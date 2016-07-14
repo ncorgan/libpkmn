@@ -68,6 +68,8 @@ SET(DOCS_DIR share/doc/pkmn)
 ####################################################################
 # Components
 ####################################################################
+PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
+
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
     PKMN_REGISTER_COMPONENT("Unit Tests"            PKMN_ENABLE_TESTS ON "" OFF)
@@ -77,7 +79,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(include)
-#ADD_SUBDIRECTORY(lib)
+ADD_SUBDIRECTORY(lib)
 
 IF(PKMN_ENABLE_DOCS)
     ADD_SUBDIRECTORY(docs)

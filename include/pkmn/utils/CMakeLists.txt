@@ -6,16 +6,13 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_headers
-        config.hpp
+    SET(pkmn_utils_headers
+        paths.hpp
     )
 
     INSTALL(
-        FILES ${pkmn_headers}
-        DESTINATION ${INCLUDE_DIR}/pkmn
+        FILES ${pkmn_utils_headers}
+        DESTINATION ${INCLUDE_DIR}/pkmn/utils
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-
-ADD_SUBDIRECTORY(types)
-ADD_SUBDIRECTORY(utils)
