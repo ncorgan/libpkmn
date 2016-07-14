@@ -5,16 +5,19 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared_ptr.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/shared_ptr.hpp
+@ONLY)
+
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_headers
-        config.hpp
+    SET(pkmn_types_headers
+        ${CMAKE_CURRENT_BINARY_DIR}/shared_ptr.hpp
     )
 
     INSTALL(
-        FILES ${pkmn_headers}
+        FILES ${pkmn_types_headers}
         DESTINATION ${INCLUDE_DIR}/pkmn
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-
-ADD_SUBDIRECTORY(types)

@@ -10,11 +10,11 @@ IF(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE "Release")
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
-IF(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
+IF(CMAKE_COMPILER_IS_GNUCXX)
     SET(PKMN_GCC TRUE)
 ELSEIF(${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
     SET(PKMN_CLANG TRUE)
-ENDIF(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 IF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
     SET(PKMN_64BIT TRUE)
@@ -23,24 +23,32 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKMN_GCC OR PKMN_CLANG)
-    SET(PKMN_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -fvisibility=hidden")
+    SET(PKMN_C_FLAGS   "-O3 -std=gnu99 -Wall -Wextra -fvisibility=hidden")
+    SET(PKMN_CXX_FLAGS "-O3 -std=c++11 -Wall -Wextra -fvisibility=hidden")
 ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
 ENDIF(PKMN_GCC OR PKMN_CLANG)
 
-# Checks for required headers
-#INCLUDE(CheckIncludeFile)
-#SET(CMAKE_REQUIRED_FLAGS "${PKMN_C_FLAGS}")
-#CHECK_INCLUDE_FILE(stdbool.h HAVE_STDBOOL_H)
-#IF(NOT HAVE_STDBOOL_H)
-#    MESSAGE(FATAL_ERROR "LibPKMN requires the header stdbool.h to compile.")
-#ENDIF(NOT HAVE_STDBOOL_H)
-#CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
-#IF(NOT HAVE_STDINT_H)
-#    MESSAGE(FATAL_ERROR "LibPKMN requires the header stdint.h to compile.")
-#ENDIF(NOT HAVE_STDINT_H)
+#
+# Look for required C++ headers
+#
+INCLUDE(CheckIncludeFileCXX)
+SET(CMAKE_REQUIRED_FLAGS "${PKMN_CXX_FLAGS}")
+CHECK_INCLUDE_FILE_CXX(memory HAVE_MEMORY)
+IF(HAVE_MEMORY)
+    SET(SPTR_HEADER    "<memory>")
+    SET(SPTR_NAMESPACE "std")
+ELSE()
+    CHECK_INCLUDE_FILE_CXX(tr1/memory HAVE_TR1_MEMORY)
+    IF(HAVE_TR1_MEMORY)
+        SET(SPTR_HEADER    "<tr1/memory>")
+        SET(SPTR_NAMESPACE "std::tr1")
+    ELSE()
+        MESSAGE(FATAL_ERROR "Could not find an STL shared_ptr!")
+    ENDIF(HAVE_TR1_MEMORY)
+ENDIF(HAVE_MEMORY)
 
 # Set compiler name for CMake display
 IF(MSVC)

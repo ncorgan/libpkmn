@@ -5,6 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    ADD_SUBDIRECTORY(pkmn)
-ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
+ADD_SUBDIRECTORY(pkmn)
