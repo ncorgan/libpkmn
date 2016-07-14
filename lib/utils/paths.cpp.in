@@ -9,30 +9,47 @@
 
 #include <pkmn/utils/paths.hpp>
 
+#include <boost/filesystem.hpp>
+#include <boost/archive/tmpdir.hpp>
+
+#include <stdexcept>
+
+namespace fs = boost::filesystem;
+
+// Store fs::paths for CMake-generated paths
+static const fs::path cmake_install_prefix("@CMAKE_INSTALL_PREFIX@");
+static const fs::path pkmn_database_path("@PKMN_DATABASE_PATH@");
+static const fs::path pkmn_images_dir("@PKMN_IMAGES_DIR@");
+
 namespace pkmn {
 
-    // TODO: implement when SQLite brought in
     std::string get_database_path() {
-        return "";
+        std::string path_to_check = "";
+
+        std::string env_var = pkmn_getenv("PKMN_DATABASE_PATH");
+        if(env_var.size() > 0 and fs::exists(fs::path(env_var))) {
+            path_to_check = env_var;
+        } else {
+            path_to_check = pkmn_database_path.string();
+        }
+
+        // TODO: Attempt to connect to database, error out otherwise
+        return path_to_check;
     }
 
     std::string get_images_dir() {
         std::string env_var = pkmn_getenv("PKMN_IMAGES_DIR");
-        if(env_var.size() > 0) {
+        if(env_var.size() > 0 and fs::exists(fs::path(env_var))) {
             return env_var;
+        } else if(fs::exists(pkmn_images_dir)) {
+            return pkmn_images_dir.string();
+        } else {
+            throw std::runtime_error("No images directory found.");
         }
-
-#ifdef PKMN_PLATFORM_WIN32
-        std::string cmake_default = "@CMAKE_INSTALL_PREFIX@\\@PKG_DATA_DIR@\\images";
-#else
-        std::string cmake_default = "@CMAKE_INSTALL_PREFIX@/@PKG_DATA_DIR@/images";
-#endif
-
-        return cmake_default;
     }
 
-    // TODO: implement
     std::string get_tmp_dir() {
-        return "/tmp";
+        std::string tmp_from_boost = boost::archive::tmpdir();
+        return tmp_from_boost == "." ? "/tmp" : tmp_from_boost;
     }
 }

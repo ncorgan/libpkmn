@@ -75,12 +75,12 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
     SET(LIB_SUFFIX 64)
 ENDIF()
-SET(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
-SET(RUNTIME_DIR bin)
-SET(LIBRARY_DIR lib${LIB_SUFFIX})
-SET(INCLUDE_DIR include)
-SET(PKG_DATA_DIR share/pkmn)
-SET(DOCS_DIR share/doc/pkmn)
+SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+SET(PKMN_RUNTIME_DIR bin)
+SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
+SET(PKMN_INCLUDE_DIR include)
+SET(PKMN_PKG_DATA_DIR share/pkmn)
+SET(PKMN_DOCS_DIR share/doc/pkmn)
 
 ####################################################################
 # Components

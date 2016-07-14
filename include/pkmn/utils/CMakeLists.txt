@@ -12,7 +12,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
 
     INSTALL(
         FILES ${pkmn_utils_headers}
-        DESTINATION ${INCLUDE_DIR}/pkmn/utils
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/utils
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)

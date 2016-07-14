@@ -17,7 +17,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
 
     INSTALL(
         FILES ${pkmn_types_headers}
-        DESTINATION ${INCLUDE_DIR}/pkmn/types
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/types
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
