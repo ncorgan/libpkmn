@@ -76,11 +76,11 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ####################################################################
 # Actual building
 ####################################################################
-#ADD_SUBDIRECTORY(include)
+ADD_SUBDIRECTORY(include)
 #ADD_SUBDIRECTORY(lib)
 
 IF(PKMN_ENABLE_DOCS)
-    #ADD_SUBDIRECTORY(docs)
+    ADD_SUBDIRECTORY(docs)
 ENDIF(PKMN_ENABLE_DOCS)
 
 IF(PKMN_ENABLE_TESTS)
