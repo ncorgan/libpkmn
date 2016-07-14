@@ -6,6 +6,7 @@
 #
 
 INCLUDE_DIRECTORIES(
+    ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
@@ -13,6 +14,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(pkmn_cpp_libs
+    ${Boost_LIBRARIES}
 )
 
 #

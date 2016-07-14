@@ -39,6 +39,23 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
 ########################################################################
+# Find dependencies
+########################################################################
+SET(BOOST_REQUIRED_COMPONENTS
+    filesystem
+    unit_test_framework
+)
+IF(MSVC)
+    SET(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "Enable Boost dynamic linking")
+    IF(BOOST_ALL_DYN_LINK)
+        ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+    ELSE(BOOST_ALL_DYN_LINK)
+        SET(BOOST_REQUIRED_COMPONENTS)
+    ENDIF(BOOST_ALL_DYN_LINK)
+ENDIF(MSVC)
+FIND_PACKAGE(Boost 1.46 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+
+########################################################################
 # Create uninstall target
 ########################################################################
 IF(NOT PKMN_USED_AS_SUBPROJECT)
