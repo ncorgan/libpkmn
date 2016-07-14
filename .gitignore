@@ -1,0 +1,6 @@
+travis-env
+*pyc
+*swp
+*~
+build
+install
