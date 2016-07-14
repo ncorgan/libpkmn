@@ -27,10 +27,10 @@ PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
 #IF(PKMN_ENABLE_CSHARP)
 #    PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
-#    ADD_DEPENDENCIES(doxygen_csharp_docs pksav-cs)
+#    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
 #ENDIF(PKMN_ENABLE_CSHARP)
 
 #IF(PKMN_ENABLE_JAVA)
 #    PKMN_BUILD_DOXYGEN_DOCS("" "java" "Java")
-#    ADD_DEPENDENCIES(doxygen_java_docs PKSav_jar)
+#    ADD_DEPENDENCIES(doxygen_java_docs pkmn_jar)
 #ENDIF(PKMN_ENABLE_JAVA)
