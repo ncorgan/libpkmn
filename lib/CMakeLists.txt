@@ -13,7 +13,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/database
 )
 
-SET(pkmn_cpp_libs
+SET(pkmn_libs
     ${Boost_LIBRARIES}
 )
 
@@ -61,7 +61,7 @@ SET_SOURCE_FILES_PROPERTIES(${pkmn_sources}
 )
 
 ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
-#TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
+TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
 
