@@ -49,6 +49,12 @@ namespace pkmn {
     }
 
     std::string get_tmp_dir() {
+        /*
+         * The Boost function checks the environment variables "TMP",
+         * "TMPDIR", and "TEMP" but oddly returns "." if none of those
+         * are populated, so if none of those work, it's probably a
+         * UNIX-like system, in which case "/tmp" is probably safe.
+         */
         std::string tmp_from_boost = boost::archive::tmpdir();
         return tmp_from_boost == "." ? "/tmp" : tmp_from_boost;
     }
