@@ -11,14 +11,7 @@
 
 namespace pkmn { namespace database {
 
-    int get_ability_id(
-        const std::string &ability_name
-    ) {
-        (void)ability_name;
-        return 0;
-    }
-
-    std::string get_ability_name(
+    std::string ability_id_to_name(
         int ability_id,
         int language_id
     ) {
@@ -27,28 +20,28 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_ball_id(
-        const std::string &ball_name
+    int ability_name_to_id(
+        const std::string &ability_name
     ) {
-        (void)ball_name;
+        (void)ability_name;
         return 0;
     }
 
-    std::string get_ball_name(
+    std::string ball_id_to_name(
         int ball_id
     ) {
         (void)ball_id;
         return "";
     }
 
-    int get_egg_group_id(
-        const std::string &egg_group_name
+    int ball_name_to_id(
+        const std::string &ball_name
     ) {
-        (void)egg_group_name;
+        (void)ball_name;
         return 0;
     }
 
-    std::string get_egg_group_name(
+    std::string egg_group_id_to_name(
         int egg_group_id,
         int language_id
     ) {
@@ -57,14 +50,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_game_id(
-        const std::string &game_name
+    int egg_group_name_to_id(
+        const std::string &egg_group_name
     ) {
-        (void)game_name;
+        (void)egg_group_name;
         return 0;
     }
 
-    std::string get_game_name(
+    std::string game_id_to_name(
         int game_id,
         int language_id
     ) {
@@ -73,14 +66,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_item_id(
-        const std::string &item_name
+    int game_name_to_id(
+        const std::string &game_name
     ) {
-        (void)item_name;
+        (void)game_name;
         return 0;
     }
 
-    std::string get_item_name(
+    std::string item_id_to_name(
         int item_id,
         int language_id
     ) {
@@ -89,16 +82,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_item_list_id(
-        const std::string &item_list_name,
-        int version_group_id
+    int item_name_to_id(
+        const std::string &item_name
     ) {
-        (void)item_list_name;
-        (void)version_group_id;
+        (void)item_name;
         return 0;
     }
 
-    std::string get_item_list_name(
+    std::string item_list_id_to_name(
         int item_list_id,
         int version_group_id
     ) {
@@ -107,14 +98,16 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_location_id(
-        const std::string &location_name
+    int item_list_name_to_id(
+        const std::string &item_list_name,
+        int version_group_id
     ) {
-        (void)location_name;
+        (void)item_list_name;
+        (void)version_group_id;
         return 0;
     }
 
-    std::string get_location_name(
+    std::string location_id_to_name(
         int location_id,
         int language_id
     ) {
@@ -123,14 +116,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_move_id(
-        const std::string &move_name
+    int location_name_to_id(
+        const std::string &location_name
     ) {
-        (void)move_name;
+        (void)location_name;
         return 0;
     }
 
-    std::string get_move_name(
+    std::string move_id_to_name(
         int move_id,
         int generation,
         int language_id
@@ -141,14 +134,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_nature_id(
-        const std::string &nature_name
+    int move_name_to_id(
+        const std::string &move_name
     ) {
-        (void)nature_name;
+        (void)move_name;
         return 0;
     }
 
-    std::string get_nature_name(
+    std::string nature_id_to_name(
         int nature_id,
         int language_id
     ) {
@@ -157,14 +150,14 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_species_id(
-        const std::string &species_name
+    int nature_name_to_id(
+        const std::string &nature_name
     ) {
-        (void)species_name;
+        (void)nature_name;
         return 0;
     }
 
-    std::string get_species_name(
+    std::string species_id_to_name(
         int species_id,
         int language_id
     ) {
@@ -173,20 +166,27 @@ namespace pkmn { namespace database {
         return "";
     }
 
-    int get_type_id(
-        const std::string &type_name
+    int species_name_to_id(
+        const std::string &species_name
     ) {
-        (void)type_name;
+        (void)species_name;
         return 0;
     }
 
-    std::string get_type_name(
+    std::string type_id_to_name(
         int type_id,
         int language_id
     ) {
         (void)type_id;
         (void)language_id;
         return "";
+    }
+
+    int type_name_to_id(
+        const std::string &type_name
+    ) {
+        (void)type_name;
+        return 0;
     }
 
 }}

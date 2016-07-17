@@ -22,13 +22,13 @@ namespace pkmn { namespace database {
      * Abilities
      */
 
-    int get_ability_id(
-        const std::string &ability_name
-    );
-
-    std::string get_ability_name(
+    std::string ability_id_to_name(
         int ability_id,
         int language_id = 9
+    );
+
+    int ability_name_to_id(
+        const std::string &ability_name
     );
 
     /*
@@ -37,51 +37,51 @@ namespace pkmn { namespace database {
      * Currently only in English.
      */
 
-    int get_ball_id(
-        const std::string &ball_name
+    std::string ball_id_to_name(
+        int ball_id
     );
 
-    std::string get_ball_name(
-        int ball_id
+    int ball_name_to_id(
+        const std::string &ball_name
     );
 
     /*
      * Egg Groups
      */
 
-    int get_egg_group_id(
-        const std::string &egg_group_name
-    );
-
-    std::string get_egg_group_name(
+    std::string egg_group_id_to_name(
         int egg_group_id,
         int language_id = 9
+    );
+
+    int egg_group_name_to_id(
+        const std::string &egg_group_name
     );
 
     /*
      * Games
      */
 
-    int get_game_id(
-        const std::string &game_name
-    );
-
-    std::string get_game_name(
+    std::string game_id_to_name(
         int game_id,
         int language_id = 9
+    );
+
+    int game_name_to_id(
+        const std::string &game_name
     );
 
     /*
      * Items
      */
 
-    int get_item_id(
-        const std::string &item_name
-    );
-
-    std::string get_item_name(
+    std::string item_id_to_name(
         int item_id,
         int language_id = 9
+    );
+
+    int item_name_to_id(
+        const std::string &item_name
     );
 
     /*
@@ -90,13 +90,13 @@ namespace pkmn { namespace database {
      * Currently only in English.
      */
 
-    int get_item_list_id(
-        const std::string &item_list_name,
+    std::string item_list_id_to_name(
+        int item_list_id,
         int version_group_id
     );
 
-    std::string get_item_list_name(
-        int item_list_id,
+    int item_list_name_to_id(
+        const std::string &item_list_name,
         int version_group_id
     );
 
@@ -104,13 +104,13 @@ namespace pkmn { namespace database {
      * Locations
      */
 
-    int get_location_id(
-        const std::string &location_name
-    );
-
-    std::string get_location_name(
+    std::string location_id_to_name(
         int location_id,
         int language_id = 9
+    );
+
+    int location_name_to_id(
+        const std::string &location_name
     );
 
     /*
@@ -120,54 +120,55 @@ namespace pkmn { namespace database {
      * for generation. Some names are only in English.
      */
 
-    int get_move_id(
-        const std::string &move_name
-    );
-
-    std::string get_move_name(
+    std::string move_id_to_name(
         int move_id,
         int generation,
         int language_id = 9
+    );
+
+    int move_name_to_id(
+        const std::string &move_name
     );
 
     /*
      * Natures
      */
 
-    int get_nature_id(
-        const std::string &nature_name
-    );
-
-    std::string get_nature_name(
+    std::string nature_id_to_name(
         int nature_id,
         int language_id = 9
+    );
+
+    int nature_name_to_id(
+        const std::string &nature_name
     );
 
     /*
      * Species
      */
 
-    int get_species_id(
-        const std::string &species_name
-    );
-
-    std::string get_species_name(
+    std::string species_id_to_name(
         int species_id,
         int language_id = 9
+    );
+
+    int species_name_to_id(
+        const std::string &species_name
     );
 
     /*
      * Types
      */
 
-    int get_type_id(
-        const std::string &type_name
-    );
-
-    std::string get_type_name(
+    std::string type_id_to_name(
         int type_id,
         int language_id = 9
     );
+
+    int type_name_to_id(
+        const std::string &type_name
+    );
+
 }}
 
 #endif /* PKMN_DATABASE_ID_TO_STRING_HPP */
