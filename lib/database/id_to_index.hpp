@@ -9,6 +9,11 @@
 
 #include <string>
 
+/*
+ * These functions convert between database ID's and their corresponding
+ * in-game indices.
+ */
+
 namespace pkmn { namespace database {
 
     /*
