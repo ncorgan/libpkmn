@@ -21,10 +21,12 @@ SET(pkmn_libs
 # Add sources included in all builds
 #
 
+ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_sources
+    ${pkmn_calculations_sources}
     ${pkmn_database_sources}
     ${pkmn_utils_sources}
 )

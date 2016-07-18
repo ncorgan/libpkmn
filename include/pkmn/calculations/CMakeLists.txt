@@ -6,18 +6,13 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_headers
-        config.hpp
+    SET(pkmn_calculations_headers
+        stats.hpp
     )
 
     INSTALL(
-        FILES ${pkmn_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn
+        FILES ${pkmn_calculations_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/calculations
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-
-ADD_SUBDIRECTORY(calculations)
-ADD_SUBDIRECTORY(database)
-ADD_SUBDIRECTORY(types)
-ADD_SUBDIRECTORY(utils)
