@@ -10,4 +10,5 @@ SET(pkmn_database_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/id_to_index.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/id_to_string.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/index_to_string.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lists.cpp
 PARENT_SCOPE)
