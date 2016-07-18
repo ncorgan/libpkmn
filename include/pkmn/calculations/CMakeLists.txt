@@ -9,6 +9,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_calculations_headers
         gender.hpp
         hidden_power.hpp
+        shininess.hpp
         stats.hpp
     )
 
