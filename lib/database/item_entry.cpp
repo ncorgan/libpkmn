@@ -5,7 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "id_to_string.hpp"
+
 #include <pkmn/database/item_entry.hpp>
+
+#include <boost/config.hpp>
+
+#include <sstream>
 
 namespace pkmn { namespace database {
 
@@ -27,19 +33,17 @@ namespace pkmn { namespace database {
         int item_index,
         int game_id
     ):
-        _game_id(0),
+        _game_id(game_id),
         _generation(0),
         _version_group_id(0),
         _item_id(0),
-        _item_index(0),
+        _item_index(item_index),
         _category_id(0),
         _item_list_id(0),
         _tmhm(false),
         _none(false),
         _invalid(true)
     {
-        (void)item_index;
-        (void)game_id;
     }
 
     item_entry::item_entry(
@@ -57,16 +61,33 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(true)
     {
-        (void)item_name;
-        (void)game_name;
+        // Make sure item and game are valid
+        _item_id = pkmn::database::item_name_to_id(
+                       item_name
+                   );
+        _game_id = pkmn::database::game_name_to_id(
+                       game_name
+                   );
     }
 
     std::string item_entry::get_name() const {
-        return "";
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            std::ostringstream stream;
+            stream << "Invalid (0x" << std::hex << _item_index << std::dec << ")";
+            return stream.str();
+        }
+
+        return pkmn::database::item_id_to_name(
+                   _item_id
+               );
     }
 
     std::string item_entry::get_game() const {
-        return "";
+        return pkmn::database::game_id_to_name(
+                   _game_id
+               );
     }
 
     std::string item_entry::get_category() const {
@@ -82,6 +103,13 @@ namespace pkmn { namespace database {
     }
 
     int item_entry::get_cost() const {
+        if(_none or _invalid) {
+            return 0;
+        }
+
+        static BOOST_CONSTEXPR const char* query = "SELECT cost FROM items WHERE id=?";
+        (void)query;
+        // TODO: call and return query function
         return 0;
     }
 
@@ -90,6 +118,13 @@ namespace pkmn { namespace database {
     }
 
     int item_entry::get_fling_power() const {
+        if(_none or _invalid or _generation < 4) {
+            return 0;
+        }
+
+        static BOOST_CONSTEXPR const char* query = "SELECT fling_power FROM items WHERE id=?";
+        (void)query;
+        // TODO: call and return query function
         return 0;
     }
 
