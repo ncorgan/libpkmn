@@ -7,7 +7,9 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_database_headers
+        item_entry.hpp
         lists.hpp
+        move_entry.hpp
     )
 
     INSTALL(

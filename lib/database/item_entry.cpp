@@ -50,10 +50,8 @@ namespace pkmn { namespace database {
         const std::string &item_name,
         const std::string &game_name
     ):
-        _game_id(0),
         _generation(0),
         _version_group_id(0),
-        _item_id(0),
         _item_index(0),
         _category_id(0),
         _item_list_id(0),
