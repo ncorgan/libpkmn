@@ -6,5 +6,6 @@
 #
 
 SET(pkmn_calculations_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/hidden_power.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/stats.cpp
 PARENT_SCOPE)

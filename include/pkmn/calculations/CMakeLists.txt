@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_calculations_headers
+        hidden_power.hpp
         stats.hpp
     )
 
