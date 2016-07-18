@@ -8,6 +8,7 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_database_headers
         item_entry.hpp
+        levelup_move.hpp
         lists.hpp
         move_entry.hpp
     )
