@@ -13,4 +13,5 @@ SET(pkmn_database_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/item_entry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lists.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/move_entry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_entry.cpp
 PARENT_SCOPE)
