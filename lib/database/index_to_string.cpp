@@ -94,6 +94,7 @@ namespace pkmn { namespace database {
         int language_id
     ) {
         (void)pokemon_index;
+        (void)game_id;
         (void)language_id;
         return "";
     }
@@ -105,6 +106,7 @@ namespace pkmn { namespace database {
     ) {
         (void)pokemon_name;
         (void)form_name;
+        (void)game_id;
         return 0;
     }
 

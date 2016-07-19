@@ -5,13 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database_common.hpp"
 #include "id_to_string.hpp"
 
 #include <pkmn/database/move_entry.hpp>
 
 #include <boost/config.hpp>
 
-#include <sstream>
+#include <stdexcept>
 
 namespace pkmn { namespace database {
 
@@ -40,7 +41,7 @@ namespace pkmn { namespace database {
     ):
         _generation(0),
         _none(false),
-        _invalid(true)
+        _invalid(false)
     {
         // Make sure move and game are valid
         _move_id = pkmn::database::move_name_to_id(
@@ -80,7 +81,10 @@ namespace pkmn { namespace database {
     int move_entry::get_pp(
         int num_pp_ups
     ) const {
-        (void)num_pp_ups;
+        if(num_pp_ups < 0 or num_pp_ups > 3) {
+            throw std::out_of_range("num_pp_ups: valid range 0-3");
+        }
+
         return 0;
     }
 
@@ -97,7 +101,15 @@ namespace pkmn { namespace database {
     }
 
     float move_entry::get_effect_chance() const {
-        return 0.0f;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT effect_chance FROM moves WHERE id=?";
+
+        float effect_chance_from_db = pkmn_db_query_bind1<float, int>(
+                                          query, _move_id
+                                      );
+
+        // Veekun's database stores this as an int 0-100.
+        return (effect_chance_from_db / 100.0f);
     }
 
     std::string move_entry::get_contest_type() const {
