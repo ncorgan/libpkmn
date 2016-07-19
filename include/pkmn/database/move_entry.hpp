@@ -20,19 +20,23 @@ namespace pkmn { namespace database {
 
             #ifndef __DOXYGEN__
             move_entry(
-                const int move_id,
-                const int game_id
+                int move_id,
+                int game_id,
+                int language_id
             );
             #endif
 
             move_entry(
                 const std::string &move_name,
-                const std::string &game_name
+                const std::string &game_name,
+                const std::string &language
             );
 
             std::string get_name() const;
 
             std::string get_game() const;
+
+            std::string get_language() const;
 
             std::string get_type() const;
 
@@ -68,6 +72,10 @@ namespace pkmn { namespace database {
             PKMN_INLINE int get_game_id() const {
                 return _game_id;
             }
+
+            PKMN_INLINE int get_language_id() const {
+                return _language_id;
+            }
             #endif
 
             //! Equality check between two move entries
@@ -83,7 +91,7 @@ namespace pkmn { namespace database {
             }
 
         private:
-            int _move_id, _game_id, _generation;
+            int _move_id, _game_id, _language_id, _generation;
             bool _none, _invalid;
     };
 

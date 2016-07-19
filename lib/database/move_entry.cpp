@@ -11,6 +11,7 @@
 #include <pkmn/database/move_entry.hpp>
 
 #include <boost/config.hpp>
+#include <boost/foreach.hpp>
 
 #include <stdexcept>
 
@@ -21,23 +22,39 @@ namespace pkmn { namespace database {
     move_entry::move_entry():
         _move_id(0),
         _game_id(0),
+        _language_id(0),
         _generation(0),
         _none(false),
         _invalid(true) {}
 
     move_entry::move_entry(
         int move_id,
-        int game_id
+        int game_id,
+        int language_id
     ):
         _move_id(move_id),
         _game_id(game_id),
+        _language_id(-1),
         _generation(0),
         _none(false),
-        _invalid(true) {}
+        _invalid(true)
+    {
+        // Confirm validity of language ID
+        typedef std::pair<std::string, int> si_pair_t;
+        BOOST_FOREACH(const si_pair_t &si_pair, libpkmn_languages) {
+            if(si_pair.second == language_id) {
+                _language_id = language_id;
+            }
+        }
+        if(language_id == -1) {
+            throw std::runtime_error("Invalid language.");
+        }
+    }
 
     move_entry::move_entry(
         const std::string &move_name,
-        const std::string &game_name
+        const std::string &game_name,
+        const std::string &language
     ):
         _generation(0),
         _none(false),
@@ -50,6 +67,13 @@ namespace pkmn { namespace database {
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
+
+        // Confirm validity of language ID
+        try {
+            _language_id = libpkmn_languages.at(language);
+        } catch(const std::exception&) {
+            throw std::runtime_error("Invalid language.");
+        }
     }
 
     std::string move_entry::get_name() const {
@@ -58,7 +82,8 @@ namespace pkmn { namespace database {
 
     std::string move_entry::get_game() const {
         return pkmn::database::game_id_to_name(
-                   _game_id
+                   _game_id,
+                   _language_id
                );
     }
 
