@@ -73,8 +73,8 @@ namespace pkmn { namespace database {
 
     std::string fix_location_string(
         const std::string &original_string,
-        const int location_id,
-        const int game_id,
+        int location_id,
+        int game_id,
         bool whole_generation
     ) {
         if((location_id == 210) and GAME_IS_DP) {
