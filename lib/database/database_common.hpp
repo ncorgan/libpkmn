@@ -24,11 +24,64 @@
 */
 
 /*
- * Use this when a valid query, given proper inputs, should
- * always succeeds.
- *
- * TODO: change these to two templated functions
+ * TODO: pass database sptr into function
  */
+
+template <typename ret_type>
+ret_type pkmn_db_query(
+    const char* query
+) {
+    (void)query;
+
+    ret_type ret;
+    (void)ret;
+    return ret;
+}
+
+template <typename ret_type, typename bind1_type>
+ret_type pkmn_db_query_bind1(
+    const char* query,
+    bind1_type bind1
+) {
+    (void)query;
+    (void)bind1;
+
+    ret_type ret;
+    (void)ret;
+    return ret;
+}
+
+template <typename ret_type, typename bind1_type, typename bind2_type>
+ret_type pkmn_db_query_bind2(
+    const char* query,
+    bind1_type bind1,
+    bind2_type bind2
+) {
+    (void)query;
+    (void)bind1;
+    (void)bind2;
+
+    ret_type ret;
+    (void)ret;
+    return ret;
+}
+
+template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
+ret_type pkmn_db_query_bind3(
+    const char* query,
+    bind1_type bind1,
+    bind2_type bind2,
+    bind3_type bind3
+) {
+    (void)query;
+    (void)bind1;
+    (void)bind2;
+    (void)bind3;
+
+    ret_type ret;
+    (void)ret;
+    return ret;
+}
 
 #define DATABASE_DOUBLE_QUERY(db, var, ...) \
     try { \

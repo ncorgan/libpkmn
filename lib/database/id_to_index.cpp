@@ -5,27 +5,38 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database_common.hpp"
 #include "id_to_index.hpp"
+
+#include <boost/config.hpp>
 
 // TODO: database sptr
 
 namespace pkmn { namespace database {
 
-    int game_game_to_index(
+    int game_id_to_index(
         int game_id
     ) {
-        (void)game_id;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT game_index FROM version_game_indices WHERE version_id=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, game_id
+               );
     }
 
     int game_index_to_id(
         int game_index
     ) {
-        (void)game_index;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT version_id FROM version_game_indices WHERE game_index=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, game_index
+               );
     }
 
-    int item_game_to_index(
+    int item_id_to_index(
         int item_id,
         int game_id
     ) {
@@ -43,7 +54,7 @@ namespace pkmn { namespace database {
         return 0;
     }
 
-    int location_game_to_index(
+    int location_id_to_index(
         int location_id,
         int game_id
     ) {
@@ -61,36 +72,52 @@ namespace pkmn { namespace database {
         return 0;
     }
 
-    int nature_game_to_index(
+    int nature_id_to_index(
         int nature_id
     ) {
-        (void)nature_id;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT game_index FROM natures WHERE id=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, nature_id
+               );
     }
 
     int nature_index_to_id(
         int nature_index
     ) {
-        (void)nature_index;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT id FROM natures WHERE game_index=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, nature_index
+               );
     }
 
-    int pokemon_game_to_index(
+    int pokemon_id_to_index(
         int pokemon_id,
         int game_id
     ) {
-        (void)pokemon_id;
-        (void)game_id;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT game_index FROM pokemon_game_indices WHERE "
+            "pokemon_id=? AND version_id=?";
+
+        return pkmn_db_query_bind2<int, int, int>(
+                   query, pokemon_id, game_id
+               );
     }
 
     int pokemon_index_to_id(
         int pokemon_index,
         int game_id
     ) {
-        (void)pokemon_index;
-        (void)game_id;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT pokemon_id FROM pokemon_game_indices WHERE "
+            "game_index=? AND version_id=?";
+
+        return pkmn_db_query_bind2<int, int, int>(
+                   query, pokemon_index, game_id
+               );
     }
 
 }}
