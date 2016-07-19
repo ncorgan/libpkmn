@@ -5,13 +5,16 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database_common.hpp"
 #include "id_to_string.hpp"
 
 #include <pkmn/database/item_entry.hpp>
 
 #include <boost/config.hpp>
+#include <boost/foreach.hpp>
+#include <boost/format.hpp>
 
-#include <sstream>
+#include <stdexcept>
 
 namespace pkmn { namespace database {
 
@@ -21,6 +24,7 @@ namespace pkmn { namespace database {
         _game_id(0),
         _generation(0),
         _version_group_id(0),
+        _language_id(9),
         _item_id(0),
         _item_index(0),
         _category_id(0),
@@ -31,11 +35,13 @@ namespace pkmn { namespace database {
 
     item_entry::item_entry(
         int item_index,
-        int game_id
+        int game_id,
+        int language_id
     ):
         _game_id(game_id),
         _generation(0),
         _version_group_id(0),
+        _language_id(9),
         _item_id(0),
         _item_index(item_index),
         _category_id(0),
@@ -44,11 +50,22 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(true)
     {
+        // Confirm validity of language ID
+        typedef std::pair<std::string, int> si_pair_t;
+        BOOST_FOREACH(const si_pair_t &si_pair, libpkmn_languages) {
+            if(si_pair.second == language_id) {
+                _language_id = language_id;
+            }
+        }
+        if(language_id == -1) {
+            throw std::runtime_error("Invalid language.");
+        }
     }
 
     item_entry::item_entry(
         const std::string &item_name,
-        const std::string &game_name
+        const std::string &game_name,
+        const std::string &language
     ):
         _generation(0),
         _version_group_id(0),
@@ -66,29 +83,48 @@ namespace pkmn { namespace database {
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
+
+        // Confirm validity of language ID
+        try {
+            _language_id = libpkmn_languages.at(language);
+        } catch(const std::exception&) {
+            throw std::runtime_error("Invalid language.");
+        }
     }
 
     std::string item_entry::get_name() const {
         if(_none) {
             return "None";
         } else if(_invalid) {
-            std::ostringstream stream;
-            stream << "Invalid (0x" << std::hex << _item_index << std::dec << ")";
-            return stream.str();
+            return str(boost::format("Invalid (0x%x)") % _item_id);
         }
 
         return pkmn::database::item_id_to_name(
-                   _item_id
+                   _item_id, _language_id
                );
     }
 
     std::string item_entry::get_game() const {
         return pkmn::database::game_id_to_name(
-                   _game_id
+                   _game_id, _language_id
                );
     }
 
     std::string item_entry::get_category() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM item_category_prose WHERE item_category_id=? "
+            "AND local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, _category_id, _language_id
+               );
+
         return "";
     }
 
@@ -105,10 +141,12 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query = "SELECT cost FROM items WHERE id=?";
-        (void)query;
-        // TODO: call and return query function
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT cost FROM items WHERE id=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, _item_id
+               );
     }
 
     bool item_entry::holdable() const {
@@ -116,18 +154,34 @@ namespace pkmn { namespace database {
     }
 
     int item_entry::get_fling_power() const {
+        // Fling was introduced in Generation IV
         if(_none or _invalid or _generation < 4) {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query = "SELECT fling_power FROM items WHERE id=?";
-        (void)query;
-        // TODO: call and return query function
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT fling_power FROM items WHERE id=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, _item_id
+               );
     }
 
     std::string item_entry::get_fling_effect() const {
-        return "";
+        if(_none or _generation < 4) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT effect FROM item_fling_effect_prose WHERE "
+            "local_language_id=? AND item_fling_effect_id="
+            "(SELECT fling_effect_id FROM items WHERE id=?)";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, _language_id, _item_id
+               );
     }
 
     void item_entry::_set_vars(
