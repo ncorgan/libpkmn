@@ -18,9 +18,13 @@ namespace pkmn { namespace database {
         int ability_id,
         int language_id
     ) {
-        (void)ability_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM ability_names WHERE ability_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, ability_id, language_id
+               );
     }
 
     int ability_name_to_id(
@@ -34,11 +38,16 @@ namespace pkmn { namespace database {
                );
     }
 
+    // TODO: support for other languages
     std::string ball_id_to_name(
         int ball_id
     ) {
-        (void)ball_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM balls WHERE id=?";
+
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, ball_id
+               );
     }
 
     int ball_name_to_id(
@@ -56,9 +65,13 @@ namespace pkmn { namespace database {
         int egg_group_id,
         int language_id
     ) {
-        (void)egg_group_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM egg_group_prose WHERE egg_group_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, egg_group_id, language_id
+               );
     }
 
     int egg_group_name_to_id(
@@ -76,9 +89,13 @@ namespace pkmn { namespace database {
         int game_id,
         int language_id
     ) {
-        (void)game_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM version_names WHERE version_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, game_id, language_id
+               );
     }
 
     int game_name_to_id(
@@ -134,9 +151,13 @@ namespace pkmn { namespace database {
         int location_id,
         int language_id
     ) {
-        (void)location_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM location_names WHERE location_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, location_id, language_id
+               );
     }
 
     int location_name_to_id(
@@ -172,9 +193,13 @@ namespace pkmn { namespace database {
         int nature_id,
         int language_id
     ) {
-        (void)nature_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM nature_names WHERE nature_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, nature_id, language_id
+               );
     }
 
     int nature_name_to_id(
@@ -192,9 +217,13 @@ namespace pkmn { namespace database {
         int species_id,
         int language_id
     ) {
-        (void)species_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM pokemon_species_names WHERE "
+            "pokemon_species_id=? AND local_language_id=9";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, species_id, language_id
+               );
     }
 
     int species_name_to_id(
@@ -212,9 +241,13 @@ namespace pkmn { namespace database {
         int type_id,
         int language_id
     ) {
-        (void)type_id;
-        (void)language_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM type_names WHERE type_id=? AND "
+            "local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, type_id, language_id
+               );
     }
 
     int type_name_to_id(

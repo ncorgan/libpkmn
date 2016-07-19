@@ -35,11 +35,13 @@ namespace pkmn { namespace database {
 
     std::string item_index_to_name(
         int item_index,
+        int game_id,
         int language_id = 9
     );
 
     int item_name_to_index(
-        const std::string &item_name
+        const std::string &item_name,
+        int game_id
     );
 
     /*
@@ -48,11 +50,13 @@ namespace pkmn { namespace database {
 
     std::string location_index_to_name(
         int location_index,
+        int game_id,
         int language_id = 9
     );
 
     int location_name_to_index(
-        const std::string &location_name
+        const std::string &location_name,
+        int game_id
     );
 
     /*
