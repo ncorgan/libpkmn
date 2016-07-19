@@ -12,8 +12,12 @@
 
 #include <boost/config.hpp>
 #include <boost/foreach.hpp>
+#include <boost/format.hpp>
 
 #include <stdexcept>
+
+// TODO: confirm this is still accurate
+#define GAMECUBE (_game_id == 19 or _game_id == 20)
 
 namespace pkmn { namespace database {
 
@@ -77,6 +81,13 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_name() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return str(boost::format("Invalid (0x%x)") % _move_id);
+        }
+
+        // TODO
         return "";
     }
 
@@ -92,11 +103,42 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_description() const {
-        return "";
+        if(_none or _invalid) {
+            return get_name();
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT flavor_text FROM move_flavor_text WHERE move_id=? "
+            "AND language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, _move_id, _language_id
+               );
     }
 
     std::string move_entry::get_damage_class() const {
-        return "";
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* old_games_query = \
+            "SELECT description FROM move_damage_class_prose "
+            "WHERE local_language_id=9 AND move_damage_class_id="
+            "(SELECT damage_class_id FROM types WHERE id="
+            "(SELECT type_id FROM moves where id=?))";
+
+        static BOOST_CONSTEXPR const char* new_games_query = \
+            "SELECT description FROM move_damage_class_prose "
+            "WHERE local_language_id=9 AND move_damage_class_id="
+            "(SELECT damage_class_id FROM moves WHERE id=?)";
+
+        bool old_game = (_generation < 4 and not GAMECUBE);
+        return pkmn_db_query_bind1<std::string, int>(
+                   (old_game ? old_games_query : new_games_query),
+                   _move_id
+               );
     }
 
     int move_entry::get_base_power() const {
@@ -121,8 +163,50 @@ namespace pkmn { namespace database {
         return 0;
     }
 
+    static std::string _cleanup_effect(
+        const std::string &input,
+        float effect_chance
+    ) {
+        std::string ret = input;
+
+        ret.erase(std::remove(ret.begin(), ret.end(), '['), ret.end());
+        ret.erase(std::remove(ret.begin(), ret.end(), ']'), ret.end());
+
+        size_t open = ret.find("{");
+        if(open != std::string::npos) {
+            size_t close = ret.find("}");
+            ret.replace(open, (close-open+1), "");
+        }
+
+        int effect_chance_num = int(effect_chance * 100.0);
+        if(effect_chance_num > 0) {
+            std::stringstream stream;
+            stream << effect_chance_num << "%";
+
+            size_t effect_chance_pos = ret.find("$effect_chance%");
+            if(effect_chance_pos != std::string::npos) {
+                ret.replace(effect_chance_pos, 15, stream.str());
+            }
+        }
+
+        return ret;
+    }
+
     std::string move_entry::get_effect() const {
-        return "";
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT short_effect FROM move_effect_prose WHERE move_effect_id="
+            "(SELECT effect_id FROM moves WHERE id=?)";
+
+        std::string from_db = pkmn_db_query_bind1<std::string, int>(
+                                  query, _move_id
+                              );
+        return _cleanup_effect(from_db, this->get_effect_chance());
     }
 
     float move_entry::get_effect_chance() const {
@@ -138,15 +222,55 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_contest_type() const {
-        return "";
+        // Contests started in Generation III
+        if(_none or _generation < 3 or GAMECUBE) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM contest_type_names WHERE contest_type_id="
+            "(SELECT contest_type_id FROM moves WHERE id=?) "
+            "AND local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, _move_id, _language_id
+               );
     }
 
     std::string move_entry::get_contest_effect() const {
-        return "";
+        // Contests started in Generation III
+        if(_none or _generation < 3 or GAMECUBE) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT flavor_text FROM contest_effect_prose WHERE contest_effect_id="
+            "(SELECT contest_effect_id FROM moves WHERE id=?)";
+
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, _move_id
+               );
     }
 
     std::string move_entry::get_super_contest_effect() const {
-        return "";
+        // Super Contests started in Generation III
+        if(_none or _generation < 4) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT flavor_text FROM super_contest_effect_prose WHERE super_contest_effect_id="
+            "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
+
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, _move_id
+               );
     }
 
 }}
