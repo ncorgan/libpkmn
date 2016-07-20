@@ -65,6 +65,31 @@ namespace pkmn { namespace database {
                );
     }
 
+    int game_name_to_generation(
+        const std::string &game_name
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT generation_id FROM version_groups WHERE id="
+            "(SELECT version_group_id FROM versions WHERE id="
+            "(SELECT version_id FROM version_names WHERE name=?))";
+
+        return pkmn_db_query_bind1<int, const std::string&>(
+                   query, game_name
+               );
+    }
+
+    int game_name_to_version_group(
+        const std::string &game_name
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT version_group_id FROM versions WHERE id="
+            "(SELECT version_id FROM version_names WHERE name=?)";
+
+        return pkmn_db_query_bind1<int, const std::string&>(
+                   query, game_name
+               );
+    }
+
     std::string fix_veekun_whitespace(
         const std::string &input
     ) {

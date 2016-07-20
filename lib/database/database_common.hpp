@@ -110,6 +110,14 @@ namespace pkmn { namespace database {
         int game_id
     );
 
+    int game_name_to_generation(
+        const std::string &game_name
+    );
+
+    int game_name_to_version_group(
+        const std::string &game_name
+    );
+
     /*
      * Workarounds for Veekun database oddities
      */
