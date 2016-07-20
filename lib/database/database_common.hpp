@@ -86,54 +86,6 @@ ret_type pkmn_db_query_bind3(
     return ret;
 }
 
-template <typename ret_type>
-void pkmn_db_query_list(
-    const char* query,
-    std::vector<ret_type> &ret_vec
-) {
-    (void)query;
-    (void)ret_vec;
-}
-
-template <typename ret_type, typename bind1_type>
-void pkmn_db_query_list_bind1(
-    const char* query,
-    std::vector<ret_type> &ret_vec,
-    bind1_type bind1
-) {
-    (void)query;
-    (void)ret_vec;
-    (void)bind1;
-}
-
-template <typename ret_type, typename bind1_type, typename bind2_type>
-void pkmn_db_query_list_bind2(
-    const char* query,
-    std::vector<ret_type> &ret_vec,
-    bind1_type bind1,
-    bind2_type bind2
-) {
-    (void)query;
-    (void)ret_vec;
-    (void)bind1;
-    (void)bind2;
-}
-
-template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
-void pkmn_db_query_list_bind3(
-    const char* query,
-    std::vector<ret_type> &ret_vec,
-    bind1_type bind1,
-    bind1_type bind2,
-    bind1_type bind3
-) {
-    (void)query;
-    (void)ret_vec;
-    (void)bind1;
-    (void)bind2;
-    (void)bind3;
-}
-
 namespace pkmn { namespace database {
 
     /*
