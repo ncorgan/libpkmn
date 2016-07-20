@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "database_common.hpp"
 #include "id_to_string.hpp"
 
 #include <boost/assign.hpp>
@@ -20,6 +21,7 @@ namespace pkmn { namespace database {
         _form_id(0),
         _pokemon_index(0),
         _game_id(0),
+        _language_id(9),
         _version_group_id(0),
         _generation(0),
         _none(false),
@@ -27,13 +29,15 @@ namespace pkmn { namespace database {
 
     pokemon_entry::pokemon_entry(
         int pokemon_index,
-        int game_id
+        int game_id,
+        int language_id
     ):
         _species_id(0),
         _pokemon_id(0),
         _form_id(0),
         _pokemon_index(pokemon_index),
         _game_id(game_id),
+        _language_id(language_id),
         _version_group_id(0),
         _generation(0),
         _none(false),
@@ -42,11 +46,13 @@ namespace pkmn { namespace database {
     pokemon_entry::pokemon_entry(
         const std::string &species_name,
         const std::string &game_name,
-        const std::string &form_name
+        const std::string &form_name,
+        const std::string &language
     ):
         _species_id(0),
         _pokemon_id(0),
         _form_id(0),
+        _language_id(9),
         _version_group_id(0),
         _generation(0),
         _none(false),
@@ -59,18 +65,29 @@ namespace pkmn { namespace database {
                           game_name
                       );
         (void)form_name;
+        (void)language;
     }
 
     std::string pokemon_entry::get_name() const {
-        return "";
+        return species_id_to_name(
+                   _species_id, _language_id
+               );
     }
 
     std::string pokemon_entry::get_game() const {
-        return "";
+        return game_id_to_name(
+                   _game_id, _language_id
+               );
     }
 
     std::string pokemon_entry::get_species() const {
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT genus FROM pokemon_species_names WHERE "
+            "pokemon_species_id=? AND local_language_id=?";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, _species_id, _language_id
+               );
     }
 
     std::string pokemon_entry::get_form() const {
@@ -81,18 +98,24 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT height FROM pokemon WHERE id=?";
 
-        (void)query;
-        return 0.0f;
+        return pkmn_db_query_bind1<float, int>(
+                   query, _pokemon_id
+               );
     }
 
     float pokemon_entry::get_weight() const {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT weight FROM pokemon WHERE id=?";
 
-        (void)query;
-        return 0.0f;
+        return pkmn_db_query_bind1<float, int>(
+                   query, _pokemon_id
+               );
     }
 
+    /*
+     * The database stores gender rates oddly, so this table
+     * converts them to actual probabilities.
+     */
     static const std::map<int, float> _veekun_gender_rates = boost::assign::map_list_of
         (-1, 0.0f)
         (0,  1.0f)
@@ -107,32 +130,42 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
-        (void)query;
-        return 0.0f;
+        int gender_rate_from_db = pkmn_db_query_bind1<int, int>(
+                                      query, _species_id
+                                  );
+        return _veekun_gender_rates.at(gender_rate_from_db);
     }
 
     float pokemon_entry::get_chance_female() const {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
-        (void)query;
-        return 0.0f;
+        int gender_rate_from_db = pkmn_db_query_bind1<int, int>(
+                                      query, _species_id
+                                  );
+        if(gender_rate_from_db == -1) {
+            return 0.0f;
+        } else {
+            return (1.0f - _veekun_gender_rates.at(gender_rate_from_db));
+        }
     }
 
     bool pokemon_entry::has_gender_differences() const {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT has_gender_differences FROM pokemon_species WHERE id=?";
 
-        (void)query;
-        return false;
+        return pkmn_db_query_bind1<bool, int>(
+                   query, _species_id
+               );
     }
 
     int pokemon_entry::get_base_happiness() const {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT base_happiness FROM pokemon_species WHERE id=?";
 
-        (void)query;
-        return 0;
+        return pkmn_db_query_bind1<int, int>(
+                   query, _species_id
+               );
     }
 
     std::pair<std::string, std::string> pokemon_entry::get_types() const {
@@ -190,9 +223,9 @@ namespace pkmn { namespace database {
             "WHERE (pokemon_species.id=? AND experience.level=?) "
             "ORDER BY experience.experience";
 
-        (void)query;
-        (void)level;
-        return 0;
+        return pkmn_db_query_bind2<int, int, int>(
+                   query, _species_id, level
+               );
     }
 
     int pokemon_entry::get_level_at_experience(
@@ -206,9 +239,9 @@ namespace pkmn { namespace database {
             "WHERE (experience.experience<=? "
             "AND pokemon_species.id=?) ORDER  BY experience.level DESC";
 
-        (void)query;
-        (void)experience;
-        return 0;
+        return pkmn_db_query_bind2<int, int, int>(
+                   query, experience, _species_id
+               );
     }
 
     pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const {

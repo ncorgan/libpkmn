@@ -34,14 +34,16 @@ namespace pkmn { namespace database {
             #ifndef __DOXYGEN__
             pokemon_entry(
                 int pokemon_index,
-                int game_id
+                int game_id,
+                int language_id
             );
             #endif
 
             pokemon_entry(
                 const std::string &species_name,
                 const std::string &game_name,
-                const std::string &form_name = ""
+                const std::string &form_name,
+                const std::string &language
             );
 
             std::string get_name() const;
@@ -138,7 +140,7 @@ namespace pkmn { namespace database {
 
         private:
             int _species_id, _pokemon_id, _form_id, _pokemon_index;
-            int _game_id, _version_group_id, _generation;
+            int _game_id, _language_id, _version_group_id, _generation;
             bool _none, _invalid;
 
             void _set_vars(bool);
