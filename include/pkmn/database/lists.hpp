@@ -15,7 +15,7 @@
 namespace pkmn { namespace database {
 
     PKMN_API std::vector<std::string> get_ability_list(
-        int latest_generation,
+        int generation,
         const std::string &language
     );
 
@@ -37,7 +37,7 @@ namespace pkmn { namespace database {
     );
 
     PKMN_API std::vector<std::string> get_move_list(
-        int latest_generation,
+        const std::string &game,
         const std::string &language
     );
 
@@ -65,7 +65,7 @@ namespace pkmn { namespace database {
     );
 
     PKMN_API std::vector<std::string> get_type_list(
-        int generation,
+        const std::string &game,
         const std::string &language
     );
 }}

@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "id_to_string.hpp"
 
 #include <pkmn/database/lists.hpp>
 
@@ -58,11 +59,11 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_ability_list(
-        int latest_generation,
+        int generation,
         const std::string &language
     ) {
-        if(latest_generation < 3 or latest_generation > 6) {
-            throw std::out_of_range("latest_generation: valid range 3-6");
+        if(generation < 3 or generation > 6) {
+            throw std::out_of_range("generation: valid range 3-6");
         }
 
         // TODO: valid language check
@@ -76,7 +77,7 @@ namespace pkmn { namespace database {
 
         std::vector<std::string> ret;
         pkmn_db_query_list_bind2<std::string, int, int>(
-            query, ret, language_id, latest_generation
+            query, ret, language_id, generation
         );
 
         return ret;
@@ -133,11 +134,50 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_move_list(
-        int latest_generation,
+        const std::string &game,
         const std::string &language
     ) {
-        (void)latest_generation;
-        return std::vector<std::string>();
+        // TODO: valid language check
+        (void)language;
+        int language_id = 9;
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT name FROM move_names WHERE local_language_id=? AND "
+            "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
+            "type_id<100) ORDER BY move_id";
+
+        int generation = game_name_to_generation(game);
+        std::vector<std::string> ret;
+        pkmn_db_query_list_bind2<std::string, int, int>(
+            main_query, ret, language_id, generation
+        );
+
+        /*
+         * Shadow Pokémon in Colosseum only know Shadow Rush, and XD brings in
+         * other Shadow moves, so only bring in the relevant Shadow moves in
+         * these cases.
+         */
+        int game_id = game_name_to_id(game);
+        if(game_id == 19) {
+            static BOOST_CONSTEXPR const char* shadow_query = \
+                "SELECT name FROM move_names WHERE local_language_id=? AND "
+                "move_id=10001";
+
+            pkmn_db_query_list_bind1<std::string, int>(
+                shadow_query, ret, language_id
+            );
+        } else if(game_id == 20) {
+            static BOOST_CONSTEXPR const char* shadow_query = \
+                "SELECT name FROM move_names WHERE local_language_id=? AND "
+                "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
+                "type_id=10002) ORDER BY move_id";
+
+            pkmn_db_query_list_bind1<std::string, int>(
+                shadow_query, ret, language_id
+            );
+        }
+
+        return ret;
     }
 
     std::vector<std::string> get_nature_list(
@@ -190,10 +230,30 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_type_list(
-        int generation,
+        const std::string &game,
         const std::string &language
     ) {
-        (void)generation;
-        return std::vector<std::string>();
+        // TODO: valid language check
+        (void)language;
+        int language_id = 9;
+
+        int generation = game_name_to_generation(game);
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM type_names WHERE local_language_id=? AND "
+            "type_id IN (SELECT id FROM types WHERE generation_id<=?) "
+            "AND type_id<100 ORDER BY type_id";
+
+        std::vector<std::string> ret;
+        pkmn_db_query_list_bind2<std::string, int, int>(
+            query, ret, language_id, generation
+        );
+
+        // The Shadow type only exists in the Gamecube games
+        int game_id = game_name_to_id(game);
+        if(game_id == 19 or game_id == 20) {
+            ret.push_back("Shadow");
+        }
+
+        return ret;
     }
 }}
