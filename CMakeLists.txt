@@ -31,7 +31,6 @@ SET(CMAKE_MODULE_PATH "${PKMN_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 ####################################################################
 # Project configuration
 ####################################################################
-INCLUDE(PKMNPlatform)
 INCLUDE(PKMNComponent)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
@@ -53,7 +52,10 @@ IF(MSVC)
         SET(BOOST_REQUIRED_COMPONENTS)
     ENDIF(BOOST_ALL_DYN_LINK)
 ENDIF(MSVC)
-FIND_PACKAGE(Boost 1.46 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+FIND_PACKAGE(Boost 1.53 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+
+# We need Boost.Predef for a check here
+INCLUDE(PKMNPlatform)
 
 ########################################################################
 # Create uninstall target

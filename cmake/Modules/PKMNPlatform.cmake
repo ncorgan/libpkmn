@@ -32,6 +32,26 @@ ELSEIF(MSVC)
 ENDIF(PKMN_GCC OR PKMN_CLANG)
 
 #
+# Use Boost.Predef to check endianness
+#
+SET(CMAKE_REQUIRED_INCLUDES
+    ${Boost_INCLUDE_DIRS}
+)
+
+INCLUDE(CheckCXXSourceCompiles)
+CHECK_CXX_SOURCE_COMPILES("
+    #include <boost/predef/other/endian.h>
+
+    #ifndef BOOST_ENDIAN_LITTLE_WORD
+    #error Not little endian
+    #endif
+
+    int main() {
+        return 0;
+    }
+" PLATFORM_LITTLE_ENDIAN)
+
+#
 # Look for required C++ headers
 #
 INCLUDE(CheckIncludeFileCXX)
