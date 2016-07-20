@@ -14,6 +14,7 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 
+#include <sstream>
 #include <stdexcept>
 
 // TODO: confirm this is still accurate
