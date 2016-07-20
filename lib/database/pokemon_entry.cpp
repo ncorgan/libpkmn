@@ -231,10 +231,24 @@ namespace pkmn { namespace database {
     }
 
     pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
+        static BOOST_CONSTEXPR const char* evolution_query = \
+            "SELECT evolves_from_species_id FROM pokemon_species WHERE id=?";
+
+        static BOOST_CONSTEXPR const char* move_query = \
+            "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=2 AND "
+            "pokemon_id=? AND version_group_id=?";
+
+        (void)evolution_query;
+        (void)move_query;
         return pkmn::database::move_list_t();
     }
 
     pkmn::database::move_list_t pokemon_entry::get_tutor_moves() const {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=3 AND "
+            "pokemon_id=? AND version_group_id=?";
+
+        (void)query;
         return pkmn::database::move_list_t();
     }
 
