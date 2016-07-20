@@ -11,6 +11,8 @@
 
 //#include <SQLiteCpp/SQLiteCpp.h>
 
+#include <boost/config.hpp>
+
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -39,6 +41,29 @@ namespace pkmn { namespace database {
     /*
      * Workarounds for Veekun database oddities
      */
+
+    int game_id_to_generation(
+        int game_id
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT generation_id FROM version_groups WHERE id="
+            "(SELECT version_group_id FROM versions WHERE id=?)";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, game_id
+               );
+    }
+
+    int game_id_to_version_group(
+        int game_id
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT version_group_id FROM versions WHERE id=?";
+
+        return pkmn_db_query_bind1<int, int>(
+                   query, game_id
+               );
+    }
 
     std::string fix_veekun_whitespace(
         const std::string &input

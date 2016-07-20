@@ -94,9 +94,21 @@ namespace pkmn { namespace database {
      *  * Templated functions for querying
      */
 
+    // TODO: replace
     static const std::map<std::string, int> libpkmn_languages = boost::assign::map_list_of
         ("English",9)
     ;
+
+    /*
+     * Common functions that don't belong elsewhere
+     */
+    int game_id_to_generation(
+        int game_id
+    );
+
+    int game_id_to_version_group(
+        int game_id
+    );
 
     /*
      * Workarounds for Veekun database oddities
