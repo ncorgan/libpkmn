@@ -13,6 +13,8 @@
 
 namespace pkmn {
 
+    PKMN_API std::string get_appdata_path();
+
     PKMN_API std::string get_database_path();
 
     PKMN_API std::string get_images_dir();
