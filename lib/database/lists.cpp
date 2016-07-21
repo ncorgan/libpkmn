@@ -251,7 +251,15 @@ namespace pkmn { namespace database {
         // The Shadow type only exists in the Gamecube games
         int game_id = game_name_to_id(game);
         if(game_id == 19 or game_id == 20) {
-            ret.push_back("Shadow");
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM type_names WHERE local_language_id=? "
+                "AND type_id=10002";
+
+            ret.push_back(
+                pkmn_db_query_bind1<std::string, int>(
+                    query, language_id
+                )
+            );
         }
 
         return ret;
