@@ -78,6 +78,10 @@ ENDMACRO(PKMN_ADD_TEST)
 
 MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ADD_EXECUTABLE(${test_name} ${test_srcs})
+    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_test_libs})
+
     PKMN_ADD_TEST(${test_name} "${TESTS_BINARY_DIR}/${test_name}")
 ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
