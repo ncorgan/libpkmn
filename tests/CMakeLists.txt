@@ -6,6 +6,7 @@
 #
 
 INCLUDE(PKMNUnitTest)
+ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 SET(cpp_tests
     cpp_calculations_test

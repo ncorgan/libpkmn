@@ -5,6 +5,4 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-int main(int argc, char* argv[]) {
-    return 0;
-}
+#include <boost/test/unit_test.hpp>
