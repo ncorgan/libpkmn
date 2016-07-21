@@ -106,7 +106,7 @@ ENDIF(PKMN_ENABLE_DOCS)
 
 IF(PKMN_ENABLE_TESTS)
     ENABLE_TESTING()
-    #ADD_SUBDIRECTORY(tests)
+    ADD_SUBDIRECTORY(tests)
 ENDIF(PKMN_ENABLE_TESTS)
 
 ####################################################################

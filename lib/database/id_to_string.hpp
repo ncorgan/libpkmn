@@ -12,8 +12,6 @@
 /*
  * These functions convert between database ID's and their corresponding
  * strings.
- *
- * TODO: language enum
  */
 
 namespace pkmn { namespace database {
