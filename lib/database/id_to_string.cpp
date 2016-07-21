@@ -15,15 +15,14 @@
 namespace pkmn { namespace database {
 
     std::string ability_id_to_name(
-        int ability_id,
-        int language_id
+        int ability_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM ability_names WHERE ability_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, ability_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, ability_id
                );
     }
 
@@ -38,7 +37,6 @@ namespace pkmn { namespace database {
                );
     }
 
-    // TODO: support for other languages
     std::string ball_id_to_name(
         int ball_id
     ) {
@@ -62,15 +60,14 @@ namespace pkmn { namespace database {
     }
 
     std::string egg_group_id_to_name(
-        int egg_group_id,
-        int language_id
+        int egg_group_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM egg_group_prose WHERE egg_group_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, egg_group_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, egg_group_id
                );
     }
 
@@ -86,15 +83,14 @@ namespace pkmn { namespace database {
     }
 
     std::string game_id_to_name(
-        int game_id,
-        int language_id
+        int game_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM version_names WHERE version_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, game_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, game_id
                );
     }
 
@@ -110,11 +106,9 @@ namespace pkmn { namespace database {
     }
 
     std::string item_id_to_name(
-        int item_id,
-        int language_id
+        int item_id
     ) {
         (void)item_id;
-        (void)language_id;
         return "";
     }
 
@@ -148,15 +142,14 @@ namespace pkmn { namespace database {
     }
 
     std::string location_id_to_name(
-        int location_id,
-        int language_id
+        int location_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM location_names WHERE location_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, location_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, location_id
                );
     }
 
@@ -173,12 +166,10 @@ namespace pkmn { namespace database {
 
     std::string move_id_to_name(
         int move_id,
-        int generation,
-        int language_id
+        int generation
     ) {
         (void)move_id;
         (void)generation;
-        (void)language_id;
         return "";
     }
 
@@ -190,15 +181,14 @@ namespace pkmn { namespace database {
     }
 
     std::string nature_id_to_name(
-        int nature_id,
-        int language_id
+        int nature_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM nature_names WHERE nature_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, nature_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, nature_id
                );
     }
 
@@ -214,15 +204,14 @@ namespace pkmn { namespace database {
     }
 
     std::string species_id_to_name(
-        int species_id,
-        int language_id
+        int species_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM pokemon_species_names WHERE "
             "pokemon_species_id=? AND local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, species_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, species_id
                );
     }
 
@@ -238,15 +227,14 @@ namespace pkmn { namespace database {
     }
 
     std::string type_id_to_name(
-        int type_id,
-        int language_id
+        int type_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM type_names WHERE type_id=? AND "
-            "local_language_id=?";
+            "local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, type_id, language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, type_id
                );
     }
 

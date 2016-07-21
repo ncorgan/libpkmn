@@ -15,11 +15,9 @@
 namespace pkmn { namespace database {
 
     std::string game_index_to_name(
-        int game_index,
-        int language_id
+        int game_index
     ) {
         (void)game_index;
-        (void)language_id;
         return "";
     }
 
@@ -37,11 +35,10 @@ namespace pkmn { namespace database {
 
     std::string item_index_to_name(
         int item_index,
-        int game_id,
-        int language_id
+        int game_id
     ) {
         (void)item_index;
-        (void)language_id;
+        (void)game_id;
         return "";
     }
 
@@ -56,12 +53,10 @@ namespace pkmn { namespace database {
 
     std::string location_index_to_name(
         int location_index,
-        int game_id,
-        int language_id
+        int game_id
     ) {
         (void)location_index;
         (void)game_id;
-        (void)language_id;
         return "";
     }
 
@@ -75,11 +70,9 @@ namespace pkmn { namespace database {
     }
 
     std::string nature_index_to_name(
-        int nature_index,
-        int language_id
+        int nature_index
     ) {
         (void)nature_index;
-        (void)language_id;
         return "";
     }
 
@@ -97,12 +90,10 @@ namespace pkmn { namespace database {
 
     std::string pokemon_index_to_name(
         int pokemon_index,
-        int game_id,
-        int language_id
+        int game_id
     ) {
         (void)pokemon_index;
         (void)game_id;
-        (void)language_id;
         return "";
     }
 

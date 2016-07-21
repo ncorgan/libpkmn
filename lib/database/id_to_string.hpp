@@ -23,8 +23,7 @@ namespace pkmn { namespace database {
      */
 
     std::string ability_id_to_name(
-        int ability_id,
-        int language_id = 9
+        int ability_id
     );
 
     int ability_name_to_id(
@@ -33,8 +32,6 @@ namespace pkmn { namespace database {
 
     /*
      * Poké Balls
-     *
-     * Currently only in English.
      */
 
     std::string ball_id_to_name(
@@ -50,8 +47,7 @@ namespace pkmn { namespace database {
      */
 
     std::string egg_group_id_to_name(
-        int egg_group_id,
-        int language_id = 9
+        int egg_group_id
     );
 
     int egg_group_name_to_id(
@@ -63,8 +59,7 @@ namespace pkmn { namespace database {
      */
 
     std::string game_id_to_name(
-        int game_id,
-        int language_id = 9
+        int game_id
     );
 
     int game_name_to_id(
@@ -76,8 +71,7 @@ namespace pkmn { namespace database {
      */
 
     std::string item_id_to_name(
-        int item_id,
-        int language_id = 9
+        int item_id
     );
 
     int item_name_to_id(
@@ -86,8 +80,6 @@ namespace pkmn { namespace database {
 
     /*
      * Item Lists
-     *
-     * Currently only in English.
      */
 
     std::string item_list_id_to_name(
@@ -105,8 +97,7 @@ namespace pkmn { namespace database {
      */
 
     std::string location_id_to_name(
-        int location_id,
-        int language_id = 9
+        int location_id
     );
 
     int location_name_to_id(
@@ -117,13 +108,12 @@ namespace pkmn { namespace database {
      * Moves
      *
      * Move names have changed over the years, so take an extra parameter
-     * for generation. Some names are only in English.
+     * for generation.
      */
 
     std::string move_id_to_name(
         int move_id,
-        int generation,
-        int language_id = 9
+        int generation
     );
 
     int move_name_to_id(
@@ -135,8 +125,7 @@ namespace pkmn { namespace database {
      */
 
     std::string nature_id_to_name(
-        int nature_id,
-        int language_id = 9
+        int nature_id
     );
 
     int nature_name_to_id(
@@ -148,8 +137,7 @@ namespace pkmn { namespace database {
      */
 
     std::string species_id_to_name(
-        int species_id,
-        int language_id = 9
+        int species_id
     );
 
     int species_name_to_id(
@@ -161,8 +149,7 @@ namespace pkmn { namespace database {
      */
 
     std::string type_id_to_name(
-        int type_id,
-        int language_id = 9
+        int type_id
     );
 
     int type_name_to_id(
