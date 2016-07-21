@@ -15,18 +15,31 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        (void)IV_attack;
-        (void)IV_defense;
-        (void)IV_speed;
-        (void)IV_special;
-        return "";
+        uint8_t alphabet_num = ((uint8_t(IV_attack) << 5)
+                             | (uint8_t(IV_defense) << 3)
+                             | (uint8_t(IV_speed) << 1)
+                             | (uint8_t(IV_special) >> 1)) / 10;
+
+        std::string ret = "?";
+        ret[0] = char(alphabet_num + 'A');
+        return ret;
     }
 
     std::string gen3_unown_form(
         uint32_t personality
     ) {
-        (void)personality;
-        return "";
+        const uint8_t* bytes = reinterpret_cast<const uint8_t*>(&personality);
+
+        uint8_t combined = (((bytes[3] & 0x3) << 6)
+                         |  ((bytes[2] & 0x3) << 4)
+                         |  ((bytes[1] & 0x3) << 2)
+                         |   (bytes[0] & 0x3));
+
+        uint8_t alphabet_num = (combined % 28);
+
+        std::string ret = "?";
+        ret[0] = char(alphabet_num + 'A');
+        return ret;
     }
 
 }}
