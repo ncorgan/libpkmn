@@ -49,9 +49,7 @@ ret_type pkmn_db_query_bind1(
     (void)query;
     (void)bind1;
 
-    ret_type ret;
-    (void)ret;
-    return ret;
+    return ret_type();
 }
 
 template <typename ret_type, typename bind1_type, typename bind2_type>
@@ -64,9 +62,7 @@ ret_type pkmn_db_query_bind2(
     (void)bind1;
     (void)bind2;
 
-    ret_type ret;
-    (void)ret;
-    return ret;
+    return ret_type();
 }
 
 template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
@@ -81,9 +77,7 @@ ret_type pkmn_db_query_bind3(
     (void)bind2;
     (void)bind3;
 
-    ret_type ret;
-    (void)ret;
-    return ret;
+    return ret_type();
 }
 
 namespace pkmn { namespace database {
