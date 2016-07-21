@@ -21,38 +21,35 @@ namespace pkmn { namespace database {
         _form_id(0),
         _pokemon_index(0),
         _game_id(0),
-        _language_id(9),
         _version_group_id(0),
         _generation(0),
         _none(false),
-        _invalid(false) {}
+        _invalid(false)
+    {}
 
     pokemon_entry::pokemon_entry(
         int pokemon_index,
-        int game_id,
-        int language_id
+        int game_id
     ):
         _species_id(0),
         _pokemon_id(0),
         _form_id(0),
         _pokemon_index(pokemon_index),
         _game_id(game_id),
-        _language_id(language_id),
         _version_group_id(0),
         _generation(0),
         _none(false),
-        _invalid(false) {}
+        _invalid(false)
+    {}
 
     pokemon_entry::pokemon_entry(
         const std::string &species_name,
         const std::string &game_name,
-        const std::string &form_name,
-        const std::string &language
+        const std::string &form_name
     ):
         _species_id(0),
         _pokemon_id(0),
         _form_id(0),
-        _language_id(9),
         _version_group_id(0),
         _generation(0),
         _none(false),
@@ -65,28 +62,27 @@ namespace pkmn { namespace database {
                           game_name
                       );
         (void)form_name;
-        (void)language;
     }
 
     std::string pokemon_entry::get_name() const {
         return species_id_to_name(
-                   _species_id, _language_id
+                   _species_id
                );
     }
 
     std::string pokemon_entry::get_game() const {
         return game_id_to_name(
-                   _game_id, _language_id
+                   _game_id
                );
     }
 
     std::string pokemon_entry::get_species() const {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT genus FROM pokemon_species_names WHERE "
-            "pokemon_species_id=? AND local_language_id=?";
+            "pokemon_species_id=? AND local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, _species_id, _language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, _species_id
                );
     }
 

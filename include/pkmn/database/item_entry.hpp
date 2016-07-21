@@ -20,15 +20,13 @@ namespace pkmn { namespace database {
             #ifndef __DOXYGEN__
             item_entry(
                 int item_index,
-                int game_id,
-                int language_id
+                int game_id
             );
             #endif
 
             item_entry(
                 const std::string &item_name,
-                const std::string &game_name,
-                const std::string &language
+                const std::string &game_name
             );
 
             std::string get_name() const;
@@ -65,10 +63,6 @@ namespace pkmn { namespace database {
             PKMN_INLINE int get_item_list_id() const {
                 return _item_list_id;
             }
-
-            PKMN_INLINE int get_language_id() const {
-                return _language_id;
-            }
             #endif
 
             //! Equality check between two item entries
@@ -84,7 +78,7 @@ namespace pkmn { namespace database {
             }
 
         private:
-            int _game_id, _generation, _version_group_id, _language_id;
+            int _game_id, _generation, _version_group_id;
             int _item_id, _item_index, _category_id, _item_list_id, _tmhm;
             bool _none, _invalid;
 

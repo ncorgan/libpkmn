@@ -7,8 +7,6 @@
 #ifndef PKMN_DATABASE_DATABASE_COMMON_HPP
 #define PKMN_DATABASE_DATABASE_COMMON_HPP
 
-#include <boost/assign.hpp>
-
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -87,11 +85,6 @@ namespace pkmn { namespace database {
      *  * get_database_connection
      *  * Templated functions for querying
      */
-
-    // TODO: replace
-    static const std::map<std::string, int> libpkmn_languages = boost::assign::map_list_of
-        ("English",9)
-    ;
 
     /*
      * Common functions that don't belong elsewhere

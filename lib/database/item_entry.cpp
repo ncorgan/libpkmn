@@ -24,24 +24,22 @@ namespace pkmn { namespace database {
         _game_id(0),
         _generation(0),
         _version_group_id(0),
-        _language_id(9),
         _item_id(0),
         _item_index(0),
         _category_id(0),
         _item_list_id(0),
         _tmhm(false),
         _none(false),
-        _invalid(true) {}
+        _invalid(true)
+    {}
 
     item_entry::item_entry(
         int item_index,
-        int game_id,
-        int language_id
+        int game_id
     ):
         _game_id(game_id),
         _generation(0),
         _version_group_id(0),
-        _language_id(9),
         _item_id(0),
         _item_index(item_index),
         _category_id(0),
@@ -49,23 +47,11 @@ namespace pkmn { namespace database {
         _tmhm(false),
         _none(false),
         _invalid(true)
-    {
-        // Confirm validity of language ID
-        typedef std::pair<std::string, int> si_pair_t;
-        BOOST_FOREACH(const si_pair_t &si_pair, libpkmn_languages) {
-            if(si_pair.second == language_id) {
-                _language_id = language_id;
-            }
-        }
-        if(language_id == -1) {
-            throw std::runtime_error("Invalid language.");
-        }
-    }
+    {}
 
     item_entry::item_entry(
         const std::string &item_name,
-        const std::string &game_name,
-        const std::string &language
+        const std::string &game_name
     ):
         _generation(0),
         _version_group_id(0),
@@ -83,13 +69,6 @@ namespace pkmn { namespace database {
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
-
-        // Confirm validity of language ID
-        try {
-            _language_id = libpkmn_languages.at(language);
-        } catch(const std::exception&) {
-            throw std::runtime_error("Invalid language.");
-        }
     }
 
     std::string item_entry::get_name() const {
@@ -100,13 +79,13 @@ namespace pkmn { namespace database {
         }
 
         return pkmn::database::item_id_to_name(
-                   _item_id, _language_id
+                   _item_id
                );
     }
 
     std::string item_entry::get_game() const {
         return pkmn::database::game_id_to_name(
-                   _game_id, _language_id
+                   _game_id
                );
     }
 
@@ -119,10 +98,10 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM item_category_prose WHERE item_category_id=? "
-            "AND local_language_id=?";
+            "AND local_language_id=9";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, _category_id, _language_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, _category_id
                );
 
         return "";
@@ -176,11 +155,11 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT effect FROM item_fling_effect_prose WHERE "
-            "local_language_id=? AND item_fling_effect_id="
+            "local_language_id=9 AND item_fling_effect_id="
             "(SELECT fling_effect_id FROM items WHERE id=?)";
 
-        return pkmn_db_query_bind2<std::string, int, int>(
-                   query, _language_id, _item_id
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, _item_id
                );
     }
 
