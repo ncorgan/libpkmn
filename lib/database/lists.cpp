@@ -68,8 +68,9 @@ namespace pkmn { namespace database {
         (void)bind3;
     }
 
-    std::vector<std::string> get_ability_list(
-        int generation
+    void get_ability_list(
+        int generation,
+        std::vector<std::string> &abilities_out
     ) {
         if(generation < 3 or generation > 6) {
             throw std::out_of_range("generation: valid range 3-6");
@@ -80,17 +81,16 @@ namespace pkmn { namespace database {
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
             "AND is_main_series=1) ORDER BY ability_id";
 
-        std::vector<std::string> ret;
+        abilities_out.clear();
         pkmn_db_query_list_bind1<std::string, int>(
-            query, ret, generation
+            query, abilities_out, generation
         );
-
-        return ret;
     }
 
-    std::vector<std::string> get_game_list(
+    void get_game_list(
         int generation,
-        bool include_previous
+        bool include_previous,
+        std::vector<std::string> &games_out
     ) {
         if(generation < 1 or generation > 6) {
             throw std::out_of_range("generation: valid range 1-6");
@@ -106,43 +106,44 @@ namespace pkmn { namespace database {
             "(SELECT id FROM versions WHERE version_group_id IN "
             "(SELECT id FROM version_groups WHERE generation_id=?))";
 
-        std::vector<std::string> ret;
+        games_out.clear();
         pkmn_db_query_list_bind1<std::string, int>(
             (include_previous ? with_previous_query : no_previous_query),
-            ret, generation
+            games_out, generation
         );
-
-        return ret;
     }
 
-    std::vector<std::string> get_item_list(
-        const std::string &game
+    void get_item_list(
+        const std::string &game,
+        std::vector<std::string> &items_out
     ) {
         (void)game;
-        return std::vector<std::string>();
+        (void)items_out;
     }
 
-    std::vector<std::string> get_location_list(
+    void get_location_list(
         const std::string &game,
-        bool whole_generation
+        bool whole_generation,
+        std::vector<std::string> &locations_out
     ) {
         (void)game;
         (void)whole_generation;
-        return std::vector<std::string>();
+        (void)locations_out;
     }
 
-    std::vector<std::string> get_move_list(
-        const std::string &game
+    void get_move_list(
+        const std::string &game,
+        std::vector<std::string> &moves_out
     ) {
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT name FROM move_names WHERE local_language_id=9 AND "
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
             "type_id<100) ORDER BY move_id";
 
+        moves_out.clear();
         int generation = game_name_to_generation(game);
-        std::vector<std::string> ret;
         pkmn_db_query_list_bind1<std::string, int>(
-            main_query, ret, generation
+            main_query, moves_out, generation
         );
 
         /*
@@ -157,7 +158,7 @@ namespace pkmn { namespace database {
                 "move_id=10001";
 
             pkmn_db_query_list<std::string>(
-                shadow_query, ret
+                shadow_query, moves_out
             );
         } else if(game_id == 20) {
             static BOOST_CONSTEXPR const char* shadow_query = \
@@ -166,20 +167,21 @@ namespace pkmn { namespace database {
                 "ORDER BY move_id";
 
             pkmn_db_query_list<std::string>(
-                shadow_query, ret
+                shadow_query, moves_out
             );
         }
-
-        return ret;
     }
 
-    std::vector<std::string> get_nature_list() {
-        return std::vector<std::string>();
+    void get_nature_list(
+        std::vector<std::string> &natures_out
+    ) {
+        (void)natures_out;
     }
 
-    std::vector<std::string> get_pokemon_list(
+    void get_pokemon_list(
         int generation,
-        bool include_previous
+        bool include_previous,
+        std::vector<std::string> &pokemon_out
     ) {
         if(generation < 1 or generation > 6) {
             throw std::out_of_range("generation: valid range 1-6");
@@ -195,41 +197,43 @@ namespace pkmn { namespace database {
             "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id=?) "
             "ORDER BY pokemon_species_id";
 
-        std::vector<std::string> ret;
+        pokemon_out.clear();
         pkmn_db_query_list_bind1<std::string, int>(
             (include_previous ? with_previous_query : no_previous_query),
-            ret, generation
+            pokemon_out, generation
         );
-
-        return ret;
     }
 
-    std::vector<std::string> get_region_list() {
+    void get_region_list(
+        std::vector<std::string> &regions_out
+    ) {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM region_names WHERE local_language_id=9 "
             "ORDER BY region_id";
 
-        std::vector<std::string> ret;
+        regions_out.clear();
         pkmn_db_query_list<std::string>(
-            query, ret
+            query, regions_out
         );
-
-        return ret;
     }
 
-    std::vector<std::string> get_ribbon_list(
-        int generation
+    void get_ribbon_list(
+        int generation,
+        std::vector<std::string> &ribbons_out
     ) {
         (void)generation;
-        return std::vector<std::string>();
+        (void)ribbons_out;
     }
 
-    std::vector<std::string> get_super_training_medal_list() {
-        return std::vector<std::string>();
+    void get_super_training_medal_list(
+        std::vector<std::string> &super_training_medals_out
+    ) {
+        super_training_medals_out.clear();
     }
 
-    std::vector<std::string> get_type_list(
-        const std::string &game
+    void get_type_list(
+        const std::string &game,
+        std::vector<std::string> &types_out
     ) {
         int generation = game_name_to_generation(game);
 
@@ -238,25 +242,15 @@ namespace pkmn { namespace database {
             "type_id IN (SELECT id FROM types WHERE generation_id<=?) "
             "AND type_id<100 ORDER BY type_id";
 
-        std::vector<std::string> ret;
+        types_out.clear();
         pkmn_db_query_list_bind1<std::string, int>(
-            query, ret, generation
+            query, types_out, generation
         );
 
         // The Shadow type only exists in the Gamecube games
         int game_id = game_name_to_id(game);
         if(game_id == 19 or game_id == 20) {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT name FROM type_names WHERE local_language_id=9 "
-                "AND type_id=10002";
-
-            ret.push_back(
-                pkmn_db_query<std::string>(
-                    query
-                )
-            );
+            types_out.push_back("Shadow");
         }
-
-        return ret;
     }
 }}

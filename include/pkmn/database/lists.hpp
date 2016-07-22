@@ -14,45 +14,59 @@
 
 namespace pkmn { namespace database {
 
-    PKMN_API std::vector<std::string> get_ability_list(
-        int generation
-    );
-
-    PKMN_API std::vector<std::string> get_game_list(
+    PKMN_API void get_ability_list(
         int generation,
-        bool include_previous
+        std::vector<std::string> &abilities_out
     );
 
-    PKMN_API std::vector<std::string> get_item_list(
-        const std::string &game
+    PKMN_API void get_game_list(
+        int generation,
+        bool include_previous,
+        std::vector<std::string> &games_out
     );
 
-    PKMN_API std::vector<std::string> get_location_list(
+    PKMN_API void get_item_list(
         const std::string &game,
-        bool whole_generation
+        std::vector<std::string> &games_out
     );
 
-    PKMN_API std::vector<std::string> get_move_list(
-        const std::string &game
+    PKMN_API void get_location_list(
+        const std::string &game,
+        bool whole_generation,
+        std::vector<std::string> &locations_out
     );
 
-    PKMN_API std::vector<std::string> get_nature_list();
+    PKMN_API void get_move_list(
+        const std::string &game,
+        std::vector<std::string> &moves_out
+    );
 
-    PKMN_API std::vector<std::string> get_pokemon_list(
+    PKMN_API void get_nature_list(
+        std::vector<std::string> &natures_out
+    );
+
+    PKMN_API void get_pokemon_list(
         int generation,
-        bool include_previous
+        bool include_previous,
+        std::vector<std::string> &pokemon_out
     );
 
-    PKMN_API std::vector<std::string> get_region_list();
-
-    PKMN_API std::vector<std::string> get_ribbon_list(
-        int generation
+    PKMN_API void get_region_list(
+        std::vector<std::string> &regions_out
     );
 
-    PKMN_API std::vector<std::string> get_super_training_medal_list();
+    PKMN_API void get_ribbon_list(
+        int generation,
+        std::vector<std::string> &ribbons_out
+    );
 
-    PKMN_API std::vector<std::string> get_type_list(
-        const std::string &game
+    PKMN_API void get_super_training_medal_list(
+        std::vector<std::string> &super_training_medals_out
+    );
+
+    PKMN_API void get_type_list(
+        const std::string &game,
+        std::vector<std::string> &types_out
     );
 }}
 
