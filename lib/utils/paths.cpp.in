@@ -93,7 +93,7 @@ namespace pkmn {
          * are populated, so if none of those work, it's probably a
          * UNIX-like system, in which case "/tmp" is probably safe.
          */
-        std::string tmp_from_boost = boost::archive::tmpdir();
+        static const std::string tmp_from_boost = boost::archive::tmpdir();
         return tmp_from_boost == "." ? "/tmp" : tmp_from_boost;
     }
 }
