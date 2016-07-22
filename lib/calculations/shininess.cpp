@@ -5,11 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
+
 #include <pkmn/calculations/shininess.hpp>
 
 #include <boost/config.hpp>
 
 #include <algorithm>
+#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 
@@ -19,6 +22,19 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
+        if(not pkmn_IV_in_bounds(IV_attack, false)) {
+            throw std::out_of_range("IV_attack: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_defense, false)) {
+            throw std::out_of_range("IV_defense: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_speed, false)) {
+            throw std::out_of_range("IV_speed: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_special, false)) {
+            throw std::out_of_range("IV_special: valid range 0-15");
+        }
+
         BOOST_STATIC_CONSTEXPR int valid_IV_attack[] = {2,3,6,7,10,11,14,15};
 
         if((IV_defense != 10) or (IV_speed != 10) or (IV_special) != 10) {

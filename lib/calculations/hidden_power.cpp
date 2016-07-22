@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
 #include "../database/database_common.hpp"
 
 #include <pkmn/calculations/hidden_power.hpp>
@@ -23,21 +24,6 @@ namespace pkmn { namespace calculations {
     // Most significant bit
     #define MSB(var) ((var >> 3) & 1)
 
-    static PKMN_INLINE void _check_IV_bounds(
-        int IV,
-        const std::string &IV_name,
-        bool modern
-    ) {
-        boost::format IV_error_format("IV_%s valid range: 0-%d");
-        int upper_bound = (modern ? 31 : 15);
-
-        if(IV < 0 or IV > upper_bound) {
-            throw std::out_of_range(
-                      str(IV_error_format % IV_name.c_str() % upper_bound)
-                  );
-        }
-    }
-
     hidden_power_t gen2_hidden_power(
         int IV_attack,
         int IV_defense,
@@ -45,10 +31,18 @@ namespace pkmn { namespace calculations {
         int IV_special
     ) {
         // Input validation
-        _check_IV_bounds(IV_attack,  "attack",  false);
-        _check_IV_bounds(IV_defense, "defense", false);
-        _check_IV_bounds(IV_speed,   "speed",   false);
-        _check_IV_bounds(IV_special, "special", false);
+        if(not pkmn_IV_in_bounds(IV_attack, false)) {
+            throw std::out_of_range("IV_attack: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_defense, false)) {
+            throw std::out_of_range("IV_defense: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_speed, false)) {
+            throw std::out_of_range("IV_speed: valid range 0-15");
+        }
+        if(not pkmn_IV_in_bounds(IV_special, false)) {
+            throw std::out_of_range("IV_special: valid range 0-15");
+        }
 
         uint8_t v = MSB(IV_special);
         uint8_t w = MSB(IV_speed);
@@ -80,12 +74,24 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        _check_IV_bounds(IV_HP,      "HP",      true);
-        _check_IV_bounds(IV_attack,  "attack",  true);
-        _check_IV_bounds(IV_defense, "defense", true);
-        _check_IV_bounds(IV_speed,   "speed",   true);
-        _check_IV_bounds(IV_spatk,   "spatk",   true);
-        _check_IV_bounds(IV_spdef,   "spdef",   true);
+        if(not pkmn_IV_in_bounds(IV_HP, true)) {
+            throw std::out_of_range("IV_HP: valid range 0-31");
+        }
+        if(not pkmn_IV_in_bounds(IV_attack, true)) {
+            throw std::out_of_range("IV_attack: valid range 0-31");
+        }
+        if(not pkmn_IV_in_bounds(IV_defense, true)) {
+            throw std::out_of_range("IV_defense: valid range 0-31");
+        }
+        if(not pkmn_IV_in_bounds(IV_speed, true)) {
+            throw std::out_of_range("IV_speed: valid range 0-31");
+        }
+        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
+            throw std::out_of_range("IV_spatk: valid range 0-31");
+        }
+        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
+            throw std::out_of_range("IV_spdef: valid range 0-31");
+        }
 
         uint8_t a = LSB(IV_HP);
         uint8_t b = LSB(IV_attack);
