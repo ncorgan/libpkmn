@@ -15,7 +15,7 @@
 #include <cmath>
 #include <cstring>
 
-static PKMN_INLINE bool pkmn_floats_close(
+BOOST_STATIC_CONSTEXPR PKMN_INLINE bool pkmn_floats_close(
     float f1, float f2
 ) {
     return (std::fabs(f1-f2) < 0.000001);
