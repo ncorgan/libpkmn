@@ -13,6 +13,8 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
+#include <stdexcept>
+
 namespace pkmn { namespace calculations {
 
     // No need to instantiate these strings at runtime if we can avoid it
@@ -42,6 +44,11 @@ namespace pkmn { namespace calculations {
         const std::string &species,
         int IV_attack
     ) {
+        // Input validation
+        if(IV_attack < 0 or IV_attack > 15) {
+            throw std::out_of_range("IV_attack: valid range 0-15");
+        }
+
         int gender_rate_from_db = pkmn_db_query_bind1<int, const std::string&>(
                                       gender_rate_query, species
                                   );

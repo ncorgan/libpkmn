@@ -10,8 +10,10 @@
 #include <pkmn/calculations/hidden_power.hpp>
 
 #include <boost/config.hpp>
+#include <boost/format.hpp>
 
 #include <cmath>
+#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 
@@ -21,12 +23,33 @@ namespace pkmn { namespace calculations {
     // Most significant bit
     #define MSB(var) ((var >> 3) & 1)
 
+    static PKMN_INLINE void _check_IV_bounds(
+        int IV,
+        const std::string &IV_name,
+        bool modern
+    ) {
+        boost::format IV_error_format("IV_%s valid range: 0-%d");
+        int upper_bound = (modern ? 31 : 15);
+
+        if(IV < 0 or IV > upper_bound) {
+            throw std::out_of_range(
+                      str(IV_error_format % IV_name.c_str() % upper_bound)
+                  );
+        }
+    }
+
     hidden_power_t gen2_hidden_power(
         int IV_attack,
         int IV_defense,
         int IV_speed,
         int IV_special
     ) {
+        // Input validation
+        _check_IV_bounds(IV_attack,  "attack",  false);
+        _check_IV_bounds(IV_defense, "defense", false);
+        _check_IV_bounds(IV_speed,   "speed",   false);
+        _check_IV_bounds(IV_special, "special", false);
+
         uint8_t v = MSB(IV_special);
         uint8_t w = MSB(IV_speed);
         uint8_t x = MSB(IV_defense);
@@ -56,6 +79,13 @@ namespace pkmn { namespace calculations {
         int IV_spatk,
         int IV_spdef
     ) {
+        // Input validation
+        _check_IV_bounds(IV_HP,      "HP",      true);
+        _check_IV_bounds(IV_attack,  "attack",  true);
+        _check_IV_bounds(IV_defense, "defense", true);
+        _check_IV_bounds(IV_speed,   "speed",   true);
+        _check_IV_bounds(IV_spatk,   "spatk",   true);
+        _check_IV_bounds(IV_spdef,   "spdef",   true);
 
         uint8_t a = LSB(IV_HP);
         uint8_t b = LSB(IV_attack);
