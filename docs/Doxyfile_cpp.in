@@ -1263,7 +1263,7 @@ INCLUDE_FILE_PATTERNS  =
 # instead of the = operator.
 
 PREDEFINED = PKMN_API= \
-             PKMN_INLINE= \
+             PKMN_INLINE=inline \
              protected=private \
              __DOXYGEN__
 
