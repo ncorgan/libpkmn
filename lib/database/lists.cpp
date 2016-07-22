@@ -181,9 +181,27 @@ namespace pkmn { namespace database {
         int generation,
         bool include_previous
     ) {
-        (void)generation;
-        (void)include_previous;
-        return std::vector<std::string>();
+        if(generation < 1 or generation > 6) {
+            throw std::out_of_range("generation: valid range 1-6");
+        }
+
+        static BOOST_CONSTEXPR const char* with_previous_query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
+            "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id<=?) "
+            "ORDER BY pokemon_species_id";
+
+        static BOOST_CONSTEXPR const char* no_previous_query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
+            "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id=?) "
+            "ORDER BY pokemon_species_id";
+
+        std::vector<std::string> ret;
+        pkmn_db_query_list_bind1<std::string, int>(
+            (include_previous ? with_previous_query : no_previous_query),
+            ret, generation
+        );
+
+        return ret;
     }
 
     std::vector<std::string> get_region_list() {
