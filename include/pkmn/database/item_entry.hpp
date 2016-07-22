@@ -78,11 +78,11 @@ namespace pkmn { namespace database {
             }
 
         private:
-            int _game_id, _generation, _version_group_id;
             int _item_id, _item_index, _category_id, _item_list_id, _tmhm;
+            int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
 
-            void _set_vars(bool);
+            void _set_vars();
     };
 }}
 #endif /* PKMN_DATABASE_ITEM_ENTRY_HPP */

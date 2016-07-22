@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
 #include <pkmn/database/item_entry.hpp>
@@ -21,14 +22,14 @@ namespace pkmn { namespace database {
     // TODO: database sptr
 
     item_entry::item_entry():
-        _game_id(0),
-        _generation(0),
-        _version_group_id(0),
         _item_id(0),
         _item_index(0),
         _category_id(0),
         _item_list_id(0),
         _tmhm(false),
+        _game_id(0),
+        _generation(0),
+        _version_group_id(0),
         _none(false),
         _invalid(true)
     {}
@@ -37,38 +38,48 @@ namespace pkmn { namespace database {
         int item_index,
         int game_id
     ):
-        _game_id(game_id),
-        _generation(0),
-        _version_group_id(0),
-        _item_id(0),
         _item_index(item_index),
         _category_id(0),
         _item_list_id(0),
         _tmhm(false),
-        _none(false),
-        _invalid(true)
-    {}
+        _game_id(game_id),
+        _generation(0),
+        _version_group_id(0),
+        _none(item_index == 0),
+        _invalid(false)
+    {
+        // Input validation
+        _item_id = pkmn::database::item_index_to_id(
+                       _item_id, _game_id
+                   );
+
+        _set_vars();
+    }
 
     item_entry::item_entry(
         const std::string &item_name,
         const std::string &game_name
     ):
-        _generation(0),
-        _version_group_id(0),
-        _item_index(0),
         _category_id(0),
         _item_list_id(0),
         _tmhm(false),
+        _generation(0),
+        _version_group_id(0),
         _none(false),
         _invalid(true)
     {
-        // Make sure item and game are valid
+        // Input validation
         _item_id = pkmn::database::item_name_to_id(
                        item_name
                    );
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
+        _item_index = pkmn::database::item_id_to_index(
+                          _item_id, _game_id
+                      );
+
+        _set_vars();
     }
 
     std::string item_entry::get_name() const {
@@ -103,8 +114,6 @@ namespace pkmn { namespace database {
         return pkmn_db_query_bind1<std::string, int>(
                    query, _category_id
                );
-
-        return "";
     }
 
     std::string item_entry::get_pocket() const {
@@ -147,6 +156,7 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_fling_effect() const {
+        // Fling was introduced in Generation IV
         if(_none or _generation < 4) {
             return "None";
         } else if(_invalid) {
@@ -163,10 +173,7 @@ namespace pkmn { namespace database {
                );
     }
 
-    void item_entry::_set_vars(
-        bool from_index
-    ) {
-        (void)from_index;
+    void item_entry::_set_vars() {
     }
 
 }}
