@@ -17,8 +17,14 @@ namespace pkmn { namespace database {
     std::string game_index_to_name(
         int game_index
     ) {
-        (void)game_index;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM version_names WHERE local_language_id=9 AND "
+            "version_id=(SELECT version_id IN version_game_indices WHERE "
+            "game_index=?)";
+
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, game_index
+               );
     }
 
     int game_name_to_index(
@@ -72,8 +78,13 @@ namespace pkmn { namespace database {
     std::string nature_index_to_name(
         int nature_index
     ) {
-        (void)nature_index;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM nature_names WHERE local_language_id=9 "
+            "AND nature_id=(SELECT id FROM natures WHERE game_index=?)";
+
+        return pkmn_db_query_bind1<std::string, int>(
+                   query, nature_index
+               );
     }
 
     int nature_name_to_index(
@@ -92,9 +103,14 @@ namespace pkmn { namespace database {
         int pokemon_index,
         int game_id
     ) {
-        (void)pokemon_index;
-        (void)game_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM pokemon_species_names WHERE pokemon_species_id="
+            "(SELECT species_id FROM pokemon WHERE id=(SELECT pokemon_id FROM "
+            "pokemon_game_indices WHERE game_index=? AND version_id=?))";
+
+        return pkmn_db_query_bind2<std::string, int, int>(
+                   query, pokemon_index, game_id
+               );
     }
 
     int pokemon_name_to_index(
