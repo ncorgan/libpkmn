@@ -122,6 +122,12 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_description() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         /*
          * If the item is a TM/HM, ignore what the database shows
          * as the description and show what move it teaches.
@@ -161,7 +167,7 @@ namespace pkmn { namespace database {
 
     int item_entry::get_cost() const {
         if(_none or _invalid) {
-            return 0;
+            return -1;
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -179,7 +185,7 @@ namespace pkmn { namespace database {
     int item_entry::get_fling_power() const {
         // Fling was introduced in Generation IV
         if(_none or _invalid or _generation < 4) {
-            return 0;
+            return -1;
         }
 
         static BOOST_CONSTEXPR const char* query = \

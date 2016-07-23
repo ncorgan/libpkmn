@@ -138,7 +138,7 @@ namespace pkmn { namespace database {
 
         private:
             int _species_id, _pokemon_id, _form_id, _pokemon_index;
-            int _game_id, _version_group_id, _generation;
+            int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
 
             void _set_vars(bool);

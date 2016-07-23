@@ -135,7 +135,9 @@ namespace pkmn { namespace database {
     int move_entry::get_pp(
         int num_pp_ups
     ) const {
-        if(num_pp_ups < 0 or num_pp_ups > 3) {
+        if(_none or _invalid) {
+            return -1;
+        } else if(num_pp_ups < 0 or num_pp_ups > 3) {
             throw std::out_of_range("num_pp_ups: valid range 0-3");
         }
 
