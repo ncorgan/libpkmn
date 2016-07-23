@@ -78,13 +78,13 @@ namespace pkmn { namespace database {
     }
 
     std::string pokemon_entry::get_name() const {
-        return species_id_to_name(
+        return pkmn::database::species_id_to_name(
                    _species_id
                );
     }
 
     std::string pokemon_entry::get_game() const {
-        return game_id_to_name(
+        return pkmn::database::game_id_to_name(
                    _game_id
                );
     }
