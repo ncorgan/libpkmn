@@ -24,9 +24,6 @@ namespace pkmn { namespace database {
     item_entry::item_entry():
         _item_id(0),
         _item_index(0),
-        _category_id(0),
-        _item_list_id(0),
-        _tmhm(false),
         _game_id(0),
         _generation(0),
         _version_group_id(0),
@@ -39,9 +36,6 @@ namespace pkmn { namespace database {
         int game_id
     ):
         _item_index(item_index),
-        _category_id(0),
-        _item_list_id(0),
-        _tmhm(false),
         _game_id(game_id),
         _generation(0),
         _version_group_id(0),
@@ -52,17 +46,18 @@ namespace pkmn { namespace database {
         _item_id = pkmn::database::item_index_to_id(
                        _item_id, _game_id
                    );
-
-        _set_vars();
+        _generation = pkmn::database::game_id_to_generation(
+                          _game_id
+                      );
+        _version_group_id = pkmn::database::game_id_to_version_group(
+                                _game_id
+                            );
     }
 
     item_entry::item_entry(
         const std::string &item_name,
         const std::string &game_name
     ):
-        _category_id(0),
-        _item_list_id(0),
-        _tmhm(false),
         _generation(0),
         _version_group_id(0),
         _none(false),
@@ -78,8 +73,12 @@ namespace pkmn { namespace database {
         _item_index = pkmn::database::item_id_to_index(
                           _item_id, _game_id
                       );
-
-        _set_vars();
+        _generation = pkmn::database::game_id_to_generation(
+                          _game_id
+                      );
+        _version_group_id = pkmn::database::game_id_to_version_group(
+                                _game_id
+                            );
     }
 
     std::string item_entry::get_name() const {
@@ -90,7 +89,7 @@ namespace pkmn { namespace database {
         }
 
         return pkmn::database::item_id_to_name(
-                   _item_id
+                   _item_id, _version_group_id
                );
     }
 
@@ -108,11 +107,11 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM item_category_prose WHERE item_category_id=? "
-            "AND local_language_id=9";
+            "SELECT name FROM item_category_prose WHERE item_category_id="
+            "(SELECT category_id FROM items WHERE id=?) AND local_language_id=9";
 
         return pkmn_db_query_bind1<std::string, int>(
-                   query, _category_id
+                   query, _item_id
                );
     }
 
@@ -121,6 +120,40 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_description() const {
+        /*
+         * If the item is a TM/HM, ignore what the database shows
+         * as the description and show what move it teaches.
+         */
+        BOOST_STATIC_CONSTEXPR int tm01 = 305;
+        BOOST_STATIC_CONSTEXPR int hm08 = 404;
+        BOOST_STATIC_CONSTEXPR int tm93 = 659;
+        BOOST_STATIC_CONSTEXPR int tm95 = 661;
+        if((_item_id >= tm01 and _item_id <= hm08) or
+           (_item_id >= tm93 and _item_id <= tm95))
+        {
+            static BOOST_CONSTEXPR const char* tmhm_move_query = \
+                "SELECT move_id FROM machines WHERE version_group_id=? "
+                "AND item_id=?";
+
+            int move_id = pkmn_db_query_bind2<int, int, int>(
+                tmhm_move_query, _version_group_id, _item_id
+            );
+            std::string move_name = pkmn::database::move_id_to_name(
+                                        move_id, _version_group_id
+                                    );
+            return str(boost::format("Teaches the move %s.") % move_name);
+
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
+                "AND version_group_id=? AND language_id=9";
+
+            return pkmn_db_query_bind2<std::string, int, int>(
+                       query, _item_id, _version_group_id
+                   );
+        }
+
+
         return "";
     }
 
@@ -171,9 +204,6 @@ namespace pkmn { namespace database {
         return pkmn_db_query_bind1<std::string, int>(
                    query, _item_id
                );
-    }
-
-    void item_entry::_set_vars() {
     }
 
 }}

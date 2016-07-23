@@ -106,12 +106,15 @@ namespace pkmn { namespace database {
     }
 
     std::string item_id_to_name(
-        int item_id
+        int item_id,
+        int version_group_id
     ) {
         (void)item_id;
+        (void)version_group_id;
         return "";
     }
 
+    // TODO: old names
     int item_name_to_id(
         const std::string &item_name
     ) {

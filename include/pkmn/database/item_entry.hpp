@@ -59,10 +59,6 @@ namespace pkmn { namespace database {
             PKMN_INLINE int get_game_id() const {
                 return _game_id;
             }
-
-            PKMN_INLINE int get_item_list_id() const {
-                return _item_list_id;
-            }
             #endif
 
             //! Equality check between two item entries
@@ -78,11 +74,9 @@ namespace pkmn { namespace database {
             }
 
         private:
-            int _item_id, _item_index, _category_id, _item_list_id, _tmhm;
+            int _item_id, _item_index;
             int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
-
-            void _set_vars();
     };
 }}
 #endif /* PKMN_DATABASE_ITEM_ENTRY_HPP */
