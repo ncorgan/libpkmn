@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
 #include <boost/assign.hpp>
@@ -45,6 +46,8 @@ namespace pkmn { namespace database {
         _version_group_id = pkmn::database::game_id_to_version_group(
                                 _game_id
                             );
+
+        _set_vars(true);
     }
 
     pokemon_entry::pokemon_entry(
@@ -63,7 +66,15 @@ namespace pkmn { namespace database {
         _game_id = pkmn::database::game_name_to_id(
                           game_name
                       );
+        _generation = pkmn::database::game_id_to_generation(
+                          _game_id
+                      );
+        _version_group_id = pkmn::database::game_id_to_version_group(
+                                _game_id
+                            );
         (void)form_name;
+
+        _set_vars(false);
     }
 
     std::string pokemon_entry::get_name() const {
@@ -208,7 +219,8 @@ namespace pkmn { namespace database {
     }
 
     std::pair<std::string, std::string> pokemon_entry::get_abilities() const {
-        if(_none) {
+        // Abilities were introduced in Generation III
+        if(_none or _generation < 3) {
             return std::make_pair("None", "None");
         } else if(_invalid) {
             return std::make_pair("Unknown", "Unknown");
@@ -223,6 +235,13 @@ namespace pkmn { namespace database {
     }
 
     std::string pokemon_entry::get_hidden_ability() const {
+        // Hidden Abilities were introduced in Generation V
+        if(_none or _generation < 5) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
             "is_hidden=1";
@@ -367,6 +386,10 @@ namespace pkmn { namespace database {
     }
 
     pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const {
+        if(_none or _invalid) {
+            return pkmn::database::pokemon_entries_t();
+        }
+
         return pkmn::database::pokemon_entries_t();
     }
 
@@ -379,7 +402,35 @@ namespace pkmn { namespace database {
     void pokemon_entry::_set_vars(
         bool from_index
     ) {
-        (void)from_index;
+        if(from_index) {
+            _pokemon_id = pkmn::database::pokemon_index_to_id(
+                              _pokemon_index, _game_id
+                          );
+
+            static BOOST_CONSTEXPR const char* species_id_query = \
+                "SELECT pokemon_species_id FROM pokemon WHERE id=?";
+
+            _species_id = pkmn_db_query_bind1<int, int>(
+                              species_id_query, _pokemon_id
+                          );
+
+            // TODO: Gen III Deoxys form corner case
+            // TODO: confirm version exists in this version, probably
+            //       a check in pokemon_forms table
+
+            static BOOST_CONSTEXPR const char* form_id_query = \
+                "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
+
+            _form_id = pkmn_db_query_bind1<int, int>(
+                           form_id_query, _pokemon_id
+                       );
+        } else {
+            // TODO: form name to ID, species+form IDs to Pokémon ID
+
+            _pokemon_index = pkmn::database::pokemon_id_to_index(
+                                 _pokemon_id, _game_id
+                             );
+        }
     }
 
 }}
