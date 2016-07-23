@@ -39,9 +39,14 @@ namespace pkmn { namespace database {
         _move_id(move_id),
         _game_id(game_id),
         _generation(0),
-        _none(false),
-        _invalid(true)
+        _none(move_id == 0),
+        _invalid(false) // TODO: proper check
     {
+        // TODO: specific error if move not in game
+
+        _generation = pkmn::database::game_id_to_generation(
+                          _game_id
+                      );
     }
 
     move_entry::move_entry(
@@ -52,7 +57,8 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(false)
     {
-        // Make sure move and game are valid
+        // Input validation
+        // TODO: specific error if move not in game
         _move_id = pkmn::database::move_name_to_id(
                        move_name
                    );
@@ -68,8 +74,9 @@ namespace pkmn { namespace database {
             return str(boost::format("Invalid (0x%x)") % _move_id);
         }
 
-        // TODO
-        return "";
+        return pkmn::database::move_id_to_name(
+                   _move_id, _generation
+               );
     }
 
     std::string move_entry::get_game() const {
@@ -143,6 +150,7 @@ namespace pkmn { namespace database {
         return 0;
     }
 
+    // TODO: Would boost::regex make this nicer?
     static std::string _cleanup_effect(
         const std::string &input,
         float effect_chance

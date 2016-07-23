@@ -40,9 +40,10 @@ namespace pkmn { namespace database {
         _generation(0),
         _version_group_id(0),
         _none(item_index == 0),
-        _invalid(false)
+        _invalid(false) // TODO: proper check
     {
         // Input validation
+        // TODO: specific error if item not in game
         _item_id = pkmn::database::item_index_to_id(
                        _item_id, _game_id
                    );
@@ -64,6 +65,7 @@ namespace pkmn { namespace database {
         _invalid(true)
     {
         // Input validation
+        // TODO: specific error if item not in game
         _item_id = pkmn::database::item_name_to_id(
                        item_name
                    );
