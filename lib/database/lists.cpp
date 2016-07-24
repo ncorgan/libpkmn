@@ -16,29 +16,32 @@
 
 namespace pkmn { namespace database {
 
-    // TODO
+    static sptr _db;
+
     template <typename ret_type>
     void pkmn_db_query_list(
         const char* query,
         std::vector<ret_type> &ret_vec
     ) {
-        (void)query;
-        (void)ret_vec;
+        SQLite::Statement stmt((*_db), query);
+        while(stmt.executeStep()) {
+            ret_vec.push_back((ret_type)stmt.getColumn(0));
+        }
     }
 
-    // TODO
     template <typename ret_type, typename bind1_type>
     void pkmn_db_query_list_bind1(
         const char* query,
         std::vector<ret_type> &ret_vec,
         bind1_type bind1
     ) {
-        (void)query;
-        (void)ret_vec;
-        (void)bind1;
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        while(stmt.executeStep()) {
+            ret_vec.push_back((ret_type)stmt.getColumn(0));
+        }
     }
 
-    // TODO
     template <typename ret_type, typename bind1_type, typename bind2_type>
     void pkmn_db_query_list_bind2(
         const char* query,
@@ -46,13 +49,14 @@ namespace pkmn { namespace database {
         bind1_type bind1,
         bind2_type bind2
     ) {
-        (void)query;
-        (void)ret_vec;
-        (void)bind1;
-        (void)bind2;
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        while(stmt.executeStep()) {
+            ret_vec.push_back((ret_type)stmt.getColumn(0));
+        }
     }
 
-    // TODO
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
     void pkmn_db_query_list_bind3(
         const char* query,
@@ -61,11 +65,13 @@ namespace pkmn { namespace database {
         bind1_type bind2,
         bind1_type bind3
     ) {
-        (void)query;
-        (void)ret_vec;
-        (void)bind1;
-        (void)bind2;
-        (void)bind3;
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        stmt.bind(3, (bind3_type)bind3);
+        while(stmt.executeStep()) {
+            ret_vec.push_back((ret_type)stmt.getColumn(0));
+        }
     }
 
     void get_ability_list(

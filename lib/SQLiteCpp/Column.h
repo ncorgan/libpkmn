@@ -4,6 +4,7 @@
  * @brief   Encapsulation of a Column in a row of the result pointed by the prepared SQLite::Statement.
  *
  * Copyright (c) 2012-2015 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+ *                    2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -187,7 +188,9 @@ public:
         return getBlob();
     }
 
-#ifdef __GNUC__
+// TODO: enabling this fails with GCC 5.2.1, can we get rid of this?
+#if 0
+//#ifdef __GNUC__
     // NOTE : the following is required by GCC and Clang to cast a Column result in a std::string
     // (error: conversion from ‘SQLite::Column’ to non-scalar type ‘std::string {aka std::basic_string<char>}’)
     // but is not working under Microsoft Visual Studio 2010 and 2012
