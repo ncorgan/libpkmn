@@ -197,7 +197,7 @@ namespace pkmn { namespace database {
         // SQLite has no bool type, so just test the integral value
         return (pkmn::database::query_db_bind1<int, int>(
                    _db, query, _species_id
-               ) > 0);
+                ) > 0);
     }
 
     int pokemon_entry::get_base_happiness() const {

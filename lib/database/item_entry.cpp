@@ -162,9 +162,10 @@ namespace pkmn { namespace database {
                 "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
                 "AND version_group_id=? AND language_id=9";
 
-            return pkmn::database::query_db_bind2<std::string, int, int>(
-                       _db, query, _item_id, _version_group_id
-                   );
+            std::string from_db = pkmn::database::query_db_bind2<std::string, int, int>(
+                                      _db, query, _item_id, _version_group_id
+                                  );
+            return fix_veekun_whitespace(from_db);
         }
     }
 

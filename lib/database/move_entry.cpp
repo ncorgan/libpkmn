@@ -104,9 +104,10 @@ namespace pkmn { namespace database {
             "SELECT flavor_text FROM move_flavor_text WHERE move_id=? "
             "AND language_id=9";
 
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db, query, _move_id
-               );
+        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                  _db, query, _move_id
+                              );
+        return fix_veekun_whitespace(from_db);
     }
 
     std::string move_entry::get_damage_class() const {
