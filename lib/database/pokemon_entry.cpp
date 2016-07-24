@@ -233,11 +233,22 @@ namespace pkmn { namespace database {
             return std::make_pair("Unknown", "Unknown");
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT type_id FROM pokemon_types WHERE pokemon_id=? ORDER BY slot";
+        static BOOST_CONSTEXPR const char* query1 = \
+            "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1";
+        static BOOST_CONSTEXPR const char* query2 = \
+            "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2";
 
-        (void)query;
-        return std::pair<std::string,std::string>();
+        std::pair<std::string, std::string> ret;
+        ret.first = pkmn::database::query_db_bind1<std::string, int>(
+                        _db, query1, _pokemon_id
+                    );
+        if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+               _db, query2, ret.second, _pokemon_id
+           )) {
+            ret.second = "None";
+        }
+
+        return ret;
     }
 
     std::pair<std::string, std::string> pokemon_entry::get_abilities() const {
@@ -248,12 +259,24 @@ namespace pkmn { namespace database {
             return std::make_pair("Unknown", "Unknown");
         }
 
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query1 = \
             "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-            "is_hidden=0 ORDER BY slot";
+            "is_hidden=0 AND slot=1";
+        static BOOST_CONSTEXPR const char* query2 = \
+            "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
+            "is_hidden=0 AND slot=2";
 
-        (void)query;
-        return std::pair<std::string,std::string>();
+        std::pair<std::string, std::string> ret;
+        ret.first = pkmn::database::query_db_bind1<std::string, int>(
+                        _db, query1, _pokemon_id
+                    );
+        if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+               _db, query2, ret.second, _pokemon_id
+           )) {
+            ret.second = "None";
+        }
+
+        return ret;
     }
 
     std::string pokemon_entry::get_hidden_ability() const {
@@ -281,11 +304,20 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT egg_group_id FROM pokemon_egg_groups WHERE pokemon_id=? AND "
-            "is_hidden=0 ORDER BY slot";
+            "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
+            "ORDER BY egg_group_id";
 
-        (void)query;
-        return std::pair<std::string,std::string>();
+        std::pair<std::string, std::string> ret;
+        SQLite::Statement stmt((*_db), query);
+        stmt.executeStep();
+        ret.first = std::string(stmt.getColumn(0));
+        if(stmt.executeStep()) {
+            ret.second = std::string(stmt.getColumn(0));
+        } else {
+            ret.second = "None";
+        }
+
+        return ret;
     }
 
     std::map<std::string, int> pokemon_entry::get_base_stats() const {

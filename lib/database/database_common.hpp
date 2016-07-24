@@ -104,6 +104,82 @@ namespace pkmn { namespace database {
     }
 
     /*
+     * Templated query functions (queries may fail)
+     */
+
+    template <typename ret_type>
+    bool maybe_query_db(
+        sptr db,
+        const char* query,
+        ret_type &out
+    ) {
+        SQLite::Statement stmt((*db), query);
+        if(stmt.executeStep()) {
+            out = (ret_type)stmt.getColumn(0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    template <typename ret_type, typename bind1_type>
+    bool maybe_query_db_bind1(
+        sptr db,
+        const char* query,
+        ret_type &out,
+        bind1_type bind1
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        if(stmt.executeStep()) {
+            out = (ret_type)stmt.getColumn(0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type>
+    bool maybe_query_db_bind2(
+        sptr db,
+        const char* query,
+        ret_type &out,
+        bind1_type bind1,
+        bind2_type bind2
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        if(stmt.executeStep()) {
+            out = (ret_type)stmt.getColumn(0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
+    bool maybe_query_db_bind2(
+        sptr db,
+        const char* query,
+        ret_type &out,
+        bind1_type bind1,
+        bind2_type bind2,
+        bind3_type bind3
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        stmt.bind(3, (bind3_type)bind3);
+        if(stmt.executeStep()) {
+            out = (ret_type)stmt.getColumn(0);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
      * Common functions that don't belong elsewhere
      */
     int game_id_to_generation(
