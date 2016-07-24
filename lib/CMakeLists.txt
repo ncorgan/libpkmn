@@ -15,12 +15,14 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_libs
     ${Boost_LIBRARIES}
+    SQLiteCpp
 )
 
 #
 # Add sources included in all builds
 #
 
+ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(utils)
