@@ -9,7 +9,7 @@
 
 #include <pkmn/utils/paths.hpp>
 
-//#include <SQLiteCpp/SQLiteCpp.h>
+#include <SQLiteCpp/SQLiteCpp.h>
 
 #include <boost/config.hpp>
 
@@ -21,22 +21,22 @@
 
 namespace pkmn { namespace database {
 
-    /*static database_sptr _db;
+    static sptr _db;
 
-    database_sptr get_database_connection() {
+    sptr get_database_connection() {
         if(!_db) {
-            std::string database_path = pksav::get_database_path();
-            _db = pksav::make_shared<SQLite::Database>(database_path.c_str());
+            std::string database_path = pkmn::get_database_path();
+            _db = pkmn::make_shared<SQLite::Database>(database_path.c_str());
 
             // Make sure our Veekun commit matches the database's
-            int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
-            if(compat_num != PKSAV_COMPAT_NUM) {
-                throw std::runtime_error("This database is incompatible with this version of PKSav.");
-            }
+            /*int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
+            if(compat_num != PKMN_COMPAT_NUM) {
+                throw std::runtime_error("This database is incompatible with this version of LibPKMN.");
+            }*/
         }
 
         return _db;
-    }*/
+    }
 
     /*
      * Workarounds for Veekun database oddities

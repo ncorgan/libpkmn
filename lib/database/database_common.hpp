@@ -7,26 +7,14 @@
 #ifndef PKMN_DATABASE_DATABASE_COMMON_HPP
 #define PKMN_DATABASE_DATABASE_COMMON_HPP
 
+#include "SQLiteCpp/SQLiteCpp.h"
+
+#include <pkmn/types/shared_ptr.hpp>
+
 #include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-/*
- * TODO:
- *
- * Get valid database connection
-
-
-#define GET_DATABASE_CONNECTION(db) \
-    if(!db) { \
-        db = pkmn::database::get_database_connection(); \
-    }
-*/
-
-/*
- * TODO: pass database sptr into function
- */
 
 template <typename ret_type>
 ret_type pkmn_db_query(
@@ -80,11 +68,9 @@ ret_type pkmn_db_query_bind3(
 
 namespace pkmn { namespace database {
 
-    /*
-     * TODO:
-     *  * get_database_connection
-     *  * Templated functions for querying
-     */
+    typedef pkmn::shared_ptr<SQLite::Database> sptr;
+
+    sptr get_database_connection();
 
     /*
      * Common functions that don't belong elsewhere
