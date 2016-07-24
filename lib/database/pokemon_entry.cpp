@@ -107,6 +107,17 @@ namespace pkmn { namespace database {
                );
     }
 
+    std::string pokemon_entry::get_pokedex_entry() const {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT flavor_text FROM pokemon_species_flavor_text WHERE "
+            "species_id=? AND version_id=? AND language_id=9";
+
+        std::string from_db = pkmn::database::query_db_bind2<std::string, int, int>(
+                                  _db, query, _species_id, _game_id
+                              );
+        return fix_veekun_whitespace(from_db);
+    }
+
     std::string pokemon_entry::get_form() const {
         return "";
     }

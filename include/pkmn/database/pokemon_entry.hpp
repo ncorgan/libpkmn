@@ -50,6 +50,8 @@ namespace pkmn { namespace database {
 
             std::string get_species() const;
 
+            std::string get_pokedex_entry() const;
+
             std::string get_form() const;
 
             float get_height() const;
