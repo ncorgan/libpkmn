@@ -16,7 +16,7 @@
 
 namespace pkmn { namespace database {
 
-    static sptr _db;
+    static pkmn::database::sptr _db;
 
     template <typename ret_type>
     void pkmn_db_query_list(

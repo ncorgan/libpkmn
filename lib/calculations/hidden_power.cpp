@@ -18,6 +18,8 @@
 
 namespace pkmn { namespace calculations {
 
+    static pkmn::database::sptr _db;
+
     static BOOST_CONSTEXPR const char* stat_name_query = \
         "SELECT name FROM type_names WHERE local_language_id=9 AND type_id=?";
 
@@ -30,6 +32,9 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         if(not pkmn_IV_in_bounds(IV_attack, false)) {
             throw std::out_of_range("IV_attack: valid range 0-15");
@@ -51,8 +56,8 @@ namespace pkmn { namespace calculations {
         uint8_t Z = (IV_special % 4);
 
         hidden_power_t ret;
-        ret.type = pkmn_db_query_bind1<std::string, int>(
-                       stat_name_query,
+        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+                       _db, stat_name_query,
                        (((IV_attack % 4) << 2) + (IV_defense % 4))
                    );
         ret.base_power = int(std::floor(float(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31)));
@@ -73,6 +78,9 @@ namespace pkmn { namespace calculations {
         int IV_spatk,
         int IV_spdef
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         if(not pkmn_IV_in_bounds(IV_HP, true)) {
             throw std::out_of_range("IV_HP: valid range 0-31");
@@ -108,8 +116,8 @@ namespace pkmn { namespace calculations {
         uint8_t z = LSB2(IV_spdef);
 
         hidden_power_t ret;
-        ret.type = pkmn_db_query_bind1<std::string, int>(
-                       stat_name_query,
+        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+                       _db, stat_name_query,
                        int(std::floor(float(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)))
                    );
         ret.base_power = int(std::floor(float((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30)));

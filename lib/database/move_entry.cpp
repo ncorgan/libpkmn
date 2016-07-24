@@ -22,7 +22,7 @@
 
 namespace pkmn { namespace database {
 
-    // TODO: database sptr
+    pkmn::database::sptr _db;
 
     move_entry::move_entry():
         _move_id(0),
@@ -42,6 +42,9 @@ namespace pkmn { namespace database {
         _none(move_id == 0),
         _invalid(false) // TODO: proper check
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // TODO: specific error if move not in game
 
         _generation = pkmn::database::game_id_to_generation(
@@ -57,6 +60,9 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(false)
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         // TODO: specific error if move not in game
         _move_id = pkmn::database::move_name_to_id(
@@ -98,8 +104,8 @@ namespace pkmn { namespace database {
             "SELECT flavor_text FROM move_flavor_text WHERE move_id=? "
             "AND language_id=9";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _move_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
                );
     }
 
@@ -122,7 +128,8 @@ namespace pkmn { namespace database {
             "(SELECT damage_class_id FROM moves WHERE id=?)";
 
         bool old_game = (_generation < 4 and not GAMECUBE);
-        return pkmn_db_query_bind1<std::string, int>(
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db,
                    (old_game ? old_games_query : new_games_query),
                    _move_id
                );
@@ -193,8 +200,8 @@ namespace pkmn { namespace database {
             "SELECT short_effect FROM move_effect_prose WHERE move_effect_id="
             "(SELECT effect_id FROM moves WHERE id=?)";
 
-        std::string from_db = pkmn_db_query_bind1<std::string, int>(
-                                  query, _move_id
+        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                  _db, query, _move_id
                               );
         return _cleanup_effect(from_db, this->get_effect_chance());
     }
@@ -203,8 +210,9 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT effect_chance FROM moves WHERE id=?";
 
-        float effect_chance_from_db = pkmn_db_query_bind1<float, int>(
-                                          query, _move_id
+        // SQLite uses doubles, so avoid implicit casting ambiguity
+        float effect_chance_from_db = (float)pkmn::database::query_db_bind1<double, int>(
+                                          _db, query, _move_id
                                       );
 
         // Veekun's database stores this as an int 0-100.
@@ -224,8 +232,8 @@ namespace pkmn { namespace database {
             "(SELECT contest_type_id FROM moves WHERE id=?) "
             "AND local_language_id=9";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _move_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
                );
     }
 
@@ -241,8 +249,8 @@ namespace pkmn { namespace database {
             "SELECT flavor_text FROM contest_effect_prose WHERE contest_effect_id="
             "(SELECT contest_effect_id FROM moves WHERE id=?)";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _move_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
                );
     }
 
@@ -258,8 +266,8 @@ namespace pkmn { namespace database {
             "SELECT flavor_text FROM super_contest_effect_prose WHERE super_contest_effect_id="
             "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _move_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
                );
     }
 

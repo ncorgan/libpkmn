@@ -10,29 +10,35 @@
 
 #include <boost/config.hpp>
 
-// TODO: database sptr
-
 namespace pkmn { namespace database {
+
+    static pkmn::database::sptr _db;
 
     int game_id_to_index(
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT game_index FROM version_game_indices WHERE version_id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, game_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, game_id
                );
     }
 
     int game_index_to_id(
         int game_index
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT version_id FROM version_game_indices WHERE game_index=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, game_index
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, game_index
                );
     }
 
@@ -40,6 +46,9 @@ namespace pkmn { namespace database {
         int item_id,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         (void)item_id;
         (void)game_id;
         return 0;
@@ -49,6 +58,9 @@ namespace pkmn { namespace database {
         int item_index,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         (void)item_index;
         (void)game_id;
         return 0;
@@ -58,6 +70,9 @@ namespace pkmn { namespace database {
         int location_id,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         (void)location_id;
         (void)game_id;
         return 0;
@@ -67,6 +82,9 @@ namespace pkmn { namespace database {
         int location_index,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         (void)location_index;
         (void)game_id;
         return 0;
@@ -75,22 +93,28 @@ namespace pkmn { namespace database {
     int nature_id_to_index(
         int nature_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT game_index FROM natures WHERE id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, nature_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, nature_id
                );
     }
 
     int nature_index_to_id(
         int nature_index
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT id FROM natures WHERE game_index=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, nature_index
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, nature_index
                );
     }
 
@@ -98,12 +122,15 @@ namespace pkmn { namespace database {
         int pokemon_id,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT game_index FROM pokemon_game_indices WHERE "
             "pokemon_id=? AND version_id=?";
 
-        return pkmn_db_query_bind2<int, int, int>(
-                   query, pokemon_id, game_id
+        return pkmn::database::query_db_bind2<int, int, int>(
+                   _db, query, pokemon_id, game_id
                );
     }
 
@@ -111,12 +138,15 @@ namespace pkmn { namespace database {
         int pokemon_index,
         int game_id
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT pokemon_id FROM pokemon_game_indices WHERE "
             "game_index=? AND version_id=?";
 
-        return pkmn_db_query_bind2<int, int, int>(
-                   query, pokemon_index, game_id
+        return pkmn::database::query_db_bind2<int, int, int>(
+                   _db, query, pokemon_index, game_id
                );
     }
 

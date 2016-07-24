@@ -9,68 +9,99 @@
 
 #include "SQLiteCpp/SQLiteCpp.h"
 
+#include <pkmn/config.hpp>
 #include <pkmn/types/shared_ptr.hpp>
+
+#include <boost/format.hpp>
+#include <boost/lockfree/detail/branch_hints.hpp>
 
 #include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
-template <typename ret_type>
-ret_type pkmn_db_query(
-    const char* query
-) {
-    (void)query;
-
-    ret_type ret;
-    (void)ret;
-    return ret;
-}
-
-template <typename ret_type, typename bind1_type>
-ret_type pkmn_db_query_bind1(
-    const char* query,
-    bind1_type bind1
-) {
-    (void)query;
-    (void)bind1;
-
-    return ret_type();
-}
-
-template <typename ret_type, typename bind1_type, typename bind2_type>
-ret_type pkmn_db_query_bind2(
-    const char* query,
-    bind1_type bind1,
-    bind2_type bind2
-) {
-    (void)query;
-    (void)bind1;
-    (void)bind2;
-
-    return ret_type();
-}
-
-template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
-ret_type pkmn_db_query_bind3(
-    const char* query,
-    bind1_type bind1,
-    bind2_type bind2,
-    bind3_type bind3
-) {
-    (void)query;
-    (void)bind1;
-    (void)bind2;
-    (void)bind3;
-
-    return ret_type();
-}
-
 namespace pkmn { namespace database {
 
     typedef pkmn::shared_ptr<SQLite::Database> sptr;
 
-    sptr get_database_connection();
+    sptr _get_connection();
+
+    PKMN_INLINE void get_connection(
+        sptr &db
+    ) {
+        if(boost::lockfree::detail::unlikely(!db)) {
+            db = _get_connection();
+        }
+    }
+
+    /*
+     * Templated query functions
+     */
+
+    template <typename ret_type>
+    ret_type query_db(
+        sptr db,
+        const char* query
+    ) {
+        return (ret_type)db->execAndGet(query);
+    }
+
+    template <typename ret_type, typename bind1_type>
+    ret_type query_db_bind1(
+        sptr db,
+        const char* query,
+        bind1_type bind1
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        if(stmt.executeStep()) {
+            return (ret_type)stmt.getColumn(0);
+        } else {
+            throw std::runtime_error(
+                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
+                  );
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type>
+    ret_type query_db_bind2(
+        sptr db,
+        const char* query,
+        bind1_type bind1,
+        bind2_type bind2
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        if(stmt.executeStep()) {
+            return (ret_type)stmt.getColumn(0);
+        } else {
+            throw std::runtime_error(
+                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
+                  );
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
+    ret_type query_db_bind3(
+        sptr db,
+        const char* query,
+        bind1_type bind1,
+        bind2_type bind2,
+        bind3_type bind3
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        stmt.bind(3, (bind3_type)bind3);
+        if(stmt.executeStep()) {
+            return (ret_type)stmt.getColumn(0);
+        } else {
+            throw std::runtime_error(
+                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
+                  );
+        }
+    }
 
     /*
      * Common functions that don't belong elsewhere

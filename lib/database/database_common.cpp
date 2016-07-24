@@ -21,9 +21,9 @@
 
 namespace pkmn { namespace database {
 
-    static sptr _db;
+    static pkmn::database::sptr _db;
 
-    sptr get_database_connection() {
+    pkmn::database::sptr _get_connection() {
         if(!_db) {
             std::string database_path = pkmn::get_database_path();
             _db = pkmn::make_shared<SQLite::Database>(database_path.c_str());
@@ -45,48 +45,60 @@ namespace pkmn { namespace database {
     int game_id_to_generation(
         int game_id
     ) {
+        // Connect to database
+        (void)_get_connection();
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT generation_id FROM version_groups WHERE id="
             "(SELECT version_group_id FROM versions WHERE id=?)";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, game_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, game_id
                );
     }
 
     int game_id_to_version_group(
         int game_id
     ) {
+        // Connect to database
+        (void)_get_connection();
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT version_group_id FROM versions WHERE id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, game_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, game_id
                );
     }
 
     int game_name_to_generation(
         const std::string &game_name
     ) {
+        // Connect to database
+        (void)_get_connection();
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT generation_id FROM version_groups WHERE id="
             "(SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?))";
 
-        return pkmn_db_query_bind1<int, const std::string&>(
-                   query, game_name
+        return pkmn::database::query_db_bind1<int, const std::string&>(
+                   _db, query, game_name
                );
     }
 
     int game_name_to_version_group(
         const std::string &game_name
     ) {
+        // Connect to database
+        (void)_get_connection();
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?)";
 
-        return pkmn_db_query_bind1<int, const std::string&>(
-                   query, game_name
+        return pkmn::database::query_db_bind1<int, const std::string&>(
+                   _db, query, game_name
                );
     }
 

@@ -16,6 +16,8 @@
 
 namespace pkmn { namespace database {
 
+    static pkmn::database::sptr _db;
+
     pokemon_entry::pokemon_entry():
         _species_id(0),
         _pokemon_id(0),
@@ -40,6 +42,9 @@ namespace pkmn { namespace database {
         _none(pokemon_index == 0),
         _invalid(false) // TODO: valid check
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -60,6 +65,9 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(false)
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         _species_id = pkmn::database::species_name_to_id(
                           species_name
                       );
@@ -94,8 +102,8 @@ namespace pkmn { namespace database {
             "SELECT genus FROM pokemon_species_names WHERE "
             "pokemon_species_id=? AND local_language_id=9";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _species_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _species_id
                );
     }
 
@@ -111,8 +119,9 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT height FROM pokemon WHERE id=?";
 
-        return pkmn_db_query_bind1<float, int>(
-                   query, _pokemon_id
+        // SQLite uses doubles, so avoid implicit casting ambiguity
+        return (float)pkmn::database::query_db_bind1<double, int>(
+                   _db, query, _pokemon_id
                );
     }
 
@@ -124,8 +133,9 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT weight FROM pokemon WHERE id=?";
 
-        return pkmn_db_query_bind1<float, int>(
-                   query, _pokemon_id
+        // SQLite uses doubles, so avoid implicit casting ambiguity
+        return pkmn::database::query_db_bind1<double, int>(
+                   _db, query, _pokemon_id
                );
     }
 
@@ -151,8 +161,8 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
-        int gender_rate_from_db = pkmn_db_query_bind1<int, int>(
-                                      query, _species_id
+        int gender_rate_from_db = pkmn::database::query_db_bind1<int, int>(
+                                      _db, query, _species_id
                                   );
         return _veekun_gender_rates.at(gender_rate_from_db);
     }
@@ -165,8 +175,8 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
-        int gender_rate_from_db = pkmn_db_query_bind1<int, int>(
-                                      query, _species_id
+        int gender_rate_from_db = pkmn::database::query_db_bind1<int, int>(
+                                      _db, query, _species_id
                                   );
         if(gender_rate_from_db == -1) {
             return 0.0f;
@@ -184,9 +194,10 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT has_gender_differences FROM pokemon_species WHERE id=?";
 
-        return pkmn_db_query_bind1<bool, int>(
-                   query, _species_id
-               );
+        // SQLite has no bool type, so just test the integral value
+        return (pkmn::database::query_db_bind1<int, int>(
+                   _db, query, _species_id
+               ) > 0);
     }
 
     int pokemon_entry::get_base_happiness() const {
@@ -198,8 +209,8 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT base_happiness FROM pokemon_species WHERE id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, _species_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, _species_id
                );
     }
 
@@ -299,8 +310,8 @@ namespace pkmn { namespace database {
             "WHERE (pokemon_species.id=? AND experience.level=?) "
             "ORDER BY experience.experience";
 
-        return pkmn_db_query_bind2<int, int, int>(
-                   query, _species_id, level
+        return pkmn::database::query_db_bind2<int, int, int>(
+                   _db, query, _species_id, level
                );
     }
 
@@ -319,8 +330,8 @@ namespace pkmn { namespace database {
             "WHERE (experience.experience<=? "
             "AND pokemon_species.id=?) ORDER  BY experience.level DESC";
 
-        return pkmn_db_query_bind2<int, int, int>(
-                   query, experience, _species_id
+        return pkmn::database::query_db_bind2<int, int, int>(
+                   _db, query, experience, _species_id
                );
     }
 
@@ -410,8 +421,8 @@ namespace pkmn { namespace database {
             static BOOST_CONSTEXPR const char* species_id_query = \
                 "SELECT pokemon_species_id FROM pokemon WHERE id=?";
 
-            _species_id = pkmn_db_query_bind1<int, int>(
-                              species_id_query, _pokemon_id
+            _species_id = pkmn::database::query_db_bind1<int, int>(
+                              _db, species_id_query, _pokemon_id
                           );
 
             // TODO: Gen III Deoxys form corner case
@@ -421,8 +432,8 @@ namespace pkmn { namespace database {
             static BOOST_CONSTEXPR const char* form_id_query = \
                 "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
 
-            _form_id = pkmn_db_query_bind1<int, int>(
-                           form_id_query, _pokemon_id
+            _form_id = pkmn::database::query_db_bind1<int, int>(
+                           _db, form_id_query, _pokemon_id
                        );
         } else {
             // TODO: form name to ID, species+form IDs to Pokémon ID

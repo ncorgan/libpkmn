@@ -17,6 +17,8 @@
 
 namespace pkmn { namespace calculations {
 
+    static pkmn::database::sptr _db;
+
     // No need to instantiate these strings at runtime if we can avoid it
     static BOOST_CONSTEXPR const char* GENDERLESS   = "Genderless";
     static BOOST_CONSTEXPR const char* MALE         = "Male";
@@ -44,13 +46,16 @@ namespace pkmn { namespace calculations {
         const std::string &species,
         int IV_attack
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         if(IV_attack < 0 or IV_attack > 15) {
             throw std::out_of_range("IV_attack: valid range 0-15");
         }
 
-        int gender_rate_from_db = pkmn_db_query_bind1<int, const std::string&>(
-                                      gender_rate_query, species
+        int gender_rate_from_db = pkmn::database::query_db_bind1<int, const std::string&>(
+                                      _db, gender_rate_query, species
                                   );
 
         float chance_female = (gender_rate_from_db == -1)
@@ -77,8 +82,11 @@ namespace pkmn { namespace calculations {
         const std::string &species,
         uint32_t personality
     ) {
-        int gender_rate_from_db = pkmn_db_query_bind1<int, const std::string&>(
-                                      gender_rate_query, species
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        int gender_rate_from_db = pkmn::database::query_db_bind1<int, const std::string&>(
+                                      _db, gender_rate_query, species
                                   );
 
         float chance_female = (gender_rate_from_db == -1)

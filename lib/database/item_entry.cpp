@@ -19,7 +19,7 @@
 
 namespace pkmn { namespace database {
 
-    // TODO: database sptr
+    static pkmn::database::sptr _db;
 
     item_entry::item_entry():
         _item_id(0),
@@ -42,6 +42,9 @@ namespace pkmn { namespace database {
         _none(item_index == 0),
         _invalid(false) // TODO: proper check
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         // TODO: specific error if item not in game
         _item_id = pkmn::database::item_index_to_id(
@@ -64,6 +67,9 @@ namespace pkmn { namespace database {
         _none(false),
         _invalid(true)
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         // Input validation
         // TODO: specific error if item not in game
         _item_id = pkmn::database::item_name_to_id(
@@ -112,8 +118,8 @@ namespace pkmn { namespace database {
             "SELECT name FROM item_category_prose WHERE item_category_id="
             "(SELECT category_id FROM items WHERE id=?) AND local_language_id=9";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _item_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _item_id
                );
     }
 
@@ -143,8 +149,8 @@ namespace pkmn { namespace database {
                 "SELECT move_id FROM machines WHERE version_group_id=? "
                 "AND item_id=?";
 
-            int move_id = pkmn_db_query_bind2<int, int, int>(
-                tmhm_move_query, _version_group_id, _item_id
+            int move_id = pkmn::database::query_db_bind2<int, int, int>(
+                _db, tmhm_move_query, _version_group_id, _item_id
             );
             std::string move_name = pkmn::database::move_id_to_name(
                                         move_id, _version_group_id
@@ -156,13 +162,10 @@ namespace pkmn { namespace database {
                 "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
                 "AND version_group_id=? AND language_id=9";
 
-            return pkmn_db_query_bind2<std::string, int, int>(
-                       query, _item_id, _version_group_id
+            return pkmn::database::query_db_bind2<std::string, int, int>(
+                       _db, query, _item_id, _version_group_id
                    );
         }
-
-
-        return "";
     }
 
     int item_entry::get_cost() const {
@@ -173,8 +176,8 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT cost FROM items WHERE id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, _item_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, _item_id
                );
     }
 
@@ -191,8 +194,8 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT fling_power FROM items WHERE id=?";
 
-        return pkmn_db_query_bind1<int, int>(
-                   query, _item_id
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, query, _item_id
                );
     }
 
@@ -209,8 +212,8 @@ namespace pkmn { namespace database {
             "local_language_id=9 AND item_fling_effect_id="
             "(SELECT fling_effect_id FROM items WHERE id=?)";
 
-        return pkmn_db_query_bind1<std::string, int>(
-                   query, _item_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _item_id
                );
     }
 
