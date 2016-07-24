@@ -378,22 +378,36 @@ namespace pkmn { namespace database {
                );
     }
 
-    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const {
+    void pokemon_entry::get_levelup_moves(
+        pkmn::database::levelup_moves_t &levelup_moves_out
+    ) const {
         if(_none or _invalid) {
-            return pkmn::database::levelup_moves_t();
+            return;
         }
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT level,move_id FROM pokemon_moves WHERE pokemon_id=? "
+            "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
             "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";
 
-        (void)query;
-        return pkmn::database::levelup_moves_t();
+        levelup_moves_out.clear();
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, _pokemon_id);
+        stmt.bind(2, _version_group_id);
+        while(stmt.executeStep()) {
+            levelup_moves_out.push_back(pkmn::database::levelup_move_t());
+            levelup_moves_out.back().move = pkmn::database::move_entry(
+                                                int(stmt.getColumn(0)),
+                                                _game_id
+                                            );
+            levelup_moves_out.back().level = int(stmt.getColumn(0));
+        }
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tm_hm_moves() const {
+    void pokemon_entry::get_tm_hm_moves(
+        pkmn::database::move_list_t &tm_hm_moves_out
+    ) const {
         if(_none or _invalid) {
-            return pkmn::database::move_list_t();
+            return;
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -401,13 +415,15 @@ namespace pkmn { namespace database {
             "(SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=4 AND "
             "pokemon_id=? AND version_group_id=?) ORDER BY machine_number";
 
-        (void)query;
-        return pkmn::database::move_list_t();
+        tm_hm_moves_out.clear();
+        _query_to_move_list(query, tm_hm_moves_out);
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
+    void pokemon_entry::get_egg_moves(
+        pkmn::database::move_list_t &egg_moves_out
+    ) const {
         if(_none or _invalid) {
-            return pkmn::database::move_list_t();
+            return;
         }
 
         static BOOST_CONSTEXPR const char* evolution_query = \
@@ -417,22 +433,26 @@ namespace pkmn { namespace database {
             "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=2 AND "
             "pokemon_id=? AND version_group_id=?";
 
+        // TODO: get from evolution_query
         (void)evolution_query;
-        (void)move_query;
-        return pkmn::database::move_list_t();
+        int actual_pokemon_id = 0;
+        egg_moves_out.clear();
+        _query_to_move_list(move_query, egg_moves_out, actual_pokemon_id);
     }
 
-    pkmn::database::move_list_t pokemon_entry::get_tutor_moves() const {
+    void pokemon_entry::get_tutor_moves(
+        pkmn::database::move_list_t &tutor_moves_out
+    ) const {
         if(_none or _invalid) {
-            return pkmn::database::move_list_t();
+            return;
         }
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=3 AND "
             "pokemon_id=? AND version_group_id=?";
 
-        (void)query;
-        return pkmn::database::move_list_t();
+        tutor_moves_out.clear();
+        _query_to_move_list(query, tutor_moves_out);
     }
 
     std::vector<std::string> pokemon_entry::get_forms() const {
@@ -484,6 +504,25 @@ namespace pkmn { namespace database {
             _pokemon_index = pkmn::database::pokemon_id_to_index(
                                  _pokemon_id, _game_id
                              );
+        }
+    }
+
+    void pokemon_entry::_query_to_move_list(
+        const char* query,
+        pkmn::database::move_list_t &move_list_out,
+        int overwrite_pokemon_id
+    ) const {
+        int pokemon_id = (overwrite_pokemon_id == -1) ? _pokemon_id
+                                                      : overwrite_pokemon_id;
+
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, pokemon_id);
+        stmt.bind(2, _version_group_id);
+
+        while(stmt.executeStep()) {
+            move_list_out.push_back(pkmn::database::move_entry(
+                int(stmt.getColumn(0)), _game_id
+            ));
         }
     }
 
