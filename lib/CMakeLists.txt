@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_libs
     ${Boost_LIBRARIES}
+    pksav
     SQLiteCpp
 )
 

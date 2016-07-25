@@ -97,6 +97,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ####################################################################
 # Actual building
 ####################################################################
+ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
