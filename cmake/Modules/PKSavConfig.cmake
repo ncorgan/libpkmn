@@ -19,7 +19,8 @@ ENDIF(PLATFORM_LITTLE_ENDIAN)
 #
 # Set PKSav components
 #
-SET(PKSAV_ENABLE_GEN2 OFF CACHE BOOL "PKSav: build Generation II component")
+SET(PKSAV_ENABLE_GEN1 ON  CACHE BOOL "PKSav: build Generation I component")
+SET(PKSAV_ENABLE_GEN2 ON  CACHE BOOL "PKSav: build Generation II component")
 SET(PKSAV_ENABLE_GBA  OFF CACHE BOOL "PKSav: build Game Boy Advance component")
 SET(PKSAV_ENABLE_GCN  OFF CACHE BOOL "PKSav: build Gamecube component")
 SET(PKSAV_ENABLE_GEN4 OFF CACHE BOOL "PKSav: build Generation IV component")
