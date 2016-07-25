@@ -58,6 +58,12 @@ FIND_PACKAGE(Boost 1.53 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 INCLUDE(PKMNPlatform)
 
 ########################################################################
+# Build PKSav
+########################################################################
+INCLUDE(PKSavConfig)
+ADD_SUBDIRECTORY(pksav)
+
+########################################################################
 # Create uninstall target
 ########################################################################
 IF(NOT PKMN_USED_AS_SUBPROJECT)
@@ -97,7 +103,6 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ####################################################################
 # Actual building
 ####################################################################
-ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
