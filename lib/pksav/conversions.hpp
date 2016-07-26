@@ -23,6 +23,16 @@ namespace pksav {
         pksav_gen2_party_pokemon_t* to
     );
 
+    void gen2_pc_pokemon_to_gen1(
+        const pksav_gen2_pc_pokemon_t* from,
+        pksav_gen1_pc_pokemon_t* to
+    );
+
+    void gen2_party_pokemon_to_gen1(
+        const pksav_gen2_party_pokemon_t* from,
+        pksav_gen1_party_pokemon_t* to
+    );
+
 }
 
 #endif /* INCLUDED_PKMN_PKSAV_CONVERSIONS_HPP */
