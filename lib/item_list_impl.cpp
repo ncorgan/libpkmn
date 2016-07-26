@@ -6,8 +6,11 @@
  */
 
 #include "item_list_impl.hpp"
+#include "item_list_gbimpl.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
+
+#include <pksav/gen1/items.h>
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
@@ -18,6 +21,10 @@ namespace pkmn {
 
     static pkmn::database::sptr _db;
 
+    // Game Boy list templated classes
+    typedef item_list_gbimpl<pksav_gen1_item_bag_t, pksav_gen1_item_t> item_list_gen1_bagimpl;
+    typedef item_list_gbimpl<pksav_gen1_item_pc_t,  pksav_gen1_item_t> item_list_gen1_pcimpl;
+
     item_list::sptr item_list::make(
         const std::string &name,
         const std::string &game
@@ -25,9 +32,40 @@ namespace pkmn {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)name;
-        (void)game;
-        return sptr();
+        static BOOST_CONSTEXPR const char* id_query = \
+            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
+            "version_group_id=(SELECT version_group_id FROM versions "
+            "WHERE id=?)";
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int item_list_id = pkmn::database::query_db_bind2<int, const std::string&, int>(
+                               _db, id_query, name, game_id
+                           );
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        switch(generation) {
+            case 1:
+                if(item_list_id == 1) {
+                    return pkmn::make_shared<item_list_gen1_bagimpl>(
+                               item_list_id, game_id, nullptr
+                           );
+                } else {
+                    return pkmn::make_shared<item_list_gen1_pcimpl>(
+                               item_list_id, game_id, nullptr
+                           );
+                }
+
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+                throw std::runtime_error("Currently unimplemented.");
+                break;
+
+            default:
+                throw std::invalid_argument("Invalid game.");
+        }
     }
 
     item_list_impl::item_list_impl(
@@ -46,6 +84,7 @@ namespace pkmn {
                         _db, capacity_query, _item_list_id,
                         _version_group_id
                     );
+        _item_slots.resize(_capacity);
     }
 
     std::string item_list_impl::get_name() {

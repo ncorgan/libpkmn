@@ -39,13 +39,21 @@ namespace pkmn {
 
             void* get_native();
 
-        private:
+        protected:
             int _item_list_id, _game_id, _version_group_id;
             int _capacity, _num_items;
 
             pkmn::item_slots_t _item_slots;
 
+            bool _our_mem;
             void* _native;
+
+            virtual void _from_native(
+                int index
+            ) = 0;
+            virtual void _to_native(
+                int index
+            ) = 0;
     };
 
 }
