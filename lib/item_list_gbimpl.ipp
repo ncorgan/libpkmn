@@ -11,8 +11,8 @@
 
 namespace pkmn {
 
-    template<typename list_type, typename item_type>
-    item_list_gbimpl<list_type, item_type>::item_list_gbimpl(
+    template<typename list_type>
+    item_list_gbimpl<list_type>::item_list_gbimpl(
         int item_list_id,
         int game_id,
         void* ptr
@@ -27,8 +27,8 @@ namespace pkmn {
         }
     }
 
-    template<typename list_type, typename item_type>
-    item_list_gbimpl<list_type, item_type>::item_list_gbimpl(
+    template<typename list_type>
+    item_list_gbimpl<list_type>::item_list_gbimpl(
         int item_list_id,
         int game_id,
         const list_type &list
@@ -38,15 +38,15 @@ namespace pkmn {
         *RCAST = list;
     }
 
-    template<typename list_type, typename item_type>
-    item_list_gbimpl<list_type, item_type>::~item_list_gbimpl() {
+    template<typename list_type>
+    item_list_gbimpl<list_type>::~item_list_gbimpl() {
         if(_our_mem) {
             delete RCAST;
         }
     }
 
-    template<typename list_type, typename item_type>
-    void item_list_gbimpl<list_type, item_type>::_from_native(
+    template<typename list_type>
+    void item_list_gbimpl<list_type>::_from_native(
         int index
     ) {
         if(index == -1) {
@@ -66,8 +66,8 @@ namespace pkmn {
         }
     }
 
-    template<typename list_type, typename item_type>
-    void item_list_gbimpl<list_type, item_type>::_to_native(
+    template<typename list_type>
+    void item_list_gbimpl<list_type>::_to_native(
         int index
     ) {
         if(index == -1) {

@@ -22,8 +22,8 @@ namespace pkmn {
     static pkmn::database::sptr _db;
 
     // Game Boy list templated classes
-    typedef item_list_gbimpl<pksav_gen1_item_bag_t, pksav_gen1_item_t> item_list_gen1_bagimpl;
-    typedef item_list_gbimpl<pksav_gen1_item_pc_t,  pksav_gen1_item_t> item_list_gen1_pcimpl;
+    typedef item_list_gbimpl<pksav_gen1_item_bag_t> item_list_gen1_bagimpl;
+    typedef item_list_gbimpl<pksav_gen1_item_pc_t>  item_list_gen1_pcimpl;
 
     item_list::sptr item_list::make(
         const std::string &name,

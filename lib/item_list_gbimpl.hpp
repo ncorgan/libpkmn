@@ -11,7 +11,7 @@
 
 namespace pkmn {
 
-    template <typename list_type, typename item_type>
+    template <typename list_type>
     class item_list_gbimpl: public item_list_impl {
         public:
             item_list_gbimpl(
