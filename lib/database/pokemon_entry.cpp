@@ -371,7 +371,7 @@ namespace pkmn { namespace database {
             "ON experience.growth_rate_id=pokemon_species.growth_rate_id "
             "AND experience.growth_rate_id=pokemon_species.growth_rate_id "
             "WHERE (experience.experience<=? "
-            "AND pokemon_species.id=?) ORDER  BY experience.level DESC";
+            "AND pokemon_species.id=?) ORDER BY experience.level DESC";
 
         return pkmn::database::query_db_bind2<int, int, int>(
                    _db, query, experience, _species_id
