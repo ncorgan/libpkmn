@@ -1,3 +1,6 @@
 [submodule "pksav"]
 	path = pksav
 	url = https://github.com/ncorgan/pksav
+[submodule "libpkmn-database"]
+	path = libpkmn-database
+	url = https://github.com/ncorgan/libpkmn-database

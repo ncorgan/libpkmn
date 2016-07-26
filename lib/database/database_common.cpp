@@ -17,7 +17,7 @@
 #include <stdexcept>
 #include <string>
 
-//#define PKMN_COMPAT_NUM 31
+#define PKMN_COMPAT_NUM 1
 
 namespace pkmn { namespace database {
 
@@ -29,10 +29,10 @@ namespace pkmn { namespace database {
             _db = pkmn::make_shared<SQLite::Database>(database_path.c_str());
 
             // Make sure our Veekun commit matches the database's
-            /*int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
+            int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
             if(compat_num != PKMN_COMPAT_NUM) {
                 throw std::runtime_error("This database is incompatible with this version of LibPKMN.");
-            }*/
+            }
         }
 
         return _db;
