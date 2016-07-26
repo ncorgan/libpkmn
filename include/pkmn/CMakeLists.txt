@@ -8,6 +8,8 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_headers
         config.hpp
+        item_list.hpp
+        item_slot.hpp
     )
 
     INSTALL(
