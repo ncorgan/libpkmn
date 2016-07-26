@@ -4,6 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+#ifndef PKMN_ITEM_LIST_GBIMPL_IPP
+#define PKMN_ITEM_LIST_GBIMPL_IPP
 
 #define RCAST reinterpret_cast<list_type*>(_native)
 
@@ -80,3 +82,5 @@ namespace pkmn {
     }
 
 }
+
+#endif /* PKMN_ITEM_LIST_GBIMPL_IPP */
