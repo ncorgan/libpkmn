@@ -34,18 +34,27 @@ namespace pkmn {
         int item_list_id,
         int game_id
     ): _item_list_id(item_list_id),
-       _game_id(game_id)
+       _game_id(game_id),
+       _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
+       _num_items(0)
     {
+        static BOOST_CONSTEXPR const char* capacity_query = \
+            "SELECT capacity FROM libpkmn_item_lists WHERE id=? AND "
+            "version_group_id=?";
+
+        _capacity = pkmn::database::query_db_bind2<int, int, int>(
+                        _db, capacity_query, _item_list_id,
+                        _version_group_id
+                    );
     }
 
     std::string item_list_impl::get_name() {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM libpkmn_item_lists WHERE id=? AND "
-            "version_group=(SELECT version_group_id FROM versions "
-            "WHERE id=?)";
+            "version_group=?";
 
         return pkmn::database::query_db_bind2<std::string, int, int>(
-                   _db, query, _item_list_id, _game_id
+                   _db, query, _item_list_id, _version_group_id
                );
     }
 
