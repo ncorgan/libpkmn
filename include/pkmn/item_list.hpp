@@ -40,6 +40,16 @@ namespace pkmn {
                 int position
             ) = 0;
 
+            virtual void add(
+                const std::string &item_name,
+                int amount
+            ) = 0;
+
+            virtual void remove(
+                const std::string &item_name,
+                int amount
+            ) = 0;
+
             virtual const pkmn::item_slots_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__

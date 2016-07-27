@@ -123,6 +123,89 @@ namespace pkmn {
         return _item_slots.at(position);
     }
 
+    void item_list_impl::add(
+        const std::string &item_name,
+        int amount
+    ) {
+        // Input validation
+        if(amount < 1 or amount > 99) {
+            throw std::out_of_range("amount: valid range 1-99");
+        }
+
+        /*
+         * Check if this item is already in the list. If so, add to
+         * that amount. If not, see if there's room to add another
+         * item.
+         */
+        int item_id = pkmn::database::item_name_to_id(item_name);
+        for(int i = 0; i < _num_items; ++i) {
+            if(_item_slots[i].item.get_item_id() == item_id) {
+                if(_item_slots[i].amount == 99) {
+                    throw std::runtime_error("Cannot add any more of this item.");
+                } else if((_item_slots[i].amount + amount) > 99) {
+                    int new_amount = _item_slots[i].amount + amount;
+                    throw std::runtime_error(
+                              str(boost::format("Can only add %d more items.") %
+                                  (new_amount - amount))
+                          );
+                } else {
+                    _item_slots[i].amount += amount;
+                    _to_native(i);
+                    return;
+                }
+            }
+        }
+
+        // At this point, we know the item isn't already in the pocket
+        if(_num_items == _capacity) {
+            throw std::runtime_error("Cannot add any new items.");
+        } else {
+            _item_slots[_num_items].item = pkmn::database::item_entry(
+                                               item_name, get_game()
+                                           );
+            _item_slots[_num_items].amount = amount;
+            _to_native(_num_items++);
+        }
+    }
+
+    void item_list_impl::remove(
+        const std::string &item_name,
+        int amount
+    ) {
+        // Input validation
+        if(amount < 1 or amount > 99) {
+            throw std::out_of_range("amount: valid range 1-99");
+        }
+
+        /*
+         * Check if this item is in the list. If so, remove that amount,
+         * and if there are no more, remove the item from the list and
+         * shift everything over.
+         */
+        int item_id = pkmn::database::item_name_to_id(item_name);
+        for(int i = 0; i < _num_items; ++i) {
+            if(_item_slots[i].item.get_item_id() == item_id) {
+                if(_item_slots[i].amount < amount) {
+                    throw std::runtime_error(
+                              str(boost::format("Can only remove items.") %
+                                  _item_slots[i].amount)
+                          );
+                } else {
+                    _item_slots[i].amount -= amount;
+                    if(_item_slots[i].amount == 0) {
+                        _item_slots.erase(_item_slots.begin()+i);
+                        _item_slots.resize(_capacity);
+                        _num_items--;
+                        _to_native();
+                    }
+                }
+            }
+        }
+
+        // At this point, this item was never in the pocket
+        throw std::runtime_error("Item not found.");
+    }
+
     const pkmn::item_slots_t& item_list_impl::as_vector() {
         return _item_slots;
     }

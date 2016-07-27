@@ -35,6 +35,16 @@ namespace pkmn {
                 int position
             );
 
+            virtual void add(
+                const std::string &item_name,
+                int amount
+            );
+
+            virtual void remove(
+                const std::string &item_name,
+                int amount
+            );
+
             const pkmn::item_slots_t& as_vector();
 
             void* get_native();
@@ -49,10 +59,10 @@ namespace pkmn {
             void* _native;
 
             virtual void _from_native(
-                int index
+                int index = -1
             ) = 0;
             virtual void _to_native(
-                int index
+                int index = -1
             ) = 0;
     };
 
