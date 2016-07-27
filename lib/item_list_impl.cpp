@@ -84,7 +84,13 @@ namespace pkmn {
                         _db, capacity_query, _item_list_id,
                         _version_group_id
                     );
+
+        pkmn::database::item_entry none_item(0, _game_id);
         _item_slots.resize(_capacity);
+        for(int i = 0; i < _capacity; ++i) {
+            _item_slots[i].item = none_item;
+            _item_slots[i].amount = 0;
+        }
     }
 
     std::string item_list_impl::get_name() {
@@ -203,7 +209,25 @@ namespace pkmn {
         }
 
         // At this point, this item was never in the pocket
-        throw std::runtime_error("Item not found.");
+        throw std::invalid_argument("Item not found.");
+    }
+
+    void item_list_impl::move(
+        int old_position,
+        int new_position
+    ) {
+        if(old_position < 0 or old_position >= _num_items or
+           new_position < 0 or new_position >= _num_items)
+        {
+            throw std::out_of_range("Cannot move an item outside of the list.");
+        } else if(old_position == new_position) {
+            throw std::invalid_argument("Positions cannot match.");
+        }
+
+        pkmn::item_slot_t temp = _item_slots[old_position-1];
+        _item_slots.erase(_item_slots.begin()+(old_position-1));
+        _item_slots.insert(_item_slots.begin()+(new_position-1), temp);
+        _to_native();
     }
 
     const pkmn::item_slots_t& item_list_impl::as_vector() {

@@ -50,6 +50,11 @@ namespace pkmn {
                 int amount
             ) = 0;
 
+            virtual void move(
+                int old_position,
+                int new_position
+            ) = 0;
+
             virtual const pkmn::item_slots_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__

@@ -45,6 +45,11 @@ namespace pkmn {
                 int amount
             );
 
+            virtual void move(
+                int old_position,
+                int new_position
+            );
+
             const pkmn::item_slots_t& as_vector();
 
             void* get_native();
