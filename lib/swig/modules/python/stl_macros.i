@@ -7,12 +7,12 @@
 
 #undef SWIG_EXPORT_ITERATOR_METHODS
 
-%include <types/pksav_std_map.i>
-%include <types/pksav_shared_ptr.i>
+%include <types/pkmn_std_map.i>
+%include <types/pkmn_shared_ptr.i>
 %include <std_pair.i>
 %include <std_vector.i>
 
-%define PKSAV_PYTHON_MAP(cpp_key, cpp_val, python_name)
+%define PKMN_PYTHON_MAP(cpp_key, cpp_val, python_name)
     %extend std::map<cpp_key, cpp_val> {
         %pythoncode %{
             def __eq__(self, rhs):
@@ -41,7 +41,7 @@
     %template(python_name) std::map<cpp_key, cpp_val>;
 %enddef
 
-%define PKSAV_PYTHON_PAIR(cpp_type1, cpp_type2, python_name)
+%define PKMN_PYTHON_PAIR(cpp_type1, cpp_type2, python_name)
     %extend std::pair<cpp_type1, cpp_type2> {
         %pythoncode %{
             def __eq__(self, rhs):
@@ -59,8 +59,8 @@
     %template(python_name) std::pair<cpp_type1, cpp_type2>;
 %enddef
 
-%define PKSAV_PYTHON_SPTR(cpp_type)
-    %extend pksav::shared_ptr<pksav:: ## cpp_type> {
+%define PKMN_PYTHON_SPTR(cpp_type)
+    %extend pkmn::shared_ptr<pkmn:: ## cpp_type> {
         %pythoncode %{
             def __eq__(self, rhs):
                 if not isinstance(rhs, (cpp_type ## _sptr)):
@@ -72,10 +72,10 @@
                 return not (self == rhs)
         %}
     }
-    %template(cpp_type ## _sptr) pksav::shared_ptr<pksav:: ## cpp_type>;
+    %template(cpp_type ## _sptr) pkmn::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
-%define PKSAV_PYTHON_VECTOR(cpp_type, python_name)
+%define PKMN_PYTHON_VECTOR(cpp_type, python_name)
     %extend std::vector<cpp_type > {
         %pythoncode %{
             def __eq__(self, rhs):
