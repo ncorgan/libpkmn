@@ -57,6 +57,10 @@ FIND_PACKAGE(Boost 1.53 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 # We need Boost.Predef for a check here
 INCLUDE(PKMNPlatform)
 
+FIND_PACKAGE(SWIG)
+FIND_PACKAGE(PythonInterp 2)
+FIND_PACKAGE(PythonLibs 2)
+
 ########################################################################
 # Build PKSav
 ########################################################################
@@ -94,6 +98,7 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
+PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND" OFF)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
