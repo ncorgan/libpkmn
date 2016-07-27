@@ -71,7 +71,8 @@ namespace pkmn {
     item_list_impl::item_list_impl(
         int item_list_id,
         int game_id
-    ): _item_list_id(item_list_id),
+    ): item_list(),
+       _item_list_id(item_list_id),
        _game_id(game_id),
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0)
