@@ -21,7 +21,7 @@ namespace pkmn {
                 int game_id
             );
 
-            ~item_list_impl() {};
+            virtual ~item_list_impl() {};
 
             std::string get_name();
 

@@ -7,7 +7,7 @@
 #ifndef PKMN_ITEM_LIST_GBIMPL_IPP
 #define PKMN_ITEM_LIST_GBIMPL_IPP
 
-#define RCAST reinterpret_cast<list_type*>(_native)
+#define GBLIST_RCAST reinterpret_cast<list_type*>(_native)
 
 namespace pkmn {
 
@@ -35,13 +35,14 @@ namespace pkmn {
     ): item_list_impl(item_list_id, game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
-        *RCAST = list;
+        *GBLIST_RCAST = list;
+        _our_mem = true;
     }
 
     template<typename list_type>
     item_list_gbimpl<list_type>::~item_list_gbimpl() {
         if(_our_mem) {
-            delete RCAST;
+            delete GBLIST_RCAST;
         }
     }
 
@@ -52,17 +53,17 @@ namespace pkmn {
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 _item_slots[i].item = pkmn::database::item_entry(
-                                          RCAST->items[i].index,
+                                          GBLIST_RCAST->items[i].index,
                                           _game_id
                                       );
-                _item_slots[i].amount = RCAST->items[i].count;
+                _item_slots[i].amount = GBLIST_RCAST->items[i].count;
             }
         } else {
             _item_slots[index].item = pkmn::database::item_entry(
-                                          RCAST->items[index].index,
+                                          GBLIST_RCAST->items[index].index,
                                           _game_id
                                       );
-            _item_slots[index].amount = RCAST->items[index].count;
+            _item_slots[index].amount = GBLIST_RCAST->items[index].count;
         }
     }
 
@@ -72,12 +73,12 @@ namespace pkmn {
     ) {
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
-                RCAST->items[i].index = uint8_t(_item_slots[i].item.get_item_index());
-                RCAST->items[i].count = uint8_t(_item_slots[i].amount);
+                GBLIST_RCAST->items[i].index = uint8_t(_item_slots[i].item.get_item_index());
+                GBLIST_RCAST->items[i].count = uint8_t(_item_slots[i].amount);
             }
         } else {
-            RCAST->items[index].index = uint8_t(_item_slots[index].item.get_item_index());
-            RCAST->items[index].count = uint8_t(_item_slots[index].amount);
+            GBLIST_RCAST->items[index].index = uint8_t(_item_slots[index].item.get_item_index());
+            GBLIST_RCAST->items[index].count = uint8_t(_item_slots[index].amount);
         }
     }
 

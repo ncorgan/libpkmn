@@ -20,7 +20,7 @@ namespace pkmn {
                 int game_id
             );
 
-            ~item_bag_impl() {};
+            virtual ~item_bag_impl() {};
 
             std::string get_game();
 
@@ -52,6 +52,8 @@ namespace pkmn {
 
             bool _our_mem;
             void* _native;
+
+            virtual void _set_ptrs() = 0;
     };
 
 }

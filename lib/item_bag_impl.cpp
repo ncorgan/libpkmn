@@ -6,6 +6,7 @@
  */
 
 #include "item_bag_impl.hpp"
+#include "item_bag_gen1impl.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
