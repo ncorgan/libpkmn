@@ -7,8 +7,8 @@
 
 #undef SWIG_EXPORT_ITERATOR_METHODS
 
-%include <types/pkmn_std_map.i>
-%include <types/pkmn_shared_ptr.i>
+%include <python/pkmn_std_map.i>
+%include <pkmn_shared_ptr.i>
 %include <std_pair.i>
 %include <std_vector.i>
 

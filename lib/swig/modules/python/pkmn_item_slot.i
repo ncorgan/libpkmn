@@ -9,7 +9,7 @@
     #include <pkmn/item_slot.hpp>
 %}
 
-%include <types/stl_macros.i>
+%include <python/stl_macros.i>
 
 %extend pkmn::item_slot_t {
     item_slot_t() {

@@ -5,3 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+ADD_SUBDIRECTORY(pkmn)
