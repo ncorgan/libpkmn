@@ -9,7 +9,7 @@
     #include <pkmn/database/levelup_move.hpp>
 %}
 
-%include <types/stl_macros.i>
+%include <python/stl_macros.i>
 
 %extend pkmn::database::levelup_move_t {
     levelup_move_t() {

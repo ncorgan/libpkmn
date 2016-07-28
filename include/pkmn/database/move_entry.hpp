@@ -34,8 +34,6 @@ namespace pkmn { namespace database {
 
             std::string get_game() const;
 
-            std::string get_language() const;
-
             std::string get_type() const;
 
             std::string get_description() const;

@@ -25,6 +25,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(pkmn_python pkmn TRUE)
-
-ADD_SUBDIRECTORY(database)
+SWIG_BUILD_PYTHON_MODULE(database_python pkmn/database TRUE)
