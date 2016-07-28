@@ -6,6 +6,7 @@
  */
 
 #include "env.hpp"
+#include "../SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/utils/paths.hpp>
 
@@ -69,8 +70,14 @@ namespace pkmn {
             throw std::runtime_error("No LibPKMN database found.");
         }
 
-        // TODO: Attempt to connect to database, error out otherwise
-        return path_to_check;
+        // We have a path. Make sure it's a LibPKMN database.
+        try {
+            SQLite::Database db(path_to_check);
+            PKMN_UNUSED(int compat_num) = db.execAndGet("SELECT compat_num FROM compat_num");
+            return path_to_check;
+        } catch(const std::exception&) {
+            throw std::runtime_error("No LibPKMN database found.");
+        }
     }
 
     std::string get_images_dir() {
