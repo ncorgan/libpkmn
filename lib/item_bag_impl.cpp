@@ -18,6 +18,34 @@ namespace pkmn {
 
     pkmn::database::sptr _db;
 
+    item_bag::sptr item_bag::make(
+        const std::string &game
+    ) {
+        int game_id = pkmn::database::game_name_to_id(
+                          game
+                      );
+        int generation = pkmn::database::game_id_to_generation(
+                             game_id
+                         );
+
+        switch(generation) {
+            case 1:
+                return pkmn::make_shared<item_bag_gen1impl>(
+                           game_id, nullptr
+                       );
+
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+                throw std::runtime_error("Currently unimplemented.");
+
+            default:
+                throw std::runtime_error("Invalid game.");
+        }
+    }
+
     item_bag_impl::item_bag_impl(
         int game_id
     ): item_bag(),

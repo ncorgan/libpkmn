@@ -111,8 +111,13 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     ENDIF(MSVC)
 
     # Install files
+    SET(py_files
+        ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+        ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.py
+    )
+
     INSTALL(
-        FILES ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.py
+        FILES ${py_files}
         DESTINATION ${PYTHON_INSTALL_DIR}/${install_dir}
         COMPONENT Python
     )
