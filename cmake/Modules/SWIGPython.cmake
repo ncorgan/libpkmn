@@ -99,6 +99,9 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
     )
+    ADD_DEPENDENCIES(${SWIG_MODULE_${module_name}_REAL_NAME}
+        pkmn_python_docstrings
+    )
 
     # Make sure SWIG artifacts are placed in same location on each platform
     # Makes Python unit testing easier

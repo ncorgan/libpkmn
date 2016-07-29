@@ -15,8 +15,9 @@ SET(SWIG_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SWIG_PYTHON_INCLUDE_DIRS
     ${SWIG_MODULE_DIR}
-    ${SWIG_MODULE_DIR}/../..
-    ${SWIG_MODULE_DIR}/../../modules
+    ${CMAKE_CURRENT_BINARY_DIR}/../..
+    ${SWIG_MODULE_DIR}/../../..
+    ${SWIG_MODULE_DIR}/../../../modules
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
 )

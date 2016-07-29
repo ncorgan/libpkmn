@@ -10,7 +10,7 @@ PKMN_PYTHON_INIT
 
 %include <std_string.i>
 
-//%import <database/database_python.i>
+%import <database/database_python.i>
 %import <stl_python.i>
 
 %{
@@ -19,6 +19,9 @@ PKMN_PYTHON_INIT
 
     #include <pkmn/utils/paths.hpp>
 %}
+
+// Convert Doxygen docs to Python docstrings
+%include <pkmn_python_docstrings.i>
 
 %include <pkmn/utils/paths.hpp>
 

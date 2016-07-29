@@ -19,6 +19,9 @@ PKMN_PYTHON_INIT
     #include <pkmn/calculations/stats.hpp>
 %}
 
+// Convert Doxygen docs to Python docstrings
+%include <pkmn_python_docstrings.i>
+
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/hidden_power.hpp>

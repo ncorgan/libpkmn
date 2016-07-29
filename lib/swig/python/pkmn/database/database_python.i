@@ -19,6 +19,9 @@ PKMN_PYTHON_INIT
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
+// Convert Doxygen docs to Python docstrings
+%include <pkmn_python_docstrings.i>
+
 %include <python/pkmn_levelup_move.i>
 
 %include <pkmn/database/item_entry.hpp>
