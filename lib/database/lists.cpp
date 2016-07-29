@@ -88,7 +88,7 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM ability_names WHERE local_language_id=9 AND "
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
-            "AND is_main_series=1) ORDER BY ability_id";
+            "AND is_main_series=1) ORDER BY name";
 
         abilities_out.clear();
         pkmn_db_query_list_bind1<std::string, int>(
