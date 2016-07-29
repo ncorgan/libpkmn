@@ -82,6 +82,9 @@ namespace pkmn { namespace database {
             throw std::out_of_range("generation: valid range 3-6");
         }
 
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM ability_names WHERE local_language_id=9 AND "
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
@@ -101,6 +104,9 @@ namespace pkmn { namespace database {
         if(generation < 1 or generation > 6) {
             throw std::out_of_range("generation: valid range 1-6");
         }
+
+        // Connect to database
+        pkmn::database::get_connection(_db);
 
         static BOOST_CONSTEXPR const char* with_previous_query = \
             "SELECT name FROM version_names WHERE local_language_id=9 AND version_id IN "
@@ -141,6 +147,9 @@ namespace pkmn { namespace database {
         const std::string &game,
         std::vector<std::string> &moves_out
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT name FROM move_names WHERE local_language_id=9 AND "
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
@@ -193,6 +202,9 @@ namespace pkmn { namespace database {
             throw std::out_of_range("generation: valid range 1-6");
         }
 
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* with_previous_query = \
             "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
             "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id<=?) "
@@ -213,6 +225,9 @@ namespace pkmn { namespace database {
     void get_region_list(
         std::vector<std::string> &regions_out
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM region_names WHERE local_language_id=9 "
             "ORDER BY region_id";
@@ -241,6 +256,9 @@ namespace pkmn { namespace database {
         const std::string &game,
         std::vector<std::string> &types_out
     ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         int generation = game_name_to_generation(game);
 
         static BOOST_CONSTEXPR const char* query = \
