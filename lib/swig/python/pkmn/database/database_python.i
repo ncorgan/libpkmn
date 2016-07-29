@@ -9,7 +9,8 @@
 PKMN_PYTHON_INIT
 
 %include <std_string.i>
-%include <std_vector.i>
+
+%import <stl_python.i>
 
 %{
     #include <pkmn/database/item_entry.hpp>

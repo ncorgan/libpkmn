@@ -11,7 +11,7 @@ PKMN_PYTHON_INIT
 %include <std_string.i>
 
 //%import <database/database_python.i>
-//%import <stl_python.i>
+%import <stl_python.i>
 
 %{
     #include <pkmn/item_list.hpp>

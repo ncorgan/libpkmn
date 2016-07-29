@@ -6,6 +6,7 @@
 #
 
 from .pkmn_python import *
+from .stl_python import *
 
 import calculations
 import database
