@@ -38,7 +38,7 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
 ########################################################################
-# Find dependencies
+# Find C++ dependencies
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
     filesystem
@@ -57,9 +57,19 @@ FIND_PACKAGE(Boost 1.53 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 # We need Boost.Predef for a check here
 INCLUDE(PKMNPlatform)
 
+########################################################################
+# Find other dependencies
+########################################################################
 FIND_PACKAGE(SWIG)
 FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
+
+INCLUDE(PKMNPython)
+PYTHON_CHECK_MODULE("PLY" "ply" "True" PYTHON_PLY_FOUND)
+PYTHON_CHECK_MODULE("CppHeaderParser" "CppHeaderParser" "True" PYTHON_CPPHEADERPARSER_FOUND)
+IF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
+    SET(PYTHON_MODULES_FOUND TRUE)
+ENDIF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
 
 ########################################################################
 # Build PKSav
@@ -98,7 +108,8 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
-PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND" OFF)
+PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
+    "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
