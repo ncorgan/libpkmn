@@ -5,7 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-from .pkmn_python import *
-
-import calculations
-import database
+from .calculations_python import *
