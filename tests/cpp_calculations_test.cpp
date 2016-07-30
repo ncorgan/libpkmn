@@ -14,15 +14,210 @@
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               -1, 0, 0, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               16, 0, 0, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, -1, 0, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, 16, 0, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, 0, -1, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, 0, 16, 0
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, 0, 0, -1
+                           );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string form = pkmn::calculations::gen2_unown_form(
+                               0, 0, 0, 16
+                           );
+    , std::out_of_range)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Unown.27s_letter
+     */
+    std::string form1 = pkmn::calculations::gen2_unown_form(
+                            10, 9, 1, 14
+                        );
+    BOOST_CHECK_EQUAL(form1, "G");
+
+    std::string form2 = pkmn::calculations::gen2_unown_form(
+                            5, 15, 10, 5
+                        );
+    BOOST_CHECK_EQUAL(form2, "S");
 }
 
 BOOST_AUTO_TEST_CASE(gen3_unown_form_test) {
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://www.smogon.com/ingame/rng/pid_iv_creation#unown_shape
+     */
+    std::string form = pkmn::calculations::gen3_unown_form(
+                           0x4C07DE71
+                       );
+    BOOST_CHECK_EQUAL(form, "B");
 }
 
 BOOST_AUTO_TEST_CASE(wurmple_becomes_silcoon_test) {
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://www.smogon.com/ingame/rng/pid_iv_creation#silcoon_cascoon
+     */
+    bool before_gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
+        0x5CF4091C, false
+    );
+    BOOST_CHECK(before_gen5_1);
+    bool before_gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
+        0x091C5CF4, false
+    );
+    BOOST_CHECK(not before_gen5_2);
+
+    bool gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
+        0x091C5CF4, true
+    );
+    BOOST_CHECK(gen5_1);
+    bool gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
+        0x5CF4091C, true
+    );
+    BOOST_CHECK(not gen5_2);
 }
 
 BOOST_AUTO_TEST_CASE(gen2_gender_test) {
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        std::string gender = pkmn::calculations::gen2_pokemon_gender(
+                                 "Not a species", 0
+                             );
+    , std::runtime_error)
+    BOOST_CHECK_THROW(
+        std::string gender = pkmn::calculations::gen2_pokemon_gender(
+                                 "Bulbasaur", -1
+                             );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        std::string gender = pkmn::calculations::gen2_pokemon_gender(
+                                 "Bulbasaur", 16
+                             );
+    , std::out_of_range)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     */
+
+    /*
+     * All male
+     */
+    std::string nidorino1 = pkmn::calculations::gen2_pokemon_gender(
+                                "Nidorino", 0
+                            );
+    BOOST_CHECK_EQUAL(nidorino1, "Male");
+    std::string nidorino2 = pkmn::calculations::gen2_pokemon_gender(
+                                "Nidorino", 15
+                            );
+    BOOST_CHECK_EQUAL(nidorino2, "Male");
+
+    /*
+     * 87.5% male, 12.5% female
+     */
+    std::string charmander1 = pkmn::calculations::gen2_pokemon_gender(
+                                  "Charmander", 1
+                              );
+    BOOST_CHECK_EQUAL(charmander1, "Female");
+    std::string charmander2 = pkmn::calculations::gen2_pokemon_gender(
+                                  "Charmander", 2
+                              );
+    BOOST_CHECK_EQUAL(charmander2, "Male");
+
+    /*
+     * 75% male, 25% female
+     */
+    std::string growlithe1 = pkmn::calculations::gen2_pokemon_gender(
+                                 "Growlithe", 1
+                             );
+    BOOST_CHECK_EQUAL(growlithe1, "Female");
+    std::string growlithe2 = pkmn::calculations::gen2_pokemon_gender(
+                                 "Growlithe", 2
+                             );
+    BOOST_CHECK_EQUAL(growlithe2, "Male");
+
+    /*
+     * 50% male, 50% female
+     */
+    std::string pidgey1 = pkmn::calculations::gen2_pokemon_gender(
+                              "Pidgey", 6
+                          );
+    BOOST_CHECK_EQUAL(pidgey1, "Female");
+    std::string pidgey2 = pkmn::calculations::gen2_pokemon_gender(
+                              "Pidgey", 7
+                          );
+    BOOST_CHECK_EQUAL(pidgey2, "Male");
+
+    /*
+     * 25% male, 75% female
+     */
+    std::string vulpix1 = pkmn::calculations::gen2_pokemon_gender(
+                              "Vulpix", 11
+                          );
+    BOOST_CHECK_EQUAL(vulpix1, "Female");
+    std::string vulpix2 = pkmn::calculations::gen2_pokemon_gender(
+                              "Vulpix", 12
+                          );
+    BOOST_CHECK_EQUAL(vulpix2, "Male");
+
+    /*
+     * All female
+     */
+    std::string nidorina1 = pkmn::calculations::gen2_pokemon_gender(
+                                "Nidorina", 0
+                            );
+    BOOST_CHECK_EQUAL(nidorina1, "Female");
+    std::string nidorina2 = pkmn::calculations::gen2_pokemon_gender(
+                                "Nidorina", 15
+                            );
+    BOOST_CHECK_EQUAL(nidorina2, "Female");
+
+    /*
+     * Genderless
+     */
+    std::string magnemite1 = pkmn::calculations::gen2_pokemon_gender(
+                                 "Magnemite", 0
+                             );
+    BOOST_CHECK_EQUAL(magnemite1, "Genderless");
+    std::string magnemite2 = pkmn::calculations::gen2_pokemon_gender(
+                                 "Magnemite", 15
+                             );
+    BOOST_CHECK_EQUAL(magnemite2, "Genderless");
 }
 
 BOOST_AUTO_TEST_CASE(modern_gender_test) {
@@ -42,7 +237,7 @@ BOOST_AUTO_TEST_CASE(modern_shiny_test) {
 
 BOOST_AUTO_TEST_CASE(gb_stat_test) {
     /*
-     * Make sure exceptions are thrown properly
+     * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
@@ -69,7 +264,7 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
 
 BOOST_AUTO_TEST_CASE(modern_stat_test) {
     /*
-     * Make sure exceptions are thrown properly
+     * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
