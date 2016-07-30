@@ -13,16 +13,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-/*
- * TODO: figure out what that parameter actually is...
- */
-bool return_true(
-    const std::exception &e
-) {
-    (void)e;
-    return true;
-}
-
 BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
 }
 
@@ -56,25 +46,25 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
      */
 
     // Invalid stat
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_gb_stat(
                        "Not a stat", 1, 1, 1, 1
                    )
-    , std::invalid_argument, return_true)
+    , std::invalid_argument)
 
     // Invalid EV
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_gb_stat(
                        "Attack", 1, 1, 123456, 1
                    )
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 
     // Invalid IV
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_gb_stat(
                        "Attack", 1, 1, 1, 12345
                    )
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 }
 
 BOOST_AUTO_TEST_CASE(modern_stat_test) {
@@ -83,39 +73,39 @@ BOOST_AUTO_TEST_CASE(modern_stat_test) {
      */
 
     // Invalid stat
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_modern_stat(
                        "Not a stat", 1, 1.0f, 1, 1, 1
                    )
-    , std::invalid_argument, return_true)
+    , std::invalid_argument)
 
     // No Special past Generation I
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_modern_stat(
                        "Special", 1, 1.0f, 1, 1, 1
                    )
-    , std::invalid_argument, return_true)
+    , std::invalid_argument)
 
     // Invalid nature modifier
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_modern_stat(
                        "Attack", 1, 0.666f, 1, 1, 1
                    )
-    , std::domain_error, return_true)
+    , std::domain_error)
 
     // Invalid EV
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_modern_stat(
                        "Attack", 1, 1.0f, 1, 12345, 1
                    )
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 
     // Invalid IV
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         int stat = pkmn::calculations::get_modern_stat(
                        "Attack", 1, 1.0f, 1, 1, 12345
                    )
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 
     // TODO: test cases with known results from external sources
 }

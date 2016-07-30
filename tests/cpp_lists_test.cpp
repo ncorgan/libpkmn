@@ -9,30 +9,20 @@
 
 #include <boost/test/unit_test.hpp>
 
-/*
- * TODO: figure out what that parameter actually is...
- */
-bool return_true(
-    const std::exception &e
-) {
-    (void)e;
-    return true;
-}
-
 BOOST_AUTO_TEST_CASE(ability_list_test) {
     std::vector<std::string> abilities;
 
     // Make sure invalid generations throw an exception
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         pkmn::database::get_ability_list(
             2, abilities
         );
-    , std::out_of_range, return_true)
-    BOOST_REQUIRE_EXCEPTION(
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
         pkmn::database::get_ability_list(
             7, abilities
         );
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 
     // TODO: test good cases
 }
@@ -41,16 +31,16 @@ BOOST_AUTO_TEST_CASE(game_list_test) {
     std::vector<std::string> games;
 
     // Make sure invalid generations throw an exception
-    BOOST_REQUIRE_EXCEPTION(
+    BOOST_CHECK_THROW(
         pkmn::database::get_game_list(
             0, true, games
         );
-    , std::out_of_range, return_true)
-    BOOST_REQUIRE_EXCEPTION(
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
         pkmn::database::get_game_list(
             7, true, games
         );
-    , std::out_of_range, return_true)
+    , std::out_of_range)
 
     // TODO: test good cases, make sure include_previous parameter works
 }
