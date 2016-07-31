@@ -13,6 +13,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <limits>
+
 BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
     /*
      * Make sure expected exceptions are thrown
@@ -221,18 +223,320 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
 }
 
 BOOST_AUTO_TEST_CASE(modern_gender_test) {
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        std::string gender = pkmn::calculations::modern_pokemon_gender(
+                                 "Not a species", 0
+                             );
+    , std::runtime_error)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     */
+
+    /*
+     * All male
+     */
+    std::string nidorino1 = pkmn::calculations::modern_pokemon_gender(
+                                "Nidorino", 0
+                            );
+    BOOST_CHECK_EQUAL(nidorino1, "Male");
+    std::string nidorino2 = pkmn::calculations::modern_pokemon_gender(
+                                "Nidorino",
+                                std::numeric_limits<uint32_t>::max()
+                            );
+    BOOST_CHECK_EQUAL(nidorino2, "Male");
+
+    /*
+     * 87.5% male, 12.5% female
+     */
+    std::string charmander1 = pkmn::calculations::modern_pokemon_gender(
+                                  "Charmander", 30
+                              );
+    BOOST_CHECK_EQUAL(charmander1, "Female");
+    std::string charmander2 = pkmn::calculations::modern_pokemon_gender(
+                                  "Charmander", 31
+                              );
+    BOOST_CHECK_EQUAL(charmander2, "Male");
+
+    /*
+     * 75% male, 25% female
+     */
+    std::string growlithe1 = pkmn::calculations::modern_pokemon_gender(
+                                 "Growlithe", 63
+                             );
+    BOOST_CHECK_EQUAL(growlithe1, "Female");
+    std::string growlithe2 = pkmn::calculations::modern_pokemon_gender(
+                                 "Growlithe", 64
+                             );
+    BOOST_CHECK_EQUAL(growlithe2, "Male");
+
+    /*
+     * 50% male, 50% female
+     */
+    std::string pidgey1 = pkmn::calculations::modern_pokemon_gender(
+                              "Pidgey", 127
+                          );
+    BOOST_CHECK_EQUAL(pidgey1, "Female");
+    std::string pidgey2 = pkmn::calculations::modern_pokemon_gender(
+                              "Pidgey", 128
+                          );
+    BOOST_CHECK_EQUAL(pidgey2, "Male");
+
+    /*
+     * 25% male, 75% female
+     */
+    std::string vulpix1 = pkmn::calculations::modern_pokemon_gender(
+                              "Vulpix", 190
+                          );
+    BOOST_CHECK_EQUAL(vulpix1, "Female");
+    std::string vulpix2 = pkmn::calculations::modern_pokemon_gender(
+                              "Vulpix", 191
+                          );
+    BOOST_CHECK_EQUAL(vulpix2, "Male");
+
+    /*
+     * All female
+     */
+    std::string nidorina1 = pkmn::calculations::modern_pokemon_gender(
+                                "Nidorina", 0
+                            );
+    BOOST_CHECK_EQUAL(nidorina1, "Female");
+    std::string nidorina2 = pkmn::calculations::modern_pokemon_gender(
+                                "Nidorina",
+                                std::numeric_limits<uint32_t>::max()
+                            );
+    BOOST_CHECK_EQUAL(nidorina2, "Female");
+
+    /*
+     * Genderless
+     */
+    std::string magnemite1 = pkmn::calculations::modern_pokemon_gender(
+                                 "Magnemite", 0
+                             );
+    BOOST_CHECK_EQUAL(magnemite1, "Genderless");
+    std::string magnemite2 = pkmn::calculations::modern_pokemon_gender(
+                                 "Magnemite",
+                                std::numeric_limits<uint32_t>::max()
+                             );
+    BOOST_CHECK_EQUAL(magnemite2, "Genderless");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
+    pkmn::calculations::hidden_power_t hidden_power;
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           -1, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           16, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, -1, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, 16, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, 0, -1, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, 0, 16, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, 0, 0, -1
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::gen2_hidden_power(
+                           0, 0, 0, 16
+                       );
+    , std::out_of_range)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
+     */
+    hidden_power = pkmn::calculations::gen2_hidden_power(
+                       15, 15, 15, 14
+                   );
+    BOOST_CHECK_EQUAL(hidden_power.type, "Dark");
+    BOOST_CHECK_EQUAL(hidden_power.base_power, 69);
 }
 
 BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
+    pkmn::calculations::hidden_power_t hidden_power;
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           -1, 0, 0, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           32, 0, 0, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, -1, 0, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 32, 0, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, -1, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 32, 0, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, -1, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, 32, 0, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, 0, -1, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, 0, 32, 0
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, 0, 0, -1
+                       );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        hidden_power = pkmn::calculations::modern_hidden_power(
+                           0, 0, 0, 0, 0, 32
+                       );
+    , std::out_of_range)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_III_to_VI
+     */
+    hidden_power = pkmn::calculations::modern_hidden_power(
+                       30, 31, 31, 31, 30, 31
+                   );
+    BOOST_CHECK_EQUAL(hidden_power.type, "Grass");
+    BOOST_CHECK_EQUAL(hidden_power.base_power, 70);
 }
 
 BOOST_AUTO_TEST_CASE(gen2_shiny_test) {
+    /*
+     * Make sure expected exceptions are thrown
+     */
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         -1, 0, 0, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         16, 0, 0, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, -1, 0, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, 16, 0, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, 0, -1, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, 0, 16, 0
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, 0, 0, -1
+                     );
+    , std::out_of_range)
+    BOOST_CHECK_THROW(
+        bool shiny = pkmn::calculations::gen2_shiny(
+                         0, 0, 0, 16
+                     );
+    , std::out_of_range)
+
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Shininess
+     */
+    bool shiny1 = pkmn::calculations::gen2_shiny(
+                      7, 10, 10, 10
+                  );
+    bool shiny2 = pkmn::calculations::gen2_shiny(
+                      6, 15, 7, 5
+                  );
+    BOOST_CHECK(shiny1);
+    BOOST_CHECK(not shiny2);
 }
 
 BOOST_AUTO_TEST_CASE(modern_shiny_test) {
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
+     *         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
+     */
+    bool shiny1 = pkmn::calculations::modern_shiny(
+                      2814471828,
+                      2545049318
+                  );
+    bool shiny2 = pkmn::calculations::modern_shiny(
+                      0xB58F0B2A,
+                      398174488
+                  );
+    BOOST_CHECK(shiny1);
+    BOOST_CHECK(shiny2);
 }
 
 BOOST_AUTO_TEST_CASE(gb_stat_test) {
