@@ -14,6 +14,12 @@
 
 namespace pkmn { namespace database {
 
+    /*
+     * TODO:
+     *  * Fixes from unit test
+     *  * See which ctors, move+copy ops, and ID getters can be constexpr'd
+     *  * Can any other info be added?
+     */
     class PKMN_API move_entry {
         public:
             move_entry();

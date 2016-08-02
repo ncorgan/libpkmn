@@ -27,6 +27,12 @@ namespace pkmn { namespace database {
     //! List of Pokémon entries.
     typedef std::vector<pokemon_entry> pokemon_entries_t;
 
+    /*
+     * TODO:
+     *  * Fixes from unit test
+     *  * See which ctors, move+copy ops, and ID getters can be constexpr'd
+     *  * Can any other info be added?
+     */
     class PKMN_API pokemon_entry {
         public:
             pokemon_entry();
