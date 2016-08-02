@@ -58,6 +58,16 @@ FIND_PACKAGE(Boost 1.53 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 INCLUDE(PKMNPlatform)
 
 ########################################################################
+# Debug settings
+########################################################################
+IF(PKMN_SQLITE_DEBUG)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "SQLite debug on.")
+    MESSAGE(STATUS "")
+    SET(PKMN_CXX_FLAGS "${PKMN_CXX_FLAGS} -DPKMN_SQLITE_DEBUG=1")
+ENDIF(PKMN_SQLITE_DEBUG)
+
+########################################################################
 # Find other dependencies
 ########################################################################
 FIND_PACKAGE(SWIG)

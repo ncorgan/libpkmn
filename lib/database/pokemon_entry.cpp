@@ -14,6 +14,10 @@
 
 #include <pkmn/database/pokemon_entry.hpp>
 
+#ifdef PKMN_SQLITE_DEBUG
+#include <iostream>
+#endif
+
 namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
@@ -306,14 +310,26 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
             "ORDER BY egg_group_id";
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << query << std::endl;
+#endif
 
         std::pair<std::string, std::string> ret;
         SQLite::Statement stmt((*_db), query);
         stmt.executeStep();
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Results: " << std::string(stmt.getColumn(0)) << ", " << std::flush;
+#endif
         ret.first = std::string(stmt.getColumn(0));
         if(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << std::string(stmt.getColumn(0)) << std::endl;
+#endif
             ret.second = std::string(stmt.getColumn(0));
         } else {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << "\b\b " << std::endl;
+#endif
             ret.second = "None";
         }
 
@@ -388,19 +404,32 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
             "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << query << std::endl
+                  << " * Bind " << _pokemon_id << " to 1" << std::endl
+                  << " * Bind " << _version_group_id << " to 2" << std::endl
+                  << " * Results: " << std::flush;
+#endif
 
         levelup_moves_out.clear();
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, _pokemon_id);
         stmt.bind(2, _version_group_id);
         while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << "(" << int(stmt.getColumn(0)) << "," << int(stmt.getColumn(1))
+                      << "), " << std::flush;
+#endif
             levelup_moves_out.push_back(pkmn::database::levelup_move_t());
             levelup_moves_out.back().move = pkmn::database::move_entry(
                                                 int(stmt.getColumn(0)),
                                                 _game_id
                                             );
-            levelup_moves_out.back().level = int(stmt.getColumn(0));
+            levelup_moves_out.back().level = int(stmt.getColumn(1));
         }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
     }
 
     void pokemon_entry::get_tm_hm_moves(
@@ -515,15 +544,27 @@ namespace pkmn { namespace database {
         int pokemon_id = (overwrite_pokemon_id == -1) ? _pokemon_id
                                                       : overwrite_pokemon_id;
 
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << query << std::endl
+                  << " * Bind " << pokemon_id << " to 1" << std::endl
+                  << " * Bind " << _version_group_id << " to 2" << std::endl
+                  << " * Results: " << std::flush;
+#endif
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, pokemon_id);
         stmt.bind(2, _version_group_id);
 
         while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << int(stmt.getColumn(0)) << ", ";
+#endif
             move_list_out.push_back(pkmn::database::move_entry(
                 int(stmt.getColumn(0)), _game_id
             ));
         }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
     }
 
 }}
