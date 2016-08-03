@@ -62,6 +62,10 @@ namespace pkmn { namespace database {
                 return _item_index;
             }
 
+            PKMN_INLINE int get_item_list_id() const {
+                return _item_list_id;
+            }
+
             PKMN_INLINE int get_game_id() const {
                 return _game_id;
             }
@@ -80,7 +84,7 @@ namespace pkmn { namespace database {
             }
 
         private:
-            int _item_id, _item_index;
+            int _item_id, _item_index, _item_list_id;
             int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
     };

@@ -21,9 +21,25 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
+    static int item_id_to_item_list_id(
+        int item_id,
+        int version_group_id
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
+            "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
+            "pocket_id FROM item_categories WHERE id=(SELECT category_id "
+            "FROM items WHERE id=?))";
+
+        return pkmn::database::query_db_bind2<int, int, int>(
+                   _db, query, version_group_id, item_id
+               );
+    }
+
     item_entry::item_entry():
         _item_id(0),
         _item_index(0),
+        _item_list_id(0),
         _game_id(0),
         _generation(0),
         _version_group_id(0),
@@ -43,17 +59,25 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        // Input validation
-        // TODO: specific error if item not in game
+        // Get item information. This also serves as input validation.
         _item_id = pkmn::database::item_index_to_id(
                        _item_id, _game_id
                    );
+
+        /*
+         * Get version information. This gives us the information we need
+         * to get version-specific information.
+         */
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
         _version_group_id = pkmn::database::game_id_to_version_group(
                                 _game_id
                             );
+
+        _item_list_id = pkmn::database::item_id_to_item_list_id(
+                            _item_id, _version_group_id
+                        );
     }
 
     item_entry::item_entry(
@@ -86,6 +110,9 @@ namespace pkmn { namespace database {
         _item_index = pkmn::database::item_id_to_index(
                           _item_id, _game_id
                       );
+        _item_list_id = pkmn::database::item_id_to_item_list_id(
+                            _item_id, _version_group_id
+                        );
     }
 
     std::string item_entry::get_name() const {
@@ -123,7 +150,9 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_pocket() const {
-        return "";
+        return pkmn::database::item_list_id_to_name(
+                   _item_list_id, _version_group_id
+               );
     }
 
     std::string item_entry::get_description() const {
