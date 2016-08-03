@@ -210,9 +210,13 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)item_list_id;
-        (void)version_group_id;
-        return "";
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM libpkmn_item_lists WHERE id=? AND "
+            "version_group_id=?";
+
+        return pkmn::database::query_db_bind2<std::string, int, int>(
+                   _db, query, item_list_id, version_group_id
+               );
     }
 
     int item_list_name_to_id(
@@ -222,9 +226,13 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)item_list_name;
-        (void)version_group_id;
-        return 0;
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
+            "version_group_id=?";
+
+        return pkmn::database::query_db_bind2<int, const std::string&, int>(
+                   _db, query, item_list_name, version_group_id
+               );
     }
 
     std::string location_id_to_name(
