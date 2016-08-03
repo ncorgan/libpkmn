@@ -138,7 +138,9 @@ namespace pkmn {
          * that amount. If not, see if there's room to add another
          * item.
          */
-        int item_id = pkmn::database::item_name_to_id(item_name);
+        int item_id = pkmn::database::item_name_to_id(
+                          item_name, _version_group_id
+                      );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {
                 if(_item_slots[i].amount == 99) {
@@ -183,7 +185,9 @@ namespace pkmn {
          * and if there are no more, remove the item from the list and
          * shift everything over.
          */
-        int item_id = pkmn::database::item_name_to_id(item_name);
+        int item_id = pkmn::database::item_name_to_id(
+                          item_name, _version_group_id
+                      );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {
                 if(_item_slots[i].amount < amount) {

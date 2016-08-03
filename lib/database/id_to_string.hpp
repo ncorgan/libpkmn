@@ -74,7 +74,8 @@ namespace pkmn { namespace database {
     );
 
     int item_name_to_id(
-        const std::string &item_name
+        const std::string &item_name,
+        int version_group_id
     );
 
     /*

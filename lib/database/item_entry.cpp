@@ -27,7 +27,7 @@ namespace pkmn { namespace database {
         _game_id(0),
         _generation(0),
         _version_group_id(0),
-        _none(false),
+        _none(true),
         _invalid(true)
     {}
 
@@ -37,8 +37,6 @@ namespace pkmn { namespace database {
     ):
         _item_index(item_index),
         _game_id(game_id),
-        _generation(0),
-        _version_group_id(0),
         _none(item_index == 0),
         _invalid(false) // TODO: proper check
     {
@@ -62,31 +60,32 @@ namespace pkmn { namespace database {
         const std::string &item_name,
         const std::string &game_name
     ):
-        _generation(0),
-        _version_group_id(0),
-        _none(false),
-        _invalid(true)
+        _none(item_name == "None"),
+        _invalid(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        // Input validation
-        // TODO: specific error if item not in game
-        _item_id = pkmn::database::item_name_to_id(
-                       item_name
-                   );
+        /*
+         * Get version information. This validates the game input and gives
+         * us the information we need to get version-specific information.
+         */
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
-        _item_index = pkmn::database::item_id_to_index(
-                          _item_id, _game_id
-                      );
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
         _version_group_id = pkmn::database::game_id_to_version_group(
                                 _game_id
                             );
+
+        _item_id = pkmn::database::item_name_to_id(
+                       item_name, _version_group_id
+                   );
+        _item_index = pkmn::database::item_id_to_index(
+                          _item_id, _game_id
+                      );
     }
 
     std::string item_entry::get_name() const {

@@ -31,7 +31,10 @@ static void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen1.get_fling_power(), -1);
     BOOST_CHECK_EQUAL(item_entry_gen1.get_fling_effect(), "None");
 
-    (void)item_entry_gen2;
+    // Generation II entry
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_name(), "Pink Bow");
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_game(), "Silver");
+
     (void)item_entry_gba;
     (void)item_entry_gcn;
     (void)item_entry_gen4;

@@ -136,23 +136,70 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)item_id;
-        (void)version_group_id;
-        return "";
+        /*
+         * If the version group isn't Generation VI, check to see if
+         * the given version group had a different name for this item.
+         * If not, fall through to the default query.
+         */
+        BOOST_STATIC_CONSTEXPR int XY   = 25;
+        BOOST_STATIC_CONSTEXPR int ORAS = 26;
+        if(version_group_id == XY or version_group_id == ORAS) {
+            static BOOST_CONSTEXPR const char* old_name_query = \
+                "SELECT name FROM old_item_names WHERE item_id=? AND "
+                "latest_version_group>=? AND local_language_id=9 "
+                "ORDER BY latest_version_group";
+
+            std::string old_ret;
+            if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                   _db, old_name_query, old_ret, item_id, version_group_id
+               ))
+            {
+                return old_ret;
+            }
+        }
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT name FROM item_names WHERE item_id=? AND "
+            "local_language_id=9";
+
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, main_query, item_id
+               );
     }
 
-    // TODO: old names
     int item_name_to_id(
-        const std::string &item_name
+        const std::string &item_name,
+        int version_group_id
     ) {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        static BOOST_CONSTEXPR const char* query = \
+        /*
+         * If the version group isn't Generation VI, check to see if
+         * the given version group had a different name for this item.
+         * If not, fall through to the default query.
+         */
+        BOOST_STATIC_CONSTEXPR int XY   = 25;
+        BOOST_STATIC_CONSTEXPR int ORAS = 26;
+        if(version_group_id == XY or version_group_id == ORAS) {
+            static BOOST_CONSTEXPR const char* old_name_query = \
+                "SELECT item_id FROM old_item_names WHERE name=? AND "
+                "latest_version_group>=? ORDER BY latest_version_group";
+
+            int old_ret;
+            if(pkmn::database::maybe_query_db_bind2<int, const std::string&, int>(
+                   _db, old_name_query, old_ret, item_name, version_group_id
+               ))
+            {
+                return old_ret;
+            }
+        }
+
+        static BOOST_CONSTEXPR const char* main_query = \
             "SELECT item_id FROM item_names WHERE name=?";
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, item_name
+                   _db, main_query, item_name
                );
     }
 
