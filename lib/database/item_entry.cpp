@@ -21,7 +21,7 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    static int item_id_to_item_list_id(
+    static int version_group_id_to_item_list_id(
         int item_id,
         int version_group_id
     ) {
@@ -75,7 +75,7 @@ namespace pkmn { namespace database {
                                 _game_id
                             );
 
-        _item_list_id = pkmn::database::item_id_to_item_list_id(
+        _item_list_id = pkmn::database::version_group_id_to_item_list_id(
                             _item_id, _version_group_id
                         );
     }
@@ -110,7 +110,7 @@ namespace pkmn { namespace database {
         _item_index = pkmn::database::item_id_to_index(
                           _item_id, _game_id
                       );
-        _item_list_id = pkmn::database::item_id_to_item_list_id(
+        _item_list_id = pkmn::database::version_group_id_to_item_list_id(
                             _item_id, _version_group_id
                         );
     }
