@@ -17,6 +17,10 @@ namespace pkmn { namespace database {
     std::string ability_id_to_name(
         int ability_id
     ) {
+        if(ability_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -32,6 +36,10 @@ namespace pkmn { namespace database {
     int ability_name_to_id(
         const std::string &ability_name
     ) {
+        if(ability_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -46,6 +54,10 @@ namespace pkmn { namespace database {
     std::string ball_id_to_name(
         int ball_id
     ) {
+        if(ball_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -60,6 +72,10 @@ namespace pkmn { namespace database {
     int ball_name_to_id(
         const std::string &ball_name
     ) {
+        if(ball_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -74,6 +90,10 @@ namespace pkmn { namespace database {
     std::string egg_group_id_to_name(
         int egg_group_id
     ) {
+        if(egg_group_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -89,6 +109,10 @@ namespace pkmn { namespace database {
     int egg_group_name_to_id(
         const std::string &egg_group_name
     ) {
+        if(egg_group_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -103,6 +127,10 @@ namespace pkmn { namespace database {
     std::string game_id_to_name(
         int game_id
     ) {
+        if(game_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -118,6 +146,10 @@ namespace pkmn { namespace database {
     int game_name_to_id(
         const std::string &game_name
     ) {
+        if(game_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -133,6 +165,10 @@ namespace pkmn { namespace database {
         int item_id,
         int version_group_id
     ) {
+        if(item_id == 0 or version_group_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -143,7 +179,7 @@ namespace pkmn { namespace database {
          */
         BOOST_STATIC_CONSTEXPR int XY   = 25;
         BOOST_STATIC_CONSTEXPR int ORAS = 26;
-        if(version_group_id == XY or version_group_id == ORAS) {
+        if(version_group_id != XY and version_group_id != ORAS) {
             static BOOST_CONSTEXPR const char* old_name_query = \
                 "SELECT name FROM old_item_names WHERE item_id=? AND "
                 "latest_version_group>=? AND local_language_id=9 "
@@ -171,6 +207,10 @@ namespace pkmn { namespace database {
         const std::string &item_name,
         int version_group_id
     ) {
+        if(item_name == "None" or version_group_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -181,7 +221,7 @@ namespace pkmn { namespace database {
          */
         BOOST_STATIC_CONSTEXPR int XY   = 25;
         BOOST_STATIC_CONSTEXPR int ORAS = 26;
-        if(version_group_id == XY or version_group_id == ORAS) {
+        if(version_group_id != XY and version_group_id != ORAS) {
             static BOOST_CONSTEXPR const char* old_name_query = \
                 "SELECT item_id FROM old_item_names WHERE name=? AND "
                 "latest_version_group>=? ORDER BY latest_version_group";
@@ -207,6 +247,10 @@ namespace pkmn { namespace database {
         int item_list_id,
         int version_group_id
     ) {
+        if(item_list_id == 0 or version_group_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -223,6 +267,10 @@ namespace pkmn { namespace database {
         const std::string &item_list_name,
         int version_group_id
     ) {
+        if(item_list_name == "None" or version_group_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -253,6 +301,10 @@ namespace pkmn { namespace database {
     int location_name_to_id(
         const std::string &location_name
     ) {
+        if(location_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -289,6 +341,10 @@ namespace pkmn { namespace database {
     std::string nature_id_to_name(
         int nature_id
     ) {
+        if(nature_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -304,6 +360,10 @@ namespace pkmn { namespace database {
     int nature_name_to_id(
         const std::string &nature_name
     ) {
+        if(nature_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -318,6 +378,10 @@ namespace pkmn { namespace database {
     std::string species_id_to_name(
         int species_id
     ) {
+        if(species_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -333,6 +397,10 @@ namespace pkmn { namespace database {
     int species_name_to_id(
         const std::string &species_name
     ) {
+        if(species_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -347,6 +415,10 @@ namespace pkmn { namespace database {
     std::string type_id_to_name(
         int type_id
     ) {
+        if(type_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -362,6 +434,10 @@ namespace pkmn { namespace database {
     int type_name_to_id(
         const std::string &type_name
     ) {
+        if(type_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 

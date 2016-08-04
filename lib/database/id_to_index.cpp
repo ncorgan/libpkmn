@@ -17,6 +17,10 @@ namespace pkmn { namespace database {
     int game_id_to_index(
         int game_id
     ) {
+        if(game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -31,6 +35,10 @@ namespace pkmn { namespace database {
     int game_index_to_id(
         int game_index
     ) {
+        if(game_index == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -46,6 +54,10 @@ namespace pkmn { namespace database {
         int item_id,
         int game_id
     ) {
+        if(item_id == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -58,6 +70,10 @@ namespace pkmn { namespace database {
         int item_index,
         int game_id
     ) {
+        if(item_index == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -70,6 +86,10 @@ namespace pkmn { namespace database {
         int location_id,
         int game_id
     ) {
+        if(location_id == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -82,6 +102,10 @@ namespace pkmn { namespace database {
         int location_index,
         int game_id
     ) {
+        if(location_index == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -93,6 +117,10 @@ namespace pkmn { namespace database {
     int nature_id_to_index(
         int nature_id
     ) {
+        if(nature_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -107,6 +135,10 @@ namespace pkmn { namespace database {
     int nature_index_to_id(
         int nature_index
     ) {
+        if(nature_index == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -122,6 +154,10 @@ namespace pkmn { namespace database {
         int pokemon_id,
         int game_id
     ) {
+        if(pokemon_id == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -138,6 +174,10 @@ namespace pkmn { namespace database {
         int pokemon_index,
         int game_id
     ) {
+        if(pokemon_index == 0 or game_id == 0) {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 

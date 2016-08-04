@@ -25,6 +25,10 @@ namespace pkmn { namespace database {
         int item_id,
         int version_group_id
     ) {
+        if(item_id == 0 or version_group_id == 0) {
+            return 0;
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
             "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
