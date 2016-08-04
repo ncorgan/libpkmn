@@ -57,6 +57,8 @@ namespace pkmn {
                 int new_position
             ) = 0;
 
+            virtual const std::vector<std::string>& get_valid_items() = 0;
+
             virtual const pkmn::item_slots_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__

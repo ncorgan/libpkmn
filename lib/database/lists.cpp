@@ -179,8 +179,10 @@ namespace pkmn { namespace database {
         const std::string &game,
         std::vector<std::string> &items_out
     ) {
-        (void)game;
-        (void)items_out;
+        int game_id = pkmn::database::game_name_to_id(game);
+        pkmn::database::_get_item_list(
+            items_out, -1, game_id
+        );
     }
 
     void get_location_list(

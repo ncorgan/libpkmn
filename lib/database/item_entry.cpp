@@ -12,7 +12,6 @@
 #include <pkmn/database/item_entry.hpp>
 
 #include <boost/config.hpp>
-#include <boost/foreach.hpp>
 #include <boost/format.hpp>
 
 #include <stdexcept>
