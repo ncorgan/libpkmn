@@ -14,6 +14,10 @@
 #include <boost/config.hpp>
 #include <boost/lockfree/detail/branch_hints.hpp>
 
+#ifdef PKMN_SQLITE_DEBUG
+#include <iostream>
+#endif
+
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -204,16 +208,32 @@ namespace pkmn { namespace database {
         const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
         for(int i = 0; i < 4; ++i) {
             if(not item_range_empty(version_group_id, i)) {
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << query << "\"" << std::endl
+                  << " * Bind " << generation << " to 1" << std::endl
+                  << " * Bind " << version_group_item_index_bounds[version_group_id][i][0] << " to 2" << std::endl
+                  << " * Bind " << version_group_item_index_bounds[version_group_id][i][1] << " to 3" << std::endl;
+#endif
                 SQLite::Statement stmt((*_db), query);
                 stmt.bind(1, generation);
                 stmt.bind(2, version_group_item_index_bounds[version_group_id][i][0]);
                 stmt.bind(3, version_group_item_index_bounds[version_group_id][i][1]);
                 if(not all_pockets) {
+#ifdef PKMN_SQLITE_DEBUG
+                    std::cout << " * Bind " << version_group_id << " to 4" << std::endl
+                              << " * Bind " << list_id << " to 5" << std::endl;
+#endif
                     stmt.bind(4, version_group_id);
                     stmt.bind(5, list_id);
                 }
+#ifdef PKMN_SQLITE_DEBUG
+                std::cout << "Results: " << std::endl;
+#endif
 
                 while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+                    std::cout << (const char*)stmt.getColumn(0) << std::endl;
+#endif
                     /*
                      * Some items' names changed in Generation IV (TODO: confirm this or V).
                      * If the function is called for an older game, substitute in old names
@@ -225,7 +245,6 @@ namespace pkmn { namespace database {
                         static BOOST_CONSTEXPR const char* old_name_query = \
                             "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
                             "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
-
                         if(boost::lockfree::detail::unlikely(
                                pkmn::database::maybe_query_db_bind2<std::string, int, int>(
                                    _db, old_name_query, old_name,
@@ -271,14 +290,30 @@ namespace pkmn { namespace database {
             const char* gcn_query = (all_pockets ? gcn_all_pockets_query
                                                  : gcn_single_pocket_query);
             SQLite::Statement gcn_stmt((*_db), gcn_query);
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << gcn_query << "\"" << std::endl
+                  << " * Bind " << (colosseum ? 1 : 0) << " to 1" << std::endl;
+#endif
             gcn_stmt.bind(1, (colosseum ? 1 : 0));
             if(not all_pockets) {
-                gcn_stmt.bind(5, list_id);
+#ifdef PKMN_SQLITE_DEBUG
+                std::cout << " * Bind " << list_id << " to 2" << std::endl;
+#endif
+                gcn_stmt.bind(2, list_id);
             }
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << "Results: " << std::flush;
+#endif
 
             while(gcn_stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+                std::cout << (const char*)gcn_stmt.getColumn(0) << ", " << std::flush;
+#endif
                 ret.push_back((const char*)gcn_stmt.getColumn(0));
             }
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << "\b\b " << std::endl;
+#endif
         }
     }
 
