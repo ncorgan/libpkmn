@@ -9,7 +9,35 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <boost/config.hpp>
 #include <boost/test/unit_test.hpp>
+
+/*
+ * These arrays have game IDs/names for one game from each generation, separating
+ * GBA and GCN games. This does not distinguish between subgroups, such as
+ * Ruby/Sapphire vs. Emerald, so those should be checked separately.
+ */
+BOOST_STATIC_CONSTEXPR int game_ids[] = {1,4,7,19,12,17,23};
+
+static BOOST_CONSTEXPR const char* game_names[] = {
+    "Red","Gold","Ruby","Colosseum","Diamond","Black","X"
+};
+
+static void item_entry_none_test(
+    const pkmn::database::item_entry &none_entry
+) {
+    BOOST_CHECK_EQUAL(none_entry.get_name(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_category(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_pocket(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_description(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_cost(), -1);
+    BOOST_CHECK(not none_entry.holdable());
+    BOOST_CHECK_EQUAL(none_entry.get_fling_power(), -1);
+    BOOST_CHECK_EQUAL(none_entry.get_fling_effect(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_item_id(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_item_index(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_item_list_id(), 0);
+}
 
 static void item_entry_test_common(
     const pkmn::database::item_entry &item_entry_gen1,
@@ -43,6 +71,15 @@ static void item_entry_test_common(
 }
 
 BOOST_AUTO_TEST_CASE(item_entry_test) {
+    // Make sure "None" entries work
+    for(int i = 0; i < 6; ++i) {
+        pkmn::database::item_entry none_byindex(0, game_ids[i]);
+        pkmn::database::item_entry none_byname("None", game_names[i]);
+
+        item_entry_none_test(none_byindex);
+        item_entry_none_test(none_byname);
+    }
+
     // TODO: get equivalent entries created by index
 
     // Test with item entries created by name
