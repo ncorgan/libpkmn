@@ -9,6 +9,7 @@
 #include "id_to_index.hpp"
 
 #include <boost/config.hpp>
+#include <boost/format.hpp>
 
 namespace pkmn { namespace database {
 
@@ -61,9 +62,41 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)item_id;
-        (void)game_id;
-        return 0;
+        bool gamecube = (game_id == 19 or game_id == 20);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        /*
+         * In any case, check the main item indices table. If this
+         * fails for a Gamecube game, check that table. If it fails
+         * for any other game, it failed overall.
+         */
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT game_index FROM item_game_indices WHERE item_id=? "
+            "AND generation_id=?";
+
+        int ret;
+        if(pkmn::database::maybe_query_db_bind2<int, int, int>(
+               _db, main_query, ret, item_id, generation
+           ))
+        {
+            return ret;
+        } else {
+            if(gamecube) {
+                bool colosseum = (game_id == 19);
+
+                static BOOST_CONSTEXPR const char* gcn_query = \
+                    "SELECT game_index FROM gamecube_item_game_indices "
+                    "WHERE item_id=? AND colosseum=?";
+
+                return pkmn::database::query_db_bind2<int, int, int>(
+                           _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                       );
+            }
+        }
+
+        throw std::invalid_argument(
+                  str(boost::format("Invalid SQLite query: %s") % main_query)
+              );
     }
 
     int item_index_to_id(

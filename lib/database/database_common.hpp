@@ -82,7 +82,7 @@ namespace pkmn { namespace database {
 #endif
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
@@ -113,7 +113,7 @@ namespace pkmn { namespace database {
 #endif
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
@@ -147,7 +147,7 @@ namespace pkmn { namespace database {
 #endif
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
