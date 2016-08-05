@@ -185,6 +185,61 @@ namespace pkmn { namespace database {
         );
     }
 
+    /*
+     * There is unfortunately a lot of manual work necessary here because the Veekun database
+     * stores location game indices by generation and not by game. This is generally fine because
+     * there is almost never any overlap in location index, but some games in the same region have
+     * version-exclusive indices, so we need to detect these and filter them out.
+     */
+
+    BOOST_STATIC_CONSTEXPR int version_group_region_ids[][2] = {
+        {0,0}, // None
+        {1,1}, // Red/Blue
+        {1,1}, // Yellow
+        {2,1}, // Gold/Silver
+        {2,1}, // Crystal
+        {3,3}, // Ruby/Sapphire
+        {3,3}, // Emerald
+        {1,1}, // FR/LG
+        {4,4}, // D/P
+        {4,4}, // Platinum
+        {2,1}, // HG/SS
+        {5,5}, // B/W
+        {0,0}, // Colosseum
+        {0,0}, // XD
+        {5,5}, // B2/W2
+        {6,6}, // X/Y
+        {3,3}, // OR/AS
+    };
+
+    // TODO: change to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
+    BOOST_CONSTEXPR PKMN_INLINE bool version_group_has_single_region(
+        int version_group_id
+    ) {
+        return (version_group_region_ids[version_group_id][0] == \
+                version_group_region_ids[version_group_id][1]);
+    }
+
+    BOOST_STATIC_CONSTEXPR int version_group_location_index_bounds[][4][2] = {
+        {{0,0},{0,0},{0,0},{0,0}}, // None
+        {{0,0},{0,0},{0,0},{0,0}}, // Red/Blue
+        {{0,0},{0,0},{0x0},{0,0}}, // Yellow
+        {{0x01,0x0C},{0x1E,0x7F},{0,0}}, // Gold/Silver
+        {{0x01,0x7F},{0,0},{0,0}}, // Crystal
+        {{0,87},{254,255},{0,0}}, // Ruby/Sapphire
+        {{0,87},{196,255},{0,0}}, // Emerald
+        {{88,196},{254,255},{0,0}}, // FR/LG
+        {{0,111},{2000,2010},{2012,2012},{3000,3076}}, // D/P
+        {{0,125},{2000,2012},{3000,3076},{0,0}}, // Platinum
+        {{126,2010},{2012,2012},{3000,3076},{0,0}}, // HG/SS
+        {{0,116},{30001,30014},{40000,60003},{0}}, // B/W
+        {{0,0},{0,0},{0,0},{0,0}}, // Colosseum
+        {{0,0},{0,0},{0,0},{0,0}}, // XD
+        {{0,60003},{0,0},{0,0},{0,0}}, // B2/W2
+        {{0,168},{30001,60003},{0,0},{0,0}}, // X/Y
+        {{170,60003},{0,0},{0,0},{0,0}} // OR/AS
+    };
+
     void get_location_list(
         const std::string &game,
         bool whole_generation,
