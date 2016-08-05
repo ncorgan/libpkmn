@@ -28,6 +28,62 @@ void item_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_item_list_id(), 0);
 }
 
+void item_entry_wrong_game_test() {
+    /*
+     * Make sure items from later generations throw an
+     * exception.
+     */
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry pink_bow(
+            "Pink Bow", "Red"
+        )
+    , std::invalid_argument)
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry razz_berry(
+            "Razz Berry", "Silver"
+        )
+    , std::invalid_argument)
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry flame_plate(
+            "Flame Plate", "Emerald"
+        )
+    , std::invalid_argument)
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry dna_splicers(
+            "DNA Splicers", "Pearl"
+        )
+    , std::invalid_argument)
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry mega_ring(
+            "Mega Ring", "White"
+        )
+    , std::invalid_argument)
+
+    /*
+     * Make sure items from different games in a given generation
+     * throw an exception.
+     */
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry gs_ball(
+            "GS Ball", "Gold"
+        )
+    , std::invalid_argument)
+    pkmn::database::item_entry gs_ball(
+        "GS Ball", "Crystal"
+    );
+
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry f_disk(
+            "F-Disk", "Ruby"
+        )
+    , std::invalid_argument)
+    pkmn::database::item_entry f_disk(
+        "F-Disk", "XD"
+    );
+
+    // TODO: more from other generations
+}
+
 void item_entry_test_common(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,

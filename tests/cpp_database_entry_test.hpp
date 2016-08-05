@@ -33,6 +33,8 @@ void item_entry_none_test(
     const pkmn::database::item_entry &none_entry
 );
 
+void item_entry_wrong_game_test();
+
 void item_entry_test_common(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,

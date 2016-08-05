@@ -22,6 +22,8 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
         item_entry_none_test(none_byname);
     }
 
+    item_entry_wrong_game_test();
+
     // TODO: get equivalent entries created by index
 
     // Test with item entries created by name
