@@ -15,7 +15,19 @@
 void move_entry_none_test(
     const pkmn::database::move_entry &none_entry
 ) {
-    (void)none_entry;
+    BOOST_CHECK_EQUAL(none_entry.get_name(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_type(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_description(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_damage_class(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_base_power(), -1);
+    BOOST_CHECK_EQUAL(none_entry.get_pp(0), -1);
+    BOOST_CHECK_CLOSE(none_entry.get_accuracy(), -1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(none_entry.get_priority(), -9);
+    BOOST_CHECK_EQUAL(none_entry.get_effect(), "None");
+    BOOST_CHECK_CLOSE(none_entry.get_effect_chance(), -1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(none_entry.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_super_contest_effect(), "None");
 }
 
 void move_entry_test_common(

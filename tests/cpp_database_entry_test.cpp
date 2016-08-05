@@ -51,7 +51,23 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
 }
 
 BOOST_AUTO_TEST_CASE(move_entry_test) {
-    (void)0;
+    // Make sure "None" entries work
+    for(int i = 0; i < 6; ++i) {
+        pkmn::database::move_entry none_byindex(0, game_ids[i]);
+        pkmn::database::move_entry none_byname("None", game_names[i]);
+
+        move_entry_none_test(none_byindex);
+        move_entry_none_test(none_byname);
+    }
+
+    /*
+     * TODO:
+     *  * Make sure moves from later generations throw exceptions
+     *  * Make sure moves from same generation, wrong game throw exceptions
+     *  * Check equality operator between equal entries above
+     *  * Check inequality operator
+     *  * Make sure different names correspond to same move
+     */
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_entry_test) {
