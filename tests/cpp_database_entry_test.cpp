@@ -62,12 +62,68 @@ static void item_entry_test_common(
     // Generation II entry
     BOOST_CHECK_EQUAL(item_entry_gen2.get_name(), "Pink Bow");
     BOOST_CHECK_EQUAL(item_entry_gen2.get_game(), "Silver");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_pocket(), "Items");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_cost(), 50);
+    BOOST_CHECK(item_entry_gen2.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_fling_power(), -1);
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_fling_effect(), "None");
 
-    (void)item_entry_gba;
-    (void)item_entry_gcn;
-    (void)item_entry_gen4;
-    (void)item_entry_gen5;
-    (void)item_entry_gen6;
+    // GBA entry
+    BOOST_CHECK_EQUAL(item_entry_gba.get_name(), "Razz Berry");
+    BOOST_CHECK_EQUAL(item_entry_gba.get_game(), "Emerald");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gba.get_pocket(), "Berries");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gba.get_cost(), 20);
+    BOOST_CHECK(item_entry_gba.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gba.get_fling_power(), -1);
+    BOOST_CHECK_EQUAL(item_entry_gba.get_fling_effect(), "None");
+
+    // Gamecube entry
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_name(), "Battle CD 03");
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_game(), "XD");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_pocket(), "Battle CDs");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_cost(), 0);
+    BOOST_CHECK(not item_entry_gcn.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_fling_power(), -1);
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_fling_effect(), "None");
+
+    // Generation IV entry
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_name(), "Fast Ball");
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_game(), "SoulSilver");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_pocket(), "Poké Balls");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_cost(), 300);
+    BOOST_CHECK(item_entry_gen4.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_fling_power(), 0);
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_fling_effect(), "None");
+
+    // Generation V entry
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_name(), "Reveal Glass");
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_game(), "Black 2");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_pocket(), "Items");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_cost(), 0);
+    BOOST_CHECK(item_entry_gen5.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_fling_power(), 0);
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_fling_effect(), "None");
+
+    // Generation VI entry
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_name(), "Salamencite");
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_game(), "Omega Ruby");
+    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_pocket(), "Battle Items");
+    // TODO: description
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_cost(), 0);
+    BOOST_CHECK(item_entry_gen6.holdable());
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_power(), 0);
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_effect(), "None");
 }
 
 BOOST_AUTO_TEST_CASE(item_entry_test) {
