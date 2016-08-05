@@ -18,6 +18,7 @@
 #include <iostream>
 #endif
 
+#include <algorithm>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -315,6 +316,26 @@ namespace pkmn { namespace database {
             std::cout << "\b\b " << std::endl;
 #endif
         }
+
+        // Sort alphabetically
+        std::sort(ret.begin(), ret.end(), string_compare);
+    }
+
+    bool string_compare(
+        const std::string &left,
+        const std::string &right
+    ) {
+        std::string::const_iterator lit, rit;
+
+        for(lit = left.begin(), rit = right.begin(); lit != left.end() && rit != right.end(); ++lit, ++rit) {
+            if(std::tolower(*lit) < std::tolower(*rit)) {
+                return true;
+            } else if(std::tolower(*lit) > std::tolower(*rit)) {
+                return false;
+            }
+        }
+
+        return (left.size() < right.size());
     }
 
 }}

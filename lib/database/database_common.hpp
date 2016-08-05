@@ -387,6 +387,11 @@ namespace pkmn { namespace database {
         std::vector<std::string> &ret,
         int list_id, int game_id
     );
+
+    bool string_compare(
+        const std::string &left,
+        const std::string &right
+    );
 }}
 
 #endif /* PKMN_DATABASE_DATABASE_COMMON_HPP */
