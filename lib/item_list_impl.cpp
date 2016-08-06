@@ -233,6 +233,9 @@ namespace pkmn {
         return _item_slots;
     }
 
+    /*
+     * TODO: if PC, all items valid except Berry Pouch, TM Case
+     */
     const std::vector<std::string>& item_list_impl::get_valid_items() {
         if(_valid_items.size() == 0) {
             pkmn::database::_get_item_list(
