@@ -50,14 +50,23 @@ namespace pkmn { namespace database {
     ) {
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "Query: \"" << query << "\"" << std::endl;
-        SQLite::Column col = db->execAndGet(query);
-        if(not col.isBlob()) {
-            std::cout << " * Result: " << (ret_type)col << std::endl;
-        }
-        return (ret_type)col;
-#else
-        return (ret_type)db->execAndGet(query);
 #endif
+        SQLite::Statement stmt((*db), query);
+        if(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            SQLite::Column col = db->execAndGet(query);
+            if(not col.isBlob()) {
+                std::cout << " * Result: " << (ret_type)col << std::endl;
+            }
+            return (ret_type)col;
+#else
+            return (ret_type)stmt.getColumn(0);
+#endif
+        } else {
+            throw std::invalid_argument(
+                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
+                  );
+        }
     }
 
     template <typename ret_type, typename bind1_type>
