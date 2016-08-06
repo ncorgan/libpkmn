@@ -11,8 +11,8 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
     ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
-    ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/pksav/include
+    ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/database
 )
@@ -38,6 +38,7 @@ SET(pkmn_sources
     ${pkmn_database_sources}
     ${pkmn_pksav_sources}
     ${pkmn_utils_sources}
+    build_info.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_list_impl.cpp

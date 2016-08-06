@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_headers
+        build_info.hpp
         config.hpp
         item_bag.hpp
         item_list.hpp
