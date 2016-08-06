@@ -377,7 +377,7 @@ namespace pkmn { namespace database {
         int range
     ) {
         return (item_id >= version_group_item_index_bounds[version_group_id][range][0]) and \
-               (item_id >= version_group_item_index_bounds[version_group_id][range][1]);
+               (item_id <= version_group_item_index_bounds[version_group_id][range][1]);
     }
 
     // TODO: switch to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
@@ -390,11 +390,11 @@ namespace pkmn { namespace database {
     }
 
     PKMN_INLINE bool item_index_valid(
-        int item_id,
+        int item_index,
         int version_group_id
     ) {
         for(int i = 0; i < 4; ++i) {
-            if(item_index_in_bounds(item_id, version_group_id, i)) {
+            if(item_index_in_bounds(item_index, version_group_id, i)) {
                 return true;
             }
         }

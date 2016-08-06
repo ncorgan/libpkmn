@@ -85,7 +85,7 @@ namespace pkmn { namespace database {
              */
 
             int version_group_id = pkmn::database::game_id_to_version_group(game_id);
-            if(item_index_valid(item_id, version_group_id)) {
+            if(item_index_valid(ret, version_group_id)) {
                 return ret;
             } else {
                 throw std::invalid_argument("This item did not exist in this game.");
