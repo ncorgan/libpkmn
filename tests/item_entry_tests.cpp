@@ -78,7 +78,7 @@ void item_entry_wrong_game_test() {
         )
     , std::invalid_argument)
     pkmn::database::item_entry f_disk(
-        "F-Disk", "XD"
+        "F-Disk", "Colosseum"
     );
 
     // TODO: more from other generations
