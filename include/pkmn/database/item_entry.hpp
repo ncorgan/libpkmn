@@ -35,22 +35,101 @@ namespace pkmn { namespace database {
                 const std::string &game_name
             );
 
+            /*!
+             * @brief Returns the item's name.
+             *
+             * This function accounts for name changes between generations
+             * and returns the name corresponding to the given game.
+             *
+             * If this entry corresponds to a "None" item or an empty item slot,
+             * this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid item, this function
+             * will return the string "Invalid (0xXX)", where XX corresponds to
+             * the hex value of the item's in-game index.
+             */
             std::string get_name() const;
 
+            /*!
+             * @brief Returns the name of the game associated with this entry.
+             */
             std::string get_game() const;
 
+            /*!
+             * @brief Returns this item's category.
+             *
+             * If this entry corresponds to a "None" item or an empty item slot,
+             * this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid item, this function will
+             * return the string "Unknown".
+             */
             std::string get_category() const;
 
+            /*!
+             * @brief Returns which pocket this item would correspond to in
+             *        the given game.
+             */
             std::string get_pocket() const;
 
+            /*!
+             * @brief Returns a description of this item.
+             *
+             * If this entry corresponds to a TM/HM, this function will return the
+             * string "TM## (move name)" or "HM## (move name)", where ## is the
+             * TM/HM number.
+             *
+             * If this entry corresponds to a "None" item or an empty item slot,
+             * this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid item, this function will
+             * return the string "Unknown".
+             */
             std::string get_description() const;
 
+            /*!
+             * @brief Returns the price of this item if bought at a Poké Mart.
+             *
+             * If this item is a key item (and thus cannot be bought or sold), this
+             * function will return 0.
+             *
+             * If this item corresponds to a "None" item, an empty item slot, or
+             * an invalid item, this function will return -1.
+             */
             int get_cost() const;
 
+            /*!
+             * @brief Returns whether or not a Pokémon can hold this item.
+             *
+             * Pokémon could not hold items in Generation I, so if this entry
+             * corresponds to an item in Red, Blue, or Yellow, this function will
+             * return false.
+             *
+             * If this item corresponds to a "None" item, an empty item slot, or
+             * an invalid item, this function will return false.
+             */
             bool holdable() const;
 
+            /*!
+             * @brief Returns the base power of the move Fling when this item is held.
+             *
+             * The move Fling was introduced in Generation IV, so if this entry
+             * corresponds to a game from a previous generation, this function will
+             * return -1.
+             *
+             * If this item cannot be used with the move Fling, this function will
+             * return -1.
+             *
+             * If this item corresponds to a "None" item, an empty item slot, or
+             * an invalid item, this function will return -1.
+             */
             int get_fling_power() const;
 
+            /*!
+             * @brief Returns the effect of the move Fling when this item is held.
+             *
+             * \todo verify database storage of effect
+             */
             std::string get_fling_effect() const;
 
             #ifndef __DOXYGEN__
