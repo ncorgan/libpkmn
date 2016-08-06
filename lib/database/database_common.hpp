@@ -343,6 +343,64 @@ namespace pkmn { namespace database {
         const std::string &left,
         const std::string &right
     );
+
+    /*
+     * Veekun's database stores item game indices by generation, but
+     * version groups would have been more appropriate. To work around this,
+     * these values determine the bounds of valid item indices for a given
+     * version group. The functions below check them.
+     */
+    BOOST_STATIC_CONSTEXPR int version_group_item_index_bounds[][4][2] = {
+        {{0,0},{0,0},{0,0},{0,0}}, // None
+        {{1,255},{0,0},{0,0},{0,0}}, // Red/Blue
+        {{1,255},{0,0},{0,0},{0,0}}, // Yellow
+        {{1,69},{71,114},{117,128},{130,249}}, // Gold/Silver
+        {{1,249},{0,0},{0,0},{0,0}}, // Crystal
+        {{1,348},{0,0},{0,0},{0,0}}, // Ruby/Sapphire
+        {{1,348},{375,376},{0,0},{0,0}}, // Emerald
+        {{1,374},{0,0},{0,0},{0,0}}, // FR/LG
+        {{1,111},{135,464},{0,0},{0,0}}, // D/P
+        {{1,467},{0,0},{0,0},{0,0}}, // Platinum
+        {{1,427},{429,536},{0,0},{0,0}}, // HG/SS
+        {{1,626},{0,0},{0,0},{0,0}}, // B/W
+        {{0,0},{0,0},{0,0},{0,0}}, // Colosseum
+        {{0,0},{0,0},{0,0},{0,0}}, // XD
+        {{1,638},{0,0},{0,0},{0,0}}, // B2/W2
+        {{1,717},{0,0},{0,0},{0,0}}, // X/Y
+        {{1,775},{0,0},{0,0},{0,0}} // OR/AS
+    };
+
+    // TODO: switch to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
+    BOOST_CONSTEXPR PKMN_INLINE bool item_index_in_bounds(
+        int item_id,
+        int version_group_id,
+        int range
+    ) {
+        return (item_id >= version_group_item_index_bounds[version_group_id][range][0]) and \
+               (item_id >= version_group_item_index_bounds[version_group_id][range][1]);
+    }
+
+    // TODO: switch to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
+    BOOST_CONSTEXPR PKMN_INLINE bool item_range_empty(
+        int version_group_id,
+        int range
+    ) {
+        return (version_group_item_index_bounds[version_group_id][range][0] == 0) and \
+               (version_group_item_index_bounds[version_group_id][range][1] == 0);
+    }
+
+    PKMN_INLINE bool item_index_valid(
+        int item_id,
+        int version_group_id
+    ) {
+        for(int i = 0; i < 4; ++i) {
+            if(item_index_in_bounds(item_id, version_group_id, i)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }}
 
 #endif /* PKMN_DATABASE_DATABASE_COMMON_HPP */

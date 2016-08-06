@@ -56,16 +56,21 @@ namespace pkmn { namespace database {
     ):
         _item_index(item_index),
         _game_id(game_id),
-        _none(item_index == 0),
-        _invalid(false) // TODO: proper check
+        _none(item_index == 0)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
 
         // Get item information. This also serves as input validation.
-        _item_id = pkmn::database::item_index_to_id(
-                       _item_id, _game_id
-                   );
+        try {
+            _item_id = pkmn::database::item_index_to_id(
+                           _item_id, _game_id
+                       );
+            _invalid = false;
+        } catch(const std::invalid_argument&) {
+            _item_id = -1;
+            _invalid = true;
+        }
 
         /*
          * Get version information. This gives us the information we need
@@ -78,9 +83,13 @@ namespace pkmn { namespace database {
                                 _game_id
                             );
 
-        _item_list_id = pkmn::database::version_group_id_to_item_list_id(
-                            _item_id, _version_group_id
-                        );
+        if(_invalid) {
+            _item_list_id = -1;
+        } else {
+            _item_list_id = pkmn::database::version_group_id_to_item_list_id(
+                                _item_id, _version_group_id
+                            );
+        }
     }
 
     item_entry::item_entry(
@@ -153,9 +162,30 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_pocket() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         return pkmn::database::item_list_id_to_name(
                    _item_list_id, _version_group_id
                );
+    }
+
+    // TM/HM detection
+    BOOST_STATIC_CONSTEXPR int TM01  = 305;
+    BOOST_STATIC_CONSTEXPR int HM08  = 404;
+    BOOST_STATIC_CONSTEXPR int TM93  = 659;
+    BOOST_STATIC_CONSTEXPR int TM95  = 661;
+    BOOST_STATIC_CONSTEXPR int TM96  = 745;
+    BOOST_STATIC_CONSTEXPR int TM100 = 749;
+    BOOST_STATIC_CONSTEXPR bool item_id_is_tmhm(
+        int item_id
+    ) {
+        return (item_id >= TM01 and item_id <= HM08) or
+               (item_id >= TM93 and item_id <= TM95) or
+               (item_id >= TM96 and item_id <= TM100);
     }
 
     std::string item_entry::get_description() const {
@@ -169,13 +199,7 @@ namespace pkmn { namespace database {
          * If the item is a TM/HM, ignore what the database shows
          * as the description and show what move it teaches.
          */
-        BOOST_STATIC_CONSTEXPR int tm01 = 305;
-        BOOST_STATIC_CONSTEXPR int hm08 = 404;
-        BOOST_STATIC_CONSTEXPR int tm93 = 659;
-        BOOST_STATIC_CONSTEXPR int tm95 = 661;
-        if((_item_id >= tm01 and _item_id <= hm08) or
-           (_item_id >= tm93 and _item_id <= tm95))
-        {
+        if(item_id_is_tmhm(_item_id)) {
             static BOOST_CONSTEXPR const char* tmhm_move_query = \
                 "SELECT move_id FROM machines WHERE version_group_id=? "
                 "AND item_id=?";
@@ -214,7 +238,19 @@ namespace pkmn { namespace database {
     }
 
     bool item_entry::holdable() const {
-        return false;
+        // Items could not be held in Generation I
+        if(_none or _invalid or _generation == 1) {
+            return false;
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT item_flag_id FROM item_flag_map WHERE "
+            "item_id=? AND item_flag_id=5";
+
+        PKMN_UNUSED(int result);
+        return pkmn::database::maybe_query_db_bind1<int, int>(
+                   _db, query, result, _item_id
+               );
     }
 
     int item_entry::get_fling_power() const {

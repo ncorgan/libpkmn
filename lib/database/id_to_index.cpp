@@ -79,7 +79,17 @@ namespace pkmn { namespace database {
                _db, main_query, ret, item_id, generation
            ))
         {
-            return ret;
+            /*
+             * We know the item existed in this generation, but we need to
+             * confirm that it existed in this specific game.
+             */
+
+            int version_group_id = pkmn::database::game_id_to_version_group(game_id);
+            if(item_index_valid(item_id, version_group_id)) {
+                return ret;
+            } else {
+                throw std::invalid_argument("This item did not exist in this game.");
+            }
         } else {
             if(gamecube) {
                 bool colosseum = (game_id == 19);

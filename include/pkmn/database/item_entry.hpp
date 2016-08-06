@@ -76,8 +76,8 @@ namespace pkmn { namespace database {
              * @brief Returns a description of this item.
              *
              * If this entry corresponds to a TM/HM, this function will return the
-             * string "TM## (move name)" or "HM## (move name)", where ## is the
-             * TM/HM number.
+             * string "Teaches the move $name.", where $name corresponds to the move
+             * name.
              *
              * If this entry corresponds to a "None" item or an empty item slot,
              * this function will return the string "None".
