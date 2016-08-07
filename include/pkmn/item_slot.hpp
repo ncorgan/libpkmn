@@ -14,30 +14,46 @@
 
 namespace pkmn {
 
-    typedef struct {
+    struct item_slot {
+        PKMN_INLINE item_slot() {}
+
+        PKMN_INLINE item_slot(
+            const pkmn::database::item_entry &slot_item,
+            int slot_amount
+        ): item(slot_item),
+           amount(slot_amount) {}
+
+#ifndef SWIG
+        PKMN_INLINE item_slot(
+            pkmn::database::item_entry&& slot_item,
+            int slot_amount
+        ): item(slot_item),
+           amount(slot_amount) {}
+#endif
+
         pkmn::database::item_entry item;
         int amount;
-    } item_slot_t;
+    };
 
     #ifndef SWIG
     PKMN_INLINE bool operator==(
-        const item_slot_t &lhs,
-        const item_slot_t &rhs
+        const item_slot &lhs,
+        const item_slot &rhs
     ) {
         return (lhs.item == rhs.item) and \
                (lhs.amount == rhs.amount);
     }
 
     PKMN_INLINE bool operator!=(
-        const item_slot_t &lhs,
-        const item_slot_t &rhs
+        const item_slot &lhs,
+        const item_slot &rhs
     ) {
         return (lhs.item != rhs.item) or \
                (lhs.amount != rhs.amount);
     }
     #endif /* SWIG */
 
-    typedef std::vector<item_slot_t> item_slots_t;
+    typedef std::vector<item_slot> item_slots_t;
 }
 
 #endif /* PKMN_ITEM_SLOT_HPP */

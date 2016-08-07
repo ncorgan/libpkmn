@@ -15,26 +15,50 @@
 namespace pkmn { namespace database {
 
     //! Represents a move that a Pokémon learns leveling up.
-    typedef struct {
+    struct levelup_move {
+        PKMN_INLINE levelup_move() {}
+
+        PKMN_INLINE levelup_move(
+            const pkmn::database::move_entry &lmove,
+            int move_level
+        ): move(lmove),
+           level(move_level) {}
+
+#ifndef SWIG
+        PKMN_INLINE levelup_move(
+            pkmn::database::move_entry&& lmove,
+            int move_level
+        ): move(lmove),
+           level(move_level) {}
+#endif
+
         //! Entry for move
         pkmn::database::move_entry move;
         //! Level at which the Pokémon learns the move
         int level;
-    } levelup_move_t;
+    };
 
     #ifndef SWIG
-    //! Equality check between two levelup_move_t instances.
-    PKMN_INLINE bool operator==(const levelup_move_t &lhs, const levelup_move_t &rhs) {
-        return (lhs.move == rhs.move) and (lhs.level == rhs.level);
+    //! Equality check between two levelup_move instances.
+    PKMN_INLINE bool operator==(
+        const levelup_move &lhs,
+        const levelup_move &rhs
+    ) {
+        return (lhs.move == rhs.move) and \
+               (lhs.level == rhs.level);
     }
 
-    //! Inequality check between two levelup_move_t instances.
-    PKMN_INLINE bool operator!=(const levelup_move_t &lhs, const levelup_move_t &rhs) {
-        return not (lhs == rhs);
+    //! Inequality check between two levelup_move instances.
+    PKMN_INLINE bool operator!=(
+        const levelup_move &lhs,
+        const levelup_move &rhs
+    ) {
+        return (lhs.move != rhs.move) or \
+               (lhs.level != rhs.level);
     }
     #endif
 
     //! List of level-up moves.
-    typedef std::vector<levelup_move_t> levelup_moves_t;
+    typedef std::vector<levelup_move> levelup_moves_t;
 }}
 #endif /* PKMN_DATABASE_LEVELUP_MOVE_HPP */

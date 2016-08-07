@@ -49,7 +49,7 @@ namespace pkmn { namespace calculations {
      * \param before_gen5 Whether the Wurmple is in a Generation III-IV game
      * \returns Whether a Wurmple will evolve into a Silcoon
      */
-    PKMN_INLINE bool wurmple_becomes_silcoon(
+    PKMN_CONSTEXPR_OR_INLINE bool wurmple_becomes_silcoon(
         uint32_t personality,
         bool before_gen5
     ) {

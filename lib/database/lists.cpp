@@ -25,7 +25,7 @@ namespace pkmn { namespace database {
     ) {
         SQLite::Statement stmt((*_db), query);
         while(stmt.executeStep()) {
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
@@ -38,7 +38,7 @@ namespace pkmn { namespace database {
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, (bind1_type)bind1);
         while(stmt.executeStep()) {
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
@@ -53,7 +53,7 @@ namespace pkmn { namespace database {
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         while(stmt.executeStep()) {
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
@@ -70,7 +70,7 @@ namespace pkmn { namespace database {
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
         while(stmt.executeStep()) {
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
@@ -274,7 +274,7 @@ namespace pkmn { namespace database {
         // The Shadow type only exists in the Gamecube games
         int game_id = game_name_to_id(game);
         if(game_id == 19 or game_id == 20) {
-            types_out.push_back("Shadow");
+            types_out.emplace_back("Shadow");
         }
     }
 }}

@@ -38,7 +38,7 @@ namespace pkmn {
 
             virtual int get_num_items() = 0;
 
-            virtual const pkmn::item_slot_t& at(
+            virtual const pkmn::item_slot& at(
                 int position
             ) = 0;
 

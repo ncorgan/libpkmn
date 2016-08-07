@@ -394,12 +394,15 @@ namespace pkmn { namespace database {
         stmt.bind(1, _pokemon_id);
         stmt.bind(2, _version_group_id);
         while(stmt.executeStep()) {
-            levelup_moves_out.push_back(pkmn::database::levelup_move_t());
-            levelup_moves_out.back().move = pkmn::database::move_entry(
-                                                int(stmt.getColumn(0)),
-                                                _game_id
-                                            );
-            levelup_moves_out.back().level = int(stmt.getColumn(0));
+            levelup_moves_out.emplace_back(
+                pkmn::database::levelup_move(
+                    pkmn::database::move_entry(
+                        int(stmt.getColumn(0)),
+                        _game_id
+                    ),
+                    int(stmt.getColumn(1))
+                )
+            );
         }
     }
 
@@ -520,9 +523,12 @@ namespace pkmn { namespace database {
         stmt.bind(2, _version_group_id);
 
         while(stmt.executeStep()) {
-            move_list_out.push_back(pkmn::database::move_entry(
-                int(stmt.getColumn(0)), _game_id
-            ));
+            move_list_out.emplace_back(
+                pkmn::database::move_entry(
+                    int(stmt.getColumn(0)),
+                    _game_id
+                )
+            );
         }
     }
 

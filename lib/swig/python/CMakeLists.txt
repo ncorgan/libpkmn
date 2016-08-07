@@ -14,7 +14,7 @@ ADD_CUSTOM_COMMAND(
     COMMENT "Generating Python docstrings"
 )
 ADD_CUSTOM_TARGET(
-    python_docstrings ALL
+    pkmn_python_docstrings ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_python_docstrings.i
 )
 
