@@ -112,7 +112,7 @@ namespace pkmn {
         return _num_items;
     }
 
-    const pkmn::item_slot_t& item_list_impl::at(
+    const pkmn::item_slot& item_list_impl::at(
         int position
     ) {
         if(position < 0 or position >= _num_items) {
@@ -223,7 +223,7 @@ namespace pkmn {
             throw std::invalid_argument("Positions cannot match.");
         }
 
-        pkmn::item_slot_t temp = _item_slots[old_position-1];
+        pkmn::item_slot temp = _item_slots[old_position-1];
         _item_slots.erase(_item_slots.begin()+(old_position-1));
         _item_slots.insert(_item_slots.begin()+(new_position-1), temp);
         _to_native();

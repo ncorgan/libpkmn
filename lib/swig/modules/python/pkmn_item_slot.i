@@ -11,21 +11,7 @@
 
 %include <python/stl_macros.i>
 
-%extend pkmn::item_slot_t {
-    item_slot_t() {
-        return new pkmn::item_slot_t;
-    }
-
-    item_slot_t(
-        const pkmn::database::item_entry &entry,
-        const int item_amount
-    ) {
-        pkmn::item_slot_t* ret = new pkmn::item_slot_t;
-        ret->item = entry;
-        ret->amount = item_amount;
-        return ret;
-    }
-
+%extend pkmn::item_slot {
     %pythoncode %{
         def __eq__(self, rhs):
             if self is rhs:
@@ -41,6 +27,5 @@
     %}
 }
 
-%rename(item_slot) pkmn::item_slot_t;
 %include <pkmn/item_slot.hpp>
-PKMN_PYTHON_VECTOR(pkmn::item_slot_t, item_slot_list)
+PKMN_PYTHON_VECTOR(pkmn::item_slot, item_slot_list)

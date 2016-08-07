@@ -72,7 +72,7 @@ namespace pkmn {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << (const char*)stmt.getColumn(0) << ", " << std::flush;
 #endif
-            _item_pocket_names.push_back(
+            _item_pocket_names.emplace_back(
                 (const char*)stmt.getColumn(0)
             );
         }

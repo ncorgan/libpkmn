@@ -36,7 +36,7 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
 #endif
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
@@ -60,7 +60,7 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
 #endif
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
@@ -87,7 +87,7 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
 #endif
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
@@ -117,7 +117,7 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
 #endif
-            ret_vec.push_back((ret_type)stmt.getColumn(0));
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
@@ -381,7 +381,7 @@ namespace pkmn { namespace database {
         // The Shadow type only exists in the Gamecube games
         int game_id = game_name_to_id(game);
         if(game_id == 19 or game_id == 20) {
-            types_out.push_back("Shadow");
+            types_out.emplace_back("Shadow");
         }
     }
 }}

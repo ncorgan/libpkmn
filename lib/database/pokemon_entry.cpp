@@ -420,12 +420,15 @@ namespace pkmn { namespace database {
             std::cout << "(" << int(stmt.getColumn(0)) << "," << int(stmt.getColumn(1))
                       << "), " << std::flush;
 #endif
-            levelup_moves_out.push_back(pkmn::database::levelup_move_t());
-            levelup_moves_out.back().move = pkmn::database::move_entry(
-                                                int(stmt.getColumn(0)),
-                                                _game_id
-                                            );
-            levelup_moves_out.back().level = int(stmt.getColumn(1));
+            levelup_moves_out.emplace_back(
+                pkmn::database::levelup_move(
+                    pkmn::database::move_entry(
+                        int(stmt.getColumn(0)),
+                        _game_id
+                    ),
+                    int(stmt.getColumn(1))
+                )
+            );
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
@@ -558,9 +561,12 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
             std::cout << int(stmt.getColumn(0)) << ", ";
 #endif
-            move_list_out.push_back(pkmn::database::move_entry(
-                int(stmt.getColumn(0)), _game_id
-            ));
+            move_list_out.emplace_back(
+                pkmn::database::move_entry(
+                    int(stmt.getColumn(0)),
+                    _game_id
+                )
+            );
         }
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
