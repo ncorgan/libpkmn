@@ -171,15 +171,15 @@ namespace pkmn { namespace database {
         // Connect to database
         (void)_get_connection();
 
-        bool gamecube = (game_id == 19 or game_id == 20);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
         /*
          * Gamecube games have the same item ranges as Ruby/Sapphire for
          * non-Gamecube exclusive items.
          */
-        int version_group_id = gamecube ? 5
-                                        : pkmn::database::game_id_to_version_group(game_id);
+        int version_group_id = pkmn::database::game_is_gamecube(game_id)
+                                   ? 5
+                                   : pkmn::database::game_id_to_version_group(game_id);
 
         static BOOST_CONSTEXPR const char* all_pockets_query = \
             "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
@@ -265,7 +265,7 @@ namespace pkmn { namespace database {
         }
 
         // Since Gamecube indices are stored separately, we need to do this over again
-        if(gamecube) {
+        if(game_is_gamecube(game_id)) {
             static BOOST_CONSTEXPR const char* gcn_all_pockets_query = \
                 "SELECT name FROM item_names WHERE local_language_id=9 "
                 "AND item_id IN (SELECT DISTINCT items.id FROM items "

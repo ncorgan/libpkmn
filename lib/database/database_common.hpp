@@ -319,6 +319,12 @@ namespace pkmn { namespace database {
         const std::string &game_name
     );
 
+    BOOST_STATIC_CONSTEXPR bool game_is_gamecube(
+        int game_id
+    ) {
+        return (game_id == 19 or game_id == 20);
+    }
+
     /*
      * Workarounds for Veekun database string oddities
      */

@@ -62,7 +62,6 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        bool gamecube = (game_id == 19 or game_id == 20);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
         /*
@@ -91,7 +90,7 @@ namespace pkmn { namespace database {
                 throw std::invalid_argument("This item did not exist in this game.");
             }
         } else {
-            if(gamecube) {
+            if(game_is_gamecube(game_id)) {
                 bool colosseum = (game_id == 19);
 
                 static BOOST_CONSTEXPR const char* gcn_query = \
