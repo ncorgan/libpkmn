@@ -380,7 +380,7 @@ namespace pkmn { namespace database {
 
         // The Shadow type only exists in the Gamecube games
         int game_id = game_name_to_id(game);
-        if(game_id == 19 or game_id == 20) {
+        if(game_is_gamecube(game_id)) {
             types_out.emplace_back("Shadow");
         }
     }

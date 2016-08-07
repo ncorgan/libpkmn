@@ -17,9 +17,6 @@
 #include <sstream>
 #include <stdexcept>
 
-// TODO: confirm this is still accurate
-#define GAMECUBE (_game_id == 19 or _game_id == 20)
-
 namespace pkmn { namespace database {
 
     pkmn::database::sptr _db;
@@ -128,7 +125,7 @@ namespace pkmn { namespace database {
             "WHERE local_language_id=9 AND move_damage_class_id="
             "(SELECT damage_class_id FROM moves WHERE id=?)";
 
-        bool old_game = (_generation < 4 and not GAMECUBE);
+        bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
         return pkmn::database::query_db_bind1<std::string, int>(
                    _db,
                    (old_game ? old_games_query : new_games_query),
@@ -222,7 +219,7 @@ namespace pkmn { namespace database {
 
     std::string move_entry::get_contest_type() const {
         // Contests started in Generation III
-        if(_none or _generation < 3 or GAMECUBE) {
+        if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
             return "None";
         } else if(_invalid) {
             return "Unknown";
@@ -240,7 +237,7 @@ namespace pkmn { namespace database {
 
     std::string move_entry::get_contest_effect() const {
         // Contests started in Generation III
-        if(_none or _generation < 3 or GAMECUBE) {
+        if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
             return "None";
         } else if(_invalid) {
             return "Unknown";
