@@ -134,7 +134,36 @@ namespace pkmn { namespace database {
     }
 
     int move_entry::get_base_power() const {
-        return 0;
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT power FROM moves WHERE move_id=?";
+
+        static BOOST_CONSTEXPR const char* old_queries[] = {
+            "",
+            "SELECT gen1_power FROM old_move_powers WHERE move_id=?",
+            "SELECT gen2_power FROM old_move_powers WHERE move_id=?",
+            "SELECT gen3_power FROM old_move_powers WHERE move_id=?",
+            "SELECT gen4_power FROM old_move_powers WHERE move_id=?",
+            "SELECT gen5_power FROM old_move_powers WHERE move_id=?",
+        };
+
+        /*
+         * If this entry is for an older game, check if it had an older
+         * power. If not, fall back to the default query.
+         */
+        if(_generation < 6) {
+            int old_ret;
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   _db, old_queries[_generation], old_ret,
+                   _move_id
+                ))
+            {
+                return old_ret;
+            }
+        }
+
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, main_query, _move_id
+               );
     }
 
     int move_entry::get_pp(
@@ -150,11 +179,74 @@ namespace pkmn { namespace database {
     }
 
     float move_entry::get_accuracy() const {
-        return 0.0f;
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT accuracy FROM moves WHERE move_id=?";
+
+        static BOOST_CONSTEXPR const char* old_queries[] = {
+            "",
+            "SELECT gen1_accuracy FROM old_move_accuracies WHERE move_id=?",
+            "SELECT gen2_accuracy FROM old_move_accuracies WHERE move_id=?",
+            "SELECT gen3_accuracy FROM old_move_accuracies WHERE move_id=?",
+            "SELECT gen4_accuracy FROM old_move_accuracies WHERE move_id=?",
+            "SELECT gen5_accuracy FROM old_move_accuracies WHERE move_id=?",
+        };
+
+        /*
+         * If this entry is for an older game, check if it had an older
+         * accuracy. If not, fall back to the default query.
+         */
+        if(_generation < 6) {
+            double old_ret;
+            if(pkmn::database::maybe_query_db_bind1<double, int>(
+                   _db, old_queries[_generation], old_ret,
+                   _move_id
+                ))
+            {
+                // Veekun's database stores this as an int 0-100.
+                return (float(old_ret) / 100.0f);
+            }
+        }
+
+        // SQLite uses doubles, so avoid implicit casting ambiguity
+        float ret = (float)pkmn::database::query_db_bind1<double, int>(
+                               _db, main_query, _move_id
+                           );
+
+        // Veekun's database stores this as an int 0-100.
+        return (ret / 100.0f);
     }
 
     int move_entry::get_priority() const {
-        return 0;
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT priority FROM moves WHERE move_id=?";
+
+        static BOOST_CONSTEXPR const char* old_queries[] = {
+            "",
+            "SELECT gen1_priority FROM old_move_priorities WHERE move_id=?",
+            "SELECT gen2_priority FROM old_move_priorities WHERE move_id=?",
+            "SELECT gen3_priority FROM old_move_priorities WHERE move_id=?",
+            "SELECT gen4_priority FROM old_move_priorities WHERE move_id=?",
+            "SELECT gen5_priority FROM old_move_priorities WHERE move_id=?",
+        };
+
+        /*
+         * If this entry is for an older game, check if it had an older
+         * priority. If not, fall back to the default query.
+         */
+        if(_generation < 6) {
+            int old_ret;
+            if(pkmn::database::maybe_query_db_bind1<int, int>(
+                   _db, old_queries[_generation], old_ret,
+                   _move_id
+                ))
+            {
+                return old_ret;
+            }
+        }
+
+        return pkmn::database::query_db_bind1<int, int>(
+                   _db, main_query, _move_id
+               );
     }
 
     // TODO: Would boost::regex make this nicer?
