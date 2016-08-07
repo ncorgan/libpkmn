@@ -60,7 +60,7 @@ namespace pkmn {
         SQLite::Statement stmt((*_db), name_query);
         stmt.bind(1, version_group_id);
         while(stmt.executeStep()) {
-            _item_pocket_names.push_back(
+            _item_pocket_names.emplace_back(
                 (const char*)stmt.getColumn(0)
             );
         }

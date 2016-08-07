@@ -11,21 +11,7 @@
 
 %include <python/stl_macros.i>
 
-%extend pkmn::database::levelup_move_t {
-    levelup_move_t() {
-        return new pkmn::database::levelup_move_t;
-    }
-
-    levelup_move_t(
-        const pkmn::database::move_entry &move,
-        const int level
-    ) {
-        pkmn::database::levelup_move_t* ret = new pkmn::database::levelup_move_t;
-        ret->move = move;
-        ret->level = level;
-        return ret;
-    }
-
+%extend pkmn::database::levelup_move {
     %pythoncode %{
         def __eq__(self, rhs):
             if self is rhs:
@@ -41,6 +27,5 @@
     %}
 }
 
-%rename(levelup_move) pkmn::database::levelup_move_t;
 %include <pkmn/database/levelup_move.hpp>
-PKMN_PYTHON_VECTOR(pkmn::database::levelup_move_t, levelup_move_list)
+PKMN_PYTHON_VECTOR(pkmn::database::levelup_move, levelup_move_list)
