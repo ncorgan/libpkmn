@@ -11,6 +11,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         gender.hpp
         hidden_power.hpp
         shininess.hpp
+        spinda_spots.hpp
         stats.hpp
     )
 
