@@ -9,14 +9,14 @@
 
 namespace pkmn { namespace calculations {
 
-    spinda_spots get_gen3_spinda_spots(
+    spinda_spots gen3_spinda_spots(
         uint32_t personality
     ) {
         (void)personality;
         return spinda_spots();
     }
 
-    spinda_spots get_nds_spinda_spots(
+    spinda_spots nds_spinda_spots(
         uint32_t personality
     ) {
         (void)personality;
