@@ -151,7 +151,7 @@ namespace pkmn { namespace database {
          * power. If not, fall back to the default query.
          */
         if(_generation < 6) {
-            int old_ret;
+            int old_ret = 0;
             if(pkmn::database::maybe_query_db_bind1<int, int>(
                    _db, old_queries[_generation], old_ret,
                    _move_id
@@ -234,7 +234,7 @@ namespace pkmn { namespace database {
          * priority. If not, fall back to the default query.
          */
         if(_generation < 6) {
-            int old_ret;
+            int old_ret = 0;
             if(pkmn::database::maybe_query_db_bind1<int, int>(
                    _db, old_queries[_generation], old_ret,
                    _move_id

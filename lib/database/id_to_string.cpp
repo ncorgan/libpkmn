@@ -226,7 +226,7 @@ namespace pkmn { namespace database {
                 "SELECT item_id FROM old_item_names WHERE name=? AND "
                 "latest_version_group>=? ORDER BY latest_version_group";
 
-            int old_ret;
+            int old_ret = 0;
             if(pkmn::database::maybe_query_db_bind2<int, const std::string&, int>(
                    _db, old_name_query, old_ret, item_name, version_group_id
                ))
