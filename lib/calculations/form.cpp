@@ -5,11 +5,23 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
+
 #include <pkmn/calculations/form.hpp>
 
 #include <stdexcept>
 
 namespace pkmn { namespace calculations {
+
+    char gen2_unown_letter(
+        uint8_t IV_attack, uint8_t IV_defense,
+        uint8_t IV_speed, uint8_t IV_special
+    ) {
+        return char(((IV_attack << 5) |
+                     (IV_defense << 3) |
+                     (IV_speed << 1) |
+                     (IV_special >> 1)) / 10) + 'A';
+    }
 
     std::string gen2_unown_form(
         int IV_attack,
@@ -17,43 +29,43 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        if(IV_attack < 0 or IV_attack > 15) {
+        if(pkmn_IV_in_bounds(IV_attack, false)) {
             throw std::out_of_range("IV_attack: valid range 0-15");
         }
-        if(IV_defense < 0 or IV_defense > 15) {
+        if(pkmn_IV_in_bounds(IV_defense, false)) {
             throw std::out_of_range("IV_defense: valid range 0-15");
         }
-        if(IV_speed < 0 or IV_speed > 15) {
+        if(pkmn_IV_in_bounds(IV_speed, false)) {
             throw std::out_of_range("IV_speed: valid range 0-15");
         }
-        if(IV_special < 0 or IV_special > 15) {
+        if(pkmn_IV_in_bounds(IV_special, false)) {
             throw std::out_of_range("IV_special: valid range 0-15");
         }
 
-        uint8_t alphabet_num = ((uint8_t(IV_attack) << 5)
-                             | (uint8_t(IV_defense) << 3)
-                             | (uint8_t(IV_speed) << 1)
-                             | (uint8_t(IV_special) >> 1)) / 10;
-
         std::string ret = "?";
-        ret[0] = char(alphabet_num + 'A');
+        ret[0] = gen2_unown_letter(
+                     uint8_t(IV_attack), uint8_t(IV_defense),
+                     uint8_t(IV_speed),  uint8_t(IV_special)
+                 );
         return ret;
+    }
+
+    char gen3_unown_letter(
+        const uint8_t* bytes
+    ) {
+        return (((bytes[3] & 0x3) << 6) |
+                ((bytes[2] & 0x3) << 4) |
+                ((bytes[1] & 0x3) << 2) |
+                 (bytes[0] & 0x3)) + 'A';
     }
 
     std::string gen3_unown_form(
         uint32_t personality
     ) {
-        const uint8_t* bytes = reinterpret_cast<const uint8_t*>(&personality);
-
-        uint8_t combined = (((bytes[3] & 0x3) << 6)
-                         |  ((bytes[2] & 0x3) << 4)
-                         |  ((bytes[1] & 0x3) << 2)
-                         |   (bytes[0] & 0x3));
-
-        uint8_t alphabet_num = (combined % 28);
-
         std::string ret = "?";
-        ret[0] = char(alphabet_num + 'A');
+        ret[0] = gen3_unown_letter(
+                     reinterpret_cast<const uint8_t*>(&personality)
+                 );
         return ret;
     }
 
