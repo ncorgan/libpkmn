@@ -31,6 +31,24 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_csharp_docs.i
 )
 
-# Build SWIG modules
+#
+# Set variables needed for CMake macros
+#
+
+SET(SWIG_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+SET(SWIG_CSHARP_INCLUDE_DIRS
+    ${SWIG_MODULE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${SWIG_MODULE_DIR}/..
+    ${SWIG_MODULE_DIR}/../modules
+    ${PKMN_SOURCE_DIR}/include
+    ${PKMN_BINARY_DIR}/include
+)
+
+SET(SWIG_CSHARP_LIBRARIES
+    pkmn
+)
+
 INCLUDE(SWIGCSharp)
 SWIG_CSHARP_INIT()
