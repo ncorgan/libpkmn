@@ -66,7 +66,8 @@ SET(SWIG_CSHARP_LIBRARIES
 INCLUDE(SWIGCSharp)
 SWIG_CSHARP_INIT()
 
+SWIG_BUILD_CSHARP_MODULE(calculations_csharp Calculations TRUE)
 SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE)
 SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE)
 
-CSHARP_BUILD_DLL("pkmn-cs" "database_csharp;stl_csharp")
+CSHARP_BUILD_DLL("pkmn-cs" "calculations_csharp;database_csharp;stl_csharp")

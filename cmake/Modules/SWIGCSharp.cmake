@@ -116,6 +116,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
     )
     ADD_DEPENDENCIES(${SWIG_MODULE_${swig_module_name}_REAL_NAME}
         pkmn_csharp_docs
+        csharp_CamelCase_i
     )
 
     # Install files
