@@ -36,6 +36,9 @@ replacements = dict(Ev = "EV",
                     Pp = "PP",
                     Pc = "PC",
                     TmHm = "TMHM",
+                    Pksav = "PKSav",
+                    Sqlite3 = "SQLite3",
+                    Sqlitecpp = "SQLiteCpp"
                    )
 
 def generate_new_name(old_name, pascal):
