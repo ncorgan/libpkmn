@@ -27,6 +27,8 @@ ignored_classes = ["item_bag",
 ignored_files = ["config.hpp",
                  "shared_ptr.hpp"]
 
+CppHeaderParser.ignoreSymbols += ["PKMN_API", "PKMN_INLINE", "PKMN_CONSTEXPR_OR_INLINE"]
+
 replacements = dict(Ev = "EV",
                     Gb = "GB",
                     Id = "ID",
