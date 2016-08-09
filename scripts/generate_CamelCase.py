@@ -27,6 +27,7 @@ ignored_files = ["config.hpp",
                  "shared_ptr.hpp"]
 
 replacements = dict(Ev = "EV",
+                    Gb = "GB",
                     Id = "ID",
                     Iv = "IV",
                     Pp = "PP",
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     os.chdir(options.include_dir)
     for root, dirs, files in os.walk(os.getcwd()):
         for file in files:
-            if file.endswith(".hpp") and file not in ignored_files):
+            if file.endswith(".hpp") and file not in ignored_files:
                 output += convert_header(CppHeaderParser.CppHeader(os.path.join(root, file)), options.java)
 
     f = open(options.output_file, 'w')
