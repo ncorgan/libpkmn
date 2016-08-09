@@ -26,6 +26,19 @@ namespace pkmn { namespace calculations {
     // Most significant bit
     #define MSB(var) ((var >> 3) & 1)
 
+    PKMN_CONSTEXPR_OR_INLINE int gen2_hidden_power_type(
+        int IV_attack, int IV_defense
+    ) {
+        return (((IV_attack % 4) << 2) + (IV_defense % 4));
+    }
+
+    PKMN_CONSTEXPR_OR_INLINE int gen2_hidden_power_base_power(
+        uint8_t v, uint8_t w, uint8_t x,
+        uint8_t y, uint8_t Z
+    ) {
+        return std::floor<int>(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31);
+    }
+
     hidden_power_t gen2_hidden_power(
         int IV_attack,
         int IV_defense,
@@ -58,9 +71,9 @@ namespace pkmn { namespace calculations {
         hidden_power_t ret;
         ret.type = pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
-                       (((IV_attack % 4) << 2) + (IV_defense % 4))
+                       gen2_hidden_power_type(IV_attack, IV_defense)
                    );
-        ret.base_power = int(std::floor(float(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31)));
+        ret.base_power = gen2_hidden_power_base_power(v, w, x, y, Z);
 
         return ret;
     }
@@ -69,6 +82,20 @@ namespace pkmn { namespace calculations {
     #define LSB(var)  (var & 1)
     // Second-least significant bit
     #define LSB2(var) ((var & 2) >> 1)
+
+    PKMN_CONSTEXPR_OR_INLINE int modern_hidden_power_type(
+        uint8_t a, uint8_t b, uint8_t c,
+        uint8_t d, uint8_t e, uint8_t f
+    ) {
+         return std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63);
+    }
+
+    PKMN_CONSTEXPR_OR_INLINE int modern_hidden_power_base_power(
+        uint8_t u, uint8_t v, uint8_t w,
+        uint8_t x, uint8_t y, uint8_t z
+    ) {
+        return std::floor<int>((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30);
+    }
 
     hidden_power_t modern_hidden_power(
         int IV_HP,
@@ -118,9 +145,9 @@ namespace pkmn { namespace calculations {
         hidden_power_t ret;
         ret.type = pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
-                       int(std::floor(float(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)))
+                       modern_hidden_power_type(a, b, c, d, e, f)
                    );
-        ret.base_power = int(std::floor(float((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30)));
+        ret.base_power = modern_hidden_power_base_power(u, v, w, x, y, z);
 
         return ret;
     }
