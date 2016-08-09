@@ -30,3 +30,7 @@ ADD_CUSTOM_TARGET(
     pkmn_csharp_docs ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_csharp_docs.i
 )
+
+# Build SWIG modules
+INCLUDE(SWIGCSharp)
+SWIG_CSHARP_INIT()
