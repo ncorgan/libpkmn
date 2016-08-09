@@ -11,6 +11,7 @@ PKMN_CSHARP_INIT
 %include <stdint.i>
 %include <std_string.i>
 
+// TODO: IntPair Equals+GetHashCode
 %import <stl_csharp.i>
 
 %{
