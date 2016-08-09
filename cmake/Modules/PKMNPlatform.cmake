@@ -52,6 +52,27 @@ CHECK_CXX_SOURCE_COMPILES("
 " PLATFORM_LITTLE_ENDIAN)
 
 #
+# Use Boost.Config to check for constexpr
+#
+CHECK_CXX_SOURCE_COMPILES("
+    #include <boost/config/suffix.hpp>
+
+    #ifdef BOOST_NO_CXX11_CONSTEXPR
+    #error No constexpr
+    #endif
+
+    int main() {
+        return 0;
+    }
+" COMPILER_HAS_CONSTEXPR)
+
+IF(COMPILER_HAS_CONSTEXPR)
+    SET(PKMN_CONSTEXPR_OR_INLINE "constexpr")
+ELSE()
+    SET(PKMN_CONSTEXPR_OR_INLINE "PKMN_INLINE")
+ENDIF(COMPILER_HAS_CONSTEXPR)
+
+#
 # Look for required C++ headers
 #
 INCLUDE(CheckIncludeFileCXX)

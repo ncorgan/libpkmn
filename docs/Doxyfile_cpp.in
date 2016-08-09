@@ -1264,6 +1264,7 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED = PKMN_API= \
              PKMN_INLINE=inline \
+             PKMN_CONSTEXPR_OR_INLINE=@PKMN_CONSTEXPR_OR_INLINE@ \
              protected=private \
              __DOXYGEN__
 

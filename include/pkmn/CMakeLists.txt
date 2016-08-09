@@ -5,9 +5,15 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
+)
+
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_headers
-        config.hpp
+        build_info.hpp
+        ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
         item_bag.hpp
         item_list.hpp
         item_slot.hpp

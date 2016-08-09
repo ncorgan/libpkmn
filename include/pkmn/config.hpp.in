@@ -34,6 +34,8 @@
 #    define PKMN_UNUSED(x)      x
 #endif
 
+#define PKMN_CONSTEXPR_OR_INLINE @PKMN_CONSTEXPR_OR_INLINE@
+
 #ifdef PKMN_DLL_EXPORTS
 #    define PKMN_API PKMN_EXPORT
 #else

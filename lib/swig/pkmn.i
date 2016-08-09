@@ -16,6 +16,9 @@
 
 %include <pkmn/config.hpp>
 
+// SWIG can't parse constexpr
+#define constexpr
+
 /*
  * All SWIG modules will ignore the following functions/classes.
  */
