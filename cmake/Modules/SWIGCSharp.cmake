@@ -64,6 +64,7 @@ MACRO(SWIG_CSHARP_INIT)
 ENDMACRO(SWIG_CSHARP_INIT)
 
 MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
+    INCLUDE(UseCSharp)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -87,7 +88,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
 
     # Set flags to pass into SWIG call
     # TODO: workaround for recent CMake dllimport assumptions
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${swig_module_name} ${SWIG_CSHARP_FLAGS})
+    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${swig_module_name} ${SWIG_CSHARP_FLAGS} -namespace PKMN)
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
@@ -112,6 +113,9 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
 
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${swig_module_name}_REAL_NAME}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    )
+    ADD_DEPENDENCIES(${SWIG_MODULE_${swig_module_name}_REAL_NAME}
+        pkmn_csharp_docs
     )
 
     # Install files

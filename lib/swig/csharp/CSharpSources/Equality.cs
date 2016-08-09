@@ -34,7 +34,7 @@ public class PKMNHashCodes {
     }
 }
 
-public partial class ItemEntry {
+/*public partial class ItemEntry {
     /// <summary>Compares two ItemEntry instances to determine value equality.</summary>
     /// <remarks>
     /// Two instances are determined to be equal if they represent the same item from
@@ -299,7 +299,7 @@ public partial class PokemonEntryList {
 
         return ret;
     }
-}
+}*/
 
 public partial class StringBoolDict {
     /// <summary>Generates a unique hash code for the given StringBoolDict.</summary>
@@ -404,7 +404,7 @@ public partial class StringStringDict {
     }
 }
 
-public partial class StringItemListDict {
+/*public partial class StringItemListDict {
     /// <summary>Generates a unique hash code for the given StringItemListDict.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
@@ -416,6 +416,6 @@ public partial class StringItemListDict {
 
         return ret;
     }
-}
+}*/
 
 }
