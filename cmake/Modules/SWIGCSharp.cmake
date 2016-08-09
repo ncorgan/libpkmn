@@ -110,6 +110,10 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
         SWIG_LINK_LIBRARIES(${swig_module_name} ${SWIG_LIBRARIES})
     ENDIF(${num_swig_libs} GREATER 0)
 
+    SET_TARGET_PROPERTIES(${SWIG_MODULE_${swig_module_name}_REAL_NAME}
+        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    )
+
     # Install files
     IF(WIN32)
         INSTALL(

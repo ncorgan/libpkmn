@@ -22,16 +22,15 @@ header_text = """/*
  */""" % datetime.datetime.now()
 
 ignored_files = ["config.hpp",
-                 "shared_ptr.hpp"]
+                 "shared_ptr.hpp.in"]
 
-CppHeaderParser.ignoreSymbols += ["PKMN_API", "PKMN_INLINE"]
+CppHeaderParser.ignoreSymbols += ["PKMN_API", "PKMN_INLINE", "PKMN_CONSTEXPR_OR_INLINE"]
 
 def get_csharp_docs(header):
     output = ""
 
     for fcn in header.functions:
         if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
-            doc = swigdoc_converter.documentation(fcn)
             output += "%s\n" % swigdoc_converter.documentation(fcn).swig_csharp_docs()
 
     for cls in header.classes:
@@ -55,7 +54,6 @@ def get_javadocs(header):
 
     for fcn in header.functions:
         if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
-            doc = swigdoc_converter.documentation(fcn)
             output += "%s\n" % swigdoc_converter.documentation(fcn).swig_javadoc()
 
     for cls in header.classes:
@@ -79,8 +77,6 @@ def get_python_docstrings(header):
 
     for fcn in header.functions:
         if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
-            #print("fcn name = {0}".format(fcn["name"]))
-            doc = swigdoc_converter.documentation(fcn)
             output += "%s\n" % swigdoc_converter.documentation(fcn).swig_python_docstring()
 
     for cls in header.classes:
@@ -95,11 +91,9 @@ def get_python_docstrings(header):
 
         for fcn in header.classes[cls]["methods"]["public"]:
             if "operator" not in fcn["name"].lower() and not fcn["destructor"] and "doxygen" in fcn:
-                #print("fcn name = {0}".format(fcn["name"]))
                 output += "%s\n" % swigdoc_converter.documentation(fcn).swig_python_docstring()
 
         for var in header.classes[cls]["properties"]["public"]:
-            #print("var name = {0}".format(var))
             if "doxygen" in var:
                 output += "%s\n" % swigdoc_converter.documentation(var).swig_python_docstring()
 

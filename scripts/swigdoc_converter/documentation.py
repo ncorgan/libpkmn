@@ -90,11 +90,11 @@ class documentation():
                 if line.startswith("//!"):
                     self.__short_doc = "/".join(line.split("/")[2:]).split("! ")[1].replace("\"","\\\"").rstrip("/*!")
                 elif line.startswith("* \\param"):
-                    self.__params[line.split(" ")[2]] = " ".join(line.split(" ")[3:])
+                    self.__params[line.split(" ")[2]] = " ".join(line.split(" ")[3:]).replace("\"","\\\"")
                 elif line.startswith("* \\throw"):
-                    self.__throws[line.split(" ")[2]] = " ".join(line.split(" ")[3:])
+                    self.__throws[line.split(" ")[2]] = " ".join(line.split(" ")[3:]).replace("\"","\\\"")
                 elif line.startswith("* \\return"):
-                    self.__returns = " ".join(line.split(" ")[2:])
+                    self.__returns = " ".join(line.split(" ")[2:]).replace("\"","\\\"")
                 elif line.startswith("* @brief"):
                     in_brief = True
                 elif line.startswith("*/") and in_brief:

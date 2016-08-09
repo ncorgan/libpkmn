@@ -12,6 +12,6 @@
     %include <pkmn.i>
     %include <pkmn_csharp_docs.i>
     %include <csharp_CamelCase.i>
-    %include <types/stl_macros.i>
+    %include <csharp/stl_macros.i>
     %typemap(csclassmodifiers) SWIGTYPE "public partial class"
 %enddef

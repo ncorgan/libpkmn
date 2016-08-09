@@ -21,7 +21,8 @@ header_text = """/*
  */""" % datetime.datetime.now()
 
 ignored_classes = ["item_bag",
-                   "item_list"]
+                   "item_list",
+                   "PKMN_API"]
 
 ignored_files = ["config.hpp",
                  "shared_ptr.hpp"]
