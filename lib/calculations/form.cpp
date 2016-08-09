@@ -29,16 +29,16 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        if(pkmn_IV_in_bounds(IV_attack, false)) {
+        if(not pkmn_IV_in_bounds(IV_attack, false)) {
             throw std::out_of_range("IV_attack: valid range 0-15");
         }
-        if(pkmn_IV_in_bounds(IV_defense, false)) {
+        if(not pkmn_IV_in_bounds(IV_defense, false)) {
             throw std::out_of_range("IV_defense: valid range 0-15");
         }
-        if(pkmn_IV_in_bounds(IV_speed, false)) {
+        if(not pkmn_IV_in_bounds(IV_speed, false)) {
             throw std::out_of_range("IV_speed: valid range 0-15");
         }
-        if(pkmn_IV_in_bounds(IV_special, false)) {
+        if(not pkmn_IV_in_bounds(IV_special, false)) {
             throw std::out_of_range("IV_special: valid range 0-15");
         }
 
