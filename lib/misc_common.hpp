@@ -15,7 +15,7 @@
 #include <cmath>
 #include <cstring>
 
-BOOST_STATIC_CONSTEXPR PKMN_INLINE bool pkmn_floats_close(
+PKMN_CONSTEXPR_OR_INLINE bool pkmn_floats_close(
     float f1, float f2
 ) {
     return (std::fabs(f1-f2) < 0.000001);
@@ -65,7 +65,7 @@ static PKMN_INLINE bool pkmn_string_is_modern_stat(
     return false;
 }
 
-BOOST_STATIC_CONSTEXPR PKMN_INLINE bool pkmn_IV_in_bounds(
+PKMN_CONSTEXPR_OR_INLINE bool pkmn_IV_in_bounds(
     int IV, bool modern
 ) {
     return (IV < 0) and (IV > (modern ? 31 : 15));
