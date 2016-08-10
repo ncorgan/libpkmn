@@ -7,6 +7,12 @@
 
 #include <pkmn/calculations/spinda_spots.hpp>
 
+#include <boost/config.hpp>
+
+/*
+ * Source: http://web.archive.org/web/20141110213341/http://www.freewebs.com/gatorshark/SpindaDocumentation.htm
+ */
+
 namespace pkmn { namespace calculations {
 
     spinda_spots gen3_spinda_spots(

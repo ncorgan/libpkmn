@@ -13,7 +13,7 @@
 
 namespace pkmn { namespace calculations {
 
-    //! X/Y coordinates of an indiviudal Spinda spot.
+    //! X/Y coordinates of an individual Spinda spot.
     struct spinda_coords {
         //! Default constructor.
         PKMN_CONSTEXPR_OR_INLINE spinda_coords():
@@ -94,27 +94,27 @@ namespace pkmn { namespace calculations {
     struct spinda_spots {
         //! Default constructor.
         PKMN_CONSTEXPR_OR_INLINE spinda_spots():
-            top_left(spinda_coords()),
-            top_right(spinda_coords()),
-            bottom_left(spinda_coords()),
-            bottom_right(spinda_coords()) {}
+            left_ear(spinda_coords()),
+            right_ear(spinda_coords()),
+            left_face(spinda_coords()),
+            right_face(spinda_coords()) {}
 
         /*!
          * @brief Constructor taking in four coordinate sets.
-         * \param tl Coordinates for top-left spot.
-         * \param tr Coordinates for top-right spot.
-         * \param bl Coordinates for bottom-left spot.
-         * \param br Coordinates for bottom-right spot.
+         * \param le Coordinates for spot on the left ear.
+         * \param re Coordinates for spot on the right ear.
+         * \param lf Coordinates for spot on the left of the face.
+         * \param rf Coordinates for spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            const spinda_coords &tl,
-            const spinda_coords &tr,
-            const spinda_coords &bl,
-            const spinda_coords &br
-        ): top_left(tl),
-           top_right(tr),
-           bottom_left(bl),
-           bottom_right(br) {}
+            const spinda_coords &le,
+            const spinda_coords &re,
+            const spinda_coords &lf,
+            const spinda_coords &rf
+        ): left_ear(le),
+           right_ear(re),
+           left_face(lf),
+           right_face(rf) {}
 
         /*!
          * @brief Copy constructor.
@@ -122,49 +122,49 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
             const spinda_spots &spots
-        ): top_left(spots.top_left),
-           top_right(spots.top_right),
-           bottom_left(spots.bottom_left),
-           bottom_right(spots.bottom_right) {}
+        ): left_ear(spots.left_ear),
+           right_ear(spots.right_ear),
+           left_face(spots.left_face),
+           right_face(spots.right_face) {}
 
         /*!
          * @brief Constructor taking in individual parts of coordinates.
-         * \param tl_x X coordinate of top-left spot.
-         * \param tl_y Y coordinate of top-left spot.
-         * \param tr_x X coordinate of top-right spot.
-         * \param tr_y Y coordinate of top-right spot.
-         * \param bl_x X coordinate of bottom-left spot.
-         * \param bl_y Y coordinate of bottom-left spot.
-         * \param br_x X coordinate of bottom-right spot.
-         * \param br_y Y coordinate of bottom-right spot.
+         * \param le_x X coordinate of spot on the left ear.
+         * \param le_y Y coordinate of spot on the left ear.
+         * \param re_x X coordinate of spot on the right ear.
+         * \param re_y Y coordinate of spot on the right ear.
+         * \param lf_x X coordinate of spot on the left of the face.
+         * \param lf_y Y coordinate of spot on the left of the face.
+         * \param rf_x X coordinate of spot on the right of the face.
+         * \param rf_y Y coordinate of spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            int tl_x, int tl_y,
-            int tr_x, int tr_y,
-            int bl_x, int bl_y,
-            int br_x, int br_y
-        ): top_left(spinda_coords(tl_x, tl_y)),
-           top_right(spinda_coords(tr_x, tr_y)),
-           bottom_left(spinda_coords(bl_x, bl_y)),
-           bottom_right(spinda_coords(br_x, br_y)) {}
+            int le_x, int le_y,
+            int re_x, int re_y,
+            int lf_x, int lf_y,
+            int rf_x, int rf_y
+        ): left_ear(spinda_coords(le_x, le_y)),
+           right_ear(spinda_coords(re_x, re_y)),
+           left_face(spinda_coords(lf_x, lf_y)),
+           right_face(spinda_coords(rf_x, rf_y)) {}
 
 #ifndef SWIG
         /*!
          * @brief Constructor taking in references to individual spots.
-         * \param tl Coordinates for top-left spot.
-         * \param tr Coordinates for top-right spot.
-         * \param bl Coordinates for bottom-left spot.
-         * \param br Coordinates for bottom-right spot.
+         * \param le Coordinates for spot on the left ear.
+         * \param re Coordinates for spot on the right ear.
+         * \param lf Coordinates for spot on the left of the face.
+         * \param rf Coordinates for spot on the right of the face.
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
-            spinda_coords&& tl,
-            spinda_coords&& tr,
-            spinda_coords&& bl,
-            spinda_coords&& br
-        ): top_left(tl),
-           top_right(tr),
-           bottom_left(bl),
-           bottom_right(br) {}
+            spinda_coords&& le,
+            spinda_coords&& re,
+            spinda_coords&& lf,
+            spinda_coords&& rf
+        ): left_ear(le),
+           right_ear(re),
+           left_face(lf),
+           right_face(rf) {}
 
         /*!
          * @brief Move constructor.
@@ -172,10 +172,10 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
             spinda_spots&& spots
-        ): top_left(spots.top_left),
-           top_right(spots.top_right),
-           bottom_left(spots.bottom_left),
-           bottom_right(spots.bottom_right) {}
+        ): left_ear(spots.left_ear),
+           right_ear(spots.right_ear),
+           left_face(spots.left_face),
+           right_face(spots.right_face) {}
 
         /*!
          * @brief Assignment operator.
@@ -184,25 +184,25 @@ namespace pkmn { namespace calculations {
         PKMN_INLINE spinda_spots& operator=(
             const spinda_spots &rhs
         ) {
-            this->top_left = rhs.top_left;
-            this->top_right = rhs.top_right;
-            this->bottom_left = rhs.bottom_left;
-            this->bottom_right = rhs.bottom_right;
+            this->left_ear = rhs.left_ear;
+            this->right_ear = rhs.right_ear;
+            this->left_face = rhs.left_face;
+            this->right_face = rhs.right_face;
             return *this;
         }
 #endif
 
-        //! Coordinates of top-left spot.
-        spinda_coords top_left;
+        //! Coordinates of spot on the left ear.
+        spinda_coords left_ear;
 
-        //! Coordinates of top-right spot.
-        spinda_coords top_right;
+        //! Coordinates of spot on the right ear.
+        spinda_coords right_ear;
 
-        //! Coordinates of bottom-left spot.
-        spinda_coords bottom_left;
+        //! Coordinates of spot on the left of the face.
+        spinda_coords left_face;
 
-        //! Coordinates of top-right spot.
-        spinda_coords bottom_right;
+        //! Coordinates of spot on the right of the face.
+        spinda_coords right_face;
     };
 
 #ifndef SWIG
@@ -215,10 +215,10 @@ namespace pkmn { namespace calculations {
         const spinda_spots &lhs,
         const spinda_spots &rhs
     ) {
-        return (lhs.top_left != rhs.top_left) and \
-               (lhs.top_right != rhs.top_right) and \
-               (lhs.bottom_left != rhs.bottom_left) and \
-               (lhs.bottom_right != rhs.bottom_right);
+        return (lhs.left_ear != rhs.left_ear) and \
+               (lhs.right_ear != rhs.right_ear) and \
+               (lhs.left_face != rhs.left_face) and \
+               (lhs.right_face != rhs.right_face);
     }
 
     /*!
