@@ -71,13 +71,13 @@ namespace pkmn { namespace calculations {
      */
 
     BOOST_STATIC_CONSTEXPR spinda_spots gen3_origin(
-        spinda_coords(24,1),  spinda_coords(0,0),
-        spinda_coords(18,19), spinda_coords(6,18)
+        spinda_coords(32,9),  spinda_coords(8,8),
+        spinda_coords(26,27), spinda_coords(14,26)
     );
 
     BOOST_STATIC_CONSTEXPR spinda_spots nds_origin(
-        spinda_coords(24,2),  spinda_coords(0,0),
-        spinda_coords(15,18), spinda_coords(3,18)
+        spinda_coords(31,9),  spinda_coords(7,7),
+        spinda_coords(22,25), spinda_coords(10,25)
     );
 
     /*
