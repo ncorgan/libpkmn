@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/build_info.hpp>
+
 #include <boost/version.hpp>
 #include <pksav/version.h>
 #include <sqlite3.h>
