@@ -13,7 +13,23 @@
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/format.hpp>
-#include <boost/lockfree/detail/branch_hints.hpp>
+
+/*
+ * Boost's branch_hints.hpp is only actually installed on compatible
+ * platforms, despite having an #ifdef that should ignore any branch
+ * hints.
+ */
+#ifdef _MSC_VER
+
+namespace boost { namespace lockfree { namespace detail {
+    PKMN_CONSTEXPR_OR_INLINE bool unlikely(bool expr) {
+        return expr;
+    }
+}}}
+
+#else
+#    include <boost/lockfree/detail/branch_hints.hpp>
+#endif
 
 #include <map>
 #include <stdexcept>
