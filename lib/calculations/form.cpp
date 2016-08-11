@@ -9,18 +9,20 @@
 
 #include <pkmn/calculations/form.hpp>
 
+#include <boost/config.hpp>
+
 #include <stdexcept>
 
 namespace pkmn { namespace calculations {
 
-    char gen2_unown_letter(
+    PKMN_CONSTEXPR_OR_INLINE char gen2_unown_letter(
         uint8_t IV_attack, uint8_t IV_defense,
         uint8_t IV_speed, uint8_t IV_special
     ) {
-        return char(((IV_attack << 5) |
-                     (IV_defense << 3) |
-                     (IV_speed << 1) |
-                     (IV_special >> 1)) / 10) + 'A';
+        return char((((IV_attack & 0x6) << 5) |
+                     ((IV_defense & 0x6) << 3) |
+                     ((IV_speed & 0x6) << 1) |
+                     ((IV_special & 0x6) >> 1)) / 10) + 'A';
     }
 
     std::string gen2_unown_form(
@@ -50,13 +52,13 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    char gen3_unown_letter(
+    PKMN_CONSTEXPR_OR_INLINE char gen3_unown_letter(
         const uint8_t* bytes
     ) {
-        return (((bytes[3] & 0x3) << 6) |
-                ((bytes[2] & 0x3) << 4) |
-                ((bytes[1] & 0x3) << 2) |
-                 (bytes[0] & 0x3)) + 'A';
+        return ((((bytes[3] & 0x3) << 6) |
+                 ((bytes[2] & 0x3) << 4) |
+                 ((bytes[1] & 0x3) << 2) |
+                  (bytes[0] & 0x3)) % 28) + 'A';
     }
 
     std::string gen3_unown_form(
@@ -66,7 +68,14 @@ namespace pkmn { namespace calculations {
         ret[0] = gen3_unown_letter(
                      reinterpret_cast<const uint8_t*>(&personality)
                  );
-        return ret;
+
+        if(ret == "[") {
+            return "?";
+        } else if(ret == "]") {
+            return "!";
+        } else {
+            return ret;
+        }
     }
 
 }}
