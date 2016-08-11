@@ -37,27 +37,27 @@ void item_entry_wrong_game_test() {
         pkmn::database::item_entry pink_bow(
             "Pink Bow", "Red"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         pkmn::database::item_entry razz_berry(
             "Razz Berry", "Silver"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         pkmn::database::item_entry flame_plate(
             "Flame Plate", "Emerald"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         pkmn::database::item_entry dna_splicers(
             "DNA Splicers", "Pearl"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         pkmn::database::item_entry mega_ring(
             "Mega Ring", "White"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
 
     /*
      * Make sure items from different games in a given generation
@@ -67,7 +67,7 @@ void item_entry_wrong_game_test() {
         pkmn::database::item_entry gs_ball(
             "GS Ball", "Gold"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     pkmn::database::item_entry gs_ball(
         "GS Ball", "Crystal"
     );
@@ -76,7 +76,7 @@ void item_entry_wrong_game_test() {
         pkmn::database::item_entry f_disk(
             "F-Disk", "Ruby"
         )
-    , std::invalid_argument)
+    , std::invalid_argument);
     pkmn::database::item_entry f_disk(
         "F-Disk", "Colosseum"
     );

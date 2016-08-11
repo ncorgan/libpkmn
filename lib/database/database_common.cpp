@@ -12,7 +12,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 
 #include <boost/config.hpp>
-#include <boost/lockfree/detail/branch_hints.hpp>
+#include <boost/algorithm/string/compare.hpp>
 
 #ifdef PKMN_SQLITE_DEBUG
 #include <iostream>
@@ -318,24 +318,7 @@ namespace pkmn { namespace database {
         }
 
         // Sort alphabetically
-        std::sort(ret.begin(), ret.end(), string_compare);
-    }
-
-    bool string_compare(
-        const std::string &left,
-        const std::string &right
-    ) {
-        std::string::const_iterator lit, rit;
-
-        for(lit = left.begin(), rit = right.begin(); lit != left.end() && rit != right.end(); ++lit, ++rit) {
-            if(std::tolower(*lit) < std::tolower(*rit)) {
-                return true;
-            } else if(std::tolower(*lit) > std::tolower(*rit)) {
-                return false;
-            }
-        }
-
-        return (left.size() < right.size());
+        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
     }
 
 }}
