@@ -61,12 +61,10 @@ namespace pksav {
         pkmn::database::get_connection(_db);
 
         std::memset(to, 0, sizeof(*to));
-        to->species = pksav_bigendian16(
-                          uint16_t(convert_pokemon_game_index(
-                              pksav_bigendian16(from->species),
-                              1, 4
-                          ))
-                      );
+        to->species = uint8_t(convert_pokemon_game_index(
+                          pksav_bigendian16(from->species),
+                          1, 4
+                      ));
         /*
          * The rest of the Gen I fields are laid out identically.
          * Gen I's catch rate corresponds to Gen II's held item.
@@ -117,12 +115,10 @@ namespace pksav {
         pkmn::database::get_connection(_db);
 
         std::memset(to, 0, sizeof(*to));
-        to->species = pksav_bigendian16(
-                          uint16_t(convert_pokemon_game_index(
-                              pksav_bigendian16(from->species),
-                              4, 1
-                          ))
-                      );
+        to->species = uint8_t(convert_pokemon_game_index(
+                          pksav_bigendian16(from->species),
+                          4, 1
+                      ));
 
         // Current HP
 
