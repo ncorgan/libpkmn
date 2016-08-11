@@ -17,12 +17,12 @@ BOOST_AUTO_TEST_CASE(ability_list_test) {
         pkmn::database::get_ability_list(
             2, abilities
         );
-    , std::out_of_range)
+    , std::out_of_range);
     BOOST_CHECK_THROW(
         pkmn::database::get_ability_list(
             7, abilities
         );
-    , std::out_of_range)
+    , std::out_of_range);
 
     // TODO: test good cases
 }
@@ -35,12 +35,12 @@ BOOST_AUTO_TEST_CASE(game_list_test) {
         pkmn::database::get_game_list(
             0, true, games
         );
-    , std::out_of_range)
+    , std::out_of_range);
     BOOST_CHECK_THROW(
         pkmn::database::get_game_list(
             7, true, games
         );
-    , std::out_of_range)
+    , std::out_of_range);
 
     // TODO: test good cases, make sure include_previous parameter works
 }
