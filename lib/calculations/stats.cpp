@@ -14,16 +14,21 @@
 
 namespace pkmn { namespace calculations {
 
+// TODO: better solution
+#ifdef PKMN_PLATFORM_WIN32
+    PKMN_INLINE int gb_stat_common(
+#else
     PKMN_CONSTEXPR_OR_INLINE int gb_stat_common(
+#endif
         int level,
         int base_stat,
         int EV,
         int IV
     ) {
-        return std::floor<int>(
-                   (((base_stat + IV) << 1) +
-                   (std::ceil<int>(std::sqrt<int>(EV)) / 4) * level) / 100
-               );
+        return int(std::floor<int>(
+                       (((base_stat + IV) << 1) +
+                       (int(std::ceil<int>(int(std::sqrt<int>(EV)))) / 4) * level) / 100
+               ));
     }
 
     int get_gb_stat(
@@ -51,14 +56,19 @@ namespace pkmn { namespace calculations {
         }
     }
 
+// TODO: better solution
+#ifdef PKMN_PLATFORM_WIN32
+    PKMN_INLINE int modern_stat_common(
+#else
     PKMN_CONSTEXPR_OR_INLINE int modern_stat_common(
+#endif
         int level,
         int base_stat,
         int EV,
         int IV
     ) {
-        return std::floor<int>(((2 * base_stat) + IV + \
-                               std::floor<int>(EV / 4) * level) / 100);
+        return int(std::floor<int>(((2 * base_stat) + IV + \
+                                   int(std::floor<int>(EV / 4) * level)) / 100));
     }
 
     int get_modern_stat(
@@ -89,7 +99,7 @@ namespace pkmn { namespace calculations {
         if(stat == "HP") {
             return (modern_stat_common(level, base_stat, EV, IV) + level + 10);
         } else {
-            return ((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
+            return int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
         }
     }
 
