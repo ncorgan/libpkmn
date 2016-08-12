@@ -26,8 +26,13 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         return int(std::floor<int>(
-                       (((base_stat + IV) << 1) +
-                       (int(std::ceil<int>(int(std::sqrt<int>(EV)))) / 4) * level) / 100
+                   (((base_stat + IV) * 2 +
+                      int(std::floor<int>(
+                          int(std::ceil<int>(
+                              std::sqrt(EV) / 4
+                          ))
+                      ))
+                   ) * level) / 100
                ));
     }
 
@@ -67,8 +72,15 @@ namespace pkmn { namespace calculations {
         int EV,
         int IV
     ) {
-        return int(std::floor<int>(((2 * base_stat) + IV + \
-                                   int(std::floor<int>(EV / 4) * level)) / 100));
+        return int(
+                   std::floor<int>(
+                       ((2 * base_stat + IV +
+                         int(std::floor<int>(
+                                 EV / 4
+                            ))) * level)
+                       / 100
+                   )
+               );
     }
 
     int get_modern_stat(
@@ -99,7 +111,7 @@ namespace pkmn { namespace calculations {
         if(stat == "HP") {
             return (modern_stat_common(level, base_stat, EV, IV) + level + 10);
         } else {
-            return int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
+            return int(std::floor<int>((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier));
         }
     }
 

@@ -539,6 +539,16 @@ BOOST_AUTO_TEST_CASE(modern_shiny_test) {
     BOOST_CHECK(shiny2);
 }
 
+/*
+ * Off-by-one is acceptable for stat checks, but BOOST_CHECK_CLOSE
+ * is for floats or doubles.
+ */
+PKMN_INLINE void PKMN_CHECK_STAT_CLOSE(
+    int actual, int expected
+) {
+    BOOST_CHECK(int(std::abs(actual-expected)) <= 1);
+}
+
 BOOST_AUTO_TEST_CASE(gb_stat_test) {
     /*
      * Make sure expected exceptions are thrown
@@ -564,6 +574,47 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
                        "Attack", 1, 1, 1, 12345
                    )
     , std::out_of_range);
+
+    /*
+     * Test with known good inputs.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
+     */
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "HP", 81, 35, 22850, 7
+        ), 189
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Attack", 81, 55, 23140, 8
+        ), 137
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Defense", 81, 30, 17280, 13
+        ), 101
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Special", 81, 50, 19625, 9
+        ), 128
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Special Attack", 81, 50, 19625, 9
+        ), 128
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Special Defense", 81, 40, 19625, 9
+        ), 112
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_gb_stat(
+            "Speed", 81, 90, 24795, 5
+        ), 190
+    );
 }
 
 BOOST_AUTO_TEST_CASE(modern_stat_test) {
@@ -606,5 +657,39 @@ BOOST_AUTO_TEST_CASE(modern_stat_test) {
                    )
     , std::out_of_range);
 
-    // TODO: test cases with known results from external sources
+    /*
+     * Test with known good inputs.
+     *
+     * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
+     */
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "HP", 78, 1.0f, 108, 74, 24
+        ), 289
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "Attack", 78, 1.1f, 130, 195, 12
+        ), 280
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "Defense", 78, 1.0f, 95, 86, 30
+        ), 193
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "Special Attack", 78, 0.9f, 80, 48, 16
+        ), 136
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "Special Defense", 78, 1.0f, 85, 84, 23
+        ), 171
+    );
+    PKMN_CHECK_STAT_CLOSE(
+        pkmn::calculations::get_modern_stat(
+            "Speed", 78, 1.0f, 102, 23, 5
+        ), 172
+    );
 }
