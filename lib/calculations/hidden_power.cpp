@@ -26,10 +26,14 @@ namespace pkmn { namespace calculations {
     // Most significant bit
     #define MSB(var) ((var >> 3) & 1)
 
+    /*
+     * There is no Normal-type Hidden Power, so all type indices
+     * are offset from normal.
+     */
     PKMN_CONSTEXPR_OR_INLINE int gen2_hidden_power_type(
         int IV_attack, int IV_defense
     ) {
-        return (((IV_attack % 4) << 2) + (IV_defense % 4));
+        return (4 * (IV_attack % 4) + (IV_defense % 4)) + 2;
     }
 
 // TODO: better solution
@@ -97,7 +101,7 @@ namespace pkmn { namespace calculations {
         uint8_t a, uint8_t b, uint8_t c,
         uint8_t d, uint8_t e, uint8_t f
     ) {
-         return int(std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63));
+         return int(std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)) + 2;
     }
 
 // TODO: better solution
