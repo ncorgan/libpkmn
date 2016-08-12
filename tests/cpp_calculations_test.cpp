@@ -95,20 +95,20 @@ BOOST_AUTO_TEST_CASE(wurmple_becomes_silcoon_test) {
      * Source: http://www.smogon.com/ingame/rng/pid_iv_creation#silcoon_cascoon
      */
     bool before_gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
-        0x5CF4091C, false
+        0x5CF4091C, true
     );
     BOOST_CHECK(before_gen5_1);
     bool before_gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
-        0x091C5CF4, false
+        0x091C5CF4, true
     );
     BOOST_CHECK(not before_gen5_2);
 
     bool gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
-        0x091C5CF4, true
+        0x091C5CF4, false
     );
     BOOST_CHECK(gen5_1);
     bool gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
-        0x5CF4091C, true
+        0x5CF4091C, false
     );
     BOOST_CHECK(not gen5_2);
 }
