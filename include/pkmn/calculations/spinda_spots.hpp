@@ -215,10 +215,10 @@ namespace pkmn { namespace calculations {
         const spinda_spots &lhs,
         const spinda_spots &rhs
     ) {
-        return (lhs.left_ear != rhs.left_ear) and \
-               (lhs.right_ear != rhs.right_ear) and \
-               (lhs.left_face != rhs.left_face) and \
-               (lhs.right_face != rhs.right_face);
+        return (lhs.left_ear == rhs.left_ear) and \
+               (lhs.right_ear == rhs.right_ear) and \
+               (lhs.left_face == rhs.left_face) and \
+               (lhs.right_face == rhs.right_face);
     }
 
     /*!
