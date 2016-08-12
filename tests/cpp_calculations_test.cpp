@@ -165,11 +165,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
      * 75% male, 25% female
      */
     std::string growlithe1 = pkmn::calculations::gen2_pokemon_gender(
-                                 "Growlithe", 1
+                                 "Growlithe", 3
                              );
     BOOST_CHECK_EQUAL(growlithe1, "Female");
     std::string growlithe2 = pkmn::calculations::gen2_pokemon_gender(
-                                 "Growlithe", 2
+                                 "Growlithe", 4
                              );
     BOOST_CHECK_EQUAL(growlithe2, "Male");
 
@@ -277,11 +277,11 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
      * 50% male, 50% female
      */
     std::string pidgey1 = pkmn::calculations::modern_pokemon_gender(
-                              "Pidgey", 127
+                              "Pidgey", 126
                           );
     BOOST_CHECK_EQUAL(pidgey1, "Female");
     std::string pidgey2 = pkmn::calculations::modern_pokemon_gender(
-                              "Pidgey", 128
+                              "Pidgey", 127
                           );
     BOOST_CHECK_EQUAL(pidgey2, "Male");
 
