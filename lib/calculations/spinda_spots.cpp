@@ -52,8 +52,8 @@ namespace pkmn { namespace calculations {
                        int((personality & 0x000000F0) >> 4)
                    ),
                    spinda_coords(
-                       int((personality & 0x0000F000) >> 8),
-                       int((personality & 0x00000F00) >> 12)
+                       int((personality & 0x00000F00) >> 8),
+                       int((personality & 0x0000F000) >> 12)
                    ),
                    spinda_coords(
                        int((personality & 0x000F0000) >> 16),

@@ -9,6 +9,7 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/calculations/stats.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -537,6 +538,60 @@ BOOST_AUTO_TEST_CASE(modern_shiny_test) {
                   );
     BOOST_CHECK(shiny1);
     BOOST_CHECK(shiny2);
+}
+
+BOOST_AUTO_TEST_CASE(spinda_coords_test) {
+    /*
+     * Check (in)equality operators.
+     */
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords1(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords2(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords3(456,123);
+
+    BOOST_CHECK(coords1 == coords2);
+    BOOST_CHECK(not (coords1 != coords2));
+    BOOST_CHECK(coords1 != coords3);
+    BOOST_CHECK(not (coords1 == coords3));
+}
+
+BOOST_AUTO_TEST_CASE(spinda_spot_test) {
+    /*
+     * Check (in)equality operators.
+     */
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS1(
+        pkmn::calculations::spinda_coords(7,5),
+        pkmn::calculations::spinda_coords(10,0),
+        pkmn::calculations::spinda_coords(1,4),
+        pkmn::calculations::spinda_coords(2,15)
+    );
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS2(
+        pkmn::calculations::spinda_coords(7,5),
+        pkmn::calculations::spinda_coords(10,0),
+        pkmn::calculations::spinda_coords(1,4),
+        pkmn::calculations::spinda_coords(2,15)
+    );
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS3(
+        pkmn::calculations::spinda_coords(7,5),
+        pkmn::calculations::spinda_coords(10,0),
+        pkmn::calculations::spinda_coords(2,15),
+        pkmn::calculations::spinda_coords(1,4)
+    );
+    BOOST_CHECK(SPOTS1 == SPOTS2);
+    BOOST_CHECK(SPOTS1 != SPOTS3);
+
+    /*
+     * Make sure known good inputs result in expected results.
+     *
+     * Source: https://github.com/magical/spinda
+     */
+
+    pkmn::calculations::spinda_spots spots1 = pkmn::calculations::spinda_spot_offset(
+                                                  4064348759
+                                              );
+    BOOST_CHECK(spots1.left_ear   == SPOTS1.left_ear);
+    BOOST_CHECK(spots1.right_ear  == SPOTS1.right_ear);
+    BOOST_CHECK(spots1.left_face  == SPOTS1.left_face);
+    BOOST_CHECK(spots1.right_face == SPOTS1.right_face);
 }
 
 /*
