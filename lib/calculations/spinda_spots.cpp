@@ -43,7 +43,7 @@ namespace pkmn { namespace calculations {
                );
     }
 
-    BOOST_STATIC_CONSTEXPR spinda_spots get_offset(
+    BOOST_STATIC_CONSTEXPR spinda_spots _spinda_spot_offset(
         uint32_t personality
     ) {
         return spinda_spots(
@@ -66,36 +66,11 @@ namespace pkmn { namespace calculations {
                );
     }
 
-    /*
-     * Spot origins
-     */
-
-    BOOST_STATIC_CONSTEXPR spinda_spots gen3_origin(
-        spinda_coords(32,9),  spinda_coords(8,8),
-        spinda_coords(26,27), spinda_coords(14,26)
-    );
-
-    BOOST_STATIC_CONSTEXPR spinda_spots nds_origin(
-        spinda_coords(31,9),  spinda_coords(7,7),
-        spinda_coords(22,25), spinda_coords(10,25)
-    );
-
-    /*
-     * Main functions
-     */
-
-    spinda_spots gen3_spinda_spots(
+    spinda_spots spinda_spot_offset(
         uint32_t personality
     ) {
         uint32_t pid_le32 = pksav_littleendian32(personality);
-        return (gen3_origin + get_offset(pid_le32));
-    }
-
-    spinda_spots nds_spinda_spots(
-        uint32_t personality
-    ) {
-        uint32_t pid_le32 = pksav_littleendian32(personality);
-        return (nds_origin + get_offset(pid_le32));
+        return _spinda_spot_offset(pid_le32);
     }
 
 }}

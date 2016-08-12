@@ -235,7 +235,7 @@ namespace pkmn { namespace calculations {
 #endif
 
     /*!
-     * @brief Calculates positions of Spinda's spots in a Generation III sprite.
+     * @brief Calculates offsets of Spinda's spots in a Generation III .
      *
      * The locations of Spinda's four spots are calculated based on the Spinda's
      * personality. As such, there are 2^32 combinations.
@@ -243,20 +243,7 @@ namespace pkmn { namespace calculations {
      * \param personality Spinda's personality
      * \returns Locations of Spinda's spots
      */
-    PKMN_API spinda_spots gen3_spinda_spots(
-        uint32_t personality
-    );
-
-    /*!
-     * @brief Calculates positions of Spinda's spots in a Generation IV-V sprite.
-     *
-     * The locations of Spinda's four spots are calculated based on the Spinda's
-     * personality. As such, there are 2^32 combinations.
-     *
-     * \param personality Spinda's personality
-     * \returns Locations of Spinda's spots
-     */
-    PKMN_API spinda_spots nds_spinda_spots(
+    PKMN_API spinda_spots spinda_spot_offset(
         uint32_t personality
     );
 
