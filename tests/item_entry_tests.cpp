@@ -113,7 +113,7 @@ void item_entry_test_common(
     // Generation II entry
     BOOST_CHECK_EQUAL(item_entry_gen2.get_name(), "Pink Bow");
     BOOST_CHECK_EQUAL(item_entry_gen2.get_game(), "Silver");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen2.get_category(), "Stat boosts");
     BOOST_CHECK_EQUAL(item_entry_gen2.get_pocket(), "Items");
     (void)item_entry_gen2.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen2.get_cost(), 50);
@@ -124,7 +124,7 @@ void item_entry_test_common(
     // GBA entry
     BOOST_CHECK_EQUAL(item_entry_gba.get_name(), "Razz Berry");
     BOOST_CHECK_EQUAL(item_entry_gba.get_game(), "Emerald");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gba.get_category(), "Baking only");
     BOOST_CHECK_EQUAL(item_entry_gba.get_pocket(), "Berries");
     (void)item_entry_gba.get_description();
     BOOST_CHECK_EQUAL(item_entry_gba.get_cost(), 20);
@@ -135,7 +135,7 @@ void item_entry_test_common(
     // Gamecube entry
     BOOST_CHECK_EQUAL(item_entry_gcn.get_name(), "Battle CD 03");
     BOOST_CHECK_EQUAL(item_entry_gcn.get_game(), "XD");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gcn.get_category(), "Battle CDs");
     BOOST_CHECK_EQUAL(item_entry_gcn.get_pocket(), "Battle CDs");
     (void)item_entry_gcn.get_description();
     BOOST_CHECK_EQUAL(item_entry_gcn.get_cost(), 0);
@@ -146,7 +146,7 @@ void item_entry_test_common(
     // Generation IV entry
     BOOST_CHECK_EQUAL(item_entry_gen4.get_name(), "Fast Ball");
     BOOST_CHECK_EQUAL(item_entry_gen4.get_game(), "SoulSilver");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen4.get_category(), "Apricorn balls");
     BOOST_CHECK_EQUAL(item_entry_gen4.get_pocket(), "Poké Balls");
     (void)item_entry_gen4.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen4.get_cost(), 300);
@@ -157,7 +157,7 @@ void item_entry_test_common(
     // Generation V entry
     BOOST_CHECK_EQUAL(item_entry_gen5.get_name(), "Reveal Glass");
     BOOST_CHECK_EQUAL(item_entry_gen5.get_game(), "Black 2");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_category(), "Gameplay");
     BOOST_CHECK_EQUAL(item_entry_gen5.get_pocket(), "Key Items");
     (void)item_entry_gen5.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen5.get_cost(), 0);
@@ -168,7 +168,7 @@ void item_entry_test_common(
     // Generation VI entry
     BOOST_CHECK_EQUAL(item_entry_gen6.get_name(), "Salamencite");
     BOOST_CHECK_EQUAL(item_entry_gen6.get_game(), "Omega Ruby");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_category(), "Mega Stones");
     BOOST_CHECK_EQUAL(item_entry_gen6.get_pocket(), "Items");
     (void)item_entry_gen6.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen6.get_cost(), 0);
