@@ -56,6 +56,7 @@ namespace pkmn { namespace database {
      * overrides the database query.
      */
     BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] = {
+        -1, // None
         -1, // Red/Blue
         -1, // Yellow
         5,  // Gold/Silver
@@ -208,7 +209,7 @@ namespace pkmn { namespace database {
         }
 
         return pkmn::database::item_list_id_to_name(
-                   _item_list_id, _version_group_id
+                   _item_list_id
                );
     }
 

@@ -10,6 +10,8 @@
 
 #include <boost/config.hpp>
 
+#include <iostream>
+
 namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
@@ -244,10 +246,9 @@ namespace pkmn { namespace database {
     }
 
     std::string item_list_id_to_name(
-        int item_list_id,
-        int version_group_id
+        int item_list_id
     ) {
-        if(item_list_id == 0 or version_group_id == 0) {
+        if(item_list_id == 0) {
             return "None";
         }
 
@@ -255,19 +256,17 @@ namespace pkmn { namespace database {
         pkmn::database::get_connection(_db);
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM libpkmn_item_lists WHERE id=? AND "
-            "version_group_id=?";
+            "SELECT name FROM libpkmn_item_lists WHERE id=?";
 
-        return pkmn::database::query_db_bind2<std::string, int, int>(
-                   _db, query, item_list_id, version_group_id
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, item_list_id
                );
     }
 
     int item_list_name_to_id(
-        const std::string &item_list_name,
-        int version_group_id
+        const std::string &item_list_name
     ) {
-        if(item_list_name == "None" or version_group_id == 0) {
+        if(item_list_name == "None") {
             return 0;
         }
 
@@ -275,11 +274,10 @@ namespace pkmn { namespace database {
         pkmn::database::get_connection(_db);
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
-            "version_group_id=?";
+            "SELECT id FROM libpkmn_item_lists WHERE name=?";
 
-        return pkmn::database::query_db_bind2<int, const std::string&, int>(
-                   _db, query, item_list_name, version_group_id
+        return pkmn::database::query_db_bind1<int, const std::string&>(
+                   _db, query, item_list_name
                );
     }
 

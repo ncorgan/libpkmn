@@ -83,13 +83,11 @@ namespace pkmn { namespace database {
      */
 
     std::string item_list_id_to_name(
-        int item_list_id,
-        int version_group_id
+        int item_list_id
     );
 
     int item_list_name_to_id(
-        const std::string &item_list_name,
-        int version_group_id
+        const std::string &item_list_name
     );
 
     /*
