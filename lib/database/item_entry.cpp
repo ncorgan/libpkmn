@@ -243,6 +243,19 @@ namespace pkmn { namespace database {
             return false;
         }
 
+        /*
+         * Veekun's database is horribly inconsistent in its item flags,
+         * probably due to contributors not caring. Rather than go through
+         * and fix all of it, it's easier just to fake it here and pretend
+         * we queried the database.
+         */
+        std::string name = this->get_name();
+        if(name.find("Ball") != std::string::npos and _item_id != 1013) { // GS Ball
+            return true;
+        } else if(name.find("Berry") != std::string::npos) {
+            return true;
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT item_flag_id FROM item_flag_map WHERE "
             "item_id=? AND item_flag_id IN (5,6,7)";
