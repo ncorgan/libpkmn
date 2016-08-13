@@ -53,8 +53,7 @@ namespace pkmn { namespace database {
         const std::string &move_name,
         const std::string &game_name
     ):
-        _generation(0),
-        _none(false),
+        _none(move_name == "None"),
         _invalid(false)
     {
         // Connect to database
@@ -68,6 +67,9 @@ namespace pkmn { namespace database {
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
+        _generation = pkmn::database::game_id_to_generation(
+                          _game_id
+                      );
     }
 
     std::string move_entry::get_name() const {
