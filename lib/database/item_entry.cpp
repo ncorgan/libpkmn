@@ -11,6 +11,7 @@
 
 #include <pkmn/database/item_entry.hpp>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
@@ -294,6 +295,10 @@ namespace pkmn { namespace database {
             return true;
         } else if(name.find("Berry") != std::string::npos) {
             return true;
+        } else if(boost::algorithm::ends_with(name, "ite") and
+                  (name.find("Meteor") == std::string::npos))
+        {
+            return true;
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -333,9 +338,16 @@ namespace pkmn { namespace database {
             "local_language_id=9 AND item_fling_effect_id="
             "(SELECT fling_effect_id FROM items WHERE id=?)";
 
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db, query, _item_id
-               );
+        // Allow for no fling effect
+        std::string ret;
+        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+               _db, query, ret, _item_id
+           ))
+        {
+            return ret;
+        } else {
+            return "None";
+        }
     }
 
 }}

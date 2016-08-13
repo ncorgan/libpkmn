@@ -152,10 +152,10 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen5.get_name(), "Reveal Glass");
     BOOST_CHECK_EQUAL(item_entry_gen5.get_game(), "Black 2");
     // TODO: category
-    BOOST_CHECK_EQUAL(item_entry_gen5.get_pocket(), "Items");
+    BOOST_CHECK_EQUAL(item_entry_gen5.get_pocket(), "Key Items");
     // TODO: description
     BOOST_CHECK_EQUAL(item_entry_gen5.get_cost(), 0);
-    BOOST_CHECK(item_entry_gen5.holdable());
+    BOOST_CHECK(not item_entry_gen5.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen5.get_fling_power(), 0);
     BOOST_CHECK_EQUAL(item_entry_gen5.get_fling_effect(), "None");
 
@@ -163,7 +163,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen6.get_name(), "Salamencite");
     BOOST_CHECK_EQUAL(item_entry_gen6.get_game(), "Omega Ruby");
     // TODO: category
-    BOOST_CHECK_EQUAL(item_entry_gen6.get_pocket(), "Battle Items");
+    BOOST_CHECK_EQUAL(item_entry_gen6.get_pocket(), "Items");
     // TODO: description
     BOOST_CHECK_EQUAL(item_entry_gen6.get_cost(), 0);
     BOOST_CHECK(item_entry_gen6.holdable());
