@@ -245,7 +245,7 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT item_flag_id FROM item_flag_map WHERE "
-            "item_id=? AND item_flag_id=5";
+            "item_id=? AND item_flag_id IN (5,6,7)";
 
         PKMN_UNUSED(int result);
         return pkmn::database::maybe_query_db_bind1<int, int>(
