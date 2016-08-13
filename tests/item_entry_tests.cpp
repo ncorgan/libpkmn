@@ -93,12 +93,18 @@ void item_entry_test_common(
     const pkmn::database::item_entry &item_entry_gen5,
     const pkmn::database::item_entry &item_entry_gen6
 ) {
+    /*
+     * For descriptions, just make sure it doesn't fail. If
+     * there is no description in the database for the corresponding
+     * game, it should fallback onto the X/Y description.
+     */
+
     // Generation I entry
     BOOST_CHECK_EQUAL(item_entry_gen1.get_name(), "Potion");
     BOOST_CHECK_EQUAL(item_entry_gen1.get_game(), "Red");
     BOOST_CHECK_EQUAL(item_entry_gen1.get_category(), "Healing");
     BOOST_CHECK_EQUAL(item_entry_gen1.get_pocket(), "Items");
-    // TODO: description
+    (void)item_entry_gen1.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen1.get_cost(), 300);
     BOOST_CHECK(not item_entry_gen1.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen1.get_fling_power(), -1);
@@ -109,7 +115,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen2.get_game(), "Silver");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gen2.get_pocket(), "Items");
-    // TODO: description
+    (void)item_entry_gen2.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen2.get_cost(), 50);
     BOOST_CHECK(item_entry_gen2.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen2.get_fling_power(), -1);
@@ -120,7 +126,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gba.get_game(), "Emerald");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gba.get_pocket(), "Berries");
-    // TODO: description
+    (void)item_entry_gba.get_description();
     BOOST_CHECK_EQUAL(item_entry_gba.get_cost(), 20);
     BOOST_CHECK(item_entry_gba.holdable());
     BOOST_CHECK_EQUAL(item_entry_gba.get_fling_power(), -1);
@@ -131,7 +137,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gcn.get_game(), "XD");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gcn.get_pocket(), "Battle CDs");
-    // TODO: description
+    (void)item_entry_gcn.get_description();
     BOOST_CHECK_EQUAL(item_entry_gcn.get_cost(), 0);
     BOOST_CHECK(not item_entry_gcn.holdable());
     BOOST_CHECK_EQUAL(item_entry_gcn.get_fling_power(), -1);
@@ -142,7 +148,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen4.get_game(), "SoulSilver");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gen4.get_pocket(), "Poké Balls");
-    // TODO: description
+    (void)item_entry_gen4.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen4.get_cost(), 300);
     BOOST_CHECK(item_entry_gen4.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen4.get_fling_power(), 0);
@@ -153,7 +159,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen5.get_game(), "Black 2");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gen5.get_pocket(), "Key Items");
-    // TODO: description
+    (void)item_entry_gen5.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen5.get_cost(), 0);
     BOOST_CHECK(not item_entry_gen5.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen5.get_fling_power(), 0);
@@ -164,7 +170,7 @@ void item_entry_test_common(
     BOOST_CHECK_EQUAL(item_entry_gen6.get_game(), "Omega Ruby");
     // TODO: category
     BOOST_CHECK_EQUAL(item_entry_gen6.get_pocket(), "Items");
-    // TODO: description
+    (void)item_entry_gen6.get_description();
     BOOST_CHECK_EQUAL(item_entry_gen6.get_cost(), 0);
     BOOST_CHECK(item_entry_gen6.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_power(), 0);
