@@ -254,13 +254,31 @@ namespace pkmn { namespace database {
             return str(boost::format("Teaches the move %s.") % move_name);
 
         } else {
-            static BOOST_CONSTEXPR const char* query = \
+            /*
+             * Veekun's database has no item flavor text for Generations I-II,
+             * so if this entry corresponds to one of those games, the query
+             * will likely fail. In that case, fall back on the flavor text
+             * from X/Y.
+             */
+
+            static BOOST_CONSTEXPR const char* main_query = \
                 "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
                 "AND version_group_id=? AND language_id=9";
 
-            std::string from_db = pkmn::database::query_db_bind2<std::string, int, int>(
-                                      _db, query, _item_id, _version_group_id
-                                  );
+            std::string from_db = "";
+            if(not pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                   _db, main_query, from_db, _item_id, _version_group_id
+              ))
+            {
+                static BOOST_CONSTEXPR const char* fallback_query = \
+                    "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
+                    "AND version_group_id=15 AND language_id=9";
+
+                from_db = pkmn::database::query_db_bind1<std::string, int>(
+                              _db, fallback_query, _item_id
+                          );
+            }
+
             return fix_veekun_whitespace(from_db);
         }
     }

@@ -96,7 +96,7 @@ void item_entry_test_common(
     // Generation I entry
     BOOST_CHECK_EQUAL(item_entry_gen1.get_name(), "Potion");
     BOOST_CHECK_EQUAL(item_entry_gen1.get_game(), "Red");
-    // TODO: category
+    BOOST_CHECK_EQUAL(item_entry_gen1.get_category(), "Healing");
     BOOST_CHECK_EQUAL(item_entry_gen1.get_pocket(), "Items");
     // TODO: description
     BOOST_CHECK_EQUAL(item_entry_gen1.get_cost(), 300);
