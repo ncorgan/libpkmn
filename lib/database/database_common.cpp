@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include <string>
 
-#define PKMN_COMPAT_NUM 1
+#define PKMN_COMPAT_NUM 2
 
 namespace pkmn { namespace database {
 
