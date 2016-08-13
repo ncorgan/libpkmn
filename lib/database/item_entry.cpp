@@ -50,6 +50,30 @@ namespace pkmn { namespace database {
         _invalid(true)
     {}
 
+    /*
+     * Veekun's database does not distinguish berries from other healing items,
+     * but they go in separate pockets in every game past Generation II, so this
+     * overrides the database query.
+     */
+    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] = {
+        -1, // Red/Blue
+        -1, // Yellow
+        5,  // Gold/Silver
+        10, // Crystal
+        18, // Ruby/Sapphire
+        24, // Emerald
+        30, // FireRed/LeafGreen
+        37, // Diamond/Pearl
+        45, // Platinum
+        53, // HeartGold/SoulSilver
+        60, // Black/White
+        66, // Colosseum
+        73, // XD
+        79, // Black 2/White 2
+        84, // X/Y
+        89  // Omega Ruby/Alpha Sapphire
+    };
+
     item_entry::item_entry(
         int item_index,
         int game_id
@@ -86,9 +110,15 @@ namespace pkmn { namespace database {
         if(_invalid) {
             _item_list_id = -1;
         } else {
-            _item_list_id = pkmn::database::version_group_id_to_item_list_id(
-                                _item_id, _version_group_id
-                            );
+            // Overrides
+            std::string name = this->get_name();
+            if(name.find("Berry") != std::string::npos) {
+                _item_list_id = BERRY_LIST_IDS[_version_group_id];
+            } else {
+                _item_list_id = pkmn::database::version_group_id_to_item_list_id(
+                                    _item_id, _version_group_id
+                                );
+            }
         }
     }
 
@@ -125,6 +155,15 @@ namespace pkmn { namespace database {
         _item_list_id = pkmn::database::version_group_id_to_item_list_id(
                             _item_id, _version_group_id
                         );
+
+        // Overrides
+        if(item_name.find("Berry") != std::string::npos) {
+            _item_list_id = BERRY_LIST_IDS[_version_group_id];
+        } else {
+            _item_list_id = pkmn::database::version_group_id_to_item_list_id(
+                                _item_id, _version_group_id
+                            );
+        }
     }
 
     std::string item_entry::get_name() const {
