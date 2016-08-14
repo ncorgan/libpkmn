@@ -149,9 +149,9 @@ namespace pkmn { namespace database {
             "SELECT weight FROM pokemon WHERE id=?";
 
         // SQLite uses doubles, so avoid implicit casting ambiguity
-        return pkmn::database::query_db_bind1<double, int>(
-                   _db, query, _pokemon_id
-               );
+        return (float)pkmn::database::query_db_bind1<double, int>(
+                          _db, query, _pokemon_id
+                      );
     }
 
     /*
