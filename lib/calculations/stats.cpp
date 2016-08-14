@@ -29,7 +29,7 @@ namespace pkmn { namespace calculations {
                    (((base_stat + IV) * 2 +
                       int(std::floor<int>(
                           int(std::ceil<int>(
-                              std::sqrt(EV) / 4
+                              int(std::sqrt(EV)) / 4
                           ))
                       ))
                    ) * level) / 100
@@ -111,7 +111,7 @@ namespace pkmn { namespace calculations {
         if(stat == "HP") {
             return (modern_stat_common(level, base_stat, EV, IV) + level + 10);
         } else {
-            return int(std::floor<int>((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier));
+            return int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
         }
     }
 
