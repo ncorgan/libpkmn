@@ -19,7 +19,7 @@
 
 namespace pkmn { namespace database {
 
-    pkmn::database::sptr _db;
+    static pkmn::database::sptr _db;
 
     move_entry::move_entry():
         _move_id(0),

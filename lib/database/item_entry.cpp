@@ -47,7 +47,7 @@ namespace pkmn { namespace database {
         _game_id(0),
         _generation(0),
         _version_group_id(0),
-        _none(true),
+        _none(false),
         _invalid(true)
     {}
 
