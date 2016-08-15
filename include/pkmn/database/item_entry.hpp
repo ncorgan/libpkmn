@@ -39,6 +39,18 @@ namespace pkmn { namespace database {
             );
             #endif
 
+            /*!
+             * @brief Constructor that instantiates an item entry based on its name and game.
+             *
+             * This class allows for querying information regarding the item in the given game.
+             * It accounts for differences between games, such as which pocket the item
+             * corresponds to in a particular game.
+             *
+             * \param item_name Item's name (does not need to match name in given game)
+             * \param game_name Which game this item is from
+             * \throw std::invalid_argument If the item or game name is invalid
+             * \throw std::invalid_argument If the given item was not in the given game
+             */
             item_entry(
                 const std::string &item_name,
                 const std::string &game_name
