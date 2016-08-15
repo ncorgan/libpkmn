@@ -24,6 +24,8 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
 
     item_entry_wrong_game_test();
 
+    item_entry_different_name_test();
+
     // TODO: get equivalent entries created by index
 
     // Test with item entries created by name
@@ -35,7 +37,7 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
     pkmn::database::item_entry byname_gen5("Reveal Glass", "Black 2");
     pkmn::database::item_entry byname_gen6("Salamencite", "Omega Ruby");
 
-    item_entry_test_common(
+    item_entry_test_main(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
         byname_gen6
