@@ -21,9 +21,18 @@ namespace pkmn { namespace database {
      */
     class PKMN_API item_entry {
         public:
-            item_entry();
-
             #ifndef __DOXYGEN__
+            PKMN_CONSTEXPR_OR_INLINE item_entry():
+                _item_id(0),
+                _item_index(0),
+                _item_list_id(0),
+                _game_id(0),
+                _generation(0),
+                _version_group_id(0),
+                _none(false),
+                _invalid(true)
+            {}
+
             item_entry(
                 int item_index,
                 int game_id
@@ -133,31 +142,35 @@ namespace pkmn { namespace database {
             std::string get_fling_effect() const;
 
             #ifndef __DOXYGEN__
-            PKMN_INLINE int get_item_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_item_id() const {
                 return _item_id;
             }
 
-            PKMN_INLINE int get_item_index() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_item_index() const {
                 return _item_index;
             }
 
-            PKMN_INLINE int get_item_list_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_item_list_id() const {
                 return _item_list_id;
             }
 
-            PKMN_INLINE int get_game_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
                 return _game_id;
             }
             #endif
 
             //! Equality check between two item entries
-            PKMN_INLINE bool operator==(const item_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator==(
+                const item_entry &rhs
+            ) const {
                 return ((this->_game_id == rhs._game_id) and
                         (this->_item_id == rhs._item_id));
             }
 
             //! Inequality check between two item entries
-            PKMN_INLINE bool operator!=(const item_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+                const item_entry &rhs
+            ) const {
                 return ((this->_game_id != rhs._game_id) or
                         (this->_item_id != rhs._item_id));
             }

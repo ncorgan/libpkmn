@@ -40,17 +40,6 @@ namespace pkmn { namespace database {
                );
     }
 
-    item_entry::item_entry():
-        _item_id(0),
-        _item_index(0),
-        _item_list_id(0),
-        _game_id(0),
-        _generation(0),
-        _version_group_id(0),
-        _none(false),
-        _invalid(true)
-    {}
-
     /*
      * Veekun's database does not distinguish berries from other healing items,
      * but they go in separate pockets in every game past Generation II, so this
