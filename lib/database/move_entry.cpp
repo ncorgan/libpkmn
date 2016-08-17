@@ -83,7 +83,33 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_type() const {
-        return "";
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Invalid";
+        } else if(_generation == 1) {
+            /*
+             * In Generation I, before the Dark type was introduced,
+             * four moves were Normal type.
+             *
+             * There aren't enough edge cases to warrant adding them
+             * to the database.
+             */
+            BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
+            for(int i = 0; i < 4; i++) {
+                if(_move_id == NORMAL_IDS[i]) {
+                    return "Normal";
+                }
+            }
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM type_names WHERE local_language_id=9 "
+            "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
+
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
+               );
     }
 
     std::string move_entry::get_description() const {
@@ -128,8 +154,12 @@ namespace pkmn { namespace database {
     }
 
     int move_entry::get_base_power() const {
+        if(_none or _invalid) {
+            return -1;
+        }
+
         static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT power FROM moves WHERE move_id=?";
+            "SELECT power FROM moves WHERE id=?";
 
         static BOOST_CONSTEXPR const char* old_queries[] = {
             "",
@@ -173,6 +203,10 @@ namespace pkmn { namespace database {
     }
 
     float move_entry::get_accuracy() const {
+        if(_none or _invalid) {
+            return -1.0f;
+        }
+
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT accuracy FROM moves WHERE move_id=?";
 
@@ -211,6 +245,10 @@ namespace pkmn { namespace database {
     }
 
     int move_entry::get_priority() const {
+        if(_none or _invalid) {
+            return -9;
+        }
+
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT priority FROM moves WHERE move_id=?";
 
@@ -291,6 +329,10 @@ namespace pkmn { namespace database {
     }
 
     float move_entry::get_effect_chance() const {
+        if(_none or _invalid) {
+            return -1.0f;
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT effect_chance FROM moves WHERE id=?";
 
