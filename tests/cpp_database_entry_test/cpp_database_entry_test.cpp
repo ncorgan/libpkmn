@@ -23,8 +23,18 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
     }
 
     item_entry_wrong_game_test();
-
     item_entry_different_name_test();
+
+    /*
+     * Test invalid items (one Gamecube, one non-Gamecube)
+     *
+     * Gamecube and non-Gamecube games use different code paths, so test
+     * both types.
+     */
+    pkmn::database::item_entry invalid(600, 15);
+    pkmn::database::item_entry invalid_gcn(600, 20);
+    item_entry_invalid_index_test(invalid);
+    item_entry_invalid_index_test(invalid_gcn);
 
     // Test with item entries created by index
     pkmn::database::item_entry byindex_gen1(20, 1);

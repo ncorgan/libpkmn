@@ -37,6 +37,10 @@ void item_entry_wrong_game_test();
 
 void item_entry_different_name_test();
 
+void item_entry_invalid_index_test(
+    const pkmn::database::item_entry &entry
+);
+
 void item_entry_test_main(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,

@@ -154,6 +154,19 @@ void item_entry_different_name_test() {
     BOOST_CHECK(dowsing_machine1 != dowsing_machine7);
 }
 
+void item_entry_invalid_index_test(
+    const pkmn::database::item_entry &entry
+) {
+    BOOST_CHECK_EQUAL(entry.get_name(), "Invalid (0x258)");
+    BOOST_CHECK_EQUAL(entry.get_category(), "Unknown");
+    BOOST_CHECK_EQUAL(entry.get_pocket(), "Unknown");
+    BOOST_CHECK_EQUAL(entry.get_description(), "Invalid (0x258)");
+    BOOST_CHECK_EQUAL(entry.get_cost(), -1);
+    BOOST_CHECK(not entry.holdable());
+    BOOST_CHECK_EQUAL(entry.get_fling_power(), -1);
+    BOOST_CHECK_EQUAL(entry.get_fling_effect(), "Unknown");
+}
+
 void item_entry_test_main(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,

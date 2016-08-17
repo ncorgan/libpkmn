@@ -161,7 +161,7 @@ namespace pkmn { namespace database {
         if(_none) {
             return "None";
         } else if(_invalid) {
-            return str(boost::format("Invalid (0x%x)") % _item_id);
+            return str(boost::format("Invalid (0x%x)") % _item_index);
         }
 
         return pkmn::database::item_id_to_name(
@@ -222,7 +222,7 @@ namespace pkmn { namespace database {
         if(_none) {
             return "None";
         } else if(_invalid) {
-            return "Unknown";
+            return get_name();
         }
 
         /*
