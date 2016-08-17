@@ -21,14 +21,6 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    move_entry::move_entry():
-        _move_id(0),
-        _game_id(0),
-        _generation(0),
-        _none(false),
-        _invalid(true)
-    {}
-
     move_entry::move_entry(
         int move_id,
         int game_id

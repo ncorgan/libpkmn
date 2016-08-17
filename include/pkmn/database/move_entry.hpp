@@ -22,9 +22,15 @@ namespace pkmn { namespace database {
      */
     class PKMN_API move_entry {
         public:
-            move_entry();
-
             #ifndef __DOXYGEN__
+            PKMN_CONSTEXPR_OR_INLINE move_entry():
+                _move_id(0),
+                _game_id(0),
+                _generation(0),
+                _none(false),
+                _invalid(true)
+            {}
+
             move_entry(
                 int move_id,
                 int game_id
@@ -67,23 +73,27 @@ namespace pkmn { namespace database {
             std::string get_super_contest_effect() const;
 
             #ifndef __DOXYGEN__
-            PKMN_INLINE int get_move_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_move_id() const {
                 return _move_id;
             }
 
-            PKMN_INLINE int get_game_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
                 return _game_id;
             }
             #endif
 
             //! Equality check between two move entries
-            PKMN_INLINE bool operator==(const move_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator==(
+                const move_entry &rhs
+            ) const {
                 return ((this->_game_id == rhs._game_id) and
                         (this->_move_id == rhs._move_id));
             }
 
             //! Inequality check between two move entries
-            PKMN_INLINE bool operator!=(const move_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+                const move_entry &rhs
+            ) const {
                 return ((this->_game_id != rhs._game_id) or
                         (this->_move_id != rhs._move_id));
             }
