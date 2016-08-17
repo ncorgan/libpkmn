@@ -397,7 +397,7 @@ namespace pkmn { namespace database {
         int version_group_id,
         int range
     ) {
-        return (item_id >= version_group_item_index_bounds[version_group_id][range][0]) and \
+        return (item_id >= version_group_item_index_bounds[version_group_id][range][0]) and
                (item_id <= version_group_item_index_bounds[version_group_id][range][1]);
     }
 
@@ -405,7 +405,7 @@ namespace pkmn { namespace database {
         int version_group_id,
         int range
     ) {
-        return (version_group_item_index_bounds[version_group_id][range][0] == 0) and \
+        return (version_group_item_index_bounds[version_group_id][range][0] == 0) and
                (version_group_item_index_bounds[version_group_id][range][1] == 0);
     }
 

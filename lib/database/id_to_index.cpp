@@ -119,9 +119,48 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)item_index;
-        (void)game_id;
-        return 0;
+        int version_group_id = pkmn::database::game_id_to_version_group(game_id);
+
+        /*
+         * Make sure the item index is valid before attempting to query the
+         * database. This check may not succeed for Gamecube games.
+         */
+        if(not item_index_valid(item_index, version_group_id) and
+           not game_is_gamecube(game_id)
+        ) {
+            throw std::invalid_argument("Invalid item index.");
+        }
+
+        /*
+         * In any case, check the main item indices table. If this
+         * fails for a Gamecube game, check that table. If it fails
+         * for any other game, it failed overall.
+         */
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT item_id FROM item_game_indices WHERE game_index=? "
+            "AND generation_id=?";
+
+        int ret = 0;
+        if(pkmn::database::maybe_query_db_bind2<int, int, int>(
+               _db, main_query, ret, item_index, generation
+           )
+        ) {
+            return ret;
+        } else if(game_is_gamecube(game_id)) {
+            bool colosseum = (game_id == 19);
+
+            static BOOST_CONSTEXPR const char* gcn_query = \
+                "SELECT item_id FROM gamecube_item_game_indices "
+                "WHERE game_index=? AND colosseum=?";
+
+            return pkmn::database::query_db_bind2<int, int, int>(
+                       _db, gcn_query, item_index, (colosseum ? 1 : 0)
+                   );
+        } else {
+            throw std::invalid_argument("asdfInvalid item index.");
+        }
     }
 
     int location_id_to_index(

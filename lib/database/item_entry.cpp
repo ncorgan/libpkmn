@@ -79,7 +79,7 @@ namespace pkmn { namespace database {
         // Get item information. This also serves as input validation.
         try {
             _item_id = pkmn::database::item_index_to_id(
-                           _item_id, _game_id
+                           _item_index, _game_id
                        );
             _invalid = false;
         } catch(const std::invalid_argument&) {
