@@ -392,8 +392,7 @@ namespace pkmn { namespace database {
         {{1,775},{0,0},{0,0},{0,0}} // OR/AS
     };
 
-    // TODO: switch to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
-    BOOST_CONSTEXPR PKMN_INLINE bool item_index_in_bounds(
+    PKMN_CONSTEXPR_OR_INLINE bool item_index_in_bounds(
         int item_id,
         int version_group_id,
         int range
@@ -402,8 +401,7 @@ namespace pkmn { namespace database {
                (item_id <= version_group_item_index_bounds[version_group_id][range][1]);
     }
 
-    // TODO: switch to PKMN_CONSTEXPR_OR_INLINE when cherrypicked over
-    BOOST_CONSTEXPR PKMN_INLINE bool item_range_empty(
+    PKMN_CONSTEXPR_OR_INLINE bool item_range_empty(
         int version_group_id,
         int range
     ) {
