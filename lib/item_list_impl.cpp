@@ -139,7 +139,7 @@ namespace pkmn {
          * item.
          */
         int item_id = pkmn::database::item_name_to_id(
-                          item_name, _version_group_id
+                          item_name
                       );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {
@@ -186,7 +186,7 @@ namespace pkmn {
          * shift everything over.
          */
         int item_id = pkmn::database::item_name_to_id(
-                          item_name, _version_group_id
+                          item_name
                       );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {

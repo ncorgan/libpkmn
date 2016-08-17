@@ -240,8 +240,8 @@ namespace pkmn { namespace database {
                      * If the function is called for an older game, substitute in old names
                      * as needed.
                      */
-                    BOOST_STATIC_CONSTEXPR int LG = 11;
-                    if(game_id <= LG) {
+                    BOOST_STATIC_CONSTEXPR int XY = 25;
+                    if(game_id <= XY) {
                         std::string old_name;
                         static BOOST_CONSTEXPR const char* old_name_query = \
                             "SELECT name FROM old_item_names WHERE local_language_id=9 AND "

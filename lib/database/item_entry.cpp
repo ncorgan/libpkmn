@@ -138,7 +138,7 @@ namespace pkmn { namespace database {
                             );
 
         _item_id = pkmn::database::item_name_to_id(
-                       item_name, _version_group_id
+                       item_name
                    );
         _item_index = pkmn::database::item_id_to_index(
                           _item_id, _game_id
