@@ -105,13 +105,13 @@ void item_entry_different_name_test() {
      */
 
     pkmn::database::item_entry elixir1("Elixer", "Red");
-    pkmn::database::item_entry elixir2("Elixer", "X");
+    pkmn::database::item_entry elixir2("Elixir", "Red");
     BOOST_CHECK(elixir1 == elixir2);
     BOOST_CHECK_EQUAL(elixir1.get_name(), "Elixer");
     BOOST_CHECK_EQUAL(elixir2.get_name(), "Elixer");
 
-    pkmn::database::item_entry elixir3("Elixir", "Red");
-    pkmn::database::item_entry elixir4("Elixir", "X");
+    pkmn::database::item_entry elixir3("Elixir", "X");
+    pkmn::database::item_entry elixir4("Elixer", "X");
     BOOST_CHECK(elixir3 == elixir4);
     BOOST_CHECK_EQUAL(elixir3.get_name(), "Elixir");
     BOOST_CHECK_EQUAL(elixir4.get_name(), "Elixir");
@@ -136,18 +136,18 @@ void item_entry_different_name_test() {
     pkmn::database::item_entry dowsing_machine6("Dowsing Machine", "HeartGold");
     BOOST_CHECK(dowsing_machine4 == dowsing_machine5);
     BOOST_CHECK(dowsing_machine5 == dowsing_machine6);
-    BOOST_CHECK_EQUAL(dowsing_machine4.get_name(), "Itemfinder");
-    BOOST_CHECK_EQUAL(dowsing_machine5.get_name(), "Itemfinder");
-    BOOST_CHECK_EQUAL(dowsing_machine6.get_name(), "Itemfinder");
+    BOOST_CHECK_EQUAL(dowsing_machine4.get_name(), "Dowsing MCHN");
+    BOOST_CHECK_EQUAL(dowsing_machine5.get_name(), "Dowsing MCHN");
+    BOOST_CHECK_EQUAL(dowsing_machine6.get_name(), "Dowsing MCHN");
 
     pkmn::database::item_entry dowsing_machine7("Itemfinder", "X");
     pkmn::database::item_entry dowsing_machine8("Dowsing MCHN", "X");
     pkmn::database::item_entry dowsing_machine9("Dowsing Machine", "X");
     BOOST_CHECK(dowsing_machine7 == dowsing_machine8);
     BOOST_CHECK(dowsing_machine8 == dowsing_machine9);
-    BOOST_CHECK_EQUAL(dowsing_machine7.get_name(), "Itemfinder");
-    BOOST_CHECK_EQUAL(dowsing_machine8.get_name(), "Itemfinder");
-    BOOST_CHECK_EQUAL(dowsing_machine9.get_name(), "Itemfinder");
+    BOOST_CHECK_EQUAL(dowsing_machine7.get_name(), "Dowsing Machine");
+    BOOST_CHECK_EQUAL(dowsing_machine8.get_name(), "Dowsing Machine");
+    BOOST_CHECK_EQUAL(dowsing_machine9.get_name(), "Dowsing Machine");
 
     BOOST_CHECK(dowsing_machine1 != dowsing_machine4);
     BOOST_CHECK(dowsing_machine4 != dowsing_machine7);
