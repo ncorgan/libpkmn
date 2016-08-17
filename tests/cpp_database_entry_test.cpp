@@ -26,7 +26,14 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
 
     item_entry_different_name_test();
 
-    // TODO: get equivalent entries created by index
+    // Test with item entries created by index
+    pkmn::database::item_entry byindex_gen1(20, 1);
+    pkmn::database::item_entry byindex_gen2(104, 5);
+    pkmn::database::item_entry byindex_gba(148, 9);
+    pkmn::database::item_entry byindex_gcn(536, 20);
+    pkmn::database::item_entry byindex_gen4(492, 16);
+    pkmn::database::item_entry byindex_gen5(638, 21);
+    pkmn::database::item_entry byindex_gen6(769, 25);
 
     // Test with item entries created by name
     pkmn::database::item_entry byname_gen1("Potion", "Red");
@@ -37,6 +44,20 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
     pkmn::database::item_entry byname_gen5("Reveal Glass", "Black 2");
     pkmn::database::item_entry byname_gen6("Salamencite", "Omega Ruby");
 
+    // These should be equal
+    BOOST_CHECK(byindex_gen1 == byname_gen1);
+    BOOST_CHECK(byindex_gen2 == byname_gen2);
+    BOOST_CHECK(byindex_gba  == byname_gba);
+    BOOST_CHECK(byindex_gcn  == byname_gcn);
+    BOOST_CHECK(byindex_gen4 == byname_gen4);
+    BOOST_CHECK(byindex_gen5 == byname_gen5);
+    BOOST_CHECK(byindex_gen6 == byname_gen6);
+
+    item_entry_test_main(
+        byindex_gen1, byindex_gen2, byindex_gba,
+        byindex_gcn, byindex_gen4, byindex_gen5,
+        byindex_gen6
+    );
     item_entry_test_main(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
@@ -45,12 +66,7 @@ BOOST_AUTO_TEST_CASE(item_entry_test) {
 
     /*
      * TODO:
-     *  * Make sure items from later generations throw exceptions
-     *  * Make sure items from same generation, wrong game throw exceptions
      *  * Make sure TMs' description have move names, verify for each generation
-     *  * Check equality operator between equal entries above
-     *  * Check inequality operator
-     *  * Make sure different names correspond to same item
      */
 }
 
