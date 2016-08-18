@@ -8,6 +8,7 @@
 #include "database_common.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
+#include "../misc_common.hpp"
 
 #include <pkmn/database/item_entry.hpp>
 
@@ -38,6 +39,36 @@ namespace pkmn { namespace database {
         return pkmn::database::query_db_bind2<int, int, int>(
                    _db, query, version_group_id, item_id
                );
+    }
+
+    /*
+     * TM/HM detection
+     */
+    BOOST_STATIC_CONSTEXPR int TM01  = 305;
+    BOOST_STATIC_CONSTEXPR int HM01  = 397;
+    BOOST_STATIC_CONSTEXPR int HM08  = 404;
+    BOOST_STATIC_CONSTEXPR int TM93  = 659;
+    BOOST_STATIC_CONSTEXPR int TM95  = 661;
+    BOOST_STATIC_CONSTEXPR int TM96  = 745;
+    BOOST_STATIC_CONSTEXPR int TM100 = 749;
+
+    static PKMN_CONSTEXPR_OR_INLINE bool item_id_is_tm(
+        int item_id
+    ) {
+        return (item_id >= TM01 and item_id < HM01) or
+               (item_id >= TM93 and item_id <= TM95);
+    }
+
+    static PKMN_CONSTEXPR_OR_INLINE bool item_id_is_hm(
+        int item_id
+    ) {
+        return (item_id >= HM01 and item_id <= HM08);
+    }
+
+    static PKMN_CONSTEXPR_OR_INLINE bool item_id_is_tmhm(
+        int item_id
+    ) {
+        return item_id_is_tm(item_id) or item_id_is_hm(item_id);
     }
 
     /*
@@ -147,6 +178,11 @@ namespace pkmn { namespace database {
                             _item_id, _version_group_id
                         );
 
+        // Don't allow HMs in Gamecube games
+        if(game_is_gamecube(_game_id) and item_id_is_hm(_item_id)) {
+            throw std::invalid_argument("Gamecube games had no HMs.");
+        }
+
         // Overrides
         if(item_name.find("Berry") != std::string::npos) {
             _item_list_id = BERRY_LIST_IDS[_version_group_id];
@@ -203,21 +239,6 @@ namespace pkmn { namespace database {
                );
     }
 
-    // TM/HM detection
-    BOOST_STATIC_CONSTEXPR int TM01  = 305;
-    BOOST_STATIC_CONSTEXPR int HM08  = 404;
-    BOOST_STATIC_CONSTEXPR int TM93  = 659;
-    BOOST_STATIC_CONSTEXPR int TM95  = 661;
-    BOOST_STATIC_CONSTEXPR int TM96  = 745;
-    BOOST_STATIC_CONSTEXPR int TM100 = 749;
-    BOOST_STATIC_CONSTEXPR bool item_id_is_tmhm(
-        int item_id
-    ) {
-        return (item_id >= TM01 and item_id <= HM08) or
-               (item_id >= TM93 and item_id <= TM95) or
-               (item_id >= TM96 and item_id <= TM100);
-    }
-
     std::string item_entry::get_description() const {
         if(_none) {
             return "None";
@@ -238,13 +259,14 @@ namespace pkmn { namespace database {
          */
         if(item_id_is_tmhm(_item_id)) {
             BOOST_STATIC_CONSTEXPR int RS   = 5;
-            BOOST_STATIC_CONSTEXPR int ORAS = 15;
+            BOOST_STATIC_CONSTEXPR int XY   = 15;
+            BOOST_STATIC_CONSTEXPR int ORAS = 16;
 
             int version_group_id = _version_group_id;
-            if(version_group_id == 12 or version_group_id == 13) {
+            if(game_is_gamecube(_game_id)) {
                 version_group_id = RS;
-            } else if(version_group_id == 16) {
-                version_group_id = ORAS;
+            } else if(version_group_id == ORAS) {
+                version_group_id = XY;
             }
 
             static BOOST_CONSTEXPR const char* tmhm_move_query =
@@ -252,9 +274,20 @@ namespace pkmn { namespace database {
                 "(SELECT move_id FROM machines WHERE version_group_id=? "
                 "AND item_id=?)";
 
-            std::string move_name = pkmn::database::query_db_bind2<std::string, int, int>(
-                                        _db, tmhm_move_query, version_group_id, _item_id
-                                    );
+            /*
+             * TM94 is different between XY and ORAS. Since is the only time that happens,
+             * just deal with it here.
+             */
+            BOOST_STATIC_CONSTEXPR int TM94 = 660;
+            std::string move_name;
+            if(_item_id == TM94 and _generation == 6) {
+                move_name = (_version_group_id == ORAS) ? "Secret Power"
+                                                        : "Rock Smash";
+            } else {
+                move_name = pkmn::database::query_db_bind2<std::string, int, int>(
+                                _db, tmhm_move_query, version_group_id, _item_id
+                            );
+            }
 
             static boost::format tmhm_desc("Teaches the move %s.");
             return str(tmhm_desc % move_name.c_str());
