@@ -232,12 +232,19 @@ namespace pkmn { namespace database {
          * For Gamecube games, use Ruby/Sapphire to check since
          * the indices are the same, and the database doesn't
          * know those items are in the Gamecube games.
+         *
+         * For Generation VI, the database has some TMs associated with
+         * XY but not ORAS, so just use XY for any queries.
          */
         if(item_id_is_tmhm(_item_id)) {
-            BOOST_STATIC_CONSTEXPR int RS = 5;
+            BOOST_STATIC_CONSTEXPR int RS   = 5;
+            BOOST_STATIC_CONSTEXPR int ORAS = 15;
+
             int version_group_id = _version_group_id;
             if(version_group_id == 12 or version_group_id == 13) {
                 version_group_id = RS;
+            } else if(version_group_id == 16) {
+                version_group_id = ORAS;
             }
 
             static BOOST_CONSTEXPR const char* tmhm_move_query =
