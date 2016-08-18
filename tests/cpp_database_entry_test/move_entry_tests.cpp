@@ -30,6 +30,9 @@ static void _move_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_super_contest_effect(), "None");
 }
 
+/*
+ * Make sure "None" move entries output expected results for all generations.
+ */
 BOOST_AUTO_TEST_CASE(move_entry_none_test) {
     for(int i = 0; i < 6; ++i) {
         pkmn::database::move_entry none_byindex(0, game_ids[i]);
@@ -40,11 +43,12 @@ BOOST_AUTO_TEST_CASE(move_entry_none_test) {
     }
 }
 
+/*
+ * Make sure move entries can't be instantiated for games that didn't
+ * have the given move.
+ */
 BOOST_AUTO_TEST_CASE(move_entry_wrong_game_test) {
-    /*
-     * Make sure moves from later generations throw an
-     * exception.
-     */
+    // Moves from later generations
     BOOST_CHECK_THROW(
         pkmn::database::move_entry sketch(
             "Sketch", "Red"
@@ -71,10 +75,7 @@ BOOST_AUTO_TEST_CASE(move_entry_wrong_game_test) {
         )
     , std::invalid_argument);
 
-    /*
-     * Make sure moves from different games in a given generation
-     * throw an exception.
-     */
+    // Moves that were only in certain games within a generation
     BOOST_CHECK_THROW(
         pkmn::database::move_entry shadow_rush(
             "Shadow Rush", "Ruby"
@@ -170,7 +171,26 @@ void move_entry_invalid_index_test() {
     BOOST_CHECK_EQUAL(invalid.get_super_contest_effect(), "Unknown");
 }
 
+/*
+ * Moves that always hit have their accuracy columns set to NULL, and
+ * moves that always KO or do no damage have their power columns set to
+ * NULL, so account for those.
+ */
 BOOST_AUTO_TEST_CASE(move_entry_null_columns_test) {
+    pkmn::database::move_entry swift(
+        "Swift", "X"
+    );
+    BOOST_CHECK_EQUAL(swift.get_accuracy(), 1.0f);
+
+    pkmn::database::move_entry fissure(
+        "Fissure", "X"
+    );
+    BOOST_CHECK_EQUAL(fissure.get_base_power(), 0);
+
+    pkmn::database::move_entry swords_dance(
+        "Swords Dance", "X"
+    );
+    BOOST_CHECK_EQUAL(swords_dance.get_base_power(), 0);
 }
 
 static void _move_entry_test_main(
@@ -182,13 +202,54 @@ static void _move_entry_test_main(
     const pkmn::database::move_entry &move_entry_gen5,
     const pkmn::database::move_entry &move_entry_gen6
 ) {
-    (void)move_entry_gen1;
-    (void)move_entry_gen2;
-    (void)move_entry_gba;
-    (void)move_entry_gcn;
-    (void)move_entry_gen4;
-    (void)move_entry_gen5;
-    (void)move_entry_gen6;
+    // Generation I entry
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_name(), "Slash");
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_game(), "Red");
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_type(), "Normal");
+    (void)move_entry_gen1.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_damage_class(), "Physical");
+
+    // Generation II entry
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_name(), "Octazooka");
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_game(), "Silver");
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_type(), "Water");
+    (void)move_entry_gen2.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_damage_class(), "Special");
+
+    // GBA entry
+    BOOST_CHECK_EQUAL(move_entry_gba.get_name(), "Memento");
+    BOOST_CHECK_EQUAL(move_entry_gba.get_game(), "Ruby");
+    BOOST_CHECK_EQUAL(move_entry_gba.get_type(), "Dark");
+    (void)move_entry_gba.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gba.get_damage_class(), "Physical");
+
+    // Gamecube entry
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_name(), "Shadow Blitz");
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_game(), "XD");
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_type(), "Shadow");
+    (void)move_entry_gcn.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_damage_class(), "Physical");
+
+    // Generation IV entry
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_name(), "Bullet Punch");
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_game(), "Pearl");
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_type(), "Steel");
+    (void)move_entry_gen4.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_damage_class(), "Physical");
+
+    // Generation V entry
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_name(), "Dragon Tail");
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_game(), "Black");
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_type(), "Dragon");
+    (void)move_entry_gen5.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_damage_class(), "Physical");
+
+    // Generation VI entry
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_name(), "Nuzzle");
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_game(), "Y");
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_type(), "Electric");
+    (void)move_entry_gen6.get_description();
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_damage_class(), "Physical");
 }
 
 BOOST_AUTO_TEST_CASE(move_entry_test_main) {
@@ -200,4 +261,17 @@ BOOST_AUTO_TEST_CASE(move_entry_test_main) {
      *  * Check inequality operator
      *  * Make sure different names correspond to same move
      */
+    pkmn::database::move_entry byname_gen1("Slash", "Red");
+    pkmn::database::move_entry byname_gen2("Octazooka", "Silver");
+    pkmn::database::move_entry byname_gba("Memento", "Ruby");
+    pkmn::database::move_entry byname_gcn("Shadow Blitz", "XD");
+    pkmn::database::move_entry byname_gen4("Bullet Punch", "Pearl");
+    pkmn::database::move_entry byname_gen5("Dragon Tail", "Black");
+    pkmn::database::move_entry byname_gen6("Nuzzle", "Y");
+
+    _move_entry_test_main(
+        byname_gen1, byname_gen2, byname_gba,
+        byname_gcn, byname_gen4, byname_gen5,
+        byname_gen6
+    );
 }

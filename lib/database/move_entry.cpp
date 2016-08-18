@@ -213,7 +213,7 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT accuracy FROM moves WHERE move_id=?";
+            "SELECT accuracy FROM moves WHERE id=?";
 
         static BOOST_CONSTEXPR const char* old_queries[] = {
             "",
