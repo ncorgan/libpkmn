@@ -13,6 +13,13 @@
 
 namespace pkmn { namespace database {
 
+    /*!
+     * @brief Class representing a database entry for an in-game item.
+     *
+     * This class abstracts the database calls needed to various tables in order
+     * to get relevant information about in-game items. It takes into account
+     * changes in the item between games.
+     */
     class PKMN_API item_entry {
         public:
             #ifndef __DOXYGEN__
@@ -23,7 +30,7 @@ namespace pkmn { namespace database {
                 _game_id(0),
                 _generation(0),
                 _version_group_id(0),
-                _none(false),
+                _none(true),
                 _invalid(true)
             {}
 
@@ -142,8 +149,6 @@ namespace pkmn { namespace database {
 
             /*!
              * @brief Returns the effect of the move Fling when this item is held.
-             *
-             * \todo verify database storage of effect
              */
             std::string get_fling_effect() const;
 
