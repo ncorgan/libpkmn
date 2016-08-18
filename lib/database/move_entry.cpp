@@ -158,6 +158,11 @@ namespace pkmn { namespace database {
             return -1;
         }
 
+        // Edge case not worth putting in a database
+        if(_move_id == 10001 and _game_id == 19) {
+            return 90;
+        }
+
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT power FROM moves WHERE id=?";
 
