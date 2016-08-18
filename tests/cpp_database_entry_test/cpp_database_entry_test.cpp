@@ -90,6 +90,11 @@ BOOST_AUTO_TEST_CASE(move_entry_test) {
         move_entry_none_test(none_byname);
     }
 
+    move_entry_wrong_game_test();
+    move_entry_different_name_test();
+    move_entry_different_type_test();
+    move_entry_null_columns_test();
+
     /*
      * TODO:
      *  * Make sure moves from later generations throw exceptions

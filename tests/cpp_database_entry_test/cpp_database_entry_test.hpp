@@ -59,6 +59,16 @@ void move_entry_none_test(
     const pkmn::database::move_entry &none_entry
 );
 
+void move_entry_wrong_game_test();
+
+void move_entry_different_name_test();
+
+void move_entry_invalid_index_test();
+
+void move_entry_null_columns_test();
+
+void move_entry_different_type_test();
+
 void move_entry_test_common(
     const pkmn::database::move_entry &move_entry_gen1,
     const pkmn::database::move_entry &move_entry_gen2,

@@ -82,7 +82,7 @@ void item_entry_wrong_game_test() {
     );
 
     /*
-     * Make sure items taht didn't make it into later generations
+     * Make sure items that didn't make it into later generations
      * can't be used in later generations.
      */
     pkmn::database::item_entry pink_bow1(
