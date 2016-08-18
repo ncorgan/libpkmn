@@ -81,9 +81,17 @@ namespace pkmn { namespace database {
             /*
              * We know the item existed in this generation, but we need to
              * confirm that it existed in this specific game.
+             *
+             * For Gamecube games, use Ruby/Sapphire to check for valid
+             * items since the indices are the same, and the database
+             * doesn't know those items are in the Gamecube games.
              */
-
+            BOOST_STATIC_CONSTEXPR int RS = 5;
             int version_group_id = pkmn::database::game_id_to_version_group(game_id);
+            if(item_id < 10000 and (version_group_id == 12 or version_group_id == 13)) {
+                version_group_id = RS;
+            }
+
             if(item_index_valid(ret, version_group_id)) {
                 return ret;
             } else {
@@ -159,7 +167,7 @@ namespace pkmn { namespace database {
                        _db, gcn_query, item_index, (colosseum ? 1 : 0)
                    );
         } else {
-            throw std::invalid_argument("asdfInvalid item index.");
+            throw std::invalid_argument("Invalid item index.");
         }
     }
 

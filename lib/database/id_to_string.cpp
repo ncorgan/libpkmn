@@ -10,8 +10,6 @@
 
 #include <boost/config.hpp>
 
-#include <iostream>
-
 namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
@@ -178,7 +176,12 @@ namespace pkmn { namespace database {
          * If the version group isn't Generation VI, check to see if
          * the given version group had a different name for this item.
          * If not, fall through to the default query.
+         *
+         * For Gamecube games, use Ruby/Sapphire to check for valid
+         * items since the indices are the same, and the database
+         * doesn't know those items are in the Gamecube games.
          */
+        BOOST_STATIC_CONSTEXPR int RS   = 5;
         BOOST_STATIC_CONSTEXPR int XY   = 25;
         BOOST_STATIC_CONSTEXPR int ORAS = 26;
         if(version_group_id != XY and version_group_id != ORAS) {
@@ -187,9 +190,15 @@ namespace pkmn { namespace database {
                 "latest_version_group>=? AND local_language_id=9 "
                 "ORDER BY latest_version_group";
 
+            int actual_version_group_id = version_group_id;
+            if(item_id < 10000 and (version_group_id == 12 or version_group_id == 13)) {
+                actual_version_group_id = RS;
+            }
+
             std::string old_ret;
             if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                   _db, old_name_query, old_ret, item_id, version_group_id
+                   _db, old_name_query, old_ret, item_id,
+                   actual_version_group_id
                ))
             {
                 return old_ret;
