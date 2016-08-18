@@ -253,6 +253,18 @@ BOOST_AUTO_TEST_CASE(item_entry_tmhm_test) {
     tmhm_entry_check_move(hm05_dppt, "Defog");
     tmhm_entry_check_move(hm05_hgss, "Whirlpool");
     tmhm_entry_check_move(hm05_gen5, "Waterfall");
+
+    // Gamecube games have no HMs
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry hm01_gcn(
+            "HM01", "Colosseum"
+        )
+    , std::invalid_argument);
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry hm01_gcn(
+            "HM01", "XD"
+        )
+    , std::invalid_argument);
 }
 
 static void _item_entry_test_main(
