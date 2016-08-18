@@ -164,7 +164,8 @@ void item_entry_invalid_index_test(
     BOOST_CHECK_EQUAL(entry.get_cost(), -1);
     BOOST_CHECK(not entry.holdable());
     BOOST_CHECK_EQUAL(entry.get_fling_power(), -1);
-    BOOST_CHECK_EQUAL(entry.get_fling_effect(), "Unknown");
+    BOOST_CHECK_EQUAL(entry.get_fling_effect(), (entry.get_game_id() == 20 ? "None"
+                                                                           : "Unknown"));
 }
 
 void item_entry_test_main(
