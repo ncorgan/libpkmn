@@ -228,19 +228,29 @@ namespace pkmn { namespace database {
         /*
          * If the item is a TM/HM, ignore what the database shows
          * as the description and show what move it teaches.
+         *
+         * For Gamecube games, use Ruby/Sapphire to check since
+         * the indices are the same, and the database doesn't
+         * know those items are in the Gamecube games.
          */
         if(item_id_is_tmhm(_item_id)) {
-            static BOOST_CONSTEXPR const char* tmhm_move_query = \
-                "SELECT move_id FROM machines WHERE version_group_id=? "
-                "AND item_id=?";
+            BOOST_STATIC_CONSTEXPR int RS = 5;
+            int version_group_id = _version_group_id;
+            if(version_group_id == 12 or version_group_id == 13) {
+                version_group_id = RS;
+            }
 
-            int move_id = pkmn::database::query_db_bind2<int, int, int>(
-                _db, tmhm_move_query, _version_group_id, _item_id
-            );
-            std::string move_name = pkmn::database::move_id_to_name(
-                                        move_id, _version_group_id
+            static BOOST_CONSTEXPR const char* tmhm_move_query =
+                "SELECT name FROM move_names WHERE local_language_id=9 AND move_id="
+                "(SELECT move_id FROM machines WHERE version_group_id=? "
+                "AND item_id=?)";
+
+            std::string move_name = pkmn::database::query_db_bind2<std::string, int, int>(
+                                        _db, tmhm_move_query, version_group_id, _item_id
                                     );
-            return str(boost::format("Teaches the move %s.") % move_name);
+
+            static boost::format tmhm_desc("Teaches the move %s.");
+            return str(tmhm_desc % move_name.c_str());
 
         } else {
             /*

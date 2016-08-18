@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE(item_entry_tmhm_test) {
         "TM83", "Omega Ruby"
     );
     tmhm_entry_check_move(tm83_gen1, "Natural Gift");
-    tmhm_entry_check_move(tm83_gen2, "Workup");
+    tmhm_entry_check_move(tm83_gen2, "Work Up");
     tmhm_entry_check_move(tm83_gen3, "Infestation");
 
     pkmn::database::item_entry tm83_xy(
