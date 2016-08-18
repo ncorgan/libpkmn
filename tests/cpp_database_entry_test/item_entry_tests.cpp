@@ -10,9 +10,8 @@
 // Only create one main
 #undef BOOST_TEST_MAIN
 
+#include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
-
-#include <iostream>
 
 static void _item_entry_none_test(
     const pkmn::database::item_entry &none_entry
@@ -30,6 +29,9 @@ static void _item_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_item_list_id(), 0);
 }
 
+/*
+ * Make sure "None" item entries output expected results for all generations.
+ */
 BOOST_AUTO_TEST_CASE(item_entry_none_test) {
     for(int i = 0; i < 6; ++i) {
         pkmn::database::item_entry none_byindex(0, game_ids[i]);
@@ -40,11 +42,12 @@ BOOST_AUTO_TEST_CASE(item_entry_none_test) {
     }
 }
 
+/*
+ * Make sure item entries can't be instantiated for games that didn't
+ * have the given item.
+ */
 BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
-    /*
-     * Make sure items from later generations throw an
-     * exception.
-     */
+    // Items from later generations
     BOOST_CHECK_THROW(
         pkmn::database::item_entry pink_bow(
             "Pink Bow", "Red"
@@ -71,10 +74,7 @@ BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
         )
     , std::invalid_argument);
 
-    /*
-     * Make sure items from different games in a given generation
-     * throw an exception.
-     */
+    // Items that were only in certain games within a generation
     BOOST_CHECK_THROW(
         pkmn::database::item_entry gs_ball(
             "GS Ball", "Gold"
@@ -93,10 +93,7 @@ BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
         "F-Disk", "Colosseum"
     );
 
-    /*
-     * Make sure items that didn't make it into later generations
-     * can't be used in later generations.
-     */
+    // Items that didn't make it into later generations
     pkmn::database::item_entry pink_bow1(
         "Pink Bow", "Silver"
     );
@@ -180,11 +177,82 @@ static void _item_entry_invalid_index_test(
                                                                            : "Unknown"));
 }
 
+/*
+ * Make sure item entries created from invalid item slots don't
+ * try to query the database for information that doesn't
+ * exist.
+ */
 BOOST_AUTO_TEST_CASE(item_entry_invalid_index_test) {
     pkmn::database::item_entry invalid(600, 15);
     pkmn::database::item_entry invalid_gcn(600, 20);
     _item_entry_invalid_index_test(invalid);
     _item_entry_invalid_index_test(invalid_gcn);
+}
+
+static PKMN_INLINE void tmhm_entry_check_move(
+    const pkmn::database::item_entry &tmhm_entry,
+    const std::string &move
+) {
+    static boost::format tmhm_desc("Teaches the move %s.");
+    BOOST_CHECK_EQUAL(tmhm_entry.get_description(), str(tmhm_desc % move.c_str()));
+}
+
+/*
+ * Make sure TM/HM item entries place the correct corresponding
+ * move in the description, even if the item name is the same.
+ */
+BOOST_AUTO_TEST_CASE(item_entry_tmhm_test) {
+    pkmn::database::item_entry tm16_gen1(
+        "TM16", "Red"
+    );
+    pkmn::database::item_entry tm16_gen2(
+        "TM16", "Silver"
+    );
+    pkmn::database::item_entry tm16_gen3(
+        "TM16", "XD"
+    );
+    tmhm_entry_check_move(tm16_gen1, "Pay Day");
+    tmhm_entry_check_move(tm16_gen2, "Icy Wind");
+    tmhm_entry_check_move(tm16_gen3, "Light Screen");
+
+    pkmn::database::item_entry tm83_gen1(
+        "TM83", "Platinum"
+    );
+    pkmn::database::item_entry tm83_gen2(
+        "TM83", "White"
+    );
+    pkmn::database::item_entry tm83_gen3(
+        "TM83", "Omega Ruby"
+    );
+    tmhm_entry_check_move(tm83_gen1, "Natural Gift");
+    tmhm_entry_check_move(tm83_gen2, "Workup");
+    tmhm_entry_check_move(tm83_gen3, "Infestation");
+
+    pkmn::database::item_entry tm83_xy(
+        "TM94", "Y"
+    );
+    pkmn::database::item_entry tm83_oras(
+        "TM94", "Alpha Sapphire"
+    );
+    tmhm_entry_check_move(tm83_xy, "Rock Smash");
+    tmhm_entry_check_move(tm83_oras, "Secret Power");
+
+    pkmn::database::item_entry hm05_gen3(
+        "HM05", "Emerald"
+    );
+    pkmn::database::item_entry hm05_dppt(
+        "HM05", "Diamond"
+    );
+    pkmn::database::item_entry hm05_hgss(
+        "HM05", "SoulSilver"
+    );
+    pkmn::database::item_entry hm05_gen5(
+        "HM05", "Black"
+    );
+    tmhm_entry_check_move(hm05_gen3, "Flash");
+    tmhm_entry_check_move(hm05_dppt, "Defog");
+    tmhm_entry_check_move(hm05_hgss, "Whirlpool");
+    tmhm_entry_check_move(hm05_gen5, "Waterfall");
 }
 
 static void _item_entry_test_main(
