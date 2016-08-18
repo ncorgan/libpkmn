@@ -12,7 +12,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-void item_entry_none_test(
+#include <iostream>
+
+static void _item_entry_none_test(
     const pkmn::database::item_entry &none_entry
 ) {
     BOOST_CHECK_EQUAL(none_entry.get_name(), "None");
@@ -28,7 +30,17 @@ void item_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_item_list_id(), 0);
 }
 
-void item_entry_wrong_game_test() {
+BOOST_AUTO_TEST_CASE(item_entry_none_test) {
+    for(int i = 0; i < 6; ++i) {
+        pkmn::database::item_entry none_byindex(0, game_ids[i]);
+        pkmn::database::item_entry none_byname("None", game_names[i]);
+
+        _item_entry_none_test(none_byindex);
+        _item_entry_none_test(none_byname);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
     /*
      * Make sure items from later generations throw an
      * exception.
@@ -99,7 +111,7 @@ void item_entry_wrong_game_test() {
  * Make sure item entries can be created from any name
  * the item has ever had, even from different games.
  */
-void item_entry_different_name_test() {
+BOOST_AUTO_TEST_CASE(item_entry_different_name_test) {
     /*
      * Test an item that changed only once.
      */
@@ -154,7 +166,7 @@ void item_entry_different_name_test() {
     BOOST_CHECK(dowsing_machine1 != dowsing_machine7);
 }
 
-void item_entry_invalid_index_test(
+static void _item_entry_invalid_index_test(
     const pkmn::database::item_entry &entry
 ) {
     BOOST_CHECK_EQUAL(entry.get_name(), "Invalid (0x258)");
@@ -168,7 +180,14 @@ void item_entry_invalid_index_test(
                                                                            : "Unknown"));
 }
 
-void item_entry_test_main(
+BOOST_AUTO_TEST_CASE(item_entry_invalid_index_test) {
+    pkmn::database::item_entry invalid(600, 15);
+    pkmn::database::item_entry invalid_gcn(600, 20);
+    _item_entry_invalid_index_test(invalid);
+    _item_entry_invalid_index_test(invalid_gcn);
+}
+
+static void _item_entry_test_main(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,
     const pkmn::database::item_entry &item_entry_gba,
@@ -259,4 +278,50 @@ void item_entry_test_main(
     BOOST_CHECK(item_entry_gen6.holdable());
     BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_power(), 0);
     BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_effect(), "None");
+}
+
+BOOST_AUTO_TEST_CASE(item_entry_test_main) {
+
+    // Test with item entries created by index
+    pkmn::database::item_entry byindex_gen1(20, 1);
+    pkmn::database::item_entry byindex_gen2(104, 5);
+    pkmn::database::item_entry byindex_gba(148, 9);
+    pkmn::database::item_entry byindex_gcn(536, 20);
+    pkmn::database::item_entry byindex_gen4(492, 16);
+    pkmn::database::item_entry byindex_gen5(638, 21);
+    pkmn::database::item_entry byindex_gen6(769, 25);
+
+    // Test with item entries created by name
+    pkmn::database::item_entry byname_gen1("Potion", "Red");
+    pkmn::database::item_entry byname_gen2("Pink Bow", "Silver");
+    pkmn::database::item_entry byname_gba("Razz Berry", "Emerald");
+    pkmn::database::item_entry byname_gcn("Battle CD 03", "XD");
+    pkmn::database::item_entry byname_gen4("Fast Ball", "SoulSilver");
+    pkmn::database::item_entry byname_gen5("Reveal Glass", "Black 2");
+    pkmn::database::item_entry byname_gen6("Salamencite", "Omega Ruby");
+
+    // These should be equal
+    BOOST_CHECK(byindex_gen1 == byname_gen1);
+    BOOST_CHECK(byindex_gen2 == byname_gen2);
+    BOOST_CHECK(byindex_gba  == byname_gba);
+    BOOST_CHECK(byindex_gcn  == byname_gcn);
+    BOOST_CHECK(byindex_gen4 == byname_gen4);
+    BOOST_CHECK(byindex_gen5 == byname_gen5);
+    BOOST_CHECK(byindex_gen6 == byname_gen6);
+
+    _item_entry_test_main(
+        byindex_gen1, byindex_gen2, byindex_gba,
+        byindex_gcn, byindex_gen4, byindex_gen5,
+        byindex_gen6
+    );
+    _item_entry_test_main(
+        byname_gen1, byname_gen2, byname_gba,
+        byname_gcn, byname_gen4, byname_gen5,
+        byname_gen6
+    );
+
+    /*
+     * TODO:
+     *  * Make sure TMs' description have move names, verify for each generation
+     */
 }

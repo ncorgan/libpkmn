@@ -26,60 +26,6 @@ static BOOST_CONSTEXPR const char* game_names[] = {
 };
 
 /*
- * Item entry tests
- */
-
-void item_entry_none_test(
-    const pkmn::database::item_entry &none_entry
-);
-
-void item_entry_wrong_game_test();
-
-void item_entry_different_name_test();
-
-void item_entry_invalid_index_test(
-    const pkmn::database::item_entry &entry
-);
-
-void item_entry_test_main(
-    const pkmn::database::item_entry &item_entry_gen1,
-    const pkmn::database::item_entry &item_entry_gen2,
-    const pkmn::database::item_entry &item_entry_gba,
-    const pkmn::database::item_entry &item_entry_gcn,
-    const pkmn::database::item_entry &item_entry_gen4,
-    const pkmn::database::item_entry &item_entry_gen5,
-    const pkmn::database::item_entry &item_entry_gen6
-);
-
-/*
- * Move entry tests
- */
-
-void move_entry_none_test(
-    const pkmn::database::move_entry &none_entry
-);
-
-void move_entry_wrong_game_test();
-
-void move_entry_different_name_test();
-
-void move_entry_invalid_index_test();
-
-void move_entry_null_columns_test();
-
-void move_entry_different_type_test();
-
-void move_entry_test_common(
-    const pkmn::database::move_entry &move_entry_gen1,
-    const pkmn::database::move_entry &move_entry_gen2,
-    const pkmn::database::move_entry &move_entry_gba,
-    const pkmn::database::move_entry &move_entry_gcn,
-    const pkmn::database::move_entry &move_entry_gen4,
-    const pkmn::database::move_entry &move_entry_gen5,
-    const pkmn::database::move_entry &move_entry_gen6
-);
-
-/*
  * Pokémon entry tests
  */
 

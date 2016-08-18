@@ -12,7 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-void move_entry_none_test(
+static void _move_entry_none_test(
     const pkmn::database::move_entry &none_entry
 ) {
     BOOST_CHECK_EQUAL(none_entry.get_name(), "None");
@@ -30,7 +30,17 @@ void move_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_super_contest_effect(), "None");
 }
 
-void move_entry_wrong_game_test() {
+BOOST_AUTO_TEST_CASE(move_entry_none_test) {
+    for(int i = 0; i < 6; ++i) {
+        pkmn::database::move_entry none_byindex(0, game_ids[i]);
+        pkmn::database::move_entry none_byname("None", game_names[i]);
+
+        _move_entry_none_test(none_byindex);
+        _move_entry_none_test(none_byname);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(move_entry_wrong_game_test) {
     /*
      * Make sure moves from later generations throw an
      * exception.
@@ -97,7 +107,7 @@ void move_entry_wrong_game_test() {
  * Make sure move entries can be created from any name
  * the move has ever had, even from different games.
  */
-void move_entry_different_name_test() {
+BOOST_AUTO_TEST_CASE(move_entry_different_name_test) {
     pkmn::database::move_entry doubleslap1(
         "DoubleSlap", "Red"
     );
@@ -123,7 +133,7 @@ void move_entry_different_name_test() {
  * Make sure moves whose types have changed between
  * generations are reflected in their entries.
  */
-void move_entry_different_type_test() {
+BOOST_AUTO_TEST_CASE(move_entry_different_type_test) {
     pkmn::database::move_entry bite1(
         "Bite", "Red"
     );
@@ -160,10 +170,10 @@ void move_entry_invalid_index_test() {
     BOOST_CHECK_EQUAL(invalid.get_super_contest_effect(), "Unknown");
 }
 
-void move_entry_null_columns_test() {
+BOOST_AUTO_TEST_CASE(move_entry_null_columns_test) {
 }
 
-void move_entry_test_common(
+static void _move_entry_test_main(
     const pkmn::database::move_entry &move_entry_gen1,
     const pkmn::database::move_entry &move_entry_gen2,
     const pkmn::database::move_entry &move_entry_gba,
@@ -179,4 +189,15 @@ void move_entry_test_common(
     (void)move_entry_gen4;
     (void)move_entry_gen5;
     (void)move_entry_gen6;
+}
+
+BOOST_AUTO_TEST_CASE(move_entry_test_main) {
+    /*
+     * TODO:
+     *  * Make sure moves from later generations throw exceptions
+     *  * Make sure moves from same generation, wrong game throw exceptions
+     *  * Check equality operator between equal entries above
+     *  * Check inequality operator
+     *  * Make sure different names correspond to same move
+     */
 }
