@@ -6,8 +6,8 @@
 #
 
 # Source/binary dirs
-FILE(TO_NATIVE_PATH ${PKMN_SOURCE_DIR}/tests TESTS_SOURCE_DIR)
-FILE(TO_NATIVE_PATH ${PKMN_BINARY_DIR}/tests TESTS_BINARY_DIR)
+SET(TESTS_SOURCE_DIR ${PKMN_SOURCE_DIR}/tests)
+SET(TESTS_BINARY_DIR ${PKMN_BINARY_DIR}/tests)
 
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -83,5 +83,11 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_test_libs})
 
-    PKMN_ADD_TEST(${test_name} "${TESTS_BINARY_DIR}/${test_name}")
+    IF(WIN32)
+        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" cpp_test_cmd ${cpp_test_cmd})
+    ELSE()
+        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+    ENDIF(WIN32)
+    PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
