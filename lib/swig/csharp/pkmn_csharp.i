@@ -37,4 +37,4 @@ PKMN_CSHARP_VECTOR(pkmn::item_slot, ItemSlot, ItemSlotList)
 PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPockets);
 
 // Item Bag
-PKMN_CSHARP_INCLUDE_AND_SPTR(item_bag, ItemBag)
+%include <csharp/pkmn_item_bag.i>
