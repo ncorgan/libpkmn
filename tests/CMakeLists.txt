@@ -21,5 +21,6 @@ ENDFOREACH(test ${cpp_tests})
 
 SET(cpp_items_test_srcs
     cpp_items_test/cpp_items_test.cpp
+    cpp_items_test/gen1_items_tests.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_items_test "${cpp_items_test_srcs}")
