@@ -28,10 +28,12 @@ PKMN_CSHARP_INIT
 %ignore make;
 %ignore get_native;
 
-// Item List
+// Item Slot
 %include <pkmn/item_slot.hpp>
 PKMN_CSHARP_VECTOR(pkmn::item_slot, ItemSlot, ItemSlotList)
-PKMN_CSHARP_INCLUDE_AND_SPTR(item_list, ItemList)
+
+// Item List
+%include <csharp/pkmn_item_list.i>
 PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPockets);
 
 // Item Bag
