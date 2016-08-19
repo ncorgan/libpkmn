@@ -57,7 +57,7 @@ namespace pkmn {
         // Populate pocket name vector
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
         static BOOST_CONSTEXPR const char* name_query = \
-            "SELECT name FROM libpkmn_pocket_names WHERE version_group_id=? "
+            "SELECT name FROM libpkmn_item_lists WHERE version_group_id=? "
             "AND name != 'PC'";
 
         SQLite::Statement stmt((*_db), name_query);
