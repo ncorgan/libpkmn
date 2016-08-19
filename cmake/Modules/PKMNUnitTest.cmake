@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_test_libs
     pkmn
+    pkmntest
 )
 
 MACRO(PKMN_ADD_TEST test_name test_cmd)

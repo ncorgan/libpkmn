@@ -10,6 +10,10 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 ADD_SUBDIRECTORY(pkmntest)
 
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
+)
+
 SET(cpp_tests
     cpp_calculations_test
     cpp_lists_test

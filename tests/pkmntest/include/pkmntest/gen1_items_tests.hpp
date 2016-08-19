@@ -12,16 +12,20 @@
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 
-PKMN_API void gen1_item_list_test(
-    pkmn::item_list::sptr items
-);
+namespace pkmntest {
 
-PKMN_API void gen1_pc_test(
-    pkmn::item_list::sptr pc
-);
+    PKMN_API void gen1_item_list_test(
+        pkmn::item_list::sptr items
+    );
 
-PKMN_API void gen1_item_bag_test(
-    pkmn::item_bag::sptr bag
-);
+    PKMN_API void gen1_pc_test(
+        pkmn::item_list::sptr pc
+    );
+
+    PKMN_API void gen1_item_bag_test(
+        pkmn::item_bag::sptr bag
+    );
+
+}
 
 #endif /* GEN1_ITEMS_TESTS_HPP */
