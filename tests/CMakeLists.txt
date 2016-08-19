@@ -18,11 +18,3 @@ SET(cpp_tests
 FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
 ENDFOREACH(test ${cpp_tests})
-
-# Tests with multiple files have to be done separately
-
-SET(cpp_items_test_srcs
-    cpp_items_test/cpp_items_test.cpp
-    cpp_items_test/gen1_items_tests.cpp
-)
-PKMN_ADD_CPP_TEST(cpp_items_test "${cpp_items_test_srcs}")
