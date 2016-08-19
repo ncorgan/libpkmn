@@ -91,3 +91,8 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
+
+MACRO(PKMN_ADD_PYTHON_TEST test_name)
+    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_PYTHON_TEST)
