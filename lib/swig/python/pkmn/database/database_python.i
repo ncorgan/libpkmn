@@ -14,7 +14,6 @@ PKMN_PYTHON_INIT
 
 %{
     #include <pkmn/database/item_entry.hpp>
-    #include <pkmn/database/lists.hpp>
     #include <pkmn/database/move_entry.hpp>
     #include <pkmn/database/pokemon_entry.hpp>
 %}
@@ -25,6 +24,7 @@ PKMN_PYTHON_INIT
 %include <python/pkmn_levelup_move.i>
 
 %include <pkmn/database/item_entry.hpp>
-%include <pkmn/database/lists.hpp>
 %include <pkmn/database/move_entry.hpp>
 %include <pkmn/database/pokemon_entry.hpp>
+
+%include <database/lists_python.i>
