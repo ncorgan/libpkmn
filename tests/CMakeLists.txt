@@ -8,6 +8,8 @@
 INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
+ADD_SUBDIRECTORY(testlib)
+
 SET(cpp_tests
     cpp_calculations_test
     cpp_lists_test
