@@ -75,7 +75,7 @@ public partial class ItemEntry {
     }
 }
 
-/*public partial class ItemSlot {
+public partial class ItemSlot {
     /// <summary>Compares two ItemSlot instances to determine value equality.</summary>
     /// <remarks>
     /// Two instances are determined to be equal if they represent the same item and have
@@ -128,7 +128,7 @@ public partial class ItemSlotList {
 
         return ret;
     }
-}*/
+}
 
 public partial class MoveEntry {
     /// <summary>Compares two MoveEntry instances to determine value equality.</summary>
@@ -404,8 +404,8 @@ public partial class StringStringDict {
     }
 }
 
-/*public partial class StringItemListDict {
-    /// <summary>Generates a unique hash code for the given StringItemListDict.</summary>
+public partial class ItemPockets {
+    /// <summary>Generates a unique hash code for the given ItemPockets.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
         int ret = 0;
@@ -416,6 +416,6 @@ public partial class StringStringDict {
 
         return ret;
     }
-}*/
+}
 
 }
