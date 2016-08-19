@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
 
 SET(cpp_tests
     cpp_calculations_test
+    cpp_items_test
     cpp_lists_test
 )
 

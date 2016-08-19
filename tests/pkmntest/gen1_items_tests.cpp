@@ -29,7 +29,8 @@ namespace pkmntest {
     void gen1_item_bag_test(
         pkmn::item_bag::sptr bag
     ) {
-        (void)bag;
+        const pkmn::item_pockets_t& pockets = bag->get_pockets();
+        gen1_item_list_test(pockets.at("Items"));
     }
 
 }
