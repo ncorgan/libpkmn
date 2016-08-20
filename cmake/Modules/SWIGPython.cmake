@@ -59,7 +59,7 @@ SET(PYTHON_INSTALL_DIR ${PYTHON_INSTALL_DIR} CACHE FILEPATH "Python install dire
 # Macro to build and install Python SWIG modules
 ########################################################################
 MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
-    INCLUDE(${SWIG_USE_FILE})
+    INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
