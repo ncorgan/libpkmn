@@ -90,7 +90,7 @@ namespace pkmn { namespace database {
                           _game_id
                       );
         _move_id = pkmn::database::move_name_to_id(
-                       move_name, _generation
+                       move_name
                    );
 
         // Check to see if the move is valid for the given game.

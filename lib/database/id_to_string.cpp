@@ -228,8 +228,10 @@ namespace pkmn { namespace database {
             "SELECT item_id FROM old_item_names WHERE name=?";
 
         int old_ret = 0;
-        if(pkmn::database::maybe_query_db_bind1<int, const std::string&>(
-               _db, old_name_query, old_ret, item_name
+        if(boost::lockfree::detail::unlikely(
+                pkmn::database::maybe_query_db_bind1<int, const std::string&>(
+                    _db, old_name_query, old_ret, item_name
+                )
            ))
         {
             return old_ret;
@@ -332,8 +334,8 @@ namespace pkmn { namespace database {
                   pkmn::database::maybe_query_db_bind1<std::string, int>(
                       _db, old_name_query, old_ret, move_id
                   )
-               )
-            ) {
+               ))
+            {
                 return old_ret;
             }
         }
@@ -348,8 +350,7 @@ namespace pkmn { namespace database {
     }
 
     int move_name_to_id(
-        const std::string &move_name,
-        int generation
+        const std::string &move_name
     ) {
         if(move_name == "None") {
             return 0;
@@ -358,19 +359,17 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        if(generation < 6) {
-            static BOOST_CONSTEXPR const char* old_name_query = \
-                "SELECT move_id FROM old_move_names WHERE name=?";
+        static BOOST_CONSTEXPR const char* old_name_query = \
+            "SELECT move_id FROM old_move_names WHERE name=?";
 
-            int old_ret;
-            if(boost::lockfree::detail::unlikely(
-                  pkmn::database::maybe_query_db_bind1<int, const std::string&>(
-                      _db, old_name_query, old_ret, move_name
-                  )
-               )
-            ) {
-                return old_ret;
-            }
+        int old_ret;
+        if(boost::lockfree::detail::unlikely(
+              pkmn::database::maybe_query_db_bind1<int, const std::string&>(
+                  _db, old_name_query, old_ret, move_name
+              )
+           )
+        ) {
+            return old_ret;
         }
 
         static BOOST_CONSTEXPR const char* main_query = \
