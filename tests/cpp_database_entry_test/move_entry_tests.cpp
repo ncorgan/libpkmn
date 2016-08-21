@@ -243,6 +243,9 @@ void move_entry_invalid_index_test() {
     BOOST_CHECK_EQUAL(invalid.get_damage_class(), "Unknown");
     BOOST_CHECK_EQUAL(invalid.get_base_power(), -1);
     BOOST_CHECK_EQUAL(invalid.get_pp(0), -1);
+    BOOST_CHECK_EQUAL(invalid.get_pp(1), -1);
+    BOOST_CHECK_EQUAL(invalid.get_pp(2), -1);
+    BOOST_CHECK_EQUAL(invalid.get_pp(3), -1);
     BOOST_CHECK_CLOSE(invalid.get_accuracy(), -1.0f, 0.0001f);
     BOOST_CHECK_EQUAL(invalid.get_priority(), -9);
     BOOST_CHECK_EQUAL(invalid.get_effect(), "Unknown");
@@ -282,6 +285,14 @@ static void _move_entry_test_main(
     const pkmn::database::move_entry &move_entry_gen5,
     const pkmn::database::move_entry &move_entry_gen6
 ) {
+    // Check for expected exceptions in get_pp()
+    BOOST_CHECK_THROW(
+        (void)move_entry_gen1.get_pp(-1)
+    , std::out_of_range);
+    BOOST_CHECK_THROW(
+        (void)move_entry_gen1.get_pp(4)
+    , std::out_of_range);
+
     // Generation I entry
     BOOST_CHECK_EQUAL(move_entry_gen1.get_name(), "Earthquake");
     BOOST_CHECK_EQUAL(move_entry_gen1.get_game(), "Red");
