@@ -316,22 +316,69 @@ namespace pkmn { namespace database {
         int move_id,
         int generation
     ) {
+        if(move_id == 0) {
+            return "None";
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)move_id;
-        (void)generation;
-        return "";
+        if(generation < 6) {
+            static BOOST_CONSTEXPR const char* old_name_query = \
+                "SELECT name FROM old_move_names WHERE move_id=?";
+
+            std::string old_ret;
+            if(boost::lockfree::detail::unlikely(
+                  pkmn::database::maybe_query_db_bind1<std::string, int>(
+                      _db, old_name_query, old_ret, move_id
+                  )
+               )
+            ) {
+                return old_ret;
+            }
+        }
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT name FROM move_names WHERE move_id=? AND "
+            "local_language_id=9";
+
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, main_query, move_id
+               );
     }
 
     int move_name_to_id(
-        const std::string &move_name
+        const std::string &move_name,
+        int generation
     ) {
+        if(move_name == "None") {
+            return 0;
+        }
+
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)move_name;
-        return 0;
+        if(generation < 6) {
+            static BOOST_CONSTEXPR const char* old_name_query = \
+                "SELECT move_id FROM old_move_names WHERE name=?";
+
+            int old_ret;
+            if(boost::lockfree::detail::unlikely(
+                  pkmn::database::maybe_query_db_bind1<int, const std::string&>(
+                      _db, old_name_query, old_ret, move_name
+                  )
+               )
+            ) {
+                return old_ret;
+            }
+        }
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT move_id FROM move_names WHERE name=?";
+
+        return pkmn::database::query_db_bind1<int, const std::string&>(
+                   _db, main_query, move_name
+               );
     }
 
     std::string nature_id_to_name(

@@ -114,7 +114,8 @@ namespace pkmn { namespace database {
     );
 
     int move_name_to_id(
-        const std::string &move_name
+        const std::string &move_name,
+        int generation
     );
 
     /*

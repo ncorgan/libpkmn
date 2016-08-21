@@ -21,24 +21,55 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
+    /*
+     * This array lists the upper bound of valid move IDs
+     * for each generation. This is trivial enough not to
+     * warrant a database query.
+     */
+    BOOST_STATIC_CONSTEXPR int MOVE_INDEX_BOUNDS[] = {
+        -1, 165, 251, 354, 467, 559, 621
+    };
+
+    // Gamecube games have an extra range.
+    BOOST_STATIC_CONSTEXPR int SHADOW_RUSH = 10001;
+    BOOST_STATIC_CONSTEXPR int SHADOW_SKY  = 10018;
+
+    // Gamecube version IDs
+    BOOST_STATIC_CONSTEXPR int COLO = 19;
+    BOOST_STATIC_CONSTEXPR int XD   = 20;
+
     move_entry::move_entry(
         int move_id,
         int game_id
     ):
         _move_id(move_id),
         _game_id(game_id),
-        _generation(0),
-        _none(move_id == 0),
-        _invalid(false) // TODO: proper check
+        _none(move_id == 0)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        // TODO: specific error if move not in game
-
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
+
+        /*
+         * Check to see if the move is valid for the given game.
+         *
+         * With this constructor, it's fine if not.
+         */
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
+            if(_game_id == COLO) {
+                _invalid = (_move_id != SHADOW_RUSH);
+            } else if(_game_id == XD) {
+                _invalid = (_move_id < SHADOW_RUSH) or
+                           (_move_id > SHADOW_SKY);
+            } else {
+                _invalid = true;
+            }
+        } else {
+            _invalid = false;
+        }
     }
 
     move_entry::move_entry(
@@ -52,16 +83,32 @@ namespace pkmn { namespace database {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        // TODO: specific error if move not in game
-        _move_id = pkmn::database::move_name_to_id(
-                       move_name
-                   );
         _game_id = pkmn::database::game_name_to_id(
                        game_name
                    );
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
+        _move_id = pkmn::database::move_name_to_id(
+                       move_name, _generation
+                   );
+
+        // Check to see if the move is valid for the given game.
+        if(_move_id > MOVE_INDEX_BOUNDS[_generation]) {
+            if(_game_id == COLO) {
+                _invalid = (_move_id != SHADOW_RUSH);
+            } else if(_game_id == XD) {
+                _invalid = (_move_id < SHADOW_RUSH) or
+                           (_move_id > SHADOW_SKY);
+            } else {
+                _invalid = true;
+            }
+        } else {
+            _invalid = false;
+        }
+        if(_invalid) {
+            throw std::invalid_argument("This item was not in this game.");
+        }
     }
 
     std::string move_entry::get_name() const {
