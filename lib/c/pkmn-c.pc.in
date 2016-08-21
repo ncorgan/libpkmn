@@ -3,7 +3,7 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}/@LIBRARY_DIR@
 includedir=${prefix}/@INCLUDE_DIR@
 
-Name: LibPKMN
+Name: LibPKMN - C API
 Description: Pokémon save editing and analysis library
 URL: https://github.com/ncorgan/libpkmn
 Version: 0.0.1
@@ -11,5 +11,5 @@ Requires:
 Requires.private:
 Conflicts:
 Cflags: -I${includedir}
-Libs: -L${libdir} -lpkmn -lpksav
+Libs: -L${libdir} -lpkmn-c -lpkmn -lpksav
 Libs.private:
