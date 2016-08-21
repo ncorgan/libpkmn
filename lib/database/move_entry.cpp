@@ -340,15 +340,10 @@ namespace pkmn { namespace database {
             }
         }
 
-        // Veekun stores 100% accuracy as NULL
-        double ret;
-        if(pkmn::database::maybe_query_db_bind1<double, int>(
-               _db, main_query, ret, _move_id
-           )) {
-            return float(ret) / 100.f;
-        } else {
-            return 1.0f;
-        }
+        // SQLite uses doubles, so avoid implicit casting ambiguity
+        return ((float)pkmn::database::query_db_bind1<double, int>(
+                          _db, main_query, _move_id
+                       )) / 100.0f;
     }
 
     int move_entry::get_priority() const {
