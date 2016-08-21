@@ -128,6 +128,8 @@ BOOST_AUTO_TEST_CASE(move_entry_different_name_test) {
     BOOST_CHECK(doubleslap3 == doubleslap4);
     BOOST_CHECK_EQUAL(doubleslap3.get_name(), "Double Slap");
     BOOST_CHECK_EQUAL(doubleslap4.get_name(), "Double Slap");
+
+    BOOST_CHECK(doubleslap1 != doubleslap3);
 }
 
 /*
@@ -421,11 +423,16 @@ static void _move_entry_test_main(
 }
 
 BOOST_AUTO_TEST_CASE(move_entry_test_main) {
-    /*
-     * TODO:
-     *  * Check equality operator between equal entries above
-     *  * Check inequality operator
-     */
+    // Test with move entries created by ID
+    pkmn::database::move_entry byid_gen1(89,1);
+    pkmn::database::move_entry byid_gen2(190,5);
+    pkmn::database::move_entry byid_gba(262,7);
+    pkmn::database::move_entry byid_gcn(10003,20);
+    pkmn::database::move_entry byid_gen4(418,13);
+    pkmn::database::move_entry byid_gen5(525,17);
+    pkmn::database::move_entry byid_gen6(609,24);
+
+    // Test with move entries created by name
     pkmn::database::move_entry byname_gen1("Earthquake", "Red");
     pkmn::database::move_entry byname_gen2("Octazooka", "Silver");
     pkmn::database::move_entry byname_gba("Memento", "Ruby");
@@ -434,6 +441,20 @@ BOOST_AUTO_TEST_CASE(move_entry_test_main) {
     pkmn::database::move_entry byname_gen5("Dragon Tail", "Black");
     pkmn::database::move_entry byname_gen6("Nuzzle", "Y");
 
+    // These should be equal
+    BOOST_CHECK(byid_gen1 == byname_gen1);
+    BOOST_CHECK(byid_gen2 == byname_gen2);
+    BOOST_CHECK(byid_gba  == byname_gba);
+    BOOST_CHECK(byid_gcn  == byname_gcn);
+    BOOST_CHECK(byid_gen4 == byname_gen4);
+    BOOST_CHECK(byid_gen5 == byname_gen5);
+    BOOST_CHECK(byid_gen6 == byname_gen6);
+
+    _move_entry_test_main(
+        byid_gen1, byid_gen2, byid_gba,
+        byid_gcn, byid_gen4, byid_gen5,
+        byid_gen6
+    );
     _move_entry_test_main(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
