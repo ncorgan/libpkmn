@@ -221,7 +221,7 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gba.get_game(), "Ruby");
     BOOST_CHECK_EQUAL(move_entry_gba.get_type(), "Dark");
     (void)move_entry_gba.get_description();
-    BOOST_CHECK_EQUAL(move_entry_gba.get_damage_class(), "Physical");
+    BOOST_CHECK_EQUAL(move_entry_gba.get_damage_class(), "Status");
 
     // Gamecube entry
     BOOST_CHECK_EQUAL(move_entry_gcn.get_name(), "Shadow Blitz");

@@ -10,7 +10,6 @@
 
 #include <pkmn/database/move_entry.hpp>
 
-#include <boost/algorithm/string.hpp>
 #include <boost/config.hpp>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
@@ -207,28 +206,34 @@ namespace pkmn { namespace database {
             return "Unknown";
         }
 
+        /*
+         * In Generations I-III (minus the Gamecube games), a move's damage
+         * class was associated with its type instead of the move itself,
+         * unless it's a status move.
+         */
         static BOOST_CONSTEXPR const char* old_games_query = \
-            "SELECT description FROM move_damage_class_prose "
-            "WHERE local_language_id=9 AND move_damage_class_id="
-            "(SELECT damage_class_id FROM types WHERE id="
-            "(SELECT type_id FROM moves where id=?))";
+            "SELECT damage_class_id FROM types WHERE id="
+            "(SELECT type_id FROM moves where id=?)";
 
-        static BOOST_CONSTEXPR const char* new_games_query = \
-            "SELECT description FROM move_damage_class_prose "
-            "WHERE local_language_id=9 AND move_damage_class_id="
-            "(SELECT damage_class_id FROM moves WHERE id=?)";
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT damage_class_id FROM moves WHERE id=?";
 
         bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
-        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
-                                  _db,
-                                  (old_game ? old_games_query : new_games_query),
-                                  _move_id
+        int damage_class_id = pkmn::database::query_db_bind1<int, int>(
+                                  _db, main_query, _move_id
                               );
 
-        // We only want the first word
-        std::vector<std::string> words;
-        boost::split(words, from_db, boost::is_any_of(" "));
-        return words[0];
+        static BOOST_CONSTEXPR const char* damage_classes[] = {
+            "", "Status", "Physical", "Special"
+        };
+
+        if(old_game and damage_class_id > 1) {
+            damage_class_id = pkmn::database::query_db_bind1<int, int>(
+                                  _db, old_games_query, _move_id
+                              );
+        }
+
+        return damage_classes[damage_class_id];
     }
 
     int move_entry::get_base_power() const {
@@ -304,27 +309,32 @@ namespace pkmn { namespace database {
 
         /*
          * If this entry is for an older game, check if it had an older
-         * accuracy. If not, fall back to the default query.
+         * accuracy.
          */
         if(_generation < 6) {
             double old_ret;
             if(pkmn::database::maybe_query_db_bind1<double, int>(
                    _db, old_queries[_generation], old_ret,
                    _move_id
-                ))
+               ))
             {
                 // Veekun's database stores this as an int 0-100.
                 return (float(old_ret) / 100.0f);
             }
         }
 
-        // SQLite uses doubles, so avoid implicit casting ambiguity
-        float ret = (float)pkmn::database::query_db_bind1<double, int>(
-                               _db, main_query, _move_id
-                           );
+        // Veekun stores 100% accuracy as NULL
+        double ret = 1.0;
+        if(pkmn::database::maybe_query_db_bind1<double, int>(
+               _db, main_query, ret, _move_id
+           ))
+        {
+            return 1.0f;
+        }
+
 
         // Veekun's database stores this as an int 0-100.
-        return (ret / 100.0f);
+        return float(ret / 100.0f);
     }
 
     int move_entry::get_priority() const {
