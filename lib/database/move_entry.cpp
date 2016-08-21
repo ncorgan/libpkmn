@@ -10,6 +10,7 @@
 
 #include <pkmn/database/move_entry.hpp>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/config.hpp>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
@@ -210,11 +211,16 @@ namespace pkmn { namespace database {
             "(SELECT damage_class_id FROM moves WHERE id=?)";
 
         bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db,
-                   (old_game ? old_games_query : new_games_query),
-                   _move_id
-               );
+        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                  _db,
+                                  (old_game ? old_games_query : new_games_query),
+                                  _move_id
+                              );
+
+        // We only want the first word
+        std::vector<std::string> words;
+        boost::split(words, from_db, boost::is_any_of(" "));
+        return words[0];
     }
 
     int move_entry::get_base_power() const {
