@@ -8,10 +8,55 @@
 #ifndef PKMN_C_ERROR_INTERNAL_HPP
 #define PKMN_C_ERROR_INTERNAL_HPP
 
+#include <pkmn-c/error.h>
+
+#include <stdexcept>
 #include <string>
 
 void pkmn_set_error(
     const std::string &error
 );
+
+#define PKMN_CPP_TO_C(...) \
+{ \
+    try { \
+        __VA_ARGS__ ; \
+        pkmn_set_error("None"); \
+        return PKMN_ERROR_NONE; \
+    } catch(const std::invalid_argument &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_INVALID_ARGUMENT; \
+    } catch(const std::domain_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_DOMAIN_ERROR; \
+    } catch(const std::length_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_LENGTH_ERROR; \
+    } catch(const std::out_of_range &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_OUT_OF_RANGE; \
+    } catch(const std::logic_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_LOGIC_ERROR; \
+    } catch(const std::range_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_RANGE_ERROR; \
+    } catch(const std::overflow_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_OVERFLOW_ERROR; \
+    } catch(const std::underflow_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_UNDERFLOW_ERROR; \
+    } catch(const std::runtime_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_RUNTIME_ERROR; \
+    } catch(const std::exception &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_STD_EXCEPTION; \
+    } catch(...) { \
+        pkmn_set_error("Unknown error"); \
+        return PKMN_UNKNOWN_ERROR; \
+    } \
+}
 
 #endif /* PKMN_C_ERROR_INTERNAL_HPP */
