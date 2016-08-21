@@ -383,11 +383,18 @@ namespace pkmn { namespace database {
                );
     }
 
-    // TODO: Would boost::regex make this nicer?
     static std::string _cleanup_effect(
         const std::string &input,
-        float effect_chance
+        int move_id
     ) {
+        // Get effect chance
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT effect_chance FROM moves WHERE id=?";
+
+        int effect_chance = pkmn::database::query_db_bind1<double, int>(
+                                _db, query, move_id
+                            );
+
         std::string ret = input;
 
         ret.erase(std::remove(ret.begin(), ret.end(), '['), ret.end());
@@ -399,10 +406,9 @@ namespace pkmn { namespace database {
             ret.replace(open, (close-open+1), "");
         }
 
-        int effect_chance_num = int(effect_chance * 100.0);
-        if(effect_chance_num > 0) {
+        if(effect_chance > 0) {
             std::stringstream stream;
-            stream << effect_chance_num << "%";
+            stream << effect_chance << "%";
 
             size_t effect_chance_pos = ret.find("$effect_chance%");
             if(effect_chance_pos != std::string::npos) {
@@ -427,24 +433,7 @@ namespace pkmn { namespace database {
         std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
                                   _db, query, _move_id
                               );
-        return _cleanup_effect(from_db, this->get_effect_chance());
-    }
-
-    float move_entry::get_effect_chance() const {
-        if(_none or _invalid) {
-            return -1.0f;
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT effect_chance FROM moves WHERE id=?";
-
-        // SQLite uses doubles, so avoid implicit casting ambiguity
-        float effect_chance_from_db = (float)pkmn::database::query_db_bind1<double, int>(
-                                          _db, query, _move_id
-                                      );
-
-        // Veekun's database stores this as an int 0-100.
-        return (effect_chance_from_db / 100.0f);
+        return _cleanup_effect(from_db, _move_id);
     }
 
     std::string move_entry::get_contest_type() const {

@@ -66,8 +66,6 @@ namespace pkmn { namespace database {
 
             std::string get_effect() const;
 
-            float get_effect_chance() const;
-
             std::string get_contest_type() const;
 
             std::string get_contest_effect() const;
