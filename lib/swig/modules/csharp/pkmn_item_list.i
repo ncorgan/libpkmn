@@ -70,8 +70,8 @@ private";
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
         ulong cptr = __cptr();
-        while(cptr > Int32.MaxValue) {
-            cptr = (ulong)Math.Sqrt(cptr);
+        while(cptr > global::System.Int32.MaxValue) {
+            cptr = (ulong)global::System.Math.Sqrt(cptr);
         }
         return (int)cptr;
     }
