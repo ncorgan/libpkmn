@@ -31,13 +31,17 @@ namespace pkmn { namespace database {
         -1, 165, 251, 354, 467, 559, 621
     };
 
+    // Some Generation VI moves are only in OR/AS
+    BOOST_STATIC_CONSTEXPR int XY_MAX = 617;
+
     // Gamecube games have an extra range.
     BOOST_STATIC_CONSTEXPR int SHADOW_RUSH = 10001;
     BOOST_STATIC_CONSTEXPR int SHADOW_SKY  = 10018;
 
-    // Gamecube version IDs
+    // Relevant version IDs
     BOOST_STATIC_CONSTEXPR int COLO = 19;
     BOOST_STATIC_CONSTEXPR int XD   = 20;
+    BOOST_STATIC_CONSTEXPR int Y    = 24;
 
     move_entry::move_entry(
         int move_id,
@@ -68,6 +72,8 @@ namespace pkmn { namespace database {
             } else {
                 _invalid = true;
             }
+        } else if(_generation == 6 and _game_id <= Y) {
+            _invalid = (_move_id > XY_MAX);
         } else {
             _invalid = false;
         }
@@ -103,6 +109,8 @@ namespace pkmn { namespace database {
             } else {
                 _invalid = true;
             }
+        } else if(_generation == 6 and _game_id <= Y) {
+            _invalid = (_move_id > XY_MAX);
         } else {
             _invalid = false;
         }
