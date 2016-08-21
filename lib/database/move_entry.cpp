@@ -341,10 +341,11 @@ namespace pkmn { namespace database {
         }
 
         // Veekun stores 100% accuracy as NULL
-        SQLite::Statement stmt((*_db), main_query);
-        if(stmt.executeStep()) {
-            // Veekun's database stores this as an int 0-100.
-            return float(double(stmt.getColumn(0)) / 100.0);
+        double ret;
+        if(pkmn::database::maybe_query_db_bind1<double, int>(
+               _db, main_query, ret, _move_id
+           )) {
+            return float(ret) / 100.f;
         } else {
             return 1.0f;
         }
