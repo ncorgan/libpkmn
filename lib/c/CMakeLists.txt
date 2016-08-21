@@ -16,6 +16,7 @@ SET(pkmn_c_libs
 )
 
 SET(pkmn_c_sources
+    build_info.cpp
     cpp_to_c.cpp
     error.cpp
 )

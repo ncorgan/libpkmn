@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_headers
+        build_info.h
         config.h
         error.h
     )
