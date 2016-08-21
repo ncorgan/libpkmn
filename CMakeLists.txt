@@ -42,6 +42,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
     filesystem
+    thread
     unit_test_framework
 )
 IF(MSVC)

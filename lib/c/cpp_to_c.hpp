@@ -5,6 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#ifndef PKMN_C_CPP_TO_C_HPP
+#define PKMN_C_CPP_TO_C_HPP
+
 #include <pkmn/config.hpp>
 
 #include <cstring>
@@ -26,3 +29,5 @@ void std_vector_std_string_to_c_strs(
     char*** c_strs_out,
     size_t* list_len_out
 );
+
+#endif /* PKMN_C_CPP_TO_C_HPP */
