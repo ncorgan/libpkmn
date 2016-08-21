@@ -482,8 +482,8 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_super_contest_effect() const {
-        // Super Contests started in Generation III
-        if(_none or _generation < 4) {
+        // Super Contests are only in Generation IV
+        if(_none or _generation != 4) {
             return "None";
         } else if(_invalid) {
             return "Unknown";

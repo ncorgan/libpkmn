@@ -277,6 +277,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gen1.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen1.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen1.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_super_contest_effect(), "None");
 
     // Generation II entry
     BOOST_CHECK_EQUAL(move_entry_gen2.get_name(), "Octazooka");
@@ -290,6 +292,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gen2.get_accuracy(), 0.85f, 0.0001f);
     (void)move_entry_gen2.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen2.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_super_contest_effect(), "None");
 
     // GBA entry
     BOOST_CHECK_EQUAL(move_entry_gba.get_name(), "Memento");
@@ -303,6 +307,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gba.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gba.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gba.get_contest_type(), "Tough");
+    BOOST_CHECK(move_entry_gba.get_contest_effect() != "None");
+    BOOST_CHECK_EQUAL(move_entry_gba.get_super_contest_effect(), "None");
 
     // Gamecube entry
     BOOST_CHECK_EQUAL(move_entry_gcn.get_name(), "Shadow Blitz");
@@ -316,6 +322,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gcn.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gcn.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gcn.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_super_contest_effect(), "None");
 
     // Generation IV entry
     BOOST_CHECK_EQUAL(move_entry_gen4.get_name(), "Bullet Punch");
@@ -329,6 +337,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gen4.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen4.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen4.get_contest_type(), "Smart");
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_contest_effect(),  "None");
+    BOOST_CHECK(move_entry_gen4.get_super_contest_effect() != "None");
 
     // Generation V entry
     BOOST_CHECK_EQUAL(move_entry_gen5.get_name(), "Dragon Tail");
@@ -342,6 +352,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gen5.get_accuracy(), 0.9f, 0.0001f);
     (void)move_entry_gen5.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen5.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_super_contest_effect(), "None");
 
     // Generation VI entry
     BOOST_CHECK_EQUAL(move_entry_gen6.get_name(), "Nuzzle");
@@ -355,6 +367,8 @@ static void _move_entry_test_main(
     BOOST_CHECK_CLOSE(move_entry_gen6.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen6.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen6.get_contest_type(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_contest_effect(), "None");
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_super_contest_effect(), "None");
 }
 
 BOOST_AUTO_TEST_CASE(move_entry_test_main) {
