@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         build_info.h
         config.h
         error.h
+        string_types.h
     )
 
     INSTALL(
