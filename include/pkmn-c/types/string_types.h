@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_STRING_TYPES_H
-#define PKMN_C_STRING_TYPES_H
+#ifndef PKMN_C_TYPES_STRING_TYPES_H
+#define PKMN_C_TYPES_STRING_TYPES_H
 
 #include <pkmn-c/config.h>
 
@@ -48,4 +48,4 @@ static PKMN_INLINE void pkmn_string_pair_free(
 }
 #endif
 
-#endif /* PKMN_C_STRING_TYPES_H */
+#endif /* PKMN_C_TYPES_STRING_TYPES_H */

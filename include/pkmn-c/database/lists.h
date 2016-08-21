@@ -9,7 +9,7 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
-#include <pkmn-c/string_types.h>
+#include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 #include <stdlib.h>

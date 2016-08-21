@@ -6,19 +6,13 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_c_headers
-        build_info.h
-        config.h
-        error.h
+    SET(pkmn_c_types_headers
+        string_types.h
     )
 
     INSTALL(
-        FILES ${pkmn_c_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c
+        FILES ${pkmn_c_types_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c/types
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-
-ADD_SUBDIRECTORY(database)
-ADD_SUBDIRECTORY(types)
-ADD_SUBDIRECTORY(utils)

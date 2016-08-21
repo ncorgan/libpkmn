@@ -11,7 +11,7 @@
 #include <pkmn/config.hpp>
 #include <pkmn/database/move_entry.hpp>
 
-#include <pkmn-c/string_types.h>
+#include <pkmn-c/types/string_types.h>
 
 #include <cstring>
 #include <string>
