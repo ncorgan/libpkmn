@@ -76,8 +76,7 @@ namespace pkmn { namespace database {
         const std::string &move_name,
         const std::string &game_name
     ):
-        _none(move_name == "None"),
-        _invalid(false)
+        _none(move_name == "None")
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -134,16 +133,34 @@ namespace pkmn { namespace database {
             return "None";
         } else if(_invalid) {
             return "Invalid";
-        } else if(_generation == 1) {
-            /*
-             * In Generation I, before the Dark type was introduced,
-             * four moves were Normal type.
-             *
-             * There aren't enough edge cases to warrant adding them
-             * to the database.
-             */
+        }
+
+        /*
+         * In Generation I, before the Dark type was introduced,
+         * four moves were Normal type.
+         *
+         * There aren't enough edge cases to warrant adding them
+         * to the database.
+         */
+        if(_generation == 1) {
             BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < 4; ++i) {
+                if(_move_id == NORMAL_IDS[i]) {
+                    return "Normal";
+                }
+            }
+        }
+
+        /*
+         * In Generation VI, before the Fairy type was introduced,
+         * three moves were Normal type.
+         *
+         * There aren't enough edge cases to warrant adding them
+         * to the database.
+         */
+        if(_generation < 6) {
+            BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {186,204,236};
+            for(int i = 0; i < 3; ++i) {
                 if(_move_id == NORMAL_IDS[i]) {
                     return "Normal";
                 }
