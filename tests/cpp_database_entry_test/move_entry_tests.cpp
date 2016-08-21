@@ -155,6 +155,69 @@ BOOST_AUTO_TEST_CASE(move_entry_different_type_test) {
     BOOST_CHECK_EQUAL(charm2.get_type(), "Fairy");
 }
 
+/*
+ * Make sure moves whose accuracy has changed between generations
+ * show the correct accuracy for each generation.
+ */
+BOOST_AUTO_TEST_CASE(move_entry_changing_accuracy_test) {
+    pkmn::database::move_entry poison_gas1(
+        "Poison Gas", "Diamond"
+    );
+    BOOST_CHECK_CLOSE(poison_gas1.get_accuracy(), 0.55f, 0.0001f);
+    pkmn::database::move_entry poison_gas2(
+        "Poison Gas", "White"
+    );
+    BOOST_CHECK_CLOSE(poison_gas2.get_accuracy(), 0.8f, 0.0001f);
+    pkmn::database::move_entry poison_gas3(
+        "Poison Gas", "X"
+    );
+    BOOST_CHECK_CLOSE(poison_gas3.get_accuracy(), 0.9f, 0.0001f);
+}
+
+/*
+ * Make sure moves whose base power has changed between generations
+ * show the correct base power for each generation.
+ */
+BOOST_AUTO_TEST_CASE(move_entry_changing_base_power_test) {
+    pkmn::database::move_entry selfdestruct1(
+        "Self-Destruct", "Red"
+    );
+    BOOST_CHECK_EQUAL(selfdestruct1.get_base_power(), 130);
+    pkmn::database::move_entry selfdestruct2(
+        "Self-Destruct", "Ruby"
+    );
+    BOOST_CHECK_EQUAL(selfdestruct2.get_base_power(), 200);
+    pkmn::database::move_entry selfdestruct3(
+        "Self-Destruct", "Omega Ruby"
+    );
+    BOOST_CHECK_EQUAL(selfdestruct3.get_base_power(), 200);
+}
+
+// TODO: PP changes
+
+BOOST_AUTO_TEST_CASE(move_entry_changing_priority_test) {
+    pkmn::database::move_entry roar1(
+        "Roar", "Blue"
+    );
+    BOOST_CHECK_EQUAL(roar1.get_priority(), 0);
+    pkmn::database::move_entry roar2(
+        "Roar", "Crystal"
+    );
+    BOOST_CHECK_EQUAL(roar2.get_priority(), -1);
+    pkmn::database::move_entry roar3(
+        "Roar", "XD"
+    );
+    BOOST_CHECK_EQUAL(roar3.get_priority(), -5);
+    pkmn::database::move_entry roar4(
+        "Roar", "SoulSilver"
+    );
+    BOOST_CHECK_EQUAL(roar4.get_priority(), -1);
+    pkmn::database::move_entry roar5(
+        "Roar", "Y"
+    );
+    BOOST_CHECK_EQUAL(roar5.get_priority(), -6);
+}
+
 void move_entry_invalid_index_test() {
     pkmn::database::move_entry invalid(468, 15);
     BOOST_CHECK_EQUAL(invalid.get_name(), "Invalid (0x1D4)");

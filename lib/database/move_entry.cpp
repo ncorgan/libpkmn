@@ -352,7 +352,7 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT priority FROM moves WHERE move_id=?";
+            "SELECT priority FROM moves WHERE id=?";
 
         static BOOST_CONSTEXPR const char* old_queries[] = {
             "",
