@@ -192,7 +192,24 @@ BOOST_AUTO_TEST_CASE(move_entry_changing_base_power_test) {
     BOOST_CHECK_EQUAL(selfdestruct3.get_base_power(), 200);
 }
 
-// TODO: PP changes
+/*
+ * Make sure moves whose base PP has changed between generations
+ * show the correct base PP for each generation.
+ */
+BOOST_AUTO_TEST_CASE(move_entry_changing_pp_test) {
+    pkmn::database::move_entry absorb1(
+        "Absorb", "LeafGreen"
+    );
+    BOOST_CHECK_EQUAL(absorb1.get_pp(0), 20);
+    pkmn::database::move_entry absorb2(
+        "Absorb", "Black"
+    );
+    BOOST_CHECK_EQUAL(absorb2.get_pp(0), 25);
+    pkmn::database::move_entry absorb3(
+        "Absorb", "X"
+    );
+    BOOST_CHECK_EQUAL(absorb3.get_pp(0), 25);
+}
 
 BOOST_AUTO_TEST_CASE(move_entry_changing_priority_test) {
     pkmn::database::move_entry roar1(

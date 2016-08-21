@@ -304,7 +304,42 @@ namespace pkmn { namespace database {
             throw std::out_of_range("num_pp_ups: valid range 0-3");
         }
 
-        return 0;
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT pp FROM moves WHERE id=?";
+
+        static BOOST_CONSTEXPR const char* old_queries[] = {
+            "",
+            "SELECT gen1_pp FROM old_move_pps WHERE move_id=?",
+            "SELECT gen2_pp FROM old_move_pps WHERE move_id=?",
+            "SELECT gen3_pp FROM old_move_pps WHERE move_id=?",
+            "SELECT gen4_pp FROM old_move_pps WHERE move_id=?",
+            "SELECT gen5_pp FROM old_move_pps WHERE move_id=?",
+        };
+
+        /*
+         * If this entry is for an older game, check if it had an older
+         * base PP. If not, fall back to the default query.
+         */
+        int base_pp = -1;
+        if(_generation < 6) {
+            (void)pkmn::database::maybe_query_db_bind1<int, int>(
+                      _db, old_queries[_generation],
+                      base_pp, _move_id
+                  );
+        }
+
+        if(base_pp == -1) {
+            base_pp = pkmn::database::query_db_bind1<int, int>(
+                          _db, main_query, _move_id
+                      );
+        }
+
+        if(num_pp_ups == 0) {
+            return base_pp;
+        } else {
+            int _20p = int(base_pp * 0.2);
+            return (base_pp + (num_pp_ups * _20p));
+        }
     }
 
     float move_entry::get_accuracy() const {
