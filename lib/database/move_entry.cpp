@@ -199,6 +199,23 @@ namespace pkmn { namespace database {
         return fix_veekun_whitespace(from_db);
     }
 
+    std::string move_entry::get_target() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM move_target_prose WHERE local_language_id=9 "
+            "AND move_target_id=(SELECT id FROM move_targets WHERE id="
+            "(SELECT target_id FROM moves WHERE id=?))";
+
+        return pkmn::database::query_db_bind1<std::string, int>(
+                   _db, query, _move_id
+               );
+    }
+
     std::string move_entry::get_damage_class() const {
         if(_none) {
             return "None";
@@ -325,9 +342,9 @@ namespace pkmn { namespace database {
 
         // Veekun stores 100% accuracy as NULL
         double ret = 1.0;
-        if(pkmn::database::maybe_query_db_bind1<double, int>(
-               _db, main_query, ret, _move_id
-           ))
+        if(not pkmn::database::maybe_query_db_bind1<double, int>(
+                   _db, main_query, ret, _move_id
+               ))
         {
             return 1.0f;
         }

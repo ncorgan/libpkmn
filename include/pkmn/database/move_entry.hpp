@@ -50,6 +50,8 @@ namespace pkmn { namespace database {
 
             std::string get_description() const;
 
+            std::string get_target() const;
+
             std::string get_damage_class() const;
 
             int get_base_power() const;
