@@ -341,17 +341,13 @@ namespace pkmn { namespace database {
         }
 
         // Veekun stores 100% accuracy as NULL
-        double ret = 1.0;
-        if(not pkmn::database::maybe_query_db_bind1<double, int>(
-                   _db, main_query, ret, _move_id
-               ))
-        {
+        SQLite::Statement stmt((*_db), main_query);
+        if(stmt.executeStep()) {
+            // Veekun's database stores this as an int 0-100.
+            return float(double(stmt.getColumn(0)) / 100.0);
+        } else {
             return 1.0f;
         }
-
-
-        // Veekun's database stores this as an int 0-100.
-        return float(ret / 100.0f);
     }
 
     int move_entry::get_priority() const {
