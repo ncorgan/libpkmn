@@ -426,7 +426,7 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT effect_chance FROM moves WHERE id=?";
 
-        int effect_chance = pkmn::database::query_db_bind1<double, int>(
+        int effect_chance = pkmn::database::query_db_bind1<int, int>(
                                 _db, query, move_id
                             );
 
