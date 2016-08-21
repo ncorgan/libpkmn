@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_ITEMS_H
-#define PKMN_C_ITEMS_H
+#ifndef PKMN_C_DATABASE_MOVES_H
+#define PKMN_C_DATABASE_MOVES_H
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
@@ -87,4 +87,4 @@ PKMN_API pkmn_error_t pkmn_database_move_effect(
 }
 #endif
 
-#endif /* PKMN_C_ITEMS_H */
+#endif /* PKMN_C_DATABASE_MOVES_H */
