@@ -290,7 +290,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen1.get_target(), "All other Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gen1.get_damage_class(), "Physical");
     BOOST_CHECK_EQUAL(move_entry_gen1.get_base_power(), 100);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(0), 10);
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(1), 12);
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(2), 14);
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen1.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen1.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen1.get_contest_type(), "None");
@@ -305,7 +308,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen2.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gen2.get_damage_class(), "Special");
     BOOST_CHECK_EQUAL(move_entry_gen2.get_base_power(), 65);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(0), 10);
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(1), 12);
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(2), 14);
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen2.get_accuracy(), 0.85f, 0.0001f);
     (void)move_entry_gen2.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen2.get_contest_type(), "None");
@@ -320,7 +326,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gba.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gba.get_damage_class(), "Status");
     BOOST_CHECK_EQUAL(move_entry_gba.get_base_power(), 0);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gba.get_pp(0), 10);
+    BOOST_CHECK_EQUAL(move_entry_gba.get_pp(1), 12);
+    BOOST_CHECK_EQUAL(move_entry_gba.get_pp(2), 14);
+    BOOST_CHECK_EQUAL(move_entry_gba.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gba.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gba.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gba.get_contest_type(), "Tough");
@@ -335,7 +344,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gcn.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gcn.get_damage_class(), "Physical");
     BOOST_CHECK_EQUAL(move_entry_gcn.get_base_power(), 40);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(0), 0);
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(1), 0);
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(2), 0);
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(3), 0);
     BOOST_CHECK_CLOSE(move_entry_gcn.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gcn.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gcn.get_contest_type(), "None");
@@ -350,7 +362,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen4.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gen4.get_damage_class(), "Physical");
     BOOST_CHECK_EQUAL(move_entry_gen4.get_base_power(), 40);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(0), 30);
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(1), 36);
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(2), 42);
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(3), 48);
     BOOST_CHECK_CLOSE(move_entry_gen4.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen4.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen4.get_contest_type(), "Smart");
@@ -365,7 +380,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen5.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gen5.get_damage_class(), "Physical");
     BOOST_CHECK_EQUAL(move_entry_gen5.get_base_power(), 60);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(0), 10);
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(1), 12);
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(2), 14);
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen5.get_accuracy(), 0.9f, 0.0001f);
     (void)move_entry_gen5.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen5.get_contest_type(), "None");
@@ -380,7 +398,10 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen6.get_target(), "Selected Pokémon");
     BOOST_CHECK_EQUAL(move_entry_gen6.get_damage_class(), "Physical");
     BOOST_CHECK_EQUAL(move_entry_gen6.get_base_power(), 20);
-    // TODO: PP
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(0), 20);
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(1), 24);
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(2), 28);
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(3), 32);
     BOOST_CHECK_CLOSE(move_entry_gen6.get_accuracy(), 1.0f, 0.0001f);
     (void)move_entry_gen6.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen6.get_contest_type(), "None");
@@ -391,11 +412,8 @@ static void _move_entry_test_main(
 BOOST_AUTO_TEST_CASE(move_entry_test_main) {
     /*
      * TODO:
-     *  * Make sure moves from later generations throw exceptions
-     *  * Make sure moves from same generation, wrong game throw exceptions
      *  * Check equality operator between equal entries above
      *  * Check inequality operator
-     *  * Make sure different names correspond to same move
      */
     pkmn::database::move_entry byname_gen1("Earthquake", "Red");
     pkmn::database::move_entry byname_gen2("Octazooka", "Silver");
