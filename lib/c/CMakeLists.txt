@@ -19,9 +19,11 @@ SET(pkmn_c_libs
 # Add sources included in all builds
 #
 
+ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_c_sources
+    ${pkmn_c_database_sources}
     ${pkmn_c_utils_sources}
     build_info.cpp
     cpp_to_c.cpp
