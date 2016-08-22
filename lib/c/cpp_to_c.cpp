@@ -9,6 +9,33 @@
 
 namespace pkmn {
 
+    void pkmn_item_slot_cpp_to_c(
+        const pkmn::item_slot &islot_cpp,
+        pkmn_item_slot_t* islot_c
+    ) {
+        std::string item_name = islot_cpp.item.get_name();
+        islot_c->item = (char*)std::malloc(item_name.size() + 1);
+        std::strcpy(islot_c->item, item_name.c_str());
+        islot_c->item[item_name.size()] = '\0';
+
+        islot_c->amount = islot_cpp.amount;
+    }
+
+    void pkmn_item_slots_cpp_to_c(
+        const pkmn::item_slots_t &islots_cpp,
+        pkmn_item_slots_t* islots_c,
+        size_t* list_length_out
+    ) {
+        *islots_c = (pkmn_item_slots_t)std::malloc(sizeof(pkmn_item_slot_t) * islots_cpp.size());
+        for(size_t i = 0; i < islots_cpp.size(); ++i) {
+            pkmn_item_slot_cpp_to_c(
+                islots_cpp[i],
+                &((*islots_c)[i])
+            );
+        }
+        *list_length_out = islots_cpp.size();
+    }
+
     void pkmn_levelup_move_cpp_to_c(
         const pkmn::database::levelup_move &lmove_cpp,
         pkmn_levelup_move_t* lmove_c

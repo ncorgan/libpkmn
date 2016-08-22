@@ -10,10 +10,12 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/item_list.hpp>
+#include <pkmn/item_slot.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
 
@@ -35,6 +37,17 @@ typedef struct {
 #define PKMN_ITEM_LIST_DECLARED
 
 namespace pkmn {
+
+    void pkmn_item_slot_cpp_to_c(
+        const pkmn::item_slot &islot_cpp,
+        pkmn_item_slot_t* islot_c
+    );
+
+    void pkmn_item_slots_cpp_to_c(
+        const pkmn::item_slots_t &islots_cpp,
+        pkmn_item_slots_t* islots_c,
+        size_t* list_length_out
+    );
 
     void pkmn_levelup_move_cpp_to_c(
         const pkmn::database::levelup_move &lmove_cpp,
