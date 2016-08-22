@@ -10,6 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/types/item_slot.h>
+
 #if !defined(PKMN_ITEM_LIST_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_list_t;
 typedef struct pkmn_item_list_t pkmn_item_list_t;
@@ -28,12 +30,52 @@ PKMN_API pkmn_error_t pkmn_item_list_make(
     const char* game_name
 );
 
-PKMN_API void pkmn_item_list_free(
+PKMN_API pkmn_error_t pkmn_item_list_free(
     pkmn_item_list_handle_t* handle_ptr
 );
 
 PKMN_API const char* pkmn_item_list_strerror(
     pkmn_item_list_handle_t handle
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_get_capacity(
+    pkmn_item_list_handle_t handle,
+    int* capacity_out
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_get_num_items(
+    pkmn_item_list_handle_t handle,
+    int* num_items_out
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_at(
+    pkmn_item_list_handle_t handle,
+    int position,
+    pkmn_item_slot_t* item_slot_out
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_add(
+    pkmn_item_list_handle_t handle,
+    const char* item_name,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_remove(
+    pkmn_item_list_handle_t handle,
+    const char* item_name,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_move(
+    pkmn_item_list_handle_t handle,
+    int old_position,
+    int new_position
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_as_array(
+    pkmn_item_list_handle_t handle,
+    pkmn_item_slots_t* array_out,
+    size_t* list_length_out
 );
 
 #ifdef __cplusplus
