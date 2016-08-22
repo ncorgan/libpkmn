@@ -42,6 +42,38 @@ const char* pkmn_item_list_strerror(
     return handle->last_error.c_str();
 }
 
+pkmn_error_t pkmn_item_list_get_name(
+    pkmn_item_list_handle_t handle,
+    char* name_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            handle->cpp->get_name(),
+            name_out,
+            buffer_len,
+            actual_strlen_out
+        )
+    )
+}
+
+pkmn_error_t pkmn_item_list_get_game(
+    pkmn_item_list_handle_t handle,
+    char* game_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            handle->cpp->get_game(),
+            game_out,
+            buffer_len,
+            actual_strlen_out
+        )
+    )
+}
+
 pkmn_error_t pkmn_item_list_get_capacity(
     pkmn_item_list_handle_t handle,
     int* capacity_out
