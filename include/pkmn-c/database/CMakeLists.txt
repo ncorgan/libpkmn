@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         items.h
         lists.h
         moves.h
+        pokemon.h
     )
 
     INSTALL(
