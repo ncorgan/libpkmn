@@ -9,6 +9,7 @@
 #define PKMN_C_CPP_TO_C_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
 #include <pkmn/database/levelup_move.hpp>
@@ -30,10 +31,16 @@
  */
 
 typedef struct {
+    pkmn::item_bag::sptr cpp;
+    std::string last_error;
+} pkmn_item_bag_t;
+
+typedef struct {
     pkmn::item_list::sptr cpp;
     std::string last_error;
 } pkmn_item_list_t;
 
+#define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
 
 namespace pkmn {
