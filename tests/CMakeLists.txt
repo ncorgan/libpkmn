@@ -16,3 +16,7 @@ SET(cpp_tests
 FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
 ENDFOREACH(test ${cpp_tests})
+
+IF(PKMN_ENABLE_C)
+    ADD_SUBDIRECTORY(Unity)
+ENDIF(PKMN_ENABLE_C)
