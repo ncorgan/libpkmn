@@ -12,12 +12,13 @@
 
 pkmn_error_t pkmn_item_list_make(
     pkmn_item_list_handle_t* handle_ptr,
-    const char* item_name,
+    const char* item_list_name,
     const char* game_name
 ) {
     PKMN_CPP_TO_C(
         pkmn::item_list::sptr cpp = pkmn::item_list::make(
-                                        item_name, game_name
+                                        item_list_name,
+                                        game_name
                                     );
 
         (*handle_ptr) = new pkmn_item_list_t;
