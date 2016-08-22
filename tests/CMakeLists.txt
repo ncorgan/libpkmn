@@ -19,4 +19,16 @@ ENDFOREACH(test ${cpp_tests})
 
 IF(PKMN_ENABLE_C)
     ADD_SUBDIRECTORY(Unity)
+
+    INCLUDE_DIRECTORIES(
+        ${CMAKE_CURRENT_SOURCE_DIR}/Unity
+    )
+
+    SET(c_tests
+        c_lists_test
+    )
+
+    FOREACH(test ${c_tests})
+        PKMN_ADD_C_TEST(${test} ${test}.c)
+    ENDFOREACH(test ${c_tests})
 ENDIF(PKMN_ENABLE_C)

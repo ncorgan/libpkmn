@@ -16,8 +16,13 @@ INCLUDE_DIRECTORIES(
     ${PKMN_SOURCE_DIR}/lib
 )
 
-SET(pkmn_test_libs
+SET(pkmn_cpp_test_libs
     pkmn
+)
+
+SET(pkmn_c_test_libs
+    pkmn-c
+    unity
 )
 
 MACRO(PKMN_ADD_TEST test_name test_cmd)
@@ -81,7 +86,7 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     SET_SOURCE_FILES_PROPERTIES(${test_srcs}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
     )
-    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_test_libs})
+    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)
         SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
@@ -91,3 +96,19 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
+
+MACRO(PKMN_ADD_C_TEST test_name test_srcs)
+    ADD_EXECUTABLE(${test_name} ${test_srcs})
+    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+        PROPERTIES COMPILE_FLAGS "${PKMN_C_FLAGS}"
+    )
+    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_c_test_libs})
+
+    IF(WIN32)
+        SET(c_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
+    ELSE()
+        SET(c_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+    ENDIF(WIN32)
+    PKMN_ADD_TEST(${test_name} ${c_test_cmd})
+ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
