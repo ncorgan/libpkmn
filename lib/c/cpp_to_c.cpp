@@ -24,7 +24,7 @@ namespace pkmn {
     void pkmn_levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t &lmoves_cpp,
         pkmn_levelup_moves_t* lmoves_c,
-        size_t* list_len_out
+        size_t* list_length_out
     ) {
         *lmoves_c = (pkmn_levelup_moves_t)std::malloc(sizeof(pkmn_levelup_move_t) * lmoves_cpp.size());
         for(size_t i = 0; i < lmoves_cpp.size(); ++i) {
@@ -33,13 +33,13 @@ namespace pkmn {
                 &((*lmoves_c)[i])
             );
         }
-        *list_len_out = lmoves_cpp.size();
+        *list_length_out = lmoves_cpp.size();
     }
 
     void pkmn_move_list_to_string_list(
         const pkmn::database::move_list_t &move_list,
         pkmn_string_list_t* string_list_out,
-        size_t* list_len_out
+        size_t* list_length_out
     ) {
         *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * move_list.size());
         for(size_t i = 0; i < move_list.size(); ++i) {
@@ -48,13 +48,13 @@ namespace pkmn {
             std::strcpy((*string_list_out)[i], move_name.c_str());
             (*string_list_out)[i][move_name.size()] = '\0';
         }
-        *list_len_out = move_list.size();
+        *list_length_out = move_list.size();
     }
 
     void pkmn_pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t &pokemon_entries,
         pkmn_string_list_t* string_list_out,
-        size_t* list_len_out
+        size_t* list_length_out
     ) {
         *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * pokemon_entries.size());
         for(size_t i = 0; i < pokemon_entries.size(); ++i) {
@@ -63,7 +63,7 @@ namespace pkmn {
             std::strcpy((*string_list_out)[i], move_name.c_str());
             (*string_list_out)[i][move_name.size()] = '\0';
         }
-        *list_len_out = pokemon_entries.size();
+        *list_length_out = pokemon_entries.size();
     }
 
     void std_pair_std_string_to_string_pair(
@@ -82,7 +82,7 @@ namespace pkmn {
     void std_vector_std_string_to_string_list(
         const std::vector<std::string> &vec,
         pkmn_string_list_t* string_list_out,
-        size_t* list_len_out
+        size_t* list_length_out
     ) {
         *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * vec.size());
         for(size_t i = 0; i < vec.size(); ++i) {
@@ -90,7 +90,7 @@ namespace pkmn {
             std::strcpy((*string_list_out)[i], vec[i].c_str());
             (*string_list_out)[i][vec[i].size()] = '\0';
         }
-        *list_len_out = vec.size();
+        *list_length_out = vec.size();
     }
 
 }
