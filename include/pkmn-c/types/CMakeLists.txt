@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
+        levelup_move.h
         string_types.h
     )
 

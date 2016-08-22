@@ -9,8 +9,11 @@
 #define PKMN_C_CPP_TO_C_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <cstring>
@@ -20,9 +23,27 @@
 
 namespace pkmn {
 
+    void pkmn_levelup_move_cpp_to_c(
+        const pkmn::database::levelup_move &lmove_cpp,
+        pkmn_levelup_move_t* lmove_c
+    );
+
+    void pkmn_levelup_moves_cpp_to_c(
+        const pkmn::database::levelup_moves_t &lmoves_cpp,
+        pkmn_levelup_moves_t* lmoves_c,
+        size_t* list_len_out
+    );
+
     void pkmn_move_list_to_string_list(
         const pkmn::database::move_list_t &move_list,
-        pkmn_string_list_t* string_list_out
+        pkmn_string_list_t* string_list_out,
+        size_t* list_len_out
+    );
+
+    void pkmn_pokemon_entries_to_string_list(
+        const pkmn::database::pokemon_entries_t &pokemon_entries,
+        pkmn_string_list_t* string_list_out,
+        size_t* list_len_out
     );
 
     PKMN_INLINE void std_string_to_c_str(
