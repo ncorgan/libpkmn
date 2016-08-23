@@ -7,9 +7,11 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_calculations_headers
+        form.h
         gender.h
         hidden_power.h
         shininess.h
+        stats.h
     )
 
     INSTALL(

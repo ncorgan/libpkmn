@@ -18,6 +18,7 @@
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn-c/types/hidden_power.h>
+#include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
@@ -85,6 +86,14 @@ namespace pkmn {
         pkmn_string_list_t* string_list_out,
         size_t* list_length_out
     );
+
+    PKMN_INLINE void std_pair_int_to_int_pair(
+        const std::pair<int, int> &pair_cpp,
+        pkmn_int_pair_t* pair_c
+    ) {
+        pair_c->first = pair_cpp.first;
+        pair_c->second = pair_cpp.second;
+    }
 
     PKMN_INLINE void std_string_to_c_str(
         const std::string &str,

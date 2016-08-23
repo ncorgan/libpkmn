@@ -8,6 +8,7 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
         hidden_power.h
+        int_pair.h
         item_slot.h
         levelup_move.h
         string_types.h
