@@ -48,7 +48,7 @@ pkmn_error_t pkmn_item_list_get_name(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
             handle->cpp->get_name(),
             name_out,
@@ -64,7 +64,7 @@ pkmn_error_t pkmn_item_list_get_game(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
             handle->cpp->get_game(),
             game_out,
@@ -78,7 +78,7 @@ pkmn_error_t pkmn_item_list_get_capacity(
     pkmn_item_list_handle_t handle,
     int* capacity_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         *capacity_out = handle->cpp->get_capacity();
     )
 }
@@ -87,7 +87,7 @@ pkmn_error_t pkmn_item_list_get_num_items(
     pkmn_item_list_handle_t handle,
     int* num_items_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         *num_items_out = handle->cpp->get_num_items();
     )
 }
@@ -97,7 +97,7 @@ pkmn_error_t pkmn_item_list_at(
     int position,
     pkmn_item_slot_t* item_slot_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::pkmn_item_slot_cpp_to_c(
             handle->cpp->at(position),
             item_slot_out
@@ -110,7 +110,7 @@ pkmn_error_t pkmn_item_list_add(
     const char* name,
     int amount
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->add(
             name, amount
         );
@@ -122,7 +122,7 @@ pkmn_error_t pkmn_item_list_remove(
     const char* name,
     int amount
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->remove(
             name, amount
         );
@@ -134,7 +134,7 @@ pkmn_error_t pkmn_item_list_move(
     int old_position,
     int new_position
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->move(
             old_position,
             new_position
@@ -147,7 +147,7 @@ pkmn_error_t pkmn_item_list_as_array(
     pkmn_item_slots_t* array_out,
     size_t* list_length_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::pkmn_item_slots_cpp_to_c(
             handle->cpp->as_vector(),
             array_out,

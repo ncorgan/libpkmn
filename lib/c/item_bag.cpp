@@ -46,7 +46,7 @@ pkmn_error_t pkmn_item_bag_get_game(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
             handle->cpp->get_game(),
             game_out,
@@ -61,7 +61,7 @@ pkmn_error_t pkmn_item_bag_get_pocket(
     const char* name,
     pkmn_item_list_handle_t* item_list_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         (*item_list_out) = new pkmn_item_list_t;
         (*item_list_out)->cpp = handle->cpp->get_pocket(name);
         (*item_list_out)->last_error = "None";
@@ -73,7 +73,7 @@ pkmn_error_t pkmn_item_bag_get_pocket_names(
     pkmn_string_list_t* pocket_names_out,
     size_t* list_length_out
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_vector_std_string_to_string_list(
             handle->cpp->get_pocket_names(),
             pocket_names_out,
@@ -87,7 +87,7 @@ pkmn_error_t pkmn_item_bag_add(
     const char* name,
     int amount
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->add(
             name, amount
         );
@@ -99,7 +99,7 @@ pkmn_error_t pkmn_item_bag_remove(
     const char* name,
     int amount
 ) {
-    PKMN_CPP_TO_C(
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->remove(
             name, amount
         );
