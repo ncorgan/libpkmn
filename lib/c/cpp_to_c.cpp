@@ -9,6 +9,17 @@
 
 namespace pkmn {
 
+    void pkmn_hidden_power_cpp_to_c(
+        const pkmn::calculations::hidden_power_t &hp_cpp,
+        pkmn_hidden_power_t* hp_c
+    ) {
+        hp_c->type = (char*)std::malloc(hp_cpp.type.size() + 1);
+        std::strcpy(hp_c->type, hp_cpp.type.c_str());
+        hp_c->type[hp_cpp.type.size()] = '\0';
+
+        hp_c->base_power = hp_cpp.base_power;
+    }
+
     void pkmn_item_slot_cpp_to_c(
         const pkmn::item_slot &islot_cpp,
         pkmn_item_slot_t* islot_c

@@ -6,22 +6,15 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_c_headers
-        build_info.h
-        config.h
-        error.h
-        item_bag.h
-        item_list.h
+    SET(pkmn_c_calculations_headers
+        gender.h
+        hidden_power.h
+        shininess.h
     )
 
     INSTALL(
-        FILES ${pkmn_c_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c
+        FILES ${pkmn_c_calculations_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c/calculations
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-
-ADD_SUBDIRECTORY(calculations)
-ADD_SUBDIRECTORY(database)
-ADD_SUBDIRECTORY(types)
-ADD_SUBDIRECTORY(utils)

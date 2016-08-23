@@ -12,10 +12,12 @@
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
+#include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
@@ -44,6 +46,11 @@ typedef struct {
 #define PKMN_ITEM_LIST_DECLARED
 
 namespace pkmn {
+
+    void pkmn_hidden_power_cpp_to_c(
+        const pkmn::calculations::hidden_power_t &hp_cpp,
+        pkmn_hidden_power_t* hp_c
+    );
 
     void pkmn_item_slot_cpp_to_c(
         const pkmn::item_slot &islot_cpp,
