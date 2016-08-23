@@ -22,18 +22,6 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    pokemon_entry::pokemon_entry():
-        _species_id(0),
-        _pokemon_id(0),
-        _form_id(0),
-        _pokemon_index(0),
-        _game_id(0),
-        _generation(0),
-        _version_group_id(0),
-        _none(true),
-        _invalid(false)
-    {}
-
     pokemon_entry::pokemon_entry(
         int pokemon_index,
         int game_id

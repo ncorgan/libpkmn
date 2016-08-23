@@ -35,7 +35,17 @@ namespace pkmn { namespace database {
      */
     class PKMN_API pokemon_entry {
         public:
-            pokemon_entry();
+            PKMN_CONSTEXPR_OR_INLINE pokemon_entry():
+                _species_id(0),
+                _pokemon_id(0),
+                _form_id(0),
+                _pokemon_index(0),
+                _game_id(0),
+                _generation(0),
+                _version_group_id(0),
+                _none(true),
+                _invalid(false)
+            {}
 
             #ifndef __DOXYGEN__
             pokemon_entry(
@@ -119,35 +129,35 @@ namespace pkmn { namespace database {
             );
 
             #ifndef __DOXYGEN__
-            PKMN_INLINE int get_species_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_species_id() const {
                 return _species_id;
             }
 
-            PKMN_INLINE int get_pokemon_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_pokemon_id() const {
                 return _pokemon_id;
             }
 
-            PKMN_INLINE int get_form_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_form_id() const {
                 return _form_id;
             }
 
-            PKMN_INLINE int get_pokemon_index() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_pokemon_index() const {
                 return _pokemon_index;
             }
 
-            PKMN_INLINE int get_game_id() const {
+            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
                 return _game_id;
             }
             #endif
 
             //! Equality check between two Pokémon entries
-            PKMN_INLINE bool operator==(const pokemon_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator==(const pokemon_entry &rhs) const {
                 return ((this->_game_id == rhs._game_id) and
                         (this->_pokemon_id == rhs._pokemon_id));
             }
 
             //! Inequality check between two Pokémon entries
-            PKMN_INLINE bool operator!=(const pokemon_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator!=(const pokemon_entry &rhs) const {
                 return ((this->_game_id != rhs._game_id) or
                         (this->_pokemon_id != rhs._pokemon_id));
             }
