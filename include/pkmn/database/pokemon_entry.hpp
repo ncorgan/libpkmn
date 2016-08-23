@@ -151,13 +151,17 @@ namespace pkmn { namespace database {
             #endif
 
             //! Equality check between two Pokémon entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator==(const pokemon_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator==(
+                const pokemon_entry &rhs
+            ) const {
                 return ((this->_game_id == rhs._game_id) and
                         (this->_pokemon_id == rhs._pokemon_id));
             }
 
             //! Inequality check between two Pokémon entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator!=(const pokemon_entry &rhs) const {
+            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+                const pokemon_entry &rhs
+            ) const {
                 return ((this->_game_id != rhs._game_id) or
                         (this->_pokemon_id != rhs._pokemon_id));
             }
