@@ -317,6 +317,116 @@ namespace pkmn { namespace database {
     }
 
     /*
+     * Templated query functions that form lists
+     */
+
+    template <typename ret_type>
+    static void query_list(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec
+    ) {
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << query << "\"" << std::endl
+                  << " * Results: " << std::flush;
+#endif
+        SQLite::Statement stmt((*db), query);
+        while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
+#endif
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
+    }
+
+    template <typename ret_type, typename bind1_type>
+    static void query_list_bind1(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1
+    ) {
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << query << "\"" << std::endl
+                  << " * Bind " << bind1 << " to 1" << std::endl
+                  << " * Results: " << std::flush;
+#endif
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
+#endif
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type>
+    static void query_list_bind2(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1,
+        bind2_type bind2
+    ) {
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << query << "\"" << std::endl
+                  << " * Bind " << bind1 << " to 1" << std::endl
+                  << " * Bind " << bind2 << " to 2" << std::endl
+                  << " * Results: " << std::flush;
+#endif
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
+#endif
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
+    static void query_list_bind3(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1,
+        bind1_type bind2,
+        bind1_type bind3
+    ) {
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: \"" << query << "\"" << std::endl
+                  << " * Bind " << bind1 << " to 1" << std::endl
+                  << " * Bind " << bind2 << " to 2" << std::endl
+                  << " * Bind " << bind3 << " to 3" << std::endl
+                  << " * Results: " << std::flush;
+#endif
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        stmt.bind(3, (bind3_type)bind3);
+        while(stmt.executeStep()) {
+#ifdef PKMN_SQLITE_DEBUG
+            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
+#endif
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
+    }
+
+    /*
      * Common functions that don't belong elsewhere
      */
     int game_id_to_generation(

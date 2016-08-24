@@ -22,108 +22,6 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    template <typename ret_type>
-    static void pkmn_db_query_list(
-        const char* query,
-        std::vector<ret_type> &ret_vec
-    ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Results: " << std::flush;
-#endif
-        SQLite::Statement stmt((*_db), query);
-        while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
-    }
-
-    template <typename ret_type, typename bind1_type>
-    static void pkmn_db_query_list_bind1(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1
-    ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Results: " << std::flush;
-#endif
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
-    }
-
-    template <typename ret_type, typename bind1_type, typename bind2_type>
-    static void pkmn_db_query_list_bind2(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1,
-        bind2_type bind2
-    ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Results: " << std::flush;
-#endif
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        stmt.bind(2, (bind2_type)bind2);
-        while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
-    }
-
-    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
-    static void pkmn_db_query_list_bind3(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1,
-        bind1_type bind2,
-        bind1_type bind3
-    ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Bind " << bind3 << " to 3" << std::endl
-                  << " * Results: " << std::flush;
-#endif
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        stmt.bind(2, (bind2_type)bind2);
-        stmt.bind(3, (bind3_type)bind3);
-        while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
-    }
-
     void get_ability_list(
         int generation,
         std::vector<std::string> &abilities_out
@@ -141,8 +39,8 @@ namespace pkmn { namespace database {
             "AND is_main_series=1) ORDER BY name";
 
         abilities_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
-            query, abilities_out, generation
+        pkmn::database::query_list_bind1<std::string, int>(
+            _db, query, abilities_out, generation
         );
     }
 
@@ -169,7 +67,8 @@ namespace pkmn { namespace database {
             "(SELECT id FROM version_groups WHERE generation_id=?))";
 
         games_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
+        pkmn::database::query_list_bind1<std::string, int>(
+            _db,
             (include_previous ? with_previous_query : no_previous_query),
             games_out, generation
         );
@@ -264,8 +163,8 @@ namespace pkmn { namespace database {
 
         moves_out.clear();
         int generation = game_name_to_generation(game);
-        pkmn_db_query_list_bind1<std::string, int>(
-            main_query, moves_out, generation
+        pkmn::database::query_list_bind1<std::string, int>(
+            _db, main_query, moves_out, generation
         );
 
         /*
@@ -279,8 +178,8 @@ namespace pkmn { namespace database {
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
 
-            pkmn_db_query_list<std::string>(
-                shadow_query, moves_out
+            pkmn::database::query_list<std::string>(
+                _db, shadow_query, moves_out
             );
         } else if(game_id == 20) {
             static BOOST_CONSTEXPR const char* shadow_query = \
@@ -288,8 +187,8 @@ namespace pkmn { namespace database {
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
                 "ORDER BY move_id";
 
-            pkmn_db_query_list<std::string>(
-                shadow_query, moves_out
+            pkmn::database::query_list<std::string>(
+                _db, shadow_query, moves_out
             );
         }
     }
@@ -323,7 +222,8 @@ namespace pkmn { namespace database {
             "ORDER BY pokemon_species_id";
 
         pokemon_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
+        pkmn::database::query_list_bind1<std::string, int>(
+            _db,
             (include_previous ? with_previous_query : no_previous_query),
             pokemon_out, generation
         );
@@ -340,8 +240,8 @@ namespace pkmn { namespace database {
             "ORDER BY region_id";
 
         regions_out.clear();
-        pkmn_db_query_list<std::string>(
-            query, regions_out
+        pkmn::database::query_list<std::string>(
+            _db, query, regions_out
         );
     }
 
@@ -374,8 +274,8 @@ namespace pkmn { namespace database {
             "AND type_id<100 ORDER BY type_id";
 
         types_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
-            query, types_out, generation
+        pkmn::database::query_list_bind1<std::string, int>(
+            _db, query, types_out, generation
         );
 
         // The Shadow type only exists in the Gamecube games
