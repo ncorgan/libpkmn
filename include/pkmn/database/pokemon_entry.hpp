@@ -171,8 +171,6 @@ namespace pkmn { namespace database {
             int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
 
-            void _set_vars(bool);
-
             void _query_to_move_list(
                 const char* query,
                 pkmn::database::move_list_t &move_list_out,

@@ -24,10 +24,16 @@ namespace pkmn { namespace database {
     static pkmn::database::sptr _db;
 
     /*
-     * Unown and Deoxys info, plus Gen III ID's
-     *
-     * TODO: separate ID, game index, form ID, currently doing wrong
+     * IDs and indices for hardcoded cases
      */
+
+    BOOST_STATIC_CONSTEXPR int PIKACHU_ID          = 25;
+    BOOST_STATIC_CONSTEXPR int ROCKSTAR_PIKACHU_ID = 10182;
+    BOOST_STATIC_CONSTEXPR int COSPLAY_PIKACHU_ID  = 10187;
+
+    BOOST_STATIC_CONSTEXPR int PICHU_ID             = 172;
+    BOOST_STATIC_CONSTEXPR int SPIKY_EARED_PICHU_ID = 10065;
+
     BOOST_STATIC_CONSTEXPR int UNOWN_INDEX          = 201;
     BOOST_STATIC_CONSTEXPR int UNOWN_B_INDEX        = 10001;
     BOOST_STATIC_CONSTEXPR int UNOWN_Z_INDEX        = 10005;
@@ -36,13 +42,28 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID         = 386;
     BOOST_STATIC_CONSTEXPR int DEOXYS_GEN3_INDEX = 410;
     BOOST_STATIC_CONSTEXPR int DEOXYS_NORMAL_ID  = 386;
-    BOOST_STATIC_CONSTEXPR int DEOXYS_ATTACK_ID  = 10031;
-    BOOST_STATIC_CONSTEXPR int DEOXYS_DEFENSE_ID = 10032;
-    BOOST_STATIC_CONSTEXPR int DEOXYS_SPEED_ID   = 10033;
+
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ATTACK_ID  = 10001;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_DEFENSE_ID = 10002;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_SPEED_ID   = 10003;
+
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ATTACK_FORM_ID  = 10031;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_DEFENSE_FORM_ID = 10032;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_SPEED_FORM_ID   = 10033;
 
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+
+    BOOST_STATIC_CONSTEXPR int HGSS = 10;
+    BOOST_STATIC_CONSTEXPR int ORAS = 16;
+
+    static PKMN_CONSTEXPR_OR_INLINE bool form_id_is_cosplay_pikachu(
+        int form_id
+    ) {
+        return (form_id >= ROCKSTAR_PIKACHU_ID) and
+               (form_id <= COSPLAY_PIKACHU_ID);
+    }
 
     static PKMN_CONSTEXPR_OR_INLINE bool pokemon_index_is_unown(
         int pokemon_index,
@@ -91,9 +112,11 @@ namespace pkmn { namespace database {
          * index. Like Unown, this form is in a separate field and is
          * no longer game-dependent.
          */
-        if(_generation == 3) {
+        if(_none) {
+            _species_id = _pokemon_id = _form_id = 0;
+        } else if(_generation == 3) {
             if(pokemon_index_is_unown(_pokemon_index, false)) {
-                _species_id = UNOWN_INDEX;
+                _species_id = _pokemon_id = UNOWN_INDEX;
                 _invalid = false;
 
                 static BOOST_CONSTEXPR const char* unown_query = \
@@ -101,27 +124,30 @@ namespace pkmn { namespace database {
                     "(SELECT form_id FROM gen3_unown_game_indices "
                     "WHERE game_index=?)";
 
-                _pokemon_id = pkmn::database::query_db_bind1<int, int>(
-                                  _db, unown_query, _pokemon_index
-                              );
+                _form_id = pkmn::database::query_db_bind1<int, int>(
+                               _db, unown_query, _pokemon_index
+                           );
             } else if(_pokemon_index == DEOXYS_GEN3_INDEX) {
                 _species_id = DEOXYS_NORMAL_ID;
                 _invalid = false;
                 switch(_game_id) {
                     case FIRERED:
                         _pokemon_id = DEOXYS_ATTACK_ID;
+                        _form_id    = DEOXYS_ATTACK_FORM_ID;
                         break;
 
                     case LEAFGREEN:
                         _pokemon_id = DEOXYS_DEFENSE_ID;
+                        _form_id    = DEOXYS_DEFENSE_FORM_ID;
                         break;
 
                     case EMERALD:
                         _pokemon_id = DEOXYS_SPEED_ID;
+                        _form_id    = DEOXYS_SPEED_FORM_ID;
                         break;
 
                     default:
-                        _pokemon_id = DEOXYS_NORMAL_ID;
+                        _pokemon_id = _form_id = DEOXYS_NORMAL_ID;
                         break;
                 }
             }
@@ -191,8 +217,6 @@ namespace pkmn { namespace database {
         } else {
             this->set_form(form_name);
         }
-
-        _set_vars(false);
     }
 
     std::string pokemon_entry::get_name() const {
@@ -618,7 +642,17 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> pokemon_entry::get_forms() const {
-        return std::vector<std::string>();
+        static BOOST_CONSTEXPR const char* form_ids_query = \
+            "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id IN "
+            "(SELECT id FROM pokemon_forms WHERE introduced_in_version_group_id<=? "
+            "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?))";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind2<std::string, int, int>(
+            _db, form_ids_query, ret, _version_group_id, _species_id
+        );
+
+        return ret;
     }
 
     pkmn::database::pokemon_entries_t pokemon_entry::get_evolutions() const {
@@ -632,34 +666,88 @@ namespace pkmn { namespace database {
     void pokemon_entry::set_form(
         const std::string &form_name
     ) {
-        (void)form_name;
-    }
-
-    void pokemon_entry::_set_vars(
-        bool from_index
-    ) {
-        if(from_index) {
-
-
-            // TODO: Gen III Deoxys form corner case
-            // TODO: confirm version exists in this version, probably
-            //       a check in pokemon_forms table
-        } else {
-            // TODO: form name to ID, species+form IDs to Pokémon ID
-
-            /*
-             * In Generation III, Deoxys's form is game-dependent, and
-             * they all share the same index, so we need to bypass
-             * the database check here.
-             */
-            if(_species_id == 386 and _generation == 3) {
-                _pokemon_index = 410;
-            } else {
-                _pokemon_index = pkmn::database::pokemon_id_to_index(
-                                     _pokemon_id, _game_id
-                                 );
-            }
+        /*
+         * Start by checking which forms exist in this game. If not, immediately
+         * throw an error.
+         */
+        std::vector<std::string> forms = this->get_forms();
+        if(std::find(forms.begin(), forms.end(), form_name) == forms.end()) {
+            throw std::invalid_argument("Invalid form.");
         }
+
+        // Set the form and Pokémon ID
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
+            "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?)";
+
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << query << std::endl
+                  << " * Bind " << form_name << " to 1" << std::endl
+                  << " * Results: " << std::flush;
+#endif
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, form_name);
+        stmt.executeStep();
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << int(stmt.getColumn(0)) << " "
+                  << int(stmt.getColumn(1)) << std::endl;
+#endif
+        /*
+         * Now that we have the form ID, check some of the hardcoded cases
+         * before assigning the proper IDs.
+         */
+        int form_id = stmt.getColumn(0);
+
+        if(_generation == 3 and _species_id == DEOXYS_ID) {
+            switch(_game_id) {
+                case FIRERED:
+                    if(form_id != DEOXYS_ATTACK_ID) {
+                        throw std::invalid_argument(
+                                  "Deoxys can only be in its Attack Forme in FireRed."
+                              );
+                    }
+                    break;
+
+                case LEAFGREEN:
+                    if(form_id != DEOXYS_DEFENSE_ID) {
+                        throw std::invalid_argument(
+                                  "Deoxys can only be in its Defense Forme in LeafGreen."
+                              );
+                    }
+                    break;
+
+                case EMERALD:
+                    if(form_id != DEOXYS_SPEED_ID) {
+                        throw std::invalid_argument(
+                                  "Deoxys can only be in its Speed Forme in Emerald."
+                              );
+                    }
+                    break;
+
+                default:
+                    if(form_id != DEOXYS_NORMAL_ID) {
+                        throw std::invalid_argument(
+                            str(boost::format("Deoxys can only be in its Normal Forme in %s.")
+                                    % this->get_game().c_str()
+                               )
+                        );
+                    }
+                    break;
+            }
+
+            _pokemon_index = DEOXYS_GEN3_INDEX;
+        } else if(_version_group_id != HGSS and form_id == SPIKY_EARED_PICHU_ID) {
+            throw std::invalid_argument("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
+        } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
+            throw std::invalid_argument(
+                str(boost::format("%s can only be in its Normal Forme in Omega Ruby/Alpha Sapphire.")
+                        % form_name.c_str()
+                   )
+            );
+        }
+
+        _form_id    = stmt.getColumn(0);
+        _pokemon_id = stmt.getColumn(1);
     }
 
     void pokemon_entry::_query_to_move_list(
