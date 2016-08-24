@@ -11,6 +11,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
+#include <boost/format.hpp>
 
 #include <pkmn/database/pokemon_entry.hpp>
 
@@ -22,21 +23,51 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
+    /*
+     * Unown and Deoxys info, plus Gen III ID's
+     *
+     * TODO: separate ID, game index, form ID, currently doing wrong
+     */
+    BOOST_STATIC_CONSTEXPR int UNOWN_INDEX          = 201;
+    BOOST_STATIC_CONSTEXPR int UNOWN_B_INDEX        = 10001;
+    BOOST_STATIC_CONSTEXPR int UNOWN_Z_INDEX        = 10005;
+    BOOST_STATIC_CONSTEXPR int UNOWN_QUESTION_INDEX = 10027;
+
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ID         = 386;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_GEN3_INDEX = 410;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_NORMAL_ID  = 386;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ATTACK_ID  = 10031;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_DEFENSE_ID = 10032;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_SPEED_ID   = 10033;
+
+    BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
+    BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
+    BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+
+    static PKMN_CONSTEXPR_OR_INLINE bool pokemon_index_is_unown(
+        int pokemon_index,
+        bool gen2
+    ) {
+        return (pokemon_index == UNOWN_INDEX) or
+               (pokemon_index >= UNOWN_B_INDEX and
+                pokemon_index <= (gen2 ? UNOWN_Z_INDEX
+                                       : UNOWN_QUESTION_INDEX));
+    }
+
     pokemon_entry::pokemon_entry(
         int pokemon_index,
         int game_id
     ):
-        _species_id(0),
-        _pokemon_id(0),
-        _form_id(0),
         _pokemon_index(pokemon_index),
         _game_id(game_id),
-        _none(pokemon_index == 0),
-        _invalid(false) // TODO: valid check
+        _none(pokemon_index == 0)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
 
+        /*
+         * Game-related info
+         */
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -44,7 +75,84 @@ namespace pkmn { namespace database {
                                 _game_id
                             );
 
-        _set_vars(true);
+        /*
+         * Pokémon-related info
+         */
+
+        /*
+         * Generation III does things differently than later games,
+         * so we need to hardcode these cases.
+         *
+         * Unown has separate in-game indices for each of its forms,
+         * unlike later games, where the form is a field inside the
+         * Pokémon data structure.
+         *
+         * Deoxys's form is game-dependent, but they share a common
+         * index. Like Unown, this form is in a separate field and is
+         * no longer game-dependent.
+         */
+        if(_generation == 3) {
+            if(pokemon_index_is_unown(_pokemon_index, false)) {
+                _species_id = UNOWN_INDEX;
+                _invalid = false;
+
+                static BOOST_CONSTEXPR const char* unown_query = \
+                    "SELECT pokemon_id FROM pokemon_forms WHERE id="
+                    "(SELECT form_id FROM gen3_unown_game_indices "
+                    "WHERE game_index=?)";
+
+                _pokemon_id = pkmn::database::query_db_bind1<int, int>(
+                                  _db, unown_query, _pokemon_index
+                              );
+            } else if(_pokemon_index == DEOXYS_GEN3_INDEX) {
+                _species_id = DEOXYS_NORMAL_ID;
+                _invalid = false;
+                switch(_game_id) {
+                    case FIRERED:
+                        _pokemon_id = DEOXYS_ATTACK_ID;
+                        break;
+
+                    case LEAFGREEN:
+                        _pokemon_id = DEOXYS_DEFENSE_ID;
+                        break;
+
+                    case EMERALD:
+                        _pokemon_id = DEOXYS_SPEED_ID;
+                        break;
+
+                    default:
+                        _pokemon_id = DEOXYS_NORMAL_ID;
+                        break;
+                }
+            }
+        } else {
+            static BOOST_CONSTEXPR const char* species_id_query = \
+                "SELECT pokemon_species_id FROM pokemon WHERE id=?";
+
+            static BOOST_CONSTEXPR const char* form_id_query = \
+                "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
+
+            try {
+                _pokemon_id = pkmn::database::pokemon_index_to_id(
+                                  _pokemon_index, _game_id
+                              );
+                _invalid = false;
+            } catch(const std::invalid_argument&) {
+                _invalid = true;
+            }
+
+            if(_invalid) {
+                _species_id = _pokemon_id = _form_id = -1;
+            } else {
+                _species_id = pkmn::database::query_db_bind1<int, int>(
+                                  _db, species_id_query, _pokemon_id
+                              );
+
+                _form_id = pkmn::database::query_db_bind1<int, int>(
+                               _db, form_id_query, _pokemon_id
+                           );
+            }
+        }
     }
 
     pokemon_entry::pokemon_entry(
@@ -52,17 +160,15 @@ namespace pkmn { namespace database {
         const std::string &game_name,
         const std::string &form_name
     ):
-        _pokemon_id(0),
-        _form_id(0),
-        _none(false),
+        _none(species_name == "None"),
         _invalid(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        _species_id = pkmn::database::species_name_to_id(
-                          species_name
-                      );
+        /*
+         * Game-related info
+         */
         _game_id = pkmn::database::game_name_to_id(
                           game_name
                       );
@@ -72,12 +178,30 @@ namespace pkmn { namespace database {
         _version_group_id = pkmn::database::game_id_to_version_group(
                                 _game_id
                             );
-        (void)form_name;
+
+        /*
+         * Pokémon-related info
+         */
+        _species_id = pkmn::database::species_name_to_id(
+                          species_name
+                      );
+
+        if(form_name == "" or form_name == species_name) {
+            _pokemon_id = _form_id = _species_id;
+        } else {
+            this->set_form(form_name);
+        }
 
         _set_vars(false);
     }
 
     std::string pokemon_entry::get_name() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return str(boost::format("Invalid (0x%x)") % _pokemon_index);
+        }
+
         return pkmn::database::species_id_to_name(
                    _species_id
                );
@@ -90,6 +214,12 @@ namespace pkmn { namespace database {
     }
 
     std::string pokemon_entry::get_species() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT genus FROM pokemon_species_names WHERE "
             "pokemon_species_id=? AND local_language_id=9";
@@ -100,6 +230,12 @@ namespace pkmn { namespace database {
     }
 
     std::string pokemon_entry::get_pokedex_entry() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT flavor_text FROM pokemon_species_flavor_text WHERE "
             "species_id=? AND version_id=? AND language_id=9";
@@ -111,6 +247,12 @@ namespace pkmn { namespace database {
     }
 
     std::string pokemon_entry::get_form() const {
+        if(_none) {
+            return "None";
+        } else if(_invalid) {
+            return "Unknown";
+        }
+
         return "";
     }
 
@@ -497,33 +639,26 @@ namespace pkmn { namespace database {
         bool from_index
     ) {
         if(from_index) {
-            _pokemon_id = pkmn::database::pokemon_index_to_id(
-                              _pokemon_index, _game_id
-                          );
 
-            static BOOST_CONSTEXPR const char* species_id_query = \
-                "SELECT pokemon_species_id FROM pokemon WHERE id=?";
-
-            _species_id = pkmn::database::query_db_bind1<int, int>(
-                              _db, species_id_query, _pokemon_id
-                          );
 
             // TODO: Gen III Deoxys form corner case
             // TODO: confirm version exists in this version, probably
             //       a check in pokemon_forms table
-
-            static BOOST_CONSTEXPR const char* form_id_query = \
-                "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
-
-            _form_id = pkmn::database::query_db_bind1<int, int>(
-                           _db, form_id_query, _pokemon_id
-                       );
         } else {
             // TODO: form name to ID, species+form IDs to Pokémon ID
 
-            _pokemon_index = pkmn::database::pokemon_id_to_index(
-                                 _pokemon_id, _game_id
-                             );
+            /*
+             * In Generation III, Deoxys's form is game-dependent, and
+             * they all share the same index, so we need to bypass
+             * the database check here.
+             */
+            if(_species_id == 386 and _generation == 3) {
+                _pokemon_index = 410;
+            } else {
+                _pokemon_index = pkmn::database::pokemon_id_to_index(
+                                     _pokemon_id, _game_id
+                                 );
+            }
         }
     }
 
