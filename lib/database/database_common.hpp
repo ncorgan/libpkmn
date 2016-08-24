@@ -321,7 +321,7 @@ namespace pkmn { namespace database {
      */
 
     template <typename ret_type>
-    static void query_list(
+    static void query_db_list(
         sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec
@@ -343,7 +343,7 @@ namespace pkmn { namespace database {
     }
 
     template <typename ret_type, typename bind1_type>
-    static void query_list_bind1(
+    static void query_db_list_bind1(
         sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,
@@ -368,7 +368,7 @@ namespace pkmn { namespace database {
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
-    static void query_list_bind2(
+    static void query_db_list_bind2(
         sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,
@@ -396,7 +396,7 @@ namespace pkmn { namespace database {
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
-    static void query_list_bind3(
+    static void query_db_list_bind3(
         sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,

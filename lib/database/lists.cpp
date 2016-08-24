@@ -39,7 +39,7 @@ namespace pkmn { namespace database {
             "AND is_main_series=1) ORDER BY name";
 
         abilities_out.clear();
-        pkmn::database::query_list_bind1<std::string, int>(
+        pkmn::database::query_db_list_bind1<std::string, int>(
             _db, query, abilities_out, generation
         );
     }
@@ -67,7 +67,7 @@ namespace pkmn { namespace database {
             "(SELECT id FROM version_groups WHERE generation_id=?))";
 
         games_out.clear();
-        pkmn::database::query_list_bind1<std::string, int>(
+        pkmn::database::query_db_list_bind1<std::string, int>(
             _db,
             (include_previous ? with_previous_query : no_previous_query),
             games_out, generation
@@ -163,7 +163,7 @@ namespace pkmn { namespace database {
 
         moves_out.clear();
         int generation = game_name_to_generation(game);
-        pkmn::database::query_list_bind1<std::string, int>(
+        pkmn::database::query_db_list_bind1<std::string, int>(
             _db, main_query, moves_out, generation
         );
 
@@ -178,7 +178,7 @@ namespace pkmn { namespace database {
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
 
-            pkmn::database::query_list<std::string>(
+            pkmn::database::query_db_list<std::string>(
                 _db, shadow_query, moves_out
             );
         } else if(game_id == 20) {
@@ -187,7 +187,7 @@ namespace pkmn { namespace database {
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
                 "ORDER BY move_id";
 
-            pkmn::database::query_list<std::string>(
+            pkmn::database::query_db_list<std::string>(
                 _db, shadow_query, moves_out
             );
         }
@@ -222,7 +222,7 @@ namespace pkmn { namespace database {
             "ORDER BY pokemon_species_id";
 
         pokemon_out.clear();
-        pkmn::database::query_list_bind1<std::string, int>(
+        pkmn::database::query_db_list_bind1<std::string, int>(
             _db,
             (include_previous ? with_previous_query : no_previous_query),
             pokemon_out, generation
@@ -240,7 +240,7 @@ namespace pkmn { namespace database {
             "ORDER BY region_id";
 
         regions_out.clear();
-        pkmn::database::query_list<std::string>(
+        pkmn::database::query_db_list<std::string>(
             _db, query, regions_out
         );
     }
@@ -274,7 +274,7 @@ namespace pkmn { namespace database {
             "AND type_id<100 ORDER BY type_id";
 
         types_out.clear();
-        pkmn::database::query_list_bind1<std::string, int>(
+        pkmn::database::query_db_list_bind1<std::string, int>(
             _db, query, types_out, generation
         );
 
