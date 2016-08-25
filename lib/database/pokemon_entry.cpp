@@ -270,11 +270,39 @@ namespace pkmn { namespace database {
         return fix_veekun_whitespace(from_db);
     }
 
+    static std::string _get_species_standard_form(
+        int species_id
+    ) {
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id=?";
+
+        std::string ret;
+        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+               _db, query, ret, species_id
+          ))
+        {
+            return ret;
+        } else {
+            return "Standard";
+        }
+    }
+
     std::string pokemon_entry::get_form() const {
         if(_none) {
             return "None";
         } else if(_invalid) {
             return "Unknown";
+        }
+
+        if(_form_id == _species_id) {
+            return _get_species_standard_form(_species_id);
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id=?";
+
+            return pkmn::database::query_db_bind1<std::string, int>(
+                       _db, query, _form_id
+                   );
         }
 
         return "";
@@ -288,10 +316,11 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT height FROM pokemon WHERE id=?";
 
-        // SQLite uses doubles, so avoid implicit casting ambiguity
-        return (float)pkmn::database::query_db_bind1<double, int>(
-                   _db, query, _pokemon_id
-               );
+        double from_db = pkmn::database::query_db_bind1<double, int>(
+                             _db, query, _pokemon_id
+                         );
+
+        return (float(from_db) / 10.0f);
     }
 
     float pokemon_entry::get_weight() const {
@@ -302,10 +331,11 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT weight FROM pokemon WHERE id=?";
 
-        // SQLite uses doubles, so avoid implicit casting ambiguity
-        return (float)pkmn::database::query_db_bind1<double, int>(
-                          _db, query, _pokemon_id
-                      );
+        double from_db = pkmn::database::query_db_bind1<double, int>(
+                             _db, query, _pokemon_id
+                         );
+
+        return (float(from_db) / 10.0f);
     }
 
     /*
@@ -387,7 +417,6 @@ namespace pkmn { namespace database {
         if(_none) {
             return std::make_pair("None", "None");
         } else if(_invalid) {
-            // TODO: Generation I, try to get types
             return std::make_pair("Unknown", "Unknown");
         }
 
@@ -642,14 +671,19 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> pokemon_entry::get_forms() const {
+        std::vector<std::string> ret;
+        ret.emplace_back(
+            _get_species_standard_form(_species_id)
+        );
+
         static BOOST_CONSTEXPR const char* form_ids_query = \
             "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id IN "
             "(SELECT id FROM pokemon_forms WHERE introduced_in_version_group_id<=? "
-            "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?))";
+            "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)) AND "
+            "form_id!=?";
 
-        std::vector<std::string> ret;
-        pkmn::database::query_db_list_bind2<std::string, int, int>(
-            _db, form_ids_query, ret, _version_group_id, _species_id
+        pkmn::database::query_db_list_bind3<std::string, int, int, int>(
+            _db, form_ids_query, ret, _version_group_id, _species_id, _species_id
         );
 
         return ret;
@@ -666,6 +700,11 @@ namespace pkmn { namespace database {
     void pokemon_entry::set_form(
         const std::string &form_name
     ) {
+        if(form_name == "") {
+            _form_id = _pokemon_id = _species_id;
+            return;
+        }
+
         /*
          * Start by checking which forms exist in this game. If not, immediately
          * throw an error.
