@@ -577,7 +577,7 @@ namespace pkmn { namespace database {
             execute_stat_stmt_and_get(stmt, ret, "Special Defense");
         }
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::map<std::string, int> pokemon_entry::get_EV_yields() const {
@@ -586,7 +586,7 @@ namespace pkmn { namespace database {
                                      : _bad_stat_map;
         } else if(_generation == 1) {
             // EV's are just base stats
-            return std::move(this->get_base_stats());
+            return this->get_base_stats();
         } else if(_generation == 2) {
             // EV's almost match base stats but just have Special
             std::map<std::string, int> ret = this->get_base_stats();
@@ -594,7 +594,7 @@ namespace pkmn { namespace database {
             ret.erase("Special Attack");
             ret.erase("Special Defense");
 
-            return std::move(ret);
+            return (ret);
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -613,7 +613,7 @@ namespace pkmn { namespace database {
         execute_stat_stmt_and_get(stmt, ret, "Special Attack");
         execute_stat_stmt_and_get(stmt, ret, "Special Defense");
 
-        return std::move(ret);
+        return (ret);
     }
 
     int pokemon_entry::get_experience_yield() const {

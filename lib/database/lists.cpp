@@ -42,7 +42,7 @@ namespace pkmn { namespace database {
             _db, query, ret, generation
         );
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::vector<std::string> get_game_list(
@@ -73,7 +73,7 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::vector<std::string> get_item_list(
@@ -86,7 +86,7 @@ namespace pkmn { namespace database {
             ret, -1, game_id
         );
 
-        return std::move(ret);
+        return (ret);
     }
 
     /*
@@ -196,7 +196,7 @@ namespace pkmn { namespace database {
             );
         }
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::vector<std::string> get_nature_list() {
@@ -231,7 +231,7 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::vector<std::string> get_region_list() {
@@ -247,7 +247,7 @@ namespace pkmn { namespace database {
             _db, query, ret
         );
 
-        return std::move(ret);
+        return (ret);
     }
 
     std::vector<std::string> get_ribbon_list(
@@ -285,6 +285,6 @@ namespace pkmn { namespace database {
             ret.emplace_back("Shadow");
         }
 
-        return std::move(ret);
+        return (ret);
     }
 }}
