@@ -521,16 +521,99 @@ namespace pkmn { namespace database {
         return ret;
     }
 
+    /*
+     * Just return these for None and Invalid entries
+     */
+    static const std::map<std::string, int> _bad_stat_map_old = boost::assign::map_list_of
+        ("HP", 0)("Attack", 0)("Defense", 0)
+        ("Speed", 0)("Special", 0)
+    ;
+    static const std::map<std::string, int> _bad_stat_map = boost::assign::map_list_of
+        ("HP", 0)("Attack", 0)("Defense", 0)
+        ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
+    ;
+
+    // Convenience (TODO: debug output)
+    static PKMN_INLINE void execute_stat_stmt_and_get(
+        SQLite::Statement &stmt,
+        std::map<std::string, int> &ret,
+        const std::string &key
+    ) {
+        stmt.executeStep();
+        ret[key] = stmt.getColumn(0);
+    }
+
     std::map<std::string, int> pokemon_entry::get_base_stats() const {
-        // TODO: original query can probably be optimized
-        // TODO: none or invalid, all stats with values -1
-        return std::map<std::string,int>();
+        if(_none or _invalid) {
+            return (_generation == 1) ? _bad_stat_map_old
+                                      : _bad_stat_map;
+        }
+
+        static BOOST_CONSTEXPR const char* old_query = \
+            "SELECT base_stat FROM pokemon_stats WHERE pokemon_id=? AND "
+            "stat_id IN (1,2,3,6,9)";
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT base_stat FROM pokemon_stats WHERE pokemon_id=? AND "
+            "stat_id IN (1,2,3,6,4,5)";
+
+        std::map<std::string, int> ret;
+
+        // TODO: debug output
+        SQLite::Statement stmt(
+            (*_db),
+            ((_generation == 1) ? old_query : main_query)
+        );
+        stmt.bind(1, _pokemon_id);
+
+        execute_stat_stmt_and_get(stmt, ret, "HP");
+        execute_stat_stmt_and_get(stmt, ret, "Attack");
+        execute_stat_stmt_and_get(stmt, ret, "Defense");
+        execute_stat_stmt_and_get(stmt, ret, "Speed");
+        if(_generation == 1) {
+            execute_stat_stmt_and_get(stmt, ret, "Special");
+        } else {
+            execute_stat_stmt_and_get(stmt, ret, "Special Attack");
+            execute_stat_stmt_and_get(stmt, ret, "Special Defense");
+        }
+
+        return std::move(ret);
     }
 
     std::map<std::string, int> pokemon_entry::get_EV_yields() const {
-        // TODO: original query can probably be optimized
-        // TODO: none or invalid, all stats with values -1
-        return std::map<std::string,int>();
+        if(_none or _invalid) {
+            return (_generation <= 2) ? _bad_stat_map_old
+                                     : _bad_stat_map;
+        } else if(_generation == 1) {
+            // EV's are just base stats
+            return std::move(this->get_base_stats());
+        } else if(_generation == 2) {
+            // EV's almost match base stats but just have Special
+            std::map<std::string, int> ret = this->get_base_stats();
+            ret["Special"] = ret["Special Attack"];
+            ret.erase("Special Attack");
+            ret.erase("Special Defense");
+
+            return std::move(ret);
+        }
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT effort FROM pokemon_stats WHERE pokemon_id=? AND "
+            "stat_id IN (1,2,3,6,4,5)";
+
+        std::map<std::string, int> ret;
+
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, _pokemon_id);
+
+        execute_stat_stmt_and_get(stmt, ret, "HP");
+        execute_stat_stmt_and_get(stmt, ret, "Attack");
+        execute_stat_stmt_and_get(stmt, ret, "Defense");
+        execute_stat_stmt_and_get(stmt, ret, "Speed");
+        execute_stat_stmt_and_get(stmt, ret, "Special Attack");
+        execute_stat_stmt_and_get(stmt, ret, "Special Defense");
+
+        return std::move(ret);
     }
 
     int pokemon_entry::get_experience_yield() const {
