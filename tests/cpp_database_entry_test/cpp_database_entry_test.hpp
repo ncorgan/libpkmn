@@ -14,6 +14,8 @@
 
 #include <boost/config.hpp>
 
+#include <algorithm>
+
 /*
  * These arrays have game IDs/names for one game from each generation, separating
  * GBA and GCN games. This does not distinguish between subgroups, such as
@@ -25,22 +27,11 @@ static BOOST_CONSTEXPR const char* game_names[] = {
     "Red","Gold","Ruby","Colosseum","Diamond","Black","X"
 };
 
-/*
- * Pokémon entry tests
- */
-
-void pokemon_entry_none_test(
-    pkmn::database::pokemon_entry &none_entry
-);
-
-void pokemon_entry_test_common(
-    pkmn::database::pokemon_entry &pokemon_entry_gen1,
-    pkmn::database::pokemon_entry &pokemon_entry_gen2,
-    pkmn::database::pokemon_entry &pokemon_entry_gba,
-    pkmn::database::pokemon_entry &pokemon_entry_gcn,
-    pkmn::database::pokemon_entry &pokemon_entry_gen4,
-    pkmn::database::pokemon_entry &pokemon_entry_gen5,
-    pkmn::database::pokemon_entry &pokemon_entry_gen6
-);
+static PKMN_INLINE bool string_in_vector(
+    const std::vector<std::string> &vec,
+    const std::string &str
+) {
+    return (std::find(vec.begin(), vec.end(), str) != vec.end());
+}
 
 #endif /* PKMN_TESTS_CPP_DATABASE_ENTRY_TEST_HPP */
