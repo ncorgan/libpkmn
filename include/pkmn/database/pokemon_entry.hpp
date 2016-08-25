@@ -104,21 +104,13 @@ namespace pkmn { namespace database {
                 int experience
             ) const;
 
-            void get_levelup_moves(
-                pkmn::database::levelup_moves_t &levelup_moves_out
-            ) const;
+            pkmn::database::levelup_moves_t get_levelup_moves() const;
 
-            void get_tm_hm_moves(
-                pkmn::database::move_list_t &tm_hm_moves_out
-            ) const;
+            pkmn::database::move_list_t get_tm_hm_moves() const;
 
-            void get_egg_moves(
-                pkmn::database::move_list_t &egg_moves_out
-            ) const;
+            pkmn::database::move_list_t get_egg_moves() const;
 
-            void get_tutor_moves(
-                pkmn::database::move_list_t &tutor_moves_out
-            ) const;
+            pkmn::database::move_list_t get_tutor_moves() const;
 
             std::vector<std::string> get_forms() const;
 

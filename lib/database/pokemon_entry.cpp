@@ -662,11 +662,9 @@ namespace pkmn { namespace database {
                );
     }
 
-    void pokemon_entry::get_levelup_moves(
-        pkmn::database::levelup_moves_t &levelup_moves_out
-    ) const {
+    pkmn::database::levelup_moves_t pokemon_entry::get_levelup_moves() const {
         if(_none or _invalid) {
-            return;
+            return pkmn::database::levelup_moves_t();
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -679,7 +677,7 @@ namespace pkmn { namespace database {
                   << " * Results: " << std::flush;
 #endif
 
-        levelup_moves_out.clear();
+        pkmn::database::levelup_moves_t ret;
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, _pokemon_id);
         stmt.bind(2, _version_group_id);
@@ -688,7 +686,7 @@ namespace pkmn { namespace database {
             std::cout << "(" << int(stmt.getColumn(0)) << "," << int(stmt.getColumn(1))
                       << "), " << std::flush;
 #endif
-            levelup_moves_out.emplace_back(
+            ret.emplace_back(
                 pkmn::database::levelup_move(
                     pkmn::database::move_entry(
                         int(stmt.getColumn(0)),
@@ -701,13 +699,12 @@ namespace pkmn { namespace database {
 #ifdef PKMN_SQLITE_DEBUG
         std::cout << "\b\b " << std::endl;
 #endif
+        return ret;
     }
 
-    void pokemon_entry::get_tm_hm_moves(
-        pkmn::database::move_list_t &tm_hm_moves_out
-    ) const {
+    pkmn::database::move_list_t pokemon_entry::get_tm_hm_moves() const {
         if(_none or _invalid) {
-            return;
+            return pkmn::database::move_list_t();
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -715,15 +712,14 @@ namespace pkmn { namespace database {
             "(SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=4 AND "
             "pokemon_id=? AND version_group_id=?) ORDER BY machine_number";
 
-        tm_hm_moves_out.clear();
-        _query_to_move_list(query, tm_hm_moves_out);
+        pkmn::database::move_list_t ret;
+        _query_to_move_list(query, ret);
+        return ret;
     }
 
-    void pokemon_entry::get_egg_moves(
-        pkmn::database::move_list_t &egg_moves_out
-    ) const {
+    pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
         if(_none or _invalid) {
-            return;
+            return pkmn::database::move_list_t();
         }
 
         static BOOST_CONSTEXPR const char* evolution_query = \
@@ -736,23 +732,24 @@ namespace pkmn { namespace database {
         // TODO: get from evolution_query
         (void)evolution_query;
         int actual_pokemon_id = 0;
-        egg_moves_out.clear();
-        _query_to_move_list(move_query, egg_moves_out, actual_pokemon_id);
+
+        pkmn::database::move_list_t ret;
+        _query_to_move_list(move_query, ret, actual_pokemon_id);
+        return ret;
     }
 
-    void pokemon_entry::get_tutor_moves(
-        pkmn::database::move_list_t &tutor_moves_out
-    ) const {
+    pkmn::database::move_list_t pokemon_entry::get_tutor_moves() const {
         if(_none or _invalid) {
-            return;
+            return pkmn::database::move_list_t();
         }
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=3 AND "
             "pokemon_id=? AND version_group_id=?";
 
-        tutor_moves_out.clear();
-        _query_to_move_list(query, tutor_moves_out);
+        pkmn::database::move_list_t ret;
+        _query_to_move_list(query, ret);
+        return ret;
     }
 
     std::vector<std::string> pokemon_entry::get_forms() const {
