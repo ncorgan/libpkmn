@@ -51,6 +51,8 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int DEOXYS_DEFENSE_FORM_ID = 10032;
     BOOST_STATIC_CONSTEXPR int DEOXYS_SPEED_FORM_ID   = 10033;
 
+    BOOST_STATIC_CONSTEXPR int ARCEUS_ID = 493;
+
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
@@ -676,15 +678,26 @@ namespace pkmn { namespace database {
             _get_species_standard_form(_species_id)
         );
 
-        static BOOST_CONSTEXPR const char* form_ids_query = \
-            "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id IN "
-            "(SELECT id FROM pokemon_forms WHERE introduced_in_version_group_id<=? "
-            "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)) AND "
-            "form_id!=?";
+        /*
+         * We need to hardcode a couple things here. Pichu's Spiky-eared form was
+         * only in HeartGold/SoulSilver, so don't let it appear later. Same applies
+         * with Arceus's '???' form, which only appeared in Generation IV.
+         */
+        if(not (_species_id == PICHU_ID and _version_group_id != HGSS)) {
+            static BOOST_CONSTEXPR const char* form_ids_query = \
+                "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id IN "
+                "(SELECT id FROM pokemon_forms WHERE introduced_in_version_group_id<=? "
+                "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)) AND "
+                "form_id!=? AND form_id!=10057";
 
-        pkmn::database::query_db_list_bind3<std::string, int, int, int>(
-            _db, form_ids_query, ret, _version_group_id, _species_id, _species_id
-        );
+            pkmn::database::query_db_list_bind3<std::string, int, int, int>(
+                _db, form_ids_query, ret, _version_group_id, _species_id, _species_id
+            );
+        }
+
+        if(_species_id == ARCEUS_ID and _generation == 4) {
+            ret.emplace_back("???");
+        }
 
         return ret;
     }
