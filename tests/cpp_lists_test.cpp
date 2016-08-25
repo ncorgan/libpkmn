@@ -23,43 +23,25 @@ BOOST_AUTO_TEST_CASE(ability_list_test) {
                              abilities4, abilities5,
                              abilities6, abilities7;
 
-    /*
-     * Make sure invalid generations throw an exception.
-     */
     BOOST_CHECK_THROW(
-        pkmn::database::get_ability_list(
-            2, abilities2
-        );
+        abilities2 = pkmn::database::get_ability_list(2);
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        pkmn::database::get_ability_list(
-            7, abilities7
-        );
+        abilities7 = pkmn::database::get_ability_list(7);
     , std::out_of_range);
 
-    /*
-     * Make sure each generation adds the appropriate abilities.
-     */
-    pkmn::database::get_ability_list(
-        3, abilities3
-    );
+    abilities3 = pkmn::database::get_ability_list(3);
     BOOST_CHECK(not string_in_vector(abilities3, "Adaptability"));
 
-    pkmn::database::get_ability_list(
-        4, abilities4
-    );
+    abilities4 = pkmn::database::get_ability_list(4);
     BOOST_CHECK(string_in_vector(abilities4, "Adaptability"));
     BOOST_CHECK(not string_in_vector(abilities4, "Analytic"));
 
-    pkmn::database::get_ability_list(
-        5, abilities5
-    );
+    abilities5 = pkmn::database::get_ability_list(5);
     BOOST_CHECK(string_in_vector(abilities5, "Analytic"));
     BOOST_CHECK(not string_in_vector(abilities5, "Aerilate"));
 
-    pkmn::database::get_ability_list(
-        6, abilities6
-    );
+    abilities6 = pkmn::database::get_ability_list(6);
     BOOST_CHECK(string_in_vector(abilities6, "Aerilate"));
 
     BOOST_CHECK(abilities3.size() > 0);
@@ -78,86 +60,58 @@ BOOST_AUTO_TEST_CASE(game_list_test) {
      * Make sure invalid generations throw an exception.
      */
     BOOST_CHECK_THROW(
-        pkmn::database::get_game_list(
-            0, true, games0
-        );
+        games0 = pkmn::database::get_game_list(0, true);
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        pkmn::database::get_game_list(
-            7, true, games7
-        );
+        games7 = pkmn::database::get_game_list(7, true);
     , std::out_of_range);
 
     /*
      * Generation I
      */
-    pkmn::database::get_game_list(
-        1, false, games1
-    );
+    games1 = pkmn::database::get_game_list(1, false);
     BOOST_CHECK_EQUAL(games1.size(), 3);
-    pkmn::database::get_game_list(
-        1, true, games1
-    );
+    games1 = pkmn::database::get_game_list(1, true);
     BOOST_CHECK_EQUAL(games1.size(), 3);
 
     /*
      * Generation II
      */
-    pkmn::database::get_game_list(
-        2, false, games2
-    );
+    games2 = pkmn::database::get_game_list(2, false);
     BOOST_CHECK_EQUAL(games2.size(), 3);
-    pkmn::database::get_game_list(
-        2, true, games2
-    );
+    games2 = pkmn::database::get_game_list(2, true);
     BOOST_CHECK_EQUAL(games2.size(), 6);
 
     /*
      * Generation III
      */
-    pkmn::database::get_game_list(
-        3, false, games3
-    );
+    games3 = pkmn::database::get_game_list(3, false);
     BOOST_CHECK_EQUAL(games3.size(), 7);
-    pkmn::database::get_game_list(
-        3, true, games3
-    );
+    games3 = pkmn::database::get_game_list(3, true);
     BOOST_CHECK_EQUAL(games3.size(), 13);
 
     /*
      * Generation IV
      */
-    pkmn::database::get_game_list(
-        4, false, games4
-    );
+    games4 = pkmn::database::get_game_list(4, false);
     BOOST_CHECK_EQUAL(games4.size(), 5);
-    pkmn::database::get_game_list(
-        4, true, games4
-    );
+    games4 = pkmn::database::get_game_list(4, true);
     BOOST_CHECK_EQUAL(games4.size(), 18);
 
     /*
      * Generation V
      */
-    pkmn::database::get_game_list(
-        5, false, games5
-    );
+    games5 = pkmn::database::get_game_list(5, false);
     BOOST_CHECK_EQUAL(games5.size(), 4);
-    pkmn::database::get_game_list(
-        5, true, games5
-    );
+    games5 = pkmn::database::get_game_list(5, true);
     BOOST_CHECK_EQUAL(games5.size(), 22);
 
     /*
      * Generation VI
      */
-    pkmn::database::get_game_list(
-        6, false, games6
-    );
+    games6 = pkmn::database::get_game_list(6, false);
     BOOST_CHECK_EQUAL(games6.size(), 4);
-    pkmn::database::get_game_list(
-        6, true, games6
-    );
+    games6 = pkmn::database::get_game_list(6, true);
     BOOST_CHECK_EQUAL(games6.size(), 26);
 }
 
@@ -167,33 +121,21 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
      */
     std::vector<std::string> items_bad;
     BOOST_CHECK_THROW(
-        pkmn::database::get_item_list(
-            "Not a game", items_bad
-        )
+        items_bad = pkmn::database::get_item_list("Not a game");
     , std::invalid_argument);
 
     /*
      * Generation I
      */
-    std::vector<std::string> items_rb, items_y;
-    pkmn::database::get_item_list(
-        "Red", items_rb
-    );
-    pkmn::database::get_item_list(
-        "Yellow", items_y
-    );
+    std::vector<std::string> items_rb = pkmn::database::get_item_list("Red");
+    std::vector<std::string> items_y  = pkmn::database::get_item_list("Yellow");
     BOOST_CHECK(items_rb == items_y);
 
     /*
      * Generation II
      */
-    std::vector<std::string> items_gs, items_c;
-    pkmn::database::get_item_list(
-        "Gold", items_gs
-    );
-    pkmn::database::get_item_list(
-        "Crystal", items_c
-    );
+    std::vector<std::string> items_gs = pkmn::database::get_item_list("Gold");
+    std::vector<std::string> items_c  = pkmn::database::get_item_list("Crystal");
     BOOST_CHECK(items_gs.size() < items_c.size());
     BOOST_CHECK(not string_in_vector(items_gs, "GS Ball"));
     BOOST_CHECK(string_in_vector(items_c, "GS Ball"));
@@ -203,23 +145,11 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     /*
      * Generation III
      */
-    std::vector<std::string> items_rs, items_e, items_frlg,
-                             items_colo, items_xd;
-    pkmn::database::get_item_list(
-        "Ruby", items_rs
-    );
-    pkmn::database::get_item_list(
-        "Emerald", items_e
-    );
-    pkmn::database::get_item_list(
-        "FireRed", items_frlg
-    );
-    pkmn::database::get_item_list(
-        "Colosseum", items_colo
-    );
-    pkmn::database::get_item_list(
-        "XD", items_xd
-    );
+    std::vector<std::string> items_rs   = pkmn::database::get_item_list("Ruby");
+    std::vector<std::string> items_e    = pkmn::database::get_item_list("Emerald");
+    std::vector<std::string> items_frlg = pkmn::database::get_item_list("FireRed");
+    std::vector<std::string> items_colo = pkmn::database::get_item_list("Colosseum");
+    std::vector<std::string> items_xd   = pkmn::database::get_item_list("XD");
 
     BOOST_CHECK(not string_in_vector(items_rs, "Magma Emblem"));
     BOOST_CHECK(string_in_vector(items_e, "Magma Emblem"));
@@ -248,16 +178,9 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     /*
      * Generation IV
      */
-    std::vector<std::string> items_dp, items_p, items_hgss;
-    pkmn::database::get_item_list(
-        "Diamond", items_dp
-    );
-    pkmn::database::get_item_list(
-        "Platinum", items_p
-    );
-    pkmn::database::get_item_list(
-        "HeartGold", items_hgss
-    );
+    std::vector<std::string> items_dp   = pkmn::database::get_item_list("Diamond");
+    std::vector<std::string> items_p    = pkmn::database::get_item_list("Platinum");
+    std::vector<std::string> items_hgss = pkmn::database::get_item_list("HeartGold");
 
     BOOST_CHECK(not string_in_vector(items_dp, "Griseous Orb"));
     BOOST_CHECK(string_in_vector(items_p, "Griseous Orb"));
@@ -270,13 +193,8 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     /*
      * Generation V
      */
-    std::vector<std::string> items_bw, items_b2w2;
-    pkmn::database::get_item_list(
-        "Black", items_bw
-    );
-    pkmn::database::get_item_list(
-        "Black 2", items_b2w2
-    );
+    std::vector<std::string> items_bw   = pkmn::database::get_item_list("Black");
+    std::vector<std::string> items_b2w2 = pkmn::database::get_item_list("Black 2");
 
     BOOST_CHECK(not string_in_vector(items_bw, "Colress MCHN"));
     BOOST_CHECK(string_in_vector(items_b2w2, "Colress MCHN"));
@@ -284,13 +202,8 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     /*
      * Generation VI
      */
-    std::vector<std::string> items_xy, items_oras;
-    pkmn::database::get_item_list(
-        "X", items_xy
-    );
-    pkmn::database::get_item_list(
-        "Omega Ruby", items_oras
-    );
+    std::vector<std::string> items_xy   = pkmn::database::get_item_list("X");
+    std::vector<std::string> items_oras = pkmn::database::get_item_list("Omega Rubby");
 
     BOOST_CHECK(string_in_vector(items_xy, "Bicycle"));
     BOOST_CHECK(not string_in_vector(items_oras, "Bicycle"));
