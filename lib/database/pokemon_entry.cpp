@@ -15,6 +15,8 @@
 
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <unordered_map>
+
 #ifdef PKMN_SQLITE_DEBUG
 #include <iostream>
 #endif
@@ -618,9 +620,44 @@ namespace pkmn { namespace database {
         return (ret);
     }
 
+    /*
+     * Experience yields were rebalanced in Generation V, so which
+     * value to return depends on what generation the entry came from.
+     * However, there are some exceptions where the value was different
+     * in Generation IV as well.
+     */
+    static const std::unordered_map<int, int> gen4_different_yields = boost::assign::map_list_of
+        (63,75)(66,75)(74,73)(138,99)(140,99)(141,199)
+        (206,125)(269,161)(345,99)(346,199)(347,99)(348,199)
+    ;
+
+    PKMN_INLINE bool gen4_has_different_yield(
+        int species_id
+    ) {
+        return (gen4_different_yields.count(species_id) > 0);
+    }
+
     int pokemon_entry::get_experience_yield() const {
         if(_none or _invalid) {
             return -1;
+        }
+
+        static BOOST_CONSTEXPR const char* old_query = \
+            "SELECT exp_yield FROM old_exp_yields WHERE species_id=?";
+
+        static BOOST_CONSTEXPR const char* main_query = \
+            "SELECT base_experience FROM pokemon WHERE id=?";
+
+        if(_generation == 4 and gen4_has_different_yield(_species_id)) {
+            return gen4_different_yields.at(_species_id);
+        } else if(_generation < 5) {
+            return pkmn::database::query_db_bind1<int, int>(
+                       _db, old_query, _species_id
+                   );
+        } else {
+            return pkmn::database::query_db_bind1<int, int>(
+                       _db, main_query, _pokemon_id
+                   );
         }
 
         return 0;
