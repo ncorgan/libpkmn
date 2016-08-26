@@ -423,9 +423,11 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query1 = \
-            "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1";
+            "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
+            "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=1)";
         static BOOST_CONSTEXPR const char* query2 = \
-            "SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2";
+            "SELECT name FROM type_names WHERE local_language_id=9 AND type_id="
+            "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2)";
 
         std::pair<std::string, std::string> ret;
         ret.first = pkmn::database::query_db_bind1<std::string, int>(
