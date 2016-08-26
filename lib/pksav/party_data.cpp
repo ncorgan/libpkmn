@@ -16,10 +16,6 @@
 
 #include <boost/config.hpp>
 
-#ifdef PKMN_SQLITE_DEBUG
-#include <iostream>
-#endif
-
 namespace pksav {
 
     static pkmn::database::sptr _db;
@@ -54,21 +50,11 @@ namespace pksav {
             (*_db),
             (gen1 ? gen1_query : main_query)
         );
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: " << stmt.getQuery() << std::endl
-                  << " * Results: " << std::flush;
-#endif
 
         for(int i = 0; i < (gen1 ? 6 : 5); ++i) {
             stmt.executeStep();
             base_stats_out[i] = stmt.getColumn(0);
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (int)stmt.getColumn(0) << ", ";
-#endif
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     void gen1_pc_pokemon_to_party_data(

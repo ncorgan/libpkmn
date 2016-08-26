@@ -37,10 +37,6 @@ namespace boost { namespace lockfree { namespace detail {
 #include <string>
 #include <vector>
 
-#ifdef PKMN_SQLITE_DEBUG
-#include <iostream>
-#endif
-
 namespace pkmn { namespace database {
 
     typedef pkmn::shared_ptr<SQLite::Database> sptr;
@@ -64,20 +60,9 @@ namespace pkmn { namespace database {
         sptr db,
         const char* query
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = db->execAndGet(query);
-            if(not col.isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            return (ret_type)col;
-#else
             return (ret_type)stmt.getColumn(0);
-#endif
         } else {
             throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
@@ -91,20 +76,9 @@ namespace pkmn { namespace database {
         const char* query,
         bind1_type bind1
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not stmt.getColumn(0).isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            return (ret_type)col;
-#endif
             return (ret_type)stmt.getColumn(0);
         } else {
             throw std::invalid_argument(
@@ -120,22 +94,10 @@ namespace pkmn { namespace database {
         bind1_type bind1,
         bind2_type bind2
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not stmt.getColumn(0).isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            return (ret_type)col;
-#endif
             return (ret_type)stmt.getColumn(0);
         } else {
             throw std::invalid_argument(
@@ -152,24 +114,11 @@ namespace pkmn { namespace database {
         bind2_type bind2,
         bind3_type bind3
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Bind " << bind3 << " to 3" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not stmt.getColumn(0).isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            return (ret_type)col;
-#endif
             return (ret_type)stmt.getColumn(0);
         } else {
             throw std::invalid_argument(
@@ -188,25 +137,11 @@ namespace pkmn { namespace database {
         const char* query,
         ret_type &out
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not col.isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            out = (ret_type)col;
-#else
             out = (ret_type)stmt.getColumn(0);
-#endif
             return true;
         } else {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << " * Query failed." << std::endl;
-#endif
             return false;
         }
     }
@@ -218,27 +153,12 @@ namespace pkmn { namespace database {
         ret_type &out,
         bind1_type bind1
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not col.isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            out = (ret_type)col;
-#else
             out = (ret_type)stmt.getColumn(0);
-#endif
             return true;
         } else {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << " * Query failed." << std::endl;
-#endif
             return false;
         }
     }
@@ -251,29 +171,13 @@ namespace pkmn { namespace database {
         bind1_type bind1,
         bind2_type bind2
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not col.isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            out = (ret_type)col;
-#else
             out = (ret_type)stmt.getColumn(0);
-#endif
             return true;
         } else {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << " * Query failed." << std::endl;
-#endif
             return false;
         }
     }
@@ -287,31 +191,14 @@ namespace pkmn { namespace database {
         bind2_type bind2,
         bind3_type bind3
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Bind " << bind3 << " to 3" << std::endl;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
         if(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            SQLite::Column col = stmt.getColumn(0);
-            if(not col.isBlob()) {
-                std::cout << " * Result: " << (ret_type)col << std::endl;
-            }
-            out = (ret_type)col;
-#else
             out = (ret_type)stmt.getColumn(0);
-#endif
             return true;
         } else {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << " * Query failed." << std::endl;
-#endif
             return false;
         }
     }
@@ -326,20 +213,10 @@ namespace pkmn { namespace database {
         const char* query,
         std::vector<ret_type> &ret_vec
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Results: " << std::flush;
-#endif
         SQLite::Statement stmt((*db), query);
         while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     template <typename ret_type, typename bind1_type>
@@ -349,22 +226,11 @@ namespace pkmn { namespace database {
         std::vector<ret_type> &ret_vec,
         bind1_type bind1
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Results: " << std::flush;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
@@ -375,24 +241,12 @@ namespace pkmn { namespace database {
         bind1_type bind1,
         bind2_type bind2
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Results: " << std::flush;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
@@ -404,26 +258,13 @@ namespace pkmn { namespace database {
         bind1_type bind2,
         bind1_type bind3
     ) {
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: \"" << query << "\"" << std::endl
-                  << " * Bind " << bind1 << " to 1" << std::endl
-                  << " * Bind " << bind2 << " to 2" << std::endl
-                  << " * Bind " << bind3 << " to 3" << std::endl
-                  << " * Results: " << std::flush;
-#endif
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
         while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (ret_type)stmt.getColumn(0) << ", " << std::flush;
-#endif
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     /*

@@ -14,10 +14,6 @@
 
 #include <stdexcept>
 
-#ifdef PKMN_SQLITE_DEBUG
-#include <iostream>
-#endif
-
 namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
@@ -42,7 +38,7 @@ namespace pkmn { namespace database {
             _db, query, ret, generation
         );
 
-        return (ret);
+        return ret;
     }
 
     std::vector<std::string> get_game_list(
@@ -73,7 +69,7 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
-        return (ret);
+        return ret;
     }
 
     std::vector<std::string> get_item_list(
@@ -86,7 +82,7 @@ namespace pkmn { namespace database {
             ret, -1, game_id
         );
 
-        return (ret);
+        return ret;
     }
 
     /*
@@ -196,7 +192,7 @@ namespace pkmn { namespace database {
             );
         }
 
-        return (ret);
+        return ret;
     }
 
     std::vector<std::string> get_nature_list() {
@@ -231,7 +227,7 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
-        return (ret);
+        return ret;
     }
 
     std::vector<std::string> get_region_list() {
@@ -247,7 +243,7 @@ namespace pkmn { namespace database {
             _db, query, ret
         );
 
-        return (ret);
+        return ret;
     }
 
     std::vector<std::string> get_ribbon_list(
@@ -285,6 +281,6 @@ namespace pkmn { namespace database {
             ret.emplace_back("Shadow");
         }
 
-        return (ret);
+        return ret;
     }
 }}

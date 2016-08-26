@@ -14,10 +14,6 @@
 
 #include <stdexcept>
 
-#ifdef PKMN_SQLITE_DEBUG
-#include <iostream>
-#endif
-
 namespace pkmn {
 
     pkmn::database::sptr _db;
@@ -60,25 +56,14 @@ namespace pkmn {
         static BOOST_CONSTEXPR const char* name_query = \
             "SELECT name FROM libpkmn_pocket_names WHERE version_group_id=? "
             "AND name != 'PC'";
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: " << name_query << std::endl
-                  << " * Bind " << version_group_id << " to 1" << std::endl
-                  << " * Results: " << std::flush;
-#endif
 
         SQLite::Statement stmt((*_db), name_query);
         stmt.bind(1, version_group_id);
         while(stmt.executeStep()) {
-#ifdef PKMN_SQLITE_DEBUG
-            std::cout << (const char*)stmt.getColumn(0) << ", " << std::flush;
-#endif
             _item_pocket_names.emplace_back(
                 (const char*)stmt.getColumn(0)
             );
         }
-#ifdef PKMN_SQLITE_DEBUG
-        std::cout << "\b\b " << std::endl;
-#endif
     }
 
     std::string item_bag_impl::get_game() {
