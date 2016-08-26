@@ -12,12 +12,55 @@
 // Only create one main
 #undef BOOST_TEST_MAIN
 
+#include <boost/assign.hpp>
 #include <boost/test/unit_test.hpp>
+
+static const std::pair<std::string, std::string> none_pair("None", "None");
+static const std::map<std::string, int> bad_stat_map_old = boost::assign::map_list_of
+    ("HP", 0)("Attack", 0)("Defense", 0)
+    ("Speed", 0)("Special", 0)
+;
+static const std::map<std::string, int> bad_stat_map = boost::assign::map_list_of
+    ("HP", 0)("Attack", 0)("Defense", 0)
+    ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
+;
 
 static void _pokemon_entry_none_test(
     pkmn::database::pokemon_entry &none_entry
 ) {
-    (void)none_entry;
+    BOOST_CHECK_EQUAL(none_entry.get_name(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_species(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_pokedex_entry(), "None");
+    BOOST_CHECK_EQUAL(none_entry.get_form(), "None");
+    BOOST_CHECK_CLOSE(none_entry.get_height(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(none_entry.get_weight(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(none_entry.get_chance_male(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(none_entry.get_chance_female(), -1.0f, 0.0001f);
+    BOOST_CHECK(not none_entry.has_gender_differences());
+    BOOST_CHECK_EQUAL(none_entry.get_base_happiness(), -1.0f);
+    BOOST_CHECK(none_entry.get_types() == none_pair);
+    BOOST_CHECK(none_entry.get_abilities() == none_pair);
+    BOOST_CHECK_EQUAL(none_entry.get_hidden_ability(), "None");
+    BOOST_CHECK(none_entry.get_egg_groups() == none_pair);
+    if(none_entry.get_game_id() == 1) {
+        BOOST_CHECK(none_entry.get_base_stats() == bad_stat_map_old);
+        BOOST_CHECK(none_entry.get_EV_yields() == bad_stat_map_old);
+    } else if(none_entry.get_game_id() == 4) {
+        BOOST_CHECK(none_entry.get_base_stats() == bad_stat_map);
+        BOOST_CHECK(none_entry.get_EV_yields() == bad_stat_map_old);
+    } else {
+        BOOST_CHECK(none_entry.get_base_stats() == bad_stat_map);
+        BOOST_CHECK(none_entry.get_EV_yields() == bad_stat_map);
+    }
+    BOOST_CHECK_EQUAL(none_entry.get_experience_yield(), -1);
+    BOOST_CHECK_EQUAL(none_entry.get_experience_at_level(2), -1);
+    BOOST_CHECK_EQUAL(none_entry.get_level_at_experience(2), -1);
+    BOOST_CHECK_EQUAL(none_entry.get_levelup_moves().size(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_egg_moves().size(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_forms().size(), 0);
+    BOOST_CHECK_EQUAL(none_entry.get_evolutions().size(), 0);
 }
 
 /*

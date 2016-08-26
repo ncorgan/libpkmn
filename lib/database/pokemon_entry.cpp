@@ -825,6 +825,10 @@ namespace pkmn { namespace database {
 
     std::vector<std::string> pokemon_entry::get_forms() const {
         std::vector<std::string> ret;
+        if(_none or _invalid) {
+            return ret;
+        }
+
         ret.emplace_back(
             _get_species_standard_form(_species_id)
         );
