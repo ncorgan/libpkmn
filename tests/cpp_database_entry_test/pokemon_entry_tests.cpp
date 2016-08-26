@@ -45,8 +45,8 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_wrong_game_test) {
         );
     , std::invalid_argument);
     BOOST_CHECK_THROW(
-        pkmn::database::pokemon_entry dunsparce(
-            "Dunsparce", "Silver", ""
+        pkmn::database::pokemon_entry ralts(
+            "Ralts", "Silver", ""
         );
     , std::invalid_argument);
     BOOST_CHECK_THROW(
