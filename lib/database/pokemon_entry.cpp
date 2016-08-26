@@ -538,7 +538,6 @@ namespace pkmn { namespace database {
         ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
     ;
 
-    // Convenience (TODO: debug output)
     static PKMN_INLINE void execute_stat_stmt_and_get(
         SQLite::Statement &stmt,
         std::map<std::string, int> &ret,
@@ -775,6 +774,10 @@ namespace pkmn { namespace database {
         return ret;
     }
 
+    /*
+     * Veekun's database only stores egg moves for unevolved Pokemon, so we need to
+     * figure out this Pokemon's earliest evolution and use that for the query.
+     */
     pkmn::database::move_list_t pokemon_entry::get_egg_moves() const {
         if(_none or _invalid) {
             return pkmn::database::move_list_t();
@@ -787,12 +790,22 @@ namespace pkmn { namespace database {
             "SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=2 AND "
             "pokemon_id=? AND version_group_id=?";
 
-        // TODO: get from evolution_query
-        (void)evolution_query;
-        int actual_pokemon_id = 0;
+        int species_id = _species_id;
+        SQLite::Statement stmt((*_db), evolution_query);
+        stmt.bind(1, species_id);
+        while(stmt.executeStep()) {
+            // The final query will be valid but return 0, which we can't use
+            if(int(stmt.getColumn(0)) == 0) {
+                break;
+            }
+            species_id = stmt.getColumn(0);
+            stmt.reset();
+            stmt.clearBindings();
+            stmt.bind(1, species_id);
+        }
 
         pkmn::database::move_list_t ret;
-        _query_to_move_list(move_query, ret, actual_pokemon_id);
+        _query_to_move_list(move_query, ret, species_id);
         return ret;
     }
 
