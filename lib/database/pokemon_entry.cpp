@@ -500,7 +500,8 @@ namespace pkmn { namespace database {
             "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
             "ORDER BY egg_group_id";
 #ifdef PKMN_SQLITE_DEBUG
-        std::cout << "Query: " << query << std::endl;
+        std::cout << "Query: " << query
+                  << " * Bind " << _species_id << " to 1" << std::endl;
 #endif
 
         std::pair<std::string, std::string> ret;
@@ -545,6 +546,9 @@ namespace pkmn { namespace database {
     ) {
         stmt.executeStep();
         ret[key] = stmt.getColumn(0);
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << int(stmt.getColumn(0)) << ", " << std::flush;
+#endif
     }
 
     std::map<std::string, int> pokemon_entry::get_base_stats() const {
@@ -563,12 +567,16 @@ namespace pkmn { namespace database {
 
         std::map<std::string, int> ret;
 
-        // TODO: debug output
         SQLite::Statement stmt(
             (*_db),
             ((_generation == 1) ? old_query : main_query)
         );
         stmt.bind(1, _pokemon_id);
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << ((_generation == 1) ? old_query : main_query) << std::endl
+                  << " * Bind " << _pokemon_id << " to 1" << std::endl
+                  << " * Results: " << std::flush;
+#endif
 
         execute_stat_stmt_and_get(stmt, ret, "HP");
         execute_stat_stmt_and_get(stmt, ret, "Attack");
@@ -580,8 +588,11 @@ namespace pkmn { namespace database {
             execute_stat_stmt_and_get(stmt, ret, "Special Attack");
             execute_stat_stmt_and_get(stmt, ret, "Special Defense");
         }
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
 
-        return (ret);
+        return ret;
     }
 
     std::map<std::string, int> pokemon_entry::get_EV_yields() const {
@@ -598,7 +609,7 @@ namespace pkmn { namespace database {
             ret.erase("Special Attack");
             ret.erase("Special Defense");
 
-            return (ret);
+            return ret;
         }
 
         static BOOST_CONSTEXPR const char* query = \
@@ -609,6 +620,11 @@ namespace pkmn { namespace database {
 
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, _pokemon_id);
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "Query: " << query << std::endl
+                  << " * Bind " << _pokemon_id << " to 1" << std::endl
+                  << " * Results: " << std::flush;
+#endif
 
         execute_stat_stmt_and_get(stmt, ret, "HP");
         execute_stat_stmt_and_get(stmt, ret, "Attack");
@@ -616,8 +632,11 @@ namespace pkmn { namespace database {
         execute_stat_stmt_and_get(stmt, ret, "Speed");
         execute_stat_stmt_and_get(stmt, ret, "Special Attack");
         execute_stat_stmt_and_get(stmt, ret, "Special Defense");
+#ifdef PKMN_SQLITE_DEBUG
+        std::cout << "\b\b " << std::endl;
+#endif
 
-        return (ret);
+        return ret;
     }
 
     /*
