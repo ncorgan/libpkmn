@@ -7,9 +7,28 @@
 
 #import "CppToObjC.h"
 
+@implementation PKStringArrayFromCpp
+
+- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new std::vector<std::string>(cppInstance)
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    PKMN_CPP_TO_OBJC(
+        [super dealloc];
+    )
+}
+
+@end
+
 @implementation CppToObjC
 
-+ (PKStringArray*)createStringArrayFromCpp: (const std::vector<std::string>&)cppInstance {
++ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance {
     PKMN_CPP_TO_OBJC(
         PKStringArrayFromCpp* fromCpp = [[PKStringArrayFromCpp alloc] initFromCpp:cppInstance];
         return (PKStringArray*)fromCpp;

@@ -60,7 +60,7 @@
 
 @interface PKStringArrayFromCpp: PKStringArray
 
-- (PKStringArray*)initFromCpp: (const std::vector<std::string>&)cppInstance;
+- (PKStringArray*)initFromCpp: (std::vector<std::string>&)cppInstance;
 
 - (void)dealloc;
 
@@ -68,7 +68,7 @@
 
 @interface CppToObjC: NSObject
 
-+ (PKStringArray*)createStringArrayFromCpp: (const std::vector<std::string>&)cppInstance;
++ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
 
 @end
 
