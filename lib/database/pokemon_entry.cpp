@@ -493,11 +493,14 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
-            "ORDER BY egg_group_id";
+            "SELECT name FROM egg_group_prose WHERE local_language_id=9 AND egg_group_id IN "
+            "(SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
+            "ORDER BY egg_group_id)";
 
         std::pair<std::string, std::string> ret;
         SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, _species_id);
+
         stmt.executeStep();
         ret.first = std::string(stmt.getColumn(0));
         if(stmt.executeStep()) {
