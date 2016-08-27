@@ -8,9 +8,12 @@
 #ifndef PKMN_OBJC_CPPTOOBJC_H
 #define PKMN_OBJC_CPPTOOBJC_H
 
+#import <PKMN-ObjC/Types/PKStringArray.h>
+
 #import <Foundation/Foundation.h>
 
 #include <stdexcept>
+#include <vector>
 
 #define PKMN_CPP_TO_OBJC(...) \
 { \
@@ -54,5 +57,19 @@
     @finally { \
     } \
 }
+
+@interface PKStringArrayFromCpp: PKStringArray
+
+- (PKStringArray*)initFromCpp: (const std::vector<std::string>&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
+@interface CppToObjC: NSObject
+
++ (PKStringArray*)createStringArrayFromCpp: (const std::vector<std::string>&)cppInstance;
+
+@end
 
 #endif /* PKMN_OBJC_CPPTOOBJC_H */
