@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PKLists : NSObject
+@interface PKLists: NSObject
 
 + (PKStringArray*)getAbilityList:(NSNumber*)generation;
 
