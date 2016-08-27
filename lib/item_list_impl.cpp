@@ -71,6 +71,9 @@ namespace pkmn {
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0)
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* capacity_query = \
             "SELECT capacity FROM libpkmn_item_lists WHERE id=? AND "
             "version_group_id=?";
