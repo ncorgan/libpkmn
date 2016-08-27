@@ -21,12 +21,13 @@ SET(pkmn_objc_libs
 # Add sources included in all builds
 #
 
-ADD_SUBDIRECTORY(utils)
+ADD_SUBDIRECTORY(Utils)
 
 SET(pkmn_objc_sources
     ${pkmn_objc_calculations_sources}
     ${pkmn_objc_database_sources}
     ${pkmn_objc_utils_sources}
+    CppToObjC.mm
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmn_objc_sources}

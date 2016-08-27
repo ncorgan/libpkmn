@@ -5,8 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-ADD_SUBDIRECTORY(pkmn)
-
-IF(PKMN_ENABLE_OBJC)
-    ADD_SUBDIRECTORY(PKMN-ObjC)
-ENDIF(PKMN_ENABLE_OBJC)
+ADD_SUBDIRECTORY(Utils)
