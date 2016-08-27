@@ -1,0 +1,65 @@
+#
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+FIND_PROGRAM(GNUSTEP_CONFIG gnustep-config)
+
+IF(GNUSTEP_CONFIG)
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--variable=GNUSTEP_SYSTEM_HEADERS"
+        OUTPUT_VARIABLE GNUSTEP_SYSTEM_INCLUDE_PATH
+    )
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--variable=GNUSTEP_LOCAL_HEADERS"
+        OUTPUT_VARIABLE GNUSTEP_LOCAL_INCLUDE_PATH
+    )
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--variable=GNUSTEP_SYSTEM_LIBRARIES"
+        OUTPUT_VARIABLE GNUSTEP_SYSTEM_LIBRARY_PATH
+    )
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--variable=GNUSTEP_LOCAL_LIBRARIES"
+        OUTPUT_VARIABLE GNUSTEP_LOCAL_LIBRARY_PATH
+    )
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--base-libs"
+        OUTPUT_VARIABLE GNUSTEP_BASE_LIBS
+    )
+    EXEC_PROGRAM(${GNUSTEP_CONFIG}
+        ARGS "--objc-flags"
+        OUTPUT_VARIABLE GNUSTEP_OBJC_FLAGS
+    )
+
+    FIND_PATH(ObjC_INCLUDE_DIRS
+        Foundation/Foundation.h
+        PATHS
+        ${GNUSTEP_SYSTEM_INCLUDE_PATH}
+        ${GNUSTEP_LOCAL_INCLUDE_PATH}
+    )
+
+    FIND_LIBRARY(ObjC_LIBRARIES
+        NAMES gnustep-base
+        PATHS
+        ${GNUSTEP_SYSTEM_LIBRARY_PATH}
+        ${GNUSTEP_LOCAL_LIBRARY_PATH}
+    )
+
+    # Unsupported or irrelevant flags
+    IF(PKMN_CLANG)
+        STRING(REPLACE " -fexec-charset=UTF-8" "" GNUSTEP_OBJC_FLAGS ${GNUSTEP_OBJC_FLAGS})
+        STRING(REPLACE " -shared-libgcc" "" GNUSTEP_BASE_LIBS ${GNUSTEP_BASE_LIBS})
+    ENDIF(PKMN_CLANG)
+    SET(ObjC_LIBRARIES "${ObjC_LIBRARIES};${GNUSTEP_BASE_LIBS};-lobjcxx")
+
+    SET(ObjC_FLAGS   "-DPKMN_GNUSTEP -x objective-c ${GNUSTEP_OBJC_FLAGS}")
+    SET(ObjCXX_FLAGS "-DPKMN_GNUSTEP -x objective-c++ ${GNUSTEP_OBJC_FLAGS}")
+
+    INCLUDE(FindPackageHandleStandardArgs)
+    FIND_PACKAGE_HANDLE_STANDARD_ARGS(ObjC DEFAULT_MSG ObjC_LIBRARIES ObjC_INCLUDE_DIRS)
+    MARK_AS_ADVANCED(ObjC_LIBRARIES ObjC_INCLUDE_DIRS)
+ELSE()
+    SET(OBJC_FOUND FALSE)
+ENDIF(GNUSTEP_CONFIG)
