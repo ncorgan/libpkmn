@@ -5,5 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-ADD_SUBDIRECTORY(Types)
-ADD_SUBDIRECTORY(Utils)
+SET(pkmn_objc_types_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKStringArray.mm
+PARENT_SCOPE)
