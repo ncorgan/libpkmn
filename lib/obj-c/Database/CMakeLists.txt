@@ -6,5 +6,6 @@
 #
 
 SET(pkmn_objc_database_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKItemDatabaseEntry.mm
     ${CMAKE_CURRENT_SOURCE_DIR}/PKLists.mm
 PARENT_SCOPE)

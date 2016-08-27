@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_objc_database_headers
+        PKItemDatabaseEntry.h
         PKLists.h
     )
 
