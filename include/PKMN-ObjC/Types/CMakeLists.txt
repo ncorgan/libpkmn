@@ -7,7 +7,10 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_objc_types_headers
+        PKNumberPair.h
         PKStringArray.h
+        PKStringNumberDictionary.h
+        PKStringPair.h
     )
 
     INSTALL(

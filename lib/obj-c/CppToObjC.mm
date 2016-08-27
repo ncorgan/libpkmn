@@ -19,9 +19,24 @@
 }
 
 - (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
+@implementation PKStringNumberDictionaryFromCpp
+
+- (PKStringNumberDictionary*)initFromCpp: (std::map<std::string, int>&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        [super dealloc];
+        _internal = reinterpret_cast<void*>(
+                        new std::map<std::string, int>((std::map<std::string, int>&&)cppInstance)
+                    );
+        return self;
     )
+}
+
+- (void)dealloc {
+    [super dealloc];
 }
 
 @end
@@ -30,9 +45,19 @@
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        PKStringArrayFromCpp* fromCpp = [[PKStringArrayFromCpp alloc] initFromCpp:cppInstance];
-        return (PKStringArray*)fromCpp;
+        return (PKStringArray*)[[PKStringArrayFromCpp alloc] initFromCpp:cppInstance];
     )
+}
+
++ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKStringNumberDictionary*)[[PKStringNumberDictionaryFromCpp alloc] initFromCpp:cppInstance];
+    )
+}
+
++ (PKStringPair*)createStringPairFromCpp: (const std::pair<std::string, std::string>&)cppInstance {
+    return [[PKStringPair alloc] initWithFirst:[NSString stringWithUTF8String:cppInstance.first.c_str()]
+                                 andSecond:[NSString stringWithUTF8String:cppInstance.second.c_str()]];
 }
 
 @end

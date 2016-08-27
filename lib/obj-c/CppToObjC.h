@@ -9,10 +9,14 @@
 #define PKMN_OBJC_CPPTOOBJC_H
 
 #import <PKMN-ObjC/Types/PKStringArray.h>
+#import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
+#import <PKMN-ObjC/Types/PKStringPair.h>
 
 #import <Foundation/Foundation.h>
 
+#include <map>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #define PKMN_CPP_TO_OBJC(...) \
@@ -66,9 +70,21 @@
 
 @end
 
+@interface PKStringNumberDictionaryFromCpp: PKStringNumberDictionary
+
+- (PKStringNumberDictionary*)initFromCpp: (std::map<std::string, int>&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
 @interface CppToObjC: NSObject
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
+
++ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&)cppInstance;
+
++ (PKStringPair*)createStringPairFromCpp: (const std::pair<std::string, std::string>&)cppInstance;
 
 @end
 

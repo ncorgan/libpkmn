@@ -6,5 +6,8 @@
 #
 
 SET(pkmn_objc_types_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKNumberPair.mm
     ${CMAKE_CURRENT_SOURCE_DIR}/PKStringArray.mm
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKStringNumberDictionary.mm
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKStringPair.mm
 PARENT_SCOPE)
