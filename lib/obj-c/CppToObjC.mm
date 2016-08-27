@@ -12,7 +12,7 @@
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new std::vector<std::string>(cppInstance)
+                        new std::vector<std::string>((std::vector<std::string>&&)cppInstance)
                     );
         return self;
     )
