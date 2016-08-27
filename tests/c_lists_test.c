@@ -7,7 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmn-c/database/lists.h>
+#include <pkmn.h>
 
 static void ability_list_test() {
     pkmn_string_list_t abilities = NULL;
