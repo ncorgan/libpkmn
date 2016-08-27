@@ -11,6 +11,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         gender.h
         hidden_power.h
         shininess.h
+        spinda_spots.h
         stats.h
     )
 
