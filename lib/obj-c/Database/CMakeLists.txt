@@ -5,6 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-ADD_SUBDIRECTORY(Database)
-ADD_SUBDIRECTORY(Types)
-ADD_SUBDIRECTORY(Utils)
+SET(pkmn_objc_database_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKLists.mm
+PARENT_SCOPE)

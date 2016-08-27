@@ -21,6 +21,7 @@ SET(pkmn_objc_libs
 # Add sources included in all builds
 #
 
+ADD_SUBDIRECTORY(Database)
 ADD_SUBDIRECTORY(Types)
 ADD_SUBDIRECTORY(Utils)
 

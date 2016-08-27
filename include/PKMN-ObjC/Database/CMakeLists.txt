@@ -6,13 +6,13 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_objc_types_headers
-        PKStringArray.h
+    SET(pkmn_objc_database_headers
+        PKLists.h
     )
 
     INSTALL(
-        FILES ${pkmn_objc_types_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/PKMN-ObjC/Types
+        FILES ${pkmn_objc_database_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/PKMN-ObjC/Database
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
