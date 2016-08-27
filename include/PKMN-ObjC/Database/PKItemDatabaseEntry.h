@@ -16,7 +16,7 @@
 
 - (PKItemDatabaseEntry*)initNoneEntry;
 
-- (PKItemDatabaseEntry*)initWithName:(NSString*)itemName andGame:(NSString*)itemGame;
+- (PKItemDatabaseEntry*)initWithName:(NSString*)itemName andGame:(NSString*)gameName;
 
 - (void)dealloc;
 

@@ -24,11 +24,11 @@
     )
 }
 
-- (PKItemDatabaseEntry*)initWithName:(NSString*)itemName andGame:(NSString*)itemGame {
+- (PKItemDatabaseEntry*)initWithName:(NSString*)itemName andGame:(NSString*)gameName {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
                         new pkmn::database::item_entry(
-                            [itemName UTF8String], [itemGame UTF8String]
+                            [itemName UTF8String], [gameName UTF8String]
                         )
                     );
         return self;
