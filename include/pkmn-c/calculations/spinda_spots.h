@@ -10,7 +10,17 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-#include <pkmn-c/types/spinda_spots.h>
+typedef struct {
+    int x;
+    int y;
+} pkmn_spinda_coords_t;
+
+typedef struct {
+    pkmn_spinda_coords_t left_ear;
+    pkmn_spinda_coords_t right_ear;
+    pkmn_spinda_coords_t left_face;
+    pkmn_spinda_coords_t right_face;
+} pkmn_spinda_spots_t;
 
 #ifdef __cplusplus
 extern "C" {
