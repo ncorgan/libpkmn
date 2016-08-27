@@ -260,12 +260,17 @@ namespace pkmn { namespace database {
             return "Unknown";
         }
 
+        /*
+         * Just use Ruby's Pokédex entry for the Gamecube games.
+         */
+        int game_id = game_is_gamecube(_game_id) ? 7 : _game_id;
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT flavor_text FROM pokemon_species_flavor_text WHERE "
             "species_id=? AND version_id=? AND language_id=9";
 
         std::string from_db = pkmn::database::query_db_bind2<std::string, int, int>(
-                                  _db, query, _species_id, _game_id
+                                  _db, query, _species_id, game_id
                               );
         return fix_veekun_whitespace(from_db);
     }
@@ -449,11 +454,13 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query1 = \
-            "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-            "is_hidden=0 AND slot=1";
+            "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
+            "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
+            "is_hidden=0 AND slot=1)";
         static BOOST_CONSTEXPR const char* query2 = \
-            "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
-            "is_hidden=0 AND slot=2";
+            "SELECT name FROM ability_names WHERE local_language_id=9 AND ability_id="
+            "(SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
+            "is_hidden=0 AND slot=2)";
 
         std::pair<std::string, std::string> ret;
         ret.first = pkmn::database::query_db_bind1<std::string, int>(
@@ -545,7 +552,7 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* main_query = \
             "SELECT base_stat FROM pokemon_stats WHERE pokemon_id=? AND "
-            "stat_id IN (1,2,3,6,4,5)";
+            "stat_id IN (1,2,3,4,5,6)";
 
         std::map<std::string, int> ret;
 
@@ -558,12 +565,13 @@ namespace pkmn { namespace database {
         execute_stat_stmt_and_get(stmt, ret, "HP");
         execute_stat_stmt_and_get(stmt, ret, "Attack");
         execute_stat_stmt_and_get(stmt, ret, "Defense");
-        execute_stat_stmt_and_get(stmt, ret, "Speed");
         if(_generation == 1) {
+            execute_stat_stmt_and_get(stmt, ret, "Speed");
             execute_stat_stmt_and_get(stmt, ret, "Special");
         } else {
             execute_stat_stmt_and_get(stmt, ret, "Special Attack");
             execute_stat_stmt_and_get(stmt, ret, "Special Defense");
+            execute_stat_stmt_and_get(stmt, ret, "Speed");
         }
 
         return ret;
@@ -588,7 +596,7 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT effort FROM pokemon_stats WHERE pokemon_id=? AND "
-            "stat_id IN (1,2,3,6,4,5)";
+            "stat_id IN (1,2,3,4,5,6)";
 
         std::map<std::string, int> ret;
 
@@ -598,9 +606,9 @@ namespace pkmn { namespace database {
         execute_stat_stmt_and_get(stmt, ret, "HP");
         execute_stat_stmt_and_get(stmt, ret, "Attack");
         execute_stat_stmt_and_get(stmt, ret, "Defense");
-        execute_stat_stmt_and_get(stmt, ret, "Speed");
         execute_stat_stmt_and_get(stmt, ret, "Special Attack");
         execute_stat_stmt_and_get(stmt, ret, "Special Defense");
+        execute_stat_stmt_and_get(stmt, ret, "Speed");
 
         return ret;
     }
