@@ -7,6 +7,8 @@
 
 #import <PKMN-ObjC/Types/PKStringPair.h>
 
+#import "CppToObjC.h"
+
 @implementation PKStringPair
 
 - (PKStringPair*)init {
@@ -25,6 +27,22 @@
     [first dealloc];
     [second dealloc];
     [super dealloc];
+}
+
+- (BOOL)isEqual:(id)object {
+    if([object isKindOfClass:[PKStringPair class]]) {
+        PKStringPair* other = object;
+        return [self isEqualToPair:other];
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)isEqualToPair:(PKStringPair*)other {
+    PKMN_CPP_TO_OBJC(
+        return ([self->first isEqual:other->first] &&
+                [self->second isEqual:other->second]);
+    )
 }
 
 @end

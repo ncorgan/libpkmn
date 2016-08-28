@@ -7,6 +7,8 @@
 
 #import <PKMN-ObjC/Database/PKLevelupMove.h>
 
+#import "CppToObjC.h"
+
 @implementation PKLevelupMove
 
 - (PKLevelupMove*)init {
@@ -29,6 +31,22 @@
     [move dealloc];
     [level dealloc];
     [super dealloc];
+}
+
+- (BOOL)isEqual:(id)object {
+    if([object isKindOfClass:[PKLevelupMove class]]) {
+        PKLevelupMove* other = object;
+        return [self isEqualToLevelupMove:other];
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)isEqualToLevelupMove:(PKLevelupMove*)other {
+    PKMN_CPP_TO_OBJC(
+        return ([self->move isEqual:other->move] &&
+                [self->level isEqual:other->level]);
+    )
 }
 
 @end

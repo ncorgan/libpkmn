@@ -24,6 +24,10 @@
 
 - (void)dealloc;
 
+- (BOOL)isEqual:(id)object;
+
+- (BOOL)isEqualToLevelupMove:(PKLevelupMove*)other;
+
 @end
 
 #endif /* INCLUDED_PKMN_OBJC_DATABASE_PKLEVELUPMOVE_H */

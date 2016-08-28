@@ -21,6 +21,10 @@
 
 - (void)dealloc;
 
+- (BOOL)isEqual:(id)object;
+
+- (BOOL)isEqualToPair:(PKNumberPair*)other;
+
 @end
 
 #endif /* INCLUDED_PKMN_OBJC_TYPES_PKNUMBERPAIR_H */
