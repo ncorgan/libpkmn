@@ -13,6 +13,19 @@
 
 #define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::move_list_t*>(arr->_internal)
 
+/*
+ * Ugly helper function to extract the internal C++ move entry from the Objective-C
+ * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
+ * to access the protected variable.
+ */
+static pkmn::database::move_entry* getInternalMoveEntry(
+    PKMoveDatabaseEntry* objC
+) {
+    void* cpp;
+    object_getInstanceVariable(objC, "_internal", &cpp);
+    return reinterpret_cast<pkmn::database::move_entry*>(cpp);
+}
+
 @implementation PKMoveDatabaseEntryArray
 
 - (PKMoveDatabaseEntryArray*)init {
@@ -50,10 +63,10 @@
 }
 
 - (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx {
-    /*PKMN_CPP_TO_OBJC(
-        PKMoveDatabaseEntry* str = (PKMoveDatabaseEntry*)obj;
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = [str UTF8Entry];
-    )*/
+    PKMN_CPP_TO_OBJC(
+        pkmn::database::move_entry* cppPtr = getInternalMoveEntry((PKMoveDatabaseEntry*)obj);
+        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = *cppPtr;
+    )
 }
 
 - (NSNumber*)count {
@@ -63,12 +76,13 @@
 }
 
 - (void)insertEntry:(PKMoveDatabaseEntry*)entry atIndex:(NSNumber*)idx {
-    /*PKMN_CPP_TO_OBJC(
+    PKMN_CPP_TO_OBJC(
+        pkmn::database::move_entry* cppPtr = getInternalMoveEntry(entry);
         CAST_TO_CPP(self)->insert(
             CAST_TO_CPP(self)->begin() + [idx unsignedLongLongValue],
-            [str UTF8Entry]
+            *cppPtr
         );
-    )*/
+    )
 }
 
 - (void)removeEntryAtIndex:(NSNumber*)idx {
@@ -80,15 +94,17 @@
 }
 
 - (void)replaceEntryAtIndex:(NSNumber*)idx withEntry:(PKMoveDatabaseEntry*)entry {
-    /*PKMN_CPP_TO_OBJC(
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = [str UTF8Entry];
-    )*/
+    PKMN_CPP_TO_OBJC(
+        pkmn::database::move_entry* cppPtr = getInternalMoveEntry(entry);
+        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = *cppPtr;
+    )
 }
 
 - (void)addEntry:(PKMoveDatabaseEntry*)entry {
-    /*PKMN_CPP_TO_OBJC(
-        CAST_TO_CPP(self)->push_back([str UTF8Entry]);
-    )*/
+    PKMN_CPP_TO_OBJC(
+        pkmn::database::move_entry* cppPtr = getInternalMoveEntry(entry);
+        CAST_TO_CPP(self)->push_back(*cppPtr);
+    )
 }
 
 - (void)removeAllEntries {
