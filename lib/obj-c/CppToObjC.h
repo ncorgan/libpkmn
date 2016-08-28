@@ -71,7 +71,7 @@
 
 @interface PKItemDatabaseEntryFromCpp: PKItemDatabaseEntry
 
-- (PKItemDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::item_entry&)cppInstance;
+- (PKItemDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::item_entry&)cppInstance;
 
 - (void)dealloc;
 
@@ -79,7 +79,7 @@
 
 @interface PKMoveDatabaseEntryFromCpp: PKMoveDatabaseEntry
 
-- (PKMoveDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::move_entry&)cppInstance;
+- (PKMoveDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::move_entry&)cppInstance;
 
 - (void)dealloc;
 
@@ -103,11 +103,11 @@
 
 @interface CppToObjC: NSObject
 
-+ (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (pkmn::database::item_entry&)cppInstance;
++ (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
 
 + (PKLevelupMove*)createLevelupMoveFromCpp: (pkmn::database::levelup_move&)cppInstance;
 
-+ (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (pkmn::database::move_entry&)cppInstance;
++ (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance;
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
 

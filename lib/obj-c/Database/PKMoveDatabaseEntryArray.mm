@@ -57,7 +57,7 @@ static pkmn::database::move_entry* getInternalMoveEntry(
 
 - (id)objectAtIndexedSubscript:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::move_entry& cpp = (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]];
+        const pkmn::database::move_entry& cpp = (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]];
         return [CppToObjC createMoveDatabaseEntryFromCpp:cpp];
     )
 }

@@ -9,10 +9,10 @@
 
 @implementation PKItemDatabaseEntryFromCpp
 
-- (PKItemDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::item_entry&)cppInstance {
+- (PKItemDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::item_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::item_entry((pkmn::database::item_entry&&)cppInstance)
+                        new pkmn::database::item_entry(cppInstance)
                     );
         return self;
     )
@@ -26,10 +26,10 @@
 
 @implementation PKMoveDatabaseEntryFromCpp
 
-- (PKMoveDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::move_entry&)cppInstance {
+- (PKMoveDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::move_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::move_entry((pkmn::database::move_entry&&)cppInstance)
+                        new pkmn::database::move_entry(cppInstance)
                     );
         return self;
     )
@@ -77,7 +77,7 @@
 
 @implementation CppToObjC
 
-+ (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (pkmn::database::item_entry&)cppInstance {
++ (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKItemDatabaseEntry*)[[PKItemDatabaseEntryFromCpp alloc] initFromCpp:cppInstance];
     )
@@ -93,7 +93,7 @@
     )
 }
 
-+ (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (pkmn::database::move_entry&)cppInstance {
++ (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKMoveDatabaseEntry*)[[PKMoveDatabaseEntryFromCpp alloc] initFromCpp:cppInstance];
     )
