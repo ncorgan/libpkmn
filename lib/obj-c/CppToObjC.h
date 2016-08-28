@@ -8,9 +8,16 @@
 #ifndef PKMN_OBJC_CPPTOOBJC_H
 #define PKMN_OBJC_CPPTOOBJC_H
 
+#import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
+#import <PKMN-ObjC/Database/PKLevelupMove.h>
+#import <PKMN-ObjC/Database/PKMoveDatabaseEntry.h>
 #import <PKMN-ObjC/Types/PKStringArray.h>
 #import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
 #import <PKMN-ObjC/Types/PKStringPair.h>
+
+#include <pkmn/database/item_entry.hpp>
+#include <pkmn/database/levelup_move.hpp>
+#include <pkmn/database/move_entry.hpp>
 
 #import <Foundation/Foundation.h>
 
@@ -62,9 +69,25 @@
     } \
 }
 
+@interface PKItemDatabaseEntryFromCpp: PKItemDatabaseEntry
+
+- (PKItemDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::item_entry&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
+@interface PKMoveDatabaseEntryFromCpp: PKMoveDatabaseEntry
+
+- (PKMoveDatabaseEntryFromCpp*)initFromCpp: (pkmn::database::move_entry&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
 @interface PKStringArrayFromCpp: PKStringArray
 
-- (PKStringArray*)initFromCpp: (std::vector<std::string>&)cppInstance;
+- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance;
 
 - (void)dealloc;
 
@@ -72,13 +95,19 @@
 
 @interface PKStringNumberDictionaryFromCpp: PKStringNumberDictionary
 
-- (PKStringNumberDictionary*)initFromCpp: (std::map<std::string, int>&)cppInstance;
+- (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&)cppInstance;
 
 - (void)dealloc;
 
 @end
 
 @interface CppToObjC: NSObject
+
++ (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (pkmn::database::item_entry&)cppInstance;
+
++ (PKLevelupMove*)createLevelupMoveFromCpp: (pkmn::database::levelup_move&)cppInstance;
+
++ (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (pkmn::database::move_entry&)cppInstance;
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
 
