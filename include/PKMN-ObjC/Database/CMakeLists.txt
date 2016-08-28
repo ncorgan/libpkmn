@@ -11,6 +11,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         PKMoveDatabaseEntry.h
         PKMoveDatabaseEntryArray.h
         PKLevelupMove.h
+        PKLevelupMoveArray.h
         PKLists.h
     )
 

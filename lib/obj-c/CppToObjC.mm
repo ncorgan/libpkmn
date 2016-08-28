@@ -24,6 +24,25 @@
 
 @end
 
+@implementation PKLevelupMoveArrayFromCpp: PKLevelupMoveArray
+
+- (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::database::levelup_moves_t(
+                                (pkmn::database::levelup_moves_t&&)cppInstance
+                            )
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
 @implementation PKMoveDatabaseEntryFromCpp
 
 - (PKMoveDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::move_entry&)cppInstance {
@@ -46,7 +65,9 @@
 - (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::move_list_t((pkmn::database::move_list_t&&)cppInstance)
+                        new pkmn::database::move_list_t(
+                                (pkmn::database::move_list_t&&)cppInstance
+                            )
                     );
         return self;
     )
@@ -63,7 +84,9 @@
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new std::vector<std::string>((std::vector<std::string>&&)cppInstance)
+                        new std::vector<std::string>(
+                                (std::vector<std::string>&&)cppInstance
+                            )
                     );
         return self;
     )
@@ -80,7 +103,9 @@
 - (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new std::map<std::string, int>((std::map<std::string, int>&&)cppInstance)
+                        new std::map<std::string, int>(
+                                (std::map<std::string, int>&&)cppInstance
+                            )
                     );
         return self;
     )
@@ -107,6 +132,12 @@
         ret->level = @(cppInstance.level);
 
         return ret;
+    )
+}
+
++ (PKLevelupMoveArray*)createLevelupMoveArrayFromCpp: (pkmn::database::levelup_moves_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKLevelupMoveArray*)[[PKLevelupMoveArrayFromCpp alloc] initFromCpp:cppInstance];
     )
 }
 
