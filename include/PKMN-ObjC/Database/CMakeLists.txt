@@ -13,6 +13,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         PKLevelupMove.h
         PKLevelupMoveArray.h
         PKPokemonDatabaseEntry.h
+        PKPokemonDatabaseEntryArray.h
         PKLists.h
     )
 

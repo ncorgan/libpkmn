@@ -13,4 +13,5 @@ SET(pkmn_objc_database_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/PKMoveDatabaseEntry.mm
     ${CMAKE_CURRENT_SOURCE_DIR}/PKMoveDatabaseEntryArray.mm
     ${CMAKE_CURRENT_SOURCE_DIR}/PKPokemonDatabaseEntry.mm
+    ${CMAKE_CURRENT_SOURCE_DIR}/PKPokemonDatabaseEntryArray.mm
 PARENT_SCOPE)

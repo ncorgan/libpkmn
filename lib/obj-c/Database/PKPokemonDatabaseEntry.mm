@@ -214,7 +214,12 @@
     )
 }
 
-// TODO: evolutions
+- (PKPokemonDatabaseEntryArray*)getEvolutions {
+    PKMN_CPP_TO_OBJC(
+        pkmn::database::pokemon_entries_t cpp = CAST_TO_CPP(self)->get_evolutions();
+        return [CppToObjC createPokemonDatabaseEntryArrayFromCpp:cpp];
+    )
+}
 
 - (BOOL)isEqual:(id)object {
     if([object isKindOfClass:[PKPokemonDatabaseEntry class]]) {

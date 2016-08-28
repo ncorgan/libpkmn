@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASE_ENTRY_H
-#define INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASE_ENTRY_H
+#ifndef INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASEENTRY_H
+#define INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASEENTRY_H
 
 #import <PKMN-ObjC/Database/PKLevelupMoveArray.h>
 #import <PKMN-ObjC/Database/PKMoveDatabaseEntryArray.h>
@@ -14,6 +14,9 @@
 #import <PKMN-ObjC/Types/PKStringPair.h>
 
 #import <Foundation/Foundation.h>
+
+// Forward declaration avoids looping imports
+@class PKPokemonDatabaseEntryArray;
 
 @interface PKPokemonDatabaseEntry : NSObject {
     @protected
@@ -78,7 +81,7 @@
 
 - (PKStringArray*)getForms;
 
-// TODO: evolutions
+- (PKPokemonDatabaseEntryArray*)getEvolutions;
 
 - (BOOL)isEqual:(id)object;
 
@@ -86,4 +89,4 @@
 
 @end
 
-#endif /* INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASE_ENTRY_H */
+#endif /* INCLUDED_PKMN_OBJC_DATABASE_PKPOKEMONDATABASEENTRY_H */

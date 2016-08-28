@@ -79,6 +79,42 @@
 
 @end
 
+@implementation PKPokemonDatabaseEntryFromCpp
+
+- (PKPokemonDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::pokemon_entry&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::database::pokemon_entry(cppInstance)
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
+@implementation PKPokemonDatabaseEntryArrayFromCpp
+
+- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::database::pokemon_entries_t(
+                                (pkmn::database::pokemon_entries_t&&)cppInstance
+                            )
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
 @implementation PKStringArrayFromCpp
 
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
@@ -150,6 +186,18 @@
 + (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKMoveDatabaseEntryArray*)[[PKMoveDatabaseEntryArrayFromCpp alloc] initFromCpp:cppInstance];
+    )
+}
+
++ (PKPokemonDatabaseEntry*)createPokemonDatabaseEntryFromCpp: (const pkmn::database::pokemon_entry&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKPokemonDatabaseEntry*)[[PKPokemonDatabaseEntryFromCpp alloc] initFromCpp:cppInstance];
+    )
+}
+
++ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKPokemonDatabaseEntryArray*)[[PKPokemonDatabaseEntryArrayFromCpp alloc] initFromCpp:cppInstance];
     )
 }
 

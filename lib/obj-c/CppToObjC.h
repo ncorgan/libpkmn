@@ -13,6 +13,8 @@
 #import <PKMN-ObjC/Database/PKLevelupMoveArray.h>
 #import <PKMN-ObjC/Database/PKMoveDatabaseEntry.h>
 #import <PKMN-ObjC/Database/PKMoveDatabaseEntryArray.h>
+#import <PKMN-ObjC/Database/PKPokemonDatabaseEntry.h>
+#import <PKMN-ObjC/Database/PKPokemonDatabaseEntryArray.h>
 #import <PKMN-ObjC/Types/PKStringArray.h>
 #import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
 #import <PKMN-ObjC/Types/PKStringPair.h>
@@ -20,6 +22,7 @@
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
 #import <Foundation/Foundation.h>
 
@@ -103,6 +106,22 @@
 
 @end
 
+@interface PKPokemonDatabaseEntryFromCpp: PKPokemonDatabaseEntry
+
+- (PKPokemonDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::pokemon_entry&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
+@interface PKPokemonDatabaseEntryArrayFromCpp: PKPokemonDatabaseEntryArray
+
+- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
 @interface PKStringArrayFromCpp: PKStringArray
 
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance;
@@ -130,6 +149,10 @@
 + (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance;
 
 + (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance;
+
++ (PKPokemonDatabaseEntry*)createPokemonDatabaseEntryFromCpp: (const pkmn::database::pokemon_entry&)cppInstance;
+
++ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance;
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
 
