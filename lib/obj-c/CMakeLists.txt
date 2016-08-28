@@ -31,6 +31,7 @@ SET(pkmn_objc_sources
     ${pkmn_objc_types_sources}
     ${pkmn_objc_utils_sources}
     CppToObjC.mm
+    PKItemSlot.mm
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmn_objc_sources}

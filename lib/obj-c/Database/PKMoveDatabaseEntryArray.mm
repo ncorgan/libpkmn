@@ -9,7 +9,8 @@
 
 #import "CppToObjC.h"
 
-#include <vector>
+#include <pkmn/config.hpp>
+#include <pkmn/database/move_entry.hpp>
 
 #define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::move_list_t*>(arr->_internal)
 
@@ -18,7 +19,7 @@
  * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
  * to access the protected variable.
  */
-static pkmn::database::move_entry* getInternalMoveEntry(
+static PKMN_INLINE pkmn::database::move_entry* getInternalMoveEntry(
     PKMoveDatabaseEntry* objC
 ) {
     void* cpp;

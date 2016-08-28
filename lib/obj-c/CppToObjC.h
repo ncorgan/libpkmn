@@ -8,6 +8,7 @@
 #ifndef PKMN_OBJC_CPPTOOBJC_H
 #define PKMN_OBJC_CPPTOOBJC_H
 
+#import <PKMN-ObjC/PKItemSlot.h>
 #import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
 #import <PKMN-ObjC/Database/PKLevelupMove.h>
 #import <PKMN-ObjC/Database/PKLevelupMoveArray.h>
@@ -19,6 +20,7 @@
 #import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
 #import <PKMN-ObjC/Types/PKStringPair.h>
 
+#include <pkmn/item_slot.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
@@ -141,6 +143,8 @@
 @interface CppToObjC: NSObject
 
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
+
++ (PKItemSlot*)createItemSlotFromCpp: (const pkmn::item_slot&)cppInstance;
 
 + (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance;
 

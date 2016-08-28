@@ -9,16 +9,17 @@
 
 #import "CppToObjC.h"
 
+#include <pkmn/config.hpp>
 #include <pkmn/database/levelup_move.hpp>
 
 #define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::levelup_moves_t*>(arr->_internal)
 
 /*
- * Ugly helper function to extract the internal C++ move entry from the Objective-C
+ * Ugly helper function to extract the internal C++ levelup move from the Objective-C
  * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
  * to access the protected variable.
  */
-static pkmn::database::levelup_move* getInternalLevelupMove(
+static PKMN_INLINE pkmn::database::levelup_move* getInternalLevelupMove(
     PKLevelupMove* objC
 ) {
     void* cpp;

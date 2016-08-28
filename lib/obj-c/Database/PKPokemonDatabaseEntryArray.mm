@@ -9,16 +9,17 @@
 
 #import "CppToObjC.h"
 
-#include <vector>
+#include <pkmn/config.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
 #define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::pokemon_entries_t*>(arr->_internal)
 
 /*
- * Ugly helper function to extract the internal C++ move entry from the Objective-C
+ * Ugly helper function to extract the internal C++ Pokémon entry from the Objective-C
  * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
  * to access the protected variable.
  */
-static pkmn::database::pokemon_entry* getInternalPokemonEntry(
+static PKMN_INLINE pkmn::database::pokemon_entry* getInternalPokemonEntry(
     PKPokemonDatabaseEntry* objC
 ) {
     void* cpp;

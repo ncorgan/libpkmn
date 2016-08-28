@@ -161,6 +161,16 @@
     )
 }
 
++ (PKItemSlot*)createItemSlotFromCpp: (const pkmn::item_slot&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        PKItemSlot* ret = [[PKItemSlot alloc] init];
+        ret->item = [CppToObjC createItemDatabaseEntryFromCpp:cppInstance.item];
+        ret->amount = @(cppInstance.amount);
+
+        return ret;
+    )
+}
+
 + (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance {
     PKMN_CPP_TO_OBJC(
         PKLevelupMove* ret = [[PKLevelupMove alloc] init];
