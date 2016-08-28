@@ -41,6 +41,23 @@
 
 @end
 
+@implementation PKMoveDatabaseEntryArrayFromCpp
+
+- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::database::move_list_t((pkmn::database::move_list_t&&)cppInstance)
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
 @implementation PKStringArrayFromCpp
 
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
@@ -83,7 +100,7 @@
     )
 }
 
-+ (PKLevelupMove*)createLevelupMoveFromCpp: (pkmn::database::levelup_move&)cppInstance {
++ (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance {
     PKMN_CPP_TO_OBJC(
         PKLevelupMove* ret = [[PKLevelupMove alloc] init];
         ret->move = [CppToObjC createMoveDatabaseEntryFromCpp:cppInstance.move];
@@ -96,6 +113,12 @@
 + (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKMoveDatabaseEntry*)[[PKMoveDatabaseEntryFromCpp alloc] initFromCpp:cppInstance];
+    )
+}
+
++ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKMoveDatabaseEntryArray*)[[PKMoveDatabaseEntryArrayFromCpp alloc] initFromCpp:cppInstance];
     )
 }
 

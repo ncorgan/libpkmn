@@ -14,7 +14,7 @@
     void* _internal;
 }
 
-- (PKMoveDatabaseEntry*)initNoneEntry;
+- (PKMoveDatabaseEntry*)init;
 
 - (PKMoveDatabaseEntry*)initWithName:(NSString*)moveName andGame:(NSString*)gameName;
 

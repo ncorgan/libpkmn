@@ -10,7 +10,7 @@
 @implementation PKLevelupMove
 
 - (PKLevelupMove*)init {
-    move = [[PKMoveDatabaseEntry alloc] initNoneEntry];
+    move = [[PKMoveDatabaseEntry alloc] init];
     level = [NSNumber alloc];
     return self;
 }

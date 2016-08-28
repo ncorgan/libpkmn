@@ -11,6 +11,7 @@
 #import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
 #import <PKMN-ObjC/Database/PKLevelupMove.h>
 #import <PKMN-ObjC/Database/PKMoveDatabaseEntry.h>
+#import <PKMN-ObjC/Database/PKMoveDatabaseEntryArray.h>
 #import <PKMN-ObjC/Types/PKStringArray.h>
 #import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
 #import <PKMN-ObjC/Types/PKStringPair.h>
@@ -85,6 +86,14 @@
 
 @end
 
+@interface PKMoveDatabaseEntryArrayFromCpp: PKMoveDatabaseEntryArray
+
+- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
 @interface PKStringArrayFromCpp: PKStringArray
 
 - (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance;
@@ -105,9 +114,11 @@
 
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
 
-+ (PKLevelupMove*)createLevelupMoveFromCpp: (pkmn::database::levelup_move&)cppInstance;
++ (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance;
 
 + (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance;
+
++ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance;
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
 

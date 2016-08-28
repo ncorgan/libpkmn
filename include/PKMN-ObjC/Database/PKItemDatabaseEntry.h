@@ -14,7 +14,7 @@
     void* _internal;
 }
 
-- (PKItemDatabaseEntry*)initNoneEntry;
+- (PKItemDatabaseEntry*)init;
 
 - (PKItemDatabaseEntry*)initWithName:(NSString*)itemName andGame:(NSString*)gameName;
 

@@ -15,7 +15,7 @@
 
 @implementation PKMoveDatabaseEntry
 
-- (PKMoveDatabaseEntry*)initNoneEntry {
+- (PKMoveDatabaseEntry*)init {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
                         new pkmn::database::move_entry

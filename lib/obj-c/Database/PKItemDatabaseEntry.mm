@@ -15,7 +15,7 @@
 
 @implementation PKItemDatabaseEntry
 
-- (PKItemDatabaseEntry*)initNoneEntry {
+- (PKItemDatabaseEntry*)init {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
                         new pkmn::database::item_entry
