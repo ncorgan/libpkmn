@@ -121,7 +121,9 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(os.getcwd()):
         for file in files:
             if file.endswith(".hpp") and file not in ignored_files:
-                output += "{0}\n".format(SWIG_DOC_FUNCTIONS[options.language](CppHeaderParser.CppHeader(os.path.join(root, file))))
+                new_output = SWIG_DOC_FUNCTIONS[options.language](CppHeaderParser.CppHeader(os.path.join(root, file)))
+                if not ("&&" in new_output or "& &" in new_output):
+                    output += "{0}\n".format(new_output)
 
     os.chdir(options.output_dir)
     f = open(SWIG_DOC_FILENAMES[options.language], 'w')
