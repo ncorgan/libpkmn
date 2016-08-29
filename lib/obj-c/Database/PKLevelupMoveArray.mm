@@ -14,17 +14,16 @@
 
 #define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::levelup_moves_t*>(arr->_internal)
 
-/*
- * Ugly helper function to extract the internal C++ levelup move from the Objective-C
- * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
- * to access the protected variable.
- */
-static PKMN_INLINE pkmn::database::levelup_move* getInternalLevelupMove(
+static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
     PKLevelupMove* objC
 ) {
-    void* cpp;
-    object_getInstanceVariable(objC, "_internal", &cpp);
-    return reinterpret_cast<pkmn::database::levelup_move*>(cpp);
+    return pkmn::database::levelup_move(
+               pkmn::database::move_entry(
+                   [[objC->move getName] UTF8String],
+                   [[objC->move getGame] UTF8String]
+               ),
+               [objC->level intValue]
+           );
 }
 
 @implementation PKLevelupMoveArray
@@ -65,8 +64,8 @@ static PKMN_INLINE pkmn::database::levelup_move* getInternalLevelupMove(
 
 - (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move* cppPtr = getInternalLevelupMove((PKLevelupMove*)obj);
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = *cppPtr;
+        pkmn::database::levelup_move cpp(levelup_move_from_objc((PKLevelupMove*)obj));
+        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = cpp;
     )
 }
 
@@ -78,10 +77,10 @@ static PKMN_INLINE pkmn::database::levelup_move* getInternalLevelupMove(
 
 - (void)insertLevelupMove:(PKLevelupMove*)entry atIndex:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move* cppPtr = getInternalLevelupMove(entry);
+        pkmn::database::levelup_move cpp(levelup_move_from_objc(entry));
         CAST_TO_CPP(self)->insert(
             CAST_TO_CPP(self)->begin() + [idx unsignedLongLongValue],
-            *cppPtr
+            cpp
         );
     )
 }
@@ -96,15 +95,15 @@ static PKMN_INLINE pkmn::database::levelup_move* getInternalLevelupMove(
 
 - (void)replaceLevelupMoveAtIndex:(NSNumber*)idx withLevelupMove:(PKLevelupMove*)entry {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move* cppPtr = getInternalLevelupMove(entry);
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = *cppPtr;
+        pkmn::database::levelup_move cpp(levelup_move_from_objc(entry));
+        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = cpp;
     )
 }
 
 - (void)addLevelupMove:(PKLevelupMove*)entry {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move* cppPtr = getInternalLevelupMove(entry);
-        CAST_TO_CPP(self)->push_back(*cppPtr);
+        pkmn::database::levelup_move cpp(levelup_move_from_objc(entry));
+        CAST_TO_CPP(self)->push_back(cpp);
     )
 }
 
