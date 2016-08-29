@@ -8,6 +8,7 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_objc_headers
         PKItemSlot.h
+        PKItemSlotArray.h
     )
 
     INSTALL(

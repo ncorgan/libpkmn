@@ -5,42 +5,42 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#import <PKMN-ObjC/Database/PKLevelupMoveArray.h>
+#import <PKMN-ObjC/PKItemSlotArray.h>
 
 #import "CppToObjC.h"
 
 #include <pkmn/config.hpp>
-#include <pkmn/database/levelup_move.hpp>
+#include <pkmn/item_slot.hpp>
 
-#define CAST_TO_CPP(arr) reinterpret_cast<pkmn::database::levelup_moves_t*>(arr->_internal)
+#define CAST_TO_CPP(arr) reinterpret_cast<pkmn::item_slots_t*>(arr->_internal)
 
-static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
-    PKLevelupMove* objC
+static PKMN_INLINE pkmn::item_slot item_slot_from_objc(
+    PKItemSlot* objC
 ) {
-    return pkmn::database::levelup_move(
-               pkmn::database::move_entry(
-                   [[objC->move getName] UTF8String],
-                   [[objC->move getGame] UTF8String]
+    return pkmn::item_slot(
+               pkmn::database::item_entry(
+                   [[objC->item getName] UTF8String],
+                   [[objC->item getGame] UTF8String]
                ),
-               [objC->level intValue]
+               [objC->amount intValue]
            );
 }
 
-@implementation PKLevelupMoveArray
+@implementation PKItemSlotArray
 
-- (PKLevelupMoveArray*)init {
+- (PKItemSlotArray*)init {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::levelup_moves_t
+                        new pkmn::item_slots_t
                     );
         return self;
     )
 }
 
-- (PKLevelupMoveArray*)initWithSize:(NSNumber*)size {
+- (PKItemSlotArray*)initWithSize:(NSNumber*)size {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::levelup_moves_t(
+                        new pkmn::item_slots_t(
                                [size unsignedLongLongValue]
                             )
                     );
@@ -57,14 +57,14 @@ static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
 
 - (id)objectAtIndexedSubscript:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        const pkmn::database::levelup_move& cpp = (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]];
-        return [CppToObjC createLevelupMoveFromCpp:cpp];
+        const pkmn::item_slot& cpp = (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]];
+        return [CppToObjC createItemSlotFromCpp:cpp];
     )
 }
 
 - (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move cpp(levelup_move_from_objc((PKLevelupMove*)obj));
+        pkmn::item_slot cpp(item_slot_from_objc((PKItemSlot*)obj));
         (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = cpp;
     )
 }
@@ -75,9 +75,9 @@ static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
     )
 }
 
-- (void)insertLevelupMove:(PKLevelupMove*)levelupMove atIndex:(NSNumber*)idx {
+- (void)insertItemSlot:(PKItemSlot*)itemSlot atIndex:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move cpp(levelup_move_from_objc(levelupMove));
+        pkmn::item_slot cpp(item_slot_from_objc(itemSlot));
         CAST_TO_CPP(self)->insert(
             CAST_TO_CPP(self)->begin() + [idx unsignedLongLongValue],
             cpp
@@ -85,7 +85,7 @@ static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
     )
 }
 
-- (void)removeLevelupMoveAtIndex:(NSNumber*)idx {
+- (void)removeItemSlotAtIndex:(NSNumber*)idx {
     PKMN_CPP_TO_OBJC(
         CAST_TO_CPP(self)->erase(
             CAST_TO_CPP(self)->begin() + [idx unsignedLongLongValue]
@@ -93,16 +93,16 @@ static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
     )
 }
 
-- (void)replaceLevelupMoveAtIndex:(NSNumber*)idx withLevelupMove:(PKLevelupMove*)levelupMove {
+- (void)replaceItemSlotAtIndex:(NSNumber*)idx withItemSlot:(PKItemSlot*)itemSlot {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move cpp(levelup_move_from_objc(levelupMove));
+        pkmn::item_slot cpp(item_slot_from_objc(itemSlot));
         (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = cpp;
     )
 }
 
-- (void)addLevelupMove:(PKLevelupMove*)levelupMove {
+- (void)addItemSlot:(PKItemSlot*)itemSlot {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_move cpp(levelup_move_from_objc(levelupMove));
+        pkmn::item_slot cpp(item_slot_from_objc(itemSlot));
         CAST_TO_CPP(self)->push_back(cpp);
     )
 }
@@ -113,22 +113,22 @@ static PKMN_INLINE pkmn::database::levelup_move levelup_move_from_objc(
     )
 }
 
-- (void)removeLastLevelupMove {
+- (void)removeLastItemSlot {
     PKMN_CPP_TO_OBJC(
         CAST_TO_CPP(self)->pop_back();
     )
 }
 
 - (BOOL)isEqual:(id)object {
-    if([object isKindOfClass:[PKLevelupMoveArray class]]) {
-        PKLevelupMoveArray* other = object;
+    if([object isKindOfClass:[PKItemSlotArray class]]) {
+        PKItemSlotArray* other = object;
         return [self isEqualToArray:other];
     } else {
         return NO;
     }
 }
 
-- (BOOL)isEqualToArray:(PKLevelupMoveArray*)other {
+- (BOOL)isEqualToArray:(PKItemSlotArray*)other {
     PKMN_CPP_TO_OBJC(
         return (*CAST_TO_CPP(self) == *CAST_TO_CPP(other));
     )
