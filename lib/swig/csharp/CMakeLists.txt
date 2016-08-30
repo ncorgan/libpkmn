@@ -73,4 +73,28 @@ SWIG_BUILD_CSHARP_MODULE(pkmn_csharp PKMN TRUE)
 SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE)
 SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE)
 
-CSHARP_BUILD_DLL("pkmn-cs" "buildinfo_csharp;calculations_csharp;database_csharp;paths_csharp;pkmn_csharp;stl_csharp")
+SET(swig_modules
+    buildinfo_csharp
+    calculations_csharp
+    database_csharp
+    paths_csharp
+    pkmn_csharp
+    stl_csharp
+)
+
+# Manually edit SWIG output
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${PKMN_SOURCE_DIR}/scripts/fix_csharp_files.py
+    DEPENDS ${swig_modules}
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/CSharpSources/ItemBag.cs # One of many, but it works
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/fix_csharp_files.py --csharp-dir=${CMAKE_CURRENT_BINARY_DIR}/CSharpSources
+    COMMENT "Fixing C# SWIG output"
+)
+ADD_CUSTOM_TARGET(
+    fix_csharp_files ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CSharpSources/ItemBag.cs
+)
+
+# Build the DLL
+CSHARP_BUILD_DLL("pkmn-cs" "${swig_modules}")
+ADD_DEPENDENCIES("pkmn-cs" fix_csharp_files)
