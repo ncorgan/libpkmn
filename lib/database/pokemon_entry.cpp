@@ -51,10 +51,12 @@ namespace pkmn { namespace database {
 
     BOOST_STATIC_CONSTEXPR int ARCEUS_ID = 493;
 
+    BOOST_STATIC_CONSTEXPR int RUBY      = 7;
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
 
+    BOOST_STATIC_CONSTEXPR int RS   = 5;
     BOOST_STATIC_CONSTEXPR int HGSS = 10;
     BOOST_STATIC_CONSTEXPR int ORAS = 16;
 
@@ -73,6 +75,31 @@ namespace pkmn { namespace database {
                (pokemon_index >= UNOWN_B_INDEX and
                 pokemon_index <= (gen2 ? UNOWN_Z_INDEX
                                        : UNOWN_QUESTION_INDEX));
+    }
+
+    static void _query_to_move_list(
+        const char* query,
+        pkmn::database::move_list_t &move_list_out,
+        int pokemon_id,
+        int game_id,
+        int version_group_id,
+        bool tmhm
+    ) {
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, pokemon_id);
+        stmt.bind(2, version_group_id);
+        if(tmhm) {
+            stmt.bind(3, version_group_id);
+        }
+
+        while(stmt.executeStep()) {
+            move_list_out.emplace_back(
+                pkmn::database::move_entry(
+                    int(stmt.getColumn(0)),
+                    game_id
+                )
+            );
+        }
     }
 
     pokemon_entry::pokemon_entry(
@@ -727,12 +754,26 @@ namespace pkmn { namespace database {
         }
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT move_id FROM machines WHERE version_group_id=? AND move_id IN "
+            "SELECT move_id FROM machines WHERE move_id IN "
             "(SELECT move_id FROM pokemon_moves WHERE pokemon_move_method_id=4 AND "
-            "pokemon_id=? AND version_group_id=?) ORDER BY machine_number";
+            "pokemon_id=? AND version_group_id=?) AND version_group_id=? ORDER BY "
+            "machine_number";
+
+        // Gamecube results match Ruby/Sapphire, so use that instead
+        int game_id = 0;
+        int version_group_id = 0;
+        if(game_is_gamecube(_game_id)) {
+            game_id = RUBY;
+            version_group_id = RS;
+        } else {
+            game_id = _game_id;
+            version_group_id = _version_group_id;
+        }
 
         pkmn::database::move_list_t ret;
-        _query_to_move_list(query, ret);
+        _query_to_move_list(
+            query, ret, _pokemon_id, game_id, version_group_id, true
+        );
         return ret;
     }
 
@@ -766,8 +807,21 @@ namespace pkmn { namespace database {
             stmt.bind(1, species_id);
         }
 
+        // Gamecube results match Ruby/Sapphire, so use that instead
+        int game_id = 0;
+        int version_group_id = 0;
+        if(game_is_gamecube(_game_id)) {
+            game_id = RUBY;
+            version_group_id = RS;
+        } else {
+            game_id = _game_id;
+            version_group_id = _version_group_id;
+        }
+
         pkmn::database::move_list_t ret;
-        _query_to_move_list(move_query, ret, species_id);
+        _query_to_move_list(
+            move_query, ret, species_id, game_id, version_group_id, false
+        );
         return ret;
     }
 
@@ -781,7 +835,9 @@ namespace pkmn { namespace database {
             "pokemon_id=? AND version_group_id=?";
 
         pkmn::database::move_list_t ret;
-        _query_to_move_list(query, ret);
+        _query_to_move_list(
+            query, ret, _pokemon_id, _game_id, _version_group_id, false
+        );
         return ret;
     }
 
@@ -831,7 +887,7 @@ namespace pkmn { namespace database {
         const std::string &form_name
     ) {
         if(form_name == "") {
-            _form_id = _pokemon_id = _species_id;
+            _form_id = _pokemon_id = _pokemon_index = _species_id;
             return;
         }
 
@@ -848,6 +904,10 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
             "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?)";
+
+        static BOOST_CONSTEXPR const char* pokemon_index_query = \
+            "SELECT game_index FROM pokemon_game_indices WHERE pokemon_id=? "
+            "AND version_id=?";
 
         SQLite::Statement stmt((*_db), query);
         stmt.bind(1, form_name);
@@ -908,28 +968,10 @@ namespace pkmn { namespace database {
 
         _form_id    = stmt.getColumn(0);
         _pokemon_id = stmt.getColumn(1);
-    }
 
-    void pokemon_entry::_query_to_move_list(
-        const char* query,
-        pkmn::database::move_list_t &move_list_out,
-        int overwrite_pokemon_id
-    ) const {
-        int pokemon_id = (overwrite_pokemon_id == -1) ? _pokemon_id
-                                                      : overwrite_pokemon_id;
-
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, pokemon_id);
-        stmt.bind(2, _version_group_id);
-
-        while(stmt.executeStep()) {
-            move_list_out.emplace_back(
-                pkmn::database::move_entry(
-                    int(stmt.getColumn(0)),
-                    _game_id
-                )
-            );
-        }
+        _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
+                             _db, pokemon_index_query, _pokemon_id, _game_id
+                         );
     }
 
 }}

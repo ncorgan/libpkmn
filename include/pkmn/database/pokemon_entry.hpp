@@ -162,12 +162,6 @@ namespace pkmn { namespace database {
             int _species_id, _pokemon_id, _form_id, _pokemon_index;
             int _game_id, _generation, _version_group_id;
             bool _none, _invalid;
-
-            void _query_to_move_list(
-                const char* query,
-                pkmn::database::move_list_t &move_list_out,
-                int overwrite_pokemon_id = -1
-            ) const;
     };
 
 }}
