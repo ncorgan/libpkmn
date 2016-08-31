@@ -28,6 +28,13 @@ PKMN_CSHARP_INIT
 %ignore make;
 %ignore get_native;
 
+// Bring in our wrapped make functions, don't expose them
+%csmethodmodifiers make_item_bag "
+internal";
+%csmethodmodifiers make_item_list "
+internal";
+%include <pkmn_statics.i>
+
 // Item Slot
 %include <pkmn/item_slot.hpp>
 PKMN_CSHARP_VECTOR(pkmn::item_slot, ItemSlot, ItemSlotList)

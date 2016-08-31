@@ -18,6 +18,24 @@ import os
 SPTR_FILES = ["ItemBag.cs",
               "ItemList.cs"]
 
+# Can these by programatically grabbed from the *_base files?
+SPTR_CTORS = dict(
+                 ItemBag = """
+public ItemBag(string game): this(PKMNPINVOKE.make_item_bag(game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                 ItemList = """
+public ItemList(string name, string game): this(PKMNPINVOKE.make_item_list(name, game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+"""
+             )
+
 def hide_sptr_ctors(filename):
     f = open(filename, "r")
     flines = f.readlines()
@@ -33,7 +51,7 @@ def hide_sptr_ctors(filename):
     for i in range(len(flines)):
         if ctor in flines[i]:
             flines[i-1] = "// \\cond\n"
-            flines[i+7] = "// \\endcond\n"
+            flines[i+7] = "// \\endcond\n{0}\n".format(SPTR_CTORS[class_name])
             break
 
     f = open(filename, "w")
