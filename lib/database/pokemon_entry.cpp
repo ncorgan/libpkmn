@@ -33,9 +33,8 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int SPIKY_EARED_PICHU_ID = 10065;
 
     BOOST_STATIC_CONSTEXPR int UNOWN_INDEX          = 201;
-    BOOST_STATIC_CONSTEXPR int UNOWN_B_INDEX        = 10001;
-    BOOST_STATIC_CONSTEXPR int UNOWN_Z_INDEX        = 10005;
-    BOOST_STATIC_CONSTEXPR int UNOWN_QUESTION_INDEX = 10027;
+    BOOST_STATIC_CONSTEXPR int UNOWN_B_INDEX        = 413;
+    BOOST_STATIC_CONSTEXPR int UNOWN_QUESTION_INDEX = 439;
 
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID         = 386;
     BOOST_STATIC_CONSTEXPR int DEOXYS_GEN3_INDEX = 410;
@@ -55,6 +54,7 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+    BOOST_STATIC_CONSTEXPR int XD        = 20;
 
     BOOST_STATIC_CONSTEXPR int RS   = 5;
     BOOST_STATIC_CONSTEXPR int HGSS = 10;
@@ -69,12 +69,11 @@ namespace pkmn { namespace database {
 
     static PKMN_CONSTEXPR_OR_INLINE bool pokemon_index_is_unown(
         int pokemon_index,
-        bool gen2
+        bool XD
     ) {
         return (pokemon_index == UNOWN_INDEX) or
-               (pokemon_index >= UNOWN_B_INDEX and
-                pokemon_index <= (gen2 ? UNOWN_Z_INDEX
-                                       : UNOWN_QUESTION_INDEX));
+               (pokemon_index >= (XD ? (UNOWN_B_INDEX + 2) : UNOWN_B_INDEX) and
+                pokemon_index >= (XD ? (UNOWN_QUESTION_INDEX + 2) : UNOWN_QUESTION_INDEX));
     }
 
     static void _query_to_move_list(
@@ -141,42 +140,45 @@ namespace pkmn { namespace database {
          */
         if(_none) {
             _species_id = _pokemon_id = _form_id = 0;
-        } else if(_generation == 3) {
-            if(pokemon_index_is_unown(_pokemon_index, false)) {
-                _species_id = _pokemon_id = UNOWN_INDEX;
-                _invalid = false;
+        } else if(_generation == 3 and pokemon_index_is_unown(
+                   _pokemon_index,
+                   (_game_id == XD)
+               ))
+        {
+            _species_id = _pokemon_id = UNOWN_INDEX;
+            _invalid = false;
 
-                static BOOST_CONSTEXPR const char* unown_query = \
-                    "SELECT pokemon_id FROM pokemon_forms WHERE id="
-                    "(SELECT form_id FROM gen3_unown_game_indices "
-                    "WHERE game_index=?)";
+            static BOOST_CONSTEXPR const char* unown_query = \
+                "SELECT pokemon_id FROM pokemon_forms WHERE id="
+                "(SELECT form_id FROM gen3_unown_game_indices "
+                "WHERE game_index=?)";
 
-                _form_id = pkmn::database::query_db_bind1<int, int>(
-                               _db, unown_query, _pokemon_index
-                           );
-            } else if(_pokemon_index == DEOXYS_GEN3_INDEX) {
-                _species_id = DEOXYS_NORMAL_ID;
-                _invalid = false;
-                switch(_game_id) {
-                    case FIRERED:
-                        _pokemon_id = DEOXYS_ATTACK_ID;
-                        _form_id    = DEOXYS_ATTACK_FORM_ID;
-                        break;
+            _form_id = pkmn::database::query_db_bind1<int, int>(
+                           _db, unown_query, _pokemon_index
+                       );
 
-                    case LEAFGREEN:
-                        _pokemon_id = DEOXYS_DEFENSE_ID;
-                        _form_id    = DEOXYS_DEFENSE_FORM_ID;
-                        break;
+        } else if(_generation == 3 and _pokemon_index == DEOXYS_GEN3_INDEX) {
+            _species_id = DEOXYS_NORMAL_ID;
+            _invalid = false;
+            switch(_game_id) {
+                case FIRERED:
+                    _pokemon_id = DEOXYS_ATTACK_ID;
+                    _form_id    = DEOXYS_ATTACK_FORM_ID;
+                    break;
 
-                    case EMERALD:
-                        _pokemon_id = DEOXYS_SPEED_ID;
-                        _form_id    = DEOXYS_SPEED_FORM_ID;
-                        break;
+                case LEAFGREEN:
+                    _pokemon_id = DEOXYS_DEFENSE_ID;
+                    _form_id    = DEOXYS_DEFENSE_FORM_ID;
+                    break;
 
-                    default:
-                        _pokemon_id = _form_id = DEOXYS_NORMAL_ID;
-                        break;
-                }
+                case EMERALD:
+                    _pokemon_id = DEOXYS_SPEED_ID;
+                    _form_id    = DEOXYS_SPEED_FORM_ID;
+                    break;
+
+                default:
+                    _pokemon_id = _form_id = DEOXYS_NORMAL_ID;
+                    break;
             }
         } else {
             static BOOST_CONSTEXPR const char* species_id_query = \
@@ -186,8 +188,9 @@ namespace pkmn { namespace database {
                 "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
 
             try {
+                int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
                 _pokemon_id = pkmn::database::pokemon_index_to_id(
-                                  _pokemon_index, _game_id
+                                  _pokemon_index, game_id
                               );
                 _invalid = false;
             } catch(const std::invalid_argument&) {
@@ -974,15 +977,23 @@ namespace pkmn { namespace database {
             _pokemon_id = stmt.getColumn(1);
         }
 
-        static BOOST_CONSTEXPR const char* pokemon_index_query = \
-            "SELECT game_index FROM pokemon_game_indices WHERE pokemon_id=? "
-            "AND version_id=?";
+        if(_generation == 3 and _species_id == UNOWN_INDEX) {
+            static BOOST_CONSTEXPR const char* unown_query = \
+                "SELECT game_index FROM gen3_unown_game_indices WHERE form_id=?";
 
-        int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
+            _pokemon_index = pkmn::database::query_db_bind1<int, int>(
+                                 _db, unown_query, _form_id
+                             );
+        } else {
+            static BOOST_CONSTEXPR const char* pokemon_index_query = \
+                "SELECT game_index FROM pokemon_game_indices WHERE pokemon_id=? "
+                "AND version_id=?";
 
-        _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
-                             _db, pokemon_index_query, _pokemon_id, game_id
-                         );
+            int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
+            _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
+                                 _db, pokemon_index_query, _pokemon_id, game_id
+                             );
+        }
     }
 
 }}
