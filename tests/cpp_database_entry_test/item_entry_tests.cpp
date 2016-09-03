@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(item_entry_tmhm_test) {
     , std::invalid_argument);
 }
 
-static void _item_entry_test_main(
+static void _item_entry_test_common(
     const pkmn::database::item_entry &item_entry_gen1,
     const pkmn::database::item_entry &item_entry_gen2,
     const pkmn::database::item_entry &item_entry_gba,
@@ -360,27 +360,25 @@ static void _item_entry_test_main(
     BOOST_CHECK_EQUAL(item_entry_gen6.get_fling_effect(), "None");
 }
 
-BOOST_AUTO_TEST_CASE(item_entry_test_main) {
+// Item entries created by index
+static pkmn::database::item_entry byindex_gen1(20, 1);
+static pkmn::database::item_entry byindex_gen2(104, 5);
+static pkmn::database::item_entry byindex_gba(148, 9);
+static pkmn::database::item_entry byindex_gcn(536, 20);
+static pkmn::database::item_entry byindex_gen4(492, 16);
+static pkmn::database::item_entry byindex_gen5(638, 21);
+static pkmn::database::item_entry byindex_gen6(769, 25);
 
-    // Test with item entries created by index
-    pkmn::database::item_entry byindex_gen1(20, 1);
-    pkmn::database::item_entry byindex_gen2(104, 5);
-    pkmn::database::item_entry byindex_gba(148, 9);
-    pkmn::database::item_entry byindex_gcn(536, 20);
-    pkmn::database::item_entry byindex_gen4(492, 16);
-    pkmn::database::item_entry byindex_gen5(638, 21);
-    pkmn::database::item_entry byindex_gen6(769, 25);
+// Item entries created by name
+static pkmn::database::item_entry byname_gen1("Potion", "Red");
+static pkmn::database::item_entry byname_gen2("Pink Bow", "Silver");
+static pkmn::database::item_entry byname_gba("Razz Berry", "Emerald");
+static pkmn::database::item_entry byname_gcn("Battle CD 03", "XD");
+static pkmn::database::item_entry byname_gen4("Fast Ball", "SoulSilver");
+static pkmn::database::item_entry byname_gen5("Reveal Glass", "Black 2");
+static pkmn::database::item_entry byname_gen6("Salamencite", "Omega Ruby");
 
-    // Test with item entries created by name
-    pkmn::database::item_entry byname_gen1("Potion", "Red");
-    pkmn::database::item_entry byname_gen2("Pink Bow", "Silver");
-    pkmn::database::item_entry byname_gba("Razz Berry", "Emerald");
-    pkmn::database::item_entry byname_gcn("Battle CD 03", "XD");
-    pkmn::database::item_entry byname_gen4("Fast Ball", "SoulSilver");
-    pkmn::database::item_entry byname_gen5("Reveal Glass", "Black 2");
-    pkmn::database::item_entry byname_gen6("Salamencite", "Omega Ruby");
-
-    // These should be equal
+BOOST_AUTO_TEST_CASE(item_entry_equality) {
     BOOST_CHECK(byindex_gen1 == byname_gen1);
     BOOST_CHECK(byindex_gen2 == byname_gen2);
     BOOST_CHECK(byindex_gba  == byname_gba);
@@ -389,19 +387,26 @@ BOOST_AUTO_TEST_CASE(item_entry_test_main) {
     BOOST_CHECK(byindex_gen5 == byname_gen5);
     BOOST_CHECK(byindex_gen6 == byname_gen6);
 
-    _item_entry_test_main(
+    BOOST_CHECK(byindex_gen1 != byname_gen2);
+    BOOST_CHECK(byindex_gen2 != byname_gba);
+    BOOST_CHECK(byindex_gba  != byname_gcn);
+    BOOST_CHECK(byindex_gcn  != byname_gen4);
+    BOOST_CHECK(byindex_gen4 != byname_gen5);
+    BOOST_CHECK(byindex_gen5 != byname_gen6);
+}
+
+BOOST_AUTO_TEST_CASE(item_entry_by_index_test) {
+    _item_entry_test_common(
         byindex_gen1, byindex_gen2, byindex_gba,
         byindex_gcn, byindex_gen4, byindex_gen5,
         byindex_gen6
     );
-    _item_entry_test_main(
+}
+
+BOOST_AUTO_TEST_CASE(item_entry_by_name_test) {
+    _item_entry_test_common(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
         byname_gen6
     );
-
-    /*
-     * TODO:
-     *  * Make sure TMs' description have move names, verify for each generation
-     */
 }

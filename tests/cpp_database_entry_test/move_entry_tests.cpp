@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE(move_entry_null_columns_test) {
     BOOST_CHECK_EQUAL(swords_dance.get_base_power(), 0);
 }
 
-static void _move_entry_test_main(
+static void _move_entry_test_common(
     const pkmn::database::move_entry &move_entry_gen1,
     const pkmn::database::move_entry &move_entry_gen2,
     const pkmn::database::move_entry &move_entry_gba,
@@ -422,26 +422,25 @@ static void _move_entry_test_main(
     BOOST_CHECK_EQUAL(move_entry_gen6.get_super_contest_effect(), "None");
 }
 
-BOOST_AUTO_TEST_CASE(move_entry_test_main) {
-    // Test with move entries created by ID
-    pkmn::database::move_entry byid_gen1(89,1);
-    pkmn::database::move_entry byid_gen2(190,5);
-    pkmn::database::move_entry byid_gba(262,7);
-    pkmn::database::move_entry byid_gcn(10003,20);
-    pkmn::database::move_entry byid_gen4(418,13);
-    pkmn::database::move_entry byid_gen5(525,17);
-    pkmn::database::move_entry byid_gen6(609,24);
+// Move entries created by ID
+static pkmn::database::move_entry byid_gen1(89,1);
+static pkmn::database::move_entry byid_gen2(190,5);
+static pkmn::database::move_entry byid_gba(262,7);
+static pkmn::database::move_entry byid_gcn(10003,20);
+static pkmn::database::move_entry byid_gen4(418,13);
+static pkmn::database::move_entry byid_gen5(525,17);
+static pkmn::database::move_entry byid_gen6(609,24);
 
-    // Test with move entries created by name
-    pkmn::database::move_entry byname_gen1("Earthquake", "Red");
-    pkmn::database::move_entry byname_gen2("Octazooka", "Silver");
-    pkmn::database::move_entry byname_gba("Memento", "Ruby");
-    pkmn::database::move_entry byname_gcn("Shadow Blitz", "XD");
-    pkmn::database::move_entry byname_gen4("Bullet Punch", "Pearl");
-    pkmn::database::move_entry byname_gen5("Dragon Tail", "Black");
-    pkmn::database::move_entry byname_gen6("Nuzzle", "Y");
+// Move entries created by name
+static pkmn::database::move_entry byname_gen1("Earthquake", "Red");
+static pkmn::database::move_entry byname_gen2("Octazooka", "Silver");
+static pkmn::database::move_entry byname_gba("Memento", "Ruby");
+static pkmn::database::move_entry byname_gcn("Shadow Blitz", "XD");
+static pkmn::database::move_entry byname_gen4("Bullet Punch", "Pearl");
+static pkmn::database::move_entry byname_gen5("Dragon Tail", "Black");
+static pkmn::database::move_entry byname_gen6("Nuzzle", "Y");
 
-    // These should be equal
+BOOST_AUTO_TEST_CASE(move_entry_equality) {
     BOOST_CHECK(byid_gen1 == byname_gen1);
     BOOST_CHECK(byid_gen2 == byname_gen2);
     BOOST_CHECK(byid_gba  == byname_gba);
@@ -450,12 +449,24 @@ BOOST_AUTO_TEST_CASE(move_entry_test_main) {
     BOOST_CHECK(byid_gen5 == byname_gen5);
     BOOST_CHECK(byid_gen6 == byname_gen6);
 
-    _move_entry_test_main(
+    BOOST_CHECK(byid_gen1 != byname_gen2);
+    BOOST_CHECK(byid_gen2 != byname_gba);
+    BOOST_CHECK(byid_gba  != byname_gcn);
+    BOOST_CHECK(byid_gcn  != byname_gen4);
+    BOOST_CHECK(byid_gen4 != byname_gen5);
+    BOOST_CHECK(byid_gen5 != byname_gen6);
+}
+
+BOOST_AUTO_TEST_CASE(move_entry_by_id_test) {
+    _move_entry_test_common(
         byid_gen1, byid_gen2, byid_gba,
         byid_gcn, byid_gen4, byid_gen5,
         byid_gen6
     );
-    _move_entry_test_main(
+}
+
+BOOST_AUTO_TEST_CASE(move_entry_by_name_test) {
+    _move_entry_test_common(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
         byname_gen6

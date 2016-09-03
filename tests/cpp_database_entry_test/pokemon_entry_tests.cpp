@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(right_evolutions_test) {
     );
 }
 
-static void _pokemon_entry_test_main(
+static void _pokemon_entry_test_common(
     pkmn::database::pokemon_entry &pokemon_entry_gen1,
     pkmn::database::pokemon_entry &pokemon_entry_gen2,
     pkmn::database::pokemon_entry &pokemon_entry_gba,
@@ -647,40 +647,39 @@ static void _pokemon_entry_test_main(
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_pokemon_index(), 700);
 }
 
-BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
-    // Test with Pokémon entries created by index
-    pkmn::database::pokemon_entry byindex_gen1(74,3);
-    pkmn::database::pokemon_entry byindex_gen2(160,4);
-    pkmn::database::pokemon_entry byindex_gba(402,9);
-    pkmn::database::pokemon_entry byindex_gcn(306,20);
-    pkmn::database::pokemon_entry byindex_gen4(401,13);
-    pkmn::database::pokemon_entry byindex_gen5(618,21);
-    pkmn::database::pokemon_entry byindex_gen6(700,26);
+// Pokémon entries created by index
+static pkmn::database::pokemon_entry byindex_gen1(74,3);
+static pkmn::database::pokemon_entry byindex_gen2(160,4);
+static pkmn::database::pokemon_entry byindex_gba(402,9);
+static pkmn::database::pokemon_entry byindex_gcn(306,20);
+static pkmn::database::pokemon_entry byindex_gen4(401,13);
+static pkmn::database::pokemon_entry byindex_gen5(618,21);
+static pkmn::database::pokemon_entry byindex_gen6(700,26);
 
-    // Test with Pokémon entries created by name
-    pkmn::database::pokemon_entry byname_gen1(
-        "Articuno", "Yellow", ""
-    );
-    pkmn::database::pokemon_entry byname_gen2(
-        "Feraligatr", "Gold", ""
-    );
-    pkmn::database::pokemon_entry byname_gba(
-        "Regice", "Emerald", ""
-    );
-    pkmn::database::pokemon_entry byname_gcn(
-        "Shroomish", "XD", ""
-    );
-    pkmn::database::pokemon_entry byname_gen4(
-        "Kricketot", "Pearl", ""
-    );
-    pkmn::database::pokemon_entry byname_gen5(
-        "Stunfisk", "Black 2", ""
-    );
-    pkmn::database::pokemon_entry byname_gen6(
-        "Sylveon", "Alpha Sapphire", ""
-    );
+// Pokémon entries created by name
+static pkmn::database::pokemon_entry byname_gen1(
+    "Articuno", "Yellow", ""
+);
+static pkmn::database::pokemon_entry byname_gen2(
+    "Feraligatr", "Gold", ""
+);
+static pkmn::database::pokemon_entry byname_gba(
+    "Regice", "Emerald", ""
+);
+static pkmn::database::pokemon_entry byname_gcn(
+    "Shroomish", "XD", ""
+);
+static pkmn::database::pokemon_entry byname_gen4(
+    "Kricketot", "Pearl", ""
+);
+static pkmn::database::pokemon_entry byname_gen5(
+    "Stunfisk", "Black 2", ""
+);
+static pkmn::database::pokemon_entry byname_gen6(
+    "Sylveon", "Alpha Sapphire", ""
+);
 
-    // These should be equal
+BOOST_AUTO_TEST_CASE(pokemon_entry_equality) {
     BOOST_CHECK(byindex_gen1 == byname_gen1);
     BOOST_CHECK(byindex_gen2 == byname_gen2);
     BOOST_CHECK(byindex_gba  == byname_gba);
@@ -689,12 +688,24 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
     BOOST_CHECK(byindex_gen5 == byname_gen5);
     BOOST_CHECK(byindex_gen6 == byname_gen6);
 
-    _pokemon_entry_test_main(
+    BOOST_CHECK(byindex_gen1 != byname_gen2);
+    BOOST_CHECK(byindex_gen2 != byname_gba);
+    BOOST_CHECK(byindex_gba  != byname_gcn);
+    BOOST_CHECK(byindex_gcn  != byname_gen4);
+    BOOST_CHECK(byindex_gen4 != byname_gen5);
+    BOOST_CHECK(byindex_gen5 != byname_gen6);
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_entry_by_index_test) {
+    _pokemon_entry_test_common(
         byindex_gen1, byindex_gen2, byindex_gba,
         byindex_gcn, byindex_gen4, byindex_gen5,
         byindex_gen6
     );
-    _pokemon_entry_test_main(
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_entry_by_name_test) {
+    _pokemon_entry_test_common(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,
         byname_gen6
