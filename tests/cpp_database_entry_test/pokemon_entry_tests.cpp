@@ -648,6 +648,15 @@ static void _pokemon_entry_test_main(
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
+    // Test with Pokémon entries created by index
+    pkmn::database::pokemon_entry byindex_gen1(74,3);
+    pkmn::database::pokemon_entry byindex_gen2(160,4);
+    pkmn::database::pokemon_entry byindex_gba(402,9);
+    pkmn::database::pokemon_entry byindex_gcn(306,20);
+    pkmn::database::pokemon_entry byindex_gen4(401,13);
+    pkmn::database::pokemon_entry byindex_gen5(618,21);
+    pkmn::database::pokemon_entry byindex_gen6(700,26);
+
     // Test with Pokémon entries created by name
     pkmn::database::pokemon_entry byname_gen1(
         "Articuno", "Yellow", ""
@@ -671,6 +680,20 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
         "Sylveon", "Alpha Sapphire", ""
     );
 
+    // These should be equal
+    BOOST_CHECK(byindex_gen1 == byname_gen1);
+    BOOST_CHECK(byindex_gen2 == byname_gen2);
+    BOOST_CHECK(byindex_gba  == byname_gba);
+    BOOST_CHECK(byindex_gcn  == byname_gcn);
+    BOOST_CHECK(byindex_gen4 == byname_gen4);
+    BOOST_CHECK(byindex_gen5 == byname_gen5);
+    BOOST_CHECK(byindex_gen6 == byname_gen6);
+
+    _pokemon_entry_test_main(
+        byindex_gen1, byindex_gen2, byindex_gba,
+        byindex_gcn, byindex_gen4, byindex_gen5,
+        byindex_gen6
+    );
     _pokemon_entry_test_main(
         byname_gen1, byname_gen2, byname_gba,
         byname_gcn, byname_gen4, byname_gen5,

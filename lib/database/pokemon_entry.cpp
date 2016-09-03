@@ -180,7 +180,7 @@ namespace pkmn { namespace database {
             }
         } else {
             static BOOST_CONSTEXPR const char* species_id_query = \
-                "SELECT pokemon_species_id FROM pokemon WHERE id=?";
+                "SELECT species_id FROM pokemon WHERE id=?";
 
             static BOOST_CONSTEXPR const char* form_id_query = \
                 "SELECT id FROM pokemon_forms WHERE pokemon_id=?";
