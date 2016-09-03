@@ -891,7 +891,27 @@ namespace pkmn { namespace database {
             return pkmn::database::pokemon_entries_t();
         }
 
-        return pkmn::database::pokemon_entries_t();
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
+            "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE "
+            "evolves_from_species_id=? AND generation_id<=?)";
+
+        pkmn::database::pokemon_entries_t ret;
+        std::string game = this->get_game();
+
+        SQLite::Statement stmt((*_db), query);
+        stmt.bind(1, _species_id);
+        stmt.bind(2, _generation);
+        while(stmt.executeStep()) {
+            ret.emplace_back(
+                pokemon_entry(
+                    std::string(stmt.getColumn(0)),
+                    game, ""
+                )
+            );
+        }
+
+        return ret;
     }
 
     void pokemon_entry::set_form(

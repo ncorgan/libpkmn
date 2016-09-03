@@ -172,6 +172,8 @@ static void _check_eevee_evolutions(
     const pkmn::database::pokemon_entries_t &evolutions,
     int generation
 ) {
+    BOOST_REQUIRE_GE(evolutions.size(), 3);
+
     BOOST_CHECK_EQUAL(evolutions.at(0).get_name(), "Vaporeon");
     BOOST_CHECK_EQUAL(evolutions.at(1).get_name(), "Jolteon");
     BOOST_CHECK_EQUAL(evolutions.at(2).get_name(), "Flareon");
@@ -181,19 +183,21 @@ static void _check_eevee_evolutions(
         BOOST_CHECK_EQUAL(evolutions.at(4).get_name(), "Umbreon");
     } else {
         BOOST_CHECK_EQUAL(evolutions.size(), 3);
+        return;
     }
 
     if(generation >= 4) {
         BOOST_CHECK_EQUAL(evolutions.at(5).get_name(), "Leafeon");
         BOOST_CHECK_EQUAL(evolutions.at(6).get_name(), "Glaceon");
     } else {
-        BOOST_CHECK_EQUAL(evolutions.size(), 7);
+        BOOST_CHECK_EQUAL(evolutions.size(), 5);
+        return;
     }
 
     if(generation >= 6) {
         BOOST_CHECK_EQUAL(evolutions.at(7).get_name(), "Sylveon");
     } else {
-        BOOST_CHECK_EQUAL(evolutions.size(), 8);
+        BOOST_CHECK_EQUAL(evolutions.size(), 7);
     }
 }
 
@@ -256,7 +260,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_name(), "Articuno");
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_game(), "Yellow");
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_species(), "Freeze");
-    (void)pokemon_entry_gen1.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gen1.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gen1.get_height(), 1.7f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen1.get_weight(), 55.4f, 0.0001f);
@@ -302,7 +306,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_name(), "Feraligatr");
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_game(), "Gold");
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_species(), "Big Jaw");
-    (void)pokemon_entry_gen2.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gen2.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gen2.get_height(), 2.3f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen2.get_weight(), 88.8f, 0.0001f);
@@ -343,7 +347,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_GT(pokemon_entry_gen2.get_levelup_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gen2.get_tm_hm_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gen2.get_egg_moves().size(), 0);
-    BOOST_CHECK_GT(pokemon_entry_gen2.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_tutor_moves().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_forms().size(), 1);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_evolutions().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_species_id(), 160);
@@ -357,7 +361,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_name(), "Regice");
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_game(), "Emerald");
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_species(), "Iceberg");
-    (void)pokemon_entry_gba.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gba.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gba.get_height(), 1.8f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gba.get_weight(), 175.0f, 0.0001f);
@@ -401,7 +405,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_level_at_experience(200000), 54);
     BOOST_CHECK_GT(pokemon_entry_gba.get_levelup_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gba.get_tm_hm_moves().size(), 0);
-    BOOST_CHECK_GT(pokemon_entry_gba.get_egg_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gba.get_egg_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gba.get_tutor_moves().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_forms().size(), 1);
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_evolutions().size(), 0);
@@ -416,7 +420,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_name(), "Shroomish");
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_game(), "XD");
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_species(), "Mushroom");
-    (void)pokemon_entry_gcn.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gcn.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gcn.get_height(), 0.4f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gcn.get_weight(), 4.5f, 0.0001f);
@@ -475,7 +479,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_name(), "Kricketot");
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_game(), "Pearl");
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_species(), "Cricket");
-    (void)pokemon_entry_gen4.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gen4.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_height(), 0.3f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_weight(), 2.2f, 0.0001f);
@@ -518,9 +522,9 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_experience_at_level(50), 117360);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_level_at_experience(200000), 59);
     BOOST_CHECK_GT(pokemon_entry_gen4.get_levelup_moves().size(), 0);
-    BOOST_CHECK_GT(pokemon_entry_gen4.get_tm_hm_moves().size(), 0);
-    BOOST_CHECK_GT(pokemon_entry_gen4.get_egg_moves().size(), 0);
-    BOOST_CHECK_GT(pokemon_entry_gen4.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_egg_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_tutor_moves().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_forms().size(), 1);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_evolutions().size(), 1);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_species_id(), 401);
@@ -534,7 +538,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_name(), "Stunfisk");
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_game(), "Black 2");
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_species(), "Trap");
-    (void)pokemon_entry_gen5.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gen5.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_height(), 0.7f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_weight(), 11.0f, 0.0001f);
@@ -593,7 +597,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_name(), "Sylveon");
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_game(), "Alpha Sapphire");
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_species(), "Intertwining");
-    (void)pokemon_entry_gen6.get_pokedex_entry();
+    BOOST_CHECK_GT(pokemon_entry_gen6.get_pokedex_entry().size(), 0);
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_form(), "Standard");
     BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_height(), 1.0f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_weight(), 23.5f, 0.0001f);
