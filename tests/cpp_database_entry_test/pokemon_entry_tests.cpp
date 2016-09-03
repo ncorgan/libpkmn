@@ -462,16 +462,189 @@ static void _pokemon_entry_test_main(
     BOOST_CHECK_GT(pokemon_entry_gcn.get_tm_hm_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gcn.get_egg_moves().size(), 0);
     BOOST_CHECK_GT(pokemon_entry_gcn.get_tutor_moves().size(), 0);
-    BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_forms().size(), 2); // TODO: Shadow
+    BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_forms().size(), 1); // TODO: Shadow
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_evolutions().size(), 1);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_species_id(), 285);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_pokemon_id(), 285);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_form_id(), 285);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_pokemon_index(), 306);
 
-    (void)pokemon_entry_gen4;
-    (void)pokemon_entry_gen5;
-    (void)pokemon_entry_gen6;
+    /*
+     * Generation IV entry
+     */
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_name(), "Kricketot");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_game(), "Pearl");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_species(), "Cricket");
+    (void)pokemon_entry_gen4.get_pokedex_entry();
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_form(), "Standard");
+    BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_height(), 0.3f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_weight(), 2.2f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_chance_male(), 0.5f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_chance_female(), 0.5f, 0.0001f);
+    BOOST_CHECK(pokemon_entry_gen4.has_gender_differences());
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_base_happiness(), 70);
+
+    std::pair<std::string, std::string> types_gen4 = pokemon_entry_gen4.get_types();
+    BOOST_CHECK_EQUAL(types_gen4.first, "Bug");
+    BOOST_CHECK_EQUAL(types_gen4.second, "None");
+
+    std::pair<std::string, std::string> abilities_gen4 = pokemon_entry_gen4.get_abilities();
+    BOOST_CHECK_EQUAL(abilities_gen4.first, "Shed Skin");
+    BOOST_CHECK_EQUAL(abilities_gen4.second, "None");
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_hidden_ability(), "None");
+
+    std::pair<std::string, std::string> egg_groups_gen4 = pokemon_entry_gen4.get_egg_groups();
+    BOOST_CHECK_EQUAL(egg_groups_gen4.first, "Bug");
+    BOOST_CHECK_EQUAL(egg_groups_gen4.second, "None");
+
+    std::map<std::string, int> base_stats_gen4 = pokemon_entry_gen4.get_base_stats();
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("HP"), 37);
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("Attack"), 25);
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("Defense"), 41);
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("Speed"), 25);
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("Special Attack"), 25);
+    BOOST_CHECK_EQUAL(base_stats_gen4.at("Special Defense"), 41);
+
+    std::map<std::string, int> EV_yields_gen4 = pokemon_entry_gen4.get_EV_yields();
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("HP"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("Defense"), 1);
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("Speed"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("Special Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen4.at("Special Defense"), 0);
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_experience_yield(), 54);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_experience_at_level(50), 117360);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_level_at_experience(200000), 59);
+    BOOST_CHECK_GT(pokemon_entry_gen4.get_levelup_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen4.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen4.get_egg_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen4.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_forms().size(), 1);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_evolutions().size(), 1);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_species_id(), 401);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_pokemon_id(), 401);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_form_id(), 401);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_pokemon_index(), 401);
+
+    /*
+     * Generation V entry
+     */
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_name(), "Stunfisk");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_game(), "Black 2");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_species(), "Trap");
+    (void)pokemon_entry_gen5.get_pokedex_entry();
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_form(), "Standard");
+    BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_height(), 0.7f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_weight(), 11.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_chance_male(), 0.5f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_chance_female(), 0.5f, 0.0001f);
+    BOOST_CHECK(not pokemon_entry_gen5.has_gender_differences());
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_base_happiness(), 70);
+
+    std::pair<std::string, std::string> types_gen5 = pokemon_entry_gen5.get_types();
+    BOOST_CHECK_EQUAL(types_gen5.first, "Ground");
+    BOOST_CHECK_EQUAL(types_gen5.second, "Electric");
+
+    std::pair<std::string, std::string> abilities_gen5 = pokemon_entry_gen5.get_abilities();
+    BOOST_CHECK_EQUAL(abilities_gen5.first, "Static");
+    BOOST_CHECK_EQUAL(abilities_gen5.second, "Limber");
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_hidden_ability(), "Sand Veil");
+
+    std::pair<std::string, std::string> egg_groups_gen5 = pokemon_entry_gen5.get_egg_groups();
+    BOOST_CHECK_EQUAL(egg_groups_gen5.first, "Water 1");
+    BOOST_CHECK_EQUAL(egg_groups_gen5.second, "Amorphous");
+
+    std::map<std::string, int> base_stats_gen5 = pokemon_entry_gen5.get_base_stats();
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("HP"), 109);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Attack"), 66);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Defense"), 84);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Speed"), 32);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Special Attack"), 81);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Special Defense"), 59);
+
+    std::map<std::string, int> EV_yields_gen5 = pokemon_entry_gen5.get_EV_yields();
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("HP"), 2);
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("Defense"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("Speed"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("Special Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen5.at("Special Defense"), 0);
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_experience_yield(), 165);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_experience_at_level(50), 125000);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_level_at_experience(200000), 58);
+    BOOST_CHECK_GT(pokemon_entry_gen5.get_levelup_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen5.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen5.get_egg_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen5.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_forms().size(), 1);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_evolutions().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_species_id(), 618);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_pokemon_id(), 618);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_form_id(), 618);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_pokemon_index(), 618);
+
+    /*
+     * Generation VI entry
+     */
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_name(), "Sylveon");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_game(), "Alpha Sapphire");
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_species(), "Intertwining");
+    (void)pokemon_entry_gen6.get_pokedex_entry();
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_form(), "Standard");
+    BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_height(), 1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_weight(), 23.5f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_chance_male(), 0.875f, 0.0001f);
+    BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_chance_female(), 0.125f, 0.0001f);
+    BOOST_CHECK(not pokemon_entry_gen6.has_gender_differences());
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_base_happiness(), 70);
+
+    std::pair<std::string, std::string> types_gen6 = pokemon_entry_gen6.get_types();
+    BOOST_CHECK_EQUAL(types_gen6.first, "Fairy");
+    BOOST_CHECK_EQUAL(types_gen6.second, "None");
+
+    std::pair<std::string, std::string> abilities_gen6 = pokemon_entry_gen6.get_abilities();
+    BOOST_CHECK_EQUAL(abilities_gen6.first, "Cute Charm");
+    BOOST_CHECK_EQUAL(abilities_gen6.second, "None");
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_hidden_ability(), "Pixilate");
+
+    std::pair<std::string, std::string> egg_groups_gen6 = pokemon_entry_gen6.get_egg_groups();
+    BOOST_CHECK_EQUAL(egg_groups_gen6.first, "Field");
+    BOOST_CHECK_EQUAL(egg_groups_gen6.second, "None");
+
+    std::map<std::string, int> base_stats_gen6 = pokemon_entry_gen6.get_base_stats();
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("HP"), 95);
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("Attack"), 65);
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("Defense"), 65);
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("Speed"), 60);
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("Special Attack"), 110);
+    BOOST_CHECK_EQUAL(base_stats_gen6.at("Special Defense"), 130);
+
+    std::map<std::string, int> EV_yields_gen6 = pokemon_entry_gen6.get_EV_yields();
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("HP"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("Defense"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("Speed"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("Special Attack"), 0);
+    BOOST_CHECK_EQUAL(EV_yields_gen6.at("Special Defense"), 2);
+
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_experience_yield(), 184);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_experience_at_level(50), 125000);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_level_at_experience(200000), 58);
+    BOOST_CHECK_GT(pokemon_entry_gen6.get_levelup_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen6.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen6.get_egg_moves().size(), 0);
+    BOOST_CHECK_GT(pokemon_entry_gen6.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_forms().size(), 1);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_evolutions().size(), 0);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_species_id(), 700);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_pokemon_id(), 700);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_form_id(), 700);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_pokemon_index(), 700);
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
@@ -492,10 +665,10 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_test_main) {
         "Kricketot", "Pearl", ""
     );
     pkmn::database::pokemon_entry byname_gen5(
-        "Eelektross", "Black 2", ""
+        "Stunfisk", "Black 2", ""
     );
     pkmn::database::pokemon_entry byname_gen6(
-        "Sylveon", "X", ""
+        "Sylveon", "Alpha Sapphire", ""
     );
 
     _pokemon_entry_test_main(
