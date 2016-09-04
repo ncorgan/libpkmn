@@ -312,10 +312,21 @@ namespace pkmn { namespace database {
         int list_id, int game_id
     );
 
-    bool string_compare(
+
+    PKMN_INLINE bool string_compare(
         const std::string &left,
         const std::string &right
-    );
+    ) {
+        for(std::string::const_iterator lit = left.begin(), rit = right.begin(); lit != left.end() && rit != right.end(); ++lit, ++rit ) {
+            if(tolower(*lit) < tolower(*rit)) {
+                return true;
+            } else if(tolower(*lit) > tolower(*rit)) {
+                return false;
+            }
+        }
+
+        return (left.size() < right.size());
+    }
 
     /*
      * Veekun's database stores item game indices by generation, but

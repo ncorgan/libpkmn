@@ -10,8 +10,10 @@
 
 #include <pkmn/database/lists.hpp>
 
+#include <boost/assign.hpp>
 #include <boost/config.hpp>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace pkmn { namespace database {
@@ -139,14 +141,151 @@ namespace pkmn { namespace database {
         {{170,60003},{0,0},{0,0},{0,0}} // OR/AS
     };
 
+    BOOST_STATIC_CONSTEXPR int num_ranges_in_version_group[] = {
+        0,0,0,3,1,2,3,4,3,3,3,0,0,1,2,1
+    };
+
+    static const std::vector<std::string> location_names_to_fix = boost::assign::list_of
+        ("Café")("Cold Storage")("Magma Hideout")
+        ("Battle Tower")("S.S. Tidal")("Team Aqua Hideout")
+    ;
+
+    PKMN_INLINE void fix_location_vector(
+        std::vector<std::string> &ret,
+        int game_id,
+        bool whole_generation
+    ) {
+        for(size_t i = 0; i < ret.size(); ++i) {
+            if(std::find(
+                   location_names_to_fix.begin(), location_names_to_fix.end(), ret[i]
+               ) != location_names_to_fix.end()
+            ) {
+                int location_id = pkmn::database::location_name_to_id(ret[i]);
+                ret[i] = pkmn::database::fix_location_string(
+                             ret[i], location_id, game_id,
+                             whole_generation
+                         );
+            }
+        }
+    }
+
     std::vector<std::string> get_location_list(
         const std::string &game,
         bool whole_generation
     ) {
-        (void)game;
-        (void)whole_generation;
+        // Connect to database
+        pkmn::database::get_connection(_db);
 
-        return std::vector<std::string>();
+        int game_id          = game_name_to_id(game);
+        int version_group_id = game_id_to_version_group(game_id);
+        int generation       = game_id_to_generation(game_id);
+        std::vector<std::string> ret;
+
+        // TODO: add Generation I locations
+        if(generation == 1) {
+            return ret;
+        }
+
+        if(game_is_gamecube(game_id)) {
+            BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
+
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM location_names WHERE local_language_id=9 AND "
+                "location_id IN (SELECT DISTINCT location_id FROM gamecube_location_index_ranges "
+                "WHERE colosseum IN (?,?))";
+
+            pkmn::database::query_db_list_bind2<std::string, int>(
+                _db, query, ret,
+                (whole_generation ? 0 : ((game_id == COLOSSEUM) ? 1 : 0)),
+                (whole_generation ? 1 : ((game_id == COLOSSEUM) ? 1 : 0))
+            );
+        } else {
+            if(whole_generation) {
+                static BOOST_CONSTEXPR const char* query = \
+                    "SELECT name FROM location_names WHERE local_language_id=9 "
+                    "AND location_id IN (SELECT locations.id FROM locations "
+                    "INNER JOIN location_game_indices ON "
+                    "(locations.id=location_game_indices.location_id) WHERE "
+                    "location_game_indices.generation_id=?)";
+
+                pkmn::database::query_db_list_bind1<std::string, int>(
+                    _db, query, ret, generation
+                );
+            } else {
+                /*
+                 * Figure out how many ranges of item indices there are and form the query
+                 * from there. This looks ugly and verbose, but a constexpr array of strings
+                 * is much faster than dynamically forming the query.
+                 */
+                static BOOST_CONSTEXPR const char* queries[] = {
+                    "",
+
+                    "SELECT name FROM location_names WHERE local_language_id=9 "
+                    "AND location_id IN (SELECT locations.id FROM locations "
+                    "INNER JOIN location_game_indices ON "
+                    "(locations.id=location_game_indices.location_id) WHERE "
+                    "location_game_indices.generation_id=? AND (locations.region_id=? OR locations.region_id IS NULL) "
+                    "AND (location_game_indices.game_index>=? AND location_game_indices.game_index<=?))",
+
+                    "SELECT name FROM location_names WHERE local_language_id=9 "
+                    "AND location_id IN (SELECT locations.id FROM locations "
+                    "INNER JOIN location_game_indices ON "
+                    "(locations.id=location_game_indices.location_id) WHERE "
+                    "location_game_indices.generation_id=? AND (locations.region_id=? OR locations.region_id IS NULL) "
+                    "AND ((location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
+
+                    "SELECT name FROM location_names WHERE local_language_id=9 "
+                    "AND location_id IN (SELECT locations.id FROM locations "
+                    "INNER JOIN location_game_indices ON "
+                    "(locations.id=location_game_indices.location_id) WHERE "
+                    "location_game_indices.generation_id=? AND (locations.region_id=? OR locations.region_id IS NULL) "
+                    "AND ((location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
+
+                    "SELECT name FROM location_names WHERE local_language_id=9 "
+                    "AND location_id IN (SELECT locations.id FROM locations "
+                    "INNER JOIN location_game_indices ON "
+                    "(locations.id=location_game_indices.location_id) WHERE "
+                    "location_game_indices.generation_id=? AND (locations.region_id=? OR locations.region_id IS NULL) "
+                    "AND ((location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?) OR"
+                    "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
+                };
+
+                for(size_t i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
+                    std::cout << game << " " << num_ranges_in_version_group[version_group_id] << std::endl;
+                    SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
+                    stmt.bind(1, generation);
+                    stmt.bind(2, version_group_region_ids[version_group_id][i]);
+
+                    stmt.bind(3, version_group_location_index_bounds[version_group_id][0][0]);
+                    stmt.bind(4, version_group_location_index_bounds[version_group_id][0][1]);
+                    if(num_ranges_in_version_group[version_group_id] > 1) {
+                        stmt.bind(5, version_group_location_index_bounds[version_group_id][1][0]);
+                        stmt.bind(6, version_group_location_index_bounds[version_group_id][1][1]);
+                    }
+                    if(num_ranges_in_version_group[version_group_id] > 2) {
+                        stmt.bind(7, version_group_location_index_bounds[version_group_id][2][0]);
+                        stmt.bind(8, version_group_location_index_bounds[version_group_id][2][1]);
+                    }
+                    if(num_ranges_in_version_group[version_group_id] > 3) {
+                        stmt.bind(9, version_group_location_index_bounds[version_group_id][3][0]);
+                        stmt.bind(10, version_group_location_index_bounds[version_group_id][3][1]);
+                    }
+
+                    while(stmt.executeStep()) {
+                        ret.push_back((const char*)stmt.getColumn(0));
+                    }
+                }
+            }
+        }
+
+        fix_location_vector(ret, game_id, whole_generation);
+        std::sort(ret.begin(), ret.end(), string_compare);
+        return ret;
     }
 
     std::vector<std::string> get_move_list(
