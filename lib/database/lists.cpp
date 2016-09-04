@@ -347,7 +347,16 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_nature_list() {
-        return std::vector<std::string>();
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM nature_names WHERE local_language_id=9 AND "
+            "nature_id IN (SELECT id FROM natures) ORDER BY name";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list<std::string>(
+            _db, query, ret
+        );
+
+        return ret;
     }
 
     std::vector<std::string> get_pokemon_list(
