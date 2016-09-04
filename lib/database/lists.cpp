@@ -167,13 +167,21 @@ namespace pkmn { namespace database {
             _db, main_query, ret, generation
         );
 
+        BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
+        BOOST_STATIC_CONSTEXPR int XD        = 20;
+        BOOST_STATIC_CONSTEXPR int X         = 23;
+        BOOST_STATIC_CONSTEXPR int Y         = 24;
+
         /*
          * Shadow Pokémon in Colosseum only know Shadow Rush, and XD brings in
          * other Shadow moves, so only bring in the relevant Shadow moves in
          * these cases.
+         *
+         * There are also four Generation VI moves that are exclusive to Omega
+         * Ruby and Alpha Sapphire, so get rid of those for X/Y.
          */
         int game_id = game_name_to_id(game);
-        if(game_id == 19) {
+        if(game_id == COLOSSEUM) {
             static BOOST_CONSTEXPR const char* shadow_query = \
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
@@ -181,7 +189,7 @@ namespace pkmn { namespace database {
             pkmn::database::query_db_list<std::string>(
                 _db, shadow_query, ret
             );
-        } else if(game_id == 20) {
+        } else if(game_id == XD) {
             static BOOST_CONSTEXPR const char* shadow_query = \
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
@@ -190,6 +198,10 @@ namespace pkmn { namespace database {
             pkmn::database::query_db_list<std::string>(
                 _db, shadow_query, ret
             );
+        } else if(game_id == X or game_id == Y) {
+            for(size_t i = 0; i < 4; ++i) {
+                ret.pop_back();
+            }
         }
 
         return ret;
@@ -236,12 +248,13 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM region_names WHERE local_language_id=9 "
-            "ORDER BY region_id";
+            "AND region_id<=6 ORDER BY region_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
             _db, query, ret
         );
+        ret.insert(ret.begin()+3, "Orre");
 
         return ret;
     }
@@ -277,14 +290,8 @@ namespace pkmn { namespace database {
 
         BOOST_STATIC_CONSTEXPR int GOLD   = 4;
         BOOST_STATIC_CONSTEXPR int SS     = 16;
-        BOOST_STATIC_CONSTEXPR int BLACK2 = 22;
 
         int game_id = game_name_to_id(game);
-
-        // The Fairy type only exists in Generation VI+
-        if(game_id <= BLACK2) {
-            ret.pop_back();
-        }
 
         // The Shadow type only exists in the Gamecube games
         if(game_is_gamecube(game_id)) {
