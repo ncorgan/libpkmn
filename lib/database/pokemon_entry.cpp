@@ -448,11 +448,49 @@ namespace pkmn { namespace database {
                );
     }
 
+    /*
+     * Some Pokémon had different types before the introduction of the Fairy
+     * type.
+     */
+    BOOST_STATIC_CONSTEXPR int old_normal_only[]    = {35,36,125,126,173,175};
+    BOOST_STATIC_CONSTEXPR int old_normal_primary[] = {176,468};
+    BOOST_STATIC_CONSTEXPR int old_none_secondary[] = {
+        39,40,122,174,183,184,280,281,282,298,303,439,546,547
+    };
+
+    static PKMN_INLINE bool species_id_had_normal_only(
+        int species_id
+    ) {
+        return (std::find(old_normal_only, old_normal_only+6, species_id) != (old_normal_only+6));
+    }
+
+    static PKMN_CONSTEXPR_OR_INLINE bool species_id_had_normal_primary(
+        int species_id
+    ) {
+        return (species_id == old_normal_primary[0]) or
+               (species_id == old_normal_primary[1]);
+    }
+
+    static PKMN_INLINE bool species_id_had_none_secondary(
+        int species_id
+    ) {
+        return (std::find(old_none_secondary, old_none_secondary+14, species_id) != (old_none_secondary+14));
+    }
+
+    static const std::pair<std::string, std::string> normal_only_pair = std::make_pair(
+        "Normal", "None"
+    );    
+
     std::pair<std::string, std::string> pokemon_entry::get_types() const {
         if(_none) {
             return std::make_pair("None", "None");
         } else if(_invalid) {
             return std::make_pair("Unknown", "Unknown");
+        }
+
+        // Corner cases
+        if(_generation < 6 and species_id_had_normal_only(_species_id)) {
+            return normal_only_pair;
         }
 
         static BOOST_CONSTEXPR const char* query1 = \
@@ -469,6 +507,12 @@ namespace pkmn { namespace database {
         if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
                _db, query2, ret.second, _pokemon_id
            )) {
+            ret.second = "None";
+        }
+
+        if(_generation < 6 and species_id_had_normal_primary(_species_id)) {
+            ret.first = "Normal";
+        } else if(_generation < 6 and species_id_had_none_secondary(_species_id)) {
             ret.second = "None";
         }
 

@@ -203,13 +203,7 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
      * Generation VI
      */
     std::vector<std::string> items_xy   = pkmn::database::get_item_list("X");
-    std::vector<std::string> items_oras = pkmn::database::get_item_list("Omega Rubby");
-
-    BOOST_CHECK(string_in_vector(items_xy, "Bicycle"));
-    BOOST_CHECK(not string_in_vector(items_oras, "Bicycle"));
-
-    BOOST_CHECK(not string_in_vector(items_xy, "Bike"));
-    BOOST_CHECK(string_in_vector(items_oras, "Bike"));
+    std::vector<std::string> items_oras = pkmn::database::get_item_list("Omega Ruby");
 
     BOOST_CHECK(not string_in_vector(items_xy, "Slowbronite"));
     BOOST_CHECK(string_in_vector(items_oras, "Slowbronite"));
@@ -226,16 +220,108 @@ BOOST_AUTO_TEST_CASE(move_list_test) {
 }
 
 BOOST_AUTO_TEST_CASE(nature_list_test) {
-    // TODO: test good cases
+    std::vector<std::string> natures = pkmn::database::get_nature_list();
+    BOOST_CHECK_EQUAL(natures.size(), 25);
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_list_test) {
-    // TODO: make sure function checks for bad generation
-    //       test good cases, make sure include_previous parameter works
+    std::vector<std::string> pokemon0, pokemon1,
+                             pokemon2, pokemon3,
+                             pokemon4, pokemon5,
+                             pokemon6, pokemon7;
+
+    BOOST_CHECK_THROW(
+        pokemon0 = pkmn::database::get_pokemon_list(0, true);
+    , std::out_of_range);
+    BOOST_CHECK_THROW(
+        pokemon7 = pkmn::database::get_pokemon_list(7, true);
+    , std::out_of_range);
+
+    /*
+     * Generation I
+     */
+    pokemon1 = pkmn::database::get_pokemon_list(1, true);
+    BOOST_CHECK_EQUAL(pokemon1.size(), 151);
+    BOOST_CHECK_EQUAL(pokemon1.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon1.back(), "Mew");
+
+    pokemon1 = pkmn::database::get_pokemon_list(1, false);
+    BOOST_CHECK_EQUAL(pokemon1.size(), 151);
+    BOOST_CHECK_EQUAL(pokemon1.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon1.back(), "Mew");
+
+    /*
+     * Generation II
+     */
+    pokemon2 = pkmn::database::get_pokemon_list(2, true);
+    BOOST_CHECK_EQUAL(pokemon2.size(),  251);
+    BOOST_CHECK_EQUAL(pokemon2.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon2.back(),  "Celebi");
+
+    pokemon2 = pkmn::database::get_pokemon_list(2, false);
+    BOOST_CHECK_EQUAL(pokemon2.size(),  100);
+    BOOST_CHECK_EQUAL(pokemon2.front(), "Chikorita");
+    BOOST_CHECK_EQUAL(pokemon2.back(),  "Celebi");
+
+    /*
+     * Generation III
+     */
+    pokemon3 = pkmn::database::get_pokemon_list(3, true);
+    BOOST_CHECK_EQUAL(pokemon3.size(),  386);
+    BOOST_CHECK_EQUAL(pokemon3.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon3.back(),  "Deoxys");
+
+    pokemon3 = pkmn::database::get_pokemon_list(3, false);
+    BOOST_CHECK_EQUAL(pokemon3.size(),  135);
+    BOOST_CHECK_EQUAL(pokemon3.front(), "Treecko");
+    BOOST_CHECK_EQUAL(pokemon3.back(),  "Deoxys");
+
+    /*
+     * Generation IV
+     */
+    pokemon4 = pkmn::database::get_pokemon_list(4, true);
+    BOOST_CHECK_EQUAL(pokemon4.size(),  493);
+    BOOST_CHECK_EQUAL(pokemon4.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon4.back(),  "Arceus");
+
+    pokemon4 = pkmn::database::get_pokemon_list(4, false);
+    BOOST_CHECK_EQUAL(pokemon4.size(),  107);
+    BOOST_CHECK_EQUAL(pokemon4.front(), "Turtwig");
+    BOOST_CHECK_EQUAL(pokemon4.back(),  "Arceus");
+
+    /*
+     * Generation V
+     */
+    pokemon5 = pkmn::database::get_pokemon_list(5, true);
+    BOOST_CHECK_EQUAL(pokemon5.size(),  649);
+    BOOST_CHECK_EQUAL(pokemon5.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon5.back(),  "Genesect");
+
+    pokemon5 = pkmn::database::get_pokemon_list(5, false);
+    BOOST_CHECK_EQUAL(pokemon5.size(),  156);
+    BOOST_CHECK_EQUAL(pokemon5.front(), "Victini");
+    BOOST_CHECK_EQUAL(pokemon5.back(),  "Genesect");
+
+    /*
+     * Generation VI
+     */
+    pokemon6 = pkmn::database::get_pokemon_list(6, true);
+    BOOST_CHECK_EQUAL(pokemon6.size(),  721);
+    BOOST_CHECK_EQUAL(pokemon6.front(), "Bulbasaur");
+    BOOST_CHECK_EQUAL(pokemon6.back(),  "Volcanion");
+
+    pokemon6 = pkmn::database::get_pokemon_list(6, false);
+    BOOST_CHECK_EQUAL(pokemon6.size(),  72);
+    BOOST_CHECK_EQUAL(pokemon6.front(), "Chespin");
+    BOOST_CHECK_EQUAL(pokemon6.back(),  "Volcanion");
 }
 
 BOOST_AUTO_TEST_CASE(region_list_test) {
-    // TODO: confirm length
+    std::vector<std::string> regions = pkmn::database::get_region_list();
+    BOOST_CHECK_EQUAL(regions.size(), 7);
+    BOOST_CHECK_EQUAL(regions.front(), "Kanto");
+    BOOST_CHECK_EQUAL(regions.back(), "Kalos");
+    BOOST_CHECK(string_in_vector(regions, "Orre"));
 }
 
 BOOST_AUTO_TEST_CASE(ribbon_list_test) {
@@ -248,6 +334,92 @@ BOOST_AUTO_TEST_CASE(super_training_medal_list_test) {
 }
 
 BOOST_AUTO_TEST_CASE(type_list_test) {
-    // TODO: make sure function checks for bad game
-    //       make sure Shadow only appears for Gamecube games
+    std::vector<std::string> types_bad,  types_gen1,
+                             types_gen2, types_gba,
+                             types_gcn,  types_gen4,
+                             types_gen5, types_gen6;
+
+    /*
+     * Make sure invalid games fail.
+     */
+    BOOST_CHECK_THROW(
+        types_bad = pkmn::database::get_type_list("Not a game");
+    , std::invalid_argument);
+
+    /*
+     * Generation I
+     */
+    types_gen1 = pkmn::database::get_type_list("Red");
+    BOOST_CHECK_EQUAL(types_gen1.size(), 15);
+    BOOST_CHECK(not string_in_vector(types_gen1, "Dark"));
+    BOOST_CHECK(not string_in_vector(types_gen1, "Steel"));
+    BOOST_CHECK(not string_in_vector(types_gen1, "???"));
+    BOOST_CHECK(not string_in_vector(types_gen1, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gen1, "Fairy"));
+
+    /*
+     * Generation II
+     */
+    types_gen2 = pkmn::database::get_type_list("Silver");
+    BOOST_CHECK_EQUAL(types_gen2.size(), 18);
+    BOOST_CHECK(string_in_vector(types_gen2, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gen2, "Steel"));
+    BOOST_CHECK(string_in_vector(types_gen2, "???"));
+    BOOST_CHECK(not string_in_vector(types_gen2, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gen2, "Fairy"));
+
+    /*
+     * Game Boy Advance
+     */
+    types_gba = pkmn::database::get_type_list("Emerald");
+    BOOST_CHECK_EQUAL(types_gba.size(), 18);
+    BOOST_CHECK(string_in_vector(types_gba, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gba, "Steel"));
+    BOOST_CHECK(string_in_vector(types_gba, "???"));
+    BOOST_CHECK(not string_in_vector(types_gba, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gba, "Fairy"));
+
+    /*
+     * Gamecube
+     */
+    types_gcn = pkmn::database::get_type_list("XD");
+    BOOST_CHECK_EQUAL(types_gcn.size(), 19);
+    BOOST_CHECK(string_in_vector(types_gcn, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gcn, "Steel"));
+    BOOST_CHECK(string_in_vector(types_gcn, "???"));
+    BOOST_CHECK(string_in_vector(types_gcn, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gcn, "Fairy"));
+
+    /*
+     * Generation IV
+     */
+    types_gen4 = pkmn::database::get_type_list("Platinum");
+    BOOST_CHECK_EQUAL(types_gen4.size(), 19);
+    BOOST_CHECK(string_in_vector(types_gen4, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gen4, "Steel"));
+    BOOST_CHECK(string_in_vector(types_gen4, "???"));
+    BOOST_CHECK(string_in_vector(types_gen4, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gen4, "Fairy"));
+
+    /*
+     * Generation V
+     */
+    types_gen5 = pkmn::database::get_type_list("Platinum");
+    BOOST_CHECK_EQUAL(types_gen5.size(), 17);
+    BOOST_CHECK(string_in_vector(types_gen5, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gen5, "Steel"));
+    BOOST_CHECK(not string_in_vector(types_gen5, "???"));
+    BOOST_CHECK(not string_in_vector(types_gen5, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gen5, "Fairy"));
+
+    /*
+     * Generation VI
+     */
+    types_gen6 = pkmn::database::get_type_list("Platinum");
+    BOOST_CHECK_EQUAL(types_gen6.size(), 18);
+    BOOST_CHECK(string_in_vector(types_gen6, "Dark"));
+    BOOST_CHECK(string_in_vector(types_gen6, "Steel"));
+    BOOST_CHECK(not string_in_vector(types_gen6, "???"));
+    BOOST_CHECK(not string_in_vector(types_gen6, "Shadow"));
+    BOOST_CHECK(string_in_vector(types_gen6, "Fairy"));
 }

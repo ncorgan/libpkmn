@@ -275,10 +275,25 @@ namespace pkmn { namespace database {
             _db, query, ret, generation
         );
 
-        // The Shadow type only exists in the Gamecube games
+        BOOST_STATIC_CONSTEXPR int GOLD   = 4;
+        BOOST_STATIC_CONSTEXPR int SS     = 16;
+        BOOST_STATIC_CONSTEXPR int BLACK2 = 22;
+
         int game_id = game_name_to_id(game);
+
+        // The Fairy type only exists in Generation VI+
+        if(game_id <= BLACK2) {
+            ret.pop_back();
+        }
+
+        // The Shadow type only exists in the Gamecube games
         if(game_is_gamecube(game_id)) {
             ret.emplace_back("Shadow");
+        }
+
+        // The ??? type only exists in Generations II-II
+        if((game_id >= GOLD and game_id <= SS) or game_is_gamecube(game_id)) {
+            ret.emplace_back("???");
         }
 
         return ret;

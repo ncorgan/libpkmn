@@ -151,6 +151,22 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_wrong_game_test) {
  * reflect that in their entries.
  */
 BOOST_AUTO_TEST_CASE(changing_type_test) {
+    pkmn::database::pokemon_entry clefairy5(
+        "Clefairy", "Black", ""
+    );
+    pkmn::database::pokemon_entry clefairy6(
+        "Clefairy", "Y", ""
+    );
+
+    std::pair<std::string, std::string> clefairy_types5 = clefairy5.get_types();
+    std::pair<std::string, std::string> clefairy_types6 = clefairy6.get_types();
+
+    BOOST_CHECK_EQUAL(clefairy_types5.first, "Normal");
+    BOOST_CHECK_EQUAL(clefairy_types5.second, "None");
+
+    BOOST_CHECK_EQUAL(clefairy_types6.first, "Fairy");
+    BOOST_CHECK_EQUAL(clefairy_types6.second, "None");
+
     pkmn::database::pokemon_entry jigglypuff5(
         "Jigglypuff", "Black", ""
     );
@@ -158,14 +174,14 @@ BOOST_AUTO_TEST_CASE(changing_type_test) {
         "Jigglypuff", "Y", ""
     );
 
-    std::pair<std::string, std::string> types5 = jigglypuff5.get_types();
-    std::pair<std::string, std::string> types6 = jigglypuff6.get_types();
+    std::pair<std::string, std::string> jigglypuff_types5 = jigglypuff5.get_types();
+    std::pair<std::string, std::string> jigglypuff_types6 = jigglypuff6.get_types();
 
-    BOOST_CHECK_EQUAL(types5.first, "Normal");
-    BOOST_CHECK_EQUAL(types5.second, "None");
+    BOOST_CHECK_EQUAL(jigglypuff_types5.first, "Normal");
+    BOOST_CHECK_EQUAL(jigglypuff_types5.second, "None");
 
-    BOOST_CHECK_EQUAL(types6.first, "Normal");
-    BOOST_CHECK_EQUAL(types6.second, "Fairy");
+    BOOST_CHECK_EQUAL(jigglypuff_types6.first, "Normal");
+    BOOST_CHECK_EQUAL(jigglypuff_types6.second, "Fairy");
 }
 
 static void _check_eevee_evolutions(
@@ -567,7 +583,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(base_stats_gen5.at("Defense"), 84);
     BOOST_CHECK_EQUAL(base_stats_gen5.at("Speed"), 32);
     BOOST_CHECK_EQUAL(base_stats_gen5.at("Special Attack"), 81);
-    BOOST_CHECK_EQUAL(base_stats_gen5.at("Special Defense"), 59);
+    BOOST_CHECK_EQUAL(base_stats_gen5.at("Special Defense"), 99);
 
     std::map<std::string, int> EV_yields_gen5 = pokemon_entry_gen5.get_EV_yields();
     BOOST_CHECK_EQUAL(EV_yields_gen5.at("HP"), 2);
