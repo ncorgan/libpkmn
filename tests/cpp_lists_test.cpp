@@ -210,13 +210,361 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
 }
 
 BOOST_AUTO_TEST_CASE(location_list_test) {
-    // TODO: make sure function checks for bad game input
-    //       test good cases, whole_generation parameter
+    std::vector<std::string> locations_bad, locations_gen1,
+                             locations_gs, locations_c,
+                             locations_rs, locations_e,
+                             locations_frlg, locations_colo,
+                             locations_xd, locations_dp,
+                             locations_pt, locations_hgss,
+                             locations_bw, locations_b2w2,
+                             locations_xy, locations_oras;
+
+    /*
+     * Make sure invalid games fail.
+     */
+    BOOST_CHECK_THROW(
+        locations_bad = pkmn::database::get_location_list("Not a game", true);
+    , std::invalid_argument);
+
+    /*
+     * Generation I
+     */
+    locations_gen1 = pkmn::database::get_location_list("Red", true);
+    BOOST_CHECK_GT(locations_gen1.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_gen1, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_gen1, "Cerulean Cave"));
+
+    locations_gen1 = pkmn::database::get_location_list("Red", false);
+    BOOST_CHECK_GT(locations_gen1.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_gen1, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_gen1, "Cerulean Cave"));
+
+    /*
+     * Gold/Silver
+     */
+    locations_gs = pkmn::database::get_location_list("Silver", true);
+    BOOST_CHECK_GT(locations_gs.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_gs, "Sprout Tower"));
+    BOOST_CHECK(string_in_vector(locations_gs, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_gs, "Battle Tower"));
+
+    locations_gs = pkmn::database::get_location_list("Silver", false);
+    BOOST_CHECK_GT(locations_gs.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_gs, "Sprout Tower"));
+    BOOST_CHECK(string_in_vector(locations_gs, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_gs, "Battle Tower"));
+
+    /*
+     * Crystal
+     */
+    locations_c = pkmn::database::get_location_list("Crystal", true);
+    BOOST_CHECK_GT(locations_c.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_c, "Sprout Tower"));
+    BOOST_CHECK(string_in_vector(locations_c, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_c, "Battle Tower"));
+
+    locations_c = pkmn::database::get_location_list("Crystal", false);
+    BOOST_CHECK_GT(locations_c.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_c, "Sprout Tower"));
+    BOOST_CHECK(string_in_vector(locations_c, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_c, "Battle Tower"));
+
+    /*
+     * Ruby/Sapphire
+     */
+    locations_rs = pkmn::database::get_location_list("Ruby", true);
+    BOOST_CHECK_GT(locations_rs.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_rs, "New Mauville"));
+    BOOST_CHECK(string_in_vector(locations_rs, "Artisan Cave"));
+    BOOST_CHECK(string_in_vector(locations_rs, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Kaminko's House"));
+
+    locations_rs = pkmn::database::get_location_list("Ruby", false);
+    BOOST_CHECK_GT(locations_rs.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_rs, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_rs, "Kaminko's House"));
+
+    /*
+     * Emerald
+     */
+    locations_e = pkmn::database::get_location_list("Emerald", true);
+    BOOST_CHECK_GT(locations_e.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_e, "New Mauville"));
+    BOOST_CHECK(string_in_vector(locations_e, "Artisan Cave"));
+    BOOST_CHECK(string_in_vector(locations_e, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_e, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_e, "Kaminko's House"));
+
+    locations_e = pkmn::database::get_location_list("Emerald", false);
+    BOOST_CHECK_GT(locations_e.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_e, "New Mauville"));
+    BOOST_CHECK(string_in_vector(locations_e, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_e, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_e, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_e, "Kaminko's House"));
+
+    /*
+     * FireRed/LeafGreen
+     */
+    locations_frlg = pkmn::database::get_location_list("LeafGreen", true);
+    BOOST_CHECK_GT(locations_frlg.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_frlg, "New Mauville"));
+    BOOST_CHECK(string_in_vector(locations_frlg, "Artisan Cave"));
+    BOOST_CHECK(string_in_vector(locations_frlg, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_frlg, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_frlg, "Kaminko's House"));
+
+    locations_frlg = pkmn::database::get_location_list("LeafGreen", false);
+    BOOST_CHECK_GT(locations_frlg.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_frlg, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_frlg, "Artisan Cave"));
+    BOOST_CHECK(string_in_vector(locations_frlg, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_frlg, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_frlg, "Kaminko's House"));
+
+    /*
+     * Colosseum
+     */
+    locations_colo = pkmn::database::get_location_list("Colosseum", true);
+    BOOST_CHECK_GT(locations_colo.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_colo, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_colo, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_colo, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_colo, "Pyrite Town"));
+    BOOST_CHECK(string_in_vector(locations_colo, "Kaminko's House"));
+
+    locations_colo = pkmn::database::get_location_list("Colosseum", false);
+    BOOST_CHECK_GT(locations_colo.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_colo, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_colo, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_colo, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_colo, "Pyrite Town"));
+    BOOST_CHECK(not string_in_vector(locations_colo, "Kaminko's House"));
+
+    /*
+     * XD
+     */
+    locations_xd = pkmn::database::get_location_list("XD", true);
+    BOOST_CHECK_GT(locations_xd.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_xd, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_xd, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_xd, "Pallet Town"));
+    BOOST_CHECK(string_in_vector(locations_xd, "Pyrite Town"));
+    BOOST_CHECK(string_in_vector(locations_xd, "Kaminko's House"));
+
+    locations_xd = pkmn::database::get_location_list("XD", false);
+    BOOST_CHECK_GT(locations_xd.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_xd, "New Mauville"));
+    BOOST_CHECK(not string_in_vector(locations_xd, "Artisan Cave"));
+    BOOST_CHECK(not string_in_vector(locations_xd, "Pallet Town"));
+    BOOST_CHECK(not string_in_vector(locations_xd, "Pyrite Town"));
+    BOOST_CHECK(string_in_vector(locations_xd, "Kaminko's House"));
+
+    /*
+     * Diamond/Pearl
+     */
+    locations_dp = pkmn::database::get_location_list("Diamond", true);
+    BOOST_CHECK_GT(locations_dp.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_dp, "Route 221"));
+    BOOST_CHECK(string_in_vector(locations_dp, "Distortion World"));
+    BOOST_CHECK(string_in_vector(locations_dp, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_dp, "PC Tokyo"));
+
+    locations_dp = pkmn::database::get_location_list("Diamond", false);
+    BOOST_CHECK_GT(locations_dp.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_dp, "Route 221"));
+    BOOST_CHECK(not string_in_vector(locations_dp, "Distortion World"));
+    BOOST_CHECK(not string_in_vector(locations_dp, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_dp, "PC Tokyo"));
+
+    /*
+     * Platinum
+     */
+    locations_pt = pkmn::database::get_location_list("Platinum", true);
+    BOOST_CHECK_GT(locations_pt.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_pt, "Route 221"));
+    BOOST_CHECK(string_in_vector(locations_pt, "Distortion World"));
+    BOOST_CHECK(string_in_vector(locations_pt, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_pt, "PC Tokyo"));
+
+    locations_pt = pkmn::database::get_location_list("Platinum", false);
+    BOOST_CHECK_GT(locations_pt.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_pt, "Route 221"));
+    BOOST_CHECK(string_in_vector(locations_pt, "Distortion World"));
+    BOOST_CHECK(not string_in_vector(locations_pt, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_pt, "PC Tokyo"));
+
+    /*
+     * HeartGold/SoulSilver
+     */
+    locations_hgss = pkmn::database::get_location_list("HeartGold", true);
+    BOOST_CHECK_GT(locations_hgss.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_hgss, "Route 221"));
+    BOOST_CHECK(string_in_vector(locations_hgss, "Distortion World"));
+    BOOST_CHECK(string_in_vector(locations_hgss, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_hgss, "PC Tokyo"));
+
+    locations_hgss = pkmn::database::get_location_list("HeartGold", false);
+    BOOST_CHECK_GT(locations_hgss.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_hgss, "Route 221"));
+    BOOST_CHECK(not string_in_vector(locations_hgss, "Distortion World"));
+    BOOST_CHECK(string_in_vector(locations_hgss, "Sinjoh Ruins"));
+    BOOST_CHECK(string_in_vector(locations_hgss, "PC Tokyo"));
+
+    /*
+     * Black/White
+     */
+    locations_bw = pkmn::database::get_location_list("White", true);
+    BOOST_CHECK_GT(locations_bw.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_bw, "Cold Storage"));
+    BOOST_CHECK(string_in_vector(locations_bw, "PWT"));
+    BOOST_CHECK(string_in_vector(locations_bw, "Castelia Sewers"));
+    BOOST_CHECK(string_in_vector(locations_bw, "PC Tokyo"));
+
+    locations_bw = pkmn::database::get_location_list("White", false);
+    BOOST_CHECK_GT(locations_bw.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_bw, "Cold Storage"));
+    BOOST_CHECK(not string_in_vector(locations_bw, "PWT"));
+    BOOST_CHECK(not string_in_vector(locations_bw, "Castelia Sewers"));
+    BOOST_CHECK(string_in_vector(locations_bw, "PC Tokyo"));
+
+    /*
+     * Black 2/White 2
+     */
+    locations_b2w2 = pkmn::database::get_location_list("White 2", true);
+    BOOST_CHECK_GT(locations_b2w2.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_b2w2, "Cold Storage"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "PWT"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "Castelia Sewers"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "PC Tokyo"));
+
+    locations_b2w2 = pkmn::database::get_location_list("White 2", false);
+    BOOST_CHECK_GT(locations_b2w2.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_b2w2, "Cold Storage"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "PWT"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "Castelia Sewers"));
+    BOOST_CHECK(string_in_vector(locations_b2w2, "PC Tokyo"));
+
+    /*
+     * X/Y
+     */
+    locations_xy = pkmn::database::get_location_list("X", true);
+    BOOST_CHECK_GT(locations_xy.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_xy, "Zubat Roost"));
+    BOOST_CHECK(string_in_vector(locations_xy, "Route 101"));
+    BOOST_CHECK(string_in_vector(locations_xy, "PC Tokyo"));
+
+    locations_xy = pkmn::database::get_location_list("X", false);
+    BOOST_CHECK_GT(locations_xy.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_xy, "Zubat Roost"));
+    BOOST_CHECK(not string_in_vector(locations_xy, "Route 101"));
+    BOOST_CHECK(string_in_vector(locations_xy, "PC Tokyo"));
+
+    /*
+     * Omega Ruby/Alpha Sapphire
+     */
+    locations_oras = pkmn::database::get_location_list("Omega Ruby", true);
+    BOOST_CHECK_GT(locations_oras.size(), 0);
+    BOOST_CHECK(string_in_vector(locations_oras, "Zubat Roost"));
+    BOOST_CHECK(string_in_vector(locations_oras, "Route 101"));
+    BOOST_CHECK(string_in_vector(locations_oras, "PC Tokyo"));
+
+    locations_oras = pkmn::database::get_location_list("Omega Ruby", false);
+    BOOST_CHECK_GT(locations_oras.size(), 0);
+    BOOST_CHECK(not string_in_vector(locations_oras, "Zubat Roost"));
+    BOOST_CHECK(string_in_vector(locations_oras, "Route 101"));
+    BOOST_CHECK(string_in_vector(locations_oras, "PC Tokyo"));
 }
 
 BOOST_AUTO_TEST_CASE(move_list_test) {
-    // TODO: make sure function checks for bad game input
-    //       test good cases
+    std::vector<std::string> types_bad,  types_gen1,
+                             types_gen2, types_gba,
+                             types_colo, types_xd,
+                             types_gen4, types_gen5,
+                             types_xy,   types_oras;
+
+    /*
+     * Make sure invalid games fail.
+     */
+    BOOST_CHECK_THROW(
+        types_bad = pkmn::database::get_type_list("Not a game");
+    , std::invalid_argument);
+
+    /*
+     * Generation I
+     */
+    types_gen1 = pkmn::database::get_move_list("Red");
+    BOOST_CHECK_EQUAL(types_gen1.size(), 165);
+    BOOST_CHECK_EQUAL(types_gen1.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_gen1.back(), "Struggle");
+
+    /*
+     * Generation II
+     */
+    types_gen2 = pkmn::database::get_move_list("Gold");
+    BOOST_CHECK_EQUAL(types_gen2.size(), 251);
+    BOOST_CHECK_EQUAL(types_gen2.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_gen2.back(), "Beat Up");
+
+    /*
+     * Game Boy Advance
+     */
+    types_gba = pkmn::database::get_move_list("Sapphire");
+    BOOST_CHECK_EQUAL(types_gba.size(), 354);
+    BOOST_CHECK_EQUAL(types_gba.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_gba.back(), "Psycho Boost");
+
+    /*
+     * Colosseum
+     */
+    types_colo = pkmn::database::get_move_list("Colosseum");
+    BOOST_CHECK_EQUAL(types_colo.size(), 355);
+    BOOST_CHECK_EQUAL(types_colo.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_colo.back(), "Shadow Rush");
+
+    /*
+     * XD
+     */
+    types_xd = pkmn::database::get_move_list("XD");
+    BOOST_CHECK_EQUAL(types_xd.size(), 372);
+    BOOST_CHECK_EQUAL(types_xd.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_xd.back(), "Shadow Sky");
+
+    /*
+     * Generation IV
+     */
+    types_gen4 = pkmn::database::get_move_list("SoulSilver");
+    BOOST_CHECK_EQUAL(types_gen4.size(), 467);
+    BOOST_CHECK_EQUAL(types_gen4.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_gen4.back(), "Shadow Force");
+
+    /*
+     * Generation V
+     */
+    types_gen5 = pkmn::database::get_move_list("White");
+    BOOST_CHECK_EQUAL(types_gen5.size(), 559);
+    BOOST_CHECK_EQUAL(types_gen5.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_gen5.back(), "Fusion Bolt");
+
+    /*
+     * X/Y
+     */
+    types_xy = pkmn::database::get_move_list("Y");
+    BOOST_CHECK_EQUAL(types_xy.size(), 617);
+    BOOST_CHECK_EQUAL(types_xy.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_xy.back(), "Light of Ruin");
+
+    /*
+     * Omega Ruby/Alpha Sapphire
+     */
+    types_oras = pkmn::database::get_move_list("Omega Ruby");
+    BOOST_CHECK_EQUAL(types_oras.size(), 621);
+    BOOST_CHECK_EQUAL(types_oras.front(), "Pound");
+    BOOST_CHECK_EQUAL(types_oras.back(), "Hyperspace Fury");
 }
 
 BOOST_AUTO_TEST_CASE(nature_list_test) {
@@ -320,8 +668,8 @@ BOOST_AUTO_TEST_CASE(region_list_test) {
     std::vector<std::string> regions = pkmn::database::get_region_list();
     BOOST_CHECK_EQUAL(regions.size(), 7);
     BOOST_CHECK_EQUAL(regions.front(), "Kanto");
+    BOOST_CHECK_EQUAL(regions[3], "Orre");
     BOOST_CHECK_EQUAL(regions.back(), "Kalos");
-    BOOST_CHECK(string_in_vector(regions, "Orre"));
 }
 
 BOOST_AUTO_TEST_CASE(ribbon_list_test) {
@@ -332,6 +680,8 @@ BOOST_AUTO_TEST_CASE(ribbon_list_test) {
 BOOST_AUTO_TEST_CASE(super_training_medal_list_test) {
     // TODO: confirm length
 }
+
+#include <iostream>
 
 BOOST_AUTO_TEST_CASE(type_list_test) {
     std::vector<std::string> types_bad,  types_gen1,
@@ -350,6 +700,7 @@ BOOST_AUTO_TEST_CASE(type_list_test) {
      * Generation I
      */
     types_gen1 = pkmn::database::get_type_list("Red");
+
     BOOST_CHECK_EQUAL(types_gen1.size(), 15);
     BOOST_CHECK(not string_in_vector(types_gen1, "Dark"));
     BOOST_CHECK(not string_in_vector(types_gen1, "Steel"));
@@ -394,17 +745,17 @@ BOOST_AUTO_TEST_CASE(type_list_test) {
      * Generation IV
      */
     types_gen4 = pkmn::database::get_type_list("Platinum");
-    BOOST_CHECK_EQUAL(types_gen4.size(), 19);
+    BOOST_CHECK_EQUAL(types_gen4.size(), 18);
     BOOST_CHECK(string_in_vector(types_gen4, "Dark"));
     BOOST_CHECK(string_in_vector(types_gen4, "Steel"));
     BOOST_CHECK(string_in_vector(types_gen4, "???"));
-    BOOST_CHECK(string_in_vector(types_gen4, "Shadow"));
+    BOOST_CHECK(not string_in_vector(types_gen4, "Shadow"));
     BOOST_CHECK(not string_in_vector(types_gen4, "Fairy"));
 
     /*
      * Generation V
      */
-    types_gen5 = pkmn::database::get_type_list("Platinum");
+    types_gen5 = pkmn::database::get_type_list("White 2");
     BOOST_CHECK_EQUAL(types_gen5.size(), 17);
     BOOST_CHECK(string_in_vector(types_gen5, "Dark"));
     BOOST_CHECK(string_in_vector(types_gen5, "Steel"));
@@ -415,7 +766,7 @@ BOOST_AUTO_TEST_CASE(type_list_test) {
     /*
      * Generation VI
      */
-    types_gen6 = pkmn::database::get_type_list("Platinum");
+    types_gen6 = pkmn::database::get_type_list("X");
     BOOST_CHECK_EQUAL(types_gen6.size(), 18);
     BOOST_CHECK(string_in_vector(types_gen6, "Dark"));
     BOOST_CHECK(string_in_vector(types_gen6, "Steel"));
