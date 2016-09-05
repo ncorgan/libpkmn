@@ -4,6 +4,7 @@
  * @brief   A prepared SQLite Statement is a compiled SQL query ready to be executed, pointing to a row of result.
  *
  * Copyright (c) 2012-2015 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+ *                    2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -323,6 +324,10 @@ Statement::Ptr::Ptr(sqlite3* apSQLite, std::string& aQuery) :
     // used to share the mStmtPtr between Statement and Column objects;
     // This is needed to enable Column objects to live longer than the Statement objet it refers to.
     mpRefCount = new unsigned int(1);  // NOLINT(readability/casting)
+
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << "Statement::Statement: created query \"" << aQuery << "\"" << std::endl;
+#endif
 }
 
 /**

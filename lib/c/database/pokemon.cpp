@@ -270,13 +270,12 @@ pkmn_error_t pkmn_database_pokemon_levelup_moves(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        pkmn::database::levelup_moves_t levelup_moves;
-        pkmn::database::pokemon_entry(
-            pokemon_name, game_name, form_name
-        ).get_levelup_moves(levelup_moves);
-
         pkmn::pkmn_levelup_moves_cpp_to_c(
-            levelup_moves, levelup_moves_out,
+            pkmn::database::pokemon_entry(
+                pokemon_name, game_name, form_name
+            ).get_levelup_moves(),
+
+            levelup_moves_out,
             list_length_out
         );
     )
@@ -290,13 +289,12 @@ pkmn_error_t pkmn_database_pokemon_tm_hm_moves(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        pkmn::database::move_list_t move_list;
-        pkmn::database::pokemon_entry(
-            pokemon_name, game_name, form_name
-        ).get_tm_hm_moves(move_list);
-
         pkmn::pkmn_move_list_to_string_list(
-            move_list, tm_hm_moves_out,
+            pkmn::database::pokemon_entry(
+                pokemon_name, game_name, form_name
+            ).get_tm_hm_moves(),
+
+            tm_hm_moves_out,
             list_length_out
         );
     )
@@ -310,13 +308,12 @@ pkmn_error_t pkmn_database_pokemon_egg_moves(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        pkmn::database::move_list_t move_list;
-        pkmn::database::pokemon_entry(
-            pokemon_name, game_name, form_name
-        ).get_egg_moves(move_list);
-
         pkmn::pkmn_move_list_to_string_list(
-            move_list, egg_moves_out,
+            pkmn::database::pokemon_entry(
+                pokemon_name, game_name, form_name
+            ).get_egg_moves(),
+
+            egg_moves_out,
             list_length_out
         );
     )
@@ -330,13 +327,12 @@ pkmn_error_t pkmn_database_pokemon_tutor_moves(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        pkmn::database::move_list_t move_list;
-        pkmn::database::pokemon_entry(
-            pokemon_name, game_name, form_name
-        ).get_tutor_moves(move_list);
-
         pkmn::pkmn_move_list_to_string_list(
-            move_list, tutor_moves_out,
+            pkmn::database::pokemon_entry(
+                pokemon_name, game_name, form_name
+            ).get_tutor_moves(),
+
+            tutor_moves_out,
             list_length_out
         );
     )

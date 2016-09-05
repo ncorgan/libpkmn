@@ -141,7 +141,9 @@ namespace pkmn {
          * that amount. If not, see if there's room to add another
          * item.
          */
-        int item_id = pkmn::database::item_name_to_id(item_name);
+        int item_id = pkmn::database::item_name_to_id(
+                          item_name
+                      );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {
                 if(_item_slots[i].amount == 99) {
@@ -186,7 +188,9 @@ namespace pkmn {
          * and if there are no more, remove the item from the list and
          * shift everything over.
          */
-        int item_id = pkmn::database::item_name_to_id(item_name);
+        int item_id = pkmn::database::item_name_to_id(
+                          item_name
+                      );
         for(int i = 0; i < _num_items; ++i) {
             if(_item_slots[i].item.get_item_id() == item_id) {
                 if(_item_slots[i].amount < amount) {
@@ -230,6 +234,19 @@ namespace pkmn {
 
     const pkmn::item_slots_t& item_list_impl::as_vector() {
         return _item_slots;
+    }
+
+    /*
+     * TODO: if PC, all items valid except Berry Pouch, TM Case
+     */
+    const std::vector<std::string>& item_list_impl::get_valid_items() {
+        if(_valid_items.size() == 0) {
+            pkmn::database::_get_item_list(
+                _valid_items, _item_list_id, _game_id
+            );
+        }
+
+        return _valid_items;
     }
 
     void* item_list_impl::get_native() {

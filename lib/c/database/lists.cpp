@@ -18,13 +18,11 @@ pkmn_error_t pkmn_database_ability_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> abilities;
-        pkmn::database::get_ability_list(
-            generation, abilities
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            abilities, ability_list_out,
+            pkmn::database::get_ability_list(
+                generation
+            ),
+            ability_list_out,
             list_length_out
         )
     )
@@ -37,14 +35,11 @@ pkmn_error_t pkmn_database_game_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> games;
-        pkmn::database::get_game_list(
-            generation, include_previous,
-            games
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            games, game_list_out,
+            pkmn::database::get_game_list(
+                generation, include_previous
+            ),
+            game_list_out,
             list_length_out
         )
     )
@@ -56,13 +51,11 @@ pkmn_error_t pkmn_database_item_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> items;
-        pkmn::database::get_item_list(
-            game, items
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            items, item_list_out,
+            pkmn::database::get_item_list(
+                game
+            ),
+            item_list_out,
             list_length_out
         )
     )
@@ -75,14 +68,11 @@ pkmn_error_t pkmn_database_location_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> locations;
-        pkmn::database::get_location_list(
-            game, whole_generation,
-            locations
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            locations, location_list_out,
+            pkmn::database::get_location_list(
+                game, whole_generation
+            ),
+            location_list_out,
             list_length_out
         )
     )
@@ -94,13 +84,11 @@ pkmn_error_t pkmn_database_move_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> moves;
-        pkmn::database::get_move_list(
-            game, moves
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            moves, move_list_out,
+            pkmn::database::get_move_list(
+                game
+            ),
+            move_list_out,
             list_length_out
         )
     )
@@ -111,13 +99,9 @@ pkmn_error_t pkmn_database_nature_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> natures;
-        pkmn::database::get_nature_list(
-            natures
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            natures, nature_list_out,
+            pkmn::database::get_nature_list(),
+            nature_list_out,
             list_length_out
         )
     )
@@ -130,14 +114,11 @@ pkmn_error_t pkmn_database_pokemon_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> pokemons;
-        pkmn::database::get_pokemon_list(
-            generation, include_previous,
-            pokemons
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            pokemons, pokemon_list_out,
+            pkmn::database::get_pokemon_list(
+                generation, include_previous
+            ),
+            pokemon_list_out,
             list_length_out
         )
     )
@@ -148,13 +129,9 @@ pkmn_error_t pkmn_database_region_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> regions;
-        pkmn::database::get_region_list(
-            regions
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            regions, region_list_out,
+            pkmn::database::get_region_list(),
+            region_list_out,
             list_length_out
         )
     )
@@ -166,13 +143,11 @@ pkmn_error_t pkmn_database_ribbon_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> abilities;
-        pkmn::database::get_ribbon_list(
-            generation, abilities
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            abilities, ribbon_list_out,
+            pkmn::database::get_ribbon_list(
+                generation
+            ),
+            ribbon_list_out,
             list_length_out
         )
     )
@@ -183,13 +158,9 @@ pkmn_error_t pkmn_database_super_training_medal_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> super_training_medals;
-        pkmn::database::get_super_training_medal_list(
-            super_training_medals
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            super_training_medals, super_training_medal_list_out,
+            pkmn::database::get_super_training_medal_list(),
+            super_training_medal_list_out,
             list_length_out
         )
     )
@@ -201,13 +172,11 @@ pkmn_error_t pkmn_database_type_list(
     size_t* list_length_out
 ) {
     PKMN_CPP_TO_C(
-        std::vector<std::string> types;
-        pkmn::database::get_type_list(
-            game, types
-        );
-
         pkmn::std_vector_std_string_to_string_list(
-            types, type_list_out,
+            pkmn::database::get_type_list(
+                game
+            ),
+            type_list_out,
             list_length_out
         )
     )
