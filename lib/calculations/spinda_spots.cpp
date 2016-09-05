@@ -17,32 +17,6 @@
 
 namespace pkmn { namespace calculations {
 
-    /*
-     * Helper functions
-     */
-
-    BOOST_STATIC_CONSTEXPR spinda_coords operator+(
-        const spinda_coords &lhs,
-        const spinda_coords &rhs
-    ) {
-        return spinda_coords(
-                   (lhs.x + rhs.x),
-                   (lhs.y + rhs.y)
-               );
-    }
-
-    BOOST_STATIC_CONSTEXPR spinda_spots operator+(
-        const spinda_spots &lhs,
-        const spinda_spots &rhs
-    ) {
-        return spinda_spots(
-                   spinda_coords(lhs.left_ear + rhs.left_ear),
-                   spinda_coords(lhs.right_ear + rhs.right_ear),
-                   spinda_coords(lhs.left_face + rhs.left_face),
-                   spinda_coords(lhs.right_face + rhs.right_face)
-               );
-    }
-
     BOOST_STATIC_CONSTEXPR spinda_spots _spinda_spot_offset(
         uint32_t personality
     ) {
