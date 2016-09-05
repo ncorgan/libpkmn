@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Not a species", 0
                              );
-    , std::runtime_error);
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
         std::string gender = pkmn::calculations::modern_pokemon_gender(
                                  "Not a species", 0
                              );
-    , std::runtime_error);
+    , std::invalid_argument);
 
     /*
      * Make sure known good inputs result in expected results.
