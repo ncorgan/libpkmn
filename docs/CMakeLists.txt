@@ -25,6 +25,11 @@ ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
 FILE(GLOB_RECURSE hpp_files ${CMAKE_SOURCE_DIR}/include/*.hpp)
 PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
+IF(PKMN_ENABLE_OBJC)
+    PKMN_BUILD_DOXYGEN_DOCS("" "objc" "Objective-C")
+    ADD_DEPENDENCIES(doxygen_objc_docs pkmn-objc)
+ENDIF(PKMN_ENABLE_OBJC)
+
 #IF(PKMN_ENABLE_CSHARP)
 #    PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
 #    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
