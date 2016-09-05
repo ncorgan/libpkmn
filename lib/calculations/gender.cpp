@@ -13,6 +13,7 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace pkmn { namespace calculations {
@@ -20,9 +21,9 @@ namespace pkmn { namespace calculations {
     static pkmn::database::sptr _db;
 
     // No need to instantiate these strings at runtime if we can avoid it
-    static BOOST_CONSTEXPR const char* GENDERLESS   = "Genderless";
-    static BOOST_CONSTEXPR const char* MALE         = "Male";
-    static BOOST_CONSTEXPR const char* FEMALE       = "Female";
+    static BOOST_CONSTEXPR const char* GENDERLESS = "Genderless";
+    static BOOST_CONSTEXPR const char* MALE       = "Male";
+    static BOOST_CONSTEXPR const char* FEMALE     = "Female";
     static BOOST_CONSTEXPR const char* gender_rate_query = \
         "SELECT gender_rate FROM pokemon_species WHERE id="
         "(SELECT pokemon_species_id FROM pokemon_species_names "
@@ -58,20 +59,21 @@ namespace pkmn { namespace calculations {
                                       _db, gender_rate_query, species
                                   );
 
-        float chance_female = (gender_rate_from_db == -1)
-                                   ? 0.0f : _veekun_gender_rates.at(gender_rate_from_db);
+        float chance_male = (gender_rate_from_db == -1)
+                                ? 0.0f
+                                : _veekun_gender_rates.at(gender_rate_from_db);
 
         if(gender_rate_from_db == -1) {
             return GENDERLESS;
-        } else if(pkmn_floats_close(chance_female, 0.0)) {
+        } else if(pkmn_floats_close(chance_male, 1.0f)) {
             return MALE;
-        } else if(pkmn_floats_close(chance_female, 0.125)) {
+        } else if(pkmn_floats_close(chance_male, 0.875f)) {
             return (IV_attack < 2) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.25)) {
+        } else if(pkmn_floats_close(chance_male, 0.75f)) {
             return (IV_attack < 4) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.5)) {
+        } else if(pkmn_floats_close(chance_male, 0.5f)) {
             return (IV_attack < 7) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.75)) {
+        } else if(pkmn_floats_close(chance_male, 0.25f)) {
             return (IV_attack < 12) ? FEMALE : MALE;
         } else {
             return FEMALE;
@@ -89,21 +91,22 @@ namespace pkmn { namespace calculations {
                                       _db, gender_rate_query, species
                                   );
 
-        float chance_female = (gender_rate_from_db == -1)
-                                   ? 0.0f : _veekun_gender_rates.at(gender_rate_from_db);
+        float chance_male = (gender_rate_from_db == -1)
+                                ? 0.0f
+                                : _veekun_gender_rates.at(gender_rate_from_db);
 
         uint8_t truncated_pid = uint8_t(personality & 0xFF);
         if(gender_rate_from_db == -1) {
             return GENDERLESS;
-        } else if(pkmn_floats_close(chance_female, 0.0)) {
+        } else if(pkmn_floats_close(chance_male, 1.0f)) {
             return MALE;
-        } else if(pkmn_floats_close(chance_female, 0.125)) {
+        } else if(pkmn_floats_close(chance_male, 0.875f)) {
             return (truncated_pid < 31) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.25)) {
+        } else if(pkmn_floats_close(chance_male, 0.75f)) {
             return (truncated_pid < 64) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.5)) {
+        } else if(pkmn_floats_close(chance_male, 0.5f)) {
             return (truncated_pid < 127) ? FEMALE : MALE;
-        } else if(pkmn_floats_close(chance_female, 0.75)) {
+        } else if(pkmn_floats_close(chance_male, 0.25f)) {
             return (truncated_pid < 191) ? FEMALE : MALE;
         } else {
             return FEMALE;

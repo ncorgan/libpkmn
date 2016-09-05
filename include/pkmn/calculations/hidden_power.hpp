@@ -66,7 +66,7 @@ namespace pkmn { namespace calculations {
 
     #ifndef SWIG
     //! Equality check between two Hidden Power structs.
-    bool operator==(
+    PKMN_INLINE bool operator==(
         const hidden_power_t &lhs,
         const hidden_power_t &rhs
     ) {
@@ -75,7 +75,7 @@ namespace pkmn { namespace calculations {
     }
 
     //! Inequality check between two Hidden Power structs.
-    bool operator!=(
+    PKMN_INLINE bool operator!=(
         const hidden_power_t &lhs,
         const hidden_power_t &rhs
     ) {
