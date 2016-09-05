@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/types/item_slot.h>
+#include <pkmn-c/types/string_types.h>
 
 #if !defined(PKMN_ITEM_LIST_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_list_t;
@@ -84,6 +85,12 @@ PKMN_API pkmn_error_t pkmn_item_list_move(
     pkmn_item_list_handle_t handle,
     int old_position,
     int new_position
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_get_valid_items(
+    pkmn_item_list_handle_t handle,
+    pkmn_string_list_t* string_list_out,
+    size_t* list_length_out
 );
 
 PKMN_API pkmn_error_t pkmn_item_list_as_array(

@@ -36,6 +36,14 @@ PKMN_API pkmn_error_t pkmn_database_move_description(
     size_t* actual_strlen_out
 );
 
+PKMN_API pkmn_error_t pkmn_database_move_target(
+    const char* item_name,
+    const char* game_name,
+    char* move_target_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+);
+
 PKMN_API pkmn_error_t pkmn_database_move_damage_class(
     const char* item_name,
     const char* game_name,

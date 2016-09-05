@@ -52,6 +52,26 @@ pkmn_error_t pkmn_database_move_description(
     )
 }
 
+pkmn_error_t pkmn_database_move_target(
+    const char* move_name,
+    const char* game_name,
+    char* move_target_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            pkmn::database::move_entry(
+                move_name, game_name
+            ).get_target(),
+
+            move_target_out,
+            buffer_len,
+            actual_strlen_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_database_move_damage_class(
     const char* move_name,
     const char* game_name,

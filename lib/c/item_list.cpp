@@ -142,6 +142,20 @@ pkmn_error_t pkmn_item_list_move(
     )
 }
 
+pkmn_error_t pkmn_item_list_get_valid_items(
+    pkmn_item_list_handle_t handle,
+    pkmn_string_list_t* string_list_out,
+    size_t* list_length_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_vector_std_string_to_string_list(
+            handle->cpp->get_valid_items(),
+            string_list_out,
+            list_length_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_item_list_as_array(
     pkmn_item_list_handle_t handle,
     pkmn_item_slots_t* array_out,
