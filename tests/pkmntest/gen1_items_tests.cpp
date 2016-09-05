@@ -68,6 +68,9 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Ether");
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 1);
         BOOST_CHECK_EQUAL(list->get_num_items(), 2);
+
+        const std::vector<std::string>& valid_items = list->get_valid_items();
+        BOOST_CHECK_GT(valid_items.size(), 0);
     }
 
     void gen1_item_list_test(

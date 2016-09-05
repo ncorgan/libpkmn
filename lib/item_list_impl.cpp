@@ -243,7 +243,9 @@ namespace pkmn {
     const std::vector<std::string>& item_list_impl::get_valid_items() {
         if(_valid_items.size() == 0) {
             pkmn::database::_get_item_list(
-                _valid_items, _item_list_id, _game_id
+                _valid_items,
+                ((get_name() == "PC") ? -1 : _item_list_id),
+                _game_id
             );
         }
 
