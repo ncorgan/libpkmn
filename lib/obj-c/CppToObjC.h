@@ -10,6 +10,7 @@
 
 #import <PKMN-ObjC/PKItemSlot.h>
 #import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
+#import <PKMN-ObjC/PKItemSlotArray.h>
 #import <PKMN-ObjC/Database/PKLevelupMove.h>
 #import <PKMN-ObjC/Database/PKLevelupMoveArray.h>
 #import <PKMN-ObjC/Database/PKMoveDatabaseEntry.h>
@@ -84,6 +85,14 @@
 
 @end
 
+@interface PKItemSlotArrayFromCpp: PKItemSlotArray
+
+- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
 @interface PKLevelupMoveArrayFromCpp: PKLevelupMoveArray
 
 - (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&)cppInstance;
@@ -145,6 +154,8 @@
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
 
 + (PKItemSlot*)createItemSlotFromCpp: (const pkmn::item_slot&)cppInstance;
+
++ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&)cppInstance;
 
 + (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance;
 

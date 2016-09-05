@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_ENTRY_H
-#define INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_ENTRY_H
+#ifndef INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_H
+#define INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_H
 
 #import <Foundation/Foundation.h>
 
@@ -52,4 +52,4 @@
 
 @end
 
-#endif /* INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_ENTRY_H */
+#endif /* INCLUDED_PKMN_OBJC_DATABASE_PKMOVEDATABASE_H */

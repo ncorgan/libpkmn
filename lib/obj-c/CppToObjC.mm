@@ -24,6 +24,24 @@
 
 @end
 
+@implementation PKItemSlotArrayFromCpp: PKItemSlotArray
+
+- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::item_slots_t(
+                                (pkmn::item_slots_t&&)cppInstance
+                            )
+                    );
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
 @implementation PKLevelupMoveArrayFromCpp: PKLevelupMoveArray
 
 - (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&)cppInstance {
@@ -168,6 +186,12 @@
         ret->amount = @(cppInstance.amount);
 
         return ret;
+    )
+}
+
++ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        return (PKItemSlotArray*)[[PKItemSlotArrayFromCpp alloc] initFromCpp:cppInstance];
     )
 }
 
