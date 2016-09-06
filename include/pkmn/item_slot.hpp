@@ -95,6 +95,11 @@ namespace pkmn {
     }
     #endif /* SWIG */
 
+    /*!
+     * @brief List of item slots.
+     *
+     * This is effectively a vector representation of an item list.
+     */
     typedef std::vector<item_slot> item_slots_t;
 }
 
