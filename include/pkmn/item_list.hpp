@@ -44,7 +44,7 @@ namespace pkmn {
              * to figure out which underlying implementation to use. This function will
              * fail if given invalid inputs.
              *
-             * \param name Item list name (a pocket name or "PC").
+             * \param name Item list name
              * \param game Which game the list corresponds to
              * \throws std::invalid_argument If either parameter is invalid
              * \throws std::runtime_error If an unimplemented game is given
