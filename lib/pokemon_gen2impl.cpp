@@ -1,0 +1,285 @@
+/*
+ * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+
+#include "pokemon_gen2impl.hpp"
+
+#include "pksav/party_data.hpp"
+
+#include <pksav/common/stats.h>
+#include <pksav/math/base256.h>
+#include <pksav/math/endian.h>
+
+#include <boost/format.hpp>
+
+#include <stdexcept>
+
+#define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
+#define GEN2_PARTY_RCAST reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
+
+namespace pkmn {
+
+    pokemon_gen2impl::pokemon_gen2impl(
+        int pokemon_index, int game_id,
+        int move1_id, int move2_id,
+        int move3_id, int move4_id
+    ): pokemon_impl(pokemon_index, game_id)
+    {
+        _native_pc  = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        _our_party_mem = true;
+
+        /*
+         * Since move IDs are manually passed in, manually create the move slots with
+         * full PP.
+         */
+        pkmn::database::move_entry move1(move1_id, game_id);
+        pkmn::database::move_entry move2(move2_id, game_id);
+        pkmn::database::move_entry move3(move3_id, game_id);
+        pkmn::database::move_entry move4(move4_id, game_id);
+
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move1_id,
+                move1.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move2_id,
+                move2.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move3_id,
+                move3.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move4_id,
+                move4.get_pp(0)
+            )
+        );
+    }
+
+    pokemon_gen2impl::pokemon_gen2impl(
+        pksav_gen2_pc_pokemon_t* pc,
+        int game_id
+    ): pokemon_impl(pc->species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(pc);
+        _our_pc_mem = false;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        pksav::gen2_pc_pokemon_to_party_data(
+            reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
+            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_our_pc_mem)
+        );
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _update_IV_map();
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    pokemon_gen2impl::pokemon_gen2impl(
+        pksav_gen2_party_pokemon_t* party,
+        int game_id
+    ): pokemon_impl(party->pc.species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(&party->pc);
+        _our_pc_mem = false;
+
+        _native_party = reinterpret_cast<void*>(&party->party_data);
+        _our_party_mem = false;
+
+        // Populate abstractions
+        _update_EV_map();
+        _update_IV_map();
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    std::string pokemon_gen2impl::get_nickname() {
+        return _nickname;
+    }
+
+    void pokemon_gen2impl::set_nickname(
+        const std::string &nickname
+    ) {
+        if(nickname.size() < 1 or nickname.size() > 10) {
+            throw std::invalid_argument(
+                      "The nickname length must be 0-10."
+                  );
+        }
+
+        _nickname = nickname;
+    }
+
+    std::string pokemon_gen2impl::get_trainer_name() {
+        return _trainer_name;
+    }
+
+    void pokemon_gen2impl::set_trainer_name(
+        const std::string &trainer_name
+    ) {
+        if(trainer_name.size() < 1 or trainer_name.size() > 7) {
+            throw std::invalid_argument(
+                      "The trainer name name length must be 0-7."
+                  );
+        }
+
+        _trainer_name = trainer_name;
+    }
+
+    int pokemon_gen2impl::get_experience() {
+        return int(pksav_from_base256(
+                       GEN2_PC_RCAST->exp,
+                       3
+                   ));
+    }
+
+    void pokemon_gen2impl::set_experience(
+        int experience
+    ) {
+        int max_experience = _database_entry.get_experience_at_level(100);
+
+        if(experience < 0 or experience > max_experience) {
+            throw std::out_of_range(
+                      str(boost::format(
+                              "experience: valid range 0-%d"
+                          ) % max_experience)
+                  );
+        }
+
+        pksav_to_base256(
+            experience,
+            GEN2_PC_RCAST->exp
+        );
+
+        GEN2_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
+
+        _calculate_stats();
+        _update_stat_map();
+    }
+
+    int pokemon_gen2impl::get_level() {
+        return int(GEN2_PC_RCAST->level);
+    }
+
+    void pokemon_gen2impl::set_level(
+        int level
+    ) {
+        if(level < 2 or level > 100) {
+            throw std::out_of_range(
+                      "level: valid range 2-100"
+                  );
+        }
+
+        GEN2_PC_RCAST->level = uint8_t(level);
+
+        pksav_to_base256(
+            size_t(_database_entry.get_experience_at_level(level)),
+            GEN2_PC_RCAST->exp
+        );
+
+        _calculate_stats();
+        _update_stat_map();
+    }
+
+    void pokemon_gen2impl::_calculate_stats() {
+        pksav::gen2_pc_pokemon_to_party_data(
+            reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
+            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_our_pc_mem)
+        );
+    }
+
+    void pokemon_gen2impl::_update_moves(
+        int index
+    ) {
+        switch(index) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                _moves[index] = pkmn::move_slot(
+                    pkmn::database::move_entry(
+                        GEN2_PC_RCAST->moves[index],
+                        _database_entry.get_game_id()
+                    ),
+                    (GEN2_PC_RCAST->move_pps[index] & 0x3F) // PKSav TODO: define for this
+                );
+                break;
+
+            default:
+                for(size_t i = 0; i < 4; ++i) {
+                    _update_moves(i);
+                }
+        }
+    }
+
+    void pokemon_gen2impl::_update_EV_map() {
+        _EVs["HP"]      = int(pksav_bigendian16(GEN2_PC_RCAST->ev_hp));
+        _EVs["Attack"]  = int(pksav_bigendian16(GEN2_PC_RCAST->ev_atk));
+        _EVs["Defense"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_def));
+        _EVs["Speed"]   = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spd));
+        _EVs["Special"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spcl));
+    }
+
+    void pokemon_gen2impl::_update_IV_map() {
+        uint8_t IV = 0;
+
+        pksav_get_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            PKSAV_STAT_HP,
+            &IV
+        );
+        _IVs["HP"] = int(IV);
+
+        pksav_get_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            PKSAV_STAT_ATTACK,
+            &IV
+        );
+        _IVs["Attack"] = int(IV);
+
+        pksav_get_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            PKSAV_STAT_DEFENSE,
+            &IV
+        );
+        _IVs["Defense"] = int(IV);
+
+        pksav_get_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            PKSAV_STAT_SPEED,
+            &IV
+        );
+        _IVs["Speed"] = int(IV);
+
+        pksav_get_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            PKSAV_STAT_SPECIAL,
+            &IV
+        );
+        _IVs["Special"] = int(IV);
+    }
+
+    void pokemon_gen2impl::_update_stat_map() {
+        _stats["HP"]              = int(pksav_bigendian16(GEN2_PARTY_RCAST->max_hp));
+        _stats["Attack"]          = int(pksav_bigendian16(GEN2_PARTY_RCAST->atk));
+        _stats["Defense"]         = int(pksav_bigendian16(GEN2_PARTY_RCAST->def));
+        _stats["Speed"]           = int(pksav_bigendian16(GEN2_PARTY_RCAST->spd));
+        _stats["Special Attack"]  = int(pksav_bigendian16(GEN2_PARTY_RCAST->spatk));
+        _stats["Special Defense"] = int(pksav_bigendian16(GEN2_PARTY_RCAST->spdef));
+    }
+}
