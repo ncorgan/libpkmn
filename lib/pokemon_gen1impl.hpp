@@ -32,11 +32,27 @@ namespace pkmn {
 
             std::string get_nickname();
 
+            void set_nickname(
+                const std::string &nickname
+            );
+
             std::string get_trainer_name();
+
+            void set_trainer_name(
+                const std::string &trainer_name
+            );
 
             int get_experience();
 
+            void set_experience(
+                int experience
+            );
+
             int get_level();
+
+            void set_level(
+                int level
+            );
 
         private:
             void _calculate_stats();

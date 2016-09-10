@@ -13,6 +13,10 @@
 #include <pksav/math/base256.h>
 #include <pksav/math/endian.h>
 
+#include <boost/format.hpp>
+
+#include <stdexcept>
+
 #define GEN1_PC_RCAST    reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc)
 #define GEN1_PARTY_RCAST reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
 
@@ -109,8 +113,32 @@ namespace pkmn {
         return _nickname;
     }
 
+    void pokemon_gen1impl::set_nickname(
+        const std::string &nickname
+    ) {
+        if(nickname.size() < 1 or nickname.size() > 10) {
+            throw std::invalid_argument(
+                      "The nickname length must be 0-10."
+                  );
+        }
+
+        _nickname = nickname;
+    }
+
     std::string pokemon_gen1impl::get_trainer_name() {
         return _trainer_name;
+    }
+
+    void pokemon_gen1impl::set_trainer_name(
+        const std::string &trainer_name
+    ) {
+        if(trainer_name.size() < 1 or trainer_name.size() > 7) {
+            throw std::invalid_argument(
+                      "The trainer name name length must be 0-7."
+                  );
+        }
+
+        _trainer_name = trainer_name;
     }
 
     int pokemon_gen1impl::get_experience() {
@@ -120,8 +148,53 @@ namespace pkmn {
                    ));
     }
 
+    void pokemon_gen1impl::set_experience(
+        int experience
+    ) {
+        int max_experience = _database_entry.get_experience_at_level(100);
+
+        if(experience < 0 or experience > max_experience) {
+            throw std::out_of_range(
+                      str(boost::format(
+                              "experience: valid range 0-%d"
+                          ) % max_experience)
+                  );
+        }
+
+        pksav_to_base256(
+            experience,
+            GEN1_PC_RCAST->exp
+        );
+
+        GEN1_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
+        GEN1_PARTY_RCAST->level = GEN1_PC_RCAST->level;
+
+        _calculate_stats();
+        _update_stat_map();
+    }
+
     int pokemon_gen1impl::get_level() {
         return int(GEN1_PARTY_RCAST->level);
+    }
+
+    void pokemon_gen1impl::set_level(
+        int level
+    ) {
+        if(level < 2 or level > 100) {
+            throw std::out_of_range(
+                      "level: valid range 2-100"
+                  );
+        }
+
+        GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
+
+        pksav_to_base256(
+            size_t(_database_entry.get_experience_at_level(level)),
+            GEN1_PC_RCAST->exp
+        );
+
+        _calculate_stats();
+        _update_stat_map();
     }
 
     void pokemon_gen1impl::_calculate_stats() {

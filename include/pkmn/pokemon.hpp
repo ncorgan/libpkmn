@@ -34,11 +34,27 @@ namespace pkmn {
 
             virtual std::string get_nickname() = 0;
 
+            virtual void set_nickname(
+                const std::string &nickname
+            ) = 0;
+
             virtual std::string get_trainer_name() = 0;
+
+            virtual void set_trainer_name(
+                const std::string &trainer_name
+            ) = 0;
 
             virtual int get_experience() = 0;
 
+            virtual void set_experience(
+                int experience
+            ) = 0;
+
             virtual int get_level() = 0;
+
+            virtual void set_level(
+                int level
+            ) = 0;
 
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
