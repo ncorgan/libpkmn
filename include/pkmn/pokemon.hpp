@@ -8,6 +8,7 @@
 #define PKMN_POKEMON_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/move_slot.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
@@ -38,6 +39,8 @@ namespace pkmn {
             virtual int get_experience() = 0;
 
             virtual int get_level() = 0;
+
+            virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual const std::map<std::string, int>& get_EVs() = 0;
 

@@ -25,6 +25,8 @@ namespace pkmn {
 
             const pkmn::database::pokemon_entry& get_database_entry();
 
+            const pkmn::move_slots_t& get_moves();
+
             const std::map<std::string, int>& get_EVs();
 
             const std::map<std::string, int>& get_IVs();
@@ -36,6 +38,7 @@ namespace pkmn {
             void* get_native_party_data();
 
         protected:
+            pkmn::move_slots_t _moves;
             std::map<std::string, int> _stats, _EVs, _IVs;
 
             pkmn::database::pokemon_entry _database_entry;
@@ -47,6 +50,10 @@ namespace pkmn {
             void* _native_party;
 
             virtual void _calculate_stats() = 0;
+
+            virtual void _update_moves(
+                int index
+            ) = 0;
 
             virtual void _update_EV_map() = 0;
             virtual void _update_IV_map() = 0;

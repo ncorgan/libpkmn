@@ -24,6 +24,11 @@ namespace pkmn {
         return _database_entry;
     }
 
+    const pkmn::move_slots_t& pokemon_impl::get_moves() {
+        _update_moves(-1);
+        return _moves;
+    }
+
     const std::map<std::string, int>& pokemon_impl::get_EVs() {
         _update_EV_map();
         return _EVs;

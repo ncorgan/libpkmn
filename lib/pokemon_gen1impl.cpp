@@ -19,8 +19,9 @@
 namespace pkmn {
 
     pokemon_gen1impl::pokemon_gen1impl(
-        int pokemon_index,
-        int game_id
+        int pokemon_index, int game_id,
+        int move1_id, int move2_id,
+        int move3_id, int move4_id
     ): pokemon_impl(pokemon_index, game_id)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
@@ -28,6 +29,40 @@ namespace pkmn {
 
         _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
         _our_party_mem = true;
+
+        /*
+         * Since move IDs are manually passed in, manually create the move slots with
+         * full PP.
+         */
+        pkmn::database::move_entry move1(move1_id, game_id);
+        pkmn::database::move_entry move2(move2_id, game_id);
+        pkmn::database::move_entry move3(move3_id, game_id);
+        pkmn::database::move_entry move4(move4_id, game_id);
+
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move1_id,
+                move1.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move2_id,
+                move2.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move3_id,
+                move3.get_pp(0)
+            )
+        );
+        _moves.emplace_back(
+            pkmn::move_slot(
+                (pkmn::database::move_entry&&)move4_id,
+                move4.get_pp(0)
+            )
+        );
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -44,6 +79,12 @@ namespace pkmn {
             reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_our_pc_mem)
         );
         _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _update_IV_map();
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -56,6 +97,12 @@ namespace pkmn {
 
         _native_party = reinterpret_cast<void*>(&party->party_data);
         _our_party_mem = false;
+
+        // Populate abstractions
+        _update_EV_map();
+        _update_IV_map();
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     std::string pokemon_gen1impl::get_nickname() {
@@ -82,6 +129,30 @@ namespace pkmn {
             reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_our_pc_mem)
         );
+    }
+
+    void pokemon_gen1impl::_update_moves(
+        int index
+    ) {
+        switch(index) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                _moves[index] = pkmn::move_slot(
+                    pkmn::database::move_entry(
+                        GEN1_PC_RCAST->moves[index],
+                        _database_entry.get_game_id()
+                    ),
+                    (GEN1_PC_RCAST->move_pps[index] & 0x3F) // PKSav TODO: define for this
+                );
+                break;
+
+            default:
+                for(size_t i = 0; i < 4; ++i) {
+                    _update_moves(i);
+                }
+        }
     }
 
     void pokemon_gen1impl::_update_EV_map() {

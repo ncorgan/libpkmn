@@ -17,8 +17,9 @@ namespace pkmn {
         public:
             pokemon_gen1impl() {}
             pokemon_gen1impl(
-                int pokemon_index,
-                int game_id
+                int pokemon_index, int game_id,
+                int move1_id, int move2_id,
+                int move3_id, int move4_id
             );
             pokemon_gen1impl(
                 pksav_gen1_pc_pokemon_t* pc,
@@ -39,6 +40,10 @@ namespace pkmn {
 
         private:
             void _calculate_stats();
+
+            void _update_moves(
+                int index
+            );
 
             void _update_EV_map();
             void _update_IV_map();
