@@ -28,6 +28,9 @@ PKMN_PYTHON_INIT
 // Item Slot
 %include <python/pkmn_item_slot.i>
 
+// Move Slot
+%include <python/pkmn_move_slot.i>
+
 // For all sptrs, for some reason didn't get ignored from pkmn.i
 %ignore make;
 %ignore get_native;

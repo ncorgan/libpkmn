@@ -17,6 +17,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_bag.hpp
         item_list.hpp
         item_slot.hpp
+        move_slot.hpp
         pokemon.hpp
     )
 
