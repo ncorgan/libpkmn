@@ -33,15 +33,17 @@ namespace pkmn {
 
             virtual std::string get_nickname() = 0;
 
+            virtual std::string get_trainer_name() = 0;
+
             virtual int get_experience() = 0;
 
             virtual int get_level() = 0;
 
-            virtual const std::map<std::string, int>& get_stats() = 0;
-
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
             virtual const std::map<std::string, int>& get_IVs() = 0;
+
+            virtual const std::map<std::string, int>& get_stats() = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native_pc_data() = 0;

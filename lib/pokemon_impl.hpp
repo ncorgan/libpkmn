@@ -25,11 +25,11 @@ namespace pkmn {
 
             const pkmn::database::pokemon_entry& get_database_entry();
 
-            const std::map<std::string, int>& get_stats();
-
             const std::map<std::string, int>& get_EVs();
 
             const std::map<std::string, int>& get_IVs();
+
+            const std::map<std::string, int>& get_stats();
 
             void* get_native_pc_data();
 
@@ -40,12 +40,17 @@ namespace pkmn {
 
             pkmn::database::pokemon_entry _database_entry;
 
+            bool _our_pc_mem;
+            bool _our_party_mem;
+
             void* _native_pc;
             void* _native_party;
 
-            virtual void _update_EVs() = 0;
-            virtual void _update_IVs() = 0;
-            virtual void _update_stats() = 0;
+            virtual void _calculate_stats() = 0;
+
+            virtual void _update_EV_map() = 0;
+            virtual void _update_IV_map() = 0;
+            virtual void _update_stat_map() = 0;
     };
 
 }

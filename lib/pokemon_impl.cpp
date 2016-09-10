@@ -24,19 +24,19 @@ namespace pkmn {
         return _database_entry;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_stats() {
-        _update_stats();
-        return _stats;
-    }
-
     const std::map<std::string, int>& pokemon_impl::get_EVs() {
-        _update_EVs();
+        _update_EV_map();
         return _EVs;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_IVs() {
-        _update_IVs();
+        _update_IV_map();
         return _IVs;
+    }
+
+    const std::map<std::string, int>& pokemon_impl::get_stats() {
+        _update_stat_map();
+        return _stats;
     }
 
     void* pokemon_impl::get_native_pc_data() {
