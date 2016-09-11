@@ -94,7 +94,7 @@ namespace pkmn {
     std::string item_list_impl::get_name() {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM libpkmn_item_lists WHERE id=? AND "
-            "version_group=?";
+            "version_group_id=?";
 
         return pkmn::database::query_db_bind2<std::string, int, int>(
                    _db, query, _item_list_id, _version_group_id
@@ -195,7 +195,7 @@ namespace pkmn {
             if(_item_slots[i].item.get_item_id() == item_id) {
                 if(_item_slots[i].amount < amount) {
                     throw std::runtime_error(
-                              str(boost::format("Can only remove items.") %
+                              str(boost::format("Can only remove %d items.") %
                                   _item_slots[i].amount)
                           );
                 } else {
@@ -206,6 +206,7 @@ namespace pkmn {
                         _num_items--;
                         _to_native();
                     }
+                    return;
                 }
             }
         }
@@ -226,9 +227,9 @@ namespace pkmn {
             throw std::invalid_argument("Positions cannot match.");
         }
 
-        pkmn::item_slot temp = _item_slots[old_position-1];
-        _item_slots.erase(_item_slots.begin()+(old_position-1));
-        _item_slots.insert(_item_slots.begin()+(new_position-1), temp);
+        pkmn::item_slot temp = _item_slots[old_position];
+        _item_slots.erase(_item_slots.begin()+old_position);
+        _item_slots.insert(_item_slots.begin()+new_position, temp);
         _to_native();
     }
 
@@ -242,7 +243,9 @@ namespace pkmn {
     const std::vector<std::string>& item_list_impl::get_valid_items() {
         if(_valid_items.size() == 0) {
             pkmn::database::_get_item_list(
-                _valid_items, _item_list_id, _game_id
+                _valid_items,
+                ((get_name() == "PC") ? -1 : _item_list_id),
+                _game_id
             );
         }
 

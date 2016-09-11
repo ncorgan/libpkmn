@@ -13,12 +13,24 @@
 
 namespace pkmn { namespace build_info {
 
+    /*!
+     * @brief Returns the version of Boost used in this build of LibPKMN.
+     */
     PKMN_API std::string get_boost_version();
 
+    /*!
+     * @brief Returns the version of PKSav used in this build of LibPKMN.
+     */
     PKMN_API std::string get_pksav_version();
 
+    /*!
+     * @brief Returns the version of SQLite3 used in this build of LibPKMN.
+     */
     PKMN_API std::string get_sqlite3_version();
 
+    /*!
+     * @brief Returns the version of SQLiteC++ used in this build of LibPKMN.
+     */
     PKMN_API std::string get_sqlitecpp_version();
 
 }}

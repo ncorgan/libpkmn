@@ -56,17 +56,13 @@ namespace pkmn {
 
         // Populate pocket name vector
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
-        static BOOST_CONSTEXPR const char* name_query = \
+        static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM libpkmn_item_lists WHERE version_group_id=? "
             "AND name != 'PC'";
 
-        SQLite::Statement stmt((*_db), name_query);
-        stmt.bind(1, version_group_id);
-        while(stmt.executeStep()) {
-            _item_pocket_names.emplace_back(
-                (const char*)stmt.getColumn(0)
-            );
-        }
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, query, _item_pocket_names, version_group_id
+        );
     }
 
     std::string item_bag_impl::get_game() {
@@ -80,7 +76,7 @@ namespace pkmn {
     ) {
         try {
             return _item_pockets.at(name);
-        } catch(...) {
+        } catch(const std::exception&) {
             throw std::invalid_argument("Invalid pocket name.");
         }
     }

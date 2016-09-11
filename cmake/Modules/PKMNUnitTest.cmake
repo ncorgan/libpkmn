@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_cpp_test_libs
     pkmn
+    pkmntest
 )
 
 SET(pkmn_c_test_libs
@@ -39,11 +40,12 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         IF(WIN32)
             SET(LIBRARY_PATHS
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
-                "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/java/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
+                "${TESTS_BINARY_DIR}/pkmntest/${CMAKE_BUILD_TYPE}"
             )
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
@@ -64,11 +66,12 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${PKMN_BINARY_DIR}/lib"
-                "${PKMN_BINARY_DIR}/lib/c"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp"
                 "${PKMN_BINARY_DIR}/lib/swig/java"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
+                "${TESTS_BINARY_DIR}/pkmntest"
             )
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
