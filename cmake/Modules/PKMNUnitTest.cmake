@@ -40,6 +40,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         IF(WIN32)
             SET(LIBRARY_PATHS
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+                "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/java/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
@@ -66,6 +67,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${PKMN_BINARY_DIR}/lib"
+                "${PKMN_BINARY_DIR}/lib/c"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp"
                 "${PKMN_BINARY_DIR}/lib/swig/java"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"

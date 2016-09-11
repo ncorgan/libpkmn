@@ -1234,6 +1234,9 @@ void UnityIgnore(const char* msg, const UNITY_LINE_TYPE line)
     void setUp(void) { }
 #   pragma weak tearDown
     void tearDown(void) { }
+#else
+    void setUp(void) { }
+    void tearDown(void) { }
 #endif
 /*-----------------------------------------------*/
 void UnityDefaultTestRun(UnityTestFunction Func, const char* FuncName, const int FuncLineNum)
