@@ -46,6 +46,7 @@ IF(PKMN_ENABLE_C)
 
     SET(c_tests
         c_lists_test
+        c_paths_test
     )
 
     FOREACH(test ${c_tests})
