@@ -65,12 +65,6 @@ PKMN_API pkmn_error_t pkmn_database_move_pp(
     int* pp_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_move_base_power(
-    const char* item_name,
-    const char* game_name,
-    int* base_power_out
-);
-
 PKMN_API pkmn_error_t pkmn_database_move_accuracy(
     const char* item_name,
     const char* game_name,
