@@ -13,6 +13,7 @@ ADD_SUBDIRECTORY(pkmntest)
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
     ${CMAKE_CURRENT_SOURCE_DIR}/
+    ${PKMN_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
 )
 
@@ -20,6 +21,7 @@ SET(cpp_tests
     cpp_calculations_test
     cpp_items_test
     cpp_lists_test
+    cpp_paths_test
 )
 
 FOREACH(test ${cpp_tests})
