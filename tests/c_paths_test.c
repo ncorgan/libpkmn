@@ -35,7 +35,11 @@ static void appdata_dir_test() {
                      &actual_strlen
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+#ifdef PKMN_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING(strbuffer, "C:\\libpkmn\\appdata\\dir");
+#else
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "/libpkmn/appdata/dir");
+#endif
 }
 
 static void database_path_test() {
@@ -58,7 +62,7 @@ static void database_path_test() {
 #ifdef PKMN_PLATFORM_WIN32
     _putenv_s("PKMN_DATABASE_PATH", __FILE__);
 #else
-    setenv("PKMN_DATABASE_PATH", __FILE__, 0);
+    setenv("PKMN_DATABASE_PATH", __FILE__, 1);
 #endif
 
     error_code = pkmn_get_database_path(
@@ -72,7 +76,7 @@ static void database_path_test() {
 #ifdef PKMN_PLATFORM_WIN32
     _putenv_s("PKMN_DATABASE_PATH", "C:\\libpkmn\\database\\path");
 #else
-    setenv("PKMN_DATABASE_PATH", "/libpkmn/database/path", 0);
+    setenv("PKMN_DATABASE_PATH", "/libpkmn/database/path", 1);
 #endif
 
     error_code = pkmn_get_database_path(
@@ -87,7 +91,7 @@ static void images_dir_test() {
 #ifdef PKMN_PLATFORM_WIN32
     _putenv_s("PKMN_IMAGES_DIR", "C:\\libpkmn\\images\\dir");
 #else
-    setenv("PKMN_IMAGES_DIR", "/libpkmn/images/dir", 0);
+    setenv("PKMN_IMAGES_DIR", "/libpkmn/images/dir", 1);
 #endif
 
     error_code = pkmn_get_images_dir(
@@ -96,7 +100,11 @@ static void images_dir_test() {
                      &actual_strlen
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+#ifdef PKMN_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING(strbuffer, "C:\\libpkmn\\images\\dir");
+#else
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "/libpkmn/images/dir");
+#endif
 }
 
 static void tmp_dir_test() {
