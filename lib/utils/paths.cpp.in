@@ -11,8 +11,10 @@
 #include <pkmn/utils/paths.hpp>
 
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 #include <boost/archive/tmpdir.hpp>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -30,18 +32,27 @@ namespace pkmn {
     ) {
         std::string value = pkmn_getenv(env_var);
         if(value.empty()) {
-            return fs::path();
+            if(must_exist) {
+                throw std::runtime_error(
+                          str(boost::format("The environment variable \"%s\" does not correspond to a valid location.")
+                                  % env_var)
+                      );
+            } else {
+                return fs::path();
+            }
         }
 
         fs::path fs_path(value);
-        if(must_exist) {
-            return fs::exists(fs_path) ? fs_path : fs::path();
+        if(must_exist and not fs::exists(fs_path)) {
+            throw std::runtime_error(
+                      str(boost::format("The environment variable \"%s\" does not correspond to a valid location.")
+                              % env_var)
+                  );
         } else {
             return fs_path;
         }
     }
 
-    // TODO: conventions for iOS, Android
     std::string get_appdata_dir() {
         fs::path fs_path = env_var_to_fs_path(
                                "PKMN_APPDATA_DIR",
