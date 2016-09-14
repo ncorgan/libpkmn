@@ -46,7 +46,8 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
-                "${TESTS_BINARY_DIR}/pkmntest/${CMAKE_BUILD_TYPE}"
+                "${TESTS_BINARY_DIR}/pkmntest/cpp/${CMAKE_BUILD_TYPE}"
+                "${TESTS_BINARY_DIR}/pkmntest/c/${CMAKE_BUILD_TYPE}"
             )
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
@@ -73,7 +74,8 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
-                "${TESTS_BINARY_DIR}/pkmntest"
+                "${TESTS_BINARY_DIR}/pkmntest/cpp"
+                "${TESTS_BINARY_DIR}/pkmntest/c"
             )
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
