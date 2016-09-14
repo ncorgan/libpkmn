@@ -30,7 +30,7 @@ PKMN_INLINE void pkmn_setenv(
     #if defined(PKMN_PLATFORM_MINGW) || defined(PKMN_PLATFORM_WIN32)
         _putenv_s(key.c_str(), val.c_str());
     #else
-        setenv(key.c_str(), val.c_str(), 0);
+        setenv(key.c_str(), val.c_str(), 1);
     #endif
 }
 

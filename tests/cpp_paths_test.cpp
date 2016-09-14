@@ -50,6 +50,7 @@ BOOST_AUTO_TEST_CASE(database_path_test) {
 #else
     static const std::string database_path("/libpkmn/database/path");
 #endif
+    pkmn_setenv("PKMN_DATABASE_PATH", database_path);
     BOOST_CHECK_THROW(
         (void)pkmn::get_database_path();
     , std::runtime_error);
