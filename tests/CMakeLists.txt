@@ -46,6 +46,7 @@ IF(PKMN_ENABLE_C)
 
     SET(c_tests
         c_database_test
+        c_items_test
         c_lists_test
         c_paths_test
     )

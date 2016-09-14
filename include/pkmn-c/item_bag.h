@@ -27,7 +27,6 @@ extern "C" {
 
 PKMN_API pkmn_error_t pkmn_item_bag_make(
     pkmn_item_bag_handle_t* handle_ptr,
-    const char* item_name,
     const char* game_name
 );
 
