@@ -10,6 +10,7 @@
 
 #include <pkmn/database/lists.hpp>
 
+#include <boost/algorithm/string/compare.hpp>
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
@@ -142,7 +143,23 @@ namespace pkmn { namespace database {
     };
 
     BOOST_STATIC_CONSTEXPR int num_ranges_in_version_group[] = {
-        0,0,0,3,1,2,3,4,3,3,3,0,0,1,2,1
+        0, // None
+        0, // Red/Blue
+        0, // Yellow
+        3, // Gold/Silver
+        1, // Crystal
+        2, // Ruby/Sapphire
+        2, // Emerald
+        2, // FR/LG
+        4, // D/P
+        3, // Platinum
+        3, // HG/SS
+        3, // B/W
+        0, // Colosseum
+        0, // XD
+        1, // B2/W2
+        2, // X/Y
+        2  // OR/AS
     };
 
     static const std::vector<std::string> location_names_to_fix = boost::assign::list_of
@@ -150,21 +167,45 @@ namespace pkmn { namespace database {
         ("Battle Tower")("S.S. Tidal")("Team Aqua Hideout")
     ;
 
-    PKMN_INLINE void fix_location_vector(
+    static PKMN_INLINE void fix_location_vector(
         std::vector<std::string> &ret,
         int game_id,
         bool whole_generation
     ) {
+        std::vector<size_t> to_erase;
+
         for(size_t i = 0; i < ret.size(); ++i) {
             if(std::find(
                    location_names_to_fix.begin(), location_names_to_fix.end(), ret[i]
                ) != location_names_to_fix.end()
             ) {
                 int location_id = pkmn::database::location_name_to_id(ret[i]);
-                ret[i] = pkmn::database::fix_location_string(
-                             ret[i], location_id, game_id,
-                             whole_generation
-                         );
+                bool different_found = true;
+                bool different_applies = true;
+                std::string new_string = pkmn::database::alternate_location_string(
+                                             ret[i], location_id, game_id,
+                                             whole_generation, &different_found,
+                                             &different_applies
+                                         );
+
+                if(different_found) {
+                    if(whole_generation) {
+                        ret.emplace_back(new_string);
+                    } else if(different_applies) {
+                        if(new_string.empty()) {
+                            to_erase.emplace_back(i);
+                        } else {
+                            ret[i] = new_string;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(not to_erase.empty()) {
+            for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i) {
+                std::cout << i << std::endl;
+                ret.erase(ret.begin() + to_erase[i]);
             }
         }
     }
@@ -256,7 +297,6 @@ namespace pkmn { namespace database {
                 };
 
                 for(size_t i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
-                    std::cout << game << " " << num_ranges_in_version_group[version_group_id] << std::endl;
                     SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
                     stmt.bind(1, generation);
                     stmt.bind(2, version_group_region_ids[version_group_id][i]);
@@ -284,7 +324,7 @@ namespace pkmn { namespace database {
         }
 
         fix_location_vector(ret, game_id, whole_generation);
-        std::sort(ret.begin(), ret.end(), string_compare);
+        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
         return ret;
     }
 
@@ -415,7 +455,18 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_super_training_medal_list() {
-        return std::vector<std::string>();
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        static BOOST_CONSTEXPR const char* query = \
+            "SELECT name FROM ribbons_medals WHERE super_training_medal=1";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list<std::string>(
+            _db, query, ret
+        );
+
+        return ret;
     }
 
     std::vector<std::string> get_type_list(

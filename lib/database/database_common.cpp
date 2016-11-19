@@ -135,27 +135,39 @@ namespace pkmn { namespace database {
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_XY  (int game_id) {return (game_id == 23 or game_id == 24);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_ORAS(int game_id) {return (game_id == 25 or game_id == 26);}
 
-    std::string fix_location_string(
+    std::string alternate_location_string(
         const std::string &original_string,
         const int location_id,
         const int game_id,
-        bool whole_generation
+        bool whole_generation,
+        bool* different_found,
+        bool* different_applies
     ) {
-        if((location_id == 210) and GAME_IS_DP(game_id)) {
+        *different_found = true;
+
+        if(location_id == 210) {
+            *different_applies = GAME_IS_DP(game_id);
             return "Cafe";
-        } else if((location_id == 378) and GAME_IS_B2W2(game_id)) {
+        } else if(location_id == 378) {
+            *different_applies = GAME_IS_B2W2(game_id);
             return "PWT";
-        } else if((location_id == 486) and (game_id == 8)) {
+        } else if(location_id == 486) {
+            *different_applies = (game_id == 8);
             return "Aqua Hideout";
-        } else if((location_id == 586) and GAME_IS_E(game_id)) {
+        } else if(location_id == 586) {
+            *different_applies = GAME_IS_E(game_id);
             return "Battle Frontier";
-        } else if((location_id == 10030) and GAME_IS_GS(game_id) and not whole_generation) {
+        } else if(location_id == 10030) {
+            *different_applies = (GAME_IS_GS(game_id) and not whole_generation);
             return "";
-        } else if((location_id == 10343) and (GAME_IS_RS(game_id) or GAME_IS_E(game_id))) {
+        } else if(location_id == 10343) {
+            *different_applies = (GAME_IS_RS(game_id) or GAME_IS_E(game_id));
             return "Ferry";
-        } else if((location_id == 10345) and GAME_IS_E(game_id)) {
+        } else if(location_id == 10345) {
+            *different_applies = GAME_IS_E(game_id);
             return "Aqua Hideout";
         } else {
+            *different_found = false;
             return original_string;
         }
     }

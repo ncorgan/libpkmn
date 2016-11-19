@@ -300,33 +300,19 @@ namespace pkmn { namespace database {
         const std::string &input
     );
 
-    std::string fix_location_string(
+    std::string alternate_location_string(
         const std::string &original_string,
         int location_id,
         int game_id,
-        bool whole_generation
+        bool whole_generation,
+        bool* different_found,
+        bool* different_applies
     );
 
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
     );
-
-
-    PKMN_INLINE bool string_compare(
-        const std::string &left,
-        const std::string &right
-    ) {
-        for(std::string::const_iterator lit = left.begin(), rit = right.begin(); lit != left.end() && rit != right.end(); ++lit, ++rit ) {
-            if(tolower(*lit) < tolower(*rit)) {
-                return true;
-            } else if(tolower(*lit) > tolower(*rit)) {
-                return false;
-            }
-        }
-
-        return (left.size() < right.size());
-    }
 
     /*
      * Veekun's database stores item game indices by generation, but

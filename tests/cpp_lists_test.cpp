@@ -421,7 +421,7 @@ BOOST_AUTO_TEST_CASE(location_list_test) {
     locations_bw = pkmn::database::get_location_list("White", true);
     BOOST_CHECK_GT(locations_bw.size(), 0);
     BOOST_CHECK(string_in_vector(locations_bw, "Cold Storage"));
-    BOOST_CHECK(not string_in_vector(locations_bw, "PWT"));
+    BOOST_CHECK(string_in_vector(locations_bw, "PWT"));
     BOOST_CHECK(string_in_vector(locations_bw, "Castelia Sewers"));
     BOOST_CHECK(string_in_vector(locations_bw, "PC Tokyo"));
 
@@ -481,90 +481,90 @@ BOOST_AUTO_TEST_CASE(location_list_test) {
 }
 
 BOOST_AUTO_TEST_CASE(move_list_test) {
-    std::vector<std::string> types_bad,  types_gen1,
-                             types_gen2, types_gba,
-                             types_colo, types_xd,
-                             types_gen4, types_gen5,
-                             types_xy,   types_oras;
+    std::vector<std::string> moves_bad,  moves_gen1,
+                             moves_gen2, moves_gba,
+                             moves_colo, moves_xd,
+                             moves_gen4, moves_gen5,
+                             moves_xy,   moves_oras;
 
     /*
      * Make sure invalid games fail.
      */
     BOOST_CHECK_THROW(
-        types_bad = pkmn::database::get_type_list("Not a game");
+        moves_bad = pkmn::database::get_type_list("Not a game");
     , std::invalid_argument);
 
     /*
      * Generation I
      */
-    types_gen1 = pkmn::database::get_move_list("Red");
-    BOOST_CHECK_EQUAL(types_gen1.size(), 165);
-    BOOST_CHECK_EQUAL(types_gen1.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_gen1.back(), "Struggle");
+    moves_gen1 = pkmn::database::get_move_list("Red");
+    BOOST_CHECK_EQUAL(moves_gen1.size(), 165);
+    BOOST_CHECK_EQUAL(moves_gen1.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_gen1.back(), "Struggle");
 
     /*
      * Generation II
      */
-    types_gen2 = pkmn::database::get_move_list("Gold");
-    BOOST_CHECK_EQUAL(types_gen2.size(), 251);
-    BOOST_CHECK_EQUAL(types_gen2.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_gen2.back(), "Beat Up");
+    moves_gen2 = pkmn::database::get_move_list("Gold");
+    BOOST_CHECK_EQUAL(moves_gen2.size(), 251);
+    BOOST_CHECK_EQUAL(moves_gen2.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_gen2.back(), "Beat Up");
 
     /*
      * Game Boy Advance
      */
-    types_gba = pkmn::database::get_move_list("Sapphire");
-    BOOST_CHECK_EQUAL(types_gba.size(), 354);
-    BOOST_CHECK_EQUAL(types_gba.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_gba.back(), "Psycho Boost");
+    moves_gba = pkmn::database::get_move_list("Sapphire");
+    BOOST_CHECK_EQUAL(moves_gba.size(), 354);
+    BOOST_CHECK_EQUAL(moves_gba.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_gba.back(), "Psycho Boost");
 
     /*
      * Colosseum
      */
-    types_colo = pkmn::database::get_move_list("Colosseum");
-    BOOST_CHECK_EQUAL(types_colo.size(), 355);
-    BOOST_CHECK_EQUAL(types_colo.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_colo.back(), "Shadow Rush");
+    moves_colo = pkmn::database::get_move_list("Colosseum");
+    BOOST_CHECK_EQUAL(moves_colo.size(), 355);
+    BOOST_CHECK_EQUAL(moves_colo.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_colo.back(), "Shadow Rush");
 
     /*
      * XD
      */
-    types_xd = pkmn::database::get_move_list("XD");
-    BOOST_CHECK_EQUAL(types_xd.size(), 372);
-    BOOST_CHECK_EQUAL(types_xd.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_xd.back(), "Shadow Sky");
+    moves_xd = pkmn::database::get_move_list("XD");
+    BOOST_CHECK_EQUAL(moves_xd.size(), 372);
+    BOOST_CHECK_EQUAL(moves_xd.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_xd.back(), "Shadow Sky");
 
     /*
      * Generation IV
      */
-    types_gen4 = pkmn::database::get_move_list("SoulSilver");
-    BOOST_CHECK_EQUAL(types_gen4.size(), 467);
-    BOOST_CHECK_EQUAL(types_gen4.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_gen4.back(), "Shadow Force");
+    moves_gen4 = pkmn::database::get_move_list("SoulSilver");
+    BOOST_CHECK_EQUAL(moves_gen4.size(), 467);
+    BOOST_CHECK_EQUAL(moves_gen4.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_gen4.back(), "Shadow Force");
 
     /*
      * Generation V
      */
-    types_gen5 = pkmn::database::get_move_list("White");
-    BOOST_CHECK_EQUAL(types_gen5.size(), 559);
-    BOOST_CHECK_EQUAL(types_gen5.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_gen5.back(), "Fusion Bolt");
+    moves_gen5 = pkmn::database::get_move_list("White");
+    BOOST_CHECK_EQUAL(moves_gen5.size(), 559);
+    BOOST_CHECK_EQUAL(moves_gen5.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_gen5.back(), "Fusion Bolt");
 
     /*
      * X/Y
      */
-    types_xy = pkmn::database::get_move_list("Y");
-    BOOST_CHECK_EQUAL(types_xy.size(), 617);
-    BOOST_CHECK_EQUAL(types_xy.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_xy.back(), "Light of Ruin");
+    moves_xy = pkmn::database::get_move_list("Y");
+    BOOST_CHECK_EQUAL(moves_xy.size(), 617);
+    BOOST_CHECK_EQUAL(moves_xy.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_xy.back(), "Light of Ruin");
 
     /*
      * Omega Ruby/Alpha Sapphire
      */
-    types_oras = pkmn::database::get_move_list("Omega Ruby");
-    BOOST_CHECK_EQUAL(types_oras.size(), 621);
-    BOOST_CHECK_EQUAL(types_oras.front(), "Pound");
-    BOOST_CHECK_EQUAL(types_oras.back(), "Hyperspace Fury");
+    moves_oras = pkmn::database::get_move_list("Omega Ruby");
+    BOOST_CHECK_EQUAL(moves_oras.size(), 621);
+    BOOST_CHECK_EQUAL(moves_oras.front(), "Pound");
+    BOOST_CHECK_EQUAL(moves_oras.back(), "Hyperspace Fury");
 }
 
 BOOST_AUTO_TEST_CASE(nature_list_test) {
@@ -678,10 +678,11 @@ BOOST_AUTO_TEST_CASE(ribbon_list_test) {
 }
 
 BOOST_AUTO_TEST_CASE(super_training_medal_list_test) {
-    // TODO: confirm length
-}
+    std::vector<std::string> super_training_medals = \
+        pkmn::database::get_super_training_medal_list();
 
-#include <iostream>
+    BOOST_CHECK_EQUAL(super_training_medals.size(), 30);
+}
 
 BOOST_AUTO_TEST_CASE(type_list_test) {
     std::vector<std::string> types_bad,  types_gen1,
