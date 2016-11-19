@@ -13,23 +13,15 @@ PKMN_PYTHON_INIT
 %import <stl_python.i>
 
 %{
-    #include <pkmn/database/item_entry.hpp>
-    #include <pkmn/database/move_entry.hpp>
-    #include <pkmn/database/pokemon_entry.hpp>
-
     #include <pkmn/database/lists.hpp>
 %}
 
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
-%include <python/pkmn_levelup_move.i>
-
-%include <pkmn/database/item_entry.hpp>
-%include <pkmn/database/move_entry.hpp>
-%include <pkmn/database/pokemon_entry.hpp>
+%include <python/pkmn_database_item_entry.i>
+%include <python/pkmn_database_levelup_move.i>
+%include <python/pkmn_database_move_entry.i>
+%include <python/pkmn_database_pokemon_entry.i>
 
 %include <pkmn/database/lists.hpp>
-
-PKMN_PYTHON_VECTOR(pkmn::database::move_entry, move_list)
-PKMN_PYTHON_VECTOR(pkmn::database::pokemon_entry, pokemon_entries)

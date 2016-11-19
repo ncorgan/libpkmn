@@ -67,6 +67,17 @@ def item_entry_test():
         if fling_effect != "None":
             raise RuntimeError("fling_effect (\"{0}\") != \"None\"".format(fling_effect))
 
+        entry_same = pkmn.database.item_entry("Salamencite", "Omega Ruby")
+        entry_different_item = pkmn.database.item_entry("Potion", "Omega Ruby")
+        entry_different_game = pkmn.database.item_entry("Salamencite", "Alpha Sapphire")
+
+        if entry != entry_same:
+            raise RuntimeError("entry != entry_same")
+        if entry == entry_different_item:
+            raise RuntimeError("entry == entry_different_item")
+        if entry == entry_different_game:
+            raise RuntimeError("entry == entry_different_game")
+
         return True
     except:
         print()
@@ -131,6 +142,13 @@ def move_entry_test():
         if not check_close(accuracy, 1.0):
             raise RuntimeError("accuracy ({0}) != 1.0".format(accuracy))
 
+        priority = entry.get_priority()
+        if priority != 1:
+            raise RuntimeError("priority ({0}) != 1".format(priority))
+
+        # Just make sure it works
+        effect = entry.get_effect()
+
         contest_type = entry.get_contest_type()
         if contest_type != "Smart":
             raise RuntimeError("contest_type (\"{0}\") != \"Smart\"".format(contest_type))
@@ -143,8 +161,16 @@ def move_entry_test():
         if super_contest_effect == "None":
             raise RuntimeError("super_contest_effect (\"{0}\") == \"None\"".format(super_contest_effect))
 
-        # Just make sure it works
-        effect = entry.get_effect()
+        entry_same = pkmn.database.move_entry("Bullet Punch", "Pearl")
+        entry_different_move = pkmn.database.move_entry("Roost", "Pearl")
+        entry_different_game = pkmn.database.move_entry("Bullet Punch", "Diamond")
+
+        if entry != entry_same:
+            raise RuntimeError("entry != entry_same")
+        if entry == entry_different_move:
+            raise RuntimeError("entry == entry_different_move")
+        if entry == entry_different_game:
+            raise RuntimeError("entry == entry_different_game")
 
         return True
     except:
@@ -303,6 +329,22 @@ def pokemon_entry_test():
         evolutions = entry.get_evolutions()
         if len(evolutions) != 1:
             raise RuntimeError("len(evolutions) ({0}) != 1".format(len(evolutions)))
+
+        # Use different Pokemon for testing (in)equality
+        entry_first = pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "Standard")
+        entry_same = pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "Standard")
+        entry_different_pokemon = pkmn.database.pokemon_entry("Pichu", "Omega Ruby", "Standard")
+        entry_different_game = pkmn.database.pokemon_entry("Pikachu", "Alpha Sapphire", "Standard")
+        entry_different_form = pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "Belle")
+
+        if entry_first != entry_same:
+            raise RuntimeError("entry_first != entry_same")
+        if entry_first == entry_different_pokemon:
+            raise RuntimeError("entry_first == entry_different_pokemon")
+        if entry_first == entry_different_game:
+            raise RuntimeError("entry_first == entry_different_game")
+        if entry_first == entry_different_form:
+            raise RuntimeError("entry_first == entry_different_form")
 
         return True
     except:
