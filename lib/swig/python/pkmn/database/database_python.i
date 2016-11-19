@@ -16,6 +16,8 @@ PKMN_PYTHON_INIT
     #include <pkmn/database/item_entry.hpp>
     #include <pkmn/database/move_entry.hpp>
     #include <pkmn/database/pokemon_entry.hpp>
+
+    #include <pkmn/database/lists.hpp>
 %}
 
 // Convert Doxygen docs to Python docstrings
@@ -27,4 +29,4 @@ PKMN_PYTHON_INIT
 %include <pkmn/database/move_entry.hpp>
 %include <pkmn/database/pokemon_entry.hpp>
 
-%include <database/lists_python.i>
+%include <pkmn/database/lists.hpp>
