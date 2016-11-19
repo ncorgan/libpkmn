@@ -16,8 +16,15 @@ INCLUDE_DIRECTORIES(
     ${PKMN_SOURCE_DIR}/lib
 )
 
-SET(pkmn_test_libs
+SET(pkmn_cpp_test_libs
     pkmn
+    pkmntest
+)
+
+SET(pkmn_c_test_libs
+    pkmn-c
+    pkmntest-c
+    unity
 )
 
 MACRO(PKMN_ADD_TEST test_name test_cmd)
@@ -38,11 +45,14 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/java/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
+                "${TESTS_BINARY_DIR}/pkmntest/cpp/${CMAKE_BUILD_TYPE}"
+                "${TESTS_BINARY_DIR}/pkmntest/c/${CMAKE_BUILD_TYPE}"
             )
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
-            SET(DATABASE_PATH ${PKMN_BINARY_DIR}/pkmn-database/database/pkmn.db)
+            SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
@@ -63,7 +73,10 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${PKMN_BINARY_DIR}/lib/swig/csharp"
                 "${PKMN_BINARY_DIR}/lib/swig/java"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
                 "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
+                "${TESTS_BINARY_DIR}/pkmntest/cpp"
+                "${TESTS_BINARY_DIR}/pkmntest/c"
             )
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
@@ -81,7 +94,7 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     SET_SOURCE_FILES_PROPERTIES(${test_srcs}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
     )
-    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_test_libs})
+    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)
         SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
@@ -91,6 +104,22 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
+
+MACRO(PKMN_ADD_C_TEST test_name test_srcs)
+    ADD_EXECUTABLE(${test_name} ${test_srcs})
+    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+        PROPERTIES COMPILE_FLAGS "${PKMN_C_FLAGS}"
+    )
+    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_c_test_libs})
+
+    IF(WIN32)
+        SET(c_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
+    ELSE()
+        SET(c_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+    ENDIF(WIN32)
+    PKMN_ADD_TEST(${test_name} ${c_test_cmd})
+ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
 
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")

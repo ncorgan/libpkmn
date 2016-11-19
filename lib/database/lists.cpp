@@ -18,65 +18,8 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    template <typename ret_type>
-    void pkmn_db_query_list(
-        const char* query,
-        std::vector<ret_type> &ret_vec
-    ) {
-        SQLite::Statement stmt((*_db), query);
-        while(stmt.executeStep()) {
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-    }
-
-    template <typename ret_type, typename bind1_type>
-    void pkmn_db_query_list_bind1(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1
-    ) {
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        while(stmt.executeStep()) {
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-    }
-
-    template <typename ret_type, typename bind1_type, typename bind2_type>
-    void pkmn_db_query_list_bind2(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1,
-        bind2_type bind2
-    ) {
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        stmt.bind(2, (bind2_type)bind2);
-        while(stmt.executeStep()) {
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-    }
-
-    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
-    void pkmn_db_query_list_bind3(
-        const char* query,
-        std::vector<ret_type> &ret_vec,
-        bind1_type bind1,
-        bind1_type bind2,
-        bind1_type bind3
-    ) {
-        SQLite::Statement stmt((*_db), query);
-        stmt.bind(1, (bind1_type)bind1);
-        stmt.bind(2, (bind2_type)bind2);
-        stmt.bind(3, (bind3_type)bind3);
-        while(stmt.executeStep()) {
-            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
-        }
-    }
-
-    void get_ability_list(
-        int generation,
-        std::vector<std::string> &abilities_out
+    std::vector<std::string> get_ability_list(
+        int generation
     ) {
         if(generation < 3 or generation > 6) {
             throw std::out_of_range("generation: valid range 3-6");
@@ -90,16 +33,17 @@ namespace pkmn { namespace database {
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
             "AND is_main_series=1) ORDER BY name";
 
-        abilities_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
-            query, abilities_out, generation
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, query, ret, generation
         );
+
+        return ret;
     }
 
-    void get_game_list(
+    std::vector<std::string> get_game_list(
         int generation,
-        bool include_previous,
-        std::vector<std::string> &games_out
+        bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
             throw std::out_of_range("generation: valid range 1-6");
@@ -118,34 +62,95 @@ namespace pkmn { namespace database {
             "(SELECT id FROM versions WHERE version_group_id IN "
             "(SELECT id FROM version_groups WHERE generation_id=?))";
 
-        games_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db,
             (include_previous ? with_previous_query : no_previous_query),
-            games_out, generation
+            ret, generation
         );
+
+        return ret;
     }
 
-    void get_item_list(
-        const std::string &game,
-        std::vector<std::string> &items_out
+    std::vector<std::string> get_item_list(
+        const std::string &game
     ) {
-        (void)game;
-        (void)items_out;
+        int game_id = pkmn::database::game_name_to_id(game);
+
+        std::vector<std::string> ret;
+        pkmn::database::_get_item_list(
+            ret, -1, game_id
+        );
+
+        return ret;
     }
 
-    void get_location_list(
+    /*
+     * There is unfortunately a lot of manual work necessary here because the Veekun database
+     * stores location game indices by generation and not by game. This is generally fine because
+     * there is almost never any overlap in location index, but some games in the same region have
+     * version-exclusive indices, so we need to detect these and filter them out.
+     */
+
+    BOOST_STATIC_CONSTEXPR int version_group_region_ids[][2] = {
+        {0,0}, // None
+        {1,1}, // Red/Blue
+        {1,1}, // Yellow
+        {2,1}, // Gold/Silver
+        {2,1}, // Crystal
+        {3,3}, // Ruby/Sapphire
+        {3,3}, // Emerald
+        {1,1}, // FR/LG
+        {4,4}, // D/P
+        {4,4}, // Platinum
+        {2,1}, // HG/SS
+        {5,5}, // B/W
+        {0,0}, // Colosseum
+        {0,0}, // XD
+        {5,5}, // B2/W2
+        {6,6}, // X/Y
+        {3,3}, // OR/AS
+    };
+
+    PKMN_CONSTEXPR_OR_INLINE bool version_group_has_single_region(
+        int version_group_id
+    ) {
+        return (version_group_region_ids[version_group_id][0] == \
+                version_group_region_ids[version_group_id][1]);
+    }
+
+    BOOST_STATIC_CONSTEXPR int version_group_location_index_bounds[][4][2] = {
+        {{0,0},{0,0},{0,0},{0,0}}, // None
+        {{0,0},{0,0},{0,0},{0,0}}, // Red/Blue
+        {{0,0},{0,0},{0x0},{0,0}}, // Yellow
+        {{0x01,0x0C},{0x1E,0x7F},{0,0}}, // Gold/Silver
+        {{0x01,0x7F},{0,0},{0,0},{0,0}}, // Crystal
+        {{0,87},{254,255},{0,0},{0,0}}, // Ruby/Sapphire
+        {{0,87},{196,255},{0,0},{0,0}}, // Emerald
+        {{88,196},{254,255},{0,0},{0,0}}, // FR/LG
+        {{0,111},{2000,2010},{2012,2012},{3000,3076}}, // D/P
+        {{0,125},{2000,2012},{3000,3076},{0,0}}, // Platinum
+        {{126,2010},{2012,2012},{3000,3076},{0,0}}, // HG/SS
+        {{0,116},{30001,30014},{40000,60003},{0,0}}, // B/W
+        {{0,0},{0,0},{0,0},{0,0}}, // Colosseum
+        {{0,0},{0,0},{0,0},{0,0}}, // XD
+        {{0,60003},{0,0},{0,0},{0,0}}, // B2/W2
+        {{0,168},{30001,60003},{0,0},{0,0}}, // X/Y
+        {{170,60003},{0,0},{0,0},{0,0}} // OR/AS
+    };
+
+    std::vector<std::string> get_location_list(
         const std::string &game,
-        bool whole_generation,
-        std::vector<std::string> &locations_out
+        bool whole_generation
     ) {
         (void)game;
         (void)whole_generation;
-        (void)locations_out;
+
+        return std::vector<std::string>();
     }
 
-    void get_move_list(
-        const std::string &game,
-        std::vector<std::string> &moves_out
+    std::vector<std::string> get_move_list(
+        const std::string &game
     ) {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -155,10 +160,11 @@ namespace pkmn { namespace database {
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
             "type_id<100) ORDER BY move_id";
 
-        moves_out.clear();
         int generation = game_name_to_generation(game);
-        pkmn_db_query_list_bind1<std::string, int>(
-            main_query, moves_out, generation
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, main_query, ret, generation
         );
 
         /*
@@ -172,8 +178,8 @@ namespace pkmn { namespace database {
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
 
-            pkmn_db_query_list<std::string>(
-                shadow_query, moves_out
+            pkmn::database::query_db_list<std::string>(
+                _db, shadow_query, ret
             );
         } else if(game_id == 20) {
             static BOOST_CONSTEXPR const char* shadow_query = \
@@ -181,22 +187,21 @@ namespace pkmn { namespace database {
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
                 "ORDER BY move_id";
 
-            pkmn_db_query_list<std::string>(
-                shadow_query, moves_out
+            pkmn::database::query_db_list<std::string>(
+                _db, shadow_query, ret
             );
         }
+
+        return ret;
     }
 
-    void get_nature_list(
-        std::vector<std::string> &natures_out
-    ) {
-        (void)natures_out;
+    std::vector<std::string> get_nature_list() {
+        return std::vector<std::string>();
     }
 
-    void get_pokemon_list(
+    std::vector<std::string> get_pokemon_list(
         int generation,
-        bool include_previous,
-        std::vector<std::string> &pokemon_out
+        bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
             throw std::out_of_range("generation: valid range 1-6");
@@ -215,16 +220,17 @@ namespace pkmn { namespace database {
             "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id=?) "
             "ORDER BY pokemon_species_id";
 
-        pokemon_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db,
             (include_previous ? with_previous_query : no_previous_query),
-            pokemon_out, generation
+            ret, generation
         );
+
+        return ret;
     }
 
-    void get_region_list(
-        std::vector<std::string> &regions_out
-    ) {
+    std::vector<std::string> get_region_list() {
         // Connect to database
         pkmn::database::get_connection(_db);
 
@@ -232,29 +238,27 @@ namespace pkmn { namespace database {
             "SELECT name FROM region_names WHERE local_language_id=9 "
             "ORDER BY region_id";
 
-        regions_out.clear();
-        pkmn_db_query_list<std::string>(
-            query, regions_out
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list<std::string>(
+            _db, query, ret
         );
+
+        return ret;
     }
 
-    void get_ribbon_list(
-        int generation,
-        std::vector<std::string> &ribbons_out
+    std::vector<std::string> get_ribbon_list(
+        int generation
     ) {
         (void)generation;
-        (void)ribbons_out;
+        return std::vector<std::string>();
     }
 
-    void get_super_training_medal_list(
-        std::vector<std::string> &super_training_medals_out
-    ) {
-        super_training_medals_out.clear();
+    std::vector<std::string> get_super_training_medal_list() {
+        return std::vector<std::string>();
     }
 
-    void get_type_list(
-        const std::string &game,
-        std::vector<std::string> &types_out
+    std::vector<std::string> get_type_list(
+        const std::string &game
     ) {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -266,15 +270,32 @@ namespace pkmn { namespace database {
             "type_id IN (SELECT id FROM types WHERE generation_id<=?) "
             "AND type_id<100 ORDER BY type_id";
 
-        types_out.clear();
-        pkmn_db_query_list_bind1<std::string, int>(
-            query, types_out, generation
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, query, ret, generation
         );
 
-        // The Shadow type only exists in the Gamecube games
+        BOOST_STATIC_CONSTEXPR int GOLD   = 4;
+        BOOST_STATIC_CONSTEXPR int SS     = 16;
+        BOOST_STATIC_CONSTEXPR int BLACK2 = 22;
+
         int game_id = game_name_to_id(game);
-        if(game_id == 19 or game_id == 20) {
-            types_out.emplace_back("Shadow");
+
+        // The Fairy type only exists in Generation VI+
+        if(game_id <= BLACK2) {
+            ret.pop_back();
         }
+
+        // The Shadow type only exists in the Gamecube games
+        if(game_is_gamecube(game_id)) {
+            ret.emplace_back("Shadow");
+        }
+
+        // The ??? type only exists in Generations II-II
+        if((game_id >= GOLD and game_id <= SS) or game_is_gamecube(game_id)) {
+            ret.emplace_back("???");
+        }
+
+        return ret;
     }
 }}

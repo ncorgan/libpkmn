@@ -42,6 +42,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
     filesystem
+    thread
     unit_test_framework
 )
 IF(MSVC)
@@ -110,6 +111,7 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
+PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
     "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
 

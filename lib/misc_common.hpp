@@ -73,10 +73,16 @@ static PKMN_INLINE bool pkmn_string_is_modern_stat(
     return false;
 }
 
+PKMN_CONSTEXPR_OR_INLINE bool pkmn_EV_in_bounds(
+    int EV, bool modern
+) {
+    return (EV >= 0) and (EV <= (modern ? 255 : 65535));
+}
+
 PKMN_CONSTEXPR_OR_INLINE bool pkmn_IV_in_bounds(
     int IV, bool modern
 ) {
-    return (IV < 0) and (IV > (modern ? 31 : 15));
+    return (IV >= 0) and (IV <= (modern ? 31 : 15));
 }
 
 #endif /* INCLUDED_PKMN_MISC_COMMON_HPP */

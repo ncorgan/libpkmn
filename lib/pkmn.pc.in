@@ -3,7 +3,7 @@ exec_prefix=${prefix}
 libdir=${exec_prefix}/@LIBRARY_DIR@
 includedir=${prefix}/@INCLUDE_DIR@
 
-Name: pkmn
+Name: LibPKMN
 Description: Pokémon save editing and analysis library
 URL: https://github.com/ncorgan/libpkmn
 Version: 0.0.1

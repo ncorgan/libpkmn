@@ -52,6 +52,8 @@ namespace pkmn {
 
             const pkmn::item_slots_t& as_vector();
 
+            const std::vector<std::string>& get_valid_items();
+
             void* get_native();
 
         protected:
@@ -59,6 +61,7 @@ namespace pkmn {
             int _capacity, _num_items;
 
             pkmn::item_slots_t _item_slots;
+            std::vector<std::string> _valid_items;
 
             bool _our_mem;
             void* _native;

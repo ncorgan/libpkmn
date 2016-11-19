@@ -45,7 +45,7 @@ namespace pkmn { namespace calculations {
      * @brief Returns whether or not a Wurmple with a given personality will
      *        evolve into a Silcoon.
      *
-     * \param personality Wurmple's personality
+     * \param personality Wurmple's personality (encryption constant in Generation VI)
      * \param before_gen5 Whether the Wurmple is in a Generation III-IV game
      * \returns Whether a Wurmple will evolve into a Silcoon
      */
@@ -53,8 +53,8 @@ namespace pkmn { namespace calculations {
         uint32_t personality,
         bool before_gen5
     ) {
-        return before_gen5 ? ((personality % 10) < 5)
-                           : (((personality >> 16) % 10) < 5);
+        return before_gen5 ? (( (personality & 0x0000FFFF)        % 10) < 5)
+                           : ((((personality & 0xFFFF0000) >> 16) % 10) < 5);
     }
 
 }}
