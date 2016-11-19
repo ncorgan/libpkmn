@@ -70,6 +70,7 @@ IF(PKMN_ENABLE_PYTHON)
     SET(python_tests
         python_database_entry_test
         python_lists_test
+        python_paths_test
     )
 
     FOREACH(test ${python_tests})
