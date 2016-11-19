@@ -30,3 +30,6 @@ PKMN_PYTHON_INIT
 %include <pkmn/database/pokemon_entry.hpp>
 
 %include <pkmn/database/lists.hpp>
+
+PKMN_PYTHON_VECTOR(pkmn::database::move_entry, move_list)
+PKMN_PYTHON_VECTOR(pkmn::database::pokemon_entry, pokemon_entries)
