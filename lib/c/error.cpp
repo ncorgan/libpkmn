@@ -15,20 +15,19 @@
 
 struct error_struct {
     std::string error;
+    boost::mutex error_mutex;
 };
 
-static struct error_struct pkmn_c_error;
-
-static boost::mutex pkmn_c_error_mutex;
+static struct error_struct global_error;
 
 void pkmn_set_error(
     const std::string &error
 ) {
-    boost::mutex::scoped_lock lock(pkmn_c_error_mutex);
-    pkmn_c_error.error = error;
+    boost::mutex::scoped_lock lock(global_error.error_mutex);
+    global_error.error = error;
 }
 
 const char* pkmn_strerror() {
-    boost::mutex::scoped_lock lock(pkmn_c_error_mutex);
-    return pkmn_c_error.error.c_str();
+    boost::mutex::scoped_lock lock(global_error.error_mutex);
+    return global_error.error.c_str();
 }
