@@ -300,21 +300,18 @@ namespace pkmn { namespace database {
         const std::string &input
     );
 
-    std::string fix_location_string(
+    std::string alternate_location_string(
         const std::string &original_string,
         int location_id,
         int game_id,
-        bool whole_generation
+        bool whole_generation,
+        bool* different_found,
+        bool* different_applies
     );
 
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
-    );
-
-    bool string_compare(
-        const std::string &left,
-        const std::string &right
     );
 
     /*

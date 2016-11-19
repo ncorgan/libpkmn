@@ -71,6 +71,9 @@ void Statement::clearBindings()
 // Bind an int value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const int& aValue)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding " << aValue << " to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_int(mStmtPtr, aIndex, aValue);
     check(ret);
 }
@@ -78,6 +81,9 @@ void Statement::bind(const int aIndex, const int& aValue)
 // Bind a 64bits int value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const sqlite3_int64& aValue)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding " << aValue << " to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_int64(mStmtPtr, aIndex, aValue);
     check(ret);
 }
@@ -85,6 +91,9 @@ void Statement::bind(const int aIndex, const sqlite3_int64& aValue)
 // Bind a double (64bits float) value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const double& aValue)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding " << aValue << " to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_double(mStmtPtr, aIndex, aValue);
     check(ret);
 }
@@ -92,6 +101,9 @@ void Statement::bind(const int aIndex, const double& aValue)
 // Bind a string value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const std::string& aValue)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding \"" << aValue << "\" to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_text(mStmtPtr, aIndex, aValue.c_str(),
                                       static_cast<int>(aValue.size()), SQLITE_TRANSIENT);
     check(ret);
@@ -100,6 +112,9 @@ void Statement::bind(const int aIndex, const std::string& aValue)
 // Bind a text value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const char* apValue)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding \"" << apValue << "\" to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_text(mStmtPtr, aIndex, apValue, -1, SQLITE_TRANSIENT);
     check(ret);
 }
@@ -107,6 +122,9 @@ void Statement::bind(const int aIndex, const char* apValue)
 // Bind a binary blob value to a parameter "?", "?NNN", ":VVV", "@VVV" or "$VVV" in the SQL prepared statement
 void Statement::bind(const int aIndex, const void* apValue, const int aSize)
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Statement::bind(): binding " << aSize << " byte blob to " << aIndex << std::endl;
+#endif
     const int ret = sqlite3_bind_blob(mStmtPtr, aIndex, apValue, aSize, SQLITE_TRANSIENT);
     check(ret);
 }

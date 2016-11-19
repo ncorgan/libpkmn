@@ -308,6 +308,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(2), 14);
     BOOST_CHECK_EQUAL(move_entry_gen1.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen1.get_accuracy(), 1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gen1.get_priority(), 0);
     (void)move_entry_gen1.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen1.get_contest_type(), "None");
     BOOST_CHECK_EQUAL(move_entry_gen1.get_contest_effect(), "None");
@@ -326,6 +327,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(2), 14);
     BOOST_CHECK_EQUAL(move_entry_gen2.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen2.get_accuracy(), 0.85f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gen2.get_priority(), 0);
     (void)move_entry_gen2.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen2.get_contest_type(), "None");
     BOOST_CHECK_EQUAL(move_entry_gen2.get_contest_effect(), "None");
@@ -344,6 +346,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gba.get_pp(2), 14);
     BOOST_CHECK_EQUAL(move_entry_gba.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gba.get_accuracy(), 1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gba.get_priority(), 0);
     (void)move_entry_gba.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gba.get_contest_type(), "Tough");
     BOOST_CHECK(move_entry_gba.get_contest_effect() != "None");
@@ -362,6 +365,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(2), 0);
     BOOST_CHECK_EQUAL(move_entry_gcn.get_pp(3), 0);
     BOOST_CHECK_CLOSE(move_entry_gcn.get_accuracy(), 1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gcn.get_priority(), 0);
     (void)move_entry_gcn.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gcn.get_contest_type(), "None");
     BOOST_CHECK_EQUAL(move_entry_gcn.get_contest_effect(), "None");
@@ -380,6 +384,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(2), 42);
     BOOST_CHECK_EQUAL(move_entry_gen4.get_pp(3), 48);
     BOOST_CHECK_CLOSE(move_entry_gen4.get_accuracy(), 1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gen4.get_priority(), 1);
     (void)move_entry_gen4.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen4.get_contest_type(), "Smart");
     BOOST_CHECK_EQUAL(move_entry_gen4.get_contest_effect(),  "None");
@@ -398,6 +403,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(2), 14);
     BOOST_CHECK_EQUAL(move_entry_gen5.get_pp(3), 16);
     BOOST_CHECK_CLOSE(move_entry_gen5.get_accuracy(), 0.9f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gen5.get_priority(), -6);
     (void)move_entry_gen5.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen5.get_contest_type(), "None");
     BOOST_CHECK_EQUAL(move_entry_gen5.get_contest_effect(), "None");
@@ -416,6 +422,7 @@ static void _move_entry_test_common(
     BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(2), 28);
     BOOST_CHECK_EQUAL(move_entry_gen6.get_pp(3), 32);
     BOOST_CHECK_CLOSE(move_entry_gen6.get_accuracy(), 1.0f, 0.0001f);
+    BOOST_CHECK_EQUAL(move_entry_gen6.get_priority(), 0);
     (void)move_entry_gen6.get_effect();
     BOOST_CHECK_EQUAL(move_entry_gen6.get_contest_type(), "None");
     BOOST_CHECK_EQUAL(move_entry_gen6.get_contest_effect(), "None");
