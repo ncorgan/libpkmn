@@ -81,8 +81,8 @@ namespace pksav {
          *
          * TODO: time of day, fix PKSav mask names
          */
-        to->caught_data = (to->caught_data & ~GEN2_LEVEL_CAUGHT_MASK)
-                        | (from->level << GEN2_LEVEL_CAUGHT_OFFSET);
+        to->caught_data = (to->caught_data & ~PKSAV_GEN2_LEVEL_CAUGHT_MASK)
+                        | (from->level << PKSAV_GEN2_LEVEL_CAUGHT_OFFSET);
 
         to->level = from->level;
     }
@@ -99,7 +99,7 @@ namespace pksav {
 
         // Party data
         std::memset(&to->party_data, 0, sizeof(to->party_data));
-        to->party_data.status = from->pc.status;
+        to->party_data.condition = from->pc.condition;
         // Leave unused field at 0
         to->party_data.current_hp = from->pc.current_hp;
         // The next four fields are identical
