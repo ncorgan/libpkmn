@@ -87,6 +87,12 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
         ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i
     @ONLY)
 
+    # Copy __init__.py for unit testing
+    CONFIGURE_FILE(
+        ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+        ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
+    @ONLY)
+
     # Set SWIG's C++ flag if specified by the user
     IF(${cplusplus})
         SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i PROPERTIES CPLUSPLUS ON)
