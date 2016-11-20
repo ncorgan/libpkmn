@@ -160,3 +160,63 @@ pkmn_error_t pkmn_database_move_effect(
         );
     )
 }
+
+pkmn_error_t pkmn_database_move_contest_type(
+    const char* move_name,
+    const char* game_name,
+    char* move_contest_type_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            pkmn::database::move_entry(
+                move_name, game_name
+            ).get_contest_type(),
+
+            move_contest_type_out,
+            buffer_len,
+            actual_strlen_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_database_move_contest_effect(
+    const char* move_name,
+    const char* game_name,
+    char* move_contest_effect_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            pkmn::database::move_entry(
+                move_name, game_name
+            ).get_contest_effect(),
+
+            move_contest_effect_out,
+            buffer_len,
+            actual_strlen_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_database_move_super_contest_effect(
+    const char* move_name,
+    const char* game_name,
+    char* move_super_contest_effect_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+) {
+    PKMN_CPP_TO_C(
+        pkmn::std_string_to_c_str(
+            pkmn::database::move_entry(
+                move_name, game_name
+            ).get_super_contest_effect(),
+
+            move_super_contest_effect_out,
+            buffer_len,
+            actual_strlen_out
+        );
+    )
+}
