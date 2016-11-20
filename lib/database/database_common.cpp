@@ -238,11 +238,9 @@ namespace pkmn { namespace database {
                         static BOOST_CONSTEXPR const char* old_name_query = \
                             "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
                             "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
-                        if(boost::lockfree::detail::unlikely(
-                               pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                                   _db, old_name_query, old_name,
-                                   int(stmt.getColumn(0)), version_group_id
-                               )
+                        if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                               _db, old_name_query, old_name,
+                               int(stmt.getColumn(0)), version_group_id
                            ))
                         {
                             ret.push_back(old_name);
