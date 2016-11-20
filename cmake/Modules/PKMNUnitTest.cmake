@@ -27,6 +27,11 @@ SET(pkmn_c_test_libs
     unity
 )
 
+SET(pkmn_objc_test_libs
+    pkmn-objc
+    unity
+)
+
 MACRO(PKMN_ADD_TEST test_name test_cmd)
     IF(CMAKE_CROSSCOMPILING)
         ADD_TEST(${test_name} ${test_cmd})
@@ -120,3 +125,19 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${c_test_cmd})
 ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
+
+MACRO(PKMN_ADD_OBJC_TEST test_name test_srcs)
+    ADD_EXECUTABLE(${test_name} ${test_srcs})
+    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+        PROPERTIES COMPILE_FLAGS "${PKMN_OBJC_FLAGS} ${ObjC_FLAGS}"
+    )
+    TARGET_LINK_LIBRARIES(${test_name} ${pkmn_objc_test_libs})
+
+    IF(WIN32)
+        SET(objc_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" objc_test_cmd ${objc_test_cmd})
+    ELSE()
+        SET(objc_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+    ENDIF(WIN32)
+    PKMN_ADD_TEST(${test_name} ${objc_test_cmd})
+ENDMACRO(PKMN_ADD_OBJC_TEST test_name test_srcs)

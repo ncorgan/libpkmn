@@ -53,3 +53,17 @@ IF(PKMN_ENABLE_C)
         PKMN_ADD_C_TEST(${test} ${test}.c)
     ENDFOREACH(test ${c_tests})
 ENDIF(PKMN_ENABLE_C)
+
+IF(PKMN_ENABLE_OBJC)
+    INCLUDE_DIRECTORIES(
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Unity
+    )
+
+    SET(objc_tests
+        ObjCListsTest
+    )
+
+    FOREACH(test ${objc_tests})
+        PKMN_ADD_OBJC_TEST(${test} ${test}.m)
+    ENDFOREACH(test ${objc_tests})
+ENDIF(PKMN_ENABLE_OBJC)
