@@ -73,14 +73,14 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_base_happiness(
     int* base_happiness_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_get_types(
+PKMN_API pkmn_error_t pkmn_database_pokemon_types(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
     pkmn_string_pair_t* types_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_get_abilities(
+PKMN_API pkmn_error_t pkmn_database_pokemon_abilities(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
@@ -95,7 +95,7 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_hidden_ability(
     size_t* actual_strlen_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_get_egg_groups(
+PKMN_API pkmn_error_t pkmn_database_pokemon_egg_groups(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,

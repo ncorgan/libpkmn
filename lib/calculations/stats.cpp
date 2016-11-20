@@ -14,12 +14,7 @@
 
 namespace pkmn { namespace calculations {
 
-// TODO: better solution
-#ifdef PKMN_PLATFORM_WIN32
     PKMN_INLINE int gb_stat_common(
-#else
-    PKMN_CONSTEXPR_OR_INLINE int gb_stat_common(
-#endif
         int level,
         int base_stat,
         int EV,
@@ -61,12 +56,7 @@ namespace pkmn { namespace calculations {
         }
     }
 
-// TODO: better solution
-#ifdef PKMN_PLATFORM_WIN32
     PKMN_INLINE int modern_stat_common(
-#else
-    PKMN_CONSTEXPR_OR_INLINE int modern_stat_common(
-#endif
         int level,
         int base_stat,
         int EV,

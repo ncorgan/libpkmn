@@ -15,23 +15,6 @@
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
-/*
- * Boost's branch_hints.hpp is only actually installed on compatible
- * platforms, despite having an #ifdef that should ignore any branch
- * hints.
- */
-#ifdef _MSC_VER
-
-namespace boost { namespace lockfree { namespace detail {
-    PKMN_CONSTEXPR_OR_INLINE bool unlikely(bool expr) {
-        return expr;
-    }
-}}}
-
-#else
-#    include <boost/lockfree/detail/branch_hints.hpp>
-#endif
-
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -46,7 +29,7 @@ namespace pkmn { namespace database {
     PKMN_INLINE void get_connection(
         sptr &db
     ) {
-        if(boost::lockfree::detail::unlikely(!db)) {
+        if(!db) {
             db = _get_connection();
         }
     }

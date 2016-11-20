@@ -23,6 +23,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
 
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include <utility>
@@ -102,7 +103,7 @@ namespace pkmn {
         size_t* actual_strlen_out
     ) {
         std::strncpy(c_str_out, str.c_str(), buffer_len);
-        *actual_strlen_out = str.size();
+        *actual_strlen_out = str.size() + 1;
     }
 
     void std_pair_std_string_to_string_pair(

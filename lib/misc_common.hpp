@@ -15,19 +15,11 @@
 #include <cmath>
 #include <cstring>
 
-#ifdef _MSC_VER
 PKMN_INLINE bool pkmn_floats_close(
     float f1, float f2
 ) {
     return (std::fabs(f1-f2) < 0.000001);
 }
-#else
-PKMN_CONSTEXPR_OR_INLINE bool pkmn_floats_close(
-    float f1, float f2
-) {
-    return (std::fabs(f1-f2) < 0.000001);
-}
-#endif
 
 static BOOST_CONSTEXPR const char* gen1_valid_stats[] =
     {"HP", "Attack", "Defense", "Speed", "Special"};
