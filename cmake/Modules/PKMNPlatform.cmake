@@ -43,10 +43,6 @@ INCLUDE(CheckCXXSourceCompiles)
 CHECK_CXX_SOURCE_COMPILES("
     #include <boost/predef.h>
 
-    #ifndef BOOST_ENDIAN_LITTLE_WORD
-    #error Not little endian
-    #endif
-
     int main() {
         return 0;
     }
