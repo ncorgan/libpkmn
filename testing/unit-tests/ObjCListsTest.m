@@ -5,11 +5,50 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#import <PKMN-ObjC/Database/PKLists.h>
-
 #include "objc_test_common.h"
 
+#import <PKMN-ObjC/Database/PKLists.h>
+
+#import <Foundation/Foundation.h>
+
+//
+// TODO: test exception cases when they don't crash anymore
+//
+
 static void AbilityListTest() {
+    @try {
+        PKStringArray* abilities = [PKLists getAbilityList:@6];
+
+        NSUInteger size = [abilities count];
+        if(size != 191) {
+            @throw [NSException
+                        exceptionWithName:@"NSRangeException"
+                                   reason:@"size != 191"
+                                 userInfo:nil
+                   ];
+        }
+
+        NSString* first = [abilities objectAtIndexedSubscript:0];
+        if(![first isEqual:@"Adaptability"]) {
+            @throw [NSException
+                        exceptionWithName:@"NSRangeException"
+                                   reason:@"abilities[0] != \"Adaptability\""
+                                 userInfo:nil
+                   ];
+        }
+
+        NSString* last = [abilities objectAtIndexedSubscript:(size-1)];
+        if(![last isEqual:@"Zen Mode"]) {
+            @throw [NSException
+                        exceptionWithName:@"NSRangeException"
+                                   reason:@"abilities[0] != \"Zen Mode\""
+                                 userInfo:nil
+                   ];
+        }
+    }
+    @catch (NSException* e) {
+        TEST_ASSERT(false);
+    }
 }
 
 static void GameListTest() {

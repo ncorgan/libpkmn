@@ -56,9 +56,9 @@
     )
 }
 
-- (NSNumber*)count {
+- (NSUInteger)count {
     PKMN_CPP_TO_OBJC(
-        return @(CAST_TO_CPP(self)->size());
+        return NSUInteger(CAST_TO_CPP(self)->size());
     )
 }
 

@@ -26,7 +26,7 @@
 // Allow setting with []
 - (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
 
-- (NSNumber*)count;
+- (NSUInteger)count;
 
 - (void)insertString:(NSString*)str atIndex:(NSNumber*)idx;
 
