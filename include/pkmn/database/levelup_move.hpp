@@ -14,33 +14,64 @@
 
 namespace pkmn { namespace database {
 
-    //! Represents a move that a Pokémon learns leveling up.
+    /*! 
+     * @brief Represents a move that a Pokémon learns leveling up.
+     */
     struct levelup_move {
-        PKMN_INLINE levelup_move() {}
+        /*!
+         * @brief Default constructor.
+         *
+         * The move entry represents an invalid move.
+         */
+        PKMN_CONSTEXPR_OR_INLINE levelup_move():
+            move(pkmn::database::move_entry()),
+            level(0) {}
 
-        PKMN_INLINE levelup_move(
+        /*!
+         * @brief Constructor that takes in copies of each member.
+         *
+         * This calls the copy constructor for the move entry.
+         *
+         * \param lmove move entry
+         * \param move_level level
+         */
+        PKMN_CONSTEXPR_OR_INLINE levelup_move(
             const pkmn::database::move_entry &lmove,
             int move_level
         ): move(lmove),
            level(move_level) {}
 
 #ifndef SWIG
-        PKMN_INLINE levelup_move(
+        /*!
+         * @brief Constructor that takes in references each member.
+         *
+         * This calls the move constructor for the move entry.
+         *
+         * \param lmove move entry
+         * \param move_level level
+         */
+        PKMN_CONSTEXPR_OR_INLINE levelup_move(
             pkmn::database::move_entry&& lmove,
             int move_level
         ): move(lmove),
            level(move_level) {}
 #endif
 
-        //! Entry for move
+        /*!
+         * @brief The entry for the given move.
+         */
         pkmn::database::move_entry move;
-        //! Level at which the Pokémon learns the move
+        /*!
+         * @brief The level at which the Pokémon learns the move.
+         */
         int level;
     };
 
     #ifndef SWIG
-    //! Equality check between two levelup_move instances.
-    PKMN_INLINE bool operator==(
+    /*!
+     * @brief Equality check between two levelup_move instances.
+     */
+    PKMN_CONSTEXPR_OR_INLINE bool operator==(
         const levelup_move &lhs,
         const levelup_move &rhs
     ) {
@@ -48,8 +79,10 @@ namespace pkmn { namespace database {
                (lhs.level == rhs.level);
     }
 
-    //! Inequality check between two levelup_move instances.
-    PKMN_INLINE bool operator!=(
+    /*!
+     * @brief Inequality check between two levelup_move instances.
+     */
+    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
         const levelup_move &lhs,
         const levelup_move &rhs
     ) {
@@ -58,7 +91,9 @@ namespace pkmn { namespace database {
     }
     #endif
 
-    //! List of level-up moves.
+    /*!
+     * @brief List of level-up moves.
+     */
     typedef std::vector<levelup_move> levelup_moves_t;
 }}
 #endif /* PKMN_DATABASE_LEVELUP_MOVE_HPP */

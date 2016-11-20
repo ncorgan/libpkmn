@@ -12,24 +12,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
+#include <boost/config.hpp>
 #include <boost/format.hpp>
-
-/*
- * Boost's branch_hints.hpp is only actually installed on compatible
- * platforms, despite having an #ifdef that should ignore any branch
- * hints.
- */
-#ifdef _MSC_VER
-
-namespace boost { namespace lockfree { namespace detail {
-    PKMN_CONSTEXPR_OR_INLINE bool unlikely(bool expr) {
-        return expr;
-    }
-}}}
-
-#else
-#    include <boost/lockfree/detail/branch_hints.hpp>
-#endif
 
 #include <map>
 #include <stdexcept>
@@ -45,7 +29,7 @@ namespace pkmn { namespace database {
     PKMN_INLINE void get_connection(
         sptr &db
     ) {
-        if(boost::lockfree::detail::unlikely(!db)) {
+        if(!db) {
             db = _get_connection();
         }
     }
@@ -59,7 +43,14 @@ namespace pkmn { namespace database {
         sptr db,
         const char* query
     ) {
-        return (ret_type)db->execAndGet(query);
+        SQLite::Statement stmt((*db), query);
+        if(stmt.executeStep()) {
+            return (ret_type)stmt.getColumn(0);
+        } else {
+            throw std::invalid_argument(
+                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
+                  );
+        }
     }
 
     template <typename ret_type, typename bind1_type>
@@ -73,7 +64,7 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
@@ -92,7 +83,7 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
@@ -113,7 +104,7 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::runtime_error(
+            throw std::invalid_argument(
                       str(boost::format("Invalid SQLite query: \"%s\")") % query)
                   );
         }
@@ -196,6 +187,70 @@ namespace pkmn { namespace database {
     }
 
     /*
+     * Templated query functions that form lists
+     */
+
+    template <typename ret_type>
+    static void query_db_list(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec
+    ) {
+        SQLite::Statement stmt((*db), query);
+        while(stmt.executeStep()) {
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+    }
+
+    template <typename ret_type, typename bind1_type>
+    static void query_db_list_bind1(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        while(stmt.executeStep()) {
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type>
+    static void query_db_list_bind2(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1,
+        bind2_type bind2
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        while(stmt.executeStep()) {
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+    }
+
+    template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
+    static void query_db_list_bind3(
+        sptr db,
+        const char* query,
+        std::vector<ret_type> &ret_vec,
+        bind1_type bind1,
+        bind1_type bind2,
+        bind1_type bind3
+    ) {
+        SQLite::Statement stmt((*db), query);
+        stmt.bind(1, (bind1_type)bind1);
+        stmt.bind(2, (bind2_type)bind2);
+        stmt.bind(3, (bind3_type)bind3);
+        while(stmt.executeStep()) {
+            ret_vec.emplace_back((ret_type)stmt.getColumn(0));
+        }
+    }
+
+    /*
      * Common functions that don't belong elsewhere
      */
     int game_id_to_generation(
@@ -214,21 +269,89 @@ namespace pkmn { namespace database {
         const std::string &game_name
     );
 
+    BOOST_STATIC_CONSTEXPR bool game_is_gamecube(
+        int game_id
+    ) {
+        return (game_id == 19 or game_id == 20);
+    }
+
     /*
-     * Workarounds for Veekun database oddities
+     * Workarounds for Veekun database string oddities
      */
 
     std::string fix_veekun_whitespace(
         const std::string &input
     );
 
-    std::string fix_location_string(
+    std::string alternate_location_string(
         const std::string &original_string,
         int location_id,
         int game_id,
-        bool whole_generation
+        bool whole_generation,
+        bool* different_found,
+        bool* different_applies
     );
 
+    void _get_item_list(
+        std::vector<std::string> &ret,
+        int list_id, int game_id
+    );
+
+    /*
+     * Veekun's database stores item game indices by generation, but
+     * version groups would have been more appropriate. To work around this,
+     * these values determine the bounds of valid item indices for a given
+     * version group. The functions below check them.
+     */
+    BOOST_STATIC_CONSTEXPR int version_group_item_index_bounds[][4][2] = {
+        {{0,0},{0,0},{0,0},{0,0}}, // None
+        {{1,255},{0,0},{0,0},{0,0}}, // Red/Blue
+        {{1,255},{0,0},{0,0},{0,0}}, // Yellow
+        {{1,69},{71,114},{117,128},{130,249}}, // Gold/Silver
+        {{1,249},{0,0},{0,0},{0,0}}, // Crystal
+        {{1,348},{0,0},{0,0},{0,0}}, // Ruby/Sapphire
+        {{1,348},{375,376},{0,0},{0,0}}, // Emerald
+        {{1,374},{0,0},{0,0},{0,0}}, // FR/LG
+        {{1,111},{135,464},{0,0},{0,0}}, // D/P
+        {{1,467},{0,0},{0,0},{0,0}}, // Platinum
+        {{1,427},{429,536},{0,0},{0,0}}, // HG/SS
+        {{1,626},{0,0},{0,0},{0,0}}, // B/W
+        {{0,0},{0,0},{0,0},{0,0}}, // Colosseum
+        {{0,0},{0,0},{0,0},{0,0}}, // XD
+        {{1,638},{0,0},{0,0},{0,0}}, // B2/W2
+        {{1,717},{0,0},{0,0},{0,0}}, // X/Y
+        {{1,775},{0,0},{0,0},{0,0}} // OR/AS
+    };
+
+    PKMN_CONSTEXPR_OR_INLINE bool item_index_in_bounds(
+        int item_id,
+        int version_group_id,
+        int range
+    ) {
+        return (item_id >= version_group_item_index_bounds[version_group_id][range][0]) and
+               (item_id <= version_group_item_index_bounds[version_group_id][range][1]);
+    }
+
+    PKMN_CONSTEXPR_OR_INLINE bool item_range_empty(
+        int version_group_id,
+        int range
+    ) {
+        return (version_group_item_index_bounds[version_group_id][range][0] == 0) and
+               (version_group_item_index_bounds[version_group_id][range][1] == 0);
+    }
+
+    PKMN_INLINE bool item_index_valid(
+        int item_index,
+        int version_group_id
+    ) {
+        for(int i = 0; i < 4; ++i) {
+            if(item_index_in_bounds(item_index, version_group_id, i)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }}
 
 #endif /* PKMN_DATABASE_DATABASE_COMMON_HPP */

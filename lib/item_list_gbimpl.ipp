@@ -7,6 +7,8 @@
 #ifndef PKMN_ITEM_LIST_GBIMPL_IPP
 #define PKMN_ITEM_LIST_GBIMPL_IPP
 
+#include <cstring>
+
 #define GBLIST_RCAST reinterpret_cast<list_type*>(_native)
 
 namespace pkmn {
@@ -23,6 +25,8 @@ namespace pkmn {
             _our_mem = false;
         } else {
             _native = reinterpret_cast<void*>(new list_type);
+            std::memset(_native, 0, sizeof(list_type));
+            GBLIST_RCAST->terminator = 0xFF;
             _our_mem = true;
         }
     }
