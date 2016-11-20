@@ -36,12 +36,7 @@ namespace pkmn { namespace calculations {
         return (4 * (IV_attack % 4) + (IV_defense % 4)) + 2;
     }
 
-// TODO: better solution
-#ifdef PKMN_PLATFORM_WIN32
     PKMN_INLINE int gen2_hidden_power_base_power(
-#else
-    PKMN_CONSTEXPR_OR_INLINE int gen2_hidden_power_base_power(
-#endif
         uint8_t v, uint8_t w, uint8_t x,
         uint8_t y, uint8_t Z
     ) {
@@ -92,24 +87,14 @@ namespace pkmn { namespace calculations {
     // Second-least significant bit
     #define LSB2(var) ((var & 2) >> 1)
 
-// TODO: better solution
-#ifdef PKMN_PLATFORM_WIN32
     PKMN_INLINE int modern_hidden_power_type(
-#else
-    PKMN_CONSTEXPR_OR_INLINE int modern_hidden_power_type(
-#endif
         uint8_t a, uint8_t b, uint8_t c,
         uint8_t d, uint8_t e, uint8_t f
     ) {
          return int(std::floor<int>(((a + (b<<1) + (c<<2) + (d<<3) + (e<<4) + (f<<5)) * 15) / 63)) + 2;
     }
 
-// TODO: better solution
-#ifdef PKMN_PLATFORM_WIN32
     PKMN_INLINE int modern_hidden_power_base_power(
-#else
-    PKMN_CONSTEXPR_OR_INLINE int modern_hidden_power_base_power(
-#endif
         uint8_t u, uint8_t v, uint8_t w,
         uint8_t x, uint8_t y, uint8_t z
     ) {
