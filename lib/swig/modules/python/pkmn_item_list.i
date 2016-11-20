@@ -17,7 +17,7 @@
     const pkmn::item_slot& __getitem__(
         int index
     ) {
-        return self->get()->as_vector()[index];
+        return self->get()->as_vector().at(index);
     }
 
     %pythoncode %{
