@@ -8,10 +8,8 @@
 INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
-ADD_SUBDIRECTORY(pkmntest)
-
 INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../pkmntest/include
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${PKMN_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
@@ -38,10 +36,8 @@ SET(database_entry_test_srcs
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 IF(PKMN_ENABLE_C)
-    ADD_SUBDIRECTORY(Unity)
-
     INCLUDE_DIRECTORIES(
-        ${CMAKE_CURRENT_SOURCE_DIR}/Unity
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Unity
     )
 
     SET(c_tests
