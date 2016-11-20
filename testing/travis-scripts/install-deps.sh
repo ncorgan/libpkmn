@@ -12,8 +12,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
     brew update
     [ $? -ne 0 ] && exit 1
-    brew tap homebrew/python
-    [ $? -ne 0 ] && exit 1
     brew install doxygen swig
     [ $? -ne 0 ] && exit 1
     pip install ply CppHeaderParser
