@@ -20,6 +20,26 @@ static float float_result = 0.0f;
 static bool bool_result = false;
 
 static void item_test() {
+    // Make sure trying to query an invalid item results in an error
+    error = pkmn_database_item_category(
+                "Not an item", "SoulSilver",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_item_category(
+                "Fast Ball", "Not a game",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_item_category(
+                "Fast Ball", "Red",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
     // Category
     error = pkmn_database_item_category(
                 "Fast Ball", "SoulSilver",
@@ -86,6 +106,26 @@ static void item_test() {
 }
 
 static void move_test() {
+    // Make sure trying to query an invalid move results in an error
+    error = pkmn_database_move_type(
+                "Not a move", "Silver",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_move_type(
+                "Octazooka", "Not a game",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_move_type(
+                "Octazooka", "Red",
+                strbuffer, BUFFER_SIZE,
+                &actual_strlen
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
     // Type
     error = pkmn_database_move_type(
                 "Octazooka", "Silver",
@@ -204,6 +244,23 @@ static void pokemon_test() {
     pkmn_string_list_t string_list_result = NULL;
     pkmn_levelup_moves_t levelup_moves_result = NULL;
     size_t list_length = 0;
+
+    // Make sure trying to query an invalid Pokémon results in an error
+    error = pkmn_database_pokemon_types(
+                "Not a Pokémon", "Black 2", "Sunny",
+                &string_pair_result
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_pokemon_types(
+                "Castform", "Not a game", "Sunny",
+                &string_pair_result
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_database_pokemon_types(
+                "Castform", "Black 2", "Not a form",
+                &string_pair_result
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
 
     // Species
     error = pkmn_database_pokemon_species(
