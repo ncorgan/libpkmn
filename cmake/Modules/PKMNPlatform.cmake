@@ -23,12 +23,13 @@ ELSE()
 ENDIF(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 
 IF(PKMN_GCC OR PKMN_CLANG)
-    SET(PKMN_C_FLAGS   "-O3 -std=gnu99 -Wall -Wextra -fvisibility=hidden")
-    SET(PKMN_CXX_FLAGS "-O3 -std=c++11 -Wall -Wextra -fvisibility=hidden")
+    SET(PKMN_C_FLAGS   "-O3 -std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
+    SET(PKMN_CXX_FLAGS "-O3 -std=c++11 -Wall -Wextra -Werror -fvisibility=hidden")
 ELSEIF(MSVC)
     ADD_DEFINITIONS(/MP)                       # Multi-threaded build
     ADD_DEFINITIONS(/EHsc)                     # Exception handling
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS) # Ignore deprecation warnings
+    ADD_DEFINITIONS(/WX)                       # Warnings become errors
 ENDIF(PKMN_GCC OR PKMN_CLANG)
 
 #
