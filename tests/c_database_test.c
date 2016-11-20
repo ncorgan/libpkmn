@@ -162,8 +162,6 @@ static void move_test() {
 }
 
 static void pokemon_test() {
-    pkmn_string_pair_t string_pair;
-
     // Species
     error = pkmn_database_pokemon_species(
                 "Kricketot", "Pearl",
