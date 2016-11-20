@@ -9,7 +9,7 @@ INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../pkmntest/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${PKMN_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
@@ -21,6 +21,8 @@ SET(cpp_tests
     cpp_lists_test
     cpp_paths_test
 )
+
+ADD_SUBDIRECTORY(pkmntest)
 
 FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
