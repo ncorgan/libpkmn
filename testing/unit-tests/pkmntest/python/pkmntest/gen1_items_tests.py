@@ -127,3 +127,15 @@ def item_bag_test(bag):
         raise RuntimeError("len(pockets) ({0}) != 1".format(len(pockets)))
 
     item_list_test(bag["Items"])
+
+    # Test sptr equality
+    pocket1 = bag["Items"]
+    pocket2 = bag["Items"]
+    pocket3 = pkmn.item_list("Items", "Red")
+
+    if pocket1 != pocket1:
+        raise RuntimeError("pocket1 != pocket1")
+    if pocket1 != pocket2:
+        raise RuntimeError("pocket1 != pocket2")
+    if pocket1 == pocket3:
+        raise RuntimeError("pocket1 == pocket3")
