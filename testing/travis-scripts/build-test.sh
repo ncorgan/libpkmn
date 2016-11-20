@@ -30,6 +30,7 @@ else
 
     mkdir -p gcc clang mingw
     export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
+    export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages:$PYTHONPATH
 
     # GCC compile check
     cd $REPO_TOPLEVEL/test-env/gcc
