@@ -96,5 +96,7 @@ ADD_CUSTOM_TARGET(
 )
 
 # Build the DLL
+SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests)
+FILE(MAKE_DIRECTORY ${CSHARP_BINARY_DIRECTORY})
 CSHARP_BUILD_DLL("pkmn-cs" "${swig_modules}")
 ADD_DEPENDENCIES("pkmn-cs" fix_csharp_files)

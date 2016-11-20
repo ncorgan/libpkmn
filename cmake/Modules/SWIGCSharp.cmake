@@ -87,8 +87,12 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
     ENDFOREACH()
 
     # Set flags to pass into SWIG call
-    # TODO: workaround for recent CMake dllimport assumptions
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${swig_module_name} ${SWIG_CSHARP_FLAGS} -namespace PKMN)
+    IF(MSVC)
+        SET(dllimport_name "${swig_module_name}")
+    ELSE()
+        SET(dllimport_name "lib${swig_module_name}")
+    ENDIF()
+    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${dllimport_name} -namespace PKMN ${CMAKE_SWIG_GLOBAL_FLAGS} ${CMAKE_GLOBAL_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})

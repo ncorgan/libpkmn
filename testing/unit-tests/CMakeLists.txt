@@ -53,3 +53,13 @@ IF(PKMN_ENABLE_C)
         PKMN_ADD_C_TEST(${test} ${test}.c)
     ENDFOREACH(test ${c_tests})
 ENDIF(PKMN_ENABLE_C)
+
+IF(PKMN_ENABLE_CSHARP)
+    SET(csharp_tests
+        CSharpListsTest
+    )
+
+    FOREACH(test ${csharp_tests})
+        PKMN_ADD_CSHARP_TEST(${test} ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cs ${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll)
+    ENDFOREACH(test ${csharp_tests})
+ENDIF(PKMN_ENABLE_CSHARP)
