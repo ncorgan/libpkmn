@@ -41,7 +41,7 @@ SET(CMAKE_REQUIRED_INCLUDES
 
 INCLUDE(CheckCXXSourceCompiles)
 CHECK_CXX_SOURCE_COMPILES("
-    #include <boost/predef/other/endian.h>
+    #include <boost/predef.h>
 
     #ifndef BOOST_ENDIAN_LITTLE_WORD
     #error Not little endian
