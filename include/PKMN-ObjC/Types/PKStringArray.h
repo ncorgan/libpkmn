@@ -21,10 +21,10 @@
 - (void)dealloc;
 
 // Allow getting with []
-- (id)objectAtIndexedSubscript:(NSNumber*)idx;
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
 
 // Allow setting with []
-- (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx;
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
 
 - (NSNumber*)count;
 

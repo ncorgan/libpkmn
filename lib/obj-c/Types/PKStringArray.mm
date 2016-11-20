@@ -42,19 +42,17 @@
     )
 }
 
-- (id)objectAtIndexedSubscript:(NSNumber*)idx {
+- (id)objectAtIndexedSubscript:(NSUInteger)idx {
     PKMN_CPP_TO_OBJC(
-        const std::string& cpp = CAST_TO_CPP(self)->at(
-                                     [idx unsignedLongLongValue]
-                                 );
+        const std::string& cpp = CAST_TO_CPP(self)->at(idx);
         return @(cpp.c_str());
     )
 }
 
-- (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx {
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx {
     PKMN_CPP_TO_OBJC(
         NSString* str = (NSString*)obj;
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = [str UTF8String];
+        (*CAST_TO_CPP(self))[idx] = [str UTF8String];
     )
 }
 
