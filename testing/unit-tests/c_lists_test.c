@@ -14,7 +14,7 @@ static void ability_list_test() {
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
 
-    // Make sure invalid generations return PKMN_ERROR_OUT_OF_RANGE
+    // Make sure invalid calls return an error
     error_code = pkmn_database_ability_list(
                      0, &abilities,
                      &list_length
@@ -40,7 +40,7 @@ static void game_list_test() {
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
 
-    // Make sure invalid generations return PKMN_ERROR_OUT_OF_RANGE
+    // Make sure invalid calls return an error
     error_code = pkmn_database_game_list(
                      7, true,
                      &games,
@@ -68,6 +68,14 @@ static void item_list_test() {
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
 
+    // Make sure invalid calls return an error
+    error_code = pkmn_database_item_list(
+                     "Not a game",
+                     &items,
+                     &list_length
+                 );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_INVALID_ARGUMENT);
+
     error_code = pkmn_database_item_list(
                      "HeartGold",
                      &items,
@@ -88,6 +96,14 @@ static void location_list_test() {
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
 
+    // Make sure invalid calls return an error
+    error_code = pkmn_database_location_list(
+                     "Not a game", false,
+                     &locations,
+                     &list_length
+                 );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_INVALID_ARGUMENT);
+
     error_code = pkmn_database_location_list(
                      "Emerald", false,
                      &locations,
@@ -107,6 +123,14 @@ static void move_list_test() {
     pkmn_string_list_t moves = NULL;
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
+
+    // Make sure invalid calls return an error
+    error_code = pkmn_database_move_list(
+                     "Not a game",
+                     &moves,
+                     &list_length
+                 );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_INVALID_ARGUMENT);
 
     error_code = pkmn_database_move_list(
                      "Red",
@@ -146,6 +170,13 @@ static void pokemon_list_test() {
     pkmn_string_list_t pokemon = NULL;
     size_t list_length = 0;
     pkmn_error_t error_code = PKMN_ERROR_NONE;
+
+    error_code = pkmn_database_pokemon_list(
+                    0, true,
+                    &pokemon,
+                    &list_length
+                );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_OUT_OF_RANGE);
 
     error_code = pkmn_database_pokemon_list(
                      1, true,
@@ -204,6 +235,34 @@ static void super_training_medal_list_test() {
     TEST_ASSERT_NULL(super_training_medals);
 }
 
+static void type_list_test() {
+    pkmn_string_list_t types = NULL;
+    size_t list_length = 0;
+    pkmn_error_t error_code = PKMN_ERROR_NONE;
+
+    // Make sure invalid calls return an error
+    error_code = pkmn_database_type_list(
+                     "Not a game",
+                     &types,
+                     &list_length
+                 );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_INVALID_ARGUMENT);
+
+    error_code = pkmn_database_type_list(
+                     "Alpha Sapphire",
+                     &types,
+                     &list_length
+                 );
+    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+    TEST_ASSERT_NOT_NULL(types);
+    TEST_ASSERT_EQUAL(list_length, 18);
+    TEST_ASSERT_EQUAL_STRING(types[0], "Normal");
+    TEST_ASSERT_EQUAL_STRING(types[list_length-1], "Fairy");
+
+    pkmn_string_list_free(&types, list_length);
+    TEST_ASSERT_NULL(types);
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(ability_list_test)
     PKMN_C_TEST(game_list_test)
@@ -215,4 +274,5 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(region_list_test)
     PKMN_C_TEST(ribbon_list_test)
     PKMN_C_TEST(super_training_medal_list_test)
+    PKMN_C_TEST(type_list_test)
 )
