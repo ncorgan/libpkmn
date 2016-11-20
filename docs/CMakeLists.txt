@@ -22,9 +22,17 @@ MACRO(PKMN_BUILD_DOXYGEN_DOCS files lang langname)
     INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${PKMN_DOCS_DIR} COMPONENT doxygen)
 ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
 
-FILE(GLOB_RECURSE hpp_files ${CMAKE_SOURCE_DIR}/include/*.hpp)
+# C++ documentation
+FILE(GLOB_RECURSE hpp_files ${CMAKE_SOURCE_DIR}/include/pkmn/*.hpp)
 PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
+# C documentation
+IF(PKMN_ENABLE_C)
+    FILE(GLOB_RECURSE h_files ${CMAKE_SOURCE_DIR}/include/pkmn-c/*.h)
+    PKMN_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
+ENDIF(PKMN_ENABLE_C)
+
+# Objective-C documentation
 IF(PKMN_ENABLE_OBJC)
     PKMN_BUILD_DOXYGEN_DOCS("" "objc" "Objective-C")
     ADD_DEPENDENCIES(doxygen_objc_docs pkmn-objc)

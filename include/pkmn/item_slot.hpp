@@ -14,29 +14,68 @@
 
 namespace pkmn {
 
+    /*!
+     * @brief A slot in an item list.
+     *
+     * An item list is made up of a list of item slots, each of which contains
+     * a unique item type and the amount of that item in the given pocket. This
+     * struct represents a single one of those slots.
+     */
     struct item_slot {
-        PKMN_INLINE item_slot() {}
+        /*!
+         * @brief Default constructor.
+         *
+         * The item entry represents an invalid item.
+         */
+        PKMN_CONSTEXPR_OR_INLINE item_slot():
+            item(pkmn::database::item_entry()),
+            amount(0) {}
 
-        PKMN_INLINE item_slot(
+        /*!
+         * @brief Constructor that takes in copies of each member.
+         *
+         * This calls the copy constructor for the item entry.
+         *
+         * \param slot_item item entry
+         * \param slot_amount how many of the item
+         */
+        PKMN_CONSTEXPR_OR_INLINE item_slot(
             const pkmn::database::item_entry &slot_item,
             int slot_amount
         ): item(slot_item),
            amount(slot_amount) {}
 
 #ifndef SWIG
-        PKMN_INLINE item_slot(
+        /*!
+         * @brief Constructor that takes in references to each member.
+         *
+         * This calls the move constructor for the item entry.
+         *
+         * \param slot_item item entry
+         * \param slot_amount how many of the item
+         */
+        PKMN_CONSTEXPR_OR_INLINE item_slot(
             pkmn::database::item_entry&& slot_item,
             int slot_amount
         ): item(slot_item),
            amount(slot_amount) {}
 #endif
 
+        /*!
+         * @brief The item in the given slot.
+         */
         pkmn::database::item_entry item;
+        /*!
+         * @brief How many of the item is in the given slot.
+         */
         int amount;
     };
 
     #ifndef SWIG
-    PKMN_INLINE bool operator==(
+    /*!
+     * @brief Equality check between two item slots.
+     */
+    PKMN_CONSTEXPR_OR_INLINE bool operator==(
         const item_slot &lhs,
         const item_slot &rhs
     ) {
@@ -44,7 +83,10 @@ namespace pkmn {
                (lhs.amount == rhs.amount);
     }
 
-    PKMN_INLINE bool operator!=(
+    /*!
+     * @brief Inequality check between two item slots.
+     */
+    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
         const item_slot &lhs,
         const item_slot &rhs
     ) {
@@ -53,6 +95,11 @@ namespace pkmn {
     }
     #endif /* SWIG */
 
+    /*!
+     * @brief List of item slots.
+     *
+     * This is effectively a vector representation of an item list.
+     */
     typedef std::vector<item_slot> item_slots_t;
 }
 

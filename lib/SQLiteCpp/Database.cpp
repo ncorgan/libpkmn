@@ -4,7 +4,7 @@
  * @brief   Management of a SQLite Database Connection.
  *
  * Copyright (c) 2012-2013 Sebastien Rombauts (sebastien.rombauts@gmail.com)
- *                    2015 Nicholas Corgan (n.corgan@gmail.com)
+ *               2016-2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,6 +16,10 @@
 #include <SQLiteCpp/Exception.h>
 
 #include <string>
+
+#ifdef PKMN_SQLITE_DEBUG
+#include <iostream>
+#endif
 
 #ifndef SQLITE_DETERMINISTIC
 #define SQLITE_DETERMINISTIC 0x800
@@ -46,6 +50,10 @@ Database::Database(const char* apFilename,
     {
         setBusyTimeout(aBusyTimeoutMs);
     }
+
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << "Database::Database: opened database at " << mFilename << std::endl;
+#endif
 }
 
 // Open the provided database UTF-8 filename with SQLITE_OPEN_xxx provided flags.
@@ -68,6 +76,10 @@ Database::Database(const std::string& aFilename,
     {
         setBusyTimeout(aBusyTimeoutMs);
     }
+
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << "Database::Database: opened database at " << mFilename << std::endl;
+#endif
 }
 
 // Close the SQLite database connection.

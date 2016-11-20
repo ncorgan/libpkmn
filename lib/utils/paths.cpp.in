@@ -11,8 +11,10 @@
 #include <pkmn/utils/paths.hpp>
 
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 #include <boost/archive/tmpdir.hpp>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -26,18 +28,24 @@ namespace pkmn {
 
     static fs::path env_var_to_fs_path(
         const std::string &env_var,
-        bool must_exist = true
+        bool must_exist
     ) {
         std::string value = pkmn_getenv(env_var);
-        if(value.empty()) {
+        if(!value.empty()) {
+            fs::path fs_path(value);
+            if(must_exist and not fs::exists(fs_path)) {
+                throw std::runtime_error(
+                          str(boost::format("The environment variable \"%s\" does not correspond to a valid location.")
+                                  % env_var)
+                      );
+            } else {
+                return fs_path;
+            }
+        } else {
             return fs::path();
         }
-
-        fs::path fs_path(value);
-        return (fs::exists(fs_path) and must_exist) ? fs_path : fs::path();
     }
 
-    // TODO: conventions for iOS, Android
     std::string get_appdata_dir() {
         fs::path fs_path = env_var_to_fs_path(
                                "PKMN_APPDATA_DIR",
@@ -48,9 +56,9 @@ namespace pkmn {
         }
 
 #ifdef PKMN_PLATFORM_WIN32
-        fs::path os_path = env_var_to_fs_path("APPDATA");
+        fs::path os_path = env_var_to_fs_path("APPDATA", true);
 #else
-        fs::path os_path = env_var_to_fs_path("HOME");
+        fs::path os_path = env_var_to_fs_path("HOME", true);
 #endif
         os_path /= fs::path(".pkmn");
         return os_path.string();
@@ -59,7 +67,10 @@ namespace pkmn {
     std::string get_database_path() {
         std::string path_to_check;
 
-        fs::path fs_path = env_var_to_fs_path("PKMN_DATABASE_PATH");
+        fs::path fs_path = env_var_to_fs_path(
+                               "PKMN_DATABASE_PATH",
+                               true
+                           );
         if(!fs_path.empty()) {
             path_to_check = fs_path.string();
         } else if(fs::exists(pkmn_database_path)) {
@@ -79,7 +90,10 @@ namespace pkmn {
     }
 
     std::string get_images_dir() {
-        fs::path fs_path = env_var_to_fs_path("PKMN_IMAGES_DIR");
+        fs::path fs_path = env_var_to_fs_path(
+                              "PKMN_IMAGES_DIR",
+                              false
+                           );
         if(!fs_path.empty()) {
             return fs_path.string();
         }

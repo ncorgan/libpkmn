@@ -177,32 +177,28 @@
 
 - (PKLevelupMoveArray*)getLevelupMoves {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::levelup_moves_t cpp;
-        CAST_TO_CPP(self)->get_levelup_moves(cpp);
+        pkmn::database::levelup_moves_t cpp = CAST_TO_CPP(self)->get_levelup_moves();
         return [CppToObjC createLevelupMoveArrayFromCpp:cpp];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getTMHMMoves {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::move_list_t cpp;
-        CAST_TO_CPP(self)->get_tm_hm_moves(cpp);
+        pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_tm_hm_moves();
         return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getEggMoves {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::move_list_t cpp;
-        CAST_TO_CPP(self)->get_egg_moves(cpp);
+        pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_egg_moves();
         return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getTutorMoves {
     PKMN_CPP_TO_OBJC(
-        pkmn::database::move_list_t cpp;
-        CAST_TO_CPP(self)->get_tutor_moves(cpp);
+        pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_tutor_moves();
         return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
     )
 }

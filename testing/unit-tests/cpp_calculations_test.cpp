@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Not a species", 0
                              );
-    , std::runtime_error);
+    , std::invalid_argument);
     BOOST_CHECK_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
         std::string gender = pkmn::calculations::modern_pokemon_gender(
                                  "Not a species", 0
                              );
-    , std::runtime_error);
+    , std::invalid_argument);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -462,48 +462,51 @@ BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen2_shiny_test) {
+    bool shiny = false;
+    (void)shiny;
+
     /*
      * Make sure expected exceptions are thrown
      */
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         -1, 0, 0, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    -1, 0, 0, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         16, 0, 0, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    16, 0, 0, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, -1, 0, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, -1, 0, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, 16, 0, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, 16, 0, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, 0, -1, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, 0, -1, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, 0, 16, 0
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, 0, 16, 0
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, 0, 0, -1
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, 0, 0, -1
+                );
     , std::out_of_range);
     BOOST_CHECK_THROW(
-        bool shiny = pkmn::calculations::gen2_shiny(
-                         0, 0, 0, 16
-                     );
+        shiny = pkmn::calculations::gen2_shiny(
+                    0, 0, 0, 16
+                );
     , std::out_of_range);
 
     /*
@@ -605,29 +608,32 @@ PKMN_INLINE void PKMN_CHECK_STAT_CLOSE(
 }
 
 BOOST_AUTO_TEST_CASE(gb_stat_test) {
+    int stat = 0;
+    (void)stat;
+
     /*
      * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_gb_stat(
-                       "Not a stat", 1, 1, 1, 1
-                   )
+        stat = pkmn::calculations::get_gb_stat(
+                   "Not a stat", 1, 1, 1, 1
+               );
     , std::invalid_argument);
 
     // Invalid EV
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_gb_stat(
-                       "Attack", 1, 1, 123456, 1
-                   )
+        stat = pkmn::calculations::get_gb_stat(
+                   "Attack", 1, 1, 123456, 1
+               );
     , std::out_of_range);
 
     // Invalid IV
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_gb_stat(
-                       "Attack", 1, 1, 1, 12345
-                   )
+        stat = pkmn::calculations::get_gb_stat(
+                   "Attack", 1, 1, 1, 12345
+               );
     , std::out_of_range);
 
     /*
@@ -673,43 +679,46 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
 }
 
 BOOST_AUTO_TEST_CASE(modern_stat_test) {
+    int stat = 0;
+    (void)stat;
+
     /*
      * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_modern_stat(
-                       "Not a stat", 1, 1.0f, 1, 1, 1
-                   )
+        stat = pkmn::calculations::get_modern_stat(
+                   "Not a stat", 1, 1.0f, 1, 1, 1
+               );
     , std::invalid_argument);
 
     // No Special past Generation I
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_modern_stat(
-                       "Special", 1, 1.0f, 1, 1, 1
-                   )
+        stat = pkmn::calculations::get_modern_stat(
+                   "Special", 1, 1.0f, 1, 1, 1
+               );
     , std::invalid_argument);
 
     // Invalid nature modifier
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_modern_stat(
-                       "Attack", 1, 0.666f, 1, 1, 1
-                   )
+        stat = pkmn::calculations::get_modern_stat(
+                   "Attack", 1, 0.666f, 1, 1, 1
+               );
     , std::domain_error);
 
     // Invalid EV
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_modern_stat(
-                       "Attack", 1, 1.0f, 1, 12345, 1
-                   )
+        stat = pkmn::calculations::get_modern_stat(
+                   "Attack", 1, 1.0f, 1, 12345, 1
+               );
     , std::out_of_range);
 
     // Invalid IV
     BOOST_CHECK_THROW(
-        int stat = pkmn::calculations::get_modern_stat(
-                       "Attack", 1, 1.0f, 1, 1, 12345
-                   )
+        stat = pkmn::calculations::get_modern_stat(
+                   "Attack", 1, 1.0f, 1, 1, 12345
+               );
     , std::out_of_range);
 
     /*

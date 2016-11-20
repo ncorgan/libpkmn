@@ -4,6 +4,7 @@
  * @brief   Encapsulation of a Column in a row of the result pointed by the prepared SQLite::Statement.
  *
  * Copyright (c) 2012-2015 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+ *                    2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -47,18 +48,27 @@ const char* Column::getOriginName() const noexcept // nothrow
 // Return the integer value of the column specified by its index starting at 0
 int Column::getInt() const noexcept // nothrow
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Column::getInt(): returning " << sqlite3_column_int(mStmtPtr, mIndex) << std::endl;
+#endif
     return sqlite3_column_int(mStmtPtr, mIndex);
 }
 
 // Return the 64bits integer value of the column specified by its index starting at 0
 sqlite3_int64 Column::getInt64() const noexcept // nothrow
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Column::getInt64(): returning " << sqlite3_column_int64(mStmtPtr, mIndex) << std::endl;
+#endif
     return sqlite3_column_int64(mStmtPtr, mIndex);
 }
 
 // Return the double value of the column specified by its index starting at 0
 double Column::getDouble() const noexcept // nothrow
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Column::getDouble(): returning " << sqlite3_column_double(mStmtPtr, mIndex) << std::endl;
+#endif
     return sqlite3_column_double(mStmtPtr, mIndex);
 }
 
@@ -66,12 +76,18 @@ double Column::getDouble() const noexcept // nothrow
 const char* Column::getText(const char* apDefaultValue /* = "" */) const noexcept // nothrow
 {
     const char* pText = (const char*)sqlite3_column_text(mStmtPtr, mIndex);
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Column::getText(): returning \"" << (pText?pText:apDefaultValue) << "\"" << std::endl;
+#endif
     return (pText?pText:apDefaultValue);
 }
 
 // Return a pointer to the text value (NULL terminated string) of the column specified by its index starting at 0
 const void* Column::getBlob() const noexcept // nothrow
 {
+#ifdef PKMN_SQLITE_DEBUG
+    std::cout << " * Column::getBlob(): returning blob" << std::endl;
+#endif
     return sqlite3_column_blob(mStmtPtr, mIndex);
 }
 

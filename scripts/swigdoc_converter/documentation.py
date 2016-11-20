@@ -67,6 +67,32 @@ PYTHON_EXCEPTIONS = {
     "std::exception"        : "SystemError",
 }
 
+"""
+Returns namespace + class name (if applicable) + function name (if applicable).
+"""
+def assemble_full_name(cpp_input, is_class):
+    full_name = ""
+
+    if cpp_input.get("parent",None) != None:
+        full_name = "%s::%s" % (assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
+        if not is_class:
+            full_name += "("
+            for param in cpp_input["parameters"]:
+                full_name += "%s %s, " % (param["type"], param["name"])
+            if len(cpp_input["parameters"]) > 0:
+                full_name = full_name[:-2]
+            full_name += ")"
+            if cpp_input["const"]:
+                full_name += " const"
+    else:
+        if is_class:
+            return "%s::%s" % (cpp_input["namespace"], cpp_input["name"])
+        else:
+            return "%s%s" % (cpp_input["namespace"], cpp_input["name"])
+
+    return full_name
+
+# TODO: sanitize quotes
 class documentation():
 
     def __init__(self, cpp_input):
@@ -75,7 +101,7 @@ class documentation():
 
         self.__input = cpp_input
         self.__class = ("CppClass" in str(type(self.__input)))
-        self.__full_name = self.__assemble_full_name(self.__input, self.__class)
+        self.__full_name = assemble_full_name(self.__input, self.__class)
         self.__short_doc = ""
         self.__long_doc = ""
         self.__returns = ""
@@ -104,31 +130,6 @@ class documentation():
                         self.__short_doc += "%s\n" % line[2:].replace("\"","\\\"")
                     else:
                         self.__long_doc += "%s\n" % line[2:].replace("\"","\\\"")
-
-    """
-    Returns namespace + class name (if applicable) + function name (if applicable).
-    """
-    def __assemble_full_name(self, cpp_input, is_class):
-        full_name = ""
-
-        if cpp_input.get("parent",None) != None:
-            full_name = "%s::%s" % (self.__assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
-            if not is_class:
-                full_name += "("
-                for param in cpp_input["parameters"]:
-                    full_name += "%s %s, " % (param["type"], param["name"])
-                if len(cpp_input["parameters"]) > 0:
-                    full_name = full_name[:-2]
-                full_name += ")"
-                if cpp_input["const"]:
-                    full_name += " const"
-        else:
-            if is_class:
-                return "%s::%s" % (cpp_input["namespace"], cpp_input["name"])
-            else:
-                return "%s%s" % (cpp_input["namespace"], cpp_input["name"])
-
-        return full_name
 
     # http://stackoverflow.com/a/925630
     def __remove_html(self, string):
