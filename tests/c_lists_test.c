@@ -168,20 +168,7 @@ static void region_list_test() {
 }
 
 static void ribbon_list_test() {
-    pkmn_string_list_t ribbons = NULL;
-    size_t list_length = 0;
-    pkmn_error_t error_code = PKMN_ERROR_NONE;
-
-    error_code = pkmn_database_ribbon_list(
-                     1,
-                     &ribbons,
-                     &list_length
-                 );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 7);
-
-    pkmn_string_list_free(&ribbons, list_length);
-    TEST_ASSERT_NULL(ribbons);
+    // TODO
 }
 
 static void super_training_medal_list_test() {
