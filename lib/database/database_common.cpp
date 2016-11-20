@@ -120,20 +120,11 @@ namespace pkmn { namespace database {
         return intermediate;
     }
 
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_RB  (int game_id) {return (game_id == 1 or game_id == 2);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_Y   (int game_id) {return (game_id == 3);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_GS  (int game_id) {return (game_id == 4 or game_id == 5);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_C   (int game_id) {return (game_id == 6);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_RS  (int game_id) {return (game_id == 7 or game_id == 8);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_E   (int game_id) {return (game_id == 9);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_FRLG(int game_id) {return (game_id == 10 or game_id == 11);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_DP  (int game_id) {return (game_id == 12 or game_id == 13);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_P   (int game_id) {return (game_id == 14);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_HGSS(int game_id) {return (game_id == 15 or game_id == 16);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_BW  (int game_id) {return (game_id == 17 or game_id == 18);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_B2W2(int game_id) {return (game_id == 21 or game_id == 22);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_XY  (int game_id) {return (game_id == 23 or game_id == 24);}
-    static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_ORAS(int game_id) {return (game_id == 25 or game_id == 26);}
 
     std::string alternate_location_string(
         const std::string &original_string,
@@ -238,11 +229,9 @@ namespace pkmn { namespace database {
                         static BOOST_CONSTEXPR const char* old_name_query = \
                             "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
                             "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
-                        if(boost::lockfree::detail::unlikely(
-                               pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                                   _db, old_name_query, old_name,
-                                   int(stmt.getColumn(0)), version_group_id
-                               )
+                        if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                               _db, old_name_query, old_name,
+                               int(stmt.getColumn(0)), version_group_id
                            ))
                         {
                             ret.push_back(old_name);

@@ -228,10 +228,8 @@ namespace pkmn { namespace database {
             "SELECT item_id FROM old_item_names WHERE name=?";
 
         int old_ret = 0;
-        if(boost::lockfree::detail::unlikely(
-                pkmn::database::maybe_query_db_bind1<int, const std::string&>(
-                    _db, old_name_query, old_ret, item_name
-                )
+        if(pkmn::database::maybe_query_db_bind1<int, const std::string&>(
+               _db, old_name_query, old_ret, item_name
            ))
         {
             return old_ret;
@@ -330,11 +328,9 @@ namespace pkmn { namespace database {
                 "SELECT name FROM old_move_names WHERE move_id=?";
 
             std::string old_ret;
-            if(boost::lockfree::detail::unlikely(
-                  pkmn::database::maybe_query_db_bind1<std::string, int>(
-                      _db, old_name_query, old_ret, move_id
-                  )
-               ))
+            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+                   _db, old_name_query, old_ret, move_id
+            ))
             {
                 return old_ret;
             }
@@ -363,12 +359,9 @@ namespace pkmn { namespace database {
             "SELECT move_id FROM old_move_names WHERE name=?";
 
         int old_ret = 0;
-        if(boost::lockfree::detail::unlikely(
-              pkmn::database::maybe_query_db_bind1<int, const std::string&>(
-                  _db, old_name_query, old_ret, move_name
-              )
-           )
-        ) {
+        if(pkmn::database::maybe_query_db_bind1<int, const std::string&>(
+               _db, old_name_query, old_ret, move_name
+        )) {
             return old_ret;
         }
 

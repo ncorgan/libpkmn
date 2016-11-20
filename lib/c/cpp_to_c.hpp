@@ -23,6 +23,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
 
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include <utility>

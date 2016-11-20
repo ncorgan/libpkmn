@@ -56,7 +56,8 @@ namespace pkmn { namespace database {
         int item_id
     ) {
         return (item_id >= TM01 and item_id < HM01) or
-               (item_id >= TM93 and item_id <= TM95);
+               (item_id >= TM93 and item_id <= TM95) or
+               (item_id >= TM96 and item_id <= TM100);
     }
 
     static PKMN_CONSTEXPR_OR_INLINE bool item_id_is_hm(

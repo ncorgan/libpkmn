@@ -25,7 +25,6 @@ namespace pkmn { namespace database {
      * IDs and indices for hardcoded cases
      */
 
-    BOOST_STATIC_CONSTEXPR int PIKACHU_ID          = 25;
     BOOST_STATIC_CONSTEXPR int ROCKSTAR_PIKACHU_ID = 10182;
     BOOST_STATIC_CONSTEXPR int COSPLAY_PIKACHU_ID  = 10187;
 

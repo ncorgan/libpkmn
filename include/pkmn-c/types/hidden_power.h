@@ -9,6 +9,8 @@
 
 #include <pkmn-c/config.h>
 
+#include <stdlib.h>
+
 typedef struct {
     char* type;
     int base_power;
