@@ -9,6 +9,8 @@
 
 #include <unity.h>
 
+#include <string.h>
+
 #define STRBUFFER_LEN 1024
 
 static void pkmntest_gen1_item_list_common(
@@ -87,7 +89,7 @@ void pkmntest_gen1_item_list_test(
                           &actual_strlen
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Items");
-    TEST_ASSERT_EQUAL(actual_strlen, 5);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_game(
                           items,
@@ -96,7 +98,7 @@ void pkmntest_gen1_item_list_test(
                           &actual_strlen
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Red");
-    TEST_ASSERT_EQUAL(actual_strlen, 3);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
 
     int capacity = 0;
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
@@ -126,7 +128,7 @@ void pkmntest_gen1_pc_test(
                           &actual_strlen
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "PC");
-    TEST_ASSERT_EQUAL(actual_strlen, 2);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_game(
                           pc,
@@ -135,7 +137,7 @@ void pkmntest_gen1_pc_test(
                           &actual_strlen
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Red");
-    TEST_ASSERT_EQUAL(actual_strlen, 3);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
 
     int capacity = 0;
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(

@@ -27,7 +27,7 @@ static void item_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Apricorn balls");
 
     // Pocket
@@ -37,7 +37,7 @@ static void item_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Poké Balls");
 
     // Description
@@ -47,7 +47,7 @@ static void item_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT(actual_strlen > 0);
 
     // Cost
@@ -81,7 +81,7 @@ static void item_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "None");
 }
 
@@ -93,7 +93,7 @@ static void move_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Water");
 
     // Description
@@ -103,7 +103,7 @@ static void move_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT(actual_strlen > 0);
 
     // Target
@@ -113,7 +113,7 @@ static void move_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Selected Pokémon");
 
     // Damage Class
@@ -123,7 +123,7 @@ static void move_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Special");
 
     // Base Power
@@ -157,7 +157,7 @@ static void move_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT(actual_strlen > 0);
 }
 
@@ -169,7 +169,7 @@ static void pokemon_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Cricket");
 
     // Pokédex Entry
@@ -179,7 +179,7 @@ static void pokemon_test() {
                 &actual_strlen
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer));
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
     TEST_ASSERT(actual_strlen > 0);
 
     // Height
