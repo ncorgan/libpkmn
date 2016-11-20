@@ -362,7 +362,7 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* old_name_query = \
             "SELECT move_id FROM old_move_names WHERE name=?";
 
-        int old_ret;
+        int old_ret = 0;
         if(boost::lockfree::detail::unlikely(
               pkmn::database::maybe_query_db_bind1<int, const std::string&>(
                   _db, old_name_query, old_ret, move_name

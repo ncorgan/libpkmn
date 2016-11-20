@@ -11,7 +11,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${PKMN_SOURCE_DIR}/include
-    ${PKMN_SOURCE_DIR}/tests/Unity
+    ${PKMN_SOURCE_DIR}/testing/Unity
     ${PKMN_BINARY_DIR}/include
 )
 
