@@ -16,7 +16,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 else
     sudo apt-get -y update
     sudo apt-get -y install build-essential cmake clang cppcheck valgrind \
-	                    doxygen libpython-dev python-ply libboost-all-dev \
+	                    doxygen libpython-dev python-ply libboost1.55-dev \
 			    swig python-pip
     sudo pip install CppHeaderParser
 fi
