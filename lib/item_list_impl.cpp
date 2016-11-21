@@ -7,6 +7,8 @@
 
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "item_list_gen2_tmhmimpl.hpp"
+
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
@@ -78,7 +80,9 @@ namespace pkmn {
 
                     case 8:
                     case 13:
-                        throw std::runtime_error("Currently unimplemented.");
+                        return pkmn::make_shared<item_list_gen2_tmhmimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
 
                     case 9:
                     case 14:
