@@ -53,9 +53,9 @@ namespace pkmn {
             _from_native();
         } else {
             _native = reinterpret_cast<void*>(new pksav_gen2_tmhm_pocket_t);
+            std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
 
-            memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             for(int i = 0; i < 50; ++i) {
                 _item_slots[i].item = pkmn::database::item_entry((i+TM01), game_id);
                 _item_slots[i].amount = 0;
@@ -68,7 +68,9 @@ namespace pkmn {
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
-        delete NATIVE_RCAST;
+        if(_our_mem) {
+            delete NATIVE_RCAST;
+        }
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {

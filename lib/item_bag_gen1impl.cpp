@@ -12,6 +12,8 @@
 
 #include <pkmn/types/shared_ptr.hpp>
 
+#include <cstring>
+
 namespace pkmn {
 
     item_bag_gen1impl::item_bag_gen1impl(
@@ -24,6 +26,7 @@ namespace pkmn {
             _our_mem = false;
         } else {
             _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
+            std::memset(_native, 0, sizeof(pksav_gen1_item_bag_t));
             _our_mem = true;
         }
 
@@ -50,7 +53,7 @@ namespace pkmn {
 
     void item_bag_gen1impl::_set_ptrs() {
         _item_pockets["Items"] = pkmn::make_shared<item_list_gen1_bagimpl>(
-                                     1, _game_id, _native
+                                     (_game_id == 3) ? 3 : 1, _game_id, _native
                                  );
     }
 }

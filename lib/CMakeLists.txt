@@ -41,6 +41,7 @@ SET(pkmn_sources
     build_info.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
+    item_bag_gen2impl.cpp
     item_list_impl.cpp
     item_list_gen2_tmhmimpl.cpp
 )
