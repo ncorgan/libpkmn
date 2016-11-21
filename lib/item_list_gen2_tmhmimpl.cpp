@@ -12,17 +12,31 @@
 #include <algorithm>
 #include <cstring>
 
-BOOST_STATIC_CONSTEXPR int TM01 = 305;
-BOOST_STATIC_CONSTEXPR int TM50 = 354;
-BOOST_STATIC_CONSTEXPR int HM01 = 397;
-BOOST_STATIC_CONSTEXPR int HM07 = 403;
+BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
+BOOST_STATIC_CONSTEXPR int TM50_ID = 354;
+BOOST_STATIC_CONSTEXPR int HM01_ID = 397;
+BOOST_STATIC_CONSTEXPR int HM07_ID = 403;
+
+// Item indices aren't contiguous
+
+BOOST_STATIC_CONSTEXPR int TM01_INDEX = 191;
+BOOST_STATIC_CONSTEXPR int TM04_INDEX = 194;
+
+BOOST_STATIC_CONSTEXPR int TM05_INDEX = 196;
+BOOST_STATIC_CONSTEXPR int TM28_INDEX = 219;
+
+BOOST_STATIC_CONSTEXPR int TM29_INDEX = 221;
+BOOST_STATIC_CONSTEXPR int TM50_INDEX = 242;
+
+BOOST_STATIC_CONSTEXPR int HM01_INDEX = 243;
+BOOST_STATIC_CONSTEXPR int HM07_INDEX = 249;
 
 static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_TM(int num) {
-    return (num >= TM01 and num <= TM50);
+    return (num >= TM01_ID and num <= TM50_ID);
 }
 
 static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
-    return (num >= HM01 and num <= HM07);
+    return (num >= HM01_ID and num <= HM07_ID);
 }
 
 static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IN_RANGE(int num) {
@@ -43,11 +57,17 @@ namespace pkmn {
             _native = ptr;
             _our_mem = false;
 
-            for(int i = 0; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry((i+TM01), game_id);
+            for(int i = 0; i < 4; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
+            }
+            for(int i = 4; i < 28; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
+            }
+            for(int i = 28; i < 50; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
             }
             for(int i = 0; i < 7; ++i) {
-                _item_slots[i+50].item = pkmn::database::item_entry((i+HM01), game_id);
+                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
             }
 
             _from_native();
@@ -56,13 +76,21 @@ namespace pkmn {
             std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
 
-            for(int i = 0; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry((i+TM01), game_id);
+            for(int i = 0; i < 5; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
+                _item_slots[i].amount = 0;
+            }
+            for(int i = 4; i < 28; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
+                _item_slots[i].amount = 0;
+            }
+            for(int i = 28; i < 50; ++i) {
+                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
                 _item_slots[i].amount = 0;
             }
             for(int i = 0; i < 7; ++i) {
-                _item_slots[i+50].item = pkmn::database::item_entry((i+HM01), game_id);
-                _item_slots[i+50].amount = 0;
+                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
+                _item_slots[50+i].amount = 0;
             }
         }
     }
@@ -105,7 +133,7 @@ namespace pkmn {
         int item_id = item.get_item_id();
         int position = -1;
         if(ITEM_ID_IS_TM(item_id)) {
-            position = item_id - TM01;
+            position = item_id - TM01_ID;
         } else if(ITEM_ID_IS_HM(item_id)) {
             position = item_id - 347;
         } else {
@@ -133,7 +161,7 @@ namespace pkmn {
         int item_id = item.get_item_id();
         int position = -1;
         if(ITEM_ID_IS_TM(item_id)) {
-            position = item_id - TM01;
+            position = item_id - TM01_ID;
         } else if(ITEM_ID_IS_HM(item_id)) {
             position = item_id - 347;
         } else {
