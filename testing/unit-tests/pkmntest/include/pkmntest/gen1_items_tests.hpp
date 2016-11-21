@@ -15,15 +15,18 @@
 namespace pkmntest {
 
     PKMN_API void gen1_item_list_test(
-        pkmn::item_list::sptr items
+        pkmn::item_list::sptr items,
+        const std::string &game
     );
 
     PKMN_API void gen1_pc_test(
-        pkmn::item_list::sptr pc
+        pkmn::item_list::sptr pc,
+        const std::string &game
     );
 
     PKMN_API void gen1_item_bag_test(
-        pkmn::item_bag::sptr bag
+        pkmn::item_bag::sptr bag,
+        const std::string &game
     );
 
 }

@@ -10,19 +10,49 @@
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(gen1_item_list_test) {
+BOOST_AUTO_TEST_CASE(gen1_red_item_list_test) {
     pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Red");
-    pkmntest::gen1_item_list_test(items);
+    pkmntest::gen1_item_list_test(items, "Red");
 }
 
-BOOST_AUTO_TEST_CASE(gen1_pc_test) {
+BOOST_AUTO_TEST_CASE(gen1_red_pc_test) {
     pkmn::item_list::sptr pc = pkmn::item_list::make("PC", "Red");
-    pkmntest::gen1_pc_test(pc);
+    pkmntest::gen1_pc_test(pc, "Red");
 }
 
-BOOST_AUTO_TEST_CASE(gen1_item_bag_test) {
+BOOST_AUTO_TEST_CASE(gen1_red_item_bag_test) {
     pkmn::item_bag::sptr bag = pkmn::item_bag::make("Red");
-    pkmntest::gen1_item_bag_test(bag);
+    pkmntest::gen1_item_bag_test(bag, "Red");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_blue_item_list_test) {
+    pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Blue");
+    pkmntest::gen1_item_list_test(items, "Blue");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_blue_pc_test) {
+    pkmn::item_list::sptr pc = pkmn::item_list::make("PC", "Blue");
+    pkmntest::gen1_pc_test(pc, "Blue");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_blue_item_bag_test) {
+    pkmn::item_bag::sptr bag = pkmn::item_bag::make("Blue");
+    pkmntest::gen1_item_bag_test(bag, "Blue");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_yellow_item_list_test) {
+    pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Yellow");
+    pkmntest::gen1_item_list_test(items, "Yellow");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_yellow_pc_test) {
+    pkmn::item_list::sptr pc = pkmn::item_list::make("PC", "Yellow");
+    pkmntest::gen1_pc_test(pc, "Yellow");
+}
+
+BOOST_AUTO_TEST_CASE(gen1_yellow_item_bag_test) {
+    pkmn::item_bag::sptr bag = pkmn::item_bag::make("Yellow");
+    pkmntest::gen1_item_bag_test(bag, "Yellow");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_gold_item_pocket_test) {
