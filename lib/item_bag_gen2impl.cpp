@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define RCAST reinterpret_cast<pksav_gen2_item_bag_t*>(_native)
+#define NATIVE_RCAST reinterpret_cast<pksav_gen2_item_bag_t*>(_native)
 
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
@@ -40,7 +40,7 @@ namespace pkmn {
     ): item_bag_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pksav_gen2_item_bag_t);
-        *RCAST = item_bag;
+        *NATIVE_RCAST = item_bag;
         _our_mem = true;
 
         _set_ptrs();
@@ -48,7 +48,7 @@ namespace pkmn {
 
     item_bag_gen2impl::~item_bag_gen2impl() {
         if(_our_mem) {
-            delete RCAST;
+            delete NATIVE_RCAST;
         }
     }
 
@@ -61,16 +61,16 @@ namespace pkmn {
         int tmhm_pocket_id     = crystal ? 13 : 8;
 
         _item_pockets["Items"]    = pkmn::make_shared<item_list_gen2_item_pocketimpl>(
-                                        item_pocket_id, _game_id, &RCAST->item_pocket
+                                        item_pocket_id, _game_id, &NATIVE_RCAST->item_pocket
                                     );
         _item_pockets["Balls"]    = pkmn::make_shared<item_list_gen2_ball_pocketimpl>(
-                                        ball_pocket_id, _game_id, &RCAST->ball_pocket
+                                        ball_pocket_id, _game_id, &NATIVE_RCAST->ball_pocket
                                     );
         _item_pockets["KeyItems"] = pkmn::make_shared<item_list_gen2_key_item_pocketimpl>(
-                                        key_item_pocket_id, _game_id, &RCAST->key_item_pocket
+                                        key_item_pocket_id, _game_id, &NATIVE_RCAST->key_item_pocket
                                     );
         _item_pockets["TM/HM"]    = pkmn::make_shared<item_list_gen2_tmhmimpl>(
-                                        tmhm_pocket_id, _game_id, &RCAST->tmhm_pocket
+                                        tmhm_pocket_id, _game_id, &NATIVE_RCAST->tmhm_pocket
                                     );
     }
 }

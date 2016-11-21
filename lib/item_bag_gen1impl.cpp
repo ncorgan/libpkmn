@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
+#define NATIVE_RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
@@ -39,7 +39,7 @@ namespace pkmn {
     ): item_bag_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
-        *RCAST = item_bag;
+        *NATIVE_RCAST = item_bag;
         _our_mem = true;
 
         _set_ptrs();
@@ -47,7 +47,7 @@ namespace pkmn {
 
     item_bag_gen1impl::~item_bag_gen1impl() {
         if(_our_mem) {
-            delete RCAST;
+            delete NATIVE_RCAST;
         }
     }
 

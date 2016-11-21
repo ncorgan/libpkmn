@@ -55,17 +55,23 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(tmhm_pocket->get_name(), "TM/HM");
         BOOST_CHECK_EQUAL(tmhm_pocket->get_game(), game);
 
+        const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
+
         for(int i = 1; i <= 50; ++i) {
             char name[5] = "";
             std::snprintf(name, sizeof(name), "TM%02d", i);
             tmhm_pocket->add(name, 50);
             BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), i);
+            BOOST_CHECK_EQUAL(item_slots[i-1].item.get_name(), name);
+            BOOST_CHECK_EQUAL(item_slots[i-1].amount, 50);
         }
         for(int i = 50; i >= 1; --i) {
             char name[5];
             std::snprintf(name, sizeof(name), "TM%02d", i);
             tmhm_pocket->remove(name, 50);
             BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), i-1);
+            BOOST_CHECK_EQUAL(item_slots[i-1].item.get_name(), name);
+            BOOST_CHECK_EQUAL(item_slots[i-1].amount, 0);
         }
 
         for(int i = 1; i <= 7; ++i) {
@@ -73,12 +79,16 @@ namespace pkmntest {
             std::snprintf(name, sizeof(name), "HM%02d", i);
             tmhm_pocket->add(name, 1);
             BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), i);
+            BOOST_CHECK_EQUAL(item_slots[50+i-1].item.get_name(), name);
+            BOOST_CHECK_EQUAL(item_slots[50+i-1].amount, 1);
         }
         for(int i = 7; i >= 1; --i) {
             char name[5];
             std::snprintf(name, sizeof(name), "HM%02d", i);
             tmhm_pocket->remove(name, 1);
             BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), i-1);
+            BOOST_CHECK_EQUAL(item_slots[50+i-1].item.get_name(), name);
+            BOOST_CHECK_EQUAL(item_slots[50+i-1].amount, 0);
         }
     }
 
