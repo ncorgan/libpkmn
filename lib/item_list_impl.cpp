@@ -39,17 +39,57 @@ namespace pkmn {
 
         switch(generation) {
             case 1:
-                if(item_list_id == 1) {
-                    return pkmn::make_shared<item_list_gen1_bagimpl>(
-                               item_list_id, game_id, nullptr
-                           );
-                } else {
-                    return pkmn::make_shared<item_list_gen1_pcimpl>(
-                               item_list_id, game_id, nullptr
-                           );
+                switch(item_list_id) {
+                    case 1:
+                    case 3:
+                        return pkmn::make_shared<item_list_gen1_bagimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 2:
+                    case 4:
+                        return pkmn::make_shared<item_list_gen1_pcimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    default:
+                        throw std::runtime_error("Invalid list.");
                 }
 
             case 2:
+                switch(item_list_id) {
+                    case 5:
+                    case 10:
+                        return pkmn::make_shared<item_list_gen2_item_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 6:
+                    case 11:
+                        return pkmn::make_shared<item_list_gen2_ball_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 7:
+                    case 12:
+                        return pkmn::make_shared<item_list_gen2_key_item_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 8:
+                    case 13:
+                        throw std::runtime_error("Currently unimplemented.");
+
+                    case 9:
+                    case 14:
+                        return pkmn::make_shared<item_list_gen2_pcimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    default:
+                        throw std::runtime_error("Invalid list.");
+                }
+
             case 3:
             case 4:
             case 5:
