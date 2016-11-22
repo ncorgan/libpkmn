@@ -8,6 +8,7 @@
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
+#include "item_list_modernimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -28,16 +29,25 @@ namespace pkmn {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        static BOOST_CONSTEXPR const char* id_query = \
-            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        int item_list_id = 0;
+        int capacity = 0;
+
+        static BOOST_CONSTEXPR const char* id_capacity_query = \
+            "SELECT id,capacity FROM libpkmn_item_lists WHERE name=? AND "
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        int game_id = pkmn::database::game_name_to_id(game);
-        int item_list_id = pkmn::database::query_db_bind2<int, const std::string&, int>(
-                               _db, id_query, name, game_id
-                           );
-        int generation = pkmn::database::game_id_to_generation(game_id);
+        SQLite::Statement stmt((*_db), id_capacity_query);
+        stmt.bind(1, name);
+        stmt.bind(2, game_id);
+        if(stmt.executeStep()) {
+            item_list_id = stmt.getColumn(0);
+            capacity = stmt.getColumn(1);
+        } else {
+            throw std::invalid_argument("Invalid list.");
+        }
 
         switch(generation) {
             case 1:
@@ -94,7 +104,14 @@ namespace pkmn {
                         throw std::runtime_error("Invalid list.");
                 }
 
+            // Technically, this works for everything past this, but
+            // we'll error out until their item_bag implementations
+            // are done.
             case 3:
+                return pkmn::make_shared<item_list_modernimpl>(
+                           item_list_id, game_id, nullptr, capacity, false
+                       );
+
             case 4:
             case 5:
             case 6:
