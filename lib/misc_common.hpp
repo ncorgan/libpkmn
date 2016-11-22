@@ -77,4 +77,10 @@ PKMN_CONSTEXPR_OR_INLINE bool pkmn_IV_in_bounds(
     return (IV >= 0) and (IV <= (modern ? 31 : 15));
 }
 
+BOOST_STATIC_CONSTEXPR bool game_is_gamecube(
+    int game_id
+) {
+    return (game_id == 19 or game_id == 20);
+}
+
 #endif /* INCLUDED_PKMN_MISC_COMMON_HPP */
