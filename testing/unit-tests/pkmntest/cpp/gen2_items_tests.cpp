@@ -10,11 +10,18 @@
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
 
+#include <boost/assign.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include <iostream>
+#include <map>
 
 namespace pkmntest {
+
+    static std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
+        ("Gold",    pkmn::database::item_entry("None", "Gold"))
+        ("Silver",  pkmn::database::item_entry("None", "Silver"))
+        ("Crystal", pkmn::database::item_entry("None", "Crystal"))
+    ;
 
     void gen2_item_pocket_test(
         pkmn::item_list::sptr item_pocket,
@@ -29,9 +36,9 @@ namespace pkmntest {
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
         BOOST_REQUIRE_EQUAL(item_slots.size(), 20);
+        const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK_EQUAL(iter->item.get_name(), "None");
-            BOOST_CHECK_EQUAL(iter->item.get_game(), game);
+            BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
 
@@ -61,9 +68,9 @@ namespace pkmntest {
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
         BOOST_REQUIRE_EQUAL(item_slots.size(), 26);
+        const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK_EQUAL(iter->item.get_name(), "None");
-            BOOST_CHECK_EQUAL(iter->item.get_game(), game);
+            BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
 
@@ -106,9 +113,9 @@ namespace pkmntest {
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
         BOOST_REQUIRE_EQUAL(item_slots.size(), 12);
+        const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK_EQUAL(iter->item.get_name(), "None");
-            BOOST_CHECK_EQUAL(iter->item.get_game(), game);
+            BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
 
@@ -211,9 +218,9 @@ namespace pkmntest {
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = pc->as_vector();
         BOOST_REQUIRE_EQUAL(item_slots.size(), 50);
+        const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK_EQUAL(iter->item.get_name(), "None");
-            BOOST_CHECK_EQUAL(iter->item.get_game(), game);
+            BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
 
