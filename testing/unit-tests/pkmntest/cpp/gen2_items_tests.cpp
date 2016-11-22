@@ -245,6 +245,7 @@ namespace pkmntest {
         pkmn::item_bag::sptr bag,
         const std::string &game
     ) {
+        // Check unchanging and initial values
         BOOST_CHECK_EQUAL(bag->get_game(), game);
 
         const pkmn::item_pockets_t& pockets = bag->get_pockets();
