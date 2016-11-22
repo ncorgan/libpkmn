@@ -18,7 +18,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
     ls -l /usr/local/include/python*
     cmake -DPYTHON_EXECUTABLE=/usr/local/bin/python2 \
-          -DPYTHON_INCLUDE_DIR=/usr/local/include/python2.7 \
           -DPYTHON_LIBRARY=/usr/local/lib/libpython2.7.dylib \
 	  $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
