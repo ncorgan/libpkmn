@@ -106,6 +106,26 @@ namespace pkmn {
         }
     }
 
+    BOOST_STATIC_CONSTEXPR int RB_PC_ID = 2;
+    BOOST_STATIC_CONSTEXPR int YELLOW_PC_ID = 4;
+    BOOST_STATIC_CONSTEXPR int GS_PC_ID = 9;
+    BOOST_STATIC_CONSTEXPR int CRYSTAL_PC_ID = 14;
+    BOOST_STATIC_CONSTEXPR int RS_PC_ID = 20;
+    BOOST_STATIC_CONSTEXPR int EMERALD_PC_ID = 26;
+    BOOST_STATIC_CONSTEXPR int FRLG_PC_ID = 32;
+
+    static PKMN_CONSTEXPR_OR_INLINE bool ITEM_LIST_ID_IS_PC(
+        int item_list_id
+    ) {
+        return (item_list_id == RB_PC_ID) or
+               (item_list_id == YELLOW_PC_ID) or
+               (item_list_id == GS_PC_ID) or
+               (item_list_id == CRYSTAL_PC_ID) or
+               (item_list_id == RS_PC_ID) or
+               (item_list_id == EMERALD_PC_ID) or
+               (item_list_id == FRLG_PC_ID);
+    }
+
     item_list_impl::item_list_impl(
         int item_list_id,
         int game_id
@@ -113,7 +133,8 @@ namespace pkmn {
        _item_list_id(item_list_id),
        _game_id(game_id),
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
-       _num_items(0)
+       _num_items(0),
+       _pc(ITEM_LIST_ID_IS_PC(item_list_id))
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -210,9 +231,18 @@ namespace pkmn {
         if(_num_items == _capacity) {
             throw std::runtime_error("Cannot add any new items.");
         } else {
-            _item_slots[_num_items].item = pkmn::database::item_entry(
-                                               item_name, get_game()
-                                           );
+            // Confirm the item can be placed in this pocket
+            pkmn::database::item_entry entry(
+                item_name, get_game()
+            );
+            if(not _pc and entry.get_item_list_id() != _item_list_id) {
+                throw std::invalid_argument(
+                          str(boost::format("This item belongs in the \"%s\" pocket.") %
+                              entry.get_pocket())
+                      );
+            }
+
+            _item_slots[_num_items].item = entry;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }

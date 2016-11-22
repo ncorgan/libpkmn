@@ -115,7 +115,7 @@ namespace pkmn {
 
         pkmn::database::item_entry item(name, get_game());
         if(item.get_pocket() != get_name()) {
-            throw std::runtime_error("This item is not valid for this list.");
+            throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
