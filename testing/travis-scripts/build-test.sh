@@ -28,7 +28,7 @@ else
     find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
     [ $? -ne 0 ] && exit 1
 
-    mkdir -p gcc clang mingw
+    mkdir -p gcc clang
     export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
     export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages:$PYTHONPATH
 
@@ -45,7 +45,7 @@ else
     # Clang compile check
     cd $REPO_TOPLEVEL/test-env/clang
     [ $? -ne 0 ] && exit 1
-    CC=clang cmake -DCMAKE_BUILD_TYPE=Debug $REPO_TOPLEVEL
+    CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Debug $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
