@@ -144,7 +144,7 @@ void pkmntest_gen1_item_list_test(
     pkmn_item_list_handle_t items,
     const char* game
 ) {
-    char strbuffer[STRBUFFER_LEN] = {'\0'};
+    char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
 
     const char* expected_name = "Items";
@@ -186,7 +186,7 @@ void pkmntest_gen1_pc_test(
     pkmn_item_list_handle_t pc,
     const char* game
 ) {
-    char strbuffer[STRBUFFER_LEN] = {'\0'};
+    char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
 
     const char* expected_name = "PC";
@@ -231,7 +231,7 @@ void pkmntest_gen1_item_bag_test(
     pkmn_string_list_t pocket_names = NULL;
     size_t num_pockets = 0;
 
-    char strbuffer[STRBUFFER_LEN];
+    char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen;
 
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_game(
