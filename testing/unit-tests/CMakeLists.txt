@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${PKMN_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
+    ${Boost_INCLUDE_DIRS}
 )
 
 SET(cpp_tests
@@ -60,5 +61,8 @@ IF(PKMN_ENABLE_C)
         cpp_to_c_test.cpp
     )
     PKMN_ADD_CPP_TEST(cpp_to_c_test "${cpp_to_c_test_srcs}")
-    TARGET_LINK_LIBRARIES(cpp_to_c_test pkmn-c)
+    TARGET_LINK_LIBRARIES(cpp_to_c_test
+        pkmn-c
+        ${Boost_LIBRARIES}
+    )
 ENDIF(PKMN_ENABLE_C)
