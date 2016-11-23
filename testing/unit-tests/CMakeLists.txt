@@ -56,6 +56,7 @@ IF(PKMN_ENABLE_C)
     # Separately add C++ -> C test
     SET(cpp_to_c_test_srcs
         ${PKMN_SOURCE_DIR}/lib/c/cpp_to_c.cpp
+        ${PKMN_SOURCE_DIR}/lib/c/error.cpp
         cpp_to_c_test.cpp
     )
     PKMN_ADD_CPP_TEST(cpp_to_c_test "${cpp_to_c_test_srcs}")
