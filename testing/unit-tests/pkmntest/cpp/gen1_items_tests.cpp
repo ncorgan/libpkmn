@@ -28,7 +28,7 @@ namespace pkmntest {
         const std::string &game
     ) {
 
-        // Make sure item slots start as correctly empty
+        // Make sure item slots start as correctly empty.
         const pkmn::item_slots_t& item_slots = list->as_vector();
         BOOST_REQUIRE_EQUAL(item_slots.size(), list->get_capacity());
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
@@ -37,9 +37,7 @@ namespace pkmntest {
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
 
-        /*
-         * Confirm exceptions are thrown when expected.
-         */
+        // Confirm exceptions are thrown when expected.
         BOOST_CHECK_THROW(
             list->add("Potion", 0)
         , std::out_of_range);
@@ -53,10 +51,7 @@ namespace pkmntest {
             list->remove("Potion", 100)
         , std::out_of_range);
 
-        /*
-         * Start adding and removing stuff, and make sure
-         * the numbers are accurate.
-         */
+        // Start adding and removing stuff, and make sure the numbers are accurate.
         list->add("Potion", 30);
         list->add("Great Ball", 99);
         list->add("Ether", 1);
@@ -69,13 +64,22 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
+        list->add("Ether", 15);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
+        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Great Ball");
+        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Ether");
+        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
+        BOOST_CHECK_EQUAL(list->get_num_items(), 3);
+
         list->remove("Great Ball", 20);
         BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
         BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Great Ball");
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 79);
         BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Ether");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
+        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
         list->move(0, 1);
@@ -84,14 +88,14 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Potion");
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 30);
         BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Ether");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
+        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
         list->remove("Potion", 30);
         BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Great Ball");
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
         BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Ether");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 1);
+        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 16);
         BOOST_CHECK(item_slots.at(2).item == none_entry);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
         BOOST_CHECK_EQUAL(list->get_num_items(), 2);
@@ -104,7 +108,7 @@ namespace pkmntest {
         pkmn::item_list::sptr items,
         const std::string &game
     ) {
-        // Check unchanging and initial values
+        // Check unchanging and initial values.
         BOOST_CHECK_EQUAL(items->get_name(), "Items");
         BOOST_CHECK_EQUAL(items->get_game(), game);
         BOOST_CHECK_EQUAL(items->get_capacity(), 20);
@@ -117,7 +121,7 @@ namespace pkmntest {
         pkmn::item_list::sptr pc,
         const std::string &game
     ) {
-        // Check unchanging and initial values
+        // Check unchanging and initial values.
         BOOST_CHECK_EQUAL(pc->get_name(), "PC");
         BOOST_CHECK_EQUAL(pc->get_game(), game);
         BOOST_CHECK_EQUAL(pc->get_capacity(), 50);
@@ -130,7 +134,7 @@ namespace pkmntest {
         pkmn::item_bag::sptr bag,
         const std::string &game
     ) {
-        // Check unchanging and initial values
+        // Check unchanging and initial values.
         BOOST_CHECK_EQUAL(bag->get_game(), game);
 
         const pkmn::item_pockets_t& pockets = bag->get_pockets();

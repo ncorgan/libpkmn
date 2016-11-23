@@ -21,9 +21,18 @@ static void pkmntest_gen1_item_list_common(
     size_t list_length = 0;
     pkmn_string_list_t valid_items = NULL;
 
-    /*
-     * Confirm expected error codes are returned.
-     */
+    // Make sure item slots start as correctly empty.
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          items, &item_slots, &list_length
+                      ), PKMN_ERROR_NONE);
+    for(size_t i = 0; i < list_length; ++i) {
+        TEST_ASSERT_EQUAL_STRING(item_slots[i].item, "None");
+        TEST_ASSERT_EQUAL(item_slots[i].amount, 0);
+    }
+    pkmn_item_slots_free(&item_slots, list_length);
+    TEST_ASSERT_NULL(item_slots);
+
+    // Confirm errors are returned when expected.
     TEST_ASSERT_EQUAL(pkmn_item_list_add(
                           items, "Potion", 0
                       ), PKMN_ERROR_OUT_OF_RANGE);
@@ -37,10 +46,7 @@ static void pkmntest_gen1_item_list_common(
                           items, "Potion", 100
                       ), PKMN_ERROR_OUT_OF_RANGE);
 
-    /*
-     * Start adding and removing stuff, and make sure
-     * the numbers are accurate.
-     */
+    // Start adding and removing stuff, and make sure the numbers are accurate.
     TEST_ASSERT_EQUAL(pkmn_item_list_add(
                           items, "Potion", 30
                       ), PKMN_ERROR_NONE);
@@ -147,8 +153,8 @@ void pkmntest_gen1_item_list_test(
     char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
 
+    // Check unchanging and initial values.
     const char* expected_name = "Items";
-
     TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
                           items,
                           strbuffer,
@@ -189,8 +195,8 @@ void pkmntest_gen1_pc_test(
     char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
 
+    // Check unchanging and initial values.
     const char* expected_name = "PC";
-
     TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
                           pc,
                           strbuffer,
@@ -234,6 +240,7 @@ void pkmntest_gen1_item_bag_test(
     char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen;
 
+    // Check unchanging and initial values.
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_game(
                           bag,
                           strbuffer,
