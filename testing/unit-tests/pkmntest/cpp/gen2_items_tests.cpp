@@ -407,6 +407,7 @@ namespace pkmntest {
         , std::invalid_argument);
         BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), 0);
 
+        // Start adding and removing stuff, and make sure the numbers are accurate.
         for(int i = 1; i <= 50; ++i) {
             char name[5] = "";
             std::snprintf(name, sizeof(name), "TM%02d", i);
