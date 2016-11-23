@@ -249,7 +249,7 @@ void pkmntest_gen1_item_bag_test(
     size_t num_pockets = 0;
 
     char strbuffer[STRBUFFER_LEN] = "";
-    size_t actual_strlen;
+    size_t actual_strlen = 0;
 
     // Check unchanging and initial values.
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_game(
@@ -259,7 +259,7 @@ void pkmntest_gen1_item_bag_test(
                           &actual_strlen
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(strbuffer)+1);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket_names(
                           bag, &pocket_names, &num_pockets
