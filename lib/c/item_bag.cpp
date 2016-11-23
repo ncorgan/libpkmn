@@ -37,6 +37,7 @@ pkmn_error_t pkmn_item_bag_free(
 const char* pkmn_item_bag_strerror(
     pkmn_item_bag_handle_t handle
 ) {
+    boost::mutex::scoped_lock lock(handle->error_mutex);
     return handle->last_error.c_str();
 }
 

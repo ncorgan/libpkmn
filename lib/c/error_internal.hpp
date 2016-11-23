@@ -61,6 +61,7 @@ void pkmn_set_error(
 
 #define PKMN_CPP_TO_C_WITH_HANDLE(h,...) \
 { \
+    boost::mutex::scoped_lock lock(h->error_mutex); \
     try { \
         __VA_ARGS__ ; \
         pkmn_set_error("None"); \
