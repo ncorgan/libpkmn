@@ -52,4 +52,12 @@ IF(PKMN_ENABLE_C)
     FOREACH(test ${c_tests})
         PKMN_ADD_C_TEST(${test} ${test}.c)
     ENDFOREACH(test ${c_tests})
+
+    # Separately add C++ -> C test
+    SET(cpp_to_c_test_srcs
+        ${PKMN_SOURCE_DIR}/lib/c/cpp_to_c.cpp
+        cpp_to_c_test.cpp
+    )
+    PKMN_ADD_CPP_TEST(cpp_to_c_test "${cpp_to_c_test_srcs}")
+    TARGET_LINK_LIBRARIES(cpp_to_c_test pkmn-c)
 ENDIF(PKMN_ENABLE_C)
