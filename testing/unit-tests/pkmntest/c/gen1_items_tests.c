@@ -7,6 +7,8 @@
 
 #include <pkmntest-c/gen1_items_tests.h>
 
+#include <pkmn-c/database/lists.h>
+
 #include <unity.h>
 
 #include <string.h>
@@ -14,12 +16,15 @@
 #define STRBUFFER_LEN 1024
 
 static void pkmntest_gen1_item_list_common(
-    pkmn_item_list_handle_t items
+    pkmn_item_list_handle_t items,
+    const char* game
 ) {
     int num_items = 0;
     pkmn_item_slots_t item_slots = NULL;
+    pkmn_string_list_t full_item_list = NULL;
     size_t list_length = 0;
     pkmn_string_list_t valid_items = NULL;
+    size_t valid_items_list_length = 0;
 
     // Make sure item slots start as correctly empty.
     TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
@@ -138,11 +143,17 @@ static void pkmntest_gen1_item_list_common(
     TEST_ASSERT_EQUAL(num_items, 2);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
-                          items, &valid_items, &list_length
+                          items, &valid_items, &valid_items_list_length
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(list_length > 0);
+    TEST_ASSERT_EQUAL(pkmn_database_item_list(
+                          game, &full_item_list, &list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(list_length, valid_items_list_length);
 
-    pkmn_string_list_free(&valid_items, list_length);
+    pkmn_string_list_free(&full_item_list, list_length);
+    TEST_ASSERT_NULL(full_item_list);
+
+    pkmn_string_list_free(&valid_items, valid_items_list_length);
     TEST_ASSERT_NULL(valid_items);
 }
 
@@ -185,7 +196,7 @@ void pkmntest_gen1_item_list_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(num_items, 0);
 
-    pkmntest_gen1_item_list_common(items);
+    pkmntest_gen1_item_list_common(items, game);
 }
 
 void pkmntest_gen1_pc_test(
@@ -227,7 +238,7 @@ void pkmntest_gen1_pc_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(num_pc, 0);
 
-    pkmntest_gen1_item_list_common(pc);
+    pkmntest_gen1_item_list_common(pc, game);
 }
 
 void pkmntest_gen1_item_bag_test(

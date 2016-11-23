@@ -7,6 +7,8 @@
 
 #include <pkmntest/gen1_items_tests.hpp>
 
+#include <pkmn/database/lists.hpp>
+
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
 
@@ -101,7 +103,8 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(list->get_num_items(), 2);
 
         const std::vector<std::string>& valid_items = list->get_valid_items();
-        BOOST_CHECK_GT(valid_items.size(), 0);
+        std::vector<std::string> full_item_list = pkmn::database::get_item_list(game);
+        BOOST_CHECK_EQUAL(valid_items.size(), full_item_list.size());
     }
 
     void gen1_item_list_test(
