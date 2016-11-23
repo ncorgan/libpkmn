@@ -26,6 +26,7 @@ static PKMN_INLINE void pkmn_levelup_move_free(
     pkmn_levelup_move_t* levelup_move
 ) {
     free(levelup_move->move);
+    levelup_move->move = NULL;
 }
 
 static PKMN_INLINE void pkmn_levelup_moves_free(
