@@ -24,8 +24,8 @@ void pkmntest_gen2_item_pocket_test(
     int num_items = 0;
     pkmn_item_slots_t item_slots = NULL;
     size_t list_length = 0;
-    //pkmn_string_list_t valid_items = NULL;
-    //size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = NULL;
+    size_t valid_items_list_length = 0;
 
     // Check unchanging and initial values.
     const char* expected_name = "Items";
@@ -152,6 +152,115 @@ void pkmntest_gen2_item_pocket_test(
     TEST_ASSERT_EQUAL(item_slots[2].amount, 1);
     pkmn_item_slots_free(&item_slots, list_length);
     TEST_ASSERT_NULL(item_slots);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_add(
+                          item_pocket,
+                          "Leftovers",
+                          15
+                      ), PKMN_ERROR_NONE);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          item_pocket,
+                          &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 3);
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          item_pocket,
+                          &item_slots,
+                          &list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Potion");
+    TEST_ASSERT_EQUAL(item_slots[0].amount, 30);
+    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "PSNCureBerry");
+    TEST_ASSERT_EQUAL(item_slots[1].amount, 99);
+    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Leftovers");
+    TEST_ASSERT_EQUAL(item_slots[2].amount, 16);
+    pkmn_item_slots_free(&item_slots, list_length);
+    TEST_ASSERT_NULL(item_slots);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
+                          item_pocket,
+                          "PSNCureBerry",
+                          20
+                      ), PKMN_ERROR_NONE);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          item_pocket,
+                          &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 3);
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          item_pocket,
+                          &item_slots,
+                          &list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Potion");
+    TEST_ASSERT_EQUAL(item_slots[0].amount, 30);
+    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "PSNCureBerry");
+    TEST_ASSERT_EQUAL(item_slots[1].amount, 79);
+    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Leftovers");
+    TEST_ASSERT_EQUAL(item_slots[2].amount, 16);
+    pkmn_item_slots_free(&item_slots, list_length);
+    TEST_ASSERT_NULL(item_slots);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_move(
+                          item_pocket,
+                          0,
+                          1
+                      ), PKMN_ERROR_NONE);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          item_pocket,
+                          &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 3);
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          item_pocket,
+                          &item_slots,
+                          &list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "PSNCureBerry");
+    TEST_ASSERT_EQUAL(item_slots[0].amount, 79);
+    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Potion");
+    TEST_ASSERT_EQUAL(item_slots[1].amount, 30);
+    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Leftovers");
+    TEST_ASSERT_EQUAL(item_slots[2].amount, 16);
+    pkmn_item_slots_free(&item_slots, list_length);
+    TEST_ASSERT_NULL(item_slots);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
+                          item_pocket,
+                          "Potion",
+                          30
+                      ), PKMN_ERROR_NONE);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          item_pocket,
+                          &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 2);
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          item_pocket,
+                          &item_slots,
+                          &list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "PSNCureBerry");
+    TEST_ASSERT_EQUAL(item_slots[0].amount, 79);
+    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Leftovers");
+    TEST_ASSERT_EQUAL(item_slots[1].amount, 16);
+    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "None");
+    TEST_ASSERT_EQUAL(item_slots[2].amount, 0);
+    pkmn_item_slots_free(&item_slots, list_length);
+    TEST_ASSERT_NULL(item_slots);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
+                          item_pocket,
+                          &valid_items,
+                          &valid_items_list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT(valid_items_list_length > 0);
+    pkmn_string_list_free(&valid_items, valid_items_list_length);
+    TEST_ASSERT_NULL(valid_items);
 }
 
 void pkmntest_gen2_key_item_pocket_test(
