@@ -59,6 +59,7 @@ namespace pkmn {
         protected:
             int _item_list_id, _game_id, _version_group_id;
             int _capacity, _num_items;
+            bool _pc;
 
             pkmn::item_slots_t _item_slots;
             std::vector<std::string> _valid_items;

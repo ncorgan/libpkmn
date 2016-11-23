@@ -17,9 +17,6 @@
 extern "C" {
 #endif
 
-// TODO: move target when database branch done
-// NOTE: functions to be overhauled not wrapped
-
 PKMN_API pkmn_error_t pkmn_database_move_type(
     const char* item_name,
     const char* game_name,
@@ -81,6 +78,30 @@ PKMN_API pkmn_error_t pkmn_database_move_effect(
     const char* item_name,
     const char* game_name,
     char* move_effect_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+);
+
+PKMN_API pkmn_error_t pkmn_database_move_contest_type(
+    const char* item_name,
+    const char* game_name,
+    char* move_contest_type_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+);
+
+PKMN_API pkmn_error_t pkmn_database_move_contest_effect(
+    const char* item_name,
+    const char* game_name,
+    char* move_contest_effect_out,
+    size_t buffer_len,
+    size_t* actual_strlen_out
+);
+
+PKMN_API pkmn_error_t pkmn_database_move_super_contest_effect(
+    const char* item_name,
+    const char* game_name,
+    char* move_super_contest_effect_out,
     size_t buffer_len,
     size_t* actual_strlen_out
 );

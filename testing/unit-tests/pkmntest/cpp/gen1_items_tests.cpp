@@ -74,13 +74,14 @@ namespace pkmntest {
     }
 
     void gen1_item_list_test(
-        pkmn::item_list::sptr items
+        pkmn::item_list::sptr items,
+        const std::string &game
     ) {
         /*
          * Check unchanging and initial values
          */
         BOOST_CHECK_EQUAL(items->get_name(), "Items");
-        BOOST_CHECK_EQUAL(items->get_game(), "Red");
+        BOOST_CHECK_EQUAL(items->get_game(), game);
         BOOST_CHECK_EQUAL(items->get_capacity(), 20);
         BOOST_CHECK_EQUAL(items->get_num_items(), 0);
 
@@ -88,13 +89,14 @@ namespace pkmntest {
     }
 
     void gen1_pc_test(
-        pkmn::item_list::sptr pc
+        pkmn::item_list::sptr pc,
+        const std::string &game
     ) {
         /*
          * Check unchanging and initial values
          */
         BOOST_CHECK_EQUAL(pc->get_name(), "PC");
-        BOOST_CHECK_EQUAL(pc->get_game(), "Red");
+        BOOST_CHECK_EQUAL(pc->get_game(), game);
         BOOST_CHECK_EQUAL(pc->get_capacity(), 50);
         BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
 
@@ -102,11 +104,17 @@ namespace pkmntest {
     }
 
     void gen1_item_bag_test(
-        pkmn::item_bag::sptr bag
+        pkmn::item_bag::sptr bag,
+        const std::string &game
     ) {
+        /*
+         * Check unchanging and initial values
+         */
+        BOOST_CHECK_EQUAL(bag->get_game(), game);
+
         const pkmn::item_pockets_t& pockets = bag->get_pockets();
         BOOST_CHECK_EQUAL(pockets.size(), 1);
-        gen1_item_list_test(pockets.at("Items"));
+        gen1_item_list_test(pockets.at("Items"), game);
     }
 
 }
