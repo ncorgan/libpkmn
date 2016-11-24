@@ -6,8 +6,7 @@
  */
 
 #include "pokemon_gen2impl.hpp"
-#include "database/id_to_index.hpp"
-#include "database/id_to_string.hpp"
+#include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
 
@@ -178,20 +177,17 @@ namespace pkmn {
     }
 
     std::string pokemon_gen2impl::get_location_caught() {
-        uint16_t location_index = GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK;
-        int location_id = pkmn::database::location_index_to_id(
-                              location_index,
-                              _database_entry.get_game_id()
-                          );
-        return pkmn::database::location_id_to_name(location_id);
+        return pkmn::database::location_index_to_name(
+                   (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
+                   _database_entry.get_game_id()
+               );
     }
 
     void pokemon_gen2impl::set_location_caught(
         const std::string &location
     ) {
-        int location_id = pkmn::database::location_name_to_id(location);
-        uint16_t location_index = uint16_t(pkmn::database::location_id_to_index(
-                                               location_id,
+        uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
+                                               location,
                                                _database_entry.get_game_id()
                                            ));
         GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;

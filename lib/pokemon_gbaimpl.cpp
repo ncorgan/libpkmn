@@ -6,8 +6,7 @@
  */
 
 #include "pokemon_gbaimpl.hpp"
-#include "database/id_to_index.hpp"
-#include "database/id_to_string.hpp"
+#include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
 
@@ -220,19 +219,17 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_location_caught() {
-        int location_id = pkmn::database::location_index_to_id(
-                              _misc->met_location,
-                              _database_entry.get_game_id()
-                          );
-        return pkmn::database::location_id_to_name(location_id);
+        return pkmn::database::location_index_to_name(
+                   _misc->met_location,
+                   _database_entry.get_game_id()
+               );
     }
 
     void pokemon_gbaimpl::set_location_caught(
         const std::string &location
     ) {
-        int location_id = pkmn::database::location_name_to_id(location);
-        _misc->met_location = uint8_t(pkmn::database::location_id_to_index(
-                                          location_id,
+        _misc->met_location = uint8_t(pkmn::database::location_name_to_index(
+                                          location,
                                           _database_entry.get_game_id()
                                       ));
     }
