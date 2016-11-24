@@ -42,6 +42,24 @@ namespace pkmn {
                 const std::string &trainer_name
             );
 
+            uint16_t get_trainer_public_id();
+
+            uint16_t get_trainer_secret_id();
+
+            uint32_t get_trainer_id();
+
+            void set_trainer_public_id(
+                uint16_t public_id
+            );
+
+            void set_trainer_secret_id(
+                uint16_t secret_id
+            );
+
+            void set_trainer_id(
+                uint32_t id
+            );
+
             int get_experience();
 
             void set_experience(

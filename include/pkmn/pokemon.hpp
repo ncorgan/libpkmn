@@ -14,6 +14,7 @@
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
+#include <cstdint>
 #include <map>
 #include <string>
 
@@ -42,6 +43,24 @@ namespace pkmn {
 
             virtual void set_trainer_name(
                 const std::string &trainer_name
+            ) = 0;
+
+            virtual uint16_t get_trainer_public_id() = 0;
+
+            virtual uint16_t get_trainer_secret_id() = 0;
+
+            virtual uint32_t get_trainer_id() = 0;
+
+            virtual void set_trainer_public_id(
+                uint16_t public_id
+            ) = 0;
+
+            virtual void set_trainer_secret_id(
+                uint16_t secret_id
+            ) = 0;
+
+            virtual void set_trainer_id(
+                uint32_t id
             ) = 0;
 
             virtual int get_experience() = 0;

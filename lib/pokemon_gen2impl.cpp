@@ -141,6 +141,40 @@ namespace pkmn {
         _trainer_name = trainer_name;
     }
 
+    uint16_t pokemon_gen2impl::get_trainer_public_id() {
+        return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
+    }
+
+    uint16_t pokemon_gen2impl::get_trainer_secret_id() {
+        throw std::runtime_error("Generation II has no secret trainer ID.");
+    }
+
+    uint32_t pokemon_gen2impl::get_trainer_id() {
+        return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
+    }
+
+    void pokemon_gen2impl::set_trainer_public_id(
+        uint16_t public_id
+    ) {
+        GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
+    }
+
+    void pokemon_gen2impl::set_trainer_secret_id(
+        PKMN_UNUSED(uint16_t secret_id)
+    ) {
+        throw std::runtime_error("Generation II has no secret trainer ID.");
+    }
+
+    void pokemon_gen2impl::set_trainer_id(
+        uint32_t id
+    ) {
+        if(id > 65535) {
+            throw std::runtime_error("id: valid values 0-65535");
+        }
+
+        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
+    }
+
     int pokemon_gen2impl::get_experience() {
         uint32_t ret = 0;
         pksav_from_base256(
