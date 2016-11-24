@@ -16,6 +16,7 @@
 
 #include <boost/format.hpp>
 
+#include <cstring>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -31,9 +32,11 @@ namespace pkmn {
     ): pokemon_impl(pokemon_index, game_id)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        std::memset(_native_pc, 0, sizeof(pksav_gen2_pc_pokemon_t));
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        std::memset(_native_party, 0, sizeof(pksav_gen2_pokemon_party_data_t));
         _our_party_mem = true;
 
         /*

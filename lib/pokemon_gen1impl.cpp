@@ -13,12 +13,34 @@
 #include <pksav/math/base256.h>
 #include <pksav/math/endian.h>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+#include <cstring>
 #include <stdexcept>
+#include <unordered_map>
 
 #define GEN1_PC_RCAST    reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc)
 #define GEN1_PARTY_RCAST reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
+
+static std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
+    ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
+    ("Fighting", PKSAV_GEN1_TYPE_FIGHTING)
+    ("Flying",   PKSAV_GEN1_TYPE_FLYING)
+    ("Poison",   PKSAV_GEN1_TYPE_POISON)
+    ("Ground",   PKSAV_GEN1_TYPE_GROUND)
+    ("Rock",     PKSAV_GEN1_TYPE_ROCK)
+    ("Bug",      PKSAV_GEN1_TYPE_BUG)
+    ("Ghost",    PKSAV_GEN1_TYPE_GHOST)
+    ("Fire",     PKSAV_GEN1_TYPE_FIRE)
+    ("Water",    PKSAV_GEN1_TYPE_WATER)
+    ("Grass",    PKSAV_GEN1_TYPE_GRASS)
+    ("Electric", PKSAV_GEN1_TYPE_ELECTRIC)
+    ("Psychic",  PKSAV_GEN1_TYPE_PSYCHIC)
+    ("Ice",      PKSAV_GEN1_TYPE_ICE)
+    ("Dragon",   PKSAV_GEN1_TYPE_DRAGON)
+;
 
 namespace pkmn {
 
@@ -30,9 +52,11 @@ namespace pkmn {
     ): pokemon_impl(pokemon_index, game_id)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        std::memset(_native_pc, 0, sizeof(pksav_gen1_pc_pokemon_t));
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        std::memset(_native_party, 0, sizeof(pksav_gen1_pokemon_party_data_t));
         _our_party_mem = true;
 
         /*
@@ -68,6 +92,28 @@ namespace pkmn {
                 move4.get_pp(0)
             )
         );
+
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = LIBPKMN_OT_NAME;
+
+        // Set internal members
+        GEN1_PC_RCAST->species = uint8_t(pokemon_index);
+
+        std::pair<std::string, std::string> types = _database_entry.get_types();
+        GEN1_PC_RCAST->types[0] = uint8_t(GEN1_TYPES.at(types.first));
+        GEN1_PC_RCAST->types[1] = (types.second == "None") ? GEN1_PC_RCAST->types[0]
+                                                           : uint8_t(GEN1_TYPES.at(types.second));
+
+        // TODO: catch rate
+
+        GEN1_PC_RCAST->moves[0] = uint8_t(move1_id);
+        GEN1_PC_RCAST->moves[1] = uint8_t(move2_id);
+        GEN1_PC_RCAST->moves[2] = uint8_t(move3_id);
+        GEN1_PC_RCAST->moves[3] = uint8_t(move4_id);
+
+        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
         set_level(level);
     }

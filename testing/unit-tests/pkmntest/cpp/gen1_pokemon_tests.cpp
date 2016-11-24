@@ -24,7 +24,10 @@ namespace pkmntest {
             pokemon->get_nickname(),
             boost::algorithm::to_upper_copy(species)
         );
-        BOOST_CHECK_EQUAL(pokemon->get_trainer_name(), "LibPKMN");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_name(),
+            pkmn::pokemon::LIBPKMN_OT_NAME
+        );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),
             (pkmn::pokemon::LIBPKMN_OT_ID && 0xFFFF)
