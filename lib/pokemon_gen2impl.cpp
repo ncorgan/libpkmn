@@ -220,7 +220,7 @@ namespace pkmn {
                         GEN2_PC_RCAST->moves[index],
                         _database_entry.get_game_id()
                     ),
-                    (GEN2_PC_RCAST->move_pps[index] & 0x3F) // PKSav TODO: define for this
+                    (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_MOVE_PP_MASK)
                 );
                 break;
 
