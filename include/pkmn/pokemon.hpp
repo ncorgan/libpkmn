@@ -29,6 +29,16 @@ namespace pkmn {
             virtual ~pokemon () {}
             #endif
 
+            static sptr make(
+                const std::string &species,
+                const std::string &game,
+                const std::string &form,
+                const std::string &move1,
+                const std::string &move2,
+                const std::string &move3,
+                const std::string &move4
+            );
+
             static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
 
             virtual std::string get_game() = 0;
