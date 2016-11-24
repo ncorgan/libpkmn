@@ -41,7 +41,9 @@ SET(pkmn_sources
     build_info.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
+    item_bag_gen2impl.cpp
     item_list_impl.cpp
+    item_list_gen2_tmhmimpl.cpp
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
     pokemon_gen2impl.cpp
@@ -94,3 +96,6 @@ INSTALL(
 
 # API wrappers
 ADD_SUBDIRECTORY(swig)
+IF(PKMN_ENABLE_C)
+    ADD_SUBDIRECTORY(c)
+ENDIF(PKMN_ENABLE_C)

@@ -142,10 +142,14 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_experience() {
-        return int(pksav_from_base256(
-                       GEN1_PC_RCAST->exp,
-                       3
-                   ));
+        uint32_t ret = 0;
+        pksav_from_base256(
+            GEN1_PC_RCAST->exp,
+            3,
+            &ret
+        );
+
+        return int(ret);
     }
 
     void pokemon_gen1impl::set_experience(

@@ -27,9 +27,12 @@ namespace pksav {
         );
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
-        size_t exp = pksav_from_base256(
-                         pc->exp, 3
-                     );
+        uint32_t exp = 0;
+        pksav_from_base256(
+            pc->exp,
+            3,
+            &exp
+        );
 
         party_data_out->level = uint8_t(entry.get_level_at_experience(int(exp)));
 

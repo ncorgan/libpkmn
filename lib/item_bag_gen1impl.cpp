@@ -5,12 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
+#define NATIVE_RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
 
 #include <pkmn/types/shared_ptr.hpp>
+
+#include <cstring>
 
 namespace pkmn {
 
@@ -24,6 +26,7 @@ namespace pkmn {
             _our_mem = false;
         } else {
             _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
+            std::memset(_native, 0, sizeof(pksav_gen1_item_bag_t));
             _our_mem = true;
         }
 
@@ -36,7 +39,7 @@ namespace pkmn {
     ): item_bag_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
-        *RCAST = item_bag;
+        *NATIVE_RCAST = item_bag;
         _our_mem = true;
 
         _set_ptrs();
@@ -44,13 +47,13 @@ namespace pkmn {
 
     item_bag_gen1impl::~item_bag_gen1impl() {
         if(_our_mem) {
-            delete RCAST;
+            delete NATIVE_RCAST;
         }
     }
 
     void item_bag_gen1impl::_set_ptrs() {
         _item_pockets["Items"] = pkmn::make_shared<item_list_gen1_bagimpl>(
-                                     1, _game_id, _native
+                                     (_game_id == 3) ? 3 : 1, _game_id, _native
                                  );
     }
 }

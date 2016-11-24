@@ -7,6 +7,8 @@
 
 #include "item_bag_impl.hpp"
 #include "item_bag_gen1impl.hpp"
+#include "item_bag_gen2impl.hpp"
+
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
@@ -35,6 +37,10 @@ namespace pkmn {
                        );
 
             case 2:
+                return pkmn::make_shared<item_bag_gen2impl>(
+                           game_id, nullptr
+                       );
+
             case 3:
             case 4:
             case 5:

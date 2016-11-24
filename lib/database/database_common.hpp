@@ -15,23 +15,6 @@
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
-/*
- * Boost's branch_hints.hpp is only actually installed on compatible
- * platforms, despite having an #ifdef that should ignore any branch
- * hints.
- */
-#ifdef _MSC_VER
-
-namespace boost { namespace lockfree { namespace detail {
-    PKMN_CONSTEXPR_OR_INLINE bool unlikely(bool expr) {
-        return expr;
-    }
-}}}
-
-#else
-#    include <boost/lockfree/detail/branch_hints.hpp>
-#endif
-
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -46,7 +29,7 @@ namespace pkmn { namespace database {
     PKMN_INLINE void get_connection(
         sptr &db
     ) {
-        if(boost::lockfree::detail::unlikely(!db)) {
+        if(!db) {
             db = _get_connection();
         }
     }
@@ -300,21 +283,18 @@ namespace pkmn { namespace database {
         const std::string &input
     );
 
-    std::string fix_location_string(
+    std::string alternate_location_string(
         const std::string &original_string,
         int location_id,
         int game_id,
-        bool whole_generation
+        bool whole_generation,
+        bool* different_found,
+        bool* different_applies
     );
 
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
-    );
-
-    bool string_compare(
-        const std::string &left,
-        const std::string &right
     );
 
     /*
