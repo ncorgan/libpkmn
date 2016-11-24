@@ -19,6 +19,8 @@
 
 namespace pkmn {
 
+    std::string pokemon::LIBPKMN_OT_NAME = "LibPKMN";
+
     pokemon::sptr pokemon::make(
         const std::string &species,
         const std::string &game,

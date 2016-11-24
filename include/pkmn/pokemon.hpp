@@ -42,6 +42,8 @@ namespace pkmn {
 
             static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
 
+            static std::string LIBPKMN_OT_NAME;
+
             virtual std::string get_game() = 0;
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
