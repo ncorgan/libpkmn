@@ -1,10 +1,17 @@
 environment:
+  BOOST_ROOT: C:\Libraries\boost_1_62_0
   matrix:
-    - CMAKE_DASH_G: "Visual Studio 14 2015"
-    - CMAKE_DASH_G: "Visual Studio 14 2015 Win64"
+    - BITNESS: 32
+    - BITNESS: 64
 
 platform: x64
 configuration: Release
+
+before_build:
+  - cmd: if "%BITNESS%"=="32" set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
+  - cmd: if "%BITNESS%"=="64" set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
+  - cmd: if "%BITNESS%"=="32" set PYTHON_ROOT="C:\Python27"
+  - cmd: if "%BITNESS%"=="64" set PYTHON_ROOT="C:\Python27-x64"
 
 install:
   - git submodule update --init --recursive
