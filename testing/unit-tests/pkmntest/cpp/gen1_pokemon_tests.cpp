@@ -30,14 +30,14 @@ namespace pkmntest {
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),
-            (pkmn::pokemon::LIBPKMN_OT_ID && 0xFFFF)
+            (pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
         );
         BOOST_CHECK_THROW(
             pokemon->get_trainer_secret_id();
         , std::runtime_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_id(),
-            (pkmn::pokemon::LIBPKMN_OT_ID && 0xFFFF)
+            (pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
         );
         BOOST_CHECK_THROW(
             pokemon->get_location_caught();

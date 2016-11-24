@@ -148,10 +148,30 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        (void)pokemon_name;
-        (void)form_name;
-        (void)game_id;
-        return 0;
+        if(form_name == "" or form_name == "Standard") {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT game_index FROM pokemon_game_indices WHERE version_id=? "
+                "AND pokemon_id=(SELECT pokemon_species_id FROM pokemon_species_names "
+                "WHERE name=?)";
+
+            return pkmn::database::query_db_bind2<int, int, const std::string&>(
+                       _db, query, game_id, pokemon_name
+                   );
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT game_index FROM pokemon_game_indices WHERE version_id=? "
+                "AND pokemon_id=(SELECT pokemon_id FROM pokemon_forms INNER JOIN "
+                "pokemon ON (pokemon_forms.pokemon_id=pokemon.id) INNER JOIN "
+                "libpkmn_pokemon_form_names ON "
+                "(pokemon_forms.id=libpkmn_pokemon_form_names.form_id) WHERE "
+                "libpkmn_pokemon_form_names.name=? AND pokemon.id IN (SELECT id "
+                "FROM pokemon WHERE pokemon_species_id=(SELECT pokemon_species_id "
+                "FROM pokemon_species_names WHERE name=?)))";
+
+            return pkmn::database::query_db_bind2<int, int, const std::string&>(
+                       _db, query, game_id, pokemon_name
+                   );
+        }
     }
 
 }}
