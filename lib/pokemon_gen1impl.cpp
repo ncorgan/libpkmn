@@ -175,6 +175,16 @@ namespace pkmn {
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
+    std::string pokemon_gen1impl::get_location_caught() {
+        throw std::runtime_error("Location caught is not recorded in Generation I.");
+    }
+
+    void pokemon_gen1impl::set_location_caught(
+        PKMN_UNUSED(const std::string &location)
+    ) {
+        throw std::runtime_error("Location caught is not recorded in Generation I.");
+    }
+
     int pokemon_gen1impl::get_experience() {
         uint32_t ret = 0;
         pksav_from_base256(

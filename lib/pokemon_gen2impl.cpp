@@ -6,6 +6,8 @@
  */
 
 #include "pokemon_gen2impl.hpp"
+#include "database/id_to_index.hpp"
+#include "database/id_to_string.hpp"
 
 #include "pksav/party_data.hpp"
 
@@ -173,6 +175,27 @@ namespace pkmn {
         }
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
+    }
+
+    std::string pokemon_gen2impl::get_location_caught() {
+        uint16_t location_index = GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK;
+        int location_id = pkmn::database::location_index_to_id(
+                              location_index,
+                              _database_entry.get_game_id()
+                          );
+        return pkmn::database::location_id_to_name(location_id);
+    }
+
+    void pokemon_gen2impl::set_location_caught(
+        const std::string &location
+    ) {
+        int location_id = pkmn::database::location_name_to_id(location);
+        uint16_t location_index = uint16_t(pkmn::database::location_id_to_index(
+                                               location_id,
+                                               _database_entry.get_game_id()
+                                           ));
+        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;
+        GEN2_PC_RCAST->caught_data |= location_index;
     }
 
     int pokemon_gen2impl::get_experience() {

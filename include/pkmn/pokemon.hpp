@@ -63,6 +63,12 @@ namespace pkmn {
                 uint32_t id
             ) = 0;
 
+            virtual std::string get_location_caught() = 0;
+
+            virtual void set_location_caught(
+                const std::string &location
+            ) = 0;
+
             virtual int get_experience() = 0;
 
             virtual void set_experience(
