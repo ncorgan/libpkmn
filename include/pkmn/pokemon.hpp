@@ -29,6 +29,8 @@ namespace pkmn {
             virtual ~pokemon () {}
             #endif
 
+            static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
+
             virtual std::string get_game() = 0;
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
