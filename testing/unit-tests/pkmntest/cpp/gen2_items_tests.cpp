@@ -504,6 +504,8 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_slots[1].amount, 1);
         BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "TM28");
         BOOST_CHECK_EQUAL(item_slots[2].amount, 8);
+        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
+        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
 
         pc->move(1, 2);
 
@@ -514,6 +516,8 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_slots[1].amount, 8);
         BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "Bicycle");
         BOOST_CHECK_EQUAL(item_slots[2].amount, 1);
+        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
+        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
 
         const std::vector<std::string>& valid_items = pc->get_valid_items();
         std::vector<std::string> full_item_list = pkmn::database::get_item_list(game);
