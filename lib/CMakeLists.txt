@@ -47,6 +47,7 @@ SET(pkmn_sources
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
     pokemon_gen2impl.cpp
+    pokemon_gbaimpl.cpp
 )
 
 #

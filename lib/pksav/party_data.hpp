@@ -10,6 +10,7 @@
 
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen2/pokemon.h>
+#include <pksav/gba/pokemon.h>
 
 namespace pksav {
 
@@ -21,6 +22,11 @@ namespace pksav {
     void gen2_pc_pokemon_to_party_data(
         const pksav_gen2_pc_pokemon_t* pc,
         pksav_gen2_pokemon_party_data_t* party_data_out
+    );
+
+    void gba_pc_pokemon_to_party_data(
+        const pksav_gba_pc_pokemon_t* pc,
+        pksav_gba_pokemon_party_data_t* party_data_out
     );
 
 }

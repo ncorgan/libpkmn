@@ -80,7 +80,7 @@ namespace pkmn {
         _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
         pksav::gen2_pc_pokemon_to_party_data(
             reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_our_pc_mem)
+            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
         );
         _our_party_mem = true;
 
@@ -226,7 +226,7 @@ namespace pkmn {
         GEN2_PC_RCAST->level = uint8_t(level);
 
         pksav_to_base256(
-            size_t(_database_entry.get_experience_at_level(level)),
+            uint32_t(_database_entry.get_experience_at_level(level)),
             GEN2_PC_RCAST->exp
         );
 
@@ -237,7 +237,7 @@ namespace pkmn {
     void pokemon_gen2impl::_calculate_stats() {
         pksav::gen2_pc_pokemon_to_party_data(
             reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_our_pc_mem)
+            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
         );
     }
 
