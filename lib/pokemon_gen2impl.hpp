@@ -19,7 +19,8 @@ namespace pkmn {
             pokemon_gen2impl(
                 int pokemon_index, int game_id,
                 int move1_id, int move2_id,
-                int move3_id, int move4_id
+                int move3_id, int move4_id,
+                int level
             );
             pokemon_gen2impl(
                 pksav_gen2_pc_pokemon_t* pc,

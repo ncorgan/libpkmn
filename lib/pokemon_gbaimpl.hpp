@@ -19,7 +19,8 @@ namespace pkmn {
             pokemon_gbaimpl(
                 int pokemon_index, int game_id,
                 int move1_id, int move2_id,
-                int move3_id, int move4_id
+                int move3_id, int move4_id,
+                int level
             );
             pokemon_gbaimpl(
                 pksav_gba_pc_pokemon_t* pc,

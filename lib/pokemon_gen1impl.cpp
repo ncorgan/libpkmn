@@ -25,7 +25,8 @@ namespace pkmn {
     pokemon_gen1impl::pokemon_gen1impl(
         int pokemon_index, int game_id,
         int move1_id, int move2_id,
-        int move3_id, int move4_id
+        int move3_id, int move4_id,
+        int level
     ): pokemon_impl(pokemon_index, game_id)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
@@ -67,6 +68,8 @@ namespace pkmn {
                 move4.get_pp(0)
             )
         );
+
+        set_level(level);
     }
 
     pokemon_gen1impl::pokemon_gen1impl(

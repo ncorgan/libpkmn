@@ -20,6 +20,7 @@ SET(cpp_tests
     cpp_items_test
     cpp_lists_test
     cpp_paths_test
+    cpp_pokemon_test
 )
 
 ADD_SUBDIRECTORY(pkmntest)

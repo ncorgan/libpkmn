@@ -22,6 +22,7 @@ SET(pkmntest_libs
 
 SET(pkmntest_sources
     gen1_items_tests.cpp
+    gen1_pokemon_tests.cpp
     gen2_items_tests.cpp
 )
 

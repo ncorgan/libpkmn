@@ -36,7 +36,8 @@ namespace pkmn {
                 const std::string &move1,
                 const std::string &move2,
                 const std::string &move3,
-                const std::string &move4
+                const std::string &move4,
+                int level
             );
 
             static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;

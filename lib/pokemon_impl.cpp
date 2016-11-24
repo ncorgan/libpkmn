@@ -15,6 +15,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include <stdexcept>
+
 namespace pkmn {
 
     pokemon::sptr pokemon::make(
@@ -24,7 +26,8 @@ namespace pkmn {
         const std::string &move1,
         const std::string &move2,
         const std::string &move3,
-        const std::string &move4
+        const std::string &move4,
+        int level
     ) {
         int game_id = pkmn::database::game_name_to_id(game);
 
@@ -44,18 +47,22 @@ namespace pkmn {
                 return pkmn::make_shared<pokemon_gen1impl>(
                            pokemon_index,
                            game_id,
-                           move1_id,move2_id,
+                           move1_id,
+                           move2_id,
                            move3_id,
-                           move4_id
+                           move4_id,
+                           level
                        );
 
             case 2:
                 return pkmn::make_shared<pokemon_gen2impl>(
                            pokemon_index,
                            game_id,
-                           move1_id,move2_id,
+                           move1_id,
+                           move2_id,
                            move3_id,
-                           move4_id
+                           move4_id,
+                           level
                        );
 
             case 3:
@@ -65,9 +72,11 @@ namespace pkmn {
                     return pkmn::make_shared<pokemon_gbaimpl>(
                                pokemon_index,
                                game_id,
-                               move1_id,move2_id,
+                               move1_id,
+                               move2_id,
                                move3_id,
-                               move4_id
+                               move4_id,
+                               level
                            );
                 }
 
