@@ -6,12 +6,12 @@ mkdir c:\projects\libpkmn\test-env\build
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
 
-dir %BOOST_LIBRARYDIR%
+dir %BOOST_LIBRARY_DIR%
 
 cmake -G %CMAKE_GENERATOR_NAME% ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DBOOST_ROOT="%BOOST_ROOT%" ^
-    -DBOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% ^
+    -DBOOST_LIBRARY_DIR=%BOOST_LIBRARY_DIR% ^
     -DPYTHON_EXECUTABLE="%PYTHON_ROOT%\python.exe" ^
     ..\..
 if not !ERRORLEVEL!==0 goto fail
