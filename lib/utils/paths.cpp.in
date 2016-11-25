@@ -31,6 +31,7 @@ namespace pkmn {
         bool must_exist
     ) {
         std::string value = pkmn_getenv(env_var);
+        std::cout << "value = \"" << value << "\"" << std::endl;
         if(!value.empty()) {
             fs::path fs_path(value);
             if(must_exist and not fs::exists(fs_path)) {
