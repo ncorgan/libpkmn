@@ -2,7 +2,16 @@ environment:
   BOOST_ROOT: C:\Libraries\boost_1_62_0
   matrix:
     - BITNESS: 32
+      PYTHON_VERSION: 27
+
     - BITNESS: 64
+      PYTHON_VERSION: 27
+
+    - BITNESS: 32
+      PYTHON_VERSION: 35
+
+    - BITNESS: 64
+      PYTHON_VERSION: 35
 
 platform: x64
 configuration: Release

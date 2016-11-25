@@ -4,10 +4,10 @@
 :: Set variables
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
-    set PYTHON_ROOT=C:\Python27
+    set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
 ) else (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
-    set PYTHON_ROOT=C:\Python27-x64
+    set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
 )
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
