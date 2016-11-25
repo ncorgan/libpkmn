@@ -6,6 +6,7 @@
  */
 
 #include "pokemon_gbaimpl.hpp"
+#include "database/id_to_index.hpp"
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
@@ -14,8 +15,12 @@
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
+#include <cstring>
+#include <ctime>
+#include <random>
 #include <stdexcept>
 
 #define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
@@ -31,9 +36,11 @@ namespace pkmn {
     ): pokemon_impl(pokemon_index, game_id)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        std::memset(_native_pc, 0, sizeof(pksav_gba_pc_pokemon_t));
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        std::memset(_native_party, 0, sizeof(pksav_gba_pokemon_party_data_t));
         _our_party_mem = true;
 
         // Set block pointers
@@ -75,6 +82,65 @@ namespace pkmn {
                 move4.get_pp(0)
             )
         );
+
+        // TODO: Use PKSav PRNG after refactor merged in
+        std::srand(std::time(NULL));
+        GBA_PC_RCAST->personality = uint32_t(std::rand());
+        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(LIBPKMN_OT_ID);
+
+        pksav_text_to_gba(
+            boost::algorithm::to_upper_copy(
+                _database_entry.get_species()
+            ).c_str(),
+            GBA_PC_RCAST->nickname,
+            11
+        );
+
+        // TODO: language (should be enum in PKSav)
+
+        pksav_text_to_gba(
+            LIBPKMN_OT_NAME.c_str(),
+            GBA_PC_RCAST->otname,
+            8
+        );
+
+        _growth->species = pksav_littleendian16(uint16_t(pokemon_index));
+        _growth->exp = pksav_littleendian32(uint32_t(
+                           _database_entry.get_experience_at_level(level)
+                       ));
+        _growth->friendship = uint8_t(_database_entry.get_base_happiness());
+
+        for(size_t i = 0; i < 4; ++i) {
+            _attacks->moves[i] = pksav_littleendian16(uint16_t(
+                                     _moves[i].move.get_move_id()
+                                 ));
+            _attacks->move_pps[i] = uint8_t(_moves[i].pp);
+        }
+
+        // TODO: Use PKSav PRNG after refactor merged in
+        _effort->ev_hp    = uint32_t(std::rand());
+        _effort->ev_atk   = uint32_t(std::rand());
+        _effort->ev_def   = uint32_t(std::rand());
+        _effort->ev_spd   = uint32_t(std::rand());
+        _effort->ev_spatk = uint32_t(std::rand());
+        _effort->ev_spdef = uint32_t(std::rand());
+
+        _misc->met_location = 0xFF; // Fateful encounter
+
+        _misc->origin_info = uint16_t(level);
+        uint16_t game_index = uint16_t(pkmn::database::game_id_to_index(game_id));
+        _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
+        // TODO: ball
+
+        _misc->iv_egg_ability = uint32_t(std::rand());
+        _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
+        if(GBA_PC_RCAST->personality % 2) {
+            _misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
+        } else {
+            _misc->iv_egg_ability &= ~PKSAV_GBA_ABILITY_MASK;
+        }
+
+        _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
 
         set_level(level);
     }
