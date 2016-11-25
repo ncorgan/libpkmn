@@ -14,6 +14,8 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     [ $? -ne 0 ] && exit 1
     brew install doxygen swig
     [ $? -ne 0 ] && exit 1
+    brew link --overwrite python
+    [ $? -ne 0 ] && exit 1
     pip install ply CppHeaderParser
     [ $? -ne 0 ] && exit 1
 

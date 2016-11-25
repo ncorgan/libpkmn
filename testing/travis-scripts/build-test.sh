@@ -16,20 +16,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     mkdir -p build
     cd build
 
-    echo "/usr/local/include"
-    ls -l /usr/local/include | grep -i python
-    echo "/usr/local/include/*"
-    ls -l /usr/local/include/* | grep -i python
-    echo "/usr/local/lib"
-    ls -l /usr/local/lib | grep -i python
-    echo "/usr/local/lib/*"
-    ls -l /usr/local/lib/* | grep -i python
-    exit 0
-
-    cmake -DPYTHON_EXECUTABLE=/usr/local/bin/python \
-	  -DPYTHON_LIBRARY=/usr/local/lib/python2.7/libpython2.7.dylib \
-	  -DPYTHON_INCLUDE_DIR=/usr/local/include/python2.7 \
-	  $REPO_TOPLEVEL
+    cmake $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
