@@ -16,6 +16,7 @@ PKMN_PYTHON_INIT
 %{
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
+    #include <pkmn/pokemon.hpp>
 
     #include <pkmn/utils/paths.hpp>
 %}
@@ -45,14 +46,19 @@ PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);
 %include <pkmn/item_bag.hpp>
 PKMN_PYTHON_SPTR(item_bag)
 
+// Pokémon
+%include <python/pkmn_pokemon.i>
+
 /*
  * Remove access to bases of sptr'd classes, but don't give access to our
  * thin make wrapper.
  */
 %rename(__make_item_list)   make_item_list;
 %rename(__make_item_bag)    make_item_bag;
+%rename(__make_pokemon)    make_pokemon;
 %include <pkmn_statics.i>
 %pythoncode %{
-    item_list     = __make_item_list;
-    item_bag      = __make_item_bag;
+    item_list = __make_item_list;
+    item_bag  = __make_item_bag;
+    pokemon   = __make_pokemon;
 %}
