@@ -13,6 +13,8 @@ mkdir c:\projects\libpkmn\test-env\build
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
 
+echo !PYTHON_ROOT!
+dir !PYTHON_ROOT!
 "!PYTHON_ROOT!\scripts\pip" install ply CppHeaderParser
 if not !ERRORLEVEL!==0 goto fail
 
