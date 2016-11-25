@@ -9,6 +9,7 @@ if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
     set PYTHON_ROOT=C:\Python27-x64
 )
+set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
 set PYTHON_PIP_EXE="!PYTHON_ROOT!\Scripts\pip.exe"
 
@@ -16,10 +17,6 @@ mkdir c:\projects\libpkmn\test-env\build
 
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
-
-echo !PYTHON_ROOT!
-echo !PYTHON_EXE!
-echo !PYTHON_PIP_EXE!
 
 !PYTHON_PIP_EXE! install ply CppHeaderParser
 if not !ERRORLEVEL!==0 goto fail
