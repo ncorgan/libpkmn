@@ -15,7 +15,7 @@ if not !ERRORLEVEL!==0 goto fail
 
 echo !PYTHON_ROOT!
 dir !PYTHON_ROOT!
-"!PYTHON_ROOT!\scripts\pip" install ply CppHeaderParser
+!PYTHON_ROOT!\scripts\pip install ply CppHeaderParser
 if not !ERRORLEVEL!==0 goto fail
 
 cmake -G %CMAKE_GENERATOR_NAME% ^
