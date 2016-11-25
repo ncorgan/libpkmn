@@ -9,8 +9,7 @@
 
 // Only create one main
 #undef BOOST_TEST_MAIN
-
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"
 
 static void _move_entry_none_test(
     const pkmn::database::move_entry &none_entry
