@@ -296,7 +296,7 @@ namespace pkmn { namespace database {
                     "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
                 };
 
-                for(size_t i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
+                for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
                     SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
                     stmt.bind(1, generation);
                     stmt.bind(2, version_group_region_ids[version_group_id][i]);

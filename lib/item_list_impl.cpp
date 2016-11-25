@@ -7,6 +7,8 @@
 
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "item_list_gen2_tmhmimpl.hpp"
+
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
@@ -39,17 +41,59 @@ namespace pkmn {
 
         switch(generation) {
             case 1:
-                if(item_list_id == 1) {
-                    return pkmn::make_shared<item_list_gen1_bagimpl>(
-                               item_list_id, game_id, nullptr
-                           );
-                } else {
-                    return pkmn::make_shared<item_list_gen1_pcimpl>(
-                               item_list_id, game_id, nullptr
-                           );
+                switch(item_list_id) {
+                    case 1:
+                    case 3:
+                        return pkmn::make_shared<item_list_gen1_bagimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 2:
+                    case 4:
+                        return pkmn::make_shared<item_list_gen1_pcimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    default:
+                        throw std::runtime_error("Invalid list.");
                 }
 
             case 2:
+                switch(item_list_id) {
+                    case 5:
+                    case 10:
+                        return pkmn::make_shared<item_list_gen2_item_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 6:
+                    case 11:
+                        return pkmn::make_shared<item_list_gen2_ball_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 7:
+                    case 12:
+                        return pkmn::make_shared<item_list_gen2_key_item_pocketimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 8:
+                    case 13:
+                        return pkmn::make_shared<item_list_gen2_tmhmimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    case 9:
+                    case 14:
+                        return pkmn::make_shared<item_list_gen2_pcimpl>(
+                                   item_list_id, game_id, nullptr
+                               );
+
+                    default:
+                        throw std::runtime_error("Invalid list.");
+                }
+
             case 3:
             case 4:
             case 5:
@@ -62,6 +106,26 @@ namespace pkmn {
         }
     }
 
+    BOOST_STATIC_CONSTEXPR int RB_PC_ID = 2;
+    BOOST_STATIC_CONSTEXPR int YELLOW_PC_ID = 4;
+    BOOST_STATIC_CONSTEXPR int GS_PC_ID = 9;
+    BOOST_STATIC_CONSTEXPR int CRYSTAL_PC_ID = 14;
+    BOOST_STATIC_CONSTEXPR int RS_PC_ID = 20;
+    BOOST_STATIC_CONSTEXPR int EMERALD_PC_ID = 26;
+    BOOST_STATIC_CONSTEXPR int FRLG_PC_ID = 32;
+
+    static PKMN_CONSTEXPR_OR_INLINE bool ITEM_LIST_ID_IS_PC(
+        int item_list_id
+    ) {
+        return (item_list_id == RB_PC_ID) or
+               (item_list_id == YELLOW_PC_ID) or
+               (item_list_id == GS_PC_ID) or
+               (item_list_id == CRYSTAL_PC_ID) or
+               (item_list_id == RS_PC_ID) or
+               (item_list_id == EMERALD_PC_ID) or
+               (item_list_id == FRLG_PC_ID);
+    }
+
     item_list_impl::item_list_impl(
         int item_list_id,
         int game_id
@@ -69,7 +133,8 @@ namespace pkmn {
        _item_list_id(item_list_id),
        _game_id(game_id),
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
-       _num_items(0)
+       _num_items(0),
+       _pc(ITEM_LIST_ID_IS_PC(item_list_id))
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -166,9 +231,18 @@ namespace pkmn {
         if(_num_items == _capacity) {
             throw std::runtime_error("Cannot add any new items.");
         } else {
-            _item_slots[_num_items].item = pkmn::database::item_entry(
-                                               item_name, get_game()
-                                           );
+            // Confirm the item can be placed in this pocket
+            pkmn::database::item_entry entry(
+                item_name, get_game()
+            );
+            if(not _pc and entry.get_item_list_id() != _item_list_id) {
+                throw std::invalid_argument(
+                          str(boost::format("This item belongs in the \"%s\" pocket.") %
+                              entry.get_pocket())
+                      );
+            }
+
+            _item_slots[_num_items].item = entry;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }

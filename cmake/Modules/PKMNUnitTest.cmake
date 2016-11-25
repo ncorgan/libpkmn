@@ -43,6 +43,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
+                "${Boost_LIBRARY_DIRS}"
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"

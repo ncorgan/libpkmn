@@ -10,6 +10,7 @@
 #include "item_list_impl.hpp"
 
 #include <pksav/gen1/items.h>
+#include <pksav/gen2/items.h>
 
 namespace pkmn {
 
@@ -38,10 +39,15 @@ namespace pkmn {
             );
     };
 
-    // Game Boy list templated classes
+    // Generation I
     typedef item_list_gbimpl<pksav_gen1_item_bag_t> item_list_gen1_bagimpl;
     typedef item_list_gbimpl<pksav_gen1_item_pc_t>  item_list_gen1_pcimpl;
 
+    // Generation II
+    typedef item_list_gbimpl<pksav_gen2_item_pocket_t> item_list_gen2_item_pocketimpl;
+    typedef item_list_gbimpl<pksav_gen2_key_item_pocket_t> item_list_gen2_key_item_pocketimpl;
+    typedef item_list_gbimpl<pksav_gen2_ball_pocket_t> item_list_gen2_ball_pocketimpl;
+    typedef item_list_gbimpl<pksav_gen2_item_pc_t>  item_list_gen2_pcimpl;
 }
 
 #include "item_list_gbimpl.ipp"
