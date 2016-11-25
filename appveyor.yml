@@ -9,7 +9,7 @@ configuration: Release
 
 install:
   - git submodule update --init --recursive
-  - choco install -y swig
+  - choco install -y doxygen swig
 
 build_script:
   - C:\projects\libpkmn\testing\appveyor-scripts\build-test.bat
