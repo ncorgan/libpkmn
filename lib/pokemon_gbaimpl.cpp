@@ -92,6 +92,7 @@ namespace pkmn {
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
         pksav::gba_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_our_pc_mem)
         );
@@ -283,6 +284,7 @@ namespace pkmn {
 
     void pokemon_gbaimpl::_calculate_stats() {
         pksav::gba_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_our_pc_mem)
         );

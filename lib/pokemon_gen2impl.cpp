@@ -11,12 +11,15 @@
 #include "pksav/party_data.hpp"
 
 #include <pksav/common/stats.h>
+#include <pksav/gen2/time_of_day.h>
 #include <pksav/math/base256.h>
 #include <pksav/math/endian.h>
 
 #include <boost/format.hpp>
 
 #include <cstring>
+#include <ctime>
+#include <random>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -73,6 +76,38 @@ namespace pkmn {
             )
         );
 
+        // Set internal members
+        GEN2_PC_RCAST->species = uint8_t(pokemon_index);
+
+        GEN2_PC_RCAST->moves[0] = uint8_t(move1_id);
+        GEN2_PC_RCAST->moves[1] = uint8_t(move2_id);
+        GEN2_PC_RCAST->moves[2] = uint8_t(move3_id);
+        GEN2_PC_RCAST->moves[3] = uint8_t(move4_id);
+
+        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+
+        // TODO: Use PKSav PRNG after refactor merged in
+        time_t now = 0;
+        std::srand(std::time(&now));
+        GEN2_PC_RCAST->ev_hp   = uint16_t(std::rand());
+        GEN2_PC_RCAST->ev_atk  = uint16_t(std::rand());
+        GEN2_PC_RCAST->ev_def  = uint16_t(std::rand());
+        GEN2_PC_RCAST->ev_spd  = uint16_t(std::rand());
+        GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
+        GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
+
+        for(size_t i = 0; i < 4; ++i) {
+            GEN2_PC_RCAST->move_pps[i] = _moves[i].move.get_pp(0);
+        }
+
+        GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
+
+        // TODO: rest of caught_data
+        pksav_gen2_set_caught_data_time_field(
+            &now,
+            &GEN2_PC_RCAST->caught_data
+        );
+
         set_level(level);
     }
 
@@ -86,6 +121,7 @@ namespace pkmn {
 
         _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
         pksav::gen2_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
         );
@@ -226,7 +262,8 @@ namespace pkmn {
 
         pksav_to_base256(
             experience,
-            GEN2_PC_RCAST->exp
+            GEN2_PC_RCAST->exp,
+            3
         );
 
         GEN2_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
@@ -252,7 +289,8 @@ namespace pkmn {
 
         pksav_to_base256(
             uint32_t(_database_entry.get_experience_at_level(level)),
-            GEN2_PC_RCAST->exp
+            GEN2_PC_RCAST->exp,
+            3
         );
 
         _calculate_stats();
@@ -261,6 +299,7 @@ namespace pkmn {
 
     void pokemon_gen2impl::_calculate_stats() {
         pksav::gen2_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
         );

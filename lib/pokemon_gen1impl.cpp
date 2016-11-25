@@ -18,6 +18,8 @@
 #include <boost/format.hpp>
 
 #include <cstring>
+#include <ctime>
+#include <random>
 #include <stdexcept>
 #include <unordered_map>
 
@@ -115,6 +117,19 @@ namespace pkmn {
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
+        // TODO: Use PKSav PRNG after refactor merged in
+        std::srand(std::time(0));
+        GEN1_PC_RCAST->ev_hp   = uint16_t(std::rand());
+        GEN1_PC_RCAST->ev_atk  = uint16_t(std::rand());
+        GEN1_PC_RCAST->ev_def  = uint16_t(std::rand());
+        GEN1_PC_RCAST->ev_spd  = uint16_t(std::rand());
+        GEN1_PC_RCAST->ev_spcl = uint16_t(std::rand());
+        GEN1_PC_RCAST->iv_data = uint16_t(std::rand());
+
+        for(size_t i = 0; i < 4; ++i) {
+            GEN1_PC_RCAST->move_pps[i] = _moves[i].move.get_pp(0);
+        }
+
         set_level(level);
     }
 
@@ -128,6 +143,7 @@ namespace pkmn {
 
         _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
         pksav::gen1_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
         );
@@ -260,7 +276,8 @@ namespace pkmn {
 
         pksav_to_base256(
             experience,
-            GEN1_PC_RCAST->exp
+            GEN1_PC_RCAST->exp,
+            3
         );
 
         GEN1_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
@@ -287,7 +304,8 @@ namespace pkmn {
 
         pksav_to_base256(
             uint32_t(_database_entry.get_experience_at_level(level)),
-            GEN1_PC_RCAST->exp
+            GEN1_PC_RCAST->exp,
+            3
         );
 
         _calculate_stats();
@@ -296,6 +314,7 @@ namespace pkmn {
 
     void pokemon_gen1impl::_calculate_stats() {
         pksav::gen1_pc_pokemon_to_party_data(
+            _database_entry,
             reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
         );

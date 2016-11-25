@@ -19,14 +19,12 @@
 namespace pksav {
 
     void gen1_pc_pokemon_to_party_data(
+        const pkmn::database::pokemon_entry &entry,
         const pksav_gen1_pc_pokemon_t* pc,
         pksav_gen1_pokemon_party_data_t* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
-        pkmn::database::pokemon_entry entry(
-            pksav_bigendian16(pc->species), 1
-        );
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
         uint32_t exp = 0;
@@ -119,14 +117,12 @@ namespace pksav {
     }
 
     void gen2_pc_pokemon_to_party_data(
+        const pkmn::database::pokemon_entry &entry,
         const pksav_gen2_pc_pokemon_t* pc,
         pksav_gen2_pokemon_party_data_t* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
-        pkmn::database::pokemon_entry entry(
-            pksav_bigendian16(pc->species), 4
-        );
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
         uint8_t IV_hp = 0;
@@ -223,14 +219,12 @@ namespace pksav {
 
     // TODO: nature modifiers
     void gba_pc_pokemon_to_party_data(
+        const pkmn::database::pokemon_entry &entry,
         const pksav_gba_pc_pokemon_t* pc,
         pksav_gba_pokemon_party_data_t* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
-        pkmn::database::pokemon_entry entry(
-            pksav_littleendian16(pc->blocks.growth.species), 7
-        );
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
         const pksav_gba_pokemon_growth_t* growth = &pc->blocks.growth;
