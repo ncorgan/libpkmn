@@ -19,7 +19,7 @@ def appdata_dir_test():
         else:
             appdata_dir = "/libpkmn/appdata/dir"
 
-        os.environ["PKMN_APPDATA_DIR"] = appdata_dir
+        os.putenv("PKMN_APPDATA_DIR", appdata_dir)
         pkmn_appdata_dir = pkmn.get_appdata_dir()
         if pkmn_appdata_dir != appdata_dir:
             raise RuntimeError("pkmn_appdata_dir (\"{0}\") != \"{1}\"".format(pkmn_appdata_dir, appdata_dir))
@@ -41,7 +41,7 @@ def database_path_test():
         pkmn.get_database_path()
 
         # Cause a failure with an existing file that isn't a database
-        os.environ["PKMN_DATABASE_PATH"] = os.path.realpath(__file__)
+        os.putenv("PKMN_DATABASE_PATH", os.path.realpath(__file__))
         try:
             pkmn.get_database_path()
         except RuntimeError:
@@ -55,7 +55,7 @@ def database_path_test():
         else:
             database_path = "/libpkmn/database/path"
 
-        os.environ["PKMN_DATABASE_PATH"] = database_path
+        os.putenv("PKMN_DATABASE_PATH", database_path)
         try:
             pkmn.get_database_path()
         except RuntimeError:
@@ -78,7 +78,7 @@ def images_dir_test():
         else:
             images_dir = "/libpkmn/images/dir"
 
-        os.environ["PKMN_IMAGES_DIR"] = images_dir
+        os.putenv("PKMN_IMAGES_DIR", images_dir)
         pkmn_images_dir = pkmn.get_images_dir()
         if pkmn_images_dir != images_dir:
             raise RuntimeError("pkmn_images_dir (\"{0}\") != \"{1}\"".format(pkmn_images_dir, images_dir))
