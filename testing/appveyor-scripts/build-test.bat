@@ -6,7 +6,8 @@ mkdir c:\projects\libpkmn\test-env\build
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
 
-"%PYTHON_ROOT%\scripts\pip" install ply CppHeaderParser
+%PYTHON_ROOT%\scripts\pip install ply CppHeaderParser
+if not !ERRORLEVEL!==0 goto fail
 
 cmake -G %CMAKE_GENERATOR_NAME% ^
     -DCMAKE_BUILD_TYPE=Release ^
