@@ -6,8 +6,6 @@ mkdir c:\projects\libpkmn\test-env\build
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
 
-dir %BOOST_LIBRARY_DIR%
-
 cmake -G %CMAKE_GENERATOR_NAME% ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DBOOST_ROOT="%BOOST_ROOT%" ^
