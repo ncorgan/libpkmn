@@ -61,6 +61,12 @@ namespace pkmn {
                 uint32_t id
             );
 
+            std::string get_trainer_gender();
+
+            void set_trainer_gender(
+                const std::string &gender
+            );
+
             std::string get_location_caught();
 
             void set_location_caught(
@@ -86,6 +92,8 @@ namespace pkmn {
                 int index
             );
 
+            void _update_markings_map();
+            void _update_ribbons_map();
             void _update_EV_map();
             void _update_IV_map();
             void _update_stat_map();

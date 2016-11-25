@@ -218,6 +218,23 @@ namespace pkmn {
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
+    std::string pokemon_gen2impl::get_trainer_gender() {
+        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_OT_GENDER_MASK) ? "Female"
+                                                                        : "Male";
+    }
+
+    void pokemon_gen2impl::set_trainer_gender(
+        const std::string &gender
+    ) {
+        if(gender == "Male") {
+            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_OT_GENDER_MASK;
+        } else if(gender == "Female") {
+            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_OT_GENDER_MASK;
+        } else {
+            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
+        }
+    }
+
     std::string pokemon_gen2impl::get_location_caught() {
         return pkmn::database::location_index_to_name(
                    (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
@@ -327,6 +344,14 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
+    }
+
+    void pokemon_gen2impl::_update_markings_map() {
+        throw std::runtime_error("There are no markings in Generation I.");
+    }
+
+    void pokemon_gen2impl::_update_ribbons_map() {
+        throw std::runtime_error("There are no ribbons in Generation I.");
     }
 
     void pokemon_gen2impl::_update_EV_map() {

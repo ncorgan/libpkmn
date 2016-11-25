@@ -78,6 +78,12 @@ namespace pkmn {
                 uint32_t id
             ) = 0;
 
+            virtual std::string get_trainer_gender() = 0;
+
+            virtual void set_trainer_gender(
+                const std::string &trainer_gender
+            ) = 0;
+
             virtual std::string get_location_caught() = 0;
 
             virtual void set_location_caught(
@@ -95,6 +101,10 @@ namespace pkmn {
             virtual void set_level(
                 int level
             ) = 0;
+
+            virtual const std::map<std::string, bool>& get_markings() = 0;
+
+            virtual const std::map<std::string, bool>& get_ribbons() = 0;
 
             virtual const pkmn::move_slots_t& get_moves() = 0;
 

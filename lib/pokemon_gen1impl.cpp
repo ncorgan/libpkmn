@@ -240,6 +240,16 @@ namespace pkmn {
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
+    std::string pokemon_gen1impl::get_trainer_gender() {
+        return "Male";
+    }
+
+    void pokemon_gen1impl::set_trainer_gender(
+        PKMN_UNUSED(const std::string &gender)
+    ) {
+        throw std::runtime_error("All Generation I trainers are male.");
+    }
+
     std::string pokemon_gen1impl::get_location_caught() {
         throw std::runtime_error("Location caught is not recorded in Generation I.");
     }
@@ -342,6 +352,14 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
+    }
+
+    void pokemon_gen1impl::_update_markings_map() {
+        throw std::runtime_error("There are no markings in Generation I.");
+    }
+
+    void pokemon_gen1impl::_update_ribbons_map() {
+        throw std::runtime_error("There are no ribbons in Generation I.");
     }
 
     void pokemon_gen1impl::_update_EV_map() {

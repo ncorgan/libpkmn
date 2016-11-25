@@ -107,6 +107,16 @@ namespace pkmn {
         return _database_entry;
     }
 
+    const std::map<std::string, bool>& pokemon_impl::get_markings() {
+        _update_markings_map();
+        return _markings;
+    }
+
+    const std::map<std::string, bool>& pokemon_impl::get_ribbons() {
+        _update_ribbons_map();
+        return _ribbons;
+    }
+
     const pkmn::move_slots_t& pokemon_impl::get_moves() {
         _update_moves(-1);
         return _moves;
