@@ -28,9 +28,8 @@
 namespace pkmn {
 
     pokemon_gen2impl::pokemon_gen2impl(
-        int pokemon_index, int game_id,
-        int move1_id, int move2_id,
-        int move3_id, int move4_id,
+        int pokemon_index,
+        int game_id,
         int level
     ): pokemon_impl(pokemon_index, game_id)
     {
@@ -42,47 +41,8 @@ namespace pkmn {
         std::memset(_native_party, 0, sizeof(pksav_gen2_pokemon_party_data_t));
         _our_party_mem = true;
 
-        /*
-         * Since move IDs are manually passed in, manually create the move slots with
-         * full PP.
-         */
-        pkmn::database::move_entry move1(move1_id, game_id);
-        pkmn::database::move_entry move2(move2_id, game_id);
-        pkmn::database::move_entry move3(move3_id, game_id);
-        pkmn::database::move_entry move4(move4_id, game_id);
-
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move1_id,
-                move1.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move2_id,
-                move2.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move3_id,
-                move3.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move4_id,
-                move4.get_pp(0)
-            )
-        );
-
         // Set internal members
         GEN2_PC_RCAST->species = uint8_t(pokemon_index);
-
-        GEN2_PC_RCAST->moves[0] = uint8_t(move1_id);
-        GEN2_PC_RCAST->moves[1] = uint8_t(move2_id);
-        GEN2_PC_RCAST->moves[2] = uint8_t(move3_id);
-        GEN2_PC_RCAST->moves[3] = uint8_t(move4_id);
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
@@ -95,10 +55,6 @@ namespace pkmn {
         GEN2_PC_RCAST->ev_spd  = uint16_t(std::rand());
         GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
         GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
-
-        for(size_t i = 0; i < 4; ++i) {
-            GEN2_PC_RCAST->move_pps[i] = _moves[i].move.get_pp(0);
-        }
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
 

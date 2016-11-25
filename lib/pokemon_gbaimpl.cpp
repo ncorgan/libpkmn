@@ -31,9 +31,8 @@
 namespace pkmn {
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        int pokemon_index, int game_id,
-        int move1_id, int move2_id,
-        int move3_id, int move4_id,
+        int pokemon_index,
+        int game_id,
         int level
     ): pokemon_impl(pokemon_index, game_id)
     {
@@ -50,40 +49,6 @@ namespace pkmn {
         _attacks = &GBA_PC_RCAST->blocks.attacks;
         _effort  = &GBA_PC_RCAST->blocks.effort;
         _misc    = &GBA_PC_RCAST->blocks.misc;
-
-        /*
-         * Since move IDs are manually passed in, manually create the move slots with
-         * full PP.
-         */
-        pkmn::database::move_entry move1(move1_id, game_id);
-        pkmn::database::move_entry move2(move2_id, game_id);
-        pkmn::database::move_entry move3(move3_id, game_id);
-        pkmn::database::move_entry move4(move4_id, game_id);
-
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move1_id,
-                move1.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move2_id,
-                move2.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move3_id,
-                move3.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move4_id,
-                move4.get_pp(0)
-            )
-        );
 
         // TODO: Use PKSav PRNG after refactor merged in
         std::srand(std::time(NULL));
@@ -111,13 +76,6 @@ namespace pkmn {
                            _database_entry.get_experience_at_level(level)
                        ));
         _growth->friendship = uint8_t(_database_entry.get_base_happiness());
-
-        for(size_t i = 0; i < 4; ++i) {
-            _attacks->moves[i] = pksav_littleendian16(uint16_t(
-                                     _moves[i].move.get_move_id()
-                                 ));
-            _attacks->move_pps[i] = uint8_t(_moves[i].pp);
-        }
 
         // TODO: Use PKSav PRNG after refactor merged in
         _effort->ev_hp    = uint32_t(std::rand());

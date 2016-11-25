@@ -33,10 +33,6 @@ namespace pkmn {
                 const std::string &species,
                 const std::string &game,
                 const std::string &form,
-                const std::string &move1,
-                const std::string &move2,
-                const std::string &move3,
-                const std::string &move4,
                 int level
             );
 

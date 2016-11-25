@@ -16,10 +16,6 @@ BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
                                       species,
                                       "Red",
                                       "",
-                                      "Ember",
-                                      "Fire Spin",
-                                      "Slash",
-                                      "None",
                                       30
                                   );
 

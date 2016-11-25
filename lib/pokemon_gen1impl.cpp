@@ -47,9 +47,8 @@ static std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::as
 namespace pkmn {
 
     pokemon_gen1impl::pokemon_gen1impl(
-        int pokemon_index, int game_id,
-        int move1_id, int move2_id,
-        int move3_id, int move4_id,
+        int pokemon_index,
+        int game_id,
         int level
     ): pokemon_impl(pokemon_index, game_id)
     {
@@ -60,40 +59,6 @@ namespace pkmn {
         _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
         std::memset(_native_party, 0, sizeof(pksav_gen1_pokemon_party_data_t));
         _our_party_mem = true;
-
-        /*
-         * Since move IDs are manually passed in, manually create the move slots with
-         * full PP.
-         */
-        pkmn::database::move_entry move1(move1_id, game_id);
-        pkmn::database::move_entry move2(move2_id, game_id);
-        pkmn::database::move_entry move3(move3_id, game_id);
-        pkmn::database::move_entry move4(move4_id, game_id);
-
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move1_id,
-                move1.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move2_id,
-                move2.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move3_id,
-                move3.get_pp(0)
-            )
-        );
-        _moves.emplace_back(
-            pkmn::move_slot(
-                (pkmn::database::move_entry&&)move4_id,
-                move4.get_pp(0)
-            )
-        );
 
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
@@ -110,11 +75,6 @@ namespace pkmn {
 
         // TODO: catch rate
 
-        GEN1_PC_RCAST->moves[0] = uint8_t(move1_id);
-        GEN1_PC_RCAST->moves[1] = uint8_t(move2_id);
-        GEN1_PC_RCAST->moves[2] = uint8_t(move3_id);
-        GEN1_PC_RCAST->moves[3] = uint8_t(move4_id);
-
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
         // TODO: Use PKSav PRNG after refactor merged in
@@ -125,10 +85,6 @@ namespace pkmn {
         GEN1_PC_RCAST->ev_spd  = uint16_t(std::rand());
         GEN1_PC_RCAST->ev_spcl = uint16_t(std::rand());
         GEN1_PC_RCAST->iv_data = uint16_t(std::rand());
-
-        for(size_t i = 0; i < 4; ++i) {
-            GEN1_PC_RCAST->move_pps[i] = _moves[i].move.get_pp(0);
-        }
 
         set_level(level);
     }
