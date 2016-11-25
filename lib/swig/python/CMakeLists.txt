@@ -20,6 +20,8 @@ IF(NOT "${SWIG_VERSION}" STREQUAL "3.0.6")
         pkmn_python_docstrings ALL
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_python_docstrings.i
     )
+ELSE()
+    FILE(WRITE "" ${CMAKE_CURRENT_BINARY_DIR}/pkmn_python_docstrings.i)
 ENDIF(NOT "${SWIG_VERSION}" STREQUAL "3.0.6")
 
 ADD_SUBDIRECTORY(pkmn)
