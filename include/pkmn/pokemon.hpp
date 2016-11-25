@@ -38,7 +38,7 @@ namespace pkmn {
 
             static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
 
-            static std::string LIBPKMN_OT_NAME;
+            static const std::string LIBPKMN_OT_NAME;
 
             virtual std::string get_game() = 0;
 
