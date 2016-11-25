@@ -32,7 +32,7 @@ if not !ERRORLEVEL!==0 goto fail
 msbuild /p:configuration=Release ALL_BUILD.vcxproj
 if not !ERRORLEVEL!==0 goto fail
 
-ctest --output-on-failure
+ctest -E "*python_paths_test" --output-on-failure
 if not !ERRORLEVEL!==0 goto fail
 
 goto pass
