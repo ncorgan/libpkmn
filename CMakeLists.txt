@@ -139,6 +139,10 @@ ENDIF(PKMN_ENABLE_TESTS)
 ####################################################################
 # Final display
 ####################################################################
+
+MESSAGE("PYTHON_INCLUDE_DIRS: ${PYTHON_INCLUDE_DIRS}")
+MESSAGE("PYTHON_LIBRARIES: ${PYTHON_LIBRARIES}")
+
 PKMN_PRINT_COMPONENT_SUMMARY()
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     MESSAGE(STATUS "")
