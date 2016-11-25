@@ -1,6 +1,13 @@
 @setlocal enableextensions enabledelayedexpansion
 @echo off
 
+:: Set variables
+if "%BITNESS%"=="32" set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
+if "%BITNESS%"=="64" set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
+if "%BITNESS%"=="32" set PYTHON_ROOT="C:\Python27"
+if "%BITNESS%"=="64" set PYTHON_ROOT="C:\Python27-x64"
+set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
+
 mkdir c:\projects\libpkmn\test-env\build
 
 cd c:\projects\libpkmn\test-env\build
