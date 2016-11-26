@@ -11,13 +11,23 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_qt5_classes
     AbilityListComboBox
+    GameListComboBox
+    ItemListComboBox
+    LocationListComboBox
+    MoveListComboBox
+    NatureListComboBox
+    PokemonListComboBox
+    RegionListComboBox
+    RibbonListComboBox
+    SuperTrainingMedalListComboBox
+    TypeListComboBox
 )
 
+#
+# Keep Qt5 files in here for organizational purposes,
+# but move them where they need to be in order to build.
+#
 FOREACH(class ${pkmn_qt5_classes})
-    #
-    # Keep Qt5 files in here for organizational purposes,
-    # but move them where they need to be in order to build.
-    #
     CONFIGURE_FILE(
         ${CMAKE_CURRENT_SOURCE_DIR}/${class}.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/../${class}.cpp

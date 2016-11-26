@@ -5,21 +5,21 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/qt5/AbilityListComboBox.hpp>
+#include <pkmn/qt5/ItemListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
 
 namespace pkmn { namespace qt5 {
 
-    AbilityListComboBox::AbilityListComboBox(
-        int generation,
+    ItemListComboBox::ItemListComboBox(
+        const QString &game,
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> abilities = pkmn::database::get_ability_list(
-                                                 generation
-                                             );
-        for(auto iter = abilities.begin(); iter != abilities.end(); ++iter) {
+        std::vector<std::string> items = pkmn::database::get_item_list(
+                                             game.toStdString()
+                                         );
+        for(auto iter = items.begin(); iter != items.end(); ++iter) {
             addItem(QString::fromStdString(*iter));
         }
 
@@ -29,4 +29,4 @@ namespace pkmn { namespace qt5 {
 }}
 
 // Generated at build time
-#include "../include/pkmn/qt5/moc_AbilityListComboBox.cpp"
+#include "../include/pkmn/qt5/moc_ItemListComboBox.cpp"
