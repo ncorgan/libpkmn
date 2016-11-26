@@ -33,10 +33,25 @@ ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
+#
+# Configuration for Qt5 support
+#
+IF(PKMN_ENABLE_QT5)
+    INCLUDE_DIRECTORIES(
+        ${Qt5Widgets_INCLUDE_DIRS}
+    )
+    LIST(APPEND pkmn_libs
+        ${Qt5Widgets_LIBRARIES}
+    )
+
+    ADD_SUBDIRECTORY(qt5)
+ENDIF(PKMN_ENABLE_QT5)
+
 SET(pkmn_sources
     ${pkmn_calculations_sources}
     ${pkmn_database_sources}
     ${pkmn_pksav_sources}
+    ${pkmn_qt5_sources} # Will be empty without Qt5 support
     ${pkmn_utils_sources}
     build_info.cpp
     item_bag_impl.cpp
@@ -83,6 +98,14 @@ ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
 TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+
+#
+# Qt5 post-build stuff
+#
+IF(PKMN_ENABLE_QT5)
+    SET_TARGET_PROPERTIES(pkmn PROPERTIES AUTOMOC ON)
+    qt5_use_modules(pkmn Widgets)
+ENDIF(PKMN_ENABLE_QT5)
 
 INSTALL(
     TARGETS pkmn

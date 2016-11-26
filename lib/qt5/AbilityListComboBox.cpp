@@ -27,3 +27,5 @@ namespace pkmn { namespace qt5 {
     }
 
 }}
+
+#include "../include/pkmn/qt5/moc_AbilityListComboBox.cpp"
