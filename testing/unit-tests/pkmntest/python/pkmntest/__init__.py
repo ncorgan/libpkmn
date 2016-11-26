@@ -5,4 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-from . import gen1_items_tests
+from .gen1_items_tests import *

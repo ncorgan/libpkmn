@@ -1,141 +1,162 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 import pkmn
-import sys
-import traceback
 
-def __item_list_common(items):
-    # Confirm errors are thrown when expected
-    try:
-        items.add("Potion", 0)
-    except IndexError:
-        pass
-    except:
-        raise RuntimeError("This should have thrown an IndexError.")
+import unittest
 
-    try:
-        items.add("Potion", 100)
-    except IndexError:
-        pass
-    except:
-        raise RuntimeError("This should have thrown an IndexError.")
+class gen1_items_test(unittest.TestCase):
 
-    try:
-        items.remove("Potion", 0)
-    except IndexError:
-        pass
-    except:
-        raise RuntimeError("This should have thrown an IndexError.")
+    #
+    # Helper functions
+    #
 
-    try:
-        items.remove("Potion", 100)
-    except IndexError:
-        pass
-    except:
-        raise RuntimeError("This should have thrown an IndexError.")
+    def __test_item_list_common(self, items, game):
+        # Make sure item slots start as correcty empty.
+        self.assertEqual(len(items.as_list()), items.get_capacity())
+        for i in range(items.get_capacity()):
+            self.assertEqual(items[i].item.get_name(), "None")
+            self.assertEqual(items[i].amount, 0)
 
-    # Start adding and removing stuff, and make sure the numbers are
-    # accurate. This also tests the custom __getitem__ function.
+        # Confirm errors are thrown when expected.
+        with self.assertRaises(IndexError):
+            items.add("Potion", 0)
+        with self.assertRaises(IndexError):
+            items.add("Potion", 100)
+        with self.assertRaises(IndexError):
+            items.remove("Potion", 0)
+        with self.assertRaises(IndexError):
+            items.remove("Potion", 100)
 
-    items.add("Potion", 30)
-    items.add("Great Ball", 99)
-    items.add("Ether", 1)
+        # Start adding and removing stuff, and make sure the numbers are accurate.
+        items.add("Potion", 30)
+        items.add("Great Ball", 99)
+        items.add("Ether", 1)
 
-    if items[0].item.get_name() != "Potion":
-        raise RuntimeError("items[0].item.get_name() (\"{0}\") != \"Potion\"".format(items[0].item.get_name()))
-    if items[0].amount != 30:
-        raise RuntimeError("items[0].amount ({0}) != 30".format(items[0].amount))
-    if items[1].item.get_name() != "Great Ball":
-        raise RuntimeError("items[1].item.get_name() (\"{0}\") != \"Great Ball\"".format(items[1].item.get_name()))
-    if items[1].amount != 99:
-        raise RuntimeError("items[1].amount ({0}) != 99".format(items[1].amount))
-    if items[2].item.get_name() != "Ether":
-        raise RuntimeError("items[2].item.get_name() (\"{0}\") != \"Ether\"".format(items[2].item.get_name()))
-    if items[2].amount != 1:
-        raise RuntimeError("items[2].amount ({0}) != 1".format(items[2].amount))
-    if items.get_num_items() != 3:
-        raise RuntimeError("items.get_num_items() ({0}) != 3".format(items.get_num_items()))
+        self.assertEqual(items[0].item.get_name(), "Potion")
+        self.assertEqual(items[0].amount, 30)
+        self.assertEqual(items[1].item.get_name(), "Great Ball")
+        self.assertEqual(items[1].amount, 99)
+        self.assertEqual(items[2].item.get_name(), "Ether")
+        self.assertEqual(items[2].amount, 1)
+        self.assertEqual(items.get_num_items(), 3)
 
-    items.remove("Great Ball", 20)
+        items.add("Ether", 15)
+        self.assertEqual(items[0].item.get_name(), "Potion")
+        self.assertEqual(items[0].amount, 30)
+        self.assertEqual(items[1].item.get_name(), "Great Ball")
+        self.assertEqual(items[1].amount, 99)
+        self.assertEqual(items[2].item.get_name(), "Ether")
+        self.assertEqual(items[2].amount, 16)
+        self.assertEqual(items.get_num_items(), 3)
 
-    if items[1].item.get_name() != "Great Ball":
-        raise RuntimeError("items[1].item.get_name() (\"{0}\") != \"Great Ball\"".format(items[1].item.get_name()))
-    if items[1].amount != 79:
-        raise RuntimeError("items[1].amount ({0}) != 79".format(items[1].amount))
+        items.remove("Great Ball", 20)
+        self.assertEqual(items[0].item.get_name(), "Potion")
+        self.assertEqual(items[0].amount, 30)
+        self.assertEqual(items[1].item.get_name(), "Great Ball")
+        self.assertEqual(items[1].amount, 79)
+        self.assertEqual(items[2].item.get_name(), "Ether")
+        self.assertEqual(items[2].amount, 16)
+        self.assertEqual(items.get_num_items(), 3)
 
-    items.move(0, 1)
+        items.move(0, 1)
+        self.assertEqual(items[0].item.get_name(), "Great Ball")
+        self.assertEqual(items[0].amount, 79)
+        self.assertEqual(items[1].item.get_name(), "Potion")
+        self.assertEqual(items[1].amount, 30)
+        self.assertEqual(items[2].item.get_name(), "Ether")
+        self.assertEqual(items[2].amount, 16)
+        self.assertEqual(items.get_num_items(), 3)
 
-    if items[0].item.get_name() != "Great Ball":
-        raise RuntimeError("items[0].item.get_name() (\"{0}\") != \"Great Ball\"".format(items[0].item.get_name()))
-    if items[0].amount != 79:
-        raise RuntimeError("items[0].amount ({0}) != 79".format(items[0].amount))
-    if items[1].item.get_name() != "Potion":
-        raise RuntimeError("items[1].item.get_name() (\"{0}\") != \"Potion\"".format(items[1].item.get_name()))
-    if items[1].amount != 30:
-        raise RuntimeError("items[1].amount ({0}) != 30".format(items[1].amount))
-    if items.get_num_items() != 3:
-        raise RuntimeError("items.get_num_items() ({0}) != 3".format(items.get_num_items()))
+        items.remove("Potion", 30)
+        self.assertEqual(items[0].item.get_name(), "Great Ball")
+        self.assertEqual(items[0].amount, 79)
+        self.assertEqual(items[1].item.get_name(), "Ether")
+        self.assertEqual(items[1].amount, 16)
+        self.assertEqual(items[2].item.get_name(), "None")
+        self.assertEqual(items[2].amount, 0)
+        self.assertEqual(items.get_num_items(), 2)
 
-    items.remove("Potion", 30)
+        valid_items = items.get_valid_items()
+        full_item_list = pkmn.database.get_item_list(game)
+        self.assertEqual(len(valid_items), len(full_item_list))
 
-    if items[0].item.get_name() != "Great Ball":
-        raise RuntimeError("items[0].item.get_name() (\"{0}\") != \"Great Ball\"".format(items[0].item.get_name()))
-    if items[0].amount != 79:
-        raise RuntimeError("items[0].amount ({0}) != 79".format(items[0].amount))
-    if items[1].item.get_name() != "Ether":
-        raise RuntimeError("items[1].item.get_name() (\"{0}\") != \"Ether\"".format(items[1].item.get_name()))
-    if items[1].amount != 1:
-        raise RuntimeError("items[1].amount ({0}) != 1".format(items[1].amount))
-    if items.get_num_items() != 2:
-        raise RuntimeError("items.get_num_items() ({0}) != 2".format(items.get_num_items()))
+    def __test_item_list(self, items, game):
+        # Check unchanging and initial values.
+        self.assertEqual(items.get_name(), "Items")
+        self.assertEqual(items.get_game(), game)
+        self.assertEqual(items.get_capacity(), 20)
+        self.assertEqual(items.get_num_items(), 0)
 
-def item_list_test(items):
-    # Check unchanging and initial values
-    if items.get_name() != "Items":
-        raise RuntimeError("items.get_name() (\"{0}\") != \"Items\"".format(items.get_name()))
-    if items.get_game() != "Red":
-        raise RuntimeError("items.get_game() (\"{0}\") != \"Red\"".format(items.get_game()))
-    if items.get_capacity() != 20:
-        raise RuntimeError("items.get_capacity() ({0}) != 20".format(items.get_capacity()))
-    if items.get_num_items() != 0:
-        raise RuntimeError("items.get_num_items() ({0}) != 0".format(items.get_num_items()))
+        self.__test_item_list_common(items, game)
 
-    __item_list_common(items)
+    def __test_item_pc(self, pc, game):
+        # Check unchanging and initial values.
+        self.assertEqual(pc.get_name(), "PC")
+        self.assertEqual(pc.get_game(), game)
+        self.assertEqual(pc.get_capacity(), 50)
+        self.assertEqual(pc.get_num_items(), 0)
 
-def pc_test(items):
-    # Check unchanging and initial values
-    if items.get_name() != "PC":
-        raise RuntimeError("items.get_name() (\"{0}\") != \"PC\"".format(items.get_name()))
-    if items.get_game() != "Red":
-        raise RuntimeError("items.get_game() (\"{0}\") != \"Red\"".format(items.get_game()))
-    if items.get_capacity() != 50:
-        raise RuntimeError("items.get_capacity() ({0}) != 50".format(items.get_capacity()))
-    if items.get_num_items() != 0:
-        raise RuntimeError("items.get_num_items() ({0}) != 0".format(items.get_num_items()))
+        self.__test_item_list_common(pc, game)
 
-    __item_list_common(items)
+    def __test_item_bag(self, bag, game):
+        # Check unchanging and initial values.
+        self.assertEqual(bag.get_game(), game)
 
-def item_bag_test(bag):
-    pockets = bag.get_pockets()
-    if len(pockets) != 1:
-        raise RuntimeError("len(pockets) ({0}) != 1".format(len(pockets)))
+        pockets = bag.get_pockets()
+        self.assertEqual(pockets.size(), 1)
 
-    item_list_test(bag["Items"])
+        self.__test_item_list(pockets["Items"], game)
 
-    # Test sptr equality
-    pocket1 = bag["Items"]
-    pocket2 = bag["Items"]
-    pocket3 = pkmn.item_list("Items", "Red")
+    #
+    # Red
+    #
 
-    if pocket1 != pocket1:
-        raise RuntimeError("pocket1 != pocket1")
-    if pocket1 != pocket2:
-        raise RuntimeError("pocket1 != pocket2")
-    if pocket1 == pocket3:
-        raise RuntimeError("pocket1 == pocket3")
+    def test_red_item_list(self):
+        items = pkmn.item_list("Items", "Red")
+        self.__test_item_list(items, "Red")
+
+    def test_red_item_pc(self):
+        pc = pkmn.item_list("PC", "Red")
+        self.__test_item_pc(pc, "Red")
+
+    def test_red_item_bag(self):
+        bag = pkmn.item_bag("Red")
+        self.__test_item_bag(bag, "Red")
+
+    #
+    # Blue
+    #
+
+    def test_blue_item_list(self):
+        items = pkmn.item_list("Items", "Blue")
+        self.__test_item_list(items, "Blue")
+
+    def test_blue_item_pc(self):
+        pc = pkmn.item_list("PC", "Blue")
+        self.__test_item_pc(pc, "Blue")
+
+    def test_blue_item_bag(self):
+        bag = pkmn.item_bag("Blue")
+        self.__test_item_bag(bag, "Blue")
+
+    #
+    # Yellow
+    #
+
+    def test_yellow_item_list(self):
+        items = pkmn.item_list("Items", "Yellow")
+        self.__test_item_list(items, "Yellow")
+
+    def test_yellow_item_pc(self):
+        pc = pkmn.item_list("PC", "Yellow")
+        self.__test_item_pc(pc, "Yellow")
+
+    def test_yellow_item_bag(self):
+        bag = pkmn.item_bag("Yellow")
+        self.__test_item_bag(bag, "Yellow")
