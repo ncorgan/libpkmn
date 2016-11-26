@@ -6,3 +6,4 @@
 #
 
 from .gen1_items_tests import *
+from .gen2_items_tests import *

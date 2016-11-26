@@ -17,7 +17,7 @@ class gen1_items_test(unittest.TestCase):
     #
 
     def __test_item_list_common(self, items, game):
-        # Make sure item slots start as correcty empty.
+        # Make sure item slots start as correctly empty.
         self.assertEqual(len(items.as_list()), items.get_capacity())
         for i in range(items.get_capacity()):
             self.assertEqual(items[i].item.get_name(), "None")
@@ -110,6 +110,7 @@ class gen1_items_test(unittest.TestCase):
 
         pockets = bag.get_pockets()
         self.assertEqual(pockets.size(), 1)
+        self.assertTrue(pockets.has_key("Items"))
 
         self.__test_item_list(pockets["Items"], game)
 
