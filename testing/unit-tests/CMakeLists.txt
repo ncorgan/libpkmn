@@ -31,7 +31,6 @@ FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
 ENDFOREACH(test ${cpp_tests})
 
-# Tests with multiple files have to be done separately
 SET(database_entry_test_srcs
     cpp_database_entry_test/item_entry_tests.cpp
     cpp_database_entry_test/move_entry_tests.cpp
@@ -39,6 +38,17 @@ SET(database_entry_test_srcs
     cpp_database_entry_test/cpp_database_entry_test.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
+
+IF(PKMN_ENABLE_QT5)
+    LIST(APPEND pkmn_cpp_test_libs
+        ${Qt5Widgets_LIBRARIES}
+        ${Qt5Test_LIBRARIES}
+    )
+    SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+    PKMN_ADD_CPP_TEST(cpp_Qt5WidgetsTest cpp_Qt5WidgetsTest/cpp_Qt5WidgetsTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_Qt5WidgetsTest PROPERTIES AUTOMOC ON)
+    qt5_use_modules(cpp_Qt5WidgetsTest Widgets Test)
+ENDIF(PKMN_ENABLE_QT5)
 
 #
 # C tests
