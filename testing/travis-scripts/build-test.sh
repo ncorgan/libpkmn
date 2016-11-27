@@ -16,7 +16,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     mkdir -p build
     cd build
 
-    cmake $REPO_TOPLEVEL
+    cmake -DPKMN_ENABLE_PYTHON=OFF $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1

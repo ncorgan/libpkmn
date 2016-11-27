@@ -9,8 +9,8 @@
 
 #include <pkmn/utils/paths.hpp>
 
-#include <boost/test/unit_test.hpp>
-    
+#include "pkmn_boost_unit_test.hpp"
+
 /*
  * The example paths don't need to exist (except the database path). These
  * tests just make sure the environment variables override the defaults.

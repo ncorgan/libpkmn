@@ -17,15 +17,18 @@ extern "C" {
 #endif
 
 PKMN_API void pkmntest_gen1_item_list_test(
-    pkmn_item_list_handle_t items
+    pkmn_item_list_handle_t items,
+    const char* game
 );
 
 PKMN_API void pkmntest_gen1_pc_test(
-    pkmn_item_list_handle_t pc
+    pkmn_item_list_handle_t pc,
+    const char* game
 );
 
 PKMN_API void pkmntest_gen1_item_bag_test(
-    pkmn_item_bag_handle_t bag
+    pkmn_item_bag_handle_t bag,
+    const char* game
 );
 
 #ifdef __cplusplus

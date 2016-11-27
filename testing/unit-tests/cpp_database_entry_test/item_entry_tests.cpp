@@ -9,9 +9,9 @@
 
 // Only create one main
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/format.hpp>
-#include <boost/test/unit_test.hpp>
 
 static void _item_entry_none_test(
     const pkmn::database::item_entry &none_entry

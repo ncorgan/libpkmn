@@ -12,7 +12,7 @@
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/calculations/stats.hpp>
 
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"
 
 #include <limits>
 

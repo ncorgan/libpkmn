@@ -9,7 +9,9 @@
 #include <pkmntest/gen2_items_tests.hpp>
 #include <pkmntest/gba_items_tests.hpp>
 
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"
+
+// Red
 
 BOOST_AUTO_TEST_CASE(gen1_red_item_list_test) {
     pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Red");
@@ -26,6 +28,8 @@ BOOST_AUTO_TEST_CASE(gen1_red_item_bag_test) {
     pkmntest::gen1_item_bag_test(bag, "Red");
 }
 
+// Blue
+
 BOOST_AUTO_TEST_CASE(gen1_blue_item_list_test) {
     pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Blue");
     pkmntest::gen1_item_list_test(items, "Blue");
@@ -41,6 +45,8 @@ BOOST_AUTO_TEST_CASE(gen1_blue_item_bag_test) {
     pkmntest::gen1_item_bag_test(bag, "Blue");
 }
 
+// Yellow
+
 BOOST_AUTO_TEST_CASE(gen1_yellow_item_list_test) {
     pkmn::item_list::sptr items = pkmn::item_list::make("Items", "Yellow");
     pkmntest::gen1_item_list_test(items, "Yellow");
@@ -55,6 +61,8 @@ BOOST_AUTO_TEST_CASE(gen1_yellow_item_bag_test) {
     pkmn::item_bag::sptr bag = pkmn::item_bag::make("Yellow");
     pkmntest::gen1_item_bag_test(bag, "Yellow");
 }
+
+// Gold
 
 BOOST_AUTO_TEST_CASE(gen2_gold_item_pocket_test) {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make("Items", "Gold");
@@ -86,6 +94,8 @@ BOOST_AUTO_TEST_CASE(gen2_gold_item_bag_test) {
     pkmntest::gen2_item_bag_test(bag, "Gold");
 }
 
+// Silver
+
 BOOST_AUTO_TEST_CASE(gen2_silver_item_pocket_test) {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make("Items", "Silver");
     pkmntest::gen2_item_pocket_test(item_pocket, "Silver");
@@ -115,6 +125,8 @@ BOOST_AUTO_TEST_CASE(gen2_silver_item_bag_test) {
     pkmn::item_bag::sptr bag = pkmn::item_bag::make("Silver");
     pkmntest::gen2_item_bag_test(bag, "Silver");
 }
+
+// Crystal
 
 BOOST_AUTO_TEST_CASE(gen2_crystal_item_pocket_test) {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make("Items", "Crystal");
