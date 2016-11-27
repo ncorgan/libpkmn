@@ -206,6 +206,14 @@ namespace pkmn {
         throw std::runtime_error("All Generation I trainers are male.");
     }
 
+    std::string pokemon_gen1impl::get_ability() {
+        throw std::runtime_error("There are no abilities in Generation I.");
+    }
+
+    std::string pokemon_gen1impl::get_ball() {
+        throw std::runtime_error("A Pokémon's ball is not recorded in Generation I.");
+    }
+
     std::string pokemon_gen1impl::get_location_caught() {
         throw std::runtime_error("Location caught is not recorded in Generation I.");
     }
@@ -214,6 +222,14 @@ namespace pkmn {
         PKMN_UNUSED(const std::string &location)
     ) {
         throw std::runtime_error("Location caught is not recorded in Generation I.");
+    }
+
+    std::string pokemon_gen1impl::get_original_game() {
+        throw std::runtime_error("Original game is not recorded in Generation I.");
+    }
+
+    uint32_t pokemon_gen1impl::get_personality() {
+        throw std::runtime_error("There is no personality in Generation I.");
     }
 
     int pokemon_gen1impl::get_experience() {
@@ -308,6 +324,10 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
+    }
+
+    void pokemon_gen1impl::_update_held_item() {
+        throw std::runtime_error("There are no held items in Generation I.");
     }
 
     void pokemon_gen1impl::_update_markings_map() {

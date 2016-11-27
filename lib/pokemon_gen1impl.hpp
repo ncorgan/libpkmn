@@ -66,11 +66,19 @@ namespace pkmn {
                 const std::string &gender
             );
 
+            std::string get_ability();
+
+            std::string get_ball();
+
             std::string get_location_caught();
 
             void set_location_caught(
                 const std::string &location
             );
+
+            std::string get_original_game();
+
+            uint32_t get_personality();
 
             int get_experience();
 
@@ -91,6 +99,7 @@ namespace pkmn {
                 int index
             );
 
+            void _update_held_item();
             void _update_markings_map();
             void _update_ribbons_map();
             void _update_EV_map();

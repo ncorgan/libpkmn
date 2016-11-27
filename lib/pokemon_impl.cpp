@@ -75,8 +75,17 @@ namespace pkmn {
         int pokemon_index,
         int game_id
     ): pokemon(),
-       _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id))
+       _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
+       _held_item(pkmn::database::item_entry(0, game_id))
     {}
+
+    std::string pokemon_impl::get_species() {
+        return _database_entry.get_name();
+    }
+
+    std::string pokemon_impl::get_form() {
+        return _database_entry.get_form();
+    }
 
     std::string pokemon_impl::get_game() {
         return _database_entry.get_game();
@@ -84,6 +93,11 @@ namespace pkmn {
 
     const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry() {
         return _database_entry;
+    }
+
+    const pkmn::database::item_entry& pokemon_impl::get_held_item() {
+        _update_held_item();
+        return _held_item;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_markings() {

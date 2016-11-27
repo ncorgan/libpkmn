@@ -7,6 +7,7 @@
 
 #include "pokemon_gbaimpl.hpp"
 #include "database/id_to_index.hpp"
+#include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
@@ -90,7 +91,7 @@ namespace pkmn {
         _misc->origin_info = uint16_t(level);
         uint16_t game_index = uint16_t(pkmn::database::game_id_to_index(game_id));
         _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
-        // TODO: ball
+        _misc->origin_info |= (12 << PKSAV_GBA_BALL_OFFSET); // Premier Ball
 
         _misc->iv_egg_ability = uint32_t(std::rand());
         _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
@@ -265,6 +266,23 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gbaimpl::get_ability() {
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if(abilities.second == "None") {
+            return abilities.first;
+        } else {
+            return (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
+                                                                    : abilities.first;
+        }
+    }
+
+    std::string pokemon_gbaimpl::get_ball() {
+        uint16_t ball = _misc->origin_info & PKSAV_GBA_BALL_MASK;
+        ball >>= PKSAV_GBA_BALL_OFFSET;
+
+        return pkmn::database::ball_id_to_name(ball);
+    }
+
     std::string pokemon_gbaimpl::get_location_caught() {
         return pkmn::database::location_index_to_name(
                    _misc->met_location,
@@ -279,6 +297,17 @@ namespace pkmn {
                                           location,
                                           _database_entry.get_game_id()
                                       ));
+    }
+
+    std::string pokemon_gbaimpl::get_original_game() {
+        uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
+        original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
+
+        return pkmn::database::game_index_to_name(original_game);
+    }
+
+    uint32_t pokemon_gbaimpl::get_personality() {
+        return pksav_littleendian32(GBA_PC_RCAST->personality);
     }
 
     int pokemon_gbaimpl::get_experience() {
@@ -354,6 +383,15 @@ namespace pkmn {
                 for(size_t i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
+        }
+    }
+
+    void pokemon_gbaimpl::_update_held_item() {
+        if(int(pksav_littleendian16(_growth->held_item)) != _held_item.get_item_index()) {
+            _held_item = pkmn::database::item_entry(
+                             pksav_littleendian16(_growth->held_item),
+                             _database_entry.get_game_id()
+                         );
         }
     }
 

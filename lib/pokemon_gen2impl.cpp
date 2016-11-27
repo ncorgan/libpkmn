@@ -191,6 +191,14 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gen2impl::get_ability() {
+        throw std::runtime_error("There are no abilities in Generation II.");
+    }
+
+    std::string pokemon_gen2impl::get_ball() {
+        throw std::runtime_error("A Pokémon's ball is not recorded in Generation II.");
+    }
+
     std::string pokemon_gen2impl::get_location_caught() {
         return pkmn::database::location_index_to_name(
                    (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
@@ -207,6 +215,14 @@ namespace pkmn {
                                            ));
         GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;
         GEN2_PC_RCAST->caught_data |= location_index;
+    }
+
+    std::string pokemon_gen2impl::get_original_game() {
+        throw std::runtime_error("Original game is not recorded in Generation II.");
+    }
+
+    uint32_t pokemon_gen2impl::get_personality() {
+        throw std::runtime_error("There is no personality in Generation II.");
     }
 
     int pokemon_gen2impl::get_experience() {
@@ -299,6 +315,15 @@ namespace pkmn {
                 for(size_t i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
+        }
+    }
+
+    void pokemon_gen2impl::_update_held_item() {
+        if(int(GEN2_PC_RCAST->held_item) != _held_item.get_item_index()) {
+            _held_item = pkmn::database::item_entry(
+                             GEN2_PC_RCAST->held_item,
+                             _database_entry.get_game_id()
+                         );
         }
     }
 

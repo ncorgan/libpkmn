@@ -21,9 +21,15 @@ namespace pkmn {
                 int game_id
             );
 
+            std::string get_species();
+
+            std::string get_form();
+
             std::string get_game();
 
             const pkmn::database::pokemon_entry& get_database_entry();
+
+            const pkmn::database::item_entry& get_held_item();
 
             const std::map<std::string, bool>& get_markings();
 
@@ -47,6 +53,7 @@ namespace pkmn {
             std::map<std::string, bool> _markings, _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
+            pkmn::database::item_entry _held_item;
 
             bool _our_pc_mem;
             bool _our_party_mem;
@@ -60,6 +67,7 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            virtual void _update_held_item() = 0;
             virtual void _update_markings_map() = 0;
             virtual void _update_ribbons_map() = 0;
             virtual void _update_EV_map() = 0;

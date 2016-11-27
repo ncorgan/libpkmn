@@ -40,6 +40,10 @@ namespace pkmn {
 
             static const std::string LIBPKMN_OT_NAME;
 
+            virtual std::string get_species() = 0;
+
+            virtual std::string get_form() = 0;
+
             virtual std::string get_game() = 0;
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
@@ -49,6 +53,8 @@ namespace pkmn {
             virtual void set_nickname(
                 const std::string &nickname
             ) = 0;
+
+            virtual const pkmn::database::item_entry& get_held_item() = 0;
 
             virtual std::string get_trainer_name() = 0;
 
@@ -80,11 +86,19 @@ namespace pkmn {
                 const std::string &trainer_gender
             ) = 0;
 
+            virtual std::string get_ability() = 0;
+
+            virtual std::string get_ball() = 0;
+
             virtual std::string get_location_caught() = 0;
 
             virtual void set_location_caught(
                 const std::string &location
             ) = 0;
+
+            virtual std::string get_original_game() = 0;
+
+            virtual uint32_t get_personality() = 0;
 
             virtual int get_experience() = 0;
 
