@@ -40,6 +40,8 @@ SET(database_entry_test_srcs
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 IF(PKMN_ENABLE_QT5)
+    CMAKE_POLICY(SET CMP0043 NEW)
+
     LIST(APPEND pkmn_cpp_test_libs
         ${Qt5Widgets_LIBRARIES}
         ${Qt5Test_LIBRARIES}

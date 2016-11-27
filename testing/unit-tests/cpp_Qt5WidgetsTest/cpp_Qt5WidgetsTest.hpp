@@ -16,6 +16,8 @@ class Qt5WidgetsTest: public QObject
 
     private slots:
         void testAbilityListComboBox();
+        void testGameListComboBox();
+        void testItemListComboBox();
 };
 
 #endif /* CPP_QT5WIDGETSTEST_HPP */
