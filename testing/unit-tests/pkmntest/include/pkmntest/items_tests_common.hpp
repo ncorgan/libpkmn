@@ -33,9 +33,7 @@ namespace pkmntest {
     void test_item_list_add_remove(
         pkmn::item_list::sptr list,
         const pkmn::database::item_entry &none_entry,
-        const std::string &item1_name,
-        const std::string &item2_name,
-        const std::string &item3_name
+        const std::vector<std::string> &item_names
     );
 
 }

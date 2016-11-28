@@ -82,12 +82,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("Orange Mail");
+        item_names.emplace_back("Lava Cookie");
+        item_names.emplace_back("Stardust");
+        item_names.emplace_back("Shadow Mail");
+        item_names.emplace_back("Pink Scarf");
+        item_names.emplace_back("Antidote");
+        item_names.emplace_back("Green Shard");
         test_item_list_add_remove(
             item_pocket,
             none_entries.at(game),
-            "Potion",
-            "Orange Mail",
-            "Soul Dew"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
@@ -137,12 +144,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Wailmer Pail");
+        item_names.emplace_back("Basement Key");
+        item_names.emplace_back("Meteorite");
+        item_names.emplace_back("Stardust");
+        item_names.emplace_back("Red Orb");
+        item_names.emplace_back("Root Fossil");
+        item_names.emplace_back("Contest Pass");
+        item_names.emplace_back("Eon Ticket");
         test_item_list_add_remove(
             key_item_pocket,
             none_entries.at(game),
-            "Wailmer Pail",
-            "Basement Key",
-            "Meteorite"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
@@ -192,12 +206,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Master Ball");
+        item_names.emplace_back("Ultra Ball");
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("Poké Ball");
+        item_names.emplace_back("Safari Ball");
+        item_names.emplace_back("Net Ball");
+        item_names.emplace_back("Dive Ball");
+        item_names.emplace_back("Nest Ball");
         test_item_list_add_remove(
             ball_pocket,
             none_entries.at(game),
-            "Great Ball",
-            "Net Ball",
-            "Dive Ball"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
@@ -250,12 +271,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("TM01");
+        item_names.emplace_back("HM01");
+        item_names.emplace_back("TM02");
+        item_names.emplace_back("HM02");
+        item_names.emplace_back("TM03");
+        item_names.emplace_back("HM03");
+        item_names.emplace_back("TM04");
+        item_names.emplace_back("HM04");
         test_item_list_add_remove(
             tmhm_pocket,
             none_entries.at(game),
-            "TM01",
-            "TM50",
-            "HM04"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
@@ -308,12 +336,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Cheri Berry");
+        item_names.emplace_back("Razz Berry");
+        item_names.emplace_back("Lum Berry");
+        item_names.emplace_back("Pinap Berry");
+        item_names.emplace_back("Aspear Berry");
+        item_names.emplace_back("Iapapa Berry");
+        item_names.emplace_back("Wiki Berry");
+        item_names.emplace_back("Apicot Berry");
         test_item_list_add_remove(
             berry_pocket,
             none_entries.at(game),
-            "Bluk Berry",
-            "Razz Berry",
-            "Durin Berry"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = berry_pocket->get_valid_items();
@@ -331,40 +366,32 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
-        const pkmn::item_slots_t& item_slots = pc->as_vector();
-        BOOST_REQUIRE_EQUAL(item_slots.size(), 50);
-        const pkmn::database::item_entry& none_entry = none_entries.at(game);
-        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK(iter->item == none_entry);
-            BOOST_CHECK_EQUAL(iter->amount, 0);
-        }
+        test_item_list_empty_slots(
+            pc,
+            none_entries.at(game)
+        );
 
         // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            pc->add("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->add("Potion", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->remove("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->remove("Potion", 100)
-        , std::out_of_range);
+        test_item_list_out_of_range_error(
+            pc,
+            "Potion"
+        );
 
-        // Make sure we can add items from every pocket.
-        pc->add("Bicycle", 1);
-        pc->add("Master Ball", 1);
-        pc->add("HM01", 1);
-        pc->add("Razz Berry", 1);
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 4);
-
-        pc->remove("Bicycle", 1);
-        pc->remove("Master Ball", 1);
-        pc->remove("HM01", 1);
-        pc->remove("Razz Berry", 1);
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
+        // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("Mach Bike");
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("TM01");
+        item_names.emplace_back("Aspear Berry");
+        item_names.emplace_back("Wailmer Pail");
+        item_names.emplace_back("Master Ball");
+        item_names.emplace_back("HM04");
+        test_item_list_add_remove(
+            pc,
+            none_entries.at(game),
+            item_names
+        );
     }
 
     void gba_item_bag_test(

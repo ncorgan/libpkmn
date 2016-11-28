@@ -43,12 +43,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("Ether");
+        item_names.emplace_back("PP Up");
+        item_names.emplace_back("TM34");
+        item_names.emplace_back("Moon Stone");
+        item_names.emplace_back("Bicycle");
+        item_names.emplace_back("Full Heal");
         test_item_list_add_remove(
             list,
             none_entries.at(game),
-            "Potion",
-            "Great Ball",
-            "Ether"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = list->get_valid_items();

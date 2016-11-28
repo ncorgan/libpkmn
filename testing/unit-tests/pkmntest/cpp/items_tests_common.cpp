@@ -58,59 +58,57 @@ namespace pkmntest {
     void test_item_list_add_remove(
         pkmn::item_list::sptr list,
         const pkmn::database::item_entry &none_entry,
-        const std::string &item1_name,
-        const std::string &item2_name,
-        const std::string &item3_name
+        const std::vector<std::string> &item_names
     ) {
+        BOOST_REQUIRE_EQUAL(item_names.size(), 8);
         const pkmn::item_slots_t& item_slots = list->as_vector();
 
-        list->add(item1_name, 30);
-        list->add(item2_name, 99);
-        list->add(item3_name, 1);
+        list->add(item_names[0], 30);
+        list->add(item_names[1], 99);
+        list->add(item_names[2], 1);
 
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item1_name);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item_names[0]);
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item2_name);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item_names[1]);
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item3_name);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item_names[2]);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
-        list->add(item3_name, 15);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item1_name);
+        list->add(item_names[2], 15);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item_names[0]);
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item2_name);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item_names[1]);
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item3_name);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item_names[2]);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
-        list->remove(item2_name, 20);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item1_name);
+        list->remove(item_names[1], 20);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item_names[0]);
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item2_name);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item_names[1]);
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item3_name);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item_names[2]);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
         list->move(0, 1);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item2_name);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item_names[1]);
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item1_name);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item_names[0]);
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item3_name);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), item_names[2]);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
         BOOST_CHECK_EQUAL(list->get_num_items(), 3);
 
-        list->remove(item1_name, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item2_name);
+        list->remove(item_names[0], 30);
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), item_names[1]);
         BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item3_name);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), item_names[2]);
         BOOST_CHECK_EQUAL(item_slots.at(1).amount, 16);
         BOOST_CHECK(item_slots.at(2).item == none_entry);
         BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
         BOOST_CHECK_EQUAL(list->get_num_items(), 2);
     }
-
 }

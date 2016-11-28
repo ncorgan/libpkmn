@@ -59,12 +59,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("HP Up");
+        item_names.emplace_back("Wht Apricorn");
+        item_names.emplace_back("Lucky Egg");
+        item_names.emplace_back("Flower Mail");
+        item_names.emplace_back("Burn Heal");
+        item_names.emplace_back("PSNCureBerry");
+        item_names.emplace_back("Stick");
         test_item_list_add_remove(
             item_pocket,
             none_entries.at(game),
-            "Potion",
-            "PSNCureBerry",
-            "Leftovers"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
@@ -135,12 +142,19 @@ namespace pkmntest {
         }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Bicycle");
+        item_names.emplace_back("Basement Key");
+        item_names.emplace_back("SecretPotion");
+        item_names.emplace_back("Mystery Egg");
+        item_names.emplace_back("Silver Wing");
+        item_names.emplace_back("Lost Item");
+        item_names.emplace_back("SquirtBottle");
+        item_names.emplace_back("Rainbow Wing");
         test_item_list_add_remove(
             key_item_pocket,
             none_entries.at(game),
-            "Bicycle",
-            "Basement Key",
-            "SecretPotion"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
@@ -180,12 +194,19 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("Poké Ball");
+        item_names.emplace_back("Park Ball");
+        item_names.emplace_back("Fast Ball");
+        item_names.emplace_back("Master Ball");
+        item_names.emplace_back("Friend Ball");
+        item_names.emplace_back("Love Ball");
+        item_names.emplace_back("Level Ball");
         test_item_list_add_remove(
             ball_pocket,
             none_entries.at(game),
-            "Great Ball",
-            "Fast Ball",
-            "Park Ball"
+            item_names
         );
 
         const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
@@ -295,47 +316,21 @@ namespace pkmntest {
             none_entries.at(game)
         );
 
-        // Make sure we can add stuff from every pocket.
-        pc->add("Potion", 5);
-        pc->add("Bicycle", 1);
-        pc->add("Great Ball", 10);
-        pc->add("TM28", 8);
-
-        const pkmn::item_slots_t& item_slots = pc->as_vector();
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 4);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 1);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 10);
-        BOOST_CHECK_EQUAL(item_slots[3].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 8);
-
-        pc->remove("Great Ball", 10);
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 1);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 8);
-        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
-
-        pc->move(1, 2);
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 8);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 1);
-        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
+        // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("Bicycle");
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("TM28");
+        item_names.emplace_back("Berry");
+        item_names.emplace_back("SquirtBottle");
+        item_names.emplace_back("Friend Ball");
+        item_names.emplace_back("HM01");
+        test_item_list_add_remove(
+            pc,
+            none_entries.at(game),
+            item_names
+        );
 
         const std::vector<std::string>& valid_items = pc->get_valid_items();
         std::vector<std::string> full_item_list = pkmn::database::get_item_list(game);
