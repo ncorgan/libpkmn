@@ -148,7 +148,7 @@ namespace pkmntest {
         item_names.emplace_back("Wailmer Pail");
         item_names.emplace_back("Basement Key");
         item_names.emplace_back("Meteorite");
-        item_names.emplace_back("Stardust");
+        item_names.emplace_back("Old Rod");
         item_names.emplace_back("Red Orb");
         item_names.emplace_back("Root Fossil");
         item_names.emplace_back("Contest Pass");
