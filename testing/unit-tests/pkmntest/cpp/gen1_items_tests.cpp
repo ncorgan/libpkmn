@@ -19,7 +19,7 @@
 
 namespace pkmntest {
 
-    static std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
+    static const std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
         ("Red",    pkmn::database::item_entry("None", "Red"))
         ("Blue",  pkmn::database::item_entry("None", "Blue"))
         ("Yellow", pkmn::database::item_entry("None", "Yellow"))

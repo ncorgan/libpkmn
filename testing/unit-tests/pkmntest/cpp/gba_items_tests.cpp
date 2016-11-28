@@ -9,15 +9,15 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
-#include <boost/test/unit_test.hpp>
 
 #include <map>
 
 namespace pkmntest {
 
-    static std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
+    static const std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
         ("Ruby",    pkmn::database::item_entry("None", "Ruby"))
         ("Sapphire",  pkmn::database::item_entry("None", "Sapphire"))
         ("Emerald", pkmn::database::item_entry("None", "Emerald"))
@@ -25,19 +25,41 @@ namespace pkmntest {
         ("LeafGreen", pkmn::database::item_entry("None", "LeafGreen"))
     ;
 
+    BOOST_STATIC_CONSTEXPR int RUBY      = 7;
+    BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
+    BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
+    BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
+    BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+
     void gba_item_pocket_test(
         pkmn::item_list::sptr item_pocket,
         const std::string &game
     ) {
+        int capacity = 0;
+        switch(item_pocket->at(0).item.get_game_id()) {
+            case RUBY:
+            case SAPPHIRE:
+                capacity = 20;
+                break;
+
+            case EMERALD:
+                capacity = 30;
+                break;
+
+            default:
+                capacity = 42;
+                break;
+        }
+
         // Check unchanging and initial values
         BOOST_CHECK_EQUAL(item_pocket->get_name(), "Items");
         BOOST_CHECK_EQUAL(item_pocket->get_game(), game);
-        //BOOST_CHECK_EQUAL(item_pocket->get_capacity(), 20);
+        BOOST_CHECK_EQUAL(item_pocket->get_capacity(), capacity);
         BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 20);
+        BOOST_REQUIRE_EQUAL(item_slots.size(), capacity);
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
             BOOST_CHECK(iter->item == none_entry);
@@ -49,15 +71,24 @@ namespace pkmntest {
         pkmn::item_list::sptr key_item_pocket,
         const std::string &game
     ) {
+        int game_id = key_item_pocket->at(0).item.get_game_id();
+
+        int capacity = 0;
+        if(game_id == RUBY or game_id == SAPPHIRE) {
+            capacity = 20;
+        } else {
+            capacity = 30;
+        }
+
         // Check unchanging and initial values
         BOOST_CHECK_EQUAL(key_item_pocket->get_name(), "Key Items");
         BOOST_CHECK_EQUAL(key_item_pocket->get_game(), game);
-        //BOOST_CHECK_EQUAL(key_item_pocket->get_capacity(), 26);
+        BOOST_CHECK_EQUAL(key_item_pocket->get_capacity(), capacity);
         BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 26);
+        BOOST_REQUIRE_EQUAL(item_slots.size(), capacity);
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
             BOOST_CHECK(iter->item == none_entry);
@@ -69,15 +100,24 @@ namespace pkmntest {
         pkmn::item_list::sptr ball_pocket,
         const std::string &game
     ) {
+        int game_id = ball_pocket->at(0).item.get_game_id();
+
+        int capacity = 0;
+        if(game_id == FIRERED or game_id == LEAFGREEN) {
+            capacity = 13;
+        } else {
+            capacity = 16;
+        }
+
         // Check unchanging and initial values
         BOOST_CHECK_EQUAL(ball_pocket->get_name(), "Poké Balls");
         BOOST_CHECK_EQUAL(ball_pocket->get_game(), game);
-        //BOOST_CHECK_EQUAL(ball_pocket->get_capacity(), 12);
+        BOOST_CHECK_EQUAL(ball_pocket->get_capacity(), capacity);
         BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 12);
+        BOOST_REQUIRE_EQUAL(item_slots.size(), capacity);
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
             BOOST_CHECK(iter->item == none_entry);
@@ -89,30 +129,59 @@ namespace pkmntest {
         pkmn::item_list::sptr tmhm_pocket,
         const std::string &game
     ) {
+        int game_id = tmhm_pocket->at(0).item.get_game_id();
+
+        int capacity = 0;
+        std::string pocket_name;
+        if(game_id == FIRERED or game_id == LEAFGREEN) {
+            capacity = 58;
+            pocket_name = "TM Case";
+        } else {
+            capacity = 64;
+            pocket_name = "TMs & HMs";
+        }
+
         // Check unchanging and initial values
-        //BOOST_CHECK_EQUAL(tmhm_pocket->get_name(), "TM/HM");
+        BOOST_CHECK_EQUAL(tmhm_pocket->get_name(), pocket_name);
         BOOST_CHECK_EQUAL(tmhm_pocket->get_game(), game);
-        //BOOST_CHECK_EQUAL(tmhm_pocket->get_capacity(), 57);
+        BOOST_CHECK_EQUAL(tmhm_pocket->get_capacity(), capacity);
         BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
-        //const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 57);
+        const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
+        BOOST_REQUIRE_EQUAL(item_slots.size(), capacity);
+        const pkmn::database::item_entry& none_entry = none_entries.at(game);
+        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
+            BOOST_CHECK(iter->item == none_entry);
+            BOOST_CHECK_EQUAL(iter->amount, 0);
+        }
     }
 
     void gba_berry_pocket_test(
         pkmn::item_list::sptr berry_pocket,
         const std::string &game
     ) {
+        int game_id = berry_pocket->at(0).item.get_game_id();
+
+        int capacity = 0;
+        std::string pocket_name;
+        if(game_id == FIRERED or game_id == LEAFGREEN) {
+            capacity = 43;
+            pocket_name = "Berry Pouch";
+        } else {
+            capacity = 46;
+            pocket_name = "Berries";
+        }
+
         // Check unchanging and initial values
-        //BOOST_CHECK_EQUAL(berry_pocket->get_name(), "Berries");
+        BOOST_CHECK_EQUAL(berry_pocket->get_name(), pocket_name);
         BOOST_CHECK_EQUAL(berry_pocket->get_game(), game);
-        //BOOST_CHECK_EQUAL(berry_pocket->get_capacity(), 12);
+        BOOST_CHECK_EQUAL(berry_pocket->get_capacity(), capacity);
         BOOST_CHECK_EQUAL(berry_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = berry_pocket->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 12);
+        BOOST_REQUIRE_EQUAL(item_slots.size(), capacity);
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
             BOOST_CHECK(iter->item == none_entry);
@@ -127,12 +196,12 @@ namespace pkmntest {
         // Check unchanging and initial values
         BOOST_CHECK_EQUAL(pc->get_name(), "PC");
         BOOST_CHECK_EQUAL(pc->get_game(), game);
-        //BOOST_CHECK_EQUAL(pc->get_capacity(), 50);
+        BOOST_CHECK_EQUAL(pc->get_capacity(), 50);
         BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty
         const pkmn::item_slots_t& item_slots = pc->as_vector();
-        //BOOST_REQUIRE_EQUAL(item_slots.size(), 50);
+        BOOST_REQUIRE_EQUAL(item_slots.size(), 50);
         const pkmn::database::item_entry& none_entry = none_entries.at(game);
         for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
             BOOST_CHECK(iter->item == none_entry);
@@ -154,10 +223,10 @@ namespace pkmntest {
         gba_ball_pocket_test(pockets.at("Poké Balls"), game);
         if(game == "FireRed" or game == "LeafGreen") {
             gba_tmhm_pocket_test(pockets.at("TM Case"), game);
-            gba_tmhm_pocket_test(pockets.at("Berry Pouch"), game);
+            gba_berry_pocket_test(pockets.at("Berry Pouch"), game);
         } else {
             gba_tmhm_pocket_test(pockets.at("TMs & HMs"), game);
-            gba_tmhm_pocket_test(pockets.at("Berries"), game);
+            gba_berry_pocket_test(pockets.at("Berries"), game);
         }
     }
 

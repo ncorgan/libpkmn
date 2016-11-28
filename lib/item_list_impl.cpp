@@ -200,9 +200,9 @@ namespace pkmn {
     const pkmn::item_slot& item_list_impl::at(
         int position
     ) {
-        if(position < 0 or position >= _num_items) {
+        if(position < 0 or position >= _capacity) {
             throw std::out_of_range(
-                      str(boost::format("position: valid range 0-%d") % (_num_items-1))
+                      str(boost::format("position: valid range 0-%d") % (_capacity-1))
                   );
         }
 
