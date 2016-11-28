@@ -92,6 +92,22 @@ BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
     pkmn::database::item_entry f_disk(
         "F-Disk", "Colosseum"
     );
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry hm01(
+            "HM01", "Colosseum"
+        )
+    , std::invalid_argument);
+    pkmn::database::item_entry hm01(
+        "HM01", "Ruby"
+    );
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry claw_fossil(
+            "Claw Fossil", "Colosseum"
+        )
+    , std::invalid_argument);
+    pkmn::database::item_entry claw_fossil(
+        "Claw Fossil", "Ruby"
+    );
 
     // Items that didn't make it into later generations
     pkmn::database::item_entry pink_bow1(
