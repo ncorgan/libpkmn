@@ -65,6 +65,35 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            item_pocket->add("Potion", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            item_pocket->add("Potion", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            item_pocket->remove("Potion", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            item_pocket->remove("Potion", 100)
+        , std::out_of_range);
+
+        // Make sure we can't add items from other pockets.
+        BOOST_CHECK_THROW(
+            item_pocket->add("Bicycle", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            item_pocket->add("Master Ball", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            item_pocket->add("HM01", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            item_pocket->add("Razz Berry", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 0);
     }
 
     void gba_key_item_pocket_test(
@@ -94,6 +123,35 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("Bicycle", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("Bicycle", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            key_item_pocket->remove("Bicycle", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            key_item_pocket->remove("Bicycle", 100)
+        , std::out_of_range);
+
+        // Make sure we can't add items from other pockets.
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("Potion", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("Master Ball", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("HM01", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            key_item_pocket->add("Razz Berry", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
     }
 
     void gba_ball_pocket_test(
@@ -123,6 +181,35 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            ball_pocket->add("Great Ball", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            ball_pocket->add("Great Ball", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            ball_pocket->remove("Great Ball", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            ball_pocket->remove("Great Ball", 100)
+        , std::out_of_range);
+
+        // Make sure we can't add items from other pockets.
+        BOOST_CHECK_THROW(
+            ball_pocket->add("Bicycle", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            ball_pocket->add("Potion", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            ball_pocket->add("HM01", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            ball_pocket->add("Razz Berry", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 0);
     }
 
     void gba_tmhm_pocket_test(
@@ -155,6 +242,35 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("TM50", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("TM50", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->remove("TM50", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->remove("TM50", 100)
+        , std::out_of_range);
+
+        // Make sure we can't add items from other pockets.
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("Bicycle", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("Master Ball", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("Potion", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            tmhm_pocket->add("Razz Berry", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), 0);
     }
 
     void gba_berry_pocket_test(
@@ -187,6 +303,35 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            berry_pocket->add("Razz Berry", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            berry_pocket->add("Razz Berry", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            berry_pocket->remove("Razz Berry", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            berry_pocket->remove("Razz Berry", 100)
+        , std::out_of_range);
+
+        // Make sure we can't add items from other pockets.
+        BOOST_CHECK_THROW(
+            berry_pocket->add("Bicycle", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            berry_pocket->add("Master Ball", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            berry_pocket->add("HM01", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            berry_pocket->add("Potion", 1);
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(berry_pocket->get_num_items(), 0);
     }
 
     void gba_pc_test(
@@ -207,6 +352,33 @@ namespace pkmntest {
             BOOST_CHECK(iter->item == none_entry);
             BOOST_CHECK_EQUAL(iter->amount, 0);
         }
+
+        // Confirm exceptions are thrown when expected.
+        BOOST_CHECK_THROW(
+            pc->add("Potion", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            pc->add("Potion", 100)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            pc->remove("Potion", 0)
+        , std::out_of_range);
+        BOOST_CHECK_THROW(
+            pc->remove("Potion", 100)
+        , std::out_of_range);
+
+        // Make sure we can add items from every pocket.
+        pc->add("Bicycle", 1);
+        pc->add("Master Ball", 1);
+        pc->add("HM01", 1);
+        pc->add("Razz Berry", 1);
+        BOOST_CHECK_EQUAL(pc->get_num_items(), 4);
+
+        pc->remove("Bicycle", 1);
+        pc->remove("Master Ball", 1);
+        pc->remove("HM01", 1);
+        pc->remove("Razz Berry", 1);
+        BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
     }
 
     void gba_item_bag_test(
