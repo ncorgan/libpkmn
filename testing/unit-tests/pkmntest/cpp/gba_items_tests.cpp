@@ -5,8 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "items_tests_common.hpp"
+
 #include <pkmntest/gba_items_tests.hpp>
-#include <pkmntest/items_tests_common.hpp>
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN

@@ -23,6 +23,7 @@ SET(pkmntest_c_libs
 SET(pkmntest_c_sources
     gen1_items_tests.c
     gen2_items_tests.c
+    items_test_common.c
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmntest_c_sources}

@@ -5,8 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "items_tests_common.hpp"
+
 #include <pkmntest/gen2_items_tests.hpp>
-#include <pkmntest/items_tests_common.hpp>
 
 #include <pkmn/database/lists.hpp>
 
