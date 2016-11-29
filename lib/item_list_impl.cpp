@@ -329,15 +329,52 @@ namespace pkmn {
     }
 
     /*
+     * Veekun's database does not distinguish berries from other healing items,
+     * but they go in separate pockets in every game past Generation II, so this
+     * overrides the database query.
+     */
+    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] = {
+        -1, // None
+        -1, // Red/Blue
+        -1, // Yellow
+        5,  // Gold/Silver
+        10, // Crystal
+        18, // Ruby/Sapphire
+        24, // Emerald
+        30, // FireRed/LeafGreen
+        37, // Diamond/Pearl
+        45, // Platinum
+        53, // HeartGold/SoulSilver
+        60, // Black/White
+        66, // Colosseum
+        73, // XD
+        79, // Black 2/White 2
+        84, // X/Y
+        89  // Omega Ruby/Alpha Sapphire
+    };
+
+    /*
      * TODO: if PC, all items valid except Berry Pouch, TM Case
      */
     const std::vector<std::string>& item_list_impl::get_valid_items() {
         if(_valid_items.size() == 0) {
-            pkmn::database::_get_item_list(
-                _valid_items,
-                ((get_name() == "PC") ? -1 : _item_list_id),
-                _game_id
-            );
+            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17) {
+                static BOOST_CONSTEXPR const char* berry_list_query = \
+                    "SELECT DISTINCT item_names.name FROM item_names JOIN item_game_indices ON "
+                    "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
+                    "AND item_names.name LIKE '%Berry'";
+
+                pkmn::database::query_db_list_bind1<std::string, int>(
+                    _db, berry_list_query, _valid_items,
+                    pkmn::database::game_id_to_generation(_game_id)
+                );
+            } else {
+                pkmn::database::_get_item_list(
+                    _valid_items,
+                    ((get_name() == "PC") ? -1 : _item_list_id),
+                    _game_id
+                );
+            }
         }
 
         return _valid_items;
