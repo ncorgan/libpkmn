@@ -8,9 +8,13 @@
 
 import pkmn
 
+import items_tests
+
+import sys
+import unicodedata
 import unittest
 
-class gen2_items_test(unittest.TestCase):
+class gen2_items_test(items_tests.items_tests):
 
     #
     # Helper functions
@@ -18,118 +22,54 @@ class gen2_items_test(unittest.TestCase):
 
     def __test_item_pocket(self, item_pocket, game):
         # Check unchanging and initial values.
+        self.assertEqual(len(item_pocket.as_list()), 20)
         self.assertEqual(item_pocket.get_name(), "Items")
         self.assertEqual(item_pocket.get_game(), game)
         self.assertEqual(item_pocket.get_capacity(), 20)
         self.assertEqual(item_pocket.get_num_items(), 0)
 
         # Make sure item slots start as correctly empty.
-        self.assertEqual(len(item_pocket.as_list()), item_pocket.get_capacity())
-        for i in range(item_pocket.get_capacity()):
-            self.assertEqual(item_pocket[i].item.get_name(), "None")
-            self.assertEqual(item_pocket[i].amount, 0)
+        self.item_list_test_empty_slot(item_pocket)
 
         # Confirm errors are thrown when expected.
-        with self.assertRaises(IndexError):
-            item_pocket.add("Potion", 0)
-        with self.assertRaises(IndexError):
-            item_pocket.add("Potion", 100)
-        with self.assertRaises(IndexError):
-            item_pocket.remove("Potion", 0)
-        with self.assertRaises(IndexError):
-            item_pocket.remove("Potion", 100)
+        self.item_list_test_out_of_range_error(item_pocket, "Potion")
 
         # Make sure we can't add items from other pockets.
-        with self.assertRaises(ValueError):
-            item_pocket.add("Bicycle", 1)
-        with self.assertRaises(ValueError):
-            item_pocket.add("Master Ball", 1)
-        with self.assertRaises(ValueError):
-            item_pocket.add("HM01", 1)
+        self.item_list_test_items_from_wrong_pocket(
+            item_pocket,
+            ["Bicycle", "Master Ball", "HM01"]
+        )
         self.assertEqual(item_pocket.get_num_items(), 0)
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        item_pocket.add("Potion", 30)
-        item_pocket.add("PSNCureBerry", 99)
-        item_pocket.add("Leftovers", 1)
-
-        self.assertEqual(item_pocket[0].item.get_name(), "Potion")
-        self.assertEqual(item_pocket[0].amount, 30)
-        self.assertEqual(item_pocket[1].item.get_name(), "PSNCureBerry")
-        self.assertEqual(item_pocket[1].amount, 99)
-        self.assertEqual(item_pocket[2].item.get_name(), "Leftovers")
-        self.assertEqual(item_pocket[2].amount, 1)
-        self.assertEqual(item_pocket.get_num_items(), 3)
-
-        item_pocket.add("Leftovers", 15)
-        self.assertEqual(item_pocket[0].item.get_name(), "Potion")
-        self.assertEqual(item_pocket[0].amount, 30)
-        self.assertEqual(item_pocket[1].item.get_name(), "PSNCureBerry")
-        self.assertEqual(item_pocket[1].amount, 99)
-        self.assertEqual(item_pocket[2].item.get_name(), "Leftovers")
-        self.assertEqual(item_pocket[2].amount, 16)
-        self.assertEqual(item_pocket.get_num_items(), 3)
-
-        item_pocket.remove("PSNCureBerry", 20)
-        self.assertEqual(item_pocket[0].item.get_name(), "Potion")
-        self.assertEqual(item_pocket[0].amount, 30)
-        self.assertEqual(item_pocket[1].item.get_name(), "PSNCureBerry")
-        self.assertEqual(item_pocket[1].amount, 79)
-        self.assertEqual(item_pocket[2].item.get_name(), "Leftovers")
-        self.assertEqual(item_pocket[2].amount, 16)
-        self.assertEqual(item_pocket.get_num_items(), 3)
-
-        item_pocket.move(0, 1)
-        self.assertEqual(item_pocket[0].item.get_name(), "PSNCureBerry")
-        self.assertEqual(item_pocket[0].amount, 79)
-        self.assertEqual(item_pocket[1].item.get_name(), "Potion")
-        self.assertEqual(item_pocket[1].amount, 30)
-        self.assertEqual(item_pocket[2].item.get_name(), "Leftovers")
-        self.assertEqual(item_pocket[2].amount, 16)
-        self.assertEqual(item_pocket.get_num_items(), 3)
-
-        item_pocket.remove("Potion", 30)
-        self.assertEqual(item_pocket[0].item.get_name(), "PSNCureBerry")
-        self.assertEqual(item_pocket[0].amount, 79)
-        self.assertEqual(item_pocket[1].item.get_name(), "Leftovers")
-        self.assertEqual(item_pocket[1].amount, 16)
-        self.assertEqual(item_pocket[2].item.get_name(), "None")
-        self.assertEqual(item_pocket[2].amount, 0)
-        self.assertEqual(item_pocket.get_num_items(), 2)
+        self.item_list_test_add_remove(
+            item_pocket,
+            [u"Potion", u"HP Up", u"Wht Apricorn", u"Lucky Egg",
+             u"Flower Mail", u"Burn Heal", u"PSNCureBerry", u"Stick"]
+        )
 
         valid_items = item_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)
 
     def __test_key_item_pocket(self, key_item_pocket, game):
         # Check unchanging and initial values.
+        self.assertEqual(len(key_item_pocket.as_list()), 26)
         self.assertEqual(key_item_pocket.get_name(), "KeyItems")
         self.assertEqual(key_item_pocket.get_game(), game)
         self.assertEqual(key_item_pocket.get_capacity(), 26)
         self.assertEqual(key_item_pocket.get_num_items(), 0)
 
         # Make sure item slots start as correctly empty.
-        self.assertEqual(len(key_item_pocket.as_list()), key_item_pocket.get_capacity())
-        for i in range(key_item_pocket.get_capacity()):
-            self.assertEqual(key_item_pocket[i].item.get_name(), "None")
-            self.assertEqual(key_item_pocket[i].amount, 0)
+        self.item_list_test_empty_slot(key_item_pocket)
 
         # Confirm errors are thrown when expected.
-        with self.assertRaises(IndexError):
-            key_item_pocket.add("Bicycle", 0)
-        with self.assertRaises(IndexError):
-            key_item_pocket.add("Bicycle", 100)
-        with self.assertRaises(IndexError):
-            key_item_pocket.remove("Bicycle", 0)
-        with self.assertRaises(IndexError):
-            key_item_pocket.remove("Bicycle", 100)
+        self.item_list_test_out_of_range_error(key_item_pocket, "Bicycle")
 
         # Make sure we can't add items from other pockets.
-        with self.assertRaises(ValueError):
-            key_item_pocket.add("potion", 1)
-        with self.assertRaises(ValueError):
-            key_item_pocket.add("Master Ball", 1)
-        with self.assertRaises(ValueError):
-            key_item_pocket.add("HM01", 1)
+        self.item_list_test_items_from_wrong_pocket(
+            key_item_pocket,
+            ["Potion", "Master Ball", "HM01"]
+        )
         self.assertEqual(key_item_pocket.get_num_items(), 0)
 
         # Crystal-specific items
@@ -145,8 +85,6 @@ class gen2_items_test(unittest.TestCase):
 
             key_item_pocket.add("Egg Ticket", 1)
             key_item_pocket.remove("Egg Ticket", 1)
-
-            self.assertEqual(key_item_pocket.get_num_items(), 0)
         else:
             with self.assertRaises(ValueError):
                 key_item_pocket.add("Clear Bell", 1)
@@ -156,140 +94,47 @@ class gen2_items_test(unittest.TestCase):
                 key_item_pocket.add("Blue Card", 1)
             with self.assertRaises(ValueError):
                 key_item_pocket.add("Egg Ticket", 1)
-            self.assertEqual(key_item_pocket.get_num_items(), 0)
+
+        self.assertEqual(key_item_pocket.get_num_items(), 0)
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        key_item_pocket.add("Bicycle", 30)
-        key_item_pocket.add("Basement Key", 99)
-        key_item_pocket.add("SecretPotion", 1)
-
-        self.assertEqual(key_item_pocket[0].item.get_name(), "Bicycle")
-        self.assertEqual(key_item_pocket[0].amount, 30)
-        self.assertEqual(key_item_pocket[1].item.get_name(), "Basement Key")
-        self.assertEqual(key_item_pocket[1].amount, 99)
-        self.assertEqual(key_item_pocket[2].item.get_name(), "SecretPotion")
-        self.assertEqual(key_item_pocket[2].amount, 1)
-        self.assertEqual(key_item_pocket.get_num_items(), 3)
-
-        key_item_pocket.add("SecretPotion", 15)
-        self.assertEqual(key_item_pocket[0].item.get_name(), "Bicycle")
-        self.assertEqual(key_item_pocket[0].amount, 30)
-        self.assertEqual(key_item_pocket[1].item.get_name(), "Basement Key")
-        self.assertEqual(key_item_pocket[1].amount, 99)
-        self.assertEqual(key_item_pocket[2].item.get_name(), "SecretPotion")
-        self.assertEqual(key_item_pocket[2].amount, 16)
-        self.assertEqual(key_item_pocket.get_num_items(), 3)
-
-        key_item_pocket.remove("Basement Key", 20)
-        self.assertEqual(key_item_pocket[0].item.get_name(), "Bicycle")
-        self.assertEqual(key_item_pocket[0].amount, 30)
-        self.assertEqual(key_item_pocket[1].item.get_name(), "Basement Key")
-        self.assertEqual(key_item_pocket[1].amount, 79)
-        self.assertEqual(key_item_pocket[2].item.get_name(), "SecretPotion")
-        self.assertEqual(key_item_pocket[2].amount, 16)
-        self.assertEqual(key_item_pocket.get_num_items(), 3)
-
-        key_item_pocket.move(0, 1)
-        self.assertEqual(key_item_pocket[0].item.get_name(), "Basement Key")
-        self.assertEqual(key_item_pocket[0].amount, 79)
-        self.assertEqual(key_item_pocket[1].item.get_name(), "Bicycle")
-        self.assertEqual(key_item_pocket[1].amount, 30)
-        self.assertEqual(key_item_pocket[2].item.get_name(), "SecretPotion")
-        self.assertEqual(key_item_pocket[2].amount, 16)
-        self.assertEqual(key_item_pocket.get_num_items(), 3)
-
-        key_item_pocket.remove("Bicycle", 30)
-        self.assertEqual(key_item_pocket[0].item.get_name(), "Basement Key")
-        self.assertEqual(key_item_pocket[0].amount, 79)
-        self.assertEqual(key_item_pocket[1].item.get_name(), "SecretPotion")
-        self.assertEqual(key_item_pocket[1].amount, 16)
-        self.assertEqual(key_item_pocket[2].item.get_name(), "None")
-        self.assertEqual(key_item_pocket[2].amount, 0)
-        self.assertEqual(key_item_pocket.get_num_items(), 2)
+        self.item_list_test_add_remove(
+            key_item_pocket,
+            [u"Bicycle", u"Basement Key", u"SecretPotion", u"Mystery Egg",
+             u"Silver Wing", u"Lost Item", u"SquirtBottle", u"Rainbow Wing"]
+        )
 
         valid_items = key_item_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)
 
     def __test_ball_pocket(self, ball_pocket, game):
         # Check unchanging and initial values.
+        self.assertEqual(len(ball_pocket.as_list()), 12)
         self.assertEqual(ball_pocket.get_name(), "Balls")
         self.assertEqual(ball_pocket.get_game(), game)
         self.assertEqual(ball_pocket.get_capacity(), 12)
         self.assertEqual(ball_pocket.get_num_items(), 0)
 
         # Make sure item slots start as correctly empty.
-        self.assertEqual(len(ball_pocket.as_list()), ball_pocket.get_capacity())
-        for i in range(ball_pocket.get_capacity()):
-            self.assertEqual(ball_pocket[i].item.get_name(), "None")
-            self.assertEqual(ball_pocket[i].amount, 0)
+        self.item_list_test_empty_slot(ball_pocket)
 
         # Confirm errors are thrown when expected.
-        with self.assertRaises(IndexError):
-            ball_pocket.add("Master Ball", 0)
-        with self.assertRaises(IndexError):
-            ball_pocket.add("Master Ball", 100)
-        with self.assertRaises(IndexError):
-            ball_pocket.remove("Master Ball", 0)
-        with self.assertRaises(IndexError):
-            ball_pocket.remove("Master Ball", 100)
+        self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
 
         # Make sure we can't add items from other pockets.
-        with self.assertRaises(ValueError):
-            ball_pocket.add("Potion", 1)
-        with self.assertRaises(ValueError):
-            ball_pocket.add("Bicycle", 1)
-        with self.assertRaises(ValueError):
-            ball_pocket.add("HM01", 1)
+        self.item_list_test_items_from_wrong_pocket(
+            ball_pocket,
+            ["Potion", "Bicycle", "HM01"]
+        )
         self.assertEqual(ball_pocket.get_num_items(), 0)
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        ball_pocket.add("Great Ball", 30)
-        ball_pocket.add("Fast Ball", 99)
-        ball_pocket.add("Park Ball", 1)
-
-        self.assertEqual(ball_pocket[0].item.get_name(), "Great Ball")
-        self.assertEqual(ball_pocket[0].amount, 30)
-        self.assertEqual(ball_pocket[1].item.get_name(), "Fast Ball")
-        self.assertEqual(ball_pocket[1].amount, 99)
-        self.assertEqual(ball_pocket[2].item.get_name(), "Park Ball")
-        self.assertEqual(ball_pocket[2].amount, 1)
-        self.assertEqual(ball_pocket.get_num_items(), 3)
-
-        ball_pocket.add("Park Ball", 15)
-        self.assertEqual(ball_pocket[0].item.get_name(), "Great Ball")
-        self.assertEqual(ball_pocket[0].amount, 30)
-        self.assertEqual(ball_pocket[1].item.get_name(), "Fast Ball")
-        self.assertEqual(ball_pocket[1].amount, 99)
-        self.assertEqual(ball_pocket[2].item.get_name(), "Park Ball")
-        self.assertEqual(ball_pocket[2].amount, 16)
-        self.assertEqual(ball_pocket.get_num_items(), 3)
-
-        ball_pocket.remove("Fast Ball", 20)
-        self.assertEqual(ball_pocket[0].item.get_name(), "Great Ball")
-        self.assertEqual(ball_pocket[0].amount, 30)
-        self.assertEqual(ball_pocket[1].item.get_name(), "Fast Ball")
-        self.assertEqual(ball_pocket[1].amount, 79)
-        self.assertEqual(ball_pocket[2].item.get_name(), "Park Ball")
-        self.assertEqual(ball_pocket[2].amount, 16)
-        self.assertEqual(ball_pocket.get_num_items(), 3)
-
-        ball_pocket.move(0, 1)
-        self.assertEqual(ball_pocket[0].item.get_name(), "Fast Ball")
-        self.assertEqual(ball_pocket[0].amount, 79)
-        self.assertEqual(ball_pocket[1].item.get_name(), "Great Ball")
-        self.assertEqual(ball_pocket[1].amount, 30)
-        self.assertEqual(ball_pocket[2].item.get_name(), "Park Ball")
-        self.assertEqual(ball_pocket[2].amount, 16)
-        self.assertEqual(ball_pocket.get_num_items(), 3)
-
-        ball_pocket.remove("Great Ball", 30)
-        self.assertEqual(ball_pocket[0].item.get_name(), "Fast Ball")
-        self.assertEqual(ball_pocket[0].amount, 79)
-        self.assertEqual(ball_pocket[1].item.get_name(), "Park Ball")
-        self.assertEqual(ball_pocket[1].amount, 16)
-        self.assertEqual(ball_pocket[2].item.get_name(), "None")
-        self.assertEqual(ball_pocket[2].amount, 0)
-        self.assertEqual(ball_pocket.get_num_items(), 2)
+        item_names = [u"Great Ball", u"Pok\u00e9 Ball", u"Park Ball", u"Fast Ball",
+                      u"Master Ball", u"Friend Ball", u"Love Ball", u"Level Ball"]
+        self.item_list_test_add_remove(
+            ball_pocket,
+            item_names
+        )
 
         valid_items = ball_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)

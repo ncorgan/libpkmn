@@ -8,79 +8,31 @@
 
 import pkmn
 
+import items_tests
+
 import unittest
 
-class gen1_items_test(unittest.TestCase):
+class gen1_items_test(items_tests.items_tests):
 
     #
     # Helper functions
     #
 
     def __test_item_list_common(self, items, game):
-        # Make sure item slots start as correctly empty.
         self.assertEqual(len(items.as_list()), items.get_capacity())
-        for i in range(items.get_capacity()):
-            self.assertEqual(items[i].item.get_name(), "None")
-            self.assertEqual(items[i].amount, 0)
+
+        # Make sure item slots start as correctly empty.
+        self.item_list_test_empty_slot(items)
 
         # Confirm errors are thrown when expected.
-        with self.assertRaises(IndexError):
-            items.add("Potion", 0)
-        with self.assertRaises(IndexError):
-            items.add("Potion", 100)
-        with self.assertRaises(IndexError):
-            items.remove("Potion", 0)
-        with self.assertRaises(IndexError):
-            items.remove("Potion", 100)
+        self.item_list_test_out_of_range_error(items, "Potion")
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
-        items.add("Potion", 30)
-        items.add("Great Ball", 99)
-        items.add("Ether", 1)
-
-        self.assertEqual(items[0].item.get_name(), "Potion")
-        self.assertEqual(items[0].amount, 30)
-        self.assertEqual(items[1].item.get_name(), "Great Ball")
-        self.assertEqual(items[1].amount, 99)
-        self.assertEqual(items[2].item.get_name(), "Ether")
-        self.assertEqual(items[2].amount, 1)
-        self.assertEqual(items.get_num_items(), 3)
-
-        items.add("Ether", 15)
-        self.assertEqual(items[0].item.get_name(), "Potion")
-        self.assertEqual(items[0].amount, 30)
-        self.assertEqual(items[1].item.get_name(), "Great Ball")
-        self.assertEqual(items[1].amount, 99)
-        self.assertEqual(items[2].item.get_name(), "Ether")
-        self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
-
-        items.remove("Great Ball", 20)
-        self.assertEqual(items[0].item.get_name(), "Potion")
-        self.assertEqual(items[0].amount, 30)
-        self.assertEqual(items[1].item.get_name(), "Great Ball")
-        self.assertEqual(items[1].amount, 79)
-        self.assertEqual(items[2].item.get_name(), "Ether")
-        self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
-
-        items.move(0, 1)
-        self.assertEqual(items[0].item.get_name(), "Great Ball")
-        self.assertEqual(items[0].amount, 79)
-        self.assertEqual(items[1].item.get_name(), "Potion")
-        self.assertEqual(items[1].amount, 30)
-        self.assertEqual(items[2].item.get_name(), "Ether")
-        self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
-
-        items.remove("Potion", 30)
-        self.assertEqual(items[0].item.get_name(), "Great Ball")
-        self.assertEqual(items[0].amount, 79)
-        self.assertEqual(items[1].item.get_name(), "Ether")
-        self.assertEqual(items[1].amount, 16)
-        self.assertEqual(items[2].item.get_name(), "None")
-        self.assertEqual(items[2].amount, 0)
-        self.assertEqual(items.get_num_items(), 2)
+        self.item_list_test_add_remove(
+            items,
+            ["Potion", "Great Ball", "Ether", "PP Up",
+             "TM34", "Moon Stone", "Bicycle", "Full Heal"]
+        )
 
         valid_items = items.get_valid_items()
         full_item_list = pkmn.database.get_item_list(game)
