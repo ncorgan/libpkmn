@@ -24,6 +24,52 @@ class items_tests(unittest.TestCase):
 
         self.assertEqual(str1, str2)
 
+    def __get_both_string_types(self, as_str):
+        if PYTHON_MAJOR_VERSION == 2:
+            return (as_str, as_str.decode("utf-8"))
+        else:
+            return (as_str, as_str)
+
+    def item_bag_test_get_pocket_with_both_text_types(self, bag):
+        pockets = bag.get_pockets()
+        for pocket_name in pockets:
+            strs = self.__get_both_string_types(pocket_name)
+
+            # Test getting pockets from bag
+            self.assertEqual(bag.get_pocket(strs[0]), bag.get_pocket(strs[1]))
+            self.assertEqual(bag[strs[0]], bag[strs[1]])
+
+            # Test getting pockets standalone
+            from_str = pkmn.item_list(strs[0], bag.get_game())
+            from_unicode = pkmn.item_list(strs[1], bag.get_game())
+
+    def item_list_test_both_text_types_with_strings(self, items, as_str, as_unicode):
+        items.add(as_str, 1)
+        items.add(as_unicode, 1)
+        self.assertEqual(items.get_num_items(), 1)
+        self.assertEqual(items[0].amount, 2)
+
+        items.remove(as_str, 2)
+        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items[0].amount, 0)
+
+        items.add(as_str, 1)
+        items.add(as_unicode, 1)
+        self.assertEqual(items.get_num_items(), 1)
+        self.assertEqual(items[0].amount, 2)
+
+        items.remove(as_unicode, 2)
+        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items[0].amount, 0)
+
+    # No matter the version of Python or SWIG, we should be able
+    # to use ASCII or Unicode from Python.
+    def item_list_test_both_text_types(self, items):
+        self.assertEqual(items.get_num_items(), 0)
+
+        strs = self.__get_both_string_types(items.get_valid_items()[0])
+        self.item_list_test_both_text_types_with_strings(items, strs[0], strs[1])
+
     def item_list_test_empty_slot(self, items):
         none_entry = pkmn.database.item_entry("None", items.get_game())
         for i in range(items.get_capacity()):

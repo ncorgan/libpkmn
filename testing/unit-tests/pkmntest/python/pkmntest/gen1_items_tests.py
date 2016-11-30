@@ -37,6 +37,7 @@ class gen1_items_test(items_tests):
         valid_items = items.get_valid_items()
         full_item_list = pkmn.database.get_item_list(game)
         self.assertEqual(len(valid_items), len(full_item_list))
+        self.item_list_test_both_text_types(items)
 
     def __test_item_list(self, items, game):
         # Check unchanging and initial values.
@@ -65,6 +66,7 @@ class gen1_items_test(items_tests):
         self.assertTrue(pockets.has_key("Items"))
 
         self.__test_item_list(pockets["Items"], game)
+        self.item_bag_test_get_pocket_with_both_text_types(bag)
 
     #
     # Red

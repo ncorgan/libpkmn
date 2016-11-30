@@ -50,6 +50,7 @@ class gen2_items_test(items_tests):
 
         valid_items = item_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)
+        self.item_list_test_both_text_types(item_pocket)
 
     def __test_key_item_pocket(self, key_item_pocket, game):
         # Check unchanging and initial values.
@@ -106,6 +107,7 @@ class gen2_items_test(items_tests):
 
         valid_items = key_item_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)
+        self.item_list_test_both_text_types(key_item_pocket)
 
     def __test_ball_pocket(self, ball_pocket, game):
         # Check unchanging and initial values.
@@ -138,6 +140,7 @@ class gen2_items_test(items_tests):
 
         valid_items = ball_pocket.get_valid_items()
         self.assertGreater(len(valid_items), 0)
+        self.item_list_test_both_text_types(ball_pocket)
 
     def __test_tmhm_pocket(self, tmhm_pocket, game):
         # Check unchanging and initial values.
@@ -204,6 +207,7 @@ class gen2_items_test(items_tests):
 
         valid_items = tmhm_pocket.get_valid_items()
         self.assertEqual(len(valid_items), 57)
+        self.item_list_test_both_text_types_with_strings(tmhm_pocket, "TM01", u"TM01")
 
     def __test_item_bag(self, bag, game):
         # Check unchanging and initial values.
@@ -220,6 +224,7 @@ class gen2_items_test(items_tests):
         self.__test_key_item_pocket(bag["KeyItems"], game)
         self.__test_ball_pocket(bag["Balls"], game)
         self.__test_tmhm_pocket(bag["TM/HM"], game)
+        self.item_bag_test_get_pocket_with_both_text_types(bag)
 
     #
     # Gold
