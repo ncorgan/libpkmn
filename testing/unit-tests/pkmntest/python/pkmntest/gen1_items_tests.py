@@ -8,11 +8,11 @@
 
 import pkmn
 
-import items_tests
+from .items_tests import items_tests
 
 import unittest
 
-class gen1_items_test(items_tests.items_tests):
+class gen1_items_test(items_tests):
 
     #
     # Helper functions

@@ -8,13 +8,13 @@
 
 import pkmn
 
-import items_tests
+from .items_tests import items_tests
 
 import sys
 import unicodedata
 import unittest
 
-class gen2_items_test(items_tests.items_tests):
+class gen2_items_test(items_tests):
 
     #
     # Helper functions
