@@ -34,7 +34,6 @@ PKMN_PYTHON_INIT
 
 // Item List
 %include <python/pkmn_item_list.i>
-PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);
 
 // Item Bag
 %include <python/pkmn_item_bag.i>

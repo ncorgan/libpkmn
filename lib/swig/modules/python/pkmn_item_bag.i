@@ -14,11 +14,11 @@
 %}
 
 %include <std_string.i>
-%include <std_wstring.i>
 
 %include <pkmn/item_bag.hpp>
 
 #if SWIG_VERSION < 0x030008
+%include <std_wstring.i>
 %warnfilter(508) pkmn::shared_ptr<pkmn::item_bag>;
 #endif
 
@@ -42,6 +42,17 @@
  * when using earlier verisons of SWIG.
  */
 #if SWIG_VERSION < 0x030008
+    std::map<std::wstring, pkmn::item_list::sptr> get_pockets() {
+        const pkmn::item_pockets_t& pockets = self->get()->get_pockets();
+        std::map<std::wstring, pkmn::item_list::sptr> ret;
+
+        for(auto iter = pockets.begin(); iter != pockets.end(); ++iter) {
+            ret[boost::locale::conv::utf_to_utf<wchar_t>(iter->first)] = iter->second;
+        }
+
+        return ret;
+    }
+
     pkmn::item_list::sptr __getitem__(
         const std::wstring &key
     ) {

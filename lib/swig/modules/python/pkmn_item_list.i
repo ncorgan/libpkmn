@@ -14,12 +14,12 @@
 %}
 
 %include <std_string.i>
-%include <std_wstring.i>
 
 %rename(as_list) as_vector;
 %include <pkmn/item_list.hpp>
 
 #if SWIG_VERSION < 0x030008
+%include <std_wstring.i>
 %warnfilter(508) pkmn::shared_ptr<pkmn::item_list>;
 #endif
 
@@ -74,3 +74,9 @@
 
 }
 %template(item_list_sptr) pkmn::shared_ptr<pkmn::item_list>;
+
+#if SWIG_VERSION < 0x030008
+PKMN_PYTHON_MAP(std::wstring, pkmn::item_list::sptr, item_pockets);
+#else
+PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);
+#endif
