@@ -261,7 +261,7 @@ class gba_items_test(items_tests):
         self.__test_ball_pocket(bag[u"Pok\u00e9 Balls"], game)
         self.__test_tmhm_pocket(bag[tmhm_pocket_name], game)
         self.__test_berry_pocket(bag[berry_pocket_name], game)
-        self.item_bag_test_get_pocket_with_both_text_types(bag)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
     #
     # Ruby

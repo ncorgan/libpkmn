@@ -66,7 +66,7 @@ class gen1_items_test(items_tests):
         self.assertTrue(pockets.has_key("Items"))
 
         self.__test_item_list(pockets["Items"], game)
-        self.item_bag_test_get_pocket_with_both_text_types(bag)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
     #
     # Red

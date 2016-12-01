@@ -24,13 +24,17 @@ class items_tests(unittest.TestCase):
 
         self.assertEqual(str1, str2)
 
-    def __get_both_string_types(self, as_str):
+    def __get_both_string_types(self, input_str):
         if PYTHON_MAJOR_VERSION == 2:
-            return (as_str, as_str.decode("utf-8"))
+            # Which call succeeds depends on SWIG version
+            try:
+                return (input_str, input_str.decode("utf-8"))
+            except:
+                return (input_str, unicode(input_str))
         else:
-            return (as_str, as_str)
+            return (input_str, input_str)
 
-    def item_bag_test_get_pocket_with_both_text_types(self, bag):
+    def item_bag_test_get_pockets_with_both_text_types(self, bag):
         pockets = bag.get_pockets()
         for pocket_name in pockets:
             strs = self.__get_both_string_types(pocket_name)

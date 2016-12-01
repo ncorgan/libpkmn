@@ -248,7 +248,7 @@ class gen2_items_test(items_tests):
         self.__test_key_item_pocket(bag["KeyItems"], game)
         self.__test_ball_pocket(bag["Balls"], game)
         self.__test_tmhm_pocket(bag["TM/HM"], game)
-        self.item_bag_test_get_pocket_with_both_text_types(bag)
+        self.item_bag_test_get_pockets_with_both_text_types(bag)
 
     #
     # Gold
