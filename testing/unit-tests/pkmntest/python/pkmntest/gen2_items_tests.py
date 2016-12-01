@@ -10,8 +10,6 @@ import pkmn
 
 from .items_tests import items_tests
 
-import sys
-import unicodedata
 import unittest
 
 class gen2_items_test(items_tests):
@@ -209,6 +207,32 @@ class gen2_items_test(items_tests):
         self.assertEqual(len(valid_items), 57)
         self.item_list_test_both_text_types_with_strings(tmhm_pocket, "TM01", u"TM01")
 
+    def __test_pc(self, pc, game):
+        # Check unchanging and initial values.
+        self.assertEqual(len(pc.as_list()), 50)
+        self.assertEqual(pc.get_name(), "PC")
+        self.assertEqual(pc.get_game(), game)
+        self.assertEqual(pc.get_capacity(), 50)
+        self.assertEqual(pc.get_num_items(), 0)
+
+        # Make sure item slots start as correctly empty.
+        self.item_list_test_empty_slot(pc)
+
+        # Confirm errors are thrown when expected.
+        self.item_list_test_out_of_range_error(pc, "Potion")
+
+        # Start adding and removing stuff, and make sure the numbers are accurate.
+        self.item_list_test_add_remove(
+            pc,
+            [u"Potion", u"Bicycle", u"Great Ball", u"TM28",
+             u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
+        )
+
+        valid_items = pc.get_valid_items()
+        full_item_list = pkmn.database.get_item_list(game)
+        self.assertEqual(len(valid_items), len(full_item_list))
+        self.item_list_test_both_text_types(pc)
+
     def __test_item_bag(self, bag, game):
         # Check unchanging and initial values.
         self.assertEqual(bag.get_game(), game)
@@ -250,6 +274,10 @@ class gen2_items_test(items_tests):
         bag = pkmn.item_bag("Gold")
         self.__test_item_bag(bag, "Gold")
 
+    def test_gold_pc(self):
+        pc = pkmn.item_list("PC", "Gold")
+        self.__test_pc(pc, "Gold")
+
     #
     # Silver
     #
@@ -274,6 +302,10 @@ class gen2_items_test(items_tests):
         bag = pkmn.item_bag("Silver")
         self.__test_item_bag(bag, "Silver")
 
+    def test_silver_pc(self):
+        pc = pkmn.item_list("PC", "Silver")
+        self.__test_pc(pc, "Silver")
+
     #
     # Crystal
     #
@@ -297,3 +329,7 @@ class gen2_items_test(items_tests):
     def test_crystal_item_bag(self):
         bag = pkmn.item_bag("Crystal")
         self.__test_item_bag(bag, "Crystal")
+
+    def test_crystal_pc(self):
+        pc = pkmn.item_list("PC", "Crystal")
+        self.__test_pc(pc, "Crystal")

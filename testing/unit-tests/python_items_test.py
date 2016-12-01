@@ -18,6 +18,10 @@ if __name__ == "__main__":
     suite2 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gen2_items_test)
     test_program2 = unittest.TextTestRunner(verbosity=3).run(suite2)
 
-    success = test_program1.wasSuccessful() and test_program2.wasSuccessful()
+    suite3 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gba_items_test)
+    test_program3 = unittest.TextTestRunner(verbosity=3).run(suite3)
+
+    success = test_program1.wasSuccessful() and test_program2.wasSuccessful() and \
+              test_program3.wasSuccessful()
 
     sys.exit(0 if success else 1)

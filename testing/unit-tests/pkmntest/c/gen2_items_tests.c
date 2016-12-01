@@ -427,13 +427,13 @@ void pkmntest_gen2_tmhm_pocket_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(list_length, 57);
     for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
         TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
         TEST_ASSERT_EQUAL(item_slots[i-1].amount, 0);
     }
     for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
         TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
         TEST_ASSERT_EQUAL(item_slots[50+i-1].amount, 0);
@@ -462,7 +462,7 @@ void pkmntest_gen2_tmhm_pocket_test(
      */
 
     for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
         TEST_ASSERT_EQUAL(pkmn_item_list_add(
                               tmhm_pocket,
@@ -482,7 +482,7 @@ void pkmntest_gen2_tmhm_pocket_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(list_length, 57);
     for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
 
         TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
@@ -492,7 +492,7 @@ void pkmntest_gen2_tmhm_pocket_test(
     TEST_ASSERT_NULL(item_slots);
 
     for(int i = 50; i >= 1; --i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
         TEST_ASSERT_EQUAL(pkmn_item_list_remove(
                               tmhm_pocket,
@@ -512,7 +512,7 @@ void pkmntest_gen2_tmhm_pocket_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(list_length, 57);
     for(int i = 1; i <= 50; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
 
         TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
@@ -522,7 +522,7 @@ void pkmntest_gen2_tmhm_pocket_test(
     TEST_ASSERT_NULL(item_slots);
 
     for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
         TEST_ASSERT_EQUAL(pkmn_item_list_add(
                               tmhm_pocket,
@@ -542,7 +542,7 @@ void pkmntest_gen2_tmhm_pocket_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(list_length, 57);
     for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
 
         TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
@@ -552,7 +552,7 @@ void pkmntest_gen2_tmhm_pocket_test(
     TEST_ASSERT_NULL(item_slots);
 
     for(int i = 7; i >= 1; --i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
         TEST_ASSERT_EQUAL(pkmn_item_list_remove(
                               tmhm_pocket,
@@ -572,7 +572,7 @@ void pkmntest_gen2_tmhm_pocket_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(list_length, 57);
     for(int i = 1; i <= 7; ++i) {
-        char name[5] = "";
+        char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
 
         TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
