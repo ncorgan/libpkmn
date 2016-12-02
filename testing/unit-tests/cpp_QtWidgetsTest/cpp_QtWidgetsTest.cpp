@@ -13,7 +13,7 @@
 
 void QtWidgetsTest::testAbilityListComboBox() {
     try {
-        pkmn::qt::AbilityListComboBox abilities(6, Q_NULLPTR);
+        pkmn::qt::AbilityListComboBox abilities(6, nullptr);
         QCOMPARE(abilities.count(), 191);
 
         abilities.setCurrentIndex(0);
@@ -27,7 +27,7 @@ void QtWidgetsTest::testAbilityListComboBox() {
 
 void QtWidgetsTest::testGameListComboBox() {
     try {
-        pkmn::qt::GameListComboBox games(6, true, Q_NULLPTR);
+        pkmn::qt::GameListComboBox games(6, true, nullptr);
         QCOMPARE(games.count(), 26);
 
         games.setCurrentIndex(0);
@@ -41,7 +41,7 @@ void QtWidgetsTest::testGameListComboBox() {
 
 void QtWidgetsTest::testItemListComboBox() {
     try {
-        pkmn::qt::ItemListComboBox items(QString("HeartGold"), Q_NULLPTR);
+        pkmn::qt::ItemListComboBox items(QString("HeartGold"), nullptr);
         QCOMPARE(items.count(), 513);
 
         items.setCurrentIndex(0);

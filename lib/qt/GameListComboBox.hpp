@@ -9,7 +9,11 @@
 
 #include <pkmn/config.hpp>
 
+#ifdef PKMN_QT4
+#include <QtGui/QComboBox>
+#else
 #include <QComboBox>
+#endif
 
 namespace pkmn { namespace qt {
 

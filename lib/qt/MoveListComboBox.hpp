@@ -9,8 +9,13 @@
 
 #include <pkmn/config.hpp>
 
+#ifdef PKMN_QT4
+#include <QtGui/QComboBox>
+#include <QtCore/QString>
+#else
 #include <QComboBox>
 #include <QString>
+#endif
 
 namespace pkmn { namespace qt {
 
