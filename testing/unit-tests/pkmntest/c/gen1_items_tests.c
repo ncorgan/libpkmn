@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "items_tests_common.h"
+
 #include <pkmntest-c/gen1_items_tests.h>
 
 #include <pkmn-c/database/lists.h>
@@ -19,7 +21,6 @@ static void pkmntest_gen1_item_list_common(
     pkmn_item_list_handle_t items,
     const char* game
 ) {
-    int num_items = 0;
     pkmn_item_slots_t item_slots = NULL;
     pkmn_string_list_t full_item_list = NULL;
     size_t list_length = 0;
@@ -27,120 +28,31 @@ static void pkmntest_gen1_item_list_common(
     size_t valid_items_list_length = 0;
 
     // Make sure item slots start as correctly empty.
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          items, &item_slots, &list_length
-                      ), PKMN_ERROR_NONE);
-    for(size_t i = 0; i < list_length; ++i) {
-        TEST_ASSERT_EQUAL_STRING(item_slots[i].item, "None");
-        TEST_ASSERT_EQUAL(item_slots[i].amount, 0);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
+    test_item_list_empty_slots(items);
     TEST_ASSERT_NULL(item_slots);
 
     // Confirm errors are returned when expected.
-    TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                          items, "Potion", 0
-                      ), PKMN_ERROR_OUT_OF_RANGE);
-    TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                          items, "Potion", 100
-                      ), PKMN_ERROR_OUT_OF_RANGE);
-    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                          items, "Potion", 0
-                      ), PKMN_ERROR_OUT_OF_RANGE);
-    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                          items, "Potion", 100
-                      ), PKMN_ERROR_OUT_OF_RANGE);
+    test_item_list_out_of_range_error(
+        items,
+        "Potion"
+    );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                          items, "Potion", 30
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                          items, "Great Ball", 99
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                          items, "Ether", 1
-                      ), PKMN_ERROR_NONE);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          items, &item_slots, &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Potion");
-    TEST_ASSERT_EQUAL(item_slots[0].amount, 30);
-    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Great Ball");
-    TEST_ASSERT_EQUAL(item_slots[1].amount, 99);
-    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Ether");
-    TEST_ASSERT_EQUAL(item_slots[2].amount, 1);
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                          items, &num_items
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_items, 3);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                          items, "Great Ball", 20
-                      ), PKMN_ERROR_NONE);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          items, &item_slots, &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Potion");
-    TEST_ASSERT_EQUAL(item_slots[0].amount, 30);
-    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Great Ball");
-    TEST_ASSERT_EQUAL(item_slots[1].amount, 79);
-    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Ether");
-    TEST_ASSERT_EQUAL(item_slots[2].amount, 1);
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                          items, &num_items
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_items, 3);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_move(
-                          items, 0, 1
-                      ), PKMN_ERROR_NONE);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          items, &item_slots, &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Great Ball");
-    TEST_ASSERT_EQUAL(item_slots[0].amount, 79);
-    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Potion");
-    TEST_ASSERT_EQUAL(item_slots[1].amount, 30);
-    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "Ether");
-    TEST_ASSERT_EQUAL(item_slots[2].amount, 1);
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                          items, &num_items
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_items, 3);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                          items, "Potion", 30
-                      ), PKMN_ERROR_NONE);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          items, &item_slots, &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(item_slots[0].item, "Great Ball");
-    TEST_ASSERT_EQUAL(item_slots[0].amount, 79);
-    TEST_ASSERT_EQUAL_STRING(item_slots[1].item, "Ether");
-    TEST_ASSERT_EQUAL(item_slots[1].amount, 1);
-    TEST_ASSERT_EQUAL_STRING(item_slots[2].item, "None");
-    TEST_ASSERT_EQUAL(item_slots[2].amount, 0);
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                          items, &num_items
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_items, 2);
+    const char* item_names[] = {
+        "Potion",
+        "Great Ball",
+        "Ether",
+        "PP Up",
+        "TM34",
+        "Moon Stone",
+        "Bicycle",
+        "Full Heal"
+    };
+    test_item_list_add_remove(
+        items,
+        item_names,
+        8
+    );
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           items, &valid_items, &valid_items_list_length

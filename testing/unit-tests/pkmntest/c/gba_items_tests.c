@@ -7,9 +7,12 @@
 
 #include "items_tests_common.h"
 
-#include <pkmntest-c/gen2_items_tests.h>
+#include <pkmntest-c/gba_items_tests.h>
 
 #include <pkmn-c/database/lists.h>
+
+// For pksav_gba_game_t
+#include <pksav/gba.h>
 
 #include <unity.h>
 
@@ -17,7 +20,29 @@
 
 #define STRBUFFER_LEN 1024
 
-void pkmntest_gen2_item_pocket_test(
+static void game_name_to_enum(
+    const char* game,
+    pksav_gba_game_t* result
+) {
+    TEST_ASSERT_NOT_NULL(game);
+    TEST_ASSERT_NOT_NULL(result);
+
+    if(strcmp(game, "Ruby") == 0 ||
+       strcmp(game, "Sapphire") == 0)
+    {
+        *result = PKSAV_GBA_RS;
+    } else if(strcmp(game, "Emerald") == 0) {
+        *result = PKSAV_GBA_EMERALD;
+    } else if(strcmp(game, "FireRed") == 0 ||
+              strcmp(game, "LeafGreen") == 0)
+    {
+        *result = PKSAV_GBA_FRLG;
+    } else {
+        TEST_ASSERT(false);
+    }
+}
+
+void pkmntest_gba_item_pocket_test(
     pkmn_item_list_handle_t item_pocket,
     const char* game
 ) {
@@ -25,9 +50,17 @@ void pkmntest_gen2_item_pocket_test(
     size_t actual_strlen = 0;
 
     int capacity = 0;
+    int expected_capacity = 0;
     int num_items = 0;
     pkmn_string_list_t valid_items = NULL;
     size_t valid_items_list_length = 0;
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
 
     // Check unchanging and initial values.
     const char* expected_name = "Items";
@@ -49,11 +82,28 @@ void pkmntest_gen2_item_pocket_test(
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
     TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
+    switch(gba_game) {
+        case PKSAV_GBA_RS:
+            expected_capacity = 20;
+            break;
+
+        case PKSAV_GBA_EMERALD:
+            expected_capacity = 30;
+            break;
+
+        case PKSAV_GBA_FRLG:
+            expected_capacity = 42;
+            break;
+
+        default:
+            TEST_ASSERT(false);
+    }
+
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
                           item_pocket,
                           &capacity
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(capacity, 20);
+    TEST_ASSERT_EQUAL(capacity, expected_capacity);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
                           item_pocket,
@@ -74,24 +124,25 @@ void pkmntest_gen2_item_pocket_test(
     const char* wrong_items[] = {
         "Bicycle",
         "Master Ball",
-        "HM01"
+        "HM01",
+        "Razz Berry"
     };
     test_item_list_items_from_wrong_pocket(
         item_pocket,
         wrong_items,
-        3
+        4
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     const char* item_names[] = {
         "Potion",
-        "HP Up",
-        "Wht Apricorn",
-        "Lucky Egg",
-        "Flower Mail",
-        "Burn Heal",
-        "PSNCureBerry",
-        "Stick"
+        "Orange Mail",
+        "Lava Cookie",
+        "Stardust",
+        "Shadow Mail",
+        "Pink Scarf",
+        "Antidote",
+        "Green Shard"
     };
     test_item_list_add_remove(
         item_pocket,
@@ -109,7 +160,7 @@ void pkmntest_gen2_item_pocket_test(
     TEST_ASSERT_NULL(valid_items);
 }
 
-void pkmntest_gen2_key_item_pocket_test(
+void pkmntest_gba_key_item_pocket_test(
     pkmn_item_list_handle_t key_item_pocket,
     const char* game
 ) {
@@ -117,12 +168,20 @@ void pkmntest_gen2_key_item_pocket_test(
     size_t actual_strlen = 0;
 
     int capacity = 0;
+    int expected_capacity = 0;
     int num_items = 0;
     pkmn_string_list_t valid_items = NULL;
     size_t valid_items_list_length = 0;
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
 
     // Check unchanging and initial values.
-    const char* expected_name = "KeyItems";
+    const char* expected_name = "Key Items";
     TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
                           key_item_pocket,
                           strbuffer,
@@ -141,11 +200,21 @@ void pkmntest_gen2_key_item_pocket_test(
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
     TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
+    switch(gba_game) {
+        case PKSAV_GBA_RS:
+            expected_capacity = 20;
+            break;
+
+        default:
+            expected_capacity = 30;
+            break;
+    }
+
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
                           key_item_pocket,
                           &capacity
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(capacity, 26);
+    TEST_ASSERT_EQUAL(capacity, expected_capacity);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
                           key_item_pocket,
@@ -159,111 +228,32 @@ void pkmntest_gen2_key_item_pocket_test(
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
         key_item_pocket,
-        "Bicycle"
+        "Basement Key"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_items[] = {
         "Potion",
         "Master Ball",
-        "HM01"
+        "HM01",
+        "Razz Berry"
     };
     test_item_list_items_from_wrong_pocket(
         key_item_pocket,
         wrong_items,
-        3
+        4
     );
-
-    // Crystal-specific items.
-    if(strcmp(game, "Crystal") == 0) {
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Clear Bell",
-                              1
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              key_item_pocket,
-                              "Clear Bell",
-                              1
-                          ), PKMN_ERROR_NONE);
-
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "GS Ball",
-                              1
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              key_item_pocket,
-                              "GS Ball",
-                              1
-                          ), PKMN_ERROR_NONE);
-
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Blue Card",
-                              1
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              key_item_pocket,
-                              "Blue Card",
-                              1
-                          ), PKMN_ERROR_NONE);
-
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Egg Ticket",
-                              1
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              key_item_pocket,
-                              "Egg Ticket",
-                              1
-                          ), PKMN_ERROR_NONE);
-
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                             key_item_pocket,
-                             &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, 0);
-    } else {
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Clear Bell",
-                              1
-                          ), PKMN_ERROR_INVALID_ARGUMENT);
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "GS Ball",
-                              1
-                          ), PKMN_ERROR_INVALID_ARGUMENT);
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Blue Card",
-                              1
-                          ), PKMN_ERROR_INVALID_ARGUMENT);
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              key_item_pocket,
-                              "Egg Ticket",
-                              1
-                          ), PKMN_ERROR_INVALID_ARGUMENT);
-
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                             key_item_pocket,
-                             &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, 0);
-    }
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     const char* item_names[] = {
-        "Bicycle",
+        "Wailmer Pail",
         "Basement Key",
-        "SecretPotion",
-        "Mystery Egg",
-        "Silver Wing",
-        "Lost Item",
-        "SquirtBottle",
-        "Rainbow Wing"
+        "Meteorite",
+        "Old Rod",
+        "Red Orb",
+        "Root Fossil",
+        "Contest Pass",
+        "Eon Ticket"
     };
     test_item_list_add_remove(
         key_item_pocket,
@@ -281,7 +271,7 @@ void pkmntest_gen2_key_item_pocket_test(
     TEST_ASSERT_NULL(valid_items);
 }
 
-void pkmntest_gen2_ball_pocket_test(
+void pkmntest_gba_ball_pocket_test(
     pkmn_item_list_handle_t ball_pocket,
     const char* game
 ) {
@@ -289,12 +279,20 @@ void pkmntest_gen2_ball_pocket_test(
     size_t actual_strlen = 0;
 
     int capacity = 0;
+    int expected_capacity = 0;
     int num_items = 0;
     pkmn_string_list_t valid_items = NULL;
     size_t valid_items_list_length = 0;
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
 
     // Check unchanging and initial values.
-    const char* expected_name = "Balls";
+    const char* expected_name = "Poké Balls";
     TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
                           ball_pocket,
                           strbuffer,
@@ -313,11 +311,21 @@ void pkmntest_gen2_ball_pocket_test(
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
     TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
+    switch(gba_game) {
+        case PKSAV_GBA_FRLG:
+            expected_capacity = 13;
+            break;
+
+        default:
+            expected_capacity = 16;
+            break;
+    }
+
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
                           ball_pocket,
                           &capacity
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(capacity, 12);
+    TEST_ASSERT_EQUAL(capacity, expected_capacity);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
                           ball_pocket,
@@ -338,24 +346,25 @@ void pkmntest_gen2_ball_pocket_test(
     const char* wrong_items[] = {
         "Potion",
         "Bicycle",
-        "HM01"
+        "HM01",
+        "Razz Berry"
     };
     test_item_list_items_from_wrong_pocket(
         ball_pocket,
         wrong_items,
-        3
+        4
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
     const char* item_names[] = {
+        "Master Ball",
+        "Ultra Ball",
         "Great Ball",
         "Poké Ball",
-        "Park Ball",
-        "Fast Ball",
-        "Master Ball",
-        "Friend Ball",
-        "Love Ball",
-        "Level Ball"
+        "Safari Ball",
+        "Net Ball",
+        "Dive Ball",
+        "Nest Ball",
     };
     test_item_list_add_remove(
         ball_pocket,
@@ -373,7 +382,7 @@ void pkmntest_gen2_ball_pocket_test(
     TEST_ASSERT_NULL(valid_items);
 }
 
-void pkmntest_gen2_tmhm_pocket_test(
+void pkmntest_gba_tmhm_pocket_test(
     pkmn_item_list_handle_t tmhm_pocket,
     const char* game
 ) {
@@ -381,14 +390,21 @@ void pkmntest_gen2_tmhm_pocket_test(
     size_t actual_strlen = 0;
 
     int capacity = 0;
+    int expected_capacity = 0;
     int num_items = 0;
-    pkmn_item_slots_t item_slots = NULL;
-    size_t list_length = 0;
     pkmn_string_list_t valid_items = NULL;
     size_t valid_items_list_length = 0;
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
 
     // Check unchanging and initial values.
-    const char* expected_name = "TM/HM";
+    const char* expected_name = (gba_game == PKSAV_GBA_FRLG) ? "TM Case"
+                                                             : "TMs & HMs";
     TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
                           tmhm_pocket,
                           strbuffer,
@@ -407,11 +423,21 @@ void pkmntest_gen2_tmhm_pocket_test(
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
     TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
+    switch(gba_game) {
+        case PKSAV_GBA_FRLG:
+            expected_capacity = 58;
+            break;
+
+        default:
+            expected_capacity = 64;
+            break;
+    }
+
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
                           tmhm_pocket,
                           &capacity
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(capacity, 57);
+    TEST_ASSERT_EQUAL(capacity, expected_capacity);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
                           tmhm_pocket,
@@ -420,178 +446,167 @@ void pkmntest_gen2_tmhm_pocket_test(
     TEST_ASSERT_EQUAL(num_items, 0);
 
     // Make sure item slots start as correctly empty.
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          tmhm_pocket,
-                          &item_slots,
-                          &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 57);
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[i-1].amount, 0);
-    }
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[50+i-1].amount, 0);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
+    test_item_list_empty_slots(tmhm_pocket);
+
+    // Confirm errors are returned when expected.
+    test_item_list_out_of_range_error(
+        tmhm_pocket,
+        "TM01"
+    );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_items[] = {
         "Potion",
-        "Master Ball",
-        "Bicycle"
+        "Bicycle",
+        "Great Ball",
+        "Razz Berry"
     };
     test_item_list_items_from_wrong_pocket(
         tmhm_pocket,
         wrong_items,
-        3
+        4
     );
 
-    /*
-     * Start adding and removing stuff, and make sure the numbers are accurate.
-     *
-     * While this is supposed to match the other pkmntest libraries, there are
-     * so many allocations done with string lists that we'll just do it after
-     * each set of commands.
-     */
-
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              tmhm_pocket,
-                              name,
-                              50
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                              tmhm_pocket,
-                              &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, i);
-    }
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          tmhm_pocket,
-                          &item_slots,
-                          &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 57);
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[i-1].amount, 50);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    for(int i = 50; i >= 1; --i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              tmhm_pocket,
-                              name,
-                              50
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                              tmhm_pocket,
-                              &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, i-1);
-    }
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          tmhm_pocket,
-                          &item_slots,
-                          &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 57);
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(item_slots[i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[i-1].amount, 0);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL(pkmn_item_list_add(
-                              tmhm_pocket,
-                              name,
-                              50
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                              tmhm_pocket,
-                              &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, i);
-    }
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          tmhm_pocket,
-                          &item_slots,
-                          &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 57);
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[50+i-1].amount, 50);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
-    for(int i = 7; i >= 1; --i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL(pkmn_item_list_remove(
-                              tmhm_pocket,
-                              name,
-                              50
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                              tmhm_pocket,
-                              &num_items
-                          ), PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(num_items, i-1);
-    }
-    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
-                          tmhm_pocket,
-                          &item_slots,
-                          &list_length
-                      ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, 57);
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(item_slots[50+i-1].item, name);
-        TEST_ASSERT_EQUAL(item_slots[50+i-1].amount, 0);
-    }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
+    // Start adding and removing stuff, and make sure the numbers are accurate.
+    const char* item_names[] = {
+        "TM01",
+        "HM01",
+        "TM02",
+        "HM02",
+        "TM03",
+        "HM03",
+        "TM04",
+        "HM04",
+    };
+    test_item_list_add_remove(
+        tmhm_pocket,
+        item_names,
+        8
+    );
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           tmhm_pocket,
                           &valid_items,
                           &valid_items_list_length
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(valid_items_list_length, 57);
+    TEST_ASSERT(valid_items_list_length > 0);
     pkmn_string_list_free(&valid_items, valid_items_list_length);
     TEST_ASSERT_NULL(valid_items);
 }
 
-void pkmntest_gen2_pc_test(
+void pkmntest_gba_berry_pocket_test(
+    pkmn_item_list_handle_t berry_pocket,
+    const char* game
+) {
+    char strbuffer[STRBUFFER_LEN];
+    size_t actual_strlen = 0;
+
+    int capacity = 0;
+    int expected_capacity = 0;
+    int num_items = 0;
+    pkmn_string_list_t valid_items = NULL;
+    size_t valid_items_list_length = 0;
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
+
+    // Check unchanging and initial values.
+    const char* expected_name = (gba_game == PKSAV_GBA_FRLG) ? "Berry Pouch"
+                                                             : "Berries";
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_name(
+                          berry_pocket,
+                          strbuffer,
+                          STRBUFFER_LEN,
+                          &actual_strlen
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_game(
+                          berry_pocket,
+                          strbuffer,
+                          STRBUFFER_LEN,
+                          &actual_strlen
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, game);
+    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
+
+    switch(gba_game) {
+        case PKSAV_GBA_FRLG:
+            expected_capacity = 43;
+            break;
+
+        default:
+            expected_capacity = 46;
+            break;
+    }
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
+                          berry_pocket,
+                          &capacity
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(capacity, expected_capacity);
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          berry_pocket,
+                          &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 0);
+
+    // Make sure item slots start as correctly empty.
+    test_item_list_empty_slots(berry_pocket);
+
+    // Confirm errors are returned when expected.
+    test_item_list_out_of_range_error(
+        berry_pocket,
+        "Razz Berry"
+    );
+
+    // Make sure we can't add items from other pockets.
+    const char* wrong_items[] = {
+        "Potion",
+        "Bicycle",
+        "Great Ball",
+        "HM02"
+    };
+    test_item_list_items_from_wrong_pocket(
+        berry_pocket,
+        wrong_items,
+        4
+    );
+
+    // Start adding and removing stuff, and make sure the numbers are accurate.
+    const char* item_names[] = {
+        "Cheri Berry",
+        "Razz Berry",
+        "Lum Berry",
+        "Pinap Berry",
+        "Aspear Berry",
+        "Iapapa Berry",
+        "Wiki Berry",
+        "Apicot Berry",
+    };
+    test_item_list_add_remove(
+        berry_pocket,
+        item_names,
+        8
+    );
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
+                          berry_pocket,
+                          &valid_items,
+                          &valid_items_list_length
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT(valid_items_list_length > 0);
+    pkmn_string_list_free(&valid_items, valid_items_list_length);
+    TEST_ASSERT_NULL(valid_items);
+}
+
+void pkmntest_gba_pc_test(
     pkmn_item_list_handle_t pc,
     const char* game
 ) {
@@ -649,13 +664,13 @@ void pkmntest_gen2_pc_test(
     // Start adding and removing stuff, and make sure the numbers are accurate.
     const char* item_names[] = {
         "Potion",
-        "Bicycle",
+        "Mach Bike",
         "Great Ball",
-        "TM28",
-        "Berry",
-        "SquirtBottle",
-        "Friend Ball",
-        "HM01"
+        "TM01",
+        "Aspear Berry",
+        "Wailmer Pail",
+        "Master Ball",
+        "HM04"
     };
     test_item_list_add_remove(
         pc,
@@ -682,7 +697,7 @@ void pkmntest_gen2_pc_test(
     TEST_ASSERT_NULL(valid_items);
 }
 
-void pkmntest_gen2_item_bag_test(
+void pkmntest_gba_item_bag_test(
     pkmn_item_bag_handle_t bag,
     const char* game
 ) {
@@ -691,6 +706,14 @@ void pkmntest_gen2_item_bag_test(
 
     char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
+
+    pksav_gba_game_t gba_game = PKSAV_GBA_RS;
+
+    // Get game type
+    game_name_to_enum(
+        game,
+        &gba_game
+    );
 
     // Check unchanging and initial values.
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_game(
@@ -707,7 +730,7 @@ void pkmntest_gen2_item_bag_test(
                           &pocket_names,
                           &num_pockets
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_pockets, 4);
+    TEST_ASSERT_EQUAL(num_pockets, 5);
 
     pkmn_string_list_free(&pocket_names, num_pockets);
     TEST_ASSERT_NULL(pocket_names);
@@ -720,7 +743,7 @@ void pkmntest_gen2_item_bag_test(
                           "Items",
                           &item_list_handle
                       ), PKMN_ERROR_NONE);
-    pkmntest_gen2_item_pocket_test(
+    pkmntest_gba_item_pocket_test(
         item_list_handle,
         game
     );
@@ -731,10 +754,10 @@ void pkmntest_gen2_item_bag_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket(
                           bag,
-                          "KeyItems",
+                          "Key Items",
                           &item_list_handle
                       ), PKMN_ERROR_NONE);
-    pkmntest_gen2_key_item_pocket_test(
+    pkmntest_gba_key_item_pocket_test(
         item_list_handle,
         game
     );
@@ -745,10 +768,10 @@ void pkmntest_gen2_item_bag_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket(
                           bag,
-                          "Balls",
+                          "Poké Balls",
                           &item_list_handle
                       ), PKMN_ERROR_NONE);
-    pkmntest_gen2_ball_pocket_test(
+    pkmntest_gba_ball_pocket_test(
         item_list_handle,
         game
     );
@@ -757,12 +780,30 @@ void pkmntest_gen2_item_bag_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(item_list_handle);
 
+    const char* expected_tmhm_name = (gba_game == PKSAV_GBA_FRLG) ? "TM Case"
+                                                                  : "TMs & HMs";
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket(
                           bag,
-                          "TM/HM",
+                          expected_tmhm_name,
                           &item_list_handle
                       ), PKMN_ERROR_NONE);
-    pkmntest_gen2_tmhm_pocket_test(
+    pkmntest_gba_tmhm_pocket_test(
+        item_list_handle,
+        game
+    );
+    TEST_ASSERT_EQUAL(pkmn_item_list_free(
+                          &item_list_handle
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(item_list_handle);
+
+    const char* expected_berry_name = (gba_game == PKSAV_GBA_FRLG) ? "Berry Pouch"
+                                                                   : "Berries";
+    TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket(
+                          bag,
+                          expected_berry_name,
+                          &item_list_handle
+                      ), PKMN_ERROR_NONE);
+    pkmntest_gba_berry_pocket_test(
         item_list_handle,
         game
     );

@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "items_tests_common.hpp"
+
 #include <pkmntest/gen2_items_tests.hpp>
 
 #include <pkmn/database/lists.hpp>
@@ -19,7 +21,7 @@
 
 namespace pkmntest {
 
-    static std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
+    static const std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
         ("Gold",    pkmn::database::item_entry("None", "Gold"))
         ("Silver",  pkmn::database::item_entry("None", "Silver"))
         ("Crystal", pkmn::database::item_entry("None", "Crystal"))
@@ -36,93 +38,42 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 0);
 
         // Make sure item slots start as correctly empty.
-        const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
-        BOOST_REQUIRE_EQUAL(item_slots.size(), 20);
-        const pkmn::database::item_entry& none_entry = none_entries.at(game);
-        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK(iter->item == none_entry);
-            BOOST_CHECK_EQUAL(iter->amount, 0);
-        }
+        test_item_list_empty_slots(
+            item_pocket,
+            none_entries.at(game)
+        );
 
         // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            item_pocket->add("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            item_pocket->add("Potion", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            item_pocket->remove("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            item_pocket->remove("Potion", 100)
-        , std::out_of_range);
+        test_item_list_out_of_range_error(
+            item_pocket,
+            "Potion"
+        );
 
         // Make sure we can't add items from other pockets.
-        BOOST_CHECK_THROW(
-            item_pocket->add("Bicycle", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            item_pocket->add("Master Ball", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            item_pocket->add("HM01", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 0);
+        std::vector<std::string> wrong_items;
+        wrong_items.emplace_back("Bicycle");
+        wrong_items.emplace_back("Master Ball");
+        wrong_items.emplace_back("HM01");
+        test_item_list_items_from_wrong_pocket(
+            item_pocket,
+            wrong_items
+        );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        item_pocket->add("Potion", 30);
-        item_pocket->add("PSNCureBerry", 99);
-        item_pocket->add("Leftovers", 1);
-
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "PSNCureBerry");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Leftovers");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-
-        item_pocket->add("Leftovers", 15);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "PSNCureBerry");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Leftovers");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-
-        item_pocket->remove("PSNCureBerry", 20);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "PSNCureBerry");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Leftovers");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-
-        item_pocket->move(0, 1);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "PSNCureBerry");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Leftovers");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 3);
-
-        item_pocket->remove("Potion", 30);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 2);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "PSNCureBerry");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Leftovers");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 16);
-        BOOST_CHECK(item_slots.at(2).item == none_entry);
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
-        BOOST_CHECK_EQUAL(item_pocket->get_num_items(), 2);
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("HP Up");
+        item_names.emplace_back("Wht Apricorn");
+        item_names.emplace_back("Lucky Egg");
+        item_names.emplace_back("Flower Mail");
+        item_names.emplace_back("Burn Heal");
+        item_names.emplace_back("PSNCureBerry");
+        item_names.emplace_back("Stick");
+        test_item_list_add_remove(
+            item_pocket,
+            none_entries.at(game),
+            item_names
+        );
 
         const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
         BOOST_CHECK_GT(valid_items.size(), 0);
@@ -138,40 +89,27 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(key_item_pocket->get_capacity(), 26);
         BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
 
-        // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            key_item_pocket->add("Bicycle", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            key_item_pocket->add("Bicycle", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            key_item_pocket->remove("Bicycle", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            key_item_pocket->remove("Bicycle", 100)
-        , std::out_of_range);
-
         // Make sure item slots start as correctly empty.
-        const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
-        BOOST_REQUIRE_EQUAL(item_slots.size(), 26);
-        const pkmn::database::item_entry& none_entry = none_entries.at(game);
-        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK(iter->item == none_entry);
-            BOOST_CHECK_EQUAL(iter->amount, 0);
-        }
+        test_item_list_empty_slots(
+            key_item_pocket,
+            none_entries.at(game)
+        );
+
+        // Confirm exceptions are thrown when expected.
+        test_item_list_out_of_range_error(
+            key_item_pocket,
+            "Bicycle"
+        );
 
         // Make sure we can't add items from other pockets.
-        BOOST_CHECK_THROW(
-            key_item_pocket->add("Potion", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            key_item_pocket->add("Master Ball", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            key_item_pocket->add("HM01", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
+        std::vector<std::string> wrong_items;
+        wrong_items.emplace_back("Potion");
+        wrong_items.emplace_back("Master Ball");
+        wrong_items.emplace_back("HM01");
+        test_item_list_items_from_wrong_pocket(
+            key_item_pocket,
+            wrong_items
+        );
 
         // Crystal-specific items.
         if(game == "Crystal") {
@@ -205,53 +143,20 @@ namespace pkmntest {
         }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        key_item_pocket->add("Bicycle", 30);
-        key_item_pocket->add("Basement Key", 99);
-        key_item_pocket->add("SecretPotion", 1);
-
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Basement Key");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "SecretPotion");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 3);
-
-        key_item_pocket->add("SecretPotion", 15);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Basement Key");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "SecretPotion");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 3);
-
-        key_item_pocket->remove("Basement Key", 20);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Basement Key");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "SecretPotion");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 3);
-
-        key_item_pocket->move(0, 1);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Basement Key");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "SecretPotion");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 3);
-
-        key_item_pocket->remove("Bicycle", 30);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Basement Key");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "SecretPotion");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 16);
-        BOOST_CHECK(item_slots.at(2).item == none_entry);
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
-        BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 2);
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Bicycle");
+        item_names.emplace_back("Basement Key");
+        item_names.emplace_back("SecretPotion");
+        item_names.emplace_back("Mystery Egg");
+        item_names.emplace_back("Silver Wing");
+        item_names.emplace_back("Lost Item");
+        item_names.emplace_back("SquirtBottle");
+        item_names.emplace_back("Rainbow Wing");
+        test_item_list_add_remove(
+            key_item_pocket,
+            none_entries.at(game),
+            item_names
+        );
 
         const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
         BOOST_CHECK_GT(valid_items.size(), 0);
@@ -267,89 +172,43 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(ball_pocket->get_capacity(), 12);
         BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 0);
 
-        // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            ball_pocket->add("Master Ball", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            ball_pocket->add("Master Ball", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            ball_pocket->remove("Master Ball", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            ball_pocket->remove("Master Ball", 100)
-        , std::out_of_range);
-
         // Make sure item slots start as correctly empty.
-        const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
-        BOOST_REQUIRE_EQUAL(item_slots.size(), 12);
-        const pkmn::database::item_entry& none_entry = none_entries.at(game);
-        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK(iter->item == none_entry);
-            BOOST_CHECK_EQUAL(iter->amount, 0);
-        }
+        test_item_list_empty_slots(
+            ball_pocket,
+            none_entries.at(game)
+        );
+
+        // Confirm exceptions are thrown when expected.
+        test_item_list_out_of_range_error(
+            ball_pocket,
+            "Master Ball"
+        );
 
         // Make sure we can't add items from other pockets.
-        BOOST_CHECK_THROW(
-            ball_pocket->add("Potion", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            ball_pocket->add("Bicycle", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            ball_pocket->add("HM01", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 0);
+        std::vector<std::string> wrong_items;
+        wrong_items.emplace_back("Potion");
+        wrong_items.emplace_back("Bicycle");
+        wrong_items.emplace_back("HM01");
+        test_item_list_items_from_wrong_pocket(
+            ball_pocket,
+            wrong_items
+        );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ball_pocket->add("Great Ball", 30);
-        ball_pocket->add("Fast Ball", 99);
-        ball_pocket->add("Park Ball", 1);
-
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Fast Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Park Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 1);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 3);
-
-        ball_pocket->add("Park Ball", 15);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Fast Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 99);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Park Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 3);
-
-        ball_pocket->remove("Fast Ball", 20);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Fast Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Park Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 3);
-
-        ball_pocket->move(0, 1);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Fast Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 30);
-        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "Park Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 16);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 3);
-
-        ball_pocket->remove("Great Ball", 30);
-        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Fast Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 79);
-        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Park Ball");
-        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 16);
-        BOOST_CHECK(item_slots.at(2).item == none_entry);
-        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
-        BOOST_CHECK_EQUAL(ball_pocket->get_num_items(), 2);
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("Poké Ball");
+        item_names.emplace_back("Park Ball");
+        item_names.emplace_back("Fast Ball");
+        item_names.emplace_back("Master Ball");
+        item_names.emplace_back("Friend Ball");
+        item_names.emplace_back("Love Ball");
+        item_names.emplace_back("Level Ball");
+        test_item_list_add_remove(
+            ball_pocket,
+            none_entries.at(game),
+            item_names
+        );
 
         const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
         BOOST_CHECK_GT(valid_items.size(), 0);
@@ -364,20 +223,6 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(tmhm_pocket->get_game(), game);
         BOOST_CHECK_EQUAL(tmhm_pocket->get_capacity(), 57);
         BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), 0);
-
-        // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            tmhm_pocket->add("TM10", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            tmhm_pocket->add("TM10", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            tmhm_pocket->remove("TM10", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            tmhm_pocket->remove("TM10", 100)
-        , std::out_of_range);
 
         // Make sure item slots start as correctly empty.
         const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
@@ -395,17 +240,21 @@ namespace pkmntest {
             BOOST_CHECK_EQUAL(item_slots[50+i-1].amount, 0);
         }
 
+        // Confirm exceptions are thrown when expected.
+        test_item_list_out_of_range_error(
+            tmhm_pocket,
+            "TM10"
+        );
+
         // Make sure we can't add items from other pockets.
-        BOOST_CHECK_THROW(
-            tmhm_pocket->add("Potion", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            tmhm_pocket->add("Master Ball", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_THROW(
-            tmhm_pocket->add("Bicycle", 1);
-        , std::invalid_argument);
-        BOOST_CHECK_EQUAL(tmhm_pocket->get_num_items(), 0);
+        std::vector<std::string> wrong_items;
+        wrong_items.emplace_back("Potion");
+        wrong_items.emplace_back("Master Ball");
+        wrong_items.emplace_back("Bicycle");
+        test_item_list_items_from_wrong_pocket(
+            tmhm_pocket,
+            wrong_items
+        );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
         for(int i = 1; i <= 50; ++i) {
@@ -457,67 +306,32 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
 
         // Confirm exceptions are thrown when expected.
-        BOOST_CHECK_THROW(
-            pc->add("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->add("Potion", 100)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->remove("Potion", 0)
-        , std::out_of_range);
-        BOOST_CHECK_THROW(
-            pc->remove("Potion", 100)
-        , std::out_of_range);
+        test_item_list_out_of_range_error(
+            pc,
+            "Potion"
+        );
 
         // Make sure item slots start as correctly empty.
-        const pkmn::item_slots_t& item_slots = pc->as_vector();
-        BOOST_REQUIRE_EQUAL(item_slots.size(), 50);
-        const pkmn::database::item_entry& none_entry = none_entries.at(game);
-        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-            BOOST_CHECK(iter->item == none_entry);
-            BOOST_CHECK_EQUAL(iter->amount, 0);
-        }
+        test_item_list_empty_slots(
+            pc,
+            none_entries.at(game)
+        );
 
-        // Make sure we can add stuff from every pocket.
-        pc->add("Potion", 5);
-        pc->add("Bicycle", 1);
-        pc->add("Great Ball", 10);
-        pc->add("TM28", 8);
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 4);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 1);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "Great Ball");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 10);
-        BOOST_CHECK_EQUAL(item_slots[3].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 8);
-
-        pc->remove("Great Ball", 10);
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 1);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 8);
-        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
-
-        pc->move(1, 2);
-
-        BOOST_CHECK_EQUAL(pc->get_num_items(), 3);
-        BOOST_CHECK_EQUAL(item_slots[0].item.get_name(), "Potion");
-        BOOST_CHECK_EQUAL(item_slots[0].amount, 5);
-        BOOST_CHECK_EQUAL(item_slots[1].item.get_name(), "TM28");
-        BOOST_CHECK_EQUAL(item_slots[1].amount, 8);
-        BOOST_CHECK_EQUAL(item_slots[2].item.get_name(), "Bicycle");
-        BOOST_CHECK_EQUAL(item_slots[2].amount, 1);
-        BOOST_CHECK(item_slots[3].item == none_entries.at(game));
-        BOOST_CHECK_EQUAL(item_slots[3].amount, 0);
+        // Start adding and removing stuff, and make sure the numbers are accurate.
+        std::vector<std::string> item_names;
+        item_names.emplace_back("Potion");
+        item_names.emplace_back("Bicycle");
+        item_names.emplace_back("Great Ball");
+        item_names.emplace_back("TM28");
+        item_names.emplace_back("Berry");
+        item_names.emplace_back("SquirtBottle");
+        item_names.emplace_back("Friend Ball");
+        item_names.emplace_back("HM01");
+        test_item_list_add_remove(
+            pc,
+            none_entries.at(game),
+            item_names
+        );
 
         const std::vector<std::string>& valid_items = pc->get_valid_items();
         std::vector<std::string> full_item_list = pkmn::database::get_item_list(game);

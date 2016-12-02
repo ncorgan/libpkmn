@@ -62,6 +62,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
+        ${Boost_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}
         ${SWIG_MODULE_DIR}
@@ -71,6 +72,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     INCLUDE_DIRECTORIES(${SWIG_INCLUDE_DIRS})
 
     SET(SWIG_LIBRARIES
+        ${Boost_LIBRARIES}
         ${SWIG_PYTHON_LIBRARIES}
         ${PYTHON_LIBRARIES}
     )

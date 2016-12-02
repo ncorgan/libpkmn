@@ -5,6 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+%begin %{
+#define SWIG_PYTHON_2_UNICODE
+%}
+
 %define PKMN_PYTHON_INIT
     %include <swig_exceptions.i>
     SWIG_CATCH_DEFAULT
