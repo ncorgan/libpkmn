@@ -4,23 +4,22 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_QT5_LOCATIONLISTCOMBOBOX_HPP
-#define PKMN_QT5_LOCATIONLISTCOMBOBOX_HPP
+#ifndef PKMN_QT_GAMELISTCOMBOBOX_HPP
+#define PKMN_QT_GAMELISTCOMBOBOX_HPP
 
 #include <pkmn/config.hpp>
 
 #include <QComboBox>
-#include <QString>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
-    class PKMN_API LocationListComboBox: public QComboBox {
+    class PKMN_API GameListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
-            LocationListComboBox(
-                const QString &game,
-                bool wholeGeneration,
+            GameListComboBox(
+                int generation,
+                bool includePrevious,
                 QWidget* parent
             );
 
@@ -31,4 +30,4 @@ namespace pkmn { namespace qt5 {
 
 }}
 
-#endif /* PKMN_QT5_LOCATIONLISTCOMBOBOX_HPP */
+#endif /* PKMN_QT_GAMELISTCOMBOBOX_HPP */

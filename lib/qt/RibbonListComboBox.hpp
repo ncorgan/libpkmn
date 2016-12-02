@@ -4,22 +4,21 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_QT5_GAMELISTCOMBOBOX_HPP
-#define PKMN_QT5_GAMELISTCOMBOBOX_HPP
+#ifndef PKMN_QT_RIBBONLISTCOMBOBOX_HPP
+#define PKMN_QT_RIBBONLISTCOMBOBOX_HPP
 
 #include <pkmn/config.hpp>
 
 #include <QComboBox>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
-    class PKMN_API GameListComboBox: public QComboBox {
+    class PKMN_API RibbonListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
-            GameListComboBox(
+            RibbonListComboBox(
                 int generation,
-                bool includePrevious,
                 QWidget* parent
             );
 
@@ -30,4 +29,4 @@ namespace pkmn { namespace qt5 {
 
 }}
 
-#endif /* PKMN_QT5_GAMELISTCOMBOBOX_HPP */
+#endif /* PKMN_QT_RIBBONLISTCOMBOBOX_HPP */

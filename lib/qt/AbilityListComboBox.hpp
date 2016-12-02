@@ -4,22 +4,21 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_QT5_ITEMLISTCOMBOBOX_HPP
-#define PKMN_QT5_ITEMLISTCOMBOBOX_HPP
+#ifndef PKMN_QT_ABILITYLISTCOMBOBOX_HPP
+#define PKMN_QT_ABILITYLISTCOMBOBOX_HPP
 
 #include <pkmn/config.hpp>
 
 #include <QComboBox>
-#include <QString>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
-    class PKMN_API ItemListComboBox: public QComboBox {
+    class PKMN_API AbilityListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
-            ItemListComboBox(
-                const QString &game,
+            AbilityListComboBox(
+                int generation,
                 QWidget* parent
             );
 
@@ -30,4 +29,4 @@ namespace pkmn { namespace qt5 {
 
 }}
 
-#endif /* PKMN_QT5_ITEMLISTCOMBOBOX_HPP */
+#endif /* PKMN_QT_ABILITYLISTCOMBOBOX_HPP */

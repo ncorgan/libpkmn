@@ -5,11 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/qt5/TypeListComboBox.hpp>
+#include <pkmn/qt/TypeListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
     TypeListComboBox::TypeListComboBox(
         const QString &game,
@@ -29,4 +29,4 @@ namespace pkmn { namespace qt5 {
 }}
 
 // Generated at build time
-#include "../include/pkmn/qt5/moc_TypeListComboBox.cpp"
+#include "../include/pkmn/qt/moc_TypeListComboBox.cpp"

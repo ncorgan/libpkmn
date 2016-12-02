@@ -36,7 +36,7 @@ ADD_SUBDIRECTORY(utils)
 #
 # Configuration for Qt5 support
 #
-IF(PKMN_ENABLE_QT5)
+IF(PKMN_ENABLE_QT)
     CMAKE_POLICY(SET CMP0043 NEW)
 
     INCLUDE_DIRECTORIES(
@@ -46,14 +46,14 @@ IF(PKMN_ENABLE_QT5)
         ${Qt5Widgets_LIBRARIES}
     )
 
-    ADD_SUBDIRECTORY(qt5)
-ENDIF(PKMN_ENABLE_QT5)
+    ADD_SUBDIRECTORY(qt)
+ENDIF(PKMN_ENABLE_QT)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
     ${pkmn_database_sources}
     ${pkmn_pksav_sources}
-    ${pkmn_qt5_sources} # Will be empty without Qt5 support
+    ${pkmn_qt_sources} # Will be empty without Qt support
     ${pkmn_utils_sources}
     build_info.cpp
     item_bag_impl.cpp
@@ -102,12 +102,12 @@ SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
 
 #
-# Qt5 post-build stuff
+# Qt post-build stuff
 #
-IF(PKMN_ENABLE_QT5)
+IF(PKMN_ENABLE_QT)
     SET_TARGET_PROPERTIES(pkmn PROPERTIES AUTOMOC ON)
     qt5_use_modules(pkmn Widgets)
-ENDIF(PKMN_ENABLE_QT5)
+ENDIF(PKMN_ENABLE_QT)
 
 INSTALL(
     TARGETS pkmn

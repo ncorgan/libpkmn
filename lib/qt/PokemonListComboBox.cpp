@@ -5,21 +5,23 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/qt5/RibbonListComboBox.hpp>
+#include <pkmn/qt/PokemonListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
-    RibbonListComboBox::RibbonListComboBox(
+    PokemonListComboBox::PokemonListComboBox(
         int generation,
+        bool includePrevious,
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> ribbons = pkmn::database::get_ribbon_list(
-                                               generation
+        std::vector<std::string> pokemon = pkmn::database::get_pokemon_list(
+                                               generation,
+                                               includePrevious
                                            );
-        for(auto iter = ribbons.begin(); iter != ribbons.end(); ++iter) {
+        for(auto iter = pokemon.begin(); iter != pokemon.end(); ++iter) {
             addItem(QString::fromStdString(*iter));
         }
 
@@ -29,4 +31,4 @@ namespace pkmn { namespace qt5 {
 }}
 
 // Generated at build time
-#include "../include/pkmn/qt5/moc_RibbonListComboBox.cpp"
+#include "../include/pkmn/qt/moc_PokemonListComboBox.cpp"

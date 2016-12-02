@@ -4,21 +4,21 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_QT5_RIBBONLISTCOMBOBOX_HPP
-#define PKMN_QT5_RIBBONLISTCOMBOBOX_HPP
+#ifndef PKMN_QT_NATURELISTCOMBOBOX_HPP
+#define PKMN_QT_NATURELISTCOMBOBOX_HPP
 
 #include <pkmn/config.hpp>
 
 #include <QComboBox>
+#include <QString>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
-    class PKMN_API RibbonListComboBox: public QComboBox {
+    class PKMN_API NatureListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
-            RibbonListComboBox(
-                int generation,
+            NatureListComboBox(
                 QWidget* parent
             );
 
@@ -29,4 +29,4 @@ namespace pkmn { namespace qt5 {
 
 }}
 
-#endif /* PKMN_QT5_RIBBONLISTCOMBOBOX_HPP */
+#endif /* PKMN_QT_NATURELISTCOMBOBOX_HPP */

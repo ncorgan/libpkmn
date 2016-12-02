@@ -5,15 +5,15 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "cpp_Qt5WidgetsTest.hpp"
+#include "cpp_qtWidgetsTest.hpp"
 
-#include <pkmn/qt5/AbilityListComboBox.hpp>
-#include <pkmn/qt5/GameListComboBox.hpp>
-#include <pkmn/qt5/ItemListComboBox.hpp>
+#include <pkmn/qt/AbilityListComboBox.hpp>
+#include <pkmn/qt/GameListComboBox.hpp>
+#include <pkmn/qt/ItemListComboBox.hpp>
 
-void Qt5WidgetsTest::testAbilityListComboBox() {
+void qtWidgetsTest::testAbilityListComboBox() {
     try {
-        pkmn::qt5::AbilityListComboBox abilities(6, Q_NULLPTR);
+        pkmn::qt::AbilityListComboBox abilities(6, Q_NULLPTR);
         QCOMPARE(abilities.count(), 191);
 
         abilities.setCurrentIndex(0);
@@ -25,9 +25,9 @@ void Qt5WidgetsTest::testAbilityListComboBox() {
     }
 }
 
-void Qt5WidgetsTest::testGameListComboBox() {
+void qtWidgetsTest::testGameListComboBox() {
     try {
-        pkmn::qt5::GameListComboBox games(6, true, Q_NULLPTR);
+        pkmn::qt::GameListComboBox games(6, true, Q_NULLPTR);
         QCOMPARE(games.count(), 26);
 
         games.setCurrentIndex(0);
@@ -39,9 +39,9 @@ void Qt5WidgetsTest::testGameListComboBox() {
     }
 }
 
-void Qt5WidgetsTest::testItemListComboBox() {
+void qtWidgetsTest::testItemListComboBox() {
     try {
-        pkmn::qt5::ItemListComboBox items(QString("HeartGold"), Q_NULLPTR);
+        pkmn::qt::ItemListComboBox items(QString("HeartGold"), Q_NULLPTR);
         QCOMPARE(items.count(), 513);
 
         items.setCurrentIndex(0);
@@ -53,5 +53,5 @@ void Qt5WidgetsTest::testItemListComboBox() {
     }
 }
 
-QTEST_MAIN(Qt5WidgetsTest)
-#include "moc_cpp_Qt5WidgetsTest.cpp"
+QTEST_MAIN(qtWidgetsTest)
+#include "moc_cpp_qtWidgetsTest.cpp"

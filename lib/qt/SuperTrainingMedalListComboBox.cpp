@@ -5,11 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/qt5/SuperTrainingMedalListComboBox.hpp>
+#include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
 
 #include <pkmn/database/lists.hpp>
 
-namespace pkmn { namespace qt5 {
+namespace pkmn { namespace qt {
 
     SuperTrainingMedalListComboBox::SuperTrainingMedalListComboBox(
         QWidget* parent
@@ -26,4 +26,4 @@ namespace pkmn { namespace qt5 {
 }}
 
 // Generated at build time
-#include "../include/pkmn/qt5/moc_SuperTrainingMedalListComboBox.cpp"
+#include "../include/pkmn/qt/moc_SuperTrainingMedalListComboBox.cpp"
