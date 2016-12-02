@@ -37,13 +37,16 @@ ADD_SUBDIRECTORY(utils)
 # Configuration for Qt5 support
 #
 IF(PKMN_ENABLE_QT)
+    MESSAGE(STATUS "QTx_INCLUDE_DIRS = ${QTx_INCLUDE_DIRS}")
+    MESSAGE(STATUS "QTx_LIBRARIES = ${QTx_LIBRARIES}")
+
     CMAKE_POLICY(SET CMP0043 NEW)
 
     INCLUDE_DIRECTORIES(
-        ${Qt5Widgets_INCLUDE_DIRS}
+        ${QTx_INCLUDE_DIRS}
     )
     LIST(APPEND pkmn_libs
-        ${Qt5Widgets_LIBRARIES}
+        ${QTx_LIBRARIES}
     )
 
     ADD_SUBDIRECTORY(qt)
