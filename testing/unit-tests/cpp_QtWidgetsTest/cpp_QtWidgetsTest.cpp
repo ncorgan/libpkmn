@@ -10,6 +10,14 @@
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
 #include <pkmn/qt/ItemListComboBox.hpp>
+#include <pkmn/qt/LocationListComboBox.hpp>
+#include <pkmn/qt/MoveListComboBox.hpp>
+#include <pkmn/qt/NatureListComboBox.hpp>
+#include <pkmn/qt/PokemonListComboBox.hpp>
+#include <pkmn/qt/RegionListComboBox.hpp>
+#include <pkmn/qt/RibbonListComboBox.hpp>
+#include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
+#include <pkmn/qt/TypeListComboBox.hpp>
 
 void QtWidgetsTest::testAbilityListComboBox() {
     try {
@@ -48,6 +56,107 @@ void QtWidgetsTest::testItemListComboBox() {
         QCOMPARE(items.currentText(), QString("Adamant Orb"));
         items.setCurrentIndex(512);
         QCOMPARE(items.currentText(), QString("Zoom Lens"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testLocationListComboBox() {
+    try {
+        pkmn::qt::LocationListComboBox locations(QString("Emerald"), false, nullptr);
+        QCOMPARE(locations.count(), 106);
+
+        locations.setCurrentIndex(0);
+        QCOMPARE(locations.currentText(), QString("Abandoned Ship"));
+        locations.setCurrentIndex(105);
+        QCOMPARE(locations.currentText(), QString("Victory Road"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testMoveListComboBox() {
+    try {
+        pkmn::qt::MoveListComboBox moves(QString("Red"), nullptr);
+        QCOMPARE(moves.count(), 165);
+
+        moves.setCurrentIndex(0);
+        QCOMPARE(moves.currentText(), QString("Pound"));
+        moves.setCurrentIndex(164);
+        QCOMPARE(moves.currentText(), QString("Struggle"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testNatureListComboBox() {
+    try {
+        pkmn::qt::NatureListComboBox natures(nullptr);
+        QCOMPARE(natures.count(), 25);
+
+        natures.setCurrentIndex(0);
+        QCOMPARE(natures.currentText(), QString("Adamant"));
+        natures.setCurrentIndex(24);
+        QCOMPARE(natures.currentText(), QString("Timid"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testPokemonListComboBox() {
+    try {
+        pkmn::qt::PokemonListComboBox pokemon(1, true, nullptr);
+        QCOMPARE(pokemon.count(), 151);
+
+        pokemon.setCurrentIndex(0);
+        QCOMPARE(pokemon.currentText(), QString("Bulbasaur"));
+        pokemon.setCurrentIndex(150);
+        QCOMPARE(pokemon.currentText(), QString("Mew"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testRegionListComboBox() {
+    try {
+        pkmn::qt::RegionListComboBox regions(nullptr);
+        QCOMPARE(regions.count(), 7);
+
+        regions.setCurrentIndex(0);
+        QCOMPARE(regions.currentText(), QString("Kanto"));
+        regions.setCurrentIndex(6);
+        QCOMPARE(regions.currentText(), QString("Kalos"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testRibbonListComboBox() {
+}
+
+void QtWidgetsTest::testSuperTrainingMedalListComboBox() {
+    try {
+        pkmn::qt::SuperTrainingMedalListComboBox superTrainingMedals(nullptr);
+        QCOMPARE(superTrainingMedals.count(), 30);
+
+        superTrainingMedals.setCurrentIndex(0);
+        QCOMPARE(superTrainingMedals.currentText(), QString("Sp. Atk Level 1"));
+        superTrainingMedals.setCurrentIndex(29);
+        QCOMPARE(superTrainingMedals.currentText(), QString("The Battle for the Best!"));
+    } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testTypeListComboBox() {
+    try {
+        pkmn::qt::TypeListComboBox types(QString("Alpha Sapphire"), nullptr);
+        QCOMPARE(types.count(), 18);
+
+        types.setCurrentIndex(0);
+        QCOMPARE(types.currentText(), QString("Normal"));
+        types.setCurrentIndex(17);
+        QCOMPARE(types.currentText(), QString("Fairy"));
     } catch(const std::exception &e) {
         QFAIL(e.what());
     }

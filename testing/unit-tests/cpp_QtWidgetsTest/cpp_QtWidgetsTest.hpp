@@ -18,6 +18,14 @@ class QtWidgetsTest: public QObject
         void testAbilityListComboBox();
         void testGameListComboBox();
         void testItemListComboBox();
+        void testLocationListComboBox();
+        void testMoveListComboBox();
+        void testNatureListComboBox();
+        void testPokemonListComboBox();
+        void testRegionListComboBox();
+        void testRibbonListComboBox();
+        void testSuperTrainingMedalListComboBox();
+        void testTypeListComboBox();
 };
 
 #endif /* CPP_QTWIDGETSTEST_HPP */
