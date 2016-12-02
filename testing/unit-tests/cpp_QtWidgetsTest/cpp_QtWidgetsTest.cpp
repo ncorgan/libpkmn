@@ -5,13 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "cpp_qtWidgetsTest.hpp"
+#include "cpp_QtWidgetsTest.hpp"
 
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
 #include <pkmn/qt/ItemListComboBox.hpp>
 
-void qtWidgetsTest::testAbilityListComboBox() {
+void QtWidgetsTest::testAbilityListComboBox() {
     try {
         pkmn::qt::AbilityListComboBox abilities(6, Q_NULLPTR);
         QCOMPARE(abilities.count(), 191);
@@ -25,7 +25,7 @@ void qtWidgetsTest::testAbilityListComboBox() {
     }
 }
 
-void qtWidgetsTest::testGameListComboBox() {
+void QtWidgetsTest::testGameListComboBox() {
     try {
         pkmn::qt::GameListComboBox games(6, true, Q_NULLPTR);
         QCOMPARE(games.count(), 26);
@@ -39,7 +39,7 @@ void qtWidgetsTest::testGameListComboBox() {
     }
 }
 
-void qtWidgetsTest::testItemListComboBox() {
+void QtWidgetsTest::testItemListComboBox() {
     try {
         pkmn::qt::ItemListComboBox items(QString("HeartGold"), Q_NULLPTR);
         QCOMPARE(items.count(), 513);
@@ -53,5 +53,5 @@ void qtWidgetsTest::testItemListComboBox() {
     }
 }
 
-QTEST_MAIN(qtWidgetsTest)
-#include "moc_cpp_qtWidgetsTest.cpp"
+QTEST_MAIN(QtWidgetsTest)
+#include "../moc_cpp_QtWidgetsTest.cpp"

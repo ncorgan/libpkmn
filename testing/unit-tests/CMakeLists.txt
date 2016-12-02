@@ -39,7 +39,7 @@ SET(database_entry_test_srcs
 )
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
-IF(PKMN_ENABLE_QT5)
+IF(PKMN_ENABLE_QT)
     CMAKE_POLICY(SET CMP0043 NEW)
 
     LIST(APPEND pkmn_cpp_test_libs
@@ -47,10 +47,9 @@ IF(PKMN_ENABLE_QT5)
         ${Qt5Test_LIBRARIES}
     )
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-    PKMN_ADD_CPP_TEST(cpp_Qt5WidgetsTest cpp_Qt5WidgetsTest/cpp_Qt5WidgetsTest.cpp)
-    SET_TARGET_PROPERTIES(cpp_Qt5WidgetsTest PROPERTIES AUTOMOC ON)
-    qt5_use_modules(cpp_Qt5WidgetsTest Widgets Test)
-ENDIF(PKMN_ENABLE_QT5)
+    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest PROPERTIES AUTOMOC ON)
+ENDIF(PKMN_ENABLE_QT)
 
 #
 # C tests

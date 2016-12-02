@@ -5,12 +5,12 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef CPP_QT5WIDGETSTEST_HPP
-#define CPP_QT5WIDGETSTEST_HPP
+#ifndef CPP_QTWIDGETSTEST_HPP
+#define CPP_QTWIDGETSTEST_HPP
 
 #include <QtTest/QtTest>
 
-class Qt5WidgetsTest: public QObject
+class QtWidgetsTest: public QObject
 {
     Q_OBJECT
 
@@ -20,4 +20,4 @@ class Qt5WidgetsTest: public QObject
         void testItemListComboBox();
 };
 
-#endif /* CPP_QT5WIDGETSTEST_HPP */
+#endif /* CPP_QTWIDGETSTEST_HPP */
