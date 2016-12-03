@@ -32,6 +32,7 @@ SET(pkmn_c_sources
     error.cpp
     item_bag.cpp
     item_list.cpp
+    pokemon.cpp
 )
 
 

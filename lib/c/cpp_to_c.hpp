@@ -12,6 +12,7 @@
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
+#include <pkmn/pokemon.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
@@ -22,6 +23,8 @@
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
+
+#include <boost/thread/mutex.hpp>
 
 #include <cstdlib>
 #include <cstring>
@@ -44,8 +47,15 @@ typedef struct {
     std::string last_error;
 } pkmn_item_list_t;
 
+typedef struct {
+    pkmn::pokemon::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_t;
+
 #define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
+#define PKMN_POKEMON_DECLARED
 
 namespace pkmn {
 
