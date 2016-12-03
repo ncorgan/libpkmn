@@ -22,7 +22,7 @@ else
     [ $? -ne 0 ] && exit 1
     sudo apt-get -y install build-essential cmake clang cppcheck valgrind \
 	                    doxygen libpython-dev python-ply libboost1.55-all-dev \
-			    swig python-pip qt4declarative-dev qt5declarative-dev
+			    swig python-pip libqt4-dev qt5base-dev
     [ $? -ne 0 ] && exit 1
     sudo pip install CppHeaderParser
     [ $? -ne 0 ] && exit 1
