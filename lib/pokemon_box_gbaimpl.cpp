@@ -49,6 +49,12 @@ namespace pkmn {
         _our_mem = true;
     }
 
+    pokemon_box_gbaimpl::~pokemon_box_gbaimpl() {
+        if(_our_mem) {
+            delete NATIVE_RCAST;
+        }
+    }
+
     std::string pokemon_box_gbaimpl::get_name() {
         return _box_name;
     }

@@ -21,6 +21,8 @@ namespace pkmn {
                 int game_id
             );
 
+            virtual ~pokemon_impl() {}
+
             std::string get_species();
 
             std::string get_form();

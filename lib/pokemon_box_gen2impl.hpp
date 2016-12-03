@@ -28,6 +28,8 @@ namespace pkmn {
                 const pksav_gen2_pokemon_box_t &native
             );
 
+            ~pokemon_box_gen2impl();
+
             std::string get_name();
 
             void set_name(

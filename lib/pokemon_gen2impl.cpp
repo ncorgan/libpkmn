@@ -108,6 +108,15 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gen2impl::~pokemon_gen2impl() {
+        if(_our_pc_mem) {
+            delete GEN2_PC_RCAST;
+        }
+        if(_our_party_mem) {
+            delete GEN2_PARTY_RCAST;
+        }
+    }
+
     std::string pokemon_gen2impl::get_nickname() {
         return _nickname;
     }

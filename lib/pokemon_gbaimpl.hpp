@@ -30,6 +30,8 @@ namespace pkmn {
                 int game_id
             );
 
+            ~pokemon_gbaimpl();
+
             std::string get_nickname();
 
             void set_nickname(

@@ -22,6 +22,8 @@ namespace pkmn {
                 int game_id
             );
 
+            virtual ~pokemon_box_impl() {}
+
             std::string get_game();
 
             pkmn::pokemon::sptr get_pokemon(

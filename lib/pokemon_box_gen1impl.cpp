@@ -49,6 +49,12 @@ namespace pkmn {
         _our_mem = true;
     }
 
+    pokemon_box_gen1impl::~pokemon_box_gen1impl() {
+        if(_our_mem) {
+            delete NATIVE_RCAST;
+        }
+    }
+
     std::string pokemon_box_gen1impl::get_name() {
         throw std::runtime_error("Generation I boxes have no names.");
     }

@@ -165,6 +165,15 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gbaimpl::~pokemon_gbaimpl() {
+        if(_our_pc_mem) {
+            delete GBA_PC_RCAST;
+        }
+        if(_our_party_mem) {
+            delete GBA_PARTY_RCAST;
+        }
+    }
+
     std::string pokemon_gbaimpl::get_nickname() {
         char nickname[11];
         pksav_text_from_gba(
