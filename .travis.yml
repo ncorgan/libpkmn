@@ -4,6 +4,10 @@ os:
  - linux
  - osx
 
+env:
+ - DESIRED_QT_VERSION=4
+ - DESIRED_QT_VERSION=5
+
 sudo: required
 dist: trusty
 
