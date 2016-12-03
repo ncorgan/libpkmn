@@ -11,7 +11,7 @@ if "%BITNESS%"=="32" (
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
 )
-set PATH="%PATH%;!CMAKE_PREFIX_PATH!\bin"
+set PATH="%PATH%";"!CMAKE_PREFIX_PATH!\bin"
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
 set PYTHON_PIP_EXE="!PYTHON_ROOT!\Scripts\pip.exe"
