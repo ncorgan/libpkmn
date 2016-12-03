@@ -48,7 +48,7 @@ namespace pkmn {
 
         // TODO: Use PKSav PRNG after refactor merged in
         time_t now = 0;
-        std::srand(std::time(&now));
+        std::srand((unsigned int)std::time(&now));
         GEN2_PC_RCAST->ev_hp   = uint16_t(std::rand());
         GEN2_PC_RCAST->ev_atk  = uint16_t(std::rand());
         GEN2_PC_RCAST->ev_def  = uint16_t(std::rand());

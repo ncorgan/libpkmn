@@ -78,7 +78,7 @@ namespace pkmn {
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
         // TODO: Use PKSav PRNG after refactor merged in
-        std::srand(std::time(0));
+        std::srand((unsigned int)std::time(0));
         GEN1_PC_RCAST->ev_hp   = uint16_t(std::rand());
         GEN1_PC_RCAST->ev_atk  = uint16_t(std::rand());
         GEN1_PC_RCAST->ev_def  = uint16_t(std::rand());

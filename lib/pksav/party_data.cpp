@@ -243,8 +243,8 @@ namespace pksav {
                                      pkmn::calculations::get_modern_stat(
                                          "HP",
                                          int(party_data_out->level),
-                                         base_stats.at("HP"),
                                          1.0f,
+                                         base_stats.at("HP"),
                                          effort->ev_hp,
                                          IV_hp
                                      )
@@ -261,8 +261,8 @@ namespace pksav {
                                   pkmn::calculations::get_modern_stat(
                                       "Attack",
                                       int(party_data_out->level),
-                                      base_stats.at("Attack"),
                                       1.0f,
+                                      base_stats.at("Attack"),
                                       effort->ev_atk,
                                       IV_attack
                                   )
@@ -278,8 +278,8 @@ namespace pksav {
                                   pkmn::calculations::get_modern_stat(
                                       "Defense",
                                       int(party_data_out->level),
-                                      base_stats.at("Defense"),
                                       1.0f,
+                                      base_stats.at("Defense"),
                                       effort->ev_def,
                                       IV_defense
                                   )
@@ -295,8 +295,8 @@ namespace pksav {
                                   pkmn::calculations::get_modern_stat(
                                       "Speed",
                                       int(party_data_out->level),
-                                      base_stats.at("Speed"),
                                       1.0f,
+                                      base_stats.at("Speed"),
                                       effort->ev_spd,
                                       IV_speed
                                   )
@@ -312,8 +312,8 @@ namespace pksav {
                                     pkmn::calculations::get_modern_stat(
                                         "Special Attack",
                                         int(party_data_out->level),
-                                        base_stats.at("Special Attack"),
                                         1.0f,
+                                        base_stats.at("Special Attack"),
                                         effort->ev_spatk,
                                         IV_spatk
                                     )
@@ -329,8 +329,8 @@ namespace pksav {
                                     pkmn::calculations::get_modern_stat(
                                         "Special Defense",
                                         int(party_data_out->level),
-                                        base_stats.at("Special Defense"),
                                         1.0f,
+                                        base_stats.at("Special Defense"),
                                         effort->ev_spdef,
                                         IV_spdef
                                     )
