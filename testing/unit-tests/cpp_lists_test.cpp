@@ -7,7 +7,7 @@
 
 #include <pkmn/database/lists.hpp>
 
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"
 
 #include <algorithm>
 

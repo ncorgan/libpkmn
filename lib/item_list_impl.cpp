@@ -8,6 +8,7 @@
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
+#include "item_list_modernimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -28,16 +29,25 @@ namespace pkmn {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        static BOOST_CONSTEXPR const char* id_query = \
-            "SELECT id FROM libpkmn_item_lists WHERE name=? AND "
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        int item_list_id = 0;
+        int capacity = 0;
+
+        static BOOST_CONSTEXPR const char* id_capacity_query = \
+            "SELECT id,capacity FROM libpkmn_item_lists WHERE name=? AND "
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        int game_id = pkmn::database::game_name_to_id(game);
-        int item_list_id = pkmn::database::query_db_bind2<int, const std::string&, int>(
-                               _db, id_query, name, game_id
-                           );
-        int generation = pkmn::database::game_id_to_generation(game_id);
+        SQLite::Statement stmt((*_db), id_capacity_query);
+        stmt.bind(1, name);
+        stmt.bind(2, game_id);
+        if(stmt.executeStep()) {
+            item_list_id = stmt.getColumn(0);
+            capacity = stmt.getColumn(1);
+        } else {
+            throw std::invalid_argument("Invalid list.");
+        }
 
         switch(generation) {
             case 1:
@@ -94,7 +104,14 @@ namespace pkmn {
                         throw std::runtime_error("Invalid list.");
                 }
 
+            // Technically, this works for everything past this, but
+            // we'll error out until their item_bag implementations
+            // are done.
             case 3:
+                return pkmn::make_shared<item_list_modernimpl>(
+                           item_list_id, game_id, nullptr, capacity, false
+                       );
+
             case 4:
             case 5:
             case 6:
@@ -183,9 +200,9 @@ namespace pkmn {
     const pkmn::item_slot& item_list_impl::at(
         int position
     ) {
-        if(position < 0 or position >= _num_items) {
+        if(position < 0 or position >= _capacity) {
             throw std::out_of_range(
-                      str(boost::format("position: valid range 0-%d") % (_num_items-1))
+                      str(boost::format("position: valid range 0-%d") % (_capacity-1))
                   );
         }
 
@@ -312,15 +329,52 @@ namespace pkmn {
     }
 
     /*
+     * Veekun's database does not distinguish berries from other healing items,
+     * but they go in separate pockets in every game past Generation II, so this
+     * overrides the database query.
+     */
+    BOOST_STATIC_CONSTEXPR int BERRY_LIST_IDS[] = {
+        -1, // None
+        -1, // Red/Blue
+        -1, // Yellow
+        5,  // Gold/Silver
+        10, // Crystal
+        18, // Ruby/Sapphire
+        24, // Emerald
+        30, // FireRed/LeafGreen
+        37, // Diamond/Pearl
+        45, // Platinum
+        53, // HeartGold/SoulSilver
+        60, // Black/White
+        66, // Colosseum
+        73, // XD
+        79, // Black 2/White 2
+        84, // X/Y
+        89  // Omega Ruby/Alpha Sapphire
+    };
+
+    /*
      * TODO: if PC, all items valid except Berry Pouch, TM Case
      */
     const std::vector<std::string>& item_list_impl::get_valid_items() {
         if(_valid_items.size() == 0) {
-            pkmn::database::_get_item_list(
-                _valid_items,
-                ((get_name() == "PC") ? -1 : _item_list_id),
-                _game_id
-            );
+            if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17) {
+                static BOOST_CONSTEXPR const char* berry_list_query = \
+                    "SELECT DISTINCT item_names.name FROM item_names JOIN item_game_indices ON "
+                    "(item_names.item_id=item_game_indices.item_id) WHERE item_game_indices.generation_id=? "
+                    "AND item_names.name LIKE '%Berry'";
+
+                pkmn::database::query_db_list_bind1<std::string, int>(
+                    _db, berry_list_query, _valid_items,
+                    pkmn::database::game_id_to_generation(_game_id)
+                );
+            } else {
+                pkmn::database::_get_item_list(
+                    _valid_items,
+                    ((get_name() == "PC") ? -1 : _item_list_id),
+                    _game_id
+                );
+            }
         }
 
         return _valid_items;

@@ -33,14 +33,10 @@ PKMN_PYTHON_INIT
 %ignore get_native;
 
 // Item List
-%rename(as_list) as_vector;
-%include <pkmn/item_list.hpp>
-PKMN_PYTHON_SPTR(item_list)
-PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);
+%include <python/pkmn_item_list.i>
 
 // Item Bag
-%include <pkmn/item_bag.hpp>
-PKMN_PYTHON_SPTR(item_bag)
+%include <python/pkmn_item_bag.i>
 
 /*
  * Remove access to bases of sptr'd classes, but don't give access to our

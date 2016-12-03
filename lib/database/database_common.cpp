@@ -6,6 +6,7 @@
  */
 
 #include "database_common.hpp"
+#include "../misc_common.hpp"
 
 #include <pkmn/utils/paths.hpp>
 
@@ -19,7 +20,7 @@
 #include <stdexcept>
 #include <string>
 
-#define PKMN_COMPAT_NUM 3
+#define PKMN_COMPAT_NUM 5
 
 namespace pkmn { namespace database {
 
@@ -176,7 +177,7 @@ namespace pkmn { namespace database {
          * Gamecube games have the same item ranges as Ruby/Sapphire for
          * non-Gamecube exclusive items.
          */
-        int version_group_id = pkmn::database::game_is_gamecube(game_id)
+        int version_group_id = game_is_gamecube(game_id)
                                    ? 5
                                    : pkmn::database::game_id_to_version_group(game_id);
 

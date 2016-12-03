@@ -11,9 +11,9 @@
 
 // Only create one main
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
-#include <boost/test/unit_test.hpp>
 
 static const std::pair<std::string, std::string> none_pair("None", "None");
 static const std::map<std::string, int> bad_stat_map_old = boost::assign::map_list_of

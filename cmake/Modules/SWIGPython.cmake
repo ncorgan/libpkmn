@@ -62,6 +62,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
+        ${Boost_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}
         ${SWIG_MODULE_DIR}
@@ -71,6 +72,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     INCLUDE_DIRECTORIES(${SWIG_INCLUDE_DIRS})
 
     SET(SWIG_LIBRARIES
+        ${Boost_LIBRARIES}
         ${SWIG_PYTHON_LIBRARIES}
         ${PYTHON_LIBRARIES}
     )
@@ -87,6 +89,12 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
         ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i
     @ONLY)
 
+    # Copy __init__.py for unit testing
+    CONFIGURE_FILE(
+        ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+        ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
+    @ONLY)
+
     # Set SWIG's C++ flag if specified by the user
     IF(${cplusplus})
         SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i PROPERTIES CPLUSPLUS ON)
@@ -99,9 +107,14 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
     )
-    ADD_DEPENDENCIES(${SWIG_MODULE_${module_name}_REAL_NAME}
-        pkmn_python_docstrings
-    )
+
+    # This is not done in SWIG 3.0.6 because of a docstring bug.
+    # See https://github.com/swig/swig/issues/475
+    IF(NOT "${SWIG_VERSION}" STREQUAL "3.0.6")
+        ADD_DEPENDENCIES(${SWIG_MODULE_${module_name}_REAL_NAME}
+            pkmn_python_docstrings
+        )
+    ENDIF(NOT "${SWIG_VERSION}" STREQUAL "3.0.6")
 
     # Make sure SWIG artifacts are placed in same location on each platform
     # Makes Python unit testing easier

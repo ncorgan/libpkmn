@@ -9,9 +9,9 @@
 
 // Only create one main
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/format.hpp>
-#include <boost/test/unit_test.hpp>
 
 static void _item_entry_none_test(
     const pkmn::database::item_entry &none_entry
@@ -91,6 +91,22 @@ BOOST_AUTO_TEST_CASE(item_entry_wrong_game_test) {
     , std::invalid_argument);
     pkmn::database::item_entry f_disk(
         "F-Disk", "Colosseum"
+    );
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry hm01(
+            "HM01", "Colosseum"
+        )
+    , std::invalid_argument);
+    pkmn::database::item_entry hm01(
+        "HM01", "Ruby"
+    );
+    BOOST_CHECK_THROW(
+        pkmn::database::item_entry claw_fossil(
+            "Claw Fossil", "Colosseum"
+        )
+    , std::invalid_argument);
+    pkmn::database::item_entry claw_fossil(
+        "Claw Fossil", "Ruby"
     );
 
     // Items that didn't make it into later generations

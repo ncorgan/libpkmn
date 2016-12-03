@@ -73,6 +73,18 @@ namespace pkmn { namespace database {
     }
 
     /*
+     * In Generation II, Apricorns were placed in the "Items" pocket instead
+     * of separate storage.
+     */
+    BOOST_STATIC_CONSTEXPR int APRICORN_LIST_IDS[] = {
+        -1, // None
+        -1, // Red/Blue
+        -1, // Yellow
+        5,  // Gold/Silver
+        10, // Crystal
+    };
+
+    /*
      * Veekun's database does not distinguish berries from other healing items,
      * but they go in separate pockets in every game past Generation II, so this
      * overrides the database query.
@@ -95,6 +107,30 @@ namespace pkmn { namespace database {
         79, // Black 2/White 2
         84, // X/Y
         89  // Omega Ruby/Alpha Sapphire
+    };
+
+    /*
+     * The pockets in which Fossils are stored change from version group to
+     * version group, so we'll just override it here.
+     */
+    BOOST_STATIC_CONSTEXPR int FOSSIL_LIST_IDS[] = {
+        -1, // None
+        1, // Red/Blue
+        3, // Yellow
+        7,  // Gold/Silver
+        12, // Crystal
+        19, // Ruby/Sapphire
+        25, // Emerald
+        31, // FireRed/LeafGreen
+        33, // Diamond/Pearl
+        41, // Platinum
+        49, // HeartGold/SoulSilver
+        57, // Black/White
+        -1, // Colosseum (no fossils)
+        -1, // XD (no fossils)
+        62, // Black 2/White 2
+        81, // X/Y
+        86  // Omega Ruby/Alpha Sapphire
     };
 
     item_entry::item_entry(
@@ -137,6 +173,14 @@ namespace pkmn { namespace database {
             std::string name = this->get_name();
             if(name.find("Berry") != std::string::npos) {
                 _item_list_id = BERRY_LIST_IDS[_version_group_id];
+            } else if(_generation == 2 and name.find("Apricorn") != std::string::npos) {
+                _item_list_id = APRICORN_LIST_IDS[_version_group_id];
+            } else if(name.find("Fossil") != std::string::npos) {
+                if(game_is_gamecube(_game_id)) {
+                    throw std::invalid_argument("Gamecube games have no fossils.");
+                } else {
+                    _item_list_id = FOSSIL_LIST_IDS[_version_group_id];
+                }
             } else {
                 _item_list_id = pkmn::database::version_group_id_to_item_list_id(
                                     _item_id, _version_group_id
@@ -181,12 +225,20 @@ namespace pkmn { namespace database {
 
         // Don't allow HMs in Gamecube games
         if(game_is_gamecube(_game_id) and item_id_is_hm(_item_id)) {
-            throw std::invalid_argument("Gamecube games had no HMs.");
+            throw std::invalid_argument("Gamecube games have no HMs.");
         }
 
         // Overrides
         if(item_name.find("Berry") != std::string::npos) {
             _item_list_id = BERRY_LIST_IDS[_version_group_id];
+        } else if(_generation == 2 and item_name.find("Apricorn") != std::string::npos) {
+            _item_list_id = APRICORN_LIST_IDS[_version_group_id];
+        } else if(item_name.find("Fossil") != std::string::npos) {
+            if(game_is_gamecube(_game_id)) {
+                throw std::invalid_argument("Gamecube games have no fossils.");
+            } else {
+                _item_list_id = FOSSIL_LIST_IDS[_version_group_id];
+            }
         } else {
             _item_list_id = pkmn::database::version_group_id_to_item_list_id(
                                 _item_id, _version_group_id
