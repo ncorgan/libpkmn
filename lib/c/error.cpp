@@ -5,6 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4273) // Inconsistent DLL linkage
+#endif
+
 #include "error_internal.hpp"
 
 #include <pkmn-c/error.h>
