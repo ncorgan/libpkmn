@@ -51,7 +51,7 @@ namespace pkmn {
                        );
 
             case 3:
-                if(pkmn::database::game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id)) {
                     throw std::runtime_error("Currently unimplemented.");
                 } else {
                     return pkmn::make_shared<pokemon_gbaimpl>(

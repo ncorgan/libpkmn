@@ -13,6 +13,8 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
+#include "misc_common.hpp"
+
 #include <boost/format.hpp>
 
 #include <stdexcept>
@@ -33,7 +35,7 @@ namespace pkmn {
                 return pkmn::make_shared<pokemon_box_gen2impl>(game_id);
 
             case 3:
-                if(pkmn::database::game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id)) {
                     throw std::runtime_error("Currently unimplemented.");
                 } else {
                     return pkmn::make_shared<pokemon_box_gbaimpl>(game_id);

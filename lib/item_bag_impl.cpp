@@ -8,9 +8,12 @@
 #include "item_bag_impl.hpp"
 #include "item_bag_gen1impl.hpp"
 #include "item_bag_gen2impl.hpp"
+#include "item_bag_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
+
+#include "misc_common.hpp"
 
 #include <boost/config.hpp>
 
@@ -42,6 +45,14 @@ namespace pkmn {
                        );
 
             case 3:
+                if(game_is_gamecube(game_id)) {
+                    throw std::runtime_error("Currently unimplemented.");
+                } else {
+                    return pkmn::make_shared<item_bag_gbaimpl>(
+                               game_id, nullptr
+                           );
+                }
+
             case 4:
             case 5:
             case 6:

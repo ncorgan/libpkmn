@@ -107,7 +107,35 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::add(
         const std::string &name,
-        const int amount
+        int amount
+    ) {
+        if(amount < 1 or amount > 99) {
+            throw std::out_of_range("Valid amount: 1-99");
+        }
+
+        pkmn::database::item_entry item(name, get_game());
+        if(item.get_pocket() != get_name()) {
+            throw std::invalid_argument("This item is not valid for this list.");
+        }
+
+        int item_id = item.get_item_id();
+        int position = -1;
+        if(ITEM_ID_IS_TM(item_id)) {
+            position = item_id - TM01_ID;
+        } else if(ITEM_ID_IS_HM(item_id)) {
+            position = item_id - 347;
+        } else {
+            throw std::invalid_argument("Invalid item.");
+        }
+
+        int new_amount = _item_slots[position].amount + amount;
+        _item_slots[position].amount = std::min<int>(99, new_amount);
+        _to_native(position);
+    }
+
+    void item_list_gen2_tmhmimpl::remove(
+        const std::string &name,
+        int amount
     ) {
         if(amount < 1 or amount > 99) {
             throw std::out_of_range("Valid amount: 1-99");
@@ -128,42 +156,14 @@ namespace pkmn {
             throw std::runtime_error("Invalid item.");
         }
 
-        int new_amount = _item_slots[position].amount + amount;
-        _item_slots[position].amount = std::min<int>(99, new_amount);
-        _to_native(position);
-    }
-
-    void item_list_gen2_tmhmimpl::remove(
-        const std::string &name,
-        const int amount
-    ) {
-        if(amount < 1 or amount > 99) {
-            throw std::runtime_error("Valid amount: 1-99");
-        }
-
-        pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name()) {
-            throw std::runtime_error("This item is not valid for this list.");
-        }
-
-        int item_id = item.get_item_id();
-        int position = -1;
-        if(ITEM_ID_IS_TM(item_id)) {
-            position = item_id - TM01_ID;
-        } else if(ITEM_ID_IS_HM(item_id)) {
-            position = item_id - 347;
-        } else {
-            throw std::runtime_error("Invalid item.");
-        }
-
         int new_amount = _item_slots[position].amount - amount;
         _item_slots[position].amount = std::max<int>(0, new_amount);
         _to_native(position);
     }
 
     void item_list_gen2_tmhmimpl::move(
-        PKMN_UNUSED(const int position1),
-        PKMN_UNUSED(const int position2)
+        PKMN_UNUSED(int position1),
+        PKMN_UNUSED(int position2)
     ) {
         throw std::runtime_error("Cannot move items in this pocket.");
     }

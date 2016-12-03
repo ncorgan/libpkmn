@@ -14,7 +14,6 @@
 #include <boost/format.hpp>
 #include <boost/archive/tmpdir.hpp>
 
-#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
