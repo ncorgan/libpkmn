@@ -6,6 +6,11 @@
  */
 
 #include "c/cpp_to_c.hpp"
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4273) // Inconsistent DLL linkage
+#endif
+
 #include "c/error_internal.hpp"
 
 #include <pkmn.h>
