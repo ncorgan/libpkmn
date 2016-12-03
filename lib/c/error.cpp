@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef _MSC_VER
 #    pragma warning(disable: 4273) // Inconsistent DLL linkage
 #endif
 
