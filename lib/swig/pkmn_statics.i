@@ -17,6 +17,8 @@
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
     #include <pkmn/pokemon.hpp>
+    #include <pkmn/pokemon_box.hpp>
+    #include <pkmn/pokemon_pc.hpp>
 
     #include <pkmn/types/shared_ptr.hpp>
 
@@ -24,6 +26,18 @@
         const std::string &game
     ) {
         return pkmn::item_bag::make(game);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
+        const std::string &game
+    ) {
+        return pkmn::pokemon_box::make(game);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(
+        const std::string &game
+    ) {
+        return pkmn::pokemon_pc::make(game);
     }
 %}
 
@@ -94,3 +108,5 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const s
 #endif
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);
