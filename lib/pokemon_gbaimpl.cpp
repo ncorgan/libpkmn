@@ -67,7 +67,7 @@ namespace pkmn {
         // TODO: language (should be enum in PKSav)
 
         pksav_text_to_gba(
-            LIBPKMN_OT_NAME.c_str(),
+            LIBPKMN_OT_NAME,
             GBA_PC_RCAST->otname,
             8
         );

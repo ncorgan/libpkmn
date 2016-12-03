@@ -29,7 +29,7 @@ namespace pkmntest {
         , std::runtime_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_name(),
-            pkmn::pokemon::LIBPKMN_OT_NAME
+            std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),

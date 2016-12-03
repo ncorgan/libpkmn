@@ -39,7 +39,7 @@ namespace pkmn {
 
             static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
 
-            static const std::string LIBPKMN_OT_NAME;
+            static PKMN_CONSTEXPR const char* LIBPKMN_OT_NAME = "LibPKMN";
 
             virtual std::string get_species() = 0;
 

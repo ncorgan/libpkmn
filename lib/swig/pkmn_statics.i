@@ -50,9 +50,25 @@
             boost::locale::conv::utf_to_utf<char>(game)
         );
     }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon> make_pokemon(
+        const std::wstring &species,
+        const std::wstring &game,
+        const std::wstring &form,
+        int level
+    ) {
+        return pkmn::pokemon::make(
+                   boost::locale::conv::utf_to_utf<char>(species),
+                   boost::locale::conv::utf_to_utf<char>(game),
+                   boost::locale::conv::utf_to_utf<char>(form),
+                   level
+               );
+    }
 %}
 
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const std::wstring& game);
+pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& species, const std::wstring& game,
+                                             const std::wstring& form, int level);
 #else
 %{
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
@@ -73,8 +89,8 @@ pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const
 %}
 
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const std::string& game,
+                                             const std::string& form, int level);
 #endif
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
-pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const std::string& game,
-                                             const std::string& form, int level);
