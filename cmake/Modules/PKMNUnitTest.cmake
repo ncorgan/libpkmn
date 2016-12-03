@@ -44,6 +44,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         IF(WIN32)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${QT_LIBRARY_DIR}"
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"
@@ -72,6 +73,8 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 SET(DY "DY")
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
+                "${Boost_LIBRARY_DIRS}"
+                "${QT_LIBRARY_DIR}"
                 "${PKMN_BINARY_DIR}/lib"
                 "${PKMN_BINARY_DIR}/lib/c"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp"
