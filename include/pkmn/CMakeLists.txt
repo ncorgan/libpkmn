@@ -19,6 +19,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_slot.hpp
         move_slot.hpp
         pokemon.hpp
+        pokemon_box.hpp
     )
 
     INSTALL(

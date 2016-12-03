@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <vector>
 
 namespace pkmn {
 
@@ -130,6 +131,7 @@ namespace pkmn {
             #endif
     };
 
+    typedef std::vector<pokemon::sptr> pokemon_list_t;
 }
 
 #endif /* PKMN_POKEMON_HPP */
