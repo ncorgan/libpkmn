@@ -22,3 +22,4 @@
 
 %include <pkmn/pokemon.hpp>
 PKMN_PYTHON_SPTR(pokemon)
+PKMN_PYTHON_VECTOR(pkmn::pokemon::sptr, pokemon_list)

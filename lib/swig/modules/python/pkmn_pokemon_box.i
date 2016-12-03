@@ -23,3 +23,4 @@
 
 %include <pkmn/pokemon_box.hpp>
 PKMN_PYTHON_SPTR(pokemon_box)
+PKMN_PYTHON_VECTOR(pkmn::pokemon_box::sptr, pokemon_box_list)
