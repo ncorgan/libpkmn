@@ -52,6 +52,8 @@ namespace pkmn {
             #endif
     };
 
+    typedef std::vector<pkmn::pokemon_box::sptr> pokemon_box_list_t;
+
 }
 
 #endif /* PKMN_POKEMON_BOX_HPP */

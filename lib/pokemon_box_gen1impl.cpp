@@ -23,6 +23,7 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pksav_gen1_pokemon_box_t);
         std::memset(_native, 0, sizeof(pksav_gen1_pokemon_box_t));
+        NATIVE_RCAST->species[20] = 0xFF;
         _our_mem = true;
 
         _from_native();
