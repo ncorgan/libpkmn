@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(pkmn_cpp_test_libs
+    ${Boost_LIBRARIES}
     pkmn
     pkmntest
 )

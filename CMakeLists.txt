@@ -43,6 +43,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 SET(BOOST_REQUIRED_COMPONENTS
     filesystem
     locale
+    system
     thread
     unit_test_framework
 )

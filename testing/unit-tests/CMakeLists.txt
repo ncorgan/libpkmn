@@ -69,7 +69,6 @@ IF(PKMN_ENABLE_C)
     PKMN_ADD_CPP_TEST(cpp_to_c_test "${cpp_to_c_test_srcs}")
     TARGET_LINK_LIBRARIES(cpp_to_c_test
         pkmn-c
-        ${Boost_LIBRARIES}
     )
 ENDIF(PKMN_ENABLE_C)
 
