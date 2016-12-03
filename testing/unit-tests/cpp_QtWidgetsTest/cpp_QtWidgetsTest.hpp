@@ -15,6 +15,7 @@ class QtWidgetsTest: public QObject
     Q_OBJECT
 
     private slots:
+        void testGetQtVersion();
         void testAbilityListComboBox();
         void testGameListComboBox();
         void testItemListComboBox();

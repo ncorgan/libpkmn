@@ -7,6 +7,8 @@
 
 #include "cpp_QtWidgetsTest.hpp"
 
+#include <pkmn/build_info.hpp>
+
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
 #include <pkmn/qt/ItemListComboBox.hpp>
@@ -18,6 +20,12 @@
 #include <pkmn/qt/RibbonListComboBox.hpp>
 #include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
 #include <pkmn/qt/TypeListComboBox.hpp>
+
+void QtWidgetsTest::testGetQtVersion() {
+    QString versionFromLibPKMN(pkmn::build_info::get_qt_version().c_str());
+    QString versionFromQt(qVersion());
+    QCOMPARE(versionFromLibPKMN, versionFromQt);
+}
 
 void QtWidgetsTest::testAbilityListComboBox() {
     try {
