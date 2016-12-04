@@ -37,7 +37,7 @@ namespace pkmn {
                 int level
             );
 
-            static PKMN_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
+            static PKMN_CONSTEXPR const uint32_t LIBPKMN_OT_ID = 2105214279;
 
             static PKMN_CONSTEXPR const char* LIBPKMN_OT_NAME = "LibPKMN";
 
