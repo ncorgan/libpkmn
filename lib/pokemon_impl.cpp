@@ -15,6 +15,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include <pksav/common/markings.h>
+
 #include <stdexcept>
 
 namespace pkmn {
@@ -134,6 +136,39 @@ namespace pkmn {
 
     void* pokemon_impl::get_native_party_data() {
         return _native_party;
+    }
+
+    // Shared setters
+
+    #define SET_MARKING(str,mask) \
+        if(marking == str) { \
+            if(value) { \
+                *native |= mask; \
+            } else { \
+                *native &= ~mask; \
+            } \
+        }
+
+    void pokemon_impl::_set_marking(
+        const std::string &marking,
+        bool value,
+        uint8_t* native,
+        bool gen3
+    ) {
+        if(_markings.find(marking) == _markings.end()) {
+            throw std::invalid_argument("Invalid marking.");
+        }
+
+        SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
+        SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);
+        SET_MARKING("Square", PKSAV_MARKING_SQUARE);
+        SET_MARKING("Heart", PKSAV_MARKING_HEART);
+        if(not gen3) {
+            SET_MARKING("Star", PKSAV_MARKING_STAR);
+            SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
+        }
+
+        _update_markings_map();
     }
 
 }

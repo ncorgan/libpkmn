@@ -428,26 +428,16 @@ namespace pkmn {
         _update_stat_map();
     }
 
-    #define GBA_SET_MARKING(str,mask) \
-        if(marking == str) { \
-            if(value) { \
-                GBA_PC_RCAST->markings |= mask; \
-            } else { \
-                GBA_PC_RCAST->markings &= ~mask; \
-            } \
-        }
-
     void pokemon_gbaimpl::set_marking(
         const std::string &marking,
         bool value
     ) {
-        if(_markings.find(marking) != _markings.end()) {
-            _markings[marking] = value;
-        } else {
-            throw std::invalid_argument("Invalid marking.");
-        }
-
-        _update_markings_map();
+        _set_marking(
+            marking,
+            value,
+            &GBA_PC_RCAST->markings,
+            true
+        );
     }
 
     void pokemon_gbaimpl::_calculate_stats() {

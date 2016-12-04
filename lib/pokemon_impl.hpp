@@ -69,6 +69,13 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            void _set_marking(
+                const std::string &marking,
+                bool value,
+                uint8_t* native,
+                bool gen3
+            );
+
             virtual void _update_held_item() = 0;
             virtual void _update_markings_map() = 0;
             virtual void _update_ribbons_map() = 0;
