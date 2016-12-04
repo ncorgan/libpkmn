@@ -64,6 +64,10 @@ namespace pkmn {
             &GEN2_PC_RCAST->caught_data
         );
 
+        // Populate abstractions
+        _update_held_item();
+        _update_EV_map();
+        _update_IV_map();
         set_level(level);
     }
 
@@ -84,6 +88,7 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Populate abstractions
+        _update_held_item();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -102,6 +107,7 @@ namespace pkmn {
         _our_party_mem = false;
 
         // Populate abstractions
+        _update_held_item();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();

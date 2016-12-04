@@ -19,6 +19,7 @@
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
@@ -102,6 +103,12 @@ namespace pkmn {
 
         _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
 
+        // Populate abstractions
+        _update_held_item();
+        _update_markings_map();
+        _update_ribbons_map();
+        _update_EV_map();
+        _update_IV_map();
         set_level(level);
     }
 
@@ -131,6 +138,9 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
+        _update_held_item();
+        _update_markings_map();
+        _update_ribbons_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -158,6 +168,9 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
+        _update_held_item();
+        _update_markings_map();
+        _update_ribbons_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -415,19 +428,26 @@ namespace pkmn {
         _update_stat_map();
     }
 
+    #define GBA_SET_MARKING(str,mask) \
+        if(marking == str) { \
+            if(value) { \
+                GBA_PC_RCAST->markings |= mask; \
+            } else { \
+                GBA_PC_RCAST->markings &= ~mask; \
+            } \
+        }
+
     void pokemon_gbaimpl::set_marking(
         const std::string &marking,
         bool value
     ) {
-        if(_markings.empty()) {
-            _update_markings_map();
-        }
-
         if(_markings.find(marking) != _markings.end()) {
             _markings[marking] = value;
         } else {
             throw std::invalid_argument("Invalid marking.");
         }
+
+        _update_markings_map();
     }
 
     void pokemon_gbaimpl::_calculate_stats() {

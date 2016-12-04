@@ -86,6 +86,10 @@ namespace pkmn {
         GEN1_PC_RCAST->ev_spcl = uint16_t(std::rand());
         GEN1_PC_RCAST->iv_data = uint16_t(std::rand());
 
+        // Populate abstractions
+        _update_EV_map();
+        _update_IV_map();
+        _update_moves(-1);
         set_level(level);
     }
 
