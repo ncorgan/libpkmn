@@ -34,9 +34,10 @@ ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
 #
-# Configuration for Qt5 support
+# Configuration for Qt support
 #
 IF(PKMN_ENABLE_QT)
+    CMAKE_POLICY(SET CMP0020 NEW)
     CMAKE_POLICY(SET CMP0043 NEW)
 
     INCLUDE_DIRECTORIES(

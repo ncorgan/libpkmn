@@ -5,6 +5,10 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+IF(PKMN_ENABLE_QT)
+    CMAKE_POLICY(SET CMP0020 NEW)
+ENDIF(PKMN_ENABLE_QT)
+
 INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
@@ -40,7 +44,6 @@ SET(database_entry_test_srcs
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 IF(PKMN_ENABLE_QT)
-    CMAKE_POLICY(SET CMP0043 NEW)
 
     INCLUDE_DIRECTORIES(
         ${QTx_INCLUDE_DIRS}
