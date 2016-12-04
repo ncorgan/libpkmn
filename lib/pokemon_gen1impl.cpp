@@ -219,7 +219,19 @@ namespace pkmn {
         throw std::runtime_error("There are no abilities in Generation I.");
     }
 
+    void pokemon_gen1impl::set_ability(
+        PKMN_UNUSED(const std::string &ability)
+    ) {
+        throw std::runtime_error("There are no abilities in Generation I.");
+    }
+
     std::string pokemon_gen1impl::get_ball() {
+        throw std::runtime_error("A Pokémon's ball is not recorded in Generation I.");
+    }
+
+    void pokemon_gen1impl::set_ball(
+        PKMN_UNUSED(const std::string &ball)
+    ) {
         throw std::runtime_error("A Pokémon's ball is not recorded in Generation I.");
     }
 
@@ -237,7 +249,19 @@ namespace pkmn {
         throw std::runtime_error("Original game is not recorded in Generation I.");
     }
 
+    void pokemon_gen1impl::set_original_game(
+        PKMN_UNUSED(const std::string &game)
+    ) {
+        throw std::runtime_error("Original game is not recorded in Generation I.");
+    }
+
     uint32_t pokemon_gen1impl::get_personality() {
+        throw std::runtime_error("There is no personality in Generation I.");
+    }
+
+    void pokemon_gen1impl::set_personality(
+        PKMN_UNUSED(uint32_t personality)
+    ) {
         throw std::runtime_error("There is no personality in Generation I.");
     }
 
@@ -301,6 +325,13 @@ namespace pkmn {
 
         _calculate_stats();
         _update_stat_map();
+    }
+
+    void pokemon_gen1impl::set_marking(
+        PKMN_UNUSED(const std::string &marking),
+        PKMN_UNUSED(bool value)
+    ) {
+        throw std::runtime_error("There are no markings in Generation I.");
     }
 
     void pokemon_gen1impl::_calculate_stats() {

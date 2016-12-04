@@ -70,7 +70,15 @@ namespace pkmn {
 
             std::string get_ability();
 
+            void set_ability(
+                const std::string &ability
+            );
+
             std::string get_ball();
+
+            void set_ball(
+                const std::string &ball
+            );
 
             std::string get_location_caught();
 
@@ -80,7 +88,15 @@ namespace pkmn {
 
             std::string get_original_game();
 
+            void set_original_game(
+                const std::string &game
+            );
+
             uint32_t get_personality();
+
+            void set_personality(
+                uint32_t personality
+            );
 
             int get_experience();
 
@@ -92,6 +108,11 @@ namespace pkmn {
 
             void set_level(
                 int level
+            );
+
+            void set_marking(
+                const std::string &marking,
+                bool value
             );
 
         private:

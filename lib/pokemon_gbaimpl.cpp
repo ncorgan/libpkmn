@@ -89,9 +89,8 @@ namespace pkmn {
         _misc->met_location = 0xFF; // Fateful encounter
 
         _misc->origin_info = uint16_t(level);
-        uint16_t game_index = uint16_t(pkmn::database::game_id_to_index(game_id));
-        _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
-        _misc->origin_info |= (12 << PKSAV_GBA_BALL_OFFSET); // Premier Ball
+        set_original_game(pkmn::database::game_id_to_name(game_id));
+        set_ball("Premier Ball");
 
         _misc->iv_egg_ability = uint32_t(std::rand());
         _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
@@ -285,11 +284,46 @@ namespace pkmn {
         }
     }
 
+    void pokemon_gbaimpl::set_ability(
+        const std::string &ability
+    ) {
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if(ability == "None") {
+            throw std::invalid_argument("The ability cannot be set to None.");
+        } else if(ability == abilities.first) {
+            _misc->iv_egg_ability &= ~PKSAV_GBA_ABILITY_MASK;
+        } else if(ability == abilities.second) {
+            _misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
+        } else {
+            std::string error_message;
+            if(abilities.second == "None") {
+                error_message = str(boost::format("ability: valid values \"%s\"")
+                                    % abilities.first.c_str());
+            } else {
+                error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
+                                    % abilities.first.c_str()
+                                    % abilities.second.c_str());
+            }
+
+            throw std::invalid_argument(error_message.c_str());
+        }
+    }
+
     std::string pokemon_gbaimpl::get_ball() {
         uint16_t ball = _misc->origin_info & PKSAV_GBA_BALL_MASK;
         ball >>= PKSAV_GBA_BALL_OFFSET;
 
         return pkmn::database::ball_id_to_name(ball);
+    }
+
+    void pokemon_gbaimpl::set_ball(
+        const std::string &ball
+    ) {
+        _misc->origin_info &= PKSAV_GBA_BALL_MASK;
+        uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
+                                        ball
+                                    ));
+        _misc->origin_info |= (ball_id << PKSAV_GBA_BALL_OFFSET);
     }
 
     std::string pokemon_gbaimpl::get_location_caught() {
@@ -315,12 +349,30 @@ namespace pkmn {
         return pkmn::database::game_index_to_name(original_game);
     }
 
+    void pokemon_gbaimpl::set_original_game(
+        const std::string &game
+    ) {
+        _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
+        uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
+                                           game
+                                       ));
+
+        _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
+    }
+
     uint32_t pokemon_gbaimpl::get_personality() {
         return pksav_littleendian32(GBA_PC_RCAST->personality);
     }
 
+    // TODO: automatically update personality-based stuff
+    void pokemon_gbaimpl::set_personality(
+        uint32_t personality
+    ) {
+        GBA_PC_RCAST->personality = pksav_littleendian32(personality);
+    }
+
     int pokemon_gbaimpl::get_experience() {
-        return int(_growth->exp);
+        return int(pksav_littleendian32(_growth->exp));
     }
 
     void pokemon_gbaimpl::set_experience(
@@ -361,6 +413,21 @@ namespace pkmn {
 
         _calculate_stats();
         _update_stat_map();
+    }
+
+    void pokemon_gbaimpl::set_marking(
+        const std::string &marking,
+        bool value
+    ) {
+        if(_markings.empty()) {
+            _update_markings_map();
+        }
+
+        if(_markings.find(marking) != _markings.end()) {
+            _markings[marking] = value;
+        } else {
+            throw std::invalid_argument("Invalid marking.");
+        }
     }
 
     void pokemon_gbaimpl::_calculate_stats() {

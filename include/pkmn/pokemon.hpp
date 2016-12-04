@@ -89,7 +89,15 @@ namespace pkmn {
 
             virtual std::string get_ability() = 0;
 
+            virtual void set_ability(
+                const std::string &ability
+            ) = 0;
+
             virtual std::string get_ball() = 0;
+
+            virtual void set_ball(
+                const std::string &ball
+            ) = 0;
 
             virtual std::string get_location_caught() = 0;
 
@@ -99,7 +107,15 @@ namespace pkmn {
 
             virtual std::string get_original_game() = 0;
 
+            virtual void set_original_game(
+                const std::string &game
+            ) = 0;
+
             virtual uint32_t get_personality() = 0;
+
+            virtual void set_personality(
+                uint32_t personality
+            ) = 0;
 
             virtual int get_experience() = 0;
 
@@ -114,6 +130,11 @@ namespace pkmn {
             ) = 0;
 
             virtual const std::map<std::string, bool>& get_markings() = 0;
+
+            virtual void set_marking(
+                const std::string &marking,
+                bool value
+            ) = 0;
 
             virtual const std::map<std::string, bool>& get_ribbons() = 0;
 

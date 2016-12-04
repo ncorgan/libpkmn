@@ -204,7 +204,19 @@ namespace pkmn {
         throw std::runtime_error("There are no abilities in Generation II.");
     }
 
+    void pokemon_gen2impl::set_ability(
+        PKMN_UNUSED(const std::string &ability)
+    ) {
+        throw std::runtime_error("There are no abilities in Generation II.");
+    }
+
     std::string pokemon_gen2impl::get_ball() {
+        throw std::runtime_error("A Pokémon's ball is not recorded in Generation II.");
+    }
+
+    void pokemon_gen2impl::set_ball(
+        PKMN_UNUSED(const std::string &ball)
+    ) {
         throw std::runtime_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
@@ -230,7 +242,19 @@ namespace pkmn {
         throw std::runtime_error("Original game is not recorded in Generation II.");
     }
 
+    void pokemon_gen2impl::set_original_game(
+        PKMN_UNUSED(const std::string &game)
+    ) {
+        throw std::runtime_error("Original game is not recorded in Generation II.");
+    }
+
     uint32_t pokemon_gen2impl::get_personality() {
+        throw std::runtime_error("There is no personality in Generation II.");
+    }
+
+    void pokemon_gen2impl::set_personality(
+        PKMN_UNUSED(uint32_t personality)
+    ) {
         throw std::runtime_error("There is no personality in Generation II.");
     }
 
@@ -295,6 +319,13 @@ namespace pkmn {
         _update_stat_map();
     }
 
+    void pokemon_gen2impl::set_marking(
+        PKMN_UNUSED(const std::string &marking),
+        PKMN_UNUSED(bool value)
+    ) {
+        throw std::runtime_error("There are no markings in Generation II.");
+    }
+
     void pokemon_gen2impl::_calculate_stats() {
         pksav::gen2_pc_pokemon_to_party_data(
             _database_entry,
@@ -337,11 +368,11 @@ namespace pkmn {
     }
 
     void pokemon_gen2impl::_update_markings_map() {
-        throw std::runtime_error("There are no markings in Generation I.");
+        throw std::runtime_error("There are no markings in Generation II.");
     }
 
     void pokemon_gen2impl::_update_ribbons_map() {
-        throw std::runtime_error("There are no ribbons in Generation I.");
+        throw std::runtime_error("There are no ribbons in Generation II.");
     }
 
     void pokemon_gen2impl::_update_EV_map() {
