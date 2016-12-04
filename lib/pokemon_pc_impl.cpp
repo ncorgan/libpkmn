@@ -6,6 +6,11 @@
  */
 
 #include "pokemon_pc_impl.hpp"
+#include "pokemon_pc_gen1impl.hpp"
+#include "pokemon_pc_gen2impl.hpp"
+#include "pokemon_pc_gbaimpl.hpp"
+
+#include "misc_common.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -15,6 +20,36 @@
 #include <stdexcept>
 
 namespace pkmn {
+
+    pokemon_pc::sptr pokemon_pc::make(
+        const std::string &game
+    ) {
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        switch(generation) {
+            case 1:
+                return pkmn::make_shared<pokemon_pc_gen1impl>(game_id);
+
+            case 2:
+                return pkmn::make_shared<pokemon_pc_gen2impl>(game_id);
+
+            case 3:
+                if(game_is_gamecube(game_id)) {
+                    throw std::runtime_error("Currently unimplemented.");
+                } else {
+                    return pkmn::make_shared<pokemon_pc_gbaimpl>(game_id);
+                }
+
+            case 4:
+            case 5:
+            case 6:
+                throw std::runtime_error("Currently unimplemented.");
+
+            default:
+                throw std::invalid_argument("Invalid game.");
+        };
+    }
 
     pokemon_pc_impl::pokemon_pc_impl(
         int game_id
