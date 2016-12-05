@@ -15,6 +15,8 @@
 
 #include "misc_common.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <boost/config.hpp>
 
 #include <stdexcept>
@@ -46,7 +48,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw std::runtime_error("Currently unimplemented.");
+                    throw pkmn::unimplemented_error();
                 } else {
                     return pkmn::make_shared<item_bag_gbaimpl>(
                                game_id, nullptr
@@ -56,7 +58,7 @@ namespace pkmn {
             case 4:
             case 5:
             case 6:
-                throw std::runtime_error("Currently unimplemented.");
+                throw pkmn::unimplemented_error();
 
             default:
                 throw std::runtime_error("Invalid game.");

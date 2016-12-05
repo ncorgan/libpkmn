@@ -8,6 +8,7 @@
 #include "../misc_common.hpp"
 #include "../database/database_common.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 
 #include <boost/config.hpp>
@@ -54,16 +55,16 @@ namespace pkmn { namespace calculations {
 
         // Input validation
         if(not pkmn_IV_in_bounds(IV_attack, false)) {
-            throw std::out_of_range("IV_attack: valid range 0-15");
+            throw pkmn::range_error("IV_attack", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_defense, false)) {
-            throw std::out_of_range("IV_defense: valid range 0-15");
+            throw pkmn::range_error("IV_defense", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_speed, false)) {
-            throw std::out_of_range("IV_speed: valid range 0-15");
+            throw pkmn::range_error("IV_speed", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_special, false)) {
-            throw std::out_of_range("IV_special: valid range 0-15");
+            throw pkmn::range_error("IV_special", 0, 15);
         }
 
         uint8_t v = MSB(IV_special);
@@ -114,22 +115,22 @@ namespace pkmn { namespace calculations {
 
         // Input validation
         if(not pkmn_IV_in_bounds(IV_HP, true)) {
-            throw std::out_of_range("IV_HP: valid range 0-31");
+            throw pkmn::range_error("IV_HP", 0, 31);
         }
         if(not pkmn_IV_in_bounds(IV_attack, true)) {
-            throw std::out_of_range("IV_attack: valid range 0-31");
+            throw pkmn::range_error("IV_attack", 0, 31);
         }
         if(not pkmn_IV_in_bounds(IV_defense, true)) {
-            throw std::out_of_range("IV_defense: valid range 0-31");
+            throw pkmn::range_error("IV_defense", 0, 31);
         }
         if(not pkmn_IV_in_bounds(IV_speed, true)) {
-            throw std::out_of_range("IV_speed: valid range 0-31");
+            throw pkmn::range_error("IV_speed", 0, 31);
         }
         if(not pkmn_IV_in_bounds(IV_spatk, true)) {
-            throw std::out_of_range("IV_spatk: valid range 0-31");
+            throw pkmn::range_error("IV_spatk", 0, 31);
         }
         if(not pkmn_IV_in_bounds(IV_spdef, true)) {
-            throw std::out_of_range("IV_spdef: valid range 0-31");
+            throw pkmn::range_error("IV_spdef", 0, 31);
         }
 
         uint8_t a = LSB(IV_HP);

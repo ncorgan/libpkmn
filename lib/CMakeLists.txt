@@ -39,6 +39,7 @@ SET(pkmn_sources
     ${pkmn_pksav_sources}
     ${pkmn_utils_sources}
     build_info.cpp
+    exception.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_bag_gen2impl.cpp

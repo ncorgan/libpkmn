@@ -1031,7 +1031,7 @@ namespace pkmn { namespace database {
                 throw std::invalid_argument("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
             } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
                 throw std::invalid_argument(
-                    str(boost::format("%s can only be in its Normal Forme in Omega Ruby/Alpha Sapphire.")
+                    str(boost::format("%s can only be in its Normal Forme in X/Y.")
                             % form_name.c_str()
                        )
                 );

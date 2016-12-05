@@ -10,12 +10,13 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
+#include <pkmn/exception.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/config.hpp>
-#include <boost/format.hpp>
 
 #include <map>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -47,9 +48,9 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::invalid_argument(
-                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
-                  );
+            std::ostringstream stream;
+            stream << "Invalid SQLite query: \"" << query << "\"";
+            throw pkmn::sqlite_error(stream.str());
         }
     }
 
@@ -64,9 +65,10 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::invalid_argument(
-                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
-                  );
+            std::ostringstream stream;
+            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                   << " * Value 1 = " << bind1;
+            throw pkmn::sqlite_error(stream.str());
         }
     }
 
@@ -83,9 +85,11 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::invalid_argument(
-                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
-                  );
+            std::ostringstream stream;
+            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                   << " * Value 1 = " << bind1 << std::endl
+                   << " * Value 2 = " << bind2;
+            throw pkmn::sqlite_error(stream.str());
         }
     }
 
@@ -104,9 +108,12 @@ namespace pkmn { namespace database {
         if(stmt.executeStep()) {
             return (ret_type)stmt.getColumn(0);
         } else {
-            throw std::invalid_argument(
-                      str(boost::format("Invalid SQLite query: \"%s\")") % query)
-                  );
+            std::ostringstream stream;
+            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                   << " * Value 1 = " << bind1 << std::endl
+                   << " * Value 2 = " << bind2 << std::endl
+                   << " * Value 3 = " << bind3 << std::endl;
+            throw pkmn::sqlite_error(stream.str());
         }
     }
 

@@ -115,7 +115,7 @@ namespace pkmn { namespace database {
             _invalid = false;
         }
         if(_invalid) {
-            throw std::invalid_argument("This item was not in this game.");
+            throw std::invalid_argument("This move was not in this game.");
         }
     }
 

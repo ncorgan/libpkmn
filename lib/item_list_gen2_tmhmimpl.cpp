@@ -9,6 +9,8 @@
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/exception.hpp>
+
 #include <algorithm>
 #include <cstring>
 
@@ -110,7 +112,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
@@ -138,7 +140,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
