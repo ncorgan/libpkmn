@@ -332,6 +332,32 @@ namespace pkmn {
         throw std::runtime_error("There are no markings in Generation II.");
     }
 
+    void pokemon_gen2impl::set_ribbon(
+        PKMN_UNUSED(const std::string &ribbon),
+        PKMN_UNUSED(bool value)
+    ) {
+        throw std::runtime_error("There are no ribbons in Generation II.");
+    }
+
+    void pokemon_gen2impl::set_move(
+        const std::string &move,
+        int index
+    ) {
+        if(index < 0 or index > 3) {
+            throw std::out_of_range("index: valid values 0-3");
+        }
+
+        // This will throw an error if the move is invalid
+        _moves[index].move = pkmn::database::move_entry(
+                                 move,
+                                 get_game()
+                             );
+        _moves[index].pp = _moves[index].move.get_pp(0);
+
+        GEN2_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
+    }
+
     void pokemon_gen2impl::_calculate_stats() {
         pksav::gen2_pc_pokemon_to_party_data(
             _database_entry,

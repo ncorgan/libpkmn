@@ -115,7 +115,23 @@ namespace pkmn {
                 bool value
             );
 
+            void set_ribbon(
+                const std::string &ribbon,
+                bool value
+            );
+
+            void set_move(
+                const std::string &move,
+                int index
+            );
+
         private:
+
+            void _set_contest_ribbon(
+                const std::string &ribbon,
+                bool value
+            );
+
             void _calculate_stats();
 
             void _update_moves(

@@ -11,6 +11,9 @@
 
 #include <boost/noncopyable.hpp>
 
+#include <stdexcept>
+#include <map>
+
 namespace pkmn {
 
     class pokemon_impl: public pokemon, public boost::noncopyable {
@@ -75,6 +78,26 @@ namespace pkmn {
                 uint8_t* native,
                 bool gen3
             );
+
+            template <typename native_type, typename mask_type>
+            void _set_ribbon(
+                const std::string &ribbon,
+                bool value,
+                native_type* native,
+                const std::map<std::string, mask_type> &masks
+            ) {
+                if(masks.find(ribbon) == masks.end()) {
+                    throw std::invalid_argument("Invalid ribbon.");
+                }
+
+                if(value) {
+                    *native |= native_type(masks.at(ribbon));
+                } else {
+                    *native &= ~native_type(masks.at(ribbon));
+                }
+
+                _update_ribbons_map();
+            }
 
             virtual void _update_held_item() = 0;
             virtual void _update_markings_map() = 0;

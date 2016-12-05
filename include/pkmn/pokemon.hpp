@@ -138,7 +138,17 @@ namespace pkmn {
 
             virtual const std::map<std::string, bool>& get_ribbons() = 0;
 
+            virtual void set_ribbon(
+                const std::string &ribbon,
+                bool value
+            ) = 0;
+
             virtual const pkmn::move_slots_t& get_moves() = 0;
+
+            virtual void set_move(
+                const std::string &move,
+                int index
+            ) = 0;
 
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
