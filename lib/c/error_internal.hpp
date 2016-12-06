@@ -10,6 +10,8 @@
 
 #include <pkmn-c/error.h>
 
+#include <pkmn/exception.hpp>
+
 #include <stdexcept>
 #include <string>
 
@@ -23,6 +25,18 @@ void pkmn_set_error(
         __VA_ARGS__ ; \
         pkmn_set_error("None"); \
         return PKMN_ERROR_NONE; \
+    } catch(const pkmn::pksav_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_PKSAV_ERROR; \
+    } catch(const pkmn::sqlite_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_SQLITE_ERROR; \
+    } catch(const pkmn::range_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_RANGE_ERROR; \
+    } catch(const pkmn::unimplemented_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_INVALID_ARGUMENT; \
@@ -40,7 +54,7 @@ void pkmn_set_error(
         return PKMN_ERROR_LOGIC_ERROR; \
     } catch(const std::range_error &e) { \
         pkmn_set_error(e.what()); \
-        return PKMN_ERROR_RANGE_ERROR; \
+        return PKMN_ERROR_STD_RANGE_ERROR; \
     } catch(const std::overflow_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_OVERFLOW_ERROR; \
@@ -66,6 +80,22 @@ void pkmn_set_error(
         pkmn_set_error("None"); \
         h->last_error = "None"; \
         return PKMN_ERROR_NONE; \
+    } catch(const pkmn::pksav_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_PKSAV_ERROR; \
+    } catch(const pkmn::sqlite_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_SQLITE_ERROR; \
+    } catch(const pkmn::range_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_RANGE_ERROR; \
+    } catch(const pkmn::unimplemented_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
