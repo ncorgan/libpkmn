@@ -177,6 +177,42 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gbaimpl::pokemon_gbaimpl(
+        const pksav_gba_pc_pokemon_t &pc,
+        int game_id
+    ): pokemon_impl(
+           pksav_littleendian16(pc.blocks.growth.species),
+           game_id
+       )
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        *GBA_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        pksav::gba_pc_pokemon_to_party_data(
+            _database_entry,
+            reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
+            reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+        );
+        _our_party_mem = true;
+
+        // Set block pointers
+        _growth  = &GBA_PC_RCAST->blocks.growth;
+        _attacks = &GBA_PC_RCAST->blocks.attacks;
+        _effort  = &GBA_PC_RCAST->blocks.effort;
+        _misc    = &GBA_PC_RCAST->blocks.misc;
+
+        // Populate abstractions
+        _update_held_item();
+        _update_markings_map();
+        _update_ribbons_map();
+        _update_EV_map();
+        _update_IV_map();
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
     pokemon_gbaimpl::~pokemon_gbaimpl() {
         if(_our_pc_mem) {
             delete GBA_PC_RCAST;
