@@ -152,7 +152,7 @@ namespace pkmn {
     ) {
         if(nickname.size() < 1 or nickname.size() > 10) {
             throw std::invalid_argument(
-                      "The nickname length must be 0-10."
+                      "The nickname length must be 1-10."
                   );
         }
 
@@ -168,7 +168,7 @@ namespace pkmn {
     ) {
         if(trainer_name.size() < 1 or trainer_name.size() > 7) {
             throw std::invalid_argument(
-                      "The trainer name name length must be 0-7."
+                      "The trainer name length must be 1-7."
                   );
         }
 

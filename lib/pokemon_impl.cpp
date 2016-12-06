@@ -9,6 +9,7 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_ndsimpl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -63,6 +64,12 @@ namespace pkmn {
 
             case 4:
             case 5:
+                return pkmn::make_shared<pokemon_ndsimpl>(
+                           pokemon_index,
+                           game_id,
+                           level
+                       );
+
             case 6:
                 throw std::runtime_error("Currently unimplemented.");
 
