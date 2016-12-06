@@ -11,6 +11,7 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/common/nds_pokemon.h>
 
 #include <pkmn/database/pokemon_entry.hpp>
 
@@ -32,6 +33,12 @@ namespace pksav {
         const pkmn::database::pokemon_entry &entry,
         const pksav_gba_pc_pokemon_t* pc,
         pksav_gba_pokemon_party_data_t* party_data_out
+    );
+
+    void nds_pc_pokemon_to_party_data(
+        const pkmn::database::pokemon_entry &entry,
+        const pksav_nds_pc_pokemon_t* pc,
+        pksav_nds_pokemon_party_data_t* party_data_out
     );
 
 }

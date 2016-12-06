@@ -87,11 +87,11 @@ namespace pkmn {
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(new pksav_nds_pokemon_party_data_t);
-        /*pksav::nds_pc_pokemon_to_party_data(
+        pksav::nds_pc_pokemon_to_party_data(
             _database_entry,
             reinterpret_cast<const pksav_nds_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party)
-        );*/
+        );
         _our_party_mem = true;
 
         // Set _block pointers
@@ -511,11 +511,11 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::_calculate_stats() {
-        /*pksav::nds_pc_pokemon_to_party_data(
+        pksav::nds_pc_pokemon_to_party_data(
             _database_entry,
             reinterpret_cast<const pksav_nds_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party)
-        );*/
+        );
     }
 
     void pokemon_ndsimpl::_update_moves(
