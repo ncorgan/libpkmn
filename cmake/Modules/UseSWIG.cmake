@@ -180,7 +180,7 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
         ${swig_include_dirs}
         -o "${swig_generated_file_fullname}"
         "${swig_source_file_fullname}"
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/fix_${swig_lowercase_language}_files.py --${swig_lowercase_language}-dir=${swig_outdir}
+        COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/fix_${swig_lowercase_language}_files.py --${swig_lowercase_language}-dir=${swig_outdir}
         MAIN_DEPENDENCY "${swig_source_file_fullname}"
         DEPENDS ${SWIG_MODULE_${name}_EXTRA_DEPS}
         COMMENT "Generating files for SWIG module ${name}")
