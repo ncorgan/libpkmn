@@ -96,11 +96,28 @@ namespace pkmn { namespace io {
         size_t filesize = fs::file_size(filepath);
         std::vector<uint8_t> buffer(filesize);
 
-        std::ifstream ifile(filepath.c_str());
+        std::ifstream ifile(filepath.c_str(), std::ios::binary);
         ifile.read((char*)buffer.data(), filesize);
         ifile.close();
 
         return load_3gpkm(buffer);
+    }
+
+    void save_3gpkm(
+        pkmn::pokemon::sptr libpkmn_pokemon,
+        const std::string &filepath
+    ) {
+        int generation = pkmn::database::game_id_to_generation(
+                             libpkmn_pokemon->get_database_entry().get_game_id()
+                         );
+
+        if(generation != 3) {
+            throw std::invalid_argument("Only GBA Pokémon can be saved to .3gpkm files.");
+        }
+
+        std::ofstream ofile(filepath.c_str(), std::ios::binary);
+        ofile.write((char*)libpkmn_pokemon->get_native_pc_data(), sizeof(pksav_gba_pc_pokemon_t));
+        ofile.close();
     }
 
 }}

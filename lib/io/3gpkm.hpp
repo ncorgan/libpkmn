@@ -29,6 +29,11 @@ namespace pkmn { namespace io {
         const std::string &filepath
     );
 
+    void save_3gpkm(
+        pkmn::pokemon::sptr libpkmn_pokemon,
+        const std::string &filepath
+    );
+
 }}
 
 #endif /* PKMN_IO_3GPKM_HPP */
