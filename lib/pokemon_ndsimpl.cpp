@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "misc_common.hpp"
 #include "pokemon_ndsimpl.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
@@ -516,6 +517,54 @@ namespace pkmn {
             reinterpret_cast<const pksav_nds_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party)
         );
+    }
+
+    void pokemon_ndsimpl::set_EV(
+        const std::string &stat,
+        int value
+    ) {
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_EV_in_bounds(value, true)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        if(stat == "HP") {
+            _blockA->ev_hp = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Attack") {
+            _blockA->ev_atk = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Defense") {
+            _blockA->ev_def = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Speed") {
+            _blockA->ev_spd = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Special Attack") {
+            _blockA->ev_spatk = pksav_littleendian16(uint16_t(value));
+        } else {
+            _blockA->ev_spdef = pksav_littleendian16(uint16_t(value));
+        }
+
+        _update_EV_map();
+        _calculate_stats();
+    }
+
+    void pokemon_ndsimpl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, true)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        pksav_set_IV(
+            &_blockB->iv_isegg_isnicknamed,
+            pkmn_stats_to_pksav.at(stat),
+            uint8_t(value)
+        );
+
+        _update_IV_map();
+        _calculate_stats();
     }
 
     void pokemon_ndsimpl::_update_moves(

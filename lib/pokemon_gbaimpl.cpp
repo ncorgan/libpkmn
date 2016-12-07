@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
@@ -557,6 +558,54 @@ namespace pkmn {
         _attacks->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
+    void pokemon_gbaimpl::set_EV(
+        const std::string &stat,
+        int value
+    ) {
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_EV_in_bounds(value, true)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        if(stat == "HP") {
+            _effort->ev_hp = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Attack") {
+            _effort->ev_atk = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Defense") {
+            _effort->ev_def = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Speed") {
+            _effort->ev_spd = pksav_littleendian16(uint16_t(value));
+        } else if(stat == "Special Attack") {
+            _effort->ev_spatk = pksav_littleendian16(uint16_t(value));
+        } else {
+            _effort->ev_spdef = pksav_littleendian16(uint16_t(value));
+        }
+
+        _update_EV_map();
+        _calculate_stats();
+    }
+
+    void pokemon_gbaimpl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, true)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        pksav_set_IV(
+            &_misc->iv_egg_ability,
+            pkmn_stats_to_pksav.at(stat),
+            uint8_t(value)
+        );
+
+        _update_IV_map();
+        _calculate_stats();
+    }
+
     void pokemon_gbaimpl::_set_contest_ribbon(
         const std::string &ribbon,
         bool value
@@ -598,6 +647,8 @@ namespace pkmn {
             reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
         );
+
+        _update_stat_map();
     }
 
     void pokemon_gbaimpl::_update_moves(

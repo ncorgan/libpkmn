@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "misc_common.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "database/index_to_string.hpp"
 
@@ -364,6 +365,56 @@ namespace pkmn {
             reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
         );
+
+        _update_stat_map();
+    }
+
+    void pokemon_gen2impl::set_EV(
+        const std::string &stat,
+        int value
+    ) {
+        // Generation II uses Generation I stats for EV's
+        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_EV_in_bounds(value, false)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        if(stat == "HP") {
+            GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
+        } else if(stat == "Attack") {
+            GEN2_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
+        } else if(stat == "Defense") {
+            GEN2_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
+        } else if(stat == "Speed") {
+            GEN2_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
+        } else {
+            GEN2_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
+        }
+
+        _update_EV_map();
+        _calculate_stats();
+    }
+
+    void pokemon_gen2impl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        // Generation II uses Generation I stats for IV's
+        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, false)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        pksav_set_gb_IV(
+            &GEN2_PC_RCAST->iv_data,
+            pkmn_stats_to_pksav.at(stat),
+            uint8_t(value)
+        );
+
+        _update_IV_map();
+        _calculate_stats();
     }
 
     void pokemon_gen2impl::_update_moves(

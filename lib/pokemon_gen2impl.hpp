@@ -125,6 +125,16 @@ namespace pkmn {
                 int index
             );
 
+            void set_EV(
+                const std::string &stat,
+                int value
+            );
+
+            void set_IV(
+                const std::string &stat,
+                int value
+            );
+
         private:
             void _calculate_stats();
 

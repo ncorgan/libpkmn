@@ -152,7 +152,17 @@ namespace pkmn {
 
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
+            virtual void set_EV(
+                const std::string &stat,
+                int value
+            ) = 0;
+
             virtual const std::map<std::string, int>& get_IVs() = 0;
+
+            virtual void set_IV(
+                const std::string &stat,
+                int value
+            ) = 0;
 
             virtual const std::map<std::string, int>& get_stats() = 0;
 

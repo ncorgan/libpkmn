@@ -9,10 +9,23 @@
 
 #include <pkmn/pokemon.hpp>
 
+#include <pksav/common/stats.h>
+
+#include <boost/assign.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <stdexcept>
 #include <map>
+
+static const std::map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
+    ("HP",              PKSAV_STAT_HP)
+    ("Attack",          PKSAV_STAT_ATTACK)
+    ("Defense",         PKSAV_STAT_DEFENSE)
+    ("Speed",           PKSAV_STAT_SPEED)
+    ("Special",         PKSAV_STAT_SPECIAL)
+    ("Special Attack",  PKSAV_STAT_SPATK)
+    ("Special Defense", PKSAV_STAT_SPDEF)
+;
 
 namespace pkmn {
 
