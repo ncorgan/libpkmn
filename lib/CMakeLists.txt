@@ -30,12 +30,14 @@ SET(pkmn_libs
 ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
     ${pkmn_database_sources}
+    ${pkmn_io_sources}
     ${pkmn_pksav_sources}
     ${pkmn_utils_sources}
     build_info.cpp
