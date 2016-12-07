@@ -16,9 +16,15 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/3gpkm.hpp"
+
 #include <pksav/common/markings.h>
 
+#include <boost/filesystem.hpp>
+
 #include <stdexcept>
+
+namespace fs = boost::filesystem;
 
 namespace pkmn {
 
@@ -75,6 +81,29 @@ namespace pkmn {
 
             default:
                 throw std::runtime_error("Invalid game.");
+        }
+    }
+
+    pokemon::sptr pokemon::from_file(
+        const std::string &filepath
+    ) {
+        // If an extension is given, assume a type. If not, try each.
+        std::string extension = fs::extension(filepath);
+        if(extension == ".3gpkm") {
+            return pkmn::io::load_3gpkm(filepath);
+        } else if(extension == ".pkm") {
+            throw std::runtime_error("Currently unimplemented.");
+        } else if(extension == ".pk6") {
+            throw std::runtime_error("Currently unimplemented.");
+        } else {
+            std::vector<uint8_t> buffer(fs::file_size(filepath));
+            PKMN_UNUSED(int game_id) = 0;
+
+            if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
+                return pkmn::io::load_3gpkm(buffer);
+            } else {
+                throw std::runtime_error("Invalid file.");
+            }
         }
     }
 

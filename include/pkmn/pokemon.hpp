@@ -37,6 +37,10 @@ namespace pkmn {
                 int level
             );
 
+            static sptr from_file(
+                const std::string &filepath
+            );
+
             static PKMN_CONSTEXPR const uint32_t LIBPKMN_OT_ID = 2105214279;
 
             static PKMN_CONSTEXPR const char* LIBPKMN_OT_NAME = "LibPKMN";
