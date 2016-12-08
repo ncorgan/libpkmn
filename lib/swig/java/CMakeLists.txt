@@ -88,7 +88,7 @@ SWIG_BUILD_JAVA_MODULE(pkmn_java         "PKMN"         TRUE)
 SWIG_BUILD_JAVA_MODULE(stl_java          "STL"          TRUE)
 JAVA_BUILD_JAR(
     "PKMN.jar"
-    "buildinfo_java;database_java;env_java;paths_java;pkmn_java;stl_java"
+    "buildinfo_java;calculations_java;database_java;env_java;paths_java;pkmn_java;stl_java"
     "nc"
     "${CMAKE_CURRENT_BINARY_DIR}/Manifest.txt"
 )
