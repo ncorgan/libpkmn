@@ -7,9 +7,9 @@
 
 %include <pkmn_shared_ptr.i>
 
-%include <types/pkmn_std_map.i>
-%include <types/pkmn_std_pair.i>
-%include <types/pkmn_std_vector.i>
+%include <java/pkmn_std_map.i>
+%include <java/pkmn_std_pair.i>
+%include <java/pkmn_std_vector.i>
 
 %define PKMN_JAVA_MAP(cpp_key, cpp_val, java_key, java_val, java_name)
 

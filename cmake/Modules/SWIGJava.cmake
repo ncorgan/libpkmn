@@ -103,7 +103,7 @@ ENDMACRO(SWIG_BUILD_JAVA_MODULE)
 MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
     # Derive depending files from SWIG module names
     FOREACH(module ${swig_modules})
-        LIST(APPEND java_depends "${CMAKE_CURRENT_BINARY_DIR}/${module}JNI.java")
+        LIST(APPEND java_depends ${SWIG_MODULE_${module}_REAL_NAME})
     ENDFOREACH(module ${swig_modules})
 
     # Get info from variables

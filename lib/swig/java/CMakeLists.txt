@@ -54,4 +54,5 @@ SET(SWIG_JAVA_LIBRARIES
 
 SWIG_BUILD_JAVA_MODULE(env_java "Env" TRUE)
 SWIG_BUILD_JAVA_MODULE(paths_java "Paths" TRUE)
-JAVA_BUILD_JAR("PKMN.jar" "Env;Paths" "nc" "")
+SWIG_BUILD_JAVA_MODULE(stl_java "STL" TRUE)
+JAVA_BUILD_JAR("PKMN.jar" "env_java;paths_java;stl_java" "nc" "")

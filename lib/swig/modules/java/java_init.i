@@ -24,5 +24,5 @@
     //%include <pkmn_javadocs.i>
     %include <java_CamelCase.i>
     //%include <java/equality.i>
-    //%include <java/stl_macros.i>
+    %include <java/stl_macros.i>
 %enddef

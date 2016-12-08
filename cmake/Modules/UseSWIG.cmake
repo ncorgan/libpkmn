@@ -238,15 +238,19 @@ MACRO(SWIG_ADD_MODULE name language)
     ${swig_generated_sources}
     ${swig_other_sources}
   )
-  IF(PKMN_CLANG)
+  IF(PKMN_GCC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "-Wno-deprecated-register ${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-strict-aliasing -Werror"
+      )
+  ELSEIF(PKMN_CLANG)
+      SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
+          PROPERTIES COMPILE_FLAGS "-Wno-strict-aliasing -Wno-deprecated-register ${PKMN_CXX_FLAGS}"
       )
   ELSE()
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
           PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
       )
-  ENDIF(PKMN_CLANG)
+  ENDIF(PKMN_GCC)
   ADD_LIBRARY(${SWIG_MODULE_${name}_REAL_NAME}
     MODULE
     ${all_swig_sources}
