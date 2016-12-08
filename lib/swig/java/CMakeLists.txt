@@ -7,6 +7,32 @@
 
 INCLUDE(SWIGJava)
 
+# Generate CamelCase conversions
+FILE(GLOB_RECURSE header_files "${PKMN_SOURCE_DIR}/include/*.hpp")
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py
+    DEPENDS ${header_files}
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/java_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/java_CamelCase.i --java
+    COMMENT "Generating java_CamelCase.i"
+)
+ADD_CUSTOM_TARGET(
+    java_CamelCase_i ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/java_CamelCase.i
+)
+
+# Generate Java docstrings
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_swig_docstrings.py
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/pkmn_javadocs.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_swig_docstrings.py --language=java --include-dir=${PKMN_SOURCE_DIR}/include --output-dir=${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating Javadocs"
+)
+ADD_CUSTOM_TARGET(
+    pkmn_javadocs ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_javadocs.i
+)
+
 #
 # Set variables needed for CMake macros
 #

@@ -80,16 +80,19 @@ MACRO(SWIG_BUILD_JAVA_MODULE swig_source module_name cplusplus)
     SWIG_ADD_MODULE(${swig_source} java ${CMAKE_CURRENT_BINARY_DIR}/${swig_source}.i)
     SWIG_LINK_LIBRARIES(${swig_source} ${SWIG_LIBRARIES})
 
+    # Add dependencies
+    ADD_DEPENDENCIES(${SWIG_MODULE_${swig_source}_REAL_NAME} java_CamelCase_i pkmn_javadocs)
+
     # Install files
     IF(WIN32)
         INSTALL(
-            TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
+            TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
             DESTINATION bin
             COMPONENT Java
         )
     ELSE()
         INSTALL(
-            TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
+            TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
             DESTINATION lib
             COMPONENT Java
         )
