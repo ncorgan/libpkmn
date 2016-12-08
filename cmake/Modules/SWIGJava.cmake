@@ -12,7 +12,8 @@
 #                         the desired location.
 #
 # Parameters:
-#  * module_name:  The module filename, minus the .i extension.
+#  * swig_source:  The SWIG source .i file.
+#  * module_name:  The Java class this module will be part of
 #  * package_name: The name of this module's Java package.
 #  * cplusplus:    TRUE or FALSE, whether or not this is a C++ module.
 #
@@ -37,18 +38,9 @@
 #  * swig_modules: SWIG modules made with SWIG_BUILD_JAVA_MODULE
 #  * package_name: same name passed into SWIG_BUILD_JAVA_MODULE
 #  * manifest_txt (optional): path to Manifest.txt
-#
-# Example (mymodule1.i, mymodule2.i):
-#  * In CMake:
-#        SWIG_BUILD_JAVA_MODULE(mymodule1 nc.MyModule TRUE)
-#        SWIG_BUILD_JAVA_MODULE(mymodule2 nc.MyModule TRUE)
-#        JAVA_BUILD_JAR(MyModule.jar "mymodule1;mymodule2" nc.MyModule "Manifest.txt")
-#
-#  * From Java:
-#        import nc.MyModule.*;
 ########################################################################
 
-MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
+MACRO(SWIG_BUILD_JAVA_MODULE swig_source module_name cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -68,25 +60,25 @@ MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
     )
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package ${package_name} ${SWIG_JAVA_FLAGS})
+    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package "nc.PKMN" ${SWIG_JAVA_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
 
     # Allows CMake variables to be placed in SWIG .i files
     CONFIGURE_FILE(
-        ${SWIG_MODULE_DIR}/${module_name}.i
-        ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i
+        ${SWIG_MODULE_DIR}/${swig_source}.i
+        ${CMAKE_CURRENT_BINARY_DIR}/${swig_source}.i
     @ONLY)
 
     # Set SWIG's C++ flag if specified by the user
     IF(${cplusplus})
-        SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i PROPERTIES CPLUSPLUS ON)
+        SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${swig_source}.i PROPERTIES CPLUSPLUS ON)
     ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
-    SWIG_ADD_MODULE(${module_name} java ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
-    SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
+    SWIG_ADD_MODULE(${swig_source} java ${CMAKE_CURRENT_BINARY_DIR}/${swig_source}.i)
+    SWIG_LINK_LIBRARIES(${swig_source} ${SWIG_LIBRARIES})
 
     # Install files
     IF(WIN32)
@@ -109,7 +101,6 @@ MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
     # Derive depending files from SWIG module names
     FOREACH(module ${swig_modules})
         LIST(APPEND java_depends "${CMAKE_CURRENT_BINARY_DIR}/${module}JNI.java")
-        LIST(APPEND swig_depends "${SWIG_MODULE_${module}_REAL_NAME}")
     ENDFOREACH(module ${swig_modules})
 
     # Get info from variables
