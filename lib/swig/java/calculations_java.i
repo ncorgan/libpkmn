@@ -19,5 +19,7 @@ PKMN_JAVA_INIT("calculations_java")
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
+%include <java/pkmn_calculations_hidden_power.i>
 %include <pkmn/calculations/shininess.hpp>
+%include <java/pkmn_calculations_spinda_spots.i>
 %include <pkmn/calculations/stats.hpp>
