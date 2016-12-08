@@ -7,6 +7,27 @@
 
 INCLUDE(SWIGJava)
 
+# Copy Java files into build directory
+SET(ComboBoxes
+    AbilityListComboBox.java
+    GameListComboBox.java
+    ItemListComboBox.java
+    LocationListComboBox.java
+    MoveListComboBox.java
+    NatureListComboBox.java
+    PokemonListComboBox.java
+    RegionListComboBox.java
+    RibbonListComboBox.java
+    SuperTrainingMedalListComboBox.java
+    TypeListComboBox.java
+)
+FOREACH(combobox ${ComboBoxes})
+    CONFIGURE_FILE(
+        ${CMAKE_CURRENT_SOURCE_DIR}/ComboBoxes/${combobox}
+        ${CMAKE_CURRENT_BINARY_DIR}/${combobox}
+    @ONLY)
+ENDFOREACH(combobox ${ComboBoxes})
+
 # Generate CamelCase conversions
 FILE(GLOB_RECURSE header_files "${PKMN_SOURCE_DIR}/include/*.hpp")
 ADD_CUSTOM_COMMAND(
