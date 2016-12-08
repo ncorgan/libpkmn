@@ -83,5 +83,11 @@ SWIG_BUILD_JAVA_MODULE(buildinfo_java "BuildInfo" TRUE)
 SWIG_BUILD_JAVA_MODULE(database_java  "Database"  TRUE)
 SWIG_BUILD_JAVA_MODULE(env_java       "Env"       TRUE)
 SWIG_BUILD_JAVA_MODULE(paths_java     "Paths"     TRUE)
+SWIG_BUILD_JAVA_MODULE(pkmn_java      "PKMN"      TRUE)
 SWIG_BUILD_JAVA_MODULE(stl_java       "STL"       TRUE)
-JAVA_BUILD_JAR("PKMN.jar" "buildinfo_java;database_java;env_java;paths_java;stl_java" "nc" "${CMAKE_CURRENT_BINARY_DIR}/Manifest.txt")
+JAVA_BUILD_JAR(
+    "PKMN.jar"
+    "buildinfo_java;database_java;env_java;paths_java;pkmn_java;stl_java"
+    "nc"
+    "${CMAKE_CURRENT_BINARY_DIR}/Manifest.txt"
+)
