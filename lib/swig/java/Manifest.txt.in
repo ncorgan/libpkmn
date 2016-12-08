@@ -1,0 +1,8 @@
+Name: nc/PKMN
+Specification-Title: LibPKMN
+Specification-Version: @PKMN_VERSION@
+Specification-Vendor: Nicholas Corgan
+Implementation-Title: nc.PKMN
+Implementation-Version: @PKMN_VERSION@
+Implementation-Vendor: Nicholas Corgan
+

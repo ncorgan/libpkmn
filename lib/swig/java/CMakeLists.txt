@@ -54,6 +54,12 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_javadocs.i
 )
 
+# Configure Manifest.txt
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Manifest.txt.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Manifest.txt
+@ONLY)
+
 #
 # Set variables needed for CMake macros
 #
@@ -78,4 +84,4 @@ SWIG_BUILD_JAVA_MODULE(database_java  "Database"  TRUE)
 SWIG_BUILD_JAVA_MODULE(env_java       "Env"       TRUE)
 SWIG_BUILD_JAVA_MODULE(paths_java     "Paths"     TRUE)
 SWIG_BUILD_JAVA_MODULE(stl_java       "STL"       TRUE)
-JAVA_BUILD_JAR("PKMN.jar" "buildinfo_java;database_java;env_java;paths_java;stl_java" "nc" "")
+JAVA_BUILD_JAR("PKMN.jar" "buildinfo_java;database_java;env_java;paths_java;stl_java" "nc" "${CMAKE_CURRENT_BINARY_DIR}/Manifest.txt")
