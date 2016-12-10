@@ -63,7 +63,7 @@ typedef struct {
 namespace pkmn {
 
     void pkmn_hidden_power_cpp_to_c(
-        const pkmn::calculations::hidden_power_t &hp_cpp,
+        const pkmn::calculations::hidden_power &hp_cpp,
         pkmn_hidden_power_t* hp_c
     );
 

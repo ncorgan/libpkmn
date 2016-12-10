@@ -9,9 +9,7 @@
     #include <pkmn/calculations/hidden_power.hpp>
 %}
 
-%rename(hidden_power) hidden_power_t;
-
-%extend pkmn::calculations::hidden_power_t {
+%extend pkmn::calculations::hidden_power {
     %pythoncode %{
         def __eq__(self, rhs):
             if self is rhs:

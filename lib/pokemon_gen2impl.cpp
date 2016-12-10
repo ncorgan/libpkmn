@@ -12,7 +12,7 @@
 #include "pksav/party_data.hpp"
 
 #include <pksav/common/stats.h>
-#include <pksav/gen2/time_of_day.h>
+#include <pksav/gen2/time.h>
 #include <pksav/math/base256.h>
 #include <pksav/math/endian.h>
 

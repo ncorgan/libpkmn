@@ -45,7 +45,6 @@ namespace pkmn {
         int level
     ): pokemon_impl(pokemon_index, game_id),
        _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
-       _dppt(game_id >= DIAMOND and game_id <= PLATINUM),
        _plat(game_id == PLATINUM),
        _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
     {
@@ -80,7 +79,6 @@ namespace pkmn {
            game_id
        ),
        _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
-       _dppt(game_id >= DIAMOND and game_id <= PLATINUM),
        _plat(game_id == PLATINUM),
        _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
     {
@@ -119,7 +117,6 @@ namespace pkmn {
            game_id
        ),
        _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
-       _dppt(game_id >= DIAMOND and game_id <= PLATINUM),
        _plat(game_id == PLATINUM),
        _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
     {

@@ -150,7 +150,7 @@ namespace pkmn {
             void _update_IV_map();
             void _update_stat_map();
 
-            bool _gen4, _dppt, _plat, _hgss;
+            bool _gen4, _plat, _hgss;
 
             pksav_nds_pokemon_blockA_t* _blockA;
             pksav_nds_pokemon_blockB_t* _blockB;
