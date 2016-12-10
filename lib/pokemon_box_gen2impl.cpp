@@ -93,14 +93,18 @@ namespace pkmn {
                 nickname,
                 10
             );
-            _pokemon_list[i]->set_nickname(nickname);
+            if(std::strlen(nickname) > 0) {
+                _pokemon_list[i]->set_nickname(nickname);
+            }
 
             pksav_text_from_gen2(
                 NATIVE_RCAST->otnames[i],
                 otname,
                 7
             );
-            _pokemon_list[i]->set_trainer_name(otname);
+            if(std::strlen(otname) > 0) {
+                _pokemon_list[i]->set_trainer_name(otname);
+            }
         }
     }
 }
