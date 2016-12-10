@@ -44,7 +44,7 @@ namespace pkmn {
 }
 
 #ifdef PKMN_PLATFORM_WIN32
-#    pragma warning(enable: 4275)
+#    pragma warning(default: 4275)
 #endif
 
 #endif /* PKMN_EXCEPTION_HPP */
