@@ -25,3 +25,37 @@ BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
         "Red"
     );
 }
+
+BOOST_AUTO_TEST_CASE(gen1_blue_pokemon_test) {
+    std::string species = "Charmander";
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      "Blue",
+                                      "",
+                                      30
+                                  );
+
+    pkmntest::gen1_pokemon_test(
+        pokemon,
+        species,
+        "Blue"
+    );
+}
+
+BOOST_AUTO_TEST_CASE(gen1_yellow_pokemon_test) {
+    std::string species = "Charmander";
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      "Yellow",
+                                      "",
+                                      30
+                                  );
+
+    pkmntest::gen1_pokemon_test(
+        pokemon,
+        species,
+        "Yellow"
+    );
+}
