@@ -258,7 +258,6 @@ MACRO(SWIG_ADD_MODULE name language)
   STRING(TOLOWER "${language}" swig_lowercase_language)
   IF (${swig_lowercase_language} STREQUAL "java")
     IF (APPLE)
-        MESSAGE(STATUS "SWIG JAVA APPLE")
         # In java you want:
         #      System.loadLibrary("LIBRARY");
         # then JNI will look for a library whose name is platform dependent, namely
