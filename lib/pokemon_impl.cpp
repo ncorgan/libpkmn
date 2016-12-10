@@ -17,6 +17,7 @@
 #include "database/index_to_string.hpp"
 
 #include "io/3gpkm.hpp"
+#include "io/pkm.hpp"
 
 #include <pksav/common/markings.h>
 
@@ -92,7 +93,7 @@ namespace pkmn {
         if(extension == ".3gpkm") {
             return pkmn::io::load_3gpkm(filepath);
         } else if(extension == ".pkm") {
-            throw std::runtime_error("Currently unimplemented.");
+            return pkmn::io::load_pkm(filepath);
         } else if(extension == ".pk6") {
             throw std::runtime_error("Currently unimplemented.");
         } else {
@@ -101,6 +102,8 @@ namespace pkmn {
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
                 return pkmn::io::load_3gpkm(buffer);
+            } else if(pkmn::io::vector_is_valid_pkm(buffer, &game_id)) {
+                return pkmn::io::load_pkm(buffer);
             } else {
                 throw std::runtime_error("Invalid file.");
             }

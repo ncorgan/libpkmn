@@ -7,4 +7,5 @@
 
 SET(pkmn_io_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/3gpkm.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pkm.cpp
 PARENT_SCOPE)
