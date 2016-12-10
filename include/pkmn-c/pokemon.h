@@ -11,6 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <stdint.h>
@@ -233,6 +234,48 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_marking(
     pkmn_pokemon_handle_t handle,
     const char* marking,
     bool value
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_moves(
+    pkmn_pokemon_handle_t handle,
+    pkmn_move_slots_t* move_slots_out,
+    size_t* list_length_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_move(
+    pkmn_pokemon_handle_t handle,
+    const char* move,
+    int index
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_EV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* EV_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_EV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int EV
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_IV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* IV_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_IV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int IV
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat_name,
+    int* stat_out
 );
 
 #ifdef __cplusplus

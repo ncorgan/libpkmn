@@ -427,3 +427,80 @@ pkmn_error_t pkmn_pokemon_set_marking(
         handle->cpp->set_marking(marking, value);
     )
 }
+
+pkmn_error_t pkmn_pokemon_get_moves(
+    pkmn_pokemon_handle_t handle,
+    pkmn_move_slots_t* move_slots_out,
+    size_t* list_length_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::pkmn_move_slots_cpp_to_c(
+            handle->cpp->get_moves(),
+            move_slots_out,
+            list_length_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_move(
+    pkmn_pokemon_handle_t handle,
+    const char* move,
+    int index
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_move(
+            move,
+            index
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_EV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* EV_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *EV_out = handle->cpp->get_EVs().at(stat);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_EV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int EV
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_EV(stat, EV);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_IV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* IV_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *IV_out = handle->cpp->get_IVs().at(stat);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_IV(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int IV
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_IV(stat, IV);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat_name,
+    int* stat_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *stat_out = handle->cpp->get_stats().at(stat_name);
+    )
+}
