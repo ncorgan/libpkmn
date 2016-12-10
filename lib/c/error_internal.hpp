@@ -28,9 +28,6 @@ void pkmn_set_error(
     } catch(const pkmn::pksav_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_PKSAV_ERROR; \
-    } catch(const pkmn::sqlite_error &e) { \
-        pkmn_set_error(e.what()); \
-        return PKMN_ERROR_SQLITE_ERROR; \
     } catch(const pkmn::range_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_RANGE_ERROR; \
@@ -84,10 +81,6 @@ void pkmn_set_error(
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
         return PKMN_ERROR_PKSAV_ERROR; \
-    } catch(const pkmn::sqlite_error &e) { \
-        pkmn_set_error(e.what()); \
-        h->last_error = e.what(); \
-        return PKMN_ERROR_SQLITE_ERROR; \
     } catch(const pkmn::range_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \

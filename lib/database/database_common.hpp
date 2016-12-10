@@ -50,7 +50,7 @@ namespace pkmn { namespace database {
         } else {
             std::ostringstream stream;
             stream << "Invalid SQLite query: \"" << query << "\"";
-            throw pkmn::sqlite_error(stream.str());
+            throw std::invalid_argument(stream.str());
         }
     }
 
@@ -68,7 +68,7 @@ namespace pkmn { namespace database {
             std::ostringstream stream;
             stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
                    << " * Value 1 = " << bind1;
-            throw pkmn::sqlite_error(stream.str());
+            throw std::invalid_argument(stream.str());
         }
     }
 
@@ -89,7 +89,7 @@ namespace pkmn { namespace database {
             stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
                    << " * Value 1 = " << bind1 << std::endl
                    << " * Value 2 = " << bind2;
-            throw pkmn::sqlite_error(stream.str());
+            throw std::invalid_argument(stream.str());
         }
     }
 
@@ -113,7 +113,7 @@ namespace pkmn { namespace database {
                    << " * Value 1 = " << bind1 << std::endl
                    << " * Value 2 = " << bind2 << std::endl
                    << " * Value 3 = " << bind3 << std::endl;
-            throw pkmn::sqlite_error(stream.str());
+            throw std::invalid_argument(stream.str());
         }
     }
 

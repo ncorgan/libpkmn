@@ -406,7 +406,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database

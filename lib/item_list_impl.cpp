@@ -312,7 +312,7 @@ namespace pkmn {
         if(old_position < 0 or old_position >= _num_items or
            new_position < 0 or new_position >= _num_items)
         {
-            throw std::out_of_range("Cannot move an item outside of the list.");
+            throw std::range_error("Cannot move an item outside of the list.");
         } else if(old_position == new_position) {
             throw std::invalid_argument("Positions cannot match.");
         }

@@ -63,22 +63,22 @@ void test_item_list_out_of_range_error(
                           list,
                           item_name,
                           0
-                      ), PKMN_ERROR_OUT_OF_RANGE);
+                      ), PKMN_ERROR_RANGE_ERROR);
     TEST_ASSERT_EQUAL(pkmn_item_list_add(
                           list,
                           item_name,
                           100
-                      ), PKMN_ERROR_OUT_OF_RANGE);
+                      ), PKMN_ERROR_RANGE_ERROR);
     TEST_ASSERT_EQUAL(pkmn_item_list_remove(
                           list,
                           item_name,
                           0
-                      ), PKMN_ERROR_OUT_OF_RANGE);
+                      ), PKMN_ERROR_RANGE_ERROR);
     TEST_ASSERT_EQUAL(pkmn_item_list_remove(
                           list,
                           item_name,
                           100
-                      ), PKMN_ERROR_OUT_OF_RANGE);
+                      ), PKMN_ERROR_RANGE_ERROR);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
                           list,

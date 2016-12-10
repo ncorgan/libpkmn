@@ -12,6 +12,10 @@
 #include <stdexcept>
 #include <string>
 
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
+#endif
+
 namespace pkmn {
 
     class PKMN_API pksav_error: public std::runtime_error {
@@ -30,14 +34,6 @@ namespace pkmn {
             );
     };
 
-    class sqlite_error: public std::invalid_argument {
-        public:
-            sqlite_error(
-                const std::string &msg
-            ): std::invalid_argument(msg)
-            {}
-    };
-
     class unimplemented_error: public std::runtime_error {
         public:
             unimplemented_error():
@@ -46,5 +42,9 @@ namespace pkmn {
     };
 
 }
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(enable: 4275)
+#endif
 
 #endif /* PKMN_EXCEPTION_HPP */

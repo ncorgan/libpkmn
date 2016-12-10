@@ -118,7 +118,7 @@ namespace pkmn { namespace database {
         stream << "Invalid SQLite query: \"" << main_query << "\"" << std::endl
                << " * Value 1 = " << item_id << std::endl
                << " * Value 2 = " << generation;
-        throw pkmn::sqlite_error(stream.str());
+        throw std::invalid_argument(stream.str());
     }
 
     int item_index_to_id(

@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include "pkmn_boost_unit_test.hpp"
@@ -25,10 +26,10 @@ BOOST_AUTO_TEST_CASE(ability_list_test) {
 
     BOOST_CHECK_THROW(
         abilities2 = pkmn::database::get_ability_list(2);
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         abilities7 = pkmn::database::get_ability_list(7);
-    , std::out_of_range);
+    , pkmn::range_error);
 
     abilities3 = pkmn::database::get_ability_list(3);
     BOOST_CHECK(not string_in_vector(abilities3, "Adaptability"));
@@ -61,10 +62,10 @@ BOOST_AUTO_TEST_CASE(game_list_test) {
      */
     BOOST_CHECK_THROW(
         games0 = pkmn::database::get_game_list(0, true);
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         games7 = pkmn::database::get_game_list(7, true);
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Generation I
@@ -580,10 +581,10 @@ BOOST_AUTO_TEST_CASE(pokemon_list_test) {
 
     BOOST_CHECK_THROW(
         pokemon0 = pkmn::database::get_pokemon_list(0, true);
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         pokemon7 = pkmn::database::get_pokemon_list(7, true);
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Generation I
