@@ -30,6 +30,7 @@
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/move_slot.h>
+#include <pkmn-c/types/pokemon_list.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <pkmn-c/utils/paths.h>

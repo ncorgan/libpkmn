@@ -19,13 +19,6 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
-#include <pkmn-c/types/hidden_power.h>
-#include <pkmn-c/types/int_pair.h>
-#include <pkmn-c/types/item_slot.h>
-#include <pkmn-c/types/levelup_move.h>
-#include <pkmn-c/types/move_slot.h>
-#include <pkmn-c/types/string_types.h>
-
 #include <boost/thread/mutex.hpp>
 
 #include <cstdlib>
@@ -58,6 +51,14 @@ typedef struct {
 #define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
 #define PKMN_POKEMON_DECLARED
+
+#include <pkmn-c/types/hidden_power.h>
+#include <pkmn-c/types/int_pair.h>
+#include <pkmn-c/types/item_slot.h>
+#include <pkmn-c/types/levelup_move.h>
+#include <pkmn-c/types/move_slot.h>
+#include <pkmn-c/types/pokemon_list.h>
+#include <pkmn-c/types/string_types.h>
 
 namespace pkmn {
 
@@ -108,6 +109,12 @@ namespace pkmn {
     void pkmn_pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t &pokemon_entries,
         pkmn_string_list_t* string_list_out,
+        size_t* list_length_out
+    );
+
+    void pkmn_pokemon_list_cpp_to_c(
+        const pkmn::pokemon_list_t &pokemon_list_cpp,
+        pkmn_pokemon_list_t* pokemon_list_c,
         size_t* list_length_out
     );
 
