@@ -29,6 +29,12 @@ static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::ass
                ))
 ;
 
+static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_entries = boost::assign::map_list_of
+    ("Red", pkmn::database::pokemon_entry("None", "Red", ""))
+    ("Blue", pkmn::database::pokemon_entry("None", "Blue", ""))
+    ("Yellow", pkmn::database::pokemon_entry("None", "Yellow", ""))
+;
+
 namespace pkmntest {
 
     static void gen1_pokemon_check_stat_map(
@@ -279,5 +285,54 @@ namespace pkmntest {
             pokemon->get_IVs().at("Attack"),
             12
         );
+    }
+
+    void gen1_pokemon_box_test(
+        pkmn::pokemon_box::sptr pokemon_box,
+        const std::string &game
+    ) {
+        // Check starting values
+        BOOST_CHECK_THROW(
+            pokemon_box->get_name()
+        , std::runtime_error);
+        BOOST_CHECK_EQUAL(
+            pokemon_box->get_game(),
+            game
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon_box->get_capacity(),
+            20
+        );
+
+        const pkmn::pokemon_list_t& as_vector = pokemon_box->as_vector();
+        BOOST_REQUIRE_EQUAL(as_vector.size(), 20);
+        for(auto iter = as_vector.begin(); iter != as_vector.end(); ++iter) {
+            BOOST_CHECK((*iter)->get_database_entry() == none_pokemon_entries.at(game));
+        }
+    }
+
+    void gen1_pokemon_pc_test(
+        pkmn::pokemon_pc::sptr pokemon_pc,
+        const std::string &game
+    ) {
+        // Check starting values
+        BOOST_CHECK_EQUAL(
+            pokemon_pc->get_game(),
+            game
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon_pc->get_num_boxes(),
+            12
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon_pc->get_box_names().size(),
+            12
+        );
+
+        const pkmn::pokemon_box_list_t& as_vector = pokemon_pc->as_vector();
+        BOOST_REQUIRE_EQUAL(as_vector.size(), 12);
+        for(auto iter = as_vector.begin(); iter != as_vector.end(); ++iter) {
+            gen1_pokemon_box_test((*iter), game);
+        }
     }
 }

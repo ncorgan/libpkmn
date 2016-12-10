@@ -10,6 +10,8 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
+#include <pkmn/pokemon_box.hpp>
+#include <pkmn/pokemon_pc.hpp>
 
 namespace pkmntest {
 
@@ -19,7 +21,15 @@ namespace pkmntest {
         const std::string &game
     );
 
-    // TODO: box and PC tests when implemented
+    PKMN_API void gen1_pokemon_box_test(
+        pkmn::pokemon_box::sptr pokemon_box,
+        const std::string &game
+    );
+
+    PKMN_API void gen1_pokemon_pc_test(
+        pkmn::pokemon_pc::sptr pokemon_pc,
+        const std::string &game
+    );
 }
 
 #endif /* GEN1_POKEMON_TESTS_HPP */

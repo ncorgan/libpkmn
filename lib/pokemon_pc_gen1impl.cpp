@@ -96,6 +96,6 @@ namespace pkmn {
     }
 
     void pokemon_pc_gen1impl::_update_box_names() {
-        // noop
+        _box_names.resize(GEN1_NUM_BOXES);
     }
 }
