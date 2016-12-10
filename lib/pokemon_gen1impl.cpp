@@ -424,6 +424,7 @@ namespace pkmn {
     void pokemon_gen1impl::_update_moves(
         int index
     ) {
+        _moves.reserve(4);
         switch(index) {
             case 0:
             case 1:

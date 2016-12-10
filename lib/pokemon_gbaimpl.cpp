@@ -654,6 +654,7 @@ namespace pkmn {
     void pokemon_gbaimpl::_update_moves(
         int index
     ) {
+        _moves.reserve(4);
         switch(index) {
             case 0:
             case 1:
