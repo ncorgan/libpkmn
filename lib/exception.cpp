@@ -13,6 +13,18 @@
 
 namespace pkmn {
 
+    feature_not_in_game_error::feature_not_in_game_error(
+        const std::string &msg
+    ): std::runtime_error(msg) {}
+
+    feature_not_in_game_error::feature_not_in_game_error(
+        const std::string &feature,
+        const std::string &game
+    ): std::runtime_error(
+        str(boost::format("%s not in %s")
+            % feature.c_str() % game.c_str())
+       ) {}
+
     pksav_error::pksav_error(
         int pksav_error_code
     ): std::runtime_error(

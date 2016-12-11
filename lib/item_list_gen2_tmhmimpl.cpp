@@ -167,7 +167,7 @@ namespace pkmn {
         PKMN_UNUSED(int position1),
         PKMN_UNUSED(int position2)
     ) {
-        throw std::runtime_error("Cannot move items in this pocket.");
+        throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
     }
 
     void item_list_gen2_tmhmimpl::_from_native(

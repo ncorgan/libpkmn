@@ -18,6 +18,17 @@
 
 namespace pkmn {
 
+    class PKMN_API feature_not_in_game_error: public std::runtime_error {
+        public:
+            feature_not_in_game_error(
+                const std::string &msg
+            );
+            feature_not_in_game_error(
+                const std::string &feature,
+                const std::string &game
+            );
+    };
+
     class PKMN_API pksav_error: public std::runtime_error {
         public:
             pksav_error(
