@@ -308,6 +308,11 @@ namespace pkmntest {
         BOOST_REQUIRE_EQUAL(as_vector.size(), 20);
         for(auto iter = as_vector.begin(); iter != as_vector.end(); ++iter) {
             BOOST_CHECK((*iter)->get_database_entry() == none_pokemon_entries.at(game));
+            const pkmn::move_slots_t& move_slots = (*iter)->get_moves();
+            BOOST_CHECK_EQUAL(move_slots.size(), 4);
+            for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
+                BOOST_CHECK((*iter) == none_move_slots.at(game));
+            }
         }
     }
 
