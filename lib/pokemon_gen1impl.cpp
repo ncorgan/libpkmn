@@ -9,6 +9,9 @@
 #include "pokemon_gen1impl.hpp"
 
 #include "pksav/party_data.hpp"
+#include "pksav/pksav_common.hpp"
+
+#include <pkmn/exception.hpp>
 
 #include <pksav/common/stats.h>
 #include <pksav/math/base256.h>
@@ -181,7 +184,7 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen1impl::get_trainer_secret_id() {
-        throw std::runtime_error("Generation I has no secret trainer ID.");
+        throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation I");
     }
 
     uint32_t pokemon_gen1impl::get_trainer_id() {
@@ -197,14 +200,14 @@ namespace pkmn {
     void pokemon_gen1impl::set_trainer_secret_id(
         PKMN_UNUSED(uint16_t secret_id)
     ) {
-        throw std::runtime_error("Generation I has no secret trainer ID.");
+        throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation I");
     }
 
     void pokemon_gen1impl::set_trainer_id(
         uint32_t id
     ) {
         if(id > 65535) {
-            throw std::runtime_error("id: valid values 0-65535");
+            throw pkmn::range_error("id", 0, 65535);
         }
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
@@ -217,41 +220,41 @@ namespace pkmn {
     void pokemon_gen1impl::set_trainer_gender(
         PKMN_UNUSED(const std::string &gender)
     ) {
-        throw std::runtime_error("All Generation I trainers are male.");
+        throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
     }
 
     std::string pokemon_gen1impl::get_ability() {
-        throw std::runtime_error("There are no abilities in Generation I.");
+        throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }
 
     void pokemon_gen1impl::set_ability(
         PKMN_UNUSED(const std::string &ability)
     ) {
-        throw std::runtime_error("There are no abilities in Generation I.");
+        throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }
 
     std::string pokemon_gen1impl::get_ball() {
-        throw std::runtime_error("A Pokémon's ball is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
     }
 
     void pokemon_gen1impl::set_ball(
         PKMN_UNUSED(const std::string &ball)
     ) {
-        throw std::runtime_error("A Pokémon's ball is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
     }
 
     std::string pokemon_gen1impl::get_location_caught() {
-        throw std::runtime_error("Location caught is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");
     }
 
     void pokemon_gen1impl::set_location_caught(
         PKMN_UNUSED(const std::string &location)
     ) {
-        throw std::runtime_error("Location caught is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");
     }
 
     std::string pokemon_gen1impl::get_original_game() {
-        throw std::runtime_error("Original game is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation I.");
     }
 
     void pokemon_gen1impl::set_original_game(
@@ -261,22 +264,24 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen1impl::get_personality() {
-        throw std::runtime_error("There is no personality in Generation I.");
+        throw pkmn::feature_not_in_game_error("Personality", "Generation I");
     }
 
     void pokemon_gen1impl::set_personality(
         PKMN_UNUSED(uint32_t personality)
     ) {
-        throw std::runtime_error("There is no personality in Generation I.");
+        throw pkmn::feature_not_in_game_error("Personality", "Generation I");
     }
 
     int pokemon_gen1impl::get_experience() {
         uint32_t ret = 0;
-        pksav_from_base256(
-            GEN1_PC_RCAST->exp,
-            3,
-            &ret
-        );
+        PKSAV_CALL(
+            pksav_from_base256(
+                GEN1_PC_RCAST->exp,
+                3,
+                &ret
+            );
+        )
 
         return int(ret);
     }
@@ -287,18 +292,16 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw std::out_of_range(
-                      str(boost::format(
-                              "experience: valid range 0-%d"
-                          ) % max_experience)
-                  );
+            throw pkmn::range_error("experience", 0, max_experience);
         }
 
-        pksav_to_base256(
-            experience,
-            GEN1_PC_RCAST->exp,
-            3
-        );
+        PKSAV_CALL(
+            pksav_to_base256(
+                experience,
+                GEN1_PC_RCAST->exp,
+                3
+            );
+        )
 
         GEN1_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
         GEN1_PARTY_RCAST->level = GEN1_PC_RCAST->level;
@@ -315,18 +318,18 @@ namespace pkmn {
         int level
     ) {
         if(level < 2 or level > 100) {
-            throw std::out_of_range(
-                      "level: valid range 2-100"
-                  );
+            throw pkmn::range_error("level", 2, 100);
         }
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
-        pksav_to_base256(
-            uint32_t(_database_entry.get_experience_at_level(level)),
-            GEN1_PC_RCAST->exp,
-            3
-        );
+        PKSAV_CALL(
+            pksav_to_base256(
+                uint32_t(_database_entry.get_experience_at_level(level)),
+                GEN1_PC_RCAST->exp,
+                3
+            );
+        )
 
         _calculate_stats();
         _update_stat_map();
@@ -336,14 +339,14 @@ namespace pkmn {
         PKMN_UNUSED(const std::string &marking),
         PKMN_UNUSED(bool value)
     ) {
-        throw std::runtime_error("There are no markings in Generation I.");
+        throw pkmn::feature_not_in_game_error("Markings", "Generation I");
     }
 
     void pokemon_gen1impl::set_ribbon(
         PKMN_UNUSED(const std::string &ribbon),
         PKMN_UNUSED(bool value)
     ) {
-        throw std::runtime_error("There are no ribbons in Generation I.");
+        throw pkmn::feature_not_in_game_error("Ribbons", "Generation I");
     }
 
     void pokemon_gen1impl::set_move(
@@ -351,7 +354,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw std::out_of_range("index: valid values 0-3");
+            throw pkmn::range_error("index", 0, 3);
         }
 
         // This will throw an error if the move is invalid
@@ -401,11 +404,13 @@ namespace pkmn {
             throw std::out_of_range("Invalid stat.");
         }
 
-        pksav_set_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            pkmn_stats_to_pksav.at(stat),
-            uint8_t(value)
-        );
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                pkmn_stats_to_pksav.at(stat),
+                uint8_t(value)
+            );
+        )
 
         _update_IV_map();
         _calculate_stats();
@@ -449,15 +454,15 @@ namespace pkmn {
     }
 
     void pokemon_gen1impl::_update_held_item() {
-        throw std::runtime_error("There are no held items in Generation I.");
+        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
     void pokemon_gen1impl::_update_markings_map() {
-        throw std::runtime_error("There are no markings in Generation I.");
+        throw pkmn::feature_not_in_game_error("Markings", "Generation I");
     }
 
     void pokemon_gen1impl::_update_ribbons_map() {
-        throw std::runtime_error("There are no ribbons in Generation I.");
+        throw pkmn::feature_not_in_game_error("Ribbons", "Generation I");
     }
 
     void pokemon_gen1impl::_update_EV_map() {
@@ -471,39 +476,49 @@ namespace pkmn {
     void pokemon_gen1impl::_update_IV_map() {
         uint8_t IV = 0;
 
-        pksav_get_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            PKSAV_STAT_HP,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
         _IVs["HP"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            PKSAV_STAT_ATTACK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
         _IVs["Attack"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
         _IVs["Defense"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            PKSAV_STAT_SPEED,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
         _IVs["Speed"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN1_PC_RCAST->iv_data,
-            PKSAV_STAT_SPECIAL,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN1_PC_RCAST->iv_data,
+                PKSAV_STAT_SPECIAL,
+                &IV
+            );
+        )
         _IVs["Special"] = int(IV);
     }
 

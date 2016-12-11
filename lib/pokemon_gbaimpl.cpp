@@ -12,6 +12,7 @@
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
+#include "pksav/pksav_common.hpp"
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
@@ -58,21 +59,25 @@ namespace pkmn {
         GBA_PC_RCAST->personality = uint32_t(std::rand());
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(LIBPKMN_OT_ID);
 
-        pksav_text_to_gba(
-            boost::algorithm::to_upper_copy(
-                _database_entry.get_species()
-            ).c_str(),
-            GBA_PC_RCAST->nickname,
-            11
-        );
+        PKSAV_CALL(
+            pksav_text_to_gba(
+                boost::algorithm::to_upper_copy(
+                    _database_entry.get_species()
+                ).c_str(),
+                GBA_PC_RCAST->nickname,
+                11
+            );
+        )
 
         // TODO: language (should be enum in PKSav)
 
-        pksav_text_to_gba(
-            LIBPKMN_OT_NAME,
-            GBA_PC_RCAST->otname,
-            8
-        );
+        PKSAV_CALL(
+            pksav_text_to_gba(
+                LIBPKMN_OT_NAME,
+                GBA_PC_RCAST->otname,
+                8
+            );
+        )
 
         _growth->species = pksav_littleendian16(uint16_t(pokemon_index));
         _growth->exp = pksav_littleendian32(uint32_t(
@@ -90,7 +95,7 @@ namespace pkmn {
 
         _misc->met_location = 0xFF; // Fateful encounter
 
-        _misc->origin_info = uint16_t(level);
+        _misc->origin_info = pksav_littleendian16(uint16_t(level));
         set_original_game(pkmn::database::game_id_to_name(game_id));
         set_ball("Premier Ball");
 
@@ -225,11 +230,13 @@ namespace pkmn {
 
     std::string pokemon_gbaimpl::get_nickname() {
         char nickname[11] = {0};
-        pksav_text_from_gba(
-            GBA_PC_RCAST->nickname,
-            nickname,
-            10
-        );
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                GBA_PC_RCAST->nickname,
+                nickname,
+                10
+            );
+        )
 
         return std::string(nickname);
     }
@@ -243,20 +250,24 @@ namespace pkmn {
                   );
         }
 
-        pksav_text_to_gba(
-            nickname.c_str(),
-            GBA_PC_RCAST->nickname,
-            10
-        );
+        PKSAV_CALL(
+            pksav_text_to_gba(
+                nickname.c_str(),
+                GBA_PC_RCAST->nickname,
+                10
+            );
+        )
     }
 
     std::string pokemon_gbaimpl::get_trainer_name() {
         char otname[8] = {0};
-        pksav_text_from_gba(
-            GBA_PC_RCAST->otname,
-            otname,
-            7
-        );
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                GBA_PC_RCAST->otname,
+                otname,
+                7
+            );
+        )
 
         return std::string(otname);
     }
@@ -270,11 +281,13 @@ namespace pkmn {
                   );
         }
 
-        pksav_text_to_gba(
-            trainer_name.c_str(),
-            GBA_PC_RCAST->otname,
-            7
-        );
+        PKSAV_CALL(
+            pksav_text_to_gba(
+                trainer_name.c_str(),
+                GBA_PC_RCAST->otname,
+                7
+            );
+        )
     }
 
     uint16_t pokemon_gbaimpl::get_trainer_public_id() {
@@ -431,14 +444,10 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw std::out_of_range(
-                      str(boost::format(
-                              "experience: valid range 0-%d"
-                          ) % max_experience)
-                  );
+            throw pkmn::range_error("experience", 0, max_experience);
         }
 
-        _growth->exp = uint32_t(experience);
+        _growth->exp = pksav_littleendian32(uint32_t(experience));
         GBA_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
 
         _calculate_stats();
@@ -453,13 +462,11 @@ namespace pkmn {
         int level
     ) {
         if(level < 1 or level > 100) {
-            throw std::out_of_range(
-                      "level: valid range 1-100"
-                  );
+            throw pkmn::range_error("level", 1, 100);
         }
 
         GBA_PARTY_RCAST->level = uint8_t(level);
-        _growth->exp = uint32_t(_database_entry.get_experience_at_level(level));
+        _growth->exp = pksav_littleendian32(uint32_t(_database_entry.get_experience_at_level(level)));
 
         _calculate_stats();
         _update_stat_map();
@@ -544,7 +551,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw std::out_of_range("index: valid values 0-3");
+            throw pkmn::range_error("index", 0, 3);
         }
 
         // This will throw an error if the move is invalid
@@ -596,11 +603,13 @@ namespace pkmn {
             throw std::out_of_range("Invalid stat.");
         }
 
-        pksav_set_IV(
-            &_misc->iv_egg_ability,
-            pkmn_stats_to_pksav.at(stat),
-            uint8_t(value)
-        );
+        PKSAV_CALL(
+            pksav_set_IV(
+                &_misc->iv_egg_ability,
+                pkmn_stats_to_pksav.at(stat),
+                uint8_t(value)
+            );
+        )
 
         _update_IV_map();
         _calculate_stats();
@@ -753,46 +762,58 @@ namespace pkmn {
     void pokemon_gbaimpl::_update_IV_map() {
         uint8_t IV = 0;
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_HP,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
         _IVs["HP"] = int(IV);
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_ATTACK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
         _IVs["Attack"] = int(IV);
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
         _IVs["Defense"] = int(IV);
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_SPEED,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
         _IVs["Speed"] = int(IV);
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_SPATK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_SPATK,
+                &IV
+            );
+        )
         _IVs["Special Attack"] = int(IV);
 
-        pksav_get_IV(
-            &_misc->iv_egg_ability,
-            PKSAV_STAT_SPDEF,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_misc->iv_egg_ability,
+                PKSAV_STAT_SPDEF,
+                &IV
+            );
+        )
         _IVs["Special Defense"] = int(IV);
     }
 

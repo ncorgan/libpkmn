@@ -12,6 +12,7 @@
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
+#include "pksav/pksav_common.hpp"
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
@@ -94,10 +95,10 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Set _block pointers
-        _blockA  = &NDS_PC_RCAST->blocks.blockA;
+        _blockA = &NDS_PC_RCAST->blocks.blockA;
         _blockB = &NDS_PC_RCAST->blocks.blockB;
-        _blockC  = &NDS_PC_RCAST->blocks.blockC;
-        _blockD    = &NDS_PC_RCAST->blocks.blockD;
+        _blockC = &NDS_PC_RCAST->blocks.blockC;
+        _blockD = &NDS_PC_RCAST->blocks.blockD;
 
         // Populate abstractions
         _update_held_item();
@@ -127,10 +128,10 @@ namespace pkmn {
         _our_party_mem = false;
 
         // Set _block pointers
-        _blockA  = &NDS_PC_RCAST->blocks.blockA;
+        _blockA = &NDS_PC_RCAST->blocks.blockA;
         _blockB = &NDS_PC_RCAST->blocks.blockB;
-        _blockC  = &NDS_PC_RCAST->blocks.blockC;
-        _blockD    = &NDS_PC_RCAST->blocks.blockD;
+        _blockC = &NDS_PC_RCAST->blocks.blockC;
+        _blockD = &NDS_PC_RCAST->blocks.blockD;
 
         // Populate abstractions
         _update_held_item();
@@ -166,10 +167,10 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Set _block pointers
-        _blockA  = &NDS_PC_RCAST->blocks.blockA;
+        _blockA = &NDS_PC_RCAST->blocks.blockA;
         _blockB = &NDS_PC_RCAST->blocks.blockB;
-        _blockC  = &NDS_PC_RCAST->blocks.blockC;
-        _blockD    = &NDS_PC_RCAST->blocks.blockD;
+        _blockC = &NDS_PC_RCAST->blocks.blockC;
+        _blockD = &NDS_PC_RCAST->blocks.blockD;
 
         // Populate abstractions
         _update_held_item();
@@ -193,17 +194,21 @@ namespace pkmn {
     std::string pokemon_ndsimpl::get_nickname() {
         char nickname[11] = {0};
         if(_gen4) {
-            pksav_text_from_gen4(
-                _blockC->nickname,
-                nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen4(
+                    _blockC->nickname,
+                    nickname,
+                    10
+                );
+            )
         } else {
-            pksav_text_from_gen5(
-                _blockC->nickname,
-                nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen5(
+                    _blockC->nickname,
+                    nickname,
+                    10
+                );
+            )
         }
 
         return std::string(nickname);
@@ -220,34 +225,42 @@ namespace pkmn {
         }
 
         if(_gen4) {
-            pksav_text_to_gen4(
-                nickname.c_str(),
-                _blockC->nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_to_gen4(
+                    nickname.c_str(),
+                    _blockC->nickname,
+                    10
+                );
+            )
         } else {
-            pksav_text_to_gen5(
-                nickname.c_str(),
-                _blockC->nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_to_gen5(
+                    nickname.c_str(),
+                    _blockC->nickname,
+                    10
+                );
+            )
         }
     }
 
     std::string pokemon_ndsimpl::get_trainer_name() {
         char otname[8] = {0};
         if(_gen4) {
-            pksav_text_from_gen4(
-                _blockD->otname,
-                otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen4(
+                    _blockD->otname,
+                    otname,
+                    7
+                );
+            )
         } else {
-            pksav_text_from_gen5(
-                _blockD->otname,
-                otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen5(
+                    _blockD->otname,
+                    otname,
+                    7
+                );
+            )
         }
 
         return std::string(otname);
@@ -263,17 +276,21 @@ namespace pkmn {
         }
 
         if(_gen4) {
-            pksav_text_to_gen4(
-                trainer_name.c_str(),
-                _blockD->otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_to_gen4(
+                    trainer_name.c_str(),
+                    _blockD->otname,
+                    7
+                );
+            )
         } else {
-            pksav_text_to_gen5(
-                trainer_name.c_str(),
-                _blockD->otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_to_gen5(
+                    trainer_name.c_str(),
+                    _blockD->otname,
+                    7
+                );
+            )
         }
     }
 
@@ -419,14 +436,10 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw std::out_of_range(
-                      str(boost::format(
-                              "experience: valid range 0-%d"
-                          ) % max_experience)
-                  );
+            throw pkmn::range_error("experience", 0, max_experience);
         }
 
-        _blockA->exp = uint32_t(experience);
+        _blockA->exp = pksav_littleendian32(uint32_t(experience));
         NDS_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
 
         _calculate_stats();
@@ -441,9 +454,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 0 or level > 100) {
-            throw std::out_of_range(
-                      "level: valid range 0-100"
-                  );
+            throw pkmn::range_error("level", 0, 100);
         }
 
         NDS_PARTY_RCAST->level = uint8_t(level);
@@ -533,7 +544,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw std::out_of_range("index: valid values 0-3");
+            throw pkmn::range_error("index", 0, 3);
         }
 
         // This will throw an error if the move is invalid
@@ -705,46 +716,58 @@ namespace pkmn {
     void pokemon_ndsimpl::_update_IV_map() {
         uint8_t IV = 0;
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_HP,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
         _IVs["HP"] = int(IV);
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_ATTACK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
         _IVs["Attack"] = int(IV);
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
         _IVs["Defense"] = int(IV);
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_SPEED,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
         _IVs["Speed"] = int(IV);
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_SPATK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPATK,
+                &IV
+            );
+        )
         _IVs["Special Attack"] = int(IV);
 
-        pksav_get_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            PKSAV_STAT_SPDEF,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_IV(
+                &_blockB->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPDEF,
+                &IV
+            );
+        )
         _IVs["Special Defense"] = int(IV);
     }
 

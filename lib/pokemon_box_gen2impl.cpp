@@ -8,6 +8,8 @@
 #include "pokemon_box_gen2impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
+#include "pksav/pksav_common.hpp"
+
 #include <pksav/gen2/text.h>
 
 #include <cstring>
@@ -66,6 +68,8 @@ namespace pkmn {
         if(name.size() > 8) {
             throw std::invalid_argument("Generation II box names have a maximum length of 8.");
         }
+
+        _box_name = name;
     }
 
     int pokemon_box_gen2impl::get_capacity() {
@@ -88,20 +92,24 @@ namespace pkmn {
                                    _game_id
                                );
 
-            pksav_text_from_gen2(
-                NATIVE_RCAST->nicknames[i],
-                nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen2(
+                    NATIVE_RCAST->nicknames[i],
+                    nickname,
+                    10
+                );
+            )
             if(std::strlen(nickname) > 0) {
                 _pokemon_list[i]->set_nickname(nickname);
             }
 
-            pksav_text_from_gen2(
-                NATIVE_RCAST->otnames[i],
-                otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen2(
+                    NATIVE_RCAST->otnames[i],
+                    otname,
+                    7
+                );
+            )
             if(std::strlen(otname) > 0) {
                 _pokemon_list[i]->set_trainer_name(otname);
             }

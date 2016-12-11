@@ -65,6 +65,8 @@ namespace pkmn {
         if(name.size() > 8) {
             throw std::invalid_argument("Generation II box names have a maximum length of 8.");
         }
+
+        _box_name = name;
     }
 
     int pokemon_box_gbaimpl::get_capacity() {

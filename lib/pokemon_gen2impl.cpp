@@ -10,6 +10,7 @@
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
+#include "pksav/pksav_common.hpp"
 
 #include <pksav/common/stats.h>
 #include <pksav/gen2/time.h>
@@ -60,10 +61,12 @@ namespace pkmn {
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
 
         // TODO: rest of caught_data
-        pksav_gen2_set_caught_data_time_field(
-            &now,
-            &GEN2_PC_RCAST->caught_data
-        );
+        PKSAV_CALL(
+            pksav_gen2_set_caught_data_time_field(
+                &now,
+                &GEN2_PC_RCAST->caught_data
+            );
+        )
 
         // Populate abstractions
         _update_held_item();
@@ -161,7 +164,7 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen2impl::get_trainer_secret_id() {
-        throw std::runtime_error("Generation II has no secret trainer ID.");
+        throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
     uint32_t pokemon_gen2impl::get_trainer_id() {
@@ -177,14 +180,14 @@ namespace pkmn {
     void pokemon_gen2impl::set_trainer_secret_id(
         PKMN_UNUSED(uint16_t secret_id)
     ) {
-        throw std::runtime_error("Generation II has no secret trainer ID.");
+        throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
     void pokemon_gen2impl::set_trainer_id(
         uint32_t id
     ) {
         if(id > 65535) {
-            throw std::runtime_error("id: valid values 0-65535");
+            throw pkmn::range_error("id", 0, 65535);
         }
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
@@ -208,13 +211,13 @@ namespace pkmn {
     }
 
     std::string pokemon_gen2impl::get_ability() {
-        throw std::runtime_error("There are no abilities in Generation II.");
+        throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
     void pokemon_gen2impl::set_ability(
         PKMN_UNUSED(const std::string &ability)
     ) {
-        throw std::runtime_error("There are no abilities in Generation II.");
+        throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }
 
     std::string pokemon_gen2impl::get_ball() {
@@ -256,22 +259,24 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen2impl::get_personality() {
-        throw std::runtime_error("There is no personality in Generation II.");
+        throw pkmn::feature_not_in_game_error("Personality", "Generation II");
     }
 
     void pokemon_gen2impl::set_personality(
         PKMN_UNUSED(uint32_t personality)
     ) {
-        throw std::runtime_error("There is no personality in Generation II.");
+        throw pkmn::feature_not_in_game_error("Personality", "Generation II");
     }
 
     int pokemon_gen2impl::get_experience() {
         uint32_t ret = 0;
-        pksav_from_base256(
-            GEN2_PC_RCAST->exp,
-            3,
-            &ret
-        );
+        PKSAV_CALL(
+            pksav_from_base256(
+                GEN2_PC_RCAST->exp,
+                3,
+                &ret
+            );
+        )
 
         return int(ret);
     }
@@ -282,18 +287,16 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw std::out_of_range(
-                      str(boost::format(
-                              "experience: valid range 0-%d"
-                          ) % max_experience)
-                  );
+            throw pkmn::range_error("experience", 0, max_experience);
         }
 
-        pksav_to_base256(
-            experience,
-            GEN2_PC_RCAST->exp,
-            3
-        );
+        PKSAV_CALL(
+            pksav_to_base256(
+                experience,
+                GEN2_PC_RCAST->exp,
+                3
+            );
+        )
 
         GEN2_PC_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
 
@@ -309,18 +312,18 @@ namespace pkmn {
         int level
     ) {
         if(level < 2 or level > 100) {
-            throw std::out_of_range(
-                      "level: valid range 2-100"
-                  );
+            throw pkmn::range_error("level", 2, 100);
         }
 
         GEN2_PC_RCAST->level = uint8_t(level);
 
-        pksav_to_base256(
-            uint32_t(_database_entry.get_experience_at_level(level)),
-            GEN2_PC_RCAST->exp,
-            3
-        );
+        PKSAV_CALL(
+            pksav_to_base256(
+                uint32_t(_database_entry.get_experience_at_level(level)),
+                GEN2_PC_RCAST->exp,
+                3
+            );
+        )
 
         _calculate_stats();
         _update_stat_map();
@@ -345,7 +348,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw std::out_of_range("index: valid values 0-3");
+            throw pkmn::range_error("index", 0, 3);
         }
 
         // This will throw an error if the move is invalid
@@ -407,11 +410,13 @@ namespace pkmn {
             throw std::out_of_range("Invalid stat.");
         }
 
-        pksav_set_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            pkmn_stats_to_pksav.at(stat),
-            uint8_t(value)
-        );
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                pkmn_stats_to_pksav.at(stat),
+                uint8_t(value)
+            );
+        )
 
         _update_IV_map();
         _calculate_stats();
@@ -470,39 +475,49 @@ namespace pkmn {
     void pokemon_gen2impl::_update_IV_map() {
         uint8_t IV = 0;
 
-        pksav_get_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            PKSAV_STAT_HP,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
         _IVs["HP"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            PKSAV_STAT_ATTACK,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
         _IVs["Attack"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
         _IVs["Defense"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            PKSAV_STAT_SPEED,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
         _IVs["Speed"] = int(IV);
 
-        pksav_get_gb_IV(
-            &GEN2_PC_RCAST->iv_data,
-            PKSAV_STAT_SPECIAL,
-            &IV
-        );
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                &GEN2_PC_RCAST->iv_data,
+                PKSAV_STAT_SPECIAL,
+                &IV
+            );
+        )
         _IVs["Special"] = int(IV);
     }
 

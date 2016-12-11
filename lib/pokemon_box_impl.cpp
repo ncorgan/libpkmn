@@ -15,6 +15,8 @@
 
 #include "misc_common.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <boost/format.hpp>
 
 #include <stdexcept>
@@ -36,7 +38,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw std::runtime_error("Currently unimplemented.");
+                    throw pkmn::unimplemented_error();
                 } else {
                     return pkmn::make_shared<pokemon_box_gbaimpl>(game_id);
                 }
@@ -44,7 +46,7 @@ namespace pkmn {
             case 4:
             case 5:
             case 6:
-                throw std::runtime_error("Currently unimplemented.");
+                throw pkmn::unimplemented_error();
 
             default:
                 throw std::runtime_error("Invalid game.");
@@ -67,10 +69,7 @@ namespace pkmn {
     ) {
         int capacity = get_capacity();
         if(index < 0 or index > (capacity-1)) {
-            throw std::out_of_range(
-                      str(boost::format("index: valid values 0-%d")
-                          % (capacity-1))
-                  );
+            throw pkmn::range_error("index", 0, (capacity-1));
         }
 
         return _pokemon_list.at(index);

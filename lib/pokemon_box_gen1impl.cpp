@@ -8,6 +8,8 @@
 #include "pokemon_box_gen1impl.hpp"
 #include "pokemon_gen1impl.hpp"
 
+#include "pksav/pksav_common.hpp"
+
 #include <pksav/gen1/text.h>
 
 #include <cstring>
@@ -57,13 +59,13 @@ namespace pkmn {
     }
 
     std::string pokemon_box_gen1impl::get_name() {
-        throw std::runtime_error("Generation I boxes have no names.");
+        throw pkmn::feature_not_in_game_error("Box names", "Generation I");
     }
 
     void pokemon_box_gen1impl::set_name(
         PKMN_UNUSED(const std::string &name)
     ) {
-        throw std::runtime_error("Generation I boxes have no names.");
+        throw pkmn::feature_not_in_game_error("Box names", "Generation I");
     }
 
     int pokemon_box_gen1impl::get_capacity() {
@@ -85,20 +87,24 @@ namespace pkmn {
                                    _game_id
                                );
 
-            pksav_text_from_gen1(
-                NATIVE_RCAST->nicknames[i],
-                nickname,
-                10
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen1(
+                    NATIVE_RCAST->nicknames[i],
+                    nickname,
+                    10
+                );
+            )
             if(std::strlen(nickname) > 0) {
                 _pokemon_list[i]->set_nickname(nickname);
             }
 
-            pksav_text_from_gen1(
-                NATIVE_RCAST->otnames[i],
-                otname,
-                7
-            );
+            PKSAV_CALL(
+                pksav_text_from_gen1(
+                    NATIVE_RCAST->otnames[i],
+                    otname,
+                    7
+                );
+            )
             if(std::strlen(otname) > 0) {
                 _pokemon_list[i]->set_trainer_name(otname);
             }

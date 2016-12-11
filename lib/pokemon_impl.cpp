@@ -19,6 +19,8 @@
 #include "io/3gpkm.hpp"
 #include "io/pkm.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <pksav/common/markings.h>
 
 #include <boost/filesystem.hpp>
@@ -60,7 +62,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw std::runtime_error("Currently unimplemented.");
+                    throw pkmn::unimplemented_error();
                 } else {
                     return pkmn::make_shared<pokemon_gbaimpl>(
                                pokemon_index,
@@ -78,7 +80,7 @@ namespace pkmn {
                        );
 
             case 6:
-                throw std::runtime_error("Currently unimplemented.");
+                throw pkmn::unimplemented_error();
 
             default:
                 throw std::runtime_error("Invalid game.");
