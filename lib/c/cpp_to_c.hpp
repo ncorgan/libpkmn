@@ -21,6 +21,8 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include <boost/thread/mutex.hpp>
+
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -34,11 +36,13 @@
 
 typedef struct {
     pkmn::item_bag::sptr cpp;
+    boost::mutex error_mutex;
     std::string last_error;
 } pkmn_item_bag_t;
 
 typedef struct {
     pkmn::item_list::sptr cpp;
+    boost::mutex error_mutex;
     std::string last_error;
 } pkmn_item_list_t;
 

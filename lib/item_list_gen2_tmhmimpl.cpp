@@ -9,6 +9,8 @@
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/exception.hpp>
+
 #include <algorithm>
 #include <cstring>
 
@@ -110,7 +112,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
@@ -138,7 +140,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
@@ -165,7 +167,7 @@ namespace pkmn {
         PKMN_UNUSED(int position1),
         PKMN_UNUSED(int position2)
     ) {
-        throw std::runtime_error("Cannot move items in this pocket.");
+        throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
     }
 
     void item_list_gen2_tmhmimpl::_from_native(

@@ -9,6 +9,7 @@
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/move_entry.hpp>
 
 #include <boost/config.hpp>
@@ -115,7 +116,7 @@ namespace pkmn { namespace database {
             _invalid = false;
         }
         if(_invalid) {
-            throw std::invalid_argument("This item was not in this game.");
+            throw std::invalid_argument("This move was not in this game.");
         }
     }
 
@@ -302,7 +303,7 @@ namespace pkmn { namespace database {
         if(_none or _invalid) {
             return -1;
         } else if(num_pp_ups < 0 or num_pp_ups > 3) {
-            throw std::out_of_range("num_pp_ups: valid range 0-3");
+            throw pkmn::range_error("num_pp_ups", 0, 3);
         }
 
         static BOOST_CONSTEXPR const char* main_query = \

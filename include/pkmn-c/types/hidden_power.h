@@ -24,6 +24,7 @@ static PKMN_INLINE void pkmn_hidden_power_free(
     pkmn_hidden_power_t* hidden_power
 ) {
     free(hidden_power->type);
+    hidden_power->type = NULL;
 }
 
 #ifdef __cplusplus

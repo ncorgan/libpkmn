@@ -53,4 +53,10 @@
 #    define PKMN_PLATFORM_MACOS
 #endif
 
+/***************************************************************************
+ * C++ components
+ ***************************************************************************/
+#cmakedefine PKMN_QT4 1
+#cmakedefine PKMN_QT5 1
+
 #endif /* PKMN_CONFIG_HPP */

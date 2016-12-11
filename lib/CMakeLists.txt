@@ -34,13 +34,32 @@ ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
+#
+# Configuration for Qt support
+#
+IF(PKMN_ENABLE_QT)
+    CMAKE_POLICY(SET CMP0020 NEW)
+    CMAKE_POLICY(SET CMP0043 NEW)
+
+    INCLUDE_DIRECTORIES(
+        ${QTx_INCLUDE_DIRS}
+    )
+    LIST(APPEND pkmn_libs
+        ${QTx_LIBRARIES}
+    )
+
+    ADD_SUBDIRECTORY(qt)
+ENDIF(PKMN_ENABLE_QT)
+
 SET(pkmn_sources
     ${pkmn_calculations_sources}
     ${pkmn_database_sources}
     ${pkmn_io_sources}
     ${pkmn_pksav_sources}
+    ${pkmn_qt_sources} # Will be empty without Qt support
     ${pkmn_utils_sources}
     build_info.cpp
+    exception.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_bag_gen2impl.cpp
@@ -100,6 +119,13 @@ ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
 TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+
+#
+# Qt post-build stuff
+#
+IF(PKMN_ENABLE_QT)
+    SET_TARGET_PROPERTIES(pkmn PROPERTIES AUTOMOC ON)
+ENDIF(PKMN_ENABLE_QT)
 
 INSTALL(
     TARGETS pkmn

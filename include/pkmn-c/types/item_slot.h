@@ -26,6 +26,7 @@ static PKMN_INLINE void pkmn_item_slot_free(
     pkmn_item_slot_t* item_slot
 ) {
     free(item_slot->item);
+    item_slot->item = NULL;
 }
 
 static PKMN_INLINE void pkmn_item_slots_free(

@@ -14,6 +14,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_headers
         build_info.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
+        exception.hpp
         item_bag.hpp
         item_list.hpp
         item_slot.hpp

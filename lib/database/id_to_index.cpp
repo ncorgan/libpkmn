@@ -12,6 +12,8 @@
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
+#include <sstream>
+
 namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
@@ -112,9 +114,11 @@ namespace pkmn { namespace database {
             }
         }
 
-        throw std::invalid_argument(
-                  str(boost::format("Invalid SQLite query: %s") % main_query)
-              );
+        std::ostringstream stream;
+        stream << "Invalid SQLite query: \"" << main_query << "\"" << std::endl
+               << " * Value 1 = " << item_id << std::endl
+               << " * Value 2 = " << generation;
+        throw std::invalid_argument(stream.str());
     }
 
     int item_index_to_id(
