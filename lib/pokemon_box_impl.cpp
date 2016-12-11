@@ -72,14 +72,20 @@ namespace pkmn {
             throw pkmn::range_error("index", 0, (capacity-1));
         }
 
+        POKEMON_BOX_LOCK_OWN_AND_POKEMON_MEMORY_MUTEXES(index);
+
         return _pokemon_list.at(index);
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {
+        POKEMON_BOX_LOCK_ALL_MEMORY_MUTEXES();
+
         return _pokemon_list;
     }
 
     void* pokemon_box_impl::get_native() {
+        POKEMON_BOX_LOCK_ALL_MEMORY_MUTEXES();
+
         return _native;
     }
 }

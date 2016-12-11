@@ -172,10 +172,14 @@ namespace pkmn {
     }
 
     void* pokemon_impl::get_native_pc_data() {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         return _native_pc;
     }
 
     void* pokemon_impl::get_native_party_data() {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         return _native_party;
     }
 

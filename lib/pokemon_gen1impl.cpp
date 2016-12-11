@@ -180,6 +180,8 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen1impl::get_trainer_public_id() {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         return pksav_bigendian16(GEN1_PC_RCAST->ot_id);
     }
 
@@ -194,6 +196,8 @@ namespace pkmn {
     void pokemon_gen1impl::set_trainer_public_id(
         uint16_t public_id
     ) {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
@@ -209,6 +213,8 @@ namespace pkmn {
         if(id > 65535) {
             throw pkmn::range_error("id", 0, 65535);
         }
+
+        POKEMON_LOCK_MEMORY_MUTEXES();
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
@@ -274,6 +280,8 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_experience() {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -295,6 +303,8 @@ namespace pkmn {
             throw pkmn::range_error("experience", 0, max_experience);
         }
 
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         PKSAV_CALL(
             pksav_to_base256(
                 experience,
@@ -311,6 +321,8 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_level() {
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         return int(GEN1_PARTY_RCAST->level);
     }
 
@@ -320,6 +332,8 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             throw pkmn::range_error("level", 2, 100);
         }
+
+        POKEMON_LOCK_MEMORY_MUTEXES();
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
@@ -357,6 +371,8 @@ namespace pkmn {
             throw pkmn::range_error("index", 0, 3);
         }
 
+        POKEMON_LOCK_MEMORY_MUTEXES();
+
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
                                  move,
@@ -377,6 +393,8 @@ namespace pkmn {
         } else if(not pkmn_EV_in_bounds(value, false)) {
             throw std::out_of_range("Invalid stat.");
         }
+
+        POKEMON_LOCK_MEMORY_MUTEXES();
 
         if(stat == "HP") {
             GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
@@ -403,6 +421,8 @@ namespace pkmn {
         } else if(not pkmn_IV_in_bounds(value, false)) {
             throw std::out_of_range("Invalid stat.");
         }
+
+        POKEMON_LOCK_MEMORY_MUTEXES();
 
         PKSAV_CALL(
             pksav_set_gb_IV(

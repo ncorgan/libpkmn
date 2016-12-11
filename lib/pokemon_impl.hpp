@@ -13,6 +13,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <stdexcept>
 #include <map>
@@ -26,6 +27,10 @@ static const std::map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = bo
     ("Special Attack",  PKSAV_STAT_SPATK)
     ("Special Defense", PKSAV_STAT_SPDEF)
 ;
+
+#define POKEMON_LOCK_MEMORY_MUTEXES() \
+    boost::mutex::scoped_lock native_pc_lock(_native_pc_mutex); \
+    boost::mutex::scoped_lock native_party_lock(_native_party_mutex);
 
 namespace pkmn {
 
@@ -64,6 +69,10 @@ namespace pkmn {
             void* get_native_pc_data();
 
             void* get_native_party_data();
+
+            // Here so other can lock them
+            boost::mutex _native_pc_mutex;
+            boost::mutex _native_party_mutex;
 
         protected:
             pkmn::move_slots_t _moves;
