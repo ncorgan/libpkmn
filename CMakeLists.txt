@@ -68,6 +68,7 @@ INCLUDE(PKMNPlatform)
 # Find other dependencies
 ########################################################################
 FIND_PACKAGE(SWIG)
+FIND_PACKAGE(Lua)
 FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
 
@@ -115,9 +116,11 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
-PKMN_REGISTER_COMPONENT(" * Qt Widgets"       PKMN_ENABLE_QT ON
+PKMN_REGISTER_COMPONENT(" * Qt Widgets"    PKMN_ENABLE_QT ON
     "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
+PKMN_REGISTER_COMPONENT("Lua API   "       PKMN_ENABLE_LUA  ON
+    "SWIG_FOUND;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
     "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
 
