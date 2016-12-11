@@ -34,6 +34,9 @@ void pkmn_set_error(
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
+    } catch(const pkmn::feature_not_in_game_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_INVALID_ARGUMENT; \
@@ -89,6 +92,10 @@ void pkmn_set_error(
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
         return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
+    } catch(const pkmn::feature_not_in_game_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
