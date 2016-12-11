@@ -10,7 +10,7 @@
 #include "database/index_to_string.hpp"
 
 #include "pksav/party_data.hpp"
-#include "pksav/pksav_common.hpp"
+#include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
 #include <pksav/gen2/time.h>

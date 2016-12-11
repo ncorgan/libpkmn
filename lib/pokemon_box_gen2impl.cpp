@@ -8,7 +8,7 @@
 #include "pokemon_box_gen2impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
-#include "pksav/pksav_common.hpp"
+#include "pksav/pksav_call.hpp"
 
 #include <pksav/gen2/text.h>
 

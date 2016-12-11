@@ -6,7 +6,7 @@
  */
 
 #include "party_data.hpp"
-#include "pksav_common.hpp"
+#include "pksav_call.hpp"
 
 #include <pkmn/calculations/stats.hpp>
 #include <pkmn/database/pokemon_entry.hpp>

@@ -9,7 +9,7 @@
 #include "pokemon_gen1impl.hpp"
 
 #include "pksav/party_data.hpp"
-#include "pksav/pksav_common.hpp"
+#include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
 
