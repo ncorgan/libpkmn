@@ -24,6 +24,13 @@ namespace pkmn { namespace build_info {
     PKMN_API std::string get_pksav_version();
 
     /*!
+     * @brief Returns the version of Qt used in this build of LibPKMN.
+     *
+     * If this build has no Qt support, this function will return "N/A".
+     */
+    PKMN_API std::string get_qt_version();
+
+    /*!
      * @brief Returns the version of SQLite3 used in this build of LibPKMN.
      */
     PKMN_API std::string get_sqlite3_version();

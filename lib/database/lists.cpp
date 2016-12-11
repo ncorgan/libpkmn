@@ -9,6 +9,7 @@
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
@@ -26,7 +27,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw std::out_of_range("generation: valid range 3-6");
+            throw pkmn::range_error("generation", 3, 6);
         }
 
         // Connect to database
@@ -50,7 +51,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database
@@ -405,7 +406,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database

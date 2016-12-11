@@ -14,6 +14,8 @@ PKMN_PYTHON_INIT
 %import <stl_python.i>
 
 %{
+    #include <pkmn/build_info.hpp>
+
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
 
@@ -23,6 +25,7 @@ PKMN_PYTHON_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%include <pkmn/build_info.hpp>
 %include <pkmn/utils/paths.hpp>
 
 // Item Slot

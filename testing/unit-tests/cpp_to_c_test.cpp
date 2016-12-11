@@ -224,9 +224,7 @@ BOOST_AUTO_TEST_CASE(exception_to_error_code_with_handle_test) {
  */
 
 BOOST_AUTO_TEST_CASE(hidden_power_cpp_to_c_test) {
-    pkmn::calculations::hidden_power_t hidden_power_cpp;
-    hidden_power_cpp.type = "Normal";
-    hidden_power_cpp.base_power = 90;
+    pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
 
     pkmn_hidden_power_t hidden_power_c;
 

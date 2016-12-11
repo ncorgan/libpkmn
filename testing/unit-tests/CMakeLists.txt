@@ -5,6 +5,10 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+IF(PKMN_ENABLE_QT)
+    CMAKE_POLICY(SET CMP0020 NEW)
+ENDIF(PKMN_ENABLE_QT)
+
 INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
@@ -32,7 +36,6 @@ FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
 ENDFOREACH(test ${cpp_tests})
 
-# Tests with multiple files have to be done separately
 SET(database_entry_test_srcs
     cpp_database_entry_test/item_entry_tests.cpp
     cpp_database_entry_test/move_entry_tests.cpp
@@ -40,6 +43,19 @@ SET(database_entry_test_srcs
     cpp_database_entry_test/cpp_database_entry_test.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
+
+IF(PKMN_ENABLE_QT)
+
+    INCLUDE_DIRECTORIES(
+        ${QTx_INCLUDE_DIRS}
+    )
+    LIST(APPEND pkmn_cpp_test_libs
+        ${QTx_LIBRARIES}
+    )
+    SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest PROPERTIES AUTOMOC ON)
+ENDIF(PKMN_ENABLE_QT)
 
 #
 # C tests
