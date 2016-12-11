@@ -137,45 +137,63 @@ namespace pkmn {
     }
 
     const pkmn::database::item_entry& pokemon_impl::get_held_item() {
+        pokemon_scoped_lock lock(this);
+
         _update_held_item();
         return _held_item;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_markings() {
+        pokemon_scoped_lock lock(this);
+
         _update_markings_map();
         return _markings;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_ribbons() {
+        pokemon_scoped_lock lock(this);
+
         _update_ribbons_map();
         return _ribbons;
     }
 
     const pkmn::move_slots_t& pokemon_impl::get_moves() {
+        pokemon_scoped_lock lock(this);
+
         _update_moves(-1);
         return _moves;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_EVs() {
+        pokemon_scoped_lock lock(this);
+
         _update_EV_map();
         return _EVs;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_IVs() {
+        pokemon_scoped_lock lock(this);
+
         _update_IV_map();
         return _IVs;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_stats() {
+        pokemon_scoped_lock lock(this);
+
         _update_stat_map();
         return _stats;
     }
 
     void* pokemon_impl::get_native_pc_data() {
+        pokemon_scoped_lock lock(this);
+
         return _native_pc;
     }
 
     void* pokemon_impl::get_native_party_data() {
+        pokemon_scoped_lock lock(this);
+
         return _native_party;
     }
 

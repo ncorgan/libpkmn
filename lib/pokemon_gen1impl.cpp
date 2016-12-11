@@ -11,6 +11,8 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "mem/scoped_lock.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/common/stats.h>
@@ -180,6 +182,8 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen1impl::get_trainer_public_id() {
+        pokemon_scoped_lock lock(this);
+
         return pksav_bigendian16(GEN1_PC_RCAST->ot_id);
     }
 
@@ -188,6 +192,8 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen1impl::get_trainer_id() {
+        pokemon_scoped_lock lock(this);
+
         return uint32_t(pksav_bigendian16(GEN1_PC_RCAST->ot_id));
     }
 
@@ -209,6 +215,8 @@ namespace pkmn {
         if(id > 65535) {
             throw pkmn::range_error("id", 0, 65535);
         }
+
+        pokemon_scoped_lock lock(this);
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
@@ -274,6 +282,8 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_experience() {
+        pokemon_scoped_lock lock(this);
+
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -295,6 +305,8 @@ namespace pkmn {
             throw pkmn::range_error("experience", 0, max_experience);
         }
 
+        pokemon_scoped_lock lock(this);
+
         PKSAV_CALL(
             pksav_to_base256(
                 experience,
@@ -311,6 +323,8 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_level() {
+        pokemon_scoped_lock lock(this);
+
         return int(GEN1_PARTY_RCAST->level);
     }
 
@@ -320,6 +334,8 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             throw pkmn::range_error("level", 2, 100);
         }
+
+        pokemon_scoped_lock lock(this);
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
@@ -364,6 +380,8 @@ namespace pkmn {
                              );
         _moves[index].pp = _moves[index].move.get_pp(0);
 
+        pokemon_scoped_lock lock(this);
+
         GEN1_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
         GEN1_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
@@ -377,6 +395,8 @@ namespace pkmn {
         } else if(not pkmn_EV_in_bounds(value, false)) {
             throw std::out_of_range("Invalid stat.");
         }
+
+        pokemon_scoped_lock lock(this);
 
         if(stat == "HP") {
             GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
@@ -403,6 +423,8 @@ namespace pkmn {
         } else if(not pkmn_IV_in_bounds(value, false)) {
             throw std::out_of_range("Invalid stat.");
         }
+
+        pokemon_scoped_lock lock(this);
 
         PKSAV_CALL(
             pksav_set_gb_IV(
