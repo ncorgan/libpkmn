@@ -7,27 +7,11 @@
 #ifndef PKMN_POKEMON_BOX_IMPL_HPP
 #define PKMN_POKEMON_BOX_IMPL_HPP
 
-#include "pokemon_impl.hpp"
-
 #include <pkmn/pokemon_box.hpp>
 
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include <string>
-
-#define POKEMON_BOX_LOCK_OWN_AND_POKEMON_MEMORY_MUTEXES(index) \
-    boost::mutex::scoped_lock native_box_mutex(_native_mutex); \
-    boost::mutex::scoped_lock pokemon_pc_mutex(reinterpret_cast<pokemon_impl*>(_pokemon_list.at(index).get())->_native_pc_mutex); \
-    boost::mutex::scoped_lock pokemon_party_mutex(reinterpret_cast<pokemon_impl*>(_pokemon_list.at(index).get())->_native_party_mutex);
-
-#define POKEMON_BOX_LOCK_ALL_MEMORY_MUTEXES(index) \
-    boost::mutex::scoped_lock native_box_mutex(_native_mutex); \
-    std::vector<boost::mutex::scoped_lock> pokemon_mutexes; \
-    for(auto iter = _pokemon_list.begin(); iter != _pokemon_list.end(); ++iter) { \
-        pokemon_mutexes.emplace_back(boost::mutex::scoped_lock(reinterpret_cast<pokemon_impl*>(iter->get())->_native_pc_mutex)); \
-        pokemon_mutexes.emplace_back(boost::mutex::scoped_lock(reinterpret_cast<pokemon_impl*>(iter->get())->_native_party_mutex)); \
-    }
 
 namespace pkmn {
 
@@ -49,8 +33,6 @@ namespace pkmn {
             const pkmn::pokemon_list_t& as_vector();
             
             void* get_native();
-
-            boost::mutex _native_mutex;
 
         protected:
             pkmn::pokemon_list_t _pokemon_list;

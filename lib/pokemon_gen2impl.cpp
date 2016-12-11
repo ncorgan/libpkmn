@@ -160,8 +160,6 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen2impl::get_trainer_public_id() {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
     }
 
@@ -170,8 +168,6 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen2impl::get_trainer_id() {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
     }
 
@@ -194,8 +190,6 @@ namespace pkmn {
             throw pkmn::range_error("id", 0, 65535);
         }
 
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
@@ -207,8 +201,6 @@ namespace pkmn {
     void pokemon_gen2impl::set_trainer_gender(
         const std::string &gender
     ) {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         if(gender == "Male") {
             GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_OT_GENDER_MASK;
         } else if(gender == "Female") {
@@ -239,8 +231,6 @@ namespace pkmn {
     }
 
     std::string pokemon_gen2impl::get_location_caught() {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         return pkmn::database::location_index_to_name(
                    (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
                    _database_entry.get_game_id()
@@ -250,8 +240,6 @@ namespace pkmn {
     void pokemon_gen2impl::set_location_caught(
         const std::string &location
     ) {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
                                                location,
                                                _database_entry.get_game_id()
@@ -281,8 +269,6 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_experience() {
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -303,8 +289,6 @@ namespace pkmn {
         if(experience < 0 or experience > max_experience) {
             throw pkmn::range_error("experience", 0, max_experience);
         }
-
-        POKEMON_LOCK_MEMORY_MUTEXES();
 
         PKSAV_CALL(
             pksav_to_base256(
@@ -330,8 +314,6 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             throw pkmn::range_error("level", 2, 100);
         }
-
-        POKEMON_LOCK_MEMORY_MUTEXES();
 
         GEN2_PC_RCAST->level = uint8_t(level);
 
@@ -369,8 +351,6 @@ namespace pkmn {
             throw pkmn::range_error("index", 0, 3);
         }
 
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
                                  move,
@@ -403,8 +383,6 @@ namespace pkmn {
             throw std::out_of_range("Invalid stat.");
         }
 
-        POKEMON_LOCK_MEMORY_MUTEXES();
-
         if(stat == "HP") {
             GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
         } else if(stat == "Attack") {
@@ -431,8 +409,6 @@ namespace pkmn {
         } else if(not pkmn_IV_in_bounds(value, false)) {
             throw std::out_of_range("Invalid stat.");
         }
-
-        POKEMON_LOCK_MEMORY_MUTEXES();
 
         PKSAV_CALL(
             pksav_set_gb_IV(
