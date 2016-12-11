@@ -14,6 +14,8 @@
 
 #include <pkmn.h>
 
+#include <pksav.h>
+
 #include <boost/thread/mutex.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -61,12 +63,68 @@ pkmn_error_t throw_exception(
     )
 }
 
+pkmn_error_t throw_feature_not_in_game_error(
+    const std::string &feature,
+    const std::string &game
+) {
+    PKMN_CPP_TO_C(
+        throw pkmn::feature_not_in_game_error(
+                  feature,
+                  game
+              );
+    )
+}
+
+pkmn_error_t throw_pksav_error(
+    pksav_error_t pksav_error_code
+) {
+    PKMN_CPP_TO_C(
+        throw pkmn::pksav_error(int(pksav_error_code));
+    )
+}
+
+pkmn_error_t throw_pkmn_range_error(
+    const std::string &value,
+    int min,
+    int max
+) {
+    PKMN_CPP_TO_C(
+        throw pkmn::range_error(value, min, max);
+    )
+}
+
+pkmn_error_t throw_pkmn_unimplemented_error() {
+    PKMN_CPP_TO_C(
+        throw pkmn::unimplemented_error();
+    )
+}
+
 BOOST_AUTO_TEST_CASE(exception_to_error_code_test) {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = throw_nothing();
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
     BOOST_CHECK_EQUAL(pkmn_strerror(), "None");
+
+    error = throw_feature_not_in_game_error("Contests", "Generation I");
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "Contests not in Generation I");
+
+    error = throw_exception<pkmn::feature_not_in_game_error>("feature_not_in_game_error");
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "feature_not_in_game_error");
+
+    error = throw_pksav_error(PKSAV_ERROR_INVALID_SAVE);
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_PKSAV_ERROR);
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "PKSav returned the following error: \"Invalid save file\"");
+
+    error = throw_pkmn_range_error("var", 1, 10);
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "var: valid values 1-10");
+
+    error = throw_pkmn_unimplemented_error();
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_UNIMPLEMENTED_ERROR);
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "Currently unimplemented.");
 
     error = throw_exception<std::invalid_argument>("invalid_argument");
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
@@ -89,7 +147,7 @@ BOOST_AUTO_TEST_CASE(exception_to_error_code_test) {
     BOOST_CHECK_EQUAL(pkmn_strerror(), "logic_error");
 
     error = throw_exception<std::range_error>("range_error");
-    BOOST_CHECK_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_STD_RANGE_ERROR);
     BOOST_CHECK_EQUAL(pkmn_strerror(), "range_error");
 
     error = throw_exception<std::overflow_error>("overflow_error");
@@ -146,6 +204,47 @@ pkmn_error_t throw_exception_with_handle(
     )
 }
 
+pkmn_error_t throw_feature_not_in_game_error_with_handle(
+    const std::string &feature,
+    const std::string &game,
+    pkmn_test_handle_t* handle
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        throw pkmn::feature_not_in_game_error(
+                  feature,
+                  game
+              );
+    )
+}
+
+pkmn_error_t throw_pksav_error_with_handle(
+    pksav_error_t pksav_error_code,
+    pkmn_test_handle_t* handle
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        throw pkmn::pksav_error(int(pksav_error_code));
+    )
+}
+
+pkmn_error_t throw_pkmn_range_error_with_handle(
+    const std::string &value,
+    int min,
+    int max,
+    pkmn_test_handle_t* handle
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        throw pkmn::range_error(value, min, max);
+    )
+}
+
+pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
+    pkmn_test_handle_t* handle
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        throw pkmn::unimplemented_error();
+    )
+}
+
 BOOST_AUTO_TEST_CASE(exception_to_error_code_with_handle_test) {
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_test_handle_t test_handle;
@@ -154,69 +253,113 @@ BOOST_AUTO_TEST_CASE(exception_to_error_code_with_handle_test) {
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
     BOOST_CHECK_EQUAL(test_handle.last_error, "None");
 
+    error = throw_feature_not_in_game_error_with_handle(
+        "Contests", "Generation I", &test_handle
+    );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
+    BOOST_CHECK_EQUAL(test_handle.last_error, "Contests not in Generation I");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "Contests not in Generation I");
+
+    error = throw_exception_with_handle<pkmn::feature_not_in_game_error>(
+        "feature_not_in_game_error", &test_handle
+    );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
+    BOOST_CHECK_EQUAL(test_handle.last_error, "feature_not_in_game_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "feature_not_in_game_error");
+
+    error = throw_pksav_error_with_handle(
+        PKSAV_ERROR_INVALID_SAVE, &test_handle
+    );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_PKSAV_ERROR);
+    BOOST_CHECK_EQUAL(test_handle.last_error, "PKSav returned the following error: \"Invalid save file\"");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "PKSav returned the following error: \"Invalid save file\"");
+
+    error = throw_pkmn_range_error_with_handle(
+        "var", 1, 10, &test_handle
+    );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    BOOST_CHECK_EQUAL(test_handle.last_error, "var: valid values 1-10");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "var: valid values 1-10");
+
+    error = throw_pkmn_unimplemented_error_with_handle(&test_handle);
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_UNIMPLEMENTED_ERROR);
+    BOOST_CHECK_EQUAL(test_handle.last_error, "Currently unimplemented.");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "Currently unimplemented.");
+
     error = throw_exception_with_handle<std::invalid_argument>(
         "invalid_argument", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
     BOOST_CHECK_EQUAL(test_handle.last_error, "invalid_argument");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "invalid_argument");
 
     error = throw_exception_with_handle<std::domain_error>(
         "domain_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_DOMAIN_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "domain_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "domain_error");
 
     error = throw_exception_with_handle<std::length_error>(
         "length_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_LENGTH_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "length_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "length_error");
 
     error = throw_exception_with_handle<std::out_of_range>(
         "out_of_range", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_OUT_OF_RANGE);
     BOOST_CHECK_EQUAL(test_handle.last_error, "out_of_range");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "out_of_range");
 
     error = throw_exception_with_handle<std::logic_error>(
         "logic_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_LOGIC_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "logic_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "logic_error");
 
     error = throw_exception_with_handle<std::range_error>(
         "range_error", &test_handle
     );
-    BOOST_CHECK_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_STD_RANGE_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "range_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "range_error");
 
     error = throw_exception_with_handle<std::overflow_error>(
         "overflow_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_OVERFLOW_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "overflow_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "overflow_error");
 
     error = throw_exception_with_handle<std::underflow_error>(
         "underflow_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_UNDERFLOW_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "underflow_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "underflow_error");
 
     error = throw_exception_with_handle<std::runtime_error>(
         "runtime_error", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_RUNTIME_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "runtime_error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "runtime_error");
 
     error = throw_exception_with_handle<pkmn_test_exception>(
         "std_exception", &test_handle
     );
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_STD_EXCEPTION);
     BOOST_CHECK_EQUAL(test_handle.last_error, "std_exception");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "std_exception");
 
     error = throw_unknown_with_handle(&test_handle);
     BOOST_CHECK_EQUAL(error, PKMN_ERROR_UNKNOWN_ERROR);
     BOOST_CHECK_EQUAL(test_handle.last_error, "Unknown error");
+    BOOST_CHECK_EQUAL(pkmn_strerror(), "Unknown error");
 }
 
 /*

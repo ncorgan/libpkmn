@@ -62,6 +62,8 @@ ENDIF(PKMN_ENABLE_QT)
 #
 IF(PKMN_ENABLE_C)
     INCLUDE_DIRECTORIES(
+        ${PKMN_SOURCE_DIR}/pksav/include
+        ${PKMN_BINARY_DIR}/pksav/include
         ${CMAKE_CURRENT_SOURCE_DIR}/../Unity
     )
 

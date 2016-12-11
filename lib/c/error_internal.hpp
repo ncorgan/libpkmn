@@ -120,7 +120,7 @@ void pkmn_set_error(
     } catch(const std::range_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
-        return PKMN_ERROR_RANGE_ERROR; \
+        return PKMN_ERROR_STD_RANGE_ERROR; \
     } catch(const std::overflow_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
