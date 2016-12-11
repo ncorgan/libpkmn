@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
-    pkmn::calculations::hidden_power_t hidden_power;
+    pkmn::calculations::hidden_power hidden_power;
     /*
      * Make sure expected exceptions are thrown
      */
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
 }
 
 BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
-    pkmn::calculations::hidden_power_t hidden_power;
+    pkmn::calculations::hidden_power hidden_power;
     /*
      * Make sure expected exceptions are thrown
      */

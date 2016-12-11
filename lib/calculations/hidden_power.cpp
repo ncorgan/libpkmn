@@ -44,7 +44,7 @@ namespace pkmn { namespace calculations {
         return int(std::floor<int>(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31));
     }
 
-    hidden_power_t gen2_hidden_power(
+    hidden_power gen2_hidden_power(
         int IV_attack,
         int IV_defense,
         int IV_speed,
@@ -73,14 +73,13 @@ namespace pkmn { namespace calculations {
         uint8_t y = MSB(IV_attack);
         uint8_t Z = (IV_special % 4);
 
-        hidden_power_t ret;
-        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+        return hidden_power(
+                   pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
                        gen2_hidden_power_type(IV_attack, IV_defense)
-                   );
-        ret.base_power = gen2_hidden_power_base_power(v, w, x, y, Z);
-
-        return ret;
+                   ),
+                   gen2_hidden_power_base_power(v, w, x, y, Z)
+               );
     }
 
     // Least significant bit
@@ -102,7 +101,7 @@ namespace pkmn { namespace calculations {
         return int(std::floor<int>((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30));
     }
 
-    hidden_power_t modern_hidden_power(
+    hidden_power modern_hidden_power(
         int IV_HP,
         int IV_attack,
         int IV_defense,
@@ -147,14 +146,13 @@ namespace pkmn { namespace calculations {
         uint8_t y = LSB2(IV_spatk);
         uint8_t z = LSB2(IV_spdef);
 
-        hidden_power_t ret;
-        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+        return hidden_power(
+                   pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
                        modern_hidden_power_type(a, b, c, d, e, f)
-                   );
-        ret.base_power = modern_hidden_power_base_power(u, v, w, x, y, z);
-
-        return ret;
+                   ),
+                   modern_hidden_power_base_power(u, v, w, x, y, z)
+               );
     }
 
 }}
