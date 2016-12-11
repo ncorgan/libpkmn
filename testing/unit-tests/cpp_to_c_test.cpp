@@ -5,12 +5,15 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "c/cpp_to_c.hpp"
+#include "c/error_internal.hpp"
+
 #ifdef _MSC_VER
 #    pragma warning(disable: 4273) // Inconsistent DLL linkage
 #endif
-
-#include "c/cpp_to_c.hpp"
-#include "c/error_internal.hpp"
+extern "C" {
+    const char* pkmn_strerror();
+}
 
 #include <pkmn.h>
 
