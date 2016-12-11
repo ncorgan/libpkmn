@@ -32,12 +32,14 @@ namespace pkmn { namespace calculations {
         ): type(hidden_power_type),
            base_power(hidden_power_base_power) {}
 
+#ifndef SWIG
         //! Move constructor with the type and base power.
         PKMN_INLINE hidden_power(
             std::string&& hidden_power_type,
             int hidden_power_base_power
         ): type(hidden_power_type),
            base_power(hidden_power_base_power) {}
+#endif
 
         //! What type Hidden Power has when this Pokémon uses it.
         std::string type;
