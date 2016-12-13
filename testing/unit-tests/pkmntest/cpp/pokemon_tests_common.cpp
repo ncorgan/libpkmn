@@ -49,37 +49,72 @@ static const std::vector<std::string> starters = boost::assign::list_of
     ("")("Bulbasaur")("Chikorita")("Treecko")("Turtwig")("Snivy")("Chespin")
 ;
 
-static const std::vector<std::string> pokemon_with_mega_forms = boost::assign::list_of
-    ("")("Venusaur")("Ampharos")("Blaziken")("Lucario")("Audino")("Diancie")
+static const std::vector<std::string> gen1_pokemon_with_xy_mega_forms = boost::assign::list_of
+    ("Venusaur")("Blastoise")("Alakazam")("Gengar")("Kangaskhan")("Pinsir")("Gyarados")("Aerodactyl")
 ;
 
+static const std::vector<std::string> gen1_pokemon_with_oras_mega_forms = boost::assign::list_of
+    ("Beedrill")("Pidgeot")("Slowbro")
+;
 
 namespace pkmntest {
 
-    static void test_invalid_forms(
+    // TODO: Check Alola forms when Generation VII supported
+    static void test_forms(
         const std::string &game
     ) {
         int generation = game_generations.at(game);
-
-        // Make sure Mega forms don't work for Pokémon who were
-        // present in the given pre-Generation VI game.
-        if(generation < 6) {
-            for(int i = 1; i <= generation; ++i) {
-                BOOST_CHECK_THROW(
-                    (void)pkmn::pokemon::make(
-                              pokemon_with_mega_forms.at(i),
-                              game,
-                              "Mega",
-                              5
-                          );
-                , std::invalid_argument);
-            }
-        }
 
         // Make sure forms that didn't appear for Generation I
         // Pokémon until later don't work until the correct
         // generation.
         if(generation >= 1) {
+            // Check that Mega forms only work in their given games
+            for(auto iter = gen1_pokemon_with_xy_mega_forms.begin();
+                     iter != gen1_pokemon_with_xy_mega_forms.end();
+                     ++iter)
+            {
+                if(generation >= 6) {
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                } else {
+                    BOOST_CHECK_THROW(
+                        (void)pkmn::pokemon::make(
+                                  *iter,
+                                  game,
+                                  "Mega",
+                                  100
+                              );
+                    , std::invalid_argument);
+                }
+            }
+            for(auto iter = gen1_pokemon_with_oras_mega_forms.begin();
+                     iter != gen1_pokemon_with_oras_mega_forms.end();
+                     ++iter)
+            {
+                if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                } else {
+                    BOOST_CHECK_THROW(
+                        (void)pkmn::pokemon::make(
+                                  *iter,
+                                  game,
+                                  "Mega",
+                                  100
+                              );
+                    , std::invalid_argument);
+                }
+            }
+
             // Cosplay Pikachu should only work for OR/AS
             static const pkmn::database::pokemon_entry oras_pikachu(
                 "Pikachu",
@@ -131,7 +166,7 @@ namespace pkmntest {
     void test_invalid_pokemon(
         const std::string &game
     ) {
-        test_invalid_forms(game);
+        test_forms(game);
         test_invalid_starters(game);
     }
 
