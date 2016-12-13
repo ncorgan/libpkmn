@@ -393,7 +393,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_EV_in_bounds(value, false)) {
-            throw std::out_of_range("Invalid stat value.");
+            throw pkmn::range_error(stat, 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -421,7 +421,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_IV_in_bounds(value, false)) {
-            throw std::out_of_range("Invalid stat.");
+            throw pkmn::range_error(stat, 0, 15);
         }
 
         pokemon_scoped_lock lock(this);
@@ -444,6 +444,8 @@ namespace pkmn {
             reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(_native_pc),
             reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
         );
+
+        GEN1_PC_RCAST->current_hp = GEN1_PARTY_RCAST->max_hp;
 
         _update_stat_map();
     }
