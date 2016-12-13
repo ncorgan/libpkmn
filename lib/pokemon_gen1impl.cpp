@@ -268,7 +268,7 @@ namespace pkmn {
     void pokemon_gen1impl::set_original_game(
         PKMN_UNUSED(const std::string &game)
     ) {
-        throw std::runtime_error("Original game is not recorded in Generation I.");
+        throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation I.");
     }
 
     uint32_t pokemon_gen1impl::get_personality() {
@@ -393,7 +393,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_EV_in_bounds(value, false)) {
-            throw std::out_of_range("Invalid stat.");
+            throw std::out_of_range("Invalid stat value.");
         }
 
         pokemon_scoped_lock lock(this);

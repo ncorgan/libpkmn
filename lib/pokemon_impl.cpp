@@ -97,7 +97,7 @@ namespace pkmn {
         } else if(extension == ".pkm") {
             return pkmn::io::load_pkm(filepath);
         } else if(extension == ".pk6") {
-            throw std::runtime_error("Currently unimplemented.");
+            throw pkmn::unimplemented_error();
         } else {
             std::vector<uint8_t> buffer(fs::file_size(filepath));
             PKMN_UNUSED(int game_id) = 0;

@@ -165,11 +165,11 @@ namespace pkmn { namespace database {
                 "libpkmn_pokemon_form_names ON "
                 "(pokemon_forms.id=libpkmn_pokemon_form_names.form_id) WHERE "
                 "libpkmn_pokemon_form_names.name=? AND pokemon.id IN (SELECT id "
-                "FROM pokemon WHERE pokemon_species_id=(SELECT pokemon_species_id "
-                "FROM pokemon_species_names WHERE name=?)))";
+                "FROM pokemon WHERE species_id=(SELECT pokemon_species_id FROM "
+                "pokemon_species_names WHERE name=?)))";
 
-            return pkmn::database::query_db_bind2<int, int, const std::string&>(
-                       _db, query, game_id, pokemon_name
+            return pkmn::database::query_db_bind3<int, int, const std::string&, const std::string&>(
+                       _db, query, game_id, form_name, pokemon_name
                    );
         }
     }

@@ -10,24 +10,16 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
-#include <pkmn/pokemon_box.hpp>
-#include <pkmn/pokemon_pc.hpp>
 
 namespace pkmntest {
+
+    PKMN_API void gen1_invalid_pokemon_test(
+        const std::string &game
+    );
 
     PKMN_API void gen1_pokemon_test(
         pkmn::pokemon::sptr pokemon,
         const std::string &species,
-        const std::string &game
-    );
-
-    PKMN_API void gen1_pokemon_box_test(
-        pkmn::pokemon_box::sptr pokemon_box,
-        const std::string &game
-    );
-
-    PKMN_API void gen1_pokemon_pc_test(
-        pkmn::pokemon_pc::sptr pokemon_pc,
         const std::string &game
     );
 }

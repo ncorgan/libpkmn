@@ -10,8 +10,12 @@
 #include <boost/test/unit_test.hpp>
 
 /*
- * Generation I Pokémon
+ * Red
  */
+
+BOOST_AUTO_TEST_CASE(gen1_red_invalid_pokemon_test) {
+    pkmntest::gen1_invalid_pokemon_test("Red");
+}
 
 BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
     std::string species = "Charmander";
@@ -30,6 +34,14 @@ BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
     );
 }
 
+/*
+ * Blue
+ */
+
+BOOST_AUTO_TEST_CASE(gen1_blue_invalid_pokemon_test) {
+    pkmntest::gen1_invalid_pokemon_test("Blue");
+}
+
 BOOST_AUTO_TEST_CASE(gen1_blue_pokemon_test) {
     std::string species = "Charmander";
 
@@ -45,6 +57,14 @@ BOOST_AUTO_TEST_CASE(gen1_blue_pokemon_test) {
         species,
         "Blue"
     );
+}
+
+/*
+ * Yellow
+ */
+
+BOOST_AUTO_TEST_CASE(gen1_yellow_invalid_pokemon_test) {
+    pkmntest::gen1_invalid_pokemon_test("Yellow");
 }
 
 BOOST_AUTO_TEST_CASE(gen1_yellow_pokemon_test) {

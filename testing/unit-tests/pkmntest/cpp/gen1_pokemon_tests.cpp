@@ -5,6 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/exception.hpp>
+
+#include "pokemon_tests_common.hpp"
+
 #include <pkmntest/gen1_pokemon_tests.hpp>
 
 // Don't create the main in a library
@@ -44,8 +48,15 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(stat_map.count("Attack"), 1);
         BOOST_CHECK_EQUAL(stat_map.count("Defense"), 1);
         BOOST_CHECK_EQUAL(stat_map.count("Speed"), 1);
+        BOOST_CHECK_EQUAL(stat_map.count("Special"), 1);
         BOOST_CHECK_EQUAL(stat_map.count("Special Attack"), 0);
         BOOST_CHECK_EQUAL(stat_map.count("Special Defense"), 0);
+    }
+
+    void gen1_invalid_pokemon_test(
+        const std::string &game
+    ) {
+        pkmntest::test_invalid_pokemon(game);
     }
 
     void gen1_pokemon_test(
@@ -53,7 +64,10 @@ namespace pkmntest {
         const std::string &species,
         const std::string &game
     ) {
-        // Check starting values
+        /*
+         * Check starting values, and confirm that we can't query values
+         * that didn't exist in Generation I.
+         */
         BOOST_CHECK_EQUAL(
             pokemon->get_species(),
             species
@@ -72,7 +86,7 @@ namespace pkmntest {
         );
         BOOST_CHECK_THROW(
             pokemon->get_held_item();
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_name(),
             std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
@@ -176,7 +190,7 @@ namespace pkmntest {
 
         BOOST_CHECK_THROW(
             pokemon->set_trainer_secret_id(54321);
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_id(),
             10001
@@ -184,22 +198,22 @@ namespace pkmntest {
 
         BOOST_CHECK_THROW(
             pokemon->set_ability("");
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_ball("Great Ball");
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_location_caught("Victory Road");
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_original_game("Blue");
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_marking("Circle", true);
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_ribbon("Cool", false);
-        , std::runtime_error);
+        , pkmn::feature_not_in_game_error);
 
         pokemon->set_experience(12345);
         BOOST_CHECK_EQUAL(
@@ -285,59 +299,5 @@ namespace pkmntest {
             pokemon->get_IVs().at("Attack"),
             12
         );
-    }
-
-    void gen1_pokemon_box_test(
-        pkmn::pokemon_box::sptr pokemon_box,
-        const std::string &game
-    ) {
-        // Check starting values
-        BOOST_CHECK_THROW(
-            pokemon_box->get_name()
-        , std::runtime_error);
-        BOOST_CHECK_EQUAL(
-            pokemon_box->get_game(),
-            game
-        );
-        BOOST_CHECK_EQUAL(
-            pokemon_box->get_capacity(),
-            20
-        );
-
-        const pkmn::pokemon_list_t& as_vector = pokemon_box->as_vector();
-        BOOST_REQUIRE_EQUAL(as_vector.size(), 20);
-        for(auto iter = as_vector.begin(); iter != as_vector.end(); ++iter) {
-            BOOST_CHECK((*iter)->get_database_entry() == none_pokemon_entries.at(game));
-            const pkmn::move_slots_t& move_slots = (*iter)->get_moves();
-            BOOST_CHECK_EQUAL(move_slots.size(), 4);
-            for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-                BOOST_CHECK((*iter) == none_move_slots.at(game));
-            }
-        }
-    }
-
-    void gen1_pokemon_pc_test(
-        pkmn::pokemon_pc::sptr pokemon_pc,
-        const std::string &game
-    ) {
-        // Check starting values
-        BOOST_CHECK_EQUAL(
-            pokemon_pc->get_game(),
-            game
-        );
-        BOOST_CHECK_EQUAL(
-            pokemon_pc->get_num_boxes(),
-            12
-        );
-        BOOST_CHECK_EQUAL(
-            pokemon_pc->get_box_names().size(),
-            12
-        );
-
-        const pkmn::pokemon_box_list_t& as_vector = pokemon_pc->as_vector();
-        BOOST_REQUIRE_EQUAL(as_vector.size(), 12);
-        for(auto iter = as_vector.begin(); iter != as_vector.end(); ++iter) {
-            gen1_pokemon_box_test((*iter), game);
-        }
     }
 }
