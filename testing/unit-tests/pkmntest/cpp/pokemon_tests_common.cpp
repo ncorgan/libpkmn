@@ -57,7 +57,264 @@ static const std::vector<std::string> gen1_pokemon_with_oras_mega_forms = boost:
     ("Beedrill")("Pidgeot")("Slowbro")
 ;
 
+static const std::vector<std::string> gen2_pokemon_with_xy_mega_forms = boost::assign::list_of
+    ("Ampharos")("Scizor")("Heracross")("Houndoom")("Tyranitar")
+;
+
 namespace pkmntest {
+
+    static void test_gen1_forms(
+        const std::string &game
+    ) {
+        int generation = game_generations.at(game);
+
+        // Check that Mega forms only work in their given games
+        for(auto iter = gen1_pokemon_with_xy_mega_forms.begin();
+                 iter != gen1_pokemon_with_xy_mega_forms.end();
+                 ++iter)
+        {
+            if(generation >= 6) {
+                (void)pkmn::pokemon::make(
+                          *iter,
+                          game,
+                          "Mega",
+                          100
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                , std::invalid_argument);
+            }
+        }
+        for(auto iter = gen1_pokemon_with_oras_mega_forms.begin();
+                 iter != gen1_pokemon_with_oras_mega_forms.end();
+                 ++iter)
+        {
+            if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+                (void)pkmn::pokemon::make(
+                          *iter,
+                          game,
+                          "Mega",
+                          100
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                , std::invalid_argument);
+            }
+        }
+
+        // Cosplay Pikachu should only work for OR/AS
+        static const pkmn::database::pokemon_entry oras_pikachu(
+            "Pikachu",
+            "Omega Ruby",
+            ""
+        );
+        const std::vector<std::string>& cosplay_forms = oras_pikachu.get_forms();
+        for(auto iter = cosplay_forms.begin()+1;
+                 iter != cosplay_forms.end();
+                 ++iter)
+        {
+            if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+                (void)pkmn::pokemon::make(
+                          "Pikachu",
+                          game,
+                          *iter,
+                          5
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              "Pikachu",
+                              game,
+                              *iter,
+                              5
+                          );
+                , std::invalid_argument);
+            }
+        }
+
+        // Hardcode Mega X/Y cases
+        if(generation >= 6) {
+            (void)pkmn::pokemon::make(
+                      "Charizard",
+                      game,
+                      "Mega X",
+                      50
+                  );
+            (void)pkmn::pokemon::make(
+                      "Charizard",
+                      game,
+                      "Mega Y",
+                      50
+                  );
+            (void)pkmn::pokemon::make(
+                      "Mewtwo",
+                      game,
+                      "Mega X",
+                      50
+                  );
+            (void)pkmn::pokemon::make(
+                      "Mewtwo",
+                      game,
+                      "Mega Y",
+                      50
+                  );
+        } else {
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Charizard",
+                          game,
+                          "Mega X",
+                          50
+                      );
+            , std::invalid_argument);
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Charizard",
+                          game,
+                          "Mega Y",
+                          50
+                      );
+            , std::invalid_argument);
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Mewtwo",
+                          game,
+                          "Mega X",
+                          50
+                      );
+            , std::invalid_argument);
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Mewtwo",
+                          game,
+                          "Mega Y",
+                          50
+                      );
+            , std::invalid_argument);
+        }
+    }
+
+    static void test_gen2_forms(
+        const std::string &game
+    ) {
+        int generation = game_generations.at(game);
+
+        // Check that Mega forms only work in their given games
+        for(auto iter = gen2_pokemon_with_xy_mega_forms.begin();
+                 iter != gen2_pokemon_with_xy_mega_forms.end();
+                 ++iter)
+        {
+            if(generation >= 6) {
+                (void)pkmn::pokemon::make(
+                          *iter,
+                          game,
+                          "Mega",
+                          100
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                , std::invalid_argument);
+            }
+        }
+
+        if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+            (void)pkmn::pokemon::make(
+                      "Steelix",
+                      game,
+                      "Mega",
+                      100
+                  );
+        } else {
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Steelix",
+                          game,
+                          "Mega",
+                          100
+                      );
+            , std::invalid_argument);
+        }
+
+        // Spiky-eared Pichu should only work in HG/SS
+        if(game == "HeartGold" or game == "SoulSilver") {
+            (void)pkmn::pokemon::make(
+                      "Pichu",
+                      game,
+                      "Spiky-eared",
+                      100
+                  );
+        } else {
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Pichu",
+                          game,
+                          "Spiky-eared",
+                          100
+                      );
+            , std::invalid_argument);
+        }
+
+        // Unown's "?" and "!" forms aren't in Generation II
+        static const pkmn::database::pokemon_entry oras_unown("Unown", "Omega Ruby", "");
+        const std::vector<std::string>& unown_forms = oras_unown.get_forms();
+        for(size_t i = 0; i < 26; ++i) {
+            (void)pkmn::pokemon::make(
+                      "Unown",
+                      game,
+                      unown_forms.at(i),
+                      10
+                  );
+        }
+        if(generation == 2) {
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Unown",
+                          game,
+                          "!",
+                          10
+                      );
+            , std::invalid_argument);
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Unown",
+                          game,
+                          "?",
+                          10
+                      );
+            , std::invalid_argument);
+        } else {
+            (void)pkmn::pokemon::make(
+                      "Unown",
+                      game,
+                      "!",
+                      10
+                  );
+            (void)pkmn::pokemon::make(
+                      "Unown",
+                      game,
+                      "?",
+                      10
+                  );
+        }
+    }
 
     // TODO: Check Alola forms when Generation VII supported
     static void test_forms(
@@ -69,81 +326,10 @@ namespace pkmntest {
         // Pokémon until later don't work until the correct
         // generation.
         if(generation >= 1) {
-            // Check that Mega forms only work in their given games
-            for(auto iter = gen1_pokemon_with_xy_mega_forms.begin();
-                     iter != gen1_pokemon_with_xy_mega_forms.end();
-                     ++iter)
-            {
-                if(generation >= 6) {
-                    (void)pkmn::pokemon::make(
-                              *iter,
-                              game,
-                              "Mega",
-                              100
-                          );
-                } else {
-                    BOOST_CHECK_THROW(
-                        (void)pkmn::pokemon::make(
-                                  *iter,
-                                  game,
-                                  "Mega",
-                                  100
-                              );
-                    , std::invalid_argument);
-                }
-            }
-            for(auto iter = gen1_pokemon_with_oras_mega_forms.begin();
-                     iter != gen1_pokemon_with_oras_mega_forms.end();
-                     ++iter)
-            {
-                if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-                    (void)pkmn::pokemon::make(
-                              *iter,
-                              game,
-                              "Mega",
-                              100
-                          );
-                } else {
-                    BOOST_CHECK_THROW(
-                        (void)pkmn::pokemon::make(
-                                  *iter,
-                                  game,
-                                  "Mega",
-                                  100
-                              );
-                    , std::invalid_argument);
-                }
-            }
-
-            // Cosplay Pikachu should only work for OR/AS
-            static const pkmn::database::pokemon_entry oras_pikachu(
-                "Pikachu",
-                "Omega Ruby",
-                ""
-            );
-            const std::vector<std::string>& cosplay_forms = oras_pikachu.get_forms();
-            for(auto iter = cosplay_forms.begin()+1;
-                     iter != cosplay_forms.end();
-                     ++iter)
-            {
-                if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-                    (void)pkmn::pokemon::make(
-                              "Pikachu",
-                              game,
-                              *iter,
-                              5
-                          );
-                } else {
-                    BOOST_CHECK_THROW(
-                        (void)pkmn::pokemon::make(
-                                  "Pikachu",
-                                  game,
-                                  *iter,
-                                  5
-                              );
-                    , std::invalid_argument);
-                }
-            }
+            test_gen1_forms(game);
+        }
+        if(generation >= 2) {
+            test_gen2_forms(game);
         }
     }
 
