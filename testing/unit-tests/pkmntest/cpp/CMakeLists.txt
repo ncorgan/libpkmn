@@ -26,6 +26,7 @@ SET(pkmntest_sources
     gen1_items_tests.cpp
     gen1_pokemon_tests.cpp
     gen2_items_tests.cpp
+    gen2_pokemon_tests.cpp
     gba_items_tests.cpp
     items_tests_common.cpp
     pokemon_tests_common.cpp

@@ -6,6 +6,7 @@
  */
 
 #include <pkmntest/gen1_pokemon_tests.hpp>
+#include <pkmntest/gen2_pokemon_tests.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -81,5 +82,80 @@ BOOST_AUTO_TEST_CASE(gen1_yellow_pokemon_test) {
         pokemon,
         species,
         "Yellow"
+    );
+}
+
+/*
+ * Gold
+ */
+
+BOOST_AUTO_TEST_CASE(gen2_gold_invalid_pokemon_test) {
+    pkmntest::gen2_invalid_pokemon_test("Gold");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_gold_pokemon_test) {
+    std::string species = "Cyndaquil";
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      "Gold",
+                                      "",
+                                      30
+                                  );
+
+    pkmntest::gen2_pokemon_test(
+        pokemon,
+        species,
+        "Gold"
+    );
+}
+
+/*
+ * Silver
+ */
+
+BOOST_AUTO_TEST_CASE(gen2_silver_invalid_pokemon_test) {
+    pkmntest::gen2_invalid_pokemon_test("Silver");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_silver_pokemon_test) {
+    std::string species = "Cyndaquil";
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      "Silver",
+                                      "",
+                                      30
+                                  );
+
+    pkmntest::gen2_pokemon_test(
+        pokemon,
+        species,
+        "Silver"
+    );
+}
+
+/*
+ * Crystal
+ */
+
+BOOST_AUTO_TEST_CASE(gen2_crystal_invalid_pokemon_test) {
+    pkmntest::gen2_invalid_pokemon_test("Crystal");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_crystal_pokemon_test) {
+    std::string species = "Cyndaquil";
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      "Crystal",
+                                      "",
+                                      30
+                                  );
+
+    pkmntest::gen2_pokemon_test(
+        pokemon,
+        species,
+        "Crystal"
     );
 }
