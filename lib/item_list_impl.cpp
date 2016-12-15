@@ -380,6 +380,7 @@ namespace pkmn {
     }
 
     void* item_list_impl::get_native() {
+        item_list_scoped_lock(this);
         return _native;
     }
 }

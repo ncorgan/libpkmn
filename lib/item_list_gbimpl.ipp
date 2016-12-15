@@ -45,6 +45,8 @@ namespace pkmn {
 
     template<typename list_type>
     item_list_gbimpl<list_type>::~item_list_gbimpl() {
+        item_list_scoped_lock(this);
+
         if(_our_mem) {
             delete GBLIST_RCAST;
         }
@@ -54,6 +56,8 @@ namespace pkmn {
     void item_list_gbimpl<list_type>::_from_native(
         int index
     ) {
+        item_list_scoped_lock(this);
+
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 _item_slots[i].item = pkmn::database::item_entry(
@@ -75,6 +79,8 @@ namespace pkmn {
     void item_list_gbimpl<list_type>::_to_native(
         int index
     ) {
+        item_list_scoped_lock(this);
+
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 GBLIST_RCAST->items[i].index = uint8_t(_item_slots[i].item.get_item_index());
