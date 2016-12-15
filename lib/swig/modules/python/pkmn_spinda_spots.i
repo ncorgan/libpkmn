@@ -33,10 +33,10 @@
             elif not isinstance(rhs, spinda_spots):
                 return False
             else:
-                return (self.top_left == rhs.top_left) and \
-                       (self.top_right == rhs.top_right) and \
-                       (self.bottom_left == rhs.bottom_left) and \
-                       (self.bottom_right == rhs.bottom_right)
+                return (self.left_ear == rhs.left_ear) and \
+                       (self.right_ear == rhs.right_ear) and \
+                       (self.left_face == rhs.left_face) and \
+                       (self.right_face == rhs.right_face)
 
         def __ne__(self, rhs):
             return not (self == rhs)
