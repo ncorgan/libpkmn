@@ -658,6 +658,13 @@ static void gb_stat_test() {
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_INT_WITHIN(1, int_result, 189);
+    error = pkmn_calculations_gb_stat(
+                PKMN_STAT_ATTACK,
+                81, 55, 23140, 8,
+                &int_result
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_INT_WITHIN(1, int_result, 137);
 }
 
 static void modern_stat_test() {
@@ -696,11 +703,19 @@ static void modern_stat_test() {
      * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
      */
     error = pkmn_calculations_modern_stat(
-                PKMN_STAT_HP, 78, 1.0f, 108, 74, 24,
+                PKMN_STAT_HP,
+                78, 1.0f, 108, 74, 24,
                 &int_result
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_INT_WITHIN(1, int_result, 289);
+    error = pkmn_calculations_modern_stat(
+                PKMN_STAT_ATTACK,
+                78, 1.1f, 130, 195, 12,
+                &int_result
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_INT_WITHIN(1, int_result, 280);
 }
 
 PKMN_C_TEST_MAIN(
