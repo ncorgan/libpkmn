@@ -12,6 +12,8 @@
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/calculations/stats.hpp>
 
+#include <pkmn/exception.hpp>
+
 #include "pkmn_boost_unit_test.hpp"
 
 #include <limits>
@@ -24,42 +26,42 @@ BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
         std::string form = pkmn::calculations::gen2_unown_form(
                                -1, 0, 0, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                16, 0, 0, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, -1, 0, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, 16, 0, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, 0, -1, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, 0, 16, 0
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, 0, 0, -1
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string form = pkmn::calculations::gen2_unown_form(
                                0, 0, 0, 16
                            );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -127,12 +129,12 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
                              );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", 16
                              );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -334,42 +336,42 @@ BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            -1, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            16, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, -1, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 16, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, -1, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 16, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, -1
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, 16
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -392,62 +394,62 @@ BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
         hidden_power = pkmn::calculations::modern_hidden_power(
                            -1, 0, 0, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            32, 0, 0, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, -1, 0, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 32, 0, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, -1, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 32, 0, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, -1, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 32, 0, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, -1, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 32, 0
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, -1
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, 32
                        );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -472,42 +474,42 @@ BOOST_AUTO_TEST_CASE(gen2_shiny_test) {
         shiny = pkmn::calculations::gen2_shiny(
                     -1, 0, 0, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     16, 0, 0, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, -1, 0, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, 16, 0, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, 0, -1, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, 0, 16, 0
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, 0, 0, -1
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
     BOOST_CHECK_THROW(
         shiny = pkmn::calculations::gen2_shiny(
                     0, 0, 0, 16
                 );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -627,14 +629,14 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
         stat = pkmn::calculations::get_gb_stat(
                    "Attack", 1, 1, 123456, 1
                );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     // Invalid IV
     BOOST_CHECK_THROW(
         stat = pkmn::calculations::get_gb_stat(
                    "Attack", 1, 1, 1, 12345
                );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Test with known good inputs.
@@ -712,14 +714,14 @@ BOOST_AUTO_TEST_CASE(modern_stat_test) {
         stat = pkmn::calculations::get_modern_stat(
                    "Attack", 1, 1.0f, 1, 12345, 1
                );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     // Invalid IV
     BOOST_CHECK_THROW(
         stat = pkmn::calculations::get_modern_stat(
                    "Attack", 1, 1.0f, 1, 1, 12345
                );
-    , std::out_of_range);
+    , pkmn::range_error);
 
     /*
      * Test with known good inputs.

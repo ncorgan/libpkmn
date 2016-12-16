@@ -68,6 +68,7 @@ IF(PKMN_ENABLE_C)
     )
 
     SET(c_tests
+        c_calculations_test
         c_database_test
         c_items_test
         c_lists_test
@@ -95,6 +96,7 @@ ENDIF(PKMN_ENABLE_C)
 #
 IF(PKMN_ENABLE_PYTHON)
     SET(python_tests
+        python_calculations_test
         python_database_entry_test
         python_items_test
         python_lists_test

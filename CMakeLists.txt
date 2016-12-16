@@ -115,8 +115,9 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 ####################################################################
 # Components
 ####################################################################
-PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
-PKMN_REGISTER_COMPONENT(" * Qt Widgets"    PKMN_ENABLE_QT ON
+PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
+    "Boost_FOUND;PYTHONINTERP_FOUND" OFF)
+PKMN_REGISTER_COMPONENT(" * Qt Widgets"       PKMN_ENABLE_QT ON
     "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
 PKMN_REGISTER_COMPONENT("Lua API   "       PKMN_ENABLE_LUA  ON
