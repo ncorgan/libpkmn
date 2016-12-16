@@ -29,6 +29,21 @@
 #
 ########################################################################
 
+# Only run the install location check once
+IF(DEFINED __INCLUDED_SWIGLUA_CMAKE)
+    RETURN()
+ENDIF(DEFINED __INCLUDED_SWIGLUA_CMAKE)
+SET(__INCLUDED_SWIGLUA_CMAKE TRUE)
+
+########################################################################
+# Set the Lua install directory
+########################################################################
+SET(LUA_INSTALL_DIR ${PKMN_LIBRARY_DIR}/lua/${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR})
+SET(LUA_INSTALL_DIR ${LUA_INSTALL_DIR} CACHE FILEPATH "Lua install directory")
+
+########################################################################
+# Macro to build and install Lua SWIG modules
+########################################################################
 MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
     INCLUDE(UseSWIG)
 
@@ -67,9 +82,16 @@ MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${module_name} lua ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
+    SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
 
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME}
         PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    )
+
+    INSTALL(
+        TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
+        DESTINATION ${LUA_INSTALL_DIR}
+        COMPONENT Lua
     )
 ENDMACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)

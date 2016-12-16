@@ -37,6 +37,19 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
     FIND_PACKAGE(Doxygen)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
+####################################################################
+# Set install subdirectories
+####################################################################
+IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    SET(LIB_SUFFIX 64)
+ENDIF()
+SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+SET(PKMN_RUNTIME_DIR bin)
+SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
+SET(PKMN_INCLUDE_DIR include)
+SET(PKMN_PKG_DATA_DIR share/pkmn)
+SET(PKMN_DOCS_DIR share/doc/pkmn)
+
 ########################################################################
 # Find C++ dependencies
 ########################################################################
@@ -100,19 +113,6 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
 ####################################################################
-# Set install subdirectories
-####################################################################
-IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
-    SET(LIB_SUFFIX 64)
-ENDIF()
-SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
-SET(PKMN_RUNTIME_DIR bin)
-SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
-SET(PKMN_INCLUDE_DIR include)
-SET(PKMN_PKG_DATA_DIR share/pkmn)
-SET(PKMN_DOCS_DIR share/doc/pkmn)
-
-####################################################################
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
@@ -120,7 +120,7 @@ PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
 PKMN_REGISTER_COMPONENT(" * Qt Widgets"       PKMN_ENABLE_QT ON
     "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
-PKMN_REGISTER_COMPONENT("Lua API   "       PKMN_ENABLE_LUA  ON
+PKMN_REGISTER_COMPONENT("Lua API"          PKMN_ENABLE_LUA  ON
     "SWIG_FOUND;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
     "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
