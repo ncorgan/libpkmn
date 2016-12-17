@@ -7,9 +7,9 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_database_headers
-        items.h
+        item_entry.h
         lists.h
-        moves.h
+        move_entry.h
         pokemon.h
     )
 

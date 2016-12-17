@@ -20,9 +20,9 @@
 #include <pkmn-c/calculations/spinda_spots.h>
 #include <pkmn-c/calculations/stats.h>
 
-#include <pkmn-c/database/items.h>
+#include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/lists.h>
-#include <pkmn-c/database/moves.h>
+#include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon.h>
 
 #include <pkmn-c/types/int_pair.h>

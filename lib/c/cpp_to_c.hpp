@@ -110,6 +110,14 @@ namespace pkmn {
         *actual_strlen_out = str.size() + 1;
     }
 
+    PKMN_INLINE void std_string_to_c_str_alloc(
+        const std::string &str,
+        char** c_str_out
+    ) {
+        *c_str_out = (char*)std::calloc(str.size()+1, sizeof(char));
+        std::strncpy(*c_str_out, str.c_str(), str.size());
+    }
+
     void std_pair_std_string_to_string_pair(
         const std::pair<std::string, std::string> &cpp_pair,
         pkmn_string_pair_t* c_pair_out
