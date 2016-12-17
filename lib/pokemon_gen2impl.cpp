@@ -65,8 +65,8 @@ namespace pkmn {
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
 
-        GEN2_PC_RCAST->caught_data = 0x7F;
-        // TODO: level caught
+        set_level_caught(level);
+        set_location_caught("Special");
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,

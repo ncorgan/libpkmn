@@ -94,7 +94,7 @@ namespace pkmn {
 
         _misc->met_location = 0xFF; // Fateful encounter
 
-        _misc->origin_info = pksav_littleendian16(uint16_t(level));
+        set_level(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
 
