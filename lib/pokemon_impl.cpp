@@ -39,24 +39,22 @@ namespace pkmn {
     ) {
         int game_id = pkmn::database::game_name_to_id(game);
 
-        int pokemon_index = pkmn::database::pokemon_name_to_index(
-                                species,
-                                form,
-                                game_id
-                            );
+        pkmn::database::pokemon_entry database_entry(
+                                          species,
+                                          game,
+                                          form
+                                      );
 
         switch(pkmn::database::game_id_to_generation(game_id)) {
             case 1:
                 return pkmn::make_shared<pokemon_gen1impl>(
-                           pokemon_index,
-                           game_id,
+                           std::move(database_entry),
                            level
                        );
 
             case 2:
                 return pkmn::make_shared<pokemon_gen2impl>(
-                           pokemon_index,
-                           game_id,
+                           std::move(database_entry),
                            level
                        );
 
@@ -65,8 +63,7 @@ namespace pkmn {
                     throw pkmn::unimplemented_error();
                 } else {
                     return pkmn::make_shared<pokemon_gbaimpl>(
-                               pokemon_index,
-                               game_id,
+                               std::move(database_entry),
                                level
                            );
                 }
@@ -74,8 +71,7 @@ namespace pkmn {
             case 4:
             case 5:
                 return pkmn::make_shared<pokemon_ndsimpl>(
-                           pokemon_index,
-                           game_id,
+                           std::move(database_entry),
                            level
                        );
 
@@ -118,6 +114,13 @@ namespace pkmn {
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
        _held_item(pkmn::database::item_entry(0, game_id))
+    {}
+
+    pokemon_impl::pokemon_impl(
+        pkmn::database::pokemon_entry&& database_entry
+    ): pokemon(),
+       _database_entry(database_entry),
+       _held_item(pkmn::database::item_entry(0, database_entry.get_game_id()))
     {}
 
     std::string pokemon_impl::get_species() {

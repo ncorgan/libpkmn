@@ -32,20 +32,6 @@ namespace pkmn { namespace database {
     );
 
     /*
-     * Items
-     */
-
-    std::string item_index_to_name(
-        int item_index,
-        int game_id
-    );
-
-    int item_name_to_index(
-        const std::string &item_name,
-        int game_id
-    );
-
-    /*
      * Locations
      */
 
@@ -69,21 +55,6 @@ namespace pkmn { namespace database {
 
     int nature_name_to_index(
         const std::string &nature_name
-    );
-
-    /*
-     * Pokémon
-     */
-
-    std::string pokemon_index_to_name(
-        int pokemon_index,
-        int game_id
-    );
-
-    int pokemon_name_to_index(
-        const std::string &pokemon_name,
-        const std::string &form_name,
-        int game_id
     );
 
 }}

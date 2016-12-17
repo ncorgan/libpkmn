@@ -53,10 +53,9 @@ static std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::as
 namespace pkmn {
 
     pokemon_gen1impl::pokemon_gen1impl(
-        int pokemon_index,
-        int game_id,
+        pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(pokemon_index, game_id)
+    ): pokemon_impl(std::move(database_entry))
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_gen1_pc_pokemon_t));
@@ -72,7 +71,7 @@ namespace pkmn {
         _trainer_name = LIBPKMN_OT_NAME;
 
         // Set internal members
-        GEN1_PC_RCAST->species = uint8_t(pokemon_index);
+        GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
         std::pair<std::string, std::string> types = _database_entry.get_types();
         GEN1_PC_RCAST->types[0] = uint8_t(GEN1_TYPES.at(types.first));

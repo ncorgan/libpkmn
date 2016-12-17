@@ -17,8 +17,7 @@ namespace pkmn {
         public:
             pokemon_ndsimpl() {}
             pokemon_ndsimpl(
-                int pokemon_index,
-                int game_id,
+                pkmn::database::pokemon_entry&& database_entry,
                 int level
             );
             pokemon_ndsimpl(

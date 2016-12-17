@@ -39,6 +39,9 @@ namespace pkmn {
                 int pokemon_index,
                 int game_id
             );
+            pokemon_impl(
+                pkmn::database::pokemon_entry&& database_entry
+            );
 
             virtual ~pokemon_impl() {}
 

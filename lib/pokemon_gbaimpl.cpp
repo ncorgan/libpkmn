@@ -35,10 +35,9 @@
 namespace pkmn {
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        int pokemon_index,
-        int game_id,
+        pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(pokemon_index, game_id)
+    ): pokemon_impl(std::move(database_entry))
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_gba_pc_pokemon_t));
@@ -79,7 +78,7 @@ namespace pkmn {
             );
         )
 
-        _growth->species = pksav_littleendian16(uint16_t(pokemon_index));
+        _growth->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
         _growth->exp = pksav_littleendian32(uint32_t(
                            _database_entry.get_experience_at_level(level)
                        ));
@@ -96,7 +95,7 @@ namespace pkmn {
         _misc->met_location = 0xFF; // Fateful encounter
 
         _misc->origin_info = pksav_littleendian16(uint16_t(level));
-        set_original_game(pkmn::database::game_id_to_name(game_id));
+        set_original_game(get_game());
         set_ball("Premier Ball");
 
         _misc->iv_egg_ability = uint32_t(std::rand());

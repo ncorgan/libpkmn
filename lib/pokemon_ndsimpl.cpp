@@ -41,13 +41,12 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int SOULSILVER = 16;
 
     pokemon_ndsimpl::pokemon_ndsimpl(
-        int pokemon_index,
-        int game_id,
+        pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(pokemon_index, game_id),
-       _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
-       _plat(game_id == PLATINUM),
-       _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
+    ): pokemon_impl(std::move(database_entry)),
+       _gen4(database_entry.get_game_id() >= DIAMOND and database_entry.get_game_id() <= SOULSILVER),
+       _plat(database_entry.get_game_id() == PLATINUM),
+       _hgss(database_entry.get_game_id() == HEARTGOLD or database_entry.get_game_id() == SOULSILVER)
     {
         _native_pc = reinterpret_cast<void*>(new pksav_nds_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_nds_pc_pokemon_t));

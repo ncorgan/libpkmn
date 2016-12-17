@@ -31,10 +31,9 @@
 namespace pkmn {
 
     pokemon_gen2impl::pokemon_gen2impl(
-        int pokemon_index,
-        int game_id,
+        pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(pokemon_index, game_id)
+    ): pokemon_impl(std::move(database_entry))
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_gen2_pc_pokemon_t));
@@ -50,7 +49,7 @@ namespace pkmn {
         _trainer_name = LIBPKMN_OT_NAME;
 
         // Set internal members
-        GEN2_PC_RCAST->species = uint8_t(pokemon_index);
+        GEN2_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 

@@ -17,8 +17,7 @@ namespace pkmn {
         public:
             pokemon_gbaimpl() {}
             pokemon_gbaimpl(
-                int pokemon_index,
-                int game_id,
+                pkmn::database::pokemon_entry&& database_entry,
                 int level
             );
             pokemon_gbaimpl(

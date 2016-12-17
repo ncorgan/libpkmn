@@ -47,30 +47,6 @@ namespace pkmn { namespace database {
                );
     }
 
-    std::string item_index_to_name(
-        int item_index,
-        int game_id
-    ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        (void)item_index;
-        (void)game_id;
-        return "";
-    }
-
-    int item_name_to_index(
-        const std::string &item_name,
-        int game_id
-    ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        (void)item_name;
-        (void)game_id;
-        return 0;
-    }
-
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_SAPPHIRE(int game_id) {return (game_id == 8);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_RSE     (int game_id) {return (game_id >= 7 and game_id <= 9);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_E       (int game_id) {return (game_id == 9);}
@@ -198,57 +174,6 @@ namespace pkmn { namespace database {
         return pkmn::database::query_db_bind1<int, const std::string&>(
                    _db, query, nature_name
                );
-    }
-
-    std::string pokemon_index_to_name(
-        int pokemon_index,
-        int game_id
-    ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM pokemon_species_names WHERE pokemon_species_id="
-            "(SELECT species_id FROM pokemon WHERE id=(SELECT pokemon_id FROM "
-            "pokemon_game_indices WHERE game_index=? AND version_id=?))";
-
-        return pkmn::database::query_db_bind2<std::string, int, int>(
-                   _db, query, pokemon_index, game_id
-               );
-    }
-
-    int pokemon_name_to_index(
-        const std::string &pokemon_name,
-        const std::string &form_name,
-        int game_id
-    ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        if(form_name == "" or form_name == "Standard") {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT game_index FROM pokemon_game_indices WHERE version_id=? "
-                "AND pokemon_id=(SELECT pokemon_species_id FROM pokemon_species_names "
-                "WHERE name=?)";
-
-            return pkmn::database::query_db_bind2<int, int, const std::string&>(
-                       _db, query, game_id, pokemon_name
-                   );
-        } else {
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT game_index FROM pokemon_game_indices WHERE version_id=? "
-                "AND pokemon_id=(SELECT pokemon_id FROM pokemon_forms INNER JOIN "
-                "pokemon ON (pokemon_forms.pokemon_id=pokemon.id) INNER JOIN "
-                "libpkmn_pokemon_form_names ON "
-                "(pokemon_forms.id=libpkmn_pokemon_form_names.form_id) WHERE "
-                "libpkmn_pokemon_form_names.name=? AND pokemon.id IN (SELECT id "
-                "FROM pokemon WHERE species_id=(SELECT pokemon_species_id FROM "
-                "pokemon_species_names WHERE name=?)))";
-
-            return pkmn::database::query_db_bind3<int, int, const std::string&, const std::string&>(
-                       _db, query, game_id, form_name, pokemon_name
-                   );
-        }
     }
 
 }}
