@@ -428,11 +428,7 @@ BOOST_AUTO_TEST_CASE(item_slots_cpp_to_c_test) {
         )
     );
 
-    pkmn_item_slots_t item_slots_c = {
-        .item_slots = NULL,
-        .length = 0
-    };
-
+    pkmn_item_slots_t item_slots_c = { NULL, 0 };
     pkmn::pkmn_item_slots_cpp_to_c(
         item_slots_cpp,
         &item_slots_c
@@ -495,11 +491,7 @@ BOOST_AUTO_TEST_CASE(levelup_moves_cpp_to_c_test) {
         )
     );
 
-    pkmn_levelup_moves_t levelup_moves_c = {
-        .levelup_moves = NULL,
-        .length = 0
-    };
-
+    pkmn_levelup_moves_t levelup_moves_c = { NULL, 0 };
     pkmn::pkmn_levelup_moves_cpp_to_c(
         levelup_moves_cpp,
         &levelup_moves_c
@@ -532,11 +524,7 @@ BOOST_AUTO_TEST_CASE(move_list_cpp_to_c_test) {
         pkmn::database::move_entry("Frenzy Plant", "Emerald")
     );
 
-    pkmn_string_list_t string_list_c = {
-        .strings = NULL,
-        .length = 0
-    };
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::pkmn_move_list_to_string_list(
         move_list_cpp,
         &string_list_c
@@ -566,11 +554,7 @@ BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
         pkmn::database::pokemon_entry("Treecko", "Ruby", "")
     );
 
-    pkmn_string_list_t string_list_c = {
-        .strings = NULL,
-        .length = 0
-    };
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::pkmn_pokemon_entries_to_string_list(
         pokemon_entries_cpp,
         &string_list_c
@@ -650,11 +634,7 @@ BOOST_AUTO_TEST_CASE(string_vector_cpp_to_c_test) {
     string_vector_cpp.emplace_back("PKSav");
     string_vector_cpp.emplace_back("TKO");
 
-    pkmn_string_list_t string_list_c = {
-        .strings = NULL,
-        .length = 0
-    };
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::std_vector_std_string_to_string_list(
         string_vector_cpp,
         &string_list_c
