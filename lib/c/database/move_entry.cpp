@@ -26,48 +26,9 @@ pkmn_error_t pkmn_database_get_move_entry(
                                        move_game
                                    );
 
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_name(),
-            &move_entry_out->name
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_game(),
-            &move_entry_out->game
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_description(),
-            &move_entry_out->description
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_target(),
-            &move_entry_out->target
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_damage_class(),
-            &move_entry_out->damage_class
-        );
-
-        move_entry_out->base_power = move_entry_cpp.get_base_power();
-        for(int i = 0; i < 4; ++i) {
-            move_entry_out->pp[i] = move_entry_cpp.get_pp(i);
-        }
-        move_entry_out->accuracy = move_entry_cpp.get_accuracy();
-
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_effect(),
-            &move_entry_out->effect
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_contest_type(),
-            &move_entry_out->contest_type
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_contest_effect(),
-            &move_entry_out->contest_effect
-        );
-        pkmn::std_string_to_c_str_alloc(
-            move_entry_cpp.get_super_contest_effect(),
-            &move_entry_out->super_contest_effect
+        pkmn::pkmn_move_entry_cpp_to_c(
+            move_entry_cpp,
+            move_entry_out
         );
     )
 }

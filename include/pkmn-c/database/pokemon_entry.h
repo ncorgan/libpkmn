@@ -58,6 +58,18 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_entry_set_form(
     const char* form
 );
 
+PKMN_API pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    int level,
+    int* experience_out
+);
+
+PKMN_API pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    int experience,
+    int* level_out
+);
+
 PKMN_API pkmn_error_t pkmn_database_pokemon_entry_free(
     pkmn_database_pokemon_entry_t* pokemon_entry
 );

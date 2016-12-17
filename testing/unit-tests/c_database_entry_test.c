@@ -405,6 +405,108 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPATK], 0);
     TEST_ASSERT_EQUAL(pokemon_entry.EV_yields[PKMN_STAT_SPDEF], 0);
     TEST_ASSERT_EQUAL(pokemon_entry.experience_yield, 165);
+
+    int experience = 0;
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_experience_at_level(
+            &pokemon_entry,
+            50,
+            &experience
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT_EQUAL(experience, 125000);
+
+    int level = 0;
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_level_at_experience(
+            &pokemon_entry,
+            200000,
+            &level
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT_EQUAL(level, 58);
+
+    TEST_ASSERT_NOT_NULL(pokemon_entry.levelup_moves.levelup_moves);
+    TEST_ASSERT(pokemon_entry.levelup_moves.length > 0);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tm_hm_moves.strings);
+    TEST_ASSERT(pokemon_entry.tm_hm_moves.length > 0);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.egg_moves.strings);
+    TEST_ASSERT(pokemon_entry.egg_moves.length > 0);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tutor_moves.strings);
+    TEST_ASSERT(pokemon_entry.tutor_moves.length > 0);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.forms.strings);
+    TEST_ASSERT(pokemon_entry.forms.length > 0);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.evolutions.strings);
+    TEST_ASSERT_EQUAL(pokemon_entry.evolutions.length, 0);
+
+    // Make sure freeing properly works
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_free(&pokemon_entry),
+        PKMN_ERROR_NONE
+    );
+    assert_pokemon_entry_uninitialized(
+        &pokemon_entry
+    );
+
+    // Test failing to set form
+    TEST_ASSERT_EQUAL(
+        pkmn_database_get_pokemon_entry(
+            "Venusaur",
+            "Ruby",
+            "",
+            &pokemon_entry
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.form, "Standard");
+
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_set_form(
+            &pokemon_entry,
+            "Mega"
+        ),
+        PKMN_ERROR_INVALID_ARGUMENT
+    );
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.form, "Standard");
+
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_free(&pokemon_entry),
+        PKMN_ERROR_NONE
+    );
+    assert_pokemon_entry_uninitialized(
+        &pokemon_entry
+    );
+
+    // Test setting form
+    TEST_ASSERT_EQUAL(
+        pkmn_database_get_pokemon_entry(
+            "Venusaur",
+            "Omega Ruby",
+            "",
+            &pokemon_entry
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.form, "Standard");
+
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_set_form(
+            &pokemon_entry,
+            "Mega"
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.form, "Mega");
+
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_free(&pokemon_entry),
+        PKMN_ERROR_NONE
+    );
+    assert_pokemon_entry_uninitialized(
+        &pokemon_entry
+    );
 }
 
 PKMN_C_TEST_MAIN(

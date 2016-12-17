@@ -25,35 +25,9 @@ pkmn_error_t pkmn_database_get_item_entry(
                                        item_name,
                                        item_game
                                    );
-
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_name(),
-            &item_entry_out->name
-        );
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_game(),
-            &item_entry_out->game
-        );
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_category(),
-            &item_entry_out->category
-        );
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_pocket(),
-            &item_entry_out->pocket
-        );
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_description(),
-            &item_entry_out->description
-        );
-
-        item_entry_out->cost = item_entry_cpp.get_cost();
-        item_entry_out->holdable = item_entry_cpp.holdable();
-        item_entry_out->fling_power = item_entry_cpp.get_fling_power();
-
-        pkmn::std_string_to_c_str_alloc(
-            item_entry_cpp.get_fling_effect(),
-            &item_entry_out->fling_effect
+        pkmn::pkmn_item_entry_cpp_to_c(
+            item_entry_cpp,
+            item_entry_out
         );
     )
 }

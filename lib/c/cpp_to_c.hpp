@@ -13,10 +13,14 @@
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn-c/database/item_entry.h>
+#include <pkmn-c/database/move_entry.h>
+#include <pkmn-c/database/pokemon_entry.h>
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -58,6 +62,11 @@ namespace pkmn {
         pkmn_hidden_power_t* hp_c
     );
 
+    void pkmn_item_entry_cpp_to_c(
+        const pkmn::database::item_entry &item_entry_cpp,
+        pkmn_database_item_entry_t* item_entry_c
+    );
+
     void pkmn_item_slot_cpp_to_c(
         const pkmn::item_slot &islot_cpp,
         pkmn_item_slot_t* islot_c
@@ -78,9 +87,19 @@ namespace pkmn {
         pkmn_levelup_moves_t* lmoves_c
     );
 
+    void pkmn_move_entry_cpp_to_c(
+        const pkmn::database::move_entry &move_entry_cpp,
+        pkmn_database_move_entry_t* move_entry_c
+    );
+
     void pkmn_move_list_to_string_list(
         const pkmn::database::move_list_t &move_list,
         pkmn_string_list_t* string_list_out
+    );
+
+    void pkmn_pokemon_entry_cpp_to_c(
+        const pkmn::database::pokemon_entry &pokemon_entry_cpp,
+        pkmn_database_pokemon_entry_t* pokemon_entry_c
     );
 
     void pkmn_pokemon_entries_to_string_list(
