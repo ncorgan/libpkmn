@@ -17,6 +17,7 @@
 #include <pksav/math/base256.h>
 #include <pksav/math/endian.h>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
@@ -43,6 +44,11 @@ namespace pkmn {
         std::memset(_native_party, 0, sizeof(pksav_gen2_pokemon_party_data_t));
         _our_party_mem = true;
 
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = LIBPKMN_OT_NAME;
+
         // Set internal members
         GEN2_PC_RCAST->species = uint8_t(pokemon_index);
 
@@ -61,6 +67,7 @@ namespace pkmn {
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
 
         // TODO: rest of caught_data
+        GEN2_PC_RCAST->caught_data = 0xFF;
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
@@ -233,13 +240,13 @@ namespace pkmn {
     }
 
     std::string pokemon_gen2impl::get_ball() {
-        throw std::runtime_error("A Pokémon's ball is not recorded in Generation II.");
+        throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
     void pokemon_gen2impl::set_ball(
         PKMN_UNUSED(const std::string &ball)
     ) {
-        throw std::runtime_error("A Pokémon's ball is not recorded in Generation II.");
+        throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
     std::string pokemon_gen2impl::get_location_caught() {
@@ -265,13 +272,13 @@ namespace pkmn {
     }
 
     std::string pokemon_gen2impl::get_original_game() {
-        throw std::runtime_error("Original game is not recorded in Generation II.");
+        throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
 
     void pokemon_gen2impl::set_original_game(
         PKMN_UNUSED(const std::string &game)
     ) {
-        throw std::runtime_error("Original game is not recorded in Generation II.");
+        throw pkmn::feature_not_in_game_error("Original game is not recorded in Generation II.");
     }
 
     uint32_t pokemon_gen2impl::get_personality() {
@@ -357,14 +364,14 @@ namespace pkmn {
         PKMN_UNUSED(const std::string &marking),
         PKMN_UNUSED(bool value)
     ) {
-        throw std::runtime_error("There are no markings in Generation II.");
+        throw pkmn::feature_not_in_game_error("Markings", "Generation II");
     }
 
     void pokemon_gen2impl::set_ribbon(
         PKMN_UNUSED(const std::string &ribbon),
         PKMN_UNUSED(bool value)
     ) {
-        throw std::runtime_error("There are no ribbons in Generation II.");
+        throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
     void pokemon_gen2impl::set_move(
@@ -406,7 +413,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_EV_in_bounds(value, false)) {
-            throw std::out_of_range("Invalid stat.");
+            throw pkmn::range_error(stat, 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -435,7 +442,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_IV_in_bounds(value, false)) {
-            throw std::out_of_range("Invalid stat.");
+            throw pkmn::range_error(stat, 0, 15);
         }
 
         pokemon_scoped_lock lock(this);
@@ -487,11 +494,11 @@ namespace pkmn {
     }
 
     void pokemon_gen2impl::_update_markings_map() {
-        throw std::runtime_error("There are no markings in Generation II.");
+        throw pkmn::feature_not_in_game_error("Markings", "Generation II");
     }
 
     void pokemon_gen2impl::_update_ribbons_map() {
-        throw std::runtime_error("There are no ribbons in Generation II.");
+        throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
     void pokemon_gen2impl::_update_EV_map() {
