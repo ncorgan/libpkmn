@@ -141,46 +141,40 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_levelup_moves(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
-    pkmn_levelup_moves_t* levelup_moves_out,
-    size_t* list_length_out
+    pkmn_levelup_moves_t* levelup_moves_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_tm_hm_moves(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
-    pkmn_string_list_t* tm_hm_moves_out,
-    size_t* list_length_out
+    pkmn_string_list_t* tm_hm_moves_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_egg_moves(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
-    pkmn_string_list_t* egg_moves_out,
-    size_t* list_length_out
+    pkmn_string_list_t* egg_moves_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_tutor_moves(
     const char* pokemon_name,
     const char* game_name,
     const char* form_name,
-    pkmn_string_list_t* tutor_moves_out,
-    size_t* list_length_out
+    pkmn_string_list_t* tutor_moves_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_forms(
     const char* pokemon_name,
     const char* game_name,
-    pkmn_string_list_t* forms_out,
-    size_t* list_length_out
+    pkmn_string_list_t* forms_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_evolutions(
     const char* pokemon_name,
     const char* game_name,
-    pkmn_string_list_t* evolutions_out,
-    size_t* list_length_out
+    pkmn_string_list_t* evolutions_out
 );
 
 #ifdef __cplusplus

@@ -34,17 +34,16 @@ namespace pkmn {
 
     void pkmn_item_slots_cpp_to_c(
         const pkmn::item_slots_t &islots_cpp,
-        pkmn_item_slots_t* islots_c,
-        size_t* list_length_out
+        pkmn_item_slots_t* islots_c
     ) {
-        *islots_c = (pkmn_item_slots_t)std::malloc(sizeof(pkmn_item_slot_t) * islots_cpp.size());
+        islots_c->item_slots = (pkmn_item_slot_t*)std::malloc(sizeof(pkmn_item_slot_t) * islots_cpp.size());
         for(size_t i = 0; i < islots_cpp.size(); ++i) {
             pkmn_item_slot_cpp_to_c(
                 islots_cpp[i],
-                &((*islots_c)[i])
+                &(islots_c->item_slots[i])
             );
         }
-        *list_length_out = islots_cpp.size();
+        islots_c->length = islots_cpp.size();
     }
 
     void pkmn_levelup_move_cpp_to_c(
@@ -61,47 +60,47 @@ namespace pkmn {
 
     void pkmn_levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t &lmoves_cpp,
-        pkmn_levelup_moves_t* lmoves_c,
-        size_t* list_length_out
+        pkmn_levelup_moves_t* lmoves_c
     ) {
-        *lmoves_c = (pkmn_levelup_moves_t)std::malloc(sizeof(pkmn_levelup_move_t) * lmoves_cpp.size());
+        lmoves_c->levelup_moves = (pkmn_levelup_move_t*)std::malloc(sizeof(pkmn_levelup_move_t) * lmoves_cpp.size());
         for(size_t i = 0; i < lmoves_cpp.size(); ++i) {
             pkmn_levelup_move_cpp_to_c(
                 lmoves_cpp[i],
-                &((*lmoves_c)[i])
+                &(lmoves_c->levelup_moves[i])
             );
         }
-        *list_length_out = lmoves_cpp.size();
+
+        lmoves_c->length = lmoves_cpp.size();
     }
 
     void pkmn_move_list_to_string_list(
         const pkmn::database::move_list_t &move_list,
-        pkmn_string_list_t* string_list_out,
-        size_t* list_length_out
+        pkmn_string_list_t* string_list_out
     ) {
-        *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * move_list.size());
+        string_list_out->strings = (char**)std::malloc(sizeof(char*) * move_list.size());
         for(size_t i = 0; i < move_list.size(); ++i) {
             std::string move_name = move_list[i].get_name();
-            (*string_list_out)[i] = (char*)std::malloc(move_name.size() + 1);
-            std::strcpy((*string_list_out)[i], move_name.c_str());
-            (*string_list_out)[i][move_name.size()] = '\0';
+            string_list_out->strings[i] = (char*)std::malloc(move_name.size() + 1);
+            std::strcpy(string_list_out->strings[i], move_name.c_str());
+            string_list_out->strings[i][move_name.size()] = '\0';
         }
-        *list_length_out = move_list.size();
+
+        string_list_out->length = move_list.size();
     }
 
     void pkmn_pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t &pokemon_entries,
-        pkmn_string_list_t* string_list_out,
-        size_t* list_length_out
+        pkmn_string_list_t* string_list_out
     ) {
-        *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * pokemon_entries.size());
+        string_list_out->strings = (char**)std::malloc(sizeof(char*) * pokemon_entries.size());
         for(size_t i = 0; i < pokemon_entries.size(); ++i) {
             std::string move_name = pokemon_entries[i].get_name();
-            (*string_list_out)[i] = (char*)std::malloc(move_name.size() + 1);
-            std::strcpy((*string_list_out)[i], move_name.c_str());
-            (*string_list_out)[i][move_name.size()] = '\0';
+            string_list_out->strings[i] = (char*)std::malloc(move_name.size() + 1);
+            std::strcpy(string_list_out->strings[i], move_name.c_str());
+            string_list_out->strings[i][move_name.size()] = '\0';
         }
-        *list_length_out = pokemon_entries.size();
+
+        string_list_out->length = pokemon_entries.size();
     }
 
     void std_pair_std_string_to_string_pair(
@@ -119,16 +118,16 @@ namespace pkmn {
 
     void std_vector_std_string_to_string_list(
         const std::vector<std::string> &vec,
-        pkmn_string_list_t* string_list_out,
-        size_t* list_length_out
+        pkmn_string_list_t* string_list_out
     ) {
-        *string_list_out = (pkmn_string_list_t)std::malloc(sizeof(char*) * vec.size());
+        string_list_out->strings = (char**)std::malloc(sizeof(char*) * vec.size());
         for(size_t i = 0; i < vec.size(); ++i) {
-            (*string_list_out)[i] = (char*)std::malloc(vec[i].size() + 1);
-            std::strcpy((*string_list_out)[i], vec[i].c_str());
-            (*string_list_out)[i][vec[i].size()] = '\0';
+            string_list_out->strings[i] = (char*)std::malloc(vec[i].size() + 1);
+            std::strcpy(string_list_out->strings[i], vec[i].c_str());
+            string_list_out->strings[i][vec[i].size()] = '\0';
         }
-        *list_length_out = vec.size();
+
+        string_list_out->length = vec.size();
     }
 
 }

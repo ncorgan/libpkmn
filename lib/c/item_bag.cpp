@@ -71,14 +71,12 @@ pkmn_error_t pkmn_item_bag_get_pocket(
 
 pkmn_error_t pkmn_item_bag_get_pocket_names(
     pkmn_item_bag_handle_t handle,
-    pkmn_string_list_t* pocket_names_out,
-    size_t* list_length_out
+    pkmn_string_list_t* pocket_names_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_vector_std_string_to_string_list(
             handle->cpp->get_pocket_names(),
-            pocket_names_out,
-            list_length_out
+            pocket_names_out
         );
     )
 }

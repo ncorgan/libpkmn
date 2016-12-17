@@ -52,8 +52,10 @@ void pkmntest_gba_item_pocket_test(
     int capacity = 0;
     int expected_capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
     pksav_gba_game_t gba_game = PKSAV_GBA_RS;
 
     // Get game type
@@ -152,12 +154,12 @@ void pkmntest_gba_item_pocket_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           item_pocket,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(valid_items_list_length > 0);
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    TEST_ASSERT(valid_items.length > 0);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
 void pkmntest_gba_key_item_pocket_test(
@@ -170,8 +172,10 @@ void pkmntest_gba_key_item_pocket_test(
     int capacity = 0;
     int expected_capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
     pksav_gba_game_t gba_game = PKSAV_GBA_RS;
 
     // Get game type
@@ -263,12 +267,12 @@ void pkmntest_gba_key_item_pocket_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           key_item_pocket,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(valid_items_list_length > 0);
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    TEST_ASSERT(valid_items.length > 0);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
 void pkmntest_gba_ball_pocket_test(
@@ -281,8 +285,10 @@ void pkmntest_gba_ball_pocket_test(
     int capacity = 0;
     int expected_capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
     pksav_gba_game_t gba_game = PKSAV_GBA_RS;
 
     // Get game type
@@ -374,12 +380,12 @@ void pkmntest_gba_ball_pocket_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           ball_pocket,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(valid_items_list_length > 0);
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    TEST_ASSERT(valid_items.length > 0);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
 void pkmntest_gba_tmhm_pocket_test(
@@ -392,8 +398,10 @@ void pkmntest_gba_tmhm_pocket_test(
     int capacity = 0;
     int expected_capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
     pksav_gba_game_t gba_game = PKSAV_GBA_RS;
 
     // Get game type
@@ -486,12 +494,12 @@ void pkmntest_gba_tmhm_pocket_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           tmhm_pocket,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(valid_items_list_length > 0);
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    TEST_ASSERT(valid_items.length > 0);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
 void pkmntest_gba_berry_pocket_test(
@@ -504,8 +512,10 @@ void pkmntest_gba_berry_pocket_test(
     int capacity = 0;
     int expected_capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
     pksav_gba_game_t gba_game = PKSAV_GBA_RS;
 
     // Get game type
@@ -598,12 +608,12 @@ void pkmntest_gba_berry_pocket_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           berry_pocket,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT(valid_items_list_length > 0);
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    TEST_ASSERT(valid_items.length > 0);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
 void pkmntest_gba_pc_test(
@@ -615,10 +625,14 @@ void pkmntest_gba_pc_test(
 
     int capacity = 0;
     int num_items = 0;
-    pkmn_string_list_t full_item_list = NULL;
-    size_t list_length = 0;
-    pkmn_string_list_t valid_items = NULL;
-    size_t valid_items_list_length = 0;
+    pkmn_string_list_t full_item_list = {
+        .strings = NULL,
+        .length = 0
+    };
+    pkmn_string_list_t valid_items = {
+        .strings = NULL,
+        .length = 0
+    };
 
     // Check unchanging and initial values.
     const char* expected_name = "PC";
@@ -680,29 +694,31 @@ void pkmntest_gba_pc_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_valid_items(
                           pc,
-                          &valid_items,
-                          &valid_items_list_length
+                          &valid_items
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(pkmn_database_item_list(
                           game,
-                          &full_item_list,
-                          &list_length
+                          &full_item_list
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(list_length, valid_items_list_length);
+    TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
 
-    pkmn_string_list_free(&full_item_list, list_length);
-    TEST_ASSERT_NULL(full_item_list);
+    pkmn_string_list_free(&full_item_list);
+    TEST_ASSERT_NULL(full_item_list.strings);
+    TEST_ASSERT_EQUAL(full_item_list.length, 0);
 
-    pkmn_string_list_free(&valid_items, valid_items_list_length);
-    TEST_ASSERT_NULL(valid_items);
+    pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(full_item_list.length, 0);
 }
 
 void pkmntest_gba_item_bag_test(
     pkmn_item_bag_handle_t bag,
     const char* game
 ) {
-    pkmn_string_list_t pocket_names = NULL;
-    size_t num_pockets = 0;
+    pkmn_string_list_t pocket_names = {
+        .strings = NULL,
+        .length = 0
+    };
 
     char strbuffer[STRBUFFER_LEN] = "";
     size_t actual_strlen = 0;
@@ -727,13 +743,13 @@ void pkmntest_gba_item_bag_test(
 
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket_names(
                           bag,
-                          &pocket_names,
-                          &num_pockets
+                          &pocket_names
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_pockets, 5);
+    TEST_ASSERT_EQUAL(pocket_names.length, 5);
 
-    pkmn_string_list_free(&pocket_names, num_pockets);
-    TEST_ASSERT_NULL(pocket_names);
+    pkmn_string_list_free(&pocket_names);
+    TEST_ASSERT_NULL(pocket_names.strings);
+    TEST_ASSERT_EQUAL(pocket_names.length, 0);
 
     // Test pockets.
     pkmn_item_list_handle_t item_list_handle = NULL;
