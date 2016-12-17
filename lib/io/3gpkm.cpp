@@ -94,7 +94,7 @@ namespace pkmn { namespace io {
                   );
         }
 
-        size_t filesize = fs::file_size(filepath);
+        size_t filesize = size_t(fs::file_size(filepath));
         std::vector<uint8_t> buffer(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);

@@ -576,17 +576,17 @@ namespace pkmn {
         }
 
         if(stat == "HP") {
-            _blockA->ev_hp = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_hp = uint8_t(value);
         } else if(stat == "Attack") {
-            _blockA->ev_atk = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_atk = uint8_t(value);
         } else if(stat == "Defense") {
-            _blockA->ev_def = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_def = uint8_t(value);
         } else if(stat == "Speed") {
-            _blockA->ev_spd = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_spd = uint8_t(value);
         } else if(stat == "Special Attack") {
-            _blockA->ev_spatk = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_spatk = uint8_t(value);
         } else {
-            _blockA->ev_spdef = pksav_littleendian16(uint16_t(value));
+            _blockA->ev_spdef = uint8_t(value);
         }
 
         _update_EV_map();

@@ -635,17 +635,17 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         if(stat == "HP") {
-            _effort->ev_hp = pksav_littleendian16(uint16_t(value));
+            _effort->ev_hp = uint8_t(value);
         } else if(stat == "Attack") {
-            _effort->ev_atk = pksav_littleendian16(uint16_t(value));
+            _effort->ev_atk = uint8_t(value);
         } else if(stat == "Defense") {
-            _effort->ev_def = pksav_littleendian16(uint16_t(value));
+            _effort->ev_def = uint8_t(value);
         } else if(stat == "Speed") {
-            _effort->ev_spd = pksav_littleendian16(uint16_t(value));
+            _effort->ev_spd = uint8_t(value);
         } else if(stat == "Special Attack") {
-            _effort->ev_spatk = pksav_littleendian16(uint16_t(value));
+            _effort->ev_spatk = uint8_t(value);
         } else {
-            _effort->ev_spdef = pksav_littleendian16(uint16_t(value));
+            _effort->ev_spdef = uint8_t(value);
         }
 
         _update_EV_map();

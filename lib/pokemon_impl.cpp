@@ -95,7 +95,7 @@ namespace pkmn {
         } else if(extension == ".pk6") {
             throw pkmn::unimplemented_error();
         } else {
-            std::vector<uint8_t> buffer(fs::file_size(filepath));
+            std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
             PKMN_UNUSED(int game_id) = 0;
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
