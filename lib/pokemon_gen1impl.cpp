@@ -250,6 +250,16 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation I.");
     }
 
+    int pokemon_gen1impl::get_level_caught() {
+        throw pkmn::feature_not_in_game_error("Level caught is not recorded in Generation I.");
+    }
+
+    void pokemon_gen1impl::set_level_caught(
+        PKMN_UNUSED(int level)
+    ) {
+        throw pkmn::feature_not_in_game_error("Level caught is not recorded in Generation I.");
+    }
+
     std::string pokemon_gen1impl::get_location_caught() {
         throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");
     }

@@ -170,6 +170,16 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_ball(
     const char* ball
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_level_caught(
+    pkmn_pokemon_handle_t handle,
+    int* level_caught_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_level_caught(
+    pkmn_pokemon_handle_t handle,
+    int level_caught
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_location_caught(
     pkmn_pokemon_handle_t handle,
     char* location_caught_out,

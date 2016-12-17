@@ -420,6 +420,26 @@ namespace pkmn {
         _misc->origin_info |= (ball_id << PKSAV_GBA_BALL_OFFSET);
     }
 
+
+    int pokemon_gbaimpl::get_level_caught() {
+        pokemon_scoped_lock lock(this);
+
+        return (_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK);
+    }
+
+    void pokemon_gbaimpl::set_level_caught(
+        int level
+    ) {
+        if(level < 0 or level > 100) {
+            throw pkmn::range_error("Level caught", 0, 100);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        _misc->origin_info &= ~PKSAV_GBA_LEVEL_MET_MASK;
+        _misc->origin_info |= uint16_t(level);
+    }
+
     std::string pokemon_gbaimpl::get_location_caught() {
         pokemon_scoped_lock lock(this);
 

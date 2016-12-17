@@ -383,6 +383,25 @@ namespace pkmn {
                                                                ));
     }
 
+    int pokemon_ndsimpl::get_level_caught() {
+        pokemon_scoped_lock lock(this);
+
+        return (_blockD->metlevel_otgender & PKSAV_NDS_LEVELMET_MASK);
+    }
+
+    void pokemon_ndsimpl::set_level_caught(
+        int level
+    ) {
+        if(level < 0 or level > 100) {
+            throw pkmn::range_error("Level caught", 0, 100);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        _blockD->metlevel_otgender &= ~PKSAV_NDS_LEVELMET_MASK;
+        _blockD->metlevel_otgender |= uint16_t(level);
+    }
+
     // TODO: as_egg
     std::string pokemon_ndsimpl::get_location_caught() {
         return pkmn::database::location_index_to_name(

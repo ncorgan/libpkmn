@@ -83,6 +83,12 @@ namespace pkmn {
                 const std::string &ball
             );
 
+            int get_level_caught();
+
+            void set_level_caught(
+                int level
+            );
+
             std::string get_location_caught();
 
             void set_location_caught(

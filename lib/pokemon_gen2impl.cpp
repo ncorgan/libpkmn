@@ -248,6 +248,28 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
+    int pokemon_gen2impl::get_level_caught() {
+        pokemon_scoped_lock lock(this);
+
+        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
+    }
+
+    void pokemon_gen2impl::set_level_caught(
+        int level
+    ) {
+        if(level < 2 or level > 100) {
+            throw pkmn::range_error("Level caught", 2, 100);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        uint16_t caught_data = uint16_t(level);
+        caught_data <<= PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
+
+        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LEVEL_CAUGHT_MASK;
+        GEN2_PC_RCAST->caught_data |= caught_data;
+    }
+
     std::string pokemon_gen2impl::get_location_caught() {
         pokemon_scoped_lock lock(this);
 
