@@ -740,7 +740,7 @@ namespace pkmn {
                 break;
 
             default:
-                for(size_t i = 0; i < 4; ++i) {
+                for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
         }
