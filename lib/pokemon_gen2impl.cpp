@@ -66,8 +66,8 @@ namespace pkmn {
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
 
-        // TODO: rest of caught_data
-        GEN2_PC_RCAST->caught_data = 0xFF;
+        GEN2_PC_RCAST->caught_data = 0x7F;
+        // TODO: level caught
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
@@ -462,7 +462,9 @@ namespace pkmn {
     void pokemon_gen2impl::_update_moves(
         int index
     ) {
-        _moves.reserve(4);
+        if(_moves.size() != 4) {
+            _moves.resize(4);
+        }
         switch(index) {
             case 0:
             case 1:

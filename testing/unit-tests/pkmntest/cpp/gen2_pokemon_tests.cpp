@@ -61,7 +61,6 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(stat_map.count("Attack"), 1);
         BOOST_CHECK_EQUAL(stat_map.count("Defense"), 1);
         BOOST_CHECK_EQUAL(stat_map.count("Speed"), 1);
-        BOOST_CHECK_EQUAL(stat_map.count("Special"), 1);
         if(is_stats) {
             BOOST_CHECK_EQUAL(stat_map.count("Special"), 0);
             BOOST_CHECK_EQUAL(stat_map.count("Special Attack"), 1);
