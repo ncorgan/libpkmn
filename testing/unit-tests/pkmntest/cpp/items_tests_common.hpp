@@ -8,6 +8,7 @@
 #ifndef ITEMS_TESTS_COMMON_HPP
 #define ITEMS_TESTS_COMMON_HPP
 
+#include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 
 #include <string>
@@ -25,7 +26,12 @@ namespace pkmntest {
         const std::string &item_name
     );
 
-    void test_item_list_items_from_wrong_pocket(
+    void test_item_bag_invalid_items(
+        pkmn::item_bag::sptr bag,
+        const std::vector<std::string> &item_names
+    );
+
+    void test_item_list_invalid_items(
         pkmn::item_list::sptr list,
         const std::vector<std::string> &item_names
     );

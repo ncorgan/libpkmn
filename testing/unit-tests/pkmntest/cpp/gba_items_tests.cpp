@@ -30,6 +30,13 @@ namespace pkmntest {
         ("Potion")("Mach Bike")("Great Ball")("TM01")
         ("Aspear Berry")("Wailmer Pail")("Master Ball")("HM04")
     ;
+    static const std::vector<std::string> wrong_game_all_pocket_items = boost::assign::list_of
+        ("Pink Bow")("Black Sludge")
+        ("Ein File S")("Gonzap's Key")
+        ("GS Ball")("Poffin Items")
+        ("TM51")
+        ("Berry")("Occa Berry")
+    ;
 
     BOOST_STATIC_CONSTEXPR int RUBY      = 7;
     BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
@@ -76,12 +83,31 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Bicycle")("Master Ball")("HM01")("Razz Berry")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             item_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from other generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Pink Bow")("Black Sludge")("Binding Band")("Beedrillite")
+        ;
+        test_item_list_invalid_items(
+            item_pocket,
+            wrong_generation_items
+        );
+
+        // Make sure we can't add items from Gamecube games.
+        static const std::vector<std::string> gcn_items = boost::assign::list_of
+            ("Time Flute")
+            ("Poké Snack")
+        ;
+        test_item_list_invalid_items(
+            item_pocket,
+            gcn_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -131,15 +157,50 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        std::vector<std::string> wrong_items;
-        wrong_items.emplace_back("Potion");
-        wrong_items.emplace_back("Master Ball");
-        wrong_items.emplace_back("HM01");
-        wrong_items.emplace_back("Razz Berry");
-        test_item_list_items_from_wrong_pocket(
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
+            ("Potion")("Master Ball")("HM01")("Razz Berry")
+        ;
+        test_item_list_invalid_items(
             key_item_pocket,
-            wrong_items
+            wrong_pocket_items
         );
+
+        // Make sure we can't add items from other generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("GS Ball")("Poffin Items")("DNA Splicers")("Aqua Suit")
+        ;
+        test_item_list_invalid_items(
+            key_item_pocket,
+            wrong_generation_items
+        );
+
+        // Make sure we can't add items from incompatible Generation III games.
+        static const std::vector<std::string> gcn_items = boost::assign::list_of
+            ("Ein File S")("Powerup Part")
+            ("Gonzap's Key")("Krane Memo 1")
+        ;
+        static const std::vector<std::string> frlg_items = boost::assign::list_of
+            ("Helix Fossil")("Tea")("Ruby")
+        ;
+        static const std::vector<std::string> emerald_items = boost::assign::list_of
+            ("Magma Emblem")("Old Sea Map")
+        ;
+        test_item_list_invalid_items(
+            key_item_pocket,
+            gcn_items
+        );
+        if(game == "Ruby" or game == "Sapphire") {
+            test_item_list_invalid_items(
+                key_item_pocket,
+                frlg_items
+            );
+        }
+        if(game != "Emerald") {
+            test_item_list_invalid_items(
+                key_item_pocket,
+                emerald_items
+            );
+        }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
         static const std::vector<std::string> item_names = boost::assign::list_of
@@ -188,12 +249,21 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Bicycle")("HM01")("Razz Berry")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             ball_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from other generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Moon Ball")("Heal Ball")("Dream Ball")
+        ;
+        test_item_list_invalid_items(
+            ball_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -246,12 +316,21 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Bicycle")("Great Ball")("Razz Berry")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             tmhm_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from other generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("TM51")
+        ;
+        test_item_list_invalid_items(
+            tmhm_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -304,12 +383,21 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Bicycle")("Great Ball")("HM02")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             berry_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from other generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Berry")("Occa Berry")("Roseli Berry")
+        ;
+        test_item_list_invalid_items(
+            berry_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -347,6 +435,12 @@ namespace pkmntest {
         test_item_list_out_of_range_error(
             pc,
             "Potion"
+        );
+
+        // Make sure we can't add items from other generations or invalid Generation III games.
+        test_item_list_invalid_items(
+            pc,
+            wrong_game_all_pocket_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -476,6 +570,11 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(berry_slots.at(0).amount, 0);
         BOOST_CHECK_EQUAL(berry_slots.at(1).item.get_name(), "None");
         BOOST_CHECK_EQUAL(berry_slots.at(1).amount, 0);
-    }
 
+        // Make sure we can't add items from other generations or invalid Generation III games.
+        test_item_bag_invalid_items(
+            bag,
+            wrong_game_all_pocket_items
+        );
+    }
 }

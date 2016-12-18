@@ -14,6 +14,11 @@ import unittest
 
 class gen2_items_test(items_tests):
 
+    def setUp(self):
+        self.__crystal_items = ["Clear Bell", "GS Ball", "Blue Card", "Egg Ticket"]
+        self.__wrong_generation_all_pocket_items = ["Black Sludge", "Poffin Items",
+                                                    "TM51", "Occa Berry"]
+
     #
     # Helper functions
     #
@@ -33,11 +38,16 @@ class gen2_items_test(items_tests):
         self.item_list_test_out_of_range_error(item_pocket, "Potion")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             item_pocket,
             ["Bicycle", "Master Ball", "HM01"]
         )
-        self.assertEqual(item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            item_pocket,
+            ["Black Flute", "Black Sludge", "Binding Band", "Beedrillite"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -65,36 +75,28 @@ class gen2_items_test(items_tests):
         self.item_list_test_out_of_range_error(key_item_pocket, "Bicycle")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             key_item_pocket,
             ["Potion", "Master Ball", "HM01"]
         )
-        self.assertEqual(key_item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            key_item_pocket,
+            ["Mach Bike", "Jade Orb", "Light Stone", "Aqua Suit"]
+        )
 
         # Crystal-specific items
         if game == "Crystal":
-            key_item_pocket.add("Clear Bell", 1)
-            key_item_pocket.remove("Clear Bell", 1)
-
-            key_item_pocket.add("GS Ball", 1)
-            key_item_pocket.remove("GS Ball", 1)
-
-            key_item_pocket.add("Blue Card", 1)
-            key_item_pocket.remove("Blue Card", 1)
-
-            key_item_pocket.add("Egg Ticket", 1)
-            key_item_pocket.remove("Egg Ticket", 1)
+            for item in self.__crystal_items:
+                key_item_pocket.add(item, 1)
+                key_item_pocket.remove(item, 1)
+            self.assertEqual(key_item_pocket.get_num_items(), 0)
         else:
-            with self.assertRaises(ValueError):
-                key_item_pocket.add("Clear Bell", 1)
-            with self.assertRaises(ValueError):
-                key_item_pocket.add("GS Ball", 1)
-            with self.assertRaises(ValueError):
-                key_item_pocket.add("Blue Card", 1)
-            with self.assertRaises(ValueError):
-                key_item_pocket.add("Egg Ticket", 1)
-
-        self.assertEqual(key_item_pocket.get_num_items(), 0)
+            self.item_class_test_invalid_items(
+                key_item_pocket,
+                self.__crystal_items
+            )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -122,11 +124,16 @@ class gen2_items_test(items_tests):
         self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             ball_pocket,
             ["Potion", "Bicycle", "HM01"]
         )
-        self.assertEqual(ball_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            ball_pocket,
+            ["Premier Ball", "Heal Ball", "Dream Ball"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         item_names = [u"Great Ball", u"Pok\u00e9 Ball", u"Park Ball", u"Fast Ball",
@@ -169,13 +176,16 @@ class gen2_items_test(items_tests):
             tmhm_pocket.remove("TM10", 100)
 
         # Make sure we can't add items from other pockets.
-        with self.assertRaises(ValueError):
-            tmhm_pocket.add("Potion", 1)
-        with self.assertRaises(ValueError):
-            tmhm_pocket.add("Master Ball", 1)
-        with self.assertRaises(ValueError):
-            tmhm_pocket.add("Bicycle", 1)
-        self.assertEqual(tmhm_pocket.get_num_items(), 0)
+        self.item_class_test_invalid_items(
+            tmhm_pocket,
+            ["Potion", "Master Ball", "Bicycle"]
+        )
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            tmhm_pocket,
+            ["TM51"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         for i in range(1,51):
@@ -220,6 +230,24 @@ class gen2_items_test(items_tests):
 
         # Confirm errors are thrown when expected.
         self.item_list_test_out_of_range_error(pc, "Potion")
+
+        # Crystal-specific items
+        if game == "Crystal":
+            for item in self.__crystal_items:
+                pc.add(item, 1)
+                pc.remove(item, 1)
+            self.assertEqual(pc.get_num_items(), 0)
+        else:
+            self.item_class_test_invalid_items(
+                pc,
+                self.__crystal_items
+            )
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            pc,
+            self.__wrong_generation_all_pocket_items
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -324,6 +352,12 @@ class gen2_items_test(items_tests):
         self.assertEqual(bag["TM/HM"][27].amount, 0)
         self.assertEqual(bag["TM/HM"][50].item.get_name(), "HM01")
         self.assertEqual(bag["TM/HM"][50].amount, 0)
+
+        # Make sure we can't add items from later generations.
+        self.item_class_test_invalid_items(
+            bag,
+            self.__wrong_generation_all_pocket_items
+        )
 
     #
     # Gold

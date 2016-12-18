@@ -14,6 +14,15 @@ import unittest
 
 class gba_items_test(items_tests):
 
+    def setUp(self):
+        self.__all_pocket_item_names = ["Potion", "Mach Bike", "Great Ball", "TM01",
+                                        "Aspear Berry", "Wailmer Pail", "Master Ball", "HM04"]
+        self.__wrong_game_all_pocket_items = ["Pink Bow", "Black Sludge",
+                                              "Ein File S", "Gonzap's Key",
+                                              "GS Ball", "Poffin Items",
+                                              "TM51",
+                                              "Berry", "Occa Berry"]
+
     #
     # Helper functions
     #
@@ -40,11 +49,22 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(item_pocket, "Potion")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             item_pocket,
             ["Bicycle", "Master Ball", "HM01", "Razz Berry"]
         )
-        self.assertEqual(item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            item_pocket,
+            ["Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"]
+        )
+
+        # Make sure we can't add items from Gamecube games.
+        self.item_class_test_invalid_items(
+            item_pocket,
+            ["Time Flute", u"Pok\u00e9 Snack"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -79,11 +99,33 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(key_item_pocket, "Basement Key")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             key_item_pocket,
             ["Potion", "Master Ball", "HM01", "Razz Berry"]
         )
-        self.assertEqual(key_item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            key_item_pocket,
+            ["GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"]
+        )
+
+        # Make sure we can't add items from Gamecube games.
+        self.item_class_test_invalid_items(
+            key_item_pocket,
+            ["Ein File S", "Powerup Part",
+             "Gonzap's Key", "Krane Memo 1"]
+        )
+        if game == "Ruby" or game == "Sapphire":
+            self.item_class_test_invalid_items(
+                key_item_pocket,
+                ["Helix Fossil", "Tea", "Ruby"]
+            )
+        if game != "Emerald":
+            self.item_class_test_invalid_items(
+                key_item_pocket,
+                ["Magma Emblem", "Old Sea Map"]
+            )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -116,11 +158,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             ball_pocket,
             ["Potion", "Bicycle", "HM01", "Razz Berry"]
         )
-        self.assertEqual(ball_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            ball_pocket,
+            ["Moon Ball", "Heal Ball", "Dream Ball"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         item_names = [u"Master Ball", u"Ultra Ball", u"Great Ball", u"Pok\u00e9 Ball",
@@ -156,11 +203,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(tmhm_pocket, "TM01")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             tmhm_pocket,
             ["Potion", "Master Ball", "Great Ball", "Razz Berry"]
         )
-        self.assertEqual(tmhm_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            tmhm_pocket,
+            ["TM51"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -195,11 +247,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(berry_pocket, "Razz Berry")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             berry_pocket,
             ["Potion", "Bicycle", "Great Ball", "HM02"]
         )
-        self.assertEqual(berry_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            berry_pocket,
+            ["Berry", "Occa Berry", "Roseli Berry"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -225,6 +282,12 @@ class gba_items_test(items_tests):
 
         # Confirm errors are thrown when expected.
         self.item_list_test_out_of_range_error(pc, "Potion")
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            pc,
+            self.__wrong_game_all_pocket_items
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -341,6 +404,12 @@ class gba_items_test(items_tests):
         self.assertEqual(bag[berry_pocket_name][0].amount, 0)
         self.assertEqual(bag[berry_pocket_name][1].item.get_name(), "None")
         self.assertEqual(bag[berry_pocket_name][1].amount, 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            bag,
+            self.__wrong_game_all_pocket_items
+        )
 
     #
     # Ruby

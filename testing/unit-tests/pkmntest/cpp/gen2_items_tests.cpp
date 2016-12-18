@@ -30,6 +30,12 @@ namespace pkmntest {
         ("Potion")("Bicycle")("Great Ball")("TM28")
         ("Berry")("SquirtBottle")("Friend Ball")("HM01")
     ;
+    static const std::vector<std::string> crystal_items = boost::assign::list_of
+        ("Clear Bell")("GS Ball")("Blue Card")("Egg Ticket")
+    ;
+    static const std::vector<std::string> wrong_generation_all_pocket_items = boost::assign::list_of
+        ("Black Sludge")("Poffin Items")("TM51")("Occa Berry")
+    ;
 
     void gen2_item_pocket_test(
         pkmn::item_list::sptr item_pocket,
@@ -54,12 +60,21 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Bicycle")("Master Ball")("HM01")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             item_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from later generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Black Flute")("Black Sludge")("Binding Band")("Beedrillite")
+        ;
+        test_item_list_invalid_items(
+            item_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -100,43 +115,36 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Master Ball")("HM01")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             key_item_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from later generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Mach Bike")("Jade Orb")("Light Stone")("Aqua Suit")
+        ;
+        test_item_list_invalid_items(
+            key_item_pocket,
+            wrong_generation_items
         );
 
         // Crystal-specific items.
         if(game == "Crystal") {
-            key_item_pocket->add("Clear Bell", 1);
-            key_item_pocket->remove("Clear Bell", 1);
-
-            key_item_pocket->add("GS Ball", 1);
-            key_item_pocket->remove("GS Ball", 1);
-
-            key_item_pocket->add("Blue Card", 1);
-            key_item_pocket->remove("Blue Card", 1);
-
-            key_item_pocket->add("Egg Ticket", 1);
-            key_item_pocket->remove("Egg Ticket", 1);
+            for(auto iter = crystal_items.begin(); iter != crystal_items.end(); ++iter) {
+                key_item_pocket->add(*iter, 1);
+                key_item_pocket->remove(*iter, 1);
+            }
 
             BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
         } else {
-            BOOST_CHECK_THROW(
-                key_item_pocket->add("Clear Bell", 1);
-            , std::invalid_argument);
-            BOOST_CHECK_THROW(
-                key_item_pocket->add("GS Ball", 1);
-            , std::invalid_argument);
-            BOOST_CHECK_THROW(
-                key_item_pocket->add("Blue Card", 1);
-            , std::invalid_argument);
-            BOOST_CHECK_THROW(
-                key_item_pocket->add("Egg Ticket", 1);
-            , std::invalid_argument);
-            BOOST_CHECK_EQUAL(key_item_pocket->get_num_items(), 0);
+            test_item_list_invalid_items(
+                key_item_pocket,
+                crystal_items
+            );
         }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -180,7 +188,7 @@ namespace pkmntest {
         static const std::vector<std::string> wrong_items = boost::assign::list_of
             ("Potion")("Bicycle")("HM01")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             ball_pocket,
             wrong_items
         );
@@ -236,9 +244,18 @@ namespace pkmntest {
         static const std::vector<std::string> wrong_items = boost::assign::list_of
             ("Potion")("Master Ball")("Bicycle")
         ;
-        test_item_list_items_from_wrong_pocket(
+        test_item_list_invalid_items(
             tmhm_pocket,
             wrong_items
+        );
+
+        // Make sure we can't add items from later generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("TM51")
+        ;
+        test_item_list_invalid_items(
+            tmhm_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -300,6 +317,27 @@ namespace pkmntest {
         test_item_list_empty_slots(
             pc,
             none_entries.at(game)
+        );
+
+        // Crystal-specific items.
+        if(game == "Crystal") {
+            for(auto iter = crystal_items.begin(); iter != crystal_items.end(); ++iter) {
+                pc->add(*iter, 1);
+                pc->remove(*iter, 1);
+            }
+
+            BOOST_CHECK_EQUAL(pc->get_num_items(), 0);
+        } else {
+            test_item_list_invalid_items(
+                pc,
+                crystal_items
+            );
+        }
+
+        // Make sure we can't add items from later generations.
+        test_item_list_invalid_items(
+            pc,
+            wrong_generation_all_pocket_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -413,5 +451,47 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(tm_hm_slots.at(27).amount, 0);
         BOOST_CHECK_EQUAL(tm_hm_slots.at(50).item.get_name(), "HM01");
         BOOST_CHECK_EQUAL(tm_hm_slots.at(50).amount, 0);
+
+        // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
+        if(game == "Crystal") {
+            bag->add("Clear Bell", 1);
+            bag->add("GS Ball", 1);
+            bag->add("Blue Card", 1);
+            bag->add("Egg Ticket", 1);
+
+            BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "Clear Bell");
+            BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 1);
+            BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "GS Ball");
+            BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 1);
+            BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "Blue Card");
+            BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 1);
+            BOOST_CHECK_EQUAL(key_item_slots.at(3).item.get_name(), "Egg Ticket");
+            BOOST_CHECK_EQUAL(key_item_slots.at(3).amount, 1);
+
+            bag->remove("Clear Bell", 1);
+            bag->remove("GS Ball", 1);
+            bag->remove("Blue Card", 1);
+            bag->remove("Egg Ticket", 1);
+
+            BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "None");
+            BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 0);
+            BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "None");
+            BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 0);
+            BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "None");
+            BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 0);
+            BOOST_CHECK_EQUAL(key_item_slots.at(3).item.get_name(), "None");
+            BOOST_CHECK_EQUAL(key_item_slots.at(3).amount, 0);
+        } else {
+            test_item_bag_invalid_items(
+                bag,
+                crystal_items
+            );
+        }
+
+        // Make sure we can't add items from later generations.
+        test_item_bag_invalid_items(
+            bag,
+            wrong_generation_all_pocket_items
+        );
     }
 }

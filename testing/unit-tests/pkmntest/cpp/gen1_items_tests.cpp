@@ -30,6 +30,9 @@ namespace pkmntest {
         ("Potion")("Great Ball")("Ether")("PP Up")
         ("TM34")("Moon Stone")("Bicycle")("Full Heal")
     ;
+    static const std::vector<std::string> wrong_generation_item_names = boost::assign::list_of
+        ("Amulet Coin")("Apicot Berry")("Air Mail")("Air Balloon")("Aqua Suit")
+    ;
 
     static void gen1_item_list_common(
         pkmn::item_list::sptr list,
@@ -45,6 +48,12 @@ namespace pkmntest {
         test_item_list_out_of_range_error(
             list,
             "Potion"
+        );
+
+        // Confirm items from later generations can't be added.
+        test_item_list_invalid_items(
+            list,
+            wrong_generation_item_names
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -91,6 +100,12 @@ namespace pkmntest {
     ) {
         // Check unchanging and initial values.
         BOOST_CHECK_EQUAL(bag->get_game(), game);
+
+        // Confirm items from later generations can't be added.
+        test_item_bag_invalid_items(
+            bag,
+            wrong_generation_item_names
+        );
 
         const pkmn::item_pockets_t& pockets = bag->get_pockets();
         BOOST_CHECK_EQUAL(pockets.size(), 1);
