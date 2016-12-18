@@ -22,6 +22,10 @@ namespace pkmn {
         public:
             typedef pkmn::shared_ptr<game_save> sptr;
 
+            static std::string detect_type(
+                const std::string &filepath
+            );
+
             #ifndef __DOXYGEN__
             game_save() {};
             virtual ~game_save() {};
