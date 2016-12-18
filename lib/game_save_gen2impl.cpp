@@ -40,6 +40,10 @@ namespace pkmn {
 
         if(_pksav_save.gen2_game == PKSAV_GEN2_CRYSTAL) {
             _game_id = CRYSTAL;
+
+            _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
+                            CRYSTAL_PC, _game_id, _pksav_save.item_pc
+                       );
         } else {
             /*
              * As there is no way to distinguish Gold and Silver saves from the saves
@@ -58,15 +62,15 @@ namespace pkmn {
                 // Default to Gold, doesn't practically matter within a version group
                 _game_id = GOLD;
             }
+
+            _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
+                            GS_PC, _game_id, _pksav_save.item_pc
+                       );
         }
 
         _item_bag = pkmn::make_shared<item_bag_gen2impl>(
                         _game_id, _pksav_save.item_bag
                     );
-        _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
-                        (_game_id == CRYSTAL) ? CRYSTAL_PC : GS_PC,
-                        _game_id, _pksav_save.item_pc
-                   );
     }
 
     game_save_gen2impl::~game_save_gen2impl() {
