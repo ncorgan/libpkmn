@@ -14,6 +14,7 @@
 %{
     #include <pkmn/config.hpp>
 
+    #include <pkmn/game_save.hpp>
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
 
@@ -40,6 +41,14 @@
 %{
     #include <boost/locale/encoding_utf.hpp>
 
+    PKMN_INLINE std::string detect_game_save_type(
+        const std::wstring &filepath
+    ) {
+        return pkmn::game_save::detect_type(
+                   boost::locale::conv::utf_to_utf<char>(filepath)
+               );
+    }
+
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
         const std::wstring &name,
         const std::wstring &game
@@ -51,9 +60,16 @@
     }
 %}
 
+std::string detect_game_save_type(const std::wstring& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const std::wstring& game);
 #else
 %{
+    PKMN_INLINE std::string detect_game_save_type(
+        const std::string &filepath
+    ) {
+        return pkmn::game_save::detect_type(filepath);
+    }
+
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
         const std::string &name,
         const std::string &game
@@ -62,6 +78,7 @@ pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const
     }
 %}
 
+std::string detect_game_save_type(const std::string& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
 #endif
 
