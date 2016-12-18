@@ -67,10 +67,10 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_has_gender_differences(
     bool* has_gender_differences_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_base_happiness(
+PKMN_API pkmn_error_t pkmn_database_pokemon_base_friendship(
     const char* pokemon_name,
     const char* game_name,
-    int* base_happiness_out
+    int* base_friendship_out
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_types(

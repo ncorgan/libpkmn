@@ -37,7 +37,7 @@ static void _pokemon_entry_none_test(
     BOOST_CHECK_CLOSE(none_entry.get_chance_male(), -1.0f, 0.0001f);
     BOOST_CHECK_CLOSE(none_entry.get_chance_female(), -1.0f, 0.0001f);
     BOOST_CHECK(not none_entry.has_gender_differences());
-    BOOST_CHECK_EQUAL(none_entry.get_base_happiness(), -1.0f);
+    BOOST_CHECK_EQUAL(none_entry.get_base_friendship(), -1.0f);
     BOOST_CHECK(none_entry.get_types() == none_pair);
     BOOST_CHECK(none_entry.get_abilities() == none_pair);
     BOOST_CHECK_EQUAL(none_entry.get_hidden_ability(), "None");
@@ -283,7 +283,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gen1.get_chance_male(), 0.0f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen1.get_chance_female(), 0.0f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gen1.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_base_happiness(), -1);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_base_friendship(), -1);
 
     std::pair<std::string, std::string> types1 = pokemon_entry_gen1.get_types();
     BOOST_CHECK_EQUAL(types1.first, "Ice");
@@ -329,7 +329,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gen2.get_chance_male(), 0.875f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen2.get_chance_female(), 0.125f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gen2.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_base_happiness(), 70);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_base_friendship(), 70);
 
     std::pair<std::string, std::string> types2 = pokemon_entry_gen2.get_types();
     BOOST_CHECK_EQUAL(types2.first, "Water");
@@ -384,7 +384,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gba.get_chance_male(), 0.0f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gba.get_chance_female(), 0.0f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gba.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gba.get_base_happiness(), 35);
+    BOOST_CHECK_EQUAL(pokemon_entry_gba.get_base_friendship(), 35);
 
     std::pair<std::string, std::string> types_gba = pokemon_entry_gba.get_types();
     BOOST_CHECK_EQUAL(types_gba.first, "Ice");
@@ -443,7 +443,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gcn.get_chance_male(), 0.5f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gcn.get_chance_female(), 0.5f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gcn.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_base_happiness(), 70);
+    BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_base_friendship(), 70);
 
     std::pair<std::string, std::string> types_gcn = pokemon_entry_gcn.get_types();
     BOOST_CHECK_EQUAL(types_gcn.first, "Grass");
@@ -502,7 +502,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_chance_male(), 0.5f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen4.get_chance_female(), 0.5f, 0.0001f);
     BOOST_CHECK(pokemon_entry_gen4.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_base_happiness(), 70);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_base_friendship(), 70);
 
     std::pair<std::string, std::string> types_gen4 = pokemon_entry_gen4.get_types();
     BOOST_CHECK_EQUAL(types_gen4.first, "Bug");
@@ -561,7 +561,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_chance_male(), 0.5f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen5.get_chance_female(), 0.5f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gen5.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_base_happiness(), 70);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_base_friendship(), 70);
 
     std::pair<std::string, std::string> types_gen5 = pokemon_entry_gen5.get_types();
     BOOST_CHECK_EQUAL(types_gen5.first, "Ground");
@@ -620,7 +620,7 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_chance_male(), 0.875f, 0.0001f);
     BOOST_CHECK_CLOSE(pokemon_entry_gen6.get_chance_female(), 0.125f, 0.0001f);
     BOOST_CHECK(not pokemon_entry_gen6.has_gender_differences());
-    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_base_happiness(), 70);
+    BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_base_friendship(), 70);
 
     std::pair<std::string, std::string> types_gen6 = pokemon_entry_gen6.get_types();
     BOOST_CHECK_EQUAL(types_gen6.first, "Fairy");

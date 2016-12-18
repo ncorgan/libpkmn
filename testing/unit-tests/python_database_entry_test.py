@@ -111,7 +111,7 @@ class database_entry_test(unittest.TestCase):
         self.assertAlmostEqual(entry.get_chance_male(), 0.5)
         self.assertAlmostEqual(entry.get_chance_female(), 0.5)
         self.assertFalse(entry.has_gender_differences())
-        self.assertEqual(entry.get_base_happiness(), 70)
+        self.assertEqual(entry.get_base_friendship(), 70)
 
         types = entry.get_types()
         self.assertEqual(types[0], "Ground")

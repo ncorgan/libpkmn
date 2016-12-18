@@ -116,15 +116,15 @@ pkmn_error_t pkmn_database_pokemon_has_gender_differences(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_base_happiness(
+pkmn_error_t pkmn_database_pokemon_base_friendship(
     const char* pokemon_name,
     const char* game_name,
-    int* base_happiness_out
+    int* base_friendship_out
 ) {
     PKMN_CPP_TO_C(
-        *base_happiness_out = pkmn::database::pokemon_entry(
+        *base_friendship_out = pkmn::database::pokemon_entry(
                                   pokemon_name, game_name, ""
-                              ).get_base_happiness();
+                              ).get_base_friendship();
     )
 }
 

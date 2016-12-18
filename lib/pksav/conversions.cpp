@@ -38,12 +38,12 @@ namespace pksav {
                );
     }
 
-    static int pokemon_index_to_base_happiness(
+    static int pokemon_index_to_base_friendship(
         int pokemon_index,
         int game_id
     ) {
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT base_happiness FROM pokemon_species WHERE id="
+            "SELECT base_friendship FROM pokemon_species WHERE id="
             "(SELECT species_id FROM pokemon WHERE id="
             "(SELECT pokemon_id FROM pokemon_game_indices WHERE "
             "version_id=? AND game_index=?))";
@@ -70,7 +70,7 @@ namespace pksav {
          * Gen I's catch rate corresponds to Gen II's held item.
          */
         std::memcpy(&to->held_item, &from->catch_rate, 26);
-        to->friendship = uint8_t(pokemon_index_to_base_happiness(
+        to->friendship = uint8_t(pokemon_index_to_base_friendship(
                              pksav_bigendian16(to->species), 4
                          ));
         // Leave Pokérus field at 0

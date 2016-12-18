@@ -63,7 +63,7 @@ namespace pkmn {
         GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
         GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
 
-        GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_happiness());
+        GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_level_caught(level);
         set_location_caught("Special");

@@ -435,8 +435,8 @@ namespace pkmn { namespace database {
                 ) > 0);
     }
 
-    int pokemon_entry::get_base_happiness() const {
-        // Happiness was introduced in Generation II
+    int pokemon_entry::get_base_friendship() const {
+        // Friendship was introduced in Generation II
         if(_none or _invalid or _generation == 1) {
             return -1;
         }

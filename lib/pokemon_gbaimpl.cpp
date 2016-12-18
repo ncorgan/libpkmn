@@ -82,7 +82,7 @@ namespace pkmn {
         _growth->exp = pksav_littleendian32(uint32_t(
                            _database_entry.get_experience_at_level(level)
                        ));
-        _growth->friendship = uint8_t(_database_entry.get_base_happiness());
+        _growth->friendship = uint8_t(_database_entry.get_base_friendship());
 
         // TODO: Use PKSav PRNG after refactor merged in
         _effort->ev_hp    = uint32_t(std::rand());

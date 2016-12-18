@@ -323,7 +323,7 @@ static void pokemon_test() {
     TEST_ASSERT(!bool_result);
 
     // Base Happiness
-    error = pkmn_database_pokemon_base_happiness(
+    error = pkmn_database_pokemon_base_friendship(
                 "Stunfisk", "Black 2",
                 &int_result
             );
