@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_ITEM_BAG_HPP
-#define PKMN_ITEM_BAG_HPP
+#ifndef PKMN_GAME_SAVE_HPP
+#define PKMN_GAME_SAVE_HPP
 
 #include <pkmn/config.hpp>
 #include <pkmn/item_bag.hpp>
@@ -52,3 +52,5 @@ namespace pkmn {
             virtual pkmn::item_list::sptr get_item_pc() = 0;
     };
 }
+
+#endif /* PKMN_GAME_SAVE_HPP */
