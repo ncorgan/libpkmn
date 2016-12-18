@@ -45,7 +45,10 @@ namespace pkmn {
              * As there is no way to distinguish Red and Blue saves from the saves
              * themselves, we'll try to depend on the fact that .sav files match
              * the name of their game's ROM, which are usually the game titles, so
-             * we'll check for the version in the filename.
+             * we'll check for the version in the filename. We also check for Yellow
+             * here because PKSav's check is valid 99.9% of the time, but there is
+             * a small chance the trainer's Pikachu despises him enough for the
+             * friendship value to be 0.
              */
             std::string filename_lower = boost::algorithm::to_lower_copy(
                                               fs::path(filepath).stem().string()

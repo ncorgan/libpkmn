@@ -60,6 +60,7 @@ SET(pkmn_sources
     exception.cpp
     game_save_impl.cpp
     game_save_gen1impl.cpp
+    game_save_gen2impl.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_bag_gen2impl.cpp
