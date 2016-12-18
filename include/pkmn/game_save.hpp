@@ -27,8 +27,6 @@ namespace pkmn {
             virtual ~game_save() {};
             #endif
 
-            virtual void load() = 0;
-
             virtual std::string get_filepath() = 0;
 
             virtual std::string get_game() = 0;

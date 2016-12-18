@@ -16,7 +16,8 @@ namespace pkmn {
 
     game_save_impl::game_save_impl(
         const std::string &filepath
-    ) {
+    ): game_save()
+    {
         if(not fs::exists(filepath)) {
             throw std::invalid_argument("The given filepath does not exist.");
         }
