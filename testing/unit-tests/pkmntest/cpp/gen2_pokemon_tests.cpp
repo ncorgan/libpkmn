@@ -194,6 +194,33 @@ namespace pkmntest {
         );
 
         BOOST_CHECK_THROW(
+            pokemon->set_held_item("Not an item");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_held_item("Razz Berry");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_held_item("Bicycle");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        pokemon->set_held_item("Berry");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "Berry"
+        );
+
+        BOOST_CHECK_THROW(
             pokemon->set_trainer_name(""),
         std::invalid_argument);
         BOOST_CHECK_THROW(
@@ -387,10 +414,13 @@ namespace pkmntest {
                                                                    );
 
         BOOST_CHECK_EQUAL(
-            uint8_t(pokemon->get_database_entry().get_pokemon_id()),
+            uint8_t(pokemon->get_database_entry().get_pokemon_index()),
             native_pc->species
         );
-        // TODO: held item
+        BOOST_CHECK_EQUAL(
+            uint8_t(pokemon->get_held_item().get_item_index()),
+            native_pc->held_item
+        );
         for(int i = 0; i < 4; ++i) {
             BOOST_CHECK_EQUAL(
                 native_pc->moves[i],

@@ -149,6 +149,24 @@ namespace pkmn {
         _nickname = nickname;
     }
 
+    void pokemon_gen2impl::set_held_item(
+        const std::string &held_item
+    ) {
+        // Make sure item is valid and is holdable
+        pkmn::database::item_entry item(
+            held_item,
+            get_game()
+        );
+
+        if(not item.holdable()) {
+            throw std::invalid_argument("This item is not holdable.");
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
+    }
+
     std::string pokemon_gen2impl::get_trainer_name() {
         return _trainer_name;
     }

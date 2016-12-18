@@ -177,6 +177,10 @@ namespace pkmntest {
         );
 
         BOOST_CHECK_THROW(
+            pokemon->set_held_item("Potion");
+        , pkmn::feature_not_in_game_error);
+
+        BOOST_CHECK_THROW(
             pokemon->set_trainer_name(""),
         std::invalid_argument);
         BOOST_CHECK_THROW(
@@ -327,6 +331,10 @@ namespace pkmntest {
         /*
          * PC data
          */
+        BOOST_CHECK_EQUAL(
+            int(native_pc->species),
+            pokemon->get_database_entry().get_pokemon_index()
+        );
         BOOST_CHECK_EQUAL(
             int(pksav_bigendian16(native_pc->current_hp)),
             pokemon->get_stats().at("HP")

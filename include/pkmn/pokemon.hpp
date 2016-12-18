@@ -61,6 +61,10 @@ namespace pkmn {
 
             virtual const pkmn::database::item_entry& get_held_item() = 0;
 
+            virtual void set_held_item(
+                const std::string &held_item
+            ) = 0;
+
             virtual std::string get_trainer_name() = 0;
 
             virtual void set_trainer_name(

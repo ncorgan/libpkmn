@@ -164,6 +164,12 @@ namespace pkmn {
         _nickname = nickname;
     }
 
+    void pokemon_gen1impl::set_held_item(
+        PKMN_UNUSED(const std::string &held_item)
+    ) {
+        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
+    }
+
     std::string pokemon_gen1impl::get_trainer_name() {
         return _trainer_name;
     }

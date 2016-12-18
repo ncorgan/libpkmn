@@ -37,6 +37,10 @@ namespace pkmn {
                 const std::string &nickname
             );
 
+            void set_held_item(
+                const std::string &held_item
+            );
+
             std::string get_trainer_name();
 
             void set_trainer_name(

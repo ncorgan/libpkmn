@@ -262,6 +262,24 @@ namespace pkmn {
         )
     }
 
+    void pokemon_gbaimpl::set_held_item(
+        const std::string &held_item
+    ) {
+        // Make sure item is valid and holdable
+        pkmn::database::item_entry item(
+            held_item,
+            get_game()
+        );
+
+        if(not item.holdable()) {
+            throw std::invalid_argument("This item is not holdable.");
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
+    }
+
     std::string pokemon_gbaimpl::get_trainer_name() {
         pokemon_scoped_lock lock(this);
 
