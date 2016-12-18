@@ -250,6 +250,81 @@ class gen2_items_test(items_tests):
         self.__test_tmhm_pocket(bag["TM/HM"], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
 
+        items = [u"Potion", u"Bicycle", u"Great Ball", u"TM28",
+                 u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
+
+        # Make sure adding items through the bag adds to the proper pockets.
+        self.assertEqual(bag["Items"].get_num_items(), 0)
+        self.assertEqual(bag["KeyItems"].get_num_items(), 0)
+        self.assertEqual(bag["Balls"].get_num_items(), 0)
+        self.assertEqual(bag["TM/HM"].get_num_items(), 0)
+        for item in items:
+            bag.add(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "Potion")
+        self.assertEqual(bag["Items"][0].amount, 5)
+        self.assertEqual(bag["Items"][1].item.get_name(), "Berry")
+        self.assertEqual(bag["Items"][1].amount, 5)
+        self.assertEqual(bag["Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Items"][2].amount, 0)
+
+        self.assertEqual(bag["KeyItems"][0].item.get_name(), "Bicycle")
+        self.assertEqual(bag["KeyItems"][0].amount, 5)
+        self.assertEqual(bag["KeyItems"][1].item.get_name(), "SquirtBottle")
+        self.assertEqual(bag["KeyItems"][1].amount, 5)
+        self.assertEqual(bag["KeyItems"][2].item.get_name(), "None")
+        self.assertEqual(bag["KeyItems"][2].amount, 0)
+
+        self.assertEqual(bag["Balls"][0].item.get_name(), "Great Ball")
+        self.assertEqual(bag["Balls"][0].amount, 5)
+        self.assertEqual(bag["Balls"][1].item.get_name(), "Friend Ball")
+        self.assertEqual(bag["Balls"][1].amount, 5)
+        self.assertEqual(bag["Balls"][2].item.get_name(), "None")
+        self.assertEqual(bag["Balls"][2].amount, 0)
+
+        self.assertEqual(bag["TM/HM"][0].item.get_name(), "TM01")
+        self.assertEqual(bag["TM/HM"][0].amount, 0)
+        self.assertEqual(bag["TM/HM"][1].item.get_name(), "TM02")
+        self.assertEqual(bag["TM/HM"][1].amount, 0)
+        self.assertEqual(bag["TM/HM"][27].item.get_name(), "TM28")
+        self.assertEqual(bag["TM/HM"][27].amount, 5)
+        self.assertEqual(bag["TM/HM"][50].item.get_name(), "HM01")
+        self.assertEqual(bag["TM/HM"][50].amount, 5)
+
+        # Make sure removing items through the bag removes from the proper pockets.
+        for item in items:
+            bag.remove(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Items"][0].amount, 0)
+        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].amount, 0)
+        self.assertEqual(bag["Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Items"][2].amount, 0)
+
+        self.assertEqual(bag["KeyItems"][0].item.get_name(), "None")
+        self.assertEqual(bag["KeyItems"][0].amount, 0)
+        self.assertEqual(bag["KeyItems"][1].item.get_name(), "None")
+        self.assertEqual(bag["KeyItems"][1].amount, 0)
+        self.assertEqual(bag["KeyItems"][2].item.get_name(), "None")
+        self.assertEqual(bag["KeyItems"][2].amount, 0)
+
+        self.assertEqual(bag["Balls"][0].item.get_name(), "None")
+        self.assertEqual(bag["Balls"][0].amount, 0)
+        self.assertEqual(bag["Balls"][1].item.get_name(), "None")
+        self.assertEqual(bag["Balls"][1].amount, 0)
+        self.assertEqual(bag["Balls"][2].item.get_name(), "None")
+        self.assertEqual(bag["Balls"][2].amount, 0)
+
+        self.assertEqual(bag["TM/HM"][0].item.get_name(), "TM01")
+        self.assertEqual(bag["TM/HM"][0].amount, 0)
+        self.assertEqual(bag["TM/HM"][1].item.get_name(), "TM02")
+        self.assertEqual(bag["TM/HM"][1].amount, 0)
+        self.assertEqual(bag["TM/HM"][27].item.get_name(), "TM28")
+        self.assertEqual(bag["TM/HM"][27].amount, 0)
+        self.assertEqual(bag["TM/HM"][50].item.get_name(), "HM01")
+        self.assertEqual(bag["TM/HM"][50].amount, 0)
+
     #
     # Gold
     #

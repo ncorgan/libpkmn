@@ -244,6 +244,7 @@ class gba_items_test(items_tests):
         else:
             tmhm_pocket_name = "TMs & HMs"
             berry_pocket_name = "Berries"
+        ball_pocket_name = u"Pok\u00e9 Balls"
 
         # Check unchanging and initial values.
         self.assertEqual(bag.get_game(), game)
@@ -252,16 +253,94 @@ class gba_items_test(items_tests):
         self.assertEqual(len(pockets), 5)
         self.assertTrue(pockets.has_key("Items"))
         self.assertTrue(pockets.has_key("Key Items"))
-        self.assertTrue(pockets.has_key(u"Pok\u00e9 Balls"))
+        self.assertTrue(pockets.has_key(ball_pocket_name))
         self.assertTrue(pockets.has_key(tmhm_pocket_name))
         self.assertTrue(pockets.has_key(berry_pocket_name))
 
         self.__test_item_pocket(bag["Items"], game)
         self.__test_key_item_pocket(bag["Key Items"], game)
-        self.__test_ball_pocket(bag[u"Pok\u00e9 Balls"], game)
+        self.__test_ball_pocket(bag[ball_pocket_name], game)
         self.__test_tmhm_pocket(bag[tmhm_pocket_name], game)
         self.__test_berry_pocket(bag[berry_pocket_name], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
+
+        items = [u"Potion", u"Mach Bike", u"Great Ball", u"TM01",
+                 u"Aspear Berry", u"Wailmer Pail", u"Master Ball", u"HM04"]
+
+        # Make sure adding items through the bag adds to the proper pocket.
+        self.assertEqual(bag["Items"].get_num_items(), 0)
+        self.assertEqual(bag["Key Items"].get_num_items(), 0)
+        self.assertEqual(bag[ball_pocket_name].get_num_items(), 0)
+        self.assertEqual(bag[tmhm_pocket_name].get_num_items(), 0)
+        self.assertEqual(bag[berry_pocket_name].get_num_items(), 0)
+        for item in items:
+            bag.add(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "Potion")
+        self.assertEqual(bag["Items"][0].amount, 5)
+        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].amount, 0)
+
+        self.assertEqual(bag["Key Items"][0].item.get_name(), "Mach Bike")
+        self.assertEqual(bag["Key Items"][0].amount, 5)
+        self.assertEqual(bag["Key Items"][1].item.get_name(), "Wailmer Pail")
+        self.assertEqual(bag["Key Items"][1].amount, 5)
+        self.assertEqual(bag["Key Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][2].amount, 0)
+
+        self.assertEqual(bag[ball_pocket_name][0].item.get_name(), "Great Ball")
+        self.assertEqual(bag[ball_pocket_name][0].amount, 5)
+        self.assertEqual(bag[ball_pocket_name][1].item.get_name(), "Master Ball")
+        self.assertEqual(bag[ball_pocket_name][1].amount, 5)
+        self.assertEqual(bag[ball_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[tmhm_pocket_name][0].item.get_name(), "TM01")
+        self.assertEqual(bag[tmhm_pocket_name][0].amount, 5)
+        self.assertEqual(bag[tmhm_pocket_name][1].item.get_name(), "HM04")
+        self.assertEqual(bag[tmhm_pocket_name][1].amount, 5)
+        self.assertEqual(bag[tmhm_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[berry_pocket_name][0].item.get_name(), "Aspear Berry")
+        self.assertEqual(bag[berry_pocket_name][0].amount, 5)
+        self.assertEqual(bag[berry_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][1].amount, 0)
+
+        # Make sure removing items through the bag removes from the proper pocket.
+        for item in items:
+            bag.remove(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Items"][0].amount, 0)
+        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].amount, 0)
+
+        self.assertEqual(bag["Key Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][0].amount, 0)
+        self.assertEqual(bag["Key Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][1].amount, 0)
+        self.assertEqual(bag["Key Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][2].amount, 0)
+
+        self.assertEqual(bag[ball_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][0].amount, 0)
+        self.assertEqual(bag[ball_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][1].amount, 0)
+        self.assertEqual(bag[ball_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[tmhm_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][0].amount, 0)
+        self.assertEqual(bag[tmhm_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][1].amount, 0)
+        self.assertEqual(bag[tmhm_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[berry_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][0].amount, 0)
+        self.assertEqual(bag[berry_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][1].amount, 0)
 
     #
     # Ruby

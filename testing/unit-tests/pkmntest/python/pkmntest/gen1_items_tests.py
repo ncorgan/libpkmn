@@ -68,6 +68,28 @@ class gen1_items_test(items_tests):
         self.__test_item_list(pockets["Items"], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
 
+        items = ["Potion", "Great Ball", "Ether", "PP Up",
+                 "TM34", "Moon Stone", "Bicycle", "Full Heal"]
+
+        # Make sure adding items through the bag adds to the pocket.
+        self.assertEqual(pockets["Items"].get_num_items(), 0)
+        for i in range(len(items)):
+            bag.add(items[i], i+1)
+
+        for i in range(len(items)):
+            self.assertEqual(pockets["Items"][i].item.get_name(), items[i])
+            self.assertEqual(pockets["Items"][i].amount, i+1)
+
+        self.assertEqual(pockets["Items"][8].item.get_name(), "None")
+        self.assertEqual(pockets["Items"][8].amount, 0)
+
+        for i in range(len(items)):
+            bag.remove(items[i], i+1)
+
+        for i in range(len(items)+1):
+            self.assertEqual(pockets["Items"][i].item.get_name(), "None")
+            self.assertEqual(pockets["Items"][i].amount, 0)
+
     #
     # Red
     #

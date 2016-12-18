@@ -111,6 +111,8 @@ namespace pkmntest {
             BOOST_CHECK_EQUAL(item_slots.at(i).item.get_name(), item_names[i]);
             BOOST_CHECK_EQUAL(item_slots.at(i).amount, i+1);
         }
+        BOOST_CHECK_EQUAL(item_slots.at(8).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(item_slots.at(8).amount, 0);
 
         for(int i = 0; i < 8; ++i) {
             bag->remove(
@@ -118,7 +120,7 @@ namespace pkmntest {
                 i+1
             );
         }
-        for(int i = 0; i < 8; ++i) {
+        for(int i = 0; i < 9; ++i) {
             BOOST_CHECK(item_slots.at(i).item == none_entries.at(game));
             BOOST_CHECK_EQUAL(item_slots.at(i).amount, 0);
         }
