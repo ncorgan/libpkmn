@@ -119,9 +119,9 @@ namespace pkmn {
                 int level
             ) = 0;
 
-            virtual std::string get_location_caught() = 0;
+            virtual std::string get_location_met() = 0;
 
-            virtual void set_location_caught(
+            virtual void set_location_met(
                 const std::string &location
             ) = 0;
 

@@ -476,7 +476,7 @@ namespace pkmn {
         _misc->origin_info |= uint16_t(level);
     }
 
-    std::string pokemon_gbaimpl::get_location_caught() {
+    std::string pokemon_gbaimpl::get_location_met() {
         pokemon_scoped_lock lock(this);
 
         return pkmn::database::location_index_to_name(
@@ -485,7 +485,7 @@ namespace pkmn {
                );
     }
 
-    void pokemon_gbaimpl::set_location_caught(
+    void pokemon_gbaimpl::set_location_met(
         const std::string &location
     ) {
         pokemon_scoped_lock lock(this);

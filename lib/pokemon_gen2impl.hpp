@@ -95,9 +95,9 @@ namespace pkmn {
                 int level
             );
 
-            std::string get_location_caught();
+            std::string get_location_met();
 
-            void set_location_caught(
+            void set_location_met(
                 const std::string &location
             );
 

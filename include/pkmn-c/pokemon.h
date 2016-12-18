@@ -180,16 +180,16 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_level_caught(
     int level_caught
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_get_location_caught(
+PKMN_API pkmn_error_t pkmn_pokemon_get_location_met(
     pkmn_pokemon_handle_t handle,
-    char* location_caught_out,
+    char* location_met_out,
     size_t buffer_len,
     size_t* actual_strlen_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_set_location_caught(
+PKMN_API pkmn_error_t pkmn_pokemon_set_location_met(
     pkmn_pokemon_handle_t handle,
-    const char* location_caught
+    const char* location_met
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_original_game(

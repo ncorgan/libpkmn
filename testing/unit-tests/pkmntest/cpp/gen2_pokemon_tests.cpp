@@ -137,7 +137,7 @@ namespace pkmntest {
             pokemon->get_level()
         );
         BOOST_CHECK_EQUAL(
-            pokemon->get_location_caught(),
+            pokemon->get_location_met(),
             "Special"
         );
         BOOST_CHECK_THROW(
@@ -262,7 +262,7 @@ namespace pkmntest {
         , pkmn::feature_not_in_game_error);
 
         // Make sure functions that affect the same PKSav field don't impact each other
-        std::string location_caught_before_change = pokemon->get_location_caught();
+        std::string location_met_before_change = pokemon->get_location_met();
         std::string trainer_gender_before_change = pokemon->get_trainer_gender();
         int level_caught_before_change = pokemon->get_level_caught();
 
@@ -273,9 +273,9 @@ namespace pkmntest {
         time_caught_before_change >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
 
         // Setting location caught shouldn't affect level caught, trainer gender, or time of day caught
-        pokemon->set_location_caught("Pallet Town");
+        pokemon->set_location_met("Pallet Town");
         BOOST_CHECK_EQUAL(
-            pokemon->get_location_caught(),
+            pokemon->get_location_met(),
             "Pallet Town"
         );
         BOOST_CHECK_EQUAL(
@@ -294,13 +294,13 @@ namespace pkmntest {
             time_caught_before_change
         );
 
-        pokemon->set_location_caught(location_caught_before_change);
+        pokemon->set_location_met(location_met_before_change);
 
         // Setting trainer gender shouldn't affect level caught, location caught, or time of ay caught
         pokemon->set_trainer_gender("Female");
         BOOST_CHECK_EQUAL(
-            pokemon->get_location_caught(),
-            location_caught_before_change
+            pokemon->get_location_met(),
+            location_met_before_change
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_level_caught(),
@@ -323,8 +323,8 @@ namespace pkmntest {
             3
         );
         BOOST_CHECK_EQUAL(
-            pokemon->get_location_caught(),
-            location_caught_before_change
+            pokemon->get_location_met(),
+            location_met_before_change
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_gender(),

@@ -439,7 +439,7 @@ namespace pkmn {
     }
 
     // TODO: as_egg
-    std::string pokemon_ndsimpl::get_location_caught() {
+    std::string pokemon_ndsimpl::get_location_met() {
         return pkmn::database::location_index_to_name(
                    pksav_littleendian16(_plat ? _blockB->met_plat
                                               : _blockD->met_dp
@@ -448,7 +448,7 @@ namespace pkmn {
                );
     }
 
-    void pokemon_ndsimpl::set_location_caught(
+    void pokemon_ndsimpl::set_location_met(
         const std::string &location
     ) {
         (_plat ? _blockB->met_plat : _blockD->met_dp) = pksav_littleendian16(uint16_t(

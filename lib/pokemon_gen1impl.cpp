@@ -298,11 +298,11 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Level caught is not recorded in Generation I.");
     }
 
-    std::string pokemon_gen1impl::get_location_caught() {
+    std::string pokemon_gen1impl::get_location_met() {
         throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");
     }
 
-    void pokemon_gen1impl::set_location_caught(
+    void pokemon_gen1impl::set_location_met(
         PKMN_UNUSED(const std::string &location)
     ) {
         throw pkmn::feature_not_in_game_error("Location caught is not recorded in Generation I.");

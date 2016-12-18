@@ -162,7 +162,7 @@ namespace pkmntest {
             pokemon->get_level_caught();
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
-            pokemon->get_location_caught();
+            pokemon->get_location_met();
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->get_original_game();
@@ -268,7 +268,7 @@ namespace pkmntest {
             pokemon->set_level_caught(78);
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
-            pokemon->set_location_caught("Victory Road");
+            pokemon->set_location_met("Victory Road");
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_original_game("Blue");

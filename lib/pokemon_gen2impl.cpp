@@ -66,7 +66,7 @@ namespace pkmn {
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_level_caught(level);
-        set_location_caught("Special");
+        set_location_met("Special");
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
@@ -306,7 +306,7 @@ namespace pkmn {
         GEN2_PC_RCAST->caught_data |= caught_data;
     }
 
-    std::string pokemon_gen2impl::get_location_caught() {
+    std::string pokemon_gen2impl::get_location_met() {
         pokemon_scoped_lock lock(this);
 
         return pkmn::database::location_index_to_name(
@@ -315,7 +315,7 @@ namespace pkmn {
                );
     }
 
-    void pokemon_gen2impl::set_location_caught(
+    void pokemon_gen2impl::set_location_met(
         const std::string &location
     ) {
         pokemon_scoped_lock lock(this);
