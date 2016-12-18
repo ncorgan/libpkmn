@@ -122,6 +122,10 @@ namespace pkmntest {
             pokemon->get_trainer_gender(),
             "Male"
         );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_friendship(),
+            pokemon->get_database_entry().get_base_friendship()
+        );
         BOOST_CHECK_THROW(
             pokemon->get_ability()
         , pkmn::feature_not_in_game_error);
@@ -259,6 +263,7 @@ namespace pkmntest {
 
         // Make sure functions that affect the same PKSav field don't impact each other
         std::string location_caught_before_change = pokemon->get_location_caught();
+        std::string trainer_gender_before_change = pokemon->get_trainer_gender();
         int level_caught_before_change = pokemon->get_level_caught();
 
         const pksav_gen2_pc_pokemon_t* native_pc = reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(
@@ -267,11 +272,15 @@ namespace pkmntest {
         uint16_t time_caught_before_change = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
         time_caught_before_change >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
 
-        // Setting location caught shouldn't affect level caught or time of day caught
+        // Setting location caught shouldn't affect level caught, trainer gender, or time of day caught
         pokemon->set_location_caught("Pallet Town");
         BOOST_CHECK_EQUAL(
             pokemon->get_location_caught(),
             "Pallet Town"
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_gender(),
+            trainer_gender_before_change
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_level_caught(),
@@ -287,7 +296,27 @@ namespace pkmntest {
 
         pokemon->set_location_caught(location_caught_before_change);
 
-        // Setting level caught shouldn't affect location caught or time of day caught
+        // Setting trainer gender shouldn't affect level caught, location caught, or time of ay caught
+        pokemon->set_trainer_gender("Female");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_location_caught(),
+            location_caught_before_change
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_level_caught(),
+            level_caught_before_change
+        );
+
+        time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
+        time_caught >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
+        BOOST_CHECK_EQUAL(
+            time_caught,
+            time_caught_before_change
+        );
+
+        pokemon->set_trainer_gender(trainer_gender_before_change);
+
+        // Setting level caught shouldn't affect location caught, trainer gender, or time of day caught
         pokemon->set_level_caught(3);
         BOOST_CHECK_EQUAL(
             pokemon->get_level_caught(),
@@ -297,12 +326,22 @@ namespace pkmntest {
             pokemon->get_location_caught(),
             location_caught_before_change
         );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_gender(),
+            trainer_gender_before_change
+        );
 
         time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
         time_caught >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
         BOOST_CHECK_EQUAL(
             time_caught,
             time_caught_before_change
+        );
+
+        pokemon->set_friendship(123);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_friendship(),
+            123
         );
 
         BOOST_CHECK_THROW(

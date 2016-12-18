@@ -71,6 +71,12 @@ namespace pkmn {
                 const std::string &gender
             );
 
+            int get_friendship();
+
+            void set_friendship(
+                int friendship
+            );
+
             std::string get_ability();
 
             void set_ability(

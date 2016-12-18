@@ -378,6 +378,24 @@ namespace pkmn {
         }
     }
 
+    int pokemon_gbaimpl::get_friendship() {
+        pokemon_scoped_lock lock(this);
+
+        return _growth->friendship;
+    }
+
+    void pokemon_gbaimpl::set_friendship(
+        int friendship
+    ) {
+        if(friendship < 0 or friendship > 255) {
+            throw pkmn::range_error("friendship", 0 , 255);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        _growth->friendship = uint8_t(friendship);
+    }
+
     std::string pokemon_gbaimpl::get_ability() {
         pokemon_scoped_lock lock(this);
 

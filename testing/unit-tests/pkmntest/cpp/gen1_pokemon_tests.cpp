@@ -51,6 +51,45 @@ namespace pkmntest {
         pkmntest::test_invalid_pokemon(game);
     }
 
+    void gen1_friendship_test(
+        const std::string &game
+    ) {
+        pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
+                                          "Pikachu",
+                                          game,
+                                          "",
+                                          5
+                                      );
+        if(game == "Yellow") {
+            pikachu->set_friendship(123);
+            BOOST_CHECK_EQUAL(
+                pikachu->get_friendship(),
+                123
+            );
+
+            // Also check a non-Pikachu
+            pkmn::pokemon::sptr mewtwo = pkmn::pokemon::make(
+                                             "Mewtwo",
+                                             game,
+                                             "",
+                                             70
+                                         );
+            BOOST_CHECK_THROW(
+                mewtwo->set_friendship(123);
+            , pkmn::feature_not_in_game_error);
+            BOOST_CHECK_THROW(
+                (void)mewtwo->get_friendship();
+            , pkmn::feature_not_in_game_error);
+        } else {
+            BOOST_CHECK_THROW(
+                pikachu->set_friendship(123);
+            , pkmn::feature_not_in_game_error);
+            BOOST_CHECK_THROW(
+                (void)pikachu->get_friendship();
+            , pkmn::feature_not_in_game_error);
+        }
+    }
+
     static void gen1_pokemon_check_stat_map(
         const std::map<std::string, int>& stat_map
     ) {
@@ -110,6 +149,9 @@ namespace pkmntest {
             pokemon->get_trainer_gender(),
             "Male"
         );
+        BOOST_CHECK_THROW(
+            pokemon->get_friendship()
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->get_ability()
         , pkmn::feature_not_in_game_error);
@@ -210,6 +252,12 @@ namespace pkmntest {
             10001
         );
 
+        BOOST_CHECK_THROW(
+            pokemon->set_trainer_gender("Male");
+        , pkmn::feature_not_in_game_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_friendship(123);
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_ability("");
         , pkmn::feature_not_in_game_error);

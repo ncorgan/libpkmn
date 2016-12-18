@@ -246,6 +246,24 @@ namespace pkmn {
         }
     }
 
+    int pokemon_gen2impl::get_friendship() {
+        pokemon_scoped_lock lock(this);
+
+        return GEN2_PC_RCAST->friendship;
+    }
+
+    void pokemon_gen2impl::set_friendship(
+        int friendship
+    ) {
+        if(friendship < 0 or friendship > 255) {
+            throw pkmn::range_error("friendship", 0, 255);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        GEN2_PC_RCAST->friendship = uint8_t(friendship);
+    }
+
     std::string pokemon_gen2impl::get_ability() {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }

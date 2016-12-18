@@ -95,6 +95,12 @@ namespace pkmn {
                 const std::string &trainer_gender
             ) = 0;
 
+            virtual int get_friendship() = 0;
+
+            virtual void set_friendship(
+                int friendship
+            ) = 0;
+
             virtual std::string get_ability() = 0;
 
             virtual void set_ability(

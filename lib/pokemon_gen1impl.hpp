@@ -71,6 +71,12 @@ namespace pkmn {
                 const std::string &gender
             );
 
+            int get_friendship();
+
+            void set_friendship(
+                int friendship
+            );
+
             std::string get_ability();
 
             void set_ability(
@@ -159,6 +165,8 @@ namespace pkmn {
             void _update_stat_map();
 
             std::string _nickname, _trainer_name;
+
+            uint8_t _yellow_pikachu_friendship;
     };
 
 }

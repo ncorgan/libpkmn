@@ -358,6 +358,24 @@ namespace pkmn {
         }
     }
 
+    int pokemon_ndsimpl::get_friendship() {
+        pokemon_scoped_lock lock(this);
+
+        return _blockA->friendship;
+    }
+
+    void pokemon_ndsimpl::set_friendship(
+        int friendship
+    ) {
+        if(friendship < 0 or friendship > 255) {
+            throw pkmn::range_error("friendship", 0, 255);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        _blockA->friendship = uint8_t(friendship);
+    }
+
     std::string pokemon_ndsimpl::get_ability() {
         return pkmn::database::ability_id_to_name(_blockA->ability);
     }

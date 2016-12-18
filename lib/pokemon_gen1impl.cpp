@@ -55,7 +55,8 @@ namespace pkmn {
     pokemon_gen1impl::pokemon_gen1impl(
         pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(std::move(database_entry))
+    ): pokemon_impl(std::move(database_entry)),
+       _yellow_pikachu_friendship(0)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_gen1_pc_pokemon_t));
@@ -101,7 +102,8 @@ namespace pkmn {
     pokemon_gen1impl::pokemon_gen1impl(
         pksav_gen1_pc_pokemon_t* pc,
         int game_id
-    ): pokemon_impl(pc->species, game_id)
+    ): pokemon_impl(pc->species, game_id),
+       _yellow_pikachu_friendship(0)
     {
         _native_pc = reinterpret_cast<void*>(pc);
         _our_pc_mem = false;
@@ -124,7 +126,8 @@ namespace pkmn {
     pokemon_gen1impl::pokemon_gen1impl(
         pksav_gen1_party_pokemon_t* party,
         int game_id
-    ): pokemon_impl(party->pc.species, game_id)
+    ): pokemon_impl(party->pc.species, game_id),
+       _yellow_pikachu_friendship(0)
     {
         _native_pc = reinterpret_cast<void*>(&party->pc);
         _our_pc_mem = false;
@@ -234,6 +237,35 @@ namespace pkmn {
         PKMN_UNUSED(const std::string &gender)
     ) {
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
+    }
+
+    BOOST_STATIC_CONSTEXPR int YELLOW = 3;
+    BOOST_STATIC_CONSTEXPR int PIKACHU = 25;
+
+    int pokemon_gen1impl::get_friendship() {
+        if(_database_entry.get_game_id() == YELLOW and
+           _database_entry.get_species_id() == PIKACHU)
+        {
+            return _yellow_pikachu_friendship;
+        } else {
+            throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
+        }
+    }
+
+    void pokemon_gen1impl::set_friendship(
+        int friendship
+    ) {
+        if(_database_entry.get_game_id() == YELLOW and
+           _database_entry.get_species_id() == PIKACHU)
+        {
+            if(friendship < 0 or friendship > 255) {
+                throw pkmn::range_error("friendship", 0, 255);
+            } else {
+                _yellow_pikachu_friendship = uint8_t(friendship);
+            }
+        } else {
+            throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
+        }
     }
 
     std::string pokemon_gen1impl::get_ability() {
