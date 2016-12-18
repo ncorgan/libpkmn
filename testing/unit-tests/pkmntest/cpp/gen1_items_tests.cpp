@@ -23,8 +23,12 @@ namespace pkmntest {
 
     static const std::map<std::string, pkmn::database::item_entry> none_entries = boost::assign::map_list_of
         ("Red",    pkmn::database::item_entry("None", "Red"))
-        ("Blue",  pkmn::database::item_entry("None", "Blue"))
+        ("Blue",   pkmn::database::item_entry("None", "Blue"))
         ("Yellow", pkmn::database::item_entry("None", "Yellow"))
+    ;
+    static const std::vector<std::string> item_names = boost::assign::list_of
+        ("Potion")("Great Ball")("Ether")("PP Up")
+        ("TM34")("Moon Stone")("Bicycle")("Full Heal")
     ;
 
     static void gen1_item_list_common(
@@ -44,15 +48,6 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        std::vector<std::string> item_names;
-        item_names.emplace_back("Potion");
-        item_names.emplace_back("Great Ball");
-        item_names.emplace_back("Ether");
-        item_names.emplace_back("PP Up");
-        item_names.emplace_back("TM34");
-        item_names.emplace_back("Moon Stone");
-        item_names.emplace_back("Bicycle");
-        item_names.emplace_back("Full Heal");
         test_item_list_add_remove(
             list,
             none_entries.at(game),
@@ -100,6 +95,33 @@ namespace pkmntest {
         const pkmn::item_pockets_t& pockets = bag->get_pockets();
         BOOST_CHECK_EQUAL(pockets.size(), 1);
         gen1_item_list_test(pockets.at("Items"), game);
+
+        // Make sure adding items through the bag adds to the pocket.
+        pkmn::item_list::sptr item_pocket = pockets.at("Items");
+        const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
+        BOOST_REQUIRE_EQUAL(item_pocket->get_num_items(), 0);
+
+        for(int i = 0; i < 8; ++i) {
+            bag->add(
+                item_names[i],
+                i+1
+            );
+        }
+        for(int i = 0; i < 8; ++i) {
+            BOOST_CHECK_EQUAL(item_slots.at(i).item.get_name(), item_names[i]);
+            BOOST_CHECK_EQUAL(item_slots.at(i).amount, i+1);
+        }
+
+        for(int i = 0; i < 8; ++i) {
+            bag->remove(
+                item_names[i],
+                i+1
+            );
+        }
+        for(int i = 0; i < 8; ++i) {
+            BOOST_CHECK(item_slots.at(i).item == none_entries.at(game));
+            BOOST_CHECK_EQUAL(item_slots.at(i).amount, 0);
+        }
     }
 
 }

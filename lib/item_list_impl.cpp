@@ -293,6 +293,7 @@ namespace pkmn {
                     if(_item_slots[i].amount == 0) {
                         _item_slots.erase(_item_slots.begin()+i);
                         _item_slots.resize(_capacity);
+                        _item_slots.back().item = pkmn::database::item_entry(0, _game_id);
                         _num_items--;
                         _to_native();
                     }

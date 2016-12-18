@@ -26,6 +26,10 @@ namespace pkmntest {
         ("Silver",  pkmn::database::item_entry("None", "Silver"))
         ("Crystal", pkmn::database::item_entry("None", "Crystal"))
     ;
+    static const std::vector<std::string> all_pocket_item_names = boost::assign::list_of
+        ("Potion")("Bicycle")("Great Ball")("TM28")
+        ("Berry")("SquirtBottle")("Friend Ball")("HM01")
+    ;
 
     void gen2_item_pocket_test(
         pkmn::item_list::sptr item_pocket,
@@ -50,25 +54,19 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        std::vector<std::string> wrong_items;
-        wrong_items.emplace_back("Bicycle");
-        wrong_items.emplace_back("Master Ball");
-        wrong_items.emplace_back("HM01");
+        static const std::vector<std::string> wrong_items = boost::assign::list_of
+            ("Bicycle")("Master Ball")("HM01")
+        ;
         test_item_list_items_from_wrong_pocket(
             item_pocket,
             wrong_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        std::vector<std::string> item_names;
-        item_names.emplace_back("Potion");
-        item_names.emplace_back("HP Up");
-        item_names.emplace_back("Wht Apricorn");
-        item_names.emplace_back("Lucky Egg");
-        item_names.emplace_back("Flower Mail");
-        item_names.emplace_back("Burn Heal");
-        item_names.emplace_back("PSNCureBerry");
-        item_names.emplace_back("Stick");
+        static const std::vector<std::string> item_names = boost::assign::list_of
+            ("Potion")("HP Up")("Wht Apricorn")("Lucky Egg")
+            ("Flower Mail")("Burn Heal")("PSNCureBerry")("Stick")
+        ;
         test_item_list_add_remove(
             item_pocket,
             none_entries.at(game),
@@ -102,10 +100,9 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        std::vector<std::string> wrong_items;
-        wrong_items.emplace_back("Potion");
-        wrong_items.emplace_back("Master Ball");
-        wrong_items.emplace_back("HM01");
+        static const std::vector<std::string> wrong_items = boost::assign::list_of
+            ("Potion")("Master Ball")("HM01")
+        ;
         test_item_list_items_from_wrong_pocket(
             key_item_pocket,
             wrong_items
@@ -143,15 +140,10 @@ namespace pkmntest {
         }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        std::vector<std::string> item_names;
-        item_names.emplace_back("Bicycle");
-        item_names.emplace_back("Basement Key");
-        item_names.emplace_back("SecretPotion");
-        item_names.emplace_back("Mystery Egg");
-        item_names.emplace_back("Silver Wing");
-        item_names.emplace_back("Lost Item");
-        item_names.emplace_back("SquirtBottle");
-        item_names.emplace_back("Rainbow Wing");
+        static const std::vector<std::string> item_names = boost::assign::list_of
+            ("Bicycle")("Basement Key")("SecretPotion")("Mystery Egg")
+            ("Silver Wing")("Lost Item")("SquirtBottle")("Rainbow Wing")
+        ;
         test_item_list_add_remove(
             key_item_pocket,
             none_entries.at(game),
@@ -185,25 +177,19 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        std::vector<std::string> wrong_items;
-        wrong_items.emplace_back("Potion");
-        wrong_items.emplace_back("Bicycle");
-        wrong_items.emplace_back("HM01");
+        static const std::vector<std::string> wrong_items = boost::assign::list_of
+            ("Potion")("Bicycle")("HM01")
+        ;
         test_item_list_items_from_wrong_pocket(
             ball_pocket,
             wrong_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        std::vector<std::string> item_names;
-        item_names.emplace_back("Great Ball");
-        item_names.emplace_back("Poké Ball");
-        item_names.emplace_back("Park Ball");
-        item_names.emplace_back("Fast Ball");
-        item_names.emplace_back("Master Ball");
-        item_names.emplace_back("Friend Ball");
-        item_names.emplace_back("Love Ball");
-        item_names.emplace_back("Level Ball");
+        static const std::vector<std::string> item_names = boost::assign::list_of
+            ("Great Ball")("Poké Ball")("Park Ball")("Fast Ball")
+            ("Master Ball")("Friend Ball")("Love Ball")("Level Ball")
+        ;
         test_item_list_add_remove(
             ball_pocket,
             none_entries.at(game),
@@ -247,10 +233,9 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        std::vector<std::string> wrong_items;
-        wrong_items.emplace_back("Potion");
-        wrong_items.emplace_back("Master Ball");
-        wrong_items.emplace_back("Bicycle");
+        static const std::vector<std::string> wrong_items = boost::assign::list_of
+            ("Potion")("Master Ball")("Bicycle")
+        ;
         test_item_list_items_from_wrong_pocket(
             tmhm_pocket,
             wrong_items
@@ -318,19 +303,10 @@ namespace pkmntest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        std::vector<std::string> item_names;
-        item_names.emplace_back("Potion");
-        item_names.emplace_back("Bicycle");
-        item_names.emplace_back("Great Ball");
-        item_names.emplace_back("TM28");
-        item_names.emplace_back("Berry");
-        item_names.emplace_back("SquirtBottle");
-        item_names.emplace_back("Friend Ball");
-        item_names.emplace_back("HM01");
         test_item_list_add_remove(
             pc,
             none_entries.at(game),
-            item_names
+            all_pocket_item_names
         );
 
         const std::vector<std::string>& valid_items = pc->get_valid_items();
@@ -352,6 +328,90 @@ namespace pkmntest {
         gen2_key_item_pocket_test(pockets.at("KeyItems"), game);
         gen2_ball_pocket_test(pockets.at("Balls"), game);
         gen2_tmhm_pocket_test(pockets.at("TM/HM"), game);
-    }
 
+        // Make sure adding items through the bag adds to the proper pockets.
+        BOOST_REQUIRE_EQUAL(pockets.at("Items")->get_num_items(), 0);
+        BOOST_REQUIRE_EQUAL(pockets.at("KeyItems")->get_num_items(), 0);
+        BOOST_REQUIRE_EQUAL(pockets.at("Balls")->get_num_items(), 0);
+        BOOST_REQUIRE_EQUAL(pockets.at("TM/HM")->get_num_items(), 0);
+        for(int i = 0; i < 8; ++i) {
+            bag->add(
+                all_pocket_item_names[i],
+                5
+            );
+        }
+
+        const pkmn::item_slots_t& item_slots = pockets.at("Items")->as_vector();
+        const pkmn::item_slots_t& key_item_slots = pockets.at("KeyItems")->as_vector();
+        const pkmn::item_slots_t& ball_slots = pockets.at("Balls")->as_vector();
+        const pkmn::item_slots_t& tm_hm_slots = pockets.at("TM/HM")->as_vector();
+
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "Potion");
+        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 5);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "Berry");
+        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 5);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "Bicycle");
+        BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 5);
+        BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "SquirtBottle");
+        BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 5);
+        BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(ball_slots.at(0).item.get_name(), "Great Ball");
+        BOOST_CHECK_EQUAL(ball_slots.at(0).amount, 5);
+        BOOST_CHECK_EQUAL(ball_slots.at(1).item.get_name(), "Friend Ball");
+        BOOST_CHECK_EQUAL(ball_slots.at(1).amount, 5);
+        BOOST_CHECK_EQUAL(ball_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(ball_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(0).item.get_name(), "TM01");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(0).amount, 0);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(1).item.get_name(), "TM02");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(1).amount, 0);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(27).item.get_name(), "TM28");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(27).amount, 5);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(50).item.get_name(), "HM01");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(50).amount, 5);
+
+        // Make sure removing items through the bag removes from the proper pockets.
+        for(int i = 0; i < 8; ++i) {
+            bag->remove(
+                all_pocket_item_names[i],
+                5
+            );
+        }
+
+        BOOST_CHECK_EQUAL(item_slots.at(0).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(item_slots.at(0).amount, 0);
+        BOOST_CHECK_EQUAL(item_slots.at(1).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(item_slots.at(1).amount, 0);
+        BOOST_CHECK_EQUAL(item_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(item_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 0);
+        BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 0);
+        BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(ball_slots.at(0).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(ball_slots.at(0).amount, 0);
+        BOOST_CHECK_EQUAL(ball_slots.at(1).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(ball_slots.at(1).amount, 0);
+        BOOST_CHECK_EQUAL(ball_slots.at(2).item.get_name(), "None");
+        BOOST_CHECK_EQUAL(ball_slots.at(2).amount, 0);
+
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(0).item.get_name(), "TM01");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(0).amount, 0);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(1).item.get_name(), "TM02");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(1).amount, 0);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(27).item.get_name(), "TM28");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(27).amount, 0);
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(50).item.get_name(), "HM01");
+        BOOST_CHECK_EQUAL(tm_hm_slots.at(50).amount, 0);
+    }
 }

@@ -51,7 +51,7 @@ namespace pkmn {
     }
 
     item_bag_gbaimpl::~item_bag_gbaimpl() {
-        item_bag_scoped_lock(this);
+        item_bag_scoped_lock lock(this);
 
         if(_our_mem) {
             delete NATIVE_RCAST;

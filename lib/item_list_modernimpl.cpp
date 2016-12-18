@@ -44,7 +44,7 @@ namespace pkmn {
     }
 
     item_list_modernimpl::~item_list_modernimpl() {
-        item_list_scoped_lock(this);
+        item_list_scoped_lock lock(this);
 
         if(_our_mem) {
             delete[] NATIVE_RCAST;
@@ -54,7 +54,7 @@ namespace pkmn {
     void item_list_modernimpl::_from_native(
         int index
     ) {
-        item_list_scoped_lock(this);
+        item_list_scoped_lock lock(this);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
@@ -76,7 +76,7 @@ namespace pkmn {
     void item_list_modernimpl::_to_native(
         int index
     ) {
-        item_list_scoped_lock(this);
+        item_list_scoped_lock lock(this);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
