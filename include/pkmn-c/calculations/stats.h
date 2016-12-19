@@ -11,16 +11,7 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/types/int_pair.h>
-
-typedef enum {
-    PKMN_STAT_HP,
-    PKMN_STAT_ATTACK,
-    PKMN_STAT_DEFENSE,
-    PKMN_STAT_SPEED,
-    PKMN_STAT_SPECIAL,
-    PKMN_STAT_SPATK,
-    PKMN_STAT_SPDEF
-} pkmn_stat_t;
+#include <pkmn-c/types/stats.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -20,8 +20,10 @@ void test_item_list_empty_slots(
 ) {
     TEST_ASSERT_NOT_NULL(list);
 
-    pkmn_item_slots_t item_slots = NULL;
-    size_t list_length = 0;
+    pkmn_item_slots_t item_slots = {
+        .item_slots = NULL,
+        .length = 0
+    };
     int capacity = 0;
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_capacity(
@@ -30,18 +32,17 @@ void test_item_list_empty_slots(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
                           list,
-                          &item_slots,
-                          &list_length
+                          &item_slots
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(capacity, (int)list_length);
+    TEST_ASSERT_EQUAL(capacity, (int)item_slots.length);
 
-    for(size_t i = 0; i < list_length; ++i) {
-        TEST_ASSERT_EQUAL_STRING(item_slots[i].item, "None");
-        TEST_ASSERT_EQUAL(item_slots[i].amount, 0);
+    for(size_t i = 0; i < item_slots.length; ++i) {
+        TEST_ASSERT_EQUAL_STRING(item_slots.item_slots[i].item, "None");
+        TEST_ASSERT_EQUAL(item_slots.item_slots[i].amount, 0);
     }
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
-
+    pkmn_item_slots_free(&item_slots);
+    TEST_ASSERT_NULL(item_slots.item_slots);
+    TEST_ASSERT_EQUAL(item_slots.length, 0);
 }
 
 void test_item_list_out_of_range_error(
@@ -132,18 +133,19 @@ static void test_item_slots(
     TEST_ASSERT_NOT_NULL(expected_item_names);
     TEST_ASSERT_NOT_NULL(expected_item_amounts);
 
-    pkmn_item_slots_t item_slots = NULL;
-    size_t list_length = 0;
+    pkmn_item_slots_t item_slots = {
+        .item_slots = NULL,
+        .length = 0
+    };
     int num_items = 0;
 
     TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
                           list,
-                          &item_slots,
-                          &list_length
+                          &item_slots
                       ), PKMN_ERROR_NONE);
     for(int i = 0; i < expected_num_items; ++i) {
-        TEST_ASSERT_EQUAL_STRING(item_slots[i].item, expected_item_names[i]);
-        TEST_ASSERT_EQUAL(item_slots[i].amount, expected_item_amounts[i]);
+        TEST_ASSERT_EQUAL_STRING(item_slots.item_slots[i].item, expected_item_names[i]);
+        TEST_ASSERT_EQUAL(item_slots.item_slots[i].amount, expected_item_amounts[i]);
     }
 
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
@@ -152,8 +154,9 @@ static void test_item_slots(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(num_items, expected_num_items);
 
-    pkmn_item_slots_free(&item_slots, list_length);
-    TEST_ASSERT_NULL(item_slots);
+    pkmn_item_slots_free(&item_slots);
+    TEST_ASSERT_NULL(item_slots.item_slots);
+    TEST_ASSERT_EQUAL(item_slots.length, 0);
 }
 
 void test_item_list_add_remove(
