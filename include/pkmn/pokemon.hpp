@@ -119,10 +119,13 @@ namespace pkmn {
                 int level
             ) = 0;
 
-            virtual std::string get_location_met() = 0;
+            virtual std::string get_location_met(
+                bool as_egg
+            ) = 0;
 
             virtual void set_location_met(
-                const std::string &location
+                const std::string &location,
+                bool as_egg
             ) = 0;
 
             virtual std::string get_original_game() = 0;

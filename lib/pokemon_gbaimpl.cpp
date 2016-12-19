@@ -92,8 +92,7 @@ namespace pkmn {
         _effort->ev_spatk = uint32_t(std::rand());
         _effort->ev_spdef = uint32_t(std::rand());
 
-        _misc->met_location = 0xFF; // Fateful encounter
-
+        set_location_met("Fateful encounter", false);
         set_level(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
@@ -476,24 +475,35 @@ namespace pkmn {
         _misc->origin_info |= uint16_t(level);
     }
 
-    std::string pokemon_gbaimpl::get_location_met() {
-        pokemon_scoped_lock lock(this);
+    std::string pokemon_gbaimpl::get_location_met(
+        bool as_egg
+    ) {
+        if(as_egg) {
+            throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
+        } else {
+            pokemon_scoped_lock lock(this);
 
-        return pkmn::database::location_index_to_name(
-                   _misc->met_location,
-                   _database_entry.get_game_id()
-               );
+            return pkmn::database::location_index_to_name(
+                       _misc->met_location,
+                       _database_entry.get_game_id()
+                   );
+        }
     }
 
     void pokemon_gbaimpl::set_location_met(
-        const std::string &location
+        const std::string &location,
+        bool as_egg
     ) {
-        pokemon_scoped_lock lock(this);
+        if(as_egg) {
+            throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
+        } else {
+            pokemon_scoped_lock lock(this);
 
-        _misc->met_location = uint8_t(pkmn::database::location_name_to_index(
-                                          location,
-                                          _database_entry.get_game_id()
-                                      ));
+            _misc->met_location = uint8_t(pkmn::database::location_name_to_index(
+                                              location,
+                                              _database_entry.get_game_id()
+                                          ));
+        }
     }
 
     std::string pokemon_gbaimpl::get_original_game() {

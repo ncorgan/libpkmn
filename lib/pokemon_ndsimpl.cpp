@@ -438,25 +438,34 @@ namespace pkmn {
         _blockD->metlevel_otgender |= uint16_t(level);
     }
 
-    // TODO: as_egg
-    std::string pokemon_ndsimpl::get_location_met() {
+    std::string pokemon_ndsimpl::get_location_met(
+        bool as_egg
+    ) {
         return pkmn::database::location_index_to_name(
-                   pksav_littleendian16(_plat ? _blockB->met_plat
-                                              : _blockD->met_dp
+                   pksav_littleendian16(_plat ? as_egg ? _blockB->eggmet_plat
+                                                       : _blockB->met_plat
+                                              : as_egg ? _blockD->eggmet_dp
+                                                       : _blockD->met_dp
                                        ),
                    _database_entry.get_game_id()
                );
     }
 
     void pokemon_ndsimpl::set_location_met(
-        const std::string &location
+        const std::string &location,
+        bool as_egg
     ) {
-        (_plat ? _blockB->met_plat : _blockD->met_dp) = pksav_littleendian16(uint16_t(
-                                                            pkmn::database::location_name_to_index(
-                                                               location,
-                                                               _database_entry.get_game_id()
-                                                            )
-                                                        ));
+        uint16_t* field = _plat ? as_egg ? &_blockB->eggmet_plat
+                                         : &_blockB->met_plat
+                                : as_egg ? &_blockD->eggmet_dp
+                                         : &_blockD->met_dp;
+
+        *field = pksav_littleendian16(uint16_t(
+                     pkmn::database::location_name_to_index(
+                         location,
+                         _database_entry.get_game_id()
+                     )
+                 ));
     }
 
     std::string pokemon_ndsimpl::get_original_game() {

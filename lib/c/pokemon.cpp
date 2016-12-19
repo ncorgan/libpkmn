@@ -324,13 +324,14 @@ pkmn_error_t pkmn_pokemon_set_level_caught(
 
 pkmn_error_t pkmn_pokemon_get_location_met(
     pkmn_pokemon_handle_t handle,
+    bool as_egg,
     char* location_met_out,
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
-            handle->cpp->get_location_met(),
+            handle->cpp->get_location_met(as_egg),
             location_met_out,
             buffer_len,
             actual_strlen_out
@@ -340,10 +341,14 @@ pkmn_error_t pkmn_pokemon_get_location_met(
 
 pkmn_error_t pkmn_pokemon_set_location_met(
     pkmn_pokemon_handle_t handle,
-    const char* location_met
+    const char* location_met,
+    bool as_egg
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        handle->cpp->set_location_met(location_met)
+        handle->cpp->set_location_met(
+            location_met,
+            as_egg
+        )
     )
 }
 

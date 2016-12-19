@@ -66,7 +66,7 @@ namespace pkmn {
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_level_caught(level);
-        set_location_met("Special");
+        set_location_met("Special", false);
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
@@ -306,26 +306,37 @@ namespace pkmn {
         GEN2_PC_RCAST->caught_data |= caught_data;
     }
 
-    std::string pokemon_gen2impl::get_location_met() {
-        pokemon_scoped_lock lock(this);
+    std::string pokemon_gen2impl::get_location_met(
+        bool as_egg
+    ) {
+        if(as_egg) {
+            throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
+        } else {
+            pokemon_scoped_lock lock(this);
 
-        return pkmn::database::location_index_to_name(
-                   (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
-                   _database_entry.get_game_id()
-               );
+            return pkmn::database::location_index_to_name(
+                       (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
+                       _database_entry.get_game_id()
+                   );
+        }
     }
 
     void pokemon_gen2impl::set_location_met(
-        const std::string &location
+        const std::string &location,
+        bool as_egg
     ) {
-        pokemon_scoped_lock lock(this);
+        if(as_egg) {
+            throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
+        } else {
+            pokemon_scoped_lock lock(this);
 
-        uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
-                                               location,
-                                               _database_entry.get_game_id()
-                                           ));
-        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;
-        GEN2_PC_RCAST->caught_data |= location_index;
+            uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
+                                                   location,
+                                                   _database_entry.get_game_id()
+                                               ));
+            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;
+            GEN2_PC_RCAST->caught_data |= location_index;
+        }
     }
 
     std::string pokemon_gen2impl::get_original_game() {

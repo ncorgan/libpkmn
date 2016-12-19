@@ -95,10 +95,13 @@ namespace pkmn {
                 int level
             );
 
-            std::string get_location_met();
+            std::string get_location_met(
+                bool as_egg
+            );
 
             void set_location_met(
-                const std::string &location
+                const std::string &location,
+                bool as_egg
             );
 
             std::string get_original_game();
