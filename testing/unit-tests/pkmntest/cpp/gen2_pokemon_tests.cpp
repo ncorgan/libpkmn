@@ -163,6 +163,9 @@ namespace pkmntest {
         BOOST_CHECK_THROW(
             pokemon->get_ribbons();
         , pkmn::feature_not_in_game_error);
+        BOOST_CHECK_THROW(
+            pokemon->get_contest_stats();
+        , pkmn::feature_not_in_game_error);
 
         const pkmn::move_slots_t& move_slots = pokemon->get_moves();
         BOOST_CHECK_EQUAL(move_slots.size(), 4);

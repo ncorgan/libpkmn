@@ -111,6 +111,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         set_level(level);
@@ -145,6 +146,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -175,6 +177,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -875,6 +878,15 @@ namespace pkmn {
         _ribbons["National"] = bool(_misc->ribbons_obedience & PKSAV_GEN3_NATIONAL_RIBBON_MASK);
         _ribbons["Earth"]    = bool(_misc->ribbons_obedience & PKSAV_GEN3_EARTH_RIBBON_MASK);
         _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GEN3_WORLD_RIBBON_MASK);
+    }
+
+    void pokemon_gbaimpl::_update_contest_stats_map() {
+        _contest_stats["Cool"]   = int(_effort->contest_stats.cool);
+        _contest_stats["Beauty"] = int(_effort->contest_stats.beauty);
+        _contest_stats["Cute"]   = int(_effort->contest_stats.cute);
+        _contest_stats["Smart"]  = int(_effort->contest_stats.smart);
+        _contest_stats["Tough"]  = int(_effort->contest_stats.tough);
+        _contest_stats["Feel"]   = int(_effort->contest_stats.feel);
     }
 
     void pokemon_gbaimpl::_update_EV_map() {

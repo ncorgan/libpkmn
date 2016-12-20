@@ -160,6 +160,13 @@ namespace pkmn {
         return _ribbons;
     }
 
+    const std::map<std::string, int>& pokemon_impl::get_contest_stats() {
+        pokemon_scoped_lock lock(this);
+
+        _update_contest_stats_map();
+        return _contest_stats;
+    }
+
     const pkmn::move_slots_t& pokemon_impl::get_moves() {
         pokemon_scoped_lock lock(this);
 

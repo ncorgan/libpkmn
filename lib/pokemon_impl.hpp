@@ -11,6 +11,7 @@
 
 #include <pkmn/pokemon.hpp>
 
+#include <pksav/common/contest_stats.h>
 #include <pksav/common/stats.h>
 
 #include <boost/assign.hpp>
@@ -59,6 +60,8 @@ namespace pkmn {
 
             const std::map<std::string, bool>& get_ribbons();
 
+            const std::map<std::string, int>& get_contest_stats();
+
             const pkmn::move_slots_t& get_moves();
 
             const std::map<std::string, int>& get_EVs();
@@ -76,7 +79,7 @@ namespace pkmn {
 
         protected:
             pkmn::move_slots_t _moves;
-            std::map<std::string, int> _stats, _EVs, _IVs;
+            std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;
             std::map<std::string, bool> _markings, _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
@@ -95,6 +98,13 @@ namespace pkmn {
             virtual void _update_moves(
                 int index
             ) = 0;
+
+            void _set_contest_stat(
+                const std::string &stat,
+                int value,
+                pksav_contest_stats_t* native,
+                bool gen3
+            );
 
             void _set_marking(
                 const std::string &marking,
@@ -126,6 +136,7 @@ namespace pkmn {
             virtual void _update_held_item() = 0;
             virtual void _update_markings_map() = 0;
             virtual void _update_ribbons_map() = 0;
+            virtual void _update_contest_stats_map() = 0;
             virtual void _update_EV_map() = 0;
             virtual void _update_IV_map() = 0;
             virtual void _update_stat_map() = 0;

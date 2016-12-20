@@ -66,6 +66,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         set_level(level);
@@ -103,6 +104,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -136,6 +138,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -175,6 +178,7 @@ namespace pkmn {
         _update_held_item();
         _update_markings_map();
         _update_ribbons_map();
+        _update_contest_stats_map();
         _update_EV_map();
         _update_IV_map();
         _update_stat_map();
@@ -719,52 +723,16 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::_update_ribbons_map() {
-        /*uint32_t cool_ribbons = _blockD->ribbons_obedience & PKSAV_GEN3_COOL_RIBBONS_MASK;
-        _ribbons["Cool"]        = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Cool Super"]  = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Cool Hyper"]  = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Cool Master"] = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        throw pkmn::unimplemented_error();
+    }
 
-        uint32_t beauty_ribbons = _blockD->ribbons_obedience & PKSAV_GEN3_BEAUTY_RIBBONS_MASK;
-        beauty_ribbons >>= PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET;
-        _ribbons["Beauty"]        = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Beauty Super"]  = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Beauty Hyper"]  = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Beauty Master"] = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
-
-        uint32_t cute_ribbons = _blockD->ribbons_obedience & PKSAV_GEN3_CUTE_RIBBONS_MASK;
-        cute_ribbons >>= PKSAV_GEN3_CUTE_RIBBONS_OFFSET;
-        _ribbons["Cute"]        = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Cute Super"]  = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Cute Hyper"]  = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Cute Master"] = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
-
-        uint32_t smart_ribbons = _blockD->ribbons_obedience & PKSAV_GEN3_SMART_RIBBONS_MASK;
-        smart_ribbons >>= PKSAV_GEN3_SMART_RIBBONS_OFFSET;
-        _ribbons["Smart"]        = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Smart Super"]  = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Smart Hyper"]  = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Smart Master"] = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
-
-        uint32_t tough_ribbons = _blockD->ribbons_obedience & PKSAV_GEN3_TOUGH_RIBBONS_MASK;
-        tough_ribbons >>= PKSAV_GEN3_TOUGH_RIBBONS_OFFSET;
-        _ribbons["Tough"]        = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Tough Super"]  = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Tough Hyper"]  = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Tough Master"] = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
-
-        _ribbons["Champion"] = bool(_blockD->ribbons_obedience & PKSAV_GEN3_CHAMPION_RIBBON_MASK);
-        _ribbons["Winning"]  = bool(_blockD->ribbons_obedience & PKSAV_GEN3_WINNING_RIBBON_MASK);
-        _ribbons["Victory"]  = bool(_blockD->ribbons_obedience & PKSAV_GEN3_VICTORY_RIBBON_MASK);
-        _ribbons["Artist"]   = bool(_blockD->ribbons_obedience & PKSAV_GEN3_ARTIST_RIBBON_MASK);
-        _ribbons["blockC"]   = bool(_blockD->ribbons_obedience & PKSAV_GEN3_blockC_RIBBON_MASK);
-        _ribbons["Marine"]   = bool(_blockD->ribbons_obedience & PKSAV_GEN3_MARINE_RIBBON_MASK);
-        _ribbons["Land"]     = bool(_blockD->ribbons_obedience & PKSAV_GEN3_LAND_RIBBON_MASK);
-        _ribbons["Sky"]      = bool(_blockD->ribbons_obedience & PKSAV_GEN3_SKY_RIBBON_MASK);
-        _ribbons["Country"]  = bool(_blockD->ribbons_obedience & PKSAV_GEN3_COUNTRY_RIBBON_MASK);
-        _ribbons["National"] = bool(_blockD->ribbons_obedience & PKSAV_GEN3_NATIONAL_RIBBON_MASK);
-        _ribbons["Earth"]    = bool(_blockD->ribbons_obedience & PKSAV_GEN3_EARTH_RIBBON_MASK);
-        _ribbons["World"]    = bool(_blockD->ribbons_obedience & PKSAV_GEN3_WORLD_RIBBON_MASK);*/
+    void pokemon_ndsimpl::_update_contest_stats_map() {
+        _contest_stats["Cool"]   = int(_blockA->contest_stats.cool);
+        _contest_stats["Beauty"] = int(_blockA->contest_stats.beauty);
+        _contest_stats["Cute"]   = int(_blockA->contest_stats.cute);
+        _contest_stats["Smart"]  = int(_blockA->contest_stats.smart);
+        _contest_stats["Tough"]  = int(_blockA->contest_stats.tough);
+        _contest_stats["Sheen"]  = int(_blockA->contest_stats.sheen);
     }
 
     void pokemon_ndsimpl::_update_EV_map() {

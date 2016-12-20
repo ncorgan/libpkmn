@@ -166,6 +166,8 @@ namespace pkmn {
                 bool value
             ) = 0;
 
+            virtual const std::map<std::string, int>& get_contest_stats() = 0;
+
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual void set_move(

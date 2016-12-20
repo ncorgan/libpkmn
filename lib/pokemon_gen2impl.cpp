@@ -571,6 +571,10 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
+    void pokemon_gen2impl::_update_contest_stats_map() {
+        throw pkmn::feature_not_in_game_error("Contests", "Generation II");
+    }
+
     void pokemon_gen2impl::_update_EV_map() {
         _EVs["HP"]      = int(pksav_bigendian16(GEN2_PC_RCAST->ev_hp));
         _EVs["Attack"]  = int(pksav_bigendian16(GEN2_PC_RCAST->ev_atk));
