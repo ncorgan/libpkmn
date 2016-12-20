@@ -86,12 +86,16 @@ namespace pkmn {
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
+        item_list_scoped_lock lock(this);
+
         if(_our_mem) {
             delete NATIVE_RCAST;
         }
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {
+        item_list_scoped_lock lock(this);
+
         int ret = 0;
         for(int i = 0; i < 50; i++) {
             if(NATIVE_RCAST->tm_count[i] > 0) {
@@ -173,6 +177,8 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     ) {
+        item_list_scoped_lock lock(this);
+
         for(size_t i = 0; i < 50; ++i) {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
         }
@@ -184,6 +190,8 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
     ) {
+        item_list_scoped_lock lock(this);
+
         for(size_t i = 0; i < 50; ++i) {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);
         }

@@ -20,10 +20,10 @@
 #include <pkmn-c/calculations/spinda_spots.h>
 #include <pkmn-c/calculations/stats.h>
 
-#include <pkmn-c/database/items.h>
+#include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/lists.h>
-#include <pkmn-c/database/moves.h>
-#include <pkmn-c/database/pokemon.h>
+#include <pkmn-c/database/move_entry.h>
+#include <pkmn-c/database/pokemon_entry.h>
 
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -31,6 +31,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/pokemon_list.h>
+#include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <pkmn-c/utils/paths.h>

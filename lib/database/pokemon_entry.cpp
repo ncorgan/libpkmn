@@ -51,11 +51,16 @@ namespace pkmn { namespace database {
 
     BOOST_STATIC_CONSTEXPR int ARCEUS_ID = 493;
 
+    BOOST_STATIC_CONSTEXPR int SWAMPERT_MEGA_ID = 10064;
+
     BOOST_STATIC_CONSTEXPR int RUBY      = 7;
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
     BOOST_STATIC_CONSTEXPR int XD        = 20;
+    BOOST_STATIC_CONSTEXPR int X         = 23;
+    BOOST_STATIC_CONSTEXPR int Y         = 24;
+    BOOST_STATIC_CONSTEXPR int OMEGARUBY = 25;
 
     BOOST_STATIC_CONSTEXPR int RS   = 5;
     BOOST_STATIC_CONSTEXPR int HGSS = 10;
@@ -1054,10 +1059,35 @@ namespace pkmn { namespace database {
                 "SELECT game_index FROM pokemon_game_indices WHERE pokemon_id=? "
                 "AND version_id=?";
 
-            int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
-            _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
-                                 _db, pokemon_index_query, _pokemon_id, game_id
-                             );
+            /*
+             * Some of the Veekun database's contributors haven't taken into account
+             * that the "pokemon_game_indices" table stores indices by version_id, so
+             * indices need to be added for ALL games they apply to. Here, we're just
+             * hoping they added to at least the lowest-indexed game.
+             */
+            int game_id = 0;
+            if(game_is_gamecube(_game_id)) {
+                game_id = RUBY;
+            } else if(_game_id == Y) {
+                game_id = X;
+            } else if(_game_id >= OMEGARUBY) {
+                game_id = (_form_id >= SWAMPERT_MEGA_ID) ? OMEGARUBY : X;
+            } else {
+                game_id = _game_id;
+            }
+
+            /*
+             * Not every form has an index, so if this query fails, default to the primary one
+             * and hope for the best.
+             */
+            if(not pkmn::database::maybe_query_db_bind2<int, int, int>(
+                       _db, pokemon_index_query, _pokemon_index, _pokemon_id, game_id
+                   )
+            ) {
+                _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
+                                     _db, pokemon_index_query, _species_id, game_id
+                                 );
+            }
         }
     }
 
