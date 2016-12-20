@@ -90,7 +90,24 @@ void test_item_list_out_of_range_error(
     TEST_ASSERT_EQUAL(num_items_before, num_items_after);
 }
 
-void test_item_list_items_from_wrong_pocket(
+void test_item_bag_invalid_items(
+    pkmn_item_bag_handle_t bag,
+    const char** item_names,
+    size_t item_names_list_length
+) {
+    TEST_ASSERT_NOT_NULL(bag);
+    TEST_ASSERT_NOT_NULL(item_names);
+
+    for(size_t i = 0; i < item_names_list_length; ++i) {
+        TEST_ASSERT_EQUAL(pkmn_item_bag_add(
+                              bag,
+                              item_names[i],
+                              1
+                          ), PKMN_ERROR_INVALID_ARGUMENT);
+    }
+}
+
+void test_item_list_invalid_items(
     pkmn_item_list_handle_t list,
     const char** item_names,
     size_t item_names_list_length

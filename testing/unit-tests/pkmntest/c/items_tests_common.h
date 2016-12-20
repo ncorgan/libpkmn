@@ -9,6 +9,7 @@
 #define ITEMS_TESTS_COMMON_H
 
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/item_bag.h>
 
 #include <stdlib.h>
 
@@ -25,7 +26,13 @@ void test_item_list_out_of_range_error(
     const char* item_name
 );
 
-void test_item_list_items_from_wrong_pocket(
+void test_item_bag_invalid_items(
+    pkmn_item_bag_handle_t bag,
+    const char** item_names,
+    size_t item_names_list_length
+);
+
+void test_item_list_invalid_items(
     pkmn_item_list_handle_t list,
     const char** item_names,
     size_t item_names_list_length

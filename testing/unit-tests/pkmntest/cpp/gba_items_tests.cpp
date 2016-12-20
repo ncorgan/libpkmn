@@ -437,7 +437,7 @@ namespace pkmntest {
             "Potion"
         );
 
-        // Make sure we can't add items from other generations or invalid Generation III games.
+        // Make sure we can't add items from other generations or incompatible Generation III games.
         test_item_list_invalid_items(
             pc,
             wrong_game_all_pocket_items

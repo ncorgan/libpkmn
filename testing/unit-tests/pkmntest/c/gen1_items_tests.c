@@ -17,6 +17,24 @@
 
 #define STRBUFFER_LEN 1024
 
+static const char* item_names[] = {
+    "Potion",
+    "Great Ball",
+    "Ether",
+    "PP Up",
+    "TM34",
+    "Moon Stone",
+    "Bicycle",
+    "Full Heal"
+};
+static const char* wrong_generation_item_names[] = {
+    "Amulet Coin",
+    "Apicot Berry",
+    "Air Mail",
+    "Air Balloon",
+    "Aqua Suit"
+};
+
 static void pkmntest_gen1_item_list_common(
     pkmn_item_list_handle_t items,
     const char* game
@@ -39,17 +57,14 @@ static void pkmntest_gen1_item_list_common(
         "Potion"
     );
 
+    // Confirm items from later generations can't be added.
+    test_item_list_invalid_items(
+        items,
+        wrong_generation_item_names,
+        5
+    );
+
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    const char* item_names[] = {
-        "Potion",
-        "Great Ball",
-        "Ether",
-        "PP Up",
-        "TM34",
-        "Moon Stone",
-        "Bicycle",
-        "Full Heal"
-    };
     test_item_list_add_remove(
         items,
         item_names,
@@ -148,11 +163,11 @@ void pkmntest_gen1_pc_test(
                       ), PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(capacity, 50);
 
-    int num_pc = 0;
+    int num_items = 0;
     TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
-                          pc, &num_pc
+                          pc, &num_items
                       ), PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(num_pc, 0);
+    TEST_ASSERT_EQUAL(num_items, 0);
 
     pkmntest_gen1_item_list_common(pc, game);
 }
@@ -163,6 +178,10 @@ void pkmntest_gen1_item_bag_test(
 ) {
     pkmn_string_list_t pocket_names = {
         .strings = NULL,
+        .length = 0
+    };
+    pkmn_item_slots_t item_slots = {
+        .item_slots = NULL,
         .length = 0
     };
 
@@ -179,6 +198,12 @@ void pkmntest_gen1_item_bag_test(
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
     TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
+    test_item_bag_invalid_items(
+        bag,
+        wrong_generation_item_names,
+        5
+    );
+
     TEST_ASSERT_EQUAL(pkmn_item_bag_get_pocket_names(
                           bag, &pocket_names
                       ), PKMN_ERROR_NONE);
@@ -194,6 +219,62 @@ void pkmntest_gen1_item_bag_test(
                       ), PKMN_ERROR_NONE);
 
     pkmntest_gen1_item_list_test(items, game);
+
+    // Make sure adding items through the bag adds to the pocket.
+    int num_items = 0;
+    TEST_ASSERT_EQUAL(pkmn_item_list_get_num_items(
+                          items, &num_items
+                      ), PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(num_items, 0);
+
+    for(int i = 0; i < 8; ++i) {
+        TEST_ASSERT_EQUAL(pkmn_item_bag_add(
+                              bag,
+                              item_names[i],
+                              i+1
+                          ), PKMN_ERROR_NONE);
+    }
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          items,
+                          &item_slots
+                      ), PKMN_ERROR_NONE);
+
+    for(int i = 0; i < 8; ++i) {
+        TEST_ASSERT_EQUAL_STRING(item_slots.item_slots[i].item, item_names[i]);
+        TEST_ASSERT_EQUAL(item_slots.item_slots[i].amount, i+1);
+    }
+
+    TEST_ASSERT_EQUAL_STRING(item_slots.item_slots[8].item, "None");
+    TEST_ASSERT_EQUAL(item_slots.item_slots[8].amount, 0);
+
+    TEST_ASSERT_EQUAL(pkmn_item_slots_free(&item_slots),
+                      PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(item_slots.item_slots);
+    TEST_ASSERT_EQUAL(item_slots.length, 0);
+
+    for(int i = 0; i < 8; ++i) {
+        TEST_ASSERT_EQUAL(pkmn_item_bag_remove(
+                              bag,
+                              item_names[i],
+                              i+1
+                          ), PKMN_ERROR_NONE);
+    }
+
+    TEST_ASSERT_EQUAL(pkmn_item_list_as_array(
+                          items,
+                          &item_slots
+                      ), PKMN_ERROR_NONE);
+
+    for(int i = 0; i < 9; ++i) {
+        TEST_ASSERT_EQUAL_STRING(item_slots.item_slots[i].item, "None");
+        TEST_ASSERT_EQUAL(item_slots.item_slots[i].amount, 0);
+    }
+
+    TEST_ASSERT_EQUAL(pkmn_item_slots_free(&item_slots),
+                      PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(item_slots.item_slots);
+    TEST_ASSERT_EQUAL(item_slots.length, 0);
 
     TEST_ASSERT_EQUAL(pkmn_item_list_free(
                           &items

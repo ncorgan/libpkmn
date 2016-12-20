@@ -185,12 +185,21 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Bicycle")("HM01")
         ;
         test_item_list_invalid_items(
             ball_pocket,
-            wrong_items
+            wrong_pocket_items
+        );
+
+        // Make sure we can't add items from later generations.
+        static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
+            ("Premier Ball")("Heal Ball")("Dream Ball")
+        ;
+        test_item_list_invalid_items(
+            ball_pocket,
+            wrong_generation_items
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
@@ -241,12 +250,12 @@ namespace pkmntest {
         );
 
         // Make sure we can't add items from other pockets.
-        static const std::vector<std::string> wrong_items = boost::assign::list_of
+        static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
             ("Potion")("Master Ball")("Bicycle")
         ;
         test_item_list_invalid_items(
             tmhm_pocket,
-            wrong_items
+            wrong_pocket_items
         );
 
         // Make sure we can't add items from later generations.
@@ -454,33 +463,21 @@ namespace pkmntest {
 
         // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
         if(game == "Crystal") {
-            bag->add("Clear Bell", 1);
-            bag->add("GS Ball", 1);
-            bag->add("Blue Card", 1);
-            bag->add("Egg Ticket", 1);
+            for(int i = 0; i < 4; ++i) {
+                bag->add(crystal_items[i], 1);
+            }
+            for(int i = 0; i < 4; ++i) {
+                BOOST_CHECK_EQUAL(key_item_slots.at(i).item.get_name(), crystal_items[i]);
+                BOOST_CHECK_EQUAL(key_item_slots.at(i).amount, 1);
+            }
 
-            BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "Clear Bell");
-            BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 1);
-            BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "GS Ball");
-            BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 1);
-            BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "Blue Card");
-            BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 1);
-            BOOST_CHECK_EQUAL(key_item_slots.at(3).item.get_name(), "Egg Ticket");
-            BOOST_CHECK_EQUAL(key_item_slots.at(3).amount, 1);
-
-            bag->remove("Clear Bell", 1);
-            bag->remove("GS Ball", 1);
-            bag->remove("Blue Card", 1);
-            bag->remove("Egg Ticket", 1);
-
-            BOOST_CHECK_EQUAL(key_item_slots.at(0).item.get_name(), "None");
-            BOOST_CHECK_EQUAL(key_item_slots.at(0).amount, 0);
-            BOOST_CHECK_EQUAL(key_item_slots.at(1).item.get_name(), "None");
-            BOOST_CHECK_EQUAL(key_item_slots.at(1).amount, 0);
-            BOOST_CHECK_EQUAL(key_item_slots.at(2).item.get_name(), "None");
-            BOOST_CHECK_EQUAL(key_item_slots.at(2).amount, 0);
-            BOOST_CHECK_EQUAL(key_item_slots.at(3).item.get_name(), "None");
-            BOOST_CHECK_EQUAL(key_item_slots.at(3).amount, 0);
+            for(int i = 0; i < 4; ++i) {
+                bag->remove(crystal_items[i], 1);
+            }
+            for(int i = 0; i < 4; ++i) {
+                BOOST_CHECK_EQUAL(key_item_slots.at(i).item.get_name(), "None");
+                BOOST_CHECK_EQUAL(key_item_slots.at(i).amount, 0);
+            }
         } else {
             test_item_bag_invalid_items(
                 bag,
