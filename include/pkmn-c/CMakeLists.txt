@@ -13,6 +13,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_bag.h
         item_list.h
         pokemon.h
+        pokemon_box.h
     )
 
     INSTALL(
