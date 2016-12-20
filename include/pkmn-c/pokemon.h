@@ -10,7 +10,8 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-#include <pkmn-c/item_list.h>
+#include <pkmn-c/database/pokemon_entry.h>
+
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/string_types.h>
 
@@ -71,6 +72,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_game(
     char* game_out,
     size_t buffer_len,
     size_t* actual_strlen_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(
+    pkmn_pokemon_handle_t handle,
+    pkmn_database_pokemon_entry_t* database_entry_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_nickname(
