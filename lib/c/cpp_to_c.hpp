@@ -137,8 +137,7 @@ namespace pkmn {
 
     void pkmn_pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t &pokemon_list_cpp,
-        pkmn_pokemon_list_t* pokemon_list_c,
-        size_t* list_length_out
+        pkmn_pokemon_list_t* pokemon_list_c
     );
 
     PKMN_INLINE void std_pair_int_to_int_pair(

@@ -43,6 +43,8 @@ class pkmn_test_exception: public std::exception {
         std::string msg_;
 };
 
+#define STRBUFFER_LEN 1024
+
 /*
  * Converting C++ exceptions to C error codes
  */
@@ -570,6 +572,70 @@ BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
     );
     BOOST_CHECK(!string_list_c.strings);
     BOOST_CHECK_EQUAL(string_list_c.length, 0);
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
+    pkmn::pokemon_list_t pokemon_list_cpp;
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Charmander", "Red", "", 5
+        )
+    );
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Squirtle", "Blue", "", 10
+        )
+    );
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Bulbasaur", "Yellow", "", 15
+        )
+    );
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
+    pkmn::pkmn_pokemon_list_cpp_to_c(
+        pokemon_list_cpp,
+        &pokemon_list_c
+    );
+
+    for(size_t i = 0; i < 3; ++i) {
+        char species_c[STRBUFFER_LEN] = {0};
+        char game_c[STRBUFFER_LEN] = {0};
+        size_t actual_strlen = 0;
+        int level_c = 0;
+
+        error = pkmn_pokemon_get_species(
+                    pokemon_list_c.pokemon_list[i],
+                    species_c,
+                    sizeof(species_c),
+                    &actual_strlen
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_species().c_str(), species_c), 0);
+
+        error = pkmn_pokemon_get_game(
+                    pokemon_list_c.pokemon_list[i],
+                    game_c,
+                    sizeof(game_c),
+                    &actual_strlen
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_game().c_str(), game_c), 0);
+
+        error = pkmn_pokemon_get_level(
+                    pokemon_list_c.pokemon_list[i],
+                    &level_c
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(pokemon_list_cpp[i]->get_level(), level_c);
+    }
+
+    pkmn_pokemon_list_free(
+        &pokemon_list_c
+    );
+    BOOST_CHECK(!pokemon_list_c.pokemon_list);
+    BOOST_CHECK_EQUAL(pokemon_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {
