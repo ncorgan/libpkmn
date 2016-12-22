@@ -22,6 +22,9 @@ namespace fs = boost::filesystem;
 
 namespace pkmn {
 
+    BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE  = 0x8000;
+    BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE = 0x10000;
+
     std::string game_save::detect_type(
         const std::string &filepath
     ) {
@@ -38,81 +41,85 @@ namespace pkmn {
 
         bool type_found = false;
 
-        // Check for a Generation I save.
-        PKSAV_CALL(
-            pksav_buffer_is_gen1_save(
-                raw.data(),
-                filesize,
-                &type_found
+        if(filesize >= GBA_SAVE_SIZE) {
+            // Check for a Ruby/Sapphire save.
+            PKSAV_CALL(
+                pksav_buffer_is_gba_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GBA_RS,
+                    &type_found
+                );
             );
-        )
-        if(type_found) {
-            return "Red/Blue/Yellow";
+            if(type_found) {
+                return "Ruby/Sapphire";
+            }
+
+            // Check for an Emerald save.
+            PKSAV_CALL(
+                pksav_buffer_is_gba_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GBA_EMERALD,
+                    &type_found
+                );
+            );
+            if(type_found) {
+                return "Emerald";
+            }
+
+            // Check for a FireRed/LeafGreen save.
+            PKSAV_CALL(
+                pksav_buffer_is_gba_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GBA_FRLG,
+                    &type_found
+                );
+            );
+            if(type_found) {
+                return "FireRed/LeafGreen";
+            }
         }
 
-        // Check for a Gold/Silver save.
-        PKSAV_CALL(
-            pksav_buffer_is_gen2_save(
-                raw.data(),
-                filesize,
-                false,
-                &type_found
+        if(filesize >= GB_SAVE_SIZE) {
+            // Check for a Generation I save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen1_save(
+                    raw.data(),
+                    filesize,
+                    &type_found
+                );
             );
-        )
-        if(type_found) {
-            return "Gold/Silver";
-        }
+            if(type_found) {
+                return "Red/Blue/Yellow";
+            }
 
-        // Check for a Crystal save.
-        PKSAV_CALL(
-            pksav_buffer_is_gen2_save(
-                raw.data(),
-                filesize,
-                true,
-                &type_found
+            // Check for a Gold/Silver save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen2_save(
+                    raw.data(),
+                    filesize,
+                    false,
+                    &type_found
+                );
             );
-        )
-        if(type_found) {
-            return "Crystal";
-        }
+            if(type_found) {
+                return "Gold/Silver";
+            }
 
-        // Check for a Ruby/Sapphire save.
-        PKSAV_CALL(
-            pksav_buffer_is_gba_save(
-                raw.data(),
-                filesize,
-                PKSAV_GBA_RS,
-                &type_found
+            // Check for a Crystal save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen2_save(
+                    raw.data(),
+                    filesize,
+                    true,
+                    &type_found
+                );
             );
-        )
-        if(type_found) {
-            return "Ruby/Sapphire";
-        }
-
-        // Check for an Emerald save.
-        PKSAV_CALL(
-            pksav_buffer_is_gba_save(
-                raw.data(),
-                filesize,
-                PKSAV_GBA_EMERALD,
-                &type_found
-            );
-        )
-        if(type_found) {
-            return "Emerald";
-        }
-
-        // Check for a FireRed/LeafGreen save.
-        PKSAV_CALL(
-            pksav_buffer_is_gba_save(
-                raw.data(),
-                filesize,
-                PKSAV_GBA_FRLG,
-                &type_found
-            );
-        )
-        if(type_found) {
-            return "FireRed/LeafGreen";
+            if(type_found) {
+                return "Crystal";
+            }
         }
 
         return "None";
