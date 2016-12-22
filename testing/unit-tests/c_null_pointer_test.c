@@ -117,12 +117,6 @@ static void item_bag_null_pointer_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
 
     error = pkmn_item_bag_make(
-                &null_item_bag,
-                "Red"
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
-
-    error = pkmn_item_bag_make(
                 &item_bag,
                 NULL // game_name
             );

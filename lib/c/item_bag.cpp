@@ -15,7 +15,6 @@ pkmn_error_t pkmn_item_bag_make(
     const char* game_name
 ) {
     PKMN_CHECK_NULL_PARAM(handle_ptr);
-    PKMN_CHECK_NULL_PARAM((*handle_ptr));
     PKMN_CHECK_NULL_PARAM(game_name);
 
     PKMN_CPP_TO_C(
