@@ -510,8 +510,254 @@ static void item_list_null_pointer_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
 }
 
+/*
+ * <pkmn-c/calculations/form.h>
+ */
+static void calculations_form_null_pointer_test() {
+    /*
+     * pkmn_calculations_gen2_unown_form
+     */
+
+    error = pkmn_calculations_gen2_unown_form(
+                0,
+                0,
+                0,
+                0,
+                NULL, // form_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_calculations_gen2_unown_form(
+                0,
+                0,
+                0,
+                0,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_gen3_unown_form
+     */
+
+    error = pkmn_calculations_gen3_unown_form(
+                0,
+                NULL, // form_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_calculations_gen3_unown_form(
+                0,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_wurmple_becomes_silcoon
+     */
+
+    error = pkmn_calculations_wurmple_becomes_silcoon(
+                0,
+                false,
+                NULL // evolves_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/calculations/gender.h>
+ */
+static void calculations_gender_null_pointer_test() {
+    pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
+
+    /*
+     * pkmn_calculations_gen2_pokemon_gender
+     */
+
+    error = pkmn_calculations_gen2_pokemon_gender(
+                NULL, // species
+                0,
+                &dummy_pkmn_gender_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_calculations_gen2_pokemon_gender(
+                strbuffer,
+                0,
+                NULL // gender_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_modern_pokemon_gender
+     */
+
+    error = pkmn_calculations_modern_pokemon_gender(
+                NULL, // species
+                0,
+                &dummy_pkmn_gender_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_calculations_modern_pokemon_gender(
+                strbuffer,
+                0,
+                NULL // gender_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/calculations/hidden_power.h>
+ */
+static void calculations_hidden_power_null_pointer_test() {
+    /*
+     * pkmn_calculations_gen2_hidden_power
+     */
+
+    error = pkmn_calculations_gen2_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_modern_hidden_power
+     */
+
+    error = pkmn_calculations_modern_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/calculations/shininess.h>
+ */
+static void calculations_shininess_null_pointer_test() {
+    /*
+     * pkmn_calculations_gen2_shiny
+     */
+
+    error = pkmn_calculations_gen2_shiny(
+                0,
+                0,
+                0,
+                0,
+                NULL // shiny_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_modern_shiny
+     */
+
+    error = pkmn_calculations_modern_shiny(
+                0,
+                0,
+                NULL // shiny_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/calculations/spinda_spots.h>
+ */
+static void calculations_spinda_spots_null_pointer_test() {
+    /*
+     * pkmn_calculations_spinda_spot_offset
+     */
+
+    error = pkmn_calculations_spinda_spot_offset(
+                0,
+                NULL // spinda_spots_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/calculations/stats.h>
+ */
+static void calculations_stats_null_pointer_test() {
+    /*
+     * pkmn_calculations_gb_stat
+     */
+
+    error = pkmn_calculations_gb_stat(
+                PKMN_STAT_HP,
+                0,
+                0,
+                0,
+                0,
+                NULL // stat_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_gb_stat_range
+     */
+
+    error = pkmn_calculations_gb_stat_range(
+                PKMN_STAT_HP,
+                0,
+                0,
+                NULL // stat_range_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_modern_stat
+     */
+
+    error = pkmn_calculations_modern_stat(
+                PKMN_STAT_HP,
+                0,
+                0.0f,
+                0,
+                0,
+                0,
+                NULL // stat_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_calculations_modern_stat_range
+     */
+
+    error = pkmn_calculations_modern_stat_range(
+                PKMN_STAT_HP,
+                0,
+                0,
+                NULL // stat_range_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(build_info_null_pointer_test)
     PKMN_C_TEST(item_bag_null_pointer_test)
     PKMN_C_TEST(item_list_null_pointer_test)
+    PKMN_C_TEST(calculations_form_null_pointer_test)
+    PKMN_C_TEST(calculations_gender_null_pointer_test)
+    PKMN_C_TEST(calculations_hidden_power_null_pointer_test)
+    PKMN_C_TEST(calculations_shininess_null_pointer_test)
+    PKMN_C_TEST(calculations_spinda_spots_null_pointer_test)
+    PKMN_C_TEST(calculations_stats_null_pointer_test)
 )
