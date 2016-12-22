@@ -73,6 +73,7 @@ IF(PKMN_ENABLE_C)
         c_database_entry_test
         c_items_test
         c_lists_test
+        c_null_pointer_test
         c_paths_test
     )
 
