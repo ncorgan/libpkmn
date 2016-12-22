@@ -90,7 +90,7 @@ namespace pkmn {
                 }
 
                 _item_pc = pkmn::make_shared<item_list_modernimpl>(
-                                RS_PC, _game_id,
+                                FRLG_PC, _game_id,
                                 _pksav_save.item_storage->frlg.pc_items,
                                 50, false
                            );
@@ -100,7 +100,7 @@ namespace pkmn {
                 _game_id = EMERALD;
 
                 _item_pc = pkmn::make_shared<item_list_modernimpl>(
-                                RS_PC, _game_id,
+                                EMERALD_PC, _game_id,
                                 _pksav_save.item_storage->emerald.pc_items,
                                 50, false
                            );
