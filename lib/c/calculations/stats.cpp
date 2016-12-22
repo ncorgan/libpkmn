@@ -38,6 +38,8 @@ pkmn_error_t pkmn_calculations_gb_stat(
     int IV,
     int* stat_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -54,6 +56,8 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
     int base_stat,
     pkmn_int_pair_t* stat_range_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_range_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -75,6 +79,8 @@ pkmn_error_t pkmn_calculations_modern_stat(
     int IV,
     int* stat_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -92,6 +98,8 @@ pkmn_error_t pkmn_calculations_modern_stat_range(
     int base_stat,
     pkmn_int_pair_t* stat_range_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_range_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 

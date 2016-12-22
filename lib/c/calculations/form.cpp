@@ -21,6 +21,9 @@ pkmn_error_t pkmn_calculations_gen2_unown_form(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(form_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::calculations::gen2_unown_form(
@@ -41,6 +44,9 @@ pkmn_error_t pkmn_calculations_gen3_unown_form(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(form_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::calculations::gen3_unown_form(
@@ -59,6 +65,8 @@ pkmn_error_t pkmn_calculations_wurmple_becomes_silcoon(
     bool before_gen5,
     bool* evolves_out
 ) {
+    PKMN_CHECK_NULL_PARAM(evolves_out);
+
     PKMN_CPP_TO_C(
         *evolves_out = pkmn::calculations::wurmple_becomes_silcoon(
                            personality, before_gen5
