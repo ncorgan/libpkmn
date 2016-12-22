@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+
+#include "pkmn_boost_unit_test.hpp"
+
+#include <pkmn/game_save.hpp>
+
+#include <string>
+
+// TODO: Blue save
+BOOST_AUTO_TEST_CASE(red_blue_yellow_test)
+{
+    std::string pokemon_red = "@POKEMON_RED_SAV@";
+    std::string pokemon_yellow = "@POKEMON_YELLOW_SAV@";
+    std::string expected_result = "Red/Blue/Yellow";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_red),
+        expected_result
+    );
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_yellow),
+        expected_result
+    );
+}
+
+// TODO: Silver save
+BOOST_AUTO_TEST_CASE(gold_silver_test)
+{
+    std::string pokemon_gold = "@POKEMON_GOLD_SAV@";
+    std::string expected_result = "Gold/Silver";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_gold),
+        expected_result
+    );
+}
+
+BOOST_AUTO_TEST_CASE(crystal_test)
+{
+    std::string pokemon_crystal = "@POKEMON_CRYSTAL_SAV@";
+    std::string expected_result = "Crystal";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_crystal),
+        expected_result
+    );
+}
+
+// TODO: Sapphire save
+BOOST_AUTO_TEST_CASE(ruby_sapphire_test)
+{
+    std::string pokemon_ruby = "@POKEMON_RUBY_SAV@";
+    std::string expected_result = "Ruby/Sapphire";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_ruby),
+        expected_result
+    );
+}
+
+BOOST_AUTO_TEST_CASE(emerald_test)
+{
+    std::string pokemon_emerald = "@POKEMON_EMERALD_SAV@";
+    std::string expected_result = "Emerald";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_emerald),
+        expected_result
+    );
+}
+
+// TODO: LeafGreen save
+BOOST_AUTO_TEST_CASE(firered_leafgreen_test)
+{
+    std::string pokemon_firered = "@POKEMON_FIRERED_SAV@";
+    std::string expected_result = "FireRed/LeafGreen";
+
+    BOOST_CHECK_EQUAL(
+        pkmn::game_save::detect_type(pokemon_firered),
+        expected_result
+    );
+}
