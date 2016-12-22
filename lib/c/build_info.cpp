@@ -17,6 +17,9 @@ pkmn_error_t pkmn_get_boost_version(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(boost_version_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::build_info::get_boost_version(),
