@@ -37,8 +37,7 @@ namespace pkmn {
 
     static BOOST_CONSTEXPR const char* SAVE_TYPE_NAMES[] = {
         "None",
-        "Red/Blue",
-        "Yellow",
+        "Red/Blue/Yellow",
         "Gold/Silver",
         "Crystal",
         "Ruby/Sapphire",

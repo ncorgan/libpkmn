@@ -49,6 +49,14 @@
                );
     }
 
+    PKMN_INLINE pkmn::shared_ptr<pkmn::game_save> make_game_save(
+        const std::wstring &filepath
+    ) {
+        return pkmn::game_save::from_file(
+            boost::locale::conv::utf_to_utf<char>(filepath)
+        );
+    }
+
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
         const std::wstring &name,
         const std::wstring &game
@@ -61,6 +69,7 @@
 %}
 
 std::string detect_game_save_type(const std::wstring& filepath);
+pkmn::shared_ptr<pkmn::game_save> make_game_save(const std::wstring& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const std::wstring& game);
 #else
 %{
@@ -68,6 +77,12 @@ pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const
         const std::string &filepath
     ) {
         return pkmn::game_save::detect_type(filepath);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::game_save> make_game_save(
+        const std::string &filepath
+    ) {
+        return pkmn::game_save::from_file(filepath);
     }
 
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
@@ -79,6 +94,7 @@ pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const
 %}
 
 std::string detect_game_save_type(const std::string& filepath);
+pkmn::shared_ptr<pkmn::game_save> make_game_save(const std::string& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
 #endif
 
