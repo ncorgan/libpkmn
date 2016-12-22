@@ -26,6 +26,10 @@ namespace pkmn {
                 const std::string &filepath
             );
 
+            static sptr from_file(
+                const std::string &filepath
+            );
+
             #ifndef __DOXYGEN__
             game_save() {};
             virtual ~game_save() {};

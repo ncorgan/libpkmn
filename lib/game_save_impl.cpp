@@ -6,6 +6,9 @@
  */
 
 #include "game_save_impl.hpp"
+#include "game_save_gen1impl.hpp"
+#include "game_save_gen2impl.hpp"
+#include "game_save_gbaimpl.hpp"
 #include "database/id_to_string.hpp"
 
 #include "pksav/pksav_call.hpp"
@@ -22,10 +25,31 @@ namespace fs = boost::filesystem;
 
 namespace pkmn {
 
+    typedef enum {
+        PKMN_SAVE_TYPE_NONE = 0,
+        PKMN_SAVE_TYPE_RED_BLUE_YELLOW,
+        PKMN_SAVE_TYPE_GOLD_SILVER,
+        PKMN_SAVE_TYPE_CRYSTAL,
+        PKMN_SAVE_TYPE_RUBY_SAPPHIRE,
+        PKMN_SAVE_TYPE_EMERALD,
+        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN
+    } pkmn_save_type_t;
+
+    static BOOST_CONSTEXPR const char* SAVE_TYPE_NAMES[] = {
+        "None",
+        "Red/Blue",
+        "Yellow",
+        "Gold/Silver",
+        "Crystal",
+        "Ruby/Sapphire",
+        "Emerald",
+        "FireRed/LeafGreen"
+    };
+
     BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE  = 0x8000;
     BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE = 0x10000;
 
-    std::string game_save::detect_type(
+    static pkmn_save_type_t _detect_type(
         const std::string &filepath
     ) {
         if(not fs::exists(filepath)) {
@@ -52,7 +76,7 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "Ruby/Sapphire";
+                return PKMN_SAVE_TYPE_RUBY_SAPPHIRE;
             }
 
             // Check for an Emerald save.
@@ -65,7 +89,7 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "Emerald";
+                return PKMN_SAVE_TYPE_EMERALD;
             }
 
             // Check for a FireRed/LeafGreen save.
@@ -78,7 +102,7 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "FireRed/LeafGreen";
+                return PKMN_SAVE_TYPE_FIRERED_LEAFGREEN;
             }
         }
 
@@ -92,7 +116,7 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "Red/Blue/Yellow";
+                return PKMN_SAVE_TYPE_RED_BLUE_YELLOW;
             }
 
             // Check for a Gold/Silver save.
@@ -105,7 +129,7 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "Gold/Silver";
+                return PKMN_SAVE_TYPE_GOLD_SILVER;
             }
 
             // Check for a Crystal save.
@@ -118,11 +142,41 @@ namespace pkmn {
                 );
             );
             if(type_found) {
-                return "Crystal";
+                return PKMN_SAVE_TYPE_CRYSTAL;
             }
         }
 
-        return "None";
+        return PKMN_SAVE_TYPE_NONE;
+    }
+
+    std::string game_save::detect_type(
+        const std::string &filepath
+    ) {
+        return SAVE_TYPE_NAMES[_detect_type(filepath)];
+    }
+
+    game_save::sptr game_save::from_file(
+        const std::string &filepath
+    ) {
+        pkmn_save_type_t save_type = _detect_type(filepath);
+
+        switch(save_type) {
+            case PKMN_SAVE_TYPE_RED_BLUE_YELLOW:
+                return pkmn::make_shared<game_save_gen1impl>(filepath);
+
+            case PKMN_SAVE_TYPE_GOLD_SILVER:
+            case PKMN_SAVE_TYPE_CRYSTAL:
+                return pkmn::make_shared<game_save_gen2impl>(filepath);
+
+            case PKMN_SAVE_TYPE_RUBY_SAPPHIRE:
+            case PKMN_SAVE_TYPE_EMERALD:
+            case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
+                return pkmn::make_shared<game_save_gbaimpl>(filepath);
+
+            case PKMN_SAVE_TYPE_NONE:
+            default:
+                throw std::invalid_argument("Invalid save (or unimplemented).");
+        }
     }
 
     game_save_impl::game_save_impl(
