@@ -19,6 +19,15 @@ void pkmn_set_error(
     const std::string &error
 );
 
+#define PKMN_CHECK_NULL_PARAM(param) \
+{ \
+    if(!param) { \
+        pkmn_set_error( #param \
+                       ": null pointer passed as parameter"); \
+        return PKMN_ERROR_NULL_POINTER; \
+    } \
+}
+
 #define PKMN_CPP_TO_C(...) \
 { \
     try { \
