@@ -546,67 +546,22 @@ namespace pkmn {
         );
     }
 
-    /*static const std::map<std::string, pksav_gen3_ribbon_mask_t> nds_ribbons = boost::assign::map_list_of
-        ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
-        ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
-        ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
-        ("Artist",   PKSAV_GEN3_ARTIST_RIBBON_MASK)
-        ("blockC",   PKSAV_GEN3_blockC_RIBBON_MASK)
-        ("Marine",   PKSAV_GEN3_MARINE_RIBBON_MASK)
-        ("Land",     PKSAV_GEN3_LAND_RIBBON_MASK)
-        ("Sky",      PKSAV_GEN3_SKY_RIBBON_MASK)
-        ("Country",  PKSAV_GEN3_COUNTRY_RIBBON_MASK)
-        ("National", PKSAV_GEN3_NATIONAL_RIBBON_MASK)
-        ("Earth",    PKSAV_GEN3_EARTH_RIBBON_MASK)
-        ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
-    ;
-
-    static const std::map<std::string, pksav_gen3_contest_ribbon_level_t> nds_contest_ribbon_levels = boost::assign::map_list_of
-        ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
-        ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
-        ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
-        ("Hyper",  PKSAV_GEN3_CONTEST_RIBBON_HYPER)
-        ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
-    ;
-
-    static const std::map<std::string, pksav_gen3_contest_ribbons_mask_t> nds_contest_ribbon_masks = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_MASK)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
-    ;
-
-    static const std::map<std::string, pksav_gen3_contest_ribbons_offset_t> nds_contest_ribbon_offsets = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_OFFSET)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_OFFSET)
-    ;*/
-
     void pokemon_ndsimpl::set_ribbon(
-        const std::string &ribbon,
-        bool value
+        PKMN_UNUSED(const std::string &ribbon),
+        PKMN_UNUSED(bool value)
     ) {
-        (void)value;
-        if(_ribbons.find(ribbon) == _ribbons.end()) {
-            throw std::invalid_argument("Invalid ribbon.");
-        }
+        throw pkmn::unimplemented_error();
+    }
 
-        /*if(nds_ribbons.find(ribbon) != nds_ribbons.end()) {
-            _set_ribbon<uint32_t, pksav_gen3_ribbon_mask_t>(
-                ribbon,
-                value,
-                &_blockD->ribbons_obedience,
-                nds_ribbons
-            );
-        } else {
-            _set_contest_ribbon(
-                ribbon,
-                value
-            );
-        }*/
+    void pokemon_ndsimpl::set_contest_stat(
+        const std::string &stat,
+        int value
+    ) {
+        _set_contest_stat(
+            stat,
+            value,
+            &_blockA->contest_stats
+        );
     }
 
     void pokemon_ndsimpl::set_move(

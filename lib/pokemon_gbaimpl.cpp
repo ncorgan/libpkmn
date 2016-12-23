@@ -671,6 +671,17 @@ namespace pkmn {
         }
     }
 
+    void pokemon_gbaimpl::set_contest_stat(
+        const std::string &stat,
+        int value
+    ) {
+        _set_contest_stat(
+            stat,
+            value,
+            &_effort->contest_stats
+        );
+    }
+
     void pokemon_gbaimpl::set_move(
         const std::string &move,
         int index

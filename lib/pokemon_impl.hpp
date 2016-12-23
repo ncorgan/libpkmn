@@ -101,6 +101,12 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            void _set_contest_stat(
+                const std::string &stat,
+                int value,
+                pksav_contest_stats_t* native
+            );
+
             void _set_marking(
                 const std::string &marking,
                 bool value,

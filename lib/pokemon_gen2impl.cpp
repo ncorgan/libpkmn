@@ -445,6 +445,13 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
     }
 
+    void pokemon_gen2impl::set_contest_stat(
+        PKMN_UNUSED(const std::string &stat),
+        PKMN_UNUSED(int value)
+    ) {
+        throw pkmn::feature_not_in_game_error("Contests", "Generation II");
+    }
+
     void pokemon_gen2impl::set_move(
         const std::string &move,
         int index

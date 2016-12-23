@@ -168,6 +168,11 @@ namespace pkmn {
 
             virtual const std::map<std::string, int>& get_contest_stats() = 0;
 
+            virtual void set_contest_stat(
+                const std::string &stat,
+                int value
+            ) = 0;
+
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual void set_move(

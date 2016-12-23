@@ -138,6 +138,11 @@ namespace pkmn {
                 bool value
             );
 
+            void set_contest_stat(
+                const std::string &stat,
+                int value
+            );
+
             void set_move(
                 const std::string &move,
                 int index

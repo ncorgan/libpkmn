@@ -203,14 +203,48 @@ namespace pkmn {
 
     // Shared setters
 
+    #define SET_CONTEST_STAT(str,field) \
+    { \
+        if(stat == str) { \
+            native->field = uint8_t(value); \
+            _contest_stats[str] = value; \
+            return; \
+        } \
+    }
+
+    void pokemon_impl::_set_contest_stat(
+        const std::string &stat,
+        int value,
+        pksav_contest_stats_t* native
+    ) {
+        if(_contest_stats.find(stat) == _contest_stats.end()) {
+            throw std::invalid_argument("Invalid contest stat.");
+        }
+        if(value < 0 or value > 255) {
+            throw pkmn::range_error("value", 0, 255);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        SET_CONTEST_STAT("Cool",   cool);
+        SET_CONTEST_STAT("Beauty", beauty);
+        SET_CONTEST_STAT("Cute",   cute);
+        SET_CONTEST_STAT("Smart",  smart);
+        SET_CONTEST_STAT("Tough",  tough);
+        SET_CONTEST_STAT("Feel",   feel);
+        SET_CONTEST_STAT("Sheen",  sheen);
+    }
+
     #define SET_MARKING(str,mask) \
+    { \
         if(marking == str) { \
             if(value) { \
                 *native |= mask; \
             } else { \
                 *native &= ~mask; \
             } \
-        }
+        } \
+    }
 
     void pokemon_impl::_set_marking(
         const std::string &marking,
