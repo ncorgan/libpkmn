@@ -7,6 +7,8 @@
 #ifndef PKMN_POKEMON_BOX_IMPL_HPP
 #define PKMN_POKEMON_BOX_IMPL_HPP
 
+#include "mem/scoped_lock.hpp"
+
 #include <pkmn/pokemon_box.hpp>
 
 #include <boost/noncopyable.hpp>
@@ -14,6 +16,17 @@
 #include <string>
 
 namespace pkmn {
+
+    // Forward declarations
+    class pokemon_impl;
+    class pokemon_box_impl;
+    namespace mem {
+        void set_pokemon_in_box(
+                 pokemon_impl* new_pokemon,
+                 pokemon_box_impl* box,
+                 int index
+             );
+    }
 
     class pokemon_box_impl: public pokemon_box, public boost::noncopyable {
         public:
@@ -30,9 +43,22 @@ namespace pkmn {
                 int index
             );
 
+            void set_pokemon(
+                int index,
+                pkmn::pokemon::sptr new_pokemon
+            );
+
             const pkmn::pokemon_list_t& as_vector();
-            
+
             void* get_native();
+
+            typedef pkmn::mem::scoped_lock<pokemon_box_impl> pokemon_box_scoped_lock;
+            friend pokemon_box_scoped_lock;
+            friend void pkmn::mem::set_pokemon_in_box(
+                            pokemon_impl* new_pokemon,
+                            pokemon_box_impl* box,
+                            int index
+                        );
 
         protected:
             pkmn::pokemon_list_t _pokemon_list;
@@ -40,6 +66,8 @@ namespace pkmn {
 
             void* _native;
             bool _our_mem;
+
+            boost::mutex _mem_mutex;
 
             int _game_id;
 

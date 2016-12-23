@@ -43,9 +43,12 @@ namespace pkmn {
                 int index
             ) = 0;
 
-            virtual const pkmn::pokemon_list_t& as_vector() = 0;
+            virtual void set_pokemon(
+                int index,
+                pkmn::pokemon::sptr new_pokemon
+            ) = 0;
 
-            // TODO: set_pokemon, requires memory logic
+            virtual const pkmn::pokemon_list_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native() = 0;

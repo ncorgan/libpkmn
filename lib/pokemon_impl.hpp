@@ -33,6 +33,17 @@ static const std::map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = bo
 
 namespace pkmn {
 
+    // Forward declarations
+    class pokemon_impl;
+    class pokemon_box_impl;
+    namespace mem {
+        void set_pokemon_in_box(
+                 pokemon_impl* new_pokemon,
+                 pokemon_box_impl* box,
+                 int index
+             );
+    }
+
     class pokemon_impl: public pokemon, public boost::noncopyable {
         public:
             pokemon_impl() {}
@@ -76,6 +87,11 @@ namespace pkmn {
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
             friend pokemon_scoped_lock;
+            friend void pkmn::mem::set_pokemon_in_box(
+                            pokemon_impl* new_pokemon,
+                            pokemon_box_impl* box,
+                            int index
+                        );
 
         protected:
             pkmn::move_slots_t _moves;

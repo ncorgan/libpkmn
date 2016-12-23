@@ -13,6 +13,8 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
+#include "mem/pokemon_setter.hpp"
+
 #include "misc_common.hpp"
 
 #include <pkmn/exception.hpp>
@@ -73,6 +75,30 @@ namespace pkmn {
         }
 
         return _pokemon_list.at(index);
+    }
+
+    void pokemon_box_impl::set_pokemon(
+        int index,
+        pkmn::pokemon::sptr new_pokemon
+    ) {
+        int capacity = get_capacity();
+        if(index < 0 or index > (capacity-1)) {
+            throw pkmn::range_error("index", 0, (capacity-1));
+        }
+
+        /*
+         * Transfer the underlying memory to the box.
+         */
+        pkmn::mem::set_pokemon_in_box(
+            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
+            this,
+            index
+        );
+
+        /*
+         * With the memory moved, copy the abstraction.
+         */
+        _pokemon_list[index] = new_pokemon;
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {

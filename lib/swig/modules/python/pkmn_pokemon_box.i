@@ -16,6 +16,16 @@
         return self->get()->get_pokemon(index);
     }
 
+    void __setitem__(
+        size_t index,
+        pkmn::pokemon::sptr new_pokemon
+    ) {
+        self->get()->set_pokemon(
+            int(index),
+            new_pokemon
+        );
+    }
+
     int __len__() {
         return self->get()->get_capacity();
     }
