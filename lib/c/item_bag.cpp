@@ -47,8 +47,12 @@ const char* pkmn_item_bag_strerror(
         return NULL;
     }
 
-    boost::mutex::scoped_lock lock(handle->error_mutex);
-    return handle->last_error.c_str();
+    try {
+        boost::mutex::scoped_lock lock(handle->error_mutex);
+        return handle->last_error.c_str();
+    } catch(...) {
+        return NULL;
+    }
 }
 
 pkmn_error_t pkmn_item_bag_get_game(
@@ -58,8 +62,8 @@ pkmn_error_t pkmn_item_bag_get_game(
     size_t* actual_strlen_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(game_out);
-    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
@@ -77,8 +81,8 @@ pkmn_error_t pkmn_item_bag_get_pocket(
     pkmn_item_list_handle_t* item_list_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name);
-    PKMN_CHECK_NULL_PARAM(item_list_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_list_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         (*item_list_out) = new pkmn_item_list_t;
@@ -92,7 +96,7 @@ pkmn_error_t pkmn_item_bag_get_pocket_names(
     pkmn_string_list_t* pocket_names_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(pocket_names_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pocket_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_vector_std_string_to_string_list(
@@ -108,7 +112,7 @@ pkmn_error_t pkmn_item_bag_add(
     int amount
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->add(
@@ -123,7 +127,7 @@ pkmn_error_t pkmn_item_bag_remove(
     int amount
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->remove(
