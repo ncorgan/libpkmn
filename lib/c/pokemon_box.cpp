@@ -105,6 +105,19 @@ pkmn_error_t pkmn_pokemon_box_get_pokemon(
     )
 }
 
+pkmn_error_t pkmn_pokemon_box_set_pokemon(
+    pkmn_pokemon_box_handle_t handle,
+    pkmn_pokemon_handle_t pokemon_handle,
+    int index
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_pokemon(
+            index,
+            pokemon_handle->cpp
+        );
+    )
+}
+
 pkmn_error_t pkmn_pokemon_box_as_array(
     pkmn_pokemon_box_handle_t handle,
     pkmn_pokemon_list_t* pokemon_list_out
