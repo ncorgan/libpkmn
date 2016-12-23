@@ -16,6 +16,8 @@ pkmn_error_t pkmn_database_ability_list(
     int generation,
     pkmn_string_list_t* ability_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(ability_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_ability_list(
@@ -31,6 +33,8 @@ pkmn_error_t pkmn_database_game_list(
     bool include_previous,
     pkmn_string_list_t* game_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(game_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_game_list(
@@ -45,6 +49,9 @@ pkmn_error_t pkmn_database_item_list(
     const char* game,
     pkmn_string_list_t* item_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(item_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_item_list(
@@ -60,6 +67,9 @@ pkmn_error_t pkmn_database_location_list(
     bool whole_generation,
     pkmn_string_list_t* location_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(location_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_location_list(
@@ -74,6 +84,9 @@ pkmn_error_t pkmn_database_move_list(
     const char* game,
     pkmn_string_list_t* move_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(move_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_move_list(
@@ -87,6 +100,8 @@ pkmn_error_t pkmn_database_move_list(
 pkmn_error_t pkmn_database_nature_list(
     pkmn_string_list_t* nature_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(nature_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_nature_list(),
@@ -100,6 +115,8 @@ pkmn_error_t pkmn_database_pokemon_list(
     bool include_previous,
     pkmn_string_list_t* pokemon_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(pokemon_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_pokemon_list(
@@ -113,6 +130,8 @@ pkmn_error_t pkmn_database_pokemon_list(
 pkmn_error_t pkmn_database_region_list(
     pkmn_string_list_t* region_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(region_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_region_list(),
@@ -125,6 +144,8 @@ pkmn_error_t pkmn_database_ribbon_list(
     int generation,
     pkmn_string_list_t* ribbon_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(ribbon_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_ribbon_list(
@@ -138,6 +159,8 @@ pkmn_error_t pkmn_database_ribbon_list(
 pkmn_error_t pkmn_database_super_training_medal_list(
     pkmn_string_list_t* super_training_medal_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(super_training_medal_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_super_training_medal_list(),
@@ -150,6 +173,9 @@ pkmn_error_t pkmn_database_type_list(
     const char* game,
     pkmn_string_list_t* type_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(type_list_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
             pkmn::database::get_type_list(
