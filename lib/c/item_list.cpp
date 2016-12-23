@@ -50,8 +50,12 @@ const char* pkmn_item_list_strerror(
         return NULL;
     }
 
-    boost::mutex::scoped_lock lock(handle->error_mutex);
-    return handle->last_error.c_str();
+    try {
+        boost::mutex::scoped_lock lock(handle->error_mutex);
+        return handle->last_error.c_str();
+    } catch(...) {
+        return NULL;
+    }
 }
 
 pkmn_error_t pkmn_item_list_get_name(
@@ -61,8 +65,8 @@ pkmn_error_t pkmn_item_list_get_name(
     size_t* actual_strlen_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name_out);
-    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
@@ -81,8 +85,8 @@ pkmn_error_t pkmn_item_list_get_game(
     size_t* actual_strlen_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(game_out);
-    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
@@ -99,7 +103,7 @@ pkmn_error_t pkmn_item_list_get_capacity(
     int* capacity_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(capacity_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(capacity_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         *capacity_out = handle->cpp->get_capacity();
@@ -111,7 +115,7 @@ pkmn_error_t pkmn_item_list_get_num_items(
     int* num_items_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(num_items_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_items_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         *num_items_out = handle->cpp->get_num_items();
@@ -124,7 +128,7 @@ pkmn_error_t pkmn_item_list_at(
     pkmn_item_slot_t* item_slot_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(item_slot_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_slot_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::pkmn_item_slot_cpp_to_c(
@@ -140,7 +144,7 @@ pkmn_error_t pkmn_item_list_add(
     int amount
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->add(
@@ -155,7 +159,7 @@ pkmn_error_t pkmn_item_list_remove(
     int amount
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(name);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->remove(
@@ -184,7 +188,7 @@ pkmn_error_t pkmn_item_list_get_valid_items(
     pkmn_string_list_t* string_list_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(string_list_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(string_list_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_vector_std_string_to_string_list(
@@ -199,7 +203,7 @@ pkmn_error_t pkmn_item_list_as_array(
     pkmn_item_slots_t* array_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(array_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(array_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::pkmn_item_slots_cpp_to_c(
