@@ -137,6 +137,12 @@ namespace pkmn {
 
             // Shared setters
 
+            void _set_modern_shininess(
+                uint32_t* personality_ptr,
+                const uint32_t* trainer_id_ptr,
+                bool value
+            );
+
             void _set_gb_IV(
                 const std::string &stat,
                 int value,

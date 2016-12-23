@@ -344,6 +344,35 @@ namespace pkmn {
 
     // Shared setters
 
+    void pokemon_impl::_set_modern_shininess(
+        uint32_t* personality_ptr,
+        const uint32_t* trainer_id_ptr,
+        bool value
+    ) {
+        uint16_t* p = reinterpret_cast<uint16_t*>(personality_ptr);
+        const uint16_t* t = reinterpret_cast<const uint16_t*>(trainer_id_ptr);
+
+        if(value) {
+            for(size_t i = 3; i < 16; ++i) {
+                size_t num_ones = 0;
+                if(p[0] & (1 << i)) ++num_ones;
+                if(p[1] & (1 << i)) ++num_ones;
+                if(t[0] & (1 << i)) ++num_ones;
+                if(t[1] & (1 << i)) ++num_ones;
+
+                if(num_ones % 2) {
+                    p[0] ^= (1 << i);
+                }
+            }
+        } else {
+            // Only one column has to satisfy the condition, so don't bother iterating
+            uint16_t sum = (p[0] & 1) + (p[1] & 1) + (t[0] & 1) + (t[1] & 1);
+            if((sum % 2) == 0) {
+                (*personality_ptr) ^= 1;
+            }
+        }
+    }
+
     void pokemon_impl::_set_gb_IV(
         const std::string &stat,
         int value,

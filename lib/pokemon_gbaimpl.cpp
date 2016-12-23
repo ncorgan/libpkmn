@@ -14,6 +14,8 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/calculations/shininess.hpp>
+
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
@@ -255,6 +257,27 @@ namespace pkmn {
                 10
             );
         )
+    }
+
+    bool pokemon_gbaimpl::is_shiny() {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::calculations::modern_shiny(
+                   pksav_littleendian32(GBA_PC_RCAST->personality),
+                   pksav_littleendian32(GBA_PC_RCAST->ot_id.id)
+               );
+    }
+
+    void pokemon_gbaimpl::set_shininess(
+        bool value
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_modern_shininess(
+            &GBA_PC_RCAST->personality,
+            &GBA_PC_RCAST->ot_id.id,
+            value
+        );
     }
 
     void pokemon_gbaimpl::set_held_item(

@@ -59,6 +59,12 @@ namespace pkmn {
                 const std::string &nickname
             ) = 0;
 
+            virtual bool is_shiny() = 0;
+
+            virtual void set_shininess(
+                bool value
+            ) = 0;
+
             virtual const pkmn::database::item_entry& get_held_item() = 0;
 
             virtual void set_held_item(

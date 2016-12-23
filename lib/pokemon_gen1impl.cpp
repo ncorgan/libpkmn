@@ -163,6 +163,16 @@ namespace pkmn {
         _nickname = nickname;
     }
 
+    bool pokemon_gen1impl::is_shiny() {
+        throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+    }
+
+    void pokemon_gen1impl::set_shininess(
+        PKMN_UNUSED(bool value)
+    ) {
+        throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+    }
+
     void pokemon_gen1impl::set_held_item(
         PKMN_UNUSED(const std::string &held_item)
     ) {

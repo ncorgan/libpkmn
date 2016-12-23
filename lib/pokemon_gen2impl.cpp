@@ -9,6 +9,8 @@
 #include "pokemon_gen2impl.hpp"
 #include "database/index_to_string.hpp"
 
+#include <pkmn/calculations/shininess.hpp>
+
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -144,6 +146,31 @@ namespace pkmn {
         }
 
         _nickname = nickname;
+    }
+
+    bool pokemon_gen2impl::is_shiny() {
+        return pkmn::calculations::gen2_shiny(
+                   _IVs["Attack"],
+                   _IVs["Defense"],
+                   _IVs["Speed"],
+                   _IVs["Special"]
+               );
+    }
+
+    void pokemon_gen2impl::set_shininess(
+        bool value
+    ) {
+        if(value) {
+            /*
+             * This value sets all IVs to the maximum values that result in
+             * a shiny Pokémon.
+             */
+            static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
+            GEN2_PC_RCAST->iv_data = shiny_iv_data;
+            _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        } else {
+            set_IV("Attack", 13);
+        }
     }
 
     void pokemon_gen2impl::set_held_item(

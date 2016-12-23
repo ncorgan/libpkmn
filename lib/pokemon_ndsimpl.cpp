@@ -11,6 +11,8 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include <pkmn/calculations/shininess.hpp>
+
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -245,6 +247,27 @@ namespace pkmn {
                 );
             )
         }
+    }
+
+    bool pokemon_ndsimpl::is_shiny() {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::calculations::modern_shiny(
+                   pksav_littleendian32(NDS_PC_RCAST->personality),
+                   pksav_littleendian32(_blockA->ot_id.id)
+               );
+    }
+
+    void pokemon_ndsimpl::set_shininess(
+        bool value
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_modern_shininess(
+            &NDS_PC_RCAST->personality,
+            &_blockA->ot_id.id,
+            value
+        );
     }
 
     void pokemon_ndsimpl::set_held_item(

@@ -37,6 +37,12 @@ namespace pkmn {
                 const std::string &nickname
             );
 
+            bool is_shiny();
+
+            void set_shininess(
+                bool value
+            );
+
             void set_held_item(
                 const std::string &held_item
             );
