@@ -132,6 +132,11 @@ namespace pkmn {
                 int level
             );
 
+            void set_IV(
+                const std::string &stat,
+                int value
+            );
+
             void set_marking(
                 const std::string &marking,
                 bool value
@@ -157,11 +162,6 @@ namespace pkmn {
                 int value
             );
 
-            void set_IV(
-                const std::string &stat,
-                int value
-            );
-
         private:
 
             void _calculate_stats();
@@ -171,11 +171,8 @@ namespace pkmn {
             );
 
             void _update_held_item();
-            void _update_markings_map();
             void _update_ribbons_map();
-            void _update_contest_stats_map();
             void _update_EV_map();
-            void _update_IV_map();
             void _update_stat_map();
 
             bool _gen4, _plat, _hgss;

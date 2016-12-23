@@ -93,7 +93,7 @@ namespace pkmn {
         _effort->ev_spdef = uint32_t(std::rand());
 
         set_location_met("Fateful encounter", false);
-        set_level(level);
+        //set_level_met(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
 
@@ -109,11 +109,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
         set_level(level);
         _update_moves(-1);
     }
@@ -130,11 +130,7 @@ namespace pkmn {
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
-        pksav::gba_pc_pokemon_to_party_data(
-            _database_entry,
-            reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
-        );
+        _calculate_stats();
         _our_party_mem = true;
 
         // Set block pointers
@@ -145,11 +141,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -176,11 +172,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -198,11 +194,7 @@ namespace pkmn {
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
-        pksav::gba_pc_pokemon_to_party_data(
-            _database_entry,
-            reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
-        );
+        _calculate_stats();
         _our_party_mem = true;
 
         // Set block pointers
@@ -213,10 +205,10 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -595,6 +587,17 @@ namespace pkmn {
         _update_stat_map();
     }
 
+    void pokemon_gbaimpl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        _set_modern_IV(
+            stat,
+            value,
+            &_misc->iv_egg_ability
+        );
+    }
+
     void pokemon_gbaimpl::set_marking(
         const std::string &marking,
         bool value
@@ -602,8 +605,7 @@ namespace pkmn {
         _set_marking(
             marking,
             value,
-            &GBA_PC_RCAST->markings,
-            true
+            &GBA_PC_RCAST->markings
         );
     }
 
@@ -730,30 +732,6 @@ namespace pkmn {
         }
 
         _update_EV_map();
-        _calculate_stats();
-    }
-
-    void pokemon_gbaimpl::set_IV(
-        const std::string &stat,
-        int value
-    ) {
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_IV_in_bounds(value, true)) {
-            throw std::out_of_range("Invalid stat.");
-        }
-
-        pokemon_scoped_lock lock(this);
-
-        PKSAV_CALL(
-            pksav_set_IV(
-                &_misc->iv_egg_ability,
-                pkmn_stats_to_pksav.at(stat),
-                uint8_t(value)
-            );
-        )
-
-        _update_IV_map();
         _calculate_stats();
     }
 
@@ -892,15 +870,6 @@ namespace pkmn {
         _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GEN3_WORLD_RIBBON_MASK);
     }
 
-    void pokemon_gbaimpl::_update_contest_stats_map() {
-        _contest_stats["Cool"]   = int(_effort->contest_stats.cool);
-        _contest_stats["Beauty"] = int(_effort->contest_stats.beauty);
-        _contest_stats["Cute"]   = int(_effort->contest_stats.cute);
-        _contest_stats["Smart"]  = int(_effort->contest_stats.smart);
-        _contest_stats["Tough"]  = int(_effort->contest_stats.tough);
-        _contest_stats["Feel"]   = int(_effort->contest_stats.feel);
-    }
-
     void pokemon_gbaimpl::_update_EV_map() {
         _EVs["HP"]              = int(_effort->ev_hp);
         _EVs["Attack"]          = int(_effort->ev_atk);
@@ -908,64 +877,6 @@ namespace pkmn {
         _EVs["Speed"]           = int(_effort->ev_spd);
         _EVs["Special Attack"]  = int(_effort->ev_spatk);
         _EVs["Special Defense"] = int(_effort->ev_spdef);
-    }
-
-    void pokemon_gbaimpl::_update_IV_map() {
-        uint8_t IV = 0;
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_HP,
-                &IV
-            );
-        )
-        _IVs["HP"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_ATTACK,
-                &IV
-            );
-        )
-        _IVs["Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_DEFENSE,
-                &IV
-            );
-        )
-        _IVs["Defense"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_SPEED,
-                &IV
-            );
-        )
-        _IVs["Speed"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_SPATK,
-                &IV
-            );
-        )
-        _IVs["Special Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_misc->iv_egg_ability,
-                PKSAV_STAT_SPDEF,
-                &IV
-            );
-        )
-        _IVs["Special Defense"] = int(IV);
     }
 
     void pokemon_gbaimpl::_update_stat_map() {

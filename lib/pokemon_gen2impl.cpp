@@ -77,7 +77,7 @@ namespace pkmn {
         // Populate abstractions
         _update_held_item();
         _update_EV_map();
-        _update_IV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         set_level(level);
         _update_moves(-1);
     }
@@ -91,17 +91,13 @@ namespace pkmn {
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
-        pksav::gen2_pc_pokemon_to_party_data(
-            _database_entry,
-            reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
-        );
+        _calculate_stats();
         _our_party_mem = true;
 
         // Populate abstractions
         _update_held_item();
         _update_EV_map();
-        _update_IV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -120,7 +116,7 @@ namespace pkmn {
         // Populate abstractions
         _update_held_item();
         _update_EV_map();
-        _update_IV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -431,6 +427,17 @@ namespace pkmn {
         _update_stat_map();
     }
 
+    void pokemon_gen2impl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        _set_gb_IV(
+            stat,
+            value,
+            &GEN2_PC_RCAST->iv_data
+        );
+    }
+
     void pokemon_gen2impl::set_marking(
         PKMN_UNUSED(const std::string &marking),
         PKMN_UNUSED(bool value)
@@ -512,31 +519,6 @@ namespace pkmn {
         _calculate_stats();
     }
 
-    void pokemon_gen2impl::set_IV(
-        const std::string &stat,
-        int value
-    ) {
-        // Generation II uses Generation I stats for IV's
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_IV_in_bounds(value, false)) {
-            throw pkmn::range_error(stat, 0, 15);
-        }
-
-        pokemon_scoped_lock lock(this);
-
-        PKSAV_CALL(
-            pksav_set_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                pkmn_stats_to_pksav.at(stat),
-                uint8_t(value)
-            );
-        )
-
-        _update_IV_map();
-        _calculate_stats();
-    }
-
     void pokemon_gen2impl::_update_moves(
         int index
     ) {
@@ -579,55 +561,6 @@ namespace pkmn {
         _EVs["Defense"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_def));
         _EVs["Speed"]   = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spd));
         _EVs["Special"] = int(pksav_bigendian16(GEN2_PC_RCAST->ev_spcl));
-    }
-
-    void pokemon_gen2impl::_update_IV_map() {
-        uint8_t IV = 0;
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                PKSAV_STAT_HP,
-                &IV
-            );
-        )
-        _IVs["HP"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                PKSAV_STAT_ATTACK,
-                &IV
-            );
-        )
-        _IVs["Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                PKSAV_STAT_DEFENSE,
-                &IV
-            );
-        )
-        _IVs["Defense"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                PKSAV_STAT_SPEED,
-                &IV
-            );
-        )
-        _IVs["Speed"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &GEN2_PC_RCAST->iv_data,
-                PKSAV_STAT_SPECIAL,
-                &IV
-            );
-        )
-        _IVs["Special"] = int(IV);
     }
 
     void pokemon_gen2impl::_update_stat_map() {

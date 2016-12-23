@@ -19,6 +19,8 @@
 #include "io/3gpkm.hpp"
 #include "io/pkm.hpp"
 
+#include "pksav/pksav_call.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/common/markings.h>
@@ -201,12 +203,216 @@ namespace pkmn {
         return _native_party;
     }
 
+    // Shared abstraction initializers
+
+    void pokemon_impl::_init_gb_IV_map(
+        const uint16_t* iv_data_ptr
+    ) {
+        uint8_t IV = 0;
+
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                iv_data_ptr,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
+        _IVs["HP"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                iv_data_ptr,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
+        _IVs["Attack"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                iv_data_ptr,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
+        _IVs["Defense"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                iv_data_ptr,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        );
+        _IVs["Speed"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_gb_IV(
+                iv_data_ptr,
+                PKSAV_STAT_SPECIAL,
+                &IV
+            );
+        )
+        _IVs["Special"] = int(IV);
+    }
+
+    void pokemon_impl::_init_modern_IV_map(
+        const uint32_t* iv_data_ptr
+    ) {
+        uint8_t IV = 0;
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
+        _IVs["HP"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
+        _IVs["Attack"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
+        _IVs["Defense"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
+        _IVs["Speed"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_SPATK,
+                &IV
+            );
+        )
+        _IVs["Special Attack"] = int(IV);
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                iv_data_ptr,
+                PKSAV_STAT_SPDEF,
+                &IV
+            );
+        )
+        _IVs["Special Defense"] = int(IV);
+    }
+
+    void pokemon_impl::_init_contest_stat_map(
+        const pksav_contest_stats_t* native_ptr
+    ) {
+        _contest_stats["Cool"]   = int(native_ptr->cool);
+        _contest_stats["Beauty"] = int(native_ptr->beauty);
+        _contest_stats["Cute"]   = int(native_ptr->cute);
+        _contest_stats["Smart"]  = int(native_ptr->smart);
+        _contest_stats["Tough"]  = int(native_ptr->tough);
+
+        // Feel and sheen are a union in this struct, so this is fine.
+        _contest_stats[(_generation == 3) ? "Feel" : "Sheen"] = int(native_ptr->feel);
+    }
+
+    void pokemon_impl::_init_markings_map(
+        const uint8_t* native_ptr
+    ) {
+        _markings["Circle"]   = bool((*native_ptr) & PKSAV_MARKING_CIRCLE);
+        _markings["Triangle"] = bool((*native_ptr) & PKSAV_MARKING_TRIANGLE);
+        _markings["Square"]   = bool((*native_ptr) & PKSAV_MARKING_SQUARE);
+        _markings["Heart"]    = bool((*native_ptr) & PKSAV_MARKING_HEART);
+        if(_generation > 3) {
+            _markings["Star"]    = bool((*native_ptr) & PKSAV_MARKING_STAR);
+            _markings["Diamond"] = bool((*native_ptr) & PKSAV_MARKING_DIAMOND);
+        }
+    }
+
     // Shared setters
+
+    void pokemon_impl::_set_gb_IV(
+        const std::string &stat,
+        int value,
+        uint16_t* iv_data_ptr
+    ) {
+        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, false)) {
+            throw pkmn::range_error(stat, 0, 15);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        PKSAV_CALL(
+            pksav_set_gb_IV(
+                iv_data_ptr,
+                pkmn_stats_to_pksav.at(stat),
+                uint8_t(value)
+            );
+        )
+
+        _IVs[stat] = value;
+
+        // Setting any IV affects HP, so we have to update that as well.
+        if(stat != "HP") {
+            uint8_t IV_hp = 0;
+            PKSAV_CALL(
+                pksav_get_gb_IV(
+                    iv_data_ptr,
+                    PKSAV_STAT_HP,
+                    &IV_hp
+                );
+            )
+
+            _IVs["HP"] = int(IV_hp);
+        }
+
+        _calculate_stats();
+    }
+
+    void pokemon_impl::_set_modern_IV(
+        const std::string &stat,
+        int value,
+        uint32_t* iv_data_ptr
+    ) {
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, true)) {
+            throw std::out_of_range("Invalid stat.");
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        PKSAV_CALL(
+            pksav_set_IV(
+                iv_data_ptr,
+                pkmn_stats_to_pksav.at(stat),
+                uint8_t(value)
+            );
+        )
+
+        _IVs[stat] = value;
+        _calculate_stats();
+    }
 
     #define SET_CONTEST_STAT(str,field) \
     { \
         if(stat == str) { \
-            native->field = uint8_t(value); \
+            native_ptr->field = uint8_t(value); \
             _contest_stats[str] = value; \
             return; \
         } \
@@ -215,7 +421,7 @@ namespace pkmn {
     void pokemon_impl::_set_contest_stat(
         const std::string &stat,
         int value,
-        pksav_contest_stats_t* native
+        pksav_contest_stats_t* native_ptr
     ) {
         if(_contest_stats.find(stat) == _contest_stats.end()) {
             throw std::invalid_argument("Invalid contest stat.");
@@ -239,18 +445,18 @@ namespace pkmn {
     { \
         if(marking == str) { \
             if(value) { \
-                *native |= mask; \
+                *native_ptr |= mask; \
             } else { \
-                *native &= ~mask; \
+                *native_ptr &= ~mask; \
             } \
+            _markings[marking] = value; \
         } \
     }
 
     void pokemon_impl::_set_marking(
         const std::string &marking,
         bool value,
-        uint8_t* native,
-        bool gen3
+        uint8_t* native_ptr
     ) {
         if(_markings.find(marking) == _markings.end()) {
             throw std::invalid_argument("Invalid marking.");
@@ -262,12 +468,10 @@ namespace pkmn {
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);
         SET_MARKING("Square", PKSAV_MARKING_SQUARE);
         SET_MARKING("Heart", PKSAV_MARKING_HEART);
-        if(not gen3) {
+        if(_generation > 3) {
             SET_MARKING("Star", PKSAV_MARKING_STAR);
             SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
         }
-
-        _update_markings_map();
     }
 
 }

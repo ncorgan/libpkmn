@@ -101,17 +101,48 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            // Shared abstraction initializers
+
+            void _init_gb_IV_map(
+                const uint16_t* iv_data_ptr
+            );
+
+            void _init_modern_IV_map(
+                const uint32_t* iv_data_ptr
+            );
+
+            void _init_contest_stat_map(
+                const pksav_contest_stats_t* native_ptr
+            );
+
+            void _init_markings_map(
+                const uint8_t* native_ptr
+            );
+
+            // Shared setters
+
+            void _set_gb_IV(
+                const std::string &stat,
+                int value,
+                uint16_t* iv_data_ptr
+            );
+
+            void _set_modern_IV(
+                const std::string &stat,
+                int value,
+                uint32_t* iv_data_ptr
+            );
+
             void _set_contest_stat(
                 const std::string &stat,
                 int value,
-                pksav_contest_stats_t* native
+                pksav_contest_stats_t* native_ptr
             );
 
             void _set_marking(
                 const std::string &marking,
                 bool value,
-                uint8_t* native,
-                bool gen3
+                uint8_t* native_ptr
             );
 
             template <typename native_type, typename mask_type>
@@ -135,11 +166,8 @@ namespace pkmn {
             }
 
             virtual void _update_held_item() {}
-            virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}
-            virtual void _update_contest_stats_map() {}
             virtual void _update_EV_map() = 0;
-            virtual void _update_IV_map() = 0;
             virtual void _update_stat_map() = 0;
     };
 

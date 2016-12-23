@@ -64,11 +64,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA->contest_stats);
+        _init_markings_map(&_blockA->markings);
         set_level(level);
         _update_moves(-1);
     }
@@ -103,11 +103,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA->contest_stats);
+        _init_markings_map(&_blockA->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -137,11 +137,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA->contest_stats);
+        _init_markings_map(&_blockA->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -177,11 +177,11 @@ namespace pkmn {
 
         // Populate abstractions
         _update_held_item();
-        _update_markings_map();
         _update_ribbons_map();
-        _update_contest_stats_map();
         _update_EV_map();
-        _update_IV_map();
+        _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA->contest_stats);
+        _init_markings_map(&_blockA->markings);
         _update_stat_map();
         _update_moves(-1);
     }
@@ -534,6 +534,17 @@ namespace pkmn {
         _update_stat_map();
     }
 
+    void pokemon_ndsimpl::set_IV(
+        const std::string &stat,
+        int value
+    ) {
+        _set_modern_IV(
+            stat,
+            value,
+            &_blockB->iv_isegg_isnicknamed
+        );
+    }
+
     void pokemon_ndsimpl::set_marking(
         const std::string &marking,
         bool value
@@ -541,8 +552,7 @@ namespace pkmn {
         _set_marking(
             marking,
             value,
-            &_blockA->markings,
-            true
+            &_blockA->markings
         );
     }
 
@@ -619,26 +629,6 @@ namespace pkmn {
         _calculate_stats();
     }
 
-    void pokemon_ndsimpl::set_IV(
-        const std::string &stat,
-        int value
-    ) {
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_IV_in_bounds(value, true)) {
-            throw std::out_of_range("Invalid stat.");
-        }
-
-        pksav_set_IV(
-            &_blockB->iv_isegg_isnicknamed,
-            pkmn_stats_to_pksav.at(stat),
-            uint8_t(value)
-        );
-
-        _update_IV_map();
-        _calculate_stats();
-    }
-
     void pokemon_ndsimpl::_update_moves(
         int index
     ) {
@@ -673,24 +663,8 @@ namespace pkmn {
         }
     }
 
-    void pokemon_ndsimpl::_update_markings_map() {
-        _markings["Circle"]   = bool(_blockA->markings & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool(_blockA->markings & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool(_blockA->markings & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool(_blockA->markings & PKSAV_MARKING_HEART);
-    }
-
     void pokemon_ndsimpl::_update_ribbons_map() {
         throw pkmn::unimplemented_error();
-    }
-
-    void pokemon_ndsimpl::_update_contest_stats_map() {
-        _contest_stats["Cool"]   = int(_blockA->contest_stats.cool);
-        _contest_stats["Beauty"] = int(_blockA->contest_stats.beauty);
-        _contest_stats["Cute"]   = int(_blockA->contest_stats.cute);
-        _contest_stats["Smart"]  = int(_blockA->contest_stats.smart);
-        _contest_stats["Tough"]  = int(_blockA->contest_stats.tough);
-        _contest_stats["Sheen"]  = int(_blockA->contest_stats.sheen);
     }
 
     void pokemon_ndsimpl::_update_EV_map() {
@@ -700,64 +674,6 @@ namespace pkmn {
         _EVs["Speed"]           = int(_blockA->ev_spd);
         _EVs["Special Attack"]  = int(_blockA->ev_spatk);
         _EVs["Special Defense"] = int(_blockA->ev_spdef);
-    }
-
-    void pokemon_ndsimpl::_update_IV_map() {
-        uint8_t IV = 0;
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_HP,
-                &IV
-            );
-        )
-        _IVs["HP"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_ATTACK,
-                &IV
-            );
-        )
-        _IVs["Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_DEFENSE,
-                &IV
-            );
-        )
-        _IVs["Defense"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_SPEED,
-                &IV
-            );
-        )
-        _IVs["Speed"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_SPATK,
-                &IV
-            );
-        )
-        _IVs["Special Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                &_blockB->iv_isegg_isnicknamed,
-                PKSAV_STAT_SPDEF,
-                &IV
-            );
-        )
-        _IVs["Special Defense"] = int(IV);
     }
 
     void pokemon_ndsimpl::_update_stat_map() {
