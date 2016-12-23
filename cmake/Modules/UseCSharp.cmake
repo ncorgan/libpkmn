@@ -32,13 +32,6 @@ if( NOT CSHARP_COMPILER )
   message( WARNING "A C# compiler executable was not found on your system" )
 endif( NOT CSHARP_COMPILER )
 
-# Include type-based USE_FILE
-if( CSHARP_TYPE MATCHES ".NET" )
-  message( STATUS "Using .NET compiler version ${CSHARP_DOTNET_VERSION}" )
-elseif ( CSHARP_TYPE MATCHES "Mono" )
-  message( STATUS "Using Mono compiler version ${CSHARP_MONO_VERSION}" )
-endif ( CSHARP_TYPE MATCHES ".NET" )
-
 macro( CSHARP_ADD_LIBRARY name )
   CSHARP_ADD_PROJECT( "library" ${name} ${ARGN} )
 endmacro( CSHARP_ADD_LIBRARY )

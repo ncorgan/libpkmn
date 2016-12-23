@@ -96,6 +96,9 @@ ENDIF(PKMN_ENABLE_C)
 # C# tests
 #
 IF(PKMN_ENABLE_CSHARP)
+    # To get CSHARP_INTERPRETER
+    FIND_PACKAGE(CSharp)
+
     SET(csharp_tests
         CSharpListsTest
     )
