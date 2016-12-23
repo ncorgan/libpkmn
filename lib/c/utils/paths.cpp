@@ -17,6 +17,9 @@ pkmn_error_t pkmn_get_appdata_dir(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(appdata_dir_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::get_appdata_dir(),
@@ -32,6 +35,9 @@ pkmn_error_t pkmn_get_database_path(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(database_path_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::get_database_path(),
@@ -47,6 +53,9 @@ pkmn_error_t pkmn_get_images_dir(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(images_dir_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::get_images_dir(),
@@ -62,6 +71,9 @@ pkmn_error_t pkmn_get_tmp_dir(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(tmp_dir_out);
+    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
+
     PKMN_CPP_TO_C(
         pkmn::std_string_to_c_str(
             pkmn::get_tmp_dir(),

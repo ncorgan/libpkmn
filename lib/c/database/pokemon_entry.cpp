@@ -21,6 +21,11 @@ pkmn_error_t pkmn_database_get_pokemon_entry(
     const char* form,
     pkmn_database_pokemon_entry_t* pokemon_entry_out
 ) {
+    PKMN_CHECK_NULL_PARAM(species);
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(form);
+    PKMN_CHECK_NULL_PARAM(pokemon_entry_out);
+
     PKMN_CPP_TO_C(
         pkmn::database::pokemon_entry pokemon_entry_cpp(
                                           species,
@@ -39,8 +44,11 @@ pkmn_error_t pkmn_database_pokemon_entry_set_form(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     const char* form
 ) {
-    // Just to see if it exists
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+    PKMN_CHECK_NULL_PARAM(form);
+
     PKMN_CPP_TO_C(
+        // Just to see if it exists
         pkmn::database::pokemon_entry new_entry(
                                           pokemon_entry->name,
                                           pokemon_entry->game,
@@ -60,6 +68,9 @@ pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
     int level,
     int* experience_out
 ) {
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+    PKMN_CHECK_NULL_PARAM(experience_out);
+
     PKMN_CPP_TO_C(
         *experience_out = pkmn::database::pokemon_entry(
                               pokemon_entry->name,
@@ -74,6 +85,9 @@ pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
     int experience,
     int* level_out
 ) {
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+    PKMN_CHECK_NULL_PARAM(level_out);
+
     PKMN_CPP_TO_C(
         *level_out = pkmn::database::pokemon_entry(
                          pokemon_entry->name,
@@ -86,6 +100,8 @@ pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
 pkmn_error_t pkmn_database_pokemon_entry_free(
     pkmn_database_pokemon_entry_t* pokemon_entry
 ) {
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+
     std::free(pokemon_entry->name);
     pokemon_entry->name = NULL;
 

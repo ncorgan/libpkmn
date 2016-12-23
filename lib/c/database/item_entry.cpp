@@ -20,6 +20,10 @@ pkmn_error_t pkmn_database_get_item_entry(
     const char* item_game,
     pkmn_database_item_entry_t* item_entry_out
 ) {
+    PKMN_CHECK_NULL_PARAM(item_name);
+    PKMN_CHECK_NULL_PARAM(item_game);
+    PKMN_CHECK_NULL_PARAM(item_entry_out);
+
     PKMN_CPP_TO_C(
         pkmn::database::item_entry item_entry_cpp(
                                        item_name,
@@ -35,6 +39,8 @@ pkmn_error_t pkmn_database_get_item_entry(
 pkmn_error_t pkmn_database_item_entry_free(
     pkmn_database_item_entry_t* item_entry
 ) {
+    PKMN_CHECK_NULL_PARAM(item_entry);
+
     std::free(item_entry->name);
     item_entry->name = NULL;
 

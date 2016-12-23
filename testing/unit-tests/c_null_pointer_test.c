@@ -750,6 +750,409 @@ static void calculations_stats_null_pointer_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
 }
 
+/*
+ * <pkmn-c/database/item_entry.h>
+ */
+static void database_item_entry_null_pointer_test() {
+    pkmn_database_item_entry_t dummy_pkmn_database_item_entry_t;
+
+    /*
+     * pkmn_database_get_item_entry
+     */
+
+    error = pkmn_database_get_item_entry(
+                NULL, // item_name
+                strbuffer,
+                &dummy_pkmn_database_item_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_item_entry(
+                strbuffer,
+                NULL, // item_game
+                &dummy_pkmn_database_item_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_item_entry(
+                strbuffer,
+                strbuffer,
+                NULL // item_entry_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_item_entry_free
+     */
+
+    error = pkmn_database_item_entry_free(
+                NULL // item_entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/database/lists.h>
+ */
+static void database_lists_null_pointer_test() {
+    /*
+     * pkmn_database_ability_list
+     */
+
+    error = pkmn_database_ability_list(
+                1,
+                NULL // ability_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_game_list
+     */
+
+    error = pkmn_database_game_list(
+                1,
+                false,
+                NULL // game_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_item_list
+     */
+
+    error = pkmn_database_item_list(
+                NULL, // game
+                &dummy_pkmn_string_list_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_item_list(
+                strbuffer,
+                NULL // item_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_location_list
+     */
+
+    error = pkmn_database_location_list(
+                NULL, // game
+                false,
+                &dummy_pkmn_string_list_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_location_list(
+                strbuffer,
+                false,
+                NULL // location_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_move_list
+     */
+
+    error = pkmn_database_move_list(
+                NULL, // game
+                &dummy_pkmn_string_list_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_move_list(
+                strbuffer,
+                NULL // move_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_nature_list
+     */
+
+    error = pkmn_database_nature_list(
+                NULL // nature_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_pokemon_list
+     */
+
+    error = pkmn_database_pokemon_list(
+                1,
+                false,
+                NULL // pokemon_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_region_list
+     */
+
+    error = pkmn_database_region_list(
+                NULL // region_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_ribbon_list
+     */
+
+    error = pkmn_database_ribbon_list(
+                1,
+                NULL // ribbon_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_super_training_medal_list
+     */
+
+    error = pkmn_database_super_training_medal_list(
+                NULL // super_training_medal_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_type_list
+     */
+
+    error = pkmn_database_type_list(
+                NULL, // game
+                &dummy_pkmn_string_list_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_type_list(
+                strbuffer,
+                NULL // type_list_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/database/move_entry.h>
+ */
+static void database_move_entry_null_pointer_test() {
+    pkmn_database_move_entry_t dummy_pkmn_database_move_entry_t;
+
+    /*
+     * pkmn_database_get_move_entry
+     */
+
+    error = pkmn_database_get_move_entry(
+                NULL, // move_name
+                strbuffer,
+                &dummy_pkmn_database_move_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_move_entry(
+                strbuffer,
+                NULL, // move_game
+                &dummy_pkmn_database_move_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_move_entry(
+                strbuffer,
+                strbuffer,
+                NULL // move_entry_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_move_entry_free
+     */
+
+    error = pkmn_database_move_entry_free(
+                NULL // move_entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/database/pokemon_entry.h>
+ */
+static void database_pokemon_entry_null_pointer_test() {
+    pkmn_database_pokemon_entry_t dummy_pkmn_database_pokemon_entry_t;
+
+    /*
+     * pkmn_database_get_pokemon_entry
+     */
+
+    error = pkmn_database_get_pokemon_entry(
+                NULL, // species
+                strbuffer,
+                strbuffer,
+                &dummy_pkmn_database_pokemon_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_pokemon_entry(
+                strbuffer,
+                NULL, // game
+                strbuffer,
+                &dummy_pkmn_database_pokemon_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_pokemon_entry(
+                strbuffer,
+                strbuffer,
+                NULL, // form
+                &dummy_pkmn_database_pokemon_entry_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_get_pokemon_entry(
+                strbuffer,
+                strbuffer,
+                strbuffer,
+                NULL // pokemon_entry_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_pokemon_entry_set_form
+     */
+
+    error = pkmn_database_pokemon_entry_set_form(
+                NULL, // pokemon_entry
+                strbuffer
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_pokemon_entry_set_form(
+                &dummy_pkmn_database_pokemon_entry_t,
+                NULL // form
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_pokemon_entry_experience_at_level
+     */
+
+    error = pkmn_database_pokemon_entry_experience_at_level(
+                NULL, // pokemon_entry
+                1,
+                &dummy_int
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_pokemon_entry_experience_at_level(
+                &dummy_pkmn_database_pokemon_entry_t,
+                1,
+                NULL // experience_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_pokemon_entry_level_at_experience
+     */
+
+    error = pkmn_database_pokemon_entry_level_at_experience(
+                NULL, // pokemon_entry
+                1,
+                &dummy_int
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_database_pokemon_entry_level_at_experience(
+                &dummy_pkmn_database_pokemon_entry_t,
+                1,
+                NULL // level_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_database_pokemon_entry_free
+     */
+
+    error = pkmn_database_pokemon_entry_free(
+                NULL // pokemon_entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
+ * <pkmn-c/utils/paths.h>
+ */
+static void utils_paths_null_pointer_test() {
+    /*
+     * pkmn_get_appdata_dir
+     */
+
+    error = pkmn_get_appdata_dir(
+                NULL, // appdata_dir_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_get_appdata_dir(
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_get_database_path
+     */
+
+    error = pkmn_get_database_path(
+                NULL, // database_path_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_get_database_path(
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_get_images_dir
+     */
+
+    error = pkmn_get_images_dir(
+                NULL, // images_dir_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_get_images_dir(
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    /*
+     * pkmn_get_tmp_dir
+     */
+
+    error = pkmn_get_tmp_dir(
+                NULL, // tmp_dir_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+
+    error = pkmn_get_tmp_dir(
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(build_info_null_pointer_test)
     PKMN_C_TEST(item_bag_null_pointer_test)
@@ -760,4 +1163,9 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(calculations_shininess_null_pointer_test)
     PKMN_C_TEST(calculations_spinda_spots_null_pointer_test)
     PKMN_C_TEST(calculations_stats_null_pointer_test)
+    PKMN_C_TEST(database_item_entry_null_pointer_test)
+    PKMN_C_TEST(database_lists_null_pointer_test)
+    PKMN_C_TEST(database_move_entry_null_pointer_test)
+    PKMN_C_TEST(database_pokemon_entry_null_pointer_test)
+    PKMN_C_TEST(utils_paths_null_pointer_test)
 )

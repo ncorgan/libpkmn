@@ -20,6 +20,10 @@ pkmn_error_t pkmn_database_get_move_entry(
     const char* move_game,
     pkmn_database_move_entry_t* move_entry_out
 ) {
+    PKMN_CHECK_NULL_PARAM(move_name);
+    PKMN_CHECK_NULL_PARAM(move_game);
+    PKMN_CHECK_NULL_PARAM(move_entry_out);
+
     PKMN_CPP_TO_C(
         pkmn::database::move_entry move_entry_cpp(
                                        move_name,
@@ -36,6 +40,8 @@ pkmn_error_t pkmn_database_get_move_entry(
 pkmn_error_t pkmn_database_move_entry_free(
     pkmn_database_move_entry_t* move_entry
 ) {
+    PKMN_CHECK_NULL_PARAM(move_entry);
+
     std::free(move_entry->name);
     move_entry->name = NULL;
 
