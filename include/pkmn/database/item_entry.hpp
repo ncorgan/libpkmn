@@ -19,6 +19,8 @@ namespace pkmn { namespace database {
      * This class abstracts the database calls needed to various tables in order
      * to get relevant information about in-game items. It takes into account
      * changes in the item between games.
+     *
+     * \todo some differences between version groups need to be done manually
      */
     class PKMN_API item_entry {
         public:

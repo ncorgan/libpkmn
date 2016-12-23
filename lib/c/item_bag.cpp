@@ -14,6 +14,9 @@ pkmn_error_t pkmn_item_bag_make(
     pkmn_item_bag_handle_t* handle_ptr,
     const char* game_name
 ) {
+    PKMN_CHECK_NULL_PARAM(handle_ptr);
+    PKMN_CHECK_NULL_PARAM(game_name);
+
     PKMN_CPP_TO_C(
         pkmn::item_bag::sptr cpp = pkmn::item_bag::make(
                                        game_name
@@ -28,6 +31,9 @@ pkmn_error_t pkmn_item_bag_make(
 pkmn_error_t pkmn_item_bag_free(
     pkmn_item_bag_handle_t* handle_ptr
 ) {
+    PKMN_CHECK_NULL_PARAM(handle_ptr);
+    PKMN_CHECK_NULL_PARAM((*handle_ptr));
+
     PKMN_CPP_TO_C(
         delete (*handle_ptr);
         *handle_ptr = NULL;
@@ -37,7 +43,16 @@ pkmn_error_t pkmn_item_bag_free(
 const char* pkmn_item_bag_strerror(
     pkmn_item_bag_handle_t handle
 ) {
-    return handle->last_error.c_str();
+    if(!handle) {
+        return NULL;
+    }
+
+    try {
+        boost::mutex::scoped_lock lock(handle->error_mutex);
+        return handle->last_error.c_str();
+    } catch(...) {
+        return NULL;
+    }
 }
 
 pkmn_error_t pkmn_item_bag_get_game(
@@ -46,6 +61,10 @@ pkmn_error_t pkmn_item_bag_get_game(
     size_t buffer_len,
     size_t* actual_strlen_out
 ) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
+
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_string_to_c_str(
             handle->cpp->get_game(),
@@ -61,6 +80,10 @@ pkmn_error_t pkmn_item_bag_get_pocket(
     const char* name,
     pkmn_item_list_handle_t* item_list_out
 ) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_list_out, handle);
+
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         (*item_list_out) = new pkmn_item_list_t;
         (*item_list_out)->cpp = handle->cpp->get_pocket(name);
@@ -70,14 +93,15 @@ pkmn_error_t pkmn_item_bag_get_pocket(
 
 pkmn_error_t pkmn_item_bag_get_pocket_names(
     pkmn_item_bag_handle_t handle,
-    pkmn_string_list_t* pocket_names_out,
-    size_t* list_length_out
+    pkmn_string_list_t* pocket_names_out
 ) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pocket_names_out, handle);
+
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::std_vector_std_string_to_string_list(
             handle->cpp->get_pocket_names(),
-            pocket_names_out,
-            list_length_out
+            pocket_names_out
         );
     )
 }
@@ -87,6 +111,9 @@ pkmn_error_t pkmn_item_bag_add(
     const char* name,
     int amount
 ) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
+
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->add(
             name, amount
@@ -99,6 +126,9 @@ pkmn_error_t pkmn_item_bag_remove(
     const char* name,
     int amount
 ) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, handle);
+
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->remove(
             name, amount

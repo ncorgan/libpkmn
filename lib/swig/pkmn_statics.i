@@ -11,8 +11,6 @@
  * sptr class.
  */
 
-%include <std_string.i>
-
 %{
     #include <pkmn/config.hpp>
 
@@ -21,13 +19,6 @@
 
     #include <pkmn/types/shared_ptr.hpp>
 
-    PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
-        const std::string &name,
-        const std::string &game
-    ) {
-        return pkmn::item_list::make(name, game);
-    }
-
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_bag> make_item_bag(
         const std::string &game
     ) {
@@ -35,5 +26,43 @@
     }
 %}
 
+%include <std_string.i>
+
+/*
+ * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
+ * Python 2 "unicode" type to be converted to a char* or std::string. There's
+ * no way for a SWIG project to bring this in, so we need this ugly workaround
+ * when using earlier verisons of SWIG.
+ */
+#if SWIGPYTHON && SWIG_VERSION < 0x030008
+%include <std_wstring.i>
+
+%{
+    #include <boost/locale/encoding_utf.hpp>
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
+        const std::wstring &name,
+        const std::wstring &game
+    ) {
+        return pkmn::item_list::make(
+            boost::locale::conv::utf_to_utf<char>(name),
+            boost::locale::conv::utf_to_utf<char>(game)
+        );
+    }
+%}
+
+pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const std::wstring& game);
+#else
+%{
+    PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
+        const std::string &name,
+        const std::string &game
+    ) {
+        return pkmn::item_list::make(name, game);
+    }
+%}
+
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
+#endif
+
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);

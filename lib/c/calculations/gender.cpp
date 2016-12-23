@@ -27,6 +27,9 @@ pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
     int IV_attack,
     pkmn_gender_t* gender_out
 ) {
+    PKMN_CHECK_NULL_PARAM(species);
+    PKMN_CHECK_NULL_PARAM(gender_out);
+
     PKMN_CPP_TO_C(
         *gender_out = genders.at(
                           pkmn::calculations::gen2_pokemon_gender(
@@ -41,6 +44,9 @@ pkmn_error_t pkmn_calculations_modern_pokemon_gender(
     uint32_t personality,
     pkmn_gender_t* gender_out
 ) {
+    PKMN_CHECK_NULL_PARAM(species);
+    PKMN_CHECK_NULL_PARAM(gender_out);
+
     PKMN_CPP_TO_C(
         *gender_out = genders.at(
                           pkmn::calculations::modern_pokemon_gender(

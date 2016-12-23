@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(pkmn_cpp_test_libs
+    ${Boost_LIBRARIES}
     pkmn
     pkmntest
 )
@@ -33,13 +34,19 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
     ELSE()
         SET(TEST_CMD ${test_cmd})
         SET(DATABASE_PATH ${CMAKE_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
-        SET(PYTHONPATH ${CMAKE_BINARY_DIR}/lib/swig/python)
+        SET(PYTHONPATH
+            "${CMAKE_BINARY_DIR}/lib/swig/python"
+            "${TESTS_SOURCE_DIR}/pkmntest/python"
+        )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
             "${CMAKE_BINARY_DIR}/lib/swig/java/PKMN.jar"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
+                "${Boost_LIBRARY_DIRS}"
+                "${QTx_RUNTIME_DIR}"
+                "${PKMN_BINARY_DIR}/pksav/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp/${CMAKE_BUILD_TYPE}"
@@ -68,6 +75,8 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 SET(DY "DY")
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
+                "${Boost_LIBRARY_DIRS}"
+                "${PKMN_BINARY_DIR}/pksav/lib"
                 "${PKMN_BINARY_DIR}/lib"
                 "${PKMN_BINARY_DIR}/lib/c"
                 "${PKMN_BINARY_DIR}/lib/swig/csharp"
@@ -80,6 +89,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             )
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
+            STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.sh.in
                 ${TESTS_BINARY_DIR}/${test_name}.sh
@@ -135,3 +145,8 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${csharp_test_cmd})
 ENDMACRO(PKMN_ADD_CSHARP_TEST)
+
+MACRO(PKMN_ADD_PYTHON_TEST test_name)
+    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_PYTHON_TEST)

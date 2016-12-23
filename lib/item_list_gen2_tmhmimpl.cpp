@@ -9,6 +9,8 @@
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/exception.hpp>
+
 #include <algorithm>
 #include <cstring>
 
@@ -84,12 +86,16 @@ namespace pkmn {
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
+        item_list_scoped_lock lock(this);
+
         if(_our_mem) {
             delete NATIVE_RCAST;
         }
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {
+        item_list_scoped_lock lock(this);
+
         int ret = 0;
         for(int i = 0; i < 50; i++) {
             if(NATIVE_RCAST->tm_count[i] > 0) {
@@ -107,10 +113,10 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::add(
         const std::string &name,
-        const int amount
+        int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
@@ -125,7 +131,7 @@ namespace pkmn {
         } else if(ITEM_ID_IS_HM(item_id)) {
             position = item_id - 347;
         } else {
-            throw std::runtime_error("Invalid item.");
+            throw std::invalid_argument("Invalid item.");
         }
 
         int new_amount = _item_slots[position].amount + amount;
@@ -135,15 +141,15 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::remove(
         const std::string &name,
-        const int amount
+        int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw std::runtime_error("Valid amount: 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
         if(item.get_pocket() != get_name()) {
-            throw std::runtime_error("This item is not valid for this list.");
+            throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
@@ -162,15 +168,17 @@ namespace pkmn {
     }
 
     void item_list_gen2_tmhmimpl::move(
-        PKMN_UNUSED(const int position1),
-        PKMN_UNUSED(const int position2)
+        PKMN_UNUSED(int position1),
+        PKMN_UNUSED(int position2)
     ) {
-        throw std::runtime_error("Cannot move items in this pocket.");
+        throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
     }
 
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     ) {
+        item_list_scoped_lock lock(this);
+
         for(size_t i = 0; i < 50; ++i) {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
         }
@@ -182,6 +190,8 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
     ) {
+        item_list_scoped_lock lock(this);
+
         for(size_t i = 0; i < 50; ++i) {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);
         }

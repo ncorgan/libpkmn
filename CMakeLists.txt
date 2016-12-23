@@ -8,7 +8,7 @@
 ########################################################################
 # CMake configuration
 ########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 PROJECT(PKMN C CXX)
 
 SET(PKMN_VERSION_MAJOR 0)
@@ -42,6 +42,8 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
     filesystem
+    locale
+    system
     thread
     unit_test_framework
 )
@@ -56,6 +58,8 @@ ENDIF(MSVC)
 FIND_PACKAGE(Boost 1.55 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+INCLUDE(PKMNQt)
 
 # We need Boost.Predef for a check here
 INCLUDE(PKMNPlatform)
@@ -111,7 +115,10 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 ####################################################################
 # Components
 ####################################################################
-PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
+PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
+    "Boost_FOUND;PYTHONINTERP_FOUND" OFF)
+PKMN_REGISTER_COMPONENT(" * Qt Widgets"       PKMN_ENABLE_QT ON
+    "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
 PKMN_REGISTER_COMPONENT("C# API"           PKMN_ENABLE_CSHARP  ON
     "SWIG_FOUND;CSHARP_FOUND;PYTHONINTERP_FOUND;PYTHON_MODULES_FOUND" OFF)

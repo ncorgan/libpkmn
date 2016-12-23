@@ -10,6 +10,7 @@
 
 #include <pkmn-c/calculations/stats.h>
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/stats.hpp>
 
 #include <boost/config.hpp>
@@ -25,7 +26,7 @@ static void enforce_enum(
     pkmn_stat_t stat
 ) {
     if(stat < PKMN_STAT_HP or stat > PKMN_STAT_SPDEF) {
-        throw std::out_of_range("stat: invalid stat");
+        throw pkmn::range_error("stat", PKMN_STAT_HP, PKMN_STAT_SPDEF);
     }
 }
 
@@ -37,6 +38,8 @@ pkmn_error_t pkmn_calculations_gb_stat(
     int IV,
     int* stat_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -53,6 +56,8 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
     int base_stat,
     pkmn_int_pair_t* stat_range_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_range_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -74,6 +79,8 @@ pkmn_error_t pkmn_calculations_modern_stat(
     int IV,
     int* stat_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 
@@ -91,6 +98,8 @@ pkmn_error_t pkmn_calculations_modern_stat_range(
     int base_stat,
     pkmn_int_pair_t* stat_range_out
 ) {
+    PKMN_CHECK_NULL_PARAM(stat_range_out);
+
     PKMN_CPP_TO_C(
         enforce_enum(stat);
 

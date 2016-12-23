@@ -5,9 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
@@ -25,7 +27,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw std::out_of_range("generation: valid range 3-6");
+            throw pkmn::range_error("generation", 3, 6);
         }
 
         // Connect to database
@@ -49,7 +51,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database
@@ -296,7 +298,7 @@ namespace pkmn { namespace database {
                     "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
                 };
 
-                for(size_t i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
+                for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
                     SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
                     stmt.bind(1, generation);
                     stmt.bind(2, version_group_region_ids[version_group_id][i]);
@@ -404,7 +406,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database

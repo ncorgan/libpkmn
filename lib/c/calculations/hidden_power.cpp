@@ -19,6 +19,8 @@ pkmn_error_t pkmn_calculations_gen2_hidden_power(
     int IV_special,
     pkmn_hidden_power_t* hidden_power_out
 ) {
+    PKMN_CHECK_NULL_PARAM(hidden_power_out);
+
     PKMN_CPP_TO_C(
         pkmn::pkmn_hidden_power_cpp_to_c(
             pkmn::calculations::gen2_hidden_power(
@@ -39,6 +41,8 @@ pkmn_error_t pkmn_calculations_modern_hidden_power(
     int IV_spdef,
     pkmn_hidden_power_t* hidden_power_out
 ) {
+    PKMN_CHECK_NULL_PARAM(hidden_power_out);
+
     PKMN_CPP_TO_C(
         pkmn::pkmn_hidden_power_cpp_to_c(
             pkmn::calculations::modern_hidden_power(

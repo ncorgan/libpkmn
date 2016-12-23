@@ -10,4 +10,4 @@
  * of its main().
  */
 
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"

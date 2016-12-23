@@ -14,6 +14,8 @@ PKMN_PYTHON_INIT
 %import <stl_python.i>
 
 %{
+    #include <pkmn/build_info.hpp>
+
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
 
@@ -23,6 +25,7 @@ PKMN_PYTHON_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 
+%include <pkmn/build_info.hpp>
 %include <pkmn/utils/paths.hpp>
 
 // Item Slot
@@ -33,14 +36,10 @@ PKMN_PYTHON_INIT
 %ignore get_native;
 
 // Item List
-%rename(as_list) as_vector;
-%include <pkmn/item_list.hpp>
-PKMN_PYTHON_SPTR(item_list)
-PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);
+%include <python/pkmn_item_list.i>
 
 // Item Bag
-%include <pkmn/item_bag.hpp>
-PKMN_PYTHON_SPTR(item_bag)
+%include <python/pkmn_item_bag.i>
 
 /*
  * Remove access to bases of sptr'd classes, but don't give access to our

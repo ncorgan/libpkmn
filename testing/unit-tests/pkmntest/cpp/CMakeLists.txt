@@ -23,6 +23,8 @@ SET(pkmntest_libs
 SET(pkmntest_sources
     gen1_items_tests.cpp
     gen2_items_tests.cpp
+    gba_items_tests.cpp
+    items_tests_common.cpp
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
