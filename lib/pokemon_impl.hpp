@@ -85,6 +85,8 @@ namespace pkmn {
             pkmn::database::pokemon_entry _database_entry;
             pkmn::database::item_entry _held_item;
 
+            int _generation;
+
             bool _our_pc_mem;
             bool _our_party_mem;
 
@@ -98,13 +100,6 @@ namespace pkmn {
             virtual void _update_moves(
                 int index
             ) = 0;
-
-            void _set_contest_stat(
-                const std::string &stat,
-                int value,
-                pksav_contest_stats_t* native,
-                bool gen3
-            );
 
             void _set_marking(
                 const std::string &marking,
@@ -133,10 +128,10 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
-            virtual void _update_held_item() = 0;
-            virtual void _update_markings_map() = 0;
-            virtual void _update_ribbons_map() = 0;
-            virtual void _update_contest_stats_map() = 0;
+            virtual void _update_held_item() {}
+            virtual void _update_markings_map() {}
+            virtual void _update_ribbons_map() {}
+            virtual void _update_contest_stats_map() {}
             virtual void _update_EV_map() = 0;
             virtual void _update_IV_map() = 0;
             virtual void _update_stat_map() = 0;

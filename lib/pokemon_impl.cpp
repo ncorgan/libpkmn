@@ -113,14 +113,16 @@ namespace pkmn {
         int game_id
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
-       _held_item(pkmn::database::item_entry(0, game_id))
+       _held_item(pkmn::database::item_entry(0, game_id)),
+       _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
     pokemon_impl::pokemon_impl(
         pkmn::database::pokemon_entry&& database_entry
     ): pokemon(),
        _database_entry(database_entry),
-       _held_item(pkmn::database::item_entry(0, database_entry.get_game_id()))
+       _held_item(pkmn::database::item_entry(0, database_entry.get_game_id())),
+       _generation(pkmn::database::game_id_to_generation(database_entry.get_game_id()))
     {}
 
     std::string pokemon_impl::get_species() {
@@ -140,58 +142,50 @@ namespace pkmn {
     }
 
     const pkmn::database::item_entry& pokemon_impl::get_held_item() {
-        pokemon_scoped_lock lock(this);
+        if(_generation == 1) {
+            throw pkmn::feature_not_in_game_error("Held items", "Generation I");
+        }
 
-        _update_held_item();
         return _held_item;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_markings() {
-        pokemon_scoped_lock lock(this);
+        if(_generation < 3) {
+            throw pkmn::feature_not_in_game_error("Markings", "Generation I-II");
+        }
 
-        _update_markings_map();
         return _markings;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_ribbons() {
-        pokemon_scoped_lock lock(this);
+        if(_generation < 3) {
+            throw pkmn::feature_not_in_game_error("Ribbons", "Generation I-II");
+        }
 
-        _update_ribbons_map();
         return _ribbons;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_contest_stats() {
-        pokemon_scoped_lock lock(this);
+        if(_generation < 3) {
+            throw pkmn::feature_not_in_game_error("Contests", "Generation I-II");
+        }
 
-        _update_contest_stats_map();
         return _contest_stats;
     }
 
     const pkmn::move_slots_t& pokemon_impl::get_moves() {
-        pokemon_scoped_lock lock(this);
-
-        _update_moves(-1);
         return _moves;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_EVs() {
-        pokemon_scoped_lock lock(this);
-
-        _update_EV_map();
         return _EVs;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_IVs() {
-        pokemon_scoped_lock lock(this);
-
-        _update_IV_map();
         return _IVs;
     }
 
     const std::map<std::string, int>& pokemon_impl::get_stats() {
-        pokemon_scoped_lock lock(this);
-
-        _update_stat_map();
         return _stats;
     }
 
@@ -227,6 +221,8 @@ namespace pkmn {
         if(_markings.find(marking) == _markings.end()) {
             throw std::invalid_argument("Invalid marking.");
         }
+
+        pokemon_scoped_lock lock(this);
 
         SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);

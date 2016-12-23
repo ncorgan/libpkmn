@@ -115,6 +115,7 @@ namespace pkmn {
         _update_EV_map();
         _update_IV_map();
         set_level(level);
+        _update_moves(-1);
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -280,6 +281,8 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
+
+        _update_held_item();
     }
 
     std::string pokemon_gbaimpl::get_trainer_name() {
@@ -596,8 +599,6 @@ namespace pkmn {
         const std::string &marking,
         bool value
     ) {
-        pokemon_scoped_lock lock(this);
-
         _set_marking(
             marking,
             value,

@@ -79,6 +79,7 @@ namespace pkmn {
         _update_EV_map();
         _update_IV_map();
         set_level(level);
+        _update_moves(-1);
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -165,6 +166,8 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
+
+        _update_held_item();
     }
 
     std::string pokemon_gen2impl::get_trainer_name() {
@@ -450,14 +453,14 @@ namespace pkmn {
             throw pkmn::range_error("index", 0, 3);
         }
 
+        pokemon_scoped_lock lock(this);
+
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
                                  move,
                                  get_game()
                              );
         _moves[index].pp = _moves[index].move.get_pp(0);
-
-        pokemon_scoped_lock lock(this);
 
         GEN2_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
         GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
@@ -561,18 +564,6 @@ namespace pkmn {
                              _database_entry.get_game_id()
                          );
         }
-    }
-
-    void pokemon_gen2impl::_update_markings_map() {
-        throw pkmn::feature_not_in_game_error("Markings", "Generation II");
-    }
-
-    void pokemon_gen2impl::_update_ribbons_map() {
-        throw pkmn::feature_not_in_game_error("Ribbons", "Generation II");
-    }
-
-    void pokemon_gen2impl::_update_contest_stats_map() {
-        throw pkmn::feature_not_in_game_error("Contests", "Generation II");
     }
 
     void pokemon_gen2impl::_update_EV_map() {

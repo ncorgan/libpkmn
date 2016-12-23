@@ -423,14 +423,14 @@ namespace pkmn {
             throw pkmn::range_error("index", 0, 3);
         }
 
+        pokemon_scoped_lock lock(this);
+
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
                                  move,
                                  get_game()
                              );
         _moves[index].pp = _moves[index].move.get_pp(0);
-
-        pokemon_scoped_lock lock(this);
 
         GEN1_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
         GEN1_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
@@ -525,22 +525,6 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
-    }
-
-    void pokemon_gen1impl::_update_held_item() {
-        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
-    }
-
-    void pokemon_gen1impl::_update_markings_map() {
-        throw pkmn::feature_not_in_game_error("Markings", "Generation I");
-    }
-
-    void pokemon_gen1impl::_update_ribbons_map() {
-        throw pkmn::feature_not_in_game_error("Ribbons", "Generation I");
-    }
-
-    void pokemon_gen1impl::_update_contest_stats_map() {
-        throw pkmn::feature_not_in_game_error("Contests", "Generation I");
     }
 
     void pokemon_gen1impl::_update_EV_map() {

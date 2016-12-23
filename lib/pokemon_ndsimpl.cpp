@@ -70,6 +70,7 @@ namespace pkmn {
         _update_EV_map();
         _update_IV_map();
         set_level(level);
+        _update_moves(-1);
     }
 
     pokemon_ndsimpl::pokemon_ndsimpl(
@@ -262,6 +263,8 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _blockA->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
+
+        _update_held_item();
     }
 
     std::string pokemon_ndsimpl::get_trainer_name() {
