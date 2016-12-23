@@ -426,13 +426,13 @@ namespace pkmn {
                                                                ));
     }
 
-    int pokemon_ndsimpl::get_level_caught() {
+    int pokemon_ndsimpl::get_level_met() {
         pokemon_scoped_lock lock(this);
 
         return (_blockD->metlevel_otgender & PKSAV_NDS_LEVELMET_MASK);
     }
 
-    void pokemon_ndsimpl::set_level_caught(
+    void pokemon_ndsimpl::set_level_met(
         int level
     ) {
         if(level < 0 or level > 100) {

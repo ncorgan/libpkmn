@@ -159,7 +159,7 @@ namespace pkmntest {
             pokemon->get_ball()
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
-            pokemon->get_level_caught();
+            pokemon->get_level_met();
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->get_location_met(true);
@@ -271,7 +271,7 @@ namespace pkmntest {
             pokemon->set_ball("Great Ball");
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
-            pokemon->set_level_caught(78);
+            pokemon->set_level_met(78);
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_location_met("Victory Road", true);

@@ -65,7 +65,7 @@ namespace pkmn {
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        set_level_caught(level);
+        set_level_met(level);
         set_location_met("Special", false);
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
@@ -283,13 +283,13 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("A Pokémon's ball is not recorded in Generation II.");
     }
 
-    int pokemon_gen2impl::get_level_caught() {
+    int pokemon_gen2impl::get_level_met() {
         pokemon_scoped_lock lock(this);
 
         return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
     }
 
-    void pokemon_gen2impl::set_level_caught(
+    void pokemon_gen2impl::set_level_met(
         int level
     ) {
         if(level < 2 or level > 100) {

@@ -133,7 +133,7 @@ namespace pkmntest {
             pokemon->get_ball()
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
-            pokemon->get_level_caught(),
+            pokemon->get_level_met(),
             pokemon->get_level()
         );
         BOOST_CHECK_THROW(
@@ -270,7 +270,7 @@ namespace pkmntest {
         // Make sure functions that affect the same PKSav field don't impact each other
         std::string location_met_before_change = pokemon->get_location_met(false);
         std::string trainer_gender_before_change = pokemon->get_trainer_gender();
-        int level_caught_before_change = pokemon->get_level_caught();
+        int level_met_before_change = pokemon->get_level_met();
 
         const pksav_gen2_pc_pokemon_t* native_pc = reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(
                                                        pokemon->get_native_pc_data()
@@ -292,8 +292,8 @@ namespace pkmntest {
             trainer_gender_before_change
         );
         BOOST_CHECK_EQUAL(
-            pokemon->get_level_caught(),
-            level_caught_before_change
+            pokemon->get_level_met(),
+            level_met_before_change
         );
 
         uint16_t time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
@@ -312,8 +312,8 @@ namespace pkmntest {
             location_met_before_change
         );
         BOOST_CHECK_EQUAL(
-            pokemon->get_level_caught(),
-            level_caught_before_change
+            pokemon->get_level_met(),
+            level_met_before_change
         );
 
         time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
@@ -326,9 +326,9 @@ namespace pkmntest {
         pokemon->set_trainer_gender(trainer_gender_before_change);
 
         // Setting level caught shouldn't affect location caught, trainer gender, or time of day caught
-        pokemon->set_level_caught(3);
+        pokemon->set_level_met(3);
         BOOST_CHECK_EQUAL(
-            pokemon->get_level_caught(),
+            pokemon->get_level_met(),
             3
         );
         BOOST_CHECK_EQUAL(

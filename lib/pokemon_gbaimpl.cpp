@@ -93,7 +93,7 @@ namespace pkmn {
         _effort->ev_spdef = uint32_t(std::rand());
 
         set_location_met("Fateful encounter", false);
-        //set_level_met(level);
+        set_level_met(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
 
@@ -454,13 +454,13 @@ namespace pkmn {
     }
 
 
-    int pokemon_gbaimpl::get_level_caught() {
+    int pokemon_gbaimpl::get_level_met() {
         pokemon_scoped_lock lock(this);
 
         return (_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK);
     }
 
-    void pokemon_gbaimpl::set_level_caught(
+    void pokemon_gbaimpl::set_level_met(
         int level
     ) {
         if(level < 0 or level > 100) {

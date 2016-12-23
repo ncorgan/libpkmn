@@ -316,21 +316,21 @@ pkmn_error_t pkmn_pokemon_set_ball(
     )
 }
 
-pkmn_error_t pkmn_pokemon_get_level_caught(
+pkmn_error_t pkmn_pokemon_get_level_met(
     pkmn_pokemon_handle_t handle,
-    int* level_caught_out
+    int* level_met_out
 ) {
     PKMN_CPP_TO_C(
-        *level_caught_out = handle->cpp->get_level_caught();
+        *level_met_out = handle->cpp->get_level_met();
     )
 }
 
-pkmn_error_t pkmn_pokemon_set_level_caught(
+pkmn_error_t pkmn_pokemon_set_level_met(
     pkmn_pokemon_handle_t handle,
-    int level_caught
+    int level_met
 ) {
     PKMN_CPP_TO_C(
-        handle->cpp->set_level_caught(level_caught);
+        handle->cpp->set_level_met(level_met);
     )
 }
 
