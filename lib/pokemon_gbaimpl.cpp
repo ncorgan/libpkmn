@@ -130,7 +130,7 @@ namespace pkmn {
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
-        _calculate_stats();
+        _populate_party_data();
         _our_party_mem = true;
 
         // Set block pointers
@@ -194,7 +194,7 @@ namespace pkmn {
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
-        _calculate_stats();
+        _populate_party_data();
         _our_party_mem = true;
 
         // Set block pointers
@@ -561,7 +561,7 @@ namespace pkmn {
         _growth->exp = pksav_littleendian32(uint32_t(experience));
         GBA_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
 
-        _calculate_stats();
+        _populate_party_data();
         _update_stat_map();
     }
 
@@ -583,7 +583,7 @@ namespace pkmn {
         GBA_PARTY_RCAST->level = uint8_t(level);
         _growth->exp = pksav_littleendian32(uint32_t(_database_entry.get_experience_at_level(level)));
 
-        _calculate_stats();
+        _populate_party_data();
         _update_stat_map();
     }
 
@@ -732,7 +732,7 @@ namespace pkmn {
         }
 
         _update_EV_map();
-        _calculate_stats();
+        _populate_party_data();
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(
@@ -770,7 +770,7 @@ namespace pkmn {
         _misc->ribbons_obedience |= (level << offset);
     }
 
-    void pokemon_gbaimpl::_calculate_stats() {
+    void pokemon_gbaimpl::_populate_party_data() {
         pksav::gba_pc_pokemon_to_party_data(
             _database_entry,
             reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),

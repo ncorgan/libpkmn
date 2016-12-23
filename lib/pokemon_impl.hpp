@@ -95,7 +95,7 @@ namespace pkmn {
 
             boost::mutex _mem_mutex;
 
-            virtual void _calculate_stats() = 0;
+            virtual void _populate_party_data() = 0;
 
             virtual void _update_moves(
                 int index

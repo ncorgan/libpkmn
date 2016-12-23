@@ -164,7 +164,7 @@ namespace pkmn {
 
         private:
 
-            void _calculate_stats();
+            void _populate_party_data();
 
             void _update_moves(
                 int index

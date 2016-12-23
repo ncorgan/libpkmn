@@ -512,7 +512,7 @@ namespace pkmn {
         _blockA->exp = pksav_littleendian32(uint32_t(experience));
         NDS_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
 
-        _calculate_stats();
+        _populate_party_data();
         _update_stat_map();
     }
 
@@ -530,7 +530,7 @@ namespace pkmn {
         NDS_PARTY_RCAST->level = uint8_t(level);
         _blockA->exp = uint32_t(_database_entry.get_experience_at_level(level));
 
-        _calculate_stats();
+        _populate_party_data();
         _update_stat_map();
     }
 
@@ -593,7 +593,7 @@ namespace pkmn {
         _blockB->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
-    void pokemon_ndsimpl::_calculate_stats() {
+    void pokemon_ndsimpl::_populate_party_data() {
         pksav::nds_pc_pokemon_to_party_data(
             _database_entry,
             reinterpret_cast<const pksav_nds_pc_pokemon_t*>(_native_pc),
@@ -626,7 +626,7 @@ namespace pkmn {
         }
 
         _update_EV_map();
-        _calculate_stats();
+        _populate_party_data();
     }
 
     void pokemon_ndsimpl::_update_moves(

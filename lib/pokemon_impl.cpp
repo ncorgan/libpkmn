@@ -381,7 +381,7 @@ namespace pkmn {
             _IVs["HP"] = int(IV_hp);
         }
 
-        _calculate_stats();
+        _populate_party_data();
     }
 
     void pokemon_impl::_set_modern_IV(
@@ -406,7 +406,7 @@ namespace pkmn {
         )
 
         _IVs[stat] = value;
-        _calculate_stats();
+        _populate_party_data();
     }
 
     #define SET_CONTEST_STAT(str,field) \
