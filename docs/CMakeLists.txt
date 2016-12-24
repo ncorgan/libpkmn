@@ -35,7 +35,6 @@ ENDIF(PKMN_ENABLE_C)
 IF(PKMN_ENABLE_CSHARP)
     PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
     ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
-    ADD_DEPENDENCIES(doxygen_csharp_docs fix_csharp_files)
 ENDIF(PKMN_ENABLE_CSHARP)
 
 #IF(PKMN_ENABLE_JAVA)
