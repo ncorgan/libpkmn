@@ -135,7 +135,7 @@ INCLUDE(SWIGCSharp)
 
 MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     CSHARP_ADD_EXECUTABLE(${test_name} ${test_srcs} ${test_dlls})
-    ADD_DEPENDENCIES(${test_name} ${test_srcs} ${test_dlls})
+    ADD_DEPENDENCIES(${test_name} "pkmn-cs")
 
     IF(WIN32)
         SET(csharp_test_cmd "\"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.exe\"")

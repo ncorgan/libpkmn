@@ -140,15 +140,10 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
 ENDMACRO(SWIG_BUILD_CSHARP_MODULE)
 
 MACRO(CSHARP_BUILD_DLL dll_name swig_modules)
-    # Derive dependencies
-    FOREACH(module ${swig_modules})
-        LIST(APPEND swig_depends "${SWIG_MODULE_${module}_REAL_NAME}")
-    ENDFOREACH(module ${swig_modules})
-
     CSHARP_ADD_LIBRARY(
         ${dll_name} "${CMAKE_SWIG_OUTDIR}/*.cs"
     )
-    ADD_DEPENDENCIES(${dll_name} ${swig_depends})
+    ADD_DEPENDENCIES(${dll_name} ${swig_modules})
 
     INSTALL(
         FILES ${CSHARP_BINARY_DIRECTORY}/${dll_name}.dll
