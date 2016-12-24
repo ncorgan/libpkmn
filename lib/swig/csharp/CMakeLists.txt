@@ -35,6 +35,7 @@ ADD_CUSTOM_TARGET(
 SET(csharp_files
     AssemblyInfo.cs
     Equality.cs
+    HashCodeBuilder.cs
 )
 
 FOREACH(cs ${csharp_files})
