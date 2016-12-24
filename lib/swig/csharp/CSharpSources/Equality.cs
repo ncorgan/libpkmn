@@ -34,6 +34,38 @@ public class PKMNHashCodes {
     }
 }
 
+public partial class HiddenPower {
+    public bool Equals(HiddenPower rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return (this.Type.Equals(rhs.Type) && this.BasePower == rhs.BasePower);
+        }
+    }
+
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        HiddenPower rhsHiddenPower = rhs as HiddenPower;
+        if(rhsHiddenPower == null) {
+            return false;
+        } else {
+            return this.Equals(rhsHiddenPower);
+        }
+    }
+
+    public override int GetHashCode() {
+        return new HashCodeBuilder<HiddenPower>(this)
+                       .With(m => m.Type)
+                       .With(m => m.BasePower)
+                       .HashCode;
+    }
+}
+
 public partial class ItemEntry {
     /// <summary>Compares two ItemEntry instances to determine value equality.</summary>
     /// <remarks>
