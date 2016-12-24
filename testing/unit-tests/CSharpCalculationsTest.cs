@@ -196,6 +196,11 @@ public class CSharpCalculationsTest {
             }
         );
 
+        /*
+         * Make sure known good inputs result in expected results, and test (in)equality functions.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
+         */
         PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
                                                        "Dark", 69
                                                    );
@@ -206,10 +211,279 @@ public class CSharpCalculationsTest {
                                                                  "Dark", 50
                                                              );
 
-        PKMN.HiddenPower hiddenPower = PKMN.Calculations.Gen2HiddenPower(15, 15, 15, 15);
+        PKMN.HiddenPower hiddenPower = PKMN.Calculations.Gen2HiddenPower(15, 15, 15, 14);
 
         Assert.AreEqual(hiddenPower, expectedHiddenPower);
         Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentType);
         Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentBasePower);
+    }
+
+    [Test]
+    public void ModernHiddenPowerTest() {
+        // Make sure expected exceptions are thrown.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(-1, 0, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(32, 0, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, -1, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 32, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, -1, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 32, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, -1, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, 32, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, 0, -1, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, 0, 32, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, 0, 0, -1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.ModernHiddenPower(0, 0, 0, 0, 0, 32);
+            }
+        );
+
+        /*
+         * Make sure known good inputs result in expected results, and test equality functions.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Generation_II
+         */
+        PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
+                                                       "Grass", 70
+                                                   );
+        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower(
+                                                            "Steel", 70
+                                                        );
+        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower(
+                                                                 "Grass", 10
+                                                             );
+
+        PKMN.HiddenPower hiddenPower = PKMN.Calculations.ModernHiddenPower(30, 31, 31, 31, 30, 31);
+
+        Assert.AreEqual(hiddenPower, expectedHiddenPower);
+        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentType);
+        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentBasePower);
+        Assert.AreEqual(hiddenPower.GetHashCode(), expectedHiddenPower.GetHashCode());
+        Assert.AreNotEqual(hiddenPower.GetHashCode(), hiddenPowerDifferentType.GetHashCode());
+        Assert.AreNotEqual(hiddenPower.GetHashCode(), hiddenPowerDifferentBasePower.GetHashCode());
+    }
+
+    [Test]
+    public void Gen2ShinyTest() {
+        // Make sure expected exceptions are thrown.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(-1, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(16, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, -1, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, 16, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, 0, -1, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, 0, 16, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, 0, 0, -1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.Gen2Shiny(0, 0, 0, 16);
+            }
+        );
+
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Shininess
+         */
+        Assert.IsTrue(PKMN.Calculations.Gen2Shiny(7, 10, 10, 10));
+        Assert.IsFalse(PKMN.Calculations.Gen2Shiny(6, 15, 7, 15));
+    }
+
+    [Test]
+    public void ModernShinyTest() {
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
+         *         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
+         */
+        Assert.IsTrue(PKMN.Calculations.ModernShiny(2814471828, 2545049318));
+        Assert.IsTrue(PKMN.Calculations.ModernShiny(0xB58F0B2A, 398174488));
+    }
+
+    [Test]
+    public void SpindaCoordsTest() {
+        // Check equality functions.
+        PKMN.SpindaCoords spindaCoords1 = new PKMN.SpindaCoords(123, 456);
+        PKMN.SpindaCoords spindaCoords2 = new PKMN.SpindaCoords(123, 456);
+        PKMN.SpindaCoords spindaCoords3 = new PKMN.SpindaCoords(456, 123);
+
+        Assert.AreEqual(spindaCoords1, spindaCoords2);
+        Assert.AreNotEqual(spindaCoords1, spindaCoords3);
+        Assert.AreEqual(spindaCoords1.GetHashCode(), spindaCoords2.GetHashCode());
+        Assert.AreNotEqual(spindaCoords1.GetHashCode(), spindaCoords3.GetHashCode());
+    }
+
+    [Test]
+    public void SpindaSpotsTest() {
+        // Check equality functions.
+        PKMN.SpindaSpots spindaSpots1 = new PKMN.SpindaSpots(
+                                                new PKMN.SpindaCoords(7, 5),
+                                                new PKMN.SpindaCoords(10, 0),
+                                                new PKMN.SpindaCoords(1, 4),
+                                                new PKMN.SpindaCoords(2, 15)
+                                            );
+        PKMN.SpindaSpots spindaSpots2 = new PKMN.SpindaSpots(
+                                                new PKMN.SpindaCoords(7, 5),
+                                                new PKMN.SpindaCoords(10, 0),
+                                                new PKMN.SpindaCoords(1, 4),
+                                                new PKMN.SpindaCoords(2, 15)
+                                            );
+        PKMN.SpindaSpots spindaSpots3 = new PKMN.SpindaSpots(
+                                                new PKMN.SpindaCoords(7, 5),
+                                                new PKMN.SpindaCoords(10, 0),
+                                                new PKMN.SpindaCoords(2, 15),
+                                                new PKMN.SpindaCoords(1, 4)
+                                            );
+
+        Assert.AreEqual(spindaSpots1, spindaSpots2);
+        Assert.AreNotEqual(spindaSpots1, spindaSpots3);
+        Assert.AreEqual(spindaSpots1.GetHashCode(), spindaSpots2.GetHashCode());
+        Assert.AreNotEqual(spindaSpots1.GetHashCode(), spindaSpots3.GetHashCode());
+
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: https://github.com/magical/spinda
+         */
+        PKMN.SpindaSpots spindaSpots = PKMN.Calculations.SpindaSpotOffset(4064348759);
+        Assert.AreEqual(spindaSpots, spindaSpots1);
+    }
+
+    [Test]
+    public void GBStatsTest() {
+        // Make sure expected exceptions are thrown.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetGBStat("Not a stat", 1, 1, 1, 1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetGBStat("Attack", 1, 1, 123456, 1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetGBStat("Attack", 1, 1, 1, 12345);
+            }
+        );
+
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
+         */
+        Assert.That(PKMN.Calculations.GetGBStat("HP", 81, 35, 22850, 7), Is.EqualTo(189).Within(1));
+        Assert.That(PKMN.Calculations.GetGBStat("Attack", 81, 55, 23140, 8), Is.EqualTo(137).Within(1));
+    }
+
+    [Test]
+    public void ModernStatsTest() {
+        // Make sure expected exceptions are thrown.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetModernStat("Not a stat", 1, 1.0f, 1, 1, 1);
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetModernStat("Special", 1, 1.0f, 1, 1, 1);
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetModernStat("Attack", 1, 0.666f, 1, 1, 1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetModernStat("Attack", 1, 1.0f, 1, 12345, 1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GetModernStat("Attack", 1, 1.0f, 1, 1, 12345);
+            }
+        );
+
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
+         */
+        Assert.That(PKMN.Calculations.GetModernStat("HP", 78, 1.0f, 108, 74, 24), Is.EqualTo(289).Within(1));
+        Assert.That(PKMN.Calculations.GetModernStat("Attack", 78, 1.1f, 130, 195, 12), Is.EqualTo(280).Within(1));
     }
 }
