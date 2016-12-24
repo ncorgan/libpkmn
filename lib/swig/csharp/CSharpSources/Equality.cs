@@ -333,6 +333,75 @@ public partial class PokemonEntryList {
     }
 }
 
+public partial class SpindaCoords {
+    public bool Equals(SpindaCoords rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return (this.X == rhs.X) && (this.Y == rhs.Y);
+        }
+    }
+
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        SpindaCoords rhsSpindaCoords = rhs as SpindaCoords;
+        if(rhsSpindaCoords == null) {
+            return false;
+        } else {
+            return this.Equals(rhsSpindaCoords);
+        }
+    }
+
+    public override int GetHashCode() {
+        return new HashCodeBuilder<SpindaCoords>(this)
+                       .With(m => m.X)
+                       .With(m => m.Y)
+                       .HashCode;
+    }
+}
+
+public partial class SpindaSpots {
+    public bool Equals(SpindaSpots rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return (this.LeftEar.Equals(rhs.LeftEar) &&
+                    this.RightEar.Equals(rhs.RightEar) &&
+                    this.LeftFace.Equals(rhs.LeftFace) &&
+                    this.RightFace.Equals(rhs.RightFace));
+        }
+    }
+
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        SpindaSpots rhsSpindaSpots = rhs as SpindaSpots;
+        if(rhsSpindaSpots == null) {
+            return false;
+        } else {
+            return this.Equals(rhsSpindaSpots);
+        }
+    }
+
+    public override int GetHashCode() {
+        return new HashCodeBuilder<SpindaSpots>(this)
+                       .With(m => m.LeftEar)
+                       .With(m => m.RightEar)
+                       .With(m => m.LeftFace)
+                       .With(m => m.RightFace)
+                       .HashCode;
+    }
+}
+
 public partial class StringBoolDict {
     /// <summary>Generates a unique hash code for the given StringBoolDict.</summary>
     /// <returns>Unique hash code</returns>
