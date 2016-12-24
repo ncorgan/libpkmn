@@ -102,6 +102,7 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
     SET(CSHARP_BINARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     SET(csharp_tests
+        CSharpCalculationsTest
         CSharpListsTest
     )
 
