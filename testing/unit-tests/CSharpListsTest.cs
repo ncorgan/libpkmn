@@ -6,7 +6,7 @@
  */
 
 using System;
-using System.Collections.Generic;
+using NUnit.Framework;
 
 public class CSharpEqualityTest {
     public static bool AbilityListTest() {

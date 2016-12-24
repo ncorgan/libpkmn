@@ -134,7 +134,7 @@ ENDMACRO(PKMN_ADD_C_TEST)
 INCLUDE(SWIGCSharp)
 
 MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
-    CSHARP_ADD_EXECUTABLE(${test_name} ${test_srcs} ${test_dlls})
+    CSHARP_ADD_EXECUTABLE(${test_name} ${test_srcs} ${test_dlls} ${NUNIT_LIBRARY})
     ADD_DEPENDENCIES(${test_name} "pkmn-cs")
 
     IF(WIN32)
