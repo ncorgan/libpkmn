@@ -21,6 +21,7 @@ IF(NUNIT_FOUND)
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
+        CSharpWinFormsTest
     )
 
     SET(csharp_pkmn_dlls
