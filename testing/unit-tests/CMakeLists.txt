@@ -12,6 +12,9 @@ ENDIF(PKMN_ENABLE_QT)
 INCLUDE(PKMNUnitTest)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
+# Find external libraries
+FIND_PACKAGE(NUnit)
+
 ADD_SUBDIRECTORY(pkmntest)
 
 #
@@ -94,7 +97,6 @@ ENDIF(PKMN_ENABLE_C)
 #
 # C# tests
 #
-FIND_PACKAGE(NUnit)
 IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
     # To get CSHARP_INTERPRETER
     FIND_PACKAGE(CSharp)
@@ -109,7 +111,12 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
     )
 
     FOREACH(test ${csharp_tests})
-        PKMN_ADD_CSHARP_TEST(${test} ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cs ${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll)
+        PKMN_ADD_CSHARP_TEST(
+            ${test}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cs
+            ${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll
+            ${CMAKE_CURRENT_BINARY_DIR}/pkmntest-cs.dll
+        )
     ENDFOREACH(test ${csharp_tests})
 ENDIF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
 

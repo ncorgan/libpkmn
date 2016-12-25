@@ -135,7 +135,7 @@ INCLUDE(SWIGCSharp)
 
 MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     CSHARP_ADD_LIBRARY(${test_name} ${test_srcs} ${test_dlls} ${NUNIT_LIBRARIES})
-    ADD_DEPENDENCIES(${test_name} "pkmn-cs")
+    ADD_DEPENDENCIES(${test_name} "pkmn-cs" "pkmntest-cs")
 
     # TODO: Determine programmatically, probably parsing variables
     IF(WIN32)
