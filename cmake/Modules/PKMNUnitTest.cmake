@@ -137,9 +137,12 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     CSHARP_ADD_LIBRARY(${test_name} ${test_srcs} ${test_dlls} ${NUNIT_LIBRARIES})
     ADD_DEPENDENCIES(${test_name} "pkmn-cs")
 
-    SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" -framework=4.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
+    # TODO: Determine programmatically, probably parsing variables
     IF(WIN32)
+        SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" /framework:2.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
         STRING(REPLACE "/" "\\\\" csharp_test_cmd ${csharp_test_cmd})
+    ELSE()
+        SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" -framework=4.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${csharp_test_cmd})
 ENDMACRO(PKMN_ADD_CSHARP_TEST)
