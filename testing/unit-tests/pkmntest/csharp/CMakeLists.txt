@@ -5,12 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests)
+SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
 
 CSHARP_ADD_LIBRARY(
     "pkmntest-cs"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cs"
-    ${PKMN_BINARY_DIR}/testing/unit-tests/pkmn-cs.dll
+    ${PKMN_BINARY_DIR}/testing/unit-tests/csharp/pkmn-cs.dll
     ${NUNIT_LIBRARIES}
 )
 ADD_DEPENDENCIES(pkmntest-cs pkmn-cs)

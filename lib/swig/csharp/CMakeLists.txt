@@ -84,6 +84,6 @@ SET(swig_modules
 )
 
 # Build the DLL
-SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests)
+SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
 FILE(MAKE_DIRECTORY ${CSHARP_BINARY_DIRECTORY})
 CSHARP_BUILD_DLL("pkmn-cs" "${swig_modules}")

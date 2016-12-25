@@ -67,9 +67,9 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
-                ${TESTS_BINARY_DIR}/${test_name}.bat
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
             @ONLY)
-            ADD_TEST(${test_name} ${TESTS_BINARY_DIR}/${test_name}.bat)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
         ELSE()
             IF(APPLE)
                 SET(DY "DY")
@@ -92,9 +92,9 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.sh.in
-                ${TESTS_BINARY_DIR}/${test_name}.sh
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh
             @ONLY)
-            ADD_TEST(${test_name} ${TESTS_BINARY_DIR}/${test_name}.sh)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
         ENDIF(WIN32)
     ENDIF(CMAKE_CROSSCOMPILING)
 ENDMACRO(PKMN_ADD_TEST)
@@ -107,10 +107,10 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)
-        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" cpp_test_cmd ${cpp_test_cmd})
     ELSE()
-        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+        SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST)
@@ -123,10 +123,10 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_c_test_libs})
 
     IF(WIN32)
-        SET(c_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
     ELSE()
-        SET(c_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+        SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${c_test_cmd})
 ENDMACRO(PKMN_ADD_C_TEST)
