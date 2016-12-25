@@ -102,6 +102,7 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
 
     SET(csharp_tests
         CSharpCalculationsTest
+        CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
         CSharpListsTest
     )
