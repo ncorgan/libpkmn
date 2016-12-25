@@ -179,6 +179,18 @@
         }
     }
 
+    /// <summary>Returns a hash code unique to the given object.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        HashCodeBuilder<$csclassname> hashCodeBuilder = new HashCodeBuilder<$csclassname>(this);
+
+        foreach($typemap(cstype, CTYPE) element in this) {
+            hashCodeBuilder = hashCodeBuilder.With(m => element);
+        }
+
+        return hashCodeBuilder.HashCode;
+    }
+
   /// <summary>An IEnumerator<$typemap(cstype, CTYPE)> implementation.</summary>
   public sealed class $csclassnameEnumerator : System.Collections.IEnumerator
 #if !SWIG_DOTNET_1

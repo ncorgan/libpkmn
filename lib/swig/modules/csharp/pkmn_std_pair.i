@@ -26,14 +26,55 @@ public";
 /// <summary>The second member of the pair.</summary>
 public";
 
+%typemap(cscode) std::pair %{
+    /// <summary>Compares two $csclassname instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if their respective fields are equal.
+    /// </remarks>
+    /// <param name="rhs">$csclassname with which to compare self</param>
+    /// <returns>Whether or not $csclassname instances are equal</returns>
+    public bool Equals($csclassname rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        }
+
+        return (this.First.Equals(rhs.First) && this.Second.Equals(rhs.Second));
+    }
+
+    /// <summary>Compares a $csclassname to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not $csclassname and Object are equal</returns>
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        $csclassname rhsList = rhs as $csclassname;
+        if(rhsList == null) {
+            return false;
+        } else {
+            return this.Equals(rhsList);
+        }
+    }
+
+    /// <summary>Returns a hash code unique to the given object.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        return new HashCodeBuilder<$csclassname>(this)
+                   .With(m => m.First)
+                   .With(m => m.Second)
+                   .HashCode;
+    }
+%}
+
 namespace std {
 
   template<class T, class U> struct pair {
 
     pair();
     pair(T t, U u);
-
-    template <class U1, class U2> pair(const pair<U1, U2> &p);
 
     T first;
     U second;

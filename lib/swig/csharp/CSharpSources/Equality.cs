@@ -6,35 +6,13 @@
  */
 namespace PKMN {
 
-public class PKMNHashCodes {
-/// <summary>Generates a unique hash code for a given string.</summary>
-/// <remarks>
-/// string.GetHashCode()'s outputs are not necessarily unique to each string, as
-/// explained below, so we need to do this ourselves.
-///
-/// "Hash codes are used to insert and retrieve keyed objects from hash tables
-/// efficiently. However, hash codes do not uniquely identify strings.
-/// Identical strings have equal hash codes, but the common language runtime
-/// can also assign the same hash code to different strings. In addition, hash
-/// codes can vary by version of the .NET Framework, by platform within a
-/// single version, and by application domain. Because of this, you should not
-/// serialize or persist hash code values, nor should you use them as keys
-/// in a hash table or dictionary."
-///
-/// https://msdn.microsoft.com/en-us/library/system.string.gethashcode(v=vs.110).aspx
-/// </remarks>
-/// <returns>Unique hash code</returns>
-    public static int StringHashCode(string str) {
-        int ret = 0;
-
-        for(int i = 0; i < str.Length; i++) {
-            ret ^= (int)System.Math.Pow((int)str[i], i);
-        }
-        return ret;
-    }
-}
-
 public partial class HiddenPower {
+    /// <summary>Compares two HiddenPower instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if their type and base power are equal.
+    /// </remarks>
+    /// <param name="rhs">HiddenPower with which to compare self</param>
+    /// <returns>Whether or not HiddenPower instances are equal</returns>
     public bool Equals(HiddenPower rhs) {
         if(rhs == null) {
             return false;
@@ -45,6 +23,9 @@ public partial class HiddenPower {
         }
     }
 
+    /// <summary>Compares a HiddenPower to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not HiddenPower and Object are equal</returns>
     public override bool Equals(System.Object rhs) {
         if(rhs == null) {
             return false;
@@ -58,6 +39,8 @@ public partial class HiddenPower {
         }
     }
 
+    /// <summary>Generates a unique hash code for the given HiddenPower.</summary>
+    /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
         return new HashCodeBuilder<HiddenPower>(this)
                        .With(m => m.Type)
@@ -80,7 +63,8 @@ public partial class ItemEntry {
         } else if(this == rhs) {
             return true;
         } else {
-            return (this.GetItemID() == rhs.GetItemID() && this.GetGameID() == rhs.GetGameID());
+            return this.GetName().Equals(rhs.GetName()) &&
+                   this.GetGame().Equals(rhs.GetGame());
         }
     }
 
@@ -103,7 +87,10 @@ public partial class ItemEntry {
     /// <summary>Generates a unique hash code for the given ItemEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return ((int)System.Math.Pow(this.GetItemID(), 3.0f) ^ (int)System.Math.Pow(this.GetGameID(), 6.0f));
+        return new HashCodeBuilder<ItemEntry>(this)
+                   .With(m => m.GetName())
+                   .With(m => m.GetGame())
+                   .HashCode;
     }
 }
 
@@ -144,21 +131,10 @@ public partial class ItemSlot {
     /// <summary>Generates a unique hash code for the given ItemSlot.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return ((int)this.Item.GetHashCode() ^ (int)System.Math.Pow(this.Amount, 5.0f));
-    }
-}
-
-public partial class ItemSlotList {
-    /// <summary>Generates a unique hash code for the given ItemSlotList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        for(int i = 0; i < this.size(); i++) {
-            ret ^= (int)System.Math.Pow(this[i].GetHashCode(), (i+1));
-        }
-
-        return ret;
+        return new HashCodeBuilder<ItemSlot>(this)
+                   .With(m => m.Item)
+                   .With(m => m.Amount)
+                   .HashCode;
     }
 }
 
@@ -176,7 +152,8 @@ public partial class MoveEntry {
         } else if(this == rhs) {
             return true;
         } else {
-            return (this.GetMoveID() == rhs.GetMoveID() && this.GetGameID() == rhs.GetGameID());
+            return this.GetName().Equals(rhs.GetName()) &&
+                   this.GetGame().Equals(rhs.GetGame());
         }
     }
 
@@ -199,7 +176,10 @@ public partial class MoveEntry {
     /// <summary>Generates a unique hash code for the given MoveEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return ((int)System.Math.Pow(this.GetMoveID(), 3.0f) ^ (int)System.Math.Pow(this.GetGameID(), 6.0f));
+        return new HashCodeBuilder<MoveEntry>(this)
+                   .With(m => m.GetName())
+                   .With(m => m.GetGame())
+                   .HashCode;
     }
 }
 
@@ -218,6 +198,9 @@ public partial class PokemonEntry {
             return true;
         } else {
             return (this.GetPokemonID() == rhs.GetPokemonID() && this.GetGameID() == rhs.GetGameID());
+            return this.GetName().Equals(rhs.GetName()) &&
+                   this.GetGame().Equals(rhs.GetGame()) &&
+                   this.GetForm().Equals(rhs.GetForm());
         }
     }
 
@@ -240,7 +223,11 @@ public partial class PokemonEntry {
     /// <summary>Generates a unique hash code for the given PokemonEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return ((int)System.Math.Pow(this.GetPokemonID(), 3.0f) ^ (int)System.Math.Pow(this.GetGameID(), 6.0f));
+        return new HashCodeBuilder<PokemonEntry>(this)
+                   .With(m => m.GetName())
+                   .With(m => m.GetGame())
+                   .With(m => m.GetForm())
+                   .HashCode;
     }
 }
 
@@ -282,58 +269,20 @@ public partial class LevelupMove {
     /// <summary>Generates a unique hash code for the given LevelupMove.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        int ret = 0;
-
-        ret ^= this.Move.GetHashCode();
-        ret ^= (int)System.Math.Pow(this.Level, 7.0f);
-
-        return ret;
-    }
-}
-
-public partial class LevelupMoveList {
-    /// <summary>Generates a unique hash code for the given LevelupMoveList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        for(int i = 0; i < this.size(); i++) {
-            ret ^= (int)System.Math.Pow(this[i].GetHashCode(), i);
-        }
-
-        return ret;
-    }
-}
-
-public partial class MoveEntryList {
-    /// <summary>Generates a unique hash code for the given MoveEntryList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        for(int i = 0; i < this.size(); i++) {
-            ret ^= (int)System.Math.Pow(this[i].GetHashCode(), i);
-        }
-
-        return ret;
-    }
-}
-
-public partial class PokemonEntryList {
-    /// <summary>Generates a unique hash code for the given PokemonEntryList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        for(int i = 0; i < this.size(); i++) {
-            ret ^= (int)System.Math.Pow(this[i].GetHashCode(), i);
-        }
-
-        return ret;
+        return new HashCodeBuilder<LevelupMove>(this)
+                   .With(m => m.Move)
+                   .With(m => m.Level)
+                   .HashCode;
     }
 }
 
 public partial class SpindaCoords {
+    /// <summary>Compares two SpindaCoords instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if each respective coordinate is equal.
+    /// </remarks>
+    /// <param name="rhs">SpindaCoords with which to compare self</param>
+    /// <returns>Whether or not SpindaCoords instances are equal</returns>
     public bool Equals(SpindaCoords rhs) {
         if(rhs == null) {
             return false;
@@ -344,6 +293,9 @@ public partial class SpindaCoords {
         }
     }
 
+    /// <summary>Compares a SpindaCoords to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not SpindaCoords and Object are equal</returns>
     public override bool Equals(System.Object rhs) {
         if(rhs == null) {
             return false;
@@ -357,6 +309,8 @@ public partial class SpindaCoords {
         }
     }
 
+    /// <summary>Generates a unique hash code for the given SpindaCoords.</summary>
+    /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
         return new HashCodeBuilder<SpindaCoords>(this)
                        .With(m => m.X)
@@ -366,6 +320,12 @@ public partial class SpindaCoords {
 }
 
 public partial class SpindaSpots {
+    /// <summary>Compares two SpindaSpots instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if their each corresponding spot is equal.
+    /// </remarks>
+    /// <param name="rhs">SpindaSpots with which to compare self</param>
+    /// <returns>Whether or not SpindaSpots instances are equal</returns>
     public bool Equals(SpindaSpots rhs) {
         if(rhs == null) {
             return false;
@@ -379,6 +339,9 @@ public partial class SpindaSpots {
         }
     }
 
+    /// <summary>Compares a SpindaSpots to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not SpindaSpots and Object are equal</returns>
     public override bool Equals(System.Object rhs) {
         if(rhs == null) {
             return false;
@@ -392,6 +355,8 @@ public partial class SpindaSpots {
         }
     }
 
+    /// <summary>Generates a unique hash code for the given SpindaSpots.</summary>
+    /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
         return new HashCodeBuilder<SpindaSpots>(this)
                        .With(m => m.LeftEar)
@@ -399,123 +364,6 @@ public partial class SpindaSpots {
                        .With(m => m.LeftFace)
                        .With(m => m.RightFace)
                        .HashCode;
-    }
-}
-
-public partial class StringBoolDict {
-    /// <summary>Generates a unique hash code for the given StringBoolDict.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        foreach(string key in this.Keys) {
-            ret ^= (int)System.Math.Pow(PKMNHashCodes.StringHashCode(key),
-                                        (this[key] ? 2.0f : 5.0f));
-        }
-
-        return ret;
-    }
-}
-
-public partial class StringIntDict {
-    /// <summary>Generates a unique hash code for the given StringIntDict.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        foreach(string key in this.Keys) {
-            ret ^= PKMNHashCodes.StringHashCode(key) * this[key];
-        }
-
-        return ret;
-    }
-}
-
-public partial class StringList {
-    /// <summary>Generates a unique hash code for the given StringList.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        for(int i = 0; i < this.Count; i++) {
-            ret ^= (int)System.Math.Pow(PKMNHashCodes.StringHashCode(this[i]), i);
-        }
-
-        return ret;
-    }
-}
-
-public partial class StringPair {
-    /// <summary>Compares two StringPair instances to determine value equality.</summary>
-    /// <remarks>
-    /// Two instances are determined to be equal if both parts of the pair are equal.
-    /// </remarks>
-    /// <param name="rhs">StringPair with which to compare self</param>
-    /// <returns>Whether or not StringPair instances are equal</returns>
-    public bool Equals(StringPair rhs) {
-        if(rhs == null) {
-            return false;
-        } else if(this == rhs) {
-            return true;
-        } else {
-            return (this.First.Equals(rhs.First) &&
-                    this.Second.Equals(rhs.Second));
-        }
-    }
-
-    /// <summary>Compares a StringPair to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not StringPair and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
-            return false;
-        }
-
-        StringPair rhsList = rhs as StringPair;
-        if(rhsList == null) {
-            return false;
-        } else {
-            return this.Equals(rhsList);
-        }
-    }
-
-    /// <summary>Generates a unique hash code for the given StringPair.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        ret ^= PKMNHashCodes.StringHashCode(this.First)*37;
-        ret ^= PKMNHashCodes.StringHashCode(this.Second)*29;
-
-        return ret;
-    }
-}
-
-public partial class StringStringDict {
-    /// <summary>Generates a unique hash code for the given StringStringDict.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        foreach(string key in this.Keys) {
-            ret ^= ((PKMNHashCodes.StringHashCode(key)*37) ^ (PKMNHashCodes.StringHashCode(this[key])*29));
-        }
-
-        return ret;
-    }
-}
-
-public partial class ItemPockets {
-    /// <summary>Generates a unique hash code for the given ItemPockets.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        int ret = 0;
-
-        foreach(string key in this.Keys) {
-            ret ^= ((PKMNHashCodes.StringHashCode(key)*37) ^ this[key].GetHashCode());
-        }
-
-        return ret;
     }
 }
 

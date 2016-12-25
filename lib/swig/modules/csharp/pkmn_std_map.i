@@ -283,6 +283,18 @@
             return this.Equals(rhsList);
         }
     }
+
+    /// <summary>Returns a hash code unique to the given object.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        HashCodeBuilder<$csclassname> hashCodeBuilder = new HashCodeBuilder<$csclassname>(this);
+
+        foreach($typemap(cstype, K) key in this.Keys) {
+            hashCodeBuilder = hashCodeBuilder.With(m => key).With(m => m[key]);
+        }
+
+        return hashCodeBuilder.HashCode;
+    }
 %}
 
   public:
