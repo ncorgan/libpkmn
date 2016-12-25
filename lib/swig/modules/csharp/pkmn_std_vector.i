@@ -182,13 +182,8 @@
     /// <summary>Returns a hash code unique to the given object.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        HashCodeBuilder<$csclassname> hashCodeBuilder = new HashCodeBuilder<$csclassname>(this);
-
-        foreach($typemap(cstype, CTYPE) element in this) {
-            hashCodeBuilder = hashCodeBuilder.With(m => element);
-        }
-
-        return hashCodeBuilder.HashCode;
+        return HashCodeBuilder.Create().AddValues<$typemap(cstype, CTYPE)>(this)
+                                       .ToHashCode();
     }
 
   /// <summary>An IEnumerator<$typemap(cstype, CTYPE)> implementation.</summary>

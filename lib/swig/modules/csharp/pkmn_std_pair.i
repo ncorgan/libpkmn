@@ -62,10 +62,9 @@ public";
     /// <summary>Returns a hash code unique to the given object.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<$csclassname>(this)
-                   .With(m => m.First)
-                   .With(m => m.Second)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue(this.First)
+                                       .AddValue(this.Second)
+                                       .ToHashCode();
     }
 %}
 

@@ -42,10 +42,9 @@ public partial class HiddenPower {
     /// <summary>Generates a unique hash code for the given HiddenPower.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<HiddenPower>(this)
-                       .With(m => m.Type)
-                       .With(m => m.BasePower)
-                       .HashCode;
+        return HashCodeBuilder.Create().AddValue<string>(this.Type)
+                                       .AddValue<int>(this.BasePower)
+                                       .ToHashCode();
     }
 }
 
@@ -87,12 +86,9 @@ public partial class ItemEntry {
     /// <summary>Generates a unique hash code for the given ItemEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        string name = this.GetName();
-        string game = this.GetGame();
-        return new HashCodeBuilder<ItemEntry>(this)
-                   .With(m => name)
-                   .With(m => game)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
+                                       .AddValue<string>(this.GetGame())
+                                       .ToHashCode();
     }
 }
 
@@ -133,10 +129,9 @@ public partial class ItemSlot {
     /// <summary>Generates a unique hash code for the given ItemSlot.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<ItemSlot>(this)
-                   .With(m => m.Item)
-                   .With(m => m.Amount)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<ItemEntry>(this.Item)
+                                       .AddValue<int>(this.Amount)
+                                       .ToHashCode();
     }
 }
 
@@ -178,10 +173,9 @@ public partial class LevelupMove {
     /// <summary>Generates a unique hash code for the given LevelupMove.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<LevelupMove>(this)
-                   .With(m => m.Move)
-                   .With(m => m.Level)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<MoveEntry>(this.Move)
+                                       .AddValue<int>(this.Level)
+                                       .ToHashCode();
     }
 }
 
@@ -223,12 +217,9 @@ public partial class MoveEntry {
     /// <summary>Generates a unique hash code for the given MoveEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        string name = this.GetName();
-        string game = this.GetGame();
-        return new HashCodeBuilder<MoveEntry>(this)
-                   .With(m => name)
-                   .With(m => game)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
+                                       .AddValue<string>(this.GetGame())
+                                       .ToHashCode();
     }
 }
 
@@ -271,14 +262,10 @@ public partial class PokemonEntry {
     /// <summary>Generates a unique hash code for the given PokemonEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        string name = this.GetName();
-        string game = this.GetGame();
-        string form = this.GetForm();
-        return new HashCodeBuilder<PokemonEntry>(this)
-                   .With(m => name)
-                   .With(m => game)
-                   .With(m => form)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
+                                       .AddValue<string>(this.GetGame())
+                                       .AddValue<string>(this.GetForm())
+                                       .ToHashCode();
     }
 }
 
@@ -318,10 +305,9 @@ public partial class SpindaCoords {
     /// <summary>Generates a unique hash code for the given SpindaCoords.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<SpindaCoords>(this)
-                       .With(m => m.X)
-                       .With(m => m.Y)
-                       .HashCode;
+        return HashCodeBuilder.Create().AddValue<int>(this.X)
+                                       .AddValue<int>(this.Y)
+                                       .ToHashCode();
     }
 }
 
@@ -364,12 +350,11 @@ public partial class SpindaSpots {
     /// <summary>Generates a unique hash code for the given SpindaSpots.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return new HashCodeBuilder<SpindaSpots>(this)
-                       .With(m => m.LeftEar)
-                       .With(m => m.RightEar)
-                       .With(m => m.LeftFace)
-                       .With(m => m.RightFace)
-                       .HashCode;
+        return HashCodeBuilder.Create().AddValue<SpindaCoords>(this.LeftEar)
+                                       .AddValue<SpindaCoords>(this.RightEar)
+                                       .AddValue<SpindaCoords>(this.LeftFace)
+                                       .AddValue<SpindaCoords>(this.RightFace)
+                                       .ToHashCode();
     }
 }
 

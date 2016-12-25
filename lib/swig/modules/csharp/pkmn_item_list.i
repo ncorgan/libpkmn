@@ -69,10 +69,8 @@ private";
     /// <summary>Generates a unique hash code for the given ItemList.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        ulong cptr = __cptr();
-        return new HashCodeBuilder<ItemList>(this)
-                   .With(m => cptr)
-                   .HashCode;
+        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
+                              .ToHashCode();
     }
 %}
 

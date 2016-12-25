@@ -287,13 +287,9 @@
     /// <summary>Returns a hash code unique to the given object.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        HashCodeBuilder<$csclassname> hashCodeBuilder = new HashCodeBuilder<$csclassname>(this);
-
-        foreach (System.Collections.Generic.KeyValuePair<$typemap(cstype, K), $typemap(cstype, T)> pair in this) {
-            hashCodeBuilder = hashCodeBuilder.With(m => pair.Key).With(m => pair.Value);
-        }
-
-        return hashCodeBuilder.HashCode;
+        return HashCodeBuilder.Create().AddValues<$typemap(cstype, K)>(this.Keys)
+                                       .AddValues<$typemap(cstype, T)>(this.Values)
+                                       .ToHashCode();
     }
 %}
 
