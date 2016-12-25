@@ -106,16 +106,20 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
+        CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
+    )
+
+    SET(csharp_test_dlls
+        "${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll;${CMAKE_CURRENT_BINARY_DIR}/pkmntest-cs.dll"
     )
 
     FOREACH(test ${csharp_tests})
         PKMN_ADD_CSHARP_TEST(
             ${test}
             ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cs
-            ${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll
-            ${CMAKE_CURRENT_BINARY_DIR}/pkmntest-cs.dll
+            "${csharp_test_dlls}"
         )
     ENDFOREACH(test ${csharp_tests})
 ENDIF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)

@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-internal class ItemsTestCommon {
+internal class ItemsTestsCommon {
     public static void TestItemListEmptySlots(
         PKMN.ItemList itemList
     ) {
