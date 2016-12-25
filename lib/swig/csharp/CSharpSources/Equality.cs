@@ -87,9 +87,11 @@ public partial class ItemEntry {
     /// <summary>Generates a unique hash code for the given ItemEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
+        string name = this.GetName();
+        string game = this.GetGame();
         return new HashCodeBuilder<ItemEntry>(this)
-                   .With(m => m.GetName())
-                   .With(m => m.GetGame())
+                   .With(m => name)
+                   .With(m => game)
                    .HashCode;
     }
 }
@@ -138,99 +140,6 @@ public partial class ItemSlot {
     }
 }
 
-public partial class MoveEntry {
-    /// <summary>Compares two MoveEntry instances to determine value equality.</summary>
-    /// <remarks>
-    /// Two instances are determined to be equal if they represent the same move from
-    /// the same game.
-    /// </remarks>
-    /// <param name="rhs">MoveEntry with which to compare self</param>
-    /// <returns>Whether or not MoveEntry instances are equal</returns>
-    public bool Equals(MoveEntry rhs) {
-        if(rhs == null) {
-            return false;
-        } else if(this == rhs) {
-            return true;
-        } else {
-            return this.GetName().Equals(rhs.GetName()) &&
-                   this.GetGame().Equals(rhs.GetGame());
-        }
-    }
-
-    /// <summary>Compares a MoveEntry to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not MoveEntry and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
-            return false;
-        }
-
-        MoveEntry rhsEntry = rhs as MoveEntry;
-        if(rhsEntry == null) {
-            return false;
-        } else {
-            return this.Equals(rhsEntry);
-        }
-    }
-
-    /// <summary>Generates a unique hash code for the given MoveEntry.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return new HashCodeBuilder<MoveEntry>(this)
-                   .With(m => m.GetName())
-                   .With(m => m.GetGame())
-                   .HashCode;
-    }
-}
-
-public partial class PokemonEntry {
-    /// <summary>Compares two PokemonEntry instances to determine value equality.</summary>
-    /// <remarks>
-    /// Two instances are determined to be equal if they represent the same Pokémon, in
-    /// the same form, in the same game.
-    /// </remarks>
-    /// <param name="rhs">PokemonEntry with which to compare self</param>
-    /// <returns>Whether or not PokemonEntry instances are equal</returns>
-    public bool Equals(PokemonEntry rhs) {
-        if(rhs == null) {
-            return false;
-        } else if(this == rhs) {
-            return true;
-        } else {
-            return (this.GetPokemonID() == rhs.GetPokemonID() && this.GetGameID() == rhs.GetGameID());
-            return this.GetName().Equals(rhs.GetName()) &&
-                   this.GetGame().Equals(rhs.GetGame()) &&
-                   this.GetForm().Equals(rhs.GetForm());
-        }
-    }
-
-    /// <summary>Compares a PokemonEntry to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not PokemonEntry and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
-            return false;
-        }
-
-        PokemonEntry rhsEntry = rhs as PokemonEntry;
-        if(rhsEntry == null) {
-            return false;
-        } else {
-            return this.Equals(rhsEntry);
-        }
-    }
-
-    /// <summary>Generates a unique hash code for the given PokemonEntry.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return new HashCodeBuilder<PokemonEntry>(this)
-                   .With(m => m.GetName())
-                   .With(m => m.GetGame())
-                   .With(m => m.GetForm())
-                   .HashCode;
-    }
-}
-
 public partial class LevelupMove {
     /// <summary>Compares two LevelupMove instances to determine value equality.</summary>
     /// <remarks>
@@ -272,6 +181,103 @@ public partial class LevelupMove {
         return new HashCodeBuilder<LevelupMove>(this)
                    .With(m => m.Move)
                    .With(m => m.Level)
+                   .HashCode;
+    }
+}
+
+public partial class MoveEntry {
+    /// <summary>Compares two MoveEntry instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if they represent the same move from
+    /// the same game.
+    /// </remarks>
+    /// <param name="rhs">MoveEntry with which to compare self</param>
+    /// <returns>Whether or not MoveEntry instances are equal</returns>
+    public bool Equals(MoveEntry rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return this.GetName().Equals(rhs.GetName()) &&
+                   this.GetGame().Equals(rhs.GetGame());
+        }
+    }
+
+    /// <summary>Compares a MoveEntry to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not MoveEntry and Object are equal</returns>
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        MoveEntry rhsEntry = rhs as MoveEntry;
+        if(rhsEntry == null) {
+            return false;
+        } else {
+            return this.Equals(rhsEntry);
+        }
+    }
+
+    /// <summary>Generates a unique hash code for the given MoveEntry.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        string name = this.GetName();
+        string game = this.GetGame();
+        return new HashCodeBuilder<MoveEntry>(this)
+                   .With(m => name)
+                   .With(m => game)
+                   .HashCode;
+    }
+}
+
+public partial class PokemonEntry {
+    /// <summary>Compares two PokemonEntry instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if they represent the same Pokémon, in
+    /// the same form, in the same game.
+    /// </remarks>
+    /// <param name="rhs">PokemonEntry with which to compare self</param>
+    /// <returns>Whether or not PokemonEntry instances are equal</returns>
+    public bool Equals(PokemonEntry rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return this.GetName().Equals(rhs.GetName()) &&
+                   this.GetGame().Equals(rhs.GetGame()) &&
+                   this.GetForm().Equals(rhs.GetForm());
+        }
+    }
+
+    /// <summary>Compares a PokemonEntry to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not PokemonEntry and Object are equal</returns>
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        PokemonEntry rhsEntry = rhs as PokemonEntry;
+        if(rhsEntry == null) {
+            return false;
+        } else {
+            return this.Equals(rhsEntry);
+        }
+    }
+
+    /// <summary>Generates a unique hash code for the given PokemonEntry.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        string name = this.GetName();
+        string game = this.GetGame();
+        string form = this.GetForm();
+        return new HashCodeBuilder<PokemonEntry>(this)
+                   .With(m => name)
+                   .With(m => game)
+                   .With(m => form)
                    .HashCode;
     }
 }

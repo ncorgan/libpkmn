@@ -289,8 +289,8 @@
     public override int GetHashCode() {
         HashCodeBuilder<$csclassname> hashCodeBuilder = new HashCodeBuilder<$csclassname>(this);
 
-        foreach($typemap(cstype, K) key in this.Keys) {
-            hashCodeBuilder = hashCodeBuilder.With(m => key).With(m => m[key]);
+        foreach (System.Collections.Generic.KeyValuePair<$typemap(cstype, K), $typemap(cstype, T)> pair in this) {
+            hashCodeBuilder = hashCodeBuilder.With(m => pair.Key).With(m => pair.Value);
         }
 
         return hashCodeBuilder.HashCode;

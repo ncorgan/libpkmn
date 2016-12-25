@@ -45,7 +45,6 @@ SET(database_entry_test_srcs
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 IF(PKMN_ENABLE_QT)
-
     INCLUDE_DIRECTORIES(
         ${QTx_INCLUDE_DIRS}
     )
@@ -103,6 +102,7 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
 
     SET(csharp_tests
         CSharpCalculationsTest
+        CSharpEqualityHashCodeTest
         CSharpListsTest
     )
 

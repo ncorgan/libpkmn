@@ -74,9 +74,9 @@ using System.Runtime.InteropServices;
         /// <returns>Unique hash code</returns>
         public override int GetHashCode() {
             ulong cptr = __cptr();
-            while(cptr > global::System.Int32.MaxValue) {
-                cptr = (ulong)global::System.Math.Sqrt(cptr);
-            }
+            return new HashCodeBuilder<csharp_name>(this)
+                       .With(m => cptr)
+                       .HashCode;
             return (int)cptr;
         }
     %}
