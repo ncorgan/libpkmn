@@ -31,19 +31,7 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/pkmn_csharp_docs.i
 )
 
-# Copy over C# sources
-SET(csharp_files
-    AssemblyInfo.cs
-    Equality.cs
-    HashCodeBuilder.cs
-)
-
-FOREACH(cs ${csharp_files})
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/CSharpSources/${cs}
-        ${CMAKE_CURRENT_BINARY_DIR}/CSharpSources/${cs}
-    @ONLY)
-ENDFOREACH(cs ${csharp_files})
+ADD_SUBDIRECTORY(CSharpSources)
 
 #
 # Set variables needed for CMake macros

@@ -42,7 +42,7 @@ endmacro( CSHARP_ADD_EXECUTABLE )
 
 # Private macro
 macro( CSHARP_ADD_PROJECT type name )
-  set( refs "/reference:System.dll" )
+  set( refs "/reference:System.dll;/reference:System.Windows.Forms.dll" )
   set( sources )
   set( sources_dep )
 
