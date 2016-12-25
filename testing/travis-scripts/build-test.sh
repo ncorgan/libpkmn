@@ -43,7 +43,7 @@ else
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
-    ctest -E "cpp_QtWidgetsTest" -E "CSharpWinFormsTest" --output-on-failure
+    ctest -E ".*GUI" --output-on-failure
     [ $? -ne 0 ] && exit 1
 
     # Clang compile check
@@ -55,7 +55,7 @@ else
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
-    ctest -E "cpp_QtWidgetsTest" -E "CSharpWinFormsTest" --output-on-failure
+    ctest -E ".*GUI" --output-on-failure
     [ $? -ne 0 ] && exit 1
 fi
 

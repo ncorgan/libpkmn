@@ -47,6 +47,6 @@ IF(PKMN_ENABLE_QT)
         ${QTx_LIBRARIES}
     )
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
-    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest PROPERTIES AUTOMOC ON)
+    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest_GUI cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest_GUI PROPERTIES AUTOMOC ON)
 ENDIF(PKMN_ENABLE_QT)
