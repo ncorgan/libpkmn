@@ -105,6 +105,7 @@ IF(PKMN_ENABLE_CSHARP AND NUNIT_FOUND)
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
         CSharpListsTest
+        CSharpPathsTest
     )
 
     FOREACH(test ${csharp_tests})
