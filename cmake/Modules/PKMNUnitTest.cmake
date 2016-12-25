@@ -139,9 +139,9 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
 
     # TODO: Determine programmatically, probably parsing variables
     IF(WIN32)
-        SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" /framework:2.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
-        STRING(REPLACE "/" "\\\\" csharp_test_cmd ${csharp_test_cmd})
-        STRING(REPLACE "\\\\framework" "/framework" csharp_test_cmd ${csharp_test_cmd})
+        STRING(REPLACE "/" "\\\\" native_nunit_command "${NUNIT_COMMAND}")
+        STRING(REPLACE "/" "\\\\" native_dll_path "${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll")
+        SET(csharp_test_cmd "\"${native_nunit_command}\" /framework:2.0 -labels \"${native_dll_path}\"")
     ELSE()
         SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" -framework=4.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
     ENDIF(WIN32)
