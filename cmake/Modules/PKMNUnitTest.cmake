@@ -131,6 +131,11 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     PKMN_ADD_TEST(${test_name} ${c_test_cmd})
 ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
 
+MACRO(PKMN_ADD_LUA_TEST test_name)
+    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_LUA_TEST test_name)
+
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
