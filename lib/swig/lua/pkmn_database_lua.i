@@ -8,7 +8,7 @@
 %include <lua/lua_init.i>
 PKMN_LUA_INIT
 
-%import <stl_lua.i>
+%import <pkmn_stl_lua.i>
 
 %{
     #include <pkmn/database/lists.hpp>
