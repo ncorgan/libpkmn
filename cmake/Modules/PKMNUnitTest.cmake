@@ -33,14 +33,17 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         ADD_TEST(${test_name} ${test_cmd})
     ELSE()
         SET(TEST_CMD ${test_cmd})
-        SET(DATABASE_PATH ${CMAKE_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+        SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(PYTHONPATH
-            "${CMAKE_BINARY_DIR}/lib/swig/python"
+            "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_SOURCE_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
-            "${CMAKE_BINARY_DIR}/lib/swig/java/PKMN.jar"
+            "${PKMN_BINARY_DIR}/lib/swig/java/PKMN.jar"
+        )
+        SET(LUA_PATH
+            "${PKMN_BINARY_DIR}/lib/swig/lua/?.lua"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
@@ -57,13 +60,13 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp/${CMAKE_BUILD_TYPE}"
                 "${TESTS_BINARY_DIR}/pkmntest/c/${CMAKE_BUILD_TYPE}"
             )
-            SET(TEST_CMD ${test_cmd})
-            SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
-            SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll")
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
             STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
+            STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
+            STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
@@ -87,6 +90,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp"
                 "${TESTS_BINARY_DIR}/pkmntest/c"
             )
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/?.so")
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")

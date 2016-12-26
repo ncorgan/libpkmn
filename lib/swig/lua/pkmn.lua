@@ -5,7 +5,9 @@
 -- or copy at http://opensource.org/licenses/MIT)
 --
 
-local pkmn = require "pkmn"
+local pkmn = {}
 
-print("Sup")
-os.exit(0)
+pkmn.database = require("pkmn_database_lua")
+pkmn.stl = require("pkmn_stl_lua")
+
+return pkmn
