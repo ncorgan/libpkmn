@@ -5,7 +5,8 @@
 -- or copy at http://opensource.org/licenses/MIT)
 --
 
-local pkmn = require "pkmn"
+local luaunit = require("luaunit")
+local pkmn = require("pkmn")
 
 print("Sup")
 os.exit(0)
