@@ -8,7 +8,7 @@
 %include <std_map.i>
 %include <std_pair.i>
 %include <pkmn_shared_ptr.i>
-%include <std_vector.i>
+%include <lua/pkmn_std_vector.i>
 
 %define PKMN_LUA_MAP(cpp_key, cpp_val, python_name)
     %template(python_name) std::map<cpp_key, cpp_val>;
