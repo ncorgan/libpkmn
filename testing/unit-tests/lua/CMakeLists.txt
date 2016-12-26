@@ -11,6 +11,19 @@
 INCLUDE(PKMNLua)
 LUA_CHECK_MODULE("LuaUnit" "luaunit" LUAUNIT_FOUND)
 
+# Get stock Lua path and C path becuase environment variables override
+# instead of append for whatever reason.
+EXECUTE_PROCESS(
+    COMMAND ${LUA_INTERPRETER} -e "print(package.path)"
+    OUTPUT_VARIABLE OLD_LUA_PATH
+    ERROR_QUIET
+)
+EXECUTE_PROCESS(
+    COMMAND ${LUA_INTERPRETER} -e "print(package.cpath)"
+    OUTPUT_VARIABLE OLD_LUA_CPATH
+    ERROR_QUIET
+)
+
 IF(LUAUNIT_FOUND)
     SET(lua_tests
         lua_lists_test
