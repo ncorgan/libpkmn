@@ -5,9 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <std_map.i>
 %include <std_pair.i>
 %include <pkmn_shared_ptr.i>
+%include <lua/pkmn_std_map.i>
 %include <lua/pkmn_std_vector.i>
 
 %define PKMN_LUA_MAP(cpp_key, cpp_val, python_name)
