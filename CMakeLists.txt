@@ -81,7 +81,7 @@ INCLUDE(PKMNPlatform)
 # Find other dependencies
 ########################################################################
 FIND_PACKAGE(SWIG)
-FIND_PACKAGE(Lua)
+FIND_PACKAGE(Lua 5.1)
 FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
 
