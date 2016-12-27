@@ -41,17 +41,45 @@ namespace pkmn {
 
             virtual std::string get_trainer_name() = 0;
 
+            virtual void set_trainer_name(
+                const std::string &trainer_name
+            ) = 0;
+
             virtual uint32_t get_trainer_id() = 0;
+
+            virtual void set_trainer_id(
+                uint32_t trainer_id
+            ) = 0;
 
             virtual uint16_t get_trainer_public_id() = 0;
 
+            virtual void set_trainer_public_id(
+                uint16_t trainer_public_id
+            ) = 0;
+
             virtual uint16_t get_trainer_secret_id() = 0;
+
+            virtual void set_trainer_secret_id(
+                uint16_t trainer_secret_id
+            ) = 0;
 
             virtual std::string get_trainer_gender() = 0;
 
+            virtual void set_trainer_gender(
+                const std::string &trainer_gender
+            ) = 0;
+
             virtual std::string get_rival_name() = 0;
 
+            virtual void set_rival_name(
+                const std::string &rival_name
+            ) = 0;
+
             virtual int get_money() = 0;
+
+            virtual void set_money(
+                int money
+            ) = 0;
 
             virtual pkmn::item_bag::sptr get_item_bag() = 0;
 

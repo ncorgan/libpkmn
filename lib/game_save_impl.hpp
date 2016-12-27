@@ -11,6 +11,8 @@
 
 #include <boost/noncopyable.hpp>
 
+BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
+
 namespace pkmn {
 
     class game_save_impl: public game_save, boost::noncopyable {

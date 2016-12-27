@@ -129,20 +129,66 @@ namespace pkmn {
         return std::string(trainer_name);
     }
 
+    void game_save_gbaimpl::set_trainer_name(
+        const std::string &trainer_name
+    ) {
+        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
+            throw std::invalid_argument("trainer_name: valid length 1-7");
+        }
+
+        PKSAV_CALL(
+            pksav_text_to_gba(
+                trainer_name.c_str(),
+                _pksav_save.trainer_info->name,
+                7
+            );
+        )
+    }
+
     uint32_t game_save_gbaimpl::get_trainer_id() {
         return pksav_littleendian32(_pksav_save.trainer_info->trainer_id.id);
+    }
+
+    void game_save_gbaimpl::set_trainer_id(
+        uint32_t trainer_id
+    ) {
+        _pksav_save.trainer_info->trainer_id.id = pksav_littleendian32(trainer_id);
     }
 
     uint16_t game_save_gbaimpl::get_trainer_public_id() {
         return pksav_littleendian16(_pksav_save.trainer_info->trainer_id.pid);
     }
 
+    void game_save_gbaimpl::set_trainer_public_id(
+        uint16_t trainer_public_id
+    ) {
+        _pksav_save.trainer_info->trainer_id.pid = pksav_littleendian16(trainer_public_id);
+    }
+
     uint16_t game_save_gbaimpl::get_trainer_secret_id() {
         return pksav_littleendian16(_pksav_save.trainer_info->trainer_id.sid);
     }
 
+    void game_save_gbaimpl::set_trainer_secret_id(
+        uint16_t trainer_secret_id
+    ) {
+        _pksav_save.trainer_info->trainer_id.sid = pksav_littleendian16(trainer_secret_id);
+    }
+
     std::string game_save_gbaimpl::get_trainer_gender() {
         return (_pksav_save.trainer_info->gender == 0) ? "Male" : "Female";
+    }
+
+    void game_save_gbaimpl::set_trainer_gender(
+        const std::string &trainer_gender
+    ) {
+        if(trainer_gender == "Male") {
+            _pksav_save.trainer_info->gender = 0;
+        } else if(trainer_gender == "Female") {
+            _pksav_save.trainer_info->gender = 1;
+        } else {
+            throw std::invalid_argument("trainer_gender: valid values \"Male\", \"Female\"");
+        }
     }
 
     std::string game_save_gbaimpl::get_rival_name() {
@@ -162,7 +208,37 @@ namespace pkmn {
         }
     }
 
+    void game_save_gbaimpl::set_rival_name(
+        const std::string &rival_name
+    ) {
+        if(_pksav_save.gba_game == PKSAV_GBA_FRLG) {
+            if(rival_name.size() == 0 or rival_name.size() > 7) {
+                throw std::invalid_argument("rival_name: valid length 1-7");
+            }
+
+            PKSAV_CALL(
+                pksav_text_to_gba(
+                    rival_name.c_str(),
+                    _pksav_save.rival_name,
+                    7
+                );
+            )
+        } else {
+            throw pkmn::feature_not_in_game_error("Rivals cannot be renamed in Ruby/Sapphire/Emerald.");
+        }
+    }
+
     int game_save_gbaimpl::get_money() {
         return int(pksav_littleendian32(*_pksav_save.money));
+    }
+
+    void game_save_gbaimpl::set_money(
+        int money
+    ) {
+        if(money < 0 or money > MONEY_MAX_VALUE) {
+            throw pkmn::range_error("money", 0, MONEY_MAX_VALUE);
+        }
+
+        *_pksav_save.money = pksav_littleendian32(uint32_t(money));
     }
 }

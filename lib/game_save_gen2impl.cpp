@@ -90,15 +90,53 @@ namespace pkmn {
         return std::string(trainer_name);
     }
 
+    void game_save_gen2impl::set_trainer_name(
+        const std::string &trainer_name
+    ) {
+        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
+            throw std::invalid_argument("trainer_name: valid length 1-7");
+        }
+
+        PKSAV_CALL(
+            pksav_text_to_gen2(
+                trainer_name.c_str(),
+                _pksav_save.trainer_name,
+                7
+            );
+        )
+    }
+
     uint32_t game_save_gen2impl::get_trainer_id() {
         return pksav_bigendian16(*_pksav_save.trainer_id);
+    }
+
+    void game_save_gen2impl::set_trainer_id(
+        uint32_t trainer_id
+    ) {
+        if(trainer_id > 65535) {
+            throw pkmn::range_error("trainer_id", 0, 65535);
+        }
+
+        *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
     }
 
     uint16_t game_save_gen2impl::get_trainer_public_id() {
         return pksav_bigendian16(*_pksav_save.trainer_id);
     }
 
+    void game_save_gen2impl::set_trainer_public_id(
+        uint16_t trainer_public_id
+    ) {
+        *_pksav_save.trainer_id = pksav_bigendian16(trainer_public_id);
+    }
+
     uint16_t game_save_gen2impl::get_trainer_secret_id() {
+        throw pkmn::feature_not_in_game_error("Secret ID", "Generation II");
+    }
+
+    void game_save_gen2impl::set_trainer_secret_id(
+        PKMN_UNUSED(uint16_t trainer_secret_id)
+    ) {
         throw pkmn::feature_not_in_game_error("Secret ID", "Generation II");
     }
 
@@ -107,6 +145,22 @@ namespace pkmn {
             return (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
         } else {
             return "Male";
+        }
+    }
+
+    void game_save_gen2impl::set_trainer_gender(
+        const std::string &trainer_gender
+    ) {
+        if(_game_id == CRYSTAL) {
+            if(trainer_gender == "Male") {
+                *_pksav_save.trainer_gender = uint8_t(PKSAV_GEN2_MALE);
+            } else if(trainer_gender == "Female") {
+                *_pksav_save.trainer_gender = uint8_t(PKSAV_GEN2_FEMALE);
+            } else {
+                throw std::invalid_argument("trainer_gender: valid values \"Male\", \"Female\"");
+            }
+        } else {
+            throw pkmn::feature_not_in_game_error("All trainers are male in Gold/Silver.");
         }
     }
 
@@ -123,6 +177,22 @@ namespace pkmn {
         return std::string(rival_name);
     }
 
+    void game_save_gen2impl::set_rival_name(
+        const std::string &rival_name
+    ) {
+        if(rival_name.size() == 0 or rival_name.size() > 7) {
+            throw std::invalid_argument("rival_name: valid length 1-7");
+        }
+
+        PKSAV_CALL(
+            pksav_text_to_gen2(
+                rival_name.c_str(),
+                _pksav_save.rival_name,
+                7
+            );
+        )
+    }
+
     int game_save_gen2impl::get_money() {
         uint32_t ret = 0;
         PKSAV_CALL(
@@ -134,5 +204,21 @@ namespace pkmn {
         )
 
         return int(ret);
+    }
+
+    void game_save_gen2impl::set_money(
+        int money
+    ) {
+        if(money < 0 or money > MONEY_MAX_VALUE) {
+            throw pkmn::range_error("money", 0, MONEY_MAX_VALUE);
+        }
+
+        PKSAV_CALL(
+            pksav_to_base256(
+                uint32_t(money),
+                _pksav_save.money,
+                3
+            );
+        )
     }
 }
