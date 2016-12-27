@@ -26,8 +26,9 @@ SET(SWIG_LUA_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_LUA_MODULE(pkmn_database_lua TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_stl_lua      TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_calculations_lua TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_database_lua     TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_stl_lua          TRUE)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/pkmn.lua

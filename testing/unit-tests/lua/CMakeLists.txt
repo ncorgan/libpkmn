@@ -26,6 +26,7 @@ EXECUTE_PROCESS(
 
 IF(LUAUNIT_FOUND)
     SET(lua_tests
+        lua_calculations_test
         lua_database_entry_test
         lua_lists_test
     )
