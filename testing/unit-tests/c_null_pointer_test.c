@@ -13,8 +13,11 @@ static pkmn_error_t error = PKMN_ERROR_NONE;
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
+static uint16_t dummy_uint16_t = 0;
+static uint32_t dummy_uint32_t = 0;
 static int dummy_int = 0;
 static size_t dummy_size_t = 0;
+pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
 static pkmn_string_list_t dummy_pkmn_string_list_t = {
     .strings = NULL,
     .length = 0
@@ -27,6 +30,14 @@ static const char* null_pointer_error_format = "Null pointer passed into paramet
     snprintf(strbuffer, STRBUFFER_LEN, null_pointer_error_format, param_name); \
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
     TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
+}
+
+#define TEST_GAME_SAVE_NULL_POINTER_RETURN(handle, param_name) \
+{ \
+    snprintf(strbuffer, STRBUFFER_LEN, null_pointer_error_format, param_name); \
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_game_save_strerror(handle), strbuffer); \
 }
 
 #define TEST_ITEM_BAG_NULL_POINTER_RETURN(handle, param_name) \
@@ -123,6 +134,414 @@ static void build_info_null_pointer_test() {
 }
 
 /*
+ * <pkmn-c/game_save.h>
+ */
+static void game_save_null_pointer_test() {
+    pkmn_game_save_handle_t game_save = NULL;
+    error = pkmn_game_save_from_file(
+                &game_save,
+                "@POKEMON_RED_SAV@"
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    pkmn_game_save_handle_t null_game_save = NULL;
+
+    pkmn_item_bag_handle_t item_bag = NULL;
+    pkmn_item_list_handle_t item_pc = NULL;
+
+    pkmn_game_save_type_t dummy_pkmn_game_save_type_t = PKMN_GAME_SAVE_TYPE_NONE;
+
+    /*
+     * pkmn_game_save_detect_type
+     */
+
+    error = pkmn_game_save_detect_type(
+                NULL, // filepath
+                &dummy_pkmn_game_save_type_t
+            );
+    TEST_NULL_POINTER_RETURN("filepath");
+
+    error = pkmn_game_save_detect_type(
+                strbuffer,
+                NULL // game_save_type_out
+            );
+    TEST_NULL_POINTER_RETURN("game_save_type_out");
+
+    /*
+     * pkmn_game_save_from_file
+     */
+
+    error = pkmn_game_save_from_file(
+                NULL, // handle_ptr
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_game_save_from_file(
+                &null_game_save,
+                NULL // filepath
+            );
+    TEST_NULL_POINTER_RETURN("filepath");
+
+    /*
+     * pkmn_game_save_free
+     */
+
+    error = pkmn_game_save_free(
+                NULL // handle_ptr
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_game_save_free(
+                &null_game_save
+            );
+    TEST_NULL_POINTER_RETURN("(*handle_ptr)");
+
+    /*
+     * pkmn_game_save_strerror
+     */
+
+    const char* game_save_strerror = pkmn_game_save_strerror(
+                                         NULL // handle
+                                     );
+    TEST_ASSERT_NULL(game_save_strerror);
+
+    /*
+     * pkmn_game_save_get_filepath
+     */
+
+    error = pkmn_game_save_get_filepath(
+                NULL, // handle
+                strbuffer,
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_filepath(
+                game_save,
+                NULL, // filepath_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "filepath_out");
+
+    error = pkmn_game_save_get_filepath(
+                game_save,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "actual_strlen_out");
+
+    /*
+     * pkmn_game_save_save
+     */
+
+    error = pkmn_game_save_save(
+                NULL // handle
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_save_as
+     */
+
+    error = pkmn_game_save_save_as(
+                NULL, // handle
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_save_as(
+                game_save,
+                NULL // filepath
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "filepath");
+
+    /*
+     * pkmn_game_save_get_game
+     */
+
+    error = pkmn_game_save_get_game(
+                NULL, // handle
+                strbuffer,
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_game(
+                game_save,
+                NULL, // game_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "game_out");
+
+    error = pkmn_game_save_get_game(
+                game_save,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "actual_strlen_out");
+
+    /*
+     * pkmn_game_save_get_trainer_name
+     */
+
+    error = pkmn_game_save_get_trainer_name(
+                NULL, // handle
+                strbuffer,
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_trainer_name(
+                game_save,
+                NULL, // trainer_name_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_name_out");
+
+    error = pkmn_game_save_get_trainer_name(
+                game_save,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "actual_strlen_out");
+
+    /*
+     * pkmn_game_save_set_trainer_name
+     */
+
+    error = pkmn_game_save_set_trainer_name(
+                NULL, // handle
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_set_trainer_name(
+                game_save,
+                NULL // trainer_name
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_name");
+
+    /*
+     * pkmn_game_save_get_trainer_id
+     */
+
+    error = pkmn_game_save_get_trainer_id(
+                NULL, // handle
+                &dummy_uint32_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_trainer_id(
+                game_save,
+                NULL // trainer_id_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_id_out");
+
+    /*
+     * pkmn_game_save_set_trainer_id
+     */
+
+    error = pkmn_game_save_set_trainer_id(
+                NULL, // handle
+                dummy_uint32_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_trainer_public_id
+     */
+
+    error = pkmn_game_save_get_trainer_public_id(
+                NULL, // handle
+                &dummy_uint16_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_trainer_public_id(
+                game_save,
+                NULL // trainer_public_id_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_public_id_out");
+
+    /*
+     * pkmn_game_save_set_trainer_public_id
+     */
+
+    error = pkmn_game_save_set_trainer_public_id(
+                NULL, // handle
+                dummy_uint16_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_trainer_secret_id
+     */
+
+    error = pkmn_game_save_get_trainer_secret_id(
+                NULL, // handle
+                &dummy_uint16_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_trainer_secret_id(
+                game_save,
+                NULL // trainer_secret_id_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_secret_id_out");
+
+    /*
+     * pkmn_game_save_set_trainer_secret_id
+     */
+
+    error = pkmn_game_save_set_trainer_secret_id(
+                NULL, // handle
+                dummy_uint16_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_trainer_gender
+     */
+
+    error = pkmn_game_save_get_trainer_gender(
+                NULL, // handle
+                &dummy_pkmn_gender_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_trainer_gender(
+                game_save,
+                NULL // gender_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "gender_out");
+
+    /*
+     * pkmn_game_save_set_trainer_gender
+     */
+
+    error = pkmn_game_save_set_trainer_gender(
+                NULL, // handle
+                dummy_pkmn_gender_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_rival_name
+     */
+
+    error = pkmn_game_save_get_rival_name(
+                NULL, // handle
+                strbuffer,
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_rival_name(
+                game_save,
+                NULL, // rival_name_out
+                STRBUFFER_LEN,
+                &dummy_size_t
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "rival_name_out");
+
+    error = pkmn_game_save_get_rival_name(
+                game_save,
+                strbuffer,
+                STRBUFFER_LEN,
+                NULL // actual_strlen_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "actual_strlen_out");
+
+    /*
+     * pkmn_game_save_set_rival_name
+     */
+
+    error = pkmn_game_save_set_rival_name(
+                NULL, // handle
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_set_rival_name(
+                game_save,
+                NULL // rival_name
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "rival_name");
+
+    /*
+     * pkmn_game_save_get_money
+     */
+
+    error = pkmn_game_save_get_money(
+                NULL, // handle
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_money(
+                game_save,
+                NULL // money_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "money_out");
+
+    /*
+     * pkmn_game_save_set_money
+     */
+
+    error = pkmn_game_save_set_money(
+                NULL, // handle
+                dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_item_bag
+     */
+
+    error = pkmn_game_save_get_item_bag(
+                NULL, // handle
+                &item_bag
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_item_bag(
+                game_save,
+                NULL // item_bag_handle_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "item_bag_handle_out");
+
+    /*
+     * pkmn_game_save_get_item_pc
+     */
+
+    error = pkmn_game_save_get_item_pc(
+                NULL, // handle
+                &item_pc
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_item_pc(
+                game_save,
+                NULL // item_pc_handle_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "item_pc_handle_out");
+
+    error = pkmn_game_save_free(&game_save);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+}
+
+/*
  * <pkmn-c/item_bag.h>
  */
 static void item_bag_null_pointer_test() {
@@ -203,7 +622,6 @@ static void item_bag_null_pointer_test() {
                 NULL // actual_strlen_out
             );
     TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "actual_strlen_out");
-
 
     /*
      * pkmn_item_bag_get_pocket
@@ -613,8 +1031,6 @@ static void calculations_form_null_pointer_test() {
  * <pkmn-c/calculations/gender.h>
  */
 static void calculations_gender_null_pointer_test() {
-    pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
-
     /*
      * pkmn_calculations_gen2_pokemon_gender
      */
@@ -1192,6 +1608,7 @@ static void utils_paths_null_pointer_test() {
 
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(build_info_null_pointer_test)
+    PKMN_C_TEST(game_save_null_pointer_test)
     PKMN_C_TEST(item_bag_null_pointer_test)
     PKMN_C_TEST(item_list_null_pointer_test)
     PKMN_C_TEST(calculations_form_null_pointer_test)

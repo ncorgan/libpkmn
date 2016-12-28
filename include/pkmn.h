@@ -10,6 +10,7 @@
 #include <pkmn-c/build_info.h>
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
+#include <pkmn-c/game_save.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
 
@@ -25,6 +26,7 @@
 #include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/hidden_power.h>

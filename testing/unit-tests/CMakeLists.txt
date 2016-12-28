@@ -77,13 +77,19 @@ IF(PKMN_ENABLE_C)
         c_database_entry_test
         c_items_test
         c_lists_test
-        c_null_pointer_test
         c_paths_test
     )
 
     FOREACH(test ${c_tests})
         PKMN_ADD_C_TEST(${test} ${test}.c)
     ENDFOREACH(test ${c_tests})
+
+    # c_null_pointer_test needs a value game save
+    CONFIGURE_FILE(
+        ${CMAKE_CURRENT_SOURCE_DIR}/c_null_pointer_test.c
+        ${CMAKE_CURRENT_BINARY_DIR}/c_null_pointer_test.c
+    @ONLY)
+    PKMN_ADD_C_TEST(c_null_pointer_test ${CMAKE_CURRENT_BINARY_DIR}/c_null_pointer_test.c)
 
     # Separately add C++ -> C test
     SET(cpp_to_c_test_srcs
