@@ -104,7 +104,7 @@ IF(PKMN_ENABLE_PYTHON)
     SET(python_tests
         python_calculations_test
         python_database_entry_test
-        python_detect_game_save_type_test
+        python_game_save_test
         python_items_test
         python_lists_test
         python_paths_test
