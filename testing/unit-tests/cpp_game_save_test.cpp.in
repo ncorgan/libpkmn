@@ -13,6 +13,9 @@
 
 #include <string>
 
+/*
+ * Red
+ */
 BOOST_AUTO_TEST_CASE(red_test)
 {
     std::string filepath = "@POKEMON_RED_SAV@";
@@ -28,8 +31,13 @@ BOOST_AUTO_TEST_CASE(red_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: blue_test
+/*
+ * TODO: Blue
+ */
 
+/*
+ * Yellow
+ */
 BOOST_AUTO_TEST_CASE(yellow_test)
 {
     std::string filepath = "@POKEMON_YELLOW_SAV@";
@@ -45,6 +53,9 @@ BOOST_AUTO_TEST_CASE(yellow_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
+/*
+ * Gold
+ */
 BOOST_AUTO_TEST_CASE(gold_test)
 {
     std::string filepath = "@POKEMON_GOLD_SAV@";
@@ -60,8 +71,13 @@ BOOST_AUTO_TEST_CASE(gold_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: silver_test
+/*
+ * TODO: Silver
+ */
 
+/*
+ * Crystal
+ */
 BOOST_AUTO_TEST_CASE(crystal_test)
 {
     std::string filepath = "@POKEMON_CRYSTAL_SAV@";
@@ -77,6 +93,9 @@ BOOST_AUTO_TEST_CASE(crystal_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
+/*
+ * Ruby
+ */
 BOOST_AUTO_TEST_CASE(ruby_test)
 {
     std::string filepath = "@POKEMON_RUBY_SAV@";
@@ -92,8 +111,13 @@ BOOST_AUTO_TEST_CASE(ruby_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: sapphire_test
+/*
+ * TODO: Sapphire
+ */
 
+/*
+ * Emerald
+ */
 BOOST_AUTO_TEST_CASE(emerald_test)
 {
     std::string filepath = "@POKEMON_EMERALD_SAV@";
@@ -109,6 +133,9 @@ BOOST_AUTO_TEST_CASE(emerald_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
+/*
+ * FireRed
+ */
 BOOST_AUTO_TEST_CASE(firered_leafgreen_test)
 {
     std::string filepath = "@POKEMON_FIRERED_SAV@";
@@ -124,4 +151,6 @@ BOOST_AUTO_TEST_CASE(firered_leafgreen_test)
     pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: leafgreen_test
+/*
+ * TODO: LeafGreen
+ */
