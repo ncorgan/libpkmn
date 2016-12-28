@@ -26,6 +26,8 @@ namespace pkmn {
 
             std::string get_filepath();
 
+            void save();
+
             std::string get_game();
 
             pkmn::item_bag::sptr get_item_bag();

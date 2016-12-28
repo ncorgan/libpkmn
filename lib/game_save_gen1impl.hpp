@@ -22,6 +22,10 @@ namespace pkmn {
 
             ~game_save_gen1impl();
 
+            void save_as(
+                const std::string &filepath
+            );
+
             std::string get_trainer_name();
 
             void set_trainer_name(

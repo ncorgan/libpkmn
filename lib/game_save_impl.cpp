@@ -193,6 +193,10 @@ namespace pkmn {
         return _filepath;
     }
 
+    void game_save_impl::save() {
+        save_as(_filepath);
+    }
+
     std::string game_save_impl::get_game() {
         return pkmn::database::game_id_to_name(_game_id);
     }

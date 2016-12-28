@@ -37,6 +37,12 @@ namespace pkmn {
 
             virtual std::string get_filepath() = 0;
 
+            virtual void save() = 0;
+
+            virtual void save_as(
+                const std::string &filepath
+            ) = 0;
+
             virtual std::string get_game() = 0;
 
             virtual std::string get_trainer_name() = 0;

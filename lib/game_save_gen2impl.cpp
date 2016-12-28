@@ -77,6 +77,19 @@ namespace pkmn {
         pksav_gen2_save_free(&_pksav_save);
     }
 
+    void game_save_gen2impl::save_as(
+        const std::string &filepath
+    ) {
+        PKSAV_CALL(
+            pksav_gen2_save_save(
+                filepath.c_str(),
+                &_pksav_save
+            );
+        )
+
+        _filepath = fs::absolute(filepath).string();
+    }
+
     std::string game_save_gen2impl::get_trainer_name() {
         char trainer_name[8] = {0};
         PKSAV_CALL(
