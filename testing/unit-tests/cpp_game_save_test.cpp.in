@@ -7,81 +7,121 @@
 
 #include "pkmn_boost_unit_test.hpp"
 
+#include <pkmntest/game_save_tests.hpp>
+
 #include <pkmn/game_save.hpp>
 
 #include <string>
 
-// TODO: Blue save
-BOOST_AUTO_TEST_CASE(red_blue_yellow_test)
+BOOST_AUTO_TEST_CASE(red_test)
 {
-    std::string pokemon_red = "@POKEMON_RED_SAV@";
-    std::string pokemon_yellow = "@POKEMON_YELLOW_SAV@";
-    std::string expected_result = "Red/Blue/Yellow";
+    std::string filepath = "@POKEMON_RED_SAV@";
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_red),
-        expected_result
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Red/Blue/Yellow"
     );
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_yellow),
-        expected_result
-    );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Red");
+    pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: Silver save
-BOOST_AUTO_TEST_CASE(gold_silver_test)
-{
-    std::string pokemon_gold = "@POKEMON_GOLD_SAV@";
-    std::string expected_result = "Gold/Silver";
+// TODO: blue_test
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_gold),
-        expected_result
+BOOST_AUTO_TEST_CASE(yellow_test)
+{
+    std::string filepath = "@POKEMON_YELLOW_SAV@";
+
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Red/Blue/Yellow"
     );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Yellow");
+    pkmntest::game_save_test_common_fields(save);
 }
+
+BOOST_AUTO_TEST_CASE(gold_test)
+{
+    std::string filepath = "@POKEMON_GOLD_SAV@";
+
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Gold/Silver"
+    );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Gold");
+    pkmntest::game_save_test_common_fields(save);
+}
+
+// TODO: silver_test
 
 BOOST_AUTO_TEST_CASE(crystal_test)
 {
-    std::string pokemon_crystal = "@POKEMON_CRYSTAL_SAV@";
-    std::string expected_result = "Crystal";
+    std::string filepath = "@POKEMON_CRYSTAL_SAV@";
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_crystal),
-        expected_result
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Crystal"
     );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Crystal");
+    pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: Sapphire save
-BOOST_AUTO_TEST_CASE(ruby_sapphire_test)
+BOOST_AUTO_TEST_CASE(ruby_test)
 {
-    std::string pokemon_ruby = "@POKEMON_RUBY_SAV@";
-    std::string expected_result = "Ruby/Sapphire";
+    std::string filepath = "@POKEMON_RUBY_SAV@";
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_ruby),
-        expected_result
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Ruby/Sapphire"
     );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Ruby");
+    pkmntest::game_save_test_common_fields(save);
 }
+
+// TODO: sapphire_test
 
 BOOST_AUTO_TEST_CASE(emerald_test)
 {
-    std::string pokemon_emerald = "@POKEMON_EMERALD_SAV@";
-    std::string expected_result = "Emerald";
+    std::string filepath = "@POKEMON_EMERALD_SAV@";
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_emerald),
-        expected_result
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "Emerald"
     );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "Emerald");
+    pkmntest::game_save_test_common_fields(save);
 }
 
-// TODO: LeafGreen save
 BOOST_AUTO_TEST_CASE(firered_leafgreen_test)
 {
-    std::string pokemon_firered = "@POKEMON_FIRERED_SAV@";
-    std::string expected_result = "FireRed/LeafGreen";
+    std::string filepath = "@POKEMON_FIRERED_SAV@";
 
-    BOOST_CHECK_EQUAL(
-        pkmn::game_save::detect_type(pokemon_firered),
-        expected_result
+    // Make sure we'll be using the correct implementation.
+    BOOST_REQUIRE_EQUAL(
+        pkmn::game_save::detect_type(filepath),
+        "FireRed/LeafGreen"
     );
+
+    pkmn::game_save::sptr save = pkmn::game_save::from_file(filepath);
+    BOOST_REQUIRE_EQUAL(save->get_game(), "FireRed");
+    pkmntest::game_save_test_common_fields(save);
 }
+
+// TODO: leafgreen_test

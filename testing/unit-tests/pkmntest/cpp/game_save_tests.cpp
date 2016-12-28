@@ -117,7 +117,7 @@ namespace pkmntest {
                 GB_GAMES,
                 GB_GAMES+6,
                 save->get_game()
-            ) == GB_GAMES+6
+            ) != GB_GAMES+6
         );
         save->set_trainer_id(
             is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
@@ -132,7 +132,7 @@ namespace pkmntest {
                 RIVAL_NAME_SET_GAMES,
                 RIVAL_NAME_SET_GAMES+7,
                 save->get_game()
-            ) == RIVAL_NAME_SET_GAMES+7
+            ) != RIVAL_NAME_SET_GAMES+7
         );
         test_rival_name(
             save,
