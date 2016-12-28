@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "game_save_tests_common.hpp"
+#include <pkmntest/game_save_tests.hpp>
 
 #include <pkmn/exception.hpp>
 
@@ -107,7 +107,7 @@ namespace pkmntest {
         }
     }
 
-    void test_game_save_common_fields(
+    void game_save_test_common_fields(
         pkmn::game_save::sptr save
     ) {
         test_trainer_name(save);

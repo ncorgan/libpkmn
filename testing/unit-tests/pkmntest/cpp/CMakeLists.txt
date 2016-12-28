@@ -24,7 +24,7 @@ SET(pkmntest_sources
     gen1_items_tests.cpp
     gen2_items_tests.cpp
     gba_items_tests.cpp
-    game_save_tests_common.cpp
+    game_save_tests.cpp
     items_tests_common.cpp
 )
 
