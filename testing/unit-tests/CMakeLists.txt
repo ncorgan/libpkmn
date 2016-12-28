@@ -45,10 +45,10 @@ SET(database_entry_test_srcs
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpp_game_save_detect_test.cpp.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cpp_game_save_detect_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/cpp_game_save_test.cpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cpp_game_save_test.cpp
 @ONLY)
-PKMN_ADD_CPP_TEST(cpp_game_save_detect_test ${CMAKE_CURRENT_BINARY_DIR}/cpp_game_save_detect_test.cpp)
+PKMN_ADD_CPP_TEST(cpp_game_save_test ${CMAKE_CURRENT_BINARY_DIR}/cpp_game_save_test.cpp)
 
 IF(PKMN_ENABLE_QT)
     INCLUDE_DIRECTORIES(
