@@ -40,7 +40,7 @@ class game_save_tests(unittest.TestCase):
 
     def __test_rival_name(self, save):
         if save.get_game() in self.__RIVAL_NAME_SET_GAMES:
-            with self.assertRaises(ValueError):
+            with self.assertRaises(RuntimeError):
                 save.set_rival_name(self.__LIBPKMN_OT_NAME)
         else:
             with self.assertRaises(ValueError):
@@ -106,7 +106,7 @@ class game_save_tests(unittest.TestCase):
         save.set_money(123456)
         self.assertEqual(save.get_money(), 123456)
 
-    def __test_game_save(filepath, game):
+    def __test_game_save(self, filepath, game):
         self.assertTrue(game in pkmn.detect_game_save_type(filepath))
 
         save = pkmn.game_save(filepath)

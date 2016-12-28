@@ -36,7 +36,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(DATABASE_PATH ${CMAKE_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(PYTHONPATH
             "${CMAKE_BINARY_DIR}/lib/swig/python"
-            "${TESTS_SOURCE_DIR}/pkmntest/python"
+            "${TESTS_BINARY_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
@@ -132,12 +132,7 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
 ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
 
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py
-        ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.py
-    @ONLY)
-
-    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.py\"")
+    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_PYTHON_TEST)
 
