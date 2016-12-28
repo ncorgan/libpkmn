@@ -86,7 +86,6 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     );
 
-    #ifndef SWIG
     //! Equality check between two Hidden Power structs.
     PKMN_INLINE bool operator==(
         const hidden_power &lhs,
@@ -104,7 +103,6 @@ namespace pkmn { namespace calculations {
         return (lhs.type != rhs.type) or
                (lhs.base_power != rhs.base_power);
     }
-    #endif /* SWIG */
 
 }}
 #endif /* PKMN_CALCULATIONS_HIDDEN_POWER_HPP */
