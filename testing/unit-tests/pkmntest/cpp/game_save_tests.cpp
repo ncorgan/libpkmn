@@ -37,6 +37,11 @@ static const std::string RIVAL_NAME_SET_GAMES[] = {
     "X", "Y"
 };
 
+static const std::string MALE_ONLY_GAMES[] = {
+    "Red", "Blue", "Yellow",
+    "Gold", "Silver"
+};
+
 namespace pkmntest {
 
     static void test_trainer_name(
@@ -156,6 +161,38 @@ namespace pkmntest {
             save,
             is_gb_game
         );
+
+        bool is_male_only = (std::find(
+            MALE_ONLY_GAMES,
+            MALE_ONLY_GAMES+5,
+            save->get_game()
+        ) != MALE_ONLY_GAMES+5);
+        if(is_male_only) {
+            BOOST_CHECK_EQUAL(
+                save->get_trainer_gender(),
+                "Male"
+            );
+            BOOST_CHECK_THROW(
+                save->set_trainer_gender("Male");
+            , pkmn::feature_not_in_game_error);
+            BOOST_CHECK_THROW(
+                save->set_trainer_gender("Female");
+            , pkmn::feature_not_in_game_error);
+        } else {
+            save->set_trainer_gender("Male");
+            BOOST_CHECK_EQUAL(
+                save->get_trainer_gender(),
+                "Male"
+            );
+            save->set_trainer_gender("Female");
+            BOOST_CHECK_EQUAL(
+                save->get_trainer_gender(),
+                "Female"
+            );
+            BOOST_CHECK_THROW(
+                save->set_trainer_gender("Genderless");
+            , std::invalid_argument);
+        }
 
         BOOST_CHECK_THROW(
             save->set_money(-1);
