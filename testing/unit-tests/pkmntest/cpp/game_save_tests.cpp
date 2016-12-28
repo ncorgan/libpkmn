@@ -64,9 +64,6 @@ namespace pkmntest {
             BOOST_CHECK_THROW(
                 save->set_rival_name(LIBPKMN_OT_NAME);
             , pkmn::feature_not_in_game_error);
-            BOOST_CHECK_THROW(
-                save->get_rival_name();
-            , pkmn::feature_not_in_game_error);
         } else {
             BOOST_CHECK_THROW(
                 save->set_rival_name("");
@@ -89,7 +86,7 @@ namespace pkmntest {
     ) {
         BOOST_CHECK_EQUAL(
             save->get_trainer_id(),
-            is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
+            (is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID)
         );
         BOOST_CHECK_EQUAL(
             save->get_trainer_public_id(),
