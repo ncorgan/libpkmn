@@ -109,12 +109,40 @@ namespace pkmn {
     }
 
     static BOOST_CONSTEXPR const char* list_name_query = \
-        "SELECT name FROM libpkmn_pocket_names WHERE id="
+        "SELECT name FROM libpkmn_item_lists WHERE id="
         "(SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
         "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
         "pocket_id FROM item_categories WHERE id=(SELECT category_id "
         "FROM items WHERE id=(SELECT item_id FROM item_names WHERE "
         "name=?))))";
+
+    static BOOST_CONSTEXPR const char* list_name_query_with_old_item_name = \
+        "SELECT name FROM libpkmn_item_lists WHERE id="
+        "(SELECT libpkmn_list_id FROM veekun_pocket_to_libpkmn_list "
+        "WHERE version_group_id=? AND veekun_pocket_id=(SELECT "
+        "pocket_id FROM item_categories WHERE id=(SELECT category_id "
+        "FROM items WHERE id=(SELECT item_id FROM old_item_names WHERE "
+        "name=?))))";
+
+    static PKMN_CONSTEXPR_OR_INLINE int FRLG = 7;
+
+    // Skips creating item entry
+    static std::string get_pocket_name(
+        const std::string &item_name,
+        int version_group_id
+    ) {
+        std::string ret;
+        if(not pkmn::database::maybe_query_db_bind2<std::string, int, const std::string&>(
+                   _db, list_name_query_with_old_item_name, ret, version_group_id, item_name
+           ))
+        {
+            ret = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
+                       _db, list_name_query, version_group_id, item_name
+                  );
+        }
+
+        return ret;
+    }
 
     void item_bag_impl::add(
         const std::string &item_name,
@@ -124,9 +152,23 @@ namespace pkmn {
                                    _game_id
                                );
 
-        std::string pocket_name = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                                      _db, list_name_query, version_group_id, item_name
-                                  );
+        std::string pocket_name;
+
+        // Special logic for Berries
+        if(item_name.find("Berry") != std::string::npos) {
+            int generation = pkmn::database::game_id_to_generation(
+                                  _game_id
+                             );
+            if(version_group_id == FRLG) {
+                pocket_name = "Berry Pouch";
+            } else if(generation > 2) {
+                pocket_name = "Berries";
+            } else {
+                pocket_name = get_pocket_name(item_name, version_group_id);
+            }
+        } else {
+            pocket_name = get_pocket_name(item_name, version_group_id);
+        }
 
         _item_pockets.at(pocket_name)->add(item_name, amount);
     }
@@ -139,14 +181,30 @@ namespace pkmn {
                                    _game_id
                                );
 
-        std::string pocket_name = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                                      _db, list_name_query, version_group_id, item_name
-                                  );
+        std::string pocket_name;
+
+        // Special logic for Berries
+        if(item_name.find("Berry") != std::string::npos) {
+            int generation = pkmn::database::game_id_to_generation(
+                                  _game_id
+                             );
+            if(version_group_id == FRLG) {
+                pocket_name = "Berry Pouch";
+            } else if(generation > 2) {
+                pocket_name = "Berries";
+            } else {
+                pocket_name = get_pocket_name(item_name, version_group_id);
+            }
+        } else {
+            pocket_name = get_pocket_name(item_name, version_group_id);
+        }
 
         _item_pockets.at(pocket_name)->remove(item_name, amount);
     }
 
     void* item_bag_impl::get_native() {
+        item_bag_scoped_lock lock(this);
+
         return _native;
     }
 

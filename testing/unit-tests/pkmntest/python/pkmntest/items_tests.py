@@ -90,7 +90,7 @@ class items_tests(unittest.TestCase):
         with self.assertRaises(IndexError):
             items.remove(item_name, 100)
 
-    def item_list_test_items_from_wrong_pocket(self, items, item_names):
+    def item_class_test_invalid_items(self, items, item_names):
         for item_name in item_names:
             with self.assertRaises(ValueError):
                 items.add(item_name, 1)
