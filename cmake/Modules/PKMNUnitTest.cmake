@@ -33,14 +33,14 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         ADD_TEST(${test_name} ${test_cmd})
     ELSE()
         SET(TEST_CMD ${test_cmd})
-        SET(DATABASE_PATH ${CMAKE_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+        SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(PYTHONPATH
-            "${CMAKE_BINARY_DIR}/lib/swig/python"
+            "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_SOURCE_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
-            "${CMAKE_BINARY_DIR}/lib/swig/java/PKMN.jar"
+            "${PKMN_BINARY_DIR}/lib/swig/java/PKMN.jar"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
