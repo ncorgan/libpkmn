@@ -16,6 +16,10 @@ environment:
 platform: x64
 configuration: Release
 
+cache:
+  - C:\ProgramData\chocolatey\bin -> testing\appveyor-scripts\build-test.bat
+  - C:\ProgramData\chocolatey\lib -> testing\appveyor-scripts\build-test.bat
+
 install:
   - git submodule update --init --recursive
   - choco install -y doxygen.install swig
