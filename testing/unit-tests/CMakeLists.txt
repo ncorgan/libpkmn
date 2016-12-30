@@ -84,12 +84,17 @@ IF(PKMN_ENABLE_C)
         PKMN_ADD_C_TEST(${test} ${test}.c)
     ENDFOREACH(test ${c_tests})
 
-    # c_null_pointer_test needs a value game save
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/c_null_pointer_test.c
-        ${CMAKE_CURRENT_BINARY_DIR}/c_null_pointer_test.c
-    @ONLY)
-    PKMN_ADD_C_TEST(c_null_pointer_test ${CMAKE_CURRENT_BINARY_DIR}/c_null_pointer_test.c)
+    SET(c_configure_tests
+        c_game_save_test
+        c_null_pointer_test
+    )
+    FOREACH(test ${c_configure_tests})
+        CONFIGURE_FILE(
+            ${CMAKE_CURRENT_SOURCE_DIR}/${test}.c
+            ${CMAKE_CURRENT_BINARY_DIR}/${test}.c
+        @ONLY)
+        PKMN_ADD_C_TEST(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test}.c)
+    ENDFOREACH(test ${c_configure_tests})
 
     # Separately add C++ -> C test
     SET(cpp_to_c_test_srcs

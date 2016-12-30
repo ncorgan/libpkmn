@@ -26,6 +26,7 @@ SET(pkmntest_c_sources
     gen1_items_tests.c
     gen2_items_tests.c
     gba_items_tests.c
+    game_save_tests.c
     items_tests_common.c
 )
 

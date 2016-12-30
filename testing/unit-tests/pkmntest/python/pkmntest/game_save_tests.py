@@ -73,7 +73,8 @@ class game_save_tests(unittest.TestCase):
         )
         self.__test_trainer_id(save)
 
-        self.__test_rival_name(save)
+        save.set_trainer_public_id(self.__LIBPKMN_OT_PID)
+        self.__test_trainer_id(save)
 
         if is_gb_game:
             with self.assertRaises(IndexError):
@@ -83,6 +84,8 @@ class game_save_tests(unittest.TestCase):
         else:
             save.set_trainer_secret_id(self.__LIBPKMN_OT_SID)
             self.__test_trainer_id(save)
+
+        self.__test_rival_name(save)
 
         if save.get_game() in self.__MALE_ONLY_GAMES:
             self.assertEqual(save.get_trainer_gender(), "Male")

@@ -129,16 +129,10 @@ namespace pkmntest {
             is_gb_game
         );
 
-        bool is_rival_name_set = (
-            std::find(
-                RIVAL_NAME_SET_GAMES,
-                RIVAL_NAME_SET_GAMES+7,
-                save->get_game()
-            ) != RIVAL_NAME_SET_GAMES+7
-        );
-        test_rival_name(
+        save->set_trainer_public_id(LIBPKMN_OT_PID);
+        test_trainer_id(
             save,
-            is_rival_name_set
+            is_gb_game
         );
 
         if(is_gb_game) {
@@ -156,10 +150,16 @@ namespace pkmntest {
             );
         }
 
-        save->set_trainer_public_id(LIBPKMN_OT_PID);
-        test_trainer_id(
+        bool is_rival_name_set = (
+            std::find(
+                RIVAL_NAME_SET_GAMES,
+                RIVAL_NAME_SET_GAMES+7,
+                save->get_game()
+            ) != RIVAL_NAME_SET_GAMES+7
+        );
+        test_rival_name(
             save,
-            is_gb_game
+            is_rival_name_set
         );
 
         bool is_male_only = (std::find(

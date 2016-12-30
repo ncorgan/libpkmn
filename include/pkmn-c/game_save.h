@@ -15,6 +15,8 @@
 
 #include <pkmn-c/types/gender.h>
 
+#include <stdint.h>
+
 #if !defined(PKMN_GAME_SAVE_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_game_save_t;
 typedef struct pkmn_game_save_t pkmn_game_save_t;
