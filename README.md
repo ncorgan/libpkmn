@@ -21,6 +21,10 @@ Build Dependencies
    * [Python](https://www.python.org) (both 2 and 3 supported)
  * Qt Widgets (optional)
    * [Qt](https://www.qt.io) (both 4 and 5 supported)
+ * Lua API (optional)
+   * [SWIG](http://swig.org/) (minimum version 2.0.11)
+   * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
+   * [PLY](https://pypi.python.org/pypi/ply)
  * Python API (optional)
    * [SWIG](http://swig.org/)
    * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
@@ -43,8 +47,9 @@ repository is automatically tested under the following configurations:
 Tests are run with the following frameworks:
  * C++: [Boost.Test](http://www.boost.org/doc/libs/1_62_0/libs/test/doc/html/index.html)
  * C: [Unity](https://github.com/ThrowTheSwitch/Unity)
+ * Lua: [Luaunit](https://github.com/bluebird75/luaunit)
  * Python: [unittest](https://docs.python.org/3/library/unittest.html)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2016/12/14
+README last updated: 2016/12/29
