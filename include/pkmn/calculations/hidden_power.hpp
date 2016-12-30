@@ -44,7 +44,7 @@ namespace pkmn { namespace calculations {
         //! Equality check with another Hidden Power struct.
         PKMN_INLINE bool operator==(
             const hidden_power &rhs
-        ) {
+        ) const {
             return (this->type == rhs.type) and
                    (this->base_power == rhs.base_power);
         }
@@ -52,7 +52,7 @@ namespace pkmn { namespace calculations {
         //! Inequality check with another Hidden Power struct.
         PKMN_INLINE bool operator!=(
             const hidden_power &rhs
-        ) {
+        ) const {
             return (this->type != rhs.type) or
                    (this->base_power != rhs.base_power);
         }

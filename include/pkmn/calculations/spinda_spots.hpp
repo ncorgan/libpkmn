@@ -65,7 +65,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator==(
             const spinda_coords &rhs
-        ) {
+        ) const {
             return (this->x == rhs.x) and (this->y == rhs.y);
         }
 
@@ -75,7 +75,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator!=(
             const spinda_coords &rhs
-        ) {
+        ) const {
             return (this->x != rhs.x) or (this->y != rhs.y);
         }
 
@@ -193,7 +193,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator==(
             const spinda_spots &rhs
-        ) {
+        ) const {
             return (this->left_ear == rhs.left_ear) and \
                    (this->right_ear == rhs.right_ear) and \
                    (this->left_face == rhs.left_face) and \
@@ -206,7 +206,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE bool operator!=(
             const spinda_spots &rhs
-        ) {
+        ) const {
             return (this->left_ear != rhs.left_ear) or \
                    (this->right_ear != rhs.right_ear) or \
                    (this->left_face != rhs.left_face) or \
