@@ -41,6 +41,22 @@ namespace pkmn { namespace calculations {
            base_power(hidden_power_base_power) {}
 #endif
 
+        //! Equality check with another Hidden Power struct.
+        PKMN_INLINE bool operator==(
+            const hidden_power &rhs
+        ) {
+            return (this->type == rhs.type) and
+                   (this->base_power == rhs.base_power);
+        }
+
+        //! Inequality check with another Hidden Power struct.
+        PKMN_INLINE bool operator!=(
+            const hidden_power &rhs
+        ) {
+            return (this->type != rhs.type) or
+                   (this->base_power != rhs.base_power);
+        }
+
         //! What type Hidden Power has when this Pokémon uses it.
         std::string type;
 
@@ -85,24 +101,6 @@ namespace pkmn { namespace calculations {
         int IV_spatk,
         int IV_spdef
     );
-
-    //! Equality check between two Hidden Power structs.
-    PKMN_INLINE bool operator==(
-        const hidden_power &lhs,
-        const hidden_power &rhs
-    ) {
-        return (lhs.type == rhs.type) and
-               (lhs.base_power == rhs.base_power);
-    }
-
-    //! Inequality check between two Hidden Power structs.
-    PKMN_INLINE bool operator!=(
-        const hidden_power &lhs,
-        const hidden_power &rhs
-    ) {
-        return (lhs.type != rhs.type) or
-               (lhs.base_power != rhs.base_power);
-    }
 
 }}
 #endif /* PKMN_CALCULATIONS_HIDDEN_POWER_HPP */

@@ -189,7 +189,6 @@ function test_spinda_coords()
     spinda_coords3 = pkmn.calculations.spinda_coords(456, 123)
 
     luaunit.assertEquals(spinda_coords1, spinda_coords2)
-    luaunit.assertEquals(spinda_coords2, spinda_coords3)
     luaunit.assertNotEquals(spinda_coords1, spinda_coords3)
 end
 
@@ -214,7 +213,6 @@ function test_spinda_spots()
                  pkmn.calculations.spinda_coords(1, 4)
              )
     luaunit.assertEquals(spots1, spots2)
-    luaunit.assertEquals(spots2, spots3)
     luaunit.assertNotEquals(spots1, spots3)
 
     --

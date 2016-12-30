@@ -36,6 +36,3 @@
 %ignore get_species_id;
 %ignore get_native;
 %ignore make;
-
-%ignore operator ==;
-%ignore operator !=;
