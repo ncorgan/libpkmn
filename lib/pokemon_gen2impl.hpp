@@ -175,6 +175,11 @@ namespace pkmn {
             void _update_EV_map();
             void _update_stat_map();
 
+            void _set_unown_form_from_IVs();
+            void _set_unown_IVs_from_form(
+                const std::string &form
+            );
+
             std::string _nickname, _trainer_name;
     };
 

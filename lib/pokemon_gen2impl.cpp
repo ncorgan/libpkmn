@@ -9,6 +9,7 @@
 #include "pokemon_gen2impl.hpp"
 #include "database/index_to_string.hpp"
 
+#include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/party_data.hpp"
@@ -24,6 +25,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 
@@ -31,6 +33,8 @@
 #define GEN2_PARTY_RCAST reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
 
 namespace pkmn {
+
+    BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
     pokemon_gen2impl::pokemon_gen2impl(
         pkmn::database::pokemon_entry&& database_entry,
@@ -63,7 +67,14 @@ namespace pkmn {
         GEN2_PC_RCAST->ev_def  = uint16_t(std::rand());
         GEN2_PC_RCAST->ev_spd  = uint16_t(std::rand());
         GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
-        GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_IVs_from_form(
+                _database_entry.get_form()
+            );
+        } else {
+            GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
+        }
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
@@ -165,11 +176,16 @@ namespace pkmn {
              * This value sets all IVs to the maximum values that result in
              * a shiny Pokémon.
              */
+            pokemon_scoped_lock lock(this);
             static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
             GEN2_PC_RCAST->iv_data = shiny_iv_data;
             _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         } else {
             set_IV("Attack", 13);
+        }
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_IVs();
         }
     }
 
@@ -463,6 +479,11 @@ namespace pkmn {
             value,
             &GEN2_PC_RCAST->iv_data
         );
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            pokemon_scoped_lock lock(this);
+            _set_unown_form_from_IVs();
+        }
     }
 
     void pokemon_gen2impl::set_marking(
@@ -597,5 +618,63 @@ namespace pkmn {
         _stats["Speed"]           = int(pksav_bigendian16(GEN2_PARTY_RCAST->spd));
         _stats["Special Attack"]  = int(pksav_bigendian16(GEN2_PARTY_RCAST->spatk));
         _stats["Special Defense"] = int(pksav_bigendian16(GEN2_PARTY_RCAST->spdef));
+    }
+
+    void pokemon_gen2impl::_set_unown_form_from_IVs() {
+        _database_entry.set_form(
+            pkmn::calculations::gen2_unown_form(
+                _IVs["Attack"],
+                _IVs["Defense"],
+                _IVs["Speed"],
+                _IVs["Special"]
+            )
+        );
+    }
+
+    void pokemon_gen2impl::_set_unown_IVs_from_form(
+        const std::string &form
+    ) {
+        // Set the maximum possible Special IV for the given form.
+        uint16_t num = std::min<uint16_t>(uint16_t((form[0] - 'A') * 10) + 9, 255);
+
+        uint8_t IV_attack = uint8_t(_IVs["Attack"]);
+        IV_attack &= ~0x6;
+        IV_attack |= ((num & 0xC0) >> 5);
+
+        uint8_t IV_defense = uint8_t(_IVs["Defense"]);
+        IV_defense &= ~0x6;
+        IV_defense |= ((num & 0x30) >> 3);
+
+        uint8_t IV_speed = uint8_t(_IVs["Speed"]);
+        IV_speed &= ~0x6;
+        IV_speed |= ((num & 0xC) >> 1);
+
+        uint8_t IV_special = uint8_t(_IVs["Special"]);
+        IV_special &= ~0x6;
+        IV_special |= ((num & 0x3) << 1);
+
+        _set_gb_IV(
+            "Attack",
+            IV_attack,
+            &GEN2_PC_RCAST->iv_data
+        );
+
+        _set_gb_IV(
+            "Defense",
+            IV_defense,
+            &GEN2_PC_RCAST->iv_data
+        );
+
+        _set_gb_IV(
+            "Speed",
+            IV_speed,
+            &GEN2_PC_RCAST->iv_data
+        );
+
+        _set_gb_IV(
+            "Special",
+            IV_special,
+            &GEN2_PC_RCAST->iv_data
+        );
     }
 }

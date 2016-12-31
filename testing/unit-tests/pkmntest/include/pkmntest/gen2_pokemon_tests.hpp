@@ -17,6 +17,10 @@ namespace pkmntest {
         const std::string &game
     );
 
+    PKMN_API void gen2_unown_form_test(
+        const std::string &game
+    );
+
     PKMN_API void gen2_pokemon_test(
         pkmn::pokemon::sptr pokemon,
         const std::string &species,
