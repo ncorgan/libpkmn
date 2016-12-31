@@ -10,6 +10,27 @@
 
 #include <boost/test/unit_test.hpp>
 
+typedef void (*pokemon_test_fcn_t)(pkmn::pokemon::sptr, const std::string&, const std::string&);
+
+static void pokemon_test_common(
+    const std::string &species,
+    const std::string &game,
+    pokemon_test_fcn_t test_fcn
+) {
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      species,
+                                      game,
+                                      "",
+                                      30
+                                  );
+
+    test_fcn(
+        pokemon,
+        species,
+        game
+    );
+}
+
 /*
  * Red
  */
@@ -23,19 +44,10 @@ BOOST_AUTO_TEST_CASE(gen1_red_friendship_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
-    std::string species = "Charmander";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Red",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen1_pokemon_test(
-        pokemon,
-        species,
-        "Red"
+    pokemon_test_common(
+        "Charmander",
+        "Red",
+        pkmntest::gen1_pokemon_test
     );
 }
 
@@ -52,19 +64,10 @@ BOOST_AUTO_TEST_CASE(gen1_blue_friendship_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen1_blue_pokemon_test) {
-    std::string species = "Charmander";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Blue",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen1_pokemon_test(
-        pokemon,
-        species,
-        "Blue"
+    pokemon_test_common(
+        "Charmander",
+        "Blue",
+        pkmntest::gen1_pokemon_test
     );
 }
 
@@ -81,19 +84,10 @@ BOOST_AUTO_TEST_CASE(gen1_yellow_friendship_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen1_yellow_pokemon_test) {
-    std::string species = "Charmander";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Yellow",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen1_pokemon_test(
-        pokemon,
-        species,
-        "Yellow"
+    pokemon_test_common(
+        "Charmander",
+        "Yellow",
+        pkmntest::gen1_pokemon_test
     );
 }
 
@@ -110,19 +104,10 @@ BOOST_AUTO_TEST_CASE(gen2_gold_unown_form_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen2_gold_pokemon_test) {
-    std::string species = "Cyndaquil";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Gold",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen2_pokemon_test(
-        pokemon,
-        species,
-        "Gold"
+    pokemon_test_common(
+        "Cyndaquil",
+        "Gold",
+        pkmntest::gen2_pokemon_test
     );
 }
 
@@ -139,19 +124,10 @@ BOOST_AUTO_TEST_CASE(gen2_silver_unown_form_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen2_silver_pokemon_test) {
-    std::string species = "Cyndaquil";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Silver",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen2_pokemon_test(
-        pokemon,
-        species,
-        "Silver"
+    pokemon_test_common(
+        "Cyndaquil",
+        "Silver",
+        pkmntest::gen2_pokemon_test
     );
 }
 
@@ -168,18 +144,9 @@ BOOST_AUTO_TEST_CASE(gen2_crystal_unown_form_test) {
 }
 
 BOOST_AUTO_TEST_CASE(gen2_crystal_pokemon_test) {
-    std::string species = "Cyndaquil";
-
-    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
-                                      species,
-                                      "Crystal",
-                                      "",
-                                      30
-                                  );
-
-    pkmntest::gen2_pokemon_test(
-        pokemon,
-        species,
-        "Crystal"
+    pokemon_test_common(
+        "Cyndaquil",
+        "Crystal",
+        pkmntest::gen2_pokemon_test
     );
 }
