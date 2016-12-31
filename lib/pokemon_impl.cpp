@@ -122,7 +122,7 @@ namespace pkmn {
     pokemon_impl::pokemon_impl(
         pkmn::database::pokemon_entry&& database_entry
     ): pokemon(),
-       _database_entry(database_entry),
+       _database_entry(std::move(database_entry)),
        _held_item(pkmn::database::item_entry(0, database_entry.get_game_id())),
        _generation(pkmn::database::game_id_to_generation(database_entry.get_game_id()))
     {}
