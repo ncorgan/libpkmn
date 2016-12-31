@@ -380,6 +380,156 @@ namespace pkmntest {
                 , std::invalid_argument);
             }
         }
+
+        // Castform should always work.
+        std::vector<std::string> castform_forms = pkmn::database::pokemon_entry(
+                                                      "Castform",
+                                                      "Omega Ruby",
+                                                      ""
+                                                  ).get_forms();
+        for(auto iter = castform_forms.begin(); iter != castform_forms.end(); ++iter) {
+            (void)pkmn::pokemon::make(
+                      "Castform",
+                      game,
+                      *iter,
+                      30
+                  );
+        }
+
+        // Primal Revision forms should only work in OR/AS.
+        (void)pkmn::pokemon::make(
+                  "Groudon",
+                  game,
+                  "",
+                  70
+              );
+        (void)pkmn::pokemon::make(
+                  "Kyogre",
+                  game,
+                  "",
+                  70
+              );
+        if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+            (void)pkmn::pokemon::make(
+                      "Groudon",
+                      game,
+                      "Primal Reversion",
+                      70
+                  );
+            (void)pkmn::pokemon::make(
+                      "Kyogre",
+                      game,
+                      "Primal Reversion",
+                      70
+                  );
+        } else {
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Groudon",
+                          game,
+                          "Primal Reversion",
+                          70
+                      );
+            , std::invalid_argument);
+            BOOST_CHECK_THROW(
+                (void)pkmn::pokemon::make(
+                          "Kyogre",
+                          game,
+                          "Primal Reversion",
+                          70
+                      );
+            , std::invalid_argument);
+        }
+
+        // In Generation III, Deoxys's form is game-specific.
+        if(generation == 3) {
+            if(game == "Ruby" or game == "Sapphire" or game == "Colosseum" or game == "XD") {
+                (void)pkmn::pokemon::make(
+                          "Deoxys",
+                          game,
+                          "Normal",
+                          70
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              "Deoxys",
+                              game,
+                              "Normal",
+                              70
+                          );
+                , std::invalid_argument);
+            }
+
+            if(game == "FireRed") {
+                (void)pkmn::pokemon::make(
+                          "Deoxys",
+                          game,
+                          "Attack",
+                          70
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              "Deoxys",
+                              game,
+                              "Attack",
+                              70
+                          );
+                , std::invalid_argument);
+            }
+
+            if(game == "LeafGreen") {
+                (void)pkmn::pokemon::make(
+                          "Deoxys",
+                          game,
+                          "Defense",
+                          70
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              "Deoxys",
+                              game,
+                              "Defense",
+                              70
+                          );
+                , std::invalid_argument);
+            }
+
+            if(game == "Emerald") {
+                (void)pkmn::pokemon::make(
+                          "Deoxys",
+                          game,
+                          "Speed",
+                          70
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              "Deoxys",
+                              game,
+                              "Speed",
+                              70
+                          );
+                , std::invalid_argument);
+            }
+        } else {
+            // Past Generation III, Deoxys's form can be switched.
+            std::vector<std::string> deoxys_forms = pkmn::database::pokemon_entry(
+                                                        "Deoxys",
+                                                        "Omega Ruby",
+                                                        ""
+                                                    ).get_forms();
+            for(auto iter = deoxys_forms.begin(); iter != deoxys_forms.end(); ++iter) {
+                (void)pkmn::pokemon::make(
+                          "Deoxys",
+                          game,
+                          *iter,
+                          30
+                      );
+            }
+        }
     }
 
     // TODO: Check Alola forms when Generation VII supported
