@@ -22,7 +22,7 @@ Build Dependencies
  * Qt Widgets (optional)
    * [Qt](https://www.qt.io) (both 4 and 5 supported)
  * Lua API (optional)
-   * [SWIG](http://swig.org/) (minimum version 2.0.11)
+   * [SWIG](http://swig.org/) (minimum version 2.0.12)
    * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
    * [PLY](https://pypi.python.org/pypi/ply)
  * Python API (optional)
@@ -52,4 +52,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2016/12/29
+README last updated: 2016/12/31
