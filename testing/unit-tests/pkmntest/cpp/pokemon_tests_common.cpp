@@ -61,6 +61,16 @@ static const std::vector<std::string> gen2_pokemon_with_xy_mega_forms = boost::a
     ("Ampharos")("Scizor")("Heracross")("Houndoom")("Tyranitar")
 ;
 
+static const std::vector<std::string> gen3_pokemon_with_xy_mega_forms = boost::assign::list_of
+    ("Blaziken")("Gardevoir")("Mawile")("Aggron")("Medicham")
+    ("Manectric")("Banette")("Absol")("Latias")("Latios")("Garchomp")
+;
+
+static const std::vector<std::string> gen3_pokemon_with_oras_mega_forms = boost::assign::list_of
+    ("Sceptile")("Swampert")("Sableye")("Sharpedo")("Camerupt")
+    ("Altaria")("Glalie")("Salamence")("Metagross")("Rayquaza")
+;
+
 namespace pkmntest {
 
     static void test_gen1_forms(
@@ -316,20 +326,82 @@ namespace pkmntest {
         }
     }
 
+    static void test_gen3_forms(
+        const std::string &game,
+        bool gcn
+    ) {
+        // TODO: Shadow forms
+        (void)gcn;
+
+        int generation = game_generations.at(game);
+
+        // Check that Mega forms only work in their given games
+        for(auto iter = gen3_pokemon_with_xy_mega_forms.begin();
+                 iter != gen3_pokemon_with_xy_mega_forms.end();
+                 ++iter)
+        {
+            if(generation >= 6) {
+                (void)pkmn::pokemon::make(
+                          *iter,
+                          game,
+                          "Mega",
+                          100
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                , std::invalid_argument);
+            }
+        }
+        for(auto iter = gen3_pokemon_with_oras_mega_forms.begin();
+                 iter != gen3_pokemon_with_oras_mega_forms.end();
+                 ++iter)
+        {
+            if(game == "Omega Ruby" or game == "Alpha Sapphire") {
+                (void)pkmn::pokemon::make(
+                          *iter,
+                          game,
+                          "Mega",
+                          100
+                      );
+            } else {
+                BOOST_CHECK_THROW(
+                    (void)pkmn::pokemon::make(
+                              *iter,
+                              game,
+                              "Mega",
+                              100
+                          );
+                , std::invalid_argument);
+            }
+        }
+    }
+
     // TODO: Check Alola forms when Generation VII supported
     static void test_forms(
         const std::string &game
     ) {
         int generation = game_generations.at(game);
 
-        // Make sure forms that didn't appear for Generation I
-        // Pokémon until later don't work until the correct
-        // generation.
+        // Make sure forms that didn't appear for a given
+        // generation's Pokémon until later don't work until
+        // the correct generation.
         if(generation >= 1) {
             test_gen1_forms(game);
         }
         if(generation >= 2) {
             test_gen2_forms(game);
+        }
+        if(generation >= 3) {
+            test_gen3_forms(
+                game,
+                (game == "Colosseum" or game == "XD")
+            );
         }
     }
 

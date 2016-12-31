@@ -7,6 +7,7 @@
 
 #include <pkmntest/gen1_pokemon_tests.hpp>
 #include <pkmntest/gen2_pokemon_tests.hpp>
+#include <pkmntest/gba_pokemon_tests.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -149,4 +150,44 @@ BOOST_AUTO_TEST_CASE(gen2_crystal_pokemon_test) {
         "Crystal",
         pkmntest::gen2_pokemon_test
     );
+}
+
+/*
+ * Ruby
+ */
+
+BOOST_AUTO_TEST_CASE(gba_ruby_invalid_pokemon_test) {
+    pkmntest::gba_invalid_pokemon_test("Ruby");
+}
+
+/*
+ * Sapphire
+ */
+
+BOOST_AUTO_TEST_CASE(gba_sapphire_invalid_pokemon_test) {
+    pkmntest::gba_invalid_pokemon_test("Sapphire");
+}
+
+/*
+ * Emerald
+ */
+
+BOOST_AUTO_TEST_CASE(gba_emerald_invalid_pokemon_test) {
+    pkmntest::gba_invalid_pokemon_test("Emerald");
+}
+
+/*
+ * FireRed
+ */
+
+BOOST_AUTO_TEST_CASE(gba_firered_invalid_pokemon_test) {
+    pkmntest::gba_invalid_pokemon_test("FireRed");
+}
+
+/*
+ * LeafGreen
+ */
+
+BOOST_AUTO_TEST_CASE(gba_leafgreen_invalid_pokemon_test) {
+    pkmntest::gba_invalid_pokemon_test("LeafGreen");
 }
