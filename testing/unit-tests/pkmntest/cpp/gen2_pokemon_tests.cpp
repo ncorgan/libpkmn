@@ -203,6 +203,33 @@ namespace pkmntest {
             "foobarbaz"
         );
 
+        // Shininess affects IV, so make sure the abstraction reflects that.
+        const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        pokemon->set_shininess(false);
+        BOOST_CHECK(not pokemon->is_shiny());
+        BOOST_CHECK_EQUAL(
+            IVs.at("Attack"),
+            13
+        );
+        pokemon->set_shininess(true);
+        BOOST_CHECK(pokemon->is_shiny());
+        BOOST_CHECK_EQUAL(
+            IVs.at("Attack"),
+            15
+        );
+        BOOST_CHECK_EQUAL(
+            IVs.at("Defense"),
+            10
+        );
+        BOOST_CHECK_EQUAL(
+            IVs.at("Speed"),
+            10
+        );
+        BOOST_CHECK_EQUAL(
+            IVs.at("Special"),
+            10
+        );
+
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Not an item");
         , std::invalid_argument);
@@ -510,7 +537,6 @@ namespace pkmntest {
             EVs.at("Special")
         );
 
-        const std::map<std::string, int>& IVs = pokemon->get_IVs();
         uint8_t IV = 0;
 
         PKSAV_CALL(

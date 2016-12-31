@@ -128,6 +128,9 @@ namespace pkmntest {
             boost::algorithm::to_upper_copy(species)
         );
         BOOST_CHECK_THROW(
+            pokemon->is_shiny();
+        , pkmn::feature_not_in_game_error);
+        BOOST_CHECK_THROW(
             pokemon->get_held_item();
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
@@ -223,6 +226,13 @@ namespace pkmntest {
             pokemon->get_nickname(),
             "foobarbaz"
         );
+
+        BOOST_CHECK_THROW(
+            pokemon->set_shininess(true);
+        , pkmn::feature_not_in_game_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_shininess(false);
+        , pkmn::feature_not_in_game_error);
 
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Potion");
