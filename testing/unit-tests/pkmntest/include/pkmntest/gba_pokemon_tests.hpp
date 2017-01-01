@@ -17,11 +17,11 @@ namespace pkmntest {
         const std::string &game
     );
 
-    /*PKMN_API void gba_pokemon_test(
+    PKMN_API void gba_pokemon_test(
         pkmn::pokemon::sptr pokemon,
         const std::string &species,
         const std::string &game
-    );*/
+    );
 }
 
 #endif /* GBA_POKEMON_TESTS_HPP */

@@ -24,7 +24,7 @@ namespace pkmn { namespace database {
 
         static BOOST_CONSTEXPR const char* query = \
             "SELECT name FROM version_names WHERE local_language_id=9 AND "
-            "version_id=(SELECT version_id IN version_game_indices WHERE "
+            "version_id=(SELECT version_id FROM version_game_indices WHERE "
             "game_index=?)";
 
         return pkmn::database::query_db_bind1<std::string, int>(

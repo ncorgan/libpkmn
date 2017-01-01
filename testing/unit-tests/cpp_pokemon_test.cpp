@@ -160,12 +160,28 @@ BOOST_AUTO_TEST_CASE(gba_ruby_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Ruby");
 }
 
+BOOST_AUTO_TEST_CASE(gba_ruby_pokemon_test) {
+    pokemon_test_common(
+        "Torchic",
+        "Ruby",
+        pkmntest::gba_pokemon_test
+    );
+}
+
 /*
  * Sapphire
  */
 
 BOOST_AUTO_TEST_CASE(gba_sapphire_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Sapphire");
+}
+
+BOOST_AUTO_TEST_CASE(gba_sapphire_pokemon_test) {
+    pokemon_test_common(
+        "Torchic",
+        "Sapphire",
+        pkmntest::gba_pokemon_test
+    );
 }
 
 /*
@@ -176,6 +192,14 @@ BOOST_AUTO_TEST_CASE(gba_emerald_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Emerald");
 }
 
+BOOST_AUTO_TEST_CASE(gba_emerald_pokemon_test) {
+    pokemon_test_common(
+        "Torchic",
+        "Emerald",
+        pkmntest::gba_pokemon_test
+    );
+}
+
 /*
  * FireRed
  */
@@ -184,10 +208,26 @@ BOOST_AUTO_TEST_CASE(gba_firered_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("FireRed");
 }
 
+BOOST_AUTO_TEST_CASE(gba_firered_pokemon_test) {
+    pokemon_test_common(
+        "Torchic",
+        "FireRed",
+        pkmntest::gba_pokemon_test
+    );
+}
+
 /*
  * LeafGreen
  */
 
 BOOST_AUTO_TEST_CASE(gba_leafgreen_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("LeafGreen");
+}
+
+BOOST_AUTO_TEST_CASE(gba_leafgreen_pokemon_test) {
+    pokemon_test_common(
+        "Torchic",
+        "LeafGreen",
+        pkmntest::gba_pokemon_test
+    );
 }

@@ -27,6 +27,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;

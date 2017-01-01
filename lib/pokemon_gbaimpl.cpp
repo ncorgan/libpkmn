@@ -28,6 +28,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 
@@ -63,10 +64,10 @@ namespace pkmn {
         PKSAV_CALL(
             pksav_text_to_gba(
                 boost::algorithm::to_upper_copy(
-                    _database_entry.get_species()
+                    _database_entry.get_name()
                 ).c_str(),
                 GBA_PC_RCAST->nickname,
-                11
+                10
             );
         )
 
@@ -76,7 +77,7 @@ namespace pkmn {
             pksav_text_to_gba(
                 LIBPKMN_OT_NAME,
                 GBA_PC_RCAST->otname,
-                8
+                7
             );
         )
 
@@ -469,7 +470,7 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
-        _misc->origin_info &= PKSAV_GBA_BALL_MASK;
+        _misc->origin_info &= ~PKSAV_GBA_BALL_MASK;
         uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
                                         ball
                                     ));
@@ -806,7 +807,7 @@ namespace pkmn {
     void pokemon_gbaimpl::_update_moves(
         int index
     ) {
-        _moves.reserve(4);
+        _moves.resize(4);
         switch(index) {
             case 0:
             case 1:
