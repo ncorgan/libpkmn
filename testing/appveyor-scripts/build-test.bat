@@ -15,6 +15,8 @@ set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
 set PYTHON_PIP_EXE="!PYTHON_ROOT!\Scripts\pip.exe"
 
+git submodule update --init --recursive
+
 mkdir c:\projects\libpkmn\test-env\build
 
 cd c:\projects\libpkmn\test-env\build

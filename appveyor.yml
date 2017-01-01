@@ -38,7 +38,6 @@ cache:
   - C:\external -> testing\appveyor-scripts\build-test.bat
 
 install:
-  - git submodule update --init --recursive
   - choco install -y doxygen.install swig
   - testing\appveyor-scripts\lua\set_compiler_env.bat
   - testing\appveyor-scripts\lua\install.bat
