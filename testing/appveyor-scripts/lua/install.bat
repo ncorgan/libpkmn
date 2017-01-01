@@ -15,11 +15,18 @@ if "%LUA_VER%" NEQ "" (
 	set LUA_SHORTV=5.1
 )
 
+:: We don't use Appveyor's platform variable, so just set it here.
+if "%BITNESS%" EQU "64" (
+	set platform="x64"
+) else (
+	set platform="x86"
+)
+
 :: defines LUA_DIR so Cmake can find this Lua install
 if "%LUA%"=="luajit" (
-	set LUA_DIR=c:\lua\%platform%\lj%LJ_SHORTV%
+	set LUA_DIR=c:\lua\!platform!\lj%LJ_SHORTV%
 ) else (
-	set LUA_DIR=c:\lua\%platform%\%LUA_VER%
+	set LUA_DIR=c:\lua\!platform!\%LUA_VER%
 )
 
 :: Now we declare a scope
@@ -183,7 +190,7 @@ if not exist "%LR_ROOT%" (
 		set CMAKE_GENERATOR=!MSVS_GENERATORS[2015]!
 		if "%BITNESS%" EQU "64" (set CMAKE_GENERATOR=!CMAKE_GENERATOR! Win64)
 		::set CMAKE_GENERATOR=!MSVS_GENERATORS[%Configuration%]!
-		:: if "%platform%" EQU "x64" (set CMAKE_GENERATOR=!CMAKE_GENERATOR! Win64)
+		:: if "!platform!" EQU "x64" (set CMAKE_GENERATOR=!CMAKE_GENERATOR! Win64)
 
 		echo cmake_generator = "!CMAKE_GENERATOR!" >> %LUAROCKS_INSTALL%\config-%LUA_SHORTV%.lua
 	)
@@ -228,7 +235,7 @@ if "%LUA%"=="luajit" (
 	echo Installation of Lua %LUA_VER% and LuaRocks %LUAROCKS_VER% done.
 	if defined NOCOMPAT echo Lua was built with compatibility flags disabled.
 )
-echo Platform         - %platform%
+echo Platform         - !platform!
 echo LUA              - %LUA%
 echo LUA_SHORTV       - %LUA_SHORTV%
 echo LJ_SHORTV        - %LJ_SHORTV%
