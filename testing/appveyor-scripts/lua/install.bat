@@ -25,7 +25,7 @@ if "%LUA%"=="luajit" (
 :: Now we declare a scope
 Setlocal EnableDelayedExpansion EnableExtensions
 
-if not defined LUAROCKS_URL set LUAROCKS_URL=http://keplerproject.github.io/luarocks/releases
+if not defined LUAROCKS_URL set LUAROCKS_URL=https://keplerproject.github.io/luarocks/releases
 if not defined LUAROCKS_REPO set LUAROCKS_REPO=https://luarocks.org
 if not defined LUA_URL set LUA_URL=http://www.lua.org/ftp
 if defined NOCOMPAT (
@@ -157,7 +157,7 @@ if not exist "%LR_ROOT%" (
 	) else (
 		if not exist downloads\luarocks-%LUAROCKS_VER%-win32.zip (
 			echo Downloading LuaRocks...
-			curl --silent --fail --max-time 120 --connect-timeout 30 --output downloads\luarocks-%LUAROCKS_VER%-win32.zip %LUAROCKS_URL%/luarocks-%LUAROCKS_VER%-win32.zip
+			curl --fail --max-time 120 --connect-timeout 30 --output downloads\luarocks-%LUAROCKS_VER%-win32.zip %LUAROCKS_URL%/luarocks-%LUAROCKS_VER%-win32.zip
 			%SEVENZIP% x -aoa -odownloads downloads\luarocks-%LUAROCKS_VER%-win32.zip
 		)
 	)
