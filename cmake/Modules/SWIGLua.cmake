@@ -45,6 +45,14 @@ SET(LUA_SHARE_INSTALL_DIR share/lua/${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR})
 SET(LUA_SHARE_INSTALL_DIR ${LUA_SHARE_INSTALL_DIR} CACHE FILEPATH "Lua .lua install directory")
 
 ########################################################################
+# MSVC workaround for bug in SWIG Lua code generation
+# See: https://github.com/swig/swig/issues/465
+########################################################################
+IF(MSVC)
+    SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS} /wd4244")
+ENDIF(MSVC)
+
+########################################################################
 # Macro to build and install Lua SWIG modules
 ########################################################################
 MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
@@ -89,7 +97,7 @@ MACRO(SWIG_BUILD_LUA_MODULE module_name cplusplus)
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
 
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME}
-        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_LUA_FLAGS}"
     )
 
     INSTALL(
