@@ -50,6 +50,8 @@ SET(LUA_SHARE_INSTALL_DIR ${LUA_SHARE_INSTALL_DIR} CACHE FILEPATH "Lua .lua inst
 ########################################################################
 IF(MSVC)
     SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS} /wd4244")
+ELSE()
+    SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS}")
 ENDIF(MSVC)
 
 ########################################################################
