@@ -468,6 +468,9 @@ namespace pkmn {
     void pokemon_gbaimpl::set_ball(
         const std::string &ball
     ) {
+        // Try and instantiate an item_entry to validate the ball.
+        (void)pkmn::database::item_entry(ball, get_game());
+
         pokemon_scoped_lock lock(this);
 
         _misc->origin_info &= ~PKSAV_GBA_BALL_MASK;

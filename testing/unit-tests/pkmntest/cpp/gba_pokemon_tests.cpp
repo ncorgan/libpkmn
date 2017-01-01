@@ -163,6 +163,10 @@ namespace pkmntest {
             pokemon->get_database_entry().get_base_friendship()
         );
         BOOST_CHECK_EQUAL(
+            pokemon->get_ability(),
+            "Blaze"
+        );
+        BOOST_CHECK_EQUAL(
             pokemon->get_ball(),
             "Premier Ball"
         );
@@ -212,6 +216,142 @@ namespace pkmntest {
         );
         check_stats_map(
             pokemon->get_stats()
+        );
+
+        /*
+         * Make sure the getters and setters agree. Also make sure it fails when
+         * expected.
+         */
+
+        BOOST_CHECK_THROW(
+            pokemon->set_nickname(""),
+        std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_nickname("Too long nickname"),
+        std::invalid_argument);
+        pokemon->set_nickname("foobarbaz");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_nickname(),
+            "foobarbaz"
+        );
+
+        // TODO: check personality being affected
+        pokemon->set_shininess(false);
+        BOOST_CHECK(not pokemon->is_shiny());
+        pokemon->set_shininess(true);
+        BOOST_CHECK(pokemon->is_shiny());
+
+        BOOST_CHECK_THROW(
+            pokemon->set_held_item("Not an item");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_held_item("Berry");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_held_item("Mach Bike");
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "None"
+        );
+        pokemon->set_held_item("Razz Berry");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_held_item().get_name(),
+            "Razz Berry"
+        );
+
+        BOOST_CHECK_THROW(
+            pokemon->set_trainer_name(""),
+        std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_trainer_name("Too long trainer name"),
+        std::invalid_argument);
+        pokemon->set_trainer_name("foobar");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_name(),
+            "foobar"
+        );
+
+        pokemon->set_trainer_id(0x1234ABCD);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_id(),
+            0x1234ABCD
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_public_id(),
+            0xABCD
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_secret_id(),
+            0x1234
+        );
+
+        pokemon->set_trainer_public_id(0x1A2B);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_id(),
+            0x12341A2B
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_public_id(),
+            0x1A2B
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_secret_id(),
+            0x1234
+        );
+
+        pokemon->set_trainer_secret_id(0x3C4D);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_id(),
+            0x3C4D1A2B
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_public_id(),
+            0x1A2B
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_secret_id(),
+            0x3C4D
+        );
+
+        pokemon->set_ability("Blaze");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_ability(),
+            "Blaze"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_ability("None");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_ability("Torrent"); // Invalid
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_ability("Speed Boost"); // Hidden ability
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_ability(),
+            "Blaze"
+        );
+
+        pokemon->set_ball("Great Ball");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_ball(),
+            "Great Ball"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_ball("Friend Ball"); // Not in Generation III
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_ball(),
+            "Great Ball"
         );
     }
 
