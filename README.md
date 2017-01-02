@@ -11,7 +11,6 @@ library for the main series Pokémon games.
 Feature Roadmap:
  * C# API
  * Java API
- * Lua API
 
 Build Dependencies
 -------------------------------------
@@ -62,4 +61,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/01/01
+README last updated: 2017/01/02
