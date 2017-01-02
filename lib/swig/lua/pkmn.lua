@@ -9,6 +9,7 @@ local pkmn = {}
 
 pkmn.calculations = require("pkmn_calculations_lua")
 pkmn.database = require("pkmn_database_lua")
+pkmn.paths = require("pkmn_paths_lua")
 pkmn.stl = require("pkmn_stl_lua")
 
 return pkmn
