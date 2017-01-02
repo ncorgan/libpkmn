@@ -26,6 +26,7 @@ SET(SWIG_LUA_LIBRARIES
     pkmn
 )
 
+SWIG_BUILD_LUA_MODULE(pkmn_buildinfo_lua TRUE)
 SWIG_BUILD_LUA_MODULE(pkmn_calculations_lua TRUE)
 SWIG_BUILD_LUA_MODULE(pkmn_core_lua         TRUE)
 SWIG_BUILD_LUA_MODULE(pkmn_database_lua     TRUE)
