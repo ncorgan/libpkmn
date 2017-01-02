@@ -29,8 +29,6 @@ environment:
 configuration: Release
 
 cache:
-  - C:\ProgramData\chocolatey\bin -> testing\appveyor-scripts\build-test.bat
-  - C:\ProgramData\chocolatey\lib -> testing\appveyor-scripts\build-test.bat
   - C:\lua -> testing\appveyor-scripts\build-test.bat
   - C:\external -> testing\appveyor-scripts\build-test.bat
 
