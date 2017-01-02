@@ -49,7 +49,7 @@ SET(LUA_SHARE_INSTALL_DIR ${LUA_SHARE_INSTALL_DIR} CACHE FILEPATH "Lua .lua inst
 # See: https://github.com/swig/swig/issues/465
 ########################################################################
 IF(MSVC)
-    SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS} /wd4244 /wd2220")
+    SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS} /wd4244 /wd4267")
 ELSE()
     SET(PKMN_CXX_LUA_FLAGS "${PKMN_CXX_FLAGS}")
 ENDIF(MSVC)
