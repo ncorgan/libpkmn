@@ -39,10 +39,20 @@ Using [Travis](https://travis-ci.org/ncorgan/libpkmn) and
 [AppVeyor](https://ci.appveyor.com/project/ncorgan/libpkmn), every push to this
 repository is automatically tested under the following configurations:
 
- * GCC 4.8.4, Python 2.7.6
- * Clang 3.5, Python 2.7.6
- * MSVC 2015 (x86, x64), Python 2.7.12
- * MSVC 2015 (x86, x64), Python 3.5.2
+ * Ubuntu 14.04 (x64)
+   * C/C++: GCC 4.8.4, Clang 3.5
+     * Boost: 1.55.0
+     * Qt: 4.8.6, 5.2.1
+   * SWIG: 3.0.2
+   * Lua: 5.1.5
+   * Python: 2.7.6
+ * Windows Server 2012 R2 (x86, x64)
+   * C/C++: MSVC 2015
+     * Boost: 1.62.0
+     * Qt: 5.7.1
+   * SWIG: 3.0.6
+   * Lua: 5.1.5, 5.2.4, 5.3.2
+   * Python: 2.7.12, 3.5.2
 
 Tests are run with the following frameworks:
  * C++: [Boost.Test](http://www.boost.org/doc/libs/1_62_0/libs/test/doc/html/index.html)
@@ -52,4 +62,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2016/12/31
+README last updated: 2017/01/01
