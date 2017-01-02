@@ -14,6 +14,15 @@ import unittest
 
 class gba_items_test(items_tests):
 
+    def setUp(self):
+        self.__all_pocket_item_names = ["Potion", "Mach Bike", "Great Ball", "TM01",
+                                        "Aspear Berry", "Wailmer Pail", "Master Ball", "HM04"]
+        self.__wrong_game_all_pocket_items = ["Pink Bow", "Black Sludge",
+                                              "Ein File S", "Gonzap's Key",
+                                              "GS Ball", "Poffin Items",
+                                              "TM51",
+                                              "Berry", "Occa Berry"]
+
     #
     # Helper functions
     #
@@ -40,11 +49,22 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(item_pocket, "Potion")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             item_pocket,
             ["Bicycle", "Master Ball", "HM01", "Razz Berry"]
         )
-        self.assertEqual(item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            item_pocket,
+            ["Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"]
+        )
+
+        # Make sure we can't add items from Gamecube games.
+        self.item_class_test_invalid_items(
+            item_pocket,
+            ["Time Flute", u"Pok\u00e9 Snack"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -79,11 +99,33 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(key_item_pocket, "Basement Key")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             key_item_pocket,
             ["Potion", "Master Ball", "HM01", "Razz Berry"]
         )
-        self.assertEqual(key_item_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            key_item_pocket,
+            ["GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"]
+        )
+
+        # Make sure we can't add items from Gamecube games.
+        self.item_class_test_invalid_items(
+            key_item_pocket,
+            ["Ein File S", "Powerup Part",
+             "Gonzap's Key", "Krane Memo 1"]
+        )
+        if game == "Ruby" or game == "Sapphire":
+            self.item_class_test_invalid_items(
+                key_item_pocket,
+                ["Helix Fossil", "Tea", "Ruby"]
+            )
+        if game != "Emerald":
+            self.item_class_test_invalid_items(
+                key_item_pocket,
+                ["Magma Emblem", "Old Sea Map"]
+            )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -116,11 +158,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             ball_pocket,
             ["Potion", "Bicycle", "HM01", "Razz Berry"]
         )
-        self.assertEqual(ball_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            ball_pocket,
+            ["Moon Ball", "Heal Ball", "Dream Ball"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         item_names = [u"Master Ball", u"Ultra Ball", u"Great Ball", u"Pok\u00e9 Ball",
@@ -156,11 +203,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(tmhm_pocket, "TM01")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             tmhm_pocket,
             ["Potion", "Master Ball", "Great Ball", "Razz Berry"]
         )
-        self.assertEqual(tmhm_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            tmhm_pocket,
+            ["TM51"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -195,11 +247,16 @@ class gba_items_test(items_tests):
         self.item_list_test_out_of_range_error(berry_pocket, "Razz Berry")
 
         # Make sure we can't add items from other pockets.
-        self.item_list_test_items_from_wrong_pocket(
+        self.item_class_test_invalid_items(
             berry_pocket,
             ["Potion", "Bicycle", "Great Ball", "HM02"]
         )
-        self.assertEqual(berry_pocket.get_num_items(), 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            berry_pocket,
+            ["Berry", "Occa Berry", "Roseli Berry"]
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -226,6 +283,12 @@ class gba_items_test(items_tests):
         # Confirm errors are thrown when expected.
         self.item_list_test_out_of_range_error(pc, "Potion")
 
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            pc,
+            self.__wrong_game_all_pocket_items
+        )
+
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
             pc,
@@ -244,6 +307,7 @@ class gba_items_test(items_tests):
         else:
             tmhm_pocket_name = "TMs & HMs"
             berry_pocket_name = "Berries"
+        ball_pocket_name = u"Pok\u00e9 Balls"
 
         # Check unchanging and initial values.
         self.assertEqual(bag.get_game(), game)
@@ -252,16 +316,100 @@ class gba_items_test(items_tests):
         self.assertEqual(len(pockets), 5)
         self.assertTrue(pockets.has_key("Items"))
         self.assertTrue(pockets.has_key("Key Items"))
-        self.assertTrue(pockets.has_key(u"Pok\u00e9 Balls"))
+        self.assertTrue(pockets.has_key(ball_pocket_name))
         self.assertTrue(pockets.has_key(tmhm_pocket_name))
         self.assertTrue(pockets.has_key(berry_pocket_name))
 
         self.__test_item_pocket(bag["Items"], game)
         self.__test_key_item_pocket(bag["Key Items"], game)
-        self.__test_ball_pocket(bag[u"Pok\u00e9 Balls"], game)
+        self.__test_ball_pocket(bag[ball_pocket_name], game)
         self.__test_tmhm_pocket(bag[tmhm_pocket_name], game)
         self.__test_berry_pocket(bag[berry_pocket_name], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
+
+        items = [u"Potion", u"Mach Bike", u"Great Ball", u"TM01",
+                 u"Aspear Berry", u"Wailmer Pail", u"Master Ball", u"HM04"]
+
+        # Make sure adding items through the bag adds to the proper pocket.
+        self.assertEqual(bag["Items"].get_num_items(), 0)
+        self.assertEqual(bag["Key Items"].get_num_items(), 0)
+        self.assertEqual(bag[ball_pocket_name].get_num_items(), 0)
+        self.assertEqual(bag[tmhm_pocket_name].get_num_items(), 0)
+        self.assertEqual(bag[berry_pocket_name].get_num_items(), 0)
+        for item in items:
+            bag.add(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "Potion")
+        self.assertEqual(bag["Items"][0].amount, 5)
+        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].amount, 0)
+
+        self.assertEqual(bag["Key Items"][0].item.get_name(), "Mach Bike")
+        self.assertEqual(bag["Key Items"][0].amount, 5)
+        self.assertEqual(bag["Key Items"][1].item.get_name(), "Wailmer Pail")
+        self.assertEqual(bag["Key Items"][1].amount, 5)
+        self.assertEqual(bag["Key Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][2].amount, 0)
+
+        self.assertEqual(bag[ball_pocket_name][0].item.get_name(), "Great Ball")
+        self.assertEqual(bag[ball_pocket_name][0].amount, 5)
+        self.assertEqual(bag[ball_pocket_name][1].item.get_name(), "Master Ball")
+        self.assertEqual(bag[ball_pocket_name][1].amount, 5)
+        self.assertEqual(bag[ball_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[tmhm_pocket_name][0].item.get_name(), "TM01")
+        self.assertEqual(bag[tmhm_pocket_name][0].amount, 5)
+        self.assertEqual(bag[tmhm_pocket_name][1].item.get_name(), "HM04")
+        self.assertEqual(bag[tmhm_pocket_name][1].amount, 5)
+        self.assertEqual(bag[tmhm_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[berry_pocket_name][0].item.get_name(), "Aspear Berry")
+        self.assertEqual(bag[berry_pocket_name][0].amount, 5)
+        self.assertEqual(bag[berry_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][1].amount, 0)
+
+        # Make sure removing items through the bag removes from the proper pocket.
+        for item in items:
+            bag.remove(item, 5)
+
+        self.assertEqual(bag["Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Items"][0].amount, 0)
+        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].amount, 0)
+
+        self.assertEqual(bag["Key Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][0].amount, 0)
+        self.assertEqual(bag["Key Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][1].amount, 0)
+        self.assertEqual(bag["Key Items"][2].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][2].amount, 0)
+
+        self.assertEqual(bag[ball_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][0].amount, 0)
+        self.assertEqual(bag[ball_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][1].amount, 0)
+        self.assertEqual(bag[ball_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[ball_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[tmhm_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][0].amount, 0)
+        self.assertEqual(bag[tmhm_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][1].amount, 0)
+        self.assertEqual(bag[tmhm_pocket_name][2].item.get_name(), "None")
+        self.assertEqual(bag[tmhm_pocket_name][2].amount, 0)
+
+        self.assertEqual(bag[berry_pocket_name][0].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][0].amount, 0)
+        self.assertEqual(bag[berry_pocket_name][1].item.get_name(), "None")
+        self.assertEqual(bag[berry_pocket_name][1].amount, 0)
+
+        # Make sure we can't add items from other generations.
+        self.item_class_test_invalid_items(
+            bag,
+            self.__wrong_game_all_pocket_items
+        )
 
     #
     # Ruby

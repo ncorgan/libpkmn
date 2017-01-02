@@ -48,7 +48,18 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(list->get_num_items(), num_items);
     }
 
-    void test_item_list_items_from_wrong_pocket(
+    void test_item_bag_invalid_items(
+        pkmn::item_bag::sptr bag,
+        const std::vector<std::string> &item_names
+    ) {
+        for(auto iter = item_names.begin(); iter != item_names.end(); ++iter) {
+            BOOST_CHECK_THROW(
+                bag->add(*iter, 1)
+            , std::invalid_argument);
+        }
+    }
+
+    void test_item_list_invalid_items(
         pkmn::item_list::sptr list,
         const std::vector<std::string> &item_names
     ) {

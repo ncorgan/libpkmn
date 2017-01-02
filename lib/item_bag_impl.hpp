@@ -7,11 +7,16 @@
 #ifndef PKMN_ITEM_BAG_IMPL_HPP
 #define PKMN_ITEM_BAG_IMPL_HPP
 
+#include "mem/scoped_lock.hpp"
+
 #include <pkmn/item_bag.hpp>
 
 #include <boost/noncopyable.hpp>
 
 namespace pkmn {
+
+    class item_bag_impl;
+    typedef pkmn::mem::scoped_lock<item_bag_impl> item_bag_scoped_lock;
 
     class item_bag_impl: public item_bag, boost::noncopyable {
         public:
@@ -44,6 +49,8 @@ namespace pkmn {
 
             void* get_native();
 
+            friend item_bag_scoped_lock;
+
         protected:
             int _game_id;
 
@@ -52,6 +59,7 @@ namespace pkmn {
 
             bool _our_mem;
             void* _native;
+            boost::mutex _mem_mutex;
 
             virtual void _set_ptrs() = 0;
     };

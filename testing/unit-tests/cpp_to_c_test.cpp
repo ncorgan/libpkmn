@@ -404,6 +404,7 @@ BOOST_AUTO_TEST_CASE(item_slot_cpp_to_c_test) {
 
     pkmn_item_slot_free(&item_slot_c);
     BOOST_CHECK(!item_slot_c.item);
+    BOOST_CHECK_EQUAL(item_slot_c.amount, 0);
 }
 
 BOOST_AUTO_TEST_CASE(item_slots_cpp_to_c_test) {
@@ -427,28 +428,25 @@ BOOST_AUTO_TEST_CASE(item_slots_cpp_to_c_test) {
         )
     );
 
-    pkmn_item_slots_t item_slots_c = NULL;
-    size_t list_length = 0;
-
+    pkmn_item_slots_t item_slots_c = { NULL, 0 };
     pkmn::pkmn_item_slots_cpp_to_c(
         item_slots_cpp,
-        &item_slots_c,
-        &list_length
+        &item_slots_c
     );
 
-    BOOST_CHECK_EQUAL(list_length, 3);
-    BOOST_CHECK_EQUAL(item_slots_c[0].item, "Potion");
-    BOOST_CHECK_EQUAL(item_slots_c[0].amount, 50);
-    BOOST_CHECK_EQUAL(item_slots_c[1].item, "Berry");
-    BOOST_CHECK_EQUAL(item_slots_c[1].amount, 28);
-    BOOST_CHECK_EQUAL(item_slots_c[2].item, "Berry Pouch");
-    BOOST_CHECK_EQUAL(item_slots_c[2].amount, 1);
+    BOOST_CHECK_EQUAL(item_slots_c.length, 3);
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[0].item, "Potion");
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[0].amount, 50);
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[1].item, "Berry");
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[1].amount, 28);
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[2].item, "Berry Pouch");
+    BOOST_CHECK_EQUAL(item_slots_c.item_slots[2].amount, 1);
 
     pkmn_item_slots_free(
-        &item_slots_c,
-        list_length
+        &item_slots_c
     );
-    BOOST_CHECK(!item_slots_c);
+    BOOST_CHECK(!item_slots_c.item_slots);
+    BOOST_CHECK_EQUAL(item_slots_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(levelup_move_cpp_to_c_test) {
@@ -469,6 +467,7 @@ BOOST_AUTO_TEST_CASE(levelup_move_cpp_to_c_test) {
 
     pkmn_levelup_move_free(&levelup_move_c);
     BOOST_CHECK(!levelup_move_c.move);
+    BOOST_CHECK_EQUAL(levelup_move_c.level, 0);
 }
 
 BOOST_AUTO_TEST_CASE(levelup_moves_cpp_to_c_test) {
@@ -492,28 +491,25 @@ BOOST_AUTO_TEST_CASE(levelup_moves_cpp_to_c_test) {
         )
     );
 
-    pkmn_levelup_moves_t levelup_moves_c = NULL;
-    size_t list_length = 0;
-
+    pkmn_levelup_moves_t levelup_moves_c = { NULL, 0 };
     pkmn::pkmn_levelup_moves_cpp_to_c(
         levelup_moves_cpp,
-        &levelup_moves_c,
-        &list_length
+        &levelup_moves_c
     );
 
-    BOOST_CHECK_EQUAL(list_length, 3);
-    BOOST_CHECK_EQUAL(levelup_moves_c[0].move, "Scratch");
-    BOOST_CHECK_EQUAL(levelup_moves_c[0].level, 50);
-    BOOST_CHECK_EQUAL(levelup_moves_c[1].move, "Synthesis");
-    BOOST_CHECK_EQUAL(levelup_moves_c[1].level, 5);
-    BOOST_CHECK_EQUAL(levelup_moves_c[2].move, "Frenzy Plant");
-    BOOST_CHECK_EQUAL(levelup_moves_c[2].level, 37);
+    BOOST_CHECK_EQUAL(levelup_moves_c.length, 3);
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[0].move, "Scratch");
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[0].level, 50);
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[1].move, "Synthesis");
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[1].level, 5);
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[2].move, "Frenzy Plant");
+    BOOST_CHECK_EQUAL(levelup_moves_c.levelup_moves[2].level, 37);
 
     pkmn_levelup_moves_free(
-        &levelup_moves_c,
-        list_length
+        &levelup_moves_c
     );
-    BOOST_CHECK(!levelup_moves_c);
+    BOOST_CHECK(!levelup_moves_c.levelup_moves);
+    BOOST_CHECK_EQUAL(levelup_moves_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(move_list_cpp_to_c_test) {
@@ -528,25 +524,22 @@ BOOST_AUTO_TEST_CASE(move_list_cpp_to_c_test) {
         pkmn::database::move_entry("Frenzy Plant", "Emerald")
     );
 
-    pkmn_string_list_t string_list_c = NULL;
-    size_t list_length = 0;
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::pkmn_move_list_to_string_list(
         move_list_cpp,
-        &string_list_c,
-        &list_length
+        &string_list_c
     );
 
-    BOOST_CHECK_EQUAL(list_length, 3);
-    BOOST_CHECK_EQUAL(string_list_c[0], "Scratch");
-    BOOST_CHECK_EQUAL(string_list_c[1], "Synthesis");
-    BOOST_CHECK_EQUAL(string_list_c[2], "Frenzy Plant");
+    BOOST_CHECK_EQUAL(string_list_c.length, 3);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "Scratch");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "Synthesis");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "Frenzy Plant");
 
     pkmn_string_list_free(
-        &string_list_c,
-        list_length
+        &string_list_c
     );
-    BOOST_CHECK(!string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
@@ -561,25 +554,22 @@ BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
         pkmn::database::pokemon_entry("Treecko", "Ruby", "")
     );
 
-    pkmn_string_list_t string_list_c = NULL;
-    size_t list_length = 0;
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::pkmn_pokemon_entries_to_string_list(
         pokemon_entries_cpp,
-        &string_list_c,
-        &list_length
+        &string_list_c
     );
 
-    BOOST_CHECK_EQUAL(list_length, 3);
-    BOOST_CHECK_EQUAL(string_list_c[0], "Charmander");
-    BOOST_CHECK_EQUAL(string_list_c[1], "Totodile");
-    BOOST_CHECK_EQUAL(string_list_c[2], "Treecko");
+    BOOST_CHECK_EQUAL(string_list_c.length, 3);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "Charmander");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "Totodile");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "Treecko");
 
     pkmn_string_list_free(
-        &string_list_c,
-        list_length
+        &string_list_c
     );
-    BOOST_CHECK(!string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {
@@ -644,23 +634,20 @@ BOOST_AUTO_TEST_CASE(string_vector_cpp_to_c_test) {
     string_vector_cpp.emplace_back("PKSav");
     string_vector_cpp.emplace_back("TKO");
 
-    pkmn_string_list_t string_list_c = NULL;
-    size_t list_length = 0;
-
+    pkmn_string_list_t string_list_c = { NULL, 0 };
     pkmn::std_vector_std_string_to_string_list(
         string_vector_cpp,
-        &string_list_c,
-        &list_length
+        &string_list_c
     );
 
-    BOOST_CHECK_EQUAL(list_length, 3);
-    BOOST_CHECK_EQUAL(string_list_c[0], "LibPKMN");
-    BOOST_CHECK_EQUAL(string_list_c[1], "PKSav");
-    BOOST_CHECK_EQUAL(string_list_c[2], "TKO");
+    BOOST_CHECK_EQUAL(string_list_c.length, 3);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "LibPKMN");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "PKSav");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "TKO");
 
     pkmn_string_list_free(
-        &string_list_c,
-        list_length
+        &string_list_c
     );
-    BOOST_CHECK(!string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
