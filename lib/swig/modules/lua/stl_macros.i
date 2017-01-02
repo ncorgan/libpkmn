@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,6 +19,11 @@
 %enddef
 
 %define PKMN_LUA_SPTR(cpp_type)
+    %extend pkmn::shared_ptr<pkmn:: ## cpp_type> {
+        bool __eq__(const pkmn::shared_ptr<pkmn:: ## cpp_type> rhs) {
+            return ((*self) == rhs);
+        }
+    }
     %template(cpp_type ## _sptr) pkmn::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
