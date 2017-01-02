@@ -11,6 +11,9 @@ local items_tests = require("items_tests")
 
 local gen2_items_tests = {}
 
+gen2_items_tests.crystal_items = {"Clear Bell", "GS Ball", "Blue Card", "Egg Ticket"}
+gen2_items_tests.wrong_generation_all_pocket_items = {"Black Sludge", "Poffin Items", "TM51", "Occa Berry"}
+
 function gen2_items_tests.test_item_pocket(item_pocket, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#item_pocket, 20)
@@ -26,7 +29,7 @@ function gen2_items_tests.test_item_pocket(item_pocket, game)
     items_tests.item_list_test_out_of_range_error(item_pocket, "Potion")
 
     -- Make sure we can't add items from other pockets.
-    items_tests.item_list_test_items_from_wrong_pocket(
+    items_tests.item_list_test_invalid_items(
         item_pocket,
         {"Bicycle", "Master Ball", "HM01"}
     )
@@ -58,26 +61,25 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     items_tests.item_list_test_out_of_range_error(key_item_pocket, "Bicycle")
 
     -- Make sure we can't add items from other pockets.
-    items_tests.item_list_test_items_from_wrong_pocket(
+    items_tests.item_list_test_invalid_items(
         key_item_pocket,
         {"Potion", "Master Ball", "HM01"}
     )
     luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
 
     -- Crystal-specific items
-    local crystal_items = {"Clear Bell", "GS Ball", "Blue Card", "Egg Ticket"}
     if game == "Crystal"
     then
-        for i = 1, #crystal_items
+        for i = 1, #gen2_items_tests.crystal_items
         do
-            key_item_pocket:add(crystal_items[i], 1)
-            key_item_pocket:remove(crystal_items[i], 1)
+            key_item_pocket:add(gen2_items_tests.crystal_items[i], 1)
+            key_item_pocket:remove(gen2_items_tests.crystal_items[i], 1)
         end
     else
-        for i = 1, #crystal_items
+        for i = 1, #gen2_items_tests.crystal_items
         do
-            luaunit.assertError(pkmn.core.item_list_sptr.add, key_item_pocket, crystal_items[i], 1)
-            luaunit.assertError(pkmn.core.item_list_sptr.remove, key_item_pocket, crystal_items[i], 1)
+            luaunit.assertError(pkmn.core.item_list_sptr.add, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
+            luaunit.assertError(pkmn.core.item_list_sptr.remove, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
         end
     end
     luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
@@ -108,7 +110,7 @@ function gen2_items_tests.test_ball_pocket(ball_pocket, game)
     items_tests.item_list_test_out_of_range_error(ball_pocket, "Master Ball")
 
     -- Make sure we can't add items from other pockets.
-    items_tests.item_list_test_items_from_wrong_pocket(
+    items_tests.item_list_test_invalid_items(
         ball_pocket,
         {"Potion", "Bicycle", "HM01"}
     )
@@ -151,7 +153,7 @@ function gen2_items_tests.test_tmhm_pocket(tmhm_pocket, game)
     items_tests.item_list_test_out_of_range_error(tmhm_pocket, "TM10")
 
     -- Make sure we can't add items from other pockets.
-    items_tests.item_list_test_items_from_wrong_pocket(
+    items_tests.item_list_test_invalid_items(
         tmhm_pocket,
         {"Potion", "Master Ball", "Bicycle"}
     )
@@ -236,6 +238,91 @@ function gen2_items_tests.test_item_bag(bag, game)
     gen2_items_tests.test_key_item_pocket(pockets["KeyItems"], game)
     gen2_items_tests.test_ball_pocket(pockets["Balls"], game)
     gen2_items_tests.test_tmhm_pocket(pockets["TM/HM"], game)
+
+    local items = {"Potion", "Bicycle", "Great Ball", "TM28",
+                   "Berry", "SquirtBottle", "Friend Ball", "HM01"}
+    
+    -- Make sure adding items through the bag adds to the proper pockets.
+    luaunit.assertEquals(bag["Items"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["KeyItems"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["Balls"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["TM/HM"]:get_num_items(), 0)
+    for i = 1, #items
+    do
+        bag:add(items[i], 5)
+    end
+
+    luaunit.assertEquals(bag["Items"][1].item:get_name(), "Potion")
+    luaunit.assertEquals(bag["Items"][1].amount, 5)
+    luaunit.assertEquals(bag["Items"][2].item:get_name(), "Berry")
+    luaunit.assertEquals(bag["Items"][2].amount, 5)
+    luaunit.assertEquals(bag["Items"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["Items"][3].amount, 0)
+
+    luaunit.assertEquals(bag["KeyItems"][1].item:get_name(), "Bicycle")
+    luaunit.assertEquals(bag["KeyItems"][1].amount, 5)
+    luaunit.assertEquals(bag["KeyItems"][2].item:get_name(), "SquirtBottle")
+    luaunit.assertEquals(bag["KeyItems"][2].amount, 5)
+    luaunit.assertEquals(bag["KeyItems"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["KeyItems"][3].amount, 0)
+
+    luaunit.assertEquals(bag["Balls"][1].item:get_name(), "Great Ball")
+    luaunit.assertEquals(bag["Balls"][1].amount, 5)
+    luaunit.assertEquals(bag["Balls"][2].item:get_name(), "Friend Ball")
+    luaunit.assertEquals(bag["Balls"][2].amount, 5)
+    luaunit.assertEquals(bag["Balls"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["Balls"][3].amount, 0)
+
+    luaunit.assertEquals(bag["TM/HM"][1].item:get_name(), "TM01")
+    luaunit.assertEquals(bag["TM/HM"][1].amount, 0)
+    luaunit.assertEquals(bag["TM/HM"][2].item:get_name(), "TM02")
+    luaunit.assertEquals(bag["TM/HM"][2].amount, 0)
+    luaunit.assertEquals(bag["TM/HM"][28].item:get_name(), "TM28")
+    luaunit.assertEquals(bag["TM/HM"][28].amount, 5)
+    luaunit.assertEquals(bag["TM/HM"][51].item:get_name(), "HM01")
+    luaunit.assertEquals(bag["TM/HM"][51].amount, 5)
+
+    -- Make sure removing items through the bag removes from the proper pockets.
+    for i = 1, #items
+    do
+        bag:remove(items[i], 5)
+    end
+
+    luaunit.assertEquals(bag["Items"][1].item:get_name(), "None")
+    luaunit.assertEquals(bag["Items"][1].amount, 0)
+    luaunit.assertEquals(bag["Items"][2].item:get_name(), "None")
+    luaunit.assertEquals(bag["Items"][2].amount, 0)
+    luaunit.assertEquals(bag["Items"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["Items"][3].amount, 0)
+
+    luaunit.assertEquals(bag["KeyItems"][1].item:get_name(), "None")
+    luaunit.assertEquals(bag["KeyItems"][1].amount, 0)
+    luaunit.assertEquals(bag["KeyItems"][2].item:get_name(), "None")
+    luaunit.assertEquals(bag["KeyItems"][2].amount, 0)
+    luaunit.assertEquals(bag["KeyItems"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["KeyItems"][3].amount, 0)
+
+    luaunit.assertEquals(bag["Balls"][1].item:get_name(), "None")
+    luaunit.assertEquals(bag["Balls"][1].amount, 0)
+    luaunit.assertEquals(bag["Balls"][2].item:get_name(), "None")
+    luaunit.assertEquals(bag["Balls"][2].amount, 0)
+    luaunit.assertEquals(bag["Balls"][3].item:get_name(), "None")
+    luaunit.assertEquals(bag["Balls"][3].amount, 0)
+
+    luaunit.assertEquals(bag["TM/HM"][1].item:get_name(), "TM01")
+    luaunit.assertEquals(bag["TM/HM"][1].amount, 0)
+    luaunit.assertEquals(bag["TM/HM"][2].item:get_name(), "TM02")
+    luaunit.assertEquals(bag["TM/HM"][2].amount, 0)
+    luaunit.assertEquals(bag["TM/HM"][28].item:get_name(), "TM28")
+    luaunit.assertEquals(bag["TM/HM"][28].amount, 0)
+    luaunit.assertEquals(bag["TM/HM"][51].item:get_name(), "HM01")
+    luaunit.assertEquals(bag["TM/HM"][51].amount, 0)
+
+    -- Make sure we can't add items from later generations.
+    items_tests.item_bag_test_invalid_items(
+        bag,
+        gen2_items_tests.wrong_generation_all_pocket_items
+    )
 end
 
 --
