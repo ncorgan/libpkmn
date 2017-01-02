@@ -9,7 +9,8 @@ local luaunit = require("luaunit")
 
 local tests = {
     require("gen1_items_tests"),
-    require("gen2_items_tests")
+    require("gen2_items_tests"),
+    require("gba_items_tests")
 }
 
 local runner = luaunit.LuaUnit.new()
