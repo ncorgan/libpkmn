@@ -27,5 +27,9 @@
         return (self->get() == rhs.get());
     }
 
+    int __len(void*) {
+        return int(self->get()->get_pockets().size());
+    }
+
 }
 %template(item_bag_sptr) pkmn::shared_ptr<pkmn::item_bag>;

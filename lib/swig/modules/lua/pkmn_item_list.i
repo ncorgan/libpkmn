@@ -18,14 +18,21 @@
 
     const pkmn::item_slot& __getitem__(
         int index
-    ) {
-        return self->get()->as_vector().at(index);
+    ) throw (std::out_of_range)
+    {
+        if (index == 0)
+            throw std::out_of_range("Lua lists are 1-based");
+        return self->get()->as_vector().at(index-1);
     }
 
     bool __eq__(
         const pkmn::item_list::sptr &rhs
     ) {
         return (self->get() == rhs.get());
+    }
+
+    int __len(void*) {
+        return int(self->get()->get_capacity());
     }
 
 }

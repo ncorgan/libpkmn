@@ -44,6 +44,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         )
         SET(LUA_PATH
             "${PKMN_BINARY_DIR}/lib/swig/lua/?.lua"
+            "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS

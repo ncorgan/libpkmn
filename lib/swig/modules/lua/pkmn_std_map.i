@@ -44,6 +44,9 @@ namespace std {
             void __setitem__(const K& key, const T& val) {
                 (*self)[key] = val;
             }
+            int __len(void*) {
+                return int(self->size());
+            }
             const T& get(const K& key) throw (std::out_of_range) {
                 std::map<K,T >::iterator i = self->find(key);
                 if (i != self->end())

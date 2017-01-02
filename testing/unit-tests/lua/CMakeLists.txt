@@ -28,6 +28,7 @@ IF(LUAUNIT_FOUND)
     SET(lua_tests
         lua_calculations_test
         lua_database_entry_test
+        lua_items_test
         lua_lists_test
         lua_paths_test
     )
