@@ -5,16 +5,12 @@
 -- or copy at http://opensource.org/licenses/MIT)
 --
 
-local test_results = {
-    require("gen1_items_tests")
+local luaunit = require("luaunit")
+
+local tests = {
+    require("gen1_items_tests"),
+    require("gen2_items_tests")
 }
 
-for i = 1, #test_results
-do
-    if test_results[i] ~= 0
-    then
-        os.exit(test_results[i])
-    end
-end
-
-os.exit(0)
+local runner = luaunit.LuaUnit.new()
+os.exit(runner:runSuite())

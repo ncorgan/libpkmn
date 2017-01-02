@@ -119,6 +119,3 @@ function test_yellow_item_bag()
     local bag = pkmn.item_bag("Yellow")
     gen1_items_tests.test_item_bag(bag, "Yellow")
 end
-
-local runner = luaunit.LuaUnit.new()
-return runner:runSuite()

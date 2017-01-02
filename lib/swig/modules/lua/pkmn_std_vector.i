@@ -55,7 +55,7 @@ namespace std {
 			{
                 if (idx == 0)
                     throw std::out_of_range("Lua lists are 1-based");
-				if (self->size())
+				if (idx>self->size())
 					throw std::out_of_range("in vector::__setitem__()");
 				(*self)[idx-1]=val;
 			}
