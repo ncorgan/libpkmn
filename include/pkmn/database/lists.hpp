@@ -37,7 +37,7 @@ namespace pkmn { namespace database {
     );
 
     /*!
-     * @brief Returns an alphabetized lists of items available in the given game.
+     * @brief Returns an alphabetized list of items available in the given game.
      *
      * \param game which game
      * \throws std::invalid_argument if the given game is invalid
@@ -76,10 +76,12 @@ namespace pkmn { namespace database {
     PKMN_API std::vector<std::string> get_nature_list();
 
     /*!
-     * @brief Returns a list (sorted by National Pokédex number) of Pokémon introduced in (or up to) the given generation.
+     * @brief Returns a list (sorted by National Pokédex number) of Pokémon introduced in
+     *        (or up to) the given generation.
      *
      * \param generation which generation
      * \param include_previous include Pokémon from previous generations.
+     * \throws pkmn::range_error if generation is not [1-6]
      */
     PKMN_API std::vector<std::string> get_pokemon_list(
         int generation,
@@ -95,6 +97,7 @@ namespace pkmn { namespace database {
      * @brief Returns a list (ordered as in-game) of ribbons available in the given generation.
      *
      * \param generation which generation
+     * \throws pkmn::range_error if generation is not [3-6]
      */
     PKMN_API std::vector<std::string> get_ribbon_list(
         int generation

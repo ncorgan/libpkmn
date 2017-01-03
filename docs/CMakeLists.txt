@@ -23,7 +23,10 @@ MACRO(PKMN_BUILD_DOXYGEN_DOCS files lang langname)
 ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
 
 # C++ documentation
-FILE(GLOB_RECURSE hpp_files ${CMAKE_SOURCE_DIR}/include/pkmn/*.hpp)
+FILE(GLOB_RECURSE hpp_files
+    ${PKMN_SOURCE_DIR}/include/pkmn/*.hpp
+    ${PKMN_BINARY_DIR}/include/pkmn/*.hpp
+)
 PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
 # C documentation
