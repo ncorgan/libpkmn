@@ -38,10 +38,6 @@ install:
   - testing\appveyor-scripts\lua\set_compiler_env.bat
   - testing\appveyor-scripts\lua\install.bat
   - luarocks install luaunit
-  - dir C:\Tools\NUnit
-  - SET PATH=%PATH%;C:\Tools\NUnit\bin
-  - SET PATH=%PATH%;C:\Tools\NUnit\bin\addins
-  - SET PATH=%PATH%;C:\Tools\NUnit\bin\lib
 
 build_script:
   - testing\appveyor-scripts\build-test.bat
