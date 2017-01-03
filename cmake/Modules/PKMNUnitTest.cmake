@@ -42,6 +42,10 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             "${CMAKE_CURRENT_BINARY_DIR}"
             "${PKMN_BINARY_DIR}/lib/swig/java/PKMN.jar"
         )
+        SET(LUA_PATH
+            "${PKMN_BINARY_DIR}/lib/swig/lua/?.lua"
+            "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
+        )
         IF(WIN32)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
@@ -60,9 +64,13 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
             SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll")
+            STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
             STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
+            STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
+            STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
@@ -86,6 +94,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp"
                 "${TESTS_BINARY_DIR}/pkmntest/c"
             )
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/?.so")
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")
@@ -146,6 +155,11 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${csharp_test_cmd})
 ENDMACRO(PKMN_ADD_CSHARP_TEST)
+
+MACRO(PKMN_ADD_LUA_TEST test_name)
+    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_LUA_TEST test_name)
 
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")

@@ -19,10 +19,20 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with a list of types available in the given game.
+     */
     class PKMN_API TypeListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
+            /*!
+             * @brief Constructor.
+             *
+             * \param game which game
+             * \param parent parent widget
+             * \throws std::invalid_argument if the given game is invalid
+             */
             TypeListComboBox(
                 const QString &game,
                 QWidget* parent

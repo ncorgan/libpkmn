@@ -9,6 +9,7 @@
 
 #include <pkmn/config.hpp>
 
+#include <algorithm>
 #include <cstdint>
 
 namespace pkmn { namespace calculations {
@@ -58,37 +59,31 @@ namespace pkmn { namespace calculations {
         }
 #endif
 
+        /*!
+         * @brief Equality check with another Spinda spots struct.
+         * \param rhs struct with which to compare self
+         */
+        PKMN_CONSTEXPR_OR_INLINE bool operator==(
+            const spinda_coords &rhs
+        ) const {
+            return (this->x == rhs.x) and (this->y == rhs.y);
+        }
+
+        /*!
+         * @brief Inequality check with another Spinda spots struct.
+         * \param rhs struct with which to compare self
+         */
+        PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+            const spinda_coords &rhs
+        ) const {
+            return (this->x != rhs.x) or (this->y != rhs.y);
+        }
+
         //! X coordinate.
         int x;
         //! Y coordinate.
         int y;
     };
-
-#ifndef SWIG
-    /*!
-     * @brief Equality check between two Spinda spot coordinates.
-     * \param lhs Coordinates to left of == operator
-     * \param rhs Coordinates to right of == operator
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
-        const spinda_coords &lhs,
-        const spinda_coords &rhs
-    ) {
-        return (lhs.x == rhs.x) and (lhs.y == rhs.y);
-    }
-
-    /*!
-     * @brief Inequality check between two Spinda spot coordinates.
-     * \param lhs Coordinates to left of != operator
-     * \param rhs Coordinates to right of != operator
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-        const spinda_coords &lhs,
-        const spinda_coords &rhs
-    ) {
-        return (not (lhs == rhs));
-    }
-#endif
 
     //! Coordinates of all four Spinda spots.
     struct spinda_spots {
@@ -161,10 +156,10 @@ namespace pkmn { namespace calculations {
             spinda_coords&& re,
             spinda_coords&& lf,
             spinda_coords&& rf
-        ): left_ear(le),
-           right_ear(re),
-           left_face(lf),
-           right_face(rf) {}
+        ): left_ear(std::move(le)),
+           right_ear(std::move(re)),
+           left_face(std::move(lf)),
+           right_face(std::move(rf)) {}
 
         /*!
          * @brief Move constructor.
@@ -172,10 +167,10 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_spots(
             spinda_spots&& spots
-        ): left_ear(spots.left_ear),
-           right_ear(spots.right_ear),
-           left_face(spots.left_face),
-           right_face(spots.right_face) {}
+        ): left_ear(std::move(spots.left_ear)),
+           right_ear(std::move(spots.right_ear)),
+           left_face(std::move(spots.left_face)),
+           right_face(std::move(spots.right_face)) {}
 
         /*!
          * @brief Assignment operator.
@@ -192,6 +187,32 @@ namespace pkmn { namespace calculations {
         }
 #endif
 
+        /*!
+         * @brief Equality check with another set of Spinda spot coordinates.
+         * \param rhs Struct with which to compare self
+         */
+        PKMN_CONSTEXPR_OR_INLINE bool operator==(
+            const spinda_spots &rhs
+        ) const {
+            return (this->left_ear == rhs.left_ear) and \
+                   (this->right_ear == rhs.right_ear) and \
+                   (this->left_face == rhs.left_face) and \
+                   (this->right_face == rhs.right_face);
+        }
+
+        /*!
+         * @brief Inequality check with another set of Spinda spot coordinates.
+         * \param rhs Struct with which to compare self
+         */
+        PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+            const spinda_spots &rhs
+        ) const {
+            return (this->left_ear != rhs.left_ear) or \
+                   (this->right_ear != rhs.right_ear) or \
+                   (this->left_face != rhs.left_face) or \
+                   (this->right_face != rhs.right_face);
+        }
+
         //! Coordinates of spot on the left ear.
         spinda_coords left_ear;
 
@@ -204,35 +225,6 @@ namespace pkmn { namespace calculations {
         //! Coordinates of spot on the right of the face.
         spinda_coords right_face;
     };
-
-#ifndef SWIG
-    /*!
-     * @brief Equality check between two sets of Spinda spot coordinates.
-     * \param lhs Coordinates to left of == operator
-     * \param rhs Coordinates to right of == operator
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
-        const spinda_spots &lhs,
-        const spinda_spots &rhs
-    ) {
-        return (lhs.left_ear == rhs.left_ear) and \
-               (lhs.right_ear == rhs.right_ear) and \
-               (lhs.left_face == rhs.left_face) and \
-               (lhs.right_face == rhs.right_face);
-    }
-
-    /*!
-     * @brief Inequality check between two sets of Spinda spot coordinates.
-     * \param lhs Coordinates to left of != operator
-     * \param rhs Coordinates to right of != operator
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-        const spinda_spots &lhs,
-        const spinda_spots &rhs
-    ) {
-        return (not (lhs == rhs));
-    }
-#endif
 
     /*!
      * @brief Calculates offsets of Spinda's spots in a Generation III .
