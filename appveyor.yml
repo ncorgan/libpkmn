@@ -41,3 +41,5 @@ install:
 
 build_script:
   - testing\appveyor-scripts\build-test.bat
+
+test: off
