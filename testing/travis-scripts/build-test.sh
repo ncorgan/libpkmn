@@ -37,25 +37,25 @@ else
     # GCC compile check
     cd $REPO_TOPLEVEL/test-env/gcc
     [ $? -ne 0 ] && exit 1
-    cmake -DCMAKE_BUILD_TYPE=Debug \
+    cmake -DCMAKE_BUILD_TYPE=Release \
 	  -DDESIRED_QT_VERSION=$DESIRED_QT_VERSION \
 	  $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
-    ctest -E "cpp_QtWidgetsTest" --output-on-failure
+    ctest -E ".*GUI" --output-on-failure
     [ $? -ne 0 ] && exit 1
 
     # Clang compile check
     cd $REPO_TOPLEVEL/test-env/clang
     [ $? -ne 0 ] && exit 1
-    CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Debug \
+    CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Release \
 	                       -DDESIRED_QT_VERSION=$DESIRED_QT_VERSION \
                                $REPO_TOPLEVEL
     [ $? -ne 0 ] && exit 1
     make
     [ $? -ne 0 ] && exit 1
-    ctest -E "cpp_QtWidgetsTest" --output-on-failure
+    ctest -E ".*GUI" --output-on-failure
     [ $? -ne 0 ] && exit 1
 fi
 

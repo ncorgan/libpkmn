@@ -1,24 +1,45 @@
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_62_0
+  LUAROCKS_VER: 2.3.0
   matrix:
     - BITNESS: 32
       PYTHON_VERSION: 27
+      LUA_VER: 5.1.5
 
     - BITNESS: 64
       PYTHON_VERSION: 27
+      LUA_VER: 5.1.5
 
     - BITNESS: 32
       PYTHON_VERSION: 35
+      LUA_VER: 5.2.4
 
     - BITNESS: 64
       PYTHON_VERSION: 35
+      LUA_VER: 5.2.4
 
-platform: x64
+    - BITNESS: 32
+      PYTHON_VERSION: 35
+      LUA_VER: 5.3.2
+
+    - BITNESS: 64
+      PYTHON_VERSION: 35
+      LUA_VER: 5.3.2
+
 configuration: Release
+
+cache:
+  - C:\lua -> testing\appveyor-scripts\build-test.bat
+  - C:\external -> testing\appveyor-scripts\build-test.bat
 
 install:
   - git submodule update --init --recursive
   - choco install -y doxygen.install swig
+  - testing\appveyor-scripts\lua\set_compiler_env.bat
+  - testing\appveyor-scripts\lua\install.bat
+  - luarocks install luaunit
 
 build_script:
-  - C:\projects\libpkmn\testing\appveyor-scripts\build-test.bat
+  - testing\appveyor-scripts\build-test.bat
+
+test: off

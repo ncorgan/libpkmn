@@ -19,6 +19,10 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with a list (as presented in-game) of
+     *        Super Training Medals in Generation VI.
+     */
     class PKMN_API SuperTrainingMedalListComboBox: public QComboBox {
         Q_OBJECT
 

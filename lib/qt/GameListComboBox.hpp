@@ -17,10 +17,22 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with a list, sorted by version group, of games
+     *        in (or up to) the given generation.
+     */
     class PKMN_API GameListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
+            /*!
+             * @brief Constructor.
+             *
+             * \param generation which generation
+             * \param includePrevious include games from earlier generations
+             * \param parent parent widget
+             * \throws pkmn::range_error if generation is not [1-6]
+             */
             GameListComboBox(
                 int generation,
                 bool includePrevious,

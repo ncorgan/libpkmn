@@ -77,8 +77,31 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_none_test) {
 }
 
 /*
+ * Make sure specifying "" as the form corresponds to the correct Standard form.
+ */
+BOOST_AUTO_TEST_CASE(pokemon_entry_standard_form_test) {
+    pkmn::database::pokemon_entry pikachu1("Pikachu", "Omega Ruby", "");
+    pkmn::database::pokemon_entry pikachu2("Pikachu", "Omega Ruby", "Standard");
+    BOOST_CHECK(pikachu1 == pikachu2);
+    BOOST_CHECK_EQUAL(pikachu1.get_species_id(), pikachu1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(pikachu1.get_form(), "Standard");
+
+    pkmn::database::pokemon_entry deoxys1("Deoxys", "Omega Ruby", "");
+    pkmn::database::pokemon_entry deoxys2("Deoxys", "Omega Ruby", "Normal");
+    BOOST_CHECK(deoxys1 == deoxys2);
+    BOOST_CHECK_EQUAL(deoxys1.get_species_id(), deoxys1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(deoxys1.get_form(), "Normal");
+
+    pkmn::database::pokemon_entry darmanitan1("Darmanitan", "Omega Ruby", "");
+    pkmn::database::pokemon_entry darmanitan2("Darmanitan", "Omega Ruby", "Standard");
+    BOOST_CHECK(darmanitan1 == darmanitan2);
+    BOOST_CHECK_EQUAL(darmanitan1.get_species_id(), darmanitan1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(darmanitan1.get_form(), "Standard");
+}
+
+/*
  * Make sure Pokémon entries can't be instantiated for games that didn't
- * have the given move.
+ * have the given Pokémon.
  */
 BOOST_AUTO_TEST_CASE(pokemon_entry_wrong_game_test) {
     // Pokémon from later generations

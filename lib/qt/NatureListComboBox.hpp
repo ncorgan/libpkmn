@@ -19,6 +19,9 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with an alphabetized list of natures.
+     */
     class PKMN_API NatureListComboBox: public QComboBox {
         Q_OBJECT
 

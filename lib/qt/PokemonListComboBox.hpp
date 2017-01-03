@@ -19,10 +19,22 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with a list (sorted by National Pokédex
+     *        number) of Pokémon introduced in (or up to) the given generation.
+     */
     class PKMN_API PokemonListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
+            /*!
+             * @brief Constructor.
+             *
+             * \param generation which generation
+             * \param includePrevious include Pokémon from previous generations.
+             * \param parent parent widget
+             * \throws pkmn::range_error if generation is not [1-6]
+             */
             PokemonListComboBox(
                 int generation,
                 bool includePrevious,

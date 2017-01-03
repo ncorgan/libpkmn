@@ -17,10 +17,21 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with an alphabetized list of all abilities
+     *        available in the given generation.
+     */
     class PKMN_API AbilityListComboBox: public QComboBox {
         Q_OBJECT
 
         public:
+            /*!
+             * @brief Constructor.
+             *
+             * \param generation which generation
+             * \param parent parent widget
+             * \throws pkmn::range_error if generation is not [3-6]
+             */
             AbilityListComboBox(
                 int generation,
                 QWidget* parent

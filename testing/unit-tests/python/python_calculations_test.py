@@ -277,6 +277,8 @@ class calculations_test(unittest.TestCase):
 
     def test_gb_stats(self):
         # Make sure expected errors are raised.
+        with self.assertRaises(ValueError):
+            stat = pkmn.calculations.get_gb_stat("Not a stat", 1, 1, 1, 1)
         with self.assertRaises(IndexError):
             stat = pkmn.calculations.get_gb_stat("Attack", 1, 1, 123456, 1)
         with self.assertRaises(IndexError):
