@@ -12,6 +12,11 @@ PKMN_CSHARP_INIT
 
 %{
     #include <pkmn/build_info.hpp>
+
+    PKMN_INLINE std::string GetSWIGVersion() {
+        return std::string("@SWIG_VERSION@");
+    }
 %}
 
 %include <pkmn/build_info.hpp>
+std::string GetSWIGVersion();
