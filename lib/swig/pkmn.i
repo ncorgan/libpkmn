@@ -36,3 +36,8 @@
 %ignore get_species_id;
 %ignore get_native;
 %ignore make;
+
+#if !defined(SWIGLUA) && !defined(SWIGPYTHON)
+%ignore operator ==;
+%ignore operator !=;
+#endif
