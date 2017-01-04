@@ -15,11 +15,19 @@ import datetime
 from optparse import OptionParser
 import os
 
-SPTR_FILES = ["ItemBag.cs",
+SPTR_FILES = ["GameSave.cs",
+              "ItemBag.cs",
               "ItemList.cs"]
 
 # Can these by programatically grabbed from the *_base files?
 SPTR_CTORS = dict(
+                 GameSave = """
+public GameSave(string filepath): this(PKMNPINVOKE.make_game_save(filepath), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
                  ItemBag = """
 public ItemBag(string game): this(PKMNPINVOKE.make_item_bag(game), true) {
     if(PKMNPINVOKE.SWIGPendingException.Pending) {

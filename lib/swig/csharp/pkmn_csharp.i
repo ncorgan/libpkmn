@@ -29,6 +29,10 @@ PKMN_CSHARP_INIT
 %ignore get_native;
 
 // Bring in our wrapped make functions, don't expose them
+%csmethodmodifiers detect_game_save_type "
+internal";
+%csmethodmodifiers make_game_save "
+internal";
 %csmethodmodifiers make_item_bag "
 internal";
 %csmethodmodifiers make_item_list "
@@ -45,3 +49,6 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
+
+// Game Save
+%include <csharp/pkmn_game_save.i>
