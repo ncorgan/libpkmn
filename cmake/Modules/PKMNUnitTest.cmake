@@ -33,14 +33,18 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         ADD_TEST(${test_name} ${test_cmd})
     ELSE()
         SET(TEST_CMD ${test_cmd})
-        SET(DATABASE_PATH ${CMAKE_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+        SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(PYTHONPATH
-            "${CMAKE_BINARY_DIR}/lib/swig/python"
+            "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_SOURCE_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
-            "${CMAKE_BINARY_DIR}/lib/swig/java/PKMN.jar"
+            "${PKMN_BINARY_DIR}/lib/swig/java/PKMN.jar"
+        )
+        SET(LUA_PATH
+            "${PKMN_BINARY_DIR}/lib/swig/lua/?.lua"
+            "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
@@ -60,16 +64,19 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
             SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll")
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
             STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
+            STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
+            STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
-                ${TESTS_BINARY_DIR}/${test_name}.bat
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
             @ONLY)
-            ADD_TEST(${test_name} ${TESTS_BINARY_DIR}/${test_name}.bat)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
         ELSE()
             IF(APPLE)
                 SET(DY "DY")
@@ -87,14 +94,15 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp"
                 "${TESTS_BINARY_DIR}/pkmntest/c"
             )
+            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/?.so")
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.sh.in
-                ${TESTS_BINARY_DIR}/${test_name}.sh
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh
             @ONLY)
-            ADD_TEST(${test_name} ${TESTS_BINARY_DIR}/${test_name}.sh)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
         ENDIF(WIN32)
     ENDIF(CMAKE_CROSSCOMPILING)
 ENDMACRO(PKMN_ADD_TEST)
@@ -107,13 +115,13 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)
-        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" cpp_test_cmd ${cpp_test_cmd})
     ELSE()
-        SET(cpp_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+        SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
-ENDMACRO(PKMN_ADD_CPP_TEST test_name test_src)
+ENDMACRO(PKMN_ADD_CPP_TEST)
 
 MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     ADD_EXECUTABLE(${test_name} ${test_srcs})
@@ -123,13 +131,37 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_c_test_libs})
 
     IF(WIN32)
-        SET(c_test_cmd "${TESTS_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
+        SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
     ELSE()
-        SET(c_test_cmd "${TESTS_BINARY_DIR}/${test_name}")
+        SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
     ENDIF(WIN32)
     PKMN_ADD_TEST(${test_name} ${c_test_cmd})
-ENDMACRO(PKMN_ADD_C_TEST test_name test_src)
+ENDMACRO(PKMN_ADD_C_TEST)
+
+INCLUDE(SWIGCSharp)
+
+MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
+    CSHARP_ADD_LIBRARY(${test_name} ${test_srcs} ${test_dlls} ${NUNIT_LIBRARIES})
+    ADD_DEPENDENCIES(${test_name} "pkmn-cs" "pkmntest-cs")
+
+    # TODO: Determine programmatically, probably parsing variables
+    IF(NOT APPVEYOR)
+        IF(WIN32)
+            STRING(REPLACE "/" "\\\\" native_nunit_command "${NUNIT_COMMAND}")
+            STRING(REPLACE "/" "\\\\" native_dll_path "${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll")
+            SET(csharp_test_cmd "\"${native_nunit_command}\" -framework=net-3.5 -labels \"${native_dll_path}\"")
+        ELSE()
+            SET(csharp_test_cmd "\"${NUNIT_COMMAND}\" -framework=4.0 -labels \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.dll\"")
+        ENDIF(WIN32)
+        PKMN_ADD_TEST(${test_name} ${csharp_test_cmd})
+    ENDIF(NOT APPVEYOR)
+ENDMACRO(PKMN_ADD_CSHARP_TEST)
+
+MACRO(PKMN_ADD_LUA_TEST test_name)
+    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_LUA_TEST test_name)
 
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")

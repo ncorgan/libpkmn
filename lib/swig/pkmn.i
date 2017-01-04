@@ -14,6 +14,9 @@
     #include <pkmn/config.hpp>
 %}
 
+%ignore PKMN_QT4;
+%ignore PKMN_QT5;
+
 %include <pkmn/config.hpp>
 
 // SWIG can't parse constexpr
@@ -37,5 +40,7 @@
 %ignore get_native;
 %ignore make;
 
+#if !defined(SWIGLUA) && !defined(SWIGPYTHON)
 %ignore operator ==;
 %ignore operator !=;
+#endif

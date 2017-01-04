@@ -37,6 +37,19 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
     FIND_PACKAGE(Doxygen)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
+####################################################################
+# Set install subdirectories
+####################################################################
+IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    SET(LIB_SUFFIX 64)
+ENDIF()
+SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+SET(PKMN_RUNTIME_DIR bin)
+SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
+SET(PKMN_INCLUDE_DIR include)
+SET(PKMN_PKG_DATA_DIR share/pkmn)
+SET(PKMN_DOCS_DIR share/doc/pkmn)
+
 ########################################################################
 # Find C++ dependencies
 ########################################################################
@@ -68,8 +81,16 @@ INCLUDE(PKMNPlatform)
 # Find other dependencies
 ########################################################################
 FIND_PACKAGE(SWIG)
+FIND_PACKAGE(CSharp)
+FIND_PACKAGE(Lua 5.1)
 FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
+
+# Needed for Lua wrapper
+# See https://github.com/swig/swig/issues/92
+IF(SWIG_VERSION STRGREATER "2.0.11")
+    SET(SWIG_GREATER_2_0_11 TRUE)
+ENDIF(SWIG_VERSION STRGREATER "2.0.11")
 
 INCLUDE(PKMNPython)
 PYTHON_CHECK_MODULE("PLY" "ply" "True" PYTHON_PLY_FOUND)
@@ -99,26 +120,17 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
 ####################################################################
-# Set install subdirectories
-####################################################################
-IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
-    SET(LIB_SUFFIX 64)
-ENDIF()
-SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
-SET(PKMN_RUNTIME_DIR bin)
-SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
-SET(PKMN_INCLUDE_DIR include)
-SET(PKMN_PKG_DATA_DIR share/pkmn)
-SET(PKMN_DOCS_DIR share/doc/pkmn)
-
-####################################################################
 # Components
 ####################################################################
 PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
     "Boost_FOUND;PYTHONINTERP_FOUND" OFF)
-PKMN_REGISTER_COMPONENT(" * Qt Widgets"       PKMN_ENABLE_QT ON
+PKMN_REGISTER_COMPONENT(" * Qt Widgets"    PKMN_ENABLE_QT ON
     "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
+PKMN_REGISTER_COMPONENT("C# API"           PKMN_ENABLE_CSHARP  ON
+    "SWIG_FOUND;CSHARP_FOUND;PYTHONINTERP_FOUND;PYTHON_MODULES_FOUND" OFF)
+PKMN_REGISTER_COMPONENT("Lua API"          PKMN_ENABLE_LUA  ON
+    "SWIG_FOUND;SWIG_GREATER_2_0_11;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
     "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
 

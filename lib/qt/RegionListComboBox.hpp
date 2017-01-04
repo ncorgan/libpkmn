@@ -19,6 +19,10 @@
 
 namespace pkmn { namespace qt {
 
+    /*!
+     * @brief A ComboBox populated with a list (sorted by their first generation)
+     *        of regions in the Pokémon world.
+     */
     class PKMN_API RegionListComboBox: public QComboBox {
         Q_OBJECT
 

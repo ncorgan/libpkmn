@@ -23,7 +23,10 @@ MACRO(PKMN_BUILD_DOXYGEN_DOCS files lang langname)
 ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
 
 # C++ documentation
-FILE(GLOB_RECURSE hpp_files ${CMAKE_SOURCE_DIR}/include/pkmn/*.hpp)
+FILE(GLOB_RECURSE hpp_files
+    ${PKMN_SOURCE_DIR}/include/pkmn/*.hpp
+    ${PKMN_BINARY_DIR}/include/pkmn/*.hpp
+)
 PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
 # C documentation
@@ -32,10 +35,10 @@ IF(PKMN_ENABLE_C)
     PKMN_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
 ENDIF(PKMN_ENABLE_C)
 
-#IF(PKMN_ENABLE_CSHARP)
-#    PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
-#    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
-#ENDIF(PKMN_ENABLE_CSHARP)
+IF(PKMN_ENABLE_CSHARP)
+    PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
+    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
+ENDIF(PKMN_ENABLE_CSHARP)
 
 #IF(PKMN_ENABLE_JAVA)
 #    PKMN_BUILD_DOXYGEN_DOCS("" "java" "Java")
