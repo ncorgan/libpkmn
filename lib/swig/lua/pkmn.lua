@@ -28,4 +28,7 @@ pkmn.pokemon_box = pkmn.core.make_pokemon_box
 pkmn.pokemon_box_list = pkmn.core.pokemon_box_list
 pkmn.pokemon_pc = pkmn.core.make_pokemon_pc
 
+pkmn.LIBPKMN_OT_ID = 2105214279;
+pkmn.LIBPKMN_OT_NAME = "LibPKMN";
+
 return pkmn
