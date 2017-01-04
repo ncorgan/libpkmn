@@ -16,7 +16,8 @@ from optparse import OptionParser
 import os
 
 SPTR_FILES = ["ItemBag.cs",
-              "ItemList.cs"]
+              "ItemList.cs",
+              "Pokemon.cs"]
 
 # Can these by programatically grabbed from the *_base files?
 SPTR_CTORS = dict(
@@ -29,6 +30,18 @@ public ItemBag(string game): this(PKMNPINVOKE.make_item_bag(game), true) {
 """,
                  ItemList = """
 public ItemList(string name, string game): this(PKMNPINVOKE.make_item_list(name, game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                 Pokemon = """
+public Pokemon(string name, string game, string form, int level): this(PKMNPINVOKE.make_pokemon__SWIG_0(name, game, form, level), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+public Pokemon(string filepath): this(PKMNPINVOKE.make_pokemon__SWIG_1(filepath), true) {
     if(PKMNPINVOKE.SWIGPendingException.Pending) {
         throw PKMNPINVOKE.SWIGPendingException.Retrieve();
     }

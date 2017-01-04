@@ -33,6 +33,10 @@ PKMN_CSHARP_INIT
 internal";
 %csmethodmodifiers make_item_list "
 internal";
+%csmethodmodifiers make_pokemon "
+internal";
+%csmethodmodifiers make_pokemon_box "
+internal";
 %include <pkmn_statics.i>
 
 // Item Slot
@@ -45,3 +49,16 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
+
+// Move Slot
+%include <pkmn/move_slot.hpp>
+PKMN_CSHARP_VECTOR(pkmn::move_slot, MoveSlot, MoveSlotList)
+
+// Pokémon 
+%include <csharp/pkmn_pokemon.i>
+
+// Pokémon Box
+%include <csharp/pkmn_pokemon_box.i>
+
+// Pokémon PC
+%include <csharp/pkmn_pokemon_pc.i>
