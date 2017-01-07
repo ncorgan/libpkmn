@@ -112,6 +112,25 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(stats_map.count("Special Defense"), 1);
     }
 
+    static void test_markings(
+        pkmn::pokemon::sptr pokemon,
+        const std::string &field
+    ) {
+        std::map<std::string, bool> markings_before = pokemon->get_markings();
+        pokemon->set_marking(field, true);
+        const std::map<std::string, bool>& markings_after = pokemon->get_markings();
+        for(auto markings_iter = markings_after.begin();
+            markings_iter != markings_after.end();
+            ++markings_iter)
+        {
+            if(markings_iter->first == field) {
+                BOOST_CHECK(markings_iter->second);
+            } else {
+                BOOST_CHECK_EQUAL(markings_iter->second, markings_before.at(markings_iter->first));
+            }
+        }
+    }
+
     static void test_contest_fields(
         pkmn::pokemon::sptr pokemon,
         const std::string &field
@@ -362,6 +381,32 @@ namespace pkmntest {
             0x3C4D
         );
 
+        pokemon->set_trainer_gender("Male");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_gender(),
+            "Male"
+        );
+        pokemon->set_trainer_gender("Female");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_gender(),
+            "Female"
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_trainer_gender("Genderless");
+        , std::invalid_argument);
+
+        pokemon->set_friendship(123);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_friendship(),
+            123
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_friendship(-1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_friendship(256);
+        , pkmn::range_error);
+
         pokemon->set_ability("Blaze");
         BOOST_CHECK_EQUAL(
             pokemon->get_ability(),
@@ -394,6 +439,39 @@ namespace pkmntest {
             "Great Ball"
         );
 
+        pokemon->set_level_met(67);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_level_met(),
+            67
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_level_met(-1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_level_met(101);
+        , pkmn::range_error);
+
+        std::string location;
+        if(game == "FireRed" or game == "LeafGreen") {
+            location = "Viridian Forest";
+        } else {
+            location = "Petalburg Woods";
+        }
+        pokemon->set_location_met(location, false);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_location_met(false),
+            location
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_location_met(location, true);
+        , pkmn::feature_not_in_game_error);
+
+        pokemon->set_personality(0x7F3AB3A8);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_personality(),
+            0x7F3AB3A8
+        );
+
         BOOST_CHECK_THROW(
             pokemon->set_contest_stat("Cool", -1);
         , pkmn::range_error);
@@ -405,6 +483,16 @@ namespace pkmntest {
         , std::invalid_argument);
 
         // Make sure functions that affect the same PKSav field don't impact each other.
+        static const std::vector<std::string> markings = boost::assign::list_of
+            ("Circle")("Triangle")("Square")("Heart")
+        ;
+        for(auto marking_iter = markings.begin();
+            marking_iter != markings.end();
+            ++marking_iter)
+        {
+            test_markings(pokemon, *marking_iter);
+        }
+
         static const std::vector<std::string> contest_fields = boost::assign::list_of
             ("Cool")("Beauty")("Cute")("Smart")("Tough")("Feel")
         ;
@@ -414,6 +502,30 @@ namespace pkmntest {
         {
             test_contest_fields(pokemon, *contest_field_iter);
         }
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Not a stat", 10);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Cool", -1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Cool", 256);
+        , pkmn::range_error);
+
+        pokemon->set_EV("Attack", 100);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_EVs().at("Attack"),
+            100
+        );
+        BOOST_CHECK_THROW(
+            pokemon->set_EV("Not a stat", 100);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_EV("Attack", -1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_EV("Attack", 256);
+        , pkmn::range_error);
 
         static const std::vector<std::string> IV_fields = boost::assign::list_of
             ("HP")("Attack")("Defense")("Speed")("Special Attack")("Special Defense")
@@ -424,6 +536,15 @@ namespace pkmntest {
         {
             test_IVs(pokemon, *IV_field_iter);
         }
+        BOOST_CHECK_THROW(
+            pokemon->set_IV("Not a stat", 10);
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_IV("Attack", -1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_IV("Attack", 32);
+        , pkmn::range_error);
     }
 
 }
