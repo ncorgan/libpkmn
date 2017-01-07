@@ -13,8 +13,10 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
 #include <pksav/gba/pokemon.h>
+#include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
 
 // Don't create the main in a library
@@ -26,6 +28,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
+
+static bool seeded = false;
 
 static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
     ("Ruby", pkmn::move_slot(
@@ -220,15 +224,17 @@ namespace pkmntest {
         pkmn::pokemon::sptr pokemon,
         const std::string &field
     ) {
+        int value = std::rand() % 255;
+
         std::map<std::string, int> contest_stats_before = pokemon->get_contest_stats();
-        pokemon->set_contest_stat(field, 123);
+        pokemon->set_contest_stat(field, value);
         const std::map<std::string, int>& contest_stats_after = pokemon->get_contest_stats();
         for(auto contest_stats_iter = contest_stats_after.begin();
             contest_stats_iter != contest_stats_after.end();
             ++contest_stats_iter)
         {
             if(contest_stats_iter->first == field) {
-                BOOST_CHECK_EQUAL(contest_stats_iter->second, 123);
+                BOOST_CHECK_EQUAL(contest_stats_iter->second, value);
             } else {
                 BOOST_CHECK_EQUAL(contest_stats_iter->second, contest_stats_before.at(contest_stats_iter->first));
             }
@@ -239,15 +245,17 @@ namespace pkmntest {
         pkmn::pokemon::sptr pokemon,
         const std::string &field
     ) {
+        int value = std::rand() % 31;
+
         std::map<std::string, int> IVs_before = pokemon->get_IVs();
-        pokemon->set_IV(field, 10);
+        pokemon->set_IV(field, value);
         const std::map<std::string, int>& IVs_after = pokemon->get_IVs();
         for(auto IVs_iter = IVs_after.begin();
             IVs_iter != IVs_after.end();
             ++IVs_iter)
         {
             if(IVs_iter->first == field) {
-                BOOST_CHECK_EQUAL(IVs_iter->second, 10);
+                BOOST_CHECK_EQUAL(IVs_iter->second, value);
             } else {
                 BOOST_CHECK_EQUAL(IVs_iter->second, IVs_before.at(IVs_iter->first));
             }
@@ -259,6 +267,11 @@ namespace pkmntest {
         const std::string &species,
         const std::string &game
     ) {
+        if(not seeded) {
+            std::srand(std::time((unsigned int)NULL));
+            seeded = true;
+        }
+
         /*
          * Check known starting values, and confirm that we can't query values
          * that didn't exist in Generation III.
@@ -645,6 +658,284 @@ namespace pkmntest {
         BOOST_CHECK_THROW(
             pokemon->set_IV("Attack", 32);
         , pkmn::range_error);
+
+        /*
+         * On the C++ level, check the underlying PKSav struct and make
+         * sure our abstractions match.
+         */
+        const pksav_gba_pc_pokemon_t* native_pc_data = reinterpret_cast<const pksav_gba_pc_pokemon_t*>(
+                                                           pokemon->get_native_pc_data()
+                                                       );
+        const pksav_gba_pokemon_growth_t* growth = &native_pc_data->blocks.growth;
+        const pksav_gba_pokemon_attacks_t* attacks = &native_pc_data->blocks.attacks;
+        const pksav_gba_pokemon_effort_t* effort = &native_pc_data->blocks.effort;
+        const pksav_gba_pokemon_misc_t* misc = &native_pc_data->blocks.misc;
+
+        BOOST_CHECK_EQUAL(
+            pksav_littleendian32(native_pc_data->personality),
+            pokemon->get_personality()
+        );
+        BOOST_CHECK_EQUAL(
+            pksav_littleendian32(native_pc_data->ot_id.id),
+            pokemon->get_trainer_id()
+        );
+        BOOST_CHECK_EQUAL(
+            pksav_littleendian16(native_pc_data->ot_id.pid),
+            pokemon->get_trainer_public_id()
+        );
+        BOOST_CHECK_EQUAL(
+            pksav_littleendian16(native_pc_data->ot_id.sid),
+            pokemon->get_trainer_secret_id()
+        );
+
+        char nickname[11] = {0};
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                native_pc_data->nickname,
+                nickname,
+                10
+            );
+        );
+        BOOST_CHECK_EQUAL(
+            std::string(nickname),
+            pokemon->get_nickname()
+        );
+
+        // TODO: language
+
+        char otname[8] = {0};
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                native_pc_data->otname,
+                otname,
+                7
+            );
+        );
+        BOOST_CHECK_EQUAL(
+            std::string(otname),
+            pokemon->get_trainer_name()
+        );
+
+        BOOST_CHECK(native_pc_data->markings & PKSAV_MARKING_CIRCLE);
+        BOOST_CHECK(native_pc_data->markings & PKSAV_MARKING_TRIANGLE);
+        BOOST_CHECK(native_pc_data->markings & PKSAV_MARKING_SQUARE);
+        BOOST_CHECK(native_pc_data->markings & PKSAV_MARKING_HEART);
+
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(growth->species)),
+            pokemon->get_database_entry().get_pokemon_index()
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(growth->held_item)),
+            pokemon->get_held_item().get_item_index()
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian32(growth->exp)),
+            pokemon->get_experience()
+        );
+        // TODO: PP Up
+        BOOST_CHECK_EQUAL(
+            int(growth->friendship),
+            pokemon->get_friendship()
+        );
+
+        for(int i = 0; i < 4; ++i) {
+            BOOST_CHECK_EQUAL(
+                int(attacks->moves[i]),
+                pokemon->get_moves().at(i).move.get_move_id()
+            );
+            BOOST_CHECK_EQUAL(
+                int(attacks->move_pps[i]),
+                pokemon->get_moves().at(i).pp
+            );
+        }
+
+        const std::map<std::string, int>& EVs = pokemon->get_EVs();
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_hp)),
+            EVs.at("HP")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_atk)),
+            EVs.at("Attack")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_def)),
+            EVs.at("Defense")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_spd)),
+            EVs.at("Speed")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_spatk)),
+            EVs.at("Special Attack")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(effort->ev_spdef)),
+            EVs.at("Special Defense")
+        );
+
+        const std::map<std::string, int>& contest_stats = pokemon->get_contest_stats();
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.cool),
+            contest_stats.at("Cool")
+        );
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.beauty),
+            contest_stats.at("Beauty")
+        );
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.cute),
+            contest_stats.at("Cute")
+        );
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.smart),
+            contest_stats.at("Smart")
+        );
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.tough),
+            contest_stats.at("Tough")
+        );
+        BOOST_CHECK_EQUAL(
+            int(effort->contest_stats.feel),
+            contest_stats.at("Feel")
+        );
+
+        // TODO: Pokérus
+        // TODO: get location indices for what we set
+
+        BOOST_CHECK_EQUAL(
+            int(misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK),
+            pokemon->get_level_met()
+        );
+
+        // TODO: get ball ID for what we set
+        BOOST_CHECK(misc->origin_info & PKSAV_GBA_OTGENDER_MASK);
+
+        const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        uint8_t IV = 0;
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_HP,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("HP")
+        );
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_ATTACK,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("Attack")
+        );
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_DEFENSE,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("Defense")
+        );
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_SPEED,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("Speed")
+        );
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_SPATK,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("Special Attack")
+        );
+
+        PKSAV_CALL(
+            pksav_get_IV(
+                &misc->iv_egg_ability,
+                PKSAV_STAT_SPDEF,
+                &IV
+            );
+        )
+        BOOST_CHECK_EQUAL(
+            int(IV),
+            IVs.at("Special Defense")
+        );
+
+        BOOST_CHECK(!(misc->iv_egg_ability & PKSAV_GBA_EGG_MASK));
+        BOOST_CHECK(!(misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK));
+
+        /*
+         * Party data
+         */
+        const pksav_gba_pokemon_party_data_t* native_party_data = reinterpret_cast<const pksav_gba_pokemon_party_data_t*>(
+                                                                      pokemon->get_native_party_data()
+                                                                  );
+        // TODO: condition
+
+        BOOST_CHECK_EQUAL(
+            int(native_party_data->level),
+            pokemon->get_level()
+        );
+
+        // TODO: Pokérus
+
+        const std::map<std::string, int>& stats = pokemon->get_stats();
+
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->current_hp)),
+            stats.at("HP")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->max_hp)),
+            stats.at("HP")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->atk)),
+            stats.at("Attack")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->def)),
+            stats.at("Defense")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->spd)),
+            stats.at("Speed")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->spatk)),
+            stats.at("Special Attack")
+        );
+        BOOST_CHECK_EQUAL(
+            int(pksav_littleendian16(native_party_data->spdef)),
+            stats.at("Special Defense")
+        );
     }
 
 }
