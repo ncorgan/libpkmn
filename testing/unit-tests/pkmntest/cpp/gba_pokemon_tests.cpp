@@ -268,7 +268,7 @@ namespace pkmntest {
         const std::string &game
     ) {
         if(not seeded) {
-            std::srand(std::time((unsigned int)NULL));
+            std::srand((unsigned int)std::time(NULL));
             seeded = true;
         }
 
