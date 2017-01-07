@@ -7,6 +7,8 @@
 #ifndef PKMN_IO_PKM_HPP
 #define PKMN_IO_PKM_HPP
 
+#error This should not be compiled until PKSav supports NDS.
+
 #include <pkmn/pokemon.hpp>
 
 #include <string>

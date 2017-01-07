@@ -9,7 +9,6 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
-#include "pokemon_ndsimpl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -17,7 +16,6 @@
 #include "database/index_to_string.hpp"
 
 #include "io/3gpkm.hpp"
-#include "io/pkm.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -73,11 +71,6 @@ namespace pkmn {
 
             case 4:
             case 5:
-                return pkmn::make_shared<pokemon_ndsimpl>(
-                           std::move(database_entry),
-                           level
-                       );
-
             case 6:
                 throw pkmn::unimplemented_error();
 
@@ -93,9 +86,7 @@ namespace pkmn {
         std::string extension = fs::extension(filepath);
         if(extension == ".3gpkm") {
             return pkmn::io::load_3gpkm(filepath);
-        } else if(extension == ".pkm") {
-            return pkmn::io::load_pkm(filepath);
-        } else if(extension == ".pk6") {
+        } else if(extension == ".pkm" or extension == ".pk6") {
             throw pkmn::unimplemented_error();
         } else {
             std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
@@ -103,8 +94,6 @@ namespace pkmn {
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
                 return pkmn::io::load_3gpkm(buffer);
-            } else if(pkmn::io::vector_is_valid_pkm(buffer, &game_id)) {
-                return pkmn::io::load_pkm(buffer);
             } else {
                 throw std::runtime_error("Invalid file.");
             }
