@@ -76,9 +76,9 @@ namespace pkmn { namespace mem {
 
         switch(new_pokemon->_generation) {
             case 1:
-                _set_pokemon_in_box<pksav_gen2_pc_pokemon_t>(
-                    reinterpret_cast<pksav_gen2_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
-                    reinterpret_cast<pksav_gen2_pc_pokemon_t**>(&(new_pokemon->_native_pc))
+                _set_pokemon_in_box<pksav_gen1_pc_pokemon_t>(
+                    reinterpret_cast<pksav_gen1_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
+                    reinterpret_cast<pksav_gen1_pc_pokemon_t**>(&(new_pokemon->_native_pc))
                 );
                 break;
 
