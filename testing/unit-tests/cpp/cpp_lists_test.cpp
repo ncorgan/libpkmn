@@ -571,6 +571,8 @@ BOOST_AUTO_TEST_CASE(move_list_test) {
 BOOST_AUTO_TEST_CASE(nature_list_test) {
     std::vector<std::string> natures = pkmn::database::get_nature_list();
     BOOST_CHECK_EQUAL(natures.size(), 25);
+    BOOST_CHECK_EQUAL(natures.front(), "Hardy");
+    BOOST_CHECK_EQUAL(natures.back(), "Quirky");
 }
 
 BOOST_AUTO_TEST_CASE(pokemon_list_test) {

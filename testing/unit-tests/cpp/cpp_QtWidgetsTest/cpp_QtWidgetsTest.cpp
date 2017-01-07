@@ -103,9 +103,9 @@ void QtWidgetsTest::testNatureListComboBox() {
         QCOMPARE(natures.count(), 25);
 
         natures.setCurrentIndex(0);
-        QCOMPARE(natures.currentText(), QString("Adamant"));
+        QCOMPARE(natures.currentText(), QString("Hardy"));
         natures.setCurrentIndex(24);
-        QCOMPARE(natures.currentText(), QString("Timid"));
+        QCOMPARE(natures.currentText(), QString("Quirky"));
     } catch(const std::exception &e) {
         QFAIL(e.what());
     }

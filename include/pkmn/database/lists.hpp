@@ -71,7 +71,7 @@ namespace pkmn { namespace database {
     );
 
     /*!
-     * @brief Returns an alphabetized list of natures.
+     * @brief Returns a list of natures sorted by in-game index.
      */
     PKMN_API std::vector<std::string> get_nature_list();
 

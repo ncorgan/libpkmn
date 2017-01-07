@@ -66,8 +66,8 @@ class lists_test(unittest.TestCase):
     def test_nature_list(self):
         nature_list = pkmn.database.get_nature_list()
         self.assertEqual(len(nature_list), 25)
-        self.assertEqual(nature_list[0], "Adamant")
-        self.assertEqual(nature_list[-1], "Timid")
+        self.assertEqual(nature_list[0], "Hardy")
+        self.assertEqual(nature_list[-1], "Quirky")
 
     def test_pokemon_list(self):
         # Make sure trying to create an invalid list results in an error
