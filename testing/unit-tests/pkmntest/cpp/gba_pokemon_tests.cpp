@@ -22,6 +22,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
@@ -57,6 +58,20 @@ static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_e
     ("LeafGreen", pkmn::database::pokemon_entry("None", "LeafGreen", ""))
 ;
 
+static const std::vector<std::string> contest_types = boost::assign::list_of
+    ("Cool")("Beauty")("Cute")("Smart")("Tough")
+;
+
+static const std::vector<std::string> contest_levels = boost::assign::list_of
+    ("")(" Super")(" Hyper")(" Hyper")(" Master")
+;
+
+static const std::vector<std::string> ribbons = boost::assign::list_of
+    ("Champion")("Winning")("Victory")("Artist")
+    ("Effort")("Marine")("Land")("Sky")
+    ("Country")("National")("Earth")("World")
+;
+
 namespace pkmntest {
 
     void gba_invalid_pokemon_test(
@@ -79,6 +94,34 @@ namespace pkmntest {
 
         BOOST_CHECK_EQUAL(markings_map.count("Star"), 0);
         BOOST_CHECK_EQUAL(markings_map.count("Diamond"), 0);
+    }
+
+    static void check_ribbons_map(
+        const std::map<std::string, bool>& ribbons_map
+    ) {
+        for(auto contest_type_iter = contest_types.begin();
+            contest_type_iter != contest_types.end();
+            ++contest_type_iter)
+        {
+            for(auto contest_level_iter = contest_levels.begin();
+                contest_level_iter != contest_levels.end();
+                ++contest_level_iter)
+            {
+                std::string ribbon_name = str(boost::format("%s%s")
+                                              % contest_type_iter->c_str()
+                                              % contest_level_iter->c_str());
+                BOOST_CHECK_EQUAL(ribbons_map.count(ribbon_name), 1);
+                BOOST_CHECK(not ribbons_map.at(ribbon_name));
+            }
+        }
+
+        for(auto ribbon_iter = ribbons.begin();
+            ribbon_iter != ribbons.end();
+            ++ribbon_iter)
+        {
+            BOOST_CHECK_EQUAL(ribbons_map.count(*ribbon_iter), 1);
+            BOOST_CHECK(not ribbons_map.at(*ribbon_iter));
+        }
     }
 
     static void check_contest_stats_map(
@@ -131,7 +174,49 @@ namespace pkmntest {
         }
     }
 
-    static void test_contest_fields(
+    static void test_contest_ribbons(
+        pkmn::pokemon::sptr pokemon,
+        const std::string &contest_type
+    ) {
+        std::string ribbon_name = contest_type;
+        std::string super_ribbon_name = contest_type + std::string(" Super");
+        std::string hyper_ribbon_name = contest_type + std::string(" Hyper");
+        std::string master_ribbon_name = contest_type + std::string(" Master");
+        const std::map<std::string, bool>& ribbons = pokemon->get_ribbons();
+
+        pokemon->set_ribbon(hyper_ribbon_name, true);
+        BOOST_CHECK(ribbons.at(ribbon_name));
+        BOOST_CHECK(ribbons.at(super_ribbon_name));
+        BOOST_CHECK(ribbons.at(hyper_ribbon_name));
+        BOOST_CHECK(not ribbons.at(master_ribbon_name));
+
+        pokemon->set_ribbon(super_ribbon_name, false);
+        BOOST_CHECK(ribbons.at(ribbon_name));
+        BOOST_CHECK(not ribbons.at(super_ribbon_name));
+        BOOST_CHECK(not ribbons.at(hyper_ribbon_name));
+        BOOST_CHECK(not ribbons.at(master_ribbon_name));
+    }
+
+    static void test_ribbons(
+        pkmn::pokemon::sptr pokemon,
+        const std::string &ribbon
+    ) {
+        std::map<std::string, bool> ribbons_before = pokemon->get_ribbons();
+        pokemon->set_ribbon(ribbon, true);
+        const std::map<std::string, bool>& ribbons_after = pokemon->get_ribbons();
+        for(auto ribbons_iter = ribbons_after.begin();
+            ribbons_iter != ribbons_after.end();
+            ++ribbons_iter)
+        {
+            if(ribbons_iter->first == ribbon) {
+                BOOST_CHECK(ribbons_iter->second);
+            } else {
+                BOOST_CHECK_EQUAL(ribbons_iter->second, ribbons_before.at(ribbons_iter->first));
+            }
+        }
+    }
+
+    static void test_contest_stats(
         pkmn::pokemon::sptr pokemon,
         const std::string &field
     ) {
@@ -254,7 +339,9 @@ namespace pkmntest {
         check_markings_map(
             pokemon->get_markings()
         );
-        // TODO: ribbons
+        check_ribbons_map(
+            pokemon->get_ribbons()
+        );
         check_contest_stats_map(
             pokemon->get_contest_stats()
         );
@@ -492,6 +579,19 @@ namespace pkmntest {
         {
             test_markings(pokemon, *marking_iter);
         }
+        for(auto contest_type_iter = contest_types.begin();
+            contest_type_iter != contest_types.end();
+            ++contest_type_iter)
+        {
+            test_contest_ribbons(pokemon, *contest_type_iter);
+        }
+
+        for(auto ribbon_iter = ribbons.begin();
+            ribbon_iter != ribbons.end();
+            ++ribbon_iter)
+        {
+            test_ribbons(pokemon, *ribbon_iter);
+        }
 
         static const std::vector<std::string> contest_fields = boost::assign::list_of
             ("Cool")("Beauty")("Cute")("Smart")("Tough")("Feel")
@@ -500,7 +600,7 @@ namespace pkmntest {
             contest_field_iter != contest_fields.end();
             ++contest_field_iter)
         {
-            test_contest_fields(pokemon, *contest_field_iter);
+            test_contest_stats(pokemon, *contest_field_iter);
         }
         BOOST_CHECK_THROW(
             pokemon->set_contest_stat("Not a stat", 10);

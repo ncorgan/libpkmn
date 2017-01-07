@@ -783,18 +783,23 @@ namespace pkmn {
         uint16_t offset = uint16_t(gba_contest_ribbon_offsets.at(ribbon_parts.at(0)));
         uint16_t level = 0;
         if(ribbon_parts.size() == 2) {
-            level = uint16_t(gba_contest_ribbon_offsets.at(ribbon_parts.at(1)));
+            level = uint16_t(gba_contest_ribbon_levels.at(ribbon_parts.at(1)));
         }
 
         uint16_t current_level = (_misc->ribbons_obedience & mask) >> offset;
         if(value) {
             level = std::max<uint16_t>(level, current_level);
         } else {
+            if(level > 0) {
+                --level;
+            }
             level = std::min<uint16_t>(level, current_level);
         }
 
         _misc->ribbons_obedience &= ~mask;
         _misc->ribbons_obedience |= (level << offset);
+
+        _update_ribbons_map();
     }
 
     void pokemon_gbaimpl::_populate_party_data() {
