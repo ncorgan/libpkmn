@@ -89,8 +89,8 @@ public class CSharpListsTest {
     public void NatureListTest() {
         PKMN.StringList natureList = PKMN.Database.GetNatureList();
         Assert.AreEqual(natureList.Count, 25);
-        Assert.AreEqual(natureList[0], "Adamant");
-        Assert.AreEqual(natureList[24], "Timid");
+        Assert.AreEqual(natureList[0], "Hardy");
+        Assert.AreEqual(natureList[24], "Quirky");
     }
 
     [Test]

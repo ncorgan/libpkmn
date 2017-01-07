@@ -61,8 +61,8 @@ end
 function test_nature_list()
     local nature_list = pkmn.database.get_nature_list()
     luaunit.assertEquals(#nature_list, 25)
-    luaunit.assertEquals(nature_list[1], "Adamant")
-    luaunit.assertEquals(nature_list[25], "Timid")
+    luaunit.assertEquals(nature_list[1], "Hardy")
+    luaunit.assertEquals(nature_list[25], "Quirky")
 end
 
 function test_pokemon_list()

@@ -165,8 +165,8 @@ static void nature_list_test() {
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
     TEST_ASSERT_NOT_NULL(natures.strings);
     TEST_ASSERT_EQUAL(natures.length, 25);
-    TEST_ASSERT_EQUAL_STRING(natures.strings[0], "Adamant");
-    TEST_ASSERT_EQUAL_STRING(natures.strings[natures.length-1], "Timid");
+    TEST_ASSERT_EQUAL_STRING(natures.strings[0], "Hardy");
+    TEST_ASSERT_EQUAL_STRING(natures.strings[natures.length-1], "Quirky");
 
     pkmn_string_list_free(&natures);
     TEST_ASSERT_NULL(natures.strings);

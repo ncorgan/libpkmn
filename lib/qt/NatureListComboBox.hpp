@@ -20,7 +20,7 @@
 namespace pkmn { namespace qt {
 
     /*!
-     * @brief A ComboBox populated with an alphabetized list of natures.
+     * @brief A ComboBox populated with a list of natures sorted by in-game index.
      */
     class PKMN_API NatureListComboBox: public QComboBox {
         Q_OBJECT

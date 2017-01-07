@@ -389,9 +389,13 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_nature_list() {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM nature_names WHERE local_language_id=9 AND "
-            "nature_id IN (SELECT id FROM natures) ORDER BY name";
+            "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
+            "(nature_names.nature_id=natures.id) WHERE nature_names.local_language_id=9 "
+            "ORDER BY natures.game_index";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(

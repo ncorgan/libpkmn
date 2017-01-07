@@ -54,8 +54,8 @@ public class CSharpWinFormsTest {
     public void NatureListComboBoxTest() {
         PKMN.NatureListComboBox natureListComboBox = new PKMN.NatureListComboBox();
         Assert.AreEqual(natureListComboBox.Items.Count, 25);
-        Assert.AreEqual(natureListComboBox.Items[0], "Adamant");
-        Assert.AreEqual(natureListComboBox.Items[24], "Timid");
+        Assert.AreEqual(natureListComboBox.Items[0], "Hardy");
+        Assert.AreEqual(natureListComboBox.Items[24], "Quirky");
     }
 
     [Test]
