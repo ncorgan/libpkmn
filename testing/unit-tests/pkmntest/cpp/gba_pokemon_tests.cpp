@@ -112,6 +112,44 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(stats_map.count("Special Defense"), 1);
     }
 
+    static void test_contest_fields(
+        pkmn::pokemon::sptr pokemon,
+        const std::string &field
+    ) {
+        std::map<std::string, int> contest_stats_before = pokemon->get_contest_stats();
+        pokemon->set_contest_stat(field, 123);
+        const std::map<std::string, int>& contest_stats_after = pokemon->get_contest_stats();
+        for(auto contest_stats_iter = contest_stats_after.begin();
+            contest_stats_iter != contest_stats_after.end();
+            ++contest_stats_iter)
+        {
+            if(contest_stats_iter->first == field) {
+                BOOST_CHECK_EQUAL(contest_stats_iter->second, 123);
+            } else {
+                BOOST_CHECK_EQUAL(contest_stats_iter->second, contest_stats_before.at(contest_stats_iter->first));
+            }
+        }
+    }
+
+    static void test_IVs(
+        pkmn::pokemon::sptr pokemon,
+        const std::string &field
+    ) {
+        std::map<std::string, int> IVs_before = pokemon->get_IVs();
+        pokemon->set_IV(field, 10);
+        const std::map<std::string, int>& IVs_after = pokemon->get_IVs();
+        for(auto IVs_iter = IVs_after.begin();
+            IVs_iter != IVs_after.end();
+            ++IVs_iter)
+        {
+            if(IVs_iter->first == field) {
+                BOOST_CHECK_EQUAL(IVs_iter->second, 10);
+            } else {
+                BOOST_CHECK_EQUAL(IVs_iter->second, IVs_before.at(IVs_iter->first));
+            }
+        }
+    }
+
     void gba_pokemon_test(
         pkmn::pokemon::sptr pokemon,
         const std::string &species,
@@ -235,11 +273,13 @@ namespace pkmntest {
             "foobarbaz"
         );
 
-        // TODO: check personality being affected
+        // Setting shininess should affect personality.
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
+        uint32_t personality = pokemon->get_personality();
         pokemon->set_shininess(true);
         BOOST_CHECK(pokemon->is_shiny());
+        BOOST_CHECK_NE(personality, pokemon->get_personality());
 
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Not an item");
@@ -353,6 +393,37 @@ namespace pkmntest {
             pokemon->get_ball(),
             "Great Ball"
         );
+
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Cool", -1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Cool", 256);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_contest_stat("Not a stat", -1);
+        , std::invalid_argument);
+
+        // Make sure functions that affect the same PKSav field don't impact each other.
+        static const std::vector<std::string> contest_fields = boost::assign::list_of
+            ("Cool")("Beauty")("Cute")("Smart")("Tough")("Feel")
+        ;
+        for(auto contest_field_iter = contest_fields.begin();
+            contest_field_iter != contest_fields.end();
+            ++contest_field_iter)
+        {
+            test_contest_fields(pokemon, *contest_field_iter);
+        }
+
+        static const std::vector<std::string> IV_fields = boost::assign::list_of
+            ("HP")("Attack")("Defense")("Speed")("Special Attack")("Special Defense")
+        ;
+        for(auto IV_field_iter = IV_fields.begin();
+            IV_field_iter != IV_fields.end();
+            ++IV_field_iter)
+        {
+            test_IVs(pokemon, *IV_field_iter);
+        }
     }
 
 }
