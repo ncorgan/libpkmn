@@ -201,6 +201,25 @@ namespace pkmn {
         pkmn_string_pair_t* c_pair_out
     );
 
+    template <typename value_type>
+    PKMN_INLINE void std_map_keys_to_string_list(
+        const std::map<std::string, value_type> &string_map,
+        pkmn_string_list_t* string_list_out
+    ) {
+        string_list_out->strings = (char**)std::malloc(sizeof(char*) * string_map.size());
+        size_t i = 0;
+        for(auto iter = string_map.begin();
+            iter != string_map.end();
+            ++iter, ++i)
+        {
+            string_list_out->strings[i] = (char*)std::malloc(iter->first.size() + 1);
+            std::strcpy(string_list_out->strings[i], iter->first.c_str());
+            string_list_out->strings[i][iter->first.size()] = '\0';
+        }
+
+        string_list_out->length = string_map.size();
+    }
+
     void std_vector_std_string_to_string_list(
         const std::vector<std::string> &vec,
         pkmn_string_list_t* string_list_out

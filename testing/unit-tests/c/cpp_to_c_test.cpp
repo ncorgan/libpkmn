@@ -19,6 +19,7 @@ extern "C" {
 
 #include <pksav.h>
 
+#include <boost/assign.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -684,6 +685,55 @@ BOOST_AUTO_TEST_CASE(string_pair_cpp_to_c_test) {
     pkmn_string_pair_free(&string_pair_c);
     BOOST_CHECK(!string_pair_c.first);
     BOOST_CHECK(!string_pair_c.second);
+}
+
+BOOST_AUTO_TEST_CASE(std_map_keys_to_string_list_test) {
+    static const std::map<std::string, bool> string_bool_map = boost::assign::map_list_of
+        ("key1", true)
+        ("key2", false)
+        ("key3", false)
+        ("key4", true)
+    ;
+    static const std::map<std::string, int> string_int_map = boost::assign::map_list_of
+        ("key5", 1)
+        ("key6", 2)
+        ("key7", 3)
+        ("key8", 4)
+        ("key9", 5)
+    ;
+
+    pkmn_string_list_t string_list_c = {NULL, 0};
+
+    pkmn::std_map_keys_to_string_list<bool>(
+        string_bool_map,
+        &string_list_c
+    );
+
+    BOOST_REQUIRE_EQUAL(string_list_c.length, 4);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "key1");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "key2");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "key3");
+    BOOST_CHECK_EQUAL(string_list_c.strings[3], "key4");
+
+    pkmn_string_list_free(&string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
+
+    pkmn::std_map_keys_to_string_list<int>(
+        string_int_map,
+        &string_list_c
+    );
+
+    BOOST_REQUIRE_EQUAL(string_list_c.length, 5);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "key5");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "key6");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "key7");
+    BOOST_CHECK_EQUAL(string_list_c.strings[3], "key8");
+    BOOST_CHECK_EQUAL(string_list_c.strings[4], "key9");
+
+    pkmn_string_list_free(&string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(string_vector_cpp_to_c_test) {
