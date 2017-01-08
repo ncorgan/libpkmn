@@ -672,4 +672,7 @@ void pkmntest_gen1_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(IV, 12);
+
+    error = pkmn_database_pokemon_entry_free(&database_entry);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 }
