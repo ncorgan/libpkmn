@@ -15,4 +15,14 @@ PKMN_API void pkmntest_gen1_invalid_pokemon_test(
     const char* game
 );
 
+PKMN_API void pkmntest_gen1_friendship_test(
+    const char* game
+);
+
+PKMN_API void pkmntest_gen1_pokemon_test(
+    pkmn_pokemon_handle_t pokemon,
+    const char* species,
+    const char* game
+);
+
 #endif /* GEN1_POKEMON_TESTS_H */
