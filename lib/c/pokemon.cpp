@@ -510,7 +510,12 @@ pkmn_error_t pkmn_pokemon_has_marking(
     bool* has_marking
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *has_marking = handle->cpp->get_markings().at(marking);
+        const std::map<std::string, bool>& markings = handle->cpp->get_markings();
+        if(markings.count(marking) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *has_marking = markings.at(marking);
     )
 }
 
@@ -542,7 +547,12 @@ pkmn_error_t pkmn_pokemon_has_ribbon(
     bool* has_ribbon
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *has_ribbon = handle->cpp->get_ribbons().at(ribbon);
+        const std::map<std::string, bool>& ribbons = handle->cpp->get_ribbons();
+        if(ribbons.count(ribbon) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *has_ribbon = ribbons.at(ribbon);
     )
 }
 
@@ -599,7 +609,12 @@ pkmn_error_t pkmn_pokemon_get_contest_stat(
     int* contest_stat_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *contest_stat_out = handle->cpp->get_contest_stats().at(stat);
+        const std::map<std::string, int>& contest_stats = handle->cpp->get_contest_stats();
+        if(contest_stats.count(stat) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *contest_stat_out = contest_stats.at(stat);
     )
 }
 
@@ -631,7 +646,12 @@ pkmn_error_t pkmn_pokemon_get_EV(
     int* EV_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *EV_out = handle->cpp->get_EVs().at(stat);
+        const std::map<std::string, int>& EVs = handle->cpp->get_EVs();
+        if(EVs.count(stat) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *EV_out = EVs.at(stat);
     )
 }
 
@@ -663,7 +683,12 @@ pkmn_error_t pkmn_pokemon_get_IV(
     int* IV_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *IV_out = handle->cpp->get_IVs().at(stat);
+        const std::map<std::string, int>& IVs = handle->cpp->get_IVs();
+        if(IVs.count(stat) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *IV_out = IVs.at(stat);
     )
 }
 
@@ -695,6 +720,11 @@ pkmn_error_t pkmn_pokemon_get_stat(
     int* stat_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *stat_out = handle->cpp->get_stats().at(stat_name);
+        const std::map<std::string, int>& stats = handle->cpp->get_stats();
+        if(stats.count(stat_name) == 0) {
+            throw std::invalid_argument("Invalid stat.");
+        }
+
+        *stat_out = stats.at(stat_name);
     )
 }

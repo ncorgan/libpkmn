@@ -147,7 +147,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_secret_id(
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_id(
     pkmn_pokemon_handle_t handle,
-    uint16_t trainer_id
+    uint32_t trainer_id
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_gender(
@@ -211,8 +211,8 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_location_met(
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_location_met(
     pkmn_pokemon_handle_t handle,
-    bool as_egg,
-    const char* location_met
+    const char* location_met,
+    bool as_egg
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_original_game(
