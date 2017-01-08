@@ -256,6 +256,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_level(
     int level
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_marking_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* marking_names_out
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_has_marking(
     pkmn_pokemon_handle_t handle,
     const char* marking,
@@ -266,6 +271,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_marking(
     pkmn_pokemon_handle_t handle,
     const char* marking,
     bool value
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_ribbon_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* ribbon_names_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_has_ribbon(
@@ -292,6 +302,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_move(
     int index
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_contest_stat_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* marking_names_out
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_contest_stat(
     pkmn_pokemon_handle_t handle,
     const char* stat,
@@ -302,6 +317,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_contest_stat(
     pkmn_pokemon_handle_t handle,
     const char* stat,
     int contest_stat
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_EV_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* EV_names_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_EV(
@@ -316,6 +336,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_EV(
     int EV
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_IV_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* IV_names_out
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_IV(
     pkmn_pokemon_handle_t handle,
     const char* stat,
@@ -326,6 +351,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_IV(
     pkmn_pokemon_handle_t handle,
     const char* stat,
     int IV
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_stat_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* stat_names_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_stat(

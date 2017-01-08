@@ -492,6 +492,18 @@ pkmn_error_t pkmn_pokemon_set_level(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_marking_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* marking_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<bool>(
+            handle->cpp->get_markings(),
+            marking_names_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_pokemon_has_marking(
     pkmn_pokemon_handle_t handle,
     const char* marking,
@@ -509,6 +521,18 @@ pkmn_error_t pkmn_pokemon_set_marking(
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->set_marking(marking, value);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_ribbon_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* ribbon_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<bool>(
+            handle->cpp->get_ribbons(),
+            ribbon_names_out
+        );
     )
 }
 
@@ -559,6 +583,18 @@ pkmn_error_t pkmn_pokemon_set_move(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_contest_stat_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* contest_stat_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<int>(
+            handle->cpp->get_contest_stats(),
+            contest_stat_names_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_contest_stat(
     pkmn_pokemon_handle_t handle,
     const char* stat,
@@ -576,6 +612,18 @@ pkmn_error_t pkmn_pokemon_set_contest_stat(
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->set_contest_stat(stat, contest_stat);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_EV_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* EV_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<int>(
+            handle->cpp->get_EVs(),
+            EV_names_out
+        );
     )
 }
 
@@ -599,6 +647,18 @@ pkmn_error_t pkmn_pokemon_set_EV(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_IV_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* IV_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<int>(
+            handle->cpp->get_IVs(),
+            IV_names_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_IV(
     pkmn_pokemon_handle_t handle,
     const char* stat,
@@ -616,6 +676,18 @@ pkmn_error_t pkmn_pokemon_set_IV(
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->set_IV(stat, IV);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_stat_names(
+    pkmn_pokemon_handle_t handle,
+    pkmn_string_list_t* stat_names_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::std_map_keys_to_string_list<int>(
+            handle->cpp->get_stats(),
+            stat_names_out
+        );
     )
 }
 
