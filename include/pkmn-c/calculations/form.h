@@ -23,15 +23,13 @@ PKMN_API pkmn_error_t pkmn_calculations_gen2_unown_form(
     int IV_speed,
     int IV_special,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_calculations_gen3_unown_form(
     uint32_t personality,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_calculations_wurmple_becomes_silcoon(

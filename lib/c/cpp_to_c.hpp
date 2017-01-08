@@ -18,6 +18,7 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn-c/error.h>
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon_entry.h>
@@ -34,6 +35,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "error_internal.hpp"
 
 /*
  * These structs are opaque in the C API, but internally,
@@ -113,6 +116,35 @@ namespace pkmn {
     ) {
         pair_c->first = pair_cpp.first;
         pair_c->second = pair_cpp.second;
+    }
+
+    PKMN_INLINE pkmn_error_t std_string_to_c_str(
+        const std::string &str,
+        char* c_str_out,
+        size_t buffer_len
+    ) {
+        PKMN_CHECK_BUFFER_LEN(buffer_len, (str.size()+1));
+        std::strncpy(c_str_out, str.c_str(), buffer_len);
+        c_str_out[buffer_len-1] = '\0';
+
+        pkmn_set_error("None");
+        return PKMN_ERROR_NONE;
+    }
+
+    template <typename handle_type>
+    PKMN_INLINE pkmn_error_t std_string_to_c_str_with_handle(
+        handle_type handle,
+        const std::string &str,
+        char* c_str_out,
+        size_t buffer_len
+    ) {
+        PKMN_CHECK_BUFFER_LEN_WITH_HANDLE(buffer_len, (str.size()+1), handle);
+        std::strncpy(c_str_out, str.c_str(), buffer_len);
+        c_str_out[buffer_len-1] = '\0';
+
+        pkmn_set_error("None");
+        handle->last_error = "None";
+        return PKMN_ERROR_NONE;
     }
 
     PKMN_INLINE void std_string_to_c_str(

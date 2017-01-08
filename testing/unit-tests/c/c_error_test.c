@@ -14,7 +14,6 @@ static pkmn_error_t error = PKMN_ERROR_NONE;
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
 static int dummy_int = 0;
-static size_t dummy_size_t = 0;
 static pkmn_string_list_t dummy_pkmn_string_list_t = {
     .strings = NULL,
     .length = 0
@@ -24,14 +23,14 @@ static const char* null_pointer_error_format = "Null pointer passed into paramet
 
 #define TEST_NULL_POINTER_RETURN(param_name) \
 { \
-    snprintf(strbuffer, STRBUFFER_LEN, null_pointer_error_format, param_name); \
+    snprintf(strbuffer, sizeof(strbuffer), null_pointer_error_format, param_name); \
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
     TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
 }
 
 #define TEST_ITEM_BAG_NULL_POINTER_RETURN(handle, param_name) \
 { \
-    snprintf(strbuffer, STRBUFFER_LEN, null_pointer_error_format, param_name); \
+    snprintf(strbuffer, sizeof(strbuffer), null_pointer_error_format, param_name); \
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
     TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
     TEST_ASSERT_EQUAL_STRING(pkmn_item_bag_strerror(handle), strbuffer); \
@@ -39,7 +38,7 @@ static const char* null_pointer_error_format = "Null pointer passed into paramet
 
 #define TEST_ITEM_LIST_NULL_POINTER_RETURN(handle, param_name) \
 { \
-    snprintf(strbuffer, STRBUFFER_LEN, null_pointer_error_format, param_name); \
+    snprintf(strbuffer, sizeof(strbuffer), null_pointer_error_format, param_name); \
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
     TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
     TEST_ASSERT_EQUAL_STRING(pkmn_item_list_strerror(handle), strbuffer); \
@@ -48,24 +47,22 @@ static const char* null_pointer_error_format = "Null pointer passed into paramet
 /*
  * <pkmn-c/build_info.h>
  */
-static void build_info_null_pointer_test() {
+static void build_info_error_test() {
     /*
      * pkmn_get_boost_version
      */
 
     error = pkmn_get_boost_version(
                 NULL, // boost_version_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("boost_version_out");
 
     error = pkmn_get_boost_version(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_pksav_version
@@ -73,17 +70,15 @@ static void build_info_null_pointer_test() {
 
     error = pkmn_get_pksav_version(
                 NULL, // pksav_version_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("pksav_version_out");
 
     error = pkmn_get_pksav_version(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_sqlite3_version
@@ -91,17 +86,15 @@ static void build_info_null_pointer_test() {
 
     error = pkmn_get_sqlite3_version(
                 NULL, // sqlite3_version_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("sqlite3_version_out");
 
     error = pkmn_get_sqlite3_version(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_sqlitecpp_version
@@ -109,23 +102,21 @@ static void build_info_null_pointer_test() {
 
     error = pkmn_get_sqlitecpp_version(
                 NULL, // sqlitecpp_version_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("sqlitecpp_version_out");
 
     error = pkmn_get_sqlitecpp_version(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 }
 
 /*
  * <pkmn-c/item_bag.h>
  */
-static void item_bag_null_pointer_test() {
+static void item_bag_error_test() {
     pkmn_item_bag_handle_t item_bag = NULL;
     error = pkmn_item_bag_make(
                 &item_bag,
@@ -183,27 +174,23 @@ static void item_bag_null_pointer_test() {
     error = pkmn_item_bag_get_game(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_item_bag_get_game(
                 item_bag,
                 NULL, // game_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "game_out");
 
     error = pkmn_item_bag_get_game(
                 item_bag,
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "actual_strlen_out");
-
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_item_bag_get_pocket
@@ -289,7 +276,7 @@ static void item_bag_null_pointer_test() {
 /*
  * <pkmn-c/item_list.h>
  */
-static void item_list_null_pointer_test() {
+static void item_list_error_test() {
     pkmn_item_list_handle_t item_list = NULL;
     error = pkmn_item_list_make(
                 &item_list,
@@ -365,26 +352,23 @@ static void item_list_null_pointer_test() {
     error = pkmn_item_list_get_name(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_item_list_get_name(
                 item_list,
                 NULL, // name_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "name_out");
 
     error = pkmn_item_list_get_name(
                 item_list,
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_item_list_get_game
@@ -393,26 +377,23 @@ static void item_list_null_pointer_test() {
     error = pkmn_item_list_get_game(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_item_list_get_game(
                 item_list,
                 NULL, // game_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "game_out");
 
     error = pkmn_item_list_get_game(
                 item_list,
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_ITEM_LIST_NULL_POINTER_RETURN(item_list, "actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_item_list_get_capacity
@@ -550,7 +531,7 @@ static void item_list_null_pointer_test() {
 /*
  * <pkmn-c/calculations/form.h>
  */
-static void calculations_form_null_pointer_test() {
+static void calculations_form_error_test() {
     /*
      * pkmn_calculations_gen2_unown_form
      */
@@ -561,8 +542,7 @@ static void calculations_form_null_pointer_test() {
                 0,
                 0,
                 NULL, // form_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("form_out");
 
@@ -572,10 +552,9 @@ static void calculations_form_null_pointer_test() {
                 0,
                 0,
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_calculations_gen3_unown_form
@@ -584,18 +563,16 @@ static void calculations_form_null_pointer_test() {
     error = pkmn_calculations_gen3_unown_form(
                 0,
                 NULL, // form_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("form_out");
 
     error = pkmn_calculations_gen3_unown_form(
                 0,
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_calculations_wurmple_becomes_silcoon
@@ -612,7 +589,7 @@ static void calculations_form_null_pointer_test() {
 /*
  * <pkmn-c/calculations/gender.h>
  */
-static void calculations_gender_null_pointer_test() {
+static void calculations_gender_error_test() {
     pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
 
     /*
@@ -655,7 +632,7 @@ static void calculations_gender_null_pointer_test() {
 /*
  * <pkmn-c/calculations/hidden_power.h>
  */
-static void calculations_hidden_power_null_pointer_test() {
+static void calculations_hidden_power_error_test() {
     /*
      * pkmn_calculations_gen2_hidden_power
      */
@@ -688,7 +665,7 @@ static void calculations_hidden_power_null_pointer_test() {
 /*
  * <pkmn-c/calculations/shininess.h>
  */
-static void calculations_shininess_null_pointer_test() {
+static void calculations_shininess_error_test() {
     /*
      * pkmn_calculations_gen2_shiny
      */
@@ -717,7 +694,7 @@ static void calculations_shininess_null_pointer_test() {
 /*
  * <pkmn-c/calculations/spinda_spots.h>
  */
-static void calculations_spinda_spots_null_pointer_test() {
+static void calculations_spinda_spots_error_test() {
     /*
      * pkmn_calculations_spinda_spot_offset
      */
@@ -732,7 +709,7 @@ static void calculations_spinda_spots_null_pointer_test() {
 /*
  * <pkmn-c/calculations/stats.h>
  */
-static void calculations_stats_null_pointer_test() {
+static void calculations_stats_error_test() {
     /*
      * pkmn_calculations_gb_stat
      */
@@ -790,7 +767,7 @@ static void calculations_stats_null_pointer_test() {
 /*
  * <pkmn-c/database/item_entry.h>
  */
-static void database_item_entry_null_pointer_test() {
+static void database_item_entry_error_test() {
     pkmn_database_item_entry_t dummy_pkmn_database_item_entry_t;
 
     /*
@@ -831,7 +808,7 @@ static void database_item_entry_null_pointer_test() {
 /*
  * <pkmn-c/database/lists.h>
  */
-static void database_lists_null_pointer_test() {
+static void database_lists_error_test() {
     /*
      * pkmn_database_ability_list
      */
@@ -971,7 +948,7 @@ static void database_lists_null_pointer_test() {
 /*
  * <pkmn-c/database/move_entry.h>
  */
-static void database_move_entry_null_pointer_test() {
+static void database_move_entry_error_test() {
     pkmn_database_move_entry_t dummy_pkmn_database_move_entry_t;
 
     /*
@@ -1012,7 +989,7 @@ static void database_move_entry_null_pointer_test() {
 /*
  * <pkmn-c/database/pokemon_entry.h>
  */
-static void database_pokemon_entry_null_pointer_test() {
+static void database_pokemon_entry_error_test() {
     pkmn_database_pokemon_entry_t dummy_pkmn_database_pokemon_entry_t;
 
     /*
@@ -1116,24 +1093,22 @@ static void database_pokemon_entry_null_pointer_test() {
 /*
  * <pkmn-c/utils/paths.h>
  */
-static void utils_paths_null_pointer_test() {
+static void utils_paths_error_test() {
     /*
      * pkmn_get_appdata_dir
      */
 
     error = pkmn_get_appdata_dir(
                 NULL, // appdata_dir_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("appdata_dir_out");
 
     error = pkmn_get_appdata_dir(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_database_path
@@ -1141,17 +1116,15 @@ static void utils_paths_null_pointer_test() {
 
     error = pkmn_get_database_path(
                 NULL, // database_path_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("database_path_out");
 
     error = pkmn_get_database_path(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_images_dir
@@ -1159,17 +1132,16 @@ static void utils_paths_null_pointer_test() {
 
     error = pkmn_get_images_dir(
                 NULL, // images_dir_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("images_dir_out");
 
-    error = pkmn_get_images_dir(
+    // TODO: uncomment when there's actually an images directory
+    /*error = pkmn_get_images_dir(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);*/
 
     /*
      * pkmn_get_tmp_dir
@@ -1177,32 +1149,30 @@ static void utils_paths_null_pointer_test() {
 
     error = pkmn_get_tmp_dir(
                 NULL, // tmp_dir_out
-                STRBUFFER_LEN,
-                &dummy_size_t
+                sizeof(strbuffer)
             );
     TEST_NULL_POINTER_RETURN("tmp_dir_out");
 
     error = pkmn_get_tmp_dir(
                 strbuffer,
-                STRBUFFER_LEN,
-                NULL // actual_strlen_out
+                0
             );
-    TEST_NULL_POINTER_RETURN("actual_strlen_out");
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 }
 
 PKMN_C_TEST_MAIN(
-    PKMN_C_TEST(build_info_null_pointer_test)
-    PKMN_C_TEST(item_bag_null_pointer_test)
-    PKMN_C_TEST(item_list_null_pointer_test)
-    PKMN_C_TEST(calculations_form_null_pointer_test)
-    PKMN_C_TEST(calculations_gender_null_pointer_test)
-    PKMN_C_TEST(calculations_hidden_power_null_pointer_test)
-    PKMN_C_TEST(calculations_shininess_null_pointer_test)
-    PKMN_C_TEST(calculations_spinda_spots_null_pointer_test)
-    PKMN_C_TEST(calculations_stats_null_pointer_test)
-    PKMN_C_TEST(database_item_entry_null_pointer_test)
-    PKMN_C_TEST(database_lists_null_pointer_test)
-    PKMN_C_TEST(database_move_entry_null_pointer_test)
-    PKMN_C_TEST(database_pokemon_entry_null_pointer_test)
-    PKMN_C_TEST(utils_paths_null_pointer_test)
+    PKMN_C_TEST(build_info_error_test)
+    PKMN_C_TEST(item_bag_error_test)
+    PKMN_C_TEST(item_list_error_test)
+    PKMN_C_TEST(calculations_form_error_test)
+    PKMN_C_TEST(calculations_gender_error_test)
+    PKMN_C_TEST(calculations_hidden_power_error_test)
+    PKMN_C_TEST(calculations_shininess_error_test)
+    PKMN_C_TEST(calculations_spinda_spots_error_test)
+    PKMN_C_TEST(calculations_stats_error_test)
+    PKMN_C_TEST(database_item_entry_error_test)
+    PKMN_C_TEST(database_lists_error_test)
+    PKMN_C_TEST(database_move_entry_error_test)
+    PKMN_C_TEST(database_pokemon_entry_error_test)
+    PKMN_C_TEST(utils_paths_error_test)
 )

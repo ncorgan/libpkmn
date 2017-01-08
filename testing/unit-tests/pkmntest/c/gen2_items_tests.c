@@ -45,7 +45,6 @@ void pkmntest_gen2_item_pocket_test(
     const char* game
 ) {
     char strbuffer[STRBUFFER_LEN];
-    size_t actual_strlen = 0;
 
     int capacity = 0;
     int num_items = 0;
@@ -60,25 +59,21 @@ void pkmntest_gen2_item_pocket_test(
         pkmn_item_list_get_name(
             item_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_game(
             item_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_capacity(
@@ -167,7 +162,6 @@ void pkmntest_gen2_key_item_pocket_test(
     const char* game
 ) {
     char strbuffer[STRBUFFER_LEN];
-    size_t actual_strlen = 0;
 
     int capacity = 0;
     int num_items = 0;
@@ -182,25 +176,21 @@ void pkmntest_gen2_key_item_pocket_test(
         pkmn_item_list_get_name(
             key_item_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_game(
             key_item_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_capacity(
@@ -317,7 +307,6 @@ void pkmntest_gen2_ball_pocket_test(
     const char* game
 ) {
     char strbuffer[STRBUFFER_LEN];
-    size_t actual_strlen = 0;
 
     int capacity = 0;
     int num_items = 0;
@@ -332,25 +321,21 @@ void pkmntest_gen2_ball_pocket_test(
         pkmn_item_list_get_name(
             ball_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_game(
             ball_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_capacity(
@@ -438,7 +423,6 @@ void pkmntest_gen2_tmhm_pocket_test(
     const char* game
 ) {
     char strbuffer[STRBUFFER_LEN];
-    size_t actual_strlen = 0;
 
     int capacity = 0;
     int num_items = 0;
@@ -457,25 +441,21 @@ void pkmntest_gen2_tmhm_pocket_test(
         pkmn_item_list_get_name(
             tmhm_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_game(
             tmhm_pocket,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_capacity(
@@ -720,7 +700,6 @@ void pkmntest_gen2_pc_test(
     const char* game
 ) {
     char strbuffer[STRBUFFER_LEN];
-    size_t actual_strlen = 0;
 
     int capacity = 0;
     int num_items = 0;
@@ -739,25 +718,21 @@ void pkmntest_gen2_pc_test(
         pkmn_item_list_get_name(
             pc,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_name);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(expected_name)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_game(
             pc,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_get_capacity(
@@ -872,20 +847,17 @@ void pkmntest_gen2_item_bag_test(
     };
 
     char strbuffer[STRBUFFER_LEN] = "";
-    size_t actual_strlen = 0;
 
     // Check unchanging and initial values.
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_get_game(
             bag,
             strbuffer,
-            STRBUFFER_LEN,
-            &actual_strlen
+            sizeof(strbuffer)
         ),
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL_STRING(strbuffer, game);
-    TEST_ASSERT_EQUAL(actual_strlen, strlen(game)+1);
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_get_pocket_names(

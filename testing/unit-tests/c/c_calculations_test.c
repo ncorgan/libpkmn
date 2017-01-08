@@ -14,7 +14,6 @@
 #define BUFFER_SIZE 512
 static char strbuffer[BUFFER_SIZE];
 static pkmn_error_t error;
-static size_t actual_strlen = 0;
 static int int_result = 0;
 static bool bool_result = false;
 static pkmn_gender_t pkmn_gender_t_result = PKMN_MALE;
@@ -31,60 +30,52 @@ static void gen2_unown_form_test() {
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 0, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
     error = pkmn_calculations_gen2_unown_form(
                 16, 0, 0, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, -1, 0, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
     error = pkmn_calculations_gen2_unown_form(
                 0, 16, 0, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, -1, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 16, 0,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, -1,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, 16,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
@@ -96,8 +87,7 @@ static void gen2_unown_form_test() {
     error = pkmn_calculations_gen2_unown_form(
                 10, 9, 1, 14,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "G");
@@ -105,8 +95,7 @@ static void gen2_unown_form_test() {
     error = pkmn_calculations_gen2_unown_form(
                 5, 15, 10, 5,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "S");
@@ -121,8 +110,7 @@ static void gen3_unown_form_test() {
     error = pkmn_calculations_gen3_unown_form(
                 0x4C07DE71,
                 strbuffer,
-                BUFFER_SIZE,
-                &actual_strlen
+                sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "B");

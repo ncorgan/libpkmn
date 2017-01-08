@@ -15,7 +15,6 @@
 
 static char strbuffer[BUFFER_LEN];
 static pkmn_error_t error_code = PKMN_ERROR_NONE;
-size_t actual_strlen = 0;
 
 /*
  * The example paths don't need to exist (except the database path). These
@@ -31,8 +30,7 @@ static void appdata_dir_test() {
 
     error_code = pkmn_get_appdata_dir(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
 #ifdef PKMN_PLATFORM_WIN32
@@ -49,8 +47,7 @@ static void database_path_test() {
      */
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
 
@@ -67,8 +64,7 @@ static void database_path_test() {
 
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_RUNTIME_ERROR);
 
@@ -81,8 +77,7 @@ static void database_path_test() {
 
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_RUNTIME_ERROR);
 }
@@ -96,8 +91,7 @@ static void images_dir_test() {
 
     error_code = pkmn_get_images_dir(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
 #ifdef PKMN_PLATFORM_WIN32
@@ -110,11 +104,9 @@ static void images_dir_test() {
 static void tmp_dir_test() {
     error_code = pkmn_get_tmp_dir(
                      strbuffer,
-                     BUFFER_LEN,
-                     &actual_strlen
+                     sizeof(strbuffer)
                  );
     TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
-    TEST_ASSERT(actual_strlen > 0);
 }
 
 PKMN_C_TEST_MAIN(
