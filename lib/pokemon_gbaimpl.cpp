@@ -728,7 +728,7 @@ namespace pkmn {
                              );
         _moves[index].pp = _moves[index].move.get_pp(0);
 
-        _attacks->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        _attacks->moves[index] = pksav_littleendian16(uint16_t(_moves[index].move.get_move_id()));
         _attacks->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -826,7 +826,7 @@ namespace pkmn {
                         pksav_littleendian16(_attacks->moves[index]),
                         _database_entry.get_game_id()
                     ),
-                    pksav_littleendian16(_attacks->move_pps[index])
+                    _attacks->move_pps[index]
                 );
                 break;
 

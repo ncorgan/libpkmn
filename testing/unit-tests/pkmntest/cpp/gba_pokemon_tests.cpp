@@ -625,6 +625,54 @@ namespace pkmntest {
             pokemon->set_contest_stat("Cool", 256);
         , pkmn::range_error);
 
+        BOOST_CHECK_THROW(
+            pokemon->set_move("Pound", -1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_move("Pound", 4);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            pokemon->set_move("Shadow Sky", 0);
+        , std::invalid_argument);
+
+        pokemon->set_move("Swallow", 0);
+        pokemon->set_move("Flamethrower", 1);
+        pokemon->set_move("Return", 2);
+        pokemon->set_move("Fire Blast", 3);
+
+        BOOST_CHECK_EQUAL(
+            move_slots.at(0).move.get_name(),
+            "Swallow"
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(0).pp,
+            move_slots.at(0).move.get_pp(0)
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(1).move.get_name(),
+            "Flamethrower"
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(1).pp,
+            move_slots.at(1).move.get_pp(0)
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(2).move.get_name(),
+            "Return"
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(2).pp,
+            move_slots.at(2).move.get_pp(0)
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(3).move.get_name(),
+            "Fire Blast"
+        );
+        BOOST_CHECK_EQUAL(
+            move_slots.at(3).pp,
+            move_slots.at(3).move.get_pp(0)
+        );
+
         pokemon->set_EV("Attack", 100);
         BOOST_CHECK_EQUAL(
             pokemon->get_EVs().at("Attack"),
@@ -742,11 +790,11 @@ namespace pkmntest {
         for(int i = 0; i < 4; ++i) {
             BOOST_CHECK_EQUAL(
                 int(attacks->moves[i]),
-                pokemon->get_moves().at(i).move.get_move_id()
+                move_slots.at(i).move.get_move_id()
             );
             BOOST_CHECK_EQUAL(
                 int(attacks->move_pps[i]),
-                pokemon->get_moves().at(i).pp
+                move_slots.at(i).pp
             );
         }
 
