@@ -142,6 +142,24 @@ pkmn_error_t pkmn_pokemon_set_nickname(
     )
 }
 
+pkmn_error_t pkmn_pokemon_is_shiny(
+    pkmn_pokemon_handle_t handle,
+    bool* is_shiny_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *is_shiny_out = handle->cpp->is_shiny();
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_shininess(
+    pkmn_pokemon_handle_t handle,
+    bool value
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_shininess(value);
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_held_item(
     pkmn_pokemon_handle_t handle,
     char* held_item_out,
@@ -154,6 +172,15 @@ pkmn_error_t pkmn_pokemon_get_held_item(
                     held_item_out,
                     buffer_len
                );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_held_item(
+    pkmn_pokemon_handle_t handle,
+    const char* held_item
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_held_item(held_item);
     )
 }
 
@@ -256,6 +283,24 @@ pkmn_error_t pkmn_pokemon_set_trainer_gender(
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->set_trainer_gender(trainer_gender)
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_friendship(
+    pkmn_pokemon_handle_t handle,
+    int* friendship_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *friendship_out = handle->cpp->get_friendship();
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_friendship(
+    pkmn_pokemon_handle_t handle,
+    int friendship
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_friendship(friendship);
     )
 }
 
@@ -452,6 +497,26 @@ pkmn_error_t pkmn_pokemon_set_marking(
     )
 }
 
+pkmn_error_t pkmn_pokemon_has_ribbon(
+    pkmn_pokemon_handle_t handle,
+    const char* ribbon,
+    bool* has_ribbon
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *has_ribbon = handle->cpp->get_ribbons().at(ribbon);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_ribbon(
+    pkmn_pokemon_handle_t handle,
+    const char* ribbon,
+    bool value
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_ribbon(ribbon, value);
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_handle_t handle,
     pkmn_move_slots_t* move_slots_out,
@@ -476,6 +541,26 @@ pkmn_error_t pkmn_pokemon_set_move(
             move,
             index
         );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_contest_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* contest_stat_out
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *contest_stat_out = handle->cpp->get_contest_stats().at(stat);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_contest_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int contest_stat
+) {
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_contest_stat(stat, contest_stat);
     )
 }
 

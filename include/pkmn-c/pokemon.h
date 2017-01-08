@@ -87,10 +87,25 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
     const char* nickname
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_is_shiny(
+    pkmn_pokemon_handle_t handle,
+    bool* is_shiny_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_shininess(
+    pkmn_pokemon_handle_t handle,
+    bool value
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_held_item(
     pkmn_pokemon_handle_t handle,
     char* held_item_out,
     size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_held_item(
+    pkmn_pokemon_handle_t handle,
+    const char* held_item
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_name(
@@ -143,6 +158,16 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_gender(
 PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_gender(
     pkmn_pokemon_handle_t handle,
     const char* trainer_gender
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_friendship(
+    pkmn_pokemon_handle_t handle,
+    int* friendship_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_friendship(
+    pkmn_pokemon_handle_t handle,
+    int friendship
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_ability(
@@ -243,6 +268,18 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_marking(
     bool value
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_has_ribbon(
+    pkmn_pokemon_handle_t handle,
+    const char* ribbon,
+    bool* has_ribbon_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_ribbon(
+    pkmn_pokemon_handle_t handle,
+    const char* ribbon,
+    bool value
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_handle_t handle,
     pkmn_move_slots_t* move_slots_out,
@@ -253,6 +290,18 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_move(
     pkmn_pokemon_handle_t handle,
     const char* move,
     int index
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_contest_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int* contest_stat_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_contest_stat(
+    pkmn_pokemon_handle_t handle,
+    const char* stat,
+    int contest_stat
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_EV(
