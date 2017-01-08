@@ -43,16 +43,15 @@ const char* pkmn_pokemon_box_strerror(
 pkmn_error_t pkmn_pokemon_box_get_name(
     pkmn_pokemon_box_handle_t handle,
     char* name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_name(),
-            name_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_box_handle_t>(
+                   handle,
+                   handle->cpp->get_name(),
+                   name_out,
+                   buffer_len
+               );
     )
 }
 
@@ -68,16 +67,15 @@ pkmn_error_t pkmn_pokemon_box_set_name(
 pkmn_error_t pkmn_pokemon_box_get_game(
     pkmn_pokemon_box_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_game(),
-            game_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_box_handle_t>(
+                   handle,
+                   handle->cpp->get_game(),
+                   game_out,
+                   buffer_len
+               );
     )
 }
 

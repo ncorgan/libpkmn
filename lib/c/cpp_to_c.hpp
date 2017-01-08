@@ -188,16 +188,6 @@ namespace pkmn {
         return PKMN_ERROR_NONE;
     }
 
-    PKMN_INLINE void std_string_to_c_str(
-        const std::string &str,
-        char* c_str_out,
-        size_t buffer_len,
-        size_t* actual_strlen_out
-    ) {
-        std::strncpy(c_str_out, str.c_str(), buffer_len);
-        *actual_strlen_out = str.size() + 1;
-    }
-
     PKMN_INLINE void std_string_to_c_str_alloc(
         const std::string &str,
         char** c_str_out

@@ -64,48 +64,45 @@ const char* pkmn_pokemon_strerror(
 pkmn_error_t pkmn_pokemon_get_species(
     pkmn_pokemon_handle_t handle,
     char* species_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_species(),
-            species_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_species(),
+                    species_out,
+                    buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_form(
     pkmn_pokemon_handle_t handle,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_form(),
-            form_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_form(),
+                    form_out,
+                    buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_game(
     pkmn_pokemon_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_game(),
-            game_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_game(),
+                    game_out,
+                    buffer_len
+               );
     )
 }
 
@@ -124,16 +121,15 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
 pkmn_error_t pkmn_pokemon_get_nickname(
     pkmn_pokemon_handle_t handle,
     char* nickname_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_nickname(),
-            nickname_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_nickname(),
+                    nickname_out,
+                    buffer_len
+               );
     )
 }
 
@@ -149,32 +145,30 @@ pkmn_error_t pkmn_pokemon_set_nickname(
 pkmn_error_t pkmn_pokemon_get_held_item(
     pkmn_pokemon_handle_t handle,
     char* held_item_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_held_item().get_name(),
-            held_item_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_held_item().get_name(),
+                    held_item_out,
+                    buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_trainer_name(
     pkmn_pokemon_handle_t handle,
     char* trainer_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_trainer_name(),
-            trainer_name_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_trainer_name(),
+                    trainer_name_out,
+                    buffer_len
+               );
     )
 }
 
@@ -244,16 +238,15 @@ pkmn_error_t pkmn_pokemon_set_trainer_id(
 pkmn_error_t pkmn_pokemon_get_trainer_gender(
     pkmn_pokemon_handle_t handle,
     char* trainer_gender_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_trainer_gender(),
-            trainer_gender_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_trainer_gender(),
+                    trainer_gender_out,
+                    buffer_len
+               );
     )
 }
 
@@ -269,16 +262,15 @@ pkmn_error_t pkmn_pokemon_set_trainer_gender(
 pkmn_error_t pkmn_pokemon_get_ability(
     pkmn_pokemon_handle_t handle,
     char* ability_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_ability(),
-            ability_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_ability(),
+                    ability_out,
+                    buffer_len
+               );
     )
 }
 
@@ -294,16 +286,15 @@ pkmn_error_t pkmn_pokemon_set_ability(
 pkmn_error_t pkmn_pokemon_get_ball(
     pkmn_pokemon_handle_t handle,
     char* ball_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_ball(),
-            ball_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_ball(),
+                    ball_out,
+                    buffer_len
+               );
     )
 }
 
@@ -338,16 +329,15 @@ pkmn_error_t pkmn_pokemon_get_location_met(
     pkmn_pokemon_handle_t handle,
     bool as_egg,
     char* location_met_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_location_met(as_egg),
-            location_met_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_location_met(as_egg),
+                    location_met_out,
+                    buffer_len
+               );
     )
 }
 
@@ -367,16 +357,15 @@ pkmn_error_t pkmn_pokemon_set_location_met(
 pkmn_error_t pkmn_pokemon_get_original_game(
     pkmn_pokemon_handle_t handle,
     char* original_game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_original_game(),
-            original_game_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_original_game(),
+                    original_game_out,
+                    buffer_len
+               );
     )
 }
 

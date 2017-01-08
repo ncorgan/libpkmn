@@ -602,14 +602,12 @@ BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
     for(size_t i = 0; i < 3; ++i) {
         char species_c[STRBUFFER_LEN] = {0};
         char game_c[STRBUFFER_LEN] = {0};
-        size_t actual_strlen = 0;
         int level_c = 0;
 
         error = pkmn_pokemon_get_species(
                     pokemon_list_c.pokemon_list[i],
                     species_c,
-                    sizeof(species_c),
-                    &actual_strlen
+                    sizeof(species_c)
                 );
         BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
         BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_species().c_str(), species_c), 0);
@@ -617,8 +615,7 @@ BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
         error = pkmn_pokemon_get_game(
                     pokemon_list_c.pokemon_list[i],
                     game_c,
-                    sizeof(game_c),
-                    &actual_strlen
+                    sizeof(game_c)
                 );
         BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
         BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_game().c_str(), game_c), 0);

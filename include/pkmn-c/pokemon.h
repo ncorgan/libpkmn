@@ -56,22 +56,19 @@ PKMN_API const char* pkmn_pokemon_strerror(
 PKMN_API pkmn_error_t pkmn_pokemon_get_species(
     pkmn_pokemon_handle_t handle,
     char* species_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_form(
     pkmn_pokemon_handle_t handle,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_game(
     pkmn_pokemon_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(
@@ -82,8 +79,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(
 PKMN_API pkmn_error_t pkmn_pokemon_get_nickname(
     pkmn_pokemon_handle_t handle,
     char* nickname_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
@@ -94,15 +90,13 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
 PKMN_API pkmn_error_t pkmn_pokemon_get_held_item(
     pkmn_pokemon_handle_t handle,
     char* held_item_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_name(
     pkmn_pokemon_handle_t handle,
     char* trainer_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_name(
@@ -143,8 +137,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_id(
 PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_gender(
     pkmn_pokemon_handle_t handle,
     char* trainer_gender_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_gender(
@@ -155,8 +148,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_gender(
 PKMN_API pkmn_error_t pkmn_pokemon_get_ability(
     pkmn_pokemon_handle_t handle,
     char* ability_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_ability(
@@ -167,8 +159,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_ability(
 PKMN_API pkmn_error_t pkmn_pokemon_get_ball(
     pkmn_pokemon_handle_t handle,
     char* ball_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_ball(
@@ -190,8 +181,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_location_met(
     pkmn_pokemon_handle_t handle,
     bool as_egg,
     char* location_met_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_location_met(
@@ -203,8 +193,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_location_met(
 PKMN_API pkmn_error_t pkmn_pokemon_get_original_game(
     pkmn_pokemon_handle_t handle,
     char* original_game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_original_game(

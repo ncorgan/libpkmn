@@ -41,8 +41,7 @@ PKMN_API const char* pkmn_pokemon_box_strerror(
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_name(
     pkmn_pokemon_box_handle_t handle,
     char* name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_set_name(
@@ -53,8 +52,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_box_set_name(
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_game(
     pkmn_pokemon_box_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_capacity(
