@@ -298,17 +298,16 @@ namespace pkmn {
 
     void pkmn_move_slots_cpp_to_c(
         const pkmn::move_slots_t &mslots_cpp,
-        pkmn_move_slots_t* mslots_c,
-        size_t* list_length_out
+        pkmn_move_slots_t* mslots_c
     ) {
-        *mslots_c = (pkmn_move_slots_t)std::malloc(sizeof(pkmn_move_slot_t) * mslots_cpp.size());
+        mslots_c->move_slots = (pkmn_move_slot_t*)std::malloc(sizeof(pkmn_move_slot_t) * mslots_cpp.size());
         for(size_t i = 0; i < mslots_cpp.size(); ++i) {
             pkmn_move_slot_cpp_to_c(
                 mslots_cpp[i],
-                &((*mslots_c)[i])
+                &(mslots_c->move_slots[i])
             );
         }
-        *list_length_out = mslots_cpp.size();
+        mslots_c->length = mslots_cpp.size();
     }
 
     void pkmn_pokemon_entries_to_string_list(

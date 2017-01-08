@@ -292,8 +292,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_ribbon(
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_handle_t handle,
-    pkmn_move_slots_t* move_slots_out,
-    size_t* list_length_out
+    pkmn_move_slots_t* move_slots_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_set_move(

@@ -558,14 +558,12 @@ pkmn_error_t pkmn_pokemon_set_ribbon(
 
 pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_handle_t handle,
-    pkmn_move_slots_t* move_slots_out,
-    size_t* list_length_out
+    pkmn_move_slots_t* move_slots_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         pkmn::pkmn_move_slots_cpp_to_c(
             handle->cpp->get_moves(),
-            move_slots_out,
-            list_length_out
+            move_slots_out
         );
     )
 }

@@ -137,8 +137,7 @@ namespace pkmn {
 
     void pkmn_move_slots_cpp_to_c(
         const pkmn::move_slots_t &mslots_cpp,
-        pkmn_move_slots_t* mslots_c,
-        size_t* list_length_out
+        pkmn_move_slots_t* mslots_c
     );
 
     void pkmn_pokemon_entries_to_string_list(

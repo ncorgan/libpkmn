@@ -545,6 +545,69 @@ BOOST_AUTO_TEST_CASE(move_list_cpp_to_c_test) {
     BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
+BOOST_AUTO_TEST_CASE(move_slot_cpp_to_c_test) {
+    pkmn::move_slot move_slot_cpp(
+        pkmn::database::move_entry("Tackle", "Red"),
+        50
+    );
+
+    pkmn_move_slot_t move_slot_c;
+
+    pkmn::pkmn_move_slot_cpp_to_c(
+        move_slot_cpp,
+        &move_slot_c
+    );
+
+    BOOST_CHECK_EQUAL(move_slot_c.move, "Tackle");
+    BOOST_CHECK_EQUAL(move_slot_c.pp, 50);
+
+    pkmn_move_slot_free(&move_slot_c);
+    BOOST_CHECK(!move_slot_c.move);
+    BOOST_CHECK_EQUAL(move_slot_c.pp, 0);
+}
+
+BOOST_AUTO_TEST_CASE(move_slots_cpp_to_c_test) {
+    pkmn::move_slots_t move_slots_cpp;
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Tackle", "Red"),
+            50
+        )
+    );
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Pound", "Silver"),
+            28
+        )
+    );
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Metronome", "LeafGreen"),
+            1
+        )
+    );
+
+    pkmn_move_slots_t move_slots_c = { NULL, 0 };
+    pkmn::pkmn_move_slots_cpp_to_c(
+        move_slots_cpp,
+        &move_slots_c
+    );
+
+    BOOST_CHECK_EQUAL(move_slots_c.length, 3);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[0].move, "Tackle");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[0].pp, 50);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[1].move, "Pound");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[1].pp, 28);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[2].move, "Metronome");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[2].pp, 1);
+
+    pkmn_move_slots_free(
+        &move_slots_c
+    );
+    BOOST_CHECK(!move_slots_c.move_slots);
+    BOOST_CHECK_EQUAL(move_slots_c.length, 0);
+}
+
 BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
     pkmn::database::pokemon_entries_t pokemon_entries_cpp;
     pokemon_entries_cpp.emplace_back(
