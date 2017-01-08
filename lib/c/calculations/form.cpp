@@ -18,45 +18,37 @@ pkmn_error_t pkmn_calculations_gen2_unown_form(
     int IV_speed,
     int IV_special,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(form_out);
-    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
 
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::calculations::gen2_unown_form(
-                IV_attack, IV_defense,
-                IV_speed, IV_special
-            ),
-
-            form_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::calculations::gen2_unown_form(
+                       IV_attack, IV_defense,
+                       IV_speed, IV_special
+                   ),
+                   form_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_calculations_gen3_unown_form(
     uint32_t personality,
     char* form_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(form_out);
-    PKMN_CHECK_NULL_PARAM(actual_strlen_out);
 
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::calculations::gen3_unown_form(
-                personality
-            ),
-
-            form_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::calculations::gen3_unown_form(
+                       personality
+                   ),
+                   form_out,
+                   buffer_len
+               );
     )
 }
 

@@ -12,12 +12,33 @@
 
 #include <pkmn/exception.hpp>
 
+#include <boost/format.hpp>
+
 #include <stdexcept>
 #include <string>
 
 void pkmn_set_error(
     const std::string &error
 );
+
+#define PKMN_CHECK_BUFFER_LEN(buffer_len, needed_len) \
+{ \
+    if(buffer_len == 0 or buffer_len < needed_len) { \
+        std::string error_msg = (boost::format("Buffer length of %d passed in, %d needed") % buffer_len % needed_len).str(); \
+        pkmn_set_error(error_msg); \
+        return PKMN_ERROR_BUFFER_TOO_SMALL; \
+    } \
+} 
+
+#define PKMN_CHECK_BUFFER_LEN_WITH_HANDLE(buffer_len, needed_len, handle) \
+{ \
+    if(buffer_len < needed_len) { \
+        std::string error_msg = (boost::format("Buffer length of %d passed in, %d needed") % buffer_len % needed_len).str(); \
+        pkmn_set_error(error_msg); \
+        handle->last_error = error_msg; \
+        return PKMN_ERROR_BUFFER_TOO_SMALL; \
+    } \
+} 
 
 #define PKMN_CHECK_NULL_PARAM(param) \
 { \
@@ -30,6 +51,7 @@ void pkmn_set_error(
 #define PKMN_CHECK_NULL_PARAM_WITH_HANDLE(param, handle) \
 { \
     if(!param) { \
+        boost::mutex::scoped_lock lock(handle->error_mutex); \
         pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
         handle->last_error = "Null pointer passed into parameter \"" #param "\""; \
         return PKMN_ERROR_NULL_POINTER; \

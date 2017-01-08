@@ -654,27 +654,22 @@ BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {
 BOOST_AUTO_TEST_CASE(std_string_cpp_to_c_test) {
     std::string string_cpp = "LibPKMN";
     char string_c[8] = "";
-    size_t actual_strlen = 0;
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
-    // Buffer too small
-    pkmn::std_string_to_c_str(
-        string_cpp,
-        string_c,
-        5,
-        &actual_strlen
-    );
-    BOOST_CHECK_EQUAL(string_c, "LibPK");
-    BOOST_CHECK_EQUAL(actual_strlen, 8);
+    error = pkmn::std_string_to_c_str(
+                string_cpp,
+                string_c,
+                0
+            );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     // Full buffer
-    pkmn::std_string_to_c_str(
-        string_cpp,
-        string_c,
-        8,
-        &actual_strlen
-    );
+    error = pkmn::std_string_to_c_str(
+                string_cpp,
+                string_c,
+                sizeof(string_c)
+            );
     BOOST_CHECK_EQUAL(string_c, "LibPKMN");
-    BOOST_CHECK_EQUAL(actual_strlen, 8);
 }
 
 BOOST_AUTO_TEST_CASE(string_pair_cpp_to_c_test) {

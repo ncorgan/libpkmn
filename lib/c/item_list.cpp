@@ -61,40 +61,36 @@ const char* pkmn_item_list_strerror(
 pkmn_error_t pkmn_item_list_get_name(
     pkmn_item_list_handle_t handle,
     char* name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_name(),
-            name_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_item_list_handle_t>(
+                   handle,
+                   handle->cpp->get_name(),
+                   name_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_item_list_get_game(
     pkmn_item_list_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_game(),
-            game_out,
-            buffer_len,
-            actual_strlen_out
-        )
+        return pkmn::std_string_to_c_str_with_handle<pkmn_item_list_handle_t>(
+                   handle,
+                   handle->cpp->get_game(),
+                   game_out,
+                   buffer_len
+               );
     )
 }
 
