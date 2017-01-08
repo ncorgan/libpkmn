@@ -10,14 +10,10 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+#include <pkmn-c/types/gender.h>
+
 #include <stdint.h>
 #include <stdlib.h>
-
-typedef enum {
-    PKMN_MALE = 0,
-    PKMN_FEMALE,
-    PKMN_GENDERLESS
-} pkmn_gender_t;
 
 #ifdef __cplusplus
 extern "C" {

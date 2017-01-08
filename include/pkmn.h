@@ -25,6 +25,7 @@
 #include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/hidden_power.h>

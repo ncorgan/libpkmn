@@ -10,6 +10,10 @@
 
 #include <pkmn-c/pokemon.h>
 
+#include <boost/assign.hpp>
+
+#include <map>
+
 pkmn_error_t pkmn_pokemon_make(
     pkmn_pokemon_handle_t* handle_ptr,
     const char* species,
@@ -262,27 +266,38 @@ pkmn_error_t pkmn_pokemon_set_trainer_id(
     )
 }
 
+static const std::map<std::string, pkmn_gender_t> genders = boost::assign::map_list_of
+    ("Male", PKMN_MALE)
+    ("Female", PKMN_FEMALE)
+    ("Genderless", PKMN_GENDERLESS)
+;
+
 pkmn_error_t pkmn_pokemon_get_trainer_gender(
     pkmn_pokemon_handle_t handle,
-    char* trainer_gender_out,
-    size_t buffer_len
+    pkmn_gender_t* trainer_gender_out
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_trainer_gender(),
-                    trainer_gender_out,
-                    buffer_len
-               );
+        *trainer_gender_out = genders.at(handle->cpp->get_trainer_gender());
     )
 }
 
 pkmn_error_t pkmn_pokemon_set_trainer_gender(
     pkmn_pokemon_handle_t handle,
-    const char* trainer_gender
+    pkmn_gender_t trainer_gender
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        handle->cpp->set_trainer_gender(trainer_gender)
+        switch(trainer_gender) {
+            case PKMN_MALE:
+                handle->cpp->set_trainer_gender("Male");
+                break;
+
+            case PKMN_FEMALE:
+                handle->cpp->set_trainer_gender("Female");
+                break;
+
+            default:
+                throw std::invalid_argument("Invalid gender.");
+        };
     )
 }
 
