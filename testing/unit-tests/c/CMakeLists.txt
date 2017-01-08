@@ -21,6 +21,7 @@ SET(c_tests
     c_items_test
     c_lists_test
     c_paths_test
+    c_pokemon_test
 )
 
 FOREACH(test ${c_tests})
