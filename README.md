@@ -61,9 +61,10 @@ repository is automatically tested under the following configurations:
 Tests are run with the following frameworks:
  * C++: [Boost.Test](http://www.boost.org/doc/libs/1_62_0/libs/test/doc/html/index.html)
  * C: [Unity](https://github.com/ThrowTheSwitch/Unity)
+ * C#: [NUnit](https://www.nunit.org/)
  * Lua: [Luaunit](https://github.com/bluebird75/luaunit)
  * Python: [unittest](https://docs.python.org/3/library/unittest.html)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/01/02
+README last updated: 2017/01/08
