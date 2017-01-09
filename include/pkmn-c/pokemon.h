@@ -303,7 +303,7 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_move(
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_contest_stat_names(
     pkmn_pokemon_handle_t handle,
-    pkmn_string_list_t* marking_names_out
+    pkmn_string_list_t* contest_stat_names_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_contest_stat(
