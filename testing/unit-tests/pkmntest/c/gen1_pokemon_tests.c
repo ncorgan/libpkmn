@@ -574,7 +574,7 @@ void pkmntest_gen1_pokemon_test(
         "Ember", "Flamethrower", "Slash", "Fire Blast"
     };
 
-    for(size_t i = 0; i < 4; ++i) {
+    for(int i = 0; i < 4; ++i) {
         error = pkmn_pokemon_set_move(
                     pokemon,
                     moves[i],
