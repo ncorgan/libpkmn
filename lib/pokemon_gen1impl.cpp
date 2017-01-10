@@ -25,6 +25,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 #include <unordered_map>

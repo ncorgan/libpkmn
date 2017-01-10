@@ -57,7 +57,7 @@ namespace pkmn {
         PKMN_CONSTEXPR_OR_INLINE move_slot(
             pkmn::database::move_entry&& slot_move,
             int slot_pp
-        ): move(slot_move),
+        ): move(std::move(slot_move)),
            pp(slot_pp) {}
 #endif
 

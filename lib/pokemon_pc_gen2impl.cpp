@@ -26,6 +26,7 @@ namespace pkmn {
         _our_mem = true;
 
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+            std::memset(&NATIVE_RCAST->pc->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
             NATIVE_RCAST->pc->boxes[i].species[20] = 0xFF;
         }
 

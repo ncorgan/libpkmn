@@ -31,6 +31,7 @@ SET(pkmntest_sources
     gba_pokemon_tests.cpp
     items_tests_common.cpp
     pokemon_tests_common.cpp
+    pokemon_pc_tests.cpp
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}

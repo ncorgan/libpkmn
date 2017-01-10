@@ -47,6 +47,8 @@ namespace pkmn {
         _native = reinterpret_cast<void*>(new pksav_gba_pokemon_box_t);
         *NATIVE_RCAST = native;
         _our_mem = true;
+
+        _from_native();
     }
 
     pokemon_box_gbaimpl::~pokemon_box_gbaimpl() {
