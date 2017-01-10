@@ -74,8 +74,6 @@ SET(pkmn_sources
     pokemon_gen2impl.cpp
     pokemon_gbaimpl.cpp
     pokemon_box_impl.cpp
-    pokemon_box_gen1impl.cpp
-    pokemon_box_gen2impl.cpp
     pokemon_box_gbaimpl.cpp
     pokemon_pc_impl.cpp
     pokemon_pc_gen1impl.cpp

@@ -6,7 +6,7 @@
  */
 
 #include "pokemon_pc_gen2impl.hpp"
-#include "pokemon_box_gen2impl.hpp"
+#include "pokemon_gb_list.hpp"
 
 #include <pksav/gen2/text.h>
 

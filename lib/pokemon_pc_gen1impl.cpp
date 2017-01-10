@@ -6,7 +6,7 @@
  */
 
 #include "pokemon_pc_gen1impl.hpp"
-#include "pokemon_box_gen1impl.hpp"
+#include "pokemon_gb_list.hpp"
 
 #include <pkmn/exception.hpp>
 

@@ -6,8 +6,7 @@
  */
 
 #include "pokemon_box_impl.hpp"
-#include "pokemon_box_gen1impl.hpp"
-#include "pokemon_box_gen2impl.hpp"
+#include "pokemon_gb_list.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
