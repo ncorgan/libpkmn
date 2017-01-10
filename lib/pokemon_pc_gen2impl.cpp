@@ -95,6 +95,8 @@ namespace pkmn {
     }
 
     void pokemon_pc_gen2impl::_update_box_names() {
+        _box_names.resize(GEN2_NUM_BOXES);
+
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             _box_names[i] = _box_list[i]->get_name();
 

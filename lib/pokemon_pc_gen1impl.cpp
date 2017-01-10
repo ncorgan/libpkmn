@@ -8,6 +8,8 @@
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_box_gen1impl.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <cstring>
 
 #define NATIVE_RCAST reinterpret_cast<pkmn::gen1_pokemon_boxes_t*>(_native)
@@ -96,6 +98,6 @@ namespace pkmn {
     }
 
     void pokemon_pc_gen1impl::_update_box_names() {
-        _box_names.resize(GEN1_NUM_BOXES);
+        throw pkmn::feature_not_in_game_error("Box names", "Generation I");
     }
 }

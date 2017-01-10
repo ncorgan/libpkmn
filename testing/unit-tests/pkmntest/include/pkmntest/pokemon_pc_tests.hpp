@@ -22,9 +22,17 @@ namespace pkmntest {
         const std::string &game
     );
 
+    PKMN_API void test_box_name(
+        pkmn::pokemon_box::sptr box
+    );
+
     PKMN_API void test_empty_pokemon_pc(
         pkmn::pokemon_pc::sptr pc,
         const std::string &game
+    );
+
+    PKMN_API void test_pc_box_names(
+        pkmn::pokemon_pc::sptr pc
     );
 
 }

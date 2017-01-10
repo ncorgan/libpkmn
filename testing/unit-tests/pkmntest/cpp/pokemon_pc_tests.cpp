@@ -12,6 +12,8 @@
 
 #include "pkmn_boost_unit_test.hpp"
 
+#include <boost/format.hpp>
+
 #include <pkmn/exception.hpp>
 
 namespace pkmntest {
@@ -51,6 +53,30 @@ namespace pkmntest {
         }
     }
 
+    void test_box_name(
+        pkmn::pokemon_box::sptr box
+    ) {
+        std::string game = box->get_game();
+        if(game == "Red" or game == "Blue" or game == "Yellow") {
+            BOOST_CHECK_THROW(
+                box->set_name("ABCDEFGH");
+            , pkmn::feature_not_in_game_error);
+            BOOST_CHECK_THROW(
+                (void)box->get_name();
+            , pkmn::feature_not_in_game_error);
+        } else {
+            BOOST_CHECK_THROW(
+                box->set_name("ABCDEFGHI");
+            , std::invalid_argument);
+
+            box->set_name("ABCDEFGH");
+            BOOST_CHECK_EQUAL(
+                box->get_name(),
+                "ABCDEFGH"
+            );
+        }
+    }
+
     void test_empty_pokemon_pc(
         pkmn::pokemon_pc::sptr pc,
         const std::string &game
@@ -65,6 +91,28 @@ namespace pkmntest {
                 pokemon_box_list.at(i),
                 game
             );
+        }
+    }
+
+    void test_pc_box_names(
+        pkmn::pokemon_pc::sptr pc
+    ) {
+        std::string game = pc->get_game();
+        if(game == "Red" or game == "Blue" or game == "Yellow") {
+            BOOST_CHECK_THROW(
+                pc->get_box(0)->set_name("ABCDEFGH");
+            , pkmn::feature_not_in_game_error);
+            BOOST_CHECK_THROW(
+                (void)pc->get_box_names();
+            , pkmn::feature_not_in_game_error);
+        } else {
+            for(int i = 0; i < pc->get_num_boxes(); ++i) {
+                std::string box_name = str(boost::format("BOX%d") % (i+1));
+                pc->get_box(i)->set_name(box_name);
+            }
+
+            const std::vector<std::string>& box_names = pc->get_box_names();
+            BOOST_REQUIRE_EQUAL(box_names.size(), pc->get_num_boxes());
         }
     }
 }
