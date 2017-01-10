@@ -6,6 +6,8 @@
  */
 
 #include "pokemon_pc_gen2impl.hpp"
+
+#define POKEMON_GB_LIST_BASE_IMPL pokemon_box_impl
 #include "pokemon_gb_list.hpp"
 
 #include <pksav/gen2/text.h>

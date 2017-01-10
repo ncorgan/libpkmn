@@ -26,7 +26,7 @@ namespace pkmn {
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id
-    ): pokemon_box_impl(game_id)
+    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         std::memset(_native, 0, sizeof(list_type));
@@ -40,7 +40,7 @@ namespace pkmn {
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id,
         list_type* native
-    ): pokemon_box_impl(game_id)
+    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
     {
         _native = reinterpret_cast<void*>(native);
         _our_mem = false;
@@ -52,7 +52,7 @@ namespace pkmn {
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id,
         const list_type &native
-    ): pokemon_box_impl(game_id)
+    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         *NATIVE_LIST_RCAST = native;

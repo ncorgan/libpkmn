@@ -6,8 +6,10 @@
  */
 
 #include "pokemon_box_impl.hpp"
-#include "pokemon_gb_list.hpp"
 #include "pokemon_box_gbaimpl.hpp"
+
+#define POKEMON_GB_LIST_BASE_IMPL pokemon_box_impl
+#include "pokemon_gb_list.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"

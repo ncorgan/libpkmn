@@ -7,6 +7,10 @@
 #ifndef PKMN_POKEMON_GB_LIST_HPP
 #define PKMN_POKEMON_GB_LIST_HPP
 
+#ifndef POKEMON_GB_LIST_BASE_IMPL
+#error You must set POKEMON_GB_LIST_BASE_IMPL before including this file.
+#endif
+
 #include "pokemon_box_impl.hpp"
 
 #include "pokemon_gen1impl.hpp"
@@ -15,7 +19,7 @@
 namespace pkmn {
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    class pokemon_gb_list: public pokemon_box_impl {
+    class pokemon_gb_list: public POKEMON_GB_LIST_BASE_IMPL {
         public:
             pokemon_gb_list() {}
             pokemon_gb_list(
