@@ -15,6 +15,8 @@
 
 #define NATIVE_RCAST reinterpret_cast<pksav_gba_pokemon_pc_t*>(_native)
 
+BOOST_STATIC_CONSTEXPR uint8_t GBA_TEXT_TERMINATOR = 0xFF;
+
 namespace pkmn {
 
     pokemon_pc_gbaimpl::pokemon_pc_gbaimpl(
@@ -23,6 +25,7 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pksav_gba_pokemon_pc_t);
         std::memset(_native, 0, sizeof(pksav_gba_pokemon_pc_t));
+        std::memset(NATIVE_RCAST->box_names, GBA_TEXT_TERMINATOR, sizeof(NATIVE_RCAST->box_names));
         _our_mem = true;
 
         _from_native();

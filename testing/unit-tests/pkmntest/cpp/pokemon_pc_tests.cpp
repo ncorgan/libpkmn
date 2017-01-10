@@ -12,6 +12,8 @@
 
 #include "pkmn_boost_unit_test.hpp"
 
+#include <pkmn/exception.hpp>
+
 namespace pkmntest {
 
     void test_empty_pokemon_box(
@@ -19,6 +21,17 @@ namespace pkmntest {
         const std::string &game
     ) {
         BOOST_CHECK_EQUAL(box->get_game(), game);
+
+        if(game == "Red" or game == "Blue" or game == "Yellow") {
+            BOOST_CHECK_THROW(
+                (void)box->get_name();
+            , pkmn::feature_not_in_game_error);
+        } else {
+            BOOST_CHECK_EQUAL(
+                box->get_name(),
+                ""
+            );
+        }
 
         const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
         BOOST_CHECK_EQUAL(box->get_capacity(), pokemon_list.size());

@@ -14,6 +14,8 @@
 
 #define NATIVE_RCAST reinterpret_cast<pkmn::gen2_pokemon_full_pc_t*>(_native)
 
+BOOST_STATIC_CONSTEXPR uint8_t GEN2_TEXT_TERMINATOR = 0x50;
+
 namespace pkmn {
 
     pokemon_pc_gen2impl::pokemon_pc_gen2impl(
@@ -27,6 +29,7 @@ namespace pkmn {
 
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             std::memset(&NATIVE_RCAST->pc->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
+            std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(pksav_gen2_pokemon_box_names_t));
             NATIVE_RCAST->pc->boxes[i].species[20] = 0xFF;
         }
 
