@@ -77,6 +77,78 @@ namespace pkmntest {
         }
     }
 
+    void test_setting_pokemon(
+        pkmn::pokemon_box::sptr box
+    ) {
+        std::string game = box->get_game();
+
+        pkmn::pokemon::sptr original_first = box->get_pokemon(0);
+        pkmn::pokemon::sptr original_second = box->get_pokemon(1);
+
+        // Make sure we can't move these
+        BOOST_CHECK_THROW(
+            box->set_pokemon(2, original_first);
+        , std::runtime_error);
+        BOOST_CHECK_THROW(
+            box->set_pokemon(3, original_second);
+        , std::runtime_error);
+
+        /*
+         * Create new Pokémon and place in box. The original variables should
+         * have the same underlying Pokémon.
+         */
+        pkmn::pokemon::sptr bulbasaur = pkmn::pokemon::make(
+                                            "Bulbasaur",
+                                            game,
+                                            "",
+                                            5
+                                        );
+        pkmn::pokemon::sptr charmander = pkmn::pokemon::make(
+                                             "Charmander",
+                                             game,
+                                             "",
+                                             5
+                                         );
+        pkmn::pokemon::sptr squirtle = pkmn::pokemon::make(
+                                           "Squirtle",
+                                           game,
+                                           "",
+                                           5
+                                       );
+
+        box->set_pokemon(0, bulbasaur);
+        box->set_pokemon(1, charmander);
+
+        // Make sure we can't do that again.
+        BOOST_CHECK_THROW(
+            box->set_pokemon(2, bulbasaur);
+        , std::runtime_error);
+        BOOST_CHECK_THROW(
+            box->set_pokemon(3, charmander);
+        , std::runtime_error);
+
+        // Replace one of the new ones.
+        box->set_pokemon(0, squirtle);
+
+        /*
+         * Now check everything we've created. Each variable should have the
+         * same Pokémon underneath, even if the pointer has changed.
+         */
+        BOOST_CHECK_EQUAL(box->get_pokemon(0)->get_species(), "Squirtle");
+        BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_species(), "Charmander");
+        BOOST_CHECK_EQUAL(original_first->get_species(), "None");
+        BOOST_CHECK_EQUAL(original_second->get_species(), "None");
+        BOOST_CHECK_EQUAL(bulbasaur->get_species(), "Bulbasaur");
+        BOOST_CHECK_EQUAL(charmander->get_species(), "Charmander");
+        BOOST_CHECK_EQUAL(squirtle->get_species(), "Squirtle");
+
+        // On the C++ level, make sure the expected equal pointers are equal.
+        BOOST_CHECK_EQUAL(box->get_pokemon(0)->get_native_pc_data(), squirtle->get_native_pc_data());
+        BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_native_pc_data(), charmander->get_native_pc_data());
+        BOOST_CHECK_NE(box->get_pokemon(0)->get_native_pc_data(), original_first->get_native_pc_data());
+        BOOST_CHECK_NE(box->get_pokemon(1)->get_native_pc_data(), original_second->get_native_pc_data());
+    }
+
     void test_empty_pokemon_pc(
         pkmn::pokemon_pc::sptr pc,
         const std::string &game
@@ -113,6 +185,20 @@ namespace pkmntest {
 
             const std::vector<std::string>& box_names = pc->get_box_names();
             BOOST_REQUIRE_EQUAL(box_names.size(), pc->get_num_boxes());
+        }
+    }
+
+    void test_setting_pokemon_in_boxes(
+        pkmn::pokemon_pc::sptr pc
+    ) {
+        for(int i = 0; i < pc->get_num_boxes(); ++i) {
+            test_setting_pokemon(
+                pc->get_box(i)
+            );
+        }
+        for(int i = 0; i < pc->get_num_boxes(); ++i) {
+            BOOST_CHECK_EQUAL(pc->get_box(i)->get_pokemon(0)->get_species(), "Squirtle");
+            BOOST_CHECK_EQUAL(pc->get_box(i)->get_pokemon(1)->get_species(), "Charmander");
         }
     }
 }

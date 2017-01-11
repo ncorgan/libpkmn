@@ -22,6 +22,8 @@ static void pokemon_box_test(
     );
 
     pkmntest::test_box_name(box);
+
+    pkmntest::test_setting_pokemon(box);
 }
 
 static void pokemon_pc_test(
@@ -35,6 +37,8 @@ static void pokemon_pc_test(
     );
 
     pkmntest::test_pc_box_names(pc);
+
+    pkmntest::test_setting_pokemon_in_boxes(pc);
 }
 
 #define TEST_BOX_AND_PC_FOR_GAME(test_game, game_name) \
