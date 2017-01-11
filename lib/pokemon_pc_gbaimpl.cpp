@@ -8,6 +8,8 @@
 #include "pokemon_pc_gbaimpl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 
+#include "pksav/pksav_call.hpp"
+
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
 
@@ -74,11 +76,13 @@ namespace pkmn {
                            );
 
             char box_name[9] = {0};
-            pksav_text_from_gba(
-                NATIVE_RCAST->box_names[i],
-                box_name,
-                8
-            );
+            PKSAV_CALL(
+                pksav_text_from_gba(
+                    NATIVE_RCAST->box_names[i],
+                    box_name,
+                    8
+                );
+            )
             _box_list[i]->set_name(box_name);
         }
     }
@@ -89,11 +93,13 @@ namespace pkmn {
         for(int i = 0; i < GBA_NUM_BOXES; ++i) {
             _box_names[i] = _box_list[i]->get_name();
 
-            pksav_text_to_gba(
-                _box_names[i].c_str(),
-                NATIVE_RCAST->box_names[i],
-                8
-            );
+            PKSAV_CALL(
+                pksav_text_to_gba(
+                    _box_names[i].c_str(),
+                    NATIVE_RCAST->box_names[i],
+                    8
+                );
+            )
         }
     }
 }

@@ -10,6 +10,8 @@
 #define POKEMON_GB_LIST_BASE_IMPL pokemon_box_impl
 #include "pokemon_gb_list.hpp"
 
+#include "pksav/pksav_call.hpp"
+
 #include <pksav/gen2/text.h>
 
 #include <cstring>
@@ -86,12 +88,14 @@ namespace pkmn {
                                &NATIVE_RCAST->pc->boxes[i]
                            );
 
-            char box_name[9] = {0};
-            pksav_text_from_gen2(
-                NATIVE_RCAST->box_names->names[i],
-                box_name,
-                8
-            );
+            char box_name[10] = {0};
+            PKSAV_CALL(
+                pksav_text_from_gen2(
+                    NATIVE_RCAST->box_names->names[i],
+                    box_name,
+                    9
+                );
+            )
             _box_list[i]->set_name(box_name);
         }
     }
@@ -102,11 +106,13 @@ namespace pkmn {
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             _box_names[i] = _box_list[i]->get_name();
 
-            pksav_text_to_gen2(
-                _box_names[i].c_str(),
-                NATIVE_RCAST->box_names->names[i],
-                8
-            );
+            PKSAV_CALL(
+                pksav_text_to_gen2(
+                    _box_names[i].c_str(),
+                    NATIVE_RCAST->box_names->names[i],
+                    9
+                );
+            )
         }
     }
 }
