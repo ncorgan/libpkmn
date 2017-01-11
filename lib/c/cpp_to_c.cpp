@@ -339,6 +339,20 @@ namespace pkmn {
         pokemon_list_c->length = pokemon_list_cpp.size();
     }
 
+    void pkmn_pokemon_box_list_cpp_to_c(
+        const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
+        pkmn_pokemon_box_list_t* pokemon_box_list_c
+    ) {
+        pokemon_box_list_c->pokemon_boxes = (pkmn_pokemon_box_handle_t*)std::malloc(sizeof(pkmn_pokemon_box_handle_t) * pokemon_box_list_cpp.size());
+        for(size_t i = 0; i < pokemon_box_list_cpp.size(); ++i) {
+            pokemon_box_list_c->pokemon_boxes[i] = new pkmn_pokemon_box_t;
+            pokemon_box_list_c->pokemon_boxes[i]->cpp = pokemon_box_list_cpp.at(i);
+            pokemon_box_list_c->pokemon_boxes[i]->last_error = "None";
+        }
+
+        pokemon_box_list_c->length = pokemon_box_list_cpp.size();
+    }
+
     void std_pair_std_string_to_string_pair(
         const std::pair<std::string, std::string> &cpp_pair,
         pkmn_string_pair_t* c_pair_out

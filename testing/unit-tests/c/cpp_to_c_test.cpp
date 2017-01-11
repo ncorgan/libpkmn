@@ -662,6 +662,10 @@ BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
         pokemon_list_cpp,
         &pokemon_list_c
     );
+    BOOST_CHECK_EQUAL(
+        pokemon_list_c.length,
+        3
+    );
 
     for(size_t i = 0; i < 3; ++i) {
         char species_c[STRBUFFER_LEN] = {0};
@@ -697,6 +701,61 @@ BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
     );
     BOOST_CHECK(!pokemon_list_c.pokemon_list);
     BOOST_CHECK_EQUAL(pokemon_list_c.length, 0);
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_box_list_cpp_to_c_test) {
+    pkmn::pokemon_box_list_t pokemon_box_list_cpp;
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("Gold")
+    );
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("Ruby")
+    );
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("FireRed")
+    );
+
+    pokemon_box_list_cpp[0]->set_name("ABCD");
+    pokemon_box_list_cpp[1]->set_name("EFGH");
+    pokemon_box_list_cpp[2]->set_name("IJKL");
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
+    pkmn::pkmn_pokemon_box_list_cpp_to_c(
+        pokemon_box_list_cpp,
+        &pokemon_box_list_c
+    );
+    BOOST_CHECK_EQUAL(
+        pokemon_box_list_c.length,
+        3
+    );
+
+    for(size_t i = 0; i < 3; ++i) {
+        char game_c[STRBUFFER_LEN] = {0};
+        char name_c[STRBUFFER_LEN] = {0};
+
+        error = pkmn_pokemon_box_get_game(
+                    pokemon_box_list_c.pokemon_boxes[i],
+                    game_c,
+                    sizeof(game_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_box_list_cpp[i]->get_game().c_str(), game_c), 0);
+
+        error = pkmn_pokemon_box_get_name(
+                    pokemon_box_list_c.pokemon_boxes[i],
+                    name_c,
+                    sizeof(name_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_box_list_cpp[i]->get_name().c_str(), name_c), 0);
+    }
+
+    pkmn_pokemon_box_list_free(
+        &pokemon_box_list_c
+    );
+    BOOST_CHECK(!pokemon_box_list_c.pokemon_boxes);
+    BOOST_CHECK_EQUAL(pokemon_box_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {

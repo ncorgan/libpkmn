@@ -81,6 +81,7 @@ typedef struct {
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/pokemon_list.h>
+#include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/string_types.h>
 
 namespace pkmn {
@@ -148,6 +149,11 @@ namespace pkmn {
     void pkmn_pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t &pokemon_list_cpp,
         pkmn_pokemon_list_t* pokemon_list_c
+    );
+
+    void pkmn_pokemon_box_list_cpp_to_c(
+        const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
+        pkmn_pokemon_box_list_t* pokemon_box_list_c
     );
 
     PKMN_INLINE void std_pair_int_to_int_pair(

@@ -14,6 +14,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         levelup_move.h
         move_slot.h
         pokemon_list.h
+        pokemon_box_list.h
         stats.h
         string_types.h
     )

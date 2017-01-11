@@ -32,6 +32,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/pokemon_list.h>
+#include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
 
