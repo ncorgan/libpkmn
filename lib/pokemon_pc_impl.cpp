@@ -55,7 +55,8 @@ namespace pkmn {
 
     pokemon_pc_impl::pokemon_pc_impl(
         int game_id
-    ): _game_id(game_id)
+    ): _game_id(game_id),
+       _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
     std::string pokemon_pc_impl::get_game() {
@@ -83,7 +84,10 @@ namespace pkmn {
     }
 
     void* pokemon_pc_impl::get_native() {
-        _update_box_names();
+        if(_generation > 1) {
+            _update_box_names();
+        }
+
         return _native;
     }
 }

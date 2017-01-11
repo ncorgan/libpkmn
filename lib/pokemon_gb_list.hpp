@@ -44,6 +44,11 @@ namespace pkmn {
 
             int get_capacity();
 
+            void set_pokemon(
+                int index,
+                pkmn::pokemon::sptr new_pokemon
+            );
+
         private:
 
             std::string _box_name;

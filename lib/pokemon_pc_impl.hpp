@@ -43,7 +43,7 @@ namespace pkmn {
             void* _native;
             bool _our_mem;
 
-            int _game_id;
+            int _game_id, _generation;
 
             virtual void _from_native() = 0;
             virtual void _update_box_names() = 0;

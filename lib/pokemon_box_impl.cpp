@@ -58,7 +58,8 @@ namespace pkmn {
 
     pokemon_box_impl::pokemon_box_impl(
         int game_id
-    ): _game_id(game_id)
+    ): _game_id(game_id),
+       _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
     std::string pokemon_box_impl::get_game() {

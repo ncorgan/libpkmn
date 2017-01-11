@@ -43,7 +43,7 @@ namespace pkmn {
                 int index
             );
 
-            void set_pokemon(
+            virtual void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
             );
@@ -69,7 +69,7 @@ namespace pkmn {
 
             boost::mutex _mem_mutex;
 
-            int _game_id;
+            int _game_id, _generation;
 
             virtual void _from_native() = 0;
     };

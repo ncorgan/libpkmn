@@ -13,6 +13,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/gen1/text.h>
+#include <pksav/gen2/text.h>
 
 #include <cstring>
 #include <stdexcept>
@@ -95,6 +96,62 @@ namespace pkmn {
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     int pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_capacity() {
         return int(sizeof(NATIVE_LIST_RCAST->entries)/sizeof(NATIVE_LIST_RCAST->entries[0]));
+    }
+
+    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
+    void pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::set_pokemon(
+        int index,
+        pkmn::pokemon::sptr new_pokemon
+    ) {
+        int capacity = get_capacity();
+        if(index < 0 or index > (capacity-1)) {
+            throw pkmn::range_error("index", 0, (capacity-1));
+        }
+
+        // Transfer the underlying memory to the box.
+        pkmn::mem::set_pokemon_in_box(
+            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
+            this,
+            index
+        );
+
+        // With the memory moved, copy the abstraction.
+        _pokemon_list[index] = new_pokemon;
+
+        // Set the entry in the species list.
+        NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
+
+        if(_generation == 1) {
+            PKSAV_CALL(
+                pksav_text_to_gen1(
+                    new_pokemon->get_nickname().c_str(),
+                    NATIVE_LIST_RCAST->nicknames[index],
+                    10
+                );
+            )
+            PKSAV_CALL(
+                pksav_text_to_gen1(
+                    new_pokemon->get_trainer_name().c_str(),
+                    NATIVE_LIST_RCAST->otnames[index],
+                    7
+                );
+            )
+        } else {
+            PKSAV_CALL(
+                pksav_text_to_gen2(
+                    new_pokemon->get_nickname().c_str(),
+                    NATIVE_LIST_RCAST->nicknames[index],
+                    10
+                );
+            )
+            PKSAV_CALL(
+                pksav_text_to_gen2(
+                    new_pokemon->get_trainer_name().c_str(),
+                    NATIVE_LIST_RCAST->otnames[index],
+                    7
+                );
+            )
+        }
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
