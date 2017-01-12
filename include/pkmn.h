@@ -12,6 +12,8 @@
 #include <pkmn-c/error.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/pokemon_box.h>
+#include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/calculations/form.h>
 #include <pkmn-c/calculations/gender.h>

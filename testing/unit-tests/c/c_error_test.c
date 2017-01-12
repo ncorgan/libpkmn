@@ -22,6 +22,7 @@ static pkmn_string_list_t dummy_pkmn_string_list_t = {
     .strings = NULL,
     .length = 0
 };
+static pkmn_pokemon_handle_t dummy_pokemon = NULL;
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
 
@@ -54,6 +55,22 @@ static const char* null_pointer_error_format = "Null pointer passed into paramet
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
     TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
     TEST_ASSERT_EQUAL_STRING(pkmn_pokemon_strerror(handle), strbuffer); \
+}
+
+#define TEST_POKEMON_BOX_NULL_POINTER_RETURN(handle, param_name) \
+{ \
+    snprintf(strbuffer, sizeof(strbuffer), null_pointer_error_format, param_name); \
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_pokemon_box_strerror(handle), strbuffer); \
+}
+
+#define TEST_POKEMON_PC_NULL_POINTER_RETURN(handle, param_name) \
+{ \
+    snprintf(strbuffer, sizeof(strbuffer), null_pointer_error_format, param_name); \
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_strerror(), strbuffer); \
+    TEST_ASSERT_EQUAL_STRING(pkmn_pokemon_pc_strerror(handle), strbuffer); \
 }
 
 /*
@@ -548,7 +565,7 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_make(
                 &pokemon,
                 "Vaporeon",
-                "Red",
+                "Ruby",
                 "",
                 70
             );
@@ -569,7 +586,7 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_make(
                 NULL, // handle_ptr
                 "Vaporeon",
-                "Red",
+                "Ruby",
                 "",
                 70
             );
@@ -578,7 +595,7 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_make(
                 &pokemon,
                 NULL, // species
-                "Red",
+                "Ruby",
                 "",
                 70
             );
@@ -596,7 +613,7 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_make(
                 &pokemon,
                 "Vaporeon",
-                "Red",
+                "Ruby",
                 NULL, // form
                 70
             );
@@ -659,6 +676,13 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "species_out");
 
+    error = pkmn_pokemon_get_species(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     /*
      * pkmn_pokemon_get_form
      */
@@ -677,6 +701,13 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form_out");
 
+    error = pkmn_pokemon_get_form(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     /*
      * pkmn_pokemon_get_game
      */
@@ -694,6 +725,13 @@ static void pokemon_error_test() {
                 sizeof(strbuffer)
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "game_out");
+
+    error = pkmn_pokemon_get_game(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_pokemon_get_database_entry
@@ -728,6 +766,13 @@ static void pokemon_error_test() {
                 sizeof(strbuffer)
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname_out");
+
+    error = pkmn_pokemon_get_nickname(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_pokemon_is_shiny
@@ -773,6 +818,13 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "held_item_out");
 
+    error = pkmn_pokemon_get_held_item(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     /*
      * pkmn_pokemon_set_held_item
      */
@@ -806,6 +858,13 @@ static void pokemon_error_test() {
                 sizeof(strbuffer)
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "trainer_name_out");
+
+    error = pkmn_pokemon_get_trainer_name(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_pokemon_set_trainer_name
@@ -971,6 +1030,13 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ability_out");
 
+    error = pkmn_pokemon_get_ability(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     /*
      * pkmn_pokemon_set_ability
      */
@@ -1004,6 +1070,13 @@ static void pokemon_error_test() {
                 sizeof(strbuffer)
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ball_out");
+
+    error = pkmn_pokemon_get_ball(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_pokemon_set_ball
@@ -1067,6 +1140,14 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "location_met_out");
 
+    error = pkmn_pokemon_get_location_met(
+                pokemon,
+                false,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     /*
      * pkmn_pokemon_set_location_met
      */
@@ -1102,6 +1183,13 @@ static void pokemon_error_test() {
                 sizeof(strbuffer)
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "original_game_out");
+
+    error = pkmn_pokemon_get_original_game(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_pokemon_set_original_game
@@ -1570,6 +1658,357 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);
+}
+
+/*
+ * <pkmn-c/pokemon_box.h>
+ */
+static void pokemon_box_error_test() {
+    pkmn_pokemon_box_handle_t pokemon_box = NULL;
+    error = pkmn_pokemon_box_make(
+                &pokemon_box,
+                "Gold"
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    pkmn_pokemon_list_t dummy_pkmn_pokemon_list_t = {
+        .pokemon_list = NULL,
+        .length = 0
+    };
+
+    pkmn_pokemon_box_handle_t null_pokemon_box = NULL;
+
+    /*
+     * pkmn_pokemon_box_make
+     */
+
+    error = pkmn_pokemon_box_make(
+                NULL, // handle_ptr
+                "Gold"
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_pokemon_box_make(
+                &pokemon_box,
+                NULL // game
+            );
+    TEST_NULL_POINTER_RETURN("game");
+
+    /*
+     * pkmn_pokemon_box_free
+     */
+
+    error = pkmn_pokemon_box_free(
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_pokemon_box_free(
+                &null_pokemon_box
+            );
+    TEST_NULL_POINTER_RETURN("(*handle_ptr)");
+
+    /*
+     * pkmn_pokemon_box_strerror
+     */
+
+    const char* pokemon_box_strerror = pkmn_pokemon_box_strerror(
+                                           NULL // handle
+                                       );
+    TEST_ASSERT_NULL(pokemon_box_strerror);
+
+    /*
+     * pkmn_pokemon_box_get_name
+     */
+
+    error = pkmn_pokemon_box_get_name(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_get_name(
+                pokemon_box,
+                NULL, // name_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name_out");
+
+    error = pkmn_pokemon_box_get_name(
+                pokemon_box,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_pokemon_box_set_name
+     */
+
+    error = pkmn_pokemon_box_set_name(
+                NULL, // handle
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_set_name(
+                pokemon_box,
+                NULL // name
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name");
+
+    /*
+     * pkmn_pokemon_box_get_game
+     */
+
+    error = pkmn_pokemon_box_get_game(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_get_game(
+                pokemon_box,
+                NULL, // game_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "game_out");
+
+    error = pkmn_pokemon_box_get_game(
+                pokemon_box,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_pokemon_box_get_capacity
+     */
+
+    error = pkmn_pokemon_box_get_capacity(
+                NULL, // handle
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_get_capacity(
+                pokemon_box,
+                NULL // capacity_out
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "capacity_out");
+
+    /*
+     * pkmn_pokemon_box_get_pokemon
+     */
+
+    error = pkmn_pokemon_box_get_pokemon(
+                NULL, // handle
+                0,
+                &dummy_pokemon
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_get_pokemon(
+                pokemon_box,
+                0,
+                NULL // pokemon_handle_out
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_handle_out");
+
+    /*
+     * pkmn_pokemon_box_set_pokemon
+     */
+
+    error = pkmn_pokemon_box_set_pokemon(
+                NULL, // handle
+                dummy_pokemon,
+                0
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_set_pokemon(
+                pokemon_box,
+                NULL, // pokemon_handle
+                0
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_handle");
+
+    /*
+     * pkmn_pokemon_box_as_array
+     */
+
+    error = pkmn_pokemon_box_as_array(
+                NULL, // handle
+                &dummy_pkmn_pokemon_list_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_as_array(
+                pokemon_box,
+                NULL // pokemon_list_out
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_list_out");
+
+    error = pkmn_pokemon_box_free(&pokemon_box);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon_box);
+}
+
+/*
+ * <pkmn-c/pokemon_pc.h>
+ */
+static void pokemon_pc_error_test() {
+    pkmn_pokemon_pc_handle_t pokemon_pc = NULL;
+    error = pkmn_pokemon_pc_make(
+                &pokemon_pc,
+                "Gold"
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    pkmn_pokemon_box_handle_t dummy_pokemon_box = NULL;
+
+    pkmn_pokemon_box_list_t dummy_pkmn_pokemon_box_list_t = {
+        .pokemon_boxes = NULL,
+        .length = 0
+    };
+
+    pkmn_pokemon_pc_handle_t null_pokemon_pc = NULL;
+
+    /*
+     * pkmn_pokemon_pc_make
+     */
+
+    error = pkmn_pokemon_pc_make(
+                NULL, // handle_ptr
+                "Gold"
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_pokemon_pc_make(
+                &pokemon_pc,
+                NULL // game
+            );
+    TEST_NULL_POINTER_RETURN("game");
+
+    /*
+     * pkmn_pokemon_pc_free
+     */
+
+    error = pkmn_pokemon_pc_free(
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("handle_ptr");
+
+    error = pkmn_pokemon_pc_free(
+                &null_pokemon_pc
+            );
+    TEST_NULL_POINTER_RETURN("(*handle_ptr)");
+
+    /*
+     * pkmn_pokemon_pc_strerror
+     */
+
+    const char* pokemon_pc_strerror = pkmn_pokemon_pc_strerror(
+                                           NULL // handle
+                                       );
+    TEST_ASSERT_NULL(pokemon_pc_strerror);
+
+    /*
+     * pkmn_pokemon_pc_get_game
+     */
+
+    error = pkmn_pokemon_pc_get_game(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_pc_get_game(
+                pokemon_pc,
+                NULL, // game_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "game_out");
+
+    error = pkmn_pokemon_pc_get_game(
+                pokemon_pc,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_pokemon_pc_get_num_boxes
+     */
+
+    error = pkmn_pokemon_pc_get_num_boxes(
+                NULL, // handle
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_pc_get_num_boxes(
+                pokemon_pc,
+                NULL // num_boxes_out
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "num_boxes_out");
+
+    /*
+     * pkmn_pokemon_pc_get_pokemon
+     */
+
+    error = pkmn_pokemon_pc_get_box(
+                NULL, // handle
+                0,
+                &dummy_pokemon_box
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_pc_get_box(
+                pokemon_pc,
+                0,
+                NULL // pokemon_handle_out
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "pokemon_box_handle_out");
+
+    /*
+     * pkmn_pokemon_pc_as_array
+     */
+
+    error = pkmn_pokemon_pc_as_array(
+                NULL, // handle
+                &dummy_pkmn_pokemon_box_list_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_pc_as_array(
+                pokemon_pc,
+                NULL // pokemon_box_list_out
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "pokemon_box_list_out");
+
+    /*
+     * pkmn_pokemon_pc_get_box_names
+     */
+
+    error = pkmn_pokemon_pc_get_box_names(
+                NULL, // handle
+                &dummy_pkmn_string_list_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_pc_get_box_names(
+                pokemon_pc,
+                NULL // box_names_out
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "box_names_out");
+
+    error = pkmn_pokemon_pc_free(&pokemon_pc);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon_pc);
 }
 
 /*
@@ -2209,6 +2648,8 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(item_bag_error_test)
     PKMN_C_TEST(item_list_error_test)
     PKMN_C_TEST(pokemon_error_test)
+    PKMN_C_TEST(pokemon_box_error_test)
+    PKMN_C_TEST(pokemon_pc_error_test)
     PKMN_C_TEST(calculations_form_error_test)
     PKMN_C_TEST(calculations_gender_error_test)
     PKMN_C_TEST(calculations_hidden_power_error_test)

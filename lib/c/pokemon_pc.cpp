@@ -59,7 +59,7 @@ pkmn_error_t pkmn_pokemon_pc_get_game(
     size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(game_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
 
     PKMN_CPP_TO_C(
         return pkmn::std_string_to_c_str(
@@ -75,7 +75,7 @@ pkmn_error_t pkmn_pokemon_pc_get_num_boxes(
     int* num_boxes_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(num_boxes_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_boxes_out, handle);
 
     PKMN_CPP_TO_C(
         *num_boxes_out = handle->cpp->get_num_boxes();
@@ -88,7 +88,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box(
     pkmn_pokemon_box_handle_t* pokemon_box_handle_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(pokemon_box_handle_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_box_handle_out, handle);
 
     PKMN_CPP_TO_C(
         pkmn::pokemon_box::sptr temp = handle->cpp->get_box(index);
@@ -104,7 +104,7 @@ pkmn_error_t pkmn_pokemon_pc_as_array(
     pkmn_pokemon_box_list_t* pokemon_box_list_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(pokemon_box_list_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_box_list_out, handle);
 
     PKMN_CPP_TO_C(
         pkmn::pkmn_pokemon_box_list_cpp_to_c(
@@ -119,7 +119,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box_names(
     pkmn_string_list_t* box_names_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM(box_names_out);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(box_names_out, handle);
 
     PKMN_CPP_TO_C(
         pkmn::std_vector_std_string_to_string_list(
