@@ -15,6 +15,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/pokemon.hpp>
 #include <pkmn/pokemon_box.hpp>
+#include <pkmn/pokemon_pc.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
@@ -70,10 +71,17 @@ typedef struct {
     std::string last_error;
 } pkmn_pokemon_box_t;
 
+typedef struct {
+    pkmn::pokemon_pc::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_pc_t;
+
 #define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
 #define PKMN_POKEMON_DECLARED
 #define PKMN_POKEMON_BOX_DECLARED
+#define PKMN_POKEMON_PC_DECLARED
 
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
