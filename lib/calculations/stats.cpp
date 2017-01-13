@@ -7,6 +7,7 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/stats.hpp>
 
 #include <cmath>
@@ -43,10 +44,10 @@ namespace pkmn { namespace calculations {
             throw std::invalid_argument("stat: invalid stat");
         }
         if(not pkmn_EV_in_bounds(EV, false)) {
-            throw std::out_of_range("EV: valid range 0-65535");
+            throw pkmn::range_error("EV", 0, 65535);
         }
         if(not pkmn_IV_in_bounds(IV, false)) {
-            throw std::out_of_range("IV: valid range 0-15");
+            throw pkmn::range_error("IV", 0, 15);
         }
 
         if(stat == "HP") {
@@ -92,10 +93,11 @@ namespace pkmn { namespace calculations {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }
         if(not pkmn_EV_in_bounds(EV, true)) {
+            throw pkmn::range_error("EV", 0, 255);
             throw std::out_of_range("EV: valid range 0-255");
         }
         if(not pkmn_IV_in_bounds(IV, true)) {
-            throw std::out_of_range("IV: valid range 0-31");
+            throw pkmn::range_error("IV", 0, 31);
         }
 
         if(stat == "HP") {

@@ -15,6 +15,8 @@ pkmn_error_t pkmn_calculations_spinda_spot_offset(
     uint32_t personality,
     pkmn_spinda_spots_t* spot_offset_out
 ) {
+    PKMN_CHECK_NULL_PARAM(spot_offset_out);
+
     PKMN_CPP_TO_C(
         pkmn::calculations::spinda_spots cpp = pkmn::calculations::spinda_spot_offset(
                                                    personality

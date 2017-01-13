@@ -7,6 +7,7 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
@@ -24,7 +25,7 @@ namespace pkmn { namespace calculations {
     ) {
         // Input validation
         if(IV_attack < 0 or IV_attack > 15) {
-            throw std::out_of_range("IV_attack: valid range 0-15");
+            throw pkmn::range_error("IV_attack", 0, 15);
         }
 
         pkmn::database::pokemon_entry entry(species, "Crystal", "");

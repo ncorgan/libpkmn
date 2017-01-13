@@ -14,6 +14,9 @@
     #include <pkmn/config.hpp>
 %}
 
+%ignore PKMN_QT4;
+%ignore PKMN_QT5;
+
 %include <pkmn/config.hpp>
 
 // SWIG can't parse constexpr
@@ -22,6 +25,8 @@
 /*
  * All SWIG modules will ignore the following functions/classes.
  */
+
+%ignore pkmn::build_info::get_qt_version;
 
 %ignore pkmn::database::item_entry::item_entry(int, int);
 %ignore pkmn::database::move_entry::move_entry(int, int);
@@ -35,5 +40,7 @@
 %ignore get_native;
 %ignore make;
 
+#if !defined(SWIGLUA) && !defined(SWIGPYTHON)
 %ignore operator ==;
 %ignore operator !=;
+#endif

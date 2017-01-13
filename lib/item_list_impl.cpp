@@ -13,6 +13,8 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
@@ -115,8 +117,7 @@ namespace pkmn {
             case 4:
             case 5:
             case 6:
-                throw std::runtime_error("Currently unimplemented.");
-                break;
+                throw pkmn::unimplemented_error();
 
             default:
                 throw std::invalid_argument("Invalid game.");
@@ -201,9 +202,7 @@ namespace pkmn {
         int position
     ) {
         if(position < 0 or position >= _capacity) {
-            throw std::out_of_range(
-                      str(boost::format("position: valid range 0-%d") % (_capacity-1))
-                  );
+            throw pkmn::range_error("position", 0, (_capacity-1));
         }
 
         return _item_slots.at(position);
@@ -215,7 +214,7 @@ namespace pkmn {
     ) {
         // Input validation
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("amount: valid range 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         /*
@@ -271,7 +270,7 @@ namespace pkmn {
     ) {
         // Input validation
         if(amount < 1 or amount > 99) {
-            throw std::out_of_range("amount: valid range 1-99");
+            throw pkmn::range_error("amount", 1, 99);
         }
 
         /*
@@ -294,6 +293,7 @@ namespace pkmn {
                     if(_item_slots[i].amount == 0) {
                         _item_slots.erase(_item_slots.begin()+i);
                         _item_slots.resize(_capacity);
+                        _item_slots.back().item = pkmn::database::item_entry(0, _game_id);
                         _num_items--;
                         _to_native();
                     }
@@ -313,7 +313,7 @@ namespace pkmn {
         if(old_position < 0 or old_position >= _num_items or
            new_position < 0 or new_position >= _num_items)
         {
-            throw std::out_of_range("Cannot move an item outside of the list.");
+            throw std::range_error("Cannot move an item outside of the list.");
         } else if(old_position == new_position) {
             throw std::invalid_argument("Positions cannot match.");
         }
@@ -381,6 +381,7 @@ namespace pkmn {
     }
 
     void* item_list_impl::get_native() {
+        item_list_scoped_lock(this);
         return _native;
     }
 }

@@ -12,7 +12,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
     brew update
     [ $? -ne 0 ] && exit 1
-    brew install doxygen swig
+    brew install doxygen swig qt qt5
     [ $? -ne 0 ] && exit 1
     pip install ply CppHeaderParser
     [ $? -ne 0 ] && exit 1
@@ -22,9 +22,13 @@ else
     [ $? -ne 0 ] && exit 1
     sudo apt-get -y install build-essential cmake clang cppcheck valgrind \
 	                    doxygen libpython-dev python-ply libboost1.55-all-dev \
-			    swig python-pip default-jdk junit
+			    swig python-pip default-jdk junit libqt4-dev qtbase5-dev \
+			    mono-complete swig3.0 python-pip libqt4-dev qtbase5-dev \
+			    liblua5.1-dev luarocks mono-complete monodevelop-nunit nunit-console
     [ $? -ne 0 ] && exit 1
     sudo pip install CppHeaderParser
+    [ $? -ne 0 ] && exit 1
+    sudo luarocks install luaunit
     [ $? -ne 0 ] && exit 1
 fi
 

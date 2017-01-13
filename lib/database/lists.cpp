@@ -9,6 +9,7 @@
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
@@ -26,7 +27,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw std::out_of_range("generation: valid range 3-6");
+            throw pkmn::range_error("generation", 3, 6);
         }
 
         // Connect to database
@@ -50,7 +51,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database
@@ -388,9 +389,13 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_nature_list() {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM nature_names WHERE local_language_id=9 AND "
-            "nature_id IN (SELECT id FROM natures) ORDER BY name";
+            "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
+            "(nature_names.nature_id=natures.id) WHERE nature_names.local_language_id=9 "
+            "ORDER BY natures.game_index";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
@@ -405,7 +410,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            throw pkmn::range_error("generation", 1, 6);
         }
 
         // Connect to database

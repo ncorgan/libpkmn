@@ -14,6 +14,10 @@ import unittest
 
 class gen1_items_test(items_tests):
 
+    def setUp(self):
+        self.__invalid_generation_items = ["Amulet Coin", "Apicot Berry", "Air Mail",
+                                           "Air Balloon", "Aqua Suit"]
+
     #
     # Helper functions
     #
@@ -26,6 +30,12 @@ class gen1_items_test(items_tests):
 
         # Confirm errors are thrown when expected.
         self.item_list_test_out_of_range_error(items, "Potion")
+
+        # Confirm items from later generations can't be added.
+        self.item_class_test_invalid_items(
+            items,
+            self.__invalid_generation_items
+        )
 
         # Start adding and removing stuff, and make sure the numbers are accurate.
         self.item_list_test_add_remove(
@@ -67,6 +77,34 @@ class gen1_items_test(items_tests):
 
         self.__test_item_list(pockets["Items"], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
+
+        # Confirm items from later generations can't be added.
+        self.item_class_test_invalid_items(
+            bag,
+            self.__invalid_generation_items
+        )
+
+        items = ["Potion", "Great Ball", "Ether", "PP Up",
+                 "TM34", "Moon Stone", "Bicycle", "Full Heal"]
+
+        # Make sure adding items through the bag adds to the pocket.
+        self.assertEqual(pockets["Items"].get_num_items(), 0)
+        for i in range(len(items)):
+            bag.add(items[i], i+1)
+
+        for i in range(len(items)):
+            self.assertEqual(pockets["Items"][i].item.get_name(), items[i])
+            self.assertEqual(pockets["Items"][i].amount, i+1)
+
+        self.assertEqual(pockets["Items"][8].item.get_name(), "None")
+        self.assertEqual(pockets["Items"][8].amount, 0)
+
+        for i in range(len(items)):
+            bag.remove(items[i], i+1)
+
+        for i in range(len(items)+1):
+            self.assertEqual(pockets["Items"][i].item.get_name(), "None")
+            self.assertEqual(pockets["Items"][i].amount, 0)
 
     #
     # Red

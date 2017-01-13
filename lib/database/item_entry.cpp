@@ -342,7 +342,7 @@ namespace pkmn { namespace database {
                             );
             }
 
-            static boost::format tmhm_desc("Teaches the move %s.");
+            boost::format tmhm_desc("Teaches the move %s.");
             return str(tmhm_desc % move_name.c_str());
 
         } else {

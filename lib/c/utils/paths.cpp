@@ -14,60 +14,60 @@
 
 pkmn_error_t pkmn_get_appdata_dir(
     char* appdata_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
+    PKMN_CHECK_NULL_PARAM(appdata_dir_out);
+
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::get_appdata_dir(),
-            appdata_dir_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::get_appdata_dir(),
+                   appdata_dir_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_get_database_path(
     char* database_path_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
+    PKMN_CHECK_NULL_PARAM(database_path_out);
+
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::get_database_path(),
-            database_path_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::get_database_path(),
+                   database_path_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_get_images_dir(
     char* images_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
+    PKMN_CHECK_NULL_PARAM(images_dir_out);
+
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::get_images_dir(),
-            images_dir_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::get_images_dir(),
+                   images_dir_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_get_tmp_dir(
     char* tmp_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
+    PKMN_CHECK_NULL_PARAM(tmp_dir_out);
+
     PKMN_CPP_TO_C(
-        pkmn::std_string_to_c_str(
-            pkmn::get_tmp_dir(),
-            tmp_dir_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str(
+                   pkmn::get_tmp_dir(),
+                   tmp_dir_out,
+                   buffer_len
+               );
     )
 }

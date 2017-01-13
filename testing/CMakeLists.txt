@@ -6,8 +6,10 @@
 #
 
 IF(PKMN_ENABLE_C)
-    # TODO: remove when PKSav's copy is built
-    ADD_SUBDIRECTORY(Unity)
+    # Use PKSav's copy if it's already built
+    IF(NOT PKSAV_ENABLE_TESTS)
+        ADD_SUBDIRECTORY(Unity)
+    ENDIF(NOT PKSAV_ENABLE_TESTS)
 ENDIF(PKMN_ENABLE_C)
 
 ADD_SUBDIRECTORY(unit-tests)
