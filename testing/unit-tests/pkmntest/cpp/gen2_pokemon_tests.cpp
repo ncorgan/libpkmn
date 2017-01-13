@@ -103,6 +103,7 @@ namespace pkmntest {
         unown->set_IV("Defense", 9);
         unown->set_IV("Speed", 1);
         unown->set_IV("Special", 14);
+        BOOST_CHECK_EQUAL(unown->get_form(), "G");
     }
 
     static void gen2_pokemon_check_stat_map(

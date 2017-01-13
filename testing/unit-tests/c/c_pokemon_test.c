@@ -8,6 +8,7 @@
 #include "c_test_common.h"
 
 #include <pkmntest-c/gen1_pokemon_tests.h>
+#include <pkmntest-c/gen2_pokemon_tests.h>
 
 #include <pkmn.h>
 
@@ -96,6 +97,36 @@ static void gen1_yellow_pokemon_test() {
     );
 }
 
+// Gold
+
+static void gen2_gold_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Gold");
+}
+
+static void gen2_gold_unown_test() {
+    pkmntest_gen2_unown_test("Gold");
+}
+
+// Silver
+
+static void gen2_silver_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Silver");
+}
+
+static void gen2_silver_unown_test() {
+    pkmntest_gen2_unown_test("Silver");
+}
+
+// Crystal
+
+static void gen2_crystal_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Crystal");
+}
+
+static void gen2_crystal_unown_test() {
+    pkmntest_gen2_unown_test("Crystal");
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_red_invalid_pokemon_test)
     PKMN_C_TEST(gen1_red_friendship_test)
@@ -108,4 +139,13 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_yellow_invalid_pokemon_test)
     PKMN_C_TEST(gen1_yellow_friendship_test)
     PKMN_C_TEST(gen1_yellow_pokemon_test)
+
+    PKMN_C_TEST(gen2_gold_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_gold_unown_test)
+
+    PKMN_C_TEST(gen2_silver_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_silver_unown_test)
+
+    PKMN_C_TEST(gen2_crystal_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_crystal_unown_test)
 )

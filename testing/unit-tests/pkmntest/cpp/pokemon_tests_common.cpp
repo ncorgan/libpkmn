@@ -282,7 +282,7 @@ namespace pkmntest {
             , std::invalid_argument);
         }
 
-        // Unown's "?" and "!" forms aren't in Generation II
+        // Unown's "!" and "?" forms aren't in Generation II
         static const pkmn::database::pokemon_entry oras_unown("Unown", "Omega Ruby", "");
         const std::vector<std::string>& unown_forms = oras_unown.get_forms();
         for(size_t i = 0; i < 26; ++i) {
