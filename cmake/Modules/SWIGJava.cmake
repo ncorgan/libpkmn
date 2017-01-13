@@ -130,6 +130,9 @@ MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
         ${jar_target} ALL
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${jar_name}
     )
+    SET_TARGET_PROPERTIES(${jar_target}
+        PROPERTIES JAR_FILE ${CMAKE_CURRENT_BINARY_DIR}/${jar_name}
+    )
 
     # Install file
     INSTALL(
