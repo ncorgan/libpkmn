@@ -68,8 +68,8 @@ PKMN_API pkmn_error_t pkmn_pokemon_box_get_pokemon(
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_set_pokemon(
     pkmn_pokemon_box_handle_t handle,
-    pkmn_pokemon_handle_t pokemon_handle,
-    int index
+    int index,
+    pkmn_pokemon_handle_t pokemon_handle
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_as_array(

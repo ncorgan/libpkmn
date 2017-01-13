@@ -1823,15 +1823,15 @@ static void pokemon_box_error_test() {
 
     error = pkmn_pokemon_box_set_pokemon(
                 NULL, // handle
-                dummy_pokemon,
-                0
+                0,
+                dummy_pokemon
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_box_set_pokemon(
                 pokemon_box,
-                NULL, // pokemon_handle
-                0
+                0,
+                NULL // pokemon_handle
             );
     TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_handle");
 

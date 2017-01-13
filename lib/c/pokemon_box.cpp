@@ -135,8 +135,8 @@ pkmn_error_t pkmn_pokemon_box_get_pokemon(
 
 pkmn_error_t pkmn_pokemon_box_set_pokemon(
     pkmn_pokemon_box_handle_t handle,
-    pkmn_pokemon_handle_t pokemon_handle,
-    int index
+    int index,
+    pkmn_pokemon_handle_t pokemon_handle
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_handle, handle);
