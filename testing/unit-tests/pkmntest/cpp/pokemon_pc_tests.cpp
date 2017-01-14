@@ -72,6 +72,14 @@ namespace pkmntest {
             );
         }
 
+        // Make sure trying to get a Pokémon out of range fails.
+        BOOST_CHECK_THROW(
+            (void)box->get_pokemon(-1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            (void)box->get_pokemon(box->get_capacity());
+        , pkmn::range_error);
+
         const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
         BOOST_CHECK_EQUAL(box->get_capacity(), pokemon_list.size());
 
@@ -152,6 +160,14 @@ namespace pkmntest {
                                            "",
                                            5
                                        );
+
+        // Make sure we can't set them at invalid indices.
+        BOOST_CHECK_THROW(
+            box->set_pokemon(-1, bulbasaur);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            box->set_pokemon(box->get_capacity(), bulbasaur);
+        , pkmn::range_error);
 
         box->set_pokemon(0, bulbasaur);
         box->set_pokemon(1, charmander);
@@ -279,6 +295,14 @@ namespace pkmntest {
         const std::string &game
     ) {
         BOOST_CHECK_EQUAL(pc->get_game(), game);
+
+        // Make sure trying to get a box at an invalid index fails.
+        BOOST_CHECK_THROW(
+            (void)pc->get_box(-1);
+        , pkmn::range_error);
+        BOOST_CHECK_THROW(
+            (void)pc->get_box(pc->get_num_boxes());
+        , pkmn::range_error);
 
         const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
         BOOST_CHECK_EQUAL(pc->get_num_boxes(), pokemon_box_list.size());

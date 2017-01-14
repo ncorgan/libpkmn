@@ -89,6 +89,21 @@ void pkmntest_test_empty_pokemon_box(
 
     TEST_ASSERT_EQUAL(capacity, ((int)pokemon_list.length));
 
+    // Make sure trying to get a Pokémon at an invliad index fails.
+    pkmn_pokemon_handle_t pokemon = NULL;
+    error = pkmn_pokemon_box_get_pokemon(
+                box,
+                -1,
+                &pokemon
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_pokemon_box_get_pokemon(
+                box,
+                capacity,
+                &pokemon
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+
     for(int i = 0; i < capacity; ++i) {
         error = pkmn_pokemon_get_species(
                     pokemon_list.pokemon_list[i],
@@ -211,6 +226,26 @@ void pkmntest_test_setting_pokemon_in_box(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NOT_NULL(original_second);
+
+    // Make sure we can't set Pokémon at invalid indices.
+    int capacity = 0;
+    error = pkmn_pokemon_box_get_capacity(
+                box,
+                &capacity
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_box_set_pokemon(
+                box,
+                -1,
+                original_first
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_pokemon_box_set_pokemon(
+                box,
+                capacity,
+                original_first
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
     // Make sure we can't move these.
     error = pkmn_pokemon_box_set_pokemon(
@@ -421,6 +456,21 @@ void pkmntest_test_empty_pokemon_pc(
                 &num_boxes
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    // Make sure we can't get boxes at invalid indices.
+    pkmn_pokemon_box_handle_t pokemon_box;
+    error = pkmn_pokemon_pc_get_box(
+                pc,
+                -1,
+                &pokemon_box
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_pokemon_pc_get_box(
+                pc,
+                num_boxes,
+                &pokemon_box
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
     pkmn_pokemon_box_list_t pokemon_box_list;
     error = pkmn_pokemon_pc_as_array(
