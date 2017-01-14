@@ -14,7 +14,7 @@
 
 %extend pkmn::shared_ptr<pkmn::pokemon_box> {
 
-    const pkmn::pokemon::sptr& __getitem__(
+    pkmn::pokemon::sptr __getitem__(
         int index
     ) throw (std::out_of_range)
     {
