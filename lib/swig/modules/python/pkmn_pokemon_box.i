@@ -15,7 +15,8 @@
 %}
 
 #if SWIG_VERSION < 0x030008
-%ignore pkmn::shared_ptr<pkmn::pokemon_box>::set_name;
+%include <std_wstring.i>
+%warnfilter(508) pkmn::shared_ptr<pkmn::pokemon_box>;
 #endif
 
 %extend pkmn::shared_ptr<pkmn::pokemon_box> {
