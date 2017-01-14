@@ -89,7 +89,7 @@ void pkmntest_test_empty_pokemon_box(
 
     TEST_ASSERT_EQUAL(capacity, ((int)pokemon_list.length));
 
-    // Make sure trying to get a Pokémon at an invliad index fails.
+    // Make sure trying to get a Pokémon at an invalid index fails.
     pkmn_pokemon_handle_t pokemon = NULL;
     error = pkmn_pokemon_box_get_pokemon(
                 box,
