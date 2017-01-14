@@ -142,10 +142,11 @@ function pokemon_pc_tests.test_box_names(pc)
             pc[i]:set_name(box_name)
         end
 
-        for i = 1, #pc
+        local box_names = pc:get_box_names()
+        for i = 1, #box_names
         do
-            local box_name = string.format("BOX%d", i)
-            luaunit.assertEquals(pc[i]:get_name(), box_name)
+            local expected_box_name = string.format("BOX%d", i)
+            luaunit.assertEquals(box_names[i], expected_box_name)
         end
     end
 end

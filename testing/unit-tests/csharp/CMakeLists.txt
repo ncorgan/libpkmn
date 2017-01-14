@@ -21,6 +21,7 @@ IF(NUNIT_FOUND)
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
+        CSharpPokemonPCTest
         CSharpWinFormsTest_GUI
     )
 
