@@ -396,7 +396,7 @@ namespace pkmntest {
                   );
         }
 
-        // Primal Revision forms should only work in OR/AS.
+        // Primal Reversion forms should only work in OR/AS.
         (void)pkmn::pokemon::make(
                   "Groudon",
                   game,

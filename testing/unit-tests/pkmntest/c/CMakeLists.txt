@@ -28,6 +28,7 @@ SET(pkmntest_c_sources
     gen2_items_tests.c
     gen2_pokemon_tests.c
     gba_items_tests.c
+    gba_pokemon_tests.c
     items_tests_common.c
     pokemon_tests_common.c
 )
