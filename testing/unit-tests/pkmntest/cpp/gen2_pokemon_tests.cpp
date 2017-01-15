@@ -157,7 +157,7 @@ namespace pkmntest {
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_name(),
-            std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
+            pkmn::pokemon::LIBPKMN_OT_NAME
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),
@@ -168,7 +168,7 @@ namespace pkmntest {
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_id(),
-            uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
+            (pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_gender(),

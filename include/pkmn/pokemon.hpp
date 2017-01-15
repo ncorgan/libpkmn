@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -41,9 +41,9 @@ namespace pkmn {
                 const std::string &filepath
             );
 
-            static PKMN_CONSTEXPR const uint32_t LIBPKMN_OT_ID = 2105214279;
+            static const uint32_t LIBPKMN_OT_ID;
 
-            static PKMN_CONSTEXPR const char* LIBPKMN_OT_NAME = "LibPKMN";
+            static const std::string LIBPKMN_OT_NAME;
 
             virtual std::string get_species() = 0;
 

@@ -75,7 +75,7 @@ namespace pkmn {
 
         PKSAV_CALL(
             pksav_text_to_gba(
-                LIBPKMN_OT_NAME,
+                LIBPKMN_OT_NAME.c_str(),
                 GBA_PC_RCAST->otname,
                 7
             );
