@@ -107,6 +107,14 @@ static void gen2_gold_unown_test() {
     pkmntest_gen2_unown_test("Gold");
 }
 
+static void gen2_gold_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Gold",
+        pkmntest_gen2_pokemon_test
+    );
+}
+
 // Silver
 
 static void gen2_silver_invalid_pokemon_test() {
@@ -117,6 +125,14 @@ static void gen2_silver_unown_test() {
     pkmntest_gen2_unown_test("Silver");
 }
 
+static void gen2_silver_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Silver",
+        pkmntest_gen2_pokemon_test
+    );
+}
+
 // Crystal
 
 static void gen2_crystal_invalid_pokemon_test() {
@@ -125,6 +141,14 @@ static void gen2_crystal_invalid_pokemon_test() {
 
 static void gen2_crystal_unown_test() {
     pkmntest_gen2_unown_test("Crystal");
+}
+
+static void gen2_crystal_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Crystal",
+        pkmntest_gen2_pokemon_test
+    );
 }
 
 PKMN_C_TEST_MAIN(
@@ -142,10 +166,13 @@ PKMN_C_TEST_MAIN(
 
     PKMN_C_TEST(gen2_gold_invalid_pokemon_test)
     PKMN_C_TEST(gen2_gold_unown_test)
+    PKMN_C_TEST(gen2_gold_pokemon_test)
 
     PKMN_C_TEST(gen2_silver_invalid_pokemon_test)
     PKMN_C_TEST(gen2_silver_unown_test)
+    PKMN_C_TEST(gen2_silver_pokemon_test)
 
     PKMN_C_TEST(gen2_crystal_invalid_pokemon_test)
     PKMN_C_TEST(gen2_crystal_unown_test)
+    PKMN_C_TEST(gen2_crystal_pokemon_test)
 )
