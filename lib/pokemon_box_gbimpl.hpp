@@ -4,12 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_POKEMON_GB_LIST_HPP
-#define PKMN_POKEMON_GB_LIST_HPP
-
-#ifndef POKEMON_GB_LIST_BASE_IMPL
-#error You must set POKEMON_GB_LIST_BASE_IMPL before including this file.
-#endif
+#ifndef PKMN_POKEMON_BOX_GBIMPL_HPP
+#define PKMN_POKEMON_BOX_GBIMPL_HPP
 
 #include "pokemon_box_impl.hpp"
 
@@ -19,7 +15,7 @@
 namespace pkmn {
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    class pokemon_gb_list: public POKEMON_GB_LIST_BASE_IMPL {
+    class pokemon_gb_list: public pokemon_box_impl {
         public:
             pokemon_gb_list() {}
             pokemon_gb_list(
@@ -63,6 +59,6 @@ namespace pkmn {
     typedef pokemon_gb_list<pksav_gen2_pokemon_box_t, pksav_gen2_pc_pokemon_t, pokemon_gen2impl> pokemon_box_gen2impl;
 }
 
-#include "pokemon_gb_list.ipp"
+#include "pokemon_box_gbimpl.ipp"
 
-#endif /* PKMN_POKEMON_GB_LIST_HPP */
+#endif /* PKMN_POKEMON_BOX_GBIMPL_HPP */

@@ -5,10 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef PKMN_POKEMON_GB_LIST_IPP
-#define PKMN_POKEMON_GB_LIST_IPP
-
-#include "pokemon_gb_list.hpp"
+#ifndef PKMN_POKEMON_BOX_GBIMPL_IPP
+#define PKMN_POKEMON_BOX_GBIMPL_IPP
 
 #include "pksav/pksav_call.hpp"
 
@@ -27,7 +25,7 @@ namespace pkmn {
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id
-    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
+    ): pokemon_box_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         std::memset(_native, 0, sizeof(list_type));
@@ -41,7 +39,7 @@ namespace pkmn {
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id,
         list_type* native
-    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
+    ): pokemon_box_impl(game_id)
     {
         _native = reinterpret_cast<void*>(native);
         _our_mem = false;
@@ -53,7 +51,7 @@ namespace pkmn {
     pokemon_gb_list<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_gb_list(
         int game_id,
         const list_type &native
-    ): POKEMON_GB_LIST_BASE_IMPL(game_id)
+    ): pokemon_box_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         *NATIVE_LIST_RCAST = native;
@@ -195,4 +193,4 @@ namespace pkmn {
     }
 }
 
-#endif /* PKMN_POKEMON_GB_LIST_IPP */
+#endif /* PKMN_POKEMON_BOX_GBIMPL_IPP */
