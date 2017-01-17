@@ -41,9 +41,9 @@ namespace pkmn {
                 const std::string &filepath
             );
 
-            static const uint32_t LIBPKMN_OT_ID;
+            static const PKMN_API uint32_t LIBPKMN_OT_ID;
 
-            static const std::string LIBPKMN_OT_NAME;
+            static const PKMN_API std::string LIBPKMN_OT_NAME;
 
             virtual std::string get_species() = 0;
 
