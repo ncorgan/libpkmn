@@ -788,6 +788,9 @@ namespace pkmn {
 
         uint16_t current_level = (_misc->ribbons_obedience & mask) >> offset;
         if(value) {
+            if(level == 0) {
+                ++level;
+            }
             level = std::max<uint16_t>(level, current_level);
         } else {
             if(level > 0) {
