@@ -8,18 +8,19 @@
 #ifndef GEN2_POKEMON_TESTS_H
 #define GEN2_POKEMON_TESTS_H
 
-#include <pkmn-c/config.h>
+#include <pkmntest-c/config.h>
+
 #include <pkmn-c/pokemon.h>
 
-PKMN_API void pkmntest_gen2_invalid_pokemon_test(
+PKMNTEST_API void pkmntest_gen2_invalid_pokemon_test(
     const char* game
 );
 
-PKMN_API void pkmntest_gen2_unown_test(
+PKMNTEST_API void pkmntest_gen2_unown_test(
     const char* game
 );
 
-PKMN_API void pkmntest_gen2_pokemon_test(
+PKMNTEST_API void pkmntest_gen2_pokemon_test(
     pkmn_pokemon_handle_t pokemon,
     const char* species,
     const char* game

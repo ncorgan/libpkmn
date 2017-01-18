@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -39,5 +39,5 @@ SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
 
 ADD_LIBRARY(pkmntest SHARED ${pkmntest_sources})
 TARGET_LINK_LIBRARIES(pkmntest ${pkmntest_libs})
-SET_TARGET_PROPERTIES(pkmntest PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
-ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+SET_TARGET_PROPERTIES(pkmntest PROPERTIES DEFINE_SYMBOL "PKMNTEST_DLL_EXPORTS")
+ADD_DEFINITIONS(-Dpkmntest_EXPORTS)
