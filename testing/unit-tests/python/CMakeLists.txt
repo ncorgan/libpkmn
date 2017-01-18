@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,7 @@ SET(python_tests
     python_items_test
     python_lists_test
     python_paths_test
+    python_pokemon_test
 )
 
 FOREACH(test ${python_tests})
