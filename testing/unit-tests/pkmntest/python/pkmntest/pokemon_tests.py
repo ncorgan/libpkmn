@@ -234,3 +234,10 @@ class pokemon_tests(unittest.TestCase):
     def invalid_pokemon_test(self, game):
         self.forms_test(game)
         self.invalid_starters_test(game)
+
+    def pokemon_test_common(self, species, game, test_fcn):
+        test_fcn(
+            pkmn.pokemon(species, game, "", 30),
+            species,
+            game
+        )
