@@ -104,10 +104,10 @@ public class Gen1ItemsTest {
             );
         }
         for(int i = 0; i < 8; ++i) {
-            Assert.AreEqual(itemPocket[i].Item.GetName(), ItemNames[i]);
+            Assert.AreEqual(itemPocket[i].Item.Name, ItemNames[i]);
             Assert.AreEqual(itemPocket[i].Amount, i+1);
         }
-        Assert.AreEqual(itemPocket[8].Item.GetName(), "None");
+        Assert.AreEqual(itemPocket[8].Item.Name, "None");
         Assert.AreEqual(itemPocket[8].Amount, 0);
 
         for(int i = 0; i < 8; ++i) {
@@ -117,7 +117,7 @@ public class Gen1ItemsTest {
             );
         }
         for(int i = 0; i < 9; ++i) {
-            Assert.AreEqual(itemPocket[i].Item.GetName(), "None");
+            Assert.AreEqual(itemPocket[i].Item.Name, "None");
             Assert.AreEqual(itemPocket[i].Amount, 0);
         }
     }

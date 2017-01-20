@@ -37,7 +37,7 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(itemEntry.Pocket, "Poké Balls");
 
         // Just make sure it works
-        itemEntry.GetDescription();
+        string description = itemEntry.Description;
 
         Assert.IsTrue(itemEntry.isHoldable);
         Assert.AreEqual(itemEntry.FlingPower, 0);
@@ -153,7 +153,7 @@ public class CSharpDatabaseEntryTest {
         Assert.That(pokemonEntry.Weight, Is.EqualTo(11.0).Within(0.0001));
         Assert.That(pokemonEntry.ChanceMale, Is.EqualTo(0.5).Within(0.0001));
         Assert.That(pokemonEntry.ChanceFemale, Is.EqualTo(0.5).Within(0.0001));
-        Assert.IsFalse(pokemonEntry.HasGenderDifferences());
+        Assert.IsFalse(pokemonEntry.HasGenderDifferences);
         Assert.AreEqual(pokemonEntry.BaseHappiness, 70);
         Assert.AreEqual(pokemonEntry.Types, (new PKMN.StringPair("Ground", "Electric")));
         Assert.AreEqual(pokemonEntry.Abilities, (new PKMN.StringPair("Static", "Limber")));

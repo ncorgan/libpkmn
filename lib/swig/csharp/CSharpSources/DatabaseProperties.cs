@@ -136,7 +136,9 @@ public partial class PokemonEntry {
         get { return GetChanceFemale(); }
     }
 
-    // TODO: rename HasGenderDifferences() function, use as variable name
+    public bool HasGenderDifferences {
+        get { return HasGenderDifferencesFunction(); }
+    }
 
     public int BaseHappiness {
         get { return GetBaseHappiness(); }
