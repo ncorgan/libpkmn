@@ -189,6 +189,10 @@ public partial class PokemonEntry {
     public StringList Forms {
         get { return GetForms(); }
     }
+
+    public PokemonEntryList Evolutions {
+        get { return GetEvolutions(); }
+    }
 }
 
 }
