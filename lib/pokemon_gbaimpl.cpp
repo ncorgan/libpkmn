@@ -75,7 +75,7 @@ namespace pkmn {
 
         PKSAV_CALL(
             pksav_text_to_gba(
-                LIBPKMN_OT_NAME,
+                LIBPKMN_OT_NAME.c_str(),
                 GBA_PC_RCAST->otname,
                 7
             );
@@ -788,6 +788,9 @@ namespace pkmn {
 
         uint16_t current_level = (_misc->ribbons_obedience & mask) >> offset;
         if(value) {
+            if(level == 0) {
+                ++level;
+            }
             level = std::max<uint16_t>(level, current_level);
         } else {
             if(level > 0) {

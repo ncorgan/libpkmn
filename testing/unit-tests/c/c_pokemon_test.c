@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #include "c_test_common.h"
 
 #include <pkmntest-c/gen1_pokemon_tests.h>
+#include <pkmntest-c/gen2_pokemon_tests.h>
+#include <pkmntest-c/gba_pokemon_tests.h>
 
 #include <pkmn.h>
 
@@ -96,6 +98,130 @@ static void gen1_yellow_pokemon_test() {
     );
 }
 
+// Gold
+
+static void gen2_gold_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Gold");
+}
+
+static void gen2_gold_unown_test() {
+    pkmntest_gen2_unown_test("Gold");
+}
+
+static void gen2_gold_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Gold",
+        pkmntest_gen2_pokemon_test
+    );
+}
+
+// Silver
+
+static void gen2_silver_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Silver");
+}
+
+static void gen2_silver_unown_test() {
+    pkmntest_gen2_unown_test("Silver");
+}
+
+static void gen2_silver_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Silver",
+        pkmntest_gen2_pokemon_test
+    );
+}
+
+// Crystal
+
+static void gen2_crystal_invalid_pokemon_test() {
+    pkmntest_gen2_invalid_pokemon_test("Crystal");
+}
+
+static void gen2_crystal_unown_test() {
+    pkmntest_gen2_unown_test("Crystal");
+}
+
+static void gen2_crystal_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Cyndaquil",
+        "Crystal",
+        pkmntest_gen2_pokemon_test
+    );
+}
+
+// Ruby
+
+static void gba_ruby_invalid_pokemon_test() {
+    pkmntest_gba_invalid_pokemon_test("Ruby");
+}
+
+static void gba_ruby_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Torchic",
+        "Ruby",
+        pkmntest_gba_pokemon_test
+    );
+}
+
+// Sapphire
+
+static void gba_sapphire_invalid_pokemon_test() {
+    pkmntest_gba_invalid_pokemon_test("Sapphire");
+}
+
+static void gba_sapphire_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Torchic",
+        "Sapphire",
+        pkmntest_gba_pokemon_test
+    );
+}
+
+// Emerald
+
+static void gba_emerald_invalid_pokemon_test() {
+    pkmntest_gba_invalid_pokemon_test("Emerald");
+}
+
+static void gba_emerald_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Torchic",
+        "Emerald",
+        pkmntest_gba_pokemon_test
+    );
+}
+
+// FireRed
+
+static void gba_firered_invalid_pokemon_test() {
+    pkmntest_gba_invalid_pokemon_test("FireRed");
+}
+
+static void gba_firered_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Torchic",
+        "FireRed",
+        pkmntest_gba_pokemon_test
+    );
+}
+
+// LeafGreen
+
+static void gba_leafgreen_invalid_pokemon_test() {
+    pkmntest_gba_invalid_pokemon_test("LeafGreen");
+}
+
+static void gba_leafgreen_pokemon_test() {
+    pkmntest_pokemon_test_common(
+        "Torchic",
+        "LeafGreen",
+        pkmntest_gba_pokemon_test
+    );
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_red_invalid_pokemon_test)
     PKMN_C_TEST(gen1_red_friendship_test)
@@ -108,4 +234,31 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_yellow_invalid_pokemon_test)
     PKMN_C_TEST(gen1_yellow_friendship_test)
     PKMN_C_TEST(gen1_yellow_pokemon_test)
+
+    PKMN_C_TEST(gen2_gold_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_gold_unown_test)
+    PKMN_C_TEST(gen2_gold_pokemon_test)
+
+    PKMN_C_TEST(gen2_silver_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_silver_unown_test)
+    PKMN_C_TEST(gen2_silver_pokemon_test)
+
+    PKMN_C_TEST(gen2_crystal_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_crystal_unown_test)
+    PKMN_C_TEST(gen2_crystal_pokemon_test)
+
+    PKMN_C_TEST(gba_ruby_invalid_pokemon_test)
+    PKMN_C_TEST(gba_ruby_pokemon_test)
+
+    PKMN_C_TEST(gba_sapphire_invalid_pokemon_test)
+    PKMN_C_TEST(gba_sapphire_pokemon_test)
+
+    PKMN_C_TEST(gba_emerald_invalid_pokemon_test)
+    PKMN_C_TEST(gba_emerald_pokemon_test)
+
+    PKMN_C_TEST(gba_firered_invalid_pokemon_test)
+    PKMN_C_TEST(gba_firered_pokemon_test)
+
+    PKMN_C_TEST(gba_leafgreen_invalid_pokemon_test)
+    PKMN_C_TEST(gba_leafgreen_pokemon_test)
 )

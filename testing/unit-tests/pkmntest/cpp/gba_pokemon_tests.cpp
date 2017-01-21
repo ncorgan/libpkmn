@@ -67,7 +67,7 @@ static const std::vector<std::string> contest_types = boost::assign::list_of
 ;
 
 static const std::vector<std::string> contest_levels = boost::assign::list_of
-    ("")(" Super")(" Hyper")(" Hyper")(" Master")
+    ("")(" Super")(" Hyper")(" Master")
 ;
 
 static const std::vector<std::string> ribbons = boost::assign::list_of
@@ -299,7 +299,7 @@ namespace pkmntest {
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_name(),
-            std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
+            pkmn::pokemon::LIBPKMN_OT_NAME
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),
@@ -308,6 +308,10 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_secret_id(),
             uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16)
+        );
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_id(),
+            pkmn::pokemon::LIBPKMN_OT_ID
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_gender(),

@@ -243,7 +243,7 @@ namespace pkmn {
         pokemon_entry_c->EV_yields[PKMN_STAT_ATTACK] = EV_yields.at("Attack");
         pokemon_entry_c->EV_yields[PKMN_STAT_DEFENSE] = EV_yields.at("Defense");
         pokemon_entry_c->EV_yields[PKMN_STAT_SPEED] = EV_yields.at("Speed");
-        if(base_stats.count("Special") > 0) {
+        if(EV_yields.count("Special") > 0) {
             pokemon_entry_c->EV_yields[PKMN_STAT_SPECIAL] = EV_yields.at("Special");
             pokemon_entry_c->EV_yields[PKMN_STAT_SPATK] = -1;
             pokemon_entry_c->EV_yields[PKMN_STAT_SPDEF] = -1;

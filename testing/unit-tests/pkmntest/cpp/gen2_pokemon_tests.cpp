@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -103,6 +103,7 @@ namespace pkmntest {
         unown->set_IV("Defense", 9);
         unown->set_IV("Speed", 1);
         unown->set_IV("Special", 14);
+        BOOST_CHECK_EQUAL(unown->get_form(), "G");
     }
 
     static void gen2_pokemon_check_stat_map(
@@ -156,7 +157,7 @@ namespace pkmntest {
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_name(),
-            std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
+            pkmn::pokemon::LIBPKMN_OT_NAME
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_public_id(),
@@ -167,7 +168,7 @@ namespace pkmntest {
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_id(),
-            uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
+            (pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF)
         );
         BOOST_CHECK_EQUAL(
             pokemon->get_trainer_gender(),
@@ -254,7 +255,7 @@ namespace pkmntest {
             "foobarbaz"
         );
 
-        // Shininess affects IV, so make sure the abstraction reflects that.
+        // Shininess affects IVs, so make sure the abstraction reflects that.
         const std::map<std::string, int>& IVs = pokemon->get_IVs();
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
@@ -345,7 +346,7 @@ namespace pkmntest {
             pokemon->set_ball("Great Ball");
         , pkmn::feature_not_in_game_error);
 
-        // Make sure functions that affect the same PKSav field don't impact each other
+        // On the C++ level, make sure functions that affect the same PKSav field don't impact each other.
         std::string location_met_before_change = pokemon->get_location_met(false);
         std::string trainer_gender_before_change = pokemon->get_trainer_gender();
         int level_met_before_change = pokemon->get_level_met();
@@ -383,8 +384,12 @@ namespace pkmntest {
 
         pokemon->set_location_met(location_met_before_change, false);
 
-        // Setting trainer gender shouldn't affect level caught, location caught, or time of ay caught
+        // Setting trainer gender shouldn't affect level caught, location caught, or time of day caught.
         pokemon->set_trainer_gender("Female");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_trainer_gender(),
+            "Female"
+        );
         BOOST_CHECK_EQUAL(
             pokemon->get_location_met(false),
             location_met_before_change
@@ -403,7 +408,7 @@ namespace pkmntest {
 
         pokemon->set_trainer_gender(trainer_gender_before_change);
 
-        // Setting level caught shouldn't affect location caught, trainer gender, or time of day caught
+        // Setting level caught shouldn't affect location caught, trainer gender, or time of day caught.
         pokemon->set_level_met(3);
         BOOST_CHECK_EQUAL(
             pokemon->get_level_met(),

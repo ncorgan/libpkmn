@@ -14,6 +14,7 @@ SET(python_tests
     python_items_test
     python_lists_test
     python_paths_test
+    python_pokemon_test
     python_pokemon_pc_test
 )
 

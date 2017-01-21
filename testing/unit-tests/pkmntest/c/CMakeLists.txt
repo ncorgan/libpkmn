@@ -26,7 +26,9 @@ SET(pkmntest_c_sources
     gen1_items_tests.c
     gen1_pokemon_tests.c
     gen2_items_tests.c
+    gen2_pokemon_tests.c
     gba_items_tests.c
+    gba_pokemon_tests.c
     items_tests_common.c
     pokemon_tests_common.c
     pokemon_pc_tests.c
@@ -38,5 +40,5 @@ SET_SOURCE_FILES_PROPERTIES(${pkmntest_c_sources}
 
 ADD_LIBRARY(pkmntest-c SHARED ${pkmntest_c_sources})
 TARGET_LINK_LIBRARIES(pkmntest-c ${pkmntest_c_libs})
-SET_TARGET_PROPERTIES(pkmntest-c PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
-ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+SET_TARGET_PROPERTIES(pkmntest-c PROPERTIES DEFINE_SYMBOL "PKMNTEST_DLL_EXPORTS")
+ADD_DEFINITIONS(-Dpkmntest_EXPORTS)

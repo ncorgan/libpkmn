@@ -59,6 +59,20 @@ static const char* gen1_pokemon_with_mega_xy_forms[] = {
     "Charizard", "Mewtwo"
 };
 
+static const char* gen2_pokemon_with_xy_mega_forms[] = {
+    "Ampharos", "Scizor", "Heracross", "Houndoom", "Tyranitar"
+};
+
+static const char* gba_pokemon_with_xy_mega_forms[] = {
+    "Blaziken", "Gardevoir", "Mawile", "Aggron", "Medicham",
+    "Manectric", "Banette", "Absol", "Latias", "Latios", "Garchomp"
+};
+
+static const char* gba_pokemon_with_oras_mega_forms[] = {
+    "Sceptile", "Swampert", "Sableye", "Sharpedo", "Camerupt",
+    "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
+};
+
 static void test_gen1_forms(
     const char* game
 ) {
@@ -192,15 +206,343 @@ static void test_gen1_forms(
 static void test_gen2_forms(
     const char* game
 ) {
-    (void)game;
+    int generation = game_to_generation(game);
+
+    pkmn_pokemon_handle_t pokemon = NULL;
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    // Check that Mega forms only work in their given games
+    for(size_t i = 0; i < 5; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    gen2_pokemon_with_xy_mega_forms[i],
+                    game,
+                    "Mega",
+                    100
+                );
+
+        if(generation >= 6) {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+            error = pkmn_pokemon_free(
+                        &pokemon
+                    );
+        } else {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+        }
+
+        TEST_ASSERT_NULL(pokemon);
+    }
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Steelix",
+                game,
+                "Mega",
+                100
+            );
+    if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(
+                    &pokemon
+                );
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+
+    TEST_ASSERT_NULL(pokemon);
+
+    // Spiky-eared Pichu should only work in HG/SS
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Pichu",
+                game,
+                "Spiky-eared",
+                100
+            );
+    if(!strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(
+                    &pokemon
+                );
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+
+    TEST_ASSERT_NULL(pokemon);
+
+    // Unown's "!" and "?" forms aren't in Generation II
+    pkmn_database_pokemon_entry_t unown_oras;
+    error = pkmn_database_get_pokemon_entry(
+                "Unown",
+                "Omega Ruby",
+                "",
+                &unown_oras
+            );
+    TEST_ASSERT_EQUAL(unown_oras.forms.length, 28);
+
+    for(size_t i = 0; i < 26; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    "Unown",
+                    game,
+                    unown_oras.forms.strings[i],
+                    10
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(
+                    &pokemon
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    }
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Unown",
+                game,
+                "!",
+                10
+            );
+    if(generation == 2) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(
+                    &pokemon
+                );
+    }
+
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Unown",
+                game,
+                "?",
+                10
+            );
+    if(generation == 2) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(
+                    &pokemon
+                );
+    }
+
+    TEST_ASSERT_NULL(pokemon);
 }
 
 static void test_gen3_forms(
     const char* game,
     bool gcn
 ) {
-    (void)game;
+    // TODO: Shadow forms
     (void)gcn;
+
+    int generation = game_to_generation(game);
+
+    pkmn_pokemon_handle_t pokemon = NULL;
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    // Check that Mega forms only work in their given games
+    for(size_t i = 0; i < 11; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    gba_pokemon_with_xy_mega_forms[i],
+                    game,
+                    "Mega",
+                    100
+                );
+
+        if(generation >= 6) {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+            error = pkmn_pokemon_free(
+                        &pokemon
+                    );
+        } else {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+        }
+
+        TEST_ASSERT_NULL(pokemon);
+    }
+    for(size_t i = 0; i < 10; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    gba_pokemon_with_oras_mega_forms[i],
+                    game,
+                    "Mega",
+                    100
+                );
+
+        if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire")) {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+            error = pkmn_pokemon_free(
+                        &pokemon
+                    );
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        } else {
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+        }
+
+        TEST_ASSERT_NULL(pokemon);
+    }
+
+    // Castform should always work.
+    pkmn_database_pokemon_entry_t castform_oras;
+    error = pkmn_database_get_pokemon_entry(
+                "Castform",
+                "Omega Ruby",
+                "",
+                &castform_oras);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(castform_oras.forms.length, 4);
+
+    for(size_t i = 0; i < castform_oras.forms.length; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    "Castform",
+                    game,
+                    castform_oras.forms.strings[i],
+                    30
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_NULL(pokemon);
+    }
+
+    // Primal Reversion forms should only work in OR/AS.
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Groudon",
+                game,
+                "",
+                70
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Kyogre",
+                game,
+                "",
+                70
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Groudon",
+                game,
+                "Primal Reversion",
+                70
+            );
+    if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Kyogre",
+                game,
+                "Primal Reversion",
+                70
+            );
+    if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
+
+    // In Generation III, Deoxys's form is game-specific.
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Deoxys",
+                game,
+                "Normal",
+                70
+            );
+    if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") ||
+       !strcmp(game, "Colosseum") || !strcmp(game, "XD")) {
+
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Deoxys",
+                game,
+                "Attack",
+                70
+            );
+    if(!strcmp(game, "FireRed")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Deoxys",
+                game,
+                "Defense",
+                70
+            );
+    if(!strcmp(game, "LeafGreen")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Deoxys",
+                game,
+                "Emerald",
+                70
+            );
+    if(!strcmp(game, "Speed")) {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    } else {
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    }
+    TEST_ASSERT_NULL(pokemon);
 }
 
 // TODO: Check Alola forms when Generation VII supported
