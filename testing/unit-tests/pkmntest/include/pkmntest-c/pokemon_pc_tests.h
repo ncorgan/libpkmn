@@ -8,34 +8,34 @@
 #ifndef POKEMON_PC_TESTS_H
 #define POKEMON_PC_TESTS_H
 
-#include <pkmn-c/config.h>
+#include <pkmntest-c/config.h>
 
 #include <pkmn-c/pokemon_box.h>
 #include <pkmn-c/pokemon_pc.h>
 
-PKMN_API void pkmntest_test_empty_pokemon_box(
+PKMNTEST_API void pkmntest_test_empty_pokemon_box(
     pkmn_pokemon_box_handle_t box,
     const char* game
 );
 
-PKMN_API void pkmntest_test_box_name(
+PKMNTEST_API void pkmntest_test_box_name(
     pkmn_pokemon_box_handle_t box
 );
 
-PKMN_API void pkmntest_test_setting_pokemon_in_box(
+PKMNTEST_API void pkmntest_test_setting_pokemon_in_box(
     pkmn_pokemon_box_handle_t box
 );
 
-PKMN_API void pkmntest_test_empty_pokemon_pc(
+PKMNTEST_API void pkmntest_test_empty_pokemon_pc(
     pkmn_pokemon_pc_handle_t pc,
     const char* game
 );
 
-PKMN_API void pkmntest_test_pc_box_names(
+PKMNTEST_API void pkmntest_test_pc_box_names(
     pkmn_pokemon_pc_handle_t pc
 );
 
-PKMN_API void pkmntest_test_setting_pokemon_in_boxes(
+PKMNTEST_API void pkmntest_test_setting_pokemon_in_boxes(
     pkmn_pokemon_pc_handle_t pc
 );
 

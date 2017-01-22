@@ -8,7 +8,7 @@
 #ifndef GEN1_POKEMON_PC_TESTS_HPP
 #define GEN1_POKEMON_PC_TESTS_HPP
 
-#include <pkmn/config.hpp>
+#include <pkmntest/config.hpp>
 
 #include <pkmn/pokemon_box.hpp>
 #include <pkmn/pokemon_pc.hpp>
@@ -17,29 +17,29 @@
 
 namespace pkmntest {
 
-    PKMN_API void test_empty_pokemon_box(
+    PKMNTEST_API void test_empty_pokemon_box(
         pkmn::pokemon_box::sptr box,
         const std::string &game
     );
 
-    PKMN_API void test_box_name(
+    PKMNTEST_API void test_box_name(
         pkmn::pokemon_box::sptr box
     );
 
-    PKMN_API void test_setting_pokemon(
+    PKMNTEST_API void test_setting_pokemon(
         pkmn::pokemon_box::sptr box
     );
 
-    PKMN_API void test_empty_pokemon_pc(
+    PKMNTEST_API void test_empty_pokemon_pc(
         pkmn::pokemon_pc::sptr pc,
         const std::string &game
     );
 
-    PKMN_API void test_pc_box_names(
+    PKMNTEST_API void test_pc_box_names(
         pkmn::pokemon_pc::sptr pc
     );
 
-    PKMN_API void test_setting_pokemon_in_boxes(
+    PKMNTEST_API void test_setting_pokemon_in_boxes(
         pkmn::pokemon_pc::sptr pc
     );
 
