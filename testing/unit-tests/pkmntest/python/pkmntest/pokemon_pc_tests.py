@@ -117,12 +117,6 @@ class pokemon_pc_tests(unittest.TestCase):
         with self.assertRaises(IndexError):
             box[len(box)] = original_second
 
-        # Make sure we can't move these.
-        with self.assertRaises(RuntimeError):
-            box[2] = original_first
-        with self.assertRaises(RuntimeError):
-            box[3] = original_second
-
         # Create Pokemon and place in box. The original variables should
         # have the same underlying Pokemon.
         bulbasaur = pkmn.pokemon("Bulbasaur", game, "", 5)
@@ -132,19 +126,21 @@ class pokemon_pc_tests(unittest.TestCase):
         box[0] = bulbasaur
         box[1] = charmander
 
-        # Make sure we can't do that again.
-        with self.assertRaises(RuntimeError):
-            box[2] = bulbasaur
-        with self.assertRaises(RuntimeError):
-            box[3] = charmander
-
         # Replace one of the new ones.
         box[0] = squirtle
+
+        # Make sure we can't copy a Pokemon to itself.
+        with self.assertRaises(ValueError):
+            box[1] = box[1]
+
+        # Copy a Pokemon whose memory is already part of the box.
+        box[2] = box[1]
 
         # Now check everything we've created. Each variable should have
         # the same underlying Pokemon.
         self.assertEqual(box[0].get_species(), "Squirtle")
         self.assertEqual(box[1].get_species(), "Charmander")
+        self.assertEqual(box[2].get_species(), "Charmander")
         self.assertEqual(original_first.get_species(), "None")
         self.assertEqual(original_second.get_species(), "None")
         self.assertEqual(bulbasaur.get_species(), "Bulbasaur")

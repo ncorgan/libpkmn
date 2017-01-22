@@ -117,18 +117,6 @@ public class PokemonPCTests {
             }
         );
 
-        // Make sure we can't move these.
-        Assert.Throws<ApplicationException>(
-            delegate {
-                box[2] = originalFirst;
-            }
-        );
-        Assert.Throws<ApplicationException>(
-            delegate {
-                box[3] = originalSecond;
-            }
-        );
-
         // Create Pokémon and place in box. The original variables should
         // still have the same underlying Pokémon.
         PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", game, "", 5);
@@ -138,25 +126,24 @@ public class PokemonPCTests {
         box[0] = bulbasaur;
         box[1] = charmander;
 
-        // Make sure we can't do that again.
-        Assert.Throws<ApplicationException>(
+        // Replace one of the new ones.
+        box[0] = squirtle;
+
+        // Make sure we can't copy a Pokémon to itself.
+        Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                box[2] = bulbasaur;
-            }
-        );
-        Assert.Throws<ApplicationException>(
-            delegate {
-                box[3] = charmander;
+                box[1] = box[1];
             }
         );
 
-        // Replace one of the new ones.
-        box[0] = squirtle;
+        // Copy a Pokémon whose memory is already part of the box.
+        box[2] = box[1];
 
         // Now check everything we've created. Each variable should have
         // the same underlying Pokémon.
         Assert.AreEqual(box[0].GetSpecies(), "Squirtle");
         Assert.AreEqual(box[1].GetSpecies(), "Charmander");
+        Assert.AreEqual(box[2].GetSpecies(), "Charmander");
         Assert.AreEqual(originalFirst.GetSpecies(), "None");
         Assert.AreEqual(originalSecond.GetSpecies(), "None");
         Assert.AreEqual(bulbasaur.GetSpecies(), "Bulbasaur");

@@ -130,14 +130,6 @@ namespace pkmntest {
         pkmn::pokemon::sptr original_first = box->get_pokemon(0);
         pkmn::pokemon::sptr original_second = box->get_pokemon(1);
 
-        // Make sure we can't move these
-        BOOST_CHECK_THROW(
-            box->set_pokemon(2, original_first);
-        , std::runtime_error);
-        BOOST_CHECK_THROW(
-            box->set_pokemon(3, original_second);
-        , std::runtime_error);
-
         /*
          * Create new Pokémon and place in box. The original variables should
          * have the same underlying Pokémon.
@@ -172,16 +164,16 @@ namespace pkmntest {
         box->set_pokemon(0, bulbasaur);
         box->set_pokemon(1, charmander);
 
-        // Make sure we can't do that again.
-        BOOST_CHECK_THROW(
-            box->set_pokemon(2, bulbasaur);
-        , std::runtime_error);
-        BOOST_CHECK_THROW(
-            box->set_pokemon(3, charmander);
-        , std::runtime_error);
-
         // Replace one of the new ones.
         box->set_pokemon(0, squirtle);
+
+        // Make sure we can't copy a Pokémon to itself.
+        BOOST_CHECK_THROW(
+            box->set_pokemon(1, box->get_pokemon(1));
+        , std::invalid_argument);
+
+        // Copy a Pokémon whose memory is already part of the box.
+        box->set_pokemon(2, box->get_pokemon(1));
 
         /*
          * Now check everything we've created. Each variable should have the
@@ -189,6 +181,7 @@ namespace pkmntest {
          */
         BOOST_CHECK_EQUAL(box->get_pokemon(0)->get_species(), "Squirtle");
         BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_species(), "Charmander");
+        BOOST_CHECK_EQUAL(box->get_pokemon(2)->get_species(), "Charmander");
         BOOST_CHECK_EQUAL(original_first->get_species(), "None");
         BOOST_CHECK_EQUAL(original_second->get_species(), "None");
         BOOST_CHECK_EQUAL(bulbasaur->get_species(), "Bulbasaur");
@@ -196,8 +189,6 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(squirtle->get_species(), "Squirtle");
 
         // On the C++ level, make sure the expected equal pointers are equal.
-        BOOST_CHECK_EQUAL(box->get_pokemon(0)->get_native_pc_data(), squirtle->get_native_pc_data());
-        BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_native_pc_data(), charmander->get_native_pc_data());
         BOOST_CHECK_NE(box->get_pokemon(0)->get_native_pc_data(), original_first->get_native_pc_data());
         BOOST_CHECK_NE(box->get_pokemon(1)->get_native_pc_data(), original_second->get_native_pc_data());
 
@@ -383,6 +374,14 @@ namespace pkmntest {
                         pokemon_list.at(1)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
+                        int(native_boxes[i]->species[2]),
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index()
+                    );
+                    BOOST_CHECK_EQUAL(
+                        int(native_boxes[i]->entries[2].species),
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index()
+                    );
+                    BOOST_CHECK_EQUAL(
                         native_boxes[i],
                         pokemon_box_list.at(i)->get_native()
                     );
@@ -411,6 +410,14 @@ namespace pkmntest {
                     BOOST_CHECK_EQUAL(
                         int(native_pc->pc->boxes[i].entries[1].species),
                         pokemon_list.at(1)->get_database_entry().get_pokemon_index()
+                    );
+                    BOOST_CHECK_EQUAL(
+                        int(native_pc->pc->boxes[i].species[2]),
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index()
+                    );
+                    BOOST_CHECK_EQUAL(
+                        int(native_pc->pc->boxes[i].entries[2].species),
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
                         &native_pc->pc->boxes[i],
@@ -448,6 +455,14 @@ namespace pkmntest {
                         BOOST_CHECK_EQUAL(
                             int(native_pc->boxes[i].entries[1].blocks.growth.species),
                             pokemon_list.at(1)->get_database_entry().get_pokemon_index()
+                        );
+                        BOOST_CHECK_EQUAL(
+                            int(native_pc->boxes[i].entries[0].blocks.growth.species),
+                            pokemon_list.at(0)->get_database_entry().get_pokemon_index()
+                        );
+                        BOOST_CHECK_EQUAL(
+                            int(native_pc->boxes[i].entries[2].blocks.growth.species),
+                            pokemon_list.at(2)->get_database_entry().get_pokemon_index()
                         );
                         BOOST_CHECK_EQUAL(
                             &native_pc->boxes[i],

@@ -247,20 +247,6 @@ void pkmntest_test_setting_pokemon_in_box(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
 
-    // Make sure we can't move these.
-    error = pkmn_pokemon_box_set_pokemon(
-                box,
-                2,
-                original_first
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RUNTIME_ERROR);
-    error = pkmn_pokemon_box_set_pokemon(
-                box,
-                3,
-                original_second
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RUNTIME_ERROR);
-
     /*
      * Create new Pokémon and place in box. The original variables should
      * have the same underlying Pokémon.
@@ -310,20 +296,6 @@ void pkmntest_test_setting_pokemon_in_box(
                 charmander
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-
-    // Make sure we can't do that again.
-    error = pkmn_pokemon_box_set_pokemon(
-                box,
-                2,
-                bulbasaur
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RUNTIME_ERROR);
-    error = pkmn_pokemon_box_set_pokemon(
-                box,
-                3,
-                charmander
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RUNTIME_ERROR);
     
     // Replace one of the new ones.
     error = pkmn_pokemon_box_set_pokemon(
@@ -333,12 +305,38 @@ void pkmntest_test_setting_pokemon_in_box(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
+    // Copy a Pokémon whose memory is already part of the box. Make sure we
+    // can't copy it to itself.
+    pkmn_pokemon_handle_t second_in_box = NULL;
+    error = pkmn_pokemon_box_get_pokemon(
+                box,
+                1,
+                &second_in_box
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_box_set_pokemon(
+                box,
+                1,
+                second_in_box
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_box_set_pokemon(
+                box,
+                2,
+                second_in_box
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_free(&second_in_box);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(second_in_box);
+
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
     pkmn_pokemon_handle_t current_first = NULL;
     pkmn_pokemon_handle_t current_second = NULL;
+    pkmn_pokemon_handle_t current_third = NULL;
 
     error = pkmn_pokemon_box_get_pokemon(
                 box,
@@ -362,6 +360,20 @@ void pkmntest_test_setting_pokemon_in_box(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     error = pkmn_pokemon_get_species(
                 current_second,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "Charmander");
+
+    error = pkmn_pokemon_box_get_pokemon(
+                box,
+                2,
+                &current_third
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_species(
+                current_third,
                 strbuffer,
                 sizeof(strbuffer)
             );
@@ -434,6 +446,10 @@ void pkmntest_test_setting_pokemon_in_box(
     error = pkmn_pokemon_free(&current_second);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(current_second);
+
+    error = pkmn_pokemon_free(&current_third);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(current_third);
 }
 
 void pkmntest_test_empty_pokemon_pc(

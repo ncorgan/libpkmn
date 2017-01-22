@@ -85,21 +85,16 @@ namespace pkmn {
         int capacity = get_capacity();
         if(index < 0 or index > (capacity-1)) {
             throw pkmn::range_error("index", 0, (capacity-1));
+        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
+            throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
 
-        /*
-         * Transfer the underlying memory to the box.
-         */
+        // Copy the underlying memory to the box.
         pkmn::mem::set_pokemon_in_box(
             dynamic_cast<pokemon_impl*>(new_pokemon.get()),
             this,
             index
         );
-
-        /*
-         * With the memory moved, copy the abstraction.
-         */
-        _pokemon_list[index] = new_pokemon;
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {

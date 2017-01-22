@@ -1,9 +1,13 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#include "../pokemon_gen1impl.hpp"
+#include "../pokemon_gen2impl.hpp"
+#include "../pokemon_gbaimpl.hpp"
 
 #include "../misc_common.hpp"
 #include "pokemon_setter.hpp"
@@ -18,38 +22,15 @@
 
 #include <stdexcept>
 
+#define RCAST_EQUAL(src_ptr,dst_ptr,type) \
+    *reinterpret_cast<type*>(dst_ptr) = *reinterpret_cast<type*>(src_ptr);
+
+#define RCAST_EQUAL_ALLOC(src_ptr,dst_ptr,type) { \
+    dst_ptr = reinterpret_cast<void*>(new type); \
+    *reinterpret_cast<type*>(dst_ptr) = *reinterpret_cast<type*>(src_ptr); \
+}
+
 namespace pkmn { namespace mem {
-
-    /*
-     * Copy the memory of the Pokémon currently in the box into a newly
-     * allocated struct and set its internal memory to this new location.
-     *
-     * Copy the new Pokémon's memory into the box and set the Pokémon's
-     * internal memory to this new location.
-     *
-     * At the end of this, both Pokémon instances will point to different
-     * underlying memory, but their data should be the same. This entire
-     * process should be entirely transparent to the user.
-     */
-    template<typename native_pc>
-    static void _set_pokemon_in_box(
-        native_pc** box_pokemon_ptr,
-        native_pc** new_pc_pokemon_ptr
-    ) {
-        /*
-         * PC Pokémon have no party data, so we know the box
-         * Pokémon owns its own party data, so don't touch that,
-         * just copy the PC data.
-         */
-        native_pc* box_pc = *box_pokemon_ptr;
-        native_pc* new_box_pc = new native_pc;
-        *new_box_pc = **box_pokemon_ptr;
-        *box_pokemon_ptr = new_box_pc;
-
-        *box_pc = **new_pc_pokemon_ptr;
-        delete *new_pc_pokemon_ptr;
-        *new_pc_pokemon_ptr = box_pc;
-    }
 
     void set_pokemon_in_box(
         pokemon_impl* new_pokemon,
@@ -65,57 +46,58 @@ namespace pkmn { namespace mem {
         pokemon_box_impl::pokemon_box_scoped_lock pokemon_box_lock(box);
         pokemon_impl::pokemon_scoped_lock box_pokemon_lock(box_pokemon);
 
-        // We can't steal the new Pokémon from someone else's memory
-        if(not (new_pokemon->_our_pc_mem and new_pokemon->_our_party_mem)) {
-            throw std::runtime_error("This Pokémon's memory is owned by another party or box.");
-        }
-
-        if(new_pokemon->_database_entry.get_game_id() != box->_game_id) {
+        int game_id = new_pokemon->_database_entry.get_game_id();
+        if(game_id != box->_game_id) {
             throw std::invalid_argument("The Pokémon and the box must be from the same game.");
         }
 
+        void* box_ptr = box_pokemon->_native_pc;
+        void* box_pc_copy = nullptr;
+        pkmn::pokemon::sptr libpkmn_copy;
+
         switch(new_pokemon->_generation) {
             case 1:
-                _set_pokemon_in_box<pksav_gen1_pc_pokemon_t>(
-                    reinterpret_cast<pksav_gen1_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
-                    reinterpret_cast<pksav_gen1_pc_pokemon_t**>(&(new_pokemon->_native_pc))
-                );
+                RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_gen1_pc_pokemon_t);
+                RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_gen1_pc_pokemon_t);
+                box->_pokemon_list[index] = pkmn::make_shared<pokemon_gen1impl>(
+                                                reinterpret_cast<pksav_gen1_pc_pokemon_t*>(box_ptr),
+                                                game_id
+                                            );
+                box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
+                box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
                 break;
 
             case 2:
-                _set_pokemon_in_box<pksav_gen2_pc_pokemon_t>(
-                    reinterpret_cast<pksav_gen2_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
-                    reinterpret_cast<pksav_gen2_pc_pokemon_t**>(&(new_pokemon->_native_pc))
-                );
+                RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_gen2_pc_pokemon_t);
+                RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_gen2_pc_pokemon_t);
+                box->_pokemon_list[index] = pkmn::make_shared<pokemon_gen2impl>(
+                                                reinterpret_cast<pksav_gen2_pc_pokemon_t*>(box_ptr),
+                                                game_id
+                                            );
+                box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
+                box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
                 break;
 
             case 3:
-                if(game_is_gamecube(new_pokemon->_database_entry.get_game_id())) {
+                if(game_is_gamecube(box_pokemon->_database_entry.get_game_id())) {
                     throw pkmn::unimplemented_error();
                 } else {
-                    _set_pokemon_in_box<pksav_gba_pc_pokemon_t>(
-                        reinterpret_cast<pksav_gba_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
-                        reinterpret_cast<pksav_gba_pc_pokemon_t**>(&(new_pokemon->_native_pc))
-                    );
+                    RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_gba_pc_pokemon_t);
+                    RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_gba_pc_pokemon_t);
+                    box->_pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(
+                                                    reinterpret_cast<pksav_gba_pc_pokemon_t*>(box_ptr),
+                                                    game_id
+                                                );
                 }
                 break;
 
-            case 4:
-            case 5:
-                _set_pokemon_in_box<pksav_nds_pc_pokemon_t>(
-                    reinterpret_cast<pksav_nds_pc_pokemon_t**>(&(box_pokemon->_native_pc)),
-                    reinterpret_cast<pksav_nds_pc_pokemon_t**>(&(new_pokemon->_native_pc))
-                );
-                break;
-
-            case 6:
-                throw pkmn::unimplemented_error();
-
             default:
-                throw std::runtime_error("Invalid game.");
+                throw pkmn::unimplemented_error();
         }
 
+        box_pokemon->_native_pc = box_pc_copy;
         box_pokemon->_our_pc_mem = true;
+
         new_pokemon->_our_pc_mem = false;
     }
 

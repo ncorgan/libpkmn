@@ -82,10 +82,6 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     luaunit.assertError(box.set_pokemon, 0, original_first)
     luaunit.assertError(box.set_pokemon, (#box+1), original_second)
 
-    -- Make sure we can't move these.
-    luaunit.assertError(box.set_pokemon, 3, original_first)
-    luaunit.assertError(box.set_pokemon, 4, original_second)
-
     -- Create Pokémon and place in box. The original variables should
     -- still have the same underlying Pokémon.
     local bulbasaur = pkmn.pokemon("Bulbasaur", game, "", 5)
@@ -95,17 +91,20 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     box[1] = bulbasaur
     box[2] = charmander
 
-    -- Make sure we can't do that again.
-    luaunit.assertError(box.set_pokemon, 3, bulbasaur)
-    luaunit.assertError(box.set_pokemon, 4, charmander)
-
     -- Replace one of the new ones.
     box[1] = squirtle
+
+    -- Make sure we can't copy a Pokémon to itself.
+    luaunit.assertError(box.set_pokemon, 2, box[2])
+
+    -- Copy a Pokémon whose memory is already part of the box.
+    box[3] = box[2]
 
     -- Now check everything we've created. Each variable should have
     -- the same underlying Pokémon.
     luaunit.assertEquals(box[1]:get_species(), "Squirtle")
     luaunit.assertEquals(box[2]:get_species(), "Charmander")
+    luaunit.assertEquals(box[3]:get_species(), "Charmander")
     luaunit.assertEquals(original_first:get_species(), "None")
     luaunit.assertEquals(original_second:get_species(), "None")
     luaunit.assertEquals(bulbasaur:get_species(), "Bulbasaur")
