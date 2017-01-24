@@ -218,19 +218,44 @@ class gba_pokemon_test(pokemon_tests):
         pokemon.set_trainer_name("foobar")
         self.assertStringEqual(pokemon.get_trainer_name(), "foobar")
 
-        # Make sure the SWIG wrapper keeps it within the proper bounds.
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_id(-1)
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_id(0xFFFFFFFFF)
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_public_id(-1)
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_public_id(0xFFFFF)
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_secret_id(-1)
-        with self.assertRaises(OverflowError):
-            pokemon.set_trainer_secret_id(0xFFFFF)
+        # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
+        # applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_id(0xFFFFFFFFF)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_id(0xFFFFFFFFF)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(0xFFFFF)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(0xFFFFF)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_secret_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_secret_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_secret_id(0xFFFFF)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_secret_id(0xFFFFF)
         self.assertEqual(pokemon.get_trainer_id(), pkmn.LIBPKMN_OT_ID)
 
         pokemon.set_trainer_id(0x1234ABCD)
