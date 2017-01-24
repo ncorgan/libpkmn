@@ -12,7 +12,7 @@ namespace PKMNTest {
 
 public class Gen2PokemonTests {
 
-    public static void TestInvalidPokemon(
+    public static void InvalidPokemonTest(
         string game
     ) {
         PokemonTestsCommon.TestInvalidPokemon(game);

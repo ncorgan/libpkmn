@@ -14,87 +14,117 @@ public class CSharpItemsTest {
      * Red
      */
     [Test]
-    public void Gen1RedTestInvalidPokemon() {
-        PKMNTest.Gen1PokemonTests.TestInvalidPokemon("Red");
+    public void Gen1RedInvalidPokemonTest() {
+        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Red");
+    }
+
+    [Test]
+    public void Gen1RedFriendshipTest() {
+        PKMNTest.Gen1PokemonTests.FriendshipTest("Red");
+    }
+
+    [Test]
+    public void Gen1RedPokemonTest() {
+        PKMNTest.Gen1PokemonTests.PokemonTest("Red");
     }
 
     /*
      * Blue
      */
     [Test]
-    public void Gen1BlueTestInvalidPokemon() {
-        PKMNTest.Gen1PokemonTests.TestInvalidPokemon("Blue");
+    public void Gen1BlueInvalidPokemonTest() {
+        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Blue");
+    }
+
+    [Test]
+    public void Gen1BlueFriendshipTest() {
+        PKMNTest.Gen1PokemonTests.FriendshipTest("Blue");
+    }
+
+    [Test]
+    public void Gen1BluePokemonTest() {
+        PKMNTest.Gen1PokemonTests.PokemonTest("Blue");
     }
 
     /*
      * Yellow
      */
     [Test]
-    public void Gen1YellowTestInvalidPokemon() {
-        PKMNTest.Gen1PokemonTests.TestInvalidPokemon("Yellow");
+    public void Gen1YellowInvalidPokemonTest() {
+        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Yellow");
+    }
+
+    [Test]
+    public void Gen1YellowFriendshipTest() {
+        PKMNTest.Gen1PokemonTests.FriendshipTest("Yellow");
+    }
+
+    [Test]
+    public void Gen1YellowPokemonTest() {
+        PKMNTest.Gen1PokemonTests.PokemonTest("Yellow");
     }
 
     /*
      * Gold
      */
     [Test]
-    public void Gen2GoldTestInvalidPokemon() {
-        PKMNTest.Gen2PokemonTests.TestInvalidPokemon("Gold");
+    public void Gen2GoldInvalidPokemonTest() {
+        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Gold");
     }
 
     /*
      * Silver
      */
     [Test]
-    public void Gen2SilverTestInvalidPokemon() {
-        PKMNTest.Gen2PokemonTests.TestInvalidPokemon("Silver");
+    public void Gen2SilverInvalidPokemonTest() {
+        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Silver");
     }
 
     /*
      * Crystal
      */
     [Test]
-    public void Gen2CrystalTestInvalidPokemon() {
-        PKMNTest.Gen2PokemonTests.TestInvalidPokemon("Crystal");
+    public void Gen2CrystalInvalidPokemonTest() {
+        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Crystal");
     }
 
     /*
      * Ruby
      */
     [Test]
-    public void GBARubyTestInvalidPokemon() {
-        PKMNTest.GBAPokemonTests.TestInvalidPokemon("Ruby");
+    public void GBARubyInvalidPokemonTest() {
+        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Ruby");
     }
 
     /*
      * Sapphire
      */
     [Test]
-    public void GBASapphireTestInvalidPokemon() {
-        PKMNTest.GBAPokemonTests.TestInvalidPokemon("Sapphire");
+    public void GBASapphireInvalidPokemonTest() {
+        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Sapphire");
     }
 
     /*
      * Emerald
      */
     [Test]
-    public void GBAEmeraldTestInvalidPokemon() {
-        PKMNTest.GBAPokemonTests.TestInvalidPokemon("Emerald");
+    public void GBAEmeraldInvalidPokemonTest() {
+        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Emerald");
     }
 
     /*
      * FireRed
      */
     [Test]
-    public void GBAFireRedTestInvalidPokemon() {
-        PKMNTest.GBAPokemonTests.TestInvalidPokemon("FireRed");
+    public void GBAFireRedInvalidPokemonTest() {
+        PKMNTest.GBAPokemonTests.InvalidPokemonTest("FireRed");
     }
 
     /*
      * LeafGreen
      */
     [Test]
-    public void GBALeafGreenTestInvalidPokemon() {
-        PKMNTest.GBAPokemonTests.TestInvalidPokemon("LeafGreen");
+    public void GBALeafGreenInvalidPokemonTest() {
+        PKMNTest.GBAPokemonTests.InvalidPokemonTest("LeafGreen");
     }
 }
