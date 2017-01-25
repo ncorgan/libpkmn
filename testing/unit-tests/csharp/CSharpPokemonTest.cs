@@ -72,6 +72,16 @@ public class CSharpItemsTest {
         PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Gold");
     }
 
+    [Test]
+    public void Gen2GoldUnownFormTest() {
+        PKMNTest.Gen2PokemonTests.UnownFormTest("Gold");
+    }
+
+    [Test]
+    public void Gen2GoldPokemonTest() {
+        PKMNTest.Gen2PokemonTests.PokemonTest("Gold");
+    }
+
     /*
      * Silver
      */
@@ -80,12 +90,32 @@ public class CSharpItemsTest {
         PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Silver");
     }
 
+    [Test]
+    public void Gen2SilverUnownFormTest() {
+        PKMNTest.Gen2PokemonTests.UnownFormTest("Silver");
+    }
+
+    [Test]
+    public void Gen2SilverPokemonTest() {
+        PKMNTest.Gen2PokemonTests.PokemonTest("Silver");
+    }
+
     /*
      * Crystal
      */
     [Test]
     public void Gen2CrystalInvalidPokemonTest() {
         PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Crystal");
+    }
+
+    [Test]
+    public void Gen2CrystalUnownFormTest() {
+        PKMNTest.Gen2PokemonTests.UnownFormTest("Crystal");
+    }
+
+    [Test]
+    public void Gen2CrystalPokemonTest() {
+        PKMNTest.Gen2PokemonTests.PokemonTest("Crystal");
     }
 
     /*
