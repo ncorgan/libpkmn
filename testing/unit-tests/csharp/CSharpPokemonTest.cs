@@ -126,12 +126,22 @@ public class CSharpItemsTest {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("Ruby");
     }
 
+    [Test]
+    public void GBARubyPokemonTest() {
+        PKMNTest.GBAPokemonTests.PokemonTest("Ruby");
+    }
+
     /*
      * Sapphire
      */
     [Test]
     public void GBASapphireInvalidPokemonTest() {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("Sapphire");
+    }
+
+    [Test]
+    public void GBASapphirePokemonTest() {
+        PKMNTest.GBAPokemonTests.PokemonTest("Sapphire");
     }
 
     /*
@@ -142,6 +152,11 @@ public class CSharpItemsTest {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("Emerald");
     }
 
+    [Test]
+    public void GBAEmeraldPokemonTest() {
+        PKMNTest.GBAPokemonTests.PokemonTest("Emerald");
+    }
+
     /*
      * FireRed
      */
@@ -150,11 +165,21 @@ public class CSharpItemsTest {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("FireRed");
     }
 
+    [Test]
+    public void GBAFireRedPokemonTest() {
+        PKMNTest.GBAPokemonTests.PokemonTest("FireRed");
+    }
+
     /*
      * LeafGreen
      */
     [Test]
     public void GBALeafGreenInvalidPokemonTest() {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("LeafGreen");
+    }
+
+    [Test]
+    public void GBALeafGreenPokemonTest() {
+        PKMNTest.GBAPokemonTests.PokemonTest("LeafGreen");
     }
 }
