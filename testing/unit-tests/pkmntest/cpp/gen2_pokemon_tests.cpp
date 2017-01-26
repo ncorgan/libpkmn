@@ -92,13 +92,30 @@ namespace pkmntest {
             );
         }
 
-        // Make sure setting IVs properly changes the form.
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
                                         "Unown",
                                         game,
                                         "A",
                                         5
                                     );
+        const std::map<std::string, int>& IVs = unown->get_IVs();
+
+        // Make sure setting the form properly changes the IVs.
+        for(int i = 0; i < 26; ++i) {
+            unown->set_form(unown_forms[i]);
+            std::string form_from_IVs = pkmn::calculations::gen2_unown_form(
+                                            IVs.at("Attack"),
+                                            IVs.at("Defense"),
+                                            IVs.at("Speed"),
+                                            IVs.at("Special")
+                                        );
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                form_from_IVs
+            );
+        }
+
+        // Make sure setting IVs properly changes the form.
         unown->set_IV("Attack", 10);
         unown->set_IV("Defense", 9);
         unown->set_IV("Speed", 1);

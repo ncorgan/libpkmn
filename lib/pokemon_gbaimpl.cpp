@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,7 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
@@ -36,6 +37,8 @@
 #define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
 
 namespace pkmn {
+
+    BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
     pokemon_gbaimpl::pokemon_gbaimpl(
         pkmn::database::pokemon_entry&& database_entry,
@@ -119,6 +122,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         set_level(level);
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -151,6 +158,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -182,6 +193,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -214,6 +229,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::~pokemon_gbaimpl() {
@@ -222,6 +241,16 @@ namespace pkmn {
         }
         if(_our_party_mem) {
             delete GBA_PARTY_RCAST;
+        }
+    }
+
+    void pokemon_gbaimpl::set_form(
+        const std::string &form
+    ) {
+        _database_entry.set_form(form);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
         }
     }
 
@@ -279,6 +308,10 @@ namespace pkmn {
             &GBA_PC_RCAST->ot_id.id,
             value
         );
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_personality();
+        }
     }
 
     void pokemon_gbaimpl::set_held_item(
@@ -566,6 +599,10 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GBA_PC_RCAST->personality = pksav_littleendian32(personality);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_personality();
+        }
     }
 
     int pokemon_gbaimpl::get_experience() {
@@ -921,5 +958,44 @@ namespace pkmn {
         _stats["Speed"]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
         _stats["Special Attack"]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
         _stats["Special Defense"] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));
+    }
+
+    void pokemon_gbaimpl::_set_unown_form_from_personality() {
+        _database_entry.set_form(
+            pkmn::calculations::gen3_unown_form(
+                pksav_littleendian32(
+                    GBA_PC_RCAST->personality
+                )
+            )
+        );
+    }
+
+    void pokemon_gbaimpl::_set_unown_personality_from_form() {
+        char as_char = _database_entry.get_form()[0];
+        uint8_t num = 0;
+
+        switch(as_char) {
+            case '?':
+                num = 26;
+                break;
+
+            case '!':
+                num = 27;
+                break;
+
+            // We can assume the form is valid at this point.
+            default:
+                num = uint8_t(as_char - 'A');
+                break;
+        }
+
+        // To maintain some randomness in the personality.
+        num *= uint8_t((rand() % 9) + 1);
+
+        uint8_t* pid_as_bytes = reinterpret_cast<uint8_t*>(&GBA_PC_RCAST->personality);
+        for(size_t i = 0; i < 4; ++i) {
+            pid_as_bytes[i] &= ~0x3;
+            pid_as_bytes[i] |= (num & (0x3 << (2*i)) >> (2*i));
+        }
     }
 }

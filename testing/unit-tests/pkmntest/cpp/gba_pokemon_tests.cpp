@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -83,6 +83,55 @@ namespace pkmntest {
     ) {
         pkmntest::test_invalid_pokemon(game);
     }
+
+    void gba_unown_form_test(
+        const std::string &game
+    ) {
+        // Make sure setting the personality properly sets the form.
+        pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                        "Unown",
+                                        game,
+                                        "A",
+                                        5
+                                    );
+        unown->set_personality(0x4C07DE71);
+        BOOST_CHECK_EQUAL(unown->get_form(), "B");
+    }
+
+    /*
+        pkmn::database::pokemon_entry unown_entry(
+            "Unown",
+            game,
+            ""
+        );
+        std::vector<std::string> unown_forms = unown_entry.get_forms();
+
+        for(int i = 0; i < 26; ++i) {
+            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                            "Unown",
+                                            game,
+                                            unown_forms[i],
+                                            5
+                                        );
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                unown_forms[i]
+            );
+
+            // Make sure IVs are properly set
+            const std::map<std::string, int>& IVs = unown->get_IVs();
+            std::string form_from_IVs = pkmn::calculations::gen2_unown_form(
+                                            IVs.at("Attack"),
+                                            IVs.at("Defense"),
+                                            IVs.at("Speed"),
+                                            IVs.at("Special")
+                                        );
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                form_from_IVs
+            );
+        }
+     */
 
     static void check_markings_map(
         const std::map<std::string, bool>& markings_map

@@ -60,16 +60,21 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_species(
     size_t buffer_len
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_game(
+    pkmn_pokemon_handle_t handle,
+    char* game_out,
+    size_t buffer_len
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_form(
     pkmn_pokemon_handle_t handle,
     char* form_out,
     size_t buffer_len
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_get_game(
+PKMN_API pkmn_error_t pkmn_pokemon_set_form(
     pkmn_pokemon_handle_t handle,
-    char* game_out,
-    size_t buffer_len
+    const char* form
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(

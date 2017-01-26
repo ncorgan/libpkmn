@@ -47,9 +47,13 @@ namespace pkmn {
 
             virtual std::string get_species() = 0;
 
+            virtual std::string get_game() = 0;
+
             virtual std::string get_form() = 0;
 
-            virtual std::string get_game() = 0;
+            virtual void set_form(
+                const std::string &form
+            ) = 0;
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
 
