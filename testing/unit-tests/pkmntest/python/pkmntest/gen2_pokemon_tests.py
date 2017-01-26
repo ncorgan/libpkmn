@@ -38,6 +38,21 @@ class gen2_pokemon_test(pokemon_tests):
         unown.set_IV("Special", 14)
         self.assertStringEqual(unown.get_form(), "G")
 
+        # Make sure setting the form properly changes IVs.
+        for letter in string.ascii_uppercase:
+            unown.set_form(letter)
+            self.assertStringEqual(unown.get_form(), letter)
+
+            # Make sure IVs are properly set.
+            IVs = unown.get_IVs()
+            form_from_IVs = pkmn.calculations.gen2_unown_form(
+                                IVs["Attack"],
+                                IVs["Defense"],
+                                IVs["Speed"],
+                                IVs["Special"]
+                            )
+            self.assertStringEqual(unown.get_form(), form_from_IVs)
+
     def check_stat_map(self, stat_map, is_stats):
         self.assertTrue(stat_map.has_key("HP"))
         self.assertTrue(stat_map.has_key("Attack"))

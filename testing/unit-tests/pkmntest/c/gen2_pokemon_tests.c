@@ -158,6 +158,68 @@ void pkmntest_gen2_unown_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "G");
 
+    // Make sure setting the form properly changes the IVs.
+    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+        error = pkmn_pokemon_set_form(
+                    unown,
+                    unown_entry.forms.strings[i]
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_form(
+                    unown,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL_STRING(strbuffer, unown_entry.forms.strings[i]);
+
+        // Make sure IVs are properly set
+        int IV_attack = 0;
+        int IV_defense = 0;
+        int IV_speed = 0;
+        int IV_special = 0;
+
+        error = pkmn_pokemon_get_IV(
+                    unown,
+                    "Attack",
+                    &IV_attack
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_IV(
+                    unown,
+                    "Defense",
+                    &IV_defense
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_IV(
+                    unown,
+                    "Speed",
+                    &IV_speed
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_IV(
+                    unown,
+                    "Special",
+                    &IV_special
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_calculations_gen2_unown_form(
+                    IV_attack,
+                    IV_defense,
+                    IV_speed,
+                    IV_special,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL_STRING(strbuffer, unown_entry.forms.strings[i]);
+    }
+
     error = pkmn_pokemon_free(&unown);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(unown);

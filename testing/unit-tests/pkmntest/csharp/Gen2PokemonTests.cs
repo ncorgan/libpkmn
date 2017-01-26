@@ -44,6 +44,23 @@ public class Gen2PokemonTests {
         unown.SetIV("Speed", 1);
         unown.SetIV("Special", 14);
         Assert.AreEqual(unown.GetForm(), "G");
+
+        // Make sure setting the form properly changes IVs.
+        foreach(char letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
+            string form = letter.ToString();
+            unown.SetForm(form);
+            Assert.AreEqual(unown.GetForm(), form);
+
+            // Make sure IVs are properly set.
+            PKMN.StringIntDict IVs = unown.GetIVs();
+            string formFromIVs = PKMN.Calculations.Gen2UnownForm(
+                                     IVs["Attack"],
+                                     IVs["Defense"],
+                                     IVs["Speed"],
+                                     IVs["Special"]
+                                 );
+            Assert.AreEqual(unown.GetForm(), formFromIVs);
+        }
     }
 
     private static void CheckStatMap(
