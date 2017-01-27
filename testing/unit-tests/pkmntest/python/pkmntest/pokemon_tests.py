@@ -178,14 +178,14 @@ class pokemon_tests(unittest.TestCase):
 
         # Primal Reversion should only work in OR/AS.
         for species in ["Groudon", "Kyogre"]:
-            pkmn.pokemon("Groudon", game, "", 70)
+            pkmn.pokemon(species, game, "", 70)
             if game in ["Omega Ruby", "Alpha Sapphire"]:
                 pkmn.pokemon(species, game, "Primal Reversion", 70)
             else:
                 with self.assertRaises(ValueError):
                     pkmn.pokemon(species, game, "Primal Reversion", 70)
 
-        # In Generation III, Deoxys's game is game-specific.
+        # In Generation III, Deoxys's form is game-specific.
         if generation == 3:
             if game in ["Ruby", "Sapphire", "Colosseum", "XD"]:
                 pkmn.pokemon("Deoxys", game, "Normal", 70)
