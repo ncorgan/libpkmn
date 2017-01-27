@@ -127,6 +127,11 @@ public class CSharpItemsTest {
     }
 
     [Test]
+    public void GBARubyUnownFormTest() {
+        PKMNTest.GBAPokemonTests.UnownFormTest("Ruby");
+    }
+
+    [Test]
     public void GBARubyPokemonTest() {
         PKMNTest.GBAPokemonTests.PokemonTest("Ruby");
     }
@@ -137,6 +142,11 @@ public class CSharpItemsTest {
     [Test]
     public void GBASapphireInvalidPokemonTest() {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("Sapphire");
+    }
+
+    [Test]
+    public void GBASapphireUnownFormTest() {
+        PKMNTest.GBAPokemonTests.UnownFormTest("Sapphire");
     }
 
     [Test]
@@ -153,6 +163,11 @@ public class CSharpItemsTest {
     }
 
     [Test]
+    public void GBAEmeraldUnownFormTest() {
+        PKMNTest.GBAPokemonTests.UnownFormTest("Emerald");
+    }
+
+    [Test]
     public void GBAEmeraldPokemonTest() {
         PKMNTest.GBAPokemonTests.PokemonTest("Emerald");
     }
@@ -166,6 +181,11 @@ public class CSharpItemsTest {
     }
 
     [Test]
+    public void GBAFireRedUnownFormTest() {
+        PKMNTest.GBAPokemonTests.UnownFormTest("FireRed");
+    }
+
+    [Test]
     public void GBAFireRedPokemonTest() {
         PKMNTest.GBAPokemonTests.PokemonTest("FireRed");
     }
@@ -176,6 +196,11 @@ public class CSharpItemsTest {
     [Test]
     public void GBALeafGreenInvalidPokemonTest() {
         PKMNTest.GBAPokemonTests.InvalidPokemonTest("LeafGreen");
+    }
+
+    [Test]
+    public void GBALeafGreenUnownFormTest() {
+        PKMNTest.GBAPokemonTests.UnownFormTest("LeafGreen");
     }
 
     [Test]

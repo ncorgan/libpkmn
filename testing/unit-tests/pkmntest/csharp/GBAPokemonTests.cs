@@ -28,6 +28,31 @@ public class GBAPokemonTests {
         PokemonTestsCommon.TestInvalidPokemon(game);
     }
 
+    public static void UnownFormTest(
+        string game
+    ) {
+        PKMN.PokemonEntry unownEntry = new PKMN.PokemonEntry("Unown", game, "");
+        foreach(string form in unownEntry.GetForms()) {
+            PKMN.Pokemon unownFromLetter = new PKMN.Pokemon("Unown", game, form, 5);
+            Assert.AreEqual(unownFromLetter.GetForm(), form);
+        }
+
+        // Make sure setting the personality properly sets the form.
+        PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, "A", 5);
+        unown.SetPersonality(0x4C07DE71);
+        Assert.AreEqual(unown.GetForm(), "B");
+
+        // Make sure setting the form properly sets the personality.
+        foreach(string form in unownEntry.GetForms()) {
+            unown.SetForm(form);
+            Assert.AreEqual(unown.GetForm(), form);
+            string formFromPersonality = PKMN.Calculations.Gen3UnownForm(
+                                             unown.GetPersonality()
+                                         );
+            Assert.AreEqual(formFromPersonality, form);
+        }
+    }
+
     private static void CheckMarkingsMap(
         PKMN.StringBoolDict markingsMap
     ) {

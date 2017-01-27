@@ -87,6 +87,26 @@ namespace pkmntest {
     void gba_unown_form_test(
         const std::string &game
     ) {
+        pkmn::database::pokemon_entry unown_entry(
+            "Unown",
+            game,
+            ""
+        );
+        std::vector<std::string> unown_forms = unown_entry.get_forms();
+
+        for(auto form_iter = unown_forms.begin(); form_iter != unown_forms.end(); ++form_iter) {
+            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                            "Unown",
+                                            game,
+                                            *form_iter,
+                                            5
+                                        );
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                *form_iter
+            );
+        }
+
         // Make sure setting the personality properly sets the form.
         pkmn::pokemon::sptr unown = pkmn::pokemon::make(
                                         "Unown",
@@ -96,42 +116,23 @@ namespace pkmntest {
                                     );
         unown->set_personality(0x4C07DE71);
         BOOST_CHECK_EQUAL(unown->get_form(), "B");
-    }
 
-    /*
-        pkmn::database::pokemon_entry unown_entry(
-            "Unown",
-            game,
-            ""
-        );
-        std::vector<std::string> unown_forms = unown_entry.get_forms();
-
-        for(int i = 0; i < 26; ++i) {
-            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
-                                            "Unown",
-                                            game,
-                                            unown_forms[i],
-                                            5
-                                        );
+        // Make sure setting the form properly sets the personality.
+        for(auto form_iter = unown_forms.begin(); form_iter != unown_forms.end(); ++form_iter) {
+            unown->set_form(*form_iter);
             BOOST_CHECK_EQUAL(
                 unown->get_form(),
-                unown_forms[i]
+                *form_iter
             );
-
-            // Make sure IVs are properly set
-            const std::map<std::string, int>& IVs = unown->get_IVs();
-            std::string form_from_IVs = pkmn::calculations::gen2_unown_form(
-                                            IVs.at("Attack"),
-                                            IVs.at("Defense"),
-                                            IVs.at("Speed"),
-                                            IVs.at("Special")
-                                        );
+            std::string form_from_personality = pkmn::calculations::gen3_unown_form(
+                                                    unown->get_personality()
+                                                );
             BOOST_CHECK_EQUAL(
-                unown->get_form(),
-                form_from_IVs
+                form_from_personality,
+                *form_iter
             );
         }
-     */
+    }
 
     static void check_markings_map(
         const std::map<std::string, bool>& markings_map

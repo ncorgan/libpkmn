@@ -72,7 +72,7 @@ namespace pkmn { namespace calculations {
 
         if(ret == "[") {
             return "?";
-        } else if(ret == "]") {
+        } else if(ret == "\\") {
             return "!";
         } else {
             return ret;

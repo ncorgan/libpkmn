@@ -989,13 +989,10 @@ namespace pkmn {
                 break;
         }
 
-        // To maintain some randomness in the personality.
-        num *= uint8_t((rand() % 9) + 1);
-
         uint8_t* pid_as_bytes = reinterpret_cast<uint8_t*>(&GBA_PC_RCAST->personality);
         for(size_t i = 0; i < 4; ++i) {
             pid_as_bytes[i] &= ~0x3;
-            pid_as_bytes[i] |= (num & (0x3 << (2*i)) >> (2*i));
+            pid_as_bytes[i] |= ((num & (0x3 << (2*i))) >> (2*i));
         }
     }
 }

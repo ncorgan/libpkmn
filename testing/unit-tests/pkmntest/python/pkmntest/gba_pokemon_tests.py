@@ -23,6 +23,25 @@ STATS = ["HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"
 
 class gba_pokemon_test(pokemon_tests):
 
+    def unown_form_test(self, game):
+        unown_entry = pkmn.database.pokemon_entry("Unown", "Omega Ruby", "")
+        for form in unown_entry.get_forms():
+            unown = pkmn.pokemon("Unown", game, form, 5)
+            self.assertStringEqual(unown.get_form(), form)
+
+        # Make sure setting the personality properly sets the form.
+        unown = pkmn.pokemon("Unown", game, "A", 5)
+        unown.set_personality(0x4C07DE71);
+        self.assertStringEqual(unown.get_form(), "B")
+
+        for form in unown_entry.get_forms():
+            unown.set_form(form)
+            self.assertStringEqual(unown.get_form(), form)
+            form_from_personality = pkmn.calculations.gen3_unown_form(
+                                        unown.get_personality()
+                                    )
+            self.assertStringEqual(form_from_personality, form)
+
     def check_markings_map(self, markings_map):
         self.assertEqual(len(markings_map), 4)
 
@@ -354,6 +373,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_ruby_invalid_pokemon(self):
         self.invalid_pokemon_test("Ruby")
 
+    def test_ruby_unown_forms(self):
+        self.unown_form_test("Ruby")
+
     def test_ruby_pokemon(self):
         self.pokemon_test_common(
             "Torchic",
@@ -367,6 +389,9 @@ class gba_pokemon_test(pokemon_tests):
 
     def test_sapphire_invalid_pokemon(self):
         self.invalid_pokemon_test("Sapphire")
+
+    def test_sapphire_unown_forms(self):
+        self.unown_form_test("Sapphire")
 
     def test_sapphire_pokemon(self):
         self.pokemon_test_common(
@@ -382,6 +407,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_emerald_invalid_pokemon(self):
         self.invalid_pokemon_test("Emerald")
 
+    def test_emerald_unown_forms(self):
+        self.unown_form_test("Emerald")
+
     def test_emerald_pokemon(self):
         self.pokemon_test_common(
             "Torchic",
@@ -396,6 +424,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_firered_invalid_pokemon(self):
         self.invalid_pokemon_test("FireRed")
 
+    def test_firered_unown_forms(self):
+        self.unown_form_test("FireRed")
+
     def test_firered_pokemon(self):
         self.pokemon_test_common(
             "Torchic",
@@ -409,6 +440,9 @@ class gba_pokemon_test(pokemon_tests):
 
     def test_leafgreen_invalid_pokemon(self):
         self.invalid_pokemon_test("LeafGreen")
+
+    def test_leafgreen_unown_forms(self):
+        self.unown_form_test("LeafGreen")
 
     def test_ruby_pokemon(self):
         self.pokemon_test_common(
