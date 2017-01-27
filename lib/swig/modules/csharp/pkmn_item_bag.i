@@ -9,12 +9,14 @@
     #include <pkmn/item_bag.hpp>
 %}
 
+%rename(item_bag_base) pkmn::item_bag;
+
 %csmethodmodifiers pkmn::item_bag::get_game() "private";
 %csmethodmodifiers pkmn::item_bag::get_pocket(const std::string&) "private";
 %csmethodmodifiers pkmn::item_bag::get_pockets() "private";
 %csmethodmodifiers pkmn::item_bag::get_pocket_names() "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__cptr() "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__sptr_eq() "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::item_bag> %{
     public string Game {
