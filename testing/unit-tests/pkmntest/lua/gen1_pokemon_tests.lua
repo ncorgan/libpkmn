@@ -125,6 +125,53 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.set_trainer_id, pokemon, 0xFFFF+1)
     luaunit.assertError(pokemon.set_trainer_public_id, pokemon, -1)
     luaunit.assertError(pokemon.set_trainer_public_id, pokemon, 0xFFFF+1)
+
+    luaunit.assertError(pokemon.set_trainer_gender, pokemon, "Male")
+    luaunit.assertError(pokemon.set_friendship, pokemon, 123)
+    luaunit.assertError(pokemon.set_ability, pokemon, "")
+    luaunit.assertError(pokemon.set_ball, pokemon, "Great Ball")
+    luaunit.assertError(pokemon.set_location_met, pokemon, "Victory Road", true)
+    luaunit.assertError(pokemon.set_location_met, pokemon, "Victory Road", false)
+    luaunit.assertError(pokemon.set_original_game, pokemon, "Blue")
+    luaunit.assertError(pokemon.set_marking, pokemon, "Circle", true)
+    luaunit.assertError(pokemon.set_ribbon, pokemon, "Cool", false)
+
+    pokemon:set_experience(12345)
+    luaunit.assertEquals(pokemon:get_experience(), 12345)
+
+    pokemon:set_level(45)
+    luaunit.assertEquals(pokemon:get_level(), 45)
+
+    luaunit.assertError(pokemon.set_move, "Ember", 0)
+    luaunit.assertError(pokemon.set_move, "Synthesis", 1)
+    luaunit.assertEquals(pokemon:get_moves()[1].move:get_name(), "None")
+
+    local move_names = {"Ember", "Flamethrower", "Slash", "Fire Blast"}
+    for i = 1, #move_names
+    do
+        pokemon:set_move(move_names[i], i)
+    end
+
+    move_slots = pokemon:get_moves()
+    for i = 1, #move_names
+    do
+        luaunit.assertEquals(move_slots[i].move:get_name(), move_names[i])
+        luaunit.assertEquals(move_slots[i].pp, move_slots[i].move:get_pp(0))
+    end
+
+    luaunit.assertError(pokemon.set_EV, pokemon, "Not a stat", 1)
+    luaunit.assertError(pokemon.set_EV, pokemon, "Attack", -1)
+    luaunit.assertError(pokemon.set_EV, pokemon, "Attack", 65536)
+
+    pokemon:set_EV("Attack", 12345)
+    luaunit.assertEquals(pokemon:get_EVs()["Attack"], 12345)
+
+    luaunit.assertError(pokemon.set_IV, pokemon, "Not a stat", 1)
+    luaunit.assertError(pokemon.set_IV, pokemon, "Attack", -1)
+    luaunit.assertError(pokemon.set_IV, pokemon, "Attack", 16)
+
+    pokemon:set_IV("Attack", 12)
+    luaunit.assertEquals(pokemon:get_IVs()["Attack"], 12)
 end
 
 -- Red
