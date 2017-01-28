@@ -64,7 +64,11 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
             SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
-            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll")
+            SET(LUA_CPATH
+                "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll"
+                "${TESTS_BINARY_DIR}/lua/bit32/${CMAKE_BUILD_TYPE}/?.dll"
+            )
+
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
@@ -94,7 +98,11 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp"
                 "${TESTS_BINARY_DIR}/pkmntest/c"
             )
-            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/?.so")
+            SET(LUA_CPATH
+                "${PKMN_BINARY_DIR}/lib/swig/lua/?.so"
+                "${TESTS_BINARY_DIR}/lua/bit32/?.so"
+            )
+
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")

@@ -12,6 +12,11 @@ INCLUDE(PKMNLua)
 LUA_CHECK_MODULE("Bit32" "bit32" BIT32_FOUND)
 LUA_CHECK_MODULE("LuaUnit" "luaunit" LUAUNIT_FOUND)
 
+# Build Bit32 if we need it.
+IF(NOT BIT32_FOUND)
+    ADD_SUBDIRECTORY(bit32)
+ENDIF(NOT BIT32_FOUND)
+
 # Get stock Lua path and C path becuase environment variables override
 # instead of append for whatever reason.
 EXECUTE_PROCESS(
@@ -25,7 +30,7 @@ EXECUTE_PROCESS(
     ERROR_QUIET
 )
 
-IF(BIT32_FOUND AND LUAUNIT_FOUND)
+IF(LUAUNIT_FOUND)
     SET(lua_tests
         lua_calculations_test
         lua_database_entry_test
@@ -38,4 +43,4 @@ IF(BIT32_FOUND AND LUAUNIT_FOUND)
     FOREACH(test ${lua_tests})
         PKMN_ADD_LUA_TEST(${test})
     ENDFOREACH(test ${lua_tests})
-ENDIF(BIT32_FOUND AND LUAUNIT_FOUND)
+ENDIF(LUAUNIT_FOUND)
