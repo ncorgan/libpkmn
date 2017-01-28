@@ -28,7 +28,7 @@ else
     [ $? -ne 0 ] && exit 1
     sudo pip install CppHeaderParser
     [ $? -ne 0 ] && exit 1
-    sudo luarocks install bit32 luaunit
+    sudo luarocks install luaunit
     [ $? -ne 0 ] && exit 1
 fi
 

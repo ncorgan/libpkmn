@@ -37,7 +37,7 @@ install:
   - choco install -y doxygen.install swig
   - testing\appveyor-scripts\lua\set_compiler_env.bat
   - testing\appveyor-scripts\lua\install.bat
-  - luarocks install bit32 luaunit
+  - luarocks install luaunit
 
 build_script:
   - testing\appveyor-scripts\build-test.bat
