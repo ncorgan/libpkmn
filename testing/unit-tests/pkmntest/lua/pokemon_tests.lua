@@ -345,12 +345,4 @@ function pokemon_tests.invalid_pokemon_test(game)
     pokemon_tests.invalid_starters_test(game)
 end
 
-function pokemon_tests.pokemon_test_common(species, game, test_fcn)
-    test_fcn(
-        pkmn.pokemon(species, game, "", 30),
-        species,
-        game
-    )
-end
-
 return pokemon_tests
