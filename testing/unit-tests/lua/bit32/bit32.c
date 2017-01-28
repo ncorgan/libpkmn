@@ -293,9 +293,15 @@ static const luaL_Reg bitlib[] = {
   {NULL, NULL}
 };
 
+#if defined(_MSC_VER)
+#    define LUAOPEN_API __declspec(dllexport)
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#    define LUAOPEN_API __attribute__((visibility("default")))
+#else
+#    define LUAOPEN_API
+#endif
 
-
-int luaopen_bit32 (lua_State *L) {
+LUAOPEN_API int luaopen_bit32 (lua_State *L) {
   luaL_register(L, "bit32", bitlib);
   return 1;
 }
