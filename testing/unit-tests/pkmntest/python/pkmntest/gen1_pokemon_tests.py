@@ -141,6 +141,27 @@ class gen1_pokemon_test(pokemon_tests):
             pokemon.set_trainer_secret_id(54321)
         self.assertEqual(pokemon.get_trainer_id(), 10001)
 
+        # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
+        # applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(0xFFFF+1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(0xFFFF+1)
+
         with self.assertRaises(RuntimeError):
             pokemon.set_trainer_gender("Male")
         with self.assertRaises(RuntimeError):
