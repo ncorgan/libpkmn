@@ -22,11 +22,11 @@ function gen1_pokemon_tests.friendship_test(game)
 
         -- Also check a non-Pikachu.
         local mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
-        luaunit.assertError(mewtwo.set_friendship, 123)
-        luaunit.assertError(mewtwo.get_friendship)
+        luaunit.assertError(mewtwo.set_friendship, mewtwo, 123)
+        luaunit.assertError(mewtwo.get_friendship, mewtwo)
     else
-        luaunit.assertError(pikachu.set_friendship, 123)
-        luaunit.assertError(pikachu.get_friendship)
+        luaunit.assertError(pikachu.set_friendship, pikachu, 123)
+        luaunit.assertError(pikachu.get_friendship, pikachu)
     end
 end
 
@@ -53,32 +53,32 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
 
-    luaunit.assertError(pokemon.is_shiny)
-    luaunit.assertError(pokemon.get_held_item)
+    luaunit.assertError(pokemon.is_shiny, pokemon)
+    luaunit.assertError(pokemon.get_held_item, pokemon)
 
     luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
     luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
 
-    luaunit.assertError(pokemon.get_trainer_secret_id)
+    luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
 
     luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
     luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
 
-    luaunit.assertError(pokemon.get_friendship)
-    luaunit.assertError(pokemon.get_ability)
-    luaunit.assertError(pokemon.get_ball)
-    luaunit.assertError(pokemon.get_level_met)
-    luaunit.assertError(pokemon.get_location_met, true)
-    luaunit.assertError(pokemon.get_location_met, false)
-    luaunit.assertError(pokemon.get_original_game)
-    luaunit.assertError(pokemon.get_personality)
+    luaunit.assertError(pokemon.get_friendship, pokemon)
+    luaunit.assertError(pokemon.get_ability, pokemon)
+    luaunit.assertError(pokemon.get_ball, pokemon)
+    luaunit.assertError(pokemon.get_level_met, pokemon)
+    luaunit.assertError(pokemon.get_location_met, pokemon, true)
+    luaunit.assertError(pokemon.get_location_met, pokemon, false)
+    luaunit.assertError(pokemon.get_original_game, pokemon)
+    luaunit.assertError(pokemon.get_personality, pokemon)
 
     luaunit.assertEquals(pokemon:get_experience(), pokemon:get_database_entry():get_experience_at_level(30))
     luaunit.assertEquals(pokemon:get_level(), 30)
 
-    luaunit.assertError(pokemon.get_markings)
-    luaunit.assertError(pokemon.get_ribbons)
-    luaunit.assertError(pokemon.get_contest_stats)
+    luaunit.assertError(pokemon.get_markings, pokemon)
+    luaunit.assertError(pokemon.get_ribbons, pokemon)
+    luaunit.assertError(pokemon.get_contest_stats, pokemon)
 
     local move_slots = pokemon:get_moves()
     luaunit.assertEquals(#move_slots, 4)
@@ -96,18 +96,18 @@ function gen1_pokemon_tests.pokemon_test(game)
     -- Make sure the getters and setters agree. Also make sure it fails when
     -- expected.
     --
-    luaunit.assertError(pokemon.set_nickname, "")
-    luaunit.assertError(pokemon.set_nickname, "Too long nickname")
+    luaunit.assertError(pokemon.set_nickname, pokemon, "")
+    luaunit.assertError(pokemon.set_nickname, pokemon, "Too long nickname")
 
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
-    luaunit.assertError(pokemon.set_shininess, true)
-    luaunit.assertError(pokemon.set_shininess, false)
-    luaunit.assertError(pokemon.set_held_item, "Potion")
+    luaunit.assertError(pokemon.set_shininess, pokemon, true)
+    luaunit.assertError(pokemon.set_shininess, pokemon, false)
+    luaunit.assertError(pokemon.set_held_item, pokemon, "Potion")
 
-    luaunit.assertError(pokemon.set_trainer_name, "")
-    luaunit.assertError(pokemon.set_trainer_name, "Too long trainer name")
+    luaunit.assertError(pokemon.set_trainer_name, pokemon, "")
+    luaunit.assertError(pokemon.set_trainer_name, pokemon, "Too long trainer name")
 
     pokemon:set_trainer_name("foobar")
     luaunit.assertEquals(pokemon:get_trainer_name(), "foobar")
@@ -115,55 +115,17 @@ function gen1_pokemon_tests.pokemon_test(game)
     pokemon:set_trainer_id(10001)
     luaunit.assertEquals(pokemon:get_trainer_id(), 10001)
     luaunit.assertEquals(pokemon:get_trainer_public_id(), 10001)
-    luaunit.assertError(pokemon.get_trainer_secret_id)
+    luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
 
     luaunit.assertError(pokemon.set_trainer_secret_id, 54321)
     luaunit.assertEquals(pokemon:get_trainer_id(), 10001)
 
     -- Make sure Lua+SWIG catches invalid values.
-    luaunit.assertError(pokemon.set_trainer_id, -1)
-    luaunit.assertError(pokemon.get_trainer_id)
+    luaunit.assertError(pokemon.set_trainer_id, pokemon, -1)
+    luaunit.assertError(pokemon.set_trainer_id, pokemon, 0xFFFF+1)
+    luaunit.assertError(pokemon.set_trainer_public_id, pokemon, -1)
+    luaunit.assertError(pokemon.set_trainer_public_id, pokemon, 0xFFFF+1)
 end
-
---[[
-        #
-        # Make sure the getters and setters agree. Also make sure it fails when
-        # expected.
-        #
-
-        with self.assertRaises(ValueError):
-            pokemon.set_nickname("")
-        with self.assertRaises(ValueError):
-            pokemon.set_nickname("Too long nickname")
-
-        pokemon.set_nickname("foobarbaz")
-        self.assertEqual(pokemon.get_nickname(), "foobarbaz")
-
-        with self.assertRaises(RuntimeError):
-            pokemon.set_shininess(True)
-        with self.assertRaises(RuntimeError):
-            pokemon.set_shininess(False)
-        with self.assertRaises(RuntimeError):
-            pokemon.set_held_item("Potion")
-
-        with self.assertRaises(ValueError):
-            pokemon.set_trainer_name("")
-        with self.assertRaises(ValueError):
-            pokemon.set_trainer_name("Too long trainer name")
-
-        pokemon.set_trainer_name("foobar")
-        self.assertEqual(pokemon.get_trainer_name(), "foobar")
-
-        pokemon.set_trainer_id(10001)
-        self.assertEqual(pokemon.get_trainer_id(), 10001)
-        self.assertEqual(pokemon.get_trainer_public_id(), 10001)
-        with self.assertRaises(RuntimeError):
-            pokemon.get_trainer_secret_id()
-
-        with self.assertRaises(RuntimeError):
-            pokemon.set_trainer_secret_id(54321)
-        self.assertEqual(pokemon.get_trainer_id(), 10001)
---]]
 
 -- Red
 
