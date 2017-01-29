@@ -10,6 +10,7 @@
 #include <pkmntest-c/gen1_pokemon_tests.h>
 #include <pkmntest-c/gen2_pokemon_tests.h>
 #include <pkmntest-c/gba_pokemon_tests.h>
+#include <pkmntest-c/pokemon_io_tests.h>
 
 #include <pkmn.h>
 
@@ -242,6 +243,11 @@ static void gba_leafgreen_pokemon_test() {
     );
 }
 
+// Other
+static void _3gpkm_test() {
+    pkmntest_test_3gpkm();
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_red_invalid_pokemon_test)
     PKMN_C_TEST(gen1_red_friendship_test)
@@ -286,4 +292,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gba_leafgreen_invalid_pokemon_test)
     PKMN_C_TEST(gba_leafgreen_unown_test)
     PKMN_C_TEST(gba_leafgreen_pokemon_test)
+
+    PKMN_C_TEST(_3gpkm_test)
 )

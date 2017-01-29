@@ -9,7 +9,7 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpItemsTest {
+public class CSharpPokemonTest {
     /*
      * Red
      */
@@ -206,5 +206,13 @@ public class CSharpItemsTest {
     [Test]
     public void GBALeafGreenPokemonTest() {
         PKMNTest.GBAPokemonTests.PokemonTest("LeafGreen");
+    }
+
+    /*
+     * Other
+     */
+    [Test]
+    public void _3GPKMTest() {
+        PKMNTest.PokemonIOTests.Test3GPKM();
     }
 }
