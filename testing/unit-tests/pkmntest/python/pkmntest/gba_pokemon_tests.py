@@ -352,6 +352,18 @@ class gba_pokemon_test(pokemon_tests):
 
         pokemon.set_personality(0x7F3AB3A8)
         self.assertEqual(pokemon.get_personality(), 0x7F3AB3A8)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_personality(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_personality(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_personality(0xFFFFFFFFF)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_personality(0xFFFFFFFFF)
 
         with self.assertRaises(IndexError):
             pokemon.set_contest_stat("Cool", -1)
