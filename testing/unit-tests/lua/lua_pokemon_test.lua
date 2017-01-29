@@ -5,6 +5,9 @@
 -- or copy at http://opensource.org/licenses/MIT)
 --
 
+-- Seed it once to avoid repeating values.
+math.randomseed(os.time()*10000)
+
 local luaunit = require("luaunit")
 
 local tests = {
