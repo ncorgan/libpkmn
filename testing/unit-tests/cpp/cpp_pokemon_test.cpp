@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 #include <pkmntest/gen1_pokemon_tests.hpp>
 #include <pkmntest/gen2_pokemon_tests.hpp>
 #include <pkmntest/gba_pokemon_tests.hpp>
+#include <pkmntest/pokemon_io_tests.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -160,6 +161,10 @@ BOOST_AUTO_TEST_CASE(gba_ruby_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Ruby");
 }
 
+BOOST_AUTO_TEST_CASE(gba_ruby_unown_form_test) {
+    pkmntest::gba_unown_form_test("Ruby");
+}
+
 BOOST_AUTO_TEST_CASE(gba_ruby_pokemon_test) {
     pokemon_test_common(
         "Torchic",
@@ -174,6 +179,10 @@ BOOST_AUTO_TEST_CASE(gba_ruby_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gba_sapphire_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Sapphire");
+}
+
+BOOST_AUTO_TEST_CASE(gba_sapphire_unown_form_test) {
+    pkmntest::gba_unown_form_test("Sapphire");
 }
 
 BOOST_AUTO_TEST_CASE(gba_sapphire_pokemon_test) {
@@ -192,6 +201,10 @@ BOOST_AUTO_TEST_CASE(gba_emerald_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("Emerald");
 }
 
+BOOST_AUTO_TEST_CASE(gba_emerald_unown_form_test) {
+    pkmntest::gba_unown_form_test("Emerald");
+}
+
 BOOST_AUTO_TEST_CASE(gba_emerald_pokemon_test) {
     pokemon_test_common(
         "Torchic",
@@ -206,6 +219,10 @@ BOOST_AUTO_TEST_CASE(gba_emerald_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gba_firered_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("FireRed");
+}
+
+BOOST_AUTO_TEST_CASE(gba_firered_unown_form_test) {
+    pkmntest::gba_unown_form_test("FireRed");
 }
 
 BOOST_AUTO_TEST_CASE(gba_firered_pokemon_test) {
@@ -224,10 +241,22 @@ BOOST_AUTO_TEST_CASE(gba_leafgreen_invalid_pokemon_test) {
     pkmntest::gba_invalid_pokemon_test("LeafGreen");
 }
 
+BOOST_AUTO_TEST_CASE(gba_leafgreen_unown_form_test) {
+    pkmntest::gba_unown_form_test("LeafGreen");
+}
+
 BOOST_AUTO_TEST_CASE(gba_leafgreen_pokemon_test) {
     pokemon_test_common(
         "Torchic",
         "LeafGreen",
         pkmntest::gba_pokemon_test
     );
+}
+
+/*
+ * Misc
+ */
+
+BOOST_AUTO_TEST_CASE(_3gpkm_test) {
+    pkmntest::test_3gpkm();
 }

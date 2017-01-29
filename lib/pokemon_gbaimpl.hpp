@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -34,6 +34,10 @@ namespace pkmn {
             );
 
             ~pokemon_gbaimpl();
+
+            void set_form(
+                const std::string &form
+            );
 
             std::string get_nickname();
 
@@ -180,6 +184,9 @@ namespace pkmn {
             void _update_moves(
                 int index
             );
+
+            void _set_unown_form_from_personality();
+            void _set_unown_personality_from_form();
 
             void _update_held_item();
             void _update_markings_map();

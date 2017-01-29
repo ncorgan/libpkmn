@@ -45,6 +45,116 @@ void pkmntest_gba_invalid_pokemon_test(
     test_invalid_pokemon(game);
 }
 
+void pkmntest_gba_unown_test(
+    const char* game
+) {
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_handle_t unown = NULL;
+    uint32_t personality = 0;
+
+    pkmn_database_pokemon_entry_t unown_entry;
+    error = pkmn_database_get_pokemon_entry(
+                "Unown",
+                game,
+                "",
+                &unown_entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    TEST_ASSERT_EQUAL(unown_entry.forms.length, 28);
+
+    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+        error = pkmn_pokemon_make(
+                    &unown,
+                    "Unown",
+                    game,
+                    unown_entry.forms.strings[i],
+                    5
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_form(
+                    unown,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL_STRING(strbuffer, unown_entry.forms.strings[i]);
+
+        // Make sure personality is properly set.
+        error = pkmn_pokemon_get_personality(
+                    unown,
+                    &personality
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_calculations_gen3_unown_form(
+                    personality,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL_STRING(strbuffer, unown_entry.forms.strings[i]);
+
+        error = pkmn_pokemon_free(&unown);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_NULL(unown);
+    }
+
+    // Make sure setting the personality properly sets the form.
+    error = pkmn_pokemon_make(
+                &unown,
+                "Unown",
+                game,
+                "A",
+                5
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_set_personality(
+                unown,
+                0x4C07DE71
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_get_form(
+                unown,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "B");
+
+    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+        error = pkmn_pokemon_set_form(
+                    unown,
+                    unown_entry.forms.strings[i]
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_pokemon_get_personality(
+                    unown,
+                    &personality
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        error = pkmn_calculations_gen3_unown_form(
+                    personality,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL_STRING(strbuffer, unown_entry.forms.strings[i]);
+    }
+
+    error = pkmn_pokemon_free(&unown);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(unown);
+
+    error = pkmn_database_pokemon_entry_free(&unown_entry);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+}
+
 typedef pkmn_error_t (*pokemon_stat_fcn_t)(pkmn_pokemon_handle_t, pkmn_string_list_t*);
 
 static void check_stat_names(
@@ -815,6 +925,42 @@ void pkmntest_gba_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, location);
+
+    error = pkmn_pokemon_set_original_game(
+                pokemon,
+                "Ruby"
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_original_game(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
+
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "Not a game"
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "Red" // Impossible
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "HeartGold" // From a later game
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_get_original_game(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
 
     uint32_t personality = 0;
     error = pkmn_pokemon_set_personality(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -146,6 +146,12 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GEN1_PARTY_RCAST;
         }
+    }
+
+    void pokemon_gen1impl::set_form(
+        const std::string &form
+    ) {
+        _database_entry.set_form(form);
     }
 
     std::string pokemon_gen1impl::get_nickname() {

@@ -5,11 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%define PKMN_LUA_INIT
-    %include <swig_exceptions.i>
-    SWIG_CATCH_DEFAULT
+#ifndef POKEMON_IO_TESTS_H
+#define POKEMON_IO_TESTS_H
 
-    %include <pkmn.i>
-    %include <lua/unsigned_nums_typemap.i> 
-    %include <lua/stl_macros.i>
-%enddef
+#include <pkmntest-c/config.h>
+
+#include <pkmn-c/pokemon.h>
+
+PKMNTEST_API void pkmntest_test_3gpkm();
+
+#endif /* POKEMON_IO_TESTS_H */

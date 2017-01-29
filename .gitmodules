@@ -4,3 +4,6 @@
 [submodule "libpkmn-database"]
 	path = libpkmn-database
 	url = https://github.com/ncorgan/libpkmn-database
+[submodule "testing/libpkmn-test-files"]
+	path = testing/libpkmn-test-files
+	url = https://github.com/ncorgan/libpkmn-test-files

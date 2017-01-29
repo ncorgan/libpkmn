@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -82,6 +82,56 @@ namespace pkmntest {
         const std::string &game
     ) {
         pkmntest::test_invalid_pokemon(game);
+    }
+
+    void gba_unown_form_test(
+        const std::string &game
+    ) {
+        pkmn::database::pokemon_entry unown_entry(
+            "Unown",
+            game,
+            ""
+        );
+        std::vector<std::string> unown_forms = unown_entry.get_forms();
+
+        for(auto form_iter = unown_forms.begin(); form_iter != unown_forms.end(); ++form_iter) {
+            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                            "Unown",
+                                            game,
+                                            *form_iter,
+                                            5
+                                        );
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                *form_iter
+            );
+        }
+
+        // Make sure setting the personality properly sets the form.
+        pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                        "Unown",
+                                        game,
+                                        "A",
+                                        5
+                                    );
+        unown->set_personality(0x4C07DE71);
+        BOOST_CHECK_EQUAL(unown->get_form(), "B");
+
+        // Make sure setting the form properly sets the personality.
+        for(auto form_iter = unown_forms.begin(); form_iter != unown_forms.end(); ++form_iter) {
+            unown->set_form(*form_iter);
+            BOOST_CHECK_EQUAL(
+                unown->get_form(),
+                *form_iter
+            );
+            std::string form_from_personality = pkmn::calculations::gen3_unown_form(
+                                                    unown->get_personality()
+                                                );
+            BOOST_CHECK_EQUAL(
+                form_from_personality,
+                *form_iter
+            );
+        }
     }
 
     static void check_markings_map(
@@ -569,6 +619,27 @@ namespace pkmntest {
         BOOST_CHECK_THROW(
             pokemon->set_location_met(location, true);
         , pkmn::feature_not_in_game_error);
+
+        pokemon->set_original_game("Ruby");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_original_game(),
+            "Ruby"
+        );
+
+        // Make sure we can't set invalid games.
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("Not a game");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("Red"); // Impossible
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("HeartGold"); // From a later game
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_original_game(),
+            "Ruby"
+        );
 
         pokemon->set_personality(0x7F3AB3A8);
         BOOST_CHECK_EQUAL(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -113,6 +113,10 @@ namespace pkmn {
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_IVs();
+        }
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -132,6 +136,10 @@ namespace pkmn {
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_IVs();
+        }
     }
 
     pokemon_gen2impl::~pokemon_gen2impl() {
@@ -140,6 +148,16 @@ namespace pkmn {
         }
         if(_our_party_mem) {
             delete GEN2_PARTY_RCAST;
+        }
+    }
+
+    void pokemon_gen2impl::set_form(
+        const std::string &form
+    ) {
+        _database_entry.set_form(form);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_IVs_from_form(form);
         }
     }
 

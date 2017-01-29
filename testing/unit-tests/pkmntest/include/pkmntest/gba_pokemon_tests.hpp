@@ -18,6 +18,10 @@ namespace pkmntest {
         const std::string &game
     );
 
+    PKMNTEST_API void gba_unown_form_test(
+        const std::string &game
+    );
+
     PKMNTEST_API void gba_pokemon_test(
         pkmn::pokemon::sptr pokemon,
         const std::string &species,

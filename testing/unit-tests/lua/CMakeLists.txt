@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,13 @@
 # Lua tests
 #
 INCLUDE(PKMNLua)
+LUA_CHECK_MODULE("Bit32" "bit32" BIT32_FOUND)
 LUA_CHECK_MODULE("LuaUnit" "luaunit" LUAUNIT_FOUND)
+
+# Build Bit32 if we need it.
+IF(NOT BIT32_FOUND)
+    ADD_SUBDIRECTORY(bit32)
+ENDIF(NOT BIT32_FOUND)
 
 # Get stock Lua path and C path becuase environment variables override
 # instead of append for whatever reason.
@@ -31,6 +37,7 @@ IF(LUAUNIT_FOUND)
         lua_items_test
         lua_lists_test
         lua_paths_test
+        lua_pokemon_test
         lua_pokemon_pc_test
     )
 

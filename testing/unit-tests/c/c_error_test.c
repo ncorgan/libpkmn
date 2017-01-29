@@ -684,6 +684,24 @@ static void pokemon_error_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
+     * pkmn_pokemon_get_game
+     */
+
+    error = pkmn_pokemon_get_game(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_game(
+                pokemon,
+                NULL, // game_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "game_out");
+
+    /*
      * pkmn_pokemon_get_form
      */
 
@@ -709,22 +727,20 @@ static void pokemon_error_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
-     * pkmn_pokemon_get_game
+     * pkmn_pokemon_set_form
      */
 
-    error = pkmn_pokemon_get_game(
+    error = pkmn_pokemon_set_form(
                 NULL, // handle
-                strbuffer,
-                sizeof(strbuffer)
+                strbuffer
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_pokemon_get_game(
+    error = pkmn_pokemon_set_form(
                 pokemon,
-                NULL, // game_out
-                sizeof(strbuffer)
+                NULL // form
             );
-    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "game_out");
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form");
 
     error = pkmn_pokemon_get_game(
                 pokemon,

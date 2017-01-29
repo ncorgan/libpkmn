@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,6 +7,7 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
@@ -14,6 +15,7 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
@@ -36,6 +38,8 @@
 #define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
 
 namespace pkmn {
+
+    BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
     pokemon_gbaimpl::pokemon_gbaimpl(
         pkmn::database::pokemon_entry&& database_entry,
@@ -119,6 +123,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         set_level(level);
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -151,6 +159,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -182,6 +194,10 @@ namespace pkmn {
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -209,11 +225,16 @@ namespace pkmn {
         // Populate abstractions
         _update_held_item();
         _update_ribbons_map();
+        _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
         _init_contest_stat_map(&_effort->contest_stats);
         _init_markings_map(&GBA_PC_RCAST->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
     }
 
     pokemon_gbaimpl::~pokemon_gbaimpl() {
@@ -222,6 +243,16 @@ namespace pkmn {
         }
         if(_our_party_mem) {
             delete GBA_PARTY_RCAST;
+        }
+    }
+
+    void pokemon_gbaimpl::set_form(
+        const std::string &form
+    ) {
+        _database_entry.set_form(form);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
         }
     }
 
@@ -279,6 +310,10 @@ namespace pkmn {
             &GBA_PC_RCAST->ot_id.id,
             value
         );
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_personality();
+        }
     }
 
     void pokemon_gbaimpl::set_held_item(
@@ -545,6 +580,11 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
+        int generation = pkmn::database::game_name_to_generation(game);
+        if(generation != 3) {
+            throw std::invalid_argument("Game must be from Generation III.");
+        }
+
         _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
                                            game
@@ -559,13 +599,16 @@ namespace pkmn {
         return pksav_littleendian32(GBA_PC_RCAST->personality);
     }
 
-    // TODO: automatically update personality-based stuff
     void pokemon_gbaimpl::set_personality(
         uint32_t personality
     ) {
         pokemon_scoped_lock lock(this);
 
         GBA_PC_RCAST->personality = pksav_littleendian32(personality);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_form_from_personality();
+        }
     }
 
     int pokemon_gbaimpl::get_experience() {
@@ -921,5 +964,41 @@ namespace pkmn {
         _stats["Speed"]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
         _stats["Special Attack"]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
         _stats["Special Defense"] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));
+    }
+
+    void pokemon_gbaimpl::_set_unown_form_from_personality() {
+        _database_entry.set_form(
+            pkmn::calculations::gen3_unown_form(
+                pksav_littleendian32(
+                    GBA_PC_RCAST->personality
+                )
+            )
+        );
+    }
+
+    void pokemon_gbaimpl::_set_unown_personality_from_form() {
+        char as_char = _database_entry.get_form()[0];
+        uint8_t num = 0;
+
+        switch(as_char) {
+            case '?':
+                num = 26;
+                break;
+
+            case '!':
+                num = 27;
+                break;
+
+            // We can assume the form is valid at this point.
+            default:
+                num = uint8_t(as_char - 'A');
+                break;
+        }
+
+        uint8_t* pid_as_bytes = reinterpret_cast<uint8_t*>(&GBA_PC_RCAST->personality);
+        for(size_t i = 0; i < 4; ++i) {
+            pid_as_bytes[i] &= ~0x3;
+            pid_as_bytes[i] |= ((num & (0x3 << (2*i))) >> (2*i));
+        }
     }
 }

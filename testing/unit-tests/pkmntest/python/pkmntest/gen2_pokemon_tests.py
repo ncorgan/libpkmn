@@ -38,6 +38,21 @@ class gen2_pokemon_test(pokemon_tests):
         unown.set_IV("Special", 14)
         self.assertStringEqual(unown.get_form(), "G")
 
+        # Make sure setting the form properly changes IVs.
+        for letter in string.ascii_uppercase:
+            unown.set_form(letter)
+            self.assertStringEqual(unown.get_form(), letter)
+
+            # Make sure IVs are properly set.
+            IVs = unown.get_IVs()
+            form_from_IVs = pkmn.calculations.gen2_unown_form(
+                                IVs["Attack"],
+                                IVs["Defense"],
+                                IVs["Speed"],
+                                IVs["Special"]
+                            )
+            self.assertStringEqual(unown.get_form(), form_from_IVs)
+
     def check_stat_map(self, stat_map, is_stats):
         self.assertTrue(stat_map.has_key("HP"))
         self.assertTrue(stat_map.has_key("Attack"))
@@ -164,6 +179,27 @@ class gen2_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.set_trainer_secret_id(54321)
         self.assertEqual(pokemon.get_trainer_id(), 10001)
+
+        # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
+        # applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(-1)
+        try:
+            with self.assertRaises(OverflowError):
+                pokemon.set_trainer_public_id(0xFFFF+1)
+        except:
+            with self.assertRaises(TypeError):
+                pokemon.set_trainer_public_id(0xFFFF+1)
 
         with self.assertRaises(RuntimeError):
             pokemon.set_ability("")

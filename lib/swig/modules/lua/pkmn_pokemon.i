@@ -6,16 +6,29 @@
  */
 
 %{
+    #include <pkmn/exception.hpp>
     #include <pkmn/pokemon.hpp>
 %}
 
 // SWIG doesn't deal well with read-only static variables
 %ignore pkmn::pokemon::LIBPKMN_OT_ID;
 %ignore pkmn::pokemon::LIBPKMN_OT_NAME;
+%ignore pkmn::pokemon::set_move;
 
 %include <pkmn/pokemon.hpp>
 
 %extend pkmn::shared_ptr<pkmn::pokemon> {
+
+    void set_move(
+        const std::string &move_name,
+        int index
+    ) {
+        if(index < 1 or index > 4) {
+            throw pkmn::range_error("index", 1, 4);
+        }
+
+        self->get()->set_move(move_name, index-1);
+    }
 
     bool __eq__(
         const pkmn::pokemon::sptr &rhs

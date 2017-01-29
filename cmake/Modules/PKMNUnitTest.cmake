@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -36,7 +36,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
-            "${TESTS_SOURCE_DIR}/pkmntest/python"
+            "${TESTS_BINARY_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
@@ -45,6 +45,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(LUA_PATH
             "${PKMN_BINARY_DIR}/lib/swig/lua/?.lua"
             "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
+            "${PKMN_BINARY_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
         )
         IF(WIN32)
             SET(LIBRARY_PATHS
@@ -64,7 +65,11 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
             SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
-            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll")
+            SET(LUA_CPATH
+                "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll"
+                "${TESTS_BINARY_DIR}/lua/bit32/${CMAKE_BUILD_TYPE}/?.dll"
+            )
+
             STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
             STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
@@ -94,7 +99,11 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 "${TESTS_BINARY_DIR}/pkmntest/cpp"
                 "${TESTS_BINARY_DIR}/pkmntest/c"
             )
-            SET(LUA_CPATH "${PKMN_BINARY_DIR}/lib/swig/lua/?.so")
+            SET(LUA_CPATH
+                "${PKMN_BINARY_DIR}/lib/swig/lua/?.so"
+                "${TESTS_BINARY_DIR}/lua/bit32/?.so"
+            )
+
             STRING(REPLACE ";" ":" LIBRARY_PATHS "${LIBRARY_PATHS}")
             STRING(REPLACE ";" ":" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE ";" ":" PYTHONPATH "${PYTHONPATH}")

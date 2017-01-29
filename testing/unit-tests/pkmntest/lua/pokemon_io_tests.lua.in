@@ -1,0 +1,136 @@
+--
+-- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+--
+-- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+-- or copy at http://opensource.org/licenses/MIT)
+--
+
+local pkmn = require("pkmn")
+local luaunit = require("luaunit")
+
+local LIBPKMN_TEST_FILES = "@LIBPKMN_TEST_FILES@"
+
+local utils = {}
+
+-- http://stackoverflow.com/a/30960054
+function utils.is_windows()
+    local shared_lib_ext = package.cpath:match("%p[\\|/]?%p(%a+)")
+    return (shared_lib_ext == "dll")
+end
+
+function utils.concat_path(path1, path2)
+    if utils.is_windows()
+    then
+        return string.format("%s\\%s", path1, path2)
+    else
+        return string.format("%s/%s", path1, path2)
+    end
+end
+
+function test_3gpkm()
+    local MARKINGS = {"Circle", "Triangle", "Square", "Heart"}
+    local CONTEST_TYPES = {"Cool", "Beauty", "Cute", "Smart", "Tough"}
+    local CONTEST_LEVELS = {"", " Super", " Hyper", " Master"}
+    local RIBBONS = {"Champion", "Winning", "Victory", "Artist",
+                     "Effort", "Marine", "Land", "Sky",
+                     "Country", "National", "Earth", "World"}
+    --
+    -- Test files in repo and compare to known values.
+    --
+    local _3gpkm_dir = utils.concat_path(LIBPKMN_TEST_FILES, "3gpkm")
+
+    local mightyena = pkmn.pokemon(utils.concat_path(_3gpkm_dir, "MIGHTYENA.3gpkm"))
+    luaunit.assertEquals(mightyena:get_species(), "Mightyena")
+    luaunit.assertEquals(mightyena:get_game(), "Emerald")
+    luaunit.assertEquals(mightyena:get_form(), "Standard")
+    luaunit.assertEquals(mightyena:get_nickname(), "MIGHTYENA")
+    luaunit.assertFalse(mightyena:is_shiny())
+    luaunit.assertEquals(mightyena:get_held_item():get_name(), "Heart Scale")
+    luaunit.assertEquals(mightyena:get_trainer_name(), "A")
+    luaunit.assertEquals(mightyena:get_trainer_public_id(), 61415)
+    luaunit.assertEquals(mightyena:get_trainer_secret_id(), 3417)
+    luaunit.assertEquals(mightyena:get_trainer_id(), 223997927)
+    luaunit.assertEquals(mightyena:get_trainer_gender(), "Female")
+    luaunit.assertEquals(mightyena:get_friendship(), 254)
+    luaunit.assertEquals(mightyena:get_ability(), "Intimidate")
+    luaunit.assertEquals(mightyena:get_ball(), "Great Ball")
+    luaunit.assertEquals(mightyena:get_level_met(), 25)
+    luaunit.assertEquals(mightyena:get_location_met(false), "Route 120")
+    luaunit.assertEquals(mightyena:get_original_game(), "Emerald")
+    luaunit.assertEquals(mightyena:get_personality(), 3557601241)
+    luaunit.assertEquals(mightyena:get_experience(), 128734)
+    luaunit.assertEquals(mightyena:get_level(), 50)
+
+    local mightyena_markings = mightyena:get_markings()
+    luaunit.assertEquals(#mightyena_markings, 4)
+    for i = 1, #MARKINGS
+    do
+        luaunit.assertFalse(mightyena_markings[MARKINGS[i]])
+    end
+
+    local mightyena_ribbons = mightyena:get_ribbons()
+    luaunit.assertEquals(#mightyena_ribbons, 32)
+    -- Contest ribbons
+    for i = 1, #CONTEST_TYPES
+    do
+        for j = 1, #CONTEST_LEVELS
+        do
+            local ribbon_name = string.format("%s%s", CONTEST_TYPES[i], CONTEST_LEVELS[j])
+            luaunit.assertFalse(mightyena_ribbons[ribbon_name])
+        end
+    end
+    -- Other ribbons
+    for i = 1, #RIBBONS
+    do
+        if RIBBONS[i] == "Champion"
+        then
+            luaunit.assertTrue(mightyena_ribbons[RIBBONS[i]])
+        else
+            luaunit.assertFalse(mightyena_ribbons[RIBBONS[i]])
+        end
+    end
+
+    local mightyena_contest_stats = mightyena:get_contest_stats()
+    luaunit.assertEquals(#mightyena_contest_stats, 6)
+    for i = 1, #CONTEST_TYPES
+    do
+        luaunit.assertEquals(mightyena_contest_stats[CONTEST_TYPES[i]], 0)
+    end
+
+    local expected_mightyena_moves = {
+        "Crunch", "Strength", "Shadow Ball", "Double-Edge"
+    }
+    local mightyena_moves = mightyena:get_moves()
+    luaunit.assertEquals(#mightyena_moves, 4)
+    for i = 1, 4
+    do
+        luaunit.assertEquals(mightyena_moves[i].move:get_name(), expected_mightyena_moves[i])
+    end
+
+    local mightyena_EVs = mightyena:get_EVs()
+    luaunit.assertEquals(#mightyena_EVs, 6)
+    luaunit.assertEquals(mightyena_EVs["HP"], 30)
+    luaunit.assertEquals(mightyena_EVs["Attack"], 110)
+    luaunit.assertEquals(mightyena_EVs["Defense"], 32)
+    luaunit.assertEquals(mightyena_EVs["Speed"], 48)
+    luaunit.assertEquals(mightyena_EVs["Special Attack"], 17)
+    luaunit.assertEquals(mightyena_EVs["Special Defense"], 83)
+
+    local mightyena_IVs = mightyena:get_IVs()
+    luaunit.assertEquals(#mightyena_IVs, 6)
+    luaunit.assertEquals(mightyena_IVs["HP"], 26)
+    luaunit.assertEquals(mightyena_IVs["Attack"], 28)
+    luaunit.assertEquals(mightyena_IVs["Defense"], 4)
+    luaunit.assertEquals(mightyena_IVs["Speed"], 13)
+    luaunit.assertEquals(mightyena_IVs["Special Attack"], 25)
+    luaunit.assertEquals(mightyena_IVs["Special Defense"], 26)
+
+    local mightyena_stats = mightyena:get_stats()
+    luaunit.assertEquals(#mightyena_stats, 6)
+    luaunit.assertEquals(mightyena_stats["HP"], 146)
+    luaunit.assertEquals(mightyena_stats["Attack"], 122)
+    luaunit.assertEquals(mightyena_stats["Defense"], 81)
+    luaunit.assertEquals(mightyena_stats["Speed"], 87)
+    luaunit.assertEquals(mightyena_stats["Special Attack"], 79)
+    luaunit.assertEquals(mightyena_stats["Special Defense"], 88)
+end
