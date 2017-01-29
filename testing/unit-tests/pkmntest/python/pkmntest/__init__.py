@@ -11,3 +11,4 @@ from .gen2_items_tests import *
 from .gen2_pokemon_tests import *
 from .gba_items_tests import *
 from .gba_pokemon_tests import *
+from .pokemon_io_tests import *
