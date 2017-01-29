@@ -22,6 +22,11 @@ SET(pkmntest_libs
     pkmn
 )
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_io_tests.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.cpp
+@ONLY)
+
 SET(pkmntest_sources
     gen1_items_tests.cpp
     gen1_pokemon_tests.cpp
@@ -30,6 +35,7 @@ SET(pkmntest_sources
     gba_items_tests.cpp
     gba_pokemon_tests.cpp
     items_tests_common.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.cpp
     pokemon_tests_common.cpp
 )
 

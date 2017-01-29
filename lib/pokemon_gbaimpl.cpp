@@ -225,6 +225,7 @@ namespace pkmn {
         // Populate abstractions
         _update_held_item();
         _update_ribbons_map();
+        _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
         _init_contest_stat_map(&_effort->contest_stats);
         _init_markings_map(&GBA_PC_RCAST->markings);

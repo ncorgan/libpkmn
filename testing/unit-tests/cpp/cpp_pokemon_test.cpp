@@ -8,6 +8,7 @@
 #include <pkmntest/gen1_pokemon_tests.hpp>
 #include <pkmntest/gen2_pokemon_tests.hpp>
 #include <pkmntest/gba_pokemon_tests.hpp>
+#include <pkmntest/pokemon_io_tests.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -250,4 +251,12 @@ BOOST_AUTO_TEST_CASE(gba_leafgreen_pokemon_test) {
         "LeafGreen",
         pkmntest::gba_pokemon_test
     );
+}
+
+/*
+ * Misc
+ */
+
+BOOST_AUTO_TEST_CASE(_3gpkm_test) {
+    pkmntest::test_3gpkm();
 }
