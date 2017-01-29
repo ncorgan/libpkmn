@@ -15,6 +15,7 @@ SET(pkmntest_python_sources
     gba_items_tests.py
     gba_pokemon_tests.py
     pokemon_io_tests.py
+    pokemon_pc_tests.py
     __init__.py
 )
 

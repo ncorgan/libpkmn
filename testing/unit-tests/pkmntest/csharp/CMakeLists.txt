@@ -14,6 +14,7 @@ SET(pkmntest_cs_srcs
     GBAPokemonTests.cs
     ItemsTestsCommon.cs
     PokemonIOTests.cs
+    PokemonPCTests.cs
     PokemonTestsCommon.cs
 )
 FOREACH(src ${pkmntest_cs_srcs})
