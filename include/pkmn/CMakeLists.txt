@@ -21,6 +21,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         move_slot.hpp
         pokemon.hpp
         pokemon_box.hpp
+        pokemon_party.hpp
         pokemon_pc.hpp
     )
 

@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef PKMN_POKEMON_BOX_GBIMPL_IPP
-#define PKMN_POKEMON_BOX_GBIMPL_IPP
+#ifndef PKMN_POKEMON_PARTY_GBIMPL_IPP
+#define PKMN_POKEMON_PARTY_GBIMPL_IPP
 
 #include "pksav/pksav_call.hpp"
 
@@ -23,9 +23,9 @@
 namespace pkmn {
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_box_gbimpl(
+    pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_party_gbimpl(
         int game_id
-    ): pokemon_box_impl(game_id)
+    ): pokemon_party_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         std::memset(_native, 0, sizeof(list_type));
@@ -36,10 +36,10 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_box_gbimpl(
+    pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_party_gbimpl(
         int game_id,
         list_type* native
-    ): pokemon_box_impl(game_id)
+    ): pokemon_party_impl(game_id)
     {
         _native = reinterpret_cast<void*>(native);
         _our_mem = false;
@@ -48,10 +48,10 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_box_gbimpl(
+    pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_party_gbimpl(
         int game_id,
         const list_type &native
-    ): pokemon_box_impl(game_id)
+    ): pokemon_party_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new list_type);
         *NATIVE_LIST_RCAST = native;
@@ -61,59 +61,34 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::~pokemon_box_gbimpl() {
+    pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::~pokemon_party_gbimpl() {
         if(_our_mem) {
             delete NATIVE_LIST_RCAST;
         }
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    std::string pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_name() {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value) {
-            throw pkmn::feature_not_in_game_error("Box names", "Generation I");
-        } else {
-            return _box_name;
-        }
+    int pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_num_pokemon() {
+        return int(NATIVE_LIST_RCAST->count);
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    void pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::set_name(
-        const std::string &name
-    ) {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value) {
-            throw pkmn::feature_not_in_game_error("Box names", "Generation I");
-        } else {
-            if(name.size() > 8) {
-                throw std::invalid_argument("Generation II box names have a maximum length of 8.");
-            }
-
-            _box_name = name;
-        }
-    }
-
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    int pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_capacity() {
-        return int(sizeof(NATIVE_LIST_RCAST->entries)/sizeof(NATIVE_LIST_RCAST->entries[0]));
-    }
-
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    void pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::set_pokemon(
+    void pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
     ) {
-        int capacity = get_capacity();
-        if(index < 0 or index > (capacity-1)) {
-            throw pkmn::range_error("index", 0, (capacity-1));
+        if(index < 0 or index > (PARTY_SIZE-1)) {
+            throw pkmn::range_error("index", 0, (PARTY_SIZE-1));
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
 
-        // Copy the underlying memory to the box.
-        pkmn::mem::set_pokemon_in_box(
+        // Copy the underlying memory to the party.
+        /*pkmn::mem::set_pokemon_in_party(
             dynamic_cast<pokemon_impl*>(new_pokemon.get()),
             this,
             index
-        );
+        );*/
 
         // Set the entry in the species list.
         NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
@@ -152,18 +127,16 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    void pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::_from_native() {
-        int capacity = get_capacity();
-
+    void pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::_from_native() {
         // This shouldn't resize if the vector is populated.
-        _pokemon_list.resize(capacity);
+        _pokemon_list.resize(PARTY_SIZE);
 
         char nickname[11] = {0};
         char otname[8] = {0};
 
-        for(int i = 0; i < capacity; ++i) {
+        for(int i = 0; i < PARTY_SIZE; ++i) {
             _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(
-                                   &NATIVE_LIST_RCAST->entries[i],
+                                   &NATIVE_LIST_RCAST->party[i],
                                    _game_id
                                );
 
@@ -192,4 +165,4 @@ namespace pkmn {
     }
 }
 
-#endif /* PKMN_POKEMON_BOX_GBIMPL_IPP */
+#endif /* PKMN_POKEMON_PARTY_GBIMPL_IPP */

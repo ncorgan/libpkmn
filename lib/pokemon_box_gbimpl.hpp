@@ -15,22 +15,22 @@
 namespace pkmn {
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    class pokemon_gb_list: public pokemon_box_impl {
+    class pokemon_box_gbimpl: public pokemon_box_impl {
         public:
-            pokemon_gb_list() {}
-            pokemon_gb_list(
+            pokemon_box_gbimpl() {}
+            pokemon_box_gbimpl(
                 int game_id
             );
-            pokemon_gb_list(
+            pokemon_box_gbimpl(
                 int game_id,
                 list_type* native
             );
-            pokemon_gb_list(
+            pokemon_box_gbimpl(
                 int game_id,
                 const list_type &native
             );
 
-            ~pokemon_gb_list();
+            ~pokemon_box_gbimpl();
 
             std::string get_name();
 
@@ -53,10 +53,10 @@ namespace pkmn {
     };
 
     // Generation I
-    typedef pokemon_gb_list<pksav_gen1_pokemon_box_t, pksav_gen1_pc_pokemon_t, pokemon_gen1impl> pokemon_box_gen1impl;
+    typedef pokemon_box_gbimpl<pksav_gen1_pokemon_box_t, pksav_gen1_pc_pokemon_t, pokemon_gen1impl> pokemon_box_gen1impl;
 
     // Generation II
-    typedef pokemon_gb_list<pksav_gen2_pokemon_box_t, pksav_gen2_pc_pokemon_t, pokemon_gen2impl> pokemon_box_gen2impl;
+    typedef pokemon_box_gbimpl<pksav_gen2_pokemon_box_t, pksav_gen2_pc_pokemon_t, pokemon_gen2impl> pokemon_box_gen2impl;
 }
 
 #include "pokemon_box_gbimpl.ipp"
