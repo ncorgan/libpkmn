@@ -430,6 +430,26 @@ public class GBAPokemonTests {
             }
         );
 
+        pokemon.SetOriginalGame("Ruby");
+        Assert.AreEqual(pokemon.GetOriginalGame(), "Ruby");
+
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                pokemon.SetOriginalGame("Not a game");
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                pokemon.SetOriginalGame("Red"); // Impossible
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                pokemon.SetOriginalGame("HeartGold"); // From a later game
+            }
+        );
+        Assert.AreEqual(pokemon.GetOriginalGame(), "Ruby");
+
         pokemon.SetPersonality(0x7F3AB3A8);
         Assert.AreEqual(pokemon.GetPersonality(), 0x7F3AB3A8);
 

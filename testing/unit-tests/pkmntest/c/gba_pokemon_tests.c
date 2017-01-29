@@ -926,6 +926,42 @@ void pkmntest_gba_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, location);
 
+    error = pkmn_pokemon_set_original_game(
+                pokemon,
+                "Ruby"
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_original_game(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
+
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "Not a game"
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "Red" // Impossible
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_original_game(
+        pokemon,
+        "HeartGold" // From a later game
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_get_original_game(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
+
     uint32_t personality = 0;
     error = pkmn_pokemon_set_personality(
                 pokemon,

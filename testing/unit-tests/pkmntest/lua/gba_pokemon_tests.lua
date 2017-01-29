@@ -323,6 +323,13 @@ function gba_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_location_met(false), location)
     luaunit.assertError(pokemon.set_location_met, location, true)
 
+    pokemon:set_original_game("Ruby")
+    luaunit.assertEquals(pokemon:get_original_game(), "Ruby")
+    luaunit.assertError(pokemon.set_original_game, pokemon, "Not a game")
+    luaunit.assertError(pokemon.set_original_game, pokemon, "Red") -- Impossible
+    luaunit.assertError(pokemon.set_original_game, pokemon, "HeartGold") -- From a later game
+    luaunit.assertEquals(pokemon:get_original_game(), "Ruby")
+
     pokemon:set_personality(0x7F3AB3A8)
     luaunit.assertEquals(pokemon:get_personality(), 0x7F3AB3A8)
 

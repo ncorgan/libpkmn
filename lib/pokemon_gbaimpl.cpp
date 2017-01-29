@@ -7,6 +7,7 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
@@ -578,6 +579,11 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
+        int generation = pkmn::database::game_name_to_generation(game);
+        if(generation != 3) {
+            throw std::invalid_argument("Game must be from Generation III.");
+        }
+
         _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
                                            game
@@ -592,7 +598,6 @@ namespace pkmn {
         return pksav_littleendian32(GBA_PC_RCAST->personality);
     }
 
-    // TODO: automatically update personality-based stuff
     void pokemon_gbaimpl::set_personality(
         uint32_t personality
     ) {

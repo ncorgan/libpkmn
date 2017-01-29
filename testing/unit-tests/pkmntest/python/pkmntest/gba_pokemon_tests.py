@@ -350,6 +350,16 @@ class gba_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.set_location_met(location, True)
 
+        pokemon.set_original_game("Ruby")
+        self.assertStringEqual(pokemon.get_original_game(), "Ruby")
+        with self.assertRaises(ValueError):
+            pokemon.set_original_game("Not a game")
+        with self.assertRaises(ValueError):
+            pokemon.set_original_game("Red") # Impossible
+        with self.assertRaises(ValueError):
+            pokemon.set_original_game("HeartGold") # From a later game
+        self.assertStringEqual(pokemon.get_original_game(), "Ruby")
+
         pokemon.set_personality(0x7F3AB3A8)
         self.assertEqual(pokemon.get_personality(), 0x7F3AB3A8)
         try:

@@ -620,6 +620,27 @@ namespace pkmntest {
             pokemon->set_location_met(location, true);
         , pkmn::feature_not_in_game_error);
 
+        pokemon->set_original_game("Ruby");
+        BOOST_CHECK_EQUAL(
+            pokemon->get_original_game(),
+            "Ruby"
+        );
+
+        // Make sure we can't set invalid games.
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("Not a game");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("Red"); // Impossible
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            pokemon->set_original_game("HeartGold"); // From a later game
+        , std::invalid_argument);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_original_game(),
+            "Ruby"
+        );
+
         pokemon->set_personality(0x7F3AB3A8);
         BOOST_CHECK_EQUAL(
             pokemon->get_personality(),
