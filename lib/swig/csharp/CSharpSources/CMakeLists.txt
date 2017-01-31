@@ -8,6 +8,7 @@
 SET(csharp_files
     AbilityListComboBox.cs
     AssemblyInfo.cs
+    BuildInfo.cs
     DatabaseProperties.cs
     GameListComboBox.cs
     Equality.cs
