@@ -103,6 +103,18 @@ pkmn_error_t pkmn_pokemon_box_get_game(
     )
 }
 
+pkmn_error_t pkmn_pokemon_box_get_num_pokemon(
+    pkmn_pokemon_box_handle_t handle,
+    int* num_pokemon_out
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_pokemon_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *num_pokemon_out = handle->cpp->get_num_pokemon();
+    )
+}
+
 pkmn_error_t pkmn_pokemon_box_get_capacity(
     pkmn_pokemon_box_handle_t handle,
     int* capacity_out

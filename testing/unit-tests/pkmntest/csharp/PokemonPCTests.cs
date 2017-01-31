@@ -101,6 +101,7 @@ public class PokemonPCTests {
         PKMN.PokemonBox box
     ) {
         string game = box.GetGame();
+        int generation = GameToGeneration(game);
 
         PKMN.Pokemon originalFirst = box[0];
         PKMN.Pokemon originalSecond = box[1];
@@ -124,10 +125,13 @@ public class PokemonPCTests {
         PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", game, "", 5);
 
         box[0] = bulbasaur;
+        Assert.AreEqual(box.GetNumPokemon(), 1);
         box[1] = charmander;
+        Assert.AreEqual(box.GetNumPokemon(), 2);
 
         // Replace one of the new ones.
         box[0] = squirtle;
+        Assert.AreEqual(box.GetNumPokemon(), 2);
 
         // Make sure we can't copy a Pokémon to itself.
         Assert.Throws<ArgumentOutOfRangeException>(
@@ -138,6 +142,50 @@ public class PokemonPCTests {
 
         // Copy a Pokémon whose memory is already part of the box.
         box[2] = box[1];
+        Assert.AreEqual(box.GetNumPokemon(), 3);
+
+        // We should always be able to clear the last contiguous Pokémon.
+        box[2] = originalFirst;
+        Assert.AreEqual(box.GetNumPokemon(), 2);
+        Assert.AreEqual(box[2].GetSpecies(), "None");
+
+        // Put it back.
+        box[2] = box[1];
+        Assert.AreEqual(box.GetNumPokemon(), 3);
+
+        // Check that Pokémon can be placed non-contiguously in the correct games.
+        if(generation <= 2) {
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate {
+                    box[1] = originalFirst;
+                }
+            );
+            Assert.AreEqual(box.GetNumPokemon(), 3);
+            Assert.AreEqual(box[1].GetSpecies(), "Charmander");
+
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate {
+                    box[4] = bulbasaur;
+                }
+            );
+            Assert.AreEqual(box.GetNumPokemon(), 3);
+            Assert.AreEqual(box[4].GetSpecies(), "None");
+        } else {
+            box[1] = originalFirst;
+            Assert.AreEqual(box.GetNumPokemon(), 2);
+            Assert.AreEqual(box[1].GetSpecies(), "None");
+
+            box[4] = bulbasaur;
+            Assert.AreEqual(box.GetNumPokemon(), 3);
+            Assert.AreEqual(box[4].GetSpecies(), "Bulbasaur");
+
+            // Restore it to how it was.
+            box[1] = charmander;
+            box[4] = originalFirst;
+            Assert.AreEqual(box.GetNumPokemon(), 3);
+            Assert.AreEqual(box[1].GetSpecies(), "Charmander");
+            Assert.AreEqual(box[4].GetSpecies(), "None");
+        }
 
         // Now check everything we've created. Each variable should have
         // the same underlying Pokémon.

@@ -63,8 +63,11 @@ namespace pkmn { namespace mem {
                                                 reinterpret_cast<pksav_gen1_pc_pokemon_t*>(box_ptr),
                                                 game_id
                                             );
-                box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
-                box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
+                // Don't set empty names.
+                if(new_pokemon->get_database_entry().get_species_id() > 0) {
+                    box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
+                    box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
+                }
                 break;
 
             case 2:
@@ -74,8 +77,11 @@ namespace pkmn { namespace mem {
                                                 reinterpret_cast<pksav_gen2_pc_pokemon_t*>(box_ptr),
                                                 game_id
                                             );
-                box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
-                box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
+                // Don't set empty names.
+                if(new_pokemon->get_database_entry().get_species_id() > 0) {
+                    box->_pokemon_list[index]->set_nickname(new_pokemon->get_nickname());
+                    box->_pokemon_list[index]->set_trainer_name(new_pokemon->get_trainer_name());
+                }
                 break;
 
             case 3:

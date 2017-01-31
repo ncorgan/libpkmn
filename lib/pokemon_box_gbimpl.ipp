@@ -92,6 +92,11 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
+    int pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_num_pokemon() {
+        return NATIVE_LIST_RCAST->count;
+    }
+
+    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     int pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_capacity() {
         return int(sizeof(NATIVE_LIST_RCAST->entries)/sizeof(NATIVE_LIST_RCAST->entries[0]));
     }
@@ -102,10 +107,15 @@ namespace pkmn {
         pkmn::pokemon::sptr new_pokemon
     ) {
         int capacity = get_capacity();
-        if(index < 0 or index > (capacity-1)) {
-            throw pkmn::range_error("index", 0, (capacity-1));
+        int num_pokemon = get_num_pokemon();
+        int max_index = std::min<int>(capacity-1, num_pokemon);
+
+        if(index < 0 or index > max_index) {
+            throw pkmn::range_error("index", 0, max_index);
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
+        } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
+            throw std::invalid_argument("Generation I-II boxes store Pokémon contiguously.");
         }
 
         // Copy the underlying memory to the box.
@@ -114,6 +124,19 @@ namespace pkmn {
             this,
             index
         );
+
+        // Update the number of Pokémon in the box if needed.
+        std::string new_species = new_pokemon->get_species();
+        if(index == num_pokemon) {
+            std::string new_species = new_pokemon->get_species();
+            if(NATIVE_LIST_RCAST->species[index] == 0 and new_species != "None") {
+                ++(NATIVE_LIST_RCAST->count);
+            }
+        } else if(index == (num_pokemon-1)) {
+            if(NATIVE_LIST_RCAST->species[index] > 0 and new_species == "None") {
+                --(NATIVE_LIST_RCAST->count);
+            }
+        }
 
         // Set the entry in the species list.
         NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());

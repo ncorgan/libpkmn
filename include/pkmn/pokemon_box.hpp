@@ -37,6 +37,8 @@ namespace pkmn {
 
             virtual std::string get_game()  = 0;
 
+            virtual int get_num_pokemon() = 0;
+
             virtual int get_capacity() = 0;
 
             virtual pkmn::pokemon::sptr get_pokemon(

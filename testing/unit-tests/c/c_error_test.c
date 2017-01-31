@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -1798,6 +1798,22 @@ static void pokemon_box_error_test() {
                 0
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_pokemon_box_get_num_pokemon
+     */
+
+    error = pkmn_pokemon_box_get_num_pokemon(
+                NULL, // handle
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_box_get_num_pokemon(
+                pokemon_box,
+                NULL // num_pokemon_out
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "num_pokemon_out");
 
     /*
      * pkmn_pokemon_box_get_capacity

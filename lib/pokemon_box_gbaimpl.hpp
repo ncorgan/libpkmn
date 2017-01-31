@@ -36,6 +36,8 @@ namespace pkmn {
                 const std::string &name
             );
 
+            int get_num_pokemon();
+
             int get_capacity();
 
         private:

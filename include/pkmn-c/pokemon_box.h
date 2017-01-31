@@ -55,6 +55,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_box_get_game(
     size_t buffer_len
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_box_get_num_pokemon(
+    pkmn_pokemon_box_handle_t handle,
+    int* num_pokemon_out
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_capacity(
     pkmn_pokemon_box_handle_t handle,
     int* capacity_out

@@ -72,6 +72,8 @@ namespace pkmntest {
             );
         }
 
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 0);
+
         // Make sure trying to get a Pokémon out of range fails.
         BOOST_CHECK_THROW(
             (void)box->get_pokemon(-1);
@@ -126,6 +128,7 @@ namespace pkmntest {
         pkmn::pokemon_box::sptr box
     ) {
         std::string game = box->get_game();
+        int generation = game_generations.at(game);
 
         pkmn::pokemon::sptr original_first = box->get_pokemon(0);
         pkmn::pokemon::sptr original_second = box->get_pokemon(1);
@@ -162,18 +165,62 @@ namespace pkmntest {
         , pkmn::range_error);
 
         box->set_pokemon(0, bulbasaur);
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 1);
         box->set_pokemon(1, charmander);
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 2);
 
         // Replace one of the new ones.
         box->set_pokemon(0, squirtle);
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 2);
 
         // Make sure we can't copy a Pokémon to itself.
         BOOST_CHECK_THROW(
             box->set_pokemon(1, box->get_pokemon(1));
         , std::invalid_argument);
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 2);
 
         // Copy a Pokémon whose memory is already part of the box.
         box->set_pokemon(2, box->get_pokemon(1));
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+
+        // We should always be able to clear the last contiguous Pokémon.
+        box->set_pokemon(2, original_first);
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 2);
+        BOOST_CHECK_EQUAL(box->get_pokemon(2)->get_species(), "None");
+
+        // Put it back.
+        box->set_pokemon(2, box->get_pokemon(1));
+        BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+
+        // Check that Pokémon can be placed non-contiguously in the correct games.
+        if(generation <= 2) {
+            BOOST_CHECK_THROW(
+                box->set_pokemon(1, original_first);
+            , std::invalid_argument);
+            BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+            BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_species(), "Charmander");
+
+            BOOST_CHECK_THROW(
+                box->set_pokemon(4, bulbasaur);
+            , pkmn::range_error);
+            BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+            BOOST_CHECK_EQUAL(box->get_pokemon(4)->get_species(), "None");
+        } else {
+            box->set_pokemon(1, original_first);
+            BOOST_CHECK_EQUAL(box->get_num_pokemon(), 2);
+            BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_species(), "None");
+
+            box->set_pokemon(4, bulbasaur);
+            BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+            BOOST_CHECK_EQUAL(box->get_pokemon(4)->get_species(), "Bulbasaur");
+
+            // Restore it to how it was.
+            box->set_pokemon(1, charmander);
+            box->set_pokemon(4, original_first);
+            BOOST_CHECK_EQUAL(box->get_num_pokemon(), 3);
+            BOOST_CHECK_EQUAL(box->get_pokemon(1)->get_species(), "Charmander");
+            BOOST_CHECK_EQUAL(box->get_pokemon(4)->get_species(), "None");
+        }
 
         /*
          * Now check everything we've created. Each variable should have the
@@ -193,7 +240,6 @@ namespace pkmntest {
         BOOST_CHECK_NE(box->get_pokemon(1)->get_native_pc_data(), original_second->get_native_pc_data());
 
         // On the C++ level, check the underlying PKSav struct.
-        int generation = game_generations.at(box->get_game());
         switch(generation) {
             case 1: {
                 const pksav_gen1_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen1_pokemon_box_t*>(box->get_native());
@@ -212,6 +258,7 @@ namespace pkmntest {
                         pokemon_list.at(i)->get_native_pc_data()
                     );
                 }
+                BOOST_CHECK_EQUAL(native_box->count, 3);
                 break;
             }
 
@@ -258,6 +305,7 @@ namespace pkmntest {
                         std::string(otname)
                     );
                 }
+                BOOST_CHECK_EQUAL(native_box->count, 3);
                 break;
             }
 
@@ -347,6 +395,7 @@ namespace pkmntest {
         for(int i = 0; i < pc->get_num_boxes(); ++i) {
             BOOST_CHECK_EQUAL(pc->get_box(i)->get_pokemon(0)->get_species(), "Squirtle");
             BOOST_CHECK_EQUAL(pc->get_box(i)->get_pokemon(1)->get_species(), "Charmander");
+            BOOST_CHECK_EQUAL(pc->get_box(i)->get_pokemon(2)->get_species(), "Charmander");
         }
 
         // On the C++ level, just check the values we've set to confirm the pointers worked.

@@ -107,6 +107,7 @@ class pokemon_pc_tests(unittest.TestCase):
 
     def __test_setting_pokemon(self, box):
         game = box.get_game()
+        generation = GAME_TO_GENERATION[game]
 
         original_first = box[0]
         original_second = box[1]
@@ -135,6 +136,41 @@ class pokemon_pc_tests(unittest.TestCase):
 
         # Copy a Pokemon whose memory is already part of the box.
         box[2] = box[1]
+
+        # We should always be able to clear the last contiguous Pokemon.
+        box[2] = original_first
+        self.assertEqual(box.get_num_pokemon(), 2)
+        self.assertStringEqual(box[2].get_species(), "None")
+
+        # Put it back.
+        box[2] = box[1]
+        self.assertEqual(box.get_num_pokemon(), 3)
+
+        # Check that Pokemon can be placed non-contiguously in the correct games.
+        if generation <= 2:
+            with self.assertRaises(ValueError):
+                box[1] = original_first
+            self.assertEqual(box.get_num_pokemon(), 3)
+            self.assertStringEqual(box[1].get_species(), "Charmander")
+
+            with self.assertRaises(IndexError):
+                box[4] = bulbasaur
+            self.assertEqual(box.get_num_pokemon(), 3)
+            self.assertStringEqual(box[4].get_species(), "None")
+        else:
+            box[1] = original_first
+            self.assertEqual(box.get_num_pokemon(), 2)
+            self.assertStringEqual(box[1].get_species(), "None")
+
+            box[4] = bulbasaur
+            self.assertEqual(box.get_num_pokemon(), 3)
+            self.assertStringEqual(box[4].get_species(), "Bulbasaur")
+
+            # Restore it to how it was.
+            box[1] = charmander
+            box[4] = original_first
+            self.assertStringEqual(box[1].get_species(), "Charmander")
+            self.assertStringEqual(box[4].get_species(), "None")
 
         # Now check everything we've created. Each variable should have
         # the same underlying Pokemon.

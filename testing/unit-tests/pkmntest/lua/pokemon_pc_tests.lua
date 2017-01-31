@@ -74,6 +74,7 @@ end
 
 function pokemon_pc_tests.test_setting_pokemon(box)
     local game = box:get_game()
+    local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
 
     local original_first = box[1]
     local original_second = box[2]
@@ -89,16 +90,56 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     local squirtle = pkmn.pokemon("Squirtle", game, "", 5)
 
     box[1] = bulbasaur
+    luaunit.assertEquals(box:get_num_pokemon(), 1)
     box[2] = charmander
+    luaunit.assertEquals(box:get_num_pokemon(), 2)
 
     -- Replace one of the new ones.
     box[1] = squirtle
+    luaunit.assertEquals(box:get_num_pokemon(), 2)
 
     -- Make sure we can't copy a Pokémon to itself.
     luaunit.assertError(box.set_pokemon, 2, box[2])
+    luaunit.assertEquals(box:get_num_pokemon(), 2)
 
     -- Copy a Pokémon whose memory is already part of the box.
     box[3] = box[2]
+    luaunit.assertEquals(box:get_num_pokemon(), 3)
+
+    -- We should always be able to clear the last contiguous Pokémon.
+    box[3] = original_first
+    luaunit.assertEquals(box:get_num_pokemon(), 2)
+    luaunit.assertEquals(box[3]:get_species(), "None")
+
+    -- Put it back.
+    box[3] = box[2]
+    luaunit.assertEquals(box:get_num_pokemon(), 3)
+
+    -- Check that Pokémon can be placed non-contiguously in the correct games.
+    if generation <= 2
+    then
+        luaunit.assertError(box.set_pokemon, box, 2, original_first)
+        luaunit.assertEquals(box:get_num_pokemon(), 3)
+        luaunit.assertEquals(box[2]:get_species(), "Charmander")
+
+        luaunit.assertError(box.set_pokemon, 5, bulbasaur)
+        luaunit.assertEquals(box:get_num_pokemon(), 3)
+        luaunit.assertEquals(box[5]:get_species(), "None")
+    else
+        box[2] = original_first
+        luaunit.assertEquals(box:get_num_pokemon(), 2)
+        luaunit.assertEquals(box[2]:get_species(), "None")
+
+        box[5] = bulbasaur
+        luaunit.assertEquals(box:get_num_pokemon(), 3)
+        luaunit.assertEquals(box[5]:get_species(), "Bulbasaur")
+
+        -- Restore it to how it was.
+        box[2] = charmander
+        box[5] = original_first
+        luaunit.assertEquals(box[2]:get_species(), "Charmander")
+        luaunit.assertEquals(box[5]:get_species(), "None")
+    end
 
     -- Now check everything we've created. Each variable should have
     -- the same underlying Pokémon.

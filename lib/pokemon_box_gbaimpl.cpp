@@ -71,6 +71,17 @@ namespace pkmn {
         _box_name = name;
     }
 
+    int pokemon_box_gbaimpl::get_num_pokemon() {
+        int num_pokemon = 0;
+        for(int i = 0; i < get_capacity(); ++i) {
+            if(NATIVE_RCAST->entries[i].blocks.growth.species > 0) {
+                ++num_pokemon;
+            }
+        }
+
+        return num_pokemon;
+    }
+
     int pokemon_box_gbaimpl::get_capacity() {
         return int(sizeof(NATIVE_RCAST->entries)/sizeof(NATIVE_RCAST->entries[0]));
     }
