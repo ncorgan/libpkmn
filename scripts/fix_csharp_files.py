@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -54,7 +54,7 @@ def hide_sptr_ctors(filename):
     flines = f.readlines()
     f.close()
     class_name = filename[:-3]
-    ctor = "public {0}".format(class_name)
+    ctor = "public {0}(".format(class_name)
 
     # Already done
     if "hide_sptr_ctors" in flines[0]:
