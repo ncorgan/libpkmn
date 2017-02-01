@@ -96,8 +96,8 @@ internal class PokemonTestsCommon {
         }
 
         // Cosplay Pikachu should only work in OR/AS.
-        PKMN.PokemonEntry cosplayPikachu = new PKMN.PokemonEntry("Pikachu", game, "");
-        foreach(string form in cosplayPikachu.GetForms()) {
+        PKMN.Database.PokemonEntry cosplayPikachu = new PKMN.Database.PokemonEntry("Pikachu", game, "");
+        foreach(string form in cosplayPikachu.Forms) {
             if(game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
                 new PKMN.Pokemon("Pikachu", game, form, 5);
             } else if(!form.Equals("Standard")) {
@@ -180,8 +180,8 @@ internal class PokemonTestsCommon {
         }
 
         // Unown's "!" and "?" forms aren't in Generation II.
-        PKMN.PokemonEntry unownEntry = new PKMN.PokemonEntry("Unown", "Omega Ruby", "");
-        foreach(string form in unownEntry.GetForms()) {
+        PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry("Unown", "Omega Ruby", "");
+        foreach(string form in unownEntry.Forms) {
             if(form.Equals("!") || form.Equals("?")) {
                 if(generation > 2) {
                     new PKMN.Pokemon("Unown", game, form, 10);
@@ -230,8 +230,8 @@ internal class PokemonTestsCommon {
         }
 
         // Castform should always work.
-        PKMN.PokemonEntry castformEntry = new PKMN.PokemonEntry("Castform", "Omega Ruby", "");
-        foreach(string form in castformEntry.GetForms()) {
+        PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
+        foreach(string form in castformEntry.Forms) {
             new PKMN.Pokemon("Castform", game, form, 30);
         }
 
@@ -297,8 +297,8 @@ internal class PokemonTestsCommon {
             }
         } else {
             // Past Generation III, Deoxys's form can be switched.
-            PKMN.PokemonEntry deoxysEntry = new PKMN.PokemonEntry("Deoxys", "Omega Ruby", "");
-            foreach(string form in deoxysEntry.GetForms()) {
+            PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", "Omega Ruby", "");
+            foreach(string form in deoxysEntry.Forms) {
                 new PKMN.Pokemon("Deoxys", game, form, 70);
             }
         }

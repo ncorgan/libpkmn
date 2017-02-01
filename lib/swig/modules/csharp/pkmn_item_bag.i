@@ -1,14 +1,8 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
- */
-
-/*
- * Given that this is supposed to be a list, we'll add the []
- * operator to treat it as such. But we can't use the cscode typemap
- * twice, so we can't use the usual SPTR macro.
  */
 
 %{
@@ -16,14 +10,27 @@
 %}
 
 %rename(item_bag_base) pkmn::item_bag;
-%rename(AsList) as_vector;
 
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__cptr "
-private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__sptr_eq "
-private";
+%csmethodmodifiers pkmn::item_bag::get_game() "private";
+%csmethodmodifiers pkmn::item_bag::get_pocket(const std::string&) "private";
+%csmethodmodifiers pkmn::item_bag::get_pockets() "private";
+%csmethodmodifiers pkmn::item_bag::get_pocket_names() "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::item_bag>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::item_bag> %{
+    public string Game {
+        get { return GetGame(); }
+    }
+
+    public ItemPockets Pockets {
+        get { return GetPockets(); }
+    }
+
+    public StringList PocketNames {
+        get { return GetPocketNames(); }
+    }
+
     /// <summary>Gets the pocket with the given name.</summary>
     /// <exception cref="System.SystemException">If index is invalid</exception>
     /// <param name="key">Key</param>

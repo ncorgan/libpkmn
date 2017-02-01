@@ -24,30 +24,30 @@ public class Gen1PokemonTests {
         PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", game, "", 5);
 
         if(game.Equals("Yellow")) {
-            pikachu.SetFriendship(123);
-            Assert.AreEqual(pikachu.GetFriendship(), 123);
+            pikachu.Friendship = 123;
+            Assert.AreEqual(pikachu.Friendship, 123);
 
             // Also check a non-Pikachu.
             PKMN.Pokemon mewtwo = new PKMN.Pokemon("Mewtwo", game, "", 70);
             Assert.Throws<ApplicationException>(
                 delegate {
-                    mewtwo.SetFriendship(123);
+                    mewtwo.Friendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                    mewtwo.GetFriendship();
+                    int friendship = mewtwo.Friendship;
                 }
             );
         } else {
             Assert.Throws<ApplicationException>(
                 delegate {
-                    pikachu.SetFriendship(123);
+                    pikachu.Friendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                    pikachu.GetFriendship();
+                   int friendship = pikachu.Friendship;
                 }
             );
         }
@@ -75,14 +75,14 @@ public class Gen1PokemonTests {
          * Check starting values, and confirm that we can't query values
          * that didn't exist in Generation I.
          */
-        Assert.AreEqual(pokemon.GetSpecies(), species);
-        Assert.AreEqual(pokemon.GetForm(), "Standard");
-        Assert.AreEqual(pokemon.GetGame(), game);
-        Assert.AreEqual(pokemon.GetNickname(), species.ToUpper());
+        Assert.AreEqual(pokemon.Species, species);
+        Assert.AreEqual(pokemon.Form, "Standard");
+        Assert.AreEqual(pokemon.Game, game);
+        Assert.AreEqual(pokemon.Nickname, species.ToUpper());
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.IsShiny();
+                bool isShiny = pokemon.IsShiny;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -91,34 +91,34 @@ public class Gen1PokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.GetTrainerName(), PKMN.Pokemon.LIBPKMN_OT_NAME);
-        Assert.AreEqual(pokemon.GetTrainerGender(), "Male");
-        Assert.AreEqual(pokemon.GetTrainerID(), (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.GetTrainerPublicID(), (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
+        Assert.AreEqual(pokemon.TrainerGender, "Male");
+        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetTrainerSecretID();
+                ushort trainerSecretID = pokemon.TrainerSecretID;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetFriendship();
+                int friendship = pokemon.Friendship;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetAbility();
+                string ability = pokemon.Ability;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetBall();
+                string ball = pokemon.Ball;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetLevelMet();
+                int levelMet = pokemon.LevelMet;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -133,45 +133,45 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetOriginalGame();
+                string originalGame = pokemon.OriginalGame;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetPersonality();
+                uint personality = pokemon.Personality;
             }
         );
 
         Assert.AreEqual(
-            pokemon.GetExperience(),
-            pokemon.GetDatabaseEntry().GetExperienceAtLevel(30)
+            pokemon.Experience,
+            pokemon.DatabaseEntry.GetExperienceAtLevel(30)
         );
-        Assert.AreEqual(pokemon.GetLevel(), 30);
+        Assert.AreEqual(pokemon.Level, 30);
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetMarkings();
+                PKMN.StringBoolDict markings = pokemon.Markings;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetRibbons();
+                PKMN.StringBoolDict ribbons = pokemon.Ribbons;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetContestStats();
+                PKMN.StringIntDict contestStats = pokemon.ContestStats;
             }
         );
 
-        foreach(PKMN.MoveSlot moveSlot in pokemon.GetMoves()) {
-            Assert.AreEqual(moveSlot.Move.GetName(), "None");
+        foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
+            Assert.AreEqual(moveSlot.Move.Name, "None");
             Assert.AreEqual(moveSlot.PP, 0);
         }
 
-        CheckStatMap(pokemon.GetEVs());
-        CheckStatMap(pokemon.GetIVs());
-        CheckStatMap(pokemon.GetStats());
+        CheckStatMap(pokemon.EVs);
+        CheckStatMap(pokemon.IVs);
+        CheckStatMap(pokemon.Stats);
 
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
@@ -179,26 +179,26 @@ public class Gen1PokemonTests {
          */
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetNickname("");
+                pokemon.Nickname = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetNickname("Too long nickname");
+                pokemon.Nickname = "Too long nickname";
             }
         );
 
-        pokemon.SetNickname("foobarbaz");
-        Assert.AreEqual(pokemon.GetNickname(), "foobarbaz");
+        pokemon.Nickname = "foobarbaz";
+        Assert.AreEqual(pokemon.Nickname, "foobarbaz");
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetShininess(true);
+                pokemon.IsShiny = true;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetShininess(false);
+                pokemon.IsShiny = false;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -209,57 +209,57 @@ public class Gen1PokemonTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetTrainerName("");
+                pokemon.TrainerName = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetTrainerName("Too long trainer name");
+                pokemon.TrainerName = "Too long trainer name";
             }
         );
 
-        pokemon.SetTrainerName("foobar");
-        Assert.AreEqual(pokemon.GetTrainerName(), "foobar");
+        pokemon.TrainerName = "foobar";
+        Assert.AreEqual(pokemon.TrainerName, "foobar");
 
-        pokemon.SetTrainerID(10001);
-        Assert.AreEqual(pokemon.GetTrainerID(), 10001);
-        Assert.AreEqual(pokemon.GetTrainerPublicID(), 10001);
+        pokemon.TrainerID = 10001;
+        Assert.AreEqual(pokemon.TrainerID, 10001);
+        Assert.AreEqual(pokemon.TrainerPublicID, 10001);
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetTrainerSecretID();
+                ushort trainerSecretID = pokemon.TrainerSecretID;
             }
         );
-
-        Assert.Throws<ApplicationException>(
-            delegate {
-                pokemon.SetTrainerSecretID(54321);
-            }
-        );
-        Assert.AreEqual(pokemon.GetTrainerID(), 10001);
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetTrainerGender("Male");
+                pokemon.TrainerSecretID = 54321;
+            }
+        );
+        Assert.AreEqual(pokemon.TrainerID, 10001);
+
+        Assert.Throws<ApplicationException>(
+            delegate {
+                pokemon.TrainerGender = "Male";
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetFriendship(123);
+                pokemon.Friendship = 123;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetAbility("");
+                pokemon.Ability = "";
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetBall("Great Ball");
+                pokemon.Ball = "Great Ball";
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetLevelMet(78);
+                pokemon.LevelMet = 78;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -274,7 +274,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetOriginalGame("Blue");
+                pokemon.OriginalGame = "Blue";
             }
         );
         Assert.Throws<ApplicationException>(
@@ -288,11 +288,11 @@ public class Gen1PokemonTests {
             }
         );
 
-        pokemon.SetExperience(12345);
-        Assert.AreEqual(pokemon.GetExperience(), 12345);
+        pokemon.Experience = 12345;
+        Assert.AreEqual(pokemon.Experience, 12345);
 
-        pokemon.SetLevel(45);
-        Assert.AreEqual(pokemon.GetLevel(), 45);
+        pokemon.Level = 45;
+        Assert.AreEqual(pokemon.Level, 45);
 
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
@@ -304,16 +304,15 @@ public class Gen1PokemonTests {
                 pokemon.SetMove("Synthesis", 0);
             }
         );
-        Assert.AreEqual(pokemon.GetMoves()[0].Move.GetName(), "None");
+        Assert.AreEqual(pokemon.Moves[0].Move.Name, "None");
 
         string[] moves = {"Ember", "Flamethrower", "Slash", "Fire Blast"};
         for(int i = 0; i < 4; ++i) {
             pokemon.SetMove(moves[i], i);
         }
-        PKMN.MoveSlotList moveSlots = pokemon.GetMoves();
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(moveSlots[i].Move.GetName(), moves[i]);
-            Assert.AreEqual(moveSlots[i].PP, moveSlots[i].Move.GetPP(0));
+            Assert.AreEqual(pokemon.Moves[i].Move.Name, moves[i]);
+            Assert.AreEqual(pokemon.Moves[i].PP, pokemon.Moves[i].Move.GetPP(0));
         }
 
         Assert.Throws<ArgumentOutOfRangeException>(
@@ -333,7 +332,7 @@ public class Gen1PokemonTests {
         );
 
         pokemon.SetEV("Attack", 12345);
-        Assert.AreEqual(pokemon.GetEVs()["Attack"], 12345);
+        Assert.AreEqual(pokemon.EVs["Attack"], 12345);
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
@@ -352,7 +351,7 @@ public class Gen1PokemonTests {
         );
 
         pokemon.SetIV("Attack", 12);
-        Assert.AreEqual(pokemon.GetIVs()["Attack"], 12);
+        Assert.AreEqual(pokemon.IVs["Attack"], 12);
     }
 }
 

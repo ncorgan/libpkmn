@@ -70,7 +70,7 @@ def hide_sptr_ctors(filename):
     flines = f.readlines()
     f.close()
     class_name = filename[:-3]
-    ctor = "public {0}".format(class_name)
+    ctor = "public {0}(".format(class_name)
 
     # Already done
     if "hide_sptr_ctors" in flines[0]:
