@@ -58,13 +58,12 @@ public class PokemonPCTests {
         );
 
         for(int i = 0; i < box.GetCapacity(); ++i) {
-            Assert.AreEqual(box[i].GetSpecies(), "None");
-            Assert.AreEqual(box[i].GetGame(), game);
+            Assert.AreEqual(box[i].Species, "None");
+            Assert.AreEqual(box[i].Game, game);
 
-            PKMN.MoveSlotList moves = box[i].GetMoves();
-            for(int j = 0; j < moves.Count; ++j) {
-                Assert.AreEqual(moves[j].Move.GetName(), "None");
-                Assert.AreEqual(moves[j].PP, 0);
+            for(int j = 0; j < box[i].Moves.Count; ++j) {
+                Assert.AreEqual(box[i].Moves[j].Move.Name, "None");
+                Assert.AreEqual(box[i].Moves[j].PP, 0);
             }
         }
     }
@@ -147,7 +146,7 @@ public class PokemonPCTests {
         // We should always be able to clear the last contiguous Pokémon.
         box[2] = originalFirst;
         Assert.AreEqual(box.GetNumPokemon(), 2);
-        Assert.AreEqual(box[2].GetSpecies(), "None");
+        Assert.AreEqual(box[2].Species, "None");
 
         // Put it back.
         box[2] = box[1];
@@ -161,7 +160,7 @@ public class PokemonPCTests {
                 }
             );
             Assert.AreEqual(box.GetNumPokemon(), 3);
-            Assert.AreEqual(box[1].GetSpecies(), "Charmander");
+            Assert.AreEqual(box[1].Species, "Charmander");
 
             Assert.Throws<IndexOutOfRangeException>(
                 delegate {
@@ -169,34 +168,34 @@ public class PokemonPCTests {
                 }
             );
             Assert.AreEqual(box.GetNumPokemon(), 3);
-            Assert.AreEqual(box[4].GetSpecies(), "None");
+            Assert.AreEqual(box[4].Species, "None");
         } else {
             box[1] = originalFirst;
             Assert.AreEqual(box.GetNumPokemon(), 2);
-            Assert.AreEqual(box[1].GetSpecies(), "None");
+            Assert.AreEqual(box[1].Species, "None");
 
             box[4] = bulbasaur;
             Assert.AreEqual(box.GetNumPokemon(), 3);
-            Assert.AreEqual(box[4].GetSpecies(), "Bulbasaur");
+            Assert.AreEqual(box[4].Species, "Bulbasaur");
 
             // Restore it to how it was.
             box[1] = charmander;
             box[4] = originalFirst;
             Assert.AreEqual(box.GetNumPokemon(), 3);
-            Assert.AreEqual(box[1].GetSpecies(), "Charmander");
-            Assert.AreEqual(box[4].GetSpecies(), "None");
+            Assert.AreEqual(box[1].Species, "Charmander");
+            Assert.AreEqual(box[4].Species, "None");
         }
 
         // Now check everything we've created. Each variable should have
         // the same underlying Pokémon.
-        Assert.AreEqual(box[0].GetSpecies(), "Squirtle");
-        Assert.AreEqual(box[1].GetSpecies(), "Charmander");
-        Assert.AreEqual(box[2].GetSpecies(), "Charmander");
-        Assert.AreEqual(originalFirst.GetSpecies(), "None");
-        Assert.AreEqual(originalSecond.GetSpecies(), "None");
-        Assert.AreEqual(bulbasaur.GetSpecies(), "Bulbasaur");
-        Assert.AreEqual(charmander.GetSpecies(), "Charmander");
-        Assert.AreEqual(squirtle.GetSpecies(), "Squirtle");
+        Assert.AreEqual(box[0].Species, "Squirtle");
+        Assert.AreEqual(box[1].Species, "Charmander");
+        Assert.AreEqual(box[2].Species, "Charmander");
+        Assert.AreEqual(originalFirst.Species, "None");
+        Assert.AreEqual(originalSecond.Species, "None");
+        Assert.AreEqual(bulbasaur.Species, "Bulbasaur");
+        Assert.AreEqual(charmander.Species, "Charmander");
+        Assert.AreEqual(squirtle.Species, "Squirtle");
     }
 
     public static void TestPokemonBox(
@@ -249,8 +248,8 @@ public class PokemonPCTests {
     ) {
         for(int i = 0; i < PC.GetNumBoxes(); ++i) {
             TestSettingPokemon(PC[i]);
-            Assert.AreEqual(PC[i][0].GetSpecies(), "Squirtle");
-            Assert.AreEqual(PC[i][1].GetSpecies(), "Charmander");
+            Assert.AreEqual(PC[i][0].Species, "Squirtle");
+            Assert.AreEqual(PC[i][1].Species, "Charmander");
         }
     }
 
