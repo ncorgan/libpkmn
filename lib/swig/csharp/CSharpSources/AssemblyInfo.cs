@@ -1,6 +1,6 @@
 #region License
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,7 +22,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCompany("Nicholas Corgan")]
 [assembly: AssemblyProduct("pkmn-cs.dll")]
 [assembly: AssemblyDefaultAlias("libpkmn-cs")]
-[assembly: AssemblyCopyright("Copyright © 2016 Nicholas Corgan. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2016-2017 Nicholas Corgan. All rights reserved.")]
 [assembly: AssemblyTrademark("LibPKMN - https://github.com/ncorgan/libpkmn")]
 [assembly: AssemblyCulture("")]
 

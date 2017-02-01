@@ -165,7 +165,7 @@ public class Gen1PokemonTests {
         );
 
         foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
-            Assert.AreEqual(moveSlot.Move.GetName(), "None");
+            Assert.AreEqual(moveSlot.Move.Name, "None");
             Assert.AreEqual(moveSlot.PP, 0);
         }
 
@@ -304,14 +304,14 @@ public class Gen1PokemonTests {
                 pokemon.SetMove("Synthesis", 0);
             }
         );
-        Assert.AreEqual(pokemon.Moves[0].Move.GetName(), "None");
+        Assert.AreEqual(pokemon.Moves[0].Move.Name, "None");
 
         string[] moves = {"Ember", "Flamethrower", "Slash", "Fire Blast"};
         for(int i = 0; i < 4; ++i) {
             pokemon.SetMove(moves[i], i);
         }
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.GetName(), moves[i]);
+            Assert.AreEqual(pokemon.Moves[i].Move.Name, moves[i]);
             Assert.AreEqual(pokemon.Moves[i].PP, pokemon.Moves[i].Move.GetPP(0));
         }
 

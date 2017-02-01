@@ -31,8 +31,8 @@ public class GBAPokemonTests {
     public static void UnownFormTest(
         string game
     ) {
-        PKMN.PokemonEntry unownEntry = new PKMN.PokemonEntry("Unown", game, "");
-        foreach(string form in unownEntry.GetForms()) {
+        PKMN.Database.PokemonEntry unownEntry = new PKMN.Database.PokemonEntry("Unown", game, "");
+        foreach(string form in unownEntry.Forms) {
             PKMN.Pokemon unownFromLetter = new PKMN.Pokemon("Unown", game, form, 5);
             Assert.AreEqual(unownFromLetter.Form, form);
         }
@@ -43,7 +43,7 @@ public class GBAPokemonTests {
         Assert.AreEqual(unown.Form, "B");
 
         // Make sure setting the form properly sets the personality.
-        foreach(string form in unownEntry.GetForms()) {
+        foreach(string form in unownEntry.Forms) {
             unown.Form = form;
             Assert.AreEqual(unown.Form, form);
             string formFromPersonality = PKMN.Calculations.Gen3UnownForm(
@@ -223,13 +223,13 @@ public class GBAPokemonTests {
         Assert.AreEqual(pokemon.Form, "Standard");
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "None");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
         Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
         Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
         Assert.AreEqual(pokemon.TrainerSecretID, ((PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF0000) >> 16));
         Assert.AreEqual(pokemon.TrainerID, PKMN.Pokemon.LIBPKMN_OT_ID);
         Assert.AreEqual(pokemon.TrainerGender, "Male");
-        Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.GetBaseFriendship());
+        Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.BaseFriendship);
         Assert.AreEqual(pokemon.Ability, "Blaze");
         Assert.AreEqual(pokemon.Ball, "Premier Ball");
         Assert.AreEqual(pokemon.LevelMet, pokemon.Level);
@@ -253,7 +253,7 @@ public class GBAPokemonTests {
         CheckContestStatsMap(pokemon.ContestStats);
 
         foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
-            Assert.AreEqual(moveSlot.Move.GetName(), "None");
+            Assert.AreEqual(moveSlot.Move.Name, "None");
             Assert.AreEqual(moveSlot.PP, 0);
         }
 
@@ -307,10 +307,10 @@ public class GBAPokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "None");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
 
         pokemon.SetHeldItem("Razz Berry");
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "Razz Berry");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "Razz Berry");
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {

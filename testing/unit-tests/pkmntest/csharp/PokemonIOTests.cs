@@ -28,7 +28,7 @@ public class PokemonIOTests {
         Assert.AreEqual(mightyena.Form, "Standard");
         Assert.AreEqual(mightyena.Nickname, "MIGHTYENA");
         Assert.IsFalse(mightyena.IsShiny);
-        Assert.AreEqual(mightyena.GetHeldItem().GetName(), "Heart Scale");
+        Assert.AreEqual(mightyena.GetHeldItem().Name, "Heart Scale");
         Assert.AreEqual(mightyena.TrainerName, "A");
         Assert.AreEqual(mightyena.TrainerPublicID, 61415);
         Assert.AreEqual(mightyena.TrainerSecretID, 3417);
@@ -68,7 +68,7 @@ public class PokemonIOTests {
         };
         Assert.AreEqual(mightyena.Moves.Count, 4);
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(mightyena.Moves[i].Move.GetName(), expectedMightyenaMoves[i]);
+            Assert.AreEqual(mightyena.Moves[i].Move.Name, expectedMightyenaMoves[i]);
         }
 
         Assert.AreEqual(mightyena.EVs.Count, 6);

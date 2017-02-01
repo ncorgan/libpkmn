@@ -5,15 +5,18 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-/*
- * Given that this is supposed to be a list, we'll add the []
- * operator to treat it as such. But we can't use the cscode typemap
- * twice, so we can't use the usual SPTR macro.
- */
-
 %{
     #include <pkmn/pokemon.hpp>
 %}
+
+%typemap(csimports) pkmn::pokemon "
+using System;
+using System.Runtime.InteropServices;
+using Database;"
+%typemap(csimports) pkmn::shared_ptr<pkmn::pokemon> "
+using System;
+using System.Runtime.InteropServices;
+using Database;"
 
 %rename(IsShinyFunction) pkmn::pokemon::is_shiny;
 %rename(pokemon_base) pkmn::pokemon;

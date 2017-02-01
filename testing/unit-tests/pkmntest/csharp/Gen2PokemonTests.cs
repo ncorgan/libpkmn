@@ -94,7 +94,7 @@ public class Gen2PokemonTests {
         Assert.AreEqual(pokemon.Form, "Standard");
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "None");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
         Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
         Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
         Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
@@ -163,7 +163,7 @@ public class Gen2PokemonTests {
         );
 
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.GetName(), "None");
+            Assert.AreEqual(pokemon.Moves[i].Move.Name, "None");
             Assert.AreEqual(pokemon.Moves[i].PP, 0);
         }
 
@@ -207,7 +207,7 @@ public class Gen2PokemonTests {
                 pokemon.SetHeldItem("Not an item");
             }
         );
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "None");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
 
         // Valid item, but not holdable
         Assert.Throws<ArgumentOutOfRangeException>(
@@ -215,10 +215,10 @@ public class Gen2PokemonTests {
                 pokemon.SetHeldItem("Bicycle");
             }
         );
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "None");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
 
         pokemon.SetHeldItem("Berry");
-        Assert.AreEqual(pokemon.GetHeldItem().GetName(), "Berry");
+        Assert.AreEqual(pokemon.GetHeldItem().Name, "Berry");
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
@@ -322,7 +322,7 @@ public class Gen2PokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.Moves[0].Move.GetName(), "None");
+        Assert.AreEqual(pokemon.Moves[0].Move.Name, "None");
 
         string[] moveNames = {"Ember", "Flamethrower", "Slash", "Fire Blast"};
         for(int i = 0; i < 4; ++i) {
@@ -330,7 +330,7 @@ public class Gen2PokemonTests {
         }
 
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.GetName(), moveNames[i]);
+            Assert.AreEqual(pokemon.Moves[i].Move.Name, moveNames[i]);
             Assert.AreEqual(pokemon.Moves[i].PP, pokemon.Moves[i].Move.GetPP(0));
         }
 

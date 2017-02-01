@@ -15,6 +15,7 @@ IF(NUNIT_FOUND)
     SET(CSHARP_BINARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     SET(csharp_tests
+        CSharpBuildInfoTest
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
