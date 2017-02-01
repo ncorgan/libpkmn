@@ -69,25 +69,6 @@ namespace pkmn {
         return _pokemon_list.at(index);
     }
 
-    void pokemon_party_impl::set_pokemon(
-        int index,
-        pkmn::pokemon::sptr new_pokemon
-    ) {
-        if(index < 0 or index > (PARTY_SIZE-1)) {
-            throw pkmn::range_error("index", 0, (PARTY_SIZE-1));
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-        (void)new_pokemon;
-
-        // Copy the underlying memory to the box.
-        /*pkmn::mem::set_pokemon_in_box(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );*/
-    }
-
     const pkmn::pokemon_list_t& pokemon_party_impl::as_vector() {
         return _pokemon_list;
     }

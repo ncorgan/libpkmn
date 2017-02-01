@@ -20,7 +20,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int PARTY_SIZE = 6;
 
     // Forward declarations
-    /*class pokemon_impl;
+    class pokemon_impl;
     class pokemon_party_impl;
     namespace mem {
         void set_pokemon_in_party(
@@ -28,7 +28,7 @@ namespace pkmn {
                  pokemon_party_impl* party,
                  int index
              );
-    }*/
+    }
 
     class pokemon_party_impl: public pokemon_party, public boost::noncopyable {
         public:
@@ -45,22 +45,17 @@ namespace pkmn {
                 int index
             );
 
-            virtual void set_pokemon(
-                int index,
-                pkmn::pokemon::sptr new_pokemon
-            );
-
             const pkmn::pokemon_list_t& as_vector();
 
             void* get_native();
 
-            /*typedef pkmn::mem::scoped_lock<pokemon_party_impl> pokemon_party_scoped_lock;
+            typedef pkmn::mem::scoped_lock<pokemon_party_impl> pokemon_party_scoped_lock;
             friend pokemon_party_scoped_lock;
             friend void pkmn::mem::set_pokemon_in_party(
                             pokemon_impl* new_pokemon,
                             pokemon_party_impl* party,
                             int index
-                        );*/
+                        );
 
         protected:
             pkmn::pokemon_list_t _pokemon_list;

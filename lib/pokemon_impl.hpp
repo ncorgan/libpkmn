@@ -36,10 +36,18 @@ namespace pkmn {
     // Forward declarations
     class pokemon_impl;
     class pokemon_box_impl;
+    class pokemon_party_impl;
     namespace mem {
         void set_pokemon_in_box(
                  pokemon_impl* new_pokemon,
                  pokemon_box_impl* box,
+                 int index
+             );
+    }
+    namespace mem {
+        void set_pokemon_in_party(
+                 pokemon_impl* new_pokemon,
+                 pokemon_party_impl* party,
                  int index
              );
     }
@@ -90,6 +98,11 @@ namespace pkmn {
             friend void pkmn::mem::set_pokemon_in_box(
                             pokemon_impl* new_pokemon,
                             pokemon_box_impl* box,
+                            int index
+                        );
+            friend void pkmn::mem::set_pokemon_in_party(
+                            pokemon_impl* new_pokemon,
+                            pokemon_party_impl* party,
                             int index
                         );
 

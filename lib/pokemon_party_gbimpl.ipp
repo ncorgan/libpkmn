@@ -77,18 +77,36 @@ namespace pkmn {
         int index,
         pkmn::pokemon::sptr new_pokemon
     ) {
-        if(index < 0 or index > (PARTY_SIZE-1)) {
-            throw pkmn::range_error("index", 0, (PARTY_SIZE-1));
+        int num_pokemon = get_num_pokemon();
+        int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
+
+        if(index < 0 or index > max_index) {
+            throw pkmn::range_error("index", 0, max_index);
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
+        } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
+            throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
         // Copy the underlying memory to the party.
-        /*pkmn::mem::set_pokemon_in_party(
+        pkmn::mem::set_pokemon_in_party(
             dynamic_cast<pokemon_impl*>(new_pokemon.get()),
             this,
             index
-        );*/
+        );
+
+        // Update the number of Pokémon in the party if needed.
+        std::string new_species = new_pokemon->get_species();
+        if(index == num_pokemon) {
+            std::string new_species = new_pokemon->get_species();
+            if(NATIVE_LIST_RCAST->species[index] == 0 and new_species != "None") {
+                ++(NATIVE_LIST_RCAST->count);
+            }
+        } else if(index == (num_pokemon-1)) {
+            if(NATIVE_LIST_RCAST->species[index] > 0 and new_species == "None") {
+                --(NATIVE_LIST_RCAST->count);
+            }
+        }
 
         // Set the entry in the species list.
         NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());

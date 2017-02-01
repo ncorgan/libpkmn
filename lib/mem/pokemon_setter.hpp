@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,12 +12,19 @@
 
 #include "../pokemon_impl.hpp"
 #include "../pokemon_box_impl.hpp"
+#include "../pokemon_party_impl.hpp"
 
 namespace pkmn { namespace mem {
 
     void set_pokemon_in_box(
         pokemon_impl* new_pokemon,
         pokemon_box_impl* box,
+        int index
+    );
+
+    void set_pokemon_in_party(
+        pokemon_impl* new_pokemon,
+        pokemon_party_impl* party,
         int index
     );
 
