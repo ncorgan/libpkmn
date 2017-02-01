@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,9 @@
 #include <pkmn-c/error.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/pokemon.h>
 #include <pkmn-c/pokemon_box.h>
+#include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/calculations/form.h>

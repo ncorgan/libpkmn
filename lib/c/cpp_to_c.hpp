@@ -15,6 +15,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/pokemon.hpp>
 #include <pkmn/pokemon_box.hpp>
+#include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/database/item_entry.hpp>
@@ -72,6 +73,12 @@ typedef struct {
 } pkmn_pokemon_box_t;
 
 typedef struct {
+    pkmn::pokemon_party::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_party_t;
+
+typedef struct {
     pkmn::pokemon_pc::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
@@ -81,6 +88,7 @@ typedef struct {
 #define PKMN_ITEM_LIST_DECLARED
 #define PKMN_POKEMON_DECLARED
 #define PKMN_POKEMON_BOX_DECLARED
+#define PKMN_POKEMON_PARTY_DECLARED
 #define PKMN_POKEMON_PC_DECLARED
 
 #include <pkmn-c/types/hidden_power.h>
