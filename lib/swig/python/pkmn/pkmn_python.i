@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -46,6 +46,9 @@ PKMN_PYTHON_INIT
 // Pokémon Box
 %include <python/pkmn_pokemon_box.i>
 
+// Pokémon Party
+%include <python/pkmn_pokemon_party.i>
+
 // Pokémon PC
 %include <python/pkmn_pokemon_pc.i>
 
@@ -57,12 +60,14 @@ PKMN_PYTHON_INIT
 %rename(__make_item_bag)    make_item_bag;
 %rename(__make_pokemon)     make_pokemon;
 %rename(__make_pokemon_box) make_pokemon_box;
+%rename(__make_pokemon_party) make_pokemon_party;
 %rename(__make_pokemon_pc)  make_pokemon_pc;
 %include <pkmn_statics.i>
 %pythoncode %{
-    item_list   = __make_item_list;
-    item_bag    = __make_item_bag;
-    pokemon     = __make_pokemon;
-    pokemon_box = __make_pokemon_box;
-    pokemon_pc  = __make_pokemon_pc;
+    item_list     = __make_item_list;
+    item_bag      = __make_item_bag;
+    pokemon       = __make_pokemon;
+    pokemon_box   = __make_pokemon_box;
+    pokemon_party = __make_pokemon_party;
+    pokemon_pc    = __make_pokemon_pc;
 %}

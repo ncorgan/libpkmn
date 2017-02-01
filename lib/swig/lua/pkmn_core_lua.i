@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -42,6 +42,9 @@ PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
 
 // Pokémon Box
 %include <lua/pkmn_pokemon_box.i>
+
+// Pokémon Party
+%include <lua/pkmn_pokemon_party.i>
 
 // Pokémon PC
 %include <lua/pkmn_pokemon_pc.i>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,6 +18,7 @@
     #include <pkmn/item_bag.hpp>
     #include <pkmn/pokemon.hpp>
     #include <pkmn/pokemon_box.hpp>
+    #include <pkmn/pokemon_party.hpp>
     #include <pkmn/pokemon_pc.hpp>
 
     #include <pkmn/types/shared_ptr.hpp>
@@ -32,6 +33,12 @@
         const std::string &game
     ) {
         return pkmn::pokemon_box::make(game);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(
+        const std::string &game
+    ) {
+        return pkmn::pokemon_party::make(game);
     }
 
     PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(
@@ -128,4 +135,5 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& filepath);
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);

@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -26,6 +26,7 @@ pkmn.pokemon = pkmn.core.make_pokemon
 pkmn.pokemon_list = pkmn.core.pokemon_list
 pkmn.pokemon_box = pkmn.core.make_pokemon_box
 pkmn.pokemon_box_list = pkmn.core.pokemon_box_list
+pkmn.pokemon_party = pkmn.core.make_pokemon_party
 pkmn.pokemon_pc = pkmn.core.make_pokemon_pc
 
 pkmn.LIBPKMN_OT_ID = 2105214279;

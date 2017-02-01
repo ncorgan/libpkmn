@@ -47,6 +47,8 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_item_list "internal";
 %csmethodmodifiers make_pokemon "internal";
 %csmethodmodifiers make_pokemon_box "internal";
+%csmethodmodifiers make_pokemon_party "internal";
+%csmethodmodifiers make_pokemon_pc "internal";
 %include <pkmn_statics.i>
 
 // Item Slot
@@ -67,6 +69,9 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 
 // Pokémon Box
 %include <csharp/pkmn_pokemon_box.i>
+
+// Pokémon Party
+%include <csharp/pkmn_pokemon_party.i>
 
 // Pokémon PC
 %include <csharp/pkmn_pokemon_pc.i>

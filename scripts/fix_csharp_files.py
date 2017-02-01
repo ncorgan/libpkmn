@@ -19,6 +19,7 @@ SPTR_FILES = ["ItemBag.cs",
               "ItemList.cs",
               "Pokemon.cs",
               "PokemonBox.cs",
+              "PokemonParty.cs",
               "PokemonPC.cs"]
 
 # Can these by programatically grabbed from the *_base files?
@@ -51,6 +52,13 @@ public Pokemon(string filepath): this(PKMNPINVOKE.make_pokemon__SWIG_1(filepath)
 """,
                 PokemonBox = """
 public PokemonBox(string game): this(PKMNPINVOKE.make_pokemon_box(game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                PokemonParty = """
+public PokemonParty(string game): this(PKMNPINVOKE.make_pokemon_party(game), true) {
     if(PKMNPINVOKE.SWIGPendingException.Pending) {
         throw PKMNPINVOKE.SWIGPendingException.Retrieve();
     }
