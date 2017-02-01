@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class PokemonListComboBox: System.Windows.Forms.ComboBox {
         public PokemonListComboBox(int generation, bool wholeGeneration) {
-            StringList pokemon = Database.GetPokemonList(generation, wholeGeneration);
+            StringList pokemon = Database.Lists.PokemonList(generation, wholeGeneration);
             foreach(string pkmn in pokemon) {
                 this.Items.Add(pkmn);
             }

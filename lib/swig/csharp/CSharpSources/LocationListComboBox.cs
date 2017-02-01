@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class LocationListComboBox: System.Windows.Forms.ComboBox {
         public LocationListComboBox(string game, bool wholeGeneration) {
-            StringList locations = Database.GetLocationList(game, wholeGeneration);
+            StringList locations = Database.Lists.LocationList(game, wholeGeneration);
             foreach(string location in locations) {
                 this.Items.Add(location);
             }

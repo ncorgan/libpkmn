@@ -14,7 +14,7 @@ internal class ItemsTestsCommon {
     public static void TestItemListEmptySlots(
         PKMN.ItemList itemList
     ) {
-        PKMN.ItemEntry noneEntry = new PKMN.ItemEntry("None", itemList.Game);
+        PKMN.Database.ItemEntry noneEntry = new PKMN.Database.ItemEntry("None", itemList.Game);
 
         foreach(PKMN.ItemSlot itemSlot in itemList.AsList()) {
             Assert.AreEqual(itemSlot.Item, noneEntry);
@@ -90,7 +90,7 @@ internal class ItemsTestsCommon {
     ) {
         Assert.AreEqual(itemNames.Length, 8);
 
-        PKMN.ItemEntry noneEntry = new PKMN.ItemEntry("None", itemList.Game);
+        PKMN.Database.ItemEntry noneEntry = new PKMN.Database.ItemEntry("None", itemList.Game);
 
         itemList.Add(itemNames[0], 30);
         itemList.Add(itemNames[1], 99);

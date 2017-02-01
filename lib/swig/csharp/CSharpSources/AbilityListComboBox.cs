@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class AbilityListComboBox: System.Windows.Forms.ComboBox {
         public AbilityListComboBox(int generation) {
-            StringList abilities = Database.GetAbilityList(generation);
+            StringList abilities = Database.Lists.AbilityList(generation);
             foreach(string ability in abilities) {
                 this.Items.Add(ability);
             }

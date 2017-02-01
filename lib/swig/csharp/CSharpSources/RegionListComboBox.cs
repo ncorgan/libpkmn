@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class RegionListComboBox: System.Windows.Forms.ComboBox {
         public RegionListComboBox() {
-            StringList regions = Database.GetRegionList();
+            StringList regions = Database.Lists.RegionList();
             foreach(string region in regions) {
                 this.Items.Add(region);
             }

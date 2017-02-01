@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -61,8 +61,7 @@ public class Gen2ItemsTest {
                          "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"}
         );
 
-        PKMN.StringList validItems = itemPocket.ValidItems;
-        Assert.Greater(validItems.Count, 0);
+        Assert.Greater(itemPocket.ValidItems.Count, 0);
     }
 
     public static void KeyItemPocketTest(
@@ -118,8 +117,7 @@ public class Gen2ItemsTest {
                          "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"}
         );
 
-        PKMN.StringList validItems = keyItemPocket.ValidItems;
-        Assert.Greater(validItems.Count, 0);
+        Assert.Greater(keyItemPocket.ValidItems.Count, 0);
     }
 
     public static void BallPocketTest(
@@ -160,8 +158,7 @@ public class Gen2ItemsTest {
                          "Master Ball", "Friend Ball", "Love Ball", "Level Ball"}
         );
 
-        PKMN.StringList validItems = ballPocket.ValidItems;
-        Assert.Greater(validItems.Count, 0);
+        Assert.Greater(ballPocket.ValidItems.Count, 0);
     }
 
     public static void TMHMPocketTest(
@@ -236,8 +233,7 @@ public class Gen2ItemsTest {
             Assert.AreEqual(tmhmPocket[50+i-1].Amount, 0);
         }
 
-        PKMN.StringList validItems = tmhmPocket.ValidItems;
-        Assert.AreEqual(validItems.Count, 57);
+        Assert.AreEqual(tmhmPocket.ValidItems.Count, 57);
     }
 
     public static void ItemPCTest(
@@ -286,9 +282,8 @@ public class Gen2ItemsTest {
             AllPocketItemNames
         );
 
-        PKMN.StringList validItems = itemPC.ValidItems;
-        PKMN.StringList fullItemList = PKMN.Database.GetItemList(game);
-        Assert.AreEqual(validItems.Count, fullItemList.Count);
+        PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
+        Assert.AreEqual(itemPC.ValidItems.Count, fullItemList.Count);
     }
 
     public static void ItemBagTest(

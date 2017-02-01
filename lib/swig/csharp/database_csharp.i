@@ -13,7 +13,6 @@ PKMN_CSHARP_INIT
 %import <stl_csharp.i>
 
 %{
-    #include <pkmn/database/lists.hpp>
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
@@ -25,5 +24,3 @@ PKMN_CSHARP_INIT
 %include <csharp/pkmn_pokemon_entry.i>
 
 %include <csharp/pkmn_levelup_move.i>
-
-%include <pkmn/database/lists.hpp>

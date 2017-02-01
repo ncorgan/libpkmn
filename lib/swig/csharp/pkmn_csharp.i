@@ -15,7 +15,6 @@ PKMN_CSHARP_INIT
 
 %{
     #include <pkmn/item_list.hpp>
-    #include <pkmn/item_slot.hpp>
     #include <pkmn/item_bag.hpp>
 
     #include <pkmn/utils/paths.hpp>
@@ -49,8 +48,7 @@ std::string GetSWIGVersion();
 %include <pkmn_statics.i>
 
 // Item Slot
-%include <pkmn/item_slot.hpp>
-PKMN_CSHARP_VECTOR(pkmn::item_slot, ItemSlot, ItemSlotList)
+%include <csharp/pkmn_item_slot.i>
 
 // Item List
 %include <csharp/pkmn_item_list.i>

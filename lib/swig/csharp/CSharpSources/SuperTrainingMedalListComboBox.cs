@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class SuperTrainingMedalListComboBox: System.Windows.Forms.ComboBox {
         public SuperTrainingMedalListComboBox() {
-            StringList superTrainingMedals = Database.GetSuperTrainingMedalList();
+            StringList superTrainingMedals = Database.Lists.SuperTrainingMedalList();
             foreach(string superTrainingMedal in superTrainingMedals) {
                 this.Items.Add(superTrainingMedal);
             }

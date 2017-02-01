@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -45,9 +45,8 @@ public class Gen1ItemsTest {
             ItemNames
         );
 
-        PKMN.StringList validItems = itemList.ValidItems;
-        PKMN.StringList fullItemList = PKMN.Database.GetItemList(game);
-        Assert.AreEqual(validItems.Count, fullItemList.Count);
+        PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
+        Assert.AreEqual(itemList.ValidItems.Count, fullItemList.Count);
     }
 
     public static void ItemListTest(

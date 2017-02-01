@@ -4,7 +4,7 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-namespace PKMN {
+namespace PKMN { namespace Database {
 
 public partial class ItemEntry {
     public string Name {
@@ -197,4 +197,4 @@ public partial class PokemonEntry {
     }
 }
 
-}
+}}

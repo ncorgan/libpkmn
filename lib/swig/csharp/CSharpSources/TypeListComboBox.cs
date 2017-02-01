@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class TypeListComboBox: System.Windows.Forms.ComboBox {
         public TypeListComboBox(string game) {
-            StringList types = Database.GetTypeList(game);
+            StringList types = Database.Lists.TypeList(game);
             foreach(string type in types) {
                 this.Items.Add(type);
             }

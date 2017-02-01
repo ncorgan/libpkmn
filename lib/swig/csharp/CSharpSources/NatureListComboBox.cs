@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class NatureListComboBox: System.Windows.Forms.ComboBox {
         public NatureListComboBox() {
-            StringList natures = Database.GetNatureList();
+            StringList natures = Database.Lists.NatureList();
             foreach(string nature in natures) {
                 this.Items.Add(nature);
             }

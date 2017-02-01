@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,21 +15,21 @@ public class CSharpDatabaseEntryTest {
         // Make sure trying to create an invalid entry results in an error.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.ItemEntry("Not an item", "SoulSilver");
+                new PKMN.Database.ItemEntry("Not an item", "SoulSilver");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.ItemEntry("Fast Ball", "Not a game");
+                new PKMN.Database.ItemEntry("Fast Ball", "Not a game");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.ItemEntry("Fast Ball", "Red");
+                new PKMN.Database.ItemEntry("Fast Ball", "Red");
             }
         );
 
-        PKMN.ItemEntry itemEntry = new PKMN.ItemEntry("Fast Ball", "SoulSilver");
+        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Fast Ball", "SoulSilver");
 
         Assert.AreEqual(itemEntry.Name, "Fast Ball");
         Assert.AreEqual(itemEntry.Game, "SoulSilver");
@@ -43,9 +43,9 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(itemEntry.FlingPower, 0);
         Assert.AreEqual(itemEntry.FlingEffect, "None");
 
-        PKMN.ItemEntry itemEntrySame = new PKMN.ItemEntry("Fast Ball", "SoulSilver");
-        PKMN.ItemEntry itemEntryDifferentItem = new PKMN.ItemEntry("Potion", "SoulSilver");
-        PKMN.ItemEntry itemEntryDifferentGame = new PKMN.ItemEntry("Potion", "HeartGold");
+        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Fast Ball", "SoulSilver");
+        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry("Potion", "SoulSilver");
+        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry("Potion", "HeartGold");
 
         Assert.AreEqual(itemEntry, itemEntry);
         Assert.AreEqual(itemEntry, itemEntrySame);
@@ -63,21 +63,21 @@ public class CSharpDatabaseEntryTest {
         // Make sure trying to create an invalid entry results in an error.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.MoveEntry("Not an item", "Silver");
+                new PKMN.Database.MoveEntry("Not an item", "Silver");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.MoveEntry("Octazooka", "Not a game");
+                new PKMN.Database.MoveEntry("Octazooka", "Not a game");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.MoveEntry("Octazooka", "Red");
+                new PKMN.Database.MoveEntry("Octazooka", "Red");
             }
         );
 
-        PKMN.MoveEntry moveEntry = new PKMN.MoveEntry("Octazooka", "Silver");
+        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Octazooka", "Silver");
 
         Assert.AreEqual(moveEntry.Name, "Octazooka");
         Assert.AreEqual(moveEntry.Game, "Silver");
@@ -105,9 +105,9 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(moveEntry.ContestEffect, "None");
         Assert.AreEqual(moveEntry.SuperContestEffect, "None");
 
-        PKMN.MoveEntry moveEntrySame = new PKMN.MoveEntry("Octazooka", "Silver");
-        PKMN.MoveEntry moveEntryDifferentMove = new PKMN.MoveEntry("Hydro Pump", "Silver");
-        PKMN.MoveEntry moveEntryDifferentGame = new PKMN.MoveEntry("Octazooka", "Gold");
+        PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Octazooka", "Silver");
+        PKMN.Database.MoveEntry moveEntryDifferentMove = new PKMN.Database.MoveEntry("Hydro Pump", "Silver");
+        PKMN.Database.MoveEntry moveEntryDifferentGame = new PKMN.Database.MoveEntry("Octazooka", "Gold");
 
         Assert.AreEqual(moveEntry, moveEntry);
         Assert.AreEqual(moveEntry, moveEntrySame);
@@ -125,21 +125,21 @@ public class CSharpDatabaseEntryTest {
         // Make sure trying to create an invalid entry results in an error.
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.PokemonEntry("Invalid", "Black 2", "Sunny");
+                new PKMN.Database.PokemonEntry("Invalid", "Black 2", "Sunny");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.PokemonEntry("Castform", "Not a game", "Sunny");
+                new PKMN.Database.PokemonEntry("Castform", "Not a game", "Sunny");
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                new PKMN.PokemonEntry("Castform", "Black 2", "Not a form");
+                new PKMN.Database.PokemonEntry("Castform", "Black 2", "Not a form");
             }
         );
 
-        PKMN.PokemonEntry pokemonEntry = new PKMN.PokemonEntry("Stunfisk", "Black 2", "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Stunfisk", "Black 2", "");
 
         Assert.AreEqual(pokemonEntry.Name, "Stunfisk");
         Assert.AreEqual(pokemonEntry.Game, "Black 2");
@@ -186,11 +186,11 @@ public class CSharpDatabaseEntryTest {
         Assert.AreEqual(pokemonEntry.Forms.Count, 1);
         Assert.AreEqual(pokemonEntry.Evolutions.Count, 0);
 
-        PKMN.PokemonEntry pokemonEntryFirst = new PKMN.PokemonEntry("Pikachu", "Omega Ruby", "Standard");
-        PKMN.PokemonEntry pokemonEntrySame = new PKMN.PokemonEntry("Pikachu", "Omega Ruby", "Standard");
-        PKMN.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.PokemonEntry("Pichu", "Omega Ruby", "Standard");
-        PKMN.PokemonEntry pokemonEntryDifferentGame = new PKMN.PokemonEntry("Pikachu", "Alpha Sapphire", "Standard");
-        PKMN.PokemonEntry pokemonEntryDifferentForm = new PKMN.PokemonEntry("Pikachu", "Omega Ruby", "Belle");
+        PKMN.Database.PokemonEntry pokemonEntryFirst = new PKMN.Database.PokemonEntry("Pikachu", "Omega Ruby", "Standard");
+        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Pikachu", "Omega Ruby", "Standard");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry("Pichu", "Omega Ruby", "Standard");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry("Pikachu", "Alpha Sapphire", "Standard");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry("Pikachu", "Omega Ruby", "Belle");
 
         Assert.AreEqual(pokemonEntryFirst, pokemonEntryFirst);
         Assert.AreEqual(pokemonEntryFirst, pokemonEntrySame);

@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class GameListComboBox: System.Windows.Forms.ComboBox {
         public GameListComboBox(int generation, bool includePrevious) {
-            StringList games = Database.GetGameList(generation, includePrevious);
+            StringList games = Database.Lists.GameList(generation, includePrevious);
             foreach(string game in games) {
                 this.Items.Add(game);
             }

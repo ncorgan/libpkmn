@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class MoveListComboBox: System.Windows.Forms.ComboBox {
         public MoveListComboBox(string game) {
-            StringList moves = Database.GetMoveList(game);
+            StringList moves = Database.Lists.MoveList(game);
             foreach(string move in moves) {
                 this.Items.Add(move);
             }

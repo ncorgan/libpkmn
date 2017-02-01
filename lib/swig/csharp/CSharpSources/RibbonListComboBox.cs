@@ -8,7 +8,7 @@ namespace PKMN {
 
     public class RibbonListComboBox: System.Windows.Forms.ComboBox {
         public RibbonListComboBox(int generation) {
-            StringList ribbons = Database.GetRibbonList(generation);
+            StringList ribbons = Database.Lists.RibbonList(generation);
             foreach(string ribbon in ribbons) {
                 this.Items.Add(ribbon);
             }
