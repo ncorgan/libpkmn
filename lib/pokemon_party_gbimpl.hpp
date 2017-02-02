@@ -25,10 +25,6 @@ namespace pkmn {
                 int game_id,
                 list_type* native
             );
-            pokemon_party_gbimpl(
-                int game_id,
-                const list_type &native
-            );
 
             ~pokemon_party_gbimpl();
 

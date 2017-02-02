@@ -48,19 +48,6 @@ namespace pkmn {
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_party_gbimpl(
-        int game_id,
-        const list_type &native
-    ): pokemon_party_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new list_type);
-        *NATIVE_LIST_RCAST = native;
-        _our_mem = true;
-
-        _from_native();
-    }
-
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     pokemon_party_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::~pokemon_party_gbimpl() {
         if(_our_mem) {
             delete NATIVE_LIST_RCAST;
