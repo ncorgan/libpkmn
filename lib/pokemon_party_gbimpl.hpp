@@ -37,8 +37,6 @@ namespace pkmn {
 
         private:
 
-            std::string _party_name;
-
             void _from_native();
     };
 
