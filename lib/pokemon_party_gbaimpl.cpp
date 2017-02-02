@@ -16,6 +16,7 @@
 #include <pkmn/exception.hpp>
 
 #include <cstring>
+#include <iostream>
 #include <stdexcept>
 
 #define NATIVE_LIST_RCAST reinterpret_cast<pksav_gba_pokemon_party_t*>(_native)
@@ -51,7 +52,7 @@ namespace pkmn {
     }
 
     int pokemon_party_gbaimpl::get_num_pokemon() {
-        return int(NATIVE_LIST_RCAST->count);
+        return int(pksav_littleendian32(NATIVE_LIST_RCAST->count));
     }
 
     void pokemon_party_gbaimpl::set_pokemon(
@@ -80,12 +81,12 @@ namespace pkmn {
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon) {
             std::string new_species = new_pokemon->get_species();
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species != "None") {
-                ++(NATIVE_LIST_RCAST->count);
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None") {
+                NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
             }
         } else if(index == (num_pokemon-1)) {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species == "None") {
-                --(NATIVE_LIST_RCAST->count);
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species == "None") {
+                NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
             }
         }
     }

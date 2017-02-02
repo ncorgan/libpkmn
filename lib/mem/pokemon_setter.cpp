@@ -136,7 +136,7 @@ namespace pkmn { namespace mem {
                 RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_gen1_pokemon_party_data_t);
 
                 RCAST_EQUAL(new_pokemon->_native_pc, party_ptr, pksav_gen1_pc_pokemon_t);
-                RCAST_EQUAL(new_pokemon->_native_party, party_ptr, pksav_gen1_pokemon_party_data_t);
+                RCAST_EQUAL(new_pokemon->_native_party, party_party_ptr, pksav_gen1_pokemon_party_data_t);
 
                 party->_pokemon_list[index] = pkmn::make_shared<pokemon_gen1impl>(
                                                   reinterpret_cast<pksav_gen1_party_pokemon_t*>(party_ptr),
@@ -155,7 +155,7 @@ namespace pkmn { namespace mem {
                 RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_gen2_pokemon_party_data_t);
 
                 RCAST_EQUAL(new_pokemon->_native_pc, party_ptr, pksav_gen2_pc_pokemon_t);
-                RCAST_EQUAL(new_pokemon->_native_party, party_ptr, pksav_gen2_pokemon_party_data_t);
+                RCAST_EQUAL(new_pokemon->_native_party, party_party_ptr, pksav_gen2_pokemon_party_data_t);
 
                 party->_pokemon_list[index] = pkmn::make_shared<pokemon_gen2impl>(
                                                   reinterpret_cast<pksav_gen2_party_pokemon_t*>(party_ptr),
@@ -176,7 +176,7 @@ namespace pkmn { namespace mem {
                     RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_gba_pokemon_party_data_t);
 
                     RCAST_EQUAL(new_pokemon->_native_pc, party_ptr, pksav_gba_pc_pokemon_t);
-                    RCAST_EQUAL(new_pokemon->_native_party, party_ptr, pksav_gba_pokemon_party_data_t);
+                    RCAST_EQUAL(new_pokemon->_native_party, party_party_ptr, pksav_gba_pokemon_party_data_t);
 
                     party->_pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(
                                                       reinterpret_cast<pksav_gba_party_pokemon_t*>(party_ptr),

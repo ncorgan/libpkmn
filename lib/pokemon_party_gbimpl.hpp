@@ -41,10 +41,10 @@ namespace pkmn {
     };
 
     // Generation I
-    typedef pokemon_party_gbimpl<pksav_gen1_pokemon_party_t, pksav_gen1_pc_pokemon_t, pokemon_gen1impl> pokemon_party_gen1impl;
+    typedef pokemon_party_gbimpl<pksav_gen1_pokemon_party_t, pksav_gen1_party_pokemon_t, pokemon_gen1impl> pokemon_party_gen1impl;
 
     // Generation II
-    typedef pokemon_party_gbimpl<pksav_gen2_pokemon_party_t, pksav_gen2_pc_pokemon_t, pokemon_gen2impl> pokemon_party_gen2impl;
+    typedef pokemon_party_gbimpl<pksav_gen2_pokemon_party_t, pksav_gen2_party_pokemon_t, pokemon_gen2impl> pokemon_party_gen2impl;
 }
 
 #include "pokemon_party_gbimpl.ipp"

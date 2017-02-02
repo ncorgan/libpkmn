@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef GEN1_POKEMON_PC_TESTS_HPP
-#define GEN1_POKEMON_PC_TESTS_HPP
+#ifndef POKEMON_PC_TESTS_HPP
+#define POKEMON_PC_TESTS_HPP
 
 #include <pkmntest/config.hpp>
 
@@ -45,4 +45,4 @@ namespace pkmntest {
 
 }
 
-#endif /* GEN1_POKEMON_PC_TESTS_HPP */
+#endif /* POKEMON_PC_TESTS_HPP */

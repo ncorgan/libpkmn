@@ -12,6 +12,7 @@
 
 #include <pksav/gen1/text.h>
 #include <pksav/gen2/text.h>
+#include <pksav/math/endian.h>
 
 #include <cstring>
 #include <stdexcept>
@@ -43,19 +44,6 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(native);
         _our_mem = false;
-
-        _from_native();
-    }
-
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
-    pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::pokemon_box_gbimpl(
-        int game_id,
-        const list_type &native
-    ): pokemon_box_impl(game_id)
-    {
-        _native = reinterpret_cast<void*>(new list_type);
-        *NATIVE_LIST_RCAST = native;
-        _our_mem = true;
 
         _from_native();
     }
@@ -93,7 +81,7 @@ namespace pkmn {
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
     int pokemon_box_gbimpl<list_type, pksav_pokemon_type, libpkmn_pokemon_type>::get_num_pokemon() {
-        return NATIVE_LIST_RCAST->count;
+        return int(NATIVE_LIST_RCAST->count);
     }
 
     template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>

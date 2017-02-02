@@ -7,6 +7,7 @@
 
 #include "pokemon_party_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
+#include "pokemon_party_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -37,6 +38,12 @@ namespace pkmn {
                 return pkmn::make_shared<pokemon_party_gen2impl>(game_id);
 
             case 3:
+                if(game_is_gamecube(game_id)) {
+                    throw pkmn::unimplemented_error();
+                } else {
+                    return pkmn::make_shared<pokemon_party_gbaimpl>(game_id);
+                }
+
             case 4:
             case 5:
             case 6:
