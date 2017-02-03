@@ -12,4 +12,5 @@ from .gen2_pokemon_tests import *
 from .gba_items_tests import *
 from .gba_pokemon_tests import *
 from .pokemon_io_tests import *
+from .pokemon_party_tests import *
 from .pokemon_pc_tests import *
