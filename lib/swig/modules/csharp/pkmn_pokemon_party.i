@@ -18,12 +18,32 @@
 %rename(pokemon_party_base) pkmn::pokemon_party;
 %rename(AsList) as_vector;
 
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__cptr "
-private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__sptr_eq "
-private";
+%csmethodmodifiers pkmn::pokemon_party::get_game "private";
+%csmethodmodifiers pkmn::pokemon_party::get_num_pokemon "private";
+%csmethodmodifiers pkmn::pokemon_party::get_pokemon(int) "private";
+%csmethodmodifiers pkmn::pokemon_party::set_pokemon(int, pkmn::pokemon::sptr) "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_party> %{
+    public string Game {
+        get {
+            return GetGame();
+        }
+    }
+
+    public int NumPokemon {
+        get {
+            return GetNumPokemon();
+        }
+    }
+
+    public int Count {
+        get {
+            return 6;
+        }
+    }
+
     /// <summary>Gets the Pokémon at the given index.</summary>
     /// <exception cref="System.SystemException">If index is invalid</exception>
     /// <param name="index">Index</param>

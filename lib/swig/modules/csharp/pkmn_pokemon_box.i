@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,12 +18,45 @@
 %rename(pokemon_box_base) pkmn::pokemon_box;
 %rename(AsList) as_vector;
 
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__cptr "
-private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__sptr_eq "
-private";
+%csmethodmodifiers pkmn::pokemon_box::get_name "private";
+%csmethodmodifiers pkmn::pokemon_box::set_name(const std::string&) "private";
+%csmethodmodifiers pkmn::pokemon_box::get_game "private";
+%csmethodmodifiers pkmn::pokemon_box::get_num_pokemon "private";
+%csmethodmodifiers pkmn::pokemon_box::get_capacity "private";
+%csmethodmodifiers pkmn::pokemon_box::get_pokemon(int) "private";
+%csmethodmodifiers pkmn::pokemon_box::set_pokemon(int, pkmn::pokemon::sptr) "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_box> %{
+
+    public string Name {
+        get {
+            return GetName();
+        }
+        set {
+            SetName(value);
+        }
+    }
+
+    public string Game {
+        get {
+            return GetGame();
+        }
+    }
+
+    public int NumPokemon {
+        get {
+            return GetNumPokemon();
+        }
+    }
+    
+    public int Count {
+        get {
+            return GetCapacity();
+        }
+    }
+
     /// <summary>Gets the Pokémon at the given index.</summary>
     /// <exception cref="System.SystemException">If index is invalid</exception>
     /// <param name="index">Index</param>

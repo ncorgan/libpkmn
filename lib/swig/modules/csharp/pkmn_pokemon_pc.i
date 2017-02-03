@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,12 +18,32 @@
 %rename(pokemon_pc_base) pkmn::pokemon_pc;
 %rename(AsList) as_vector;
 
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__cptr "
-private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__sptr_eq "
-private";
+%csmethodmodifiers pkmn::pokemon_pc::get_game "private";
+%csmethodmodifiers pkmn::pokemon_pc::get_num_boxes "private";
+%csmethodmodifiers pkmn::pokemon_pc::get_box "private";
+%csmethodmodifiers pkmn::pokemon_pc::get_box_names "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_pc> %{
+    public string Game {
+        get {
+            return GetGame();
+        }
+    }
+
+    public int Count {
+        get {
+            return GetNumBoxes();
+        }
+    }
+
+    public StringList BoxNames {
+        get {
+            return GetBoxNames();
+        }
+    }
+
     /// <summary>Gets the box at the given index.</summary>
     /// <exception cref="System.SystemException">If index is invalid</exception>
     /// <param name="index">Index</param>

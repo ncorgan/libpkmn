@@ -16,7 +16,8 @@ public class PokemonPartyTests {
         PKMN.PokemonParty party,
         string game
     ) {
-        Assert.AreEqual(party.GetGame(), game);
+        Assert.AreEqual(party.Game, game);
+        Assert.AreEqual(party.Count, 6);
 
         // Make sure trying to get a Pokémon at an invalid index fails.
         Assert.Throws<IndexOutOfRangeException>(
@@ -26,11 +27,11 @@ public class PokemonPartyTests {
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                PKMN.Pokemon pokemon = party[6];
+                PKMN.Pokemon pokemon = party[party.Count];
             }
         );
 
-        for(int i = 0; i < 6; ++i) {
+        for(int i = 0; i < party.Count; ++i) {
             Assert.AreEqual(party[i].Species, "None");
             Assert.AreEqual(party[i].Game, game);
 
@@ -44,8 +45,6 @@ public class PokemonPartyTests {
     internal static void TestSettingPokemon(
         PKMN.PokemonParty party
     ) {
-        string game = party.GetGame();
-
         PKMN.Pokemon originalFirst = party[0];
         PKMN.Pokemon originalSecond = party[1];
 
@@ -57,26 +56,26 @@ public class PokemonPartyTests {
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                party[6] = originalSecond;
+                party[party.Count] = originalSecond;
             }
         );
 
         // Create Pokémon and place in party. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", game, "", 5);
-        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", game, "", 5);
-        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", game, "", 5);
+        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", party.Game, "", 5);
+        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", party.Game, "", 5);
+        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", party.Game, "", 5);
 
         party[0] = bulbasaur;
-        Assert.AreEqual(party.GetNumPokemon(), 1);
+        Assert.AreEqual(party.NumPokemon, 1);
         Assert.AreEqual(party[0].Species, "Bulbasaur");
         party[1] = charmander;
-        Assert.AreEqual(party.GetNumPokemon(), 2);
+        Assert.AreEqual(party.NumPokemon, 2);
         Assert.AreEqual(party[1].Species, "Charmander");
 
         // Replace one of the new ones.
         party[0] = squirtle;
-        Assert.AreEqual(party.GetNumPokemon(), 2);
+        Assert.AreEqual(party.NumPokemon, 2);
         Assert.AreEqual(party[0].Species, "Squirtle");
 
         // Make sure we can't copy a Pokémon to itself.
@@ -88,17 +87,17 @@ public class PokemonPartyTests {
 
         // Copy a Pokémon whose memory is already part of the party.
         party[2] = party[1];
-        Assert.AreEqual(party.GetNumPokemon(), 3);
+        Assert.AreEqual(party.NumPokemon, 3);
         Assert.AreEqual(party[2].Species, "Charmander");
 
         // We should be able to clear the last contiguous Pokémon.
         party[2] = originalFirst;
-        Assert.AreEqual(party.GetNumPokemon(), 2);
+        Assert.AreEqual(party.NumPokemon, 2);
         Assert.AreEqual(party[2].Species, "None");
 
         // Put it back.
         party[2] = party[1];
-        Assert.AreEqual(party.GetNumPokemon(), 3);
+        Assert.AreEqual(party.NumPokemon, 3);
         Assert.AreEqual(party[2].Species, "Charmander");
 
         // Check that Pokémon cannot be placed non-contiguously.
@@ -107,7 +106,7 @@ public class PokemonPartyTests {
                 party[1] = originalFirst;
             }
         );
-        Assert.AreEqual(party.GetNumPokemon(), 3);
+        Assert.AreEqual(party.NumPokemon, 3);
         Assert.AreEqual(party[1].Species, "Charmander");
 
         Assert.Throws<IndexOutOfRangeException>(
@@ -115,7 +114,7 @@ public class PokemonPartyTests {
                 party[4] = bulbasaur;
             }
         );
-        Assert.AreEqual(party.GetNumPokemon(), 3);
+        Assert.AreEqual(party.NumPokemon, 3);
         Assert.AreEqual(party[4].Species, "None");
 
         // Now check everything we've created. Each variable should have
