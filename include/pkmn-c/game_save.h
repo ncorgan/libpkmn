@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -60,8 +60,7 @@ PKMN_API const char* pkmn_game_save_strerror(
 PKMN_API pkmn_error_t pkmn_game_save_get_filepath(
     pkmn_game_save_handle_t handle,
     char* filepath_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_game_save_save(
@@ -76,15 +75,13 @@ PKMN_API pkmn_error_t pkmn_game_save_save_as(
 PKMN_API pkmn_error_t pkmn_game_save_get_game(
     pkmn_game_save_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_game_save_get_trainer_name(
     pkmn_game_save_handle_t handle,
     char* trainer_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_game_save_set_trainer_name(
@@ -135,8 +132,7 @@ PKMN_API pkmn_error_t pkmn_game_save_set_trainer_gender(
 PKMN_API pkmn_error_t pkmn_game_save_get_rival_name(
     pkmn_game_save_handle_t handle,
     char* rival_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_game_save_set_rival_name(

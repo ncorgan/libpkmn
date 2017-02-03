@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -45,9 +45,8 @@ public class Gen1ItemsTest {
             ItemNames
         );
 
-        PKMN.StringList validItems = itemList.GetValidItems();
-        PKMN.StringList fullItemList = PKMN.Database.GetItemList(game);
-        Assert.AreEqual(validItems.Count, fullItemList.Count);
+        PKMN.StringList fullItemList = PKMN.Database.Lists.ItemList(game);
+        Assert.AreEqual(itemList.ValidItems.Count, fullItemList.Count);
     }
 
     public static void ItemListTest(
@@ -55,10 +54,10 @@ public class Gen1ItemsTest {
         string game
     ) {
         // Check unchanging and initial values.
-        Assert.AreEqual(itemList.GetName(), "Items");
-        Assert.AreEqual(itemList.GetGame(), game);
-        Assert.AreEqual(itemList.GetCapacity(), 20);
-        Assert.AreEqual(itemList.GetNumItems(), 0);
+        Assert.AreEqual(itemList.Name, "Items");
+        Assert.AreEqual(itemList.Game, game);
+        Assert.AreEqual(itemList.Capacity, 20);
+        Assert.AreEqual(itemList.NumItems, 0);
 
         ItemListCommon(itemList, game);
     }
@@ -68,10 +67,10 @@ public class Gen1ItemsTest {
         string game
     ) {
         // Check unchanging and initial values.
-        Assert.AreEqual(itemPC.GetName(), "PC");
-        Assert.AreEqual(itemPC.GetGame(), game);
-        Assert.AreEqual(itemPC.GetCapacity(), 50);
-        Assert.AreEqual(itemPC.GetNumItems(), 0);
+        Assert.AreEqual(itemPC.Name, "PC");
+        Assert.AreEqual(itemPC.Game, game);
+        Assert.AreEqual(itemPC.Capacity, 50);
+        Assert.AreEqual(itemPC.NumItems, 0);
 
         ItemListCommon(itemPC, game);
     }
@@ -81,7 +80,7 @@ public class Gen1ItemsTest {
         string game
     ) {
         // Check unchanging and initial values.
-        Assert.AreEqual(itemBag.GetGame(), game);
+        Assert.AreEqual(itemBag.Game, game);
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemBagInvalidItems(
@@ -89,13 +88,13 @@ public class Gen1ItemsTest {
             WrongGenerationItemNames
         );
 
-        PKMN.ItemPockets pockets = itemBag.GetPockets();
+        PKMN.ItemPockets pockets = itemBag.Pockets;
         Assert.AreEqual(pockets.Count, 1);
         ItemListTest(pockets["Items"], game);
 
         // Make sure adding items through the bag adds to the pocket.
         PKMN.ItemList itemPocket = pockets["Items"];
-        Assert.AreEqual(itemPocket.GetNumItems(), 0);
+        Assert.AreEqual(itemPocket.NumItems, 0);
 
         for(int i = 0; i < 8; ++i) {
             itemBag.Add(
@@ -104,10 +103,10 @@ public class Gen1ItemsTest {
             );
         }
         for(int i = 0; i < 8; ++i) {
-            Assert.AreEqual(itemPocket[i].Item.GetName(), ItemNames[i]);
+            Assert.AreEqual(itemPocket[i].Item.Name, ItemNames[i]);
             Assert.AreEqual(itemPocket[i].Amount, i+1);
         }
-        Assert.AreEqual(itemPocket[8].Item.GetName(), "None");
+        Assert.AreEqual(itemPocket[8].Item.Name, "None");
         Assert.AreEqual(itemPocket[8].Amount, 0);
 
         for(int i = 0; i < 8; ++i) {
@@ -117,7 +116,7 @@ public class Gen1ItemsTest {
             );
         }
         for(int i = 0; i < 9; ++i) {
-            Assert.AreEqual(itemPocket[i].Item.GetName(), "None");
+            Assert.AreEqual(itemPocket[i].Item.Name, "None");
             Assert.AreEqual(itemPocket[i].Amount, 0);
         }
     }

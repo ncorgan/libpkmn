@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +17,6 @@ static pkmn_game_save_handle_t game_save = NULL;
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
-static size_t actual_strlen = 0;
 
 /*
  * Red
@@ -42,8 +41,7 @@ static void red_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Red");
@@ -78,8 +76,7 @@ static void yellow_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Yellow");
@@ -110,8 +107,7 @@ static void gold_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Gold");
@@ -146,8 +142,7 @@ static void crystal_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Crystal");
@@ -178,8 +173,7 @@ static void ruby_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
@@ -214,8 +208,7 @@ static void emerald_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Emerald");
@@ -246,8 +239,7 @@ static void firered_test() {
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "FireRed");

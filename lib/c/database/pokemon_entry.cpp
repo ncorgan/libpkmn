@@ -122,7 +122,7 @@ pkmn_error_t pkmn_database_pokemon_entry_free(
     pokemon_entry->chance_male = 0.0f;
     pokemon_entry->chance_female = 0.0f;
     pokemon_entry->has_gender_differences = false;
-    pokemon_entry->base_happiness = 0;
+    pokemon_entry->base_friendship = 0;
 
     pkmn_string_pair_free(&pokemon_entry->types);
     pkmn_string_pair_free(&pokemon_entry->abilities);

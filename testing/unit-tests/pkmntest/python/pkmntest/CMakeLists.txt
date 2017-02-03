@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,9 +8,16 @@
 SET(pkmntest_python_sources
     game_save_tests.py
     items_tests.py
+    pokemon_tests.py
     gen1_items_tests.py
+    gen1_pokemon_tests.py
     gen2_items_tests.py
+    gen2_pokemon_tests.py
     gba_items_tests.py
+    gba_pokemon_tests.py
+    pokemon_io_tests.py
+    pokemon_party_tests.py
+    pokemon_pc_tests.py
     __init__.py
 )
 

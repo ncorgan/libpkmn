@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +17,11 @@ import os
 
 SPTR_FILES = ["GameSave.cs",
               "ItemBag.cs",
-              "ItemList.cs"]
+              "ItemList.cs",
+              "Pokemon.cs",
+              "PokemonBox.cs",
+              "PokemonParty.cs",
+              "PokemonPC.cs"]
 
 # Can these by programatically grabbed from the *_base files?
 SPTR_CTORS = dict(
@@ -41,6 +45,39 @@ public ItemList(string name, string game): this(PKMNPINVOKE.make_item_list(name,
         throw PKMNPINVOKE.SWIGPendingException.Retrieve();
     }
 }
+""",
+                 Pokemon = """
+public Pokemon(string name, string game, string form, int level): this(PKMNPINVOKE.make_pokemon__SWIG_0(name, game, form, level), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+public Pokemon(string filepath): this(PKMNPINVOKE.make_pokemon__SWIG_1(filepath), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                PokemonBox = """
+public PokemonBox(string game): this(PKMNPINVOKE.make_pokemon_box(game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                PokemonParty = """
+public PokemonParty(string game): this(PKMNPINVOKE.make_pokemon_party(game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
+""",
+                PokemonPC = """
+public PokemonPC(string game): this(PKMNPINVOKE.make_pokemon_pc(game), true) {
+    if(PKMNPINVOKE.SWIGPendingException.Pending) {
+        throw PKMNPINVOKE.SWIGPendingException.Retrieve();
+    }
+}
 """
              )
 
@@ -49,7 +86,7 @@ def hide_sptr_ctors(filename):
     flines = f.readlines()
     f.close()
     class_name = filename[:-3]
-    ctor = "public {0}".format(class_name)
+    ctor = "public {0}(".format(class_name)
 
     # Already done
     if "hide_sptr_ctors" in flines[0]:

@@ -80,7 +80,7 @@ namespace pkmn { namespace database {
 
             bool has_gender_differences() const;
 
-            int get_base_happiness() const;
+            int get_base_friendship() const;
 
             std::pair<std::string, std::string> get_types() const;
 

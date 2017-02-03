@@ -54,13 +54,13 @@ namespace pkmn { namespace calculations {
         const uint16_t* p = reinterpret_cast<const uint16_t*>(&personality);
         const uint16_t* t = reinterpret_cast<const uint16_t*>(&trainer_id);
 
-        for(size_t i = 3; i < 16; i++) {
+        for(size_t i = 3; i < 16; ++i) {
             size_t num_ones = 0;
-            if(p[0] & (1 << i)) num_ones++;
-            if(p[1] & (1 << i)) num_ones++;
-            if(t[0] & (1 << i)) num_ones++;
-            if(t[1] & (1 << i)) num_ones++;
-            if((num_ones == 1) or (num_ones == 3)) {
+            if(p[0] & (1 << i)) ++num_ones;
+            if(p[1] & (1 << i)) ++num_ones;
+            if(t[0] & (1 << i)) ++num_ones;
+            if(t[1] & (1 << i)) ++num_ones;
+            if(num_ones % 2) {
                 return false;
             }
         }

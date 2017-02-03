@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "items_tests_common.h"
-
 #include <pkmntest-c/game_save_tests.h>
+
+#include <pkmn-c/pokemon.h>
 
 #include <unity.h>
 
@@ -18,12 +18,9 @@ static pkmn_error_t error = PKMN_ERROR_NONE;
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
-size_t actual_strlen = 0;
 
-// TODO: replace with pokemon #defines
 #define LIBPKMN_OT_NAME "LibPKMN"
 #define TOO_LONG_OT_NAME "LibPKMNLibPKMN"
-#define LIBPKMN_OT_ID  ((uint32_t)2105214279)
 #define LIBPKMN_OT_PID ((uint16_t)1351)
 #define LIBPKMN_OT_SID ((uint16_t)32123)
 
@@ -69,8 +66,7 @@ static void test_trainer_name(
     error = pkmn_game_save_get_trainer_name(
                 save,
                 strbuffer,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, LIBPKMN_OT_NAME);
@@ -108,8 +104,7 @@ static void test_rival_name(
         error = pkmn_game_save_get_rival_name(
                     save,
                     strbuffer,
-                    STRBUFFER_LEN,
-                    &actual_strlen
+                    STRBUFFER_LEN
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(strbuffer, LIBPKMN_OT_NAME);
@@ -164,8 +159,7 @@ void pkmntest_game_save_test_common_fields(
     error = pkmn_game_save_get_game(
                 save,
                 game,
-                STRBUFFER_LEN,
-                &actual_strlen
+                STRBUFFER_LEN
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 

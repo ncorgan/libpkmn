@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -202,7 +202,7 @@ namespace pkmn {
         pokemon_entry_c->chance_male = pokemon_entry_cpp.get_chance_male();
         pokemon_entry_c->chance_female = pokemon_entry_cpp.get_chance_female();
         pokemon_entry_c->has_gender_differences = pokemon_entry_cpp.has_gender_differences();
-        pokemon_entry_c->base_happiness = pokemon_entry_cpp.get_base_happiness();
+        pokemon_entry_c->base_friendship = pokemon_entry_cpp.get_base_friendship();
 
         pkmn::std_pair_std_string_to_string_pair(
             pokemon_entry_cpp.get_types(),
@@ -243,7 +243,7 @@ namespace pkmn {
         pokemon_entry_c->EV_yields[PKMN_STAT_ATTACK] = EV_yields.at("Attack");
         pokemon_entry_c->EV_yields[PKMN_STAT_DEFENSE] = EV_yields.at("Defense");
         pokemon_entry_c->EV_yields[PKMN_STAT_SPEED] = EV_yields.at("Speed");
-        if(base_stats.count("Special") > 0) {
+        if(EV_yields.count("Special") > 0) {
             pokemon_entry_c->EV_yields[PKMN_STAT_SPECIAL] = EV_yields.at("Special");
             pokemon_entry_c->EV_yields[PKMN_STAT_SPATK] = -1;
             pokemon_entry_c->EV_yields[PKMN_STAT_SPDEF] = -1;
@@ -284,6 +284,32 @@ namespace pkmn {
         );
     }
 
+    void pkmn_move_slot_cpp_to_c(
+        const pkmn::move_slot &mslot_cpp,
+        pkmn_move_slot_t* mslot_c
+    ) {
+        std::string move_name = mslot_cpp.move.get_name();
+        mslot_c->move = (char*)std::malloc(move_name.size() + 1);
+        std::strcpy(mslot_c->move, move_name.c_str());
+        mslot_c->move[move_name.size()] = '\0';
+
+        mslot_c->pp = mslot_cpp.pp;
+    }
+
+    void pkmn_move_slots_cpp_to_c(
+        const pkmn::move_slots_t &mslots_cpp,
+        pkmn_move_slots_t* mslots_c
+    ) {
+        mslots_c->move_slots = (pkmn_move_slot_t*)std::malloc(sizeof(pkmn_move_slot_t) * mslots_cpp.size());
+        for(size_t i = 0; i < mslots_cpp.size(); ++i) {
+            pkmn_move_slot_cpp_to_c(
+                mslots_cpp[i],
+                &(mslots_c->move_slots[i])
+            );
+        }
+        mslots_c->length = mslots_cpp.size();
+    }
+
     void pkmn_pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t &pokemon_entries,
         pkmn_string_list_t* string_list_out
@@ -297,6 +323,34 @@ namespace pkmn {
         }
 
         string_list_out->length = pokemon_entries.size();
+    }
+
+    void pkmn_pokemon_list_cpp_to_c(
+        const pkmn::pokemon_list_t &pokemon_list_cpp,
+        pkmn_pokemon_list_t* pokemon_list_c
+    ) {
+        pokemon_list_c->pokemon_list = (pkmn_pokemon_handle_t*)std::malloc(sizeof(pkmn_pokemon_handle_t) * pokemon_list_cpp.size());
+        for(size_t i = 0; i < pokemon_list_cpp.size(); ++i) {
+            pokemon_list_c->pokemon_list[i] = new pkmn_pokemon_t;
+            pokemon_list_c->pokemon_list[i]->cpp = pokemon_list_cpp.at(i);
+            pokemon_list_c->pokemon_list[i]->last_error = "None";
+        }
+
+        pokemon_list_c->length = pokemon_list_cpp.size();
+    }
+
+    void pkmn_pokemon_box_list_cpp_to_c(
+        const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
+        pkmn_pokemon_box_list_t* pokemon_box_list_c
+    ) {
+        pokemon_box_list_c->pokemon_boxes = (pkmn_pokemon_box_handle_t*)std::malloc(sizeof(pkmn_pokemon_box_handle_t) * pokemon_box_list_cpp.size());
+        for(size_t i = 0; i < pokemon_box_list_cpp.size(); ++i) {
+            pokemon_box_list_c->pokemon_boxes[i] = new pkmn_pokemon_box_t;
+            pokemon_box_list_c->pokemon_boxes[i]->cpp = pokemon_box_list_cpp.at(i);
+            pokemon_box_list_c->pokemon_boxes[i]->last_error = "None";
+        }
+
+        pokemon_box_list_c->length = pokemon_box_list_cpp.size();
     }
 
     void std_pair_std_string_to_string_pair(

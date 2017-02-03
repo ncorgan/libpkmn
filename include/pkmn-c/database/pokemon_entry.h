@@ -26,7 +26,7 @@ typedef struct {
     float chance_male;
     float chance_female;
     bool has_gender_differences;
-    int base_happiness;
+    int base_friendship;
     pkmn_string_pair_t types;
     pkmn_string_pair_t abilities;
     char* hidden_ability;

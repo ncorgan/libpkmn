@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -17,6 +17,7 @@
 #  * module_name:        The module filename, minus the .i extension.
 #  * csharp_module_name: The C# class associated with the module.
 #  * cplusplus:          TRUE or FALSE, whether or not this is a C++ module.
+#  * namespace:          The C# namespace this class will be in.
 #
 # Assumes the following variables are set:
 #  * SWIG_MODULE_DIR:          The source directory that contains the .i
@@ -63,7 +64,7 @@ MACRO(SWIG_CSHARP_INIT)
     SET(CSHARP_BINARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 ENDMACRO(SWIG_CSHARP_INIT)
 
-MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
+MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus namespace)
     INCLUDE(UseCSharp)
     INCLUDE(UseSWIG)
 
@@ -92,7 +93,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
     ELSE()
         SET(dllimport_name "lib${swig_module_name}")
     ENDIF()
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${dllimport_name} -namespace PKMN ${CMAKE_SWIG_GLOBAL_FLAGS} ${CMAKE_GLOBAL_FLAGS})
+    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${dllimport_name} -namespace ${namespace} ${CMAKE_SWIG_GLOBAL_FLAGS} ${CMAKE_GLOBAL_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})

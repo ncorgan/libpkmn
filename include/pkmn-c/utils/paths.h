@@ -18,26 +18,22 @@ extern "C" {
 
 PKMN_API pkmn_error_t pkmn_get_appdata_dir(
     char* appdata_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_get_database_path(
     char* database_path_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_get_images_dir(
     char* images_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_get_tmp_dir(
     char* tmp_dir_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 #ifdef __cplusplus

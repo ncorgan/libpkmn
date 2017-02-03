@@ -90,20 +90,18 @@ const char* pkmn_game_save_strerror(
 pkmn_error_t pkmn_game_save_get_filepath(
     pkmn_game_save_handle_t handle,
     char* filepath_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(filepath_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_filepath(),
-            filepath_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str_with_handle<pkmn_game_save_handle_t>(
+                   handle,
+                   handle->cpp->get_filepath(),
+                   filepath_out,
+                   buffer_len
+               );
     )
 }
 
@@ -132,40 +130,36 @@ pkmn_error_t pkmn_game_save_save_as(
 pkmn_error_t pkmn_game_save_get_game(
     pkmn_game_save_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_game(),
-            game_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str_with_handle<pkmn_game_save_handle_t>(
+                   handle,
+                   handle->cpp->get_game(),
+                   game_out,
+                   buffer_len
+               );
     )
 }
 
 pkmn_error_t pkmn_game_save_get_trainer_name(
     pkmn_game_save_handle_t handle,
     char* trainer_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(trainer_name_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_trainer_name(),
-            trainer_name_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str_with_handle<pkmn_game_save_handle_t>(
+                   handle,
+                   handle->cpp->get_trainer_name(),
+                   trainer_name_out,
+                   buffer_len
+               );
     )
 }
 
@@ -287,20 +281,18 @@ pkmn_error_t pkmn_game_save_set_trainer_gender(
 pkmn_error_t pkmn_game_save_get_rival_name(
     pkmn_game_save_handle_t handle,
     char* rival_name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(rival_name_out, handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(actual_strlen_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_string_to_c_str(
-            handle->cpp->get_rival_name(),
-            rival_name_out,
-            buffer_len,
-            actual_strlen_out
-        );
+        return pkmn::std_string_to_c_str_with_handle<pkmn_game_save_handle_t>(
+                   handle,
+                   handle->cpp->get_rival_name(),
+                   rival_name_out,
+                   buffer_len
+               );
     )
 }
 

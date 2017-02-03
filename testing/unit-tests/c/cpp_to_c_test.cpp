@@ -19,6 +19,7 @@ extern "C" {
 
 #include <pksav.h>
 
+#include <boost/assign.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -42,6 +43,8 @@ class pkmn_test_exception: public std::exception {
     protected:
         std::string msg_;
 };
+
+#define STRBUFFER_LEN 1024
 
 /*
  * Converting C++ exceptions to C error codes
@@ -542,6 +545,69 @@ BOOST_AUTO_TEST_CASE(move_list_cpp_to_c_test) {
     BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
+BOOST_AUTO_TEST_CASE(move_slot_cpp_to_c_test) {
+    pkmn::move_slot move_slot_cpp(
+        pkmn::database::move_entry("Tackle", "Red"),
+        50
+    );
+
+    pkmn_move_slot_t move_slot_c;
+
+    pkmn::pkmn_move_slot_cpp_to_c(
+        move_slot_cpp,
+        &move_slot_c
+    );
+
+    BOOST_CHECK_EQUAL(move_slot_c.move, "Tackle");
+    BOOST_CHECK_EQUAL(move_slot_c.pp, 50);
+
+    pkmn_move_slot_free(&move_slot_c);
+    BOOST_CHECK(!move_slot_c.move);
+    BOOST_CHECK_EQUAL(move_slot_c.pp, 0);
+}
+
+BOOST_AUTO_TEST_CASE(move_slots_cpp_to_c_test) {
+    pkmn::move_slots_t move_slots_cpp;
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Tackle", "Red"),
+            50
+        )
+    );
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Pound", "Silver"),
+            28
+        )
+    );
+    move_slots_cpp.emplace_back(
+        pkmn::move_slot(
+            pkmn::database::move_entry("Metronome", "LeafGreen"),
+            1
+        )
+    );
+
+    pkmn_move_slots_t move_slots_c = { NULL, 0 };
+    pkmn::pkmn_move_slots_cpp_to_c(
+        move_slots_cpp,
+        &move_slots_c
+    );
+
+    BOOST_CHECK_EQUAL(move_slots_c.length, 3);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[0].move, "Tackle");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[0].pp, 50);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[1].move, "Pound");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[1].pp, 28);
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[2].move, "Metronome");
+    BOOST_CHECK_EQUAL(move_slots_c.move_slots[2].pp, 1);
+
+    pkmn_move_slots_free(
+        &move_slots_c
+    );
+    BOOST_CHECK(!move_slots_c.move_slots);
+    BOOST_CHECK_EQUAL(move_slots_c.length, 0);
+}
+
 BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
     pkmn::database::pokemon_entries_t pokemon_entries_cpp;
     pokemon_entries_cpp.emplace_back(
@@ -572,6 +638,126 @@ BOOST_AUTO_TEST_CASE(pokemon_entries_cpp_to_c_test) {
     BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
+BOOST_AUTO_TEST_CASE(pokemon_list_cpp_to_c) {
+    pkmn::pokemon_list_t pokemon_list_cpp;
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Charmander", "Red", "", 5
+        )
+    );
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Squirtle", "Blue", "", 10
+        )
+    );
+    pokemon_list_cpp.emplace_back(
+        pkmn::pokemon::make(
+            "Bulbasaur", "Yellow", "", 15
+        )
+    );
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
+    pkmn::pkmn_pokemon_list_cpp_to_c(
+        pokemon_list_cpp,
+        &pokemon_list_c
+    );
+    BOOST_CHECK_EQUAL(
+        pokemon_list_c.length,
+        3
+    );
+
+    for(size_t i = 0; i < 3; ++i) {
+        char species_c[STRBUFFER_LEN] = {0};
+        char game_c[STRBUFFER_LEN] = {0};
+        int level_c = 0;
+
+        error = pkmn_pokemon_get_species(
+                    pokemon_list_c.pokemon_list[i],
+                    species_c,
+                    sizeof(species_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_species().c_str(), species_c), 0);
+
+        error = pkmn_pokemon_get_game(
+                    pokemon_list_c.pokemon_list[i],
+                    game_c,
+                    sizeof(game_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_list_cpp[i]->get_game().c_str(), game_c), 0);
+
+        error = pkmn_pokemon_get_level(
+                    pokemon_list_c.pokemon_list[i],
+                    &level_c
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(pokemon_list_cpp[i]->get_level(), level_c);
+    }
+
+    pkmn_pokemon_list_free(
+        &pokemon_list_c
+    );
+    BOOST_CHECK(!pokemon_list_c.pokemon_list);
+    BOOST_CHECK_EQUAL(pokemon_list_c.length, 0);
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_box_list_cpp_to_c_test) {
+    pkmn::pokemon_box_list_t pokemon_box_list_cpp;
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("Gold")
+    );
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("Ruby")
+    );
+    pokemon_box_list_cpp.emplace_back(
+        pkmn::pokemon_box::make("FireRed")
+    );
+
+    pokemon_box_list_cpp[0]->set_name("ABCD");
+    pokemon_box_list_cpp[1]->set_name("EFGH");
+    pokemon_box_list_cpp[2]->set_name("IJKL");
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
+    pkmn::pkmn_pokemon_box_list_cpp_to_c(
+        pokemon_box_list_cpp,
+        &pokemon_box_list_c
+    );
+    BOOST_CHECK_EQUAL(
+        pokemon_box_list_c.length,
+        3
+    );
+
+    for(size_t i = 0; i < 3; ++i) {
+        char game_c[STRBUFFER_LEN] = {0};
+        char name_c[STRBUFFER_LEN] = {0};
+
+        error = pkmn_pokemon_box_get_game(
+                    pokemon_box_list_c.pokemon_boxes[i],
+                    game_c,
+                    sizeof(game_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_box_list_cpp[i]->get_game().c_str(), game_c), 0);
+
+        error = pkmn_pokemon_box_get_name(
+                    pokemon_box_list_c.pokemon_boxes[i],
+                    name_c,
+                    sizeof(name_c)
+                );
+        BOOST_CHECK_EQUAL(error, PKMN_ERROR_NONE);
+        BOOST_CHECK_EQUAL(strcmp(pokemon_box_list_cpp[i]->get_name().c_str(), name_c), 0);
+    }
+
+    pkmn_pokemon_box_list_free(
+        &pokemon_box_list_c
+    );
+    BOOST_CHECK(!pokemon_box_list_c.pokemon_boxes);
+    BOOST_CHECK_EQUAL(pokemon_box_list_c.length, 0);
+}
+
 BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {
     std::pair<int, int> int_pair_cpp(6322, 10011);
     pkmn_int_pair_t int_pair_c;
@@ -588,27 +774,22 @@ BOOST_AUTO_TEST_CASE(int_pair_cpp_to_c_test) {
 BOOST_AUTO_TEST_CASE(std_string_cpp_to_c_test) {
     std::string string_cpp = "LibPKMN";
     char string_c[8] = "";
-    size_t actual_strlen = 0;
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
-    // Buffer too small
-    pkmn::std_string_to_c_str(
-        string_cpp,
-        string_c,
-        5,
-        &actual_strlen
-    );
-    BOOST_CHECK_EQUAL(string_c, "LibPK");
-    BOOST_CHECK_EQUAL(actual_strlen, 8);
+    error = pkmn::std_string_to_c_str(
+                string_cpp,
+                string_c,
+                0
+            );
+    BOOST_CHECK_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     // Full buffer
-    pkmn::std_string_to_c_str(
-        string_cpp,
-        string_c,
-        8,
-        &actual_strlen
-    );
+    error = pkmn::std_string_to_c_str(
+                string_cpp,
+                string_c,
+                sizeof(string_c)
+            );
     BOOST_CHECK_EQUAL(string_c, "LibPKMN");
-    BOOST_CHECK_EQUAL(actual_strlen, 8);
 }
 
 BOOST_AUTO_TEST_CASE(string_pair_cpp_to_c_test) {
@@ -626,6 +807,55 @@ BOOST_AUTO_TEST_CASE(string_pair_cpp_to_c_test) {
     pkmn_string_pair_free(&string_pair_c);
     BOOST_CHECK(!string_pair_c.first);
     BOOST_CHECK(!string_pair_c.second);
+}
+
+BOOST_AUTO_TEST_CASE(std_map_keys_to_string_list_test) {
+    static const std::map<std::string, bool> string_bool_map = boost::assign::map_list_of
+        ("key1", true)
+        ("key2", false)
+        ("key3", false)
+        ("key4", true)
+    ;
+    static const std::map<std::string, int> string_int_map = boost::assign::map_list_of
+        ("key5", 1)
+        ("key6", 2)
+        ("key7", 3)
+        ("key8", 4)
+        ("key9", 5)
+    ;
+
+    pkmn_string_list_t string_list_c = {NULL, 0};
+
+    pkmn::std_map_keys_to_string_list<bool>(
+        string_bool_map,
+        &string_list_c
+    );
+
+    BOOST_REQUIRE_EQUAL(string_list_c.length, 4);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "key1");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "key2");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "key3");
+    BOOST_CHECK_EQUAL(string_list_c.strings[3], "key4");
+
+    pkmn_string_list_free(&string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
+
+    pkmn::std_map_keys_to_string_list<int>(
+        string_int_map,
+        &string_list_c
+    );
+
+    BOOST_REQUIRE_EQUAL(string_list_c.length, 5);
+    BOOST_CHECK_EQUAL(string_list_c.strings[0], "key5");
+    BOOST_CHECK_EQUAL(string_list_c.strings[1], "key6");
+    BOOST_CHECK_EQUAL(string_list_c.strings[2], "key7");
+    BOOST_CHECK_EQUAL(string_list_c.strings[3], "key8");
+    BOOST_CHECK_EQUAL(string_list_c.strings[4], "key9");
+
+    pkmn_string_list_free(&string_list_c);
+    BOOST_CHECK(!string_list_c.strings);
+    BOOST_CHECK_EQUAL(string_list_c.length, 0);
 }
 
 BOOST_AUTO_TEST_CASE(string_vector_cpp_to_c_test) {

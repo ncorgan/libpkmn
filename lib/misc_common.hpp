@@ -35,7 +35,7 @@ static BOOST_CONSTEXPR const char* modern_valid_stats[] =
 static PKMN_INLINE bool pkmn_string_is_gen1_stat(
     const char* str
 ) {
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < 5; ++i) {
         if(!std::strcmp(gen1_valid_stats[i], str)) {
             return true;
         }
