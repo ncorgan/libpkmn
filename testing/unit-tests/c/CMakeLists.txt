@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -22,6 +22,7 @@ SET(c_tests
     c_lists_test
     c_paths_test
     c_pokemon_test
+    c_pokemon_party_test
     c_pokemon_pc_test
 )
 
