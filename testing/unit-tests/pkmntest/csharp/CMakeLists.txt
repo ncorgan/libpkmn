@@ -14,6 +14,7 @@ SET(pkmntest_cs_srcs
     GBAPokemonTests.cs
     ItemsTestsCommon.cs
     PokemonIOTests.cs
+    PokemonPartyTests.cs
     PokemonPCTests.cs
     PokemonTestsCommon.cs
 )
