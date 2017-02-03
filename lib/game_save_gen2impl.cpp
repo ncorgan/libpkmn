@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #include "game_save_gen2impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "pokemon_party_gbimpl.hpp"
+#include "pokemon_pc_gen2impl.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -42,7 +44,9 @@ namespace pkmn {
             _game_id = CRYSTAL;
 
             _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
-                            CRYSTAL_PC, _game_id, _pksav_save.item_pc
+                            CRYSTAL_PC,
+                            _game_id,
+                            _pksav_save.item_pc
                        );
         } else {
             /*
@@ -64,12 +68,25 @@ namespace pkmn {
             }
 
             _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
-                            GS_PC, _game_id, _pksav_save.item_pc
+                            GS_PC,
+                            _game_id,
+                            _pksav_save.item_pc
                        );
         }
 
+        _pokemon_party = pkmn::make_shared<pokemon_party_gen2impl>(
+                             _game_id,
+                             _pksav_save.pokemon_party
+                         );
+        _pokemon_pc = pkmn::make_shared<pokemon_pc_gen2impl>(
+                          _game_id,
+                          _pksav_save.pokemon_pc,
+                          _pksav_save.pokemon_box_names,
+                          false
+                      );
         _item_bag = pkmn::make_shared<item_bag_gen2impl>(
-                        _game_id, _pksav_save.item_bag
+                        _game_id,
+                        _pksav_save.item_bag
                     );
     }
 

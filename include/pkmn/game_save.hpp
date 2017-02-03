@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
+#include <pkmn/pokemon_party.hpp>
+#include <pkmn/pokemon_pc.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <cstdint>
@@ -86,6 +88,10 @@ namespace pkmn {
             virtual void set_money(
                 int money
             ) = 0;
+
+            virtual pkmn::pokemon_party::sptr get_pokemon_party() = 0;
+
+            virtual pkmn::pokemon_pc::sptr get_pokemon_pc() = 0;
 
             virtual pkmn::item_bag::sptr get_item_bag() = 0;
 

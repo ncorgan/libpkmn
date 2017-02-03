@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #include "game_save_gen1impl.hpp"
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "pokemon_party_gbimpl.hpp"
+#include "pokemon_pc_gen1impl.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -65,12 +67,23 @@ namespace pkmn {
             }
         }
 
+        _pokemon_party = pkmn::make_shared<pokemon_party_gen1impl>(
+                             _game_id,
+                             _pksav_save.pokemon_party
+                         );
+        _pokemon_pc = pkmn::make_shared<pokemon_pc_gen1impl>(
+                          _game_id,
+                          _pksav_save.pokemon_boxes,
+                          false
+                      );
         _item_bag = pkmn::make_shared<item_bag_gen1impl>(
-                        _game_id, _pksav_save.item_bag
+                        _game_id,
+                        _pksav_save.item_bag
                     );
         _item_pc = pkmn::make_shared<item_list_gen1_pcimpl>(
                         (_game_id == YELLOW) ? YELLOW_PC : RB_PC,
-                        _game_id, _pksav_save.item_pc
+                        _game_id,
+                        _pksav_save.item_pc
                    );
     }
 
