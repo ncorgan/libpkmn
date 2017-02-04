@@ -59,7 +59,7 @@ namespace pkmn {
                 NATIVE_RCAST->box_names = box_names;
             }
         }
-        _our_mem = (not copy);
+        _our_mem = copy;
 
         _from_native();
     }
