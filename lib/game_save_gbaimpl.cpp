@@ -8,6 +8,8 @@
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
+#include "pokemon_party_gbaimpl.hpp"
+#include "pokemon_pc_gbaimpl.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -106,6 +108,15 @@ namespace pkmn {
                            );
                 break;
         }
+
+        _pokemon_party = pkmn::make_shared<pokemon_party_gbaimpl>(
+                             _game_id,
+                             _pksav_save.pokemon_party
+                         );
+        _pokemon_pc = pkmn::make_shared<pokemon_pc_gbaimpl>(
+                          _game_id,
+                          _pksav_save.pokemon_pc
+                      );
 
         _item_bag = pkmn::make_shared<item_bag_gbaimpl>(
                         _game_id, _pksav_save.item_storage

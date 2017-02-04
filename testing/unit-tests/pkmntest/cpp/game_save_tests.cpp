@@ -15,12 +15,10 @@
 #undef BOOST_TEST_MAIN
 #include "pkmn_boost_unit_test.hpp"
 
+#include <iostream>
 #include <string>
 
-// TODO: replace with pokemon static fields
-BOOST_STATIC_CONSTEXPR const char* LIBPKMN_OT_NAME = "LibPKMN";
 BOOST_STATIC_CONSTEXPR const char* TOO_LONG_OT_NAME = "LibPKMNLibPKMN";
-BOOST_STATIC_CONSTEXPR uint32_t LIBPKMN_OT_ID = 2105214279;
 BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_PID = 1351;
 BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_SID = 32123;
 
@@ -54,10 +52,10 @@ namespace pkmntest {
             save->set_trainer_name(TOO_LONG_OT_NAME);
         , std::invalid_argument);
 
-        save->set_trainer_name(LIBPKMN_OT_NAME);
+        save->set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
         BOOST_CHECK_EQUAL(
             save->get_trainer_name(),
-            std::string(LIBPKMN_OT_NAME)
+            std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
         );
     }
 
@@ -67,7 +65,7 @@ namespace pkmntest {
     ) {
         if(is_rival_name_set) {
             BOOST_CHECK_THROW(
-                save->set_rival_name(LIBPKMN_OT_NAME);
+                save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
             , pkmn::feature_not_in_game_error);
         } else {
             BOOST_CHECK_THROW(
@@ -77,10 +75,10 @@ namespace pkmntest {
                 save->set_rival_name(TOO_LONG_OT_NAME);
             , std::invalid_argument);
 
-            save->set_rival_name(LIBPKMN_OT_NAME);
+            save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
             BOOST_CHECK_EQUAL(
                 save->get_rival_name(),
-                std::string(LIBPKMN_OT_NAME)
+                std::string(pkmn::pokemon::LIBPKMN_OT_NAME)
             );
         }
     }
@@ -91,7 +89,7 @@ namespace pkmntest {
     ) {
         BOOST_CHECK_EQUAL(
             save->get_trainer_id(),
-            (is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID)
+            (is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID)
         );
         BOOST_CHECK_EQUAL(
             save->get_trainer_public_id(),
@@ -122,7 +120,7 @@ namespace pkmntest {
             ) != GB_GAMES+6
         );
         save->set_trainer_id(
-            is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
+            is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
         );
         test_trainer_id(
             save,
@@ -137,7 +135,7 @@ namespace pkmntest {
 
         if(is_gb_game) {
             BOOST_CHECK_THROW(
-                save->set_trainer_id(LIBPKMN_OT_ID);
+                save->set_trainer_id(pkmn::pokemon::LIBPKMN_OT_ID);
             , pkmn::range_error);
             BOOST_CHECK_THROW(
                 save->set_trainer_secret_id(LIBPKMN_OT_SID);
@@ -206,5 +204,59 @@ namespace pkmntest {
             save->get_money(),
             123456
         );
+
+        // To avoid crashing
+        BOOST_REQUIRE(save->get_item_bag().get() != nullptr);
+        BOOST_REQUIRE(save->get_item_pc().get() != nullptr);
+        BOOST_REQUIRE(save->get_pokemon_party().get() != nullptr);
+        BOOST_REQUIRE(save->get_pokemon_pc().get() != nullptr);
+
+        // Make sure get_num_pokemon() and the party matches
+        pkmn::pokemon_party::sptr party = save->get_pokemon_party();
+        int num_party_pokemon = party->get_num_pokemon();
+        BOOST_CHECK_GT(num_party_pokemon, 0);
+        BOOST_CHECK_LE(num_party_pokemon, 6);
+        BOOST_CHECK_EQUAL(party->as_vector().size(), 6);
+        for(int i = 0; i < 6; ++i) {
+            pkmn::pokemon::sptr party_pokemon = party->get_pokemon(i);
+            BOOST_REQUIRE(party_pokemon.get() != nullptr);
+            /*
+             * TODO: What to do past this? In principle, it should all be "None",
+             *       but the memory is not zeroed out in-game.
+             */
+            if(i < num_party_pokemon) {
+                BOOST_CHECK_NE(
+                    party_pokemon->get_species(),
+                    "None"
+                );
+            }
+        }
+
+        pkmn::pokemon_pc::sptr pc = save->get_pokemon_pc();
+        int num_boxes = pc->get_num_boxes();
+        BOOST_CHECK_EQUAL(num_boxes, pc->as_vector().size());
+        for(int i = 0; i < num_boxes; ++i) {
+            pkmn::pokemon_box::sptr box = pc->get_box(i);
+            BOOST_REQUIRE(box.get() != nullptr);
+
+            int capacity = box->get_capacity();
+            int num_box_pokemon = box->get_num_pokemon();
+            BOOST_CHECK_GT(capacity, 0);
+            BOOST_CHECK_GE(num_box_pokemon, 0);
+            BOOST_CHECK_LE(num_box_pokemon, capacity);
+            BOOST_CHECK_EQUAL(capacity, box->as_vector().size());
+
+            for(int j = 0; j < capacity; ++j) {
+                pkmn::pokemon::sptr box_pokemon = box->get_pokemon(j);
+                BOOST_REQUIRE(box_pokemon.get() != nullptr);
+
+                if(j < num_box_pokemon) {
+                    BOOST_CHECK_NE(
+                        box_pokemon->get_species(),
+                        "None"
+                    );
+                }
+            }
+        }
     }
 }
