@@ -47,7 +47,7 @@ namespace pkmn {
                 NATIVE_RCAST->boxes[i] = &native[i];
             }
         }
-        _our_mem = (not copy);
+        _our_mem = copy;
 
         _from_native();
     }
@@ -67,7 +67,7 @@ namespace pkmn {
                 NATIVE_RCAST->boxes[i] = native[i];
             }
         }
-        _our_mem = (not copy);
+        _our_mem = copy;
 
         _from_native();
     }
