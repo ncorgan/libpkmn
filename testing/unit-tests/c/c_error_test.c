@@ -2668,7 +2668,14 @@ static void database_move_entry_error_test() {
  * <pkmn-c/database/pokemon_entry.h>
  */
 static void database_pokemon_entry_error_test() {
-    pkmn_database_pokemon_entry_t dummy_pkmn_database_pokemon_entry_t;
+    pkmn_database_pokemon_entry_t entry;
+    error = pkmn_database_get_pokemon_entry(
+                "Charmander",
+                "Diamond",
+                "",
+                &entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
     /*
      * pkmn_database_get_pokemon_entry
@@ -2678,7 +2685,7 @@ static void database_pokemon_entry_error_test() {
                 NULL, // species
                 strbuffer,
                 strbuffer,
-                &dummy_pkmn_database_pokemon_entry_t
+                &entry
             );
     TEST_NULL_POINTER_RETURN("species");
 
@@ -2686,7 +2693,7 @@ static void database_pokemon_entry_error_test() {
                 strbuffer,
                 NULL, // game
                 strbuffer,
-                &dummy_pkmn_database_pokemon_entry_t
+                &entry
             );
     TEST_NULL_POINTER_RETURN("game");
 
@@ -2694,7 +2701,7 @@ static void database_pokemon_entry_error_test() {
                 strbuffer,
                 strbuffer,
                 NULL, // form
-                &dummy_pkmn_database_pokemon_entry_t
+                &entry
             );
     TEST_NULL_POINTER_RETURN("form");
 
@@ -2717,7 +2724,7 @@ static void database_pokemon_entry_error_test() {
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
     error = pkmn_database_pokemon_entry_set_form(
-                &dummy_pkmn_database_pokemon_entry_t,
+                &entry,
                 NULL // form
             );
     TEST_NULL_POINTER_RETURN("form");
@@ -2734,7 +2741,7 @@ static void database_pokemon_entry_error_test() {
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
     error = pkmn_database_pokemon_entry_experience_at_level(
-                &dummy_pkmn_database_pokemon_entry_t,
+                &entry,
                 1,
                 NULL // experience_out
             );
@@ -2752,11 +2759,70 @@ static void database_pokemon_entry_error_test() {
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
     error = pkmn_database_pokemon_entry_level_at_experience(
-                &dummy_pkmn_database_pokemon_entry_t,
+                &entry,
                 1,
                 NULL // level_out
             );
     TEST_NULL_POINTER_RETURN("level_out");
+
+    /*
+     * pkmn_database_pokemon_entry_icon_filepath
+     */
+
+    error = pkmn_database_pokemon_entry_icon_filepath(
+                NULL, // pokemon_entry
+                false,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_entry");
+
+    error = pkmn_database_pokemon_entry_icon_filepath(
+                &entry,
+                false,
+                NULL, // icon_filepath_out
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("icon_filepath_out");
+
+    error = pkmn_database_pokemon_entry_icon_filepath(
+                &entry,
+                false,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_database_pokemon_entry_sprite_filepath
+     */
+
+    error = pkmn_database_pokemon_entry_sprite_filepath(
+                NULL, // pokemon_entry
+                false,
+                false,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_entry");
+
+    error = pkmn_database_pokemon_entry_sprite_filepath(
+                &entry,
+                false,
+                false,
+                NULL, // sprite_filepath_out
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("sprite_filepath_out");
+
+    error = pkmn_database_pokemon_entry_sprite_filepath(
+                &entry,
+                false,
+                false,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_database_pokemon_entry_free
@@ -2766,6 +2832,11 @@ static void database_pokemon_entry_error_test() {
                 NULL // pokemon_entry
             );
     TEST_NULL_POINTER_RETURN("pokemon_entry");
+
+    error = pkmn_database_pokemon_entry_free(
+                &entry
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 }
 
 /*
@@ -2814,12 +2885,11 @@ static void utils_paths_error_test() {
             );
     TEST_NULL_POINTER_RETURN("images_dir_out");
 
-    // TODO: uncomment when there's actually an images directory
-    /*error = pkmn_get_images_dir(
+    error = pkmn_get_images_dir(
                 strbuffer,
                 0
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);*/
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
      * pkmn_get_tmp_dir
