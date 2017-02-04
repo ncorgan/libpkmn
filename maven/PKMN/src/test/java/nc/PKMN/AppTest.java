@@ -10,6 +10,13 @@ import junit.framework.TestSuite;
 public class AppTest 
     extends TestCase
 {
+    static {
+        try {
+            InitPKMN.initialize();
+        } catch(Exception e) {
+        }
+    }
+
     /**
      * Create the test case
      *

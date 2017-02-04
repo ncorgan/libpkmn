@@ -61,7 +61,7 @@ SET(SWIG_JAVA_LIBRARIES
 SWIG_BUILD_JAVA_MODULE(buildinfo_java    "BuildInfo"    TRUE nc.PKMN)
 SWIG_BUILD_JAVA_MODULE(calculations_java "Calculations" TRUE nc.PKMN)
 SWIG_BUILD_JAVA_MODULE(database_java     "Database"     TRUE nc.PKMN)
-SWIG_BUILD_JAVA_MODULE(env_java          "Env"          TRUE nc.Utils)
+SWIG_BUILD_JAVA_MODULE(env_java          "Env"          TRUE nc.PKMN)
 SWIG_BUILD_JAVA_MODULE(paths_java        "Paths"        TRUE nc.PKMN)
 SWIG_BUILD_JAVA_MODULE(pkmn_java         "PKMN"         TRUE nc.PKMN)
 SWIG_BUILD_JAVA_MODULE(stl_java          "STL"          TRUE nc.PKMN)

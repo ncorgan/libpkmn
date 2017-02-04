@@ -5,12 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-package nc.Utils;
+package nc.PKMN;
 
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.Paths;
 
-public class InitPKMN {
+class InitPKMN {
 
     // This will never be instanced.
     private InitPKMN() {}
@@ -23,6 +24,7 @@ public class InitPKMN {
     };
 
     public static Path tempDirectory;
+    private static boolean initialized = false;
 
     public static boolean isWindows() {
         return System.getProperty("os.name").startsWith("Win");
@@ -69,22 +71,29 @@ public class InitPKMN {
         return outputPath;
     }
 
-    static {
+    public static void initialize() throws FileNotFoundException, IOException {
         /*
          * Create temporary directory for this process. Resource files
          * will be extracted here either on import or as needed.
          */
-        try {
-            tempDirectory = Files.createTempDirectory("PKMN_");
-            tempDirectory.toFile().deleteOnExit();
+        if(tempDirectory == null) {
+            try {
+                tempDirectory = Files.createTempDirectory("PKMN_");
+                tempDirectory.toFile().deleteOnExit();
 
-            extractFileFromJAR("/resources/libpkmn.db", false);
-
-            for(int i = 0; i < libraryNames.length; ++i) {
-                extractFileFromJAR("/resources/" + getLibraryFileName(libraryNames[i]), true);
+                extractFileFromJAR("/resources/libpkmn.db", false);
+                for(int i = 0; i < libraryNames.length; ++i) {
+                    extractFileFromJAR("/resources/" + getLibraryFileName(libraryNames[i]), true);
+                }
+            } catch(Exception e) {
             }
-        } catch(IOException e) {
-            // TODO: what to do here?
+        }
+    }
+
+    static {
+        try {
+            initialize();
+        } catch(Exception e) {
         }
     }
 }
