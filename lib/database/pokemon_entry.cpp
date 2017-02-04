@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,14 +10,18 @@
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
-#include <boost/assign.hpp>
-#include <boost/config.hpp>
-#include <boost/format.hpp>
-
 #include <pkmn/exception.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/utils/paths.hpp>
+
+#include <boost/assign.hpp>
+#include <boost/config.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include <unordered_map>
+
+namespace fs = boost::filesystem;
 
 namespace pkmn { namespace database {
 
@@ -52,6 +56,8 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int ARCEUS_ID = 493;
 
     BOOST_STATIC_CONSTEXPR int SWAMPERT_MEGA_ID = 10064;
+
+    BOOST_STATIC_CONSTEXPR int VOLCANION_ID = 721;
 
     BOOST_STATIC_CONSTEXPR int RUBY      = 7;
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
@@ -1095,6 +1101,107 @@ namespace pkmn { namespace database {
                                  );
             }
         }
+    }
+
+    /*
+     * These don't quite match up with Veekun version group identifiers, so
+     * we'll do it ourselves.
+     */
+    BOOST_STATIC_CONSTEXPR const char* IMAGES_SUBDIR_STRINGS[] = {
+        "",
+        "red-blue",
+        "yellow",
+        "gold-silver",
+        "crystal",
+        "ruby-sapphire",
+        "emerald",
+        "firered-leafgreen",
+        "diamond-pearl",
+        "platinum",
+        "heartgold-soulsilver",
+        "black-white",
+        "colosseum-xd",
+        "colosseum-xd",
+        "black2-white2",
+        "x-y",
+        "or-as"
+    };
+
+    static BOOST_CONSTEXPR const char* image_name_query = \
+        "SELECT image_name FROM libpkmn_pokemon_form_names WHERE form_id=?";
+
+    static PKMN_INLINE bool has_different_female_icon(
+        int species_id
+    ) {
+        return (species_id == 521 or species_id == 592 or species_id == 593);
+    }
+
+    std::string pokemon_entry::get_icon_filepath(
+        bool female
+    ) const {
+        if(_species_id > VOLCANION_ID) {
+            throw pkmn::unimplemented_error();
+        }
+
+        fs::path icon_filepath(pkmn::get_images_dir());
+        icon_filepath /= "pokemon-icons";
+
+        if(female and has_different_female_icon(_species_id)) {
+            icon_filepath /= "female";
+        }
+
+        std::string form_suffix;
+        (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
+                  _db, image_name_query, form_suffix, _form_id
+              );
+        if(not form_suffix.empty()) {
+            form_suffix.insert(0, "-");
+        }
+
+        icon_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
+
+        return icon_filepath.string();
+    }
+
+    std::string pokemon_entry::get_sprite_filepath(
+        bool female,
+        bool shiny
+    ) const {
+        if(_generation > 5) {
+            throw pkmn::unimplemented_error();
+        }
+
+        fs::path sprite_filepath(pkmn::get_images_dir());
+        sprite_filepath /= str(boost::format("generation-%d") % _generation);
+        sprite_filepath /= IMAGES_SUBDIR_STRINGS[_version_group_id];
+
+        // TODO: None image for all games
+        if(_invalid) {
+            sprite_filepath /= "substitute.png";
+        } else {
+            if(female and has_gender_differences()) {
+                sprite_filepath /= "female";
+            }
+            if(shiny) {
+                if(_generation > 1) {
+                    sprite_filepath /= "shiny";
+                } else {
+                    throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+                }
+            }
+
+            std::string form_suffix;
+            (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
+                      _db, image_name_query, form_suffix, _form_id
+                  );
+            if(not form_suffix.empty()) {
+                form_suffix.insert(0, "-");
+            }
+
+            sprite_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
+        }
+
+        return sprite_filepath.string();
     }
 
 }}
