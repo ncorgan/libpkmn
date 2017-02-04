@@ -19,7 +19,6 @@
 
     <build>
         <directory>${basedir}/target</directory>
-        <sourceDirectory>${basedir}/../.., src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>com.googlecode.cmake-maven-project</groupId>
@@ -136,4 +135,16 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <excludePackageNames>cz.adamh.utils</excludePackageNames>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
