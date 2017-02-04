@@ -1103,28 +1103,33 @@ namespace pkmn { namespace database {
         }
     }
 
-    /*
-     * These don't quite match up with Veekun version group identifiers, so
-     * we'll do it ourselves.
-     */
     BOOST_STATIC_CONSTEXPR const char* IMAGES_SUBDIR_STRINGS[] = {
         "",
         "red-blue",
+        "red-blue",
         "yellow",
-        "gold-silver",
+        "gold",
+        "silver",
         "crystal",
+        "ruby-sapphire",
         "ruby-sapphire",
         "emerald",
         "firered-leafgreen",
+        "firered-leafgreen",
+        "diamond-pearl",
         "diamond-pearl",
         "platinum",
         "heartgold-soulsilver",
         "black-white",
+        "black-white",
         "colosseum-xd",
         "colosseum-xd",
         "black2-white2",
+        "black2-white2",
         "x-y",
-        "or-as"
+        "x-y",
+        "omegaruby-alphasapphire",
+        "omegaruby-alphasapphire"
     };
 
     static BOOST_CONSTEXPR const char* image_name_query = \
@@ -1167,27 +1172,27 @@ namespace pkmn { namespace database {
         bool female,
         bool shiny
     ) const {
-        if(_generation > 5) {
+        if(_generation > 5 or game_is_gamecube(_game_id)) {
             throw pkmn::unimplemented_error();
         }
 
         fs::path sprite_filepath(pkmn::get_images_dir());
         sprite_filepath /= str(boost::format("generation-%d") % _generation);
-        sprite_filepath /= IMAGES_SUBDIR_STRINGS[_version_group_id];
+        sprite_filepath /= IMAGES_SUBDIR_STRINGS[_game_id];
 
         // TODO: None image for all games
         if(_invalid) {
             sprite_filepath /= "substitute.png";
         } else {
-            if(female and has_gender_differences()) {
-                sprite_filepath /= "female";
-            }
             if(shiny) {
                 if(_generation > 1) {
                     sprite_filepath /= "shiny";
                 } else {
                     throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
                 }
+            }
+            if(female and has_gender_differences()) {
+                sprite_filepath /= "female";
             }
 
             std::string form_suffix;

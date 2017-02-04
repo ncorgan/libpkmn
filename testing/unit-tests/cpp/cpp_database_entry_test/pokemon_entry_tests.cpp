@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,6 +7,7 @@
 
 #include "cpp_database_entry_test.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
 // Only create one main
@@ -14,6 +15,11 @@
 #include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
+
+#include <iostream>
+
+namespace fs = boost::filesystem;
 
 static const std::pair<std::string, std::string> none_pair("None", "None");
 static const std::map<std::string, int> bad_stat_map_old = boost::assign::map_list_of
@@ -80,23 +86,354 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_none_test) {
  * Make sure specifying "" as the form corresponds to the correct Standard form.
  */
 BOOST_AUTO_TEST_CASE(pokemon_entry_standard_form_test) {
-    pkmn::database::pokemon_entry pikachu1("Pikachu", "Omega Ruby", "");
-    pkmn::database::pokemon_entry pikachu2("Pikachu", "Omega Ruby", "Standard");
+    pkmn::database::pokemon_entry pikachu1("Pikachu", "Black 2", "");
+    pkmn::database::pokemon_entry pikachu2("Pikachu", "Black 2", "Standard");
     BOOST_CHECK(pikachu1 == pikachu2);
     BOOST_CHECK_EQUAL(pikachu1.get_species_id(), pikachu1.get_pokemon_id());
     BOOST_CHECK_EQUAL(pikachu1.get_form(), "Standard");
+    BOOST_CHECK_EQUAL(pikachu1.get_icon_filepath(false), pikachu2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(pikachu1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(pikachu1.get_icon_filepath(true), pikachu2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(pikachu1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(pikachu1.get_sprite_filepath(false,false), pikachu2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(pikachu1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(pikachu1.get_sprite_filepath(false,true), pikachu2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(pikachu1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(pikachu1.get_sprite_filepath(true,false), pikachu2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(pikachu1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(pikachu1.get_sprite_filepath(true,true), pikachu2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(pikachu1.get_sprite_filepath(true,true)));
 
-    pkmn::database::pokemon_entry deoxys1("Deoxys", "Omega Ruby", "");
-    pkmn::database::pokemon_entry deoxys2("Deoxys", "Omega Ruby", "Normal");
+    pkmn::database::pokemon_entry unown1("Unown", "Black 2", "");
+    pkmn::database::pokemon_entry unown2("Unown", "Black 2", "A");
+    BOOST_CHECK(unown1 == unown2);
+    BOOST_CHECK_EQUAL(unown1.get_species_id(), unown1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(unown1.get_form(), "A");
+    BOOST_CHECK_EQUAL(unown1.get_icon_filepath(false), unown2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(unown1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(unown1.get_icon_filepath(true), unown2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(unown1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(unown1.get_sprite_filepath(false,false), unown2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(unown1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(unown1.get_sprite_filepath(false,true), unown2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(unown1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(unown1.get_sprite_filepath(true,false), unown2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(unown1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(unown1.get_sprite_filepath(true,true), unown2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(unown1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry castform1("Castform", "Black 2", "");
+    pkmn::database::pokemon_entry castform2("Castform", "Black 2", "Standard");
+    BOOST_CHECK(castform1 == castform2);
+    BOOST_CHECK_EQUAL(castform1.get_species_id(), castform1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(castform1.get_form(), "Standard");
+    BOOST_CHECK_EQUAL(castform1.get_icon_filepath(false), castform2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(castform1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(castform1.get_icon_filepath(true), castform2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(castform1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(castform1.get_sprite_filepath(false,false), castform2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(castform1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(castform1.get_sprite_filepath(false,true), castform2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(castform1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(castform1.get_sprite_filepath(true,false), castform2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(castform1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(castform1.get_sprite_filepath(true,true), castform2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(castform1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry deoxys1("Deoxys", "Black 2", "");
+    pkmn::database::pokemon_entry deoxys2("Deoxys", "Black 2", "Normal");
     BOOST_CHECK(deoxys1 == deoxys2);
     BOOST_CHECK_EQUAL(deoxys1.get_species_id(), deoxys1.get_pokemon_id());
     BOOST_CHECK_EQUAL(deoxys1.get_form(), "Normal");
+    BOOST_CHECK_EQUAL(deoxys1.get_icon_filepath(false), deoxys2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(deoxys1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(deoxys1.get_icon_filepath(true), deoxys2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(deoxys1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(deoxys1.get_sprite_filepath(false,false), deoxys2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(deoxys1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(deoxys1.get_sprite_filepath(false,true), deoxys2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(deoxys1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(deoxys1.get_sprite_filepath(true,false), deoxys2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(deoxys1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(deoxys1.get_sprite_filepath(true,true), deoxys2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(deoxys1.get_sprite_filepath(true,true)));
 
-    pkmn::database::pokemon_entry darmanitan1("Darmanitan", "Omega Ruby", "");
-    pkmn::database::pokemon_entry darmanitan2("Darmanitan", "Omega Ruby", "Standard");
+    pkmn::database::pokemon_entry burmy1("Burmy", "Black 2", "");
+    pkmn::database::pokemon_entry burmy2("Burmy", "Black 2", "Plant");
+    BOOST_CHECK(burmy1 == burmy2);
+    BOOST_CHECK_EQUAL(burmy1.get_species_id(), burmy1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(burmy1.get_form(), "Plant");
+    BOOST_CHECK_EQUAL(burmy1.get_icon_filepath(false), burmy2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(burmy1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(burmy1.get_icon_filepath(true), burmy2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(burmy1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(burmy1.get_sprite_filepath(false,false), burmy2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(burmy1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(burmy1.get_sprite_filepath(false,true), burmy2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(burmy1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(burmy1.get_sprite_filepath(true,false), burmy2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(burmy1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(burmy1.get_sprite_filepath(true,true), burmy2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(burmy1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry wormadam1("Wormadam", "Black 2", "");
+    pkmn::database::pokemon_entry wormadam2("Wormadam", "Black 2", "Plant");
+    BOOST_CHECK(wormadam1 == wormadam2);
+    BOOST_CHECK_EQUAL(wormadam1.get_species_id(), wormadam1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(wormadam1.get_form(), "Plant");
+    BOOST_CHECK_EQUAL(wormadam1.get_icon_filepath(false), wormadam2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(wormadam1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(wormadam1.get_icon_filepath(true), wormadam2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(wormadam1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(wormadam1.get_sprite_filepath(false,false), wormadam2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(wormadam1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(wormadam1.get_sprite_filepath(false,true), wormadam2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(wormadam1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(wormadam1.get_sprite_filepath(true,false), wormadam2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(wormadam1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(wormadam1.get_sprite_filepath(true,true), wormadam2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(wormadam1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry cherrim1("Cherrim", "Black 2", "Overcast");
+    pkmn::database::pokemon_entry cherrim2("Cherrim", "Black 2", "Overcast");
+    BOOST_CHECK(cherrim1 == cherrim2);
+    BOOST_CHECK_EQUAL(cherrim1.get_species_id(), cherrim1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(cherrim1.get_form(), "Overcast");
+    BOOST_CHECK_EQUAL(cherrim1.get_icon_filepath(false), cherrim2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(cherrim1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(cherrim1.get_icon_filepath(true), cherrim2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(cherrim1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(cherrim1.get_sprite_filepath(false,false), cherrim2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(cherrim1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(cherrim1.get_sprite_filepath(false,true), cherrim2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(cherrim1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(cherrim1.get_sprite_filepath(true,false), cherrim2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(cherrim1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(cherrim1.get_sprite_filepath(true,true), cherrim2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(cherrim1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry shellos1("Shellos", "Black 2", "");
+    pkmn::database::pokemon_entry shellos2("Shellos", "Black 2", "West");
+    BOOST_CHECK(shellos1 == shellos2);
+    BOOST_CHECK_EQUAL(shellos1.get_species_id(), shellos1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(shellos1.get_form(), "West");
+    BOOST_CHECK_EQUAL(shellos1.get_icon_filepath(false), shellos2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(shellos1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(shellos1.get_icon_filepath(true), shellos2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(shellos1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(shellos1.get_sprite_filepath(false,false), shellos2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(shellos1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(shellos1.get_sprite_filepath(false,true), shellos2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(shellos1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(shellos1.get_sprite_filepath(true,false), shellos2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(shellos1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(shellos1.get_sprite_filepath(true,true), shellos2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(shellos1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry gastrodon1("Gastrodon", "Black 2", "");
+    pkmn::database::pokemon_entry gastrodon2("Gastrodon", "Black 2", "West");
+    BOOST_CHECK(gastrodon1 == gastrodon2);
+    BOOST_CHECK_EQUAL(gastrodon1.get_species_id(), gastrodon1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(gastrodon1.get_form(), "West");
+    BOOST_CHECK_EQUAL(gastrodon1.get_icon_filepath(false), gastrodon2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(gastrodon1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(gastrodon1.get_icon_filepath(true), gastrodon2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(gastrodon1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(gastrodon1.get_sprite_filepath(false,false), gastrodon2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(gastrodon1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(gastrodon1.get_sprite_filepath(false,true), gastrodon2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(gastrodon1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(gastrodon1.get_sprite_filepath(true,false), gastrodon2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(gastrodon1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(gastrodon1.get_sprite_filepath(true,true), gastrodon2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(gastrodon1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry giratina1("Giratina", "Black 2", "");
+    pkmn::database::pokemon_entry giratina2("Giratina", "Black 2", "Altered");
+    BOOST_CHECK(giratina1 == giratina2);
+    BOOST_CHECK_EQUAL(giratina1.get_species_id(), giratina1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(giratina1.get_form(), "Altered");
+    BOOST_CHECK_EQUAL(giratina1.get_icon_filepath(false), giratina2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(giratina1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(giratina1.get_icon_filepath(true), giratina2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(giratina1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(giratina1.get_sprite_filepath(false,false), giratina2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(giratina1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(giratina1.get_sprite_filepath(false,true), giratina2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(giratina1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(giratina1.get_sprite_filepath(true,false), giratina2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(giratina1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(giratina1.get_sprite_filepath(true,true), giratina2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(giratina1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry shaymin1("Shaymin", "Black 2", "");
+    pkmn::database::pokemon_entry shaymin2("Shaymin", "Black 2", "Land");
+    BOOST_CHECK(shaymin1 == shaymin2);
+    BOOST_CHECK_EQUAL(shaymin1.get_species_id(), shaymin1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(shaymin1.get_form(), "Land");
+    BOOST_CHECK_EQUAL(shaymin1.get_icon_filepath(false), shaymin2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(shaymin1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(shaymin1.get_icon_filepath(true), shaymin2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(shaymin1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(shaymin1.get_sprite_filepath(false,false), shaymin2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(shaymin1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(shaymin1.get_sprite_filepath(false,true), shaymin2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(shaymin1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(shaymin1.get_sprite_filepath(true,false), shaymin2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(shaymin1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(shaymin1.get_sprite_filepath(true,true), shaymin2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(shaymin1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry arceus1("Arceus", "Black 2", "");
+    pkmn::database::pokemon_entry arceus2("Arceus", "Black 2", "Normal");
+    BOOST_CHECK(arceus1 == arceus2);
+    BOOST_CHECK_EQUAL(arceus1.get_species_id(), arceus1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(arceus1.get_form(), "Normal");
+    BOOST_CHECK_EQUAL(arceus1.get_icon_filepath(false), arceus2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(arceus1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(arceus1.get_icon_filepath(true), arceus2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(arceus1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(arceus1.get_sprite_filepath(false,false), arceus2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(arceus1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(arceus1.get_sprite_filepath(false,true), arceus2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(arceus1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(arceus1.get_sprite_filepath(true,false), arceus2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(arceus1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(arceus1.get_sprite_filepath(true,true), arceus2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(arceus1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry basculin1("Basculin", "Black 2", "");
+    pkmn::database::pokemon_entry basculin2("Basculin", "Black 2", "Red-Striped");
+    BOOST_CHECK(basculin1 == basculin2);
+    BOOST_CHECK_EQUAL(basculin1.get_species_id(), basculin1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(basculin1.get_form(), "Red-Striped");
+    BOOST_CHECK_EQUAL(basculin1.get_icon_filepath(false), basculin2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(basculin1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(basculin1.get_icon_filepath(true), basculin2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(basculin1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(basculin1.get_sprite_filepath(false,false), basculin2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(basculin1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(basculin1.get_sprite_filepath(false,true), basculin2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(basculin1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(basculin1.get_sprite_filepath(true,false), basculin2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(basculin1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(basculin1.get_sprite_filepath(true,true), basculin2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(basculin1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry darmanitan1("Darmanitan", "Black 2", "");
+    pkmn::database::pokemon_entry darmanitan2("Darmanitan", "Black 2", "Standard");
     BOOST_CHECK(darmanitan1 == darmanitan2);
     BOOST_CHECK_EQUAL(darmanitan1.get_species_id(), darmanitan1.get_pokemon_id());
     BOOST_CHECK_EQUAL(darmanitan1.get_form(), "Standard");
+    BOOST_CHECK_EQUAL(darmanitan1.get_icon_filepath(false), darmanitan2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(darmanitan1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(darmanitan1.get_icon_filepath(true), darmanitan2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(darmanitan1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(darmanitan1.get_sprite_filepath(false,false), darmanitan2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(darmanitan1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(darmanitan1.get_sprite_filepath(false,true), darmanitan2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(darmanitan1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(darmanitan1.get_sprite_filepath(true,false), darmanitan2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(darmanitan1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(darmanitan1.get_sprite_filepath(true,true), darmanitan2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(darmanitan1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry deerling1("Deerling", "Black 2", "");
+    pkmn::database::pokemon_entry deerling2("Deerling", "Black 2", "Spring");
+    BOOST_CHECK(deerling1 == deerling2);
+    BOOST_CHECK_EQUAL(deerling1.get_species_id(), deerling1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(deerling1.get_form(), "Spring");
+    BOOST_CHECK_EQUAL(deerling1.get_icon_filepath(false), deerling2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(deerling1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(deerling1.get_icon_filepath(true), deerling2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(deerling1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(deerling1.get_sprite_filepath(false,false), deerling2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(deerling1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(deerling1.get_sprite_filepath(false,true), deerling2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(deerling1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(deerling1.get_sprite_filepath(true,false), deerling2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(deerling1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(deerling1.get_sprite_filepath(true,true), deerling2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(deerling1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry sawsbuck1("Sawsbuck", "Black 2", "");
+    pkmn::database::pokemon_entry sawsbuck2("Sawsbuck", "Black 2", "Spring");
+    BOOST_CHECK(sawsbuck1 == sawsbuck2);
+    BOOST_CHECK_EQUAL(sawsbuck1.get_species_id(), sawsbuck1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(sawsbuck1.get_form(), "Spring");
+    BOOST_CHECK_EQUAL(sawsbuck1.get_icon_filepath(false), sawsbuck2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(sawsbuck1.get_icon_filepath(true), sawsbuck2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(sawsbuck1.get_sprite_filepath(false,false), sawsbuck2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(sawsbuck1.get_sprite_filepath(false,true), sawsbuck2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(sawsbuck1.get_sprite_filepath(true,false), sawsbuck2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(sawsbuck1.get_sprite_filepath(true,true), sawsbuck2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(sawsbuck1.get_sprite_filepath(true,true)));
+
+    static BOOST_CONSTEXPR const char* incarnates[] = {
+        "Tornadus", "Thundurus", "Landorus"
+    };
+    for(int i = 0; i < 3; ++i) {
+        pkmn::database::pokemon_entry incarnate1(incarnates[i], "Black 2", "");
+        pkmn::database::pokemon_entry incarnate2(incarnates[i], "Black 2", "Incarnate");
+        BOOST_CHECK(incarnate1 == incarnate2);
+        BOOST_CHECK_EQUAL(incarnate1.get_species_id(), incarnate1.get_pokemon_id());
+        BOOST_CHECK_EQUAL(incarnate1.get_form(), "Incarnate");
+        BOOST_CHECK_EQUAL(incarnate1.get_icon_filepath(false), incarnate2.get_icon_filepath(false));
+        BOOST_CHECK(fs::exists(incarnate1.get_icon_filepath(false)));
+        BOOST_CHECK_EQUAL(incarnate1.get_icon_filepath(true), incarnate2.get_icon_filepath(true));
+        BOOST_CHECK(fs::exists(incarnate1.get_icon_filepath(true)));
+        BOOST_CHECK_EQUAL(incarnate1.get_sprite_filepath(false,false), incarnate2.get_sprite_filepath(false,false));
+        BOOST_CHECK(fs::exists(incarnate1.get_sprite_filepath(false,false)));
+        BOOST_CHECK_EQUAL(incarnate1.get_sprite_filepath(false,true), incarnate2.get_sprite_filepath(false,true));
+        BOOST_CHECK(fs::exists(incarnate1.get_sprite_filepath(false,true)));
+        BOOST_CHECK_EQUAL(incarnate1.get_sprite_filepath(true,false), incarnate2.get_sprite_filepath(true,false));
+        BOOST_CHECK(fs::exists(incarnate1.get_sprite_filepath(true,false)));
+        BOOST_CHECK_EQUAL(incarnate1.get_sprite_filepath(true,true), incarnate2.get_sprite_filepath(true,true));
+        BOOST_CHECK(fs::exists(incarnate1.get_sprite_filepath(true,true)));
+    }
+
+    pkmn::database::pokemon_entry keldeo1("Keldeo", "Black 2", "");
+    pkmn::database::pokemon_entry keldeo2("Keldeo", "Black 2", "Ordinary");
+    BOOST_CHECK(keldeo1 == keldeo2);
+    BOOST_CHECK_EQUAL(keldeo1.get_species_id(), keldeo1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(keldeo1.get_form(), "Ordinary");
+    BOOST_CHECK_EQUAL(keldeo1.get_icon_filepath(false), keldeo2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(keldeo1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(keldeo1.get_icon_filepath(true), keldeo2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(keldeo1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(keldeo1.get_sprite_filepath(false,false), keldeo2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(keldeo1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(keldeo1.get_sprite_filepath(false,true), keldeo2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(keldeo1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(keldeo1.get_sprite_filepath(true,false), keldeo2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(keldeo1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(keldeo1.get_sprite_filepath(true,true), keldeo2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(keldeo1.get_sprite_filepath(true,true)));
+
+    pkmn::database::pokemon_entry meloetta1("Meloetta", "Black 2", "");
+    pkmn::database::pokemon_entry meloetta2("Meloetta", "Black 2", "Aria");
+    BOOST_CHECK(meloetta1 == meloetta2);
+    BOOST_CHECK_EQUAL(meloetta1.get_species_id(), meloetta1.get_pokemon_id());
+    BOOST_CHECK_EQUAL(meloetta1.get_form(), "Aria");
+    BOOST_CHECK_EQUAL(meloetta1.get_icon_filepath(false), meloetta2.get_icon_filepath(false));
+    BOOST_CHECK(fs::exists(meloetta1.get_icon_filepath(false)));
+    BOOST_CHECK_EQUAL(meloetta1.get_icon_filepath(true), meloetta2.get_icon_filepath(true));
+    BOOST_CHECK(fs::exists(meloetta1.get_icon_filepath(true)));
+    BOOST_CHECK_EQUAL(meloetta1.get_sprite_filepath(false,false), meloetta2.get_sprite_filepath(false,false));
+    BOOST_CHECK(fs::exists(meloetta1.get_sprite_filepath(false,false)));
+    BOOST_CHECK_EQUAL(meloetta1.get_sprite_filepath(false,true), meloetta2.get_sprite_filepath(false,true));
+    BOOST_CHECK(fs::exists(meloetta1.get_sprite_filepath(false,true)));
+    BOOST_CHECK_EQUAL(meloetta1.get_sprite_filepath(true,false), meloetta2.get_sprite_filepath(true,false));
+    BOOST_CHECK(fs::exists(meloetta1.get_sprite_filepath(true,false)));
+    BOOST_CHECK_EQUAL(meloetta1.get_sprite_filepath(true,true), meloetta2.get_sprite_filepath(true,true));
+    BOOST_CHECK(fs::exists(meloetta1.get_sprite_filepath(true,true)));
+
+    // TODO: Gen VI after sprites and icons brought in
 }
 
 /*
@@ -339,6 +676,19 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_pokemon_index(), 74);
     BOOST_CHECK_EQUAL(pokemon_entry_gen1.get_game_id(), 3);
 
+    BOOST_CHECK(fs::exists(pokemon_entry_gen1.get_icon_filepath(false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen1.get_icon_filepath(true)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen1.get_sprite_filepath(false,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen1.get_sprite_filepath(true,false)));
+
+    // No shininess in Generation I
+    BOOST_CHECK_THROW(
+        (void)pokemon_entry_gen1.get_sprite_filepath(false,true);
+    , pkmn::feature_not_in_game_error);
+    BOOST_CHECK_THROW(
+        (void)pokemon_entry_gen1.get_sprite_filepath(true,true);
+    , pkmn::feature_not_in_game_error);
+
     /*
      * Generation II entry
      */
@@ -393,6 +743,13 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_pokemon_id(), 160);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_form_id(), 160);
     BOOST_CHECK_EQUAL(pokemon_entry_gen2.get_pokemon_index(), 160);
+
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_icon_filepath(false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_icon_filepath(true)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_sprite_filepath(false,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen2.get_sprite_filepath(true,true)));
 
     /*
      * Game Boy Advance entry
@@ -453,6 +810,13 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_form_id(), 378);
     BOOST_CHECK_EQUAL(pokemon_entry_gba.get_pokemon_index(), 402);
 
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_icon_filepath(false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_icon_filepath(true)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_sprite_filepath(false,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gba.get_sprite_filepath(true,true)));
+
     /*
      * Gamecube entry
      */
@@ -511,6 +875,8 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_pokemon_id(), 285);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_form_id(), 285);
     BOOST_CHECK_EQUAL(pokemon_entry_gcn.get_pokemon_index(), 306);
+
+    // TODO: sprites+icons
 
     /*
      * Generation IV entry
@@ -571,6 +937,13 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_form_id(), 401);
     BOOST_CHECK_EQUAL(pokemon_entry_gen4.get_pokemon_index(), 401);
 
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_icon_filepath(false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_icon_filepath(true)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_sprite_filepath(false,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen4.get_sprite_filepath(true,true)));
+
     /*
      * Generation V entry
      */
@@ -630,6 +1003,13 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_form_id(), 618);
     BOOST_CHECK_EQUAL(pokemon_entry_gen5.get_pokemon_index(), 618);
 
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_icon_filepath(false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_icon_filepath(true)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_sprite_filepath(false,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_sprite_filepath(true,false)));
+    BOOST_CHECK(fs::exists(pokemon_entry_gen5.get_sprite_filepath(true,true)));
+
     /*
      * Generation VI entry
      */
@@ -688,6 +1068,8 @@ static void _pokemon_entry_test_common(
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_pokemon_id(), 700);
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_form_id(), 700);
     BOOST_CHECK_EQUAL(pokemon_entry_gen6.get_pokemon_index(), 700);
+
+    // TODO: sprites+icons
 }
 
 // Pokémon entries created by index
