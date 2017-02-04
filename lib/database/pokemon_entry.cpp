@@ -440,7 +440,7 @@ namespace pkmn { namespace database {
                 ) > 0);
     }
 
-    int pokemon_entry::get_base_happiness() const {
+    int pokemon_entry::get_base_friendship() const {
         // Happiness was introduced in Generation II
         if(_none or _invalid or _generation == 1) {
             return -1;
@@ -1003,32 +1003,32 @@ namespace pkmn { namespace database {
                 if(_generation == 3 and _species_id == DEOXYS_ID) {
                     switch(_game_id) {
                         case FIRERED:
-                            if(form_id != DEOXYS_ATTACK_ID) {
-                                throw pkmn::feature_not_in_game_error(
+                            if(form_id != DEOXYS_ATTACK_FORM_ID) {
+                                throw std::invalid_argument(
                                           "Deoxys can only be in its Attack Forme in FireRed."
                                       );
                             }
                             break;
 
                         case LEAFGREEN:
-                            if(form_id != DEOXYS_DEFENSE_ID) {
-                                throw pkmn::feature_not_in_game_error(
+                            if(form_id != DEOXYS_DEFENSE_FORM_ID) {
+                                throw std::invalid_argument(
                                           "Deoxys can only be in its Defense Forme in LeafGreen."
                                       );
                             }
                             break;
 
                         case EMERALD:
-                            if(form_id != DEOXYS_SPEED_ID) {
-                                throw pkmn::feature_not_in_game_error(
+                            if(form_id != DEOXYS_SPEED_FORM_ID) {
+                                throw std::invalid_argument(
                                           "Deoxys can only be in its Speed Forme in Emerald."
                                       );
                             }
                             break;
 
                         default:
-                            if(form_id != DEOXYS_NORMAL_ID) {
-                                throw pkmn::feature_not_in_game_error(
+                            if(form_id != _species_id) {
+                                throw std::invalid_argument(
                                     str(boost::format("Deoxys can only be in its Normal Forme in %s.")
                                             % this->get_game().c_str()
                                        )

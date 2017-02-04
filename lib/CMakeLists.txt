@@ -30,6 +30,8 @@ SET(pkmn_libs
 ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(io)
+ADD_SUBDIRECTORY(mem)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
@@ -53,6 +55,8 @@ ENDIF(PKMN_ENABLE_QT)
 SET(pkmn_sources
     ${pkmn_calculations_sources}
     ${pkmn_database_sources}
+    ${pkmn_io_sources}
+    ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources} # Will be empty without Qt support
     ${pkmn_utils_sources}
@@ -65,6 +69,18 @@ SET(pkmn_sources
     item_list_impl.cpp
     item_list_gen2_tmhmimpl.cpp
     item_list_modernimpl.cpp
+    pokemon_impl.cpp
+    pokemon_gen1impl.cpp
+    pokemon_gen2impl.cpp
+    pokemon_gbaimpl.cpp
+    pokemon_box_impl.cpp
+    pokemon_box_gbaimpl.cpp
+    pokemon_party_impl.cpp
+    pokemon_party_gbaimpl.cpp
+    pokemon_pc_impl.cpp
+    pokemon_pc_gen1impl.cpp
+    pokemon_pc_gen2impl.cpp
+    pokemon_pc_gbaimpl.cpp
 )
 
 #

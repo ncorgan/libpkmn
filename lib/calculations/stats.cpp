@@ -94,7 +94,6 @@ namespace pkmn { namespace calculations {
         }
         if(not pkmn_EV_in_bounds(EV, true)) {
             throw pkmn::range_error("EV", 0, 255);
-            throw std::out_of_range("EV: valid range 0-255");
         }
         if(not pkmn_IV_in_bounds(IV, true)) {
             throw pkmn::range_error("IV", 0, 31);

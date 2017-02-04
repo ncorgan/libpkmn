@@ -228,7 +228,7 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry->chance_male, 0.0f);
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry->chance_female, 0.0f);
     TEST_ASSERT_FALSE(pokemon_entry->has_gender_differences);
-    TEST_ASSERT_EQUAL(pokemon_entry->base_happiness, 0);
+    TEST_ASSERT_EQUAL(pokemon_entry->base_friendship, 0);
     TEST_ASSERT_NULL(pokemon_entry->types.first);
     TEST_ASSERT_NULL(pokemon_entry->types.second);
     TEST_ASSERT_NULL(pokemon_entry->abilities.first);
@@ -382,7 +382,7 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_male, 0.5f);
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_female, 0.5f);
     TEST_ASSERT_FALSE(pokemon_entry.has_gender_differences);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_happiness, 70);
+    TEST_ASSERT_EQUAL(pokemon_entry.base_friendship, 70);
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.first, "Ground");
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.second, "Electric");
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.first, "Static");

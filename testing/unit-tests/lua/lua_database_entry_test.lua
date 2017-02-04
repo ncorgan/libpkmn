@@ -101,7 +101,7 @@ function test_pokemon_entry()
     luaunit.assertAlmostEquals(entry:get_chance_male(), 0.5, 0.0001)
     luaunit.assertAlmostEquals(entry:get_chance_female(), 0.5, 0.0001)
     luaunit.assertFalse(entry:has_gender_differences())
-    luaunit.assertEquals(entry:get_base_happiness(), 70)
+    luaunit.assertEquals(entry:get_base_friendship(), 70)
 
     local types = entry:get_types()
     luaunit.assertEquals(types.first, "Ground")
