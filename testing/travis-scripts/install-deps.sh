@@ -24,7 +24,8 @@ else
 	                    doxygen libpython-dev python-ply libboost1.55-all-dev \
 			    swig python-pip default-jdk junit libqt4-dev qtbase5-dev \
 			    mono-complete swig3.0 python-pip libqt4-dev qtbase5-dev \
-			    liblua5.1-dev luarocks mono-complete monodevelop-nunit nunit-console
+			    liblua5.1-dev luarocks mono-complete monodevelop-nunit nunit-console \
+			    maven
     [ $? -ne 0 ] && exit 1
     sudo pip install CppHeaderParser
     [ $? -ne 0 ] && exit 1

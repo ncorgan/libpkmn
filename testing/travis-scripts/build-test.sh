@@ -57,6 +57,11 @@ else
     [ $? -ne 0 ] && exit 1
     ctest -E ".*GUI" --output-on-failure
     [ $? -ne 0 ] && exit 1
+
+    # Build with Java
+    cd $REPO_TOPLEVEL/maven
+    mvn test
+    mvn site
 fi
 
 echo # So we can check the last error code
