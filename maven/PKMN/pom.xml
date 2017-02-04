@@ -72,7 +72,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/resources</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/cmake/lib</directory>
