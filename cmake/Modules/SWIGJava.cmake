@@ -40,7 +40,7 @@
 #  * manifest_txt (optional): path to Manifest.txt
 ########################################################################
 
-MACRO(SWIG_BUILD_JAVA_MODULE swig_source module_name cplusplus)
+MACRO(SWIG_BUILD_JAVA_MODULE swig_source module_name cplusplus package_name)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -60,7 +60,7 @@ MACRO(SWIG_BUILD_JAVA_MODULE swig_source module_name cplusplus)
     )
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package "nc.PKMN" ${SWIG_JAVA_FLAGS})
+    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package ${package_name} ${SWIG_JAVA_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
