@@ -127,13 +127,13 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& filepath);
 %}
 
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
-//pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const std::string& game,
-//                                             const std::string& form, int level);
-//pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& filepath);
+pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const std::string& game,
+                                             const std::string& form, int level);
+pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& filepath);
 
 #endif
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
-//pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
-//pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
-//pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
+pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);
