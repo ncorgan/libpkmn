@@ -17,6 +17,7 @@ static bool dummy_bool = 0;
 static int dummy_int = 0;
 static uint16_t dummy_uint16_t = 0;
 static uint32_t dummy_uint32_t = 0;
+static float dummy_float = 0;
 static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
 static pkmn_string_list_t dummy_pkmn_string_list_t = {
     .strings = NULL,
@@ -2370,6 +2371,41 @@ static void calculations_shininess_error_test() {
 }
 
 /*
+ * <pkmn-c/calculations/size.h>
+ */
+static void calculations_size_error_test() {
+    /*
+     * pkmn_calculations_pokemon_size
+     */
+
+    error = pkmn_calculations_pokemon_size(
+                NULL, // species
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                &dummy_float
+            );
+    TEST_NULL_POINTER_RETURN("species");
+
+    error = pkmn_calculations_pokemon_size(
+                strbuffer,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                NULL // size_out
+            );
+    TEST_NULL_POINTER_RETURN("size_out");
+}
+
+/*
  * <pkmn-c/calculations/spinda_spots.h>
  */
 static void calculations_spinda_spots_error_test() {
@@ -2850,6 +2886,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(calculations_gender_error_test)
     PKMN_C_TEST(calculations_hidden_power_error_test)
     PKMN_C_TEST(calculations_shininess_error_test)
+    PKMN_C_TEST(calculations_size_error_test)
     PKMN_C_TEST(calculations_spinda_spots_error_test)
     PKMN_C_TEST(calculations_stats_error_test)
     PKMN_C_TEST(database_item_entry_error_test)
