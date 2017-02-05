@@ -53,6 +53,7 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
 
+    luaunit.assertError(pokemon.get_gender, pokemon)
     luaunit.assertError(pokemon.is_shiny, pokemon)
     luaunit.assertError(pokemon.get_held_item, pokemon)
 

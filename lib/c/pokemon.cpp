@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,12 @@
 #include <boost/assign.hpp>
 
 #include <map>
+
+static const std::map<std::string, pkmn_gender_t> genders = boost::assign::map_list_of
+    ("Male", PKMN_MALE)
+    ("Female", PKMN_FEMALE)
+    ("Genderless", PKMN_GENDERLESS)
+;
 
 pkmn_error_t pkmn_pokemon_make(
     pkmn_pokemon_handle_t* handle_ptr,
@@ -196,6 +202,18 @@ pkmn_error_t pkmn_pokemon_set_nickname(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_gender(
+    pkmn_pokemon_handle_t handle,
+    pkmn_gender_t* gender_out
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(gender_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        *gender_out = genders.at(handle->cpp->get_gender());
+    )
+}
+
 pkmn_error_t pkmn_pokemon_is_shiny(
     pkmn_pokemon_handle_t handle,
     bool* is_shiny_out
@@ -347,12 +365,6 @@ pkmn_error_t pkmn_pokemon_set_trainer_id(
         handle->cpp->set_trainer_id(trainer_id);
     )
 }
-
-static const std::map<std::string, pkmn_gender_t> genders = boost::assign::map_list_of
-    ("Male", PKMN_MALE)
-    ("Female", PKMN_FEMALE)
-    ("Genderless", PKMN_GENDERLESS)
-;
 
 pkmn_error_t pkmn_pokemon_get_trainer_gender(
     pkmn_pokemon_handle_t handle,

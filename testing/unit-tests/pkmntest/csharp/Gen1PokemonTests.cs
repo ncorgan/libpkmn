@@ -82,6 +82,11 @@ public class Gen1PokemonTests {
 
         Assert.Throws<ApplicationException>(
             delegate {
+                string gender = pokemon.Gender;
+            }
+        );
+        Assert.Throws<ApplicationException>(
+            delegate {
                 bool isShiny = pokemon.IsShiny;
             }
         );

@@ -170,6 +170,10 @@ namespace pkmn {
         _nickname = nickname;
     }
 
+    std::string pokemon_gen1impl::get_gender() {
+        throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
+    }
+
     bool pokemon_gen1impl::is_shiny() {
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
     }

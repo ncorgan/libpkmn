@@ -10,6 +10,7 @@
 #include "database/index_to_string.hpp"
 
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/party_data.hpp"
@@ -175,6 +176,13 @@ namespace pkmn {
         }
 
         _nickname = nickname;
+    }
+
+    std::string pokemon_gen2impl::get_gender() {
+        return pkmn::calculations::gen2_pokemon_gender(
+                   _database_entry.get_name(),
+                   _IVs["Attack"]
+               );
     }
 
     bool pokemon_gen2impl::is_shiny() {

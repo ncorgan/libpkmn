@@ -800,6 +800,22 @@ static void pokemon_error_test() {
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
 
     /*
+     * pkmn_pokemon_get_gender
+     */
+
+    error = pkmn_pokemon_get_gender(
+                NULL, // handle
+                &dummy_pkmn_gender_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                NULL // gender_out
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "gender_out");
+
+    /*
      * pkmn_pokemon_is_shiny
      */
 

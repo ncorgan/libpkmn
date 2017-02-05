@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -127,6 +127,9 @@ namespace pkmntest {
             pokemon->get_nickname(),
             boost::algorithm::to_upper_copy(species)
         );
+        BOOST_CHECK_THROW(
+            pokemon->get_gender();
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->is_shiny();
         , pkmn::feature_not_in_game_error);
