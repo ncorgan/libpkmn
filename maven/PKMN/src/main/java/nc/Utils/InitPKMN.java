@@ -81,10 +81,14 @@ class InitPKMN {
                 tempDirectory = Files.createTempDirectory("PKMN_");
                 tempDirectory.toFile().deleteOnExit();
 
-                extractFileFromJAR("/resources/libpkmn.db", false);
                 for(int i = 0; i < libraryNames.length; ++i) {
                     extractFileFromJAR("/resources/" + getLibraryFileName(libraryNames[i]), true);
                 }
+                Path databaseOutputFile = extractFileFromJAR("/resources/libpkmn.db", false);
+
+                // With everything extracted, set LibPKMN's environment variables.
+                nc.PKMN.Env.setEnv("LIBPKMN_TMP_DIR", tempDirectory.toString());
+                nc.PKMN.Env.setEnv("LIBPKMN_DATABASE_PATH", databaseOutputFile.toString());
             } catch(Exception e) {
             }
         }
