@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE(gen3_gen4_nature_test) {
         ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
     ;
 
-    std::srand(std::time(NULL));
+    std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
         BOOST_CHECK_EQUAL(
             pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
@@ -647,7 +647,7 @@ BOOST_AUTO_TEST_CASE(pokemon_size_test) {
         )
     , pkmn::range_error);
 
-    std::srand(std::time(NULL));
+    std::srand((unsigned int)std::time(NULL));
     for(auto pokemon_iter = pokemon_with_size_checks.begin();
         pokemon_iter != pokemon_with_size_checks.end();
         ++pokemon_iter
