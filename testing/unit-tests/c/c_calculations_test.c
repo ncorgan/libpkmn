@@ -667,7 +667,7 @@ static void pokemon_size_test() {
                     );
             TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
-            TEST_ASSERT(abs(size-entry.height) < entry.height);
+            TEST_ASSERT(fabs(size-entry.height) < entry.height);
         }
 
         error = pkmn_database_pokemon_entry_free(&entry);
