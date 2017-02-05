@@ -580,4 +580,79 @@ namespace pkmntest {
         test_invalid_starters(game);
     }
 
+    void gender_test(
+        const std::string &game
+    ) {
+        // Single-gender
+        pkmn::pokemon::sptr nidorina = pkmn::pokemon::make(
+                                           "Nidorina",
+                                           game,
+                                           "",
+                                           50
+                                       );
+        BOOST_CHECK_EQUAL(nidorina->get_gender(), "Female");
+        nidorina->set_gender("Female");
+        BOOST_CHECK_THROW(
+            nidorina->set_gender("Male");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            nidorina->set_gender("Genderless");
+        , std::invalid_argument);
+
+        pkmn::pokemon::sptr nidorino = pkmn::pokemon::make(
+                                           "Nidorino",
+                                           game,
+                                           "",
+                                           50
+                                       );
+        BOOST_CHECK_EQUAL(nidorino->get_gender(), "Male");
+        nidorino->set_gender("Male");
+        BOOST_CHECK_THROW(
+            nidorino->set_gender("Female");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            nidorino->set_gender("Genderless");
+        , std::invalid_argument);
+
+        pkmn::pokemon::sptr magnemite = pkmn::pokemon::make(
+                                            "Magnemite",
+                                            game,
+                                            "",
+                                            50
+                                        );
+        BOOST_CHECK_EQUAL(magnemite->get_gender(), "Genderless");
+        magnemite->set_gender("Genderless");
+        BOOST_CHECK_THROW(
+            magnemite->set_gender("Male");
+        , std::invalid_argument);
+        BOOST_CHECK_THROW(
+            magnemite->set_gender("Female");
+        , std::invalid_argument);
+
+        static const std::vector<std::string> mixed_pokemon = boost::assign::list_of
+            ("Charmander") // 87.5% male
+            ("Growlithe")  // 75% male
+            ("Pidgey")     // 50% male
+            ("Vulpix")     // 25% male
+        ;
+
+        for(auto pokemon_iter = mixed_pokemon.begin(); pokemon_iter != mixed_pokemon.end(); ++pokemon_iter) {
+            pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                              *pokemon_iter,
+                                              game,
+                                              "",
+                                              50
+                                          );
+            BOOST_CHECK_NE(pokemon->get_gender(), "Genderless");
+
+            pokemon->set_gender("Male");
+            BOOST_CHECK_EQUAL(pokemon->get_gender(), "Male");
+            pokemon->set_gender("Female");
+            BOOST_CHECK_EQUAL(pokemon->get_gender(), "Female");
+            BOOST_CHECK_THROW(
+                pokemon->set_gender("Genderless");
+            , std::invalid_argument);
+        }
+    }
+
 }

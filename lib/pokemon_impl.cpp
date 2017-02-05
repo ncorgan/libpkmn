@@ -356,6 +356,8 @@ namespace pkmn {
             throw std::invalid_argument("This Pokémon is male-only.");
         } else if(pkmn_floats_close(chance_female, 1.0f) and gender != "Female") {
             throw std::invalid_argument("This Pokémon is female-only.");
+        } else if(gender == "Genderless") {
+            throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
         }
 
         if(gender == "Male") {

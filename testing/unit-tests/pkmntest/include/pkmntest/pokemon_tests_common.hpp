@@ -18,6 +18,10 @@ namespace pkmntest {
         const std::string &game
     );
 
+    PKMNTEST_API void gender_test(
+        const std::string &game
+    );
+
 }
 
 #endif /* POKEMON_TESTS_COMMON_HPP */

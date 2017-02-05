@@ -102,6 +102,10 @@ BOOST_AUTO_TEST_CASE(gen2_gold_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Gold");
 }
 
+BOOST_AUTO_TEST_CASE(gen2_gold_gender_test) {
+    pkmntest::gender_test("Gold");
+}
+
 BOOST_AUTO_TEST_CASE(gen2_gold_unown_form_test) {
     pkmntest::gen2_unown_form_test("Gold");
 }
@@ -120,6 +124,10 @@ BOOST_AUTO_TEST_CASE(gen2_gold_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gen2_silver_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Silver");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_silver_gender_test) {
+    pkmntest::gender_test("Silver");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_silver_unown_form_test) {
@@ -142,6 +150,10 @@ BOOST_AUTO_TEST_CASE(gen2_crystal_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Crystal");
 }
 
+BOOST_AUTO_TEST_CASE(gen2_crystal_gender_test) {
+    pkmntest::gender_test("Crystal");
+}
+
 BOOST_AUTO_TEST_CASE(gen2_crystal_unown_form_test) {
     pkmntest::gen2_unown_form_test("Crystal");
 }
@@ -160,6 +172,10 @@ BOOST_AUTO_TEST_CASE(gen2_crystal_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gba_ruby_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Ruby");
+}
+
+BOOST_AUTO_TEST_CASE(gba_ruby_gender_test) {
+    pkmntest::gender_test("Ruby");
 }
 
 BOOST_AUTO_TEST_CASE(gba_ruby_unown_form_test) {
@@ -182,6 +198,10 @@ BOOST_AUTO_TEST_CASE(gba_sapphire_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Sapphire");
 }
 
+BOOST_AUTO_TEST_CASE(gba_sapphire_gender_test) {
+    pkmntest::gender_test("Sapphire");
+}
+
 BOOST_AUTO_TEST_CASE(gba_sapphire_unown_form_test) {
     pkmntest::gba_unown_form_test("Sapphire");
 }
@@ -200,6 +220,10 @@ BOOST_AUTO_TEST_CASE(gba_sapphire_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gba_emerald_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("Emerald");
+}
+
+BOOST_AUTO_TEST_CASE(gba_emerald_gender_test) {
+    pkmntest::gender_test("Emerald");
 }
 
 BOOST_AUTO_TEST_CASE(gba_emerald_unown_form_test) {
@@ -222,6 +246,10 @@ BOOST_AUTO_TEST_CASE(gba_firered_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("FireRed");
 }
 
+BOOST_AUTO_TEST_CASE(gba_firered_gender_test) {
+    pkmntest::gender_test("FireRed");
+}
+
 BOOST_AUTO_TEST_CASE(gba_firered_unown_form_test) {
     pkmntest::gba_unown_form_test("FireRed");
 }
@@ -240,6 +268,10 @@ BOOST_AUTO_TEST_CASE(gba_firered_pokemon_test) {
 
 BOOST_AUTO_TEST_CASE(gba_leafgreen_invalid_pokemon_test) {
     pkmntest::invalid_pokemon_test("LeafGreen");
+}
+
+BOOST_AUTO_TEST_CASE(gba_leafgreen_gender_test) {
+    pkmntest::gender_test("LeafGreen");
 }
 
 BOOST_AUTO_TEST_CASE(gba_leafgreen_unown_form_test) {
