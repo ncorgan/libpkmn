@@ -647,7 +647,7 @@ BOOST_AUTO_TEST_CASE(pokemon_size_test) {
                              (std::rand() % 32),
                              (std::rand() % 32)
                          );
-            BOOST_CHECK_LE(std::abs(size-height), 0.75f);
+            BOOST_CHECK_LE(std::abs(size-height), height);
         }
     }
 }
