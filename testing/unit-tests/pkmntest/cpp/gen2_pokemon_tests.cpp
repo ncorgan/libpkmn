@@ -6,7 +6,7 @@
  */
 
 #include <pkmntest/gen2_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -49,12 +49,6 @@ static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_e
 ;
 
 namespace pkmntest {
-
-    void gen2_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gen2_unown_form_test(
         const std::string &game

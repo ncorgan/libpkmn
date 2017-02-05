@@ -6,7 +6,7 @@
  */
 
 #include <pkmntest/gba_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -77,12 +77,6 @@ static const std::vector<std::string> ribbons = boost::assign::list_of
 ;
 
 namespace pkmntest {
-
-    void gba_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gba_unown_form_test(
         const std::string &game

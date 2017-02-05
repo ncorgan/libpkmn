@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
+
+#include <pkmn/pokemon.hpp>
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
@@ -571,7 +573,7 @@ namespace pkmntest {
         }
     }
 
-    void test_invalid_pokemon(
+    void invalid_pokemon_test(
         const std::string &game
     ) {
         test_forms(game);
