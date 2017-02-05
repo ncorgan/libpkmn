@@ -5,8 +5,11 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
+
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/exception.hpp>
 
 #include <boost/assign.hpp>
 
@@ -77,6 +80,26 @@ namespace pkmn { namespace calculations {
         int IV_spatk,
         int IV_spdef
     ) {
+        // Input validation
+        if(not pkmn_IV_in_bounds(IV_HP, true)) {
+            throw pkmn::range_error("IV_HP", 0, 31);
+        }
+        if(not pkmn_IV_in_bounds(IV_attack, true)) {
+            throw pkmn::range_error("IV_attack", 0, 31);
+        }
+        if(not pkmn_IV_in_bounds(IV_defense, true)) {
+            throw pkmn::range_error("IV_defense", 0, 31);
+        }
+        if(not pkmn_IV_in_bounds(IV_speed, true)) {
+            throw pkmn::range_error("IV_speed", 0, 31);
+        }
+        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
+            throw pkmn::range_error("IV_spatk", 0, 31);
+        }
+        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
+            throw pkmn::range_error("IV_spdef", 0, 31);
+        }
+
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);
 
         uint16_t p1 = uint16_t(personality % 256);

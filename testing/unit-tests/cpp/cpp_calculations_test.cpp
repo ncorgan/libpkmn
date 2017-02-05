@@ -566,6 +566,68 @@ BOOST_AUTO_TEST_CASE(pokemon_size_test) {
         (pkmn::database::pokemon_entry("Heracross", "FireRed", ""))
     ;
 
+    // Test input validation.
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, -1, 0, 0, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 32, 0, 0, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, -1, 0, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 32, 0, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, -1, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 32, 0, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, -1, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, 32, 0, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, 0, -1, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, 0, 32, 0
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, 0, 0, -1
+        )
+    , pkmn::range_error);
+    BOOST_CHECK_THROW(
+        pkmn::calculations::pokemon_size(
+            "Barboach", 0, 0, 0, 0, 0, 0, 32
+        )
+    , pkmn::range_error);
+
     std::srand(std::time(NULL));
     for(auto pokemon_iter = pokemon_with_size_checks.begin();
         pokemon_iter != pokemon_with_size_checks.end();
