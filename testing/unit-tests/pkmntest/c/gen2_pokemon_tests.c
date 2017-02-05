@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.h"
+#include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gen2_pokemon_tests.h>
 
@@ -20,12 +20,6 @@
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
-
-void pkmntest_gen2_invalid_pokemon_test(
-    const char* game
-) {
-    test_invalid_pokemon(game);
-}
 
 void pkmntest_gen2_unown_test(
     const char* game

@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.h"
+#include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gba_pokemon_tests.h>
 
@@ -38,12 +38,6 @@ static const char* ribbons[] = {
     "Effort", "Marine", "Land", "Sky",
     "Country", "National", "Earth", "World",
 };
-
-void pkmntest_gba_invalid_pokemon_test(
-    const char* game
-) {
-    test_invalid_pokemon(game);
-}
 
 void pkmntest_gba_unown_test(
     const char* game
