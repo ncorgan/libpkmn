@@ -14,10 +14,11 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_API float get_pokemon_size(
+    PKMN_API float pokemon_size(
         const std::string &species,
         uint32_t personality,
         int IV_HP,
+        int IV_attack,
         int IV_defense,
         int IV_speed,
         int IV_spatk,

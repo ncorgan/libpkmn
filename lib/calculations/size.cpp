@@ -10,7 +10,8 @@
 
 #include <boost/assign.hpp>
 
-#include <unordered_map>
+#include <cmath>
+#include <map>
 
 struct size_xyz_t {
     size_xyz_t(uint16_t _x, uint16_t _y, uint16_t _z):
@@ -21,7 +22,7 @@ struct size_xyz_t {
     uint16_t z;
 };
 
-static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_list_of<uint16_t, size_xyz_t>
+static const std::map<uint16_t, size_xyz_t> XYZ = boost::assign::map_list_of<uint16_t, size_xyz_t>
     (9,     size_xyz_t(290,1,0))
     (109,   size_xyz_t(300,1,10))
     (309,   size_xyz_t(400,2,110))
@@ -39,9 +40,34 @@ static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_l
     (65535, size_xyz_t(1700,1,65510))
 ;
 
+uint16_t get_s(
+    uint16_t s_from_calculation
+) {
+    // The loop won't catch this.
+    if(s_from_calculation == 0) {
+        return 9;
+    }
+
+    uint16_t last_value = 0;
+    for(auto xyz_iter = XYZ.begin(); xyz_iter != XYZ.end(); ++xyz_iter) {
+        if(s_from_calculation > last_value and s_from_calculation <= xyz_iter->first) {
+            return xyz_iter->first;
+        } else {
+            last_value = xyz_iter->first;
+        }
+    }
+
+    // This should never happen, since the map encompasses the entire uint16_t range.
+    return 65535;
+}
+
+PKMN_INLINE float round_float(float value) {
+    return std::floor(value * 5 + 0.5) / 5;
+}
+
 namespace pkmn { namespace calculations {
 
-    float get_pokemon_size(
+    float pokemon_size(
         const std::string &species,
         uint32_t personality,
         int IV_HP,
@@ -62,12 +88,14 @@ namespace pkmn { namespace calculations {
         uint16_t spatk = uint16_t(IV_spatk) % 16;
         uint16_t spdef = uint16_t(IV_spdef) % 16;
 
-        uint16_t s = ((((attack xor defense) * HP) xor p1) * 256) +
-                     ((((spatk xor spdef) * speed) xor p2));
+        uint16_t s = get_s(
+                         ((((attack xor defense) * HP) xor p1) * 256) +
+                         (((spatk xor spdef) * speed) xor p2)
+                     );
         const size_xyz_t& xyz = XYZ.at(s);
 
         uint16_t size_in_mm = ((((s - xyz.z) / xyz.y) + xyz.x) * h) / 10;
-        return float(size_in_mm / 1000);
+        return round_float(size_in_mm / 1000.0f);
     }
 
 }}
