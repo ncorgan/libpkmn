@@ -12,6 +12,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         hidden_power.hpp
         nature.hpp
         shininess.hpp
+        size.hpp
         spinda_spots.hpp
         stats.hpp
     )
