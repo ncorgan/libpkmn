@@ -43,6 +43,10 @@ namespace pkmn {
 
             std::string get_gender();
 
+            void set_gender(
+                const std::string &gender
+            );
+
             bool is_shiny();
 
             void set_shininess(

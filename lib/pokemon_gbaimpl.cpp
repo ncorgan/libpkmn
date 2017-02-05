@@ -301,6 +301,19 @@ namespace pkmn {
                );
     }
 
+    void pokemon_gbaimpl::set_gender(
+        const std::string &gender
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_modern_gender(
+            &GBA_PC_RCAST->personality,
+            gender
+        );
+
+        // No need to check Unown case, it's genderless.
+    }
+
     bool pokemon_gbaimpl::is_shiny() {
         pokemon_scoped_lock lock(this);
 

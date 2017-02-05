@@ -65,6 +65,10 @@ namespace pkmn {
 
             virtual std::string get_gender() = 0;
 
+            virtual void set_gender(
+                const std::string &gender
+            ) = 0;
+
             virtual bool is_shiny() = 0;
 
             virtual void set_shininess(
