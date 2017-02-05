@@ -65,7 +65,7 @@ uint16_t get_s(
 }
 
 PKMN_INLINE static float round_float(float value) {
-    return std::floor(value * 5 + 0.5) / 5;
+    return float(std::floor(value * 5 + 0.5) / 5);
 }
 
 namespace pkmn { namespace calculations {
