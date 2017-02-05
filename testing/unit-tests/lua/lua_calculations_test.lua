@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -7,6 +7,8 @@
 
 local luaunit = require("luaunit")
 local pkmn = require("pkmn")
+
+math.randomseed(os.time())
 
 function test_gen2_unown_form()
     -- Make sure expected errors are thrown.
@@ -151,6 +153,28 @@ function test_modern_hidden_power()
     luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
+function test_gen3_gen4_nature()
+    -- Make sure SWIG+Lua catches values outside the uint32_t range.
+    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, -1)
+    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, 0xFFFFFFFF+1)
+
+    local natures = {
+        "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+        "Bold", "Docile", "Relaxed", "Impish", "Lax",
+        "Timid", "Hasty", "Serious", "Jolly", "Naive",
+        "Modest", "Mild", "Quiet", "Bashful", "Rash",
+        "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+    }
+
+    for i = 1, #natures
+    do
+        luaunit.assertEquals(
+            pkmn.calculations.gen3_gen4_nature((math.random(0,50000) * 1000) + i-1),
+            natures[i]
+        )
+    end
+end
+
 function test_gen2_shiny()
     -- Make sure expected errors are thrown.
     luaunit.assertError(pkmn.calculations.gen2_shiny, -1, 0, 0, 0)
@@ -180,6 +204,58 @@ function test_modern_shiny()
     --
     luaunit.assertTrue(pkmn.calculations.modern_shiny(2814471828, 2545049318))
     luaunit.assertTrue(pkmn.calculations.modern_shiny(0xB58F0B2A, 398174488))
+end
+
+function test_pokemon_size()
+    -- Test input validation.
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", -1, 0, 0, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, -1, 0, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 32, 0, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, -1, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 32, 0, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, -1, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 32, 0, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, -1, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 32, 0, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, -1, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 32, 0)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 0, -1)
+    luaunit.assertError(pkmn.calculations.pokemon_size, "Magikarp", 0, 0, 0, 0, 0, 0, 32)
+
+    --
+    -- There are no known good calculations, so just check for reasonable values
+    -- for each relevant Pokémon.
+    --
+    local pokemon_with_size_checks = {
+        pkmn.database.pokemon_entry("Barboach", "Ruby", ""),
+        pkmn.database.pokemon_entry("Shroomish", "Ruby", ""),
+        pkmn.database.pokemon_entry("Seedot", "Emerald", ""),
+        pkmn.database.pokemon_entry("Lotad", "Emerald", ""),
+        pkmn.database.pokemon_entry("Magikarp", "FireRed", ""),
+        pkmn.database.pokemon_entry("Heracross", "FireRed", "")
+    }
+
+    for i = 1, #pokemon_with_size_checks
+    do
+        local height = pokemon_with_size_checks[i]:get_height()
+        local species = pokemon_with_size_checks[i]:get_name()
+
+        for j = 1, 10
+        do
+            local size = pkmn.calculations.pokemon_size(
+                             species,
+                             math.random(0, 2147483646),
+                             math.random(0, 31),
+                             math.random(0, 31),
+                             math.random(0, 31),
+                             math.random(0, 31),
+                             math.random(0, 31),
+                             math.random(0, 31)
+                         )
+            luaunit.assertTrue(math.abs(height-size) <= height)
+        end
+    end
 end
 
 function test_spinda_coords()
