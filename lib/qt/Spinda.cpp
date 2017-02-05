@@ -6,19 +6,27 @@
  */
 
 #include <pkmn/qt/Spinda.hpp>
+#include <pkmn/utils/paths.hpp>
 
 namespace pkmn { namespace qt {
 
-    QString generateSpindaImage(
+    bool GenerateSpindaImageAtPath(
         int generation,
-        uint32_t personality
+        uint32_t personality,
+        const QString &filePath
     ) {
-        (void)generation;
-        (void)personality;
-        return QString("");
+        QImage outputImage;
+
+        GenerateSpindaImage(
+            generation,
+            personality,
+            &outputImage
+        );
+
+        return outputImage.save(filePath);
     }
 
-    void generateSpindaImage(
+    void GenerateSpindaImage(
         int generation,
         uint32_t personality,
         QImage* imageOut

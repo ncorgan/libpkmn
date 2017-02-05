@@ -21,9 +21,10 @@
 
 namespace pkmn { namespace qt {
 
-    PKMN_API QString GenerateSpindaImage(
+    PKMN_API bool GenerateSpindaImageAtPath(
         int generation,
-        uint32_t personality
+        uint32_t personality,
+        const QString &filePath
     );
 
     PKMN_API void GenerateSpindaImage(
