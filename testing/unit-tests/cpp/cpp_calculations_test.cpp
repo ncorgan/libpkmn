@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,13 +9,20 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/calculations/size.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/calculations/stats.hpp>
+
+#include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn/exception.hpp>
 
 #include "pkmn_boost_unit_test.hpp"
 
+#include <boost/assign.hpp>
+
+#include <random>
+#include <ctime>
 #include <limits>
 
 BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
@@ -543,6 +550,44 @@ BOOST_AUTO_TEST_CASE(modern_shiny_test) {
                   );
     BOOST_CHECK(shiny1);
     BOOST_CHECK(shiny2);
+}
+
+BOOST_AUTO_TEST_CASE(pokemon_size_test) {
+    /*
+     * There are no known good calculations, so just check for reasonable values
+     * for each relevant Pokémon.
+     */
+    static const std::vector<pkmn::database::pokemon_entry> pokemon_with_size_checks = boost::assign::list_of
+        (pkmn::database::pokemon_entry("Barboach", "Ruby", ""))
+        (pkmn::database::pokemon_entry("Shroomish", "Ruby", ""))
+        (pkmn::database::pokemon_entry("Seedot", "Emerald", ""))
+        (pkmn::database::pokemon_entry("Lotad", "Emerald", ""))
+        (pkmn::database::pokemon_entry("Magikarp", "FireRed", ""))
+        (pkmn::database::pokemon_entry("Heracross", "FireRed", ""))
+    ;
+
+    std::srand(std::time(NULL));
+    for(auto pokemon_iter = pokemon_with_size_checks.begin();
+        pokemon_iter != pokemon_with_size_checks.end();
+        ++pokemon_iter
+    ) {
+        float height = pokemon_iter->get_height();
+        std::string species = pokemon_iter->get_name();
+
+        for(int i = 0; i < 10; ++i) {
+            float size = pkmn::calculations::pokemon_size(
+                             species,
+                             uint32_t(std::rand()),
+                             (std::rand() % 32),
+                             (std::rand() % 32),
+                             (std::rand() % 32),
+                             (std::rand() % 32),
+                             (std::rand() % 32),
+                             (std::rand() % 32)
+                         );
+            BOOST_CHECK_LE(std::abs(size-height), 0.75f);
+        }
+    }
 }
 
 BOOST_AUTO_TEST_CASE(spinda_coords_test) {
