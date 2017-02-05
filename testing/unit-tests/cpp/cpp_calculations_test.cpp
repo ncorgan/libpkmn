@@ -8,6 +8,7 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
+#include <pkmn/calculations/nature.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
@@ -468,6 +469,24 @@ BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
                    );
     BOOST_CHECK_EQUAL(hidden_power.type, "Grass");
     BOOST_CHECK_EQUAL(hidden_power.base_power, 70);
+}
+
+BOOST_AUTO_TEST_CASE(gen3_gen4_nature_test) {
+    static const std::vector<std::string> natures = boost::assign::list_of
+        ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
+        ("Bold")("Docile")("Relaxed")("Impish")("Lax")
+        ("Timid")("Hasty")("Serious")("Jolly")("Naive")
+        ("Modest")("Mild")("Quiet")("Bashful")("Rash")
+        ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
+    ;
+
+    std::srand(std::time(NULL));
+    for(uint32_t i = 0; i < natures.size(); ++i) {
+        BOOST_CHECK_EQUAL(
+            pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
+            natures[i]
+        );
+    }
 }
 
 BOOST_AUTO_TEST_CASE(gen2_shiny_test) {

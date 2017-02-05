@@ -188,6 +188,30 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
 
+    def test_gen3_gen4_nature(self):
+        natures = [
+            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+            "Bold", "Docile", "Relaxed", "Impish", "Lax",
+            "Timid", "Hasty", "Serious", "Jolly", "Naive",
+            "Modest", "Mild", "Quiet", "Bashful", "Rash",
+            "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+        ]
+
+        # Make sure the SWIG wrapper keeps personality within the proper bounds.
+        # Which error applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pkmn.calculations.gen3_gen4_nature(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pkmn.calculations.gen3_gen4_nature(0xFFFFFFFF+1)
+
+        for i in range(len(natures)):
+            self.assertEqual(
+                pkmn.calculations.gen3_gen4_nature((random.randint(0, 50000) * 1000) + i),
+                natures[i]
+            )
+
     def test_gen2_shiny(self):
         # Make sure expected errors are raised.
         with self.assertRaises(IndexError):
