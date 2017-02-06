@@ -25,9 +25,12 @@
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <iostream>
+
+namespace fs = boost::filesystem;
 
 static bool seeded = false;
 
@@ -423,6 +426,9 @@ namespace pkmntest {
             pokemon->get_stats()
         );
 
+        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -463,13 +469,24 @@ namespace pkmntest {
             "Male"
         );
 
-        // Setting shininess should affect personality.
+        // Setting shininess should affect personality. Also check filepaths.
+        std::string sprite_filepath;
+
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
         uint32_t personality = pokemon->get_personality();
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        BOOST_CHECK(sprite_filepath.find("shiny") == std::string::npos);
+
         pokemon->set_shininess(true);
         BOOST_CHECK(pokemon->is_shiny());
         BOOST_CHECK_NE(personality, pokemon->get_personality());
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+        BOOST_CHECK(sprite_filepath.find("shiny") != std::string::npos);
 
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Not an item");

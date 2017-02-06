@@ -24,8 +24,11 @@
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 #include <iostream>
+
+namespace fs = boost::filesystem;
 
 static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
     ("Gold", pkmn::move_slot(
@@ -249,6 +252,9 @@ namespace pkmntest {
             true
         );
 
+        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -290,15 +296,25 @@ namespace pkmntest {
             "Male"
         );
 
-        // Shininess affects IVs, so make sure the abstraction reflects that.
+        // Shininess affects IVs, so make sure the abstraction reflects that. Also check filepaths.
+        std::string sprite_filepath;
+
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
         BOOST_CHECK_EQUAL(
             IVs.at("Attack"),
             13
         );
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        BOOST_CHECK(sprite_filepath.find("shiny") == std::string::npos);
+
         pokemon->set_shininess(true);
         BOOST_CHECK(pokemon->is_shiny());
+        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
         BOOST_CHECK_EQUAL(
             IVs.at("Attack"),
             15
@@ -315,6 +331,9 @@ namespace pkmntest {
             IVs.at("Special"),
             10
         );
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+        BOOST_CHECK(sprite_filepath.find("shiny") != std::string::npos);
 
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Not an item");

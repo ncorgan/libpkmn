@@ -21,6 +21,9 @@
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
     ("Red", pkmn::move_slot(
@@ -206,6 +209,9 @@ namespace pkmntest {
         gen1_pokemon_check_stat_map(
             pokemon->get_stats()
         );
+
+        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
 
         /*
          * Make sure the getters and setters agree. Also make sure it fails when

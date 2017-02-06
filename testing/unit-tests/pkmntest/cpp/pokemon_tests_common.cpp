@@ -14,8 +14,11 @@
 #include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 
 #include <iostream>
+
+namespace fs = boost::filesystem;
 
 // No database access here
 static const std::map<std::string, int> game_generations = boost::assign::map_list_of
@@ -288,12 +291,14 @@ namespace pkmntest {
         static const pkmn::database::pokemon_entry oras_unown("Unown", "Omega Ruby", "");
         const std::vector<std::string>& unown_forms = oras_unown.get_forms();
         for(size_t i = 0; i < 26; ++i) {
-            (void)pkmn::pokemon::make(
-                      "Unown",
-                      game,
-                      unown_forms.at(i),
-                      10
-                  );
+            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                            "Unown",
+                                            game,
+                                            unown_forms.at(i),
+                                            10
+                                        );
+            BOOST_CHECK(fs::exists(unown->get_icon_filepath()));
+            BOOST_CHECK(fs::exists(unown->get_sprite_filepath()));
         }
         if(generation == 2) {
             BOOST_CHECK_THROW(
@@ -313,18 +318,23 @@ namespace pkmntest {
                       );
             , std::invalid_argument);
         } else {
-            (void)pkmn::pokemon::make(
-                      "Unown",
-                      game,
-                      "!",
-                      10
-                  );
-            (void)pkmn::pokemon::make(
-                      "Unown",
-                      game,
-                      "?",
-                      10
-                  );
+            pkmn::pokemon::sptr unown = pkmn::pokemon::make(
+                                            "Unown",
+                                            game,
+                                            "!",
+                                            10
+                                        );
+            BOOST_CHECK(fs::exists(unown->get_icon_filepath()));
+            BOOST_CHECK(fs::exists(unown->get_sprite_filepath()));
+
+            unown = pkmn::pokemon::make(
+                        "Unown",
+                        game,
+                        "?",
+                        10
+                    );
+            BOOST_CHECK(fs::exists(unown->get_icon_filepath()));
+            BOOST_CHECK(fs::exists(unown->get_sprite_filepath()));
         }
     }
 
@@ -390,27 +400,35 @@ namespace pkmntest {
                                                       ""
                                                   ).get_forms();
         for(auto iter = castform_forms.begin(); iter != castform_forms.end(); ++iter) {
-            (void)pkmn::pokemon::make(
-                      "Castform",
-                      game,
-                      *iter,
-                      30
-                  );
+            pkmn::pokemon::sptr castform = pkmn::pokemon::make(
+                                               "Castform",
+                                               game,
+                                               *iter,
+                                               30
+                                           );
+            BOOST_CHECK(fs::exists(castform->get_icon_filepath()));
+            BOOST_CHECK(fs::exists(castform->get_sprite_filepath()));
         }
 
         // Primal Reversion forms should only work in OR/AS.
-        (void)pkmn::pokemon::make(
-                  "Groudon",
-                  game,
-                  "",
-                  70
-              );
-        (void)pkmn::pokemon::make(
-                  "Kyogre",
-                  game,
-                  "",
-                  70
-              );
+        pkmn::pokemon::sptr groudon = pkmn::pokemon::make(
+                                          "Groudon",
+                                          game,
+                                          "",
+                                          70
+                                      );
+        BOOST_CHECK(fs::exists(groudon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(groudon->get_sprite_filepath()));
+
+        pkmn::pokemon::sptr kyogre = pkmn::pokemon::make(
+                                         "Kyogre",
+                                         game,
+                                         "",
+                                         70
+                                     );
+        BOOST_CHECK(fs::exists(kyogre->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(kyogre->get_sprite_filepath()));
+
         if(game == "Omega Ruby" or game == "Alpha Sapphire") {
             (void)pkmn::pokemon::make(
                       "Groudon",
@@ -444,14 +462,17 @@ namespace pkmntest {
         }
 
         // In Generation III, Deoxys's form is game-specific.
+        pkmn::pokemon::sptr deoxys;
         if(generation == 3) {
             if(game == "Ruby" or game == "Sapphire" or game == "Colosseum" or game == "XD") {
-                (void)pkmn::pokemon::make(
-                          "Deoxys",
-                          game,
-                          "Normal",
-                          70
-                      );
+                deoxys = pkmn::pokemon::make(
+                             "Deoxys",
+                             game,
+                             "Normal",
+                             70
+                         );
+                BOOST_CHECK(fs::exists(deoxys->get_icon_filepath()));
+                BOOST_CHECK(fs::exists(deoxys->get_sprite_filepath()));
             } else {
                 BOOST_CHECK_THROW(
                     (void)pkmn::pokemon::make(
@@ -464,12 +485,14 @@ namespace pkmntest {
             }
 
             if(game == "FireRed") {
-                (void)pkmn::pokemon::make(
-                          "Deoxys",
-                          game,
-                          "Attack",
-                          70
-                      );
+                deoxys = pkmn::pokemon::make(
+                             "Deoxys",
+                             game,
+                             "Attack",
+                             70
+                         );
+                BOOST_CHECK(fs::exists(deoxys->get_icon_filepath()));
+                BOOST_CHECK(fs::exists(deoxys->get_sprite_filepath()));
             } else {
                 BOOST_CHECK_THROW(
                     (void)pkmn::pokemon::make(
@@ -482,12 +505,14 @@ namespace pkmntest {
             }
 
             if(game == "LeafGreen") {
-                (void)pkmn::pokemon::make(
-                          "Deoxys",
-                          game,
-                          "Defense",
-                          70
-                      );
+                deoxys = pkmn::pokemon::make(
+                             "Deoxys",
+                             game,
+                             "Defense",
+                             70
+                         );
+                BOOST_CHECK(fs::exists(deoxys->get_icon_filepath()));
+                BOOST_CHECK(fs::exists(deoxys->get_sprite_filepath()));
             } else {
                 BOOST_CHECK_THROW(
                     (void)pkmn::pokemon::make(
@@ -500,12 +525,14 @@ namespace pkmntest {
             }
 
             if(game == "Emerald") {
-                (void)pkmn::pokemon::make(
-                          "Deoxys",
-                          game,
-                          "Speed",
-                          70
-                      );
+                deoxys = pkmn::pokemon::make(
+                             "Deoxys",
+                             game,
+                             "Speed",
+                             70
+                         );
+                BOOST_CHECK(fs::exists(deoxys->get_icon_filepath()));
+                BOOST_CHECK(fs::exists(deoxys->get_sprite_filepath()));
             } else {
                 BOOST_CHECK_THROW(
                     (void)pkmn::pokemon::make(
@@ -524,12 +551,14 @@ namespace pkmntest {
                                                         ""
                                                     ).get_forms();
             for(auto iter = deoxys_forms.begin(); iter != deoxys_forms.end(); ++iter) {
-                (void)pkmn::pokemon::make(
-                          "Deoxys",
-                          game,
-                          *iter,
-                          30
-                      );
+                deoxys = pkmn::pokemon::make(
+                             "Deoxys",
+                             game,
+                             *iter,
+                             30
+                         );
+                BOOST_CHECK(fs::exists(deoxys->get_icon_filepath()));
+                BOOST_CHECK(fs::exists(deoxys->get_sprite_filepath()));
             }
         }
     }
