@@ -19,9 +19,10 @@ extern "C" {
 
 #include <pksav.h>
 
+#include "pkmn_boost_unit_test.hpp"
+
 #include <boost/assign.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/test/unit_test.hpp>
 
 #include <stdexcept>
 #include <string>

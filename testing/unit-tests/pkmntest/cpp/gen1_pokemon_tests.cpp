@@ -17,10 +17,10 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/test/unit_test.hpp>
 
 static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
     ("Red", pkmn::move_slot(
