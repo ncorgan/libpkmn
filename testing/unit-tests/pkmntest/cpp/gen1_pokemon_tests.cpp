@@ -225,6 +225,9 @@ namespace pkmntest {
         );
 
         BOOST_CHECK_THROW(
+            pokemon->set_gender("Male");
+        , pkmn::feature_not_in_game_error);
+        BOOST_CHECK_THROW(
             pokemon->set_shininess(true);
         , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(

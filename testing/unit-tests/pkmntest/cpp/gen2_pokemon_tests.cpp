@@ -266,8 +266,31 @@ namespace pkmntest {
             "foobarbaz"
         );
 
-        // Shininess affects IVs, so make sure the abstraction reflects that.
+        // Gender affects IVs, so make sure the abstraction reflects that.
         const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        pokemon->set_gender("Male");
+        BOOST_CHECK_EQUAL(
+            IVs.at("Attack"),
+            15
+        );
+        pokemon->set_gender("Female");
+        BOOST_CHECK_LT(
+            IVs.at("Attack"),
+            15
+        );
+
+        pokemon->set_IV("Attack", 0);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Female"
+        );
+        pokemon->set_IV("Attack", 15);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Male"
+        );
+
+        // Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
         BOOST_CHECK_EQUAL(

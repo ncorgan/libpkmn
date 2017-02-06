@@ -12,12 +12,6 @@ namespace PKMNTest {
 
 public class Gen2PokemonTests {
 
-    public static void InvalidPokemonTest(
-        string game
-    ) {
-        PokemonTestsCommon.TestInvalidPokemon(game);
-    }
-
     public static void UnownFormTest(
         string game
     ) {
@@ -188,6 +182,17 @@ public class Gen2PokemonTests {
 
         pokemon.Nickname = "foobarbaz";
         Assert.AreEqual(pokemon.Nickname, "foobarbaz");
+
+        // Gender affects IVs, so make sure the abstraction reflects that.
+        pokemon.Gender = "Male";
+        Assert.AreEqual(pokemon.IVs["Attack"], 15);
+        pokemon.Gender = "Female";
+        Assert.Less(pokemon.IVs["Attack"], 15);
+
+        pokemon.SetIV("Attack", 0);
+        Assert.AreEqual(pokemon.Gender, "Female");
+        pokemon.SetIV("Attack", 15);
+        Assert.AreEqual(pokemon.Gender, "Male");
 
         // Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon.IsShiny = false;

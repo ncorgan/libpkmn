@@ -205,6 +205,17 @@ class gba_pokemon_test(pokemon_tests):
         pokemon.set_nickname("foobarbaz")
         self.assertStringEqual(pokemon.get_nickname(), "foobarbaz")
 
+        # Gender is tied to personality, so make sure they affect each other.
+        pokemon.set_gender("Female")
+        self.assertLess(pokemon.get_personality() & 0xFF, 0xFF)
+        pokemon.set_gender("Male")
+        self.assertEqual(pokemon.get_personality() & 0xFF, 0xFF)
+
+        pokemon.set_personality(0x1234AB00)
+        self.assertEqual(pokemon.get_gender(), "Female")
+        pokemon.set_personality(0xCD5678FF)
+        self.assertEqual(pokemon.get_gender(), "Male")
+
         # Setting shininess should affect personality.
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
@@ -395,6 +406,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_ruby_invalid_pokemon(self):
         self.invalid_pokemon_test("Ruby")
 
+    def test_ruby_gender(self):
+        self.gender_test("Ruby")
+
     def test_ruby_unown_forms(self):
         self.unown_form_test("Ruby")
 
@@ -411,6 +425,9 @@ class gba_pokemon_test(pokemon_tests):
 
     def test_sapphire_invalid_pokemon(self):
         self.invalid_pokemon_test("Sapphire")
+
+    def test_sapphire_gender(self):
+        self.gender_test("Sapphire")
 
     def test_sapphire_unown_forms(self):
         self.unown_form_test("Sapphire")
@@ -429,6 +446,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_emerald_invalid_pokemon(self):
         self.invalid_pokemon_test("Emerald")
 
+    def test_emerald_gender(self):
+        self.gender_test("Emerald")
+
     def test_emerald_unown_forms(self):
         self.unown_form_test("Emerald")
 
@@ -446,6 +466,9 @@ class gba_pokemon_test(pokemon_tests):
     def test_firered_invalid_pokemon(self):
         self.invalid_pokemon_test("FireRed")
 
+    def test_firered_gender(self):
+        self.gender_test("FireRed")
+
     def test_firered_unown_forms(self):
         self.unown_form_test("FireRed")
 
@@ -462,6 +485,9 @@ class gba_pokemon_test(pokemon_tests):
 
     def test_leafgreen_invalid_pokemon(self):
         self.invalid_pokemon_test("LeafGreen")
+
+    def test_leafgreen_gender(self):
+        self.gender_test("LeafGreen")
 
     def test_leafgreen_unown_forms(self):
         self.unown_form_test("LeafGreen")

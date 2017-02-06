@@ -135,6 +135,17 @@ function gen2_pokemon_tests.pokemon_test(game)
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
+    -- Gender affects IVs, so make sure the abstraction reflects that.
+    pokemon:set_gender("Male")
+    luaunit.assertEquals(pokemon:get_IVs()["Attack"], 15)
+    pokemon:set_gender("Female")
+    luaunit.assertTrue(pokemon:get_IVs()["Attack"] < 15)
+
+    pokemon:set_IV("Attack", 0)
+    luaunit.assertEquals(pokemon:get_gender(), "Female")
+    pokemon:set_IV("Attack", 15)
+    luaunit.assertEquals(pokemon:get_gender(), "Male")
+
     -- Shininess affects IVs, so make sure the abstraction reflects that.
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
@@ -246,6 +257,10 @@ function test_gen2_gold_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Gold")
 end
 
+function test_gen2_gold_gender()
+    pokemon_tests.gender_test("Gold")
+end
+
 function test_gen2_gold_unown_forms()
     gen2_pokemon_tests.unown_forms_test("Gold")
 end
@@ -260,6 +275,10 @@ function test_gen2_silver_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Silver")
 end
 
+function test_gen2_silver_gender()
+    pokemon_tests.gender_test("Silver")
+end
+
 function test_gen2_silver_unown_forms()
     gen2_pokemon_tests.unown_forms_test("Silver")
 end
@@ -272,6 +291,10 @@ end
 
 function test_gen2_crystal_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Crystal")
+end
+
+function test_gen2_crystal_gender()
+    pokemon_tests.gender_test("Crystal")
 end
 
 function test_gen2_crystal_unown_forms()

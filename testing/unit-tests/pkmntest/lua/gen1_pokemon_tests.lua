@@ -103,6 +103,8 @@ function gen1_pokemon_tests.pokemon_test(game)
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
+    luaunit.assertError(pokemon.set_gender, pokemon, "Male")
+
     luaunit.assertError(pokemon.set_shininess, pokemon, true)
     luaunit.assertError(pokemon.set_shininess, pokemon, false)
     luaunit.assertError(pokemon.set_held_item, pokemon, "Potion")

@@ -554,6 +554,65 @@ void pkmntest_gen2_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "foobarbaz");
 
+    // Gender affects IVs, so make sure the abstraction reflects that.
+    int IV_attack = 0;
+    int IV_defense = 0;
+    int IV_speed = 0;
+    int IV_special = 0;
+    pkmn_gender_t gender = PKMN_MALE;
+
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_MALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_IV(
+                pokemon,
+                "Attack",
+                &IV_attack
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(IV_attack, 15);
+
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_FEMALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_IV(
+                pokemon,
+                "Attack",
+                &IV_attack
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(IV_attack < 15);
+
+    error = pkmn_pokemon_set_IV(
+                pokemon,
+                "Attack",
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_FEMALE);
+
+    error = pkmn_pokemon_set_IV(
+                pokemon,
+                "Attack",
+                15
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_MALE);
+
     // Shininess affects IVs, so make sure the abstraction reflects that.
     error = pkmn_pokemon_set_shininess(
                 pokemon,
@@ -567,10 +626,6 @@ void pkmntest_gen2_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_FALSE(bool_result);
 
-    int IV_attack = 0;
-    int IV_defense = 0;
-    int IV_speed = 0;
-    int IV_special = 0;
 
     error = pkmn_pokemon_get_IV(
                 pokemon,

@@ -345,4 +345,46 @@ function pokemon_tests.invalid_pokemon_test(game)
     pokemon_tests.invalid_starters_test(game)
 end
 
+function pokemon_tests.gender_test(game)
+    -- Single-gender Pokémon
+    local nidorina = pkmn.pokemon("Nidorina", game, "", 50)
+    luaunit.assertEquals(nidorina:get_gender(), "Female")
+    nidorina:set_gender("Female")
+    luaunit.assertError(nidorina.set_gender, nidorina, "Male")
+    luaunit.assertError(nidorina.set_gender, nidorina, "Genderless")
+
+    local nidorino = pkmn.pokemon("Nidorino", game, "", 50)
+    luaunit.assertEquals(nidorino:get_gender(), "Male")
+    nidorino:set_gender("Male")
+    luaunit.assertError(nidorino.set_gender, nidorino, "Female")
+    luaunit.assertError(nidorino.set_gender, nidorino, "Genderless")
+
+    local magnemite = pkmn.pokemon("Magnemite", game, "", 50)
+    luaunit.assertEquals(magnemite:get_gender(), "Genderless")
+    magnemite:set_gender("Genderless")
+    luaunit.assertError(magnemite.set_gender, magnemite, "Male")
+    luaunit.assertError(magnemite.set_gender, magnemite, "Female")
+
+    local mixed_pokemon = {
+        "Charmander", -- 87.5% male
+        "Growlithe",  -- 75% male
+        "Pidgey",     -- 50% male
+        "Vulpix"      -- 25% male
+    }
+    for i = 1, #mixed_pokemon
+    do
+        local pokemon = pkmn.pokemon(
+                            mixed_pokemon[i],
+                            game,
+                            "",
+                            50
+                        )
+        pokemon:set_gender("Female")
+        luaunit.assertEquals(pokemon:get_gender(), "Female")
+        pokemon:set_gender("Male")
+        luaunit.assertEquals(pokemon:get_gender(), "Male")
+        luaunit.assertError(pokemon.set_gender, pokemon, "Genderless")
+    end
+end
+
 return pokemon_tests

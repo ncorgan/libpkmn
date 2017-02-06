@@ -214,6 +214,32 @@ pkmn_error_t pkmn_pokemon_get_gender(
     )
 }
 
+pkmn_error_t pkmn_pokemon_set_gender(
+    pkmn_pokemon_handle_t handle,
+    pkmn_gender_t gender
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        switch(gender) {
+            case PKMN_MALE:
+                handle->cpp->set_gender("Male");
+                break;
+
+            case PKMN_FEMALE:
+                handle->cpp->set_gender("Female");
+                break;
+
+            case PKMN_GENDERLESS:
+                handle->cpp->set_gender("Genderless");
+                break;
+
+            default:
+                throw std::invalid_argument("Invalid gender.");
+        };
+    )
+}
+
 pkmn_error_t pkmn_pokemon_is_shiny(
     pkmn_pokemon_handle_t handle,
     bool* is_shiny_out

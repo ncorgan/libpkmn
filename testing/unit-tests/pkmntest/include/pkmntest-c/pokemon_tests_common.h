@@ -22,6 +22,10 @@ PKMNTEST_API void pkmntest_invalid_pokemon_test(
     const char* game
 );
 
+PKMNTEST_API void pkmntest_gender_test(
+    const char* game
+);
+
 #ifdef __cplusplus
 }
 #endif

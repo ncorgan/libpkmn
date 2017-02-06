@@ -29,6 +29,7 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::get_nickname "private";
 %csmethodmodifiers pkmn::pokemon::set_nickname "private";
 %csmethodmodifiers pkmn::pokemon::get_gender "private";
+%csmethodmodifiers pkmn::pokemon::set_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::is_shiny "private";
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
@@ -107,6 +108,9 @@ using Database;"
     public string Gender {
         get {
             return GetGender();
+        }
+        set {
+            SetGender(value);
         }
     }
 

@@ -119,6 +119,8 @@ class gen1_pokemon_test(pokemon_tests):
         self.assertEqual(pokemon.get_nickname(), "foobarbaz")
 
         with self.assertRaises(RuntimeError):
+            pokemon.set_gender("Male")
+        with self.assertRaises(RuntimeError):
             pokemon.set_shininess(True)
         with self.assertRaises(RuntimeError):
             pokemon.set_shininess(False)

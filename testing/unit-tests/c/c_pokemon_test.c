@@ -106,6 +106,10 @@ static void gen2_gold_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Gold");
 }
 
+static void gen2_gold_gender_test() {
+    pkmntest_gender_test("Gold");
+}
+
 static void gen2_gold_unown_test() {
     pkmntest_gen2_unown_test("Gold");
 }
@@ -122,6 +126,10 @@ static void gen2_gold_pokemon_test() {
 
 static void gen2_silver_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Silver");
+}
+
+static void gen2_silver_gender_test() {
+    pkmntest_gender_test("Silver");
 }
 
 static void gen2_silver_unown_test() {
@@ -142,6 +150,10 @@ static void gen2_crystal_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Crystal");
 }
 
+static void gen2_crystal_gender_test() {
+    pkmntest_gender_test("Crystal");
+}
+
 static void gen2_crystal_unown_test() {
     pkmntest_gen2_unown_test("Crystal");
 }
@@ -158,6 +170,10 @@ static void gen2_crystal_pokemon_test() {
 
 static void gba_ruby_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Ruby");
+}
+
+static void gba_ruby_gender_test() {
+    pkmntest_gender_test("Ruby");
 }
 
 static void gba_ruby_unown_test() {
@@ -178,6 +194,10 @@ static void gba_sapphire_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Sapphire");
 }
 
+static void gba_sapphire_gender_test() {
+    pkmntest_gender_test("Sapphire");
+}
+
 static void gba_sapphire_unown_test() {
     pkmntest_gba_unown_test("Sapphire");
 }
@@ -194,6 +214,10 @@ static void gba_sapphire_pokemon_test() {
 
 static void gba_emerald_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("Emerald");
+}
+
+static void gba_emerald_gender_test() {
+    pkmntest_gender_test("Emerald");
 }
 
 static void gba_emerald_unown_test() {
@@ -214,6 +238,10 @@ static void gba_firered_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("FireRed");
 }
 
+static void gba_firered_gender_test() {
+    pkmntest_gender_test("FireRed");
+}
+
 static void gba_firered_unown_test() {
     pkmntest_gba_unown_test("FireRed");
 }
@@ -230,6 +258,10 @@ static void gba_firered_pokemon_test() {
 
 static void gba_leafgreen_invalid_pokemon_test() {
     pkmntest_invalid_pokemon_test("LeafGreen");
+}
+
+static void gba_leafgreen_gender_test() {
+    pkmntest_gender_test("LeafGreen");
 }
 
 static void gba_leafgreen_unown_test() {
@@ -263,34 +295,42 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gen1_yellow_pokemon_test)
 
     PKMN_C_TEST(gen2_gold_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_gold_gender_test)
     PKMN_C_TEST(gen2_gold_unown_test)
     PKMN_C_TEST(gen2_gold_pokemon_test)
 
     PKMN_C_TEST(gen2_silver_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_silver_gender_test)
     PKMN_C_TEST(gen2_silver_unown_test)
     PKMN_C_TEST(gen2_silver_pokemon_test)
 
     PKMN_C_TEST(gen2_crystal_invalid_pokemon_test)
+    PKMN_C_TEST(gen2_crystal_gender_test)
     PKMN_C_TEST(gen2_crystal_unown_test)
     PKMN_C_TEST(gen2_crystal_pokemon_test)
 
     PKMN_C_TEST(gba_ruby_invalid_pokemon_test)
+    PKMN_C_TEST(gba_ruby_gender_test)
     PKMN_C_TEST(gba_ruby_unown_test)
     PKMN_C_TEST(gba_ruby_pokemon_test)
 
     PKMN_C_TEST(gba_sapphire_invalid_pokemon_test)
+    PKMN_C_TEST(gba_sapphire_gender_test)
     PKMN_C_TEST(gba_sapphire_unown_test)
     PKMN_C_TEST(gba_sapphire_pokemon_test)
 
     PKMN_C_TEST(gba_emerald_invalid_pokemon_test)
+    PKMN_C_TEST(gba_emerald_gender_test)
     PKMN_C_TEST(gba_emerald_unown_test)
     PKMN_C_TEST(gba_emerald_pokemon_test)
 
     PKMN_C_TEST(gba_firered_invalid_pokemon_test)
+    PKMN_C_TEST(gba_firered_gender_test)
     PKMN_C_TEST(gba_firered_unown_test)
     PKMN_C_TEST(gba_firered_pokemon_test)
 
     PKMN_C_TEST(gba_leafgreen_invalid_pokemon_test)
+    PKMN_C_TEST(gba_leafgreen_gender_test)
     PKMN_C_TEST(gba_leafgreen_unown_test)
     PKMN_C_TEST(gba_leafgreen_pokemon_test)
 

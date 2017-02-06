@@ -440,6 +440,29 @@ namespace pkmntest {
             "foobarbaz"
         );
 
+        // Gender and personality are tied, so make sure they affect each other.
+        pokemon->set_gender("Female");
+        BOOST_CHECK_LT(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+        pokemon->set_gender("Male");
+        BOOST_CHECK_EQUAL(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+
+        pokemon->set_personality(0x1234AB00);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Female"
+        );
+        pokemon->set_personality(0xCD5678FF);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Male"
+        );
+
         // Setting shininess should affect personality.
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());

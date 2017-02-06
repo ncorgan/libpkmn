@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-internal class PokemonTestsCommon {
+public class PokemonTestsCommon {
 
     private static string[] Starters = {
         "", "Bulbasaur", "Chikorita", "Treecko", "Turtwig", "Snivy", "Chespin"
@@ -342,11 +342,99 @@ internal class PokemonTestsCommon {
         }
     }
 
-    public static void TestInvalidPokemon(
+    public static void InvalidPokemonTest(
         string game
     ) {
         TestForms(game);
         TestInvalidStarters(game);
+    }
+
+    public static void GenderTest(
+        string game
+    ) {
+
+        // Single-gender
+        PKMN.Pokemon nidorina = new PKMN.Pokemon(
+                                        "Nidorina",
+                                        game,
+                                        "",
+                                        50
+                                    );
+        Assert.AreEqual(nidorina.Gender, "Female");
+        nidorina.Gender = "Female";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorina.Gender = "Male";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorina.Gender = "Genderless";
+            }
+        );
+
+        PKMN.Pokemon nidorino = new PKMN.Pokemon(
+                                        "Nidorino",
+                                        game,
+                                        "",
+                                        50
+                                    );
+        Assert.AreEqual(nidorino.Gender, "Male");
+        nidorino.Gender = "Male";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorino.Gender = "Female";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorino.Gender = "Genderless";
+            }
+        );
+
+        PKMN.Pokemon magnemite = new PKMN.Pokemon(
+                                         "Magnemite",
+                                         game,
+                                         "",
+                                         50
+                                     );
+        Assert.AreEqual(magnemite.Gender, "Genderless");
+        magnemite.Gender = "Genderless";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                magnemite.Gender = "Male";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                magnemite.Gender = "Female";
+            }
+        );
+
+        string[] mixedPokemon = {
+            "Charmander", // 87.5% male
+            "Growlithe",  // 75% male
+            "Pidgey",     // 50% male
+            "Vulpix"      // 25% male
+        };
+        foreach(string species in mixedPokemon) {
+            PKMN.Pokemon pokemon = new PKMN.Pokemon(
+                                           species,
+                                           game,
+                                           "",
+                                           50
+                                       );
+
+            pokemon.Gender = "Female";
+            Assert.AreEqual(pokemon.Gender, "Female");
+            pokemon.Gender = "Male";
+            Assert.AreEqual(pokemon.Gender, "Male");
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate {
+                    pokemon.Gender = "Genderless";
+                }
+            );
+        }
     }
 }
 

@@ -98,6 +98,11 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_gender(
     pkmn_gender_t* gender_out
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_set_gender(
+    pkmn_pokemon_handle_t handle,
+    pkmn_gender_t gender
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_is_shiny(
     pkmn_pokemon_handle_t handle,
     bool* is_shiny_out

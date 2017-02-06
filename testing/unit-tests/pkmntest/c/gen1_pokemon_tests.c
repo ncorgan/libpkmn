@@ -168,6 +168,12 @@ void pkmntest_gen1_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_nickname);
 
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
+
     bool shiny = false;
     error = pkmn_pokemon_is_shiny(
                 pokemon,
@@ -395,6 +401,12 @@ void pkmntest_gen1_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "foobarbaz");
+
+    error = pkmn_pokemon_set_gender(
+        pokemon,
+        PKMN_MALE
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
 
     error = pkmn_pokemon_set_shininess(
                 pokemon,
