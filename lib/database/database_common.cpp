@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <string>
 
-#define PKMN_COMPAT_NUM 6
+#define PKMN_COMPAT_NUM 7
 
 namespace pkmn { namespace database {
 
