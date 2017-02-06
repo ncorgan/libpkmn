@@ -505,6 +505,14 @@ namespace pkmn {
         _populate_party_data();
     }
 
+    std::string pokemon_gen1impl::get_icon_filepath() {
+        return _database_entry.get_icon_filepath(false);
+    }
+
+    std::string pokemon_gen1impl::get_sprite_filepath() {
+        return _database_entry.get_sprite_filepath(false,false);
+    }
+
     void pokemon_gen1impl::_populate_party_data() {
         pksav::gen1_pc_pokemon_to_party_data(
             _database_entry,

@@ -965,3 +965,39 @@ pkmn_error_t pkmn_pokemon_get_stat(
         *stat_out = stats.at(stat_name);
     )
 }
+
+pkmn_error_t pkmn_pokemon_get_icon_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* icon_filepath_out,
+    size_t buffer_len
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(icon_filepath_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_icon_filepath(),
+                    icon_filepath_out,
+                    buffer_len
+               );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_get_sprite_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* sprite_filepath_out,
+    size_t buffer_len
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(sprite_filepath_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_sprite_filepath(),
+                    sprite_filepath_out,
+                    buffer_len
+               );
+    )
+}

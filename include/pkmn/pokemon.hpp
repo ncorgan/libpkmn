@@ -212,6 +212,10 @@ namespace pkmn {
 
             virtual const std::map<std::string, int>& get_stats() = 0;
 
+            virtual std::string get_icon_filepath() = 0;
+
+            virtual std::string get_sprite_filepath() = 0;
+
             #ifndef __DOXYGEN__
             virtual void* get_native_pc_data() = 0;
             virtual void* get_native_party_data() = 0;

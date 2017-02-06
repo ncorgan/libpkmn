@@ -174,6 +174,10 @@ namespace pkmn {
                 int value
             );
 
+            std::string get_icon_filepath();
+
+            std::string get_sprite_filepath();
+
         private:
             void _populate_party_data();
 

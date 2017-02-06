@@ -89,6 +89,10 @@ namespace pkmn {
 
             const std::map<std::string, int>& get_stats();
 
+            virtual std::string get_icon_filepath();
+
+            virtual std::string get_sprite_filepath();
+
             void* get_native_pc_data();
 
             void* get_native_party_data();

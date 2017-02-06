@@ -1696,6 +1696,56 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "stat_out");
 
+    /*
+     * pkmn_pokemon_get_icon_filepath
+     */
+
+    error = pkmn_pokemon_get_icon_filepath(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                NULL, // icon_filepath_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "icon_filepath_out");
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
+    /*
+     * pkmn_pokemon_get_sprite_filepath
+     */
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                NULL, // sprite_filepath_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "sprite_filepath_out");
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_BUFFER_TOO_SMALL);
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);

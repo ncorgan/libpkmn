@@ -184,6 +184,19 @@ namespace pkmn {
         return _stats;
     }
 
+    std::string pokemon_impl::get_icon_filepath() {
+        return _database_entry.get_icon_filepath(
+                    (get_gender() == "Female")
+               );
+    }
+
+    std::string pokemon_impl::get_sprite_filepath() {
+        return _database_entry.get_sprite_filepath(
+                    (get_gender() == "Female"),
+                    is_shiny()
+               );
+    }
+
     void* pokemon_impl::get_native_pc_data() {
         pokemon_scoped_lock lock(this);
 

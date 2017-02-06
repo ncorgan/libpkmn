@@ -378,6 +378,18 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_stat(
     int* stat_out
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_icon_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* icon_filepath_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_sprite_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* sprite_filepath_out,
+    size_t buffer_len
+);
+
 #ifdef __cplusplus
 }
 #endif
