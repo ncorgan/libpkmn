@@ -6,7 +6,7 @@
  */
 
 #include <pkmntest/gba_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -21,11 +21,11 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
-#include <boost/test/unit_test.hpp>
 
 #include <iostream>
 
@@ -77,12 +77,6 @@ static const std::vector<std::string> ribbons = boost::assign::list_of
 ;
 
 namespace pkmntest {
-
-    void gba_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gba_unown_form_test(
         const std::string &game
@@ -444,6 +438,29 @@ namespace pkmntest {
         BOOST_CHECK_EQUAL(
             pokemon->get_nickname(),
             "foobarbaz"
+        );
+
+        // Gender and personality are tied, so make sure they affect each other.
+        pokemon->set_gender("Female");
+        BOOST_CHECK_LT(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+        pokemon->set_gender("Male");
+        BOOST_CHECK_EQUAL(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+
+        pokemon->set_personality(0x1234AB00);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Female"
+        );
+        pokemon->set_personality(0xCD5678FF);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Male"
         );
 
         // Setting shininess should affect personality.

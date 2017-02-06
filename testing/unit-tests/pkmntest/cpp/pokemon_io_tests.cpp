@@ -11,7 +11,7 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#include "pkmn_boost_unit_test.hpp"
 
 namespace fs = boost::filesystem;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,9 @@ using NUnit.Framework;
 
 [TestFixture]
 public class CSharpCalculationsTest {
+
+    private static Random rng = new Random();
+
     [Test]
     public void Gen2UnownFormTest() {
         // Make sure expected exceptions are thrown.
@@ -308,6 +311,24 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
+    public void Gen3Gen4NatureTest() {
+        string[] natures = {
+            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+            "Bold", "Docile", "Relaxed", "Impish", "Lax",
+            "Timid", "Hasty", "Serious", "Jolly", "Naive",
+            "Modest", "Mild", "Quiet", "Bashful", "Rash",
+            "Calm", "Gentle", "Sassy", "Careful", "Quirky"
+        };
+
+        for(uint i = 0; i < natures.Length; ++i) {
+            Assert.AreEqual(
+                PKMN.Calculations.Gen3Gen4Nature((uint)((rng.Next(0,50001) * 1000) + i)),
+                natures[i]
+            );
+        }
+    }
+
+    [Test]
     public void Gen2ShinyTest() {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
@@ -358,6 +379,103 @@ public class CSharpCalculationsTest {
          */
         Assert.IsTrue(PKMN.Calculations.Gen2Shiny(7, 10, 10, 10));
         Assert.IsFalse(PKMN.Calculations.Gen2Shiny(6, 15, 7, 15));
+    }
+
+    [Test]
+    public void PokemonSizeTest() {
+        // Make sure expected exceptions are thrown.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, -1, 0, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 32, 0, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, -1, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 32, 0, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, -1, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 32, 0, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, -1, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 32, 0, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, -1, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 32, 0);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 0, -1);
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.PokemonSize("Magikarp", 0, 0, 0, 0, 0, 0, 32);
+            }
+        );
+
+        /*
+         * There are no known good calculations, so just check for reasonable values
+         * for each relevant Pokémon.
+         */
+        PKMN.Database.PokemonEntry[] pokemonWithSizeChecks = {
+            new PKMN.Database.PokemonEntry("Barboach", "Ruby", ""),
+            new PKMN.Database.PokemonEntry("Shroomish", "Ruby", ""),
+            new PKMN.Database.PokemonEntry("Seedot", "Emerald", ""),
+            new PKMN.Database.PokemonEntry("Lotad", "Emerald", ""),
+            new PKMN.Database.PokemonEntry("Magikarp", "FireRed", ""),
+            new PKMN.Database.PokemonEntry("Heracross", "FireRed", "")
+        };
+
+        for(int i = 0; i < pokemonWithSizeChecks.Length; ++i) {
+            for(int j = 0; j < 10; ++j) {
+                float size = PKMN.Calculations.PokemonSize(
+                                 pokemonWithSizeChecks[i].Name,
+                                 (uint)rng.Next(0, Int32.MaxValue),
+                                 rng.Next(0, 32),
+                                 rng.Next(0, 32),
+                                 rng.Next(0, 32),
+                                 rng.Next(0, 32),
+                                 rng.Next(0, 32),
+                                 rng.Next(0, 32)
+                             );
+                Assert.LessOrEqual(
+                    Math.Abs(size-pokemonWithSizeChecks[i].Height),
+                    pokemonWithSizeChecks[i].Height
+                );
+            }
+        }
     }
 
     [Test]

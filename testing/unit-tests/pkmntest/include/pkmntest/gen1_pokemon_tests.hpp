@@ -14,10 +14,6 @@
 
 namespace pkmntest {
 
-    PKMNTEST_API void gen1_invalid_pokemon_test(
-        const std::string &game
-    );
-
     PKMNTEST_API void gen1_friendship_test(
         const std::string &game
     );

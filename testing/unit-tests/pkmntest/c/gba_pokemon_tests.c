@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.h"
+#include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gba_pokemon_tests.h>
 
@@ -38,12 +38,6 @@ static const char* ribbons[] = {
     "Effort", "Marine", "Land", "Sky",
     "Country", "National", "Earth", "World",
 };
-
-void pkmntest_gba_invalid_pokemon_test(
-    const char* game
-) {
-    test_invalid_pokemon(game);
-}
 
 void pkmntest_gba_unown_test(
     const char* game
@@ -598,8 +592,58 @@ void pkmntest_gba_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "foobarbaz");
 
-    bool is_shiny = false;
+    // Gender and personality are tied, so make sure they affect each other.
+    uint32_t personality = 0;
+    pkmn_gender_t gender = PKMN_MALE;
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_FEMALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_personality(
+                pokemon,
+                &personality
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT((personality & 0xFF) < 0xFF);
 
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_MALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_personality(
+                pokemon,
+                &personality
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL((personality & 0xFF), 0xFF);
+
+    error = pkmn_pokemon_set_personality(
+                pokemon,
+                0x1234AB00
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_FEMALE);
+
+    error = pkmn_pokemon_set_personality(
+                pokemon,
+                0xCD5678FF
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_MALE);
+
+    bool is_shiny = false;
     error = pkmn_pokemon_set_shininess(
                 pokemon,
                 false
@@ -962,7 +1006,6 @@ void pkmntest_gba_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "Ruby");
 
-    uint32_t personality = 0;
     error = pkmn_pokemon_set_personality(
                 pokemon,
                 0x7F3AB3A8

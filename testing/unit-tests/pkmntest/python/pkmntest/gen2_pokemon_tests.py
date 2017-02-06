@@ -138,6 +138,17 @@ class gen2_pokemon_test(pokemon_tests):
         pokemon.set_nickname("foobarbaz")
         self.assertStringEqual(pokemon.get_nickname(), "foobarbaz")
 
+        # Gender affects IVs, so make sure the abstraction reflects that.
+        pokemon.set_gender("Female")
+        self.assertLess(pokemon.get_IVs()["Attack"], 15)
+        pokemon.set_gender("Male")
+        self.assertEqual(pokemon.get_IVs()["Attack"], 15)
+
+        pokemon.set_IV("Attack", 0)
+        self.assertEqual(pokemon.get_gender(), "Female")
+        pokemon.set_IV("Attack", 15)
+        self.assertEqual(pokemon.get_gender(), "Male")
+
         # Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
@@ -283,6 +294,9 @@ class gen2_pokemon_test(pokemon_tests):
     def test_gold_invalid_pokemon(self):
         self.invalid_pokemon_test("Gold")
 
+    def test_gold_gender(self):
+        self.gender_test("Gold")
+
     def test_gold_unown_forms(self):
         self.unown_form_test("Gold")
 
@@ -300,6 +314,9 @@ class gen2_pokemon_test(pokemon_tests):
     def test_silver_invalid_pokemon(self):
         self.invalid_pokemon_test("Silver")
 
+    def test_silver_gender(self):
+        self.gender_test("Silver")
+
     def test_silver_unown_forms(self):
         self.unown_form_test("Silver")
 
@@ -316,6 +333,9 @@ class gen2_pokemon_test(pokemon_tests):
 
     def test_crystal_invalid_pokemon(self):
         self.invalid_pokemon_test("Crystal")
+
+    def test_crystal_gender(self):
+        self.gender_test("Crystal")
 
     def test_crystal_unown_forms(self):
         self.unown_form_test("Crystal")

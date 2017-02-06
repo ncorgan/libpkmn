@@ -337,6 +337,47 @@ namespace pkmn {
 
     // Shared setters
 
+    void pokemon_impl::_set_modern_gender(
+        uint32_t* personality_ptr,
+        const std::string &gender
+    ) {
+        float chance_male = _database_entry.get_chance_male();
+        float chance_female = _database_entry.get_chance_female();
+
+        // Check for invalid genders.
+        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
+            if(gender != "Genderless") {
+                throw std::invalid_argument("This Pokémon is genderless.");
+            } else {
+                // Nothing to do.
+                return;
+            }
+        } else if(pkmn_floats_close(chance_male, 1.0f) and gender != "Male") {
+            throw std::invalid_argument("This Pokémon is male-only.");
+        } else if(pkmn_floats_close(chance_female, 1.0f) and gender != "Female") {
+            throw std::invalid_argument("This Pokémon is female-only.");
+        } else if(gender == "Genderless") {
+            throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
+        }
+
+        if(gender == "Male") {
+            *personality_ptr |= 0xFF;
+        } else {
+            *personality_ptr &= ~0xFF;
+
+            std::srand((unsigned int)std::time(NULL));
+            if(pkmn_floats_close(chance_male, 0.875f)) {
+                *personality_ptr |= uint32_t(std::rand() % 31);
+            } else if(pkmn_floats_close(chance_male, 0.75f)) {
+                *personality_ptr |= uint32_t(std::rand() % 64);
+            } else if(pkmn_floats_close(chance_male, 0.5f)) {
+                *personality_ptr |= uint32_t(std::rand() % 127);
+            } else {
+                *personality_ptr |= uint32_t(std::rand() % 191);
+            }
+        }
+    }
+
     void pokemon_impl::_set_modern_shininess(
         uint32_t* personality_ptr,
         const uint32_t* trainer_id_ptr,

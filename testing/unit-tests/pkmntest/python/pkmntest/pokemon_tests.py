@@ -241,3 +241,45 @@ class pokemon_tests(unittest.TestCase):
             species,
             game
         )
+
+    def gender_test(self, game):
+        # Single-gender
+        nidorina = pkmn.pokemon("Nidorina", game, "", 50)
+        self.assertEqual(nidorina.get_gender(), "Female")
+        nidorina.set_gender("Female")
+        with self.assertRaises(ValueError):
+            nidorina.set_gender("Male")
+        with self.assertRaises(ValueError):
+            nidorina.set_gender("Genderless")
+
+        nidorino = pkmn.pokemon("Nidorino", game, "", 50)
+        self.assertEqual(nidorino.get_gender(), "Male")
+        nidorino.set_gender("Male")
+        with self.assertRaises(ValueError):
+            nidorino.set_gender("Female")
+        with self.assertRaises(ValueError):
+            nidorino.set_gender("Genderless")
+
+        magnemite = pkmn.pokemon("Magnemite", game, "", 50)
+        self.assertEqual(magnemite.get_gender(), "Genderless")
+        magnemite.set_gender("Genderless")
+        with self.assertRaises(ValueError):
+            magnemite.set_gender("Male")
+        with self.assertRaises(ValueError):
+            magnemite.set_gender("Female")
+
+        mixed_pokemon = [
+            "Charmander", # 87.5% male
+            "Growlithe",  # 75% male
+            "Pidgey",     # 50% male
+            "Vulpix"      # 25% male
+        ]
+
+        for species in mixed_pokemon:
+            pokemon = pkmn.pokemon(species, game, "", 50)
+            pokemon.set_gender("Female")
+            self.assertEqual(pokemon.get_gender(), "Female")
+            pokemon.set_gender("Male")
+            self.assertEqual(pokemon.get_gender(), "Male")
+            with self.assertRaises(ValueError):
+                pokemon.set_gender("Genderless")

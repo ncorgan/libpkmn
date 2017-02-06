@@ -6,7 +6,7 @@
  */
 
 #include <pkmntest/gen2_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -20,10 +20,10 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/test/unit_test.hpp>
 
 #include <iostream>
 
@@ -49,12 +49,6 @@ static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_e
 ;
 
 namespace pkmntest {
-
-    void gen2_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gen2_unown_form_test(
         const std::string &game
@@ -272,8 +266,31 @@ namespace pkmntest {
             "foobarbaz"
         );
 
-        // Shininess affects IVs, so make sure the abstraction reflects that.
+        // Gender affects IVs, so make sure the abstraction reflects that.
         const std::map<std::string, int>& IVs = pokemon->get_IVs();
+        pokemon->set_gender("Male");
+        BOOST_CHECK_EQUAL(
+            IVs.at("Attack"),
+            15
+        );
+        pokemon->set_gender("Female");
+        BOOST_CHECK_LT(
+            IVs.at("Attack"),
+            15
+        );
+
+        pokemon->set_IV("Attack", 0);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Female"
+        );
+        pokemon->set_IV("Attack", 15);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Male"
+        );
+
+        // Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
         BOOST_CHECK_EQUAL(

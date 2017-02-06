@@ -9,6 +9,7 @@
 #include <pkmntest/gen2_pokemon_tests.hpp>
 #include <pkmntest/gba_pokemon_tests.hpp>
 #include <pkmntest/pokemon_io_tests.hpp>
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -38,7 +39,7 @@ static void pokemon_test_common(
  */
 
 BOOST_AUTO_TEST_CASE(gen1_red_invalid_pokemon_test) {
-    pkmntest::gen1_invalid_pokemon_test("Red");
+    pkmntest::invalid_pokemon_test("Red");
 }
 
 BOOST_AUTO_TEST_CASE(gen1_red_friendship_test) {
@@ -58,7 +59,7 @@ BOOST_AUTO_TEST_CASE(gen1_red_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gen1_blue_invalid_pokemon_test) {
-    pkmntest::gen1_invalid_pokemon_test("Blue");
+    pkmntest::invalid_pokemon_test("Blue");
 }
 
 BOOST_AUTO_TEST_CASE(gen1_blue_friendship_test) {
@@ -78,7 +79,7 @@ BOOST_AUTO_TEST_CASE(gen1_blue_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gen1_yellow_invalid_pokemon_test) {
-    pkmntest::gen1_invalid_pokemon_test("Yellow");
+    pkmntest::invalid_pokemon_test("Yellow");
 }
 
 BOOST_AUTO_TEST_CASE(gen1_yellow_friendship_test) {
@@ -98,7 +99,11 @@ BOOST_AUTO_TEST_CASE(gen1_yellow_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gen2_gold_invalid_pokemon_test) {
-    pkmntest::gen2_invalid_pokemon_test("Gold");
+    pkmntest::invalid_pokemon_test("Gold");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_gold_gender_test) {
+    pkmntest::gender_test("Gold");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_gold_unown_form_test) {
@@ -118,7 +123,11 @@ BOOST_AUTO_TEST_CASE(gen2_gold_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gen2_silver_invalid_pokemon_test) {
-    pkmntest::gen2_invalid_pokemon_test("Silver");
+    pkmntest::invalid_pokemon_test("Silver");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_silver_gender_test) {
+    pkmntest::gender_test("Silver");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_silver_unown_form_test) {
@@ -138,7 +147,11 @@ BOOST_AUTO_TEST_CASE(gen2_silver_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gen2_crystal_invalid_pokemon_test) {
-    pkmntest::gen2_invalid_pokemon_test("Crystal");
+    pkmntest::invalid_pokemon_test("Crystal");
+}
+
+BOOST_AUTO_TEST_CASE(gen2_crystal_gender_test) {
+    pkmntest::gender_test("Crystal");
 }
 
 BOOST_AUTO_TEST_CASE(gen2_crystal_unown_form_test) {
@@ -158,7 +171,11 @@ BOOST_AUTO_TEST_CASE(gen2_crystal_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gba_ruby_invalid_pokemon_test) {
-    pkmntest::gba_invalid_pokemon_test("Ruby");
+    pkmntest::invalid_pokemon_test("Ruby");
+}
+
+BOOST_AUTO_TEST_CASE(gba_ruby_gender_test) {
+    pkmntest::gender_test("Ruby");
 }
 
 BOOST_AUTO_TEST_CASE(gba_ruby_unown_form_test) {
@@ -178,7 +195,11 @@ BOOST_AUTO_TEST_CASE(gba_ruby_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gba_sapphire_invalid_pokemon_test) {
-    pkmntest::gba_invalid_pokemon_test("Sapphire");
+    pkmntest::invalid_pokemon_test("Sapphire");
+}
+
+BOOST_AUTO_TEST_CASE(gba_sapphire_gender_test) {
+    pkmntest::gender_test("Sapphire");
 }
 
 BOOST_AUTO_TEST_CASE(gba_sapphire_unown_form_test) {
@@ -198,7 +219,11 @@ BOOST_AUTO_TEST_CASE(gba_sapphire_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gba_emerald_invalid_pokemon_test) {
-    pkmntest::gba_invalid_pokemon_test("Emerald");
+    pkmntest::invalid_pokemon_test("Emerald");
+}
+
+BOOST_AUTO_TEST_CASE(gba_emerald_gender_test) {
+    pkmntest::gender_test("Emerald");
 }
 
 BOOST_AUTO_TEST_CASE(gba_emerald_unown_form_test) {
@@ -218,7 +243,11 @@ BOOST_AUTO_TEST_CASE(gba_emerald_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gba_firered_invalid_pokemon_test) {
-    pkmntest::gba_invalid_pokemon_test("FireRed");
+    pkmntest::invalid_pokemon_test("FireRed");
+}
+
+BOOST_AUTO_TEST_CASE(gba_firered_gender_test) {
+    pkmntest::gender_test("FireRed");
 }
 
 BOOST_AUTO_TEST_CASE(gba_firered_unown_form_test) {
@@ -238,7 +267,11 @@ BOOST_AUTO_TEST_CASE(gba_firered_pokemon_test) {
  */
 
 BOOST_AUTO_TEST_CASE(gba_leafgreen_invalid_pokemon_test) {
-    pkmntest::gba_invalid_pokemon_test("LeafGreen");
+    pkmntest::invalid_pokemon_test("LeafGreen");
+}
+
+BOOST_AUTO_TEST_CASE(gba_leafgreen_gender_test) {
+    pkmntest::gender_test("LeafGreen");
 }
 
 BOOST_AUTO_TEST_CASE(gba_leafgreen_unown_form_test) {

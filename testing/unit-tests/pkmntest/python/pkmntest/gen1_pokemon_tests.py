@@ -53,6 +53,8 @@ class gen1_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_nickname(), species.upper())
 
         with self.assertRaises(RuntimeError):
+            pokemon.get_gender()
+        with self.assertRaises(RuntimeError):
             pokemon.is_shiny()
         with self.assertRaises(RuntimeError):
             pokemon.get_held_item()
@@ -116,6 +118,8 @@ class gen1_pokemon_test(pokemon_tests):
         pokemon.set_nickname("foobarbaz")
         self.assertEqual(pokemon.get_nickname(), "foobarbaz")
 
+        with self.assertRaises(RuntimeError):
+            pokemon.set_gender("Male")
         with self.assertRaises(RuntimeError):
             pokemon.set_shininess(True)
         with self.assertRaises(RuntimeError):

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,6 +7,8 @@
 
 #ifndef POKEMON_TESTS_COMMON_H
 #define POKEMON_TESTS_COMMON_H
+
+#include <pkmntest-c/config.h>
 
 #include <pkmn-c/pokemon.h>
 
@@ -16,7 +18,11 @@
 extern "C" {
 #endif
 
-void test_invalid_pokemon(
+PKMNTEST_API void pkmntest_invalid_pokemon_test(
+    const char* game
+);
+
+PKMNTEST_API void pkmntest_gender_test(
     const char* game
 );
 

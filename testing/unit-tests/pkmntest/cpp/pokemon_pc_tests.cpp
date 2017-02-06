@@ -7,14 +7,6 @@
 
 #include <pkmntest/pokemon_pc_tests.hpp> 
 
-// Don't create the main in a library
-#undef BOOST_TEST_MAIN
-
-#include "pkmn_boost_unit_test.hpp"
-
-#include <boost/assign.hpp>
-#include <boost/format.hpp>
-
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/gen1.h>
@@ -22,6 +14,13 @@
 #include <pksav/gba.h>
 
 #include <pkmn/exception.hpp>
+
+// Don't create the main in a library
+#undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
+
+#include <boost/assign.hpp>
+#include <boost/format.hpp>
 
 // No database access here
 static const std::map<std::string, int> game_generations = boost::assign::map_list_of

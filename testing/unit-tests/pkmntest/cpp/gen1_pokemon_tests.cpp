@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include <pkmntest/gen1_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include "pksav/pksav_call.hpp"
@@ -17,10 +17,10 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/test/unit_test.hpp>
 
 static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
     ("Red", pkmn::move_slot(
@@ -44,12 +44,6 @@ static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_e
 ;
 
 namespace pkmntest {
-
-    void gen1_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gen1_friendship_test(
         const std::string &game
@@ -127,6 +121,9 @@ namespace pkmntest {
             pokemon->get_nickname(),
             boost::algorithm::to_upper_copy(species)
         );
+        BOOST_CHECK_THROW(
+            pokemon->get_gender();
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->is_shiny();
         , pkmn::feature_not_in_game_error);
@@ -227,6 +224,9 @@ namespace pkmntest {
             "foobarbaz"
         );
 
+        BOOST_CHECK_THROW(
+            pokemon->set_gender("Male");
+        , pkmn::feature_not_in_game_error);
         BOOST_CHECK_THROW(
             pokemon->set_shininess(true);
         , pkmn::feature_not_in_game_error);

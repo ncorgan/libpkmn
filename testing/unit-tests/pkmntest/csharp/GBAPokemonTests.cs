@@ -22,12 +22,6 @@ public class GBAPokemonTests {
                                      "Special Attack", "Special Defense"};
     private static Random rng = new Random();
 
-    public static void InvalidPokemonTest(
-        string game
-    ) {
-        PokemonTestsCommon.TestInvalidPokemon(game);
-    }
-
     public static void UnownFormTest(
         string game
     ) {
@@ -278,6 +272,17 @@ public class GBAPokemonTests {
 
         pokemon.Nickname = "foobarbaz";
         Assert.AreEqual(pokemon.Nickname, "foobarbaz");
+
+        // Gender and personality are tied, so make sure they affect each other.
+        pokemon.Gender = "Female";
+        Assert.Less((pokemon.Personality & 0xFF), 0xFF);
+        pokemon.Gender = "Male";
+        Assert.AreEqual((pokemon.Personality & 0xFF), 0xFF);
+
+        pokemon.Personality = 0x1234AB00;
+        Assert.AreEqual(pokemon.Gender, "Female");
+        pokemon.Personality = 0xCD5678FF;
+        Assert.AreEqual(pokemon.Gender, "Male");
 
         // Setting shininess should affect personality.
         pokemon.IsShiny = false;

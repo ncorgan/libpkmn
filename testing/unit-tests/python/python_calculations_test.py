@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 
 import pkmn
 
+import random
 import sys
 import unittest
 
@@ -187,6 +188,30 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
 
+    def test_gen3_gen4_nature(self):
+        natures = [
+            "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+            "Bold", "Docile", "Relaxed", "Impish", "Lax",
+            "Timid", "Hasty", "Serious", "Jolly", "Naive",
+            "Modest", "Mild", "Quiet", "Bashful", "Rash",
+            "Calm", "Gentle", "Sassy", "Careful", "Quirky",
+        ]
+
+        # Make sure the SWIG wrapper keeps personality within the proper bounds.
+        # Which error applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pkmn.calculations.gen3_gen4_nature(-1)
+        except:
+            with self.assertRaises(TypeError):
+                pkmn.calculations.gen3_gen4_nature(0xFFFFFFFF+1)
+
+        for i in range(len(natures)):
+            self.assertEqual(
+                pkmn.calculations.gen3_gen4_nature((random.randint(0, 50000) * 1000) + i),
+                natures[i]
+            )
+
     def test_gen2_shiny(self):
         # Make sure expected errors are raised.
         with self.assertRaises(IndexError):
@@ -223,6 +248,108 @@ class calculations_test(unittest.TestCase):
         #
         self.assertTrue(pkmn.calculations.modern_shiny(2814471828, 2545049318))
         self.assertTrue(pkmn.calculations.modern_shiny(0xB58F0B2A, 398174488))
+
+    def test_pokemon_size(self):
+        # There are no known good calculations, so just check for reasonable values
+        # for each relevant Pokemon.
+        pokemon_with_size_checks = [
+            pkmn.database.pokemon_entry("Barboach", "Ruby", ""),
+            pkmn.database.pokemon_entry("Shroomish", "Ruby", ""),
+            pkmn.database.pokemon_entry("Seedot", "Emerald", ""),
+            pkmn.database.pokemon_entry("Lotad", "Emerald", ""),
+            pkmn.database.pokemon_entry("Magikarp", "FireRed", ""),
+            pkmn.database.pokemon_entry("Heracross", "FireRed", "")
+        ]
+
+        # Make sure the SWIG wrapper keeps personality within the proper bounds.
+        # Which error applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                pkmn.calculations.pokemon_size(
+                    "Magikarp", -1, 0, 0, 0, 0, 0, 0
+                )
+        except:
+            with self.assertRaises(TypeError):
+                pkmn.calculations.pokemon_size(
+                    "Magikarp", -1, 0, 0, 0, 0, 0, 0
+                )
+        try:
+            with self.assertRaises(OverflowError):
+                pkmn.calculations.pokemon_size(
+                    "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+                )
+        except:
+            with self.assertRaises(TypeError):
+                pkmn.calculations.pokemon_size(
+                    "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+                )
+
+        # Test input validation.
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, -1, 0, 0, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 32, 0, 0, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, -1, 0, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 32, 0, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, -1, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 32, 0, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, -1, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 32, 0, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, -1, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 32, 0
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, -1
+            )
+        with self.assertRaises(IndexError):
+            pkmn.calculations.pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, 32
+            )
+
+        for entry in pokemon_with_size_checks:
+            height = entry.get_height()
+            species = entry.get_name()
+
+            for i in range(10):
+                size = pkmn.calculations.pokemon_size(
+                           species,
+                           random.randint(0, 0xFFFFFF),
+                           random.randint(0, 31),
+                           random.randint(0, 31),
+                           random.randint(0, 31),
+                           random.randint(0, 31),
+                           random.randint(0, 31),
+                           random.randint(0, 31)
+                       )
+                self.assertTrue(abs(size-height) <= height)
 
     def test_spinda_coords(self):
         # Check (in)equality operators.

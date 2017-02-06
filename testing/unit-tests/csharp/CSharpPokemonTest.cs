@@ -15,7 +15,7 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen1RedInvalidPokemonTest() {
-        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Red");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Red");
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen1BlueInvalidPokemonTest() {
-        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Blue");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Blue");
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen1YellowInvalidPokemonTest() {
-        PKMNTest.Gen1PokemonTests.InvalidPokemonTest("Yellow");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Yellow");
     }
 
     [Test]
@@ -69,7 +69,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen2GoldInvalidPokemonTest() {
-        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Gold");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Gold");
+    }
+
+    [Test]
+    public void Gen2GoldGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Gold");
     }
 
     [Test]
@@ -87,7 +92,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen2SilverInvalidPokemonTest() {
-        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Silver");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Silver");
+    }
+
+    [Test]
+    public void Gen2SilverGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Silver");
     }
 
     [Test]
@@ -105,7 +115,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void Gen2CrystalInvalidPokemonTest() {
-        PKMNTest.Gen2PokemonTests.InvalidPokemonTest("Crystal");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Crystal");
+    }
+
+    [Test]
+    public void Gen2CrystalGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Crystal");
     }
 
     [Test]
@@ -123,7 +138,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void GBARubyInvalidPokemonTest() {
-        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Ruby");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Ruby");
+    }
+
+    [Test]
+    public void GBARubyGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Ruby");
     }
 
     [Test]
@@ -141,7 +161,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void GBASapphireInvalidPokemonTest() {
-        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Sapphire");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Sapphire");
+    }
+
+    [Test]
+    public void GBASapphireGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Sapphire");
     }
 
     [Test]
@@ -159,7 +184,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void GBAEmeraldInvalidPokemonTest() {
-        PKMNTest.GBAPokemonTests.InvalidPokemonTest("Emerald");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("Emerald");
+    }
+
+    [Test]
+    public void GBAEmeraldGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("Emerald");
     }
 
     [Test]
@@ -177,7 +207,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void GBAFireRedInvalidPokemonTest() {
-        PKMNTest.GBAPokemonTests.InvalidPokemonTest("FireRed");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("FireRed");
+    }
+
+    [Test]
+    public void GBAFireRedGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("FireRed");
     }
 
     [Test]
@@ -195,7 +230,12 @@ public class CSharpPokemonTest {
      */
     [Test]
     public void GBALeafGreenInvalidPokemonTest() {
-        PKMNTest.GBAPokemonTests.InvalidPokemonTest("LeafGreen");
+        PKMNTest.PokemonTestsCommon.InvalidPokemonTest("LeafGreen");
+    }
+
+    [Test]
+    public void GBALeafGreenGenderTest() {
+        PKMNTest.PokemonTestsCommon.GenderTest("LeafGreen");
     }
 
     [Test]
