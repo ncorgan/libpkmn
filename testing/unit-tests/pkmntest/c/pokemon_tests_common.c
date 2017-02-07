@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "util.h"
+
 #include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmn-c/pokemon.h>
@@ -13,6 +15,9 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#define STRBUFFER_LEN 1024
+static char strbuffer[STRBUFFER_LEN] = {0};
 
 static int game_to_generation(
     const char* game
@@ -293,6 +298,22 @@ static void test_gen2_forms(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         error = pkmn_pokemon_free(
                     &pokemon
                 );
@@ -415,6 +436,22 @@ static void test_gen3_forms(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_NULL(pokemon);
@@ -429,6 +466,23 @@ static void test_gen3_forms(
                 70
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);
@@ -441,6 +495,23 @@ static void test_gen3_forms(
                 70
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);
@@ -488,6 +559,22 @@ static void test_gen3_forms(
     if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") ||
        !strcmp(game, "Colosseum") || !strcmp(game, "XD")) {
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -504,6 +591,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "FireRed")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -520,6 +623,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "LeafGreen")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -536,6 +655,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "Speed")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);

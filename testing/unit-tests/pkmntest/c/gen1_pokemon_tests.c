@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "util.h"
+
 #include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gen1_pokemon_tests.h>
@@ -373,6 +375,21 @@ void pkmntest_gen1_pokemon_test(
         pokemon,
         pkmn_pokemon_get_stat_names
     );
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
     /*
      * Make sure the getters and setters agree. Also make sure it fails when

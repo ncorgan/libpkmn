@@ -313,7 +313,6 @@ namespace pkmntest {
 
         pokemon->set_shininess(true);
         BOOST_CHECK(pokemon->is_shiny());
-        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
         BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
         BOOST_CHECK_EQUAL(
             IVs.at("Attack"),

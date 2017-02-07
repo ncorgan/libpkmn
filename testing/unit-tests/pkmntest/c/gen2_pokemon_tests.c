@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "util.h"
+
 #include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gen2_pokemon_tests.h>
@@ -526,6 +528,21 @@ void pkmntest_gen2_pokemon_test(
         pkmn_pokemon_get_stat_names
     );
 
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
     /*
      * Make sure the getters and setters agree. Also make sure it fails when
      * expected.
@@ -613,7 +630,7 @@ void pkmntest_gen2_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(gender, PKMN_MALE);
 
-    // Shininess affects IVs, so make sure the abstraction reflects that.
+    // Shininess affects IVs, so make sure the abstraction reflects that. Also check filepaths.
     error = pkmn_pokemon_set_shininess(
                 pokemon,
                 false
@@ -626,7 +643,6 @@ void pkmntest_gen2_pokemon_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_FALSE(bool_result);
 
-
     error = pkmn_pokemon_get_IV(
                 pokemon,
                 "Attack",
@@ -634,6 +650,17 @@ void pkmntest_gen2_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(IV_attack, 13);
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    // This will fail if "shiny" is anywhere in the filepath.
+    TEST_ASSERT_NULL(strstr(strbuffer, "shiny"));
 
     error = pkmn_pokemon_set_shininess(
                 pokemon,
@@ -678,6 +705,15 @@ void pkmntest_gen2_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL(IV_special, 10);
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+    TEST_ASSERT_NOT_NULL(strstr(strbuffer, "shiny"));
 
     // Invalid item.
     error = pkmn_pokemon_set_held_item(
