@@ -184,7 +184,9 @@ public class PokemonTestsCommon {
         foreach(string form in unownEntry.Forms) {
             if(form.Equals("!") || form.Equals("?")) {
                 if(generation > 2) {
-                    new PKMN.Pokemon("Unown", game, form, 10);
+                    PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
+                    Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                    Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
                 } else {
                     Assert.Throws<ArgumentOutOfRangeException>(
                         delegate {
@@ -193,7 +195,9 @@ public class PokemonTestsCommon {
                     );
                 }
             } else {
-                new PKMN.Pokemon("Unown", game, form, 10);
+                PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
+                Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
             }
         }
     }
@@ -232,12 +236,19 @@ public class PokemonTestsCommon {
         // Castform should always work.
         PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
         foreach(string form in castformEntry.Forms) {
-            new PKMN.Pokemon("Castform", game, form, 30);
+            PKMN.Pokemon castform = new PKMN.Pokemon("Castform", game, form, 30);
+            Assert.IsTrue(System.IO.File.Exists(castform.IconFilepath));
+            Assert.IsTrue(System.IO.File.Exists(castform.SpriteFilepath));
         }
 
         // Primal Reversion forms should only work in OR/AS.
-        new PKMN.Pokemon("Groudon", game, "", 70);
-        new PKMN.Pokemon("Kyogre", game, "", 70);
+        PKMN.Pokemon groudon = new PKMN.Pokemon("Groudon", game, "", 70);
+        Assert.IsTrue(System.IO.File.Exists(groudon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(groudon.SpriteFilepath));
+        PKMN.Pokemon kyogre = new PKMN.Pokemon("Kyogre", game, "", 70);
+        Assert.IsTrue(System.IO.File.Exists(kyogre.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(kyogre.SpriteFilepath));
+
         if(game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
             new PKMN.Pokemon("Groudon", game, "Primal Reversion", 70);
             new PKMN.Pokemon("Kyogre", game, "Primal Reversion", 70);
@@ -257,7 +268,9 @@ public class PokemonTestsCommon {
         // In Generation III, Deoxys's form is game-specific.
         if(generation == 3) {
             if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Colosseum") || game.Equals("XD")) {
-                new PKMN.Pokemon("Deoxys", game, "Normal", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Normal", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -267,7 +280,9 @@ public class PokemonTestsCommon {
             }
 
             if(game.Equals("FireRed")) {
-                new PKMN.Pokemon("Deoxys", game, "Attack", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Attack", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -277,7 +292,9 @@ public class PokemonTestsCommon {
             }
 
             if(game.Equals("LeafGreen")) {
-                new PKMN.Pokemon("Deoxys", game, "Defense", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Defense", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -287,7 +304,9 @@ public class PokemonTestsCommon {
             }
 
             if(game.Equals("Emerald")) {
-                new PKMN.Pokemon("Deoxys", game, "Speed", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Speed", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -299,7 +318,9 @@ public class PokemonTestsCommon {
             // Past Generation III, Deoxys's form can be switched.
             PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", "Omega Ruby", "");
             foreach(string form in deoxysEntry.Forms) {
-                new PKMN.Pokemon("Deoxys", game, form, 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, form, 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
         }
     }

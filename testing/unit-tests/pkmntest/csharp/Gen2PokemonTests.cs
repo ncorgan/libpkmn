@@ -165,6 +165,9 @@ public class Gen2PokemonTests {
         CheckStatMap(pokemon.IVs, false);
         CheckStatMap(pokemon.Stats, true);
 
+        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -198,6 +201,10 @@ public class Gen2PokemonTests {
         pokemon.IsShiny = false;
         Assert.IsFalse(pokemon.IsShiny);
         Assert.AreEqual(pokemon.IVs["Attack"], 13);
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
 
         pokemon.IsShiny = true;
         Assert.IsTrue(pokemon.IsShiny);
@@ -206,6 +213,8 @@ public class Gen2PokemonTests {
         Assert.AreEqual(pokemon.IVs["Defense"], 10);
         Assert.AreEqual(pokemon.IVs["Speed"], 10);
         Assert.AreEqual(pokemon.IVs["Special"], 10);
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {

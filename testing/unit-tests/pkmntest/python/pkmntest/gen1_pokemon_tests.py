@@ -10,6 +10,7 @@ import pkmn
 
 from .pokemon_tests import pokemon_tests
 
+import os
 import unittest
 
 class gen1_pokemon_test(pokemon_tests):
@@ -104,6 +105,9 @@ class gen1_pokemon_test(pokemon_tests):
         self.gen1_check_stat_map(pokemon.get_EVs())
         self.gen1_check_stat_map(pokemon.get_IVs())
         self.gen1_check_stat_map(pokemon.get_stats())
+
+        self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
 
         #
         # Make sure the getters and setters agree. Also make sure it fails when

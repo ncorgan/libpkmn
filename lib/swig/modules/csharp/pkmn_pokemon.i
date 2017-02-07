@@ -65,6 +65,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::get_EVs "private";
 %csmethodmodifiers pkmn::pokemon::get_IVs "private";
 %csmethodmodifiers pkmn::pokemon::get_stats "private";
+%csmethodmodifiers pkmn::pokemon::get_icon_filepath "private";
+%csmethodmodifiers pkmn::pokemon::get_sprite_filepath "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__cptr "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__sptr_eq "private";
 
@@ -281,6 +283,18 @@ using Database;"
     public StringIntDict Stats {
         get {
             return GetStats();
+        }
+    }
+
+    public string IconFilepath {
+        get {
+            return GetIconFilepath();
+        }
+    }
+
+    public string SpriteFilepath {
+        get {
+            return GetSpriteFilepath();
         }
     }
 

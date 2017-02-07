@@ -93,6 +93,9 @@ function gen1_pokemon_tests.pokemon_test(game)
     gen1_pokemon_tests.check_stat_map(pokemon:get_IVs())
     gen1_pokemon_tests.check_stat_map(pokemon:get_stats())
 
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
     -- expected.

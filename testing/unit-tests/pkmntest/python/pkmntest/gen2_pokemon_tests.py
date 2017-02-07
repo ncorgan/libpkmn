@@ -10,6 +10,7 @@ import pkmn
 
 from .pokemon_tests import pokemon_tests
 
+import os
 import string
 import unittest
 
@@ -125,6 +126,9 @@ class gen2_pokemon_test(pokemon_tests):
         self.check_stat_map(pokemon.get_IVs(), False)
         self.check_stat_map(pokemon.get_stats(), True)
 
+        self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
         #
         # Make sure the getters and setters agree. Also make sure it fails when
         # expected.
@@ -149,10 +153,14 @@ class gen2_pokemon_test(pokemon_tests):
         pokemon.set_IV("Attack", 15)
         self.assertEqual(pokemon.get_gender(), "Male")
 
-        # Shininess affects IVs, so make sure the abstraction reflects that.
+        # Shininess affects IVs, so make sure the abstraction reflects that. Also check filepaths.
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
         self.assertEqual(pokemon.get_IVs()["Attack"], 13)
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
+        # This will fail if "shiny" is anywhere in the filepath.
+        self.assertFalse("shiny" in pokemon.get_sprite_filepath())
 
         pokemon.set_shininess(True)
         self.assertTrue(pokemon.is_shiny())
@@ -162,6 +170,8 @@ class gen2_pokemon_test(pokemon_tests):
         self.assertEqual(IVs["Defense"], 10)
         self.assertEqual(IVs["Speed"], 10)
         self.assertEqual(IVs["Special"], 10)
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+        self.assertTrue("shiny" in pokemon.get_sprite_filepath())
 
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Not an item")

@@ -225,6 +225,9 @@ function gba_pokemon_tests.pokemon_test(game)
     gba_pokemon_tests.check_stats_map(pokemon:get_IVs())
     gba_pokemon_tests.check_stats_map(pokemon:get_stats())
 
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
     -- expected.
@@ -247,13 +250,20 @@ function gba_pokemon_tests.pokemon_test(game)
     pokemon:set_personality(0xCD5678FF)
     luaunit.assertEquals(pokemon:get_gender(), "Male")
 
-    -- Setting shininess should affect personality.
+    -- Setting shininess should affect personality. Also check personality.
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
     local personality = pokemon:get_personality()
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
+    -- This will fail if "shiny" is anywhere in the filepath.
+    luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+
     pokemon:set_shininess(true)
     luaunit.assertTrue(pokemon:is_shiny())
     luaunit.assertNotEquals(pokemon:get_personality(), personality)
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
 
     luaunit.assertError(pokemon.set_held_item, pokemon, "Not an item")
 

@@ -172,6 +172,9 @@ public class Gen1PokemonTests {
         CheckStatMap(pokemon.IVs);
         CheckStatMap(pokemon.Stats);
 
+        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.

@@ -10,6 +10,7 @@ import pkmn
 
 from .pokemon_tests import pokemon_tests
 
+import os
 import random
 import unittest
 
@@ -192,6 +193,9 @@ class gba_pokemon_test(pokemon_tests):
         self.check_stats_map(pokemon.get_IVs())
         self.check_stats_map(pokemon.get_stats())
 
+        self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
         #
         # Make sure the getters and setters agree. Also make sure it fails when
         # expected.
@@ -216,13 +220,20 @@ class gba_pokemon_test(pokemon_tests):
         pokemon.set_personality(0xCD5678FF)
         self.assertEqual(pokemon.get_gender(), "Male")
 
-        # Setting shininess should affect personality.
+        # Setting shininess should affect personality. Also check filepaths.
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
         personality = pokemon.get_personality()
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
+        # This will fail if "shiny" is anywhere in the filepath.
+        self.assertFalse("shiny" in pokemon.get_sprite_filepath())
+
         pokemon.set_shininess(True)
         self.assertTrue(pokemon.is_shiny())
         self.assertNotEqual(pokemon.get_personality(), personality)
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+        self.assertTrue("shiny" in pokemon.get_sprite_filepath())
 
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Not an item")

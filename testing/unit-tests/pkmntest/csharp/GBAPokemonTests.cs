@@ -255,6 +255,9 @@ public class GBAPokemonTests {
         CheckStatsMap(pokemon.IVs);
         CheckStatsMap(pokemon.Stats);
 
+        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -288,9 +291,16 @@ public class GBAPokemonTests {
         pokemon.IsShiny = false;
         Assert.IsFalse(pokemon.IsShiny);
         uint personality = pokemon.Personality;
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+
         pokemon.IsShiny = true;
         Assert.IsTrue(pokemon.IsShiny);
         Assert.AreNotEqual(pokemon.Personality, personality);
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
