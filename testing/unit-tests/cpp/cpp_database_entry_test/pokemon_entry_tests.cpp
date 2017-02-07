@@ -22,6 +22,7 @@
 namespace fs = boost::filesystem;
 
 static const std::pair<std::string, std::string> none_pair("None", "None");
+static const std::pair<std::string, std::string> invalid_pair("Unknown", "Unknown");
 static const std::map<std::string, int> bad_stat_map_old = boost::assign::map_list_of
     ("HP", 0)("Attack", 0)("Defense", 0)
     ("Speed", 0)("Special", 0)
@@ -67,10 +68,27 @@ static void _pokemon_entry_none_test(
     BOOST_CHECK_EQUAL(none_entry.get_tutor_moves().size(), 0);
     BOOST_CHECK_EQUAL(none_entry.get_forms().size(), 0);
     BOOST_CHECK_EQUAL(none_entry.get_evolutions().size(), 0);
+
+    BOOST_CHECK(fs::exists(none_entry.get_icon_filepath(false)));
+    BOOST_CHECK(none_entry.get_icon_filepath(false).find("0.png") != std::string::npos);
+    BOOST_CHECK(fs::exists(none_entry.get_icon_filepath(true)));
+    BOOST_CHECK(none_entry.get_icon_filepath(true).find("0.png") != std::string::npos);
+
+    // TODO: remove after GCN and Gen VI support
+    if(none_entry.get_game_id() != 19 and none_entry.get_game_id() != 23) {
+        BOOST_CHECK(fs::exists(none_entry.get_sprite_filepath(false,false)));
+        BOOST_CHECK(none_entry.get_sprite_filepath(false,false).find("0.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(none_entry.get_sprite_filepath(false,true)));
+        BOOST_CHECK(none_entry.get_sprite_filepath(false,true).find("0.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(none_entry.get_sprite_filepath(true,false)));
+        BOOST_CHECK(none_entry.get_sprite_filepath(true,false).find("0.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(none_entry.get_sprite_filepath(true,true)));
+        BOOST_CHECK(none_entry.get_sprite_filepath(true,true).find("0.png") != std::string::npos);
+    }
 }
 
 /*
- * Make sure "None" move entries output expected results for all generations.
+ * Make sure "None" Pokémon entries output expected results for all generations.
  */
 BOOST_AUTO_TEST_CASE(pokemon_entry_none_test) {
     for(int i = 0; i < 6; ++i) {
@@ -79,6 +97,82 @@ BOOST_AUTO_TEST_CASE(pokemon_entry_none_test) {
 
         _pokemon_entry_none_test(none_byindex);
         _pokemon_entry_none_test(none_byname);
+    }
+}
+
+static void _pokemon_entry_invalid_test(
+    pkmn::database::pokemon_entry &invalid_entry
+) {
+    BOOST_CHECK_EQUAL(invalid_entry.get_name(), "Invalid (0x547)");
+    BOOST_CHECK_EQUAL(invalid_entry.get_species(), "Unknown");
+    BOOST_CHECK_EQUAL(invalid_entry.get_pokedex_entry(), "Unknown");
+    BOOST_CHECK_EQUAL(invalid_entry.get_form(), "Unknown");
+    BOOST_CHECK_CLOSE(invalid_entry.get_height(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(invalid_entry.get_weight(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(invalid_entry.get_chance_male(), -1.0f, 0.0001f);
+    BOOST_CHECK_CLOSE(invalid_entry.get_chance_female(), -1.0f, 0.0001f);
+    BOOST_CHECK(not invalid_entry.has_gender_differences());
+    BOOST_CHECK_EQUAL(invalid_entry.get_base_friendship(), -1.0f);
+    BOOST_CHECK(invalid_entry.get_types() == invalid_pair);
+    if(invalid_entry.get_game_id() == 17 or invalid_entry.get_game_id() > 19) {
+        BOOST_CHECK_EQUAL(invalid_entry.get_hidden_ability(), "Unknown");
+    } else {
+        BOOST_CHECK_EQUAL(invalid_entry.get_hidden_ability(), "None");
+    }
+    if(invalid_entry.get_game_id() >= 7) {
+        BOOST_CHECK(invalid_entry.get_abilities() == invalid_pair);
+    } else {
+        BOOST_CHECK(invalid_entry.get_abilities() == none_pair);
+    }
+    if(invalid_entry.get_game_id() == 1) {
+        BOOST_CHECK(invalid_entry.get_egg_groups() == none_pair);
+        BOOST_CHECK(invalid_entry.get_base_stats() == bad_stat_map_old);
+        BOOST_CHECK(invalid_entry.get_EV_yields() == bad_stat_map_old);
+    } else if(invalid_entry.get_game_id() == 4) {
+        BOOST_CHECK(invalid_entry.get_egg_groups() == invalid_pair);
+        BOOST_CHECK(invalid_entry.get_base_stats() == bad_stat_map);
+        BOOST_CHECK(invalid_entry.get_EV_yields() == bad_stat_map_old);
+    } else {
+        BOOST_CHECK(invalid_entry.get_egg_groups() == invalid_pair);
+        BOOST_CHECK(invalid_entry.get_base_stats() == bad_stat_map);
+        BOOST_CHECK(invalid_entry.get_EV_yields() == bad_stat_map);
+    }
+    BOOST_CHECK_EQUAL(invalid_entry.get_experience_yield(), -1);
+    BOOST_CHECK_EQUAL(invalid_entry.get_experience_at_level(2), -1);
+    BOOST_CHECK_EQUAL(invalid_entry.get_level_at_experience(2), -1);
+    BOOST_CHECK_EQUAL(invalid_entry.get_levelup_moves().size(), 0);
+    BOOST_CHECK_EQUAL(invalid_entry.get_tm_hm_moves().size(), 0);
+    BOOST_CHECK_EQUAL(invalid_entry.get_egg_moves().size(), 0);
+    BOOST_CHECK_EQUAL(invalid_entry.get_tutor_moves().size(), 0);
+    BOOST_CHECK_EQUAL(invalid_entry.get_forms().size(), 0);
+    BOOST_CHECK_EQUAL(invalid_entry.get_evolutions().size(), 0);
+
+    BOOST_CHECK(fs::exists(invalid_entry.get_icon_filepath(false)));
+    BOOST_CHECK(invalid_entry.get_icon_filepath(false).find("0.png") != std::string::npos);
+    BOOST_CHECK(fs::exists(invalid_entry.get_icon_filepath(true)));
+    BOOST_CHECK(invalid_entry.get_icon_filepath(true).find("0.png") != std::string::npos);
+
+    // TODO: remove after GCN and Gen VI support
+    if(invalid_entry.get_game_id() != 19 and invalid_entry.get_game_id() != 23) {
+        BOOST_CHECK(fs::exists(invalid_entry.get_sprite_filepath(false,false)));
+        BOOST_CHECK(invalid_entry.get_sprite_filepath(false,false).find("substitute.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(invalid_entry.get_sprite_filepath(false,true)));
+        BOOST_CHECK(invalid_entry.get_sprite_filepath(false,true).find("substitute.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(invalid_entry.get_sprite_filepath(true,false)));
+        BOOST_CHECK(invalid_entry.get_sprite_filepath(true,false).find("substitute.png") != std::string::npos);
+        BOOST_CHECK(fs::exists(invalid_entry.get_sprite_filepath(true,true)));
+        BOOST_CHECK(invalid_entry.get_sprite_filepath(true,true).find("substitute.png") != std::string::npos);
+    }
+}
+
+/*
+ * Make sure "Invalid" Pokémon entries output expected results for all generations.
+ */
+BOOST_AUTO_TEST_CASE(pokemon_entry_invalid_test) {
+    for(int i = 0; i < 6; ++i) {
+        // Invalid ID for any game
+        pkmn::database::pokemon_entry invalid_entry(1351, game_ids[i]);
+        _pokemon_entry_invalid_test(invalid_entry);
     }
 }
 

@@ -85,7 +85,7 @@ namespace pkmn { namespace database {
     ) {
         return (pokemon_index == UNOWN_INDEX) or
                (pokemon_index >= (XD ? (UNOWN_B_INDEX + 2) : UNOWN_B_INDEX) and
-                pokemon_index >= (XD ? (UNOWN_QUESTION_INDEX + 2) : UNOWN_QUESTION_INDEX));
+                pokemon_index <= (XD ? (UNOWN_QUESTION_INDEX + 2) : UNOWN_QUESTION_INDEX));
     }
 
     static void _query_to_move_list(
@@ -1150,20 +1150,23 @@ namespace pkmn { namespace database {
 
         fs::path icon_filepath(pkmn::get_images_dir());
         icon_filepath /= "pokemon-icons";
+        if(_none or _invalid) {
+            icon_filepath /= "0.png";
+        } else {
+            if(female and has_different_female_icon(_species_id)) {
+                icon_filepath /= "female";
+            }
 
-        if(female and has_different_female_icon(_species_id)) {
-            icon_filepath /= "female";
+            std::string form_suffix;
+            (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
+                      _db, image_name_query, form_suffix, _form_id
+                  );
+            if(not form_suffix.empty()) {
+                form_suffix.insert(0, "-");
+            }
+
+            icon_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
         }
-
-        std::string form_suffix;
-        (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
-                  _db, image_name_query, form_suffix, _form_id
-              );
-        if(not form_suffix.empty()) {
-            form_suffix.insert(0, "-");
-        }
-
-        icon_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
 
         return icon_filepath.string();
     }
@@ -1180,8 +1183,9 @@ namespace pkmn { namespace database {
         sprite_filepath /= str(boost::format("generation-%d") % _generation);
         sprite_filepath /= IMAGES_SUBDIR_STRINGS[_game_id];
 
-        // TODO: None image for all games
-        if(_invalid) {
+        if(_none) {
+            sprite_filepath /= "0.png";
+        } else if(_invalid) {
             sprite_filepath /= "substitute.png";
         } else {
             if(shiny) {
