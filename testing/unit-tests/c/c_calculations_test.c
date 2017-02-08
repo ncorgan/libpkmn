@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,7 +9,9 @@
 
 #include <pkmn.h>
 
+#include <math.h>
 #include <string.h>
+#include <time.h>
 
 #define BUFFER_SIZE 512
 static char strbuffer[BUFFER_SIZE];
@@ -577,6 +579,102 @@ static void modern_shiny_test() {
     TEST_ASSERT(bool_result);
 }
 
+static void pokemon_size_test() {
+    float size = 0.0f;
+    pkmn_database_pokemon_entry_t entry;
+    srand((unsigned int)time(NULL));
+
+    // Test input validation.
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, -1, 0, 0, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 32, 0, 0, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, -1, 0, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 32, 0, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, -1, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 32, 0, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, -1, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 32, 0, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, -1, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 32, 0, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, -1, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    error = pkmn_calculations_pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, 32, &size
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+
+    /*
+     * There are no known good calculations, so just check for reasonable values
+     * for each relevant Pokémon.
+     */
+    static const char* pokemon_with_size_checks[] = {
+        "Barboach", "Shroomish", "Seedot", "Lotad", "Magikarp", "Heracross"
+    };
+    static const char* games[] = {
+        "Ruby", "Ruby", "Emerald", "Emerald", "FireRed", "FireRed"
+    };
+    for(int i = 0; i < 6; ++i) {
+        error = pkmn_database_get_pokemon_entry(
+                    pokemon_with_size_checks[i],
+                    games[i],
+                    "",
+                    &entry
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+        for(int j = 0; j < 10; ++j) {
+            error = pkmn_calculations_pokemon_size(
+                        entry.name,
+                        (uint32_t)rand(),
+                        (rand() % 32),
+                        (rand() % 32),
+                        (rand() % 32),
+                        (rand() % 32),
+                        (rand() % 32),
+                        (rand() % 32),
+                        &size
+                    );
+            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+            TEST_ASSERT(fabs(size-entry.height) < entry.height);
+        }
+
+        error = pkmn_database_pokemon_entry_free(&entry);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    }
+}
+
 static void spinda_spot_test() {
     /*
      * Make sure known good inputs result in expected results.
@@ -716,6 +814,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(modern_hidden_power_test)
     PKMN_C_TEST(gen2_shiny_test)
     PKMN_C_TEST(modern_shiny_test)
+    PKMN_C_TEST(pokemon_size_test)
     PKMN_C_TEST(spinda_spot_test)
     PKMN_C_TEST(gb_stat_test)
     PKMN_C_TEST(modern_stat_test)

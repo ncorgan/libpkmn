@@ -57,7 +57,7 @@ namespace pkmn { namespace calculations {
     ) {
         uint8_t truncated_pid = uint8_t(personality & 0xFF);
 
-        pkmn::database::pokemon_entry entry(species, "Crystal", "");
+        pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 

@@ -28,6 +28,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::get_database_entry "private";
 %csmethodmodifiers pkmn::pokemon::get_nickname "private";
 %csmethodmodifiers pkmn::pokemon::set_nickname "private";
+%csmethodmodifiers pkmn::pokemon::get_gender "private";
+%csmethodmodifiers pkmn::pokemon::set_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::is_shiny "private";
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
@@ -63,6 +65,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::get_EVs "private";
 %csmethodmodifiers pkmn::pokemon::get_IVs "private";
 %csmethodmodifiers pkmn::pokemon::get_stats "private";
+%csmethodmodifiers pkmn::pokemon::get_icon_filepath "private";
+%csmethodmodifiers pkmn::pokemon::get_sprite_filepath "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__cptr "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__sptr_eq "private";
 
@@ -100,6 +104,15 @@ using Database;"
         }
         set {
             SetNickname(value);
+        }
+    }
+
+    public string Gender {
+        get {
+            return GetGender();
+        }
+        set {
+            SetGender(value);
         }
     }
 
@@ -270,6 +283,18 @@ using Database;"
     public StringIntDict Stats {
         get {
             return GetStats();
+        }
+    }
+
+    public string IconFilepath {
+        get {
+            return GetIconFilepath();
+        }
+    }
+
+    public string SpriteFilepath {
+        get {
+            return GetSpriteFilepath();
         }
     }
 

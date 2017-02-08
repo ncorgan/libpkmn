@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -68,6 +68,21 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     int experience,
     int* level_out
+);
+
+PKMN_API pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    bool shiny,
+    char* icon_filepath_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    bool female,
+    bool shiny,
+    char* sprite_filepath_out,
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_database_pokemon_entry_free(

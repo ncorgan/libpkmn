@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -89,6 +89,10 @@ namespace pkmn {
 
             const std::map<std::string, int>& get_stats();
 
+            virtual std::string get_icon_filepath();
+
+            virtual std::string get_sprite_filepath();
+
             void* get_native_pc_data();
 
             void* get_native_party_data();
@@ -149,6 +153,11 @@ namespace pkmn {
             );
 
             // Shared setters
+
+            void _set_modern_gender(
+                uint32_t* personality_ptr,
+                const std::string &gender
+            );
 
             void _set_modern_shininess(
                 uint32_t* personality_ptr,

@@ -34,6 +34,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
     ELSE()
         SET(TEST_CMD ${test_cmd})
         SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
+        SET(IMAGES_DIR ${PKMN_SOURCE_DIR}/images)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_BINARY_DIR}/pkmntest/python"
@@ -64,7 +65,6 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             )
             SET(TEST_CMD ${test_cmd})
             SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
-            SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
             SET(LUA_CPATH
                 "${PKMN_BINARY_DIR}/lib/swig/lua/${CMAKE_BUILD_TYPE}/?.dll"
                 "${TESTS_BINARY_DIR}/lua/bit32/${CMAKE_BUILD_TYPE}/?.dll"
@@ -77,6 +77,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
             STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
+            STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat

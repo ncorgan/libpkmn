@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-internal class PokemonTestsCommon {
+public class PokemonTestsCommon {
 
     private static string[] Starters = {
         "", "Bulbasaur", "Chikorita", "Treecko", "Turtwig", "Snivy", "Chespin"
@@ -184,7 +184,9 @@ internal class PokemonTestsCommon {
         foreach(string form in unownEntry.Forms) {
             if(form.Equals("!") || form.Equals("?")) {
                 if(generation > 2) {
-                    new PKMN.Pokemon("Unown", game, form, 10);
+                    PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
+                    Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                    Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
                 } else {
                     Assert.Throws<ArgumentOutOfRangeException>(
                         delegate {
@@ -193,7 +195,9 @@ internal class PokemonTestsCommon {
                     );
                 }
             } else {
-                new PKMN.Pokemon("Unown", game, form, 10);
+                PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
+                Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
             }
         }
     }
@@ -232,12 +236,19 @@ internal class PokemonTestsCommon {
         // Castform should always work.
         PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
         foreach(string form in castformEntry.Forms) {
-            new PKMN.Pokemon("Castform", game, form, 30);
+            PKMN.Pokemon castform = new PKMN.Pokemon("Castform", game, form, 30);
+            Assert.IsTrue(System.IO.File.Exists(castform.IconFilepath));
+            Assert.IsTrue(System.IO.File.Exists(castform.SpriteFilepath));
         }
 
         // Primal Reversion forms should only work in OR/AS.
-        new PKMN.Pokemon("Groudon", game, "", 70);
-        new PKMN.Pokemon("Kyogre", game, "", 70);
+        PKMN.Pokemon groudon = new PKMN.Pokemon("Groudon", game, "", 70);
+        Assert.IsTrue(System.IO.File.Exists(groudon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(groudon.SpriteFilepath));
+        PKMN.Pokemon kyogre = new PKMN.Pokemon("Kyogre", game, "", 70);
+        Assert.IsTrue(System.IO.File.Exists(kyogre.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(kyogre.SpriteFilepath));
+
         if(game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
             new PKMN.Pokemon("Groudon", game, "Primal Reversion", 70);
             new PKMN.Pokemon("Kyogre", game, "Primal Reversion", 70);
@@ -257,7 +268,9 @@ internal class PokemonTestsCommon {
         // In Generation III, Deoxys's form is game-specific.
         if(generation == 3) {
             if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Colosseum") || game.Equals("XD")) {
-                new PKMN.Pokemon("Deoxys", game, "Normal", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Normal", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -267,7 +280,9 @@ internal class PokemonTestsCommon {
             }
 
             if(game.Equals("FireRed")) {
-                new PKMN.Pokemon("Deoxys", game, "Attack", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Attack", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -277,7 +292,9 @@ internal class PokemonTestsCommon {
             }
 
             if(game.Equals("LeafGreen")) {
-                new PKMN.Pokemon("Deoxys", game, "Defense", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Defense", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -287,7 +304,9 @@ internal class PokemonTestsCommon {
             }
 
             if(game.Equals("Emerald")) {
-                new PKMN.Pokemon("Deoxys", game, "Speed", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Speed", 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
@@ -299,7 +318,9 @@ internal class PokemonTestsCommon {
             // Past Generation III, Deoxys's form can be switched.
             PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", "Omega Ruby", "");
             foreach(string form in deoxysEntry.Forms) {
-                new PKMN.Pokemon("Deoxys", game, form, 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, form, 70);
+                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
         }
     }
@@ -342,11 +363,99 @@ internal class PokemonTestsCommon {
         }
     }
 
-    public static void TestInvalidPokemon(
+    public static void InvalidPokemonTest(
         string game
     ) {
         TestForms(game);
         TestInvalidStarters(game);
+    }
+
+    public static void GenderTest(
+        string game
+    ) {
+
+        // Single-gender
+        PKMN.Pokemon nidorina = new PKMN.Pokemon(
+                                        "Nidorina",
+                                        game,
+                                        "",
+                                        50
+                                    );
+        Assert.AreEqual(nidorina.Gender, "Female");
+        nidorina.Gender = "Female";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorina.Gender = "Male";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorina.Gender = "Genderless";
+            }
+        );
+
+        PKMN.Pokemon nidorino = new PKMN.Pokemon(
+                                        "Nidorino",
+                                        game,
+                                        "",
+                                        50
+                                    );
+        Assert.AreEqual(nidorino.Gender, "Male");
+        nidorino.Gender = "Male";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorino.Gender = "Female";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                nidorino.Gender = "Genderless";
+            }
+        );
+
+        PKMN.Pokemon magnemite = new PKMN.Pokemon(
+                                         "Magnemite",
+                                         game,
+                                         "",
+                                         50
+                                     );
+        Assert.AreEqual(magnemite.Gender, "Genderless");
+        magnemite.Gender = "Genderless";
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                magnemite.Gender = "Male";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                magnemite.Gender = "Female";
+            }
+        );
+
+        string[] mixedPokemon = {
+            "Charmander", // 87.5% male
+            "Growlithe",  // 75% male
+            "Pidgey",     // 50% male
+            "Vulpix"      // 25% male
+        };
+        foreach(string species in mixedPokemon) {
+            PKMN.Pokemon pokemon = new PKMN.Pokemon(
+                                           species,
+                                           game,
+                                           "",
+                                           50
+                                       );
+
+            pokemon.Gender = "Female";
+            Assert.AreEqual(pokemon.Gender, "Female");
+            pokemon.Gender = "Male";
+            Assert.AreEqual(pokemon.Gender, "Male");
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate {
+                    pokemon.Gender = "Genderless";
+                }
+            );
+        }
     }
 }
 

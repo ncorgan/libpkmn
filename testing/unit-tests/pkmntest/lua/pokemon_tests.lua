@@ -53,6 +53,12 @@ pokemon_tests.GEN3_POKEMON_WITH_ORAS_MEGA_FORMS = {
     "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
 }
 
+-- http://stackoverflow.com/a/4991602
+function pokemon_tests.file_exists(name)
+    local f=io.open(name,"r")
+    if f~=nil then io.close(f) return true else return false end
+end
+
 function pokemon_tests.gen1_forms_test(game)
     local generation = pokemon_tests.GAME_TO_GENERATION[game]
 
@@ -195,13 +201,20 @@ function pokemon_tests.gen2_forms_test(game)
     local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     for i = 1, #letters
     do
-        pkmn.pokemon("Unown", game, letters:sub(i,i), 10)
+        local unown = pkmn.pokemon("Unown", game, letters:sub(i,i), 10)
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
     end
 
     if generation > 2
     then
-        pkmn.pokemon("Unown", game, "!", 10)
-        pkmn.pokemon("Unown", game, "?", 10)
+        local unown = pkmn.pokemon("Unown", game, "!", 10)
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+
+        unown = pkmn.pokemon("Unown", game, "?", 10)
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
     else
         luaunit.assertError(pkmn.pokemon, "Unown", game, "!", 10)
         luaunit.assertError(pkmn.pokemon, "Unown", game, "?", 10)
@@ -259,14 +272,19 @@ function pokemon_tests.gen3_forms_test(game)
     local castform_forms = pkmn.database.pokemon_entry("Castform", "Omega Ruby", ""):get_forms()
     for i = 1, #castform_forms
     do
-        pkmn.pokemon("Castform", game, castform_forms[i], 30)
+        local castform = pkmn.pokemon("Castform", game, castform_forms[i], 30)
+        luaunit.assertTrue(pokemon_tests.file_exists(castform:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(castform:get_sprite_filepath()))
     end
 
     -- Primal Reversion should only work in OR/AS.
     local species = {"Groudon", "Kyogre"}
     for i = 1, 2
     do
-        pkmn.pokemon(species[i], game, "", 70)
+        local pokemon = pkmn.pokemon(species[i], game, "", 70)
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
         if game == "Omega Ruby" or game == "Alpha Sapphire"
         then
             pkmn.pokemon(species, game, "Primal Reversion", 70)
@@ -280,28 +298,36 @@ function pokemon_tests.gen3_forms_test(game)
     then
         if game == "Ruby" or game == "Sapphire" or game == "Colosseum" or game == "XD"
         then
-            pkmn.pokemon("Deoxys", game, "Normal", 70)
+            local deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Normal", 70)
         end
 
         if game == "FireRed"
         then
-            pkmn.pokemon("Deoxys", game, "Attack", 70)
+            local deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Attack", 70)
         end
 
         if game == "LeafGreen"
         then
-            pkmn.pokemon("Deoxys", game, "Defense", 70)
+            local deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Defense", 70)
         end
 
         if game == "Emerald"
         then
-            pkmn.pokemon("Deoxys", game, "Speed", 70)
+            local deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Speed", 70)
         end
@@ -309,7 +335,9 @@ function pokemon_tests.gen3_forms_test(game)
         local deoxys_forms = pkmn.database.pokemon_entry("Deoxys", "Omega Ruby", ""):get_forms()
         for i = 1, #deoxys_forms
         do
-            pkmn.pokemon("Deoxys", game, deoxys_forms[i], 70)
+            local deoxys = pkmn.pokemon("Deoxys", game, deoxys_forms[i], 70)
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
         end
     end
 end
@@ -343,6 +371,48 @@ end
 function pokemon_tests.invalid_pokemon_test(game)
     pokemon_tests.forms_test(game)
     pokemon_tests.invalid_starters_test(game)
+end
+
+function pokemon_tests.gender_test(game)
+    -- Single-gender Pokémon
+    local nidorina = pkmn.pokemon("Nidorina", game, "", 50)
+    luaunit.assertEquals(nidorina:get_gender(), "Female")
+    nidorina:set_gender("Female")
+    luaunit.assertError(nidorina.set_gender, nidorina, "Male")
+    luaunit.assertError(nidorina.set_gender, nidorina, "Genderless")
+
+    local nidorino = pkmn.pokemon("Nidorino", game, "", 50)
+    luaunit.assertEquals(nidorino:get_gender(), "Male")
+    nidorino:set_gender("Male")
+    luaunit.assertError(nidorino.set_gender, nidorino, "Female")
+    luaunit.assertError(nidorino.set_gender, nidorino, "Genderless")
+
+    local magnemite = pkmn.pokemon("Magnemite", game, "", 50)
+    luaunit.assertEquals(magnemite:get_gender(), "Genderless")
+    magnemite:set_gender("Genderless")
+    luaunit.assertError(magnemite.set_gender, magnemite, "Male")
+    luaunit.assertError(magnemite.set_gender, magnemite, "Female")
+
+    local mixed_pokemon = {
+        "Charmander", -- 87.5% male
+        "Growlithe",  -- 75% male
+        "Pidgey",     -- 50% male
+        "Vulpix"      -- 25% male
+    }
+    for i = 1, #mixed_pokemon
+    do
+        local pokemon = pkmn.pokemon(
+                            mixed_pokemon[i],
+                            game,
+                            "",
+                            50
+                        )
+        pokemon:set_gender("Female")
+        luaunit.assertEquals(pokemon:get_gender(), "Female")
+        pokemon:set_gender("Male")
+        luaunit.assertEquals(pokemon:get_gender(), "Male")
+        luaunit.assertError(pokemon.set_gender, pokemon, "Genderless")
+    end
 end
 
 return pokemon_tests

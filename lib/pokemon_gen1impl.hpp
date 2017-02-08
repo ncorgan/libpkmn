@@ -41,6 +41,12 @@ namespace pkmn {
                 const std::string &nickname
             );
 
+            std::string get_gender();
+
+            void set_gender(
+                const std::string &gender
+            );
+
             bool is_shiny();
 
             void set_shininess(
@@ -167,6 +173,10 @@ namespace pkmn {
                 const std::string &stat,
                 int value
             );
+
+            std::string get_icon_filepath();
+
+            std::string get_sprite_filepath();
 
         private:
             void _populate_party_data();
