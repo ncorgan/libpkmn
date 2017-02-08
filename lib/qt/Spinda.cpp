@@ -13,6 +13,7 @@ namespace pkmn { namespace qt {
     bool GenerateSpindaImageAtPath(
         int generation,
         uint32_t personality,
+        bool shiny,
         const QString &filePath
     ) {
         QImage outputImage;
@@ -20,6 +21,7 @@ namespace pkmn { namespace qt {
         GenerateSpindaImage(
             generation,
             personality,
+            shiny,
             &outputImage
         );
 
@@ -29,10 +31,12 @@ namespace pkmn { namespace qt {
     void GenerateSpindaImage(
         int generation,
         uint32_t personality,
+        bool shiny,
         QImage* imageOut
     ) {
         (void)generation;
         (void)personality;
+        (void)shiny;
         (void)imageOut;
     }
 

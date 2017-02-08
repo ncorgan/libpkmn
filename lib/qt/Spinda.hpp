@@ -24,12 +24,14 @@ namespace pkmn { namespace qt {
     PKMN_API bool GenerateSpindaImageAtPath(
         int generation,
         uint32_t personality,
+        bool shiny,
         const QString &filePath
     );
 
     PKMN_API void GenerateSpindaImage(
         int generation,
         uint32_t personality,
+        bool shiny,
         QImage* imageOut
     );
 
