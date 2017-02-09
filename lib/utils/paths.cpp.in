@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,24 +15,6 @@
 #include <boost/archive/tmpdir.hpp>
 
 #include <stdexcept>
-
-#cmakedefine PKMN_ENABLE_JAVA
-
-#ifdef PKMN_ENABLE_JAVA
-#if defined(PKMN_PLATFORM_WIN32) || defined(PKMN_PLATFORM_MINGW)
-#include <windows.h>
-
-static int get_pid() {
-    return GetCurrentProcessId();
-}
-#else
-#include <unistd.h>
-
-static int get_pid() {
-    return getpid();
-}
-#endif
-#endif
 
 namespace fs = boost::filesystem;
 
@@ -130,16 +112,6 @@ namespace pkmn {
          * UNIX-like system, in which case "/tmp" is probably safe.
          */
         static const std::string tmp_from_boost = boost::archive::tmpdir();
-#ifdef PKMN_ENABLE_JAVA
-        /*
-         * Temp dir is process-dependent because it is used for every file
-         * extracted from the JAR.
-         */
-        fs::path tmp_dir(tmp_from_boost == "." ? "/tmp" : tmp_from_boost);
-        tmp_dir /= str(boost::format("pkmn_%d") % get_pid());
-        return tmp_dir.string();
-#else
         return tmp_from_boost == "." ? "/tmp" : tmp_from_boost;
-#endif
     }
 }
