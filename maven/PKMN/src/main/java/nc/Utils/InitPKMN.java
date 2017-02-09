@@ -98,11 +98,8 @@ class InitPKMN {
                 Path databaseOutputFile = extractFileFromJAR("/resources/libpkmn.db", false);
 
                 // With everything extracted, set LibPKMN's environment variables.
-                nc.PKMN.Env.setEnv("LIBPKMN_TMP_DIR", tempDirectory.toString());
-                nc.PKMN.Env.setEnv("LIBPKMN_DATABASE_PATH", databaseOutputFile.toString());
-
-                System.out.println("LIBPKMN_DATABASE_PATH = " + nc.PKMN.Paths.getDatabasePath());
-                System.out.println("LIBPKMN_TMP_DIR = " + nc.PKMN.Paths.getTmpDir());
+                nc.PKMN.Env.setEnv("PKMN_TMP_DIR", tempDirectory.toString());
+                nc.PKMN.Env.setEnv("PKMN_DATABASE_PATH", databaseOutputFile.toString());
             } catch(Exception e) {
             }
         }
