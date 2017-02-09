@@ -21,14 +21,14 @@
 
 namespace pkmn { namespace qt {
 
-    PKMN_API bool GenerateSpindaImageAtPath(
+    PKMN_API bool GenerateSpindaSpriteAtPath(
         int generation,
         uint32_t personality,
         bool shiny,
         const QString &filePath
     );
 
-    PKMN_API void GenerateSpindaImage(
+    PKMN_API void GenerateSpindaSprite(
         int generation,
         uint32_t personality,
         bool shiny,

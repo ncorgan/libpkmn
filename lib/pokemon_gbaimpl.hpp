@@ -178,6 +178,8 @@ namespace pkmn {
                 int value
             );
 
+            std::string get_sprite_filepath();
+
         private:
 
             void _set_contest_ribbon(
