@@ -8,6 +8,7 @@
 package nc.PKMN;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.file.*;
 import java.nio.file.Paths;
 
@@ -64,7 +65,11 @@ class InitPKMN {
         }
 
         if(loadLibrary) {
-            System.load(outputPath.toString());
+            try {
+                System.load(outputPath.toString());
+            } catch (UnsatisfiedLinkError e) {
+                System.err.println("Failed to load " + outputPath.toString());
+            }
         }
 
         outputPath.toFile().deleteOnExit();
@@ -81,6 +86,12 @@ class InitPKMN {
                 tempDirectory = Files.createTempDirectory("PKMN_");
                 tempDirectory.toFile().deleteOnExit();
 
+                // http://stackoverflow.com/a/24988095
+                System.setProperty("java.library.path", tempDirectory.toString());
+                Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+                fieldSysPath.setAccessible(true);
+                fieldSysPath.set(null, null);
+
                 for(int i = 0; i < libraryNames.length; ++i) {
                     extractFileFromJAR("/resources/" + getLibraryFileName(libraryNames[i]), true);
                 }
@@ -89,6 +100,9 @@ class InitPKMN {
                 // With everything extracted, set LibPKMN's environment variables.
                 nc.PKMN.Env.setEnv("LIBPKMN_TMP_DIR", tempDirectory.toString());
                 nc.PKMN.Env.setEnv("LIBPKMN_DATABASE_PATH", databaseOutputFile.toString());
+
+                System.out.println("LIBPKMN_DATABASE_PATH = " + nc.PKMN.Paths.getDatabasePath());
+                System.out.println("LIBPKMN_TMP_DIR = " + nc.PKMN.Paths.getTmpDir());
             } catch(Exception e) {
             }
         }
