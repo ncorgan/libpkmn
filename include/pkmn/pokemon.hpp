@@ -63,6 +63,12 @@ namespace pkmn {
                 const std::string &nickname
             ) = 0;
 
+            virtual std::string get_gender() = 0;
+
+            virtual void set_gender(
+                const std::string &gender
+            ) = 0;
+
             virtual bool is_shiny() = 0;
 
             virtual void set_shininess(
@@ -205,6 +211,10 @@ namespace pkmn {
             ) = 0;
 
             virtual const std::map<std::string, int>& get_stats() = 0;
+
+            virtual std::string get_icon_filepath() = 0;
+
+            virtual std::string get_sprite_filepath() = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native_pc_data() = 0;

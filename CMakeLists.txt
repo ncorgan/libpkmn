@@ -147,6 +147,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(libpkmn-database)
+ADD_SUBDIRECTORY(images)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 

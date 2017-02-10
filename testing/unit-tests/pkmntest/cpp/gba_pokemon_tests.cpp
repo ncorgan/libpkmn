@@ -6,7 +6,7 @@
  */
 
 #include <pkmntest/gba_pokemon_tests.hpp>
-#include "pokemon_tests_common.hpp"
+#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -21,13 +21,16 @@
 
 // Don't create the main in a library
 #undef BOOST_TEST_MAIN
+#include "pkmn_boost_unit_test.hpp"
 
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-#include <boost/test/unit_test.hpp>
 
 #include <iostream>
+
+namespace fs = boost::filesystem;
 
 static bool seeded = false;
 
@@ -77,12 +80,6 @@ static const std::vector<std::string> ribbons = boost::assign::list_of
 ;
 
 namespace pkmntest {
-
-    void gba_invalid_pokemon_test(
-        const std::string &game
-    ) {
-        pkmntest::test_invalid_pokemon(game);
-    }
 
     void gba_unown_form_test(
         const std::string &game
@@ -429,6 +426,9 @@ namespace pkmntest {
             pokemon->get_stats()
         );
 
+        BOOST_CHECK(fs::exists(pokemon->get_icon_filepath()));
+        BOOST_CHECK(fs::exists(pokemon->get_sprite_filepath()));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -446,13 +446,47 @@ namespace pkmntest {
             "foobarbaz"
         );
 
-        // Setting shininess should affect personality.
+        // Gender and personality are tied, so make sure they affect each other.
+        pokemon->set_gender("Female");
+        BOOST_CHECK_LT(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+        pokemon->set_gender("Male");
+        BOOST_CHECK_EQUAL(
+            (pokemon->get_personality() & 0xFF),
+            0xFF
+        );
+
+        pokemon->set_personality(0x1234AB00);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Female"
+        );
+        pokemon->set_personality(0xCD5678FF);
+        BOOST_CHECK_EQUAL(
+            pokemon->get_gender(),
+            "Male"
+        );
+
+        // Setting shininess should affect personality. Also check filepaths.
+        std::string sprite_filepath;
+
         pokemon->set_shininess(false);
         BOOST_CHECK(not pokemon->is_shiny());
         uint32_t personality = pokemon->get_personality();
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        BOOST_CHECK(sprite_filepath.find("shiny") == std::string::npos);
+
         pokemon->set_shininess(true);
         BOOST_CHECK(pokemon->is_shiny());
         BOOST_CHECK_NE(personality, pokemon->get_personality());
+        sprite_filepath = pokemon->get_sprite_filepath();
+        BOOST_CHECK(fs::exists(sprite_filepath));
+        BOOST_CHECK(sprite_filepath.find("shiny") != std::string::npos);
 
         BOOST_CHECK_THROW(
             pokemon->set_held_item("Not an item");

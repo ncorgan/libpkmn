@@ -170,6 +170,16 @@ namespace pkmn {
         _nickname = nickname;
     }
 
+    std::string pokemon_gen1impl::get_gender() {
+        throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
+    }
+
+    void pokemon_gen1impl::set_gender(
+        PKMN_UNUSED(const std::string &gender)
+    ) {
+        throw pkmn::feature_not_in_game_error("Pokémon gender", "Generation I");
+    }
+
     bool pokemon_gen1impl::is_shiny() {
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
     }
@@ -493,6 +503,14 @@ namespace pkmn {
 
         _update_EV_map();
         _populate_party_data();
+    }
+
+    std::string pokemon_gen1impl::get_icon_filepath() {
+        return _database_entry.get_icon_filepath(false);
+    }
+
+    std::string pokemon_gen1impl::get_sprite_filepath() {
+        return _database_entry.get_sprite_filepath(false,false);
     }
 
     void pokemon_gen1impl::_populate_party_data() {

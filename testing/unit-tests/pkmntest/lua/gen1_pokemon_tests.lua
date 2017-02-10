@@ -53,6 +53,7 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
 
+    luaunit.assertError(pokemon.get_gender, pokemon)
     luaunit.assertError(pokemon.is_shiny, pokemon)
     luaunit.assertError(pokemon.get_held_item, pokemon)
 
@@ -92,6 +93,9 @@ function gen1_pokemon_tests.pokemon_test(game)
     gen1_pokemon_tests.check_stat_map(pokemon:get_IVs())
     gen1_pokemon_tests.check_stat_map(pokemon:get_stats())
 
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
     -- expected.
@@ -101,6 +105,8 @@ function gen1_pokemon_tests.pokemon_test(game)
 
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
+
+    luaunit.assertError(pokemon.set_gender, pokemon, "Male")
 
     luaunit.assertError(pokemon.set_shininess, pokemon, true)
     luaunit.assertError(pokemon.set_shininess, pokemon, false)

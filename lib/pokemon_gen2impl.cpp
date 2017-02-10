@@ -10,6 +10,7 @@
 #include "database/index_to_string.hpp"
 
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/party_data.hpp"
@@ -175,6 +176,51 @@ namespace pkmn {
         }
 
         _nickname = nickname;
+    }
+
+    std::string pokemon_gen2impl::get_gender() {
+        return pkmn::calculations::gen2_pokemon_gender(
+                   _database_entry.get_name(),
+                   _IVs["Attack"]
+               );
+    }
+
+    void pokemon_gen2impl::set_gender(
+        const std::string &gender
+    ) {
+        float chance_male = _database_entry.get_chance_male();
+        float chance_female = _database_entry.get_chance_female();
+
+        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
+            if(gender != "Genderless") {
+                throw std::invalid_argument("This Pokémon is genderless.");
+            }
+        } else {
+            if(gender == "Male") {
+                if(pkmn_floats_close(chance_male, 0.0f)) {
+                    throw std::invalid_argument("This Pokémon is female-only.");
+                } else {
+                    set_IV("Attack", 15);
+                }
+            } else if(gender == "Female") {
+                if(pkmn_floats_close(chance_female, 0.0f)) {
+                    throw std::invalid_argument("This Pokémon is male-only.");
+                } else {
+                    // Set the IV to the max it can be while still being female.
+                    if(pkmn_floats_close(chance_male, 0.875f)) {
+                        set_IV("Attack", 1);
+                    } else if(pkmn_floats_close(chance_male, 0.75f)) {
+                        set_IV("Attack", 3);
+                    } else if(pkmn_floats_close(chance_male, 0.5f)) {
+                        set_IV("Attack", 6);
+                    } else {
+                        set_IV("Attack", 11);
+                    }
+                }
+            } else {
+                throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
+            }
+        }
     }
 
     bool pokemon_gen2impl::is_shiny() {

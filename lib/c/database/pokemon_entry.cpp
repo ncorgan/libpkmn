@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -94,6 +94,51 @@ pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
                          pokemon_entry->game,
                          pokemon_entry->form
                      ).get_level_at_experience(experience);
+    )
+}
+
+pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    bool shiny,
+    char* icon_filepath_out,
+    size_t buffer_len
+) {
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+    PKMN_CHECK_NULL_PARAM(icon_filepath_out);
+
+    PKMN_CPP_TO_C(
+        return pkmn::std_string_to_c_str(
+                   pkmn::database::pokemon_entry(
+                       pokemon_entry->name,
+                       pokemon_entry->game,
+                       pokemon_entry->form
+                   ).get_icon_filepath(shiny),
+                   icon_filepath_out,
+                   buffer_len
+               );
+    )
+}
+
+pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
+    pkmn_database_pokemon_entry_t* pokemon_entry,
+    bool female,
+    bool shiny,
+    char* sprite_filepath_out,
+    size_t buffer_len
+) {
+    PKMN_CHECK_NULL_PARAM(pokemon_entry);
+    PKMN_CHECK_NULL_PARAM(sprite_filepath_out);
+
+    PKMN_CPP_TO_C(
+        return pkmn::std_string_to_c_str(
+                   pkmn::database::pokemon_entry(
+                       pokemon_entry->name,
+                       pokemon_entry->game,
+                       pokemon_entry->form
+                   ).get_sprite_filepath(female, shiny),
+                   sprite_filepath_out,
+                   buffer_len
+               );
     )
 }
 

@@ -8,6 +8,7 @@
 
 import pkmn
 
+import os
 import string
 import sys
 import unittest
@@ -141,7 +142,9 @@ class pokemon_tests(unittest.TestCase):
 
         # Unown's "!" and "?" forms aren't in Generation II.
         for letter in string.ascii_uppercase:
-            pkmn.pokemon("Unown", game, letter, 10)
+            unown = pkmn.pokemon("Unown", game, letter, 10)
+            self.assertTrue(os.path.exists(unown.get_icon_filepath()))
+            self.assertTrue(os.path.exists(unown.get_sprite_filepath()))
 
         if generation > 2:
             pkmn.pokemon("Unown", game, "!", 10)
@@ -174,11 +177,15 @@ class pokemon_tests(unittest.TestCase):
 
         # Castform should always work.
         for form in pkmn.database.pokemon_entry("Castform", "Omega Ruby", "").get_forms():
-            pkmn.pokemon("Castform", game, form, 30)
+            castform = pkmn.pokemon("Castform", game, form, 30)
+            self.assertTrue(os.path.exists(castform.get_icon_filepath()))
+            self.assertTrue(os.path.exists(castform.get_sprite_filepath()))
 
         # Primal Reversion should only work in OR/AS.
         for species in ["Groudon", "Kyogre"]:
-            pkmn.pokemon(species, game, "", 70)
+            pokemon = pkmn.pokemon(species, game, "", 70)
+            self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+            self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
             if game in ["Omega Ruby", "Alpha Sapphire"]:
                 pkmn.pokemon(species, game, "Primal Reversion", 70)
             else:
@@ -188,31 +195,41 @@ class pokemon_tests(unittest.TestCase):
         # In Generation III, Deoxys's form is game-specific.
         if generation == 3:
             if game in ["Ruby", "Sapphire", "Colosseum", "XD"]:
-                pkmn.pokemon("Deoxys", game, "Normal", 70)
+                deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
+                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
             else:
                 with self.assertRaises(ValueError):
-                    pkmn.pokemon("Deoxys", game, "Normal", 70)
+                    deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
 
             if game in ["FireRed"]:
-                pkmn.pokemon("Deoxys", game, "Attack", 70)
+                deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
+                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
             else:
                 with self.assertRaises(ValueError):
-                    pkmn.pokemon("Deoxys", game, "Attack", 70)
+                    deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
 
             if game in ["LeafGreen"]:
-                pkmn.pokemon("Deoxys", game, "Defense", 70)
+                deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
+                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
             else:
                 with self.assertRaises(ValueError):
-                    pkmn.pokemon("Deoxys", game, "Defense", 70)
+                    deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
 
             if game in ["Emerald"]:
-                pkmn.pokemon("Deoxys", game, "Speed", 70)
+                deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
+                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
             else:
                 with self.assertRaises(ValueError):
-                    pkmn.pokemon("Deoxys", game, "Speed", 70)
+                    deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
         else:
             for form in pkmn.database.pokemon_entry("Deoxys", "Omega Ruby", "").get_forms():
-                pkmn.pokemon("Deoxys", game, form, 70)
+                deoxys = pkmn.pokemon("Deoxys", game, form, 70)
+                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
 
     def forms_test(self, game):
         generation = GAME_TO_GENERATION[game]
@@ -241,3 +258,45 @@ class pokemon_tests(unittest.TestCase):
             species,
             game
         )
+
+    def gender_test(self, game):
+        # Single-gender
+        nidorina = pkmn.pokemon("Nidorina", game, "", 50)
+        self.assertEqual(nidorina.get_gender(), "Female")
+        nidorina.set_gender("Female")
+        with self.assertRaises(ValueError):
+            nidorina.set_gender("Male")
+        with self.assertRaises(ValueError):
+            nidorina.set_gender("Genderless")
+
+        nidorino = pkmn.pokemon("Nidorino", game, "", 50)
+        self.assertEqual(nidorino.get_gender(), "Male")
+        nidorino.set_gender("Male")
+        with self.assertRaises(ValueError):
+            nidorino.set_gender("Female")
+        with self.assertRaises(ValueError):
+            nidorino.set_gender("Genderless")
+
+        magnemite = pkmn.pokemon("Magnemite", game, "", 50)
+        self.assertEqual(magnemite.get_gender(), "Genderless")
+        magnemite.set_gender("Genderless")
+        with self.assertRaises(ValueError):
+            magnemite.set_gender("Male")
+        with self.assertRaises(ValueError):
+            magnemite.set_gender("Female")
+
+        mixed_pokemon = [
+            "Charmander", # 87.5% male
+            "Growlithe",  # 75% male
+            "Pidgey",     # 50% male
+            "Vulpix"      # 25% male
+        ]
+
+        for species in mixed_pokemon:
+            pokemon = pkmn.pokemon(species, game, "", 50)
+            pokemon.set_gender("Female")
+            self.assertEqual(pokemon.get_gender(), "Female")
+            pokemon.set_gender("Male")
+            self.assertEqual(pokemon.get_gender(), "Male")
+            with self.assertRaises(ValueError):
+                pokemon.set_gender("Genderless")

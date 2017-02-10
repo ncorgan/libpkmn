@@ -12,12 +12,6 @@ namespace PKMNTest {
 
 public class Gen1PokemonTests {
 
-    public static void InvalidPokemonTest(
-        string game
-    ) {
-        PokemonTestsCommon.TestInvalidPokemon(game);
-    }
-
     public static void FriendshipTest(
         string game
     ) {
@@ -80,6 +74,11 @@ public class Gen1PokemonTests {
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
 
+        Assert.Throws<ApplicationException>(
+            delegate {
+                string gender = pokemon.Gender;
+            }
+        );
         Assert.Throws<ApplicationException>(
             delegate {
                 bool isShiny = pokemon.IsShiny;
@@ -173,6 +172,9 @@ public class Gen1PokemonTests {
         CheckStatMap(pokemon.IVs);
         CheckStatMap(pokemon.Stats);
 
+        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -191,6 +193,11 @@ public class Gen1PokemonTests {
         pokemon.Nickname = "foobarbaz";
         Assert.AreEqual(pokemon.Nickname, "foobarbaz");
 
+        Assert.Throws<ApplicationException>(
+            delegate {
+                pokemon.Gender = "Male";
+            }
+        );
         Assert.Throws<ApplicationException>(
             delegate {
                 pokemon.IsShiny = true;

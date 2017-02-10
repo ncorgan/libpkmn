@@ -192,6 +192,13 @@ public class CSharpDatabaseEntryTest {
         PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry("Pikachu", "Alpha Sapphire", "Standard");
         PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry("Pikachu", "Omega Ruby", "Belle");
 
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetIconFilepath(false)));
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetIconFilepath(true)));
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(false,false)));
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(false,true)));
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(true,false)));
+        Assert.IsTrue(System.IO.File.Exists(pokemonEntry.GetSpriteFilepath(true,true)));
+
         Assert.AreEqual(pokemonEntryFirst, pokemonEntryFirst);
         Assert.AreEqual(pokemonEntryFirst, pokemonEntrySame);
         Assert.AreEqual(pokemonEntryFirst.GetHashCode(), pokemonEntrySame.GetHashCode());
