@@ -62,10 +62,6 @@ else
     cd $REPO_TOPLEVEL/maven/PKMN
     mvn test
     [ $? -ne 0 ] && exit 1
-    mvn site
-    [ $? -ne 0 ] && exit 1
-    mvn package
-    [ $? -ne 0 ] && exit 1
 fi
 
 echo # So we can check the last error code
