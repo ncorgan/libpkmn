@@ -24,7 +24,7 @@ class InitPKMN {
         "stl_java"
     };
 
-    public static Path tempDirectory;
+    public static Path pkmnDirectory;
     private static boolean initialized = false;
 
     public static boolean isWindows() {
@@ -49,7 +49,7 @@ class InitPKMN {
         }
 
         Path fileName = Paths.get(resourcePath).getFileName();
-        Path outputPath = tempDirectory.resolve(fileName);
+        Path outputPath = pkmnDirectory.resolve(fileName);
         OutputStream os = new FileOutputStream(outputPath.toFile());
 
         // Read from resource and write to temp file.
@@ -81,13 +81,19 @@ class InitPKMN {
          * Create temporary directory for this process. Resource files
          * will be extracted here either on import or as needed.
          */
-        if(tempDirectory == null) {
+        if(pkmnDirectory == null) {
             try {
-                tempDirectory = Files.createTempDirectory("PKMN_");
+                pkmnDirectory = Files.createTempDirectory("PKMN_");
+                pkmnDirectory.toFile().deleteOnExit();
+
+                // Make directories
+                Path imagesDirectory = Files.createDirectory(pkmnDirectory.resolve("images"));
+                imagesDirectory.toFile().deleteOnExit();
+                Path tempDirectory = Files.createDirectory(pkmnDirectory.resolve("tmp"));
                 tempDirectory.toFile().deleteOnExit();
 
                 // http://stackoverflow.com/a/24988095
-                System.setProperty("java.library.path", tempDirectory.toString());
+                System.setProperty("java.library.path", pkmnDirectory.toString());
                 Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
                 fieldSysPath.setAccessible(true);
                 fieldSysPath.set(null, null);
@@ -98,8 +104,9 @@ class InitPKMN {
                 Path databaseOutputFile = extractFileFromJAR("/resources/libpkmn.db", false);
 
                 // With everything extracted, set LibPKMN's environment variables.
-                nc.PKMN.Env.setEnv("PKMN_TMP_DIR", tempDirectory.toString());
                 nc.PKMN.Env.setEnv("PKMN_DATABASE_PATH", databaseOutputFile.toString());
+                nc.PKMN.Env.setEnv("PKMN_IMAGES_DIR", imagesDirectory.toString());
+                nc.PKMN.Env.setEnv("PKMN_TMP_DIR", tempDirectory.toString());
             } catch(Exception e) {
             }
         }
