@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -15,12 +15,16 @@ IF(NUNIT_FOUND)
     SET(CSHARP_BINARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     SET(csharp_tests
+        CSharpBuildInfoTest
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
+        CSharpPokemonTest
+        CSharpPokemonPartyTest
+        CSharpPokemonPCTest
         CSharpWinFormsTest_GUI
     )
 

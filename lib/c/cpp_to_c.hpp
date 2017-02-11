@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,11 @@
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
+#include <pkmn/move_slot.hpp>
+#include <pkmn/pokemon.hpp>
+#include <pkmn/pokemon_box.hpp>
+#include <pkmn/pokemon_party.hpp>
+#include <pkmn/pokemon_pc.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
@@ -55,8 +60,45 @@ typedef struct {
     std::string last_error;
 } pkmn_item_list_t;
 
+typedef struct {
+    pkmn::pokemon::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_t;
+
+typedef struct {
+    pkmn::pokemon_box::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_box_t;
+
+typedef struct {
+    pkmn::pokemon_party::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_party_t;
+
+typedef struct {
+    pkmn::pokemon_pc::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_pc_t;
+
 #define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
+#define PKMN_POKEMON_DECLARED
+#define PKMN_POKEMON_BOX_DECLARED
+#define PKMN_POKEMON_PARTY_DECLARED
+#define PKMN_POKEMON_PC_DECLARED
+
+#include <pkmn-c/types/hidden_power.h>
+#include <pkmn-c/types/int_pair.h>
+#include <pkmn-c/types/item_slot.h>
+#include <pkmn-c/types/levelup_move.h>
+#include <pkmn-c/types/move_slot.h>
+#include <pkmn-c/types/pokemon_list.h>
+#include <pkmn-c/types/pokemon_box_list.h>
+#include <pkmn-c/types/string_types.h>
 
 namespace pkmn {
 
@@ -105,9 +147,29 @@ namespace pkmn {
         pkmn_database_pokemon_entry_t* pokemon_entry_c
     );
 
+    void pkmn_move_slot_cpp_to_c(
+        const pkmn::move_slot &mslot_cpp,
+        pkmn_move_slot_t* mslot_c
+    );
+
+    void pkmn_move_slots_cpp_to_c(
+        const pkmn::move_slots_t &mslots_cpp,
+        pkmn_move_slots_t* mslots_c
+    );
+
     void pkmn_pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t &pokemon_entries,
         pkmn_string_list_t* string_list_out
+    );
+
+    void pkmn_pokemon_list_cpp_to_c(
+        const pkmn::pokemon_list_t &pokemon_list_cpp,
+        pkmn_pokemon_list_t* pokemon_list_c
+    );
+
+    void pkmn_pokemon_box_list_cpp_to_c(
+        const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
+        pkmn_pokemon_box_list_t* pokemon_box_list_c
     );
 
     PKMN_INLINE void std_pair_int_to_int_pair(
@@ -147,16 +209,6 @@ namespace pkmn {
         return PKMN_ERROR_NONE;
     }
 
-    PKMN_INLINE void std_string_to_c_str(
-        const std::string &str,
-        char* c_str_out,
-        size_t buffer_len,
-        size_t* actual_strlen_out
-    ) {
-        std::strncpy(c_str_out, str.c_str(), buffer_len);
-        *actual_strlen_out = str.size() + 1;
-    }
-
     PKMN_INLINE void std_string_to_c_str_alloc(
         const std::string &str,
         char** c_str_out
@@ -169,6 +221,25 @@ namespace pkmn {
         const std::pair<std::string, std::string> &cpp_pair,
         pkmn_string_pair_t* c_pair_out
     );
+
+    template <typename value_type>
+    PKMN_INLINE void std_map_keys_to_string_list(
+        const std::map<std::string, value_type> &string_map,
+        pkmn_string_list_t* string_list_out
+    ) {
+        string_list_out->strings = (char**)std::malloc(sizeof(char*) * string_map.size());
+        size_t i = 0;
+        for(auto iter = string_map.begin();
+            iter != string_map.end();
+            ++iter, ++i)
+        {
+            string_list_out->strings[i] = (char*)std::malloc(iter->first.size() + 1);
+            std::strcpy(string_list_out->strings[i], iter->first.c_str());
+            string_list_out->strings[i][iter->first.size()] = '\0';
+        }
+
+        string_list_out->length = string_map.size();
+    }
 
     void std_vector_std_string_to_string_list(
         const std::vector<std::string> &vec,

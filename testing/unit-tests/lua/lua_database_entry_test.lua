@@ -83,6 +83,12 @@ function test_move_entry()
     luaunit.assertNotEquals(entry, entry_different_game)
 end
 
+-- http://stackoverflow.com/a/4991602
+function file_exists(name)
+    local f=io.open(name,"r")
+    if f~=nil then io.close(f) return true else return false end
+end
+
 function test_pokemon_entry()
     -- Make sure trying to create an invalid entry results in an error
     luaunit.assertError(pkmn.database.pokemon_entry, "Invalid", "Black 2, Sunny")
@@ -101,7 +107,7 @@ function test_pokemon_entry()
     luaunit.assertAlmostEquals(entry:get_chance_male(), 0.5, 0.0001)
     luaunit.assertAlmostEquals(entry:get_chance_female(), 0.5, 0.0001)
     luaunit.assertFalse(entry:has_gender_differences())
-    luaunit.assertEquals(entry:get_base_happiness(), 70)
+    luaunit.assertEquals(entry:get_base_friendship(), 70)
 
     local types = entry:get_types()
     luaunit.assertEquals(types.first, "Ground")
@@ -141,6 +147,13 @@ function test_pokemon_entry()
     luaunit.assertTrue(#entry:get_egg_moves() > 0)
     luaunit.assertTrue(#entry:get_tutor_moves() > 0)
     luaunit.assertEquals(#entry:get_evolutions(), 0)
+
+    luaunit.assertTrue(file_exists(entry:get_icon_filepath(false)))
+    luaunit.assertTrue(file_exists(entry:get_icon_filepath(true)))
+    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(false,false)))
+    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(false,true)))
+    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(true,false)))
+    luaunit.assertTrue(file_exists(entry:get_sprite_filepath(true,true)))
 
     -- Use different Pokémon for testing (in)equality.
     local entry_first = pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "Standard")

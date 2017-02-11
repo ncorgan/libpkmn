@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef INCLUDED_PKMN_PKSAV_PKSAV_COMMON_HPP
-#define INCLUDED_PKMN_PKSAV_PKSAV_COMMON_HPP
+#ifndef INCLUDED_PKMN_PKSAV_PKSAV_CALL_HPP
+#define INCLUDED_PKMN_PKSAV_PKSAV_CALL_HPP
 
 #include <pksav/error.h>
 
@@ -20,4 +20,4 @@
     } \
 }
 
-#endif /* INCLUDED_PKMN_PKSAV_PKSAV_COMMON_HPP */
+#endif /* INCLUDED_PKMN_PKSAV_PKSAV_CALL_HPP */

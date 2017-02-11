@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -34,11 +34,11 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void ItemEntryTest() {
-        PKMN.ItemEntry itemEntry = new PKMN.ItemEntry("Potion", "Red");
+        PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Potion", "Red");
 
-        PKMN.ItemEntry itemEntrySame = new PKMN.ItemEntry("Potion", "Red");
-        PKMN.ItemEntry itemEntryDifferentItem = new PKMN.ItemEntry("Great Ball", "Red");
-        PKMN.ItemEntry itemEntryDifferentGame = new PKMN.ItemEntry("Potion", "Blue");
+        PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Potion", "Red");
+        PKMN.Database.ItemEntry itemEntryDifferentItem = new PKMN.Database.ItemEntry("Great Ball", "Red");
+        PKMN.Database.ItemEntry itemEntryDifferentGame = new PKMN.Database.ItemEntry("Potion", "Blue");
 
         Assert.AreEqual(itemEntry, itemEntry);
         Assert.AreEqual(itemEntry, itemEntrySame);
@@ -54,24 +54,24 @@ public class CSharpEqualityHashCodeTest {
     [Test]
     public void ItemSlotTest() {
         PKMN.ItemSlot itemSlot = new PKMN.ItemSlot(
-                                         new PKMN.ItemEntry("Potion", "Red"),
+                                         new PKMN.Database.ItemEntry("Potion", "Red"),
                                          10
                                      );
 
         PKMN.ItemSlot itemSlotSame = new PKMN.ItemSlot(
-                                             new PKMN.ItemEntry("Potion", "Red"),
+                                             new PKMN.Database.ItemEntry("Potion", "Red"),
                                              10
                                          );
         PKMN.ItemSlot itemSlotDifferentItem = new PKMN.ItemSlot(
-                                                      new PKMN.ItemEntry("Great Ball", "Red"),
+                                                      new PKMN.Database.ItemEntry("Great Ball", "Red"),
                                                       10
                                                   );
         PKMN.ItemSlot itemSlotDifferentGame = new PKMN.ItemSlot(
-                                                      new PKMN.ItemEntry("Potion", "Blue"),
+                                                      new PKMN.Database.ItemEntry("Potion", "Blue"),
                                                       10
                                                   );
         PKMN.ItemSlot itemSlotDifferentAmount = new PKMN.ItemSlot(
-                                                        new PKMN.ItemEntry("Potion", "Red"),
+                                                        new PKMN.Database.ItemEntry("Potion", "Red"),
                                                         5
                                                     );
 
@@ -91,25 +91,25 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void LevelupMoveTest() {
-        PKMN.LevelupMove levelupMove = new PKMN.LevelupMove(
-                                               new PKMN.MoveEntry("Scratch", "Red"),
+        PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
+                                               new PKMN.Database.MoveEntry("Scratch", "Red"),
                                                10
                                            );
 
-        PKMN.LevelupMove levelupMoveSame = new PKMN.LevelupMove(
-                                                   new PKMN.MoveEntry("Scratch", "Red"),
+        PKMN.Database.LevelupMove levelupMoveSame = new PKMN.Database.LevelupMove(
+                                                   new PKMN.Database.MoveEntry("Scratch", "Red"),
                                                    10
                                                );
-        PKMN.LevelupMove levelupMoveDifferentMove = new PKMN.LevelupMove(
-                                                            new PKMN.MoveEntry("Tackle", "Red"),
+        PKMN.Database.LevelupMove levelupMoveDifferentMove = new PKMN.Database.LevelupMove(
+                                                            new PKMN.Database.MoveEntry("Tackle", "Red"),
                                                             10
                                                         );
-        PKMN.LevelupMove levelupMoveDifferentGame = new PKMN.LevelupMove(
-                                                            new PKMN.MoveEntry("Scratch", "Blue"),
+        PKMN.Database.LevelupMove levelupMoveDifferentGame = new PKMN.Database.LevelupMove(
+                                                            new PKMN.Database.MoveEntry("Scratch", "Blue"),
                                                             10
                                                         );
-        PKMN.LevelupMove levelupMoveDifferentLevel = new PKMN.LevelupMove(
-                                                             new PKMN.MoveEntry("Scratch", "Red"),
+        PKMN.Database.LevelupMove levelupMoveDifferentLevel = new PKMN.Database.LevelupMove(
+                                                             new PKMN.Database.MoveEntry("Scratch", "Red"),
                                                              5
                                                          );
 
@@ -129,11 +129,11 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void MoveEntryTest() {
-        PKMN.MoveEntry moveEntry = new PKMN.MoveEntry("Scratch", "Red");
+        PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Scratch", "Red");
 
-        PKMN.MoveEntry moveEntrySame = new PKMN.MoveEntry("Scratch", "Red");
-        PKMN.MoveEntry moveEntryDifferentMove = new PKMN.MoveEntry("Tackle", "Red");
-        PKMN.MoveEntry moveEntryDifferentGame = new PKMN.MoveEntry("Scratch", "Blue");
+        PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Scratch", "Red");
+        PKMN.Database.MoveEntry moveEntryDifferentMove = new PKMN.Database.MoveEntry("Tackle", "Red");
+        PKMN.Database.MoveEntry moveEntryDifferentGame = new PKMN.Database.MoveEntry("Scratch", "Blue");
 
         Assert.AreEqual(moveEntry, moveEntry);
         Assert.AreEqual(moveEntry, moveEntrySame);
@@ -148,12 +148,12 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void PokemonEntryTest() {
-        PKMN.PokemonEntry pokemonEntry = new PKMN.PokemonEntry("Venusaur", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
 
-        PKMN.PokemonEntry pokemonEntrySame = new PKMN.PokemonEntry("Venusaur", "Omega Ruby", "");
-        PKMN.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.PokemonEntry("Charizard", "Omega Ruby", "");
-        PKMN.PokemonEntry pokemonEntryDifferentGame = new PKMN.PokemonEntry("Venusaur", "Ruby", "");
-        PKMN.PokemonEntry pokemonEntryDifferentForm = new PKMN.PokemonEntry("Venusaur", "Omega Ruby", "Mega");
+        PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentPokemon = new PKMN.Database.PokemonEntry("Charizard", "Omega Ruby", "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentGame = new PKMN.Database.PokemonEntry("Venusaur", "Ruby", "");
+        PKMN.Database.PokemonEntry pokemonEntryDifferentForm = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "Mega");
 
         Assert.AreEqual(pokemonEntry, pokemonEntry);
         Assert.AreEqual(pokemonEntry, pokemonEntrySame);
@@ -454,19 +454,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotList = new PKMN.ItemSlotList();
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Potion", "Red"),
+                    new PKMN.Database.ItemEntry("Potion", "Red"),
                     10
                 )
         );
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Great Ball", "Gold"),
+                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
                     3
                 )
         );
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Razz Berry", "Ruby"),
+                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
                     5
                 )
         );
@@ -474,19 +474,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotListSame = new PKMN.ItemSlotList();
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Potion", "Red"),
+                    new PKMN.Database.ItemEntry("Potion", "Red"),
                     10
                 )
         );
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Great Ball", "Gold"),
+                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
                     3
                 )
         );
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Razz Berry", "Ruby"),
+                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
                     5
                 )
         );
@@ -494,19 +494,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotListReversed = new PKMN.ItemSlotList();
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Razz Berry", "Ruby"),
+                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
                     5
                 )
         );
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Great Ball", "Gold"),
+                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
                     3
                 )
         );
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.ItemEntry("Potion", "Red"),
+                    new PKMN.Database.ItemEntry("Potion", "Red"),
                     10
                 )
         );
@@ -521,37 +521,37 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void MoveEntryListTest() {
-        PKMN.MoveEntryList moveEntryList = new PKMN.MoveEntryList();
+        PKMN.Database.MoveEntryList moveEntryList = new PKMN.Database.MoveEntryList();
         moveEntryList.Add(
-            new PKMN.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry("Scratch", "Red")
         );
         moveEntryList.Add(
-            new PKMN.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry("Synthesis", "Gold")
         );
         moveEntryList.Add(
-            new PKMN.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry("Swallow", "Ruby")
         );
 
-        PKMN.MoveEntryList moveEntryListSame = new PKMN.MoveEntryList();
+        PKMN.Database.MoveEntryList moveEntryListSame = new PKMN.Database.MoveEntryList();
         moveEntryListSame.Add(
-            new PKMN.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry("Scratch", "Red")
         );
         moveEntryListSame.Add(
-            new PKMN.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry("Synthesis", "Gold")
         );
         moveEntryListSame.Add(
-            new PKMN.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry("Swallow", "Ruby")
         );
 
-        PKMN.MoveEntryList moveEntryListReversed = new PKMN.MoveEntryList();
+        PKMN.Database.MoveEntryList moveEntryListReversed = new PKMN.Database.MoveEntryList();
         moveEntryListReversed.Add(
-            new PKMN.MoveEntry("Swallow", "Ruby")
+            new PKMN.Database.MoveEntry("Swallow", "Ruby")
         );
         moveEntryListReversed.Add(
-            new PKMN.MoveEntry("Synthesis", "Gold")
+            new PKMN.Database.MoveEntry("Synthesis", "Gold")
         );
         moveEntryListReversed.Add(
-            new PKMN.MoveEntry("Scratch", "Red")
+            new PKMN.Database.MoveEntry("Scratch", "Red")
         );
 
         Assert.AreEqual(moveEntryList, moveEntryList);
@@ -564,37 +564,37 @@ public class CSharpEqualityHashCodeTest {
 
     [Test]
     public void PokemonEntryListTest() {
-        PKMN.PokemonEntryList pokemonEntryList = new PKMN.PokemonEntryList();
+        PKMN.Database.PokemonEntryList pokemonEntryList = new PKMN.Database.PokemonEntryList();
         pokemonEntryList.Add(
-            new PKMN.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
         );
         pokemonEntryList.Add(
-            new PKMN.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
         );
         pokemonEntryList.Add(
-            new PKMN.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
         );
 
-        PKMN.PokemonEntryList pokemonEntryListSame = new PKMN.PokemonEntryList();
+        PKMN.Database.PokemonEntryList pokemonEntryListSame = new PKMN.Database.PokemonEntryList();
         pokemonEntryListSame.Add(
-            new PKMN.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
         );
         pokemonEntryListSame.Add(
-            new PKMN.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
         );
 
-        PKMN.PokemonEntryList pokemonEntryListReversed = new PKMN.PokemonEntryList();
+        PKMN.Database.PokemonEntryList pokemonEntryListReversed = new PKMN.Database.PokemonEntryList();
         pokemonEntryListReversed.Add(
-            new PKMN.PokemonEntry("Mudkip", "Sapphire", "")
+            new PKMN.Database.PokemonEntry("Mudkip", "Sapphire", "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.PokemonEntry("Totodile", "Silver", "")
+            new PKMN.Database.PokemonEntry("Totodile", "Silver", "")
         );
         pokemonEntryListReversed.Add(
-            new PKMN.PokemonEntry("Squirtle", "Blue", "")
+            new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
         );
 
         Assert.AreEqual(pokemonEntryList, pokemonEntryList);

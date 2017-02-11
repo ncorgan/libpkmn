@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,8 @@
 #include <pkmn.h>
 
 #include <string.h>
+
+#define STRBUFFER_LEN 1024
 
 static void assert_item_entry_uninitialized(
     pkmn_database_item_entry_t* item_entry
@@ -228,7 +230,7 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry->chance_male, 0.0f);
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry->chance_female, 0.0f);
     TEST_ASSERT_FALSE(pokemon_entry->has_gender_differences);
-    TEST_ASSERT_EQUAL(pokemon_entry->base_happiness, 0);
+    TEST_ASSERT_EQUAL(pokemon_entry->base_friendship, 0);
     TEST_ASSERT_NULL(pokemon_entry->types.first);
     TEST_ASSERT_NULL(pokemon_entry->types.second);
     TEST_ASSERT_NULL(pokemon_entry->abilities.first);
@@ -253,6 +255,18 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL(pokemon_entry->forms.length, 0);
     TEST_ASSERT_NULL(pokemon_entry->evolutions.strings);
     TEST_ASSERT_EQUAL(pokemon_entry->evolutions.length, 0);
+}
+
+static bool file_exists(
+    const char* filepath
+) {
+    FILE* file = fopen(filepath, "rb");
+    if(file) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 static void pokemon_entry_test() {
@@ -382,7 +396,7 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_male, 0.5f);
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_female, 0.5f);
     TEST_ASSERT_FALSE(pokemon_entry.has_gender_differences);
-    TEST_ASSERT_EQUAL(pokemon_entry.base_happiness, 70);
+    TEST_ASSERT_EQUAL(pokemon_entry.base_friendship, 70);
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.first, "Ground");
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.second, "Electric");
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.first, "Static");
@@ -427,6 +441,33 @@ static void pokemon_entry_test() {
         PKMN_ERROR_NONE
     );
     TEST_ASSERT_EQUAL(level, 58);
+
+    char icon_filepath[STRBUFFER_LEN] = {0};
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_icon_filepath(
+            &pokemon_entry,
+            false,
+            icon_filepath,
+            STRBUFFER_LEN
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT(strlen(icon_filepath) > 0);
+    TEST_ASSERT(file_exists(icon_filepath));
+
+    char sprite_filepath[STRBUFFER_LEN] = {0};
+    TEST_ASSERT_EQUAL(
+        pkmn_database_pokemon_entry_sprite_filepath(
+            &pokemon_entry,
+            false,
+            false,
+            sprite_filepath,
+            STRBUFFER_LEN
+        ),
+        PKMN_ERROR_NONE
+    );
+    TEST_ASSERT(strlen(sprite_filepath) > 0);
+    TEST_ASSERT(file_exists(sprite_filepath));
 
     TEST_ASSERT_NOT_NULL(pokemon_entry.levelup_moves.levelup_moves);
     TEST_ASSERT(pokemon_entry.levelup_moves.length > 0);

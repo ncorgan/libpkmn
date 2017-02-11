@@ -57,7 +57,7 @@ namespace pkmn {
         PKMN_CONSTEXPR_OR_INLINE item_slot(
             pkmn::database::item_entry&& slot_item,
             int slot_amount
-        ): item(slot_item),
+        ): item(std::move(slot_item)),
            amount(slot_amount) {}
 #endif
 

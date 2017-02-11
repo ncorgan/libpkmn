@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,6 @@
     SWIG_CATCH_DEFAULT
 
     %include <pkmn.i>
-    //%include <pkmn_python_docstrings.i>
+    %include <lua/unsigned_nums_typemap.i> 
     %include <lua/stl_macros.i>
 %enddef

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 
 import pkmn
 
+import os
 import sys
 import unittest
 
@@ -111,7 +112,7 @@ class database_entry_test(unittest.TestCase):
         self.assertAlmostEqual(entry.get_chance_male(), 0.5)
         self.assertAlmostEqual(entry.get_chance_female(), 0.5)
         self.assertFalse(entry.has_gender_differences())
-        self.assertEqual(entry.get_base_happiness(), 70)
+        self.assertEqual(entry.get_base_friendship(), 70)
 
         types = entry.get_types()
         self.assertEqual(types[0], "Ground")
@@ -152,6 +153,13 @@ class database_entry_test(unittest.TestCase):
         self.assertGreater(len(entry.get_tutor_moves()), 0)
         self.assertEqual(len(entry.get_forms()), 1)
         self.assertEqual(len(entry.get_evolutions()), 0)
+
+        self.assertTrue(os.path.exists(entry.get_icon_filepath(False)))
+        self.assertTrue(os.path.exists(entry.get_icon_filepath(True)))
+        self.assertTrue(os.path.exists(entry.get_sprite_filepath(False,False)))
+        self.assertTrue(os.path.exists(entry.get_sprite_filepath(False,True)))
+        self.assertTrue(os.path.exists(entry.get_sprite_filepath(True,False)))
+        self.assertTrue(os.path.exists(entry.get_sprite_filepath(True,True)))
 
         # Use different Pokemon for testing (in)equality
         entry_first = pkmn.database.pokemon_entry("Pikachu", "Omega Ruby", "Standard")
