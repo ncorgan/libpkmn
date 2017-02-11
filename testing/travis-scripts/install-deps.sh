@@ -12,10 +12,10 @@ sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
 sudo apt-get -y install cmake cppcheck libboost1.55-all-dev libqt4-dev qtbase5-dev \
                         libgtest-dev swig swig3.0 doxygen \
-			mono-complete monodevelop-unit nunit-console \
+			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
 			liblua5.1-dev luarocks \
-			python3 python-pip python3-pip
+			libpython-dev libpython3-dev python3 python-pip python3-pip
 [ $? -ne 0 ] && exit 1
 sudo pip install CppHeaderParser
 [ $? -ne 0 ] && exit 1
