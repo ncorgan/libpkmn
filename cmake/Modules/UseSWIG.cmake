@@ -240,7 +240,7 @@ MACRO(SWIG_ADD_MODULE name language)
   )
   IF(PKMN_CLANG)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "-Wno-error=missing-field-initializers -Wno-deprecated-register ${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-missing-field-initializers -Werror -Wno-deprecated-register"
       )
   ELSEIF(PKMN_GCC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
