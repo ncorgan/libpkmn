@@ -20,7 +20,8 @@ matrix:
           packages:
             - g++-6
       env:
-        - COMPILER=g++-6
+        - NEWCC=gcc-6
+        - NEWCXX=g++-6
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
@@ -35,11 +36,12 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-4.0
           packages:
             - clang-4.0
       env:
+        - NEWCC=clang-4.0
+        - NEWCXX=clang++-4.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
