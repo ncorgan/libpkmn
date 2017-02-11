@@ -16,12 +16,26 @@ find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[
 find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
 [ $? -ne 0 ] && exit 1
 
-export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
-export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages:$PYTHONPATH
+
+if [ $PYTHON_VERSION -eq 2 ]
+then
+    export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
+    export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages:$PYTHONPATH
+    PYTHON_INCLUDE_DIR=/usr/include/python2.7
+    PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so
+else
+    export PYTHONPATH=/usr/lib/python3/dist-packages:/usr/lib/python3/site-packages:$PYTHONPATH
+    export PYTHONPATH=/usr/local/lib/python3/dist-packages:/usr/local/lib/python3/site-packages:$PYTHONPATH
+    PYTHON_INCLUDE_DIR=/usr/include/python3.4m
+    PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.4m.so
+fi
 
 cmake -DCMAKE_BUILD_TYPE=Release \
   -DDESIRED_QT_VERSION=$DESIRED_QT_VERSION \
   -DSWIG_EXECUTABLE=/usr/bin/swig${SWIG_VERSION}.0 \
+  -DPYTHON_EXECUTABLE=/usr/bin/python${PYTHON_VERSION} \
+  -DPYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR \
+  -DPYTHON_LIBRARY=$PYTHON_LIBRARY \
   $REPO_TOPLEVEL
 [ $? -ne 0 ] && exit 1
 make

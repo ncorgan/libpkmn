@@ -5,21 +5,29 @@ os:
 
 matrix:
   include:
+    # Default/older GCC, dependencies
     - compiler: gcc
       env:
       - DESIRED_QT_VERSION=4
+      - PYTHON_VERSION=2
       - SWIG_VERSION=2
+    # Newer GCC, dependencies
     - compiler: gcc
       env:
       - DESIRED_QT_VERSION=5
+      - PYTHON_VERSION=3
       - SWIG_VERSION=3
+    # Default/older Clang, dependencies
     - compiler: clang
       env:
       - DESIRED_QT_VERSION=4
+      - PYTHON_VERSION=2
       - SWIG_VERSION=2
+    # Newer Clang, dependencies
     - compiler: clang
       env:
       - DESIRED_QT_VERSION=5
+      - PYTHON_VERSION=3
       - SWIG_VERSION=3
 
 sudo: required
