@@ -3,13 +3,24 @@ language: cpp
 os:
  - linux
 
-compiler:
- - gcc
- - clang
-
-env:
- - DESIRED_QT_VERSION=4
- - DESIRED_QT_VERSION=5
+matrix:
+  include:
+    - compiler: gcc
+      env:
+      - DESIRED_QT_VERSION=4
+      - SWIG_VERSION=2
+    - compiler: gcc
+      env:
+      - DESIRED_QT_VERSION=5
+      - SWIG_VERSION=3
+    - compiler: clang
+      env:
+      - DESIRED_QT_VERSION=4
+      - SWIG_VERSION=2
+    - compiler: clang
+      env:
+      - DESIRED_QT_VERSION=5
+      - SWIG_VERSION=3
 
 sudo: required
 dist: trusty

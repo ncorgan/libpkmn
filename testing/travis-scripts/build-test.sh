@@ -21,6 +21,7 @@ export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.
 
 cmake -DCMAKE_BUILD_TYPE=Release \
   -DDESIRED_QT_VERSION=$DESIRED_QT_VERSION \
+  -DSWIG_EXECUTABLE=/usr/bin/swig${SWIG_VERSION}.0 \
   $REPO_TOPLEVEL
 [ $? -ne 0 ] && exit 1
 make
