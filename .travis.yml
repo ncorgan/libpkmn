@@ -12,15 +12,15 @@ matrix:
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
     # Newer GCC, dependencies
-    - addons:
+    - compiler: gcc
+      addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
       env:
-        - CC=gcc
-        - CXX=g++
+        - COMPILER=g++-6
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
@@ -31,7 +31,8 @@ matrix:
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
     # Newer Clang, dependencies
-    - addons:
+    - compiler: clang
+      addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -39,8 +40,6 @@ matrix:
           packages:
             - clang-4.0
       env:
-        - CC=clang
-        - CXX=clang++
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
