@@ -3,6 +3,10 @@ language: cpp
 os:
  - linux
 
+compiler:
+ - gcc
+ - clang
+
 env:
  - DESIRED_QT_VERSION=4
  - DESIRED_QT_VERSION=5
