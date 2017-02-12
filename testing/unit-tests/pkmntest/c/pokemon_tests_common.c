@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.h"
+#include "util.h"
+
+#include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmn-c/pokemon.h>
 
@@ -13,6 +15,9 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#define STRBUFFER_LEN 1024
+static char strbuffer[STRBUFFER_LEN] = {0};
 
 static int game_to_generation(
     const char* game
@@ -293,6 +298,22 @@ static void test_gen2_forms(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         error = pkmn_pokemon_free(
                     &pokemon
                 );
@@ -415,6 +436,22 @@ static void test_gen3_forms(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_NULL(pokemon);
@@ -429,6 +466,23 @@ static void test_gen3_forms(
                 70
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);
@@ -441,6 +495,23 @@ static void test_gen3_forms(
                 70
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(pokemon);
@@ -488,6 +559,22 @@ static void test_gen3_forms(
     if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") ||
        !strcmp(game, "Colosseum") || !strcmp(game, "XD")) {
 
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -504,6 +591,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "FireRed")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -520,6 +623,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "LeafGreen")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -536,6 +655,22 @@ static void test_gen3_forms(
                 70
             );
     if(!strcmp(game, "Speed")) {
+        error = pkmn_pokemon_get_icon_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
+        error = pkmn_pokemon_get_sprite_filepath(
+                    pokemon,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT(file_exists(strbuffer));
+
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -590,9 +725,183 @@ static void test_invalid_starters(
     }
 }
 
-void test_invalid_pokemon(
+void pkmntest_invalid_pokemon_test(
     const char* game
 ) {
     test_forms(game);
     test_invalid_starters(game);
+}
+
+void pkmntest_gender_test(
+    const char* game
+) {
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_handle_t pokemon = NULL;
+    pkmn_gender_t gender = PKMN_MALE;
+
+    // All-female
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Nidorina",
+                game,
+                "",
+                50
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NOT_NULL(pokemon);
+
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_FEMALE);
+
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_FEMALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_MALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_GENDERLESS
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon);
+
+    // All-male
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Nidorino",
+                game,
+                "",
+                50
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NOT_NULL(pokemon);
+
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_MALE);
+
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_MALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_FEMALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_GENDERLESS
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon);
+
+    // Genderless
+    error = pkmn_pokemon_make(
+                &pokemon,
+                "Magnemite",
+                game,
+                "",
+                50
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NOT_NULL(pokemon);
+
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(gender, PKMN_GENDERLESS);
+
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_GENDERLESS
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_MALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    error = pkmn_pokemon_set_gender(
+                pokemon,
+                PKMN_FEMALE
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_NULL(pokemon);
+
+    static const char* mixed_pokemon[] = {
+        "Charmander", // 87.5% male
+        "Growlithe",  // 75% male
+        "Pidgey",     // 50% male
+        "Vulpix"     // 25% male
+    };
+    for(int i = 0; i < 4; ++i) {
+        error = pkmn_pokemon_make(
+                    &pokemon,
+                    mixed_pokemon[i],
+                    game,
+                    "",
+                    50
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_NOT_NULL(pokemon);
+
+        error = pkmn_pokemon_set_gender(
+                    pokemon,
+                    PKMN_MALE
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_get_gender(
+                    pokemon,
+                    &gender
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(gender, PKMN_MALE);
+
+        error = pkmn_pokemon_set_gender(
+                    pokemon,
+                    PKMN_FEMALE
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        error = pkmn_pokemon_get_gender(
+                    pokemon,
+                    &gender
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(gender, PKMN_FEMALE);
+
+        error = pkmn_pokemon_set_gender(
+                    pokemon,
+                    PKMN_GENDERLESS
+                );
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_NULL(pokemon);
+    }
 }

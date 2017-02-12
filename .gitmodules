@@ -7,3 +7,6 @@
 [submodule "testing/libpkmn-test-files"]
 	path = testing/libpkmn-test-files
 	url = https://github.com/ncorgan/libpkmn-test-files
+[submodule "images"]
+	path = images
+	url = https://github.com/ncorgan/libpkmn-images

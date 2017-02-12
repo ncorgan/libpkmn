@@ -9,7 +9,10 @@ The goal of LibPKMN is to be the most portable, intuitive, and expansive save ed
 library for the main series Pokémon games.
 
 Feature Roadmap:
+ * Game save abstraction
  * Java API
+ * Ruby API
+ * Dynamic Spinda sprite generation
 
 Build Dependencies
 -------------------------------------
@@ -42,13 +45,15 @@ Using [Travis](https://travis-ci.org/ncorgan/libpkmn) and
 repository is automatically tested under the following configurations:
 
  * Ubuntu 14.04 (x64)
-   * C/C++: GCC 4.8.4, Clang 3.5
+   * C/C++
+     * GCC: 4.8.4, 6.2.0
+     * Clang: 3.5.0, 4.0.0
      * Boost: 1.55.0
      * Qt: 4.8.6, 5.2.1
-   * SWIG: 3.0.2
+   * SWIG: 2.0.11, 3.0.2
    * C#: Mono 3.2.8
    * Lua: 5.1.5
-   * Python: 2.7.6
+   * Python: 2.7.6, 3.4.3
  * Windows Server 2012 R2 (x86, x64)
    * C/C++: MSVC 2015
      * Boost: 1.62.0
@@ -67,4 +72,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/01/08
+README last updated: 2017/02/12

@@ -125,6 +125,9 @@ function gen2_pokemon_tests.pokemon_test(game)
     gen2_pokemon_tests.check_stat_map(pokemon:get_IVs(), false)
     gen2_pokemon_tests.check_stat_map(pokemon:get_stats(), true)
 
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
     --
     -- Make sure the getters and setters agree. Also make sure it fails
     -- when expected.
@@ -135,13 +138,30 @@ function gen2_pokemon_tests.pokemon_test(game)
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
-    -- Shininess affects IVs, so make sure the abstraction reflects that.
+    -- Gender affects IVs, so make sure the abstraction reflects that.
+    pokemon:set_gender("Male")
+    luaunit.assertEquals(pokemon:get_IVs()["Attack"], 15)
+    pokemon:set_gender("Female")
+    luaunit.assertTrue(pokemon:get_IVs()["Attack"] < 15)
+
+    pokemon:set_IV("Attack", 0)
+    luaunit.assertEquals(pokemon:get_gender(), "Female")
+    pokemon:set_IV("Attack", 15)
+    luaunit.assertEquals(pokemon:get_gender(), "Male")
+
+    -- Shininess affects IVs, so make sure the abstraction reflects that. Also check filepaths.
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
     luaunit.assertEquals(pokemon:get_IVs()["Attack"], 13)
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
+    -- This will fail if "shiny" is anywhere in the filepath.
+    luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
 
     pokemon:set_shininess(true)
     luaunit.assertTrue(pokemon:is_shiny())
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
 
     local IVs = pokemon:get_IVs()
     luaunit.assertEquals(IVs["Attack"], 15)
@@ -246,6 +266,10 @@ function test_gen2_gold_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Gold")
 end
 
+function test_gen2_gold_gender()
+    pokemon_tests.gender_test("Gold")
+end
+
 function test_gen2_gold_unown_forms()
     gen2_pokemon_tests.unown_forms_test("Gold")
 end
@@ -260,6 +284,10 @@ function test_gen2_silver_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Silver")
 end
 
+function test_gen2_silver_gender()
+    pokemon_tests.gender_test("Silver")
+end
+
 function test_gen2_silver_unown_forms()
     gen2_pokemon_tests.unown_forms_test("Silver")
 end
@@ -272,6 +300,10 @@ end
 
 function test_gen2_crystal_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Crystal")
+end
+
+function test_gen2_crystal_gender()
+    pokemon_tests.gender_test("Crystal")
 end
 
 function test_gen2_crystal_unown_forms()

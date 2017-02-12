@@ -22,6 +22,7 @@
 #include <pkmn-c/calculations/gender.h>
 #include <pkmn-c/calculations/hidden_power.h>
 #include <pkmn-c/calculations/shininess.h>
+#include <pkmn-c/calculations/size.h>
 #include <pkmn-c/calculations/spinda_spots.h>
 #include <pkmn-c/calculations/stats.h>
 

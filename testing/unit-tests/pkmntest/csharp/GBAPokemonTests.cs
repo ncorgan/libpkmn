@@ -22,12 +22,6 @@ public class GBAPokemonTests {
                                      "Special Attack", "Special Defense"};
     private static Random rng = new Random();
 
-    public static void InvalidPokemonTest(
-        string game
-    ) {
-        PokemonTestsCommon.TestInvalidPokemon(game);
-    }
-
     public static void UnownFormTest(
         string game
     ) {
@@ -261,6 +255,9 @@ public class GBAPokemonTests {
         CheckStatsMap(pokemon.IVs);
         CheckStatsMap(pokemon.Stats);
 
+        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
@@ -279,13 +276,31 @@ public class GBAPokemonTests {
         pokemon.Nickname = "foobarbaz";
         Assert.AreEqual(pokemon.Nickname, "foobarbaz");
 
+        // Gender and personality are tied, so make sure they affect each other.
+        pokemon.Gender = "Female";
+        Assert.Less((pokemon.Personality & 0xFF), 0xFF);
+        pokemon.Gender = "Male";
+        Assert.AreEqual((pokemon.Personality & 0xFF), 0xFF);
+
+        pokemon.Personality = 0x1234AB00;
+        Assert.AreEqual(pokemon.Gender, "Female");
+        pokemon.Personality = 0xCD5678FF;
+        Assert.AreEqual(pokemon.Gender, "Male");
+
         // Setting shininess should affect personality.
         pokemon.IsShiny = false;
         Assert.IsFalse(pokemon.IsShiny);
         uint personality = pokemon.Personality;
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+
+        // This will fail if "shiny" is anywhere in the filepath.
+        Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+
         pokemon.IsShiny = true;
         Assert.IsTrue(pokemon.IsShiny);
         Assert.AreNotEqual(pokemon.Personality, personality);
+        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {

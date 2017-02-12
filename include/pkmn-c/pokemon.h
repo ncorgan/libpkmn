@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -91,6 +91,16 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_nickname(
 PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
     pkmn_pokemon_handle_t handle,
     const char* nickname
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_gender(
+    pkmn_pokemon_handle_t handle,
+    pkmn_gender_t* gender_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_gender(
+    pkmn_pokemon_handle_t handle,
+    pkmn_gender_t gender
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_is_shiny(
@@ -366,6 +376,18 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_stat(
     pkmn_pokemon_handle_t handle,
     const char* stat_name,
     int* stat_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_icon_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* icon_filepath_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_sprite_filepath(
+    pkmn_pokemon_handle_t handle,
+    char* sprite_filepath_out,
+    size_t buffer_len
 );
 
 #ifdef __cplusplus

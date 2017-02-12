@@ -225,6 +225,9 @@ function gba_pokemon_tests.pokemon_test(game)
     gba_pokemon_tests.check_stats_map(pokemon:get_IVs())
     gba_pokemon_tests.check_stats_map(pokemon:get_stats())
 
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
     -- expected.
@@ -236,13 +239,31 @@ function gba_pokemon_tests.pokemon_test(game)
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
-    -- Setting shininess should affect personality.
+    -- Gender and personality are tied, so make sure they affect each other.
+    pokemon:set_gender("Female")
+    luaunit.assertTrue(bit32.band(pokemon:get_personality(), 0xFF) < 0xFF)
+    pokemon:set_gender("Male")
+    luaunit.assertEquals(bit32.band(pokemon:get_personality(), 0xFF), 0xFF)
+
+    pokemon:set_personality(0x1234AB00)
+    luaunit.assertEquals(pokemon:get_gender(), "Female")
+    pokemon:set_personality(0xCD5678FF)
+    luaunit.assertEquals(pokemon:get_gender(), "Male")
+
+    -- Setting shininess should affect personality. Also check personality.
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
     local personality = pokemon:get_personality()
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+
+    -- This will fail if "shiny" is anywhere in the filepath.
+    luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+
     pokemon:set_shininess(true)
     luaunit.assertTrue(pokemon:is_shiny())
     luaunit.assertNotEquals(pokemon:get_personality(), personality)
+    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
 
     luaunit.assertError(pokemon.set_held_item, pokemon, "Not an item")
 
@@ -354,6 +375,10 @@ function test_gba_ruby_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Ruby")
 end
 
+function test_gba_ruby_gender()
+    pokemon_tests.gender_test("Ruby")
+end
+
 function test_gba_ruby_unown_form()
     gba_pokemon_tests.unown_form_test("Ruby")
 end
@@ -366,6 +391,10 @@ end
 
 function test_gba_sapphire_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Sapphire")
+end
+
+function test_gba_ruby_gender()
+    pokemon_tests.gender_test("Ruby")
 end
 
 function test_gba_sapphire_unown_form()
@@ -382,6 +411,10 @@ function test_gba_emerald_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Emerald")
 end
 
+function test_gba_sapphire_gender()
+    pokemon_tests.gender_test("Sapphire")
+end
+
 function test_gba_emerald_unown_form()
     gba_pokemon_tests.unown_form_test("Emerald")
 end
@@ -396,6 +429,10 @@ function test_gba_firered_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("FireRed")
 end
 
+function test_gba_firered_gender()
+    pokemon_tests.gender_test("FireRed")
+end
+
 function test_gba_firered_unown_form()
     gba_pokemon_tests.unown_form_test("FireRed")
 end
@@ -408,6 +445,10 @@ end
 
 function test_gba_leafgreen_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("LeafGreen")
+end
+
+function test_gba_leafgreen_gender()
+    pokemon_tests.gender_test("LeafGreen")
 end
 
 function test_gba_leafgreen_unown_form()

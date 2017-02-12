@@ -16,6 +16,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
@@ -289,6 +290,28 @@ namespace pkmn {
                 10
             );
         )
+    }
+
+    std::string pokemon_gbaimpl::get_gender() {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::calculations::modern_pokemon_gender(
+                   _database_entry.get_name(),
+                   pksav_littleendian32(GBA_PC_RCAST->personality)
+               );
+    }
+
+    void pokemon_gbaimpl::set_gender(
+        const std::string &gender
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_modern_gender(
+            &GBA_PC_RCAST->personality,
+            gender
+        );
+
+        // No need to check Unown case, it's genderless.
     }
 
     bool pokemon_gbaimpl::is_shiny() {

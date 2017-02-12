@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "pokemon_tests_common.h"
+#include "util.h"
+
+#include <pkmntest-c/pokemon_tests_common.h>
 
 #include <pkmntest-c/gen1_pokemon_tests.h>
 
@@ -18,12 +20,6 @@
 #include <string.h>
 
 #define STRBUFFER_LEN 1024
-
-void pkmntest_gen1_invalid_pokemon_test(
-    const char* game
-) {
-    test_invalid_pokemon(game);
-}
 
 void pkmntest_gen1_friendship_test(
     const char* game
@@ -173,6 +169,12 @@ void pkmntest_gen1_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, expected_nickname);
+
+    error = pkmn_pokemon_get_gender(
+                pokemon,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
 
     bool shiny = false;
     error = pkmn_pokemon_is_shiny(
@@ -374,6 +376,21 @@ void pkmntest_gen1_pokemon_test(
         pkmn_pokemon_get_stat_names
     );
 
+    error = pkmn_pokemon_get_icon_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT(file_exists(strbuffer));
+
+    error = pkmn_pokemon_get_sprite_filepath(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+
     /*
      * Make sure the getters and setters agree. Also make sure it fails when
      * expected.
@@ -401,6 +418,12 @@ void pkmntest_gen1_pokemon_test(
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "foobarbaz");
+
+    error = pkmn_pokemon_set_gender(
+        pokemon,
+        PKMN_MALE
+    );
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR);
 
     error = pkmn_pokemon_set_shininess(
                 pokemon,

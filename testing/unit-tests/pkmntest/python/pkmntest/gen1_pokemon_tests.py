@@ -10,6 +10,7 @@ import pkmn
 
 from .pokemon_tests import pokemon_tests
 
+import os
 import unittest
 
 class gen1_pokemon_test(pokemon_tests):
@@ -52,6 +53,8 @@ class gen1_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_game(), game)
         self.assertStringEqual(pokemon.get_nickname(), species.upper())
 
+        with self.assertRaises(RuntimeError):
+            pokemon.get_gender()
         with self.assertRaises(RuntimeError):
             pokemon.is_shiny()
         with self.assertRaises(RuntimeError):
@@ -103,6 +106,9 @@ class gen1_pokemon_test(pokemon_tests):
         self.gen1_check_stat_map(pokemon.get_IVs())
         self.gen1_check_stat_map(pokemon.get_stats())
 
+        self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
         #
         # Make sure the getters and setters agree. Also make sure it fails when
         # expected.
@@ -116,6 +122,8 @@ class gen1_pokemon_test(pokemon_tests):
         pokemon.set_nickname("foobarbaz")
         self.assertEqual(pokemon.get_nickname(), "foobarbaz")
 
+        with self.assertRaises(RuntimeError):
+            pokemon.set_gender("Male")
         with self.assertRaises(RuntimeError):
             pokemon.set_shininess(True)
         with self.assertRaises(RuntimeError):

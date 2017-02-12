@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -143,6 +143,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(libpkmn-database)
+ADD_SUBDIRECTORY(images)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
