@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#undef SWIG_EXPORT_ITERATOR_METHODS
 
 %include <python/pkmn_std_map.i>
 %include <pkmn_shared_ptr.i>
