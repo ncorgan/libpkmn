@@ -21,8 +21,15 @@ INCLUDE_DIRECTORIES(
     ${GTEST_INCLUDE_DIRS}
 )
 
-SET(boost_cpp_tests
+SET(cpp_tests
     cpp_calculations_test
+)
+
+FOREACH(test ${cpp_tests})
+    PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
+ENDFOREACH(test ${boost_cpp_tests})
+
+SET(boost_cpp_tests
     cpp_items_test
     cpp_lists_test
     cpp_paths_test
