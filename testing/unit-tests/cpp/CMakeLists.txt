@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 
 SET(cpp_tests
     cpp_calculations_test
+    cpp_paths_test
 )
 
 FOREACH(test ${cpp_tests})
@@ -32,7 +33,6 @@ ENDFOREACH(test ${boost_cpp_tests})
 SET(boost_cpp_tests
     cpp_items_test
     cpp_lists_test
-    cpp_paths_test
     cpp_pokemon_test
     cpp_pokemon_party_test
     cpp_pokemon_pc_test
