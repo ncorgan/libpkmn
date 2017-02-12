@@ -18,6 +18,8 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
+    GTest::GTest
+    GTest::Main
     pkmn
     pkmntest
 )

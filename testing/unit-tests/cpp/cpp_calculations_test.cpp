@@ -22,6 +22,8 @@
 
 #include <boost/assign.hpp>
 
+#include <gtest/gtest.h>
+
 #include <random>
 #include <ctime>
 #include <limits>

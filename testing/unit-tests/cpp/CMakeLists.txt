@@ -18,9 +18,10 @@ INCLUDE_DIRECTORIES(
     ${PKMN_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
     ${Boost_INCLUDE_DIRS}
+    ${GTEST_INCLUDE_DIRS}
 )
 
-SET(cpp_tests
+SET(boost_cpp_tests
     cpp_calculations_test
     cpp_items_test
     cpp_lists_test
@@ -30,9 +31,9 @@ SET(cpp_tests
     cpp_pokemon_pc_test
 )
 
-FOREACH(test ${cpp_tests})
+FOREACH(test ${boost_cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
-ENDFOREACH(test ${cpp_tests})
+ENDFOREACH(test ${boost_cpp_tests})
 
 SET(database_entry_test_srcs
     cpp_database_entry_test/item_entry_tests.cpp
