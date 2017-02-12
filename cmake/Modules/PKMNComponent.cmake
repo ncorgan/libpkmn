@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -49,6 +49,11 @@ MACRO(PKMN_REGISTER_COMPONENT name var enb deps dis)
     SET(_pkmn_enabled_components ${_pkmn_enabled_components} CACHE INTERNAL "" FORCE)
     SET(_pkmn_disabled_components ${_pkmn_disabled_components} CACHE INTERNAL "" FORCE)
 ENDMACRO(PKMN_REGISTER_COMPONENT)
+
+FUNCTION(PKMN_APPEND_SUBCOMPONENT name)
+    LIST(APPEND _pkmn_enabled_components " * ${name}")
+    SET(_pkmn_enabled_components ${_pkmn_enabled_components} CACHE INTERNAL "" FORCE)
+ENDFUNCTION(PKMN_APPEND_SUBCOMPONENT name)
 
 #Print the summary of enabled/disabled components
 FUNCTION(PKMN_PRINT_COMPONENT_SUMMARY)
