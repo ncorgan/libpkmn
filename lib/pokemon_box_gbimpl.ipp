@@ -172,7 +172,17 @@ namespace pkmn {
         char nickname[11] = {0};
         char otname[8] = {0};
 
+        int num_pokemon = get_num_pokemon();
+
         for(int i = 0; i < capacity; ++i) {
+            /*
+             * Memory is not necessarily zeroed-out past the num_pokemon point,
+             * so we'll do it ourselves.
+             */
+            if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0) {
+                std::memset(&NATIVE_LIST_RCAST->entries[i], 0, sizeof(pksav_pokemon_type));
+            }
+
             _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(
                                    &NATIVE_LIST_RCAST->entries[i],
                                    _game_id

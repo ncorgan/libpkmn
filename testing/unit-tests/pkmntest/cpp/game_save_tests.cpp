@@ -215,17 +215,18 @@ namespace pkmntest {
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         int num_party_pokemon = party->get_num_pokemon();
         BOOST_CHECK_GT(num_party_pokemon, 0);
-        BOOST_CHECK_LE(num_party_pokemon, 6);
+        BOOST_REQUIRE_LE(num_party_pokemon, 6);
         BOOST_CHECK_EQUAL(party->as_vector().size(), 6);
         for(int i = 0; i < 6; ++i) {
             pkmn::pokemon::sptr party_pokemon = party->get_pokemon(i);
             BOOST_REQUIRE(party_pokemon.get() != nullptr);
-            /*
-             * TODO: What to do past this? In principle, it should all be "None",
-             *       but the memory is not zeroed out in-game.
-             */
             if(i < num_party_pokemon) {
                 BOOST_CHECK_NE(
+                    party_pokemon->get_species(),
+                    "None"
+                );
+            } else {
+                BOOST_CHECK_EQUAL(
                     party_pokemon->get_species(),
                     "None"
                 );
@@ -243,18 +244,25 @@ namespace pkmntest {
             int num_box_pokemon = box->get_num_pokemon();
             BOOST_CHECK_GT(capacity, 0);
             BOOST_CHECK_GE(num_box_pokemon, 0);
-            BOOST_CHECK_LE(num_box_pokemon, capacity);
+            BOOST_REQUIRE_LE(num_box_pokemon, capacity);
             BOOST_CHECK_EQUAL(capacity, box->as_vector().size());
 
             for(int j = 0; j < capacity; ++j) {
                 pkmn::pokemon::sptr box_pokemon = box->get_pokemon(j);
                 BOOST_REQUIRE(box_pokemon.get() != nullptr);
 
-                if(j < num_box_pokemon) {
-                    BOOST_CHECK_NE(
-                        box_pokemon->get_species(),
-                        "None"
-                    );
+                if(std::find(GB_GAMES, GB_GAMES+6, save->get_game()) != GB_GAMES+6) {
+                    if(j < num_box_pokemon) {
+                        BOOST_CHECK_NE(
+                            box_pokemon->get_species(),
+                            "None"
+                        );
+                    } else {
+                        BOOST_CHECK_EQUAL(
+                            box_pokemon->get_species(),
+                            "None"
+                        );
+                    }
                 }
             }
         }
