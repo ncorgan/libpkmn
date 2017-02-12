@@ -251,6 +251,7 @@ namespace pkmntest {
                 pkmn::pokemon::sptr box_pokemon = box->get_pokemon(j);
                 BOOST_REQUIRE(box_pokemon.get() != nullptr);
 
+                // Boxes are only contiguous in Game Boy games.
                 if(std::find(GB_GAMES, GB_GAMES+6, save->get_game()) != GB_GAMES+6) {
                     if(j < num_box_pokemon) {
                         BOOST_CHECK_NE(

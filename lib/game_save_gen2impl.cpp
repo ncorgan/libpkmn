@@ -80,7 +80,7 @@ namespace pkmn {
                          );
         _pokemon_pc = pkmn::make_shared<pokemon_pc_gen2impl>(
                           _game_id,
-                          _pksav_save.pokemon_pc,
+                          _pksav_save.pokemon_boxes,
                           _pksav_save.pokemon_box_names,
                           false
                       );

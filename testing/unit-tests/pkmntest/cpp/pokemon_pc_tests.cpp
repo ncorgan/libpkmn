@@ -377,7 +377,7 @@ namespace pkmntest {
 
     // See pokemon_pc_gen2impl.hpp
     typedef struct {
-        pksav_gen2_pokemon_pc_t* pc;
+        pksav_gen2_pokemon_box_t* boxes[14];
         pksav_gen2_pokemon_box_names_t* box_names;
     } gen2_pokemon_full_pc_t;
 
@@ -444,31 +444,31 @@ namespace pkmntest {
                 for(size_t i = 0; i < pokemon_box_list.size(); ++i) {
                     const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].species[0]),
+                        int(native_pc->boxes[i]->species[0]),
                         pokemon_list.at(0)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].entries[0].species),
+                        int(native_pc->boxes[i]->entries[0].species),
                         pokemon_list.at(0)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].species[1]),
+                        int(native_pc->boxes[i]->species[1]),
                         pokemon_list.at(1)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].entries[1].species),
+                        int(native_pc->boxes[i]->entries[1].species),
                         pokemon_list.at(1)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].species[2]),
+                        int(native_pc->boxes[i]->species[2]),
                         pokemon_list.at(2)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        int(native_pc->pc->boxes[i].entries[2].species),
+                        int(native_pc->boxes[i]->entries[2].species),
                         pokemon_list.at(2)->get_database_entry().get_pokemon_index()
                     );
                     BOOST_CHECK_EQUAL(
-                        &native_pc->pc->boxes[i],
+                        native_pc->boxes[i],
                         pokemon_box_list.at(i)->get_native()
                     );
 
