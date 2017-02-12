@@ -5,33 +5,13 @@ os:
 
 matrix:
   include:
-    # Older GCC, older dependencies
+    # Default/older GCC, dependencies
     - compiler: gcc
       env:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Older GCC, newer dependencies
-    - compiler: gcc
-      env:
-        - DESIRED_QT_VERSION=5
-        - PYTHON_VERSION=3
-        - SWIG_VERSION=3
-    # Newer GCC, older dependencies
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env:
-        - NEWCC=gcc-6
-        - NEWCXX=g++-6
-        - DESIRED_QT_VERSION=4
-        - PYTHON_VERSION=2
-        - SWIG_VERSION=2
-    # Newer GCC, newer dependencies
+    # Newer GCC, dependencies
     - compiler: gcc
       addons:
         apt:
@@ -45,33 +25,13 @@ matrix:
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
-    # Older Clang, older dependencies
+    # Default/older Clang, dependencies
     - compiler: clang
       env:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Older Clang, newer dependencies
-    - compiler: clang
-      env:
-        - DESIRED_QT_VERSION=5
-        - PYTHON_VERSION=3
-        - SWIG_VERSION=3
-    # Newer Clang, older dependencies
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-4.0
-          packages:
-            - clang-4.0
-      env:
-        - NEWCC=clang-4.0
-        - NEWCXX=clang++-4.0
-        - DESIRED_QT_VERSION=4
-        - PYTHON_VERSION=2
-        - SWIG_VERSION=2
-    # Newer Clang, newer dependencies
+    # Newer Clang, dependencies
     - compiler: clang
       addons:
         apt:
