@@ -174,13 +174,29 @@ namespace pkmn {
 
         int num_pokemon = get_num_pokemon();
 
+        /*
+         * Unfortuately, the count field may not be reliable, so we need to check
+         * ourselves and fix it if it's wrong.
+         */
+        if(NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0) {
+            for(int i = 0; i < num_pokemon; ++i) {
+                if(NATIVE_LIST_RCAST->entries[i].species == 0) {
+                    NATIVE_LIST_RCAST->count = i;
+                    break;
+                }
+            }
+        }
+
         for(int i = 0; i < capacity; ++i) {
             /*
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
             if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0) {
+                NATIVE_LIST_RCAST->species[i] = 0;
                 std::memset(&NATIVE_LIST_RCAST->entries[i], 0, sizeof(pksav_pokemon_type));
+                std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
+                std::memset(NATIVE_LIST_RCAST->otnames[i], 0x50, sizeof(NATIVE_LIST_RCAST->otnames[i]));
             }
 
             _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(

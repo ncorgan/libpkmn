@@ -146,7 +146,10 @@ namespace pkmn {
              * so we'll do it ourselves.
              */
             if(i >= num_pokemon and NATIVE_LIST_RCAST->party[i].pc.species > 0) {
+                NATIVE_LIST_RCAST->species[i] = 0;
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_pokemon_type));
+                std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
+                std::memset(NATIVE_LIST_RCAST->otnames[i], 0x50, sizeof(NATIVE_LIST_RCAST->otnames[i]));
             }
 
             _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(
