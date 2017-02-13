@@ -13,12 +13,13 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
+    ${PKMN_SOURCE_DIR}/pksav/include
+    ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/lib
 )
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
-    GTest::GTest
     GTest::Main
     pkmn
     pkmntest
