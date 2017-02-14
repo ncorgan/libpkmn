@@ -1120,6 +1120,7 @@ namespace pkmn { namespace database {
         "diamond-pearl",
         "platinum",
         "heartgold-soulsilver",
+        "heartgold-soulsilver",
         "black-white",
         "black-white",
         "colosseum-xd",
