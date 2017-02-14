@@ -75,10 +75,10 @@ TEST_P(pokemon_entry_none_test, pokemon_entry_none_test) {
     EXPECT_EQ("None", none_entry.get_species());
     EXPECT_EQ("None", none_entry.get_pokedex_entry());
     EXPECT_EQ("None", none_entry.get_form());
-    EXPECT_DOUBLE_EQ(-1.0f, none_entry.get_height());
-    EXPECT_DOUBLE_EQ(-1.0f, none_entry.get_weight());
-    EXPECT_DOUBLE_EQ(-1.0f, none_entry.get_chance_male());
-    EXPECT_DOUBLE_EQ(-1.0f, none_entry.get_chance_female());
+    EXPECT_FLOAT_EQ(-1.0f, none_entry.get_height());
+    EXPECT_FLOAT_EQ(-1.0f, none_entry.get_weight());
+    EXPECT_FLOAT_EQ(-1.0f, none_entry.get_chance_male());
+    EXPECT_FLOAT_EQ(-1.0f, none_entry.get_chance_female());
     EXPECT_TRUE(not none_entry.has_gender_differences());
     EXPECT_EQ(-1.0f, none_entry.get_base_friendship());
     EXPECT_TRUE(none_entry.get_types() == none_pair);
@@ -359,10 +359,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Freeze", pokemon_entry_gen1.get_species());
     EXPECT_GT(pokemon_entry_gen1.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen1.get_form());
-    EXPECT_DOUBLE_EQ(1.7f, pokemon_entry_gen1.get_height());
-    EXPECT_DOUBLE_EQ(55.4f, pokemon_entry_gen1.get_weight());
-    EXPECT_DOUBLE_EQ(0.0f, pokemon_entry_gen1.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.0f, pokemon_entry_gen1.get_chance_female());
+    EXPECT_FLOAT_EQ(1.7f, pokemon_entry_gen1.get_height());
+    EXPECT_FLOAT_EQ(55.4f, pokemon_entry_gen1.get_weight());
+    EXPECT_FLOAT_EQ(0.0f, pokemon_entry_gen1.get_chance_male());
+    EXPECT_FLOAT_EQ(0.0f, pokemon_entry_gen1.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gen1.has_gender_differences());
     EXPECT_EQ(-1, pokemon_entry_gen1.get_base_friendship());
 
@@ -418,10 +418,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Big Jaw", pokemon_entry_gen2.get_species());
     EXPECT_GT(pokemon_entry_gen2.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen2.get_form());
-    EXPECT_DOUBLE_EQ(2.3f, pokemon_entry_gen2.get_height());
-    EXPECT_DOUBLE_EQ(88.8f, pokemon_entry_gen2.get_weight());
-    EXPECT_DOUBLE_EQ(0.875f, pokemon_entry_gen2.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.125f, pokemon_entry_gen2.get_chance_female());
+    EXPECT_FLOAT_EQ(2.3f, pokemon_entry_gen2.get_height());
+    EXPECT_FLOAT_EQ(88.8f, pokemon_entry_gen2.get_weight());
+    EXPECT_FLOAT_EQ(0.875f, pokemon_entry_gen2.get_chance_male());
+    EXPECT_FLOAT_EQ(0.125f, pokemon_entry_gen2.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gen2.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen2.get_base_friendship());
 
@@ -480,10 +480,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Iceberg", pokemon_entry_gba.get_species());
     EXPECT_GT(pokemon_entry_gba.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gba.get_form());
-    EXPECT_DOUBLE_EQ(1.8f, pokemon_entry_gba.get_height());
-    EXPECT_DOUBLE_EQ(175.0f, pokemon_entry_gba.get_weight());
-    EXPECT_DOUBLE_EQ(0.0f, pokemon_entry_gba.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.0f, pokemon_entry_gba.get_chance_female());
+    EXPECT_FLOAT_EQ(1.8f, pokemon_entry_gba.get_height());
+    EXPECT_FLOAT_EQ(175.0f, pokemon_entry_gba.get_weight());
+    EXPECT_FLOAT_EQ(0.0f, pokemon_entry_gba.get_chance_male());
+    EXPECT_FLOAT_EQ(0.0f, pokemon_entry_gba.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gba.has_gender_differences());
     EXPECT_EQ(35, pokemon_entry_gba.get_base_friendship());
 
@@ -546,10 +546,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Mushroom", pokemon_entry_gcn.get_species());
     EXPECT_GT(pokemon_entry_gcn.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gcn.get_form());
-    EXPECT_DOUBLE_EQ(0.4f, pokemon_entry_gcn.get_height());
-    EXPECT_DOUBLE_EQ(4.5f, pokemon_entry_gcn.get_weight());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gcn.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gcn.get_chance_female());
+    EXPECT_FLOAT_EQ(0.4f, pokemon_entry_gcn.get_height());
+    EXPECT_FLOAT_EQ(4.5f, pokemon_entry_gcn.get_weight());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gcn.get_chance_male());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gcn.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gcn.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gcn.get_base_friendship());
 
@@ -607,10 +607,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Cricket", pokemon_entry_gen4.get_species());
     EXPECT_GT(pokemon_entry_gen4.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen4.get_form());
-    EXPECT_DOUBLE_EQ(0.3f, pokemon_entry_gen4.get_height());
-    EXPECT_DOUBLE_EQ(2.2f, pokemon_entry_gen4.get_weight());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gen4.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gen4.get_chance_female());
+    EXPECT_FLOAT_EQ(0.3f, pokemon_entry_gen4.get_height());
+    EXPECT_FLOAT_EQ(2.2f, pokemon_entry_gen4.get_weight());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gen4.get_chance_male());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gen4.get_chance_female());
     EXPECT_TRUE(pokemon_entry_gen4.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen4.get_base_friendship());
 
@@ -673,10 +673,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Trap", pokemon_entry_gen5.get_species());
     EXPECT_GT(pokemon_entry_gen5.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen5.get_form());
-    EXPECT_DOUBLE_EQ(0.7f, pokemon_entry_gen5.get_height());
-    EXPECT_DOUBLE_EQ(11.0f, pokemon_entry_gen5.get_weight());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gen5.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.5f, pokemon_entry_gen5.get_chance_female());
+    EXPECT_FLOAT_EQ(0.7f, pokemon_entry_gen5.get_height());
+    EXPECT_FLOAT_EQ(11.0f, pokemon_entry_gen5.get_weight());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gen5.get_chance_male());
+    EXPECT_FLOAT_EQ(0.5f, pokemon_entry_gen5.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gen5.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen5.get_base_friendship());
 
@@ -739,10 +739,10 @@ static void _pokemon_entry_test(
     EXPECT_EQ("Intertwining", pokemon_entry_gen6.get_species());
     EXPECT_GT(pokemon_entry_gen6.get_pokedex_entry().size(), 0);
     EXPECT_EQ("Standard", pokemon_entry_gen6.get_form());
-    EXPECT_DOUBLE_EQ(1.0f, pokemon_entry_gen6.get_height());
-    EXPECT_DOUBLE_EQ(23.5f, pokemon_entry_gen6.get_weight());
-    EXPECT_DOUBLE_EQ(0.875f, pokemon_entry_gen6.get_chance_male());
-    EXPECT_DOUBLE_EQ(0.125f, pokemon_entry_gen6.get_chance_female());
+    EXPECT_FLOAT_EQ(1.0f, pokemon_entry_gen6.get_height());
+    EXPECT_FLOAT_EQ(23.5f, pokemon_entry_gen6.get_weight());
+    EXPECT_FLOAT_EQ(0.875f, pokemon_entry_gen6.get_chance_male());
+    EXPECT_FLOAT_EQ(0.125f, pokemon_entry_gen6.get_chance_female());
     EXPECT_FALSE(pokemon_entry_gen6.has_gender_differences());
     EXPECT_EQ(70, pokemon_entry_gen6.get_base_friendship());
 
