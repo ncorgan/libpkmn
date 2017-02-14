@@ -38,6 +38,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(TEST_CMD ${test_cmd})
         SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(IMAGES_DIR ${PKMN_SOURCE_DIR}/images)
+        SET(LIBPKMN_TEST_FILES ${PKMN_SOURCE_DIR}/testing/libpkmn-test-files)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_BINARY_DIR}/pkmntest/python"
@@ -81,6 +82,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
+            STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
