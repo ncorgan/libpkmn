@@ -43,10 +43,9 @@ FOREACH(test ${boost_cpp_tests})
 ENDFOREACH(test ${boost_cpp_tests})
 
 SET(database_entry_test_srcs
-    cpp_database_entry_test/item_entry_tests.cpp
-    cpp_database_entry_test/move_entry_tests.cpp
-    cpp_database_entry_test/pokemon_entry_tests.cpp
-    cpp_database_entry_test/cpp_database_entry_test.cpp
+    cpp_database_entry_test/item_entry_test.cpp
+    cpp_database_entry_test/move_entry_test.cpp
+    cpp_database_entry_test/pokemon_entry_test.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
