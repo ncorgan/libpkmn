@@ -571,20 +571,16 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
         pokemon->set_move("Shadow Sky", 0);
     , std::invalid_argument);
 
-    // TODO: for loop
-    pokemon->set_move("Swallow", 0);
-    pokemon->set_move("Flamethrower", 1);
-    pokemon->set_move("Return", 2);
-    pokemon->set_move("Fire Blast", 3);
-
-    EXPECT_EQ("Swallow", move_slots.at(0).move.get_name());
-    EXPECT_EQ(move_slots.at(0).move.get_pp(0), move_slots.at(0).pp);
-    EXPECT_EQ("Flamethrower", move_slots.at(1).move.get_name());
-    EXPECT_EQ(move_slots.at(1).move.get_pp(0), move_slots.at(1).pp);
-    EXPECT_EQ("Return", move_slots.at(2).move.get_name());
-    EXPECT_EQ(move_slots.at(2).move.get_pp(0), move_slots.at(2).pp);
-    EXPECT_EQ("Fire Blast", move_slots.at(3).move.get_name());
-    EXPECT_EQ(move_slots.at(3).move.get_pp(0), move_slots.at(3).pp);
+    static const std::string moves[] = {
+        "Swallow", "Flamethrower", "Return", "Fire Blast"
+    };
+    for(int i = 0; i < 4; ++i) {
+        pokemon->set_move(moves[i], i);
+    }
+    for(int i = 0; i < 4; ++i) {
+        EXPECT_EQ(moves[i], move_slots.at(i).move.get_name());
+        EXPECT_EQ(move_slots.at(i).move.get_pp(0), move_slots.at(i).pp);
+    }
 
     pokemon->set_EV("Attack", 100);
     EXPECT_EQ(100, pokemon->get_EVs().at("Attack"));
