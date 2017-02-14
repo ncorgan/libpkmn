@@ -172,3 +172,7 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
     MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
     MESSAGE(STATUS "")
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
+
+IF(PKMN_ENABLE_JAVA)
+    MESSAGE(WARNING "The Java API was manually specified to be built. This does not build the entire JAR itself, as this is meant to be a Maven step. Certain Qt subclasses are also omitted from the build, regardless of Qt support.")
+ENDIF(PKMN_ENABLE_JAVA)
