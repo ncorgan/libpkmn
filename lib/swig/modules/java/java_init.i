@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,6 +21,7 @@
     SWIG_CATCH_DEFAULT
 
     %include <pkmn.i>
+    %include <java/unsigned_nums_typemap.i> 
     //%include <pkmn_javadocs.i>
     %include <java_CamelCase.i>
     //%include <java/equality.i>
