@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %include <java/java_init.i>
-PKMN_JAVA_INIT("stl_java")
+PKMN_JAVA_INIT
 
 /*
  * This file contains all pure STL wrappers. Other .i files can declare maps,

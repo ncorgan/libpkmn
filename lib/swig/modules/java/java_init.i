@@ -5,18 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%define PKMN_JAVA_INIT(libname)
-    %pragma(java) jniclasscode=%{
-        static {
-            try {
-                System.loadLibrary(libname);
-            } catch (UnsatisfiedLinkError e) {
-                System.err.println("Failed to load " + libname + " with error: " + e);
-                System.exit(1);
-            }
-        }
-    %}
-
+%define PKMN_JAVA_INIT
     %include <swig_exceptions.i>
     SWIG_CATCH_DEFAULT
 

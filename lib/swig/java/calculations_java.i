@@ -6,7 +6,7 @@
  */
 
 %include <java/java_init.i>
-PKMN_JAVA_INIT("calculations_java")
+PKMN_JAVA_INIT
 
 %import <stl_java.i>
 
