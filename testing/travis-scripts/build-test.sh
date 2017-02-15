@@ -49,4 +49,9 @@ make
 ctest -E ".*GUI" --output-on-failure
 [ $? -ne 0 ] && exit 1
 
+cd $REPO_TOPLEVEL/maven/PKMN
+[ $? -ne 0 ] && exit 1
+mvn -q test
+[ $? -ne 0 ] && exit 1
+
 echo # So we can check the last error code
