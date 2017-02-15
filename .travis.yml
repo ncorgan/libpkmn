@@ -3,9 +3,48 @@ language: cpp
 os:
  - linux
 
-env:
- - DESIRED_QT_VERSION=4
- - DESIRED_QT_VERSION=5
+matrix:
+  include:
+    # Default/older GCC, dependencies
+    - compiler: gcc
+      env:
+        - DESIRED_QT_VERSION=4
+        - PYTHON_VERSION=2
+        - SWIG_VERSION=2
+    # Newer GCC, dependencies
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - NEWCC=gcc-6
+        - NEWCXX=g++-6
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    # Default/older Clang, dependencies
+    - compiler: clang
+      env:
+        - DESIRED_QT_VERSION=4
+        - PYTHON_VERSION=2
+        - SWIG_VERSION=2
+    # Newer Clang, dependencies
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+      env:
+        - NEWCC=clang-4.0
+        - NEWCXX=clang++-4.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
 
 sudo: required
 dist: trusty

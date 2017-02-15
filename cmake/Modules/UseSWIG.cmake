@@ -22,7 +22,7 @@
 #=============================================================================
 # Copyright 2004-2009 Kitware, Inc.
 # Copyright 2009 Mathieu Malaterre <mathieu.malaterre@gmail.com>
-# Copyright 2016 Nicholas Corgan <n.corgan@gmail.com>
+# Copyright 2016-2017 Nicholas Corgan <n.corgan@gmail.com>
 #
 # Distributed under the OSI-approved BSD License (the "License");
 # see accompanying file Copyright.txt for details.
@@ -240,11 +240,11 @@ MACRO(SWIG_ADD_MODULE name language)
   )
   IF(PKMN_GCC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-strict-aliasing -Werror"
+          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-strict-aliasing -Werror -Wno-missing-field-initializers"
       )
   ELSEIF(PKMN_CLANG)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "-Wno-strict-aliasing -Wno-deprecated-register ${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "-Wno-strict-aliasing -Wno-deprecated-register ${PKMN_CXX_FLAGS} -Wno-error -Wno-missing-field-initializers -Werror"
       )
   ELSE()
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
