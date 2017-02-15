@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,13 +13,17 @@ PKMN_JAVA_INIT("calculations_java")
 %{
     #include <pkmn/calculations/form.hpp>
     #include <pkmn/calculations/gender.hpp>
+    #include <pkmn/calculations/nature.hpp>
     #include <pkmn/calculations/shininess.hpp>
+    #include <pkmn/calculations/size.hpp>
     #include <pkmn/calculations/stats.hpp>
 %}
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <java/pkmn_calculations_hidden_power.i>
+%include <pkmn/calculations/nature.hpp>
 %include <pkmn/calculations/shininess.hpp>
+%include <pkmn/calculations/size.hpp>
 %include <java/pkmn_calculations_spinda_spots.i>
 %include <pkmn/calculations/stats.hpp>
