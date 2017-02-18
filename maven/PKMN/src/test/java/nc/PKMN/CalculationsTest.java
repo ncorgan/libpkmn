@@ -117,7 +117,7 @@ public class CalculationsTest extends TestCase {
          */
         try {
             String form = nc.PKMN.Calculations.gen2PokemonGender("Not a species", 0);
-            fail("Using an invalid species should have failed..");
+            fail("Using an invalid species should have failed.");
         } catch(Exception ex) {}
         try {
             String form = nc.PKMN.Calculations.gen2PokemonGender("Bulbasaur", -1);
@@ -167,7 +167,7 @@ public class CalculationsTest extends TestCase {
          */
         try {
             String form = nc.PKMN.Calculations.modernPokemonGender("Not a species", 0);
-            fail("Using an invalid species should have failed..");
+            fail("Using an invalid species should have failed.");
         } catch(Exception ex) {}
         try {
             String form = nc.PKMN.Calculations.modernPokemonGender("Bulbasaur", -1);
@@ -334,5 +334,78 @@ public class CalculationsTest extends TestCase {
                 )
             );
         }
+    }
+
+    public void testGen2Shiny() {
+        // Make sure using invalid parameters results in an error.
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(-1, 0, 0, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(16, 0, 0, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, -1, 0, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, 16, 0, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, 0, -1, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, 0, 16, 0);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, 0, 0, -1);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.gen2Shiny(0, 0, 0, 16);
+            fail("Using an invalid parameter should have failed.");
+        } catch(Exception ex) {}
+
+        /*
+         * Make sure known good inputs result in expected results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Shininess
+         */
+        assertTrue(nc.PKMN.Calculations.gen2Shiny(7, 10, 10, 10));
+        assertFalse(nc.PKMN.Calculations.gen2Shiny(6, 15, 7, 5));
+    }
+
+    public void testModernShiny() {
+        // Make sure SWIg+Java catch invalid parameters.
+        try {
+            boolean isShiny = nc.PKMN.Calculations.modernShiny(-1, 0);
+            fail("SWIG+Java did not catch an invalid uint32_t value.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.modernShiny(UINT32_MAX+1, 0);
+            fail("SWIG+Java did not catch an invalid uint32_t value.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.modernShiny(0, -1);
+            fail("SWIG+Java did not catch an invalid uint32_t value.");
+        } catch(Exception ex) {}
+        try {
+            boolean isShiny = nc.PKMN.Calculations.modernShiny(0, UINT32_MAX+1);
+            fail("SWIG+Java did not catch an invalid uint32_t value.");
+        } catch(Exception ex) {}
+
+        /*
+         * Make sure known good inputs result in expected results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
+         *         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
+         */
+        assertTrue(nc.PKMN.Calculations.modernShiny(2814471828L, 2545049318L));
+        assertTrue(nc.PKMN.Calculations.modernShiny(0xB58F0B2AL, 398174488L));
     }
 }
