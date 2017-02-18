@@ -17,7 +17,8 @@ sudo apt-get -y install cmake cppcheck libboost1.55-all-dev libqt4-dev qtbase5-d
 			liblua5.1-dev luarocks \
 			libpython-dev libpython3-dev python3 python-pip python3-pip
 [ $? -ne 0 ] && exit 1
-sudo pip${PYTHON_VERSION} install CppHeaderParser
+sudo pip2 install CppHeaderParser
+sudo pip3 install CppHeaderParser
 [ $? -ne 0 ] && exit 1
 sudo luarocks install luaunit
 [ $? -ne 0 ] && exit 1

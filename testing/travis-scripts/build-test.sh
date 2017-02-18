@@ -16,6 +16,8 @@ find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[
 find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
 [ $? -ne 0 ] && exit 1
 
+# Make sure it uses the Python from apt instead of Travis's in /opt.
+export PATH=/usr/bin:/usr/local/bin:$PATH
 
 if [ $PYTHON_VERSION -eq 2 ]
 then
