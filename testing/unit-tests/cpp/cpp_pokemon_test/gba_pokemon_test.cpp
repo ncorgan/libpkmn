@@ -6,7 +6,6 @@
  */
 
 #include <pkmntest/pokemon_test.hpp>
-#include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -22,42 +21,7 @@
 #include <gtest/gtest.h>
 
 #include <boost/assign.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-
-namespace fs = boost::filesystem;
-
-static const std::map<std::string, pkmn::move_slot> none_move_slots = boost::assign::map_list_of
-    ("Ruby", pkmn::move_slot(
-                 pkmn::database::move_entry("None", "Ruby"),
-                 0
-             ))
-    ("Sapphire", pkmn::move_slot(
-                     pkmn::database::move_entry("None", "Sapphire"),
-                     0
-                 ))
-    ("Emerald", pkmn::move_slot(
-                    pkmn::database::move_entry("None", "Emerald"),
-                    0
-                ))
-    ("FireRed", pkmn::move_slot(
-                    pkmn::database::move_entry("None", "FireRed"),
-                    0
-                ))
-    ("LeafGreen", pkmn::move_slot(
-                      pkmn::database::move_entry("None", "LeafGreen"),
-                      0
-                  ))
-;
-
-static const std::map<std::string, pkmn::database::pokemon_entry> none_pokemon_entries = boost::assign::map_list_of
-    ("Ruby", pkmn::database::pokemon_entry("None", "Ruby", ""))
-    ("Sapphire", pkmn::database::pokemon_entry("None", "Sapphire", ""))
-    ("Emerald", pkmn::database::pokemon_entry("None", "Emerald", ""))
-    ("FireRed", pkmn::database::pokemon_entry("None", "FireRed", ""))
-    ("LeafGreen", pkmn::database::pokemon_entry("None", "LeafGreen", ""))
-;
 
 static const std::vector<std::string> contest_types = boost::assign::list_of
     ("Cool")("Beauty")("Cute")("Smart")("Tough")

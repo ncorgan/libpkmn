@@ -124,7 +124,7 @@ namespace pkmntest {
         EXPECT_EQ(1, EVs.count("Attack"));
         EXPECT_EQ(1, EVs.count("Defense"));
         EXPECT_EQ(1, EVs.count("Speed"));
-        if(generation >= 2) {
+        if(generation >= 3) {
             EXPECT_EQ(0, EVs.count("Special"));
             EXPECT_EQ(1, EVs.count("Special Attack"));
             EXPECT_EQ(1, EVs.count("Special Defense"));
@@ -247,30 +247,39 @@ namespace pkmntest {
     ) {
         int generation = game_generations.at(pokemon->get_game());
 
-        std::pair<std::string, std::string> abilities = pokemon->get_database_entry().get_abilities();
-        ASSERT_NE("None", abilities.first);
+        if(generation >= 3) {
+            std::pair<std::string, std::string> abilities = pokemon->get_database_entry().get_abilities();
+            ASSERT_NE("None", abilities.first);
 
-        pokemon->set_ability(abilities.first);
-        EXPECT_EQ(abilities.first, pokemon->get_ability());
-        if(abilities.second != "None") {
-            pokemon->set_ability(abilities.second);
-            EXPECT_EQ(abilities.second, pokemon->get_ability());
+            pokemon->set_ability(abilities.first);
+            EXPECT_EQ(abilities.first, pokemon->get_ability());
+            if(abilities.second != "None") {
+                pokemon->set_ability(abilities.second);
+                EXPECT_EQ(abilities.second, pokemon->get_ability());
+            }
+
+            if(generation >= 5) {
+                std::string hidden_ability = pokemon->get_database_entry().get_hidden_ability();
+                ASSERT_NE("None", hidden_ability);
+
+                pokemon->set_ability(hidden_ability);
+                EXPECT_EQ(hidden_ability, pokemon->get_ability());
+            }
+
+            EXPECT_THROW(
+                pokemon->set_ability("Not an ability");
+            , std::invalid_argument);
+            EXPECT_THROW(
+                pokemon->set_ability("Wonder Guard");
+            , std::invalid_argument);
+        } else {
+            EXPECT_THROW(
+                pokemon->get_ability();
+            , pkmn::feature_not_in_game_error);
+            EXPECT_THROW(
+                pokemon->set_ability("Wonder Guard");
+            , pkmn::feature_not_in_game_error);
         }
-
-        if(generation >= 5) {
-            std::string hidden_ability = pokemon->get_database_entry().get_hidden_ability();
-            ASSERT_NE("None", hidden_ability);
-
-            pokemon->set_ability(hidden_ability);
-            EXPECT_EQ(hidden_ability, pokemon->get_ability());
-        }
-
-        EXPECT_THROW(
-            pokemon->set_ability("Not an ability");
-        , std::invalid_argument);
-        EXPECT_THROW(
-            pokemon->set_ability("Wonder Guard");
-        , std::invalid_argument);
     }
 
     static void test_setting_ball(
@@ -292,10 +301,10 @@ namespace pkmntest {
         } else {
             EXPECT_THROW(
                 pokemon->get_ball();
-            , std::invalid_argument);
+            , pkmn::feature_not_in_game_error);
             EXPECT_THROW(
                 pokemon->set_ball("Great Ball");
-            , std::invalid_argument);
+            , pkmn::feature_not_in_game_error);
         }
     }
 

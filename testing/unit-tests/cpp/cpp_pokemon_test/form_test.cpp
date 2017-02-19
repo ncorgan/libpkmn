@@ -5,8 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_tests_common.hpp>
-
 #include <pkmn/pokemon.hpp>
 
 #include <boost/assign.hpp>

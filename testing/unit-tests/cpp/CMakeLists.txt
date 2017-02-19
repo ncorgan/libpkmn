@@ -33,7 +33,6 @@ ENDFOREACH(test ${boost_cpp_tests})
 
 SET(boost_cpp_tests
     cpp_items_test
-    old_cpp_pokemon_test
     cpp_pokemon_party_test
     cpp_pokemon_pc_test
 )
@@ -51,6 +50,8 @@ PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
 SET(pokemon_test_srcs
     cpp_pokemon_test/form_test.cpp
+    cpp_pokemon_test/gen1_pokemon_test.cpp
+    cpp_pokemon_test/gen2_pokemon_test.cpp
     cpp_pokemon_test/gba_pokemon_test.cpp
     cpp_pokemon_test/gen1_friendship_test.cpp
     cpp_pokemon_test/gender_test.cpp
