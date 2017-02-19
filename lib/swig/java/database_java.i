@@ -17,10 +17,10 @@ PKMN_JAVA_INIT
     #include <pkmn/database/lists.hpp>
 %}
 
-%include <pkmn/database/item_entry.hpp>
-%include <pkmn/database/move_entry.hpp>
+%include <java/pkmn_database_item_entry.i>
+%include <java/pkmn_database_move_entry.i>
 %include <java/pkmn_database_levelup_move.i>
-%include <pkmn/database/pokemon_entry.hpp>
+%include <java/pkmn_database_pokemon_entry.i>
 %include <pkmn/database/lists.hpp>
 
 // std::vector

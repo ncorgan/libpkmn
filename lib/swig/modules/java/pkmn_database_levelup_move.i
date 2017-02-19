@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -40,6 +40,43 @@ public";
  * @param newLevel new level
  */
 public";
+
+%typemap(javacode) pkmn::database::levelup_move %{
+
+    public boolean equals(LevelupMove other) {
+        if(this == other) {
+            return true;
+        } else if(other == null) {
+            return false;
+        }
+
+        return (this.getMove().equals(other.getMove())) &&
+               (this.getLevel() == other.getLevel());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(this == other) {
+            return true;
+        } else if(other == null) {
+            return false;
+        } else if(!(other instanceof LevelupMove)) {
+            return false;
+        }
+
+        return this.equals((LevelupMove)other);
+    }
+
+    @Override
+    public int hashCode() {
+        org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+        hashCodeBuilder.append(this.getMove());
+        hashCodeBuilder.append(this.getLevel());
+
+        return hashCodeBuilder.toHashCode();
+    }
+
+%}
 
 /*
  * Manually write the get/set functions so we can individually

@@ -41,6 +41,43 @@ public";
  */
 public";
 
+%typemap(javacode) pkmn::database::levelup_move %{
+
+    public boolean equals(ItemSlot other) {
+        if(this == other) {
+            return true;
+        } else if(other == null) {
+            return false;
+        }
+
+        return (this.getItem().equals(other.getItem())) &&
+               (this.getAmount() == other.getAmount());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(this == other) {
+            return true;
+        } else if(other == null) {
+            return false;
+        } else if(!(other instanceof ItemSlot)) {
+            return false;
+        }
+
+        return this.equals((ItemSlot)other);
+    }
+
+    @Override
+    public int hashCode() {
+        org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+        hashCodeBuilder.append(this.getItem());
+        hashCodeBuilder.append(this.getAmount());
+
+        return hashCodeBuilder.toHashCode();
+    }
+
+%}
+
 /*
  * Manually write the get/set functions so we can individually
  * document them.

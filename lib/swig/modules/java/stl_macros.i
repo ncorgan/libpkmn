@@ -91,6 +91,8 @@ public";
         public boolean equals(java_name other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
+                return false;
             } else if(this.size() != other.size()) {
                 return false;
             } else if(!this.keySet().equals(other.keySet())) {
@@ -105,6 +107,8 @@ public";
         public boolean equals(Object other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
+                return false;
             } else if(!(other instanceof java_name)) {
                 return false;
             }
@@ -164,6 +168,8 @@ public";
         public boolean equals(java_name other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
+                return false;
             }
 
             // Can't call .equals() on primitive types like int
@@ -174,6 +180,7 @@ public";
         public boolean equals(Object other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
             } else if(!(other instanceof java_name)) {
                 return false;
             }
@@ -374,6 +381,8 @@ public";
         public boolean equals(java_name other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
+                return false;
             } else if(this.size() != other.size()) {
                 return false;
             }
@@ -393,6 +402,8 @@ public";
         public boolean equals(Object other) {
             if(this == other) {
                 return true;
+            } else if(other == null) {
+                return false;
             } else if(!(other instanceof java_type)) {
                 return false;
             }
