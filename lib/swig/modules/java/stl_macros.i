@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,7 +11,7 @@
 %include <java/pkmn_std_pair.i>
 %include <java/pkmn_std_vector.i>
 
-%define PKMN_JAVA_MAP(cpp_key, cpp_val, java_key, java_val, java_name)
+%define PKMN_JAVA_MAP(cpp_key, cpp_val, java_key, java_val, java_keyset_type, java_name)
 
     %typemap(javaimports) std::map<cpp_key, cpp_val > "
 /**
@@ -87,6 +87,45 @@ public";
  */
 public";
 
+    %typemap(javacode) std::map<cpp_key, cpp_val > %{
+        public boolean equals(java_name other) {
+            if(this == other) {
+                return true;
+            } else if(this.size() != other.size()) {
+                return false;
+            } else if(!this.keySet().equals(other.keySet())) {
+                return false;
+            }
+
+            // Can't call .equals() on primitive types like int
+            return (this.hashCode() == other.hashCode());
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if(this == other) {
+                return true;
+            } else if(!(other instanceof java_name)) {
+                return false;
+            }
+
+            return this.equals((java_name)other);
+        }
+
+        @Override
+        public int hashCode() {
+            org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+
+            java_keyset_type keySet = this.keySet();
+            hashCodeBuilder.append(keySet);
+            for(int i = 0; i < keySet.size(); ++i) {
+                hashCodeBuilder.append(this.get(keySet.get(i)));
+            }
+
+            return hashCodeBuilder.toHashCode();
+        }
+    %}
+
     %template(java_name) std::map<cpp_key, cpp_val >;
 %enddef
 
@@ -120,6 +159,37 @@ public";
  * Sets the second value in the pair.
  */
 public";
+
+    %typemap(javacode) std::pair<cpp_type1, cpp_type2> %{
+        public boolean equals(java_name other) {
+            if(this == other) {
+                return true;
+            }
+
+            // Can't call .equals() on primitive types like int
+            return (this.hashCode() == other.hashCode());
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if(this == other) {
+                return true;
+            } else if(!(other instanceof java_name)) {
+                return false;
+            }
+
+            return this.equals((java_name)other);
+        }
+
+        @Override
+        public int hashCode() {
+            org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+            hashCodeBuilder.append(this.getFirst());
+            hashCodeBuilder.append(this.getSecond());
+
+            return hashCodeBuilder.toHashCode();
+        }
+    %}
 
     %template(java_name) std::pair<cpp_type1, cpp_type2>;
 %enddef
@@ -299,6 +369,47 @@ public";
  * @throws RuntimeException if vector is empty
  */
 public";
+
+    %typemap(javacode) std::vector<cpp_type> %{
+        public boolean equals(java_name other) {
+            if(this == other) {
+                return true;
+            } else if(this.size() != other.size()) {
+                return false;
+            }
+
+            for(int i = 0; i < this.size(); ++i) {
+                java_type thisEntry = this.get(i);
+                java_type otherEntry = other.get(i);
+                if(!thisEntry.equals(otherEntry)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if(this == other) {
+                return true;
+            } else if(!(other instanceof java_type)) {
+                return false;
+            }
+
+            return this.equals((java_type)other);
+        }
+
+        @Override
+        public int hashCode() {
+            org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+            for(int i = 0; i < this.size(); ++i) {
+                hashCodeBuilder.append(this.get(i));
+            }
+
+            return hashCodeBuilder.toHashCode();
+        }
+    %}
 
     %template(java_name) std::vector<cpp_type>;
 %enddef

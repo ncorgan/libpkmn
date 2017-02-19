@@ -17,9 +17,9 @@ PKMN_JAVA_INIT
 %include <std_string.i>
 
 // std::map
-PKMN_JAVA_MAP(std::string, bool,        String, boolean, StringBooleanMap)
-PKMN_JAVA_MAP(std::string, std::string, String, String,  StringStringMap)
-PKMN_JAVA_MAP(std::string, int,         String, int,     StringIntMap)
+PKMN_JAVA_MAP(std::string, bool,        String, boolean, StringVector, StringBooleanMap)
+PKMN_JAVA_MAP(std::string, std::string, String, String,  StringVector, StringStringMap)
+PKMN_JAVA_MAP(std::string, int,         String, int,     StringVector, StringIntMap)
 
 // std::pair
 PKMN_JAVA_PAIR(int,         int,         int,    int,    IntPair)

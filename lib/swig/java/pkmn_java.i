@@ -29,7 +29,7 @@ PKMN_JAVA_INIT
 
 // Item List
 PKMN_JAVA_INCLUDE_AND_SPTR(item_list, ItemList);
-PKMN_JAVA_MAP(std::string, pkmn::shared_ptr<pkmn::item_list>, String, ItemList, StringItemListMap);
+PKMN_JAVA_MAP(std::string, pkmn::shared_ptr<pkmn::item_list>, String, ItemList, StringVector, StringItemListMap);
 
 // Item Bag
 PKMN_JAVA_INCLUDE_AND_SPTR(item_bag, ItemBag);

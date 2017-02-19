@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -42,6 +42,38 @@ public";
  * @param newBasePower new base power
  */
 public";
+
+%typemap(javacode) pkmn::calculations::hidden_power %{
+
+public boolean equals(HiddenPower other) {
+    if(this == other) {
+        return true;
+    }
+
+    return (this.getType().equals(other.getType())) &&
+           (this.getBasePower() == other.getBasePower());
+}
+
+@Override
+public boolean equals(Object other) {
+    if(this == other) {
+        return true;
+    } else if(!(other instanceof HiddenPower)) {
+        return false;
+    }
+
+    return this.equals((HiddenPower)other);
+}
+
+@Override
+public int hashCode() {
+    org.apache.commons.lang3.builder.HashCodeBuilder hashCodeBuilder = new org.apache.commons.lang3.builder.HashCodeBuilder();
+    hashCodeBuilder.append(this.getType());
+    hashCodeBuilder.append(this.getBasePower());
+    return hashCodeBuilder.toHashCode();
+}
+
+%}
 
 /*
  * Manually write the get/set functions so we can individually
