@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/gba_pokemon_tests.hpp>
+#include <pkmntest/pokemon_test.hpp>
 #include <pkmntest/pokemon_tests_common.hpp>
 
 #include <pkmn/exception.hpp>
@@ -73,56 +73,7 @@ static const std::vector<std::string> ribbons = boost::assign::list_of
     ("Country")("National")("Earth")("World")
 ;
 
-class gba_pokemon_test: public ::testing::TestWithParam<std::string> {
-    public:
-        static void SetUpTestCase() {
-            std::srand((unsigned int)std::time(NULL));
-        }
-
-        PKMNTEST_INLINE const std::string& get_game() {
-            return _game;
-        }
-
-        PKMNTEST_INLINE const std::string& get_species() {
-            return _species;
-        }
-
-        PKMNTEST_INLINE pkmn::pokemon::sptr get_pokemon() {
-            return _pokemon;
-        }
-
-    protected:
-        void SetUp() {
-            _game = GetParam();
-            _species = "Torchic";
-            _pokemon = pkmn::pokemon::make(_species, _game, "", 30);
-
-            ASSERT_NE(nullptr, _pokemon.get());
-            ASSERT_EQ(_species, _pokemon->get_species());
-            ASSERT_EQ(_game, _pokemon->get_game());
-        }
-
-    private:
-
-        std::string _game, _species;
-        pkmn::pokemon::sptr _pokemon;
-};
-
-static void check_initial_markings_map(
-    const std::map<std::string, bool>& markings_map
-) {
-    EXPECT_EQ(1, markings_map.count("Circle"));
-    EXPECT_FALSE(markings_map.at("Circle"));
-    EXPECT_EQ(1, markings_map.count("Triangle"));
-    EXPECT_FALSE(markings_map.at("Triangle"));
-    EXPECT_EQ(1, markings_map.count("Square"));
-    EXPECT_FALSE(markings_map.at("Square"));
-    EXPECT_EQ(1, markings_map.count("Heart"));
-    EXPECT_FALSE(markings_map.at("Heart"));
-
-    EXPECT_EQ(0, markings_map.count("Star"));
-    EXPECT_EQ(0, markings_map.count("Diamond"));
-}
+class gba_pokemon_test: public pkmntest::pokemon_test {};
 
 static void check_initial_ribbons_map(
     const std::map<std::string, bool>& ribbons_map
@@ -149,56 +100,6 @@ static void check_initial_ribbons_map(
     {
         EXPECT_EQ(1, ribbons_map.count(*ribbon_iter));
         EXPECT_FALSE(ribbons_map.at(*ribbon_iter));
-    }
-}
-
-static void check_initial_contest_stats_map(
-    const std::map<std::string, int>& contest_stats_map
-) {
-    EXPECT_EQ(1, contest_stats_map.count("Cool"));
-    EXPECT_EQ(0, contest_stats_map.at("Cool"));
-    EXPECT_EQ(1, contest_stats_map.count("Beauty"));
-    EXPECT_EQ(0, contest_stats_map.at("Beauty"));
-    EXPECT_EQ(1, contest_stats_map.count("Cute"));
-    EXPECT_EQ(0, contest_stats_map.at("Cute"));
-    EXPECT_EQ(1, contest_stats_map.count("Smart"));
-    EXPECT_EQ(0, contest_stats_map.at("Smart"));
-    EXPECT_EQ(1, contest_stats_map.count("Tough"));
-    EXPECT_EQ(0, contest_stats_map.at("Tough"));
-    EXPECT_EQ(1, contest_stats_map.count("Feel"));
-    EXPECT_EQ(0, contest_stats_map.at("Feel"));
-
-    EXPECT_EQ(0, contest_stats_map.count("Sheen"));
-}
-
-static void check_initial_stats_map(
-    const std::map<std::string, int>& stats_map
-) {
-    EXPECT_EQ(1, stats_map.count("HP"));
-    EXPECT_EQ(1, stats_map.count("Attack"));
-    EXPECT_EQ(1, stats_map.count("Defense"));
-    EXPECT_EQ(1, stats_map.count("Speed"));
-    EXPECT_EQ(0, stats_map.count("Special"));
-    EXPECT_EQ(1, stats_map.count("Special Attack"));
-    EXPECT_EQ(1, stats_map.count("Special Defense"));
-}
-
-static void test_markings(
-    pkmn::pokemon::sptr pokemon,
-    const std::string &field
-) {
-    std::map<std::string, bool> markings_before = pokemon->get_markings();
-    pokemon->set_marking(field, true);
-    const std::map<std::string, bool>& markings_after = pokemon->get_markings();
-    for(auto markings_iter = markings_after.begin();
-        markings_iter != markings_after.end();
-        ++markings_iter)
-    {
-        if(markings_iter->first == field) {
-            EXPECT_TRUE(markings_iter->second);
-        } else {
-            EXPECT_EQ(markings_before.at(markings_iter->first), markings_iter->second);
-        }
     }
 }
 
@@ -244,290 +145,34 @@ static void test_ribbons(
     }
 }
 
-static void test_contest_stats(
-    pkmn::pokemon::sptr pokemon,
-    const std::string &field
-) {
-    int value = std::rand() % 255;
-
-    std::map<std::string, int> contest_stats_before = pokemon->get_contest_stats();
-    pokemon->set_contest_stat(field, value);
-    const std::map<std::string, int>& contest_stats_after = pokemon->get_contest_stats();
-    for(auto contest_stats_iter = contest_stats_after.begin();
-        contest_stats_iter != contest_stats_after.end();
-        ++contest_stats_iter)
-    {
-        if(contest_stats_iter->first == field) {
-            EXPECT_EQ(value, contest_stats_iter->second);
-        } else {
-            EXPECT_EQ(contest_stats_before.at(contest_stats_iter->first), contest_stats_iter->second);
-        }
-    }
-}
-
-static void test_IVs(
-    pkmn::pokemon::sptr pokemon,
-    const std::string &field
-) {
-    int value = std::rand() % 31;
-
-    std::map<std::string, int> IVs_before = pokemon->get_IVs();
-    pokemon->set_IV(field, value);
-    const std::map<std::string, int>& IVs_after = pokemon->get_IVs();
-    for(auto IVs_iter = IVs_after.begin();
-        IVs_iter != IVs_after.end();
-        ++IVs_iter)
-    {
-        if(IVs_iter->first == field) {
-            EXPECT_EQ(value, IVs_iter->second);
-        } else {
-            EXPECT_EQ(IVs_before.at(IVs_iter->first), IVs_iter->second);
-        }
-    }
-}
-
 TEST_P(gba_pokemon_test, gba_pokemon_test) {
-    const std::string& game = get_game();
-    const std::string& species = get_species();
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
-    /*
-     * Check known starting values, and confirm that we can't query values
-     * that didn't exist in Generation III.
-     */
-    EXPECT_EQ(species, pokemon->get_species());
-    EXPECT_EQ("Standard", pokemon->get_form());
-    EXPECT_EQ(game, pokemon->get_game());
-    EXPECT_EQ(boost::algorithm::to_upper_copy(species), pokemon->get_nickname());
-    EXPECT_EQ("None", pokemon->get_held_item().get_name());
-    EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_NAME, pokemon->get_trainer_name());
-    EXPECT_EQ(uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_public_id());
-    EXPECT_EQ(uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
-    EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_ID, pokemon->get_trainer_id());
-    EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_friendship());
-    EXPECT_EQ("Blaze", pokemon->get_ability());
-    EXPECT_EQ("Premier Ball", pokemon->get_ball());
-    EXPECT_EQ(pokemon->get_level(), pokemon->get_level_met());
-    EXPECT_THROW(
-        pokemon->get_location_met(true)
-    , pkmn::feature_not_in_game_error);
-    EXPECT_EQ("Fateful encounter", pokemon->get_location_met(false));
-    EXPECT_EQ(pokemon->get_game(), pokemon->get_original_game());
-    EXPECT_EQ(
-        pokemon->get_database_entry().get_experience_at_level(30),
-        pokemon->get_experience()
-    );
-    EXPECT_EQ(30, pokemon->get_level());
+    pkmntest::pokemon_test_common(
+        pokemon,
+        {
+            "Great Ball",
+            {"Friend Ball", "Heal Ball"},
 
-    check_initial_markings_map(
-        pokemon->get_markings()
+            "Razz Berry",
+            {"Berry", "Mach Bike"},
+
+            "Fateful encounter",
+            {"Petalburg Woods", "Viridian Forest"},
+            {"New Bark Town", "Twinleaf Town"},
+
+            {"Swallow", "Flamethrower", "Return", "Fire Blast"},
+            {"Shadow Sky", "Roost"},
+
+            {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"}, // TODO: test Colosseum/XD
+            {"Gold", "HeartGold"}
+        }
     );
+
+    // Test ribbons.
     check_initial_ribbons_map(
         pokemon->get_ribbons()
     );
-    check_initial_contest_stats_map(
-        pokemon->get_contest_stats()
-    );
-
-    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    EXPECT_EQ(4, move_slots.size());
-    for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-        EXPECT_TRUE((*iter) == none_move_slots.at(game));
-    }
-
-    check_initial_stats_map(
-        pokemon->get_EVs()
-    );
-    check_initial_stats_map(
-        pokemon->get_IVs()
-    );
-    check_initial_stats_map(
-        pokemon->get_stats()
-    );
-
-    EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
-    EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
-
-    /*
-     * Make sure the getters and setters agree. Also make sure it fails when
-     * expected.
-     */
-
-    EXPECT_THROW(
-        pokemon->set_nickname(""),
-    std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_nickname("Too long nickname"),
-    std::invalid_argument);
-    pokemon->set_nickname("foobarbaz");
-    EXPECT_EQ("foobarbaz", pokemon->get_nickname());
-
-    // Gender and personality are tied, so make sure they affect each other.
-    pokemon->set_gender("Female");
-    EXPECT_LT((pokemon->get_personality() & 0xFF), 0xFF);
-    pokemon->set_gender("Male");
-    EXPECT_EQ(0xFF, (pokemon->get_personality() & 0xFF));
-
-    pokemon->set_personality(0x1234AB00);
-    EXPECT_EQ("Female", pokemon->get_gender());
-    pokemon->set_personality(0xCD5678FF);
-    EXPECT_EQ("Male", pokemon->get_gender());
-
-    // Setting shininess should affect personality. Also check filepaths.
-    std::string sprite_filepath;
-
-    pokemon->set_shininess(false);
-    EXPECT_FALSE(pokemon->is_shiny());
-    uint32_t personality = pokemon->get_personality();
-    sprite_filepath = pokemon->get_sprite_filepath();
-    EXPECT_TRUE(fs::exists(sprite_filepath));
-
-    // This will fail if "shiny" is anywhere in the filepath.
-    EXPECT_TRUE(sprite_filepath.find("shiny") == std::string::npos);
-
-    pokemon->set_shininess(true);
-    EXPECT_TRUE(pokemon->is_shiny());
-    EXPECT_NE(pokemon->get_personality(), personality);
-    sprite_filepath = pokemon->get_sprite_filepath();
-    EXPECT_TRUE(fs::exists(sprite_filepath));
-    EXPECT_TRUE(sprite_filepath.find("shiny") != std::string::npos);
-
-    EXPECT_THROW(
-        pokemon->set_held_item("Not an item");
-    , std::invalid_argument);
-    EXPECT_EQ("None", pokemon->get_held_item().get_name());
-    EXPECT_THROW(
-        pokemon->set_held_item("Berry");
-    , std::invalid_argument);
-    EXPECT_EQ("None", pokemon->get_held_item().get_name());
-    EXPECT_THROW(
-        pokemon->set_held_item("Mach Bike");
-    , std::invalid_argument);
-    EXPECT_EQ("None", pokemon->get_held_item().get_name());
-    pokemon->set_held_item("Razz Berry");
-    EXPECT_EQ("Razz Berry", pokemon->get_held_item().get_name());
-
-    EXPECT_THROW(
-        pokemon->set_trainer_name(""),
-    std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_trainer_name("Too long trainer name"),
-    std::invalid_argument);
-    pokemon->set_trainer_name("foobar");
-    EXPECT_EQ("foobar", pokemon->get_trainer_name());
-
-    pokemon->set_trainer_id(0x1234ABCD);
-    EXPECT_EQ(0x1234ABCD, pokemon->get_trainer_id());
-    EXPECT_EQ(0xABCD, pokemon->get_trainer_public_id());
-    EXPECT_EQ(0x1234, pokemon->get_trainer_secret_id());
-
-    pokemon->set_trainer_public_id(0x1A2B);
-    EXPECT_EQ(0x12341A2B, pokemon->get_trainer_id());
-    EXPECT_EQ(0x1A2B, pokemon->get_trainer_public_id());
-    EXPECT_EQ(0x1234, pokemon->get_trainer_secret_id());
-
-    pokemon->set_trainer_secret_id(0x3C4D);
-    EXPECT_EQ(0x3C4D1A2B, pokemon->get_trainer_id());
-    EXPECT_EQ(0x1A2B, pokemon->get_trainer_public_id());
-    EXPECT_EQ(0x3C4D, pokemon->get_trainer_secret_id());
-
-    pokemon->set_trainer_gender("Male");
-    EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    pokemon->set_trainer_gender("Female");
-    EXPECT_EQ("Female", pokemon->get_trainer_gender());
-    EXPECT_THROW(
-        pokemon->set_trainer_gender("Genderless");
-    , std::invalid_argument);
-
-    pokemon->set_friendship(123);
-    EXPECT_EQ(123, pokemon->get_friendship());
-    EXPECT_THROW(
-        pokemon->set_friendship(-1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_friendship(256);
-    , pkmn::range_error);
-
-    pokemon->set_ability("Blaze");
-    EXPECT_EQ("Blaze", pokemon->get_ability());
-    EXPECT_THROW(
-        pokemon->set_ability("None");
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_ability("Torrent"); // Invalid
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_ability("Speed Boost"); // Hidden ability
-    , std::invalid_argument);
-    EXPECT_EQ("Blaze", pokemon->get_ability());
-
-    pokemon->set_ball("Great Ball");
-    EXPECT_EQ("Great Ball", pokemon->get_ball());
-    EXPECT_THROW(
-        pokemon->set_ball("Friend Ball"); // Not in Generation III
-    , std::invalid_argument);
-    EXPECT_EQ("Great Ball", pokemon->get_ball());
-
-    pokemon->set_level_met(67);
-    EXPECT_EQ(67, pokemon->get_level_met());
-    EXPECT_THROW(
-        pokemon->set_level_met(-1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_level_met(101);
-    , pkmn::range_error);
-
-    std::string location;
-    if(game == "FireRed" or game == "LeafGreen") {
-        location = "Viridian Forest";
-    } else {
-        location = "Petalburg Woods";
-    }
-    pokemon->set_location_met(location, false);
-    EXPECT_EQ(location, pokemon->get_location_met(false));
-    EXPECT_THROW(
-        pokemon->set_location_met(location, true);
-    , pkmn::feature_not_in_game_error);
-
-    pokemon->set_original_game("Ruby");
-    EXPECT_EQ("Ruby", pokemon->get_original_game());
-
-    // Make sure we can't set invalid games.
-    EXPECT_THROW(
-        pokemon->set_original_game("Not a game");
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_original_game("Red"); // Impossible
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_original_game("HeartGold"); // From a later game
-    , std::invalid_argument);
-    EXPECT_EQ("Ruby", pokemon->get_original_game());
-
-    pokemon->set_personality(0x7F3AB3A8);
-    EXPECT_EQ(0x7F3AB3A8, pokemon->get_personality());
-
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Cool", -1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Cool", 256);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Not a stat", -1);
-    , std::invalid_argument);
-
-    // Make sure functions that affect the same PKSav field don't impact each other.
-    static const std::vector<std::string> markings = boost::assign::list_of
-        ("Circle")("Triangle")("Square")("Heart")
-    ;
-    for(auto marking_iter = markings.begin();
-        marking_iter != markings.end();
-        ++marking_iter)
-    {
-        test_markings(pokemon, *marking_iter);
-    }
     for(auto contest_type_iter = contest_types.begin();
         contest_type_iter != contest_types.end();
         ++contest_type_iter)
@@ -542,76 +187,25 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
         test_ribbons(pokemon, *ribbon_iter);
     }
 
-    static const std::vector<std::string> contest_fields = boost::assign::list_of
-        ("Cool")("Beauty")("Cute")("Smart")("Tough")("Feel")
-    ;
-    for(auto contest_field_iter = contest_fields.begin();
-        contest_field_iter != contest_fields.end();
-        ++contest_field_iter)
-    {
-        test_contest_stats(pokemon, *contest_field_iter);
-    }
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Not a stat", 10);
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Cool", -1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_contest_stat("Cool", 256);
-    , pkmn::range_error);
+    // Gender and personality are tied, so make sure they affect each other.
+    pokemon->set_gender("Female");
+    EXPECT_LT((pokemon->get_personality() & 0xFF), 0xFF);
+    pokemon->set_gender("Male");
+    EXPECT_EQ(0xFF, (pokemon->get_personality() & 0xFF));
 
-    EXPECT_THROW(
-        pokemon->set_move("Pound", -1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_move("Pound", 4);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_move("Shadow Sky", 0);
-    , std::invalid_argument);
+    pokemon->set_personality(0x1234AB00);
+    EXPECT_EQ("Female", pokemon->get_gender());
+    pokemon->set_personality(0xCD5678FF);
+    EXPECT_EQ("Male", pokemon->get_gender());
 
-    static const std::string moves[] = {
-        "Swallow", "Flamethrower", "Return", "Fire Blast"
-    };
-    for(int i = 0; i < 4; ++i) {
-        pokemon->set_move(moves[i], i);
-    }
-    for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves[i], move_slots.at(i).move.get_name());
-        EXPECT_EQ(move_slots.at(i).move.get_pp(0), move_slots.at(i).pp);
-    }
+    // Setting shininess should affect personality.
+    pokemon->set_shininess(false);
+    EXPECT_FALSE(pokemon->is_shiny());
+    uint32_t personality = pokemon->get_personality();
 
-    pokemon->set_EV("Attack", 100);
-    EXPECT_EQ(100, pokemon->get_EVs().at("Attack"));
-    EXPECT_THROW(
-        pokemon->set_EV("Not a stat", 100);
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_EV("Attack", -1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_EV("Attack", 256);
-    , pkmn::range_error);
-
-    static const std::vector<std::string> IV_fields = boost::assign::list_of
-        ("HP")("Attack")("Defense")("Speed")("Special Attack")("Special Defense")
-    ;
-    for(auto IV_field_iter = IV_fields.begin();
-        IV_field_iter != IV_fields.end();
-        ++IV_field_iter)
-    {
-        test_IVs(pokemon, *IV_field_iter);
-    }
-    EXPECT_THROW(
-        pokemon->set_IV("Not a stat", 10);
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pokemon->set_IV("Attack", -1);
-    , pkmn::range_error);
-    EXPECT_THROW(
-        pokemon->set_IV("Attack", 32);
-    , pkmn::range_error);
+    pokemon->set_shininess(true);
+    EXPECT_TRUE(pokemon->is_shiny());
+    EXPECT_NE(pokemon->get_personality(), personality);
 
     /*
      * On the C++ level, check the underlying PKSav struct and make
@@ -663,6 +257,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: PP Up
     EXPECT_EQ(pokemon->get_friendship(), int(growth->friendship));
 
+    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
         EXPECT_EQ(move_slots.at(i).move.get_move_id(), int(attacks->moves[i]));
         EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
@@ -774,16 +369,16 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(stats.at("Special Defense"), int(pksav_littleendian16(native_party_data->spdef)));
 }
 
-static const std::string games[] = {
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen"
+static const std::vector<std::pair<std::string, std::string>> params = {
+    {"Ruby", "Torchic"},
+    {"Sapphire", "Mudkip"},
+    {"Emerald", "Treecko"},
+    {"FireRed", "Charmander"},
+    {"LeafGreen", "Bulbasaur"}
 };
 
 INSTANTIATE_TEST_CASE_P(
     cpp_gba_pokemon_test,
     gba_pokemon_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(params)
 );

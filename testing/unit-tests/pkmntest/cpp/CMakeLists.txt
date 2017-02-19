@@ -37,6 +37,7 @@ SET(pkmntest_sources
     gba_pokemon_tests.cpp
     items_tests_common.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.cpp
+    pokemon_test.cpp
     pokemon_tests_common.cpp
     pokemon_pc_tests.cpp
 )
