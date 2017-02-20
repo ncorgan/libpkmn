@@ -5,9 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_party_test.hpp>
+#include <pkmntest/config.hpp>
 
 #include <pkmn/exception.hpp>
+#include <pkmn/pokemon_party.hpp>
 
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>
@@ -17,7 +18,10 @@
 
 #include <boost/assign.hpp>
 
+#include <gtest/gtest.h>
+
 #include <cstring>
+#include <string>
 
 // No database access here
 static const std::map<std::string, int> game_generations = boost::assign::map_list_of
@@ -48,6 +52,37 @@ static const std::map<std::string, int> game_generations = boost::assign::map_li
     ("Omega Ruby", 6)
     ("Alpha Sapphire", 6)
 ;
+
+class pokemon_party_test: public ::testing::TestWithParam<std::string> {
+    public:
+        PKMNTEST_INLINE pkmn::pokemon_party::sptr get_party() {
+            return _party;
+        }
+
+        PKMNTEST_INLINE const std::string& get_game() {
+            return _game;
+        }
+
+        PKMNTEST_INLINE void reset_party() {
+            _party = pkmn::pokemon_party::make(_game);
+
+            ASSERT_NE(nullptr, _party.get());
+            ASSERT_EQ(_game, _party->get_game());
+            ASSERT_EQ(0, _party->get_num_pokemon());
+            ASSERT_EQ(6, _party->as_vector().size());
+        }
+
+    protected:
+        void SetUp() {
+            _game = GetParam();
+            reset_party();
+        }
+
+    private:
+
+        std::string _game;
+        pkmn::pokemon_party::sptr _party;
+};
 
 TEST_P(pokemon_party_test, empty_party_test) {
     pkmn::pokemon_party::sptr party = get_party();
