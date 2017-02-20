@@ -122,6 +122,41 @@ INSTANTIATE_TEST_CASE_P(
 class gba_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gba_item_bag_test, item_bag_test) {
+    pkmn::item_bag::sptr bag = get_item_bag();
+
+    const std::string& game = get_game();
+    bool is_frlg = (game == "FireRed" or game == "LeafGreen");
+    std::string berry_pocket_name = is_frlg ? "Berry Pouch" : "Berries";
+    std::string tmhm_pocket_name = is_frlg ? "TM Case" : "TMs & HMs";
+
+    const pkmn::item_pockets_t& pockets = bag->get_pockets();
+    ASSERT_EQ(5, pockets.size());
+    ASSERT_EQ("Items", pockets.at("Items")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Items")->get_game());
+    ASSERT_EQ("Key Items", pockets.at("Key Items")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Key Items")->get_game());
+    ASSERT_EQ("Poké Balls", pockets.at("Poké Balls")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Poké Balls")->get_game());
+    ASSERT_EQ(berry_pocket_name, pockets.at(berry_pocket_name)->get_name());
+    ASSERT_EQ(get_game(), pockets.at(berry_pocket_name)->get_game());
+    ASSERT_EQ(tmhm_pocket_name, pockets.at(tmhm_pocket_name)->get_name());
+    ASSERT_EQ(get_game(), pockets.at(tmhm_pocket_name)->get_game());
+
+    const std::vector<std::string>& pocket_names = bag->get_pocket_names();
+    ASSERT_EQ(5, pockets.size());
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "Items"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "Key Items"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "Poké Balls"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), berry_pocket_name));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), tmhm_pocket_name));
+
+    gba_item_pocket_test(pockets.at("Items"));
+    gba_key_item_pocket_test(pockets.at("Key Items"));
+    gba_ball_pocket_test(pockets.at("Poké Balls"));
+    gba_berry_pocket_test(pockets.at(berry_pocket_name));
+    gba_tmhm_pocket_test(pockets.at(tmhm_pocket_name));
+
+    // TODO: make sure adding to bag is reflected in pocket
 }
 
 static const std::vector<std::string> item_bag_params = {

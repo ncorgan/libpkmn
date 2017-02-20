@@ -58,6 +58,20 @@ INSTANTIATE_TEST_CASE_P(
 class gen1_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gen1_item_bag_test, item_bag_test) {
+    pkmn::item_bag::sptr bag = get_item_bag();
+
+    const pkmn::item_pockets_t& pockets = bag->get_pockets();
+    ASSERT_EQ(1, pockets.size());
+    ASSERT_EQ("Items", pockets.at("Items")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Items")->get_game());
+
+    const std::vector<std::string>& pocket_names = bag->get_pocket_names();
+    ASSERT_EQ(1, pockets.size());
+    ASSERT_EQ("Items", pocket_names[0]);
+
+    gen1_item_pocket_test(pockets.at("Items"));
+
+    // TODO: make sure adding to bag is reflected in pocket
 }
 
 static const std::vector<std::string> item_bag_params = {

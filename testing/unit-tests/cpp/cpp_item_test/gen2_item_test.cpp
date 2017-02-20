@@ -17,6 +17,8 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <algorithm>
+
 class gen2_item_list_test: public pkmntest::item_list_test {};
 
 void gen2_item_pocket_test(
@@ -88,6 +90,32 @@ INSTANTIATE_TEST_CASE_P(
 class gen2_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gen2_item_bag_test, item_bag_test) {
+    pkmn::item_bag::sptr bag = get_item_bag();
+
+    const pkmn::item_pockets_t& pockets = bag->get_pockets();
+    ASSERT_EQ(4, pockets.size());
+    ASSERT_EQ("Items", pockets.at("Items")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Items")->get_game());
+    ASSERT_EQ("KeyItems", pockets.at("KeyItems")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("KeyItems")->get_game());
+    ASSERT_EQ("Balls", pockets.at("Balls")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("Balls")->get_game());
+    ASSERT_EQ("TM/HM", pockets.at("TM/HM")->get_name());
+    ASSERT_EQ(get_game(), pockets.at("TM/HM")->get_game());
+
+    const std::vector<std::string>& pocket_names = bag->get_pocket_names();
+    ASSERT_EQ(4, pockets.size());
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "Items"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "KeyItems"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "Balls"));
+    ASSERT_NE(pocket_names.end(), std::find(pocket_names.begin(), pocket_names.end(), "TM/HM"));
+
+    gen2_item_pocket_test(pockets.at("Items"));
+    gen2_key_item_pocket_test(pockets.at("KeyItems"));
+    gen2_ball_pocket_test(pockets.at("Balls"));
+    gen2_tmhm_pocket_test(pockets.at("TM/HM"));
+
+    // TODO: make sure adding to bag is reflected in pocket
 }
 
 static const std::vector<std::string> item_bag_params = {
