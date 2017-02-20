@@ -8,6 +8,7 @@
 #include <pkmntest/item_test.hpp>
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -17,18 +18,65 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <vector>
+
+static const std::vector<std::string> item_names = boost::assign::list_of
+    ("Potion")("Great Ball")("Ether")("PP Up")
+    ("TM34")("Moon Stone")("Bicycle")("Full Heal")
+;
+static const std::vector<std::string> wrong_generation_item_names = boost::assign::list_of
+    ("Amulet Coin")("Apicot Berry")("Air Mail")("Air Balloon")("Aqua Suit")
+;
+
 class gen1_item_list_test: public pkmntest::item_list_test {};
 
-void gen1_item_pocket_test(
+static void gen1_item_list_test_common(
+    pkmn::item_list::sptr list 
+) {
+    // Make sure item slots start as correctly empty.
+    pkmntest::test_item_list_empty_slots(list);
+
+    // Confirm exceptions are thrown when expected.
+    pkmntest::test_item_list_out_of_range_error(
+        list,
+        "Potion"
+    );
+
+    // Confirm items from later generations can't be added.
+    pkmntest::test_item_list_invalid_items(
+        list,
+        wrong_generation_item_names
+    );
+
+    // Start adding and removing stuff, and make sure the numbers are accurate.
+    pkmntest::test_item_list_add_remove(
+        list,
+        item_names
+    );
+
+    const std::vector<std::string>& valid_items = list->get_valid_items();
+    std::vector<std::string> full_item_list = pkmn::database::get_item_list(list->get_game());
+    EXPECT_EQ(full_item_list.size(), valid_items.size());
+}
+
+static void gen1_item_pocket_test(
     pkmn::item_list::sptr item_pocket
 ) {
     ASSERT_EQ("Items", item_pocket->get_name());
+    ASSERT_EQ(20, item_pocket->get_capacity());
+    ASSERT_EQ(20, item_pocket->as_vector().size());
+
+    gen1_item_list_test_common(item_pocket);
 }
 
-void gen1_item_pc_test(
+static void gen1_item_pc_test(
     pkmn::item_list::sptr item_pc
 ) {
     ASSERT_EQ("PC", item_pc->get_name());
+    ASSERT_EQ(50, item_pc->get_capacity());
+    ASSERT_EQ(50, item_pc->as_vector().size());
+
+    gen1_item_list_test_common(item_pc);
 }
 
 static const pkmntest::item_list_test_fcns_t gen1_test_fcns = boost::assign::map_list_of
@@ -71,7 +119,34 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
 
     gen1_item_pocket_test(pockets.at("Items"));
 
-    // TODO: make sure adding to bag is reflected in pocket
+    // Make sure adding items through the bag adds to the pocket.
+    pkmn::item_list::sptr item_pocket = pockets.at("Items");
+    const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
+    ASSERT_EQ(0, item_pocket->get_num_items());
+
+    for(int i = 0; i < 8; ++i) {
+        bag->add(
+            item_names[i],
+            i+1
+        );
+    }
+    for(int i = 0; i < 8; ++i) {
+        EXPECT_EQ(item_names[i], item_slots.at(i).item.get_name());
+        EXPECT_EQ(i+1, item_slots.at(i).amount);
+    }
+    EXPECT_EQ("None", item_slots.at(8).item.get_name());
+    EXPECT_EQ(0, item_slots.at(8).amount);
+
+    for(int i = 0; i < 8; ++i) {
+        bag->remove(
+            item_names[i],
+            i+1
+        );
+    }
+    for(int i = 0; i < 9; ++i) {
+        EXPECT_EQ("None", item_slots.at(i).item.get_name());
+        EXPECT_EQ(0, item_slots.at(i).amount);
+    }
 }
 
 static const std::vector<std::string> item_bag_params = {

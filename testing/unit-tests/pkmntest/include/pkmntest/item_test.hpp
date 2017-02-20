@@ -59,6 +59,25 @@ namespace pkmntest {
             pkmn::item_list::sptr _item_list;
     };
 
+    PKMNTEST_API void test_item_list_empty_slots(
+        pkmn::item_list::sptr list
+    );
+
+    PKMNTEST_API void test_item_list_out_of_range_error(
+        pkmn::item_list::sptr list,
+        const std::string &item_name
+    );
+
+    PKMNTEST_API void test_item_list_invalid_items(
+        pkmn::item_list::sptr list,
+        const std::vector<std::string> &item_names
+    );
+
+    PKMNTEST_API void test_item_list_add_remove(
+        pkmn::item_list::sptr list,
+        const std::vector<std::string> &item_names
+    );
+
     class item_bag_test: public ::testing::TestWithParam<std::string> {
         public:
             PKMNTEST_INLINE pkmn::item_bag::sptr get_item_bag() {
@@ -87,6 +106,11 @@ namespace pkmntest {
             std::string _game;
             pkmn::item_bag::sptr _item_bag;
     };
+
+    PKMNTEST_API void test_item_bag_invalid_items(
+        pkmn::item_bag::sptr bag,
+        const std::vector<std::string> &item_names
+    );
 }
 
 #endif /* PKMNTEST_ITEM_TEST_HPP */
