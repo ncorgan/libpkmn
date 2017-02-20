@@ -58,7 +58,6 @@ SET(BOOST_REQUIRED_COMPONENTS
     locale
     system
     thread
-    unit_test_framework
 )
 IF(MSVC)
     SET(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "Enable Boost dynamic linking")
