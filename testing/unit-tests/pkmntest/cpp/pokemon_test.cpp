@@ -625,7 +625,7 @@ namespace pkmntest {
         }
 
         if(generation >= 3) {
-            // Make sure setting EVs only impacts the specific EV.
+            // Make sure setting IVs only impacts the specific IV.
             const std::map<std::string, int>& IVs = pokemon->get_IVs();
             for(auto IVs_iter = IVs.begin(); IVs_iter != IVs.end(); ++IVs_iter) {
                 std::map<std::string, int> IVs_before = pokemon->get_IVs();

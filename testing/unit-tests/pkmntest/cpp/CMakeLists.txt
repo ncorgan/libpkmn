@@ -29,7 +29,7 @@ SET(pkmntest_sources
     gba_items_tests.cpp
     items_tests_common.cpp
     pokemon_test.cpp
-    pokemon_pc_tests.cpp
+    pokemon_pc_test.cpp
 )
 
 SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
