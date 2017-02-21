@@ -20,7 +20,7 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
-    GTest::Main
+    gtest_main
     pkmn
     pkmntest
 )
@@ -124,9 +124,20 @@ ENDMACRO(PKMN_ADD_TEST)
 
 MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ADD_EXECUTABLE(${test_name} ${test_srcs})
-    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
-    )
+    # Ignore overzealous error when comparing a size_t to a numeric literal.
+    IF(PKMN_GCC)
+        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+            PROPERTIES COMPILE_FLAGS "-Wno-sign-compare ${PKMN_CXX_FLAGS}"
+        )
+    ELSEIF(PKMN_CLANG)
+        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-sign-compare -Werror"
+        )
+    ELSE()
+        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+        )
+    ENDIF(PKMN_GCC)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)

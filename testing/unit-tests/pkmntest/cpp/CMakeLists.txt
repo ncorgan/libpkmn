@@ -19,7 +19,7 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmntest_libs
     ${Boost_LIBRARIES}
-    GTest::GTest
+    gtest
     pkmn
 )
 
@@ -29,9 +29,20 @@ SET(pkmntest_sources
     pokemon_pc_test.cpp
 )
 
-SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
-    PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
-)
+# Ignore overzealous error when comparing a size_t to a numeric literal.
+IF(PKMN_GCC)
+    SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
+        PROPERTIES COMPILE_FLAGS "-Wno-sign-compare ${PKMN_CXX_FLAGS}"
+    )
+ELSEIF(PKMN_CLANG)
+    SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
+        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-sign-compare -Werror"
+    )
+ELSE()
+    SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
+        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    )
+ENDIF(PKMN_GCC)
 
 ADD_LIBRARY(pkmntest SHARED ${pkmntest_sources})
 TARGET_LINK_LIBRARIES(pkmntest ${pkmntest_libs})
