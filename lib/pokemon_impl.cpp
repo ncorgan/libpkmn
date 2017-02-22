@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -441,21 +441,8 @@ namespace pkmn {
             );
         )
 
-        _IVs[stat] = value;
-
-        // Setting any IV affects HP, so we have to update that as well.
-        if(stat != "HP") {
-            uint8_t IV_hp = 0;
-            PKSAV_CALL(
-                pksav_get_gb_IV(
-                    iv_data_ptr,
-                    PKSAV_STAT_HP,
-                    &IV_hp
-                );
-            )
-
-            _IVs["HP"] = int(IV_hp);
-        }
+        // Setting any IV affects HP, and vice versa, so we may as well update it all.
+        _init_gb_IV_map(iv_data_ptr);
 
         _populate_party_data();
     }
