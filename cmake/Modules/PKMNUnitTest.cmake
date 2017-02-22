@@ -31,6 +31,14 @@ SET(pkmn_c_test_libs
     unity
 )
 
+IF(PKMN_GCC)
+    SET(PKMNTEST_CXX_FLAGS "-Wno-sign-compare ${PKMN_CXX_FLAGS}")
+ELSEIF(PKMN_CLANG)
+    SET(PKMNTEST_CXX_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-sign-compare -Werror")
+ELSE()
+    SET(PKMNTEST_CXX_FLAGS "${PKMN_CXX_FLAGS} /wd4018")
+ENDIF(PKMN_GCC)
+
 MACRO(PKMN_ADD_TEST test_name test_cmd)
     IF(CMAKE_CROSSCOMPILING)
         ADD_TEST(${test_name} ${test_cmd})
@@ -124,20 +132,9 @@ ENDMACRO(PKMN_ADD_TEST)
 
 MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ADD_EXECUTABLE(${test_name} ${test_srcs})
-    # Ignore overzealous error when comparing a size_t to a numeric literal.
-    IF(PKMN_GCC)
-        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-            PROPERTIES COMPILE_FLAGS "-Wno-sign-compare ${PKMN_CXX_FLAGS}"
-        )
-    ELSEIF(PKMN_CLANG)
-        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-sign-compare -Werror"
-        )
-    ELSE()
-        SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} /wd4018"
-        )
-    ENDIF(PKMN_GCC)
+    SET_SOURCE_FILES_PROPERTIES(${test_srcs}
+        PROPERTIES COMPILE_FLAGS "${PKMNTEST_CXX_FLAGS}"
+    )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
     IF(WIN32)
