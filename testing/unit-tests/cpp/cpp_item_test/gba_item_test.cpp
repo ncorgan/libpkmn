@@ -398,14 +398,14 @@ void gba_item_pc_test(
 }
 
 static const pkmntest::item_list_test_fcns_t gba_test_fcns = boost::assign::map_list_of
-    ("Items", gba_item_pocket_test)
-    ("Key Items", gba_key_item_pocket_test)
-    ("Poké Balls", gba_ball_pocket_test)
-    ("TMs & HMs", gba_tmhm_pocket_test)
-    ("TM Case", gba_tmhm_pocket_test)
-    ("Berries", gba_berry_pocket_test)
-    ("Berry Pouch", gba_berry_pocket_test)
-    ("PC", gba_item_pc_test)
+    ("Items", &gba_item_pocket_test)
+    ("Key Items", &gba_key_item_pocket_test)
+    ("Poké Balls", &gba_ball_pocket_test)
+    ("TMs & HMs", &gba_tmhm_pocket_test)
+    ("TM Case", &gba_tmhm_pocket_test)
+    ("Berries", &gba_berry_pocket_test)
+    ("Berry Pouch", &gba_berry_pocket_test)
+    ("PC", &gba_item_pc_test)
 ;
 
 TEST_P(gba_item_list_test, item_list_test) {

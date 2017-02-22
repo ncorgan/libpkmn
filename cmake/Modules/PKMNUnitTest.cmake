@@ -135,7 +135,7 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
         )
     ELSE()
         SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+            PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} /wd4018"
         )
     ENDIF(PKMN_GCC)
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})

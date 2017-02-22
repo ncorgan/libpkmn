@@ -327,11 +327,11 @@ void gen2_item_pc_test(
 }
 
 static const pkmntest::item_list_test_fcns_t gen2_test_fcns = boost::assign::map_list_of
-    ("Items", gen2_item_pocket_test)
-    ("KeyItems", gen2_key_item_pocket_test)
-    ("Balls", gen2_ball_pocket_test)
-    ("TM/HM", gen2_tmhm_pocket_test)
-    ("PC", gen2_item_pc_test)
+    ("Items", &gen2_item_pocket_test)
+    ("KeyItems", &gen2_key_item_pocket_test)
+    ("Balls", &gen2_ball_pocket_test)
+    ("TM/HM", &gen2_tmhm_pocket_test)
+    ("PC", &gen2_item_pc_test)
 ;
 
 TEST_P(gen2_item_list_test, item_list_test) {

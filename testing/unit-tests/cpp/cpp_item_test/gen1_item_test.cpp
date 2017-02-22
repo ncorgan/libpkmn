@@ -80,8 +80,8 @@ static void gen1_item_pc_test(
 }
 
 static const pkmntest::item_list_test_fcns_t gen1_test_fcns = boost::assign::map_list_of
-    ("Items", gen1_item_pocket_test)
-    ("PC", gen1_item_pc_test)
+    ("Items", &gen1_item_pocket_test)
+    ("PC", &gen1_item_pc_test)
 ;
 
 TEST_P(gen1_item_list_test, item_list_test) {
