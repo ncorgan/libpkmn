@@ -12,7 +12,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
-#include <pksav/gen2/pokemon.h>
+#include <pksav/gen2/items.h>
 #include <pksav/math/endian.h>
 
 #include <boost/assign.hpp>
@@ -79,6 +79,23 @@ void gen2_item_pocket_test(
 
     const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
+    int num_items = item_pocket->get_num_items();
+
+    const pksav_gen2_item_pocket_t* native = reinterpret_cast<const pksav_gen2_item_pocket_t*>(item_pocket->get_native());
+    EXPECT_EQ(num_items, int(native->count));
+    for(int i = 0; i < num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+    }
+    EXPECT_EQ(0, native->items[num_items].index);
+    EXPECT_EQ(0, native->items[num_items].count);
+    EXPECT_EQ(0xFF, native->terminator);
 }
 
 void gen2_key_item_pocket_test(
@@ -142,6 +159,23 @@ void gen2_key_item_pocket_test(
 
     const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
+    int num_items = key_item_pocket->get_num_items();
+
+    const pksav_gen2_key_item_pocket_t* native = reinterpret_cast<const pksav_gen2_key_item_pocket_t*>(key_item_pocket->get_native());
+    EXPECT_EQ(num_items, int(native->count));
+    for(int i = 0; i < num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+    }
+    EXPECT_EQ(0, native->items[num_items].index);
+    EXPECT_EQ(0, native->items[num_items].count);
+    EXPECT_EQ(0xFF, native->terminator);
 }
 
 void gen2_ball_pocket_test(
@@ -190,6 +224,23 @@ void gen2_ball_pocket_test(
 
     const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pkmn::item_slots_t& item_slots = ball_pocket->as_vector();
+    int num_items = ball_pocket->get_num_items();
+
+    const pksav_gen2_ball_pocket_t* native = reinterpret_cast<const pksav_gen2_ball_pocket_t*>(ball_pocket->get_native());
+    EXPECT_EQ(num_items, int(native->count));
+    for(int i = 0; i < num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+    }
+    EXPECT_EQ(0, native->items[num_items].index);
+    EXPECT_EQ(0, native->items[num_items].count);
+    EXPECT_EQ(0xFF, native->terminator);
 }
 
 void gen2_tmhm_pocket_test(
@@ -255,6 +306,18 @@ void gen2_tmhm_pocket_test(
         EXPECT_EQ(i-1, tmhm_pocket->get_num_items());
         EXPECT_EQ(name, item_slots[i-1].item.get_name());
         EXPECT_EQ(0, item_slots[i-1].amount);
+    }
+
+    /*
+     * Before removing items, on the C++ level, make sure the LibPKMN abstraction
+     * matches the underlying PKSav struct.
+     */
+    const pksav_gen2_tmhm_pocket_t* native = reinterpret_cast<const pksav_gen2_tmhm_pocket_t*>(tmhm_pocket->get_native());
+    for(int i = 0; i < 50; ++i) {
+        EXPECT_EQ(item_slots[i].amount, int(native->tm_count[i]));
+    }
+    for(int i = 0; i < 7; ++i) {
+        EXPECT_EQ(item_slots[50+i].amount, int(native->hm_count[i]));
     }
 
     for(int i = 1; i <= 7; ++i) {
@@ -324,6 +387,23 @@ void gen2_item_pc_test(
     const std::vector<std::string>& valid_items = item_pc->get_valid_items();
     std::vector<std::string> full_item_list = pkmn::database::get_item_list(item_pc->get_game());
     EXPECT_EQ(full_item_list.size(), valid_items.size());
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pkmn::item_slots_t& item_slots = item_pc->as_vector();
+    int num_items = item_pc->get_num_items();
+
+    const pksav_gen2_item_pc_t* native = reinterpret_cast<const pksav_gen2_item_pc_t*>(item_pc->get_native());
+    EXPECT_EQ(num_items, int(native->count));
+    for(int i = 0; i < num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+    }
+    EXPECT_EQ(0, native->items[num_items].index);
+    EXPECT_EQ(0, native->items[num_items].count);
+    EXPECT_EQ(0xFF, native->terminator);
 }
 
 static const pkmntest::item_list_test_fcns_t gen2_test_fcns = boost::assign::map_list_of
@@ -365,7 +445,7 @@ INSTANTIATE_TEST_CASE_P(
 class gen2_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gen2_item_bag_test, item_bag_test) {
-    pkmn::item_bag::sptr bag = get_item_bag();
+    const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
     ASSERT_EQ(4, pockets.size());
@@ -389,12 +469,13 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     gen2_key_item_pocket_test(pockets.at("KeyItems"));
     gen2_ball_pocket_test(pockets.at("Balls"));
     gen2_tmhm_pocket_test(pockets.at("TM/HM"));
+    reset();
 
     // Make sure adding items through the bag adds to the proper pockets.
-    ASSERT_EQ(0, pockets.at("Items")->get_num_items());
-    ASSERT_EQ(0, pockets.at("KeyItems")->get_num_items());
-    ASSERT_EQ(0, pockets.at("Balls")->get_num_items());
-    ASSERT_EQ(0, pockets.at("TM/HM")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("Items")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("KeyItems")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("Balls")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("TM/HM")->get_num_items());
     for(int i = 0; i < 8; ++i) {
         bag->add(
             all_pocket_item_names[i],
@@ -402,10 +483,10 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
         );
     }
 
-    const pkmn::item_slots_t& item_slots = pockets.at("Items")->as_vector();
-    const pkmn::item_slots_t& key_item_slots = pockets.at("KeyItems")->as_vector();
-    const pkmn::item_slots_t& ball_slots = pockets.at("Balls")->as_vector();
-    const pkmn::item_slots_t& tm_hm_slots = pockets.at("TM/HM")->as_vector();
+    const pkmn::item_slots_t& item_slots = bag->get_pocket("Items")->as_vector();
+    const pkmn::item_slots_t& key_item_slots = bag->get_pocket("KeyItems")->as_vector();
+    const pkmn::item_slots_t& ball_slots = bag->get_pocket("Balls")->as_vector();
+    const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket("TM/HM")->as_vector();
 
     EXPECT_EQ("Potion", item_slots.at(0).item.get_name());
     EXPECT_EQ(5, item_slots.at(0).amount);
@@ -436,6 +517,34 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ(5, tm_hm_slots.at(27).amount);
     EXPECT_EQ("HM01", tm_hm_slots.at(50).item.get_name());
     EXPECT_EQ(5, tm_hm_slots.at(50).amount);
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pksav_gen2_item_bag_t* native = reinterpret_cast<const pksav_gen2_item_bag_t*>(bag->get_native());
+    EXPECT_EQ(2, native->item_pocket.count);
+    for(int i = 0; i < 3; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->item_pocket.items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->item_pocket.items[i].count));
+    }
+    EXPECT_EQ(0xFF, native->item_pocket.terminator);
+    EXPECT_EQ(2, native->key_item_pocket.count);
+    for(int i = 0; i < 3; ++i) {
+        EXPECT_EQ(key_item_slots.at(i).item.get_item_index(), int(native->key_item_pocket.items[i].index));
+        EXPECT_EQ(key_item_slots.at(i).amount, int(native->key_item_pocket.items[i].count));
+    }
+    EXPECT_EQ(0xFF, native->key_item_pocket.terminator);
+    EXPECT_EQ(2, native->ball_pocket.count);
+    for(int i = 0; i < 3; ++i) {
+        EXPECT_EQ(ball_slots.at(i).item.get_item_index(), int(native->ball_pocket.items[i].index));
+        EXPECT_EQ(ball_slots.at(i).amount, int(native->ball_pocket.items[i].count));
+    }
+    EXPECT_EQ(0xFF, native->ball_pocket.terminator);
+    EXPECT_EQ(0, native->tmhm_pocket.tm_count[0]);
+    EXPECT_EQ(0, native->tmhm_pocket.tm_count[1]);
+    EXPECT_EQ(5, native->tmhm_pocket.tm_count[27]);
+    EXPECT_EQ(5, native->tmhm_pocket.hm_count[0]);
 
     // Make sure removing items through the bag removes from the proper pockets.
     for(int i = 0; i < 8; ++i) {

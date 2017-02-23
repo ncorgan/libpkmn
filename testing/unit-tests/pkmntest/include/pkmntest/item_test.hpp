@@ -80,7 +80,8 @@ namespace pkmntest {
 
     class item_bag_test: public ::testing::TestWithParam<std::string> {
         public:
-            PKMNTEST_INLINE pkmn::item_bag::sptr get_item_bag() {
+            // We need access to the specific sptr instance.
+            PKMNTEST_INLINE const pkmn::item_bag::sptr& get_item_bag() {
                 return _item_bag;
             }
 

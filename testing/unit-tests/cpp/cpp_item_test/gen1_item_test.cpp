@@ -12,7 +12,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
-#include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/items.h>
 #include <pksav/math/endian.h>
 
 #include <boost/assign.hpp>
@@ -29,6 +29,33 @@ static const std::vector<std::string> wrong_generation_item_names = boost::assig
 ;
 
 class gen1_item_list_test: public pkmntest::item_list_test {};
+
+/*
+ * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+ * PKSav struct.
+ */
+static void check_pksav_struct(
+    const pkmn::item_slots_t& item_slots,
+    int expected_num_items,
+    const void* ptr,
+    bool pc
+) {
+    const pksav_gen1_item_pc_t* native = reinterpret_cast<const pksav_gen1_item_pc_t*>(ptr);
+    EXPECT_EQ(expected_num_items, int(native->count));
+    for(int i = 0; i < expected_num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
+    }
+
+    EXPECT_EQ(0, native->items[expected_num_items].index);
+    EXPECT_EQ(0, native->items[expected_num_items].count);
+
+    if(pc) {
+        EXPECT_EQ(0xFF, native->terminator);
+    } else {
+        EXPECT_EQ(0xFF, reinterpret_cast<const pksav_gen1_item_bag_t*>(native)->terminator);
+    }
+}
 
 static void gen1_item_list_test_common(
     pkmn::item_list::sptr list 
@@ -53,10 +80,18 @@ static void gen1_item_list_test_common(
         list,
         item_names
     );
+    ASSERT_EQ(6, list->get_num_items());
 
     const std::vector<std::string>& valid_items = list->get_valid_items();
     std::vector<std::string> full_item_list = pkmn::database::get_item_list(list->get_game());
     EXPECT_EQ(full_item_list.size(), valid_items.size());
+
+    check_pksav_struct(
+        list->as_vector(),
+        list->get_num_items(),
+        list->get_native(),
+        (list->get_name() == "PC")
+    );
 }
 
 static void gen1_item_pocket_test(
@@ -106,7 +141,7 @@ INSTANTIATE_TEST_CASE_P(
 class gen1_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gen1_item_bag_test, item_bag_test) {
-    pkmn::item_bag::sptr bag = get_item_bag();
+    const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
     ASSERT_EQ(1, pockets.size());
@@ -118,9 +153,10 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
     ASSERT_EQ("Items", pocket_names[0]);
 
     gen1_item_pocket_test(pockets.at("Items"));
+    reset();
 
     // Make sure adding items through the bag adds to the pocket.
-    pkmn::item_list::sptr item_pocket = pockets.at("Items");
+    pkmn::item_list::sptr item_pocket = bag->get_pocket("Items");
     const pkmn::item_slots_t& item_slots = item_pocket->as_vector();
     ASSERT_EQ(0, item_pocket->get_num_items());
 
@@ -137,6 +173,14 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
     EXPECT_EQ("None", item_slots.at(8).item.get_name());
     EXPECT_EQ(0, item_slots.at(8).amount);
 
+    check_pksav_struct(
+        item_slots,
+        8,
+        bag->get_native(),
+        false
+    );
+
+    // Make sure adding items through the bag removes from the pocket.
     for(int i = 0; i < 8; ++i) {
         bag->remove(
             item_names[i],

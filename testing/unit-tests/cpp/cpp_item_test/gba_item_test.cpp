@@ -11,7 +11,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
-#include <pksav/gba/pokemon.h>
+#include <pksav/gba/items.h>
 #include <pksav/math/endian.h>
 
 #include <boost/assign.hpp>
@@ -36,6 +36,24 @@ BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
 BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
 
 class gba_item_list_test: public pkmntest::item_list_test {};
+
+/*
+ * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+ * PKSav struct.
+ */
+static void check_pksav_struct(
+    const pkmn::item_slots_t& item_slots,
+    int expected_num_items,
+    const pksav_item_t* native_items
+) {
+    for(int i = 0; i < expected_num_items; ++i) {
+        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(pksav_littleendian16(native_items[i].index)));
+        EXPECT_EQ(item_slots.at(i).amount, int(pksav_littleendian16(native_items[i].count)));
+    }
+
+    EXPECT_EQ(0, native_items[expected_num_items].index);
+    EXPECT_EQ(0, native_items[expected_num_items].count);
+}
 
 void gba_item_pocket_test(
     pkmn::item_list::sptr item_pocket
@@ -109,6 +127,12 @@ void gba_item_pocket_test(
 
     const std::vector<std::string>& valid_items = item_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    check_pksav_struct(
+        item_pocket->as_vector(),
+        item_pocket->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(item_pocket->get_native())
+    );
 }
 
 void gba_key_item_pocket_test(
@@ -195,6 +219,12 @@ void gba_key_item_pocket_test(
 
     const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    check_pksav_struct(
+        key_item_pocket->as_vector(),
+        key_item_pocket->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(key_item_pocket->get_native())
+    );
 }
 
 void gba_ball_pocket_test(
@@ -252,6 +282,12 @@ void gba_ball_pocket_test(
 
     const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    check_pksav_struct(
+        ball_pocket->as_vector(),
+        ball_pocket->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(ball_pocket->get_native())
+    );
 }
 
 void gba_tmhm_pocket_test(
@@ -309,6 +345,12 @@ void gba_tmhm_pocket_test(
 
     const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    check_pksav_struct(
+        tmhm_pocket->as_vector(),
+        tmhm_pocket->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(tmhm_pocket->get_native())
+    );
 }
 
 void gba_berry_pocket_test(
@@ -366,6 +408,12 @@ void gba_berry_pocket_test(
 
     const std::vector<std::string>& valid_items = berry_pocket->get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+
+    check_pksav_struct(
+        berry_pocket->as_vector(),
+        berry_pocket->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(berry_pocket->get_native())
+    );
 }
 
 void gba_item_pc_test(
@@ -394,6 +442,12 @@ void gba_item_pc_test(
     pkmntest::test_item_list_add_remove(
         item_pc,
         all_pocket_item_names
+    );
+
+    check_pksav_struct(
+        item_pc->as_vector(),
+        item_pc->get_num_items(),
+        reinterpret_cast<const pksav_item_t*>(item_pc->get_native())
     );
 }
 
@@ -454,7 +508,7 @@ INSTANTIATE_TEST_CASE_P(
 class gba_item_bag_test: public pkmntest::item_bag_test {};
 
 TEST_P(gba_item_bag_test, item_bag_test) {
-    pkmn::item_bag::sptr bag = get_item_bag();
+    const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const std::string& game = get_game();
     bool is_frlg = (game == "FireRed" or game == "LeafGreen");
@@ -487,17 +541,18 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     gba_ball_pocket_test(pockets.at("Poké Balls"));
     gba_berry_pocket_test(pockets.at(berry_pocket_name));
     gba_tmhm_pocket_test(pockets.at(tmhm_pocket_name));
+    reset();
 
     // Make sure adding items through the bag adds to the proper pockets.
-    ASSERT_EQ(0, pockets.at("Items")->get_num_items());
-    ASSERT_EQ(0, pockets.at("Key Items")->get_num_items());
-    ASSERT_EQ(0, pockets.at("Poké Balls")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("Items")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("Key Items")->get_num_items());
+    ASSERT_EQ(0, bag->get_pocket("Poké Balls")->get_num_items());
     if(is_frlg) {
-        ASSERT_EQ(0, pockets.at("TM Case")->get_num_items());
-        ASSERT_EQ(0, pockets.at("Berry Pouch")->get_num_items());
+        ASSERT_EQ(0, bag->get_pocket("TM Case")->get_num_items());
+        ASSERT_EQ(0, bag->get_pocket("Berry Pouch")->get_num_items());
     } else {
-        ASSERT_EQ(0, pockets.at("TMs & HMs")->get_num_items());
-        ASSERT_EQ(0, pockets.at("Berries")->get_num_items());
+        ASSERT_EQ(0, bag->get_pocket("TMs & HMs")->get_num_items());
+        ASSERT_EQ(0, bag->get_pocket("Berries")->get_num_items());
     }
     for(int i = 0; i < 8; ++i) {
         bag->add(
@@ -506,11 +561,11 @@ TEST_P(gba_item_bag_test, item_bag_test) {
         );
     }
 
-    const pkmn::item_slots_t& item_slots = pockets.at("Items")->as_vector();
-    const pkmn::item_slots_t& key_item_slots = pockets.at("Key Items")->as_vector();
-    const pkmn::item_slots_t& ball_slots = pockets.at("Poké Balls")->as_vector();
-    const pkmn::item_slots_t& tm_hm_slots = pockets.at(tmhm_pocket_name)->as_vector();
-    const pkmn::item_slots_t& berry_slots = pockets.at(berry_pocket_name)->as_vector();
+    const pkmn::item_slots_t& item_slots = bag->get_pocket("Items")->as_vector();
+    const pkmn::item_slots_t& key_item_slots = bag->get_pocket("Key Items")->as_vector();
+    const pkmn::item_slots_t& ball_slots = bag->get_pocket("Poké Balls")->as_vector();
+    const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket(tmhm_pocket_name)->as_vector();
+    const pkmn::item_slots_t& berry_slots = bag->get_pocket(berry_pocket_name)->as_vector();
 
     EXPECT_EQ("Potion", item_slots.at(0).item.get_name());
     EXPECT_EQ(5, item_slots.at(0).amount);
@@ -542,6 +597,98 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     EXPECT_EQ(5, berry_slots.at(0).amount);
     EXPECT_EQ("None", berry_slots.at(1).item.get_name());
     EXPECT_EQ(0, berry_slots.at(1).amount);
+
+    /*
+     * On the C++ level, make sure the LibPKMN abstraction matches the underlying
+     * PKSav struct.
+     */
+    const pksav_gba_item_storage_t* native = reinterpret_cast<const pksav_gba_item_storage_t*>(bag->get_native());
+    switch(item_slots.at(0).item.get_game_id()) {
+        case RUBY:
+        case SAPPHIRE:
+            check_pksav_struct(
+                item_slots,
+                1,
+                native->rs.items
+            );
+            check_pksav_struct(
+                key_item_slots,
+                2,
+                native->rs.key_items
+            );
+            check_pksav_struct(
+                ball_slots,
+                2,
+                native->rs.balls
+            );
+            check_pksav_struct(
+                tm_hm_slots,
+                2,
+                native->rs.tms_hms
+            );
+            check_pksav_struct(
+                berry_slots,
+                1,
+                native->rs.berries
+            );
+            break;
+
+        case EMERALD:
+            check_pksav_struct(
+                item_slots,
+                1,
+                native->emerald.items
+            );
+            check_pksav_struct(
+                key_item_slots,
+                2,
+                native->emerald.key_items
+            );
+            check_pksav_struct(
+                ball_slots,
+                2,
+                native->emerald.balls
+            );
+            check_pksav_struct(
+                tm_hm_slots,
+                2,
+                native->emerald.tms_hms
+            );
+            check_pksav_struct(
+                berry_slots,
+                1,
+                native->emerald.berries
+            );
+            break;
+
+        default:
+            check_pksav_struct(
+                item_slots,
+                1,
+                native->frlg.items
+            );
+            check_pksav_struct(
+                key_item_slots,
+                2,
+                native->frlg.key_items
+            );
+            check_pksav_struct(
+                ball_slots,
+                2,
+                native->frlg.balls
+            );
+            check_pksav_struct(
+                tm_hm_slots,
+                2,
+                native->frlg.tms_hms
+            );
+            check_pksav_struct(
+                berry_slots,
+                1,
+                native->frlg.berries
+            );
+            break;
+    }
 
     // Make sure removing items through the bag removes from the proper pockets.
     for(int i = 0; i < 8; ++i) {

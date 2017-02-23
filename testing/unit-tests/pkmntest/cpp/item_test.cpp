@@ -212,14 +212,5 @@ namespace pkmntest {
         EXPECT_EQ(item_names[7], item_slots.at(5).item.get_name());
         EXPECT_EQ(6, item_slots.at(5).amount);
         EXPECT_EQ(6, list->get_num_items());
-
-        // Remove everything
-        list->remove(item_names[4], 2);
-        list->remove(item_names[1], 49);
-        list->remove(item_names[7], 6);
-        list->remove(item_names[5], 12);
-        list->remove(item_names[3], 90);
-        list->remove(item_names[6], 65);
-        EXPECT_EQ(0, list->get_num_items());
     }
 }
