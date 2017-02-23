@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -27,6 +27,7 @@ namespace pkmn {
         } else {
             _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
             std::memset(_native, 0, sizeof(pksav_gen1_item_bag_t));
+            NATIVE_RCAST->terminator = 0xFF;
             _our_mem = true;
         }
 

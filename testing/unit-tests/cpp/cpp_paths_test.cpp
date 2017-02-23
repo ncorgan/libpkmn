@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,14 +9,14 @@
 
 #include <pkmn/utils/paths.hpp>
 
-#include "pkmn_boost_unit_test.hpp"
+#include <gtest/gtest.h>
 
 /*
  * The example paths don't need to exist (except the database path). These
  * tests just make sure the environment variables override the defaults.
  */
 
-BOOST_AUTO_TEST_CASE(appdata_dir_test) {
+TEST(cpp_paths_test, appdata_dir_test) {
 #ifdef PKMN_PLATFORM_WIN32
     static const std::string appdata_dir("C:\\libpkmn\\appdata\\dir");
 #else
@@ -24,10 +24,10 @@ BOOST_AUTO_TEST_CASE(appdata_dir_test) {
 #endif
 
     pkmn_setenv("PKMN_APPDATA_DIR", appdata_dir);
-    BOOST_CHECK_EQUAL(pkmn::get_appdata_dir(), appdata_dir);
+    EXPECT_EQ(appdata_dir, pkmn::get_appdata_dir());
 }
 
-BOOST_AUTO_TEST_CASE(database_path_test) {
+TEST(cpp_paths_test, database_path_test) {
     /*
      * When this unit test is run, the PKMN_DATABASE_PATH environment variable
      * is set to a valid value, so just make sure the call doesn't fail.
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(database_path_test) {
      * outside the build system.
      */
     pkmn_setenv("PKMN_DATABASE_PATH", __FILE__);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         (void)pkmn::get_database_path();
     , std::runtime_error);
 
@@ -51,12 +51,12 @@ BOOST_AUTO_TEST_CASE(database_path_test) {
     static const std::string database_path("/libpkmn/database/path");
 #endif
     pkmn_setenv("PKMN_DATABASE_PATH", database_path);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         (void)pkmn::get_database_path();
     , std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(images_dir_test) {
+TEST(cpp_paths_test, images_dir_test) {
 #ifdef PKMN_PLATFORM_WIN32
     static const std::string images_dir("C:\\libpkmn\\images\\dir");
 #else
@@ -64,9 +64,16 @@ BOOST_AUTO_TEST_CASE(images_dir_test) {
 #endif
 
     pkmn_setenv("PKMN_IMAGES_DIR", images_dir);
-    BOOST_CHECK_EQUAL(pkmn::get_images_dir(), images_dir);    
+    EXPECT_EQ(images_dir, pkmn::get_images_dir());    
 }
 
-BOOST_AUTO_TEST_CASE(tmp_dir_test) {
+TEST(cpp_paths_test, tmp_dir_test) {
+#ifdef PKMN_PLATFORM_WIN32
+    static const std::string tmp_dir("C:\\libpkmn\\tmp\\dir");
+#else
+    static const std::string tmp_dir("/libpkmn/tmp/dir");
+#endif
 
+    pkmn_setenv("PKMN_TMP_DIR", tmp_dir);
+    EXPECT_EQ(tmp_dir, pkmn::get_tmp_dir());    
 }
