@@ -20,6 +20,9 @@ static const game_save_test_params_t params[] = {
 };
 
 TEST_P(game_save_test, game_save_test) {
+    pkmn::game_save::sptr save = get_game_save();
+
+    pkmntest::game_save_test_common_fields(save);
 }
 
 INSTANTIATE_TEST_CASE_P(

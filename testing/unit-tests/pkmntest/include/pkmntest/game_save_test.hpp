@@ -47,6 +47,10 @@ namespace pkmntest {
             game_save_test_params_t _params;
             pkmn::game_save::sptr _game_save;
     };
+
+    PKMNTEST_API void game_save_test_common_fields(
+        pkmn::game_save::sptr save
+    );
 }
 
 #endif /* PKMNTEST_GAME_SAVE_TEST_HPP */
