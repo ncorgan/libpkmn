@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 
 SET(cpp_tests
     cpp_calculations_test
+    cpp_game_save_test
     cpp_lists_test
     cpp_paths_test
     cpp_pokemon_party_test
@@ -32,17 +33,6 @@ SET(cpp_tests
 FOREACH(test ${cpp_tests})
     PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
 ENDFOREACH(test ${boost_cpp_tests})
-
-SET(configure_cpp_tests
-    cpp_game_save_test
-)
-FOREACH(test ${configure_cpp_tests})
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cpp.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${test}.cpp
-    @ONLY)
-    PKMN_ADD_CPP_TEST(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test}.cpp)
-ENDFOREACH(test ${configure_cpp_tests})
 
 SET(database_entry_test_srcs
     cpp_database_entry_test/item_entry_test.cpp
