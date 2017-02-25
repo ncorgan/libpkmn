@@ -33,6 +33,10 @@ namespace pkmntest {
                 return _params;
             }
 
+            static PKMN_INLINE void SetUpTestCase() {
+                std::srand((unsigned int)std::time(NULL));
+            }
+
             void load_save();
 
         protected:
@@ -50,6 +54,11 @@ namespace pkmntest {
 
     PKMNTEST_API void game_save_test_common_fields(
         pkmn::game_save::sptr save
+    );
+
+    PKMNTEST_API void check_two_game_saves_equal(
+        pkmn::game_save::sptr save1,
+        pkmn::game_save::sptr save2
     );
 }
 

@@ -7,7 +7,18 @@
 
 #include <pkmntest/game_save_test.hpp>
 
+#include <pkmn/utils/paths.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+
+#include <iostream>
+
+namespace fs = boost::filesystem;
+
 namespace pkmntest {
+
+static const fs::path TMP_DIR(pkmn::get_tmp_dir());
 
 static const game_save_test_params_t params[] = {
     game_save_test_params_t("Red/Blue/Yellow", "Red", "red_blue/pokemon_red.sav"),
@@ -23,6 +34,13 @@ TEST_P(game_save_test, game_save_test) {
     pkmn::game_save::sptr save = get_game_save();
 
     pkmntest::game_save_test_common_fields(save);
+
+    fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%d.sav") % save->get_game().c_str() % rand());
+    save->save_as(temp_save_path.string());
+
+    pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());
+    std::cout << save->get_game() << " " << save2->get_game() << std::endl;
+    pkmntest::check_two_game_saves_equal(save, save2);
 }
 
 INSTANTIATE_TEST_CASE_P(

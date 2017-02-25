@@ -73,6 +73,36 @@ namespace fs = boost::filesystem;
 
 namespace pkmntest {
 
+    static PKMN_INLINE bool is_gb_game(
+        const std::string &game
+    ) {
+        return std::find(
+                   GB_GAMES,
+                   GB_GAMES+6,
+                   game
+               ) != GB_GAMES+6;
+    }
+
+    static PKMN_INLINE bool is_rival_name_set(
+        const std::string &game
+    ) {
+        return std::find(
+                   RIVAL_NAME_SET_GAMES,
+                   RIVAL_NAME_SET_GAMES+7,
+                   game
+               ) != RIVAL_NAME_SET_GAMES+7;
+    }
+
+    static PKMN_INLINE bool is_male_only(
+        const std::string &game
+    ) {
+        return std::find(
+                   MALE_ONLY_GAMES,
+                   MALE_ONLY_GAMES+5,
+                   game
+               ) != MALE_ONLY_GAMES+5;
+    }
+
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 
     void game_save_test::load_save() {
@@ -135,37 +165,20 @@ namespace pkmntest {
     void game_save_test_common_fields(
         pkmn::game_save::sptr save
     ) {
+        std::string game = save->get_game();
+
         test_trainer_name(save);
 
-        bool is_gb_game = (
-            std::find(
-                GB_GAMES,
-                GB_GAMES+6,
-                save->get_game()
-            ) != GB_GAMES+6
-        );
         save->set_trainer_id(
-            is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
+            is_gb_game(game) ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
         );
-        test_trainer_id(save, is_gb_game);
+        test_trainer_id(save, is_gb_game(game));
         save->set_trainer_public_id(LIBPKMN_OT_PID);
-        test_trainer_id(save, is_gb_game);
+        test_trainer_id(save, is_gb_game(game));
 
-        bool is_rival_name_set = (
-            std::find(
-                RIVAL_NAME_SET_GAMES,
-                RIVAL_NAME_SET_GAMES+7,
-                save->get_game()
-            ) != RIVAL_NAME_SET_GAMES+7
-        );
-        test_rival_name(save, is_rival_name_set);
+        test_rival_name(save, is_rival_name_set(game));
 
-        bool is_male_only = (std::find(
-            MALE_ONLY_GAMES,
-            MALE_ONLY_GAMES+5,
-            save->get_game()
-        ) != MALE_ONLY_GAMES+5);
-        if(is_male_only) {
+        if(is_male_only(game)) {
             EXPECT_EQ("Male", save->get_trainer_gender());
             EXPECT_THROW(
                 save->set_trainer_gender("Male");
@@ -234,7 +247,7 @@ namespace pkmntest {
                 ASSERT_NE(nullptr, box_pokemon.get());
 
                 // Boxes are only contiguous in Game Boy games.
-                if(is_gb_game) {
+                if(is_gb_game(game)) {
                     if(j < num_box_pokemon) {
                         EXPECT_NE("None", box_pokemon->get_species());
                     } else {
@@ -242,6 +255,39 @@ namespace pkmntest {
                     }
                 }
             }
+        }
+    }
+
+    void check_two_game_saves_equal(
+        pkmn::game_save::sptr save1,
+        pkmn::game_save::sptr save2
+    ) {
+        ASSERT_EQ(save1->get_game(), save2->get_game());
+        std::string game = save1->get_game();
+
+        EXPECT_EQ(save1->get_trainer_name(), save2->get_trainer_name());
+        EXPECT_EQ(save1->get_trainer_id(), save2->get_trainer_id());
+        EXPECT_EQ(save1->get_trainer_public_id(), save2->get_trainer_public_id());
+
+        if(not is_gb_game(game)) {
+            EXPECT_EQ(save1->get_trainer_secret_id(), save2->get_trainer_secret_id());
+        }
+        if(not is_male_only(game)) {
+            EXPECT_EQ(save1->get_trainer_gender(), save2->get_trainer_gender());
+        }
+        if(not is_rival_name_set(game)) {
+            EXPECT_EQ(save1->get_rival_name(), save2->get_rival_name());
+        }
+
+        EXPECT_EQ(save1->get_money(), save2->get_money());
+
+        pkmn::pokemon_party::sptr party1 = save1->get_pokemon_party();
+        pkmn::pokemon_party::sptr party2 = save2->get_pokemon_party();
+        EXPECT_EQ(party1->get_num_pokemon(), party2->get_num_pokemon());
+        for(int i = 0; i < 6; ++i) {
+            pkmn::pokemon::sptr party_pokemon1 = party1->get_pokemon(i);
+            pkmn::pokemon::sptr party_pokemon2 = party2->get_pokemon(i);
+            EXPECT_EQ(party_pokemon1->get_species(), party_pokemon2->get_species());
         }
     }
 }
