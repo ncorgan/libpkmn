@@ -14,7 +14,7 @@ import junit.framework.TestSuite;
 public class DatabaseEntryTest extends TestCase {
     protected void setUp() {
         try {
-            InitPKMN.initialize();
+            JARUtils.initialize();
         } catch(Exception e) {
         }
     }

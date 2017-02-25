@@ -20,7 +20,7 @@ public class CalculationsTest extends TestCase {
 
     protected void setUp() {
         try {
-            InitPKMN.initialize();
+            JARUtils.initialize();
         } catch(Exception e) {
         }
     }

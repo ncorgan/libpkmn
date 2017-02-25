@@ -12,10 +12,10 @@ import java.lang.reflect.Field;
 import java.nio.file.*;
 import java.nio.file.Paths;
 
-class InitPKMN {
+class JARUtils {
 
     // This will never be instanced.
-    private InitPKMN() {}
+    private JARUtils() {}
 
     // Order matters.
     private static String[] libraryNames = {
@@ -39,17 +39,16 @@ class InitPKMN {
         }
     }
 
-    public static Path extractFileFromJAR (
+    public static Path extractResourceFromJAR (
         String resourcePath,
         boolean loadLibrary
     ) throws FileNotFoundException, IOException {
-        InputStream is = InitPKMN.class.getResourceAsStream(resourcePath);
+        InputStream is = JARUtils.class.getResourceAsStream("/resources/" + resourcePath);
         if(is == null) {
             throw new FileNotFoundException("Could not find resource " + resourcePath);
         }
 
-        Path fileName = Paths.get(resourcePath).getFileName();
-        Path outputPath = pkmnDirectory.resolve(fileName);
+        Path outputPath = pkmnDirectory.resolve(resourcePath);
         OutputStream os = new FileOutputStream(outputPath.toFile());
 
         // Read from resource and write to temp file.
@@ -99,9 +98,9 @@ class InitPKMN {
                 fieldSysPath.set(null, null);
 
                 for(int i = 0; i < libraryNames.length; ++i) {
-                    extractFileFromJAR("/resources/" + getLibraryFileName(libraryNames[i]), true);
+                    extractResourceFromJAR(getLibraryFileName(libraryNames[i]), true);
                 }
-                Path databaseOutputFile = extractFileFromJAR("/resources/libpkmn.db", false);
+                Path databaseOutputFile = extractResourceFromJAR("libpkmn.db", false);
 
                 // With everything extracted, set LibPKMN's environment variables.
                 nc.PKMN.Env.setEnv("PKMN_DATABASE_PATH", databaseOutputFile.toString());
