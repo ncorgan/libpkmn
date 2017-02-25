@@ -9,6 +9,11 @@
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
+%rename(getIconFilepathPrivate) pkmn::database::pokemon_entry::get_icon_filepath const;
+%rename(getSpriteFilepathPrivate) pkmn::database::pokemon_entry::get_sprite_filepath const;
+%javamethodmodifiers pkmn::database::pokemon_entry::get_icon_filepath const "private";
+%javamethodmodifiers pkmn::database::pokemon_entry::get_sprite_filepath const "private";
+
 %typemap(javacode) pkmn::database::pokemon_entry %{
 
     public boolean equals(PokemonEntry other) {
@@ -46,15 +51,34 @@
         return hashCodeBuilder.toHashCode();
     }
 
-    // TODO: extract images from JAR
+    public String getIconFilepath(
+        boolean female
+    ) {
+        // This is where the file should be. Now we just need to extract it from the JAR.
+        String endPath = this.getIconFilepathPrivate(female);
 
-    public java.awt.image.BufferedImage getIcon(
+        String pkmnImagesDir = nc.PKMN.Paths.getImagesDir();
+        java.nio.file.Path relativePath = java.nio.file.Paths.get(pkmnImagesDir).relativize(java.nio.file.Paths.get(endPath));
+
+        return endPath;
+    }
+
+    public String getSpriteFilepath(
+        boolean female,
+        boolean shiny
+    ) {
+        // This is where the file should be. Now we just need to extract it from the JAR.
+        String endPath = this.getSpriteFilepathPrivate(female, shiny);
+        return endPath;
+    }
+
+    public java.awt.Image getIcon(
         boolean female
     ) throws java.io.IOException {
         return javax.imageio.ImageIO.read(new java.io.File(this.getIconFilepath(female)));
     }
 
-    public java.awt.image.BufferedImage getSprite(
+    public java.awt.Image getSprite(
         boolean female, boolean shiny
     ) throws java.io.IOException {
         return javax.imageio.ImageIO.read(new java.io.File(this.getSpriteFilepath(female, shiny)));
