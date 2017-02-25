@@ -49,25 +49,28 @@ class JARUtils {
         }
 
         Path outputPath = pkmnDirectory.resolve(resourcePath);
-        OutputStream os = new FileOutputStream(outputPath.toFile());
+        if(!Files.exists(outputPath)) {
+            outputPath.getParent().toFile().mkdirs();
+            OutputStream os = new FileOutputStream(outputPath.toFile());
 
-        // Read from resource and write to temp file.
-        byte buffer[] = new byte[1024];
-        int readBytes = 0;
-        try {
-            while((readBytes = is.read(buffer)) != -1) {
-                os.write(buffer, 0, readBytes);
-            }
-        } finally {
-            os.close();
-            is.close();
-        }
-
-        if(loadLibrary) {
+            // Read from resource and write to temp file.
+            byte buffer[] = new byte[1024];
+            int readBytes = 0;
             try {
-                System.load(outputPath.toString());
-            } catch (UnsatisfiedLinkError e) {
-                System.err.println("Failed to load " + outputPath.toString());
+                while((readBytes = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, readBytes);
+                }
+            } finally {
+                os.close();
+                is.close();
+            }
+
+            if(loadLibrary) {
+                try {
+                    System.load(outputPath.toString());
+                } catch (UnsatisfiedLinkError e) {
+                    System.err.println("Failed to load " + outputPath.toString());
+                }
             }
         }
 
@@ -83,7 +86,7 @@ class JARUtils {
         if(pkmnDirectory == null) {
             try {
                 pkmnDirectory = Files.createTempDirectory("PKMN_");
-                pkmnDirectory.toFile().deleteOnExit();
+                //pkmnDirectory.toFile().deleteOnExit();
 
                 // Make directories
                 Path imagesDirectory = Files.createDirectory(pkmnDirectory.resolve("images"));

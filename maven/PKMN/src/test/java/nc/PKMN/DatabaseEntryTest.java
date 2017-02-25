@@ -7,6 +7,9 @@
 
 package nc.PKMN;
 
+import java.nio.file.*;
+import java.nio.file.Paths;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -105,7 +108,7 @@ public class DatabaseEntryTest extends TestCase {
         // TODO: equality checks
     }
 
-    public void testPokemonEntry() {
+    public void testPokemonEntry() throws java.io.IOException {
         // Make sure trying to create an invalid entry results in an exception.
         try {
             PokemonEntry pokemonEntry = new PokemonEntry("Invalid", "Black 2", "Sunny");
@@ -176,6 +179,20 @@ public class DatabaseEntryTest extends TestCase {
         assertTrue(pokemonEntry.getTutorMoves().size() > 0);
         assertEquals(1, pokemonEntry.getForms().size());
         assertEquals(0, pokemonEntry.getEvolutions().size());
+
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getIconFilepath(false))));
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getIconFilepath(true))));
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getSpriteFilepath(false,false))));
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getSpriteFilepath(false,true))));
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getSpriteFilepath(true,false))));
+        assertTrue(Files.exists(Paths.get(pokemonEntry.getSpriteFilepath(true,true))));
+
+        pokemonEntry.getIcon(false);
+        pokemonEntry.getIcon(true);
+        pokemonEntry.getSprite(false,false);
+        pokemonEntry.getSprite(false,true);
+        pokemonEntry.getSprite(true,false);
+        pokemonEntry.getSprite(true,true);
 
         // TODO: equality checks
     }
