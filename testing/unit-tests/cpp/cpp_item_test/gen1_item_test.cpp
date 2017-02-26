@@ -180,7 +180,7 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
         false
     );
 
-    // Make sure adding items through the bag removes from the pocket.
+    // Make sure removing items through the bag removes from the pocket.
     for(int i = 0; i < 8; ++i) {
         bag->remove(
             item_names[i],
