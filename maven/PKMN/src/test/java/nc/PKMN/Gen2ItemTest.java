@@ -357,7 +357,10 @@ public class Gen2ItemTest extends ItemTest {
 
         StringVector pocketNames = itemBag.getPocketNames();
         assertEquals(4, pocketNames.size());
-        // TODO: find names in vector
+        assertTrue(pocketNames.contains("Items"));
+        assertTrue(pocketNames.contains("KeyItems"));
+        assertTrue(pocketNames.contains("Balls"));
+        assertTrue(pocketNames.contains("TM/HM"));
 
         this.testItemPocket(itemPockets.get("Items"));
         this.testKeyItemPocket(itemPockets.get("KeyItems"));

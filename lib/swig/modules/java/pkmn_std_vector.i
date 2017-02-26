@@ -34,6 +34,9 @@ namespace std {
                 self->push_back(e);
                 return true;
             }
+            bool contains(const_reference e) {
+                return (std::find(self->begin(), self->end(), e) != self->end());
+            }
             T set(int index, T element) throw (std::out_of_range) {
                 if(index >= 0 and index <= (int)self->size()) {
                     T ret = (*self)[index];

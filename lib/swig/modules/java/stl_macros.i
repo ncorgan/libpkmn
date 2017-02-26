@@ -20,9 +20,18 @@
  * Matches a subset of the java.util.HashMap API.
  */";
 
+    %javamethodmodifiers std::map<cpp_key, cpp_val >::contains "
+/**
+ * Returns true if this vector contains the specified element.
+ *
+ * @param e element whose presence in this vector is to be tested
+ */
+public";
+
     %javamethodmodifiers std::map<cpp_key, cpp_val >::size "
 /**
  * Returns the number of key-value mappings in this map.
+ * se presence in this vector is to be tested
  */
 public";
 
