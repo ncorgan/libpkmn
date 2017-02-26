@@ -9,7 +9,7 @@
 # CMake configuration
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
-PROJECT(pkmn-cpp-app)
+PROJECT(pkmn-cpp-app CXX)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules;${CMAKE_MODULE_PATH}")
 
