@@ -5,15 +5,20 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/utils/paths.hpp>
+#include <pkmn.h>
 
-#include <iostream>
+#include <stdio.h>
 
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
 
-    std::cout << "Database path: " << pkmn::get_database_path() << std::endl;
+    char strbuffer[256] = {0};
+    if(pkmn_get_database_path(strbuffer, sizeof(strbuffer))) {
+        fputs("Failed to find database.", stderr);
+    }
+
+    printf("Database path: %s\n", strbuffer);
 
     return 0;
 }

@@ -65,4 +65,16 @@ make
 ./pkmn-cpp-app
 [ $? -ne 0 ] && exit 1
 
+# Test external C project
+mkdir $REPO_TOPLEVEL/test-env/c-app
+[ $? -ne 0 ] && exit 1
+cd $REPO_TOPLEVEL/test-env/c-app
+[ $? -ne 0 ] && exit 1
+cmake $REPO_TOPLEVEL/testing/applications/c
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-c-app
+[ $? -ne 0 ] && exit 1
+
 echo # So we can check the last error code
