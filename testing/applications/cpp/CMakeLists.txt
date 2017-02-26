@@ -9,7 +9,7 @@
 # CMake configuration
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
-PROJECT(pkmn-testapp)
+PROJECT(pkmn-cpp-app)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules;${CMAKE_MODULE_PATH}")
 
@@ -23,5 +23,5 @@ FIND_PACKAGE(PKMN REQUIRED)
 ########################################################################
 INCLUDE_DIRECTORIES(${PKMN_INCLUDE_DIR})
 
-ADD_EXECUTABLE(pkmn-app pkmn-app.cpp)
-TARGET_LINK_LIBRARIES(pkmn-app ${PKMN_LIBRARY})
+ADD_EXECUTABLE(pkmn-cpp-app pkmn-cpp-app.cpp)
+TARGET_LINK_LIBRARIES(pkmn-cpp-app ${PKMN_LIBRARY})

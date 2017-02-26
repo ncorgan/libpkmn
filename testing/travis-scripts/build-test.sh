@@ -7,8 +7,8 @@
 #
 
 REPO_TOPLEVEL=$PWD
-mkdir -p test-env
-cd test-env
+mkdir -p test-env/pkmn-build
+cd test-env/pkmn-build
 [ $? -ne 0 ] && exit 1
 
 # Check source
@@ -47,6 +47,20 @@ cmake -DCMAKE_BUILD_TYPE=Release \
 make
 [ $? -ne 0 ] && exit 1
 ctest -E ".*GUI" --output-on-failure
+[ $? -ne 0 ] && exit 1
+sudo make install
+[ $? -ne 0 ] && exit 1
+
+# Test external C++ project
+mkdir $REPO_TOPLEVEL/test-env/cpp-app
+[ $? -ne 0 ] && exit 1
+cd $REPO_TOPLEVEL/test-env/cpp-app
+[ $? -ne 0 ] && exit 1
+cmake $REPO_TOPLEVEL/testing/applications/cpp
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-cpp-app
 [ $? -ne 0 ] && exit 1
 
 echo # So we can check the last error code
