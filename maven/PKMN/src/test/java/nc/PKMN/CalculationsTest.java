@@ -9,30 +9,22 @@ package nc.PKMN;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class CalculationsTest extends TestCase {
+public class CalculationsTest {
+
+    // Make sure native libraries are loaded.
+    static {
+        try {
+            JARUtils.initialize();
+        } catch(Exception e) {}
+    }
 
     // Putting L in a hex literal makes me sad.
     private static long UINT32_MAX = 0xFFFFFFFFL;
 
-    protected void setUp() {
-        try {
-            JARUtils.initialize();
-        } catch(Exception e) {
-        }
-    }
-
-    public CalculationsTest(String testName) {
-        super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(CalculationsTest.class);
-    }
-
+    @Test
     public void testGen2UnownForm() {
         // Make sure using invalid parameters results in an error.
         try {
@@ -79,6 +71,7 @@ public class CalculationsTest extends TestCase {
         assertEquals("S", form2);
     }
 
+    @Test
     public void testGen3UnownForm() {
         // Make sure SWIG+Java catches invalid input parameters.
         try {
@@ -99,6 +92,7 @@ public class CalculationsTest extends TestCase {
         assertEquals("B", form);
     }
 
+    @Test
     public void testWurmpleBecomesSilcoon() {
         /*
          * Make sure known good inputs result in expected results.
@@ -111,6 +105,7 @@ public class CalculationsTest extends TestCase {
         assertFalse(nc.PKMN.Calculations.wurmpleBecomesSilcoon(0x5CF4091CL, false));
     }
 
+    @Test
     public void testGen2Gender() {
         /*
          * Make sure expected exceptions are thrown.
@@ -161,6 +156,7 @@ public class CalculationsTest extends TestCase {
         assertEquals("Genderless", nc.PKMN.Calculations.gen2PokemonGender("Magnemite", 15));
     }
 
+    @Test
     public void testModernGender() {
         /*
          * Make sure expected exceptions are thrown.
@@ -211,6 +207,7 @@ public class CalculationsTest extends TestCase {
         assertEquals("Genderless", nc.PKMN.Calculations.modernPokemonGender("Magnemite", UINT32_MAX));
     }
 
+    @Test
     public void testGen2HiddenPower() {
         // Make sure using invalid parameters results in an error.
         try {
@@ -256,6 +253,7 @@ public class CalculationsTest extends TestCase {
         assertEquals(69, hiddenPower.getBasePower());
     }
 
+    @Test
     public void testModernHiddenPower() {
         // Make sure using invalid parameters results in an error.
         try {
@@ -317,6 +315,7 @@ public class CalculationsTest extends TestCase {
         assertEquals(70, hiddenPower.getBasePower());
     }
 
+    @Test
     public void testGen3Gen4Nature() {
         String[] natures = {
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
@@ -336,6 +335,7 @@ public class CalculationsTest extends TestCase {
         }
     }
 
+    @Test
     public void testGen2Shiny() {
         // Make sure using invalid parameters results in an error.
         try {
@@ -380,6 +380,7 @@ public class CalculationsTest extends TestCase {
         assertFalse(nc.PKMN.Calculations.gen2Shiny(6, 15, 7, 5));
     }
 
+    @Test
     public void testModernShiny() {
         // Make sure SWIg+Java catch invalid parameters.
         try {

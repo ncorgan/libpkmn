@@ -7,25 +7,19 @@
 
 package nc.PKMN;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class AAAAA_PathsTest extends TestCase {
-    protected void setUp() {
+public class AAAAA_PathsTest {
+
+    // Make sure native libraries are loaded.
+    static {
         try {
             JARUtils.initialize();
         } catch(Exception e) {}
     }
 
-    public AAAAA_PathsTest(String testName) {
-        super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(AAAAA_PathsTest.class);
-    }
-
+    @Test
     public void testPaths() {
         System.out.println(" * Appdata directory: " + nc.PKMN.Paths.getAppdataDir());
         System.out.println(" * Database path:     " + nc.PKMN.Paths.getDatabasePath());

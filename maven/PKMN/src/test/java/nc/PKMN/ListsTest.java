@@ -7,26 +7,20 @@
 
 package nc.PKMN;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Ignore;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ListsTest extends TestCase {
-    protected void setUp() {
+public class ListsTest {
+
+    // Make sure native libraries are loaded.
+    static {
         try {
             JARUtils.initialize();
-        } catch(Exception e) {
-        }
+        } catch(Exception e) {}
     }
 
-    public ListsTest(String testName) {
-        super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ListsTest.class);
-    }
-
+    @Test
     public void testAbilityList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -40,6 +34,7 @@ public class ListsTest extends TestCase {
         assertEquals("Zen Mode", abilityList.get(190));
     }
 
+    @Test
     public void testGameList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -53,6 +48,7 @@ public class ListsTest extends TestCase {
         assertEquals("Alpha Sapphire", gameList.get(25));
     }
 
+    @Test
     public void testItemList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -66,6 +62,7 @@ public class ListsTest extends TestCase {
         assertEquals("Zoom Lens", itemList.get(512));
     }
 
+    @Test
     public void testLocationList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -79,6 +76,7 @@ public class ListsTest extends TestCase {
         assertEquals("Victory Road", locationList.get(105));
     }
 
+    @Test
     public void testMoveList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -92,6 +90,7 @@ public class ListsTest extends TestCase {
         assertEquals("Struggle", moveList.get(164));
     }
 
+    @Test
     public void testNatureList() {
         StringVector natureList = nc.PKMN.Database.getNatureList();
         assertEquals(25, natureList.size());
@@ -99,6 +98,7 @@ public class ListsTest extends TestCase {
         assertEquals("Quirky", natureList.get(24));
     }
 
+    @Test
     public void testPokemonList() {
         // Make sure trying to create an invalid list results in an exception.
         try {
@@ -112,6 +112,7 @@ public class ListsTest extends TestCase {
         assertEquals("Mew", pokemonList.get(150));
     }
 
+    @Test
     public void testRegionList() {
         StringVector regionList = nc.PKMN.Database.getRegionList();
         assertEquals(7, regionList.size());
@@ -119,9 +120,12 @@ public class ListsTest extends TestCase {
         assertEquals("Kalos", regionList.get(6));
     }
 
+    @Ignore("Not implemented")
+    @Test
     public void testRibbonTest() {
     }
 
+    @Test
     public void testSuperTrainingMedalList() {
         StringVector superTrainingMedalList = nc.PKMN.Database.getSuperTrainingMedalList();
         assertEquals(30, superTrainingMedalList.size());
@@ -129,6 +133,7 @@ public class ListsTest extends TestCase {
         assertEquals("The Battle for the Best!", superTrainingMedalList.get(29));
     }
 
+    @Test
     public void testTypeList() {
         // Make sure trying to create an invalid list results in an exception.
         try {

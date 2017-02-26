@@ -10,26 +10,19 @@ package nc.PKMN;
 import java.nio.file.*;
 import java.nio.file.Paths;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class DatabaseEntryTest extends TestCase {
-    protected void setUp() {
+public class DatabaseEntryTest {
+
+    // Make sure native libraries are loaded.
+    static {
         try {
             JARUtils.initialize();
-        } catch(Exception e) {
-        }
+        } catch(Exception e) {}
     }
 
-    public DatabaseEntryTest(String testName) {
-        super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(DatabaseEntryTest.class);
-    }
-
+    @Test
     public void testItemEntry() {
         // Make sure trying to create an invalid entry results in an exception.
         try {
@@ -62,6 +55,7 @@ public class DatabaseEntryTest extends TestCase {
         // TODO: equality checks
     }
 
+    @Test
     public void testMoveEntry() {
         // Make sure trying to create an invalid entry results in an exception.
         try {
@@ -108,6 +102,7 @@ public class DatabaseEntryTest extends TestCase {
         // TODO: equality checks
     }
 
+    @Test
     public void testPokemonEntry() throws java.io.IOException {
         // Make sure trying to create an invalid entry results in an exception.
         try {
