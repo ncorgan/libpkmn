@@ -16,7 +16,6 @@ find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[
 find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
 [ $? -ne 0 ] && exit 1
 
-
 if [ $PYTHON_VERSION -eq 2 ]
 then
     export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
@@ -51,6 +50,9 @@ ctest -E ".*GUI" --output-on-failure
 # So the log isn't too verbose
 echo Installing...
 sudo make install > /dev/null 2>&1
+[ $? -ne 0 ] && exit 1
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+sudo ldconfig
 [ $? -ne 0 ] && exit 1
 
 # Test external C++ project
