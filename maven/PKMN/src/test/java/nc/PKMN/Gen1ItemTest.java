@@ -70,6 +70,7 @@ public class Gen1ItemTest extends ItemTest {
         assertEquals("Items", itemPocket.getName());
         assertEquals(this.testGame, itemPocket.getGame());
         assertEquals(20, itemPocket.getCapacity());
+        assertEquals(20, itemPocket.asVector().size());
 
         this.testItemListCommon(itemPocket);
     }
@@ -80,6 +81,7 @@ public class Gen1ItemTest extends ItemTest {
         assertEquals("PC", itemPC.getName());
         assertEquals(this.testGame, itemPC.getGame());
         assertEquals(50, itemPC.getCapacity());
+        assertEquals(50, itemPC.asVector().size());
 
         this.testItemListCommon(itemPC);
     }
