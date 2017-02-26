@@ -78,19 +78,15 @@ make
 [ $? -ne 0 ] && exit 1
 
 # Test external Lua project
-mkdir $REPO_TOPLEVEL/test-env/lua-app
-[ $? -ne 0 ] && exit 1
-cd $REPO_TOPLEVEL/test-env/lua-app
+cd $REPO_TOPLEVEL/testing/applications/lua
 [ $? -ne 0 ] && exit 1
 lua pkmn-lua-app.lua
 [ $? -ne 0 ] && exit 1
 
 # Test external Python project
-mkdir $REPO_TOPLEVEL/test-env/python-app
+cd $REPO_TOPLEVEL/testing/applications/python
 [ $? -ne 0 ] && exit 1
-cd $REPO_TOPLEVEL/test-env/python-app
-[ $? -ne 0 ] && exit 1
-python${PYTHON_VERSION} pkmn-python-app.python
+python${PYTHON_VERSION} pkmn-python-app.py
 [ $? -ne 0 ] && exit 1
 
 echo # So we can check the last error code
