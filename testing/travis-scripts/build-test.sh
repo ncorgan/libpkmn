@@ -48,7 +48,9 @@ make
 [ $? -ne 0 ] && exit 1
 ctest -E ".*GUI" --output-on-failure
 [ $? -ne 0 ] && exit 1
-sudo make install
+# So the log isn't too verbose
+echo Installing...
+sudo make install > /dev/null 2>&1
 [ $? -ne 0 ] && exit 1
 
 # Test external C++ project
