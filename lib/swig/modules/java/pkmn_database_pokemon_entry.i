@@ -53,12 +53,11 @@
 
     public String getIconFilepath(
         boolean female
-    ) {
+    ) throws java.io.IOException {
         // This is where the file should be. Now we just need to extract it from the JAR.
         String endPath = this.getIconFilepathPrivate(female);
-
-        String pkmnImagesDir = nc.PKMN.Paths.getImagesDir();
-        java.nio.file.Path relativePath = java.nio.file.Paths.get(pkmnImagesDir).relativize(java.nio.file.Paths.get(endPath));
+        java.nio.file.Path resourcePath = JARUtils.pkmnDirectory.relativize(java.nio.file.Paths.get(endPath));
+        JARUtils.extractResourceFromJAR(resourcePath.toString(), false);
 
         return endPath;
     }
@@ -66,19 +65,22 @@
     public String getSpriteFilepath(
         boolean female,
         boolean shiny
-    ) {
+    ) throws java.io.IOException {
         // This is where the file should be. Now we just need to extract it from the JAR.
         String endPath = this.getSpriteFilepathPrivate(female, shiny);
+        java.nio.file.Path resourcePath = JARUtils.pkmnDirectory.relativize(java.nio.file.Paths.get(endPath));
+        JARUtils.extractResourceFromJAR(resourcePath.toString(), false);
+
         return endPath;
     }
 
-    public java.awt.Image getIcon(
+    public java.awt.image.BufferedImage getIcon(
         boolean female
     ) throws java.io.IOException {
         return javax.imageio.ImageIO.read(new java.io.File(this.getIconFilepath(female)));
     }
 
-    public java.awt.Image getSprite(
+    public java.awt.image.BufferedImage getSprite(
         boolean female, boolean shiny
     ) throws java.io.IOException {
         return javax.imageio.ImageIO.read(new java.io.File(this.getSpriteFilepath(female, shiny)));
