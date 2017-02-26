@@ -5,58 +5,42 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_pc_tests.hpp>
+#include <pkmntest/pokemon_pc_test.hpp>
 
-#include "pkmn_boost_unit_test.hpp"
+static const std::string games[] = {
+    "Red",
+    "Blue",
+    "Yellow",
+    "Gold",
+    "Silver",
+    "Crystal",
+    "Ruby",
+    "Sapphire",
+    "Emerald",
+    "FireRed",
+    "LeafGreen"
+};
 
-// Common functions
+namespace pkmntest {
 
-static void pokemon_box_test(
-    const std::string &game
-) {
-    pkmn::pokemon_box::sptr box = pkmn::pokemon_box::make(game);
-
-    pkmntest::test_empty_pokemon_box(
-        box,
-        game
-    );
-
-    pkmntest::test_box_name(box);
-
-    pkmntest::test_setting_pokemon(box);
+TEST_P(pokemon_box_test, pokemon_box_test) {
+    pkmntest::pokemon_box_test_common(get_pokemon_box());
 }
 
-static void pokemon_pc_test(
-    const std::string &game
-) {
-    pkmn::pokemon_pc::sptr pc = pkmn::pokemon_pc::make(game);
+INSTANTIATE_TEST_CASE_P(
+    cpp_pokemon_box_test,
+    pokemon_box_test,
+    ::testing::ValuesIn(games)
+);
 
-    pkmntest::test_empty_pokemon_pc(
-        pc,
-        game
-    );
-
-    pkmntest::test_pc_box_names(pc);
-
-    pkmntest::test_setting_pokemon_in_boxes(pc);
+TEST_P(pokemon_pc_test, pokemon_pc_test) {
+    pkmntest::pokemon_pc_test_common(get_pokemon_pc());
 }
 
-#define TEST_BOX_AND_PC_FOR_GAME(test_game, game_name) \
-    BOOST_AUTO_TEST_CASE(test_game ## _pokemon_box_test) { \
-        pokemon_box_test(game_name); \
-    } \
-    BOOST_AUTO_TEST_CASE(test_game ## _pokemon_pc_test) { \
-        pokemon_pc_test(game_name); \
-    }
+INSTANTIATE_TEST_CASE_P(
+    cpp_pokemon_pc_test,
+    pokemon_pc_test,
+    ::testing::ValuesIn(games)
+);
 
-TEST_BOX_AND_PC_FOR_GAME(red, "Red");
-TEST_BOX_AND_PC_FOR_GAME(blue, "Blue");
-TEST_BOX_AND_PC_FOR_GAME(yellow, "Yellow");
-TEST_BOX_AND_PC_FOR_GAME(gold, "Gold");
-TEST_BOX_AND_PC_FOR_GAME(silver, "Silver");
-TEST_BOX_AND_PC_FOR_GAME(crystal, "Crystal");
-TEST_BOX_AND_PC_FOR_GAME(ruby, "Ruby");
-TEST_BOX_AND_PC_FOR_GAME(sapphire, "Sapphire");
-TEST_BOX_AND_PC_FOR_GAME(emerald, "Emerald");
-TEST_BOX_AND_PC_FOR_GAME(firered, "FireRed");
-TEST_BOX_AND_PC_FOR_GAME(leafgreen, "LeafGreen");
+}

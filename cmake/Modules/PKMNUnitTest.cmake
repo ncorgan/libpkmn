@@ -13,11 +13,14 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
+    ${PKMN_SOURCE_DIR}/pksav/include
+    ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/lib
 )
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
+    gtest_main
     pkmn
     pkmntest
 )
@@ -28,6 +31,14 @@ SET(pkmn_c_test_libs
     unity
 )
 
+IF(PKMN_GCC)
+    SET(PKMNTEST_CXX_FLAGS "-Wno-sign-compare ${PKMN_CXX_FLAGS}")
+ELSEIF(PKMN_CLANG)
+    SET(PKMNTEST_CXX_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-sign-compare -Werror")
+ELSE()
+    SET(PKMNTEST_CXX_FLAGS "${PKMN_CXX_FLAGS} /wd4018")
+ENDIF(PKMN_GCC)
+
 MACRO(PKMN_ADD_TEST test_name test_cmd)
     IF(CMAKE_CROSSCOMPILING)
         ADD_TEST(${test_name} ${test_cmd})
@@ -35,6 +46,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(TEST_CMD ${test_cmd})
         SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(IMAGES_DIR ${PKMN_SOURCE_DIR}/images)
+        SET(LIBPKMN_TEST_FILES ${PKMN_SOURCE_DIR}/testing/libpkmn-test-files)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_BINARY_DIR}/pkmntest/python"
@@ -78,6 +90,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
+            STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
@@ -120,7 +133,7 @@ ENDMACRO(PKMN_ADD_TEST)
 MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     ADD_EXECUTABLE(${test_name} ${test_srcs})
     SET_SOURCE_FILES_PROPERTIES(${test_srcs}
-        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+        PROPERTIES COMPILE_FLAGS "${PKMNTEST_CXX_FLAGS}"
     )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 

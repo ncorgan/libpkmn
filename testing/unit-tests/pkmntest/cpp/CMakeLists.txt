@@ -19,30 +19,19 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmntest_libs
     ${Boost_LIBRARIES}
+    gtest
     pkmn
 )
 
-CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_io_tests.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.cpp
-@ONLY)
-
 SET(pkmntest_sources
-    gen1_items_tests.cpp
-    gen1_pokemon_tests.cpp
-    gen2_items_tests.cpp
-    gen2_pokemon_tests.cpp
-    gba_items_tests.cpp
-    gba_pokemon_tests.cpp
-    items_tests_common.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.cpp
-    pokemon_tests_common.cpp
-    pokemon_party_tests.cpp
-    pokemon_pc_tests.cpp
+    item_test.cpp
+    pokemon_test.cpp
+    pokemon_pc_test.cpp
 )
 
+# Ignore overzealous error when comparing a size_t to a numeric literal.
 SET_SOURCE_FILES_PROPERTIES(${pkmntest_sources}
-    PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+    PROPERTIES COMPILE_FLAGS "${PKMNTEST_CXX_FLAGS}"
 )
 
 ADD_LIBRARY(pkmntest SHARED ${pkmntest_sources})

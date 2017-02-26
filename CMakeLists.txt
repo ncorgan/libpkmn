@@ -58,7 +58,6 @@ SET(BOOST_REQUIRED_COMPONENTS
     locale
     system
     thread
-    unit_test_framework
 )
 IF(MSVC)
     SET(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "Enable Boost dynamic linking")
@@ -168,7 +167,7 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
     MESSAGE(STATUS "")
     MESSAGE(STATUS "Building LibPKMN.")
     MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
-    MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
+    MESSAGE(STATUS " - Compiler: ${PKMN_COMPILER_NAME}")
     MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
     MESSAGE(STATUS "")
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
