@@ -33,4 +33,16 @@ void pokemon_test_common(
     pkmn_test_values_t* test_values
 );
 
+// Generation I tests
+
+void red_pokemon_test();
+void blue_pokemon_test();
+void yellow_pokemon_test();
+
+// Generation II tests
+
+void gold_pokemon_test();
+void silver_pokemon_test();
+void crystal_pokemon_test();
+
 #endif /* POKEMON_TEST_H */

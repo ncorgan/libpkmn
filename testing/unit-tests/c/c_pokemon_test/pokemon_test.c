@@ -383,7 +383,7 @@ static void check_initial_maps(
     TEST_ASSERT_TRUE(string_list_contains(&stat_names, "Attack"));
     TEST_ASSERT_TRUE(string_list_contains(&stat_names, "Defense"));
     TEST_ASSERT_TRUE(string_list_contains(&stat_names, "Speed"));
-    if(generation >= 3) {
+    if(generation >= 2) {
         TEST_ASSERT_FALSE(string_list_contains(&stat_names, "Special"));
         TEST_ASSERT_TRUE(string_list_contains(&stat_names, "Special Attack"));
         TEST_ASSERT_TRUE(string_list_contains(&stat_names, "Special Defense"));
@@ -732,7 +732,7 @@ static void test_setting_item(
     int generation = game_to_generation(game);
     TEST_ASSERT_NOT_EQUAL(-1, generation);
 
-    if(generation >= 3) {
+    if(generation >= 2) {
         error = pkmn_pokemon_set_held_item(
                     pokemon,
                     item_name
@@ -827,7 +827,7 @@ static void test_setting_levels(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_database_pokemon_entry_level_at_experience(
                 &pokemon_entry,
-                level,
+                experience,
                 &level_at_experience
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -1268,6 +1268,7 @@ static void test_setting_moves(
                     0
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        ++i;
     }
 }
 
@@ -1325,12 +1326,12 @@ static void test_setting_original_game(
                     strbuffer,
                     sizeof(strbuffer)
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_original_game(
                     pokemon,
                     games[0]
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
 }
 

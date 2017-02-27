@@ -28,8 +28,8 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
             "Great Ball",
             {"Great Ball"},
 
-            "Berry",
-            {"Berry"},
+            "Potion",
+            {"Potion"},
 
             "Special",
             {"Route 1"},

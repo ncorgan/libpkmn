@@ -31,8 +31,10 @@ FOREACH(test ${c_tests})
 ENDFOREACH(test ${c_tests})
 
 SET(pokemon_test_srcs
-    c_pokemon_test/c_pokemon_test.c
+    c_pokemon_test/gen1_pokemon_test.c
+    c_pokemon_test/gen2_pokemon_test.c
     c_pokemon_test/pokemon_test.c
+    c_pokemon_test/main.c
 )
 PKMN_ADD_C_TEST(c_pokemon_test "${pokemon_test_srcs}")
 
