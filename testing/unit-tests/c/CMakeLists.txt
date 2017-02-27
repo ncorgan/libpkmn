@@ -11,6 +11,7 @@
 INCLUDE_DIRECTORIES(
     ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/pksav/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Unity
 )
 
@@ -21,7 +22,6 @@ SET(c_tests
     c_items_test
     c_lists_test
     c_paths_test
-    c_pokemon_test
     c_pokemon_party_test
     c_pokemon_pc_test
 )
@@ -29,6 +29,12 @@ SET(c_tests
 FOREACH(test ${c_tests})
     PKMN_ADD_C_TEST(${test} ${test}.c)
 ENDFOREACH(test ${c_tests})
+
+SET(pokemon_test_srcs
+    c_pokemon_test/c_pokemon_test.c
+    c_pokemon_test/pokemon_test.c
+)
+PKMN_ADD_C_TEST(c_pokemon_test "${pokemon_test_srcs}")
 
 # Separately add C++ -> C test
 SET(cpp_to_c_test_srcs

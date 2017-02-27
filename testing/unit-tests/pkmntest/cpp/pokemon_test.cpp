@@ -47,13 +47,14 @@ static const std::map<std::string, int> game_generations = boost::assign::map_li
     ("Alpha Sapphire", 6)
 ;
 
-BOOST_STATIC_CONSTEXPR int GB_EV_MAX     = 65535;
-BOOST_STATIC_CONSTEXPR int MODERN_EV_MAX = 255;
+// These are actually one more than the max, but we need this for the modulo.
+BOOST_STATIC_CONSTEXPR int GB_EV_MAX     = 65536;
+BOOST_STATIC_CONSTEXPR int MODERN_EV_MAX = 256;
 
-BOOST_STATIC_CONSTEXPR int GB_IV_MAX     = 15;
-BOOST_STATIC_CONSTEXPR int MODERN_IV_MAX = 31;
+BOOST_STATIC_CONSTEXPR int GB_IV_MAX     = 16;
+BOOST_STATIC_CONSTEXPR int MODERN_IV_MAX = 32;
 
-BOOST_STATIC_CONSTEXPR int STAT_MAX      = 65535;
+BOOST_STATIC_CONSTEXPR int STAT_MAX      = 65536;
 
 namespace pkmntest {
 
@@ -81,7 +82,7 @@ namespace pkmntest {
             EXPECT_EQ(uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
             EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_ID, pokemon->get_trainer_id());
         } else {
-            EXPECT_EQ((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_public_id());
+            EXPECT_EQ((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_id());
         }
 
         if(generation >= 2) {
@@ -152,9 +153,9 @@ namespace pkmntest {
             EXPECT_EQ(0, IVs.count("Special Attack"));
             EXPECT_EQ(0, IVs.count("Special Defense"));
         }
-        for(auto EV_iter = EVs.begin(); EV_iter != EVs.end(); ++EV_iter) {
-            EXPECT_GE(EV_iter->second, 0);
-            EXPECT_LE(EV_iter->second, (generation >= 3) ? MODERN_EV_MAX : GB_EV_MAX);
+        for(auto IV_iter = IVs.begin(); IV_iter != IVs.end(); ++IV_iter) {
+            EXPECT_GE(IV_iter->second, 0);
+            EXPECT_LE(IV_iter->second, (generation >= 3) ? MODERN_IV_MAX : GB_IV_MAX);
         }
 
         const std::map<std::string, int>& stats = pokemon->get_stats();
@@ -366,6 +367,9 @@ namespace pkmntest {
     ) {
         int generation = game_generations.at(pokemon->get_game());
 
+        EXPECT_THROW(
+            pokemon->set_level(-1);
+        , pkmn::range_error);
         EXPECT_THROW(
             pokemon->set_level(101);
         , pkmn::range_error);
