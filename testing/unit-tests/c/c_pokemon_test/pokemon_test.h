@@ -53,6 +53,12 @@ void emerald_pokemon_test();
 void firered_pokemon_test();
 void leafgreen_pokemon_test();
 
+// Generation I friendship
+
+void red_friendship_test();
+void blue_friendship_test();
+void yellow_friendship_test();
+
 // I/O
 
 void test_3gpkm();

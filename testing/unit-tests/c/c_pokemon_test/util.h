@@ -10,6 +10,8 @@
 
 #include <pkmntest-c/config.h>
 
+#include <pkmn-c/types/string_types.h>
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
