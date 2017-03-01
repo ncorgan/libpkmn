@@ -45,4 +45,12 @@ void gold_pokemon_test();
 void silver_pokemon_test();
 void crystal_pokemon_test();
 
+// Game Boy Advance tests
+
+void ruby_pokemon_test();
+void sapphire_pokemon_test();
+void emerald_pokemon_test();
+void firered_pokemon_test();
+void leafgreen_pokemon_test();
+
 #endif /* POKEMON_TEST_H */

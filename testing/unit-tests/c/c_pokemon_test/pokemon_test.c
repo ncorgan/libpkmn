@@ -448,7 +448,7 @@ static void check_initial_maps(
         TEST_ASSERT_TRUE(string_list_contains(&marking_names, "Triangle"));
         TEST_ASSERT_TRUE(string_list_contains(&marking_names, "Square"));
         TEST_ASSERT_TRUE(string_list_contains(&marking_names, "Heart"));
-        if(generation == 3) {
+        if(generation >= 4) {
             TEST_ASSERT_TRUE(string_list_contains(&marking_names, "Star"));
             TEST_ASSERT_TRUE(string_list_contains(&marking_names, "Diamond"));
         } else {
@@ -1311,7 +1311,7 @@ static void test_setting_original_game(
         }
 
         i = 0;
-        while(games[i]) {
+        while(invalid_games[i]) {
             error = pkmn_pokemon_set_original_game(
                         pokemon,
                         invalid_games[i]

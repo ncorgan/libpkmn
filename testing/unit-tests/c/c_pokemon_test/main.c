@@ -24,4 +24,10 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(gold_pokemon_test);
     PKMN_C_TEST(silver_pokemon_test);
     PKMN_C_TEST(crystal_pokemon_test);
+
+    PKMN_C_TEST(ruby_pokemon_test);
+    PKMN_C_TEST(sapphire_pokemon_test);
+    PKMN_C_TEST(emerald_pokemon_test);
+    PKMN_C_TEST(firered_pokemon_test);
+    PKMN_C_TEST(leafgreen_pokemon_test);
 )
