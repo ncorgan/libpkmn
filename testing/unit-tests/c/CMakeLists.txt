@@ -37,6 +37,7 @@ SET(pokemon_test_srcs
     c_pokemon_test/pokemon_test.c
     c_pokemon_test/gen1_friendship_test.c
     c_pokemon_test/pokemon_io_test.c
+    c_pokemon_test/unown_tests.c
     c_pokemon_test/main.c
 )
 PKMN_ADD_C_TEST(c_pokemon_test "${pokemon_test_srcs}")

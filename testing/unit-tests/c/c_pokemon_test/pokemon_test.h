@@ -53,14 +53,25 @@ void emerald_pokemon_test();
 void firered_pokemon_test();
 void leafgreen_pokemon_test();
 
+// I/O
+
+void test_3gpkm();
+
 // Generation I friendship
 
 void red_friendship_test();
 void blue_friendship_test();
 void yellow_friendship_test();
 
-// I/O
+// Unown
 
-void test_3gpkm();
+void gold_unown_test();
+void silver_unown_test();
+void crystal_unown_test();
+void ruby_unown_test();
+void sapphire_unown_test();
+void emerald_unown_test();
+void firered_unown_test();
+void leafgreen_unown_test();
 
 #endif /* POKEMON_TEST_H */

@@ -36,4 +36,13 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(red_friendship_test);
     PKMN_C_TEST(blue_friendship_test);
     PKMN_C_TEST(yellow_friendship_test);
+
+    PKMN_C_TEST(gold_unown_test);
+    PKMN_C_TEST(silver_unown_test);
+    PKMN_C_TEST(crystal_unown_test);
+    PKMN_C_TEST(ruby_unown_test);
+    PKMN_C_TEST(sapphire_unown_test);
+    PKMN_C_TEST(emerald_unown_test);
+    PKMN_C_TEST(firered_unown_test);
+    PKMN_C_TEST(leafgreen_unown_test);
 )
