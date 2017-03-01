@@ -53,4 +53,8 @@ void emerald_pokemon_test();
 void firered_pokemon_test();
 void leafgreen_pokemon_test();
 
+// I/O
+
+void test_3gpkm();
+
 #endif /* POKEMON_TEST_H */

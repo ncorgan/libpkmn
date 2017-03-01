@@ -30,4 +30,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_pokemon_test);
     PKMN_C_TEST(firered_pokemon_test);
     PKMN_C_TEST(leafgreen_pokemon_test);
+
+    PKMN_C_TEST(test_3gpkm);
 )
