@@ -7,6 +7,7 @@
 
 #include "pokemon_test.h"
 #include "unity.h"
+#include "util.h"
 
 #include <pkmn-c/pokemon.h>
 #include <pkmn-c/database/move_entry.h>
@@ -49,31 +50,6 @@ static int game_to_generation(
     }
 
     return -1;
-}
-
-static bool file_exists(
-    const char* filepath
-) {
-    FILE* file = fopen(filepath, "r");
-    if(file) {
-        fclose(file);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-static bool string_list_contains(
-    pkmn_string_list_t* string_list,
-    const char* string
-) {
-    for(size_t i = 0; i < string_list->length; ++i) {
-        if(!strcmp(string_list->strings[i], string)) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 // These are actually one more than the max, but we need this for the modulo.
