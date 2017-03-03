@@ -12,8 +12,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include <iostream>
-
 namespace fs = boost::filesystem;
 
 namespace pkmntest {
@@ -39,8 +37,9 @@ TEST_P(game_save_test, game_save_test) {
     save->save_as(temp_save_path.string());
 
     pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());
-    std::cout << save->get_game() << " " << save2->get_game() << std::endl;
     pkmntest::check_two_game_saves_equal(save, save2);
+
+    std::remove(temp_save_path.string().c_str());
 }
 
 INSTANTIATE_TEST_CASE_P(
