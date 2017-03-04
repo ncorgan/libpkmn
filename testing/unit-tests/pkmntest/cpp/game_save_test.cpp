@@ -9,6 +9,7 @@
 
 #include <pkmntest/game_save_test.hpp>
 
+#include <pkmn/database/lists.hpp>
 #include <pkmn/exception.hpp>
 
 #include <pksav/gen1/pokemon.h>
@@ -262,6 +263,83 @@ namespace pkmntest {
                         EXPECT_EQ("None", box_pokemon->get_species());
                     }
                 }
+            }
+        }
+    }
+
+    static pkmn::pokemon::sptr get_random_pokemon(
+        const std::string &game,
+        const std::vector<std::string> &pokemon_list,
+        const std::vector<std::string> &move_list,
+        const std::vector<std::string> &item_list
+    ) {
+        int generation = game_generations.at(game);
+
+        pkmn::pokemon::sptr ret = pkmn::pokemon::make(
+                                      pokemon_list[std::rand() % pokemon_list.size()],
+                                      game,
+                                      "",
+                                      ((std::rand() % 99) + 2)
+                                  );
+        //std::cout << ret->get_species() << std::endl;
+        for(int i = 0; i < 4; ++i) {
+            ret->set_move(
+                move_list[std::rand() % move_list.size()],
+                i
+            );
+            //std::cout << " * " << ret->get_moves().at(i).move.get_name() << std::endl;
+        }
+
+        if(generation >= 2) {
+
+            // Keep going until one is holdable
+            while(ret->get_held_item().get_item_id() == 0) {
+                try {
+                    ret->set_held_item(
+                        item_list[std::rand() % item_list.size()]
+                    );
+                } catch(std::invalid_argument&) {}
+            }
+            //std::cout << " * " << ret->get_held_item().get_name() << std::endl;
+        }
+
+        return ret;
+    }
+
+    void randomize_pokemon(
+        pkmn::game_save::sptr save
+    ) {
+        int generation = game_generations.at(save->get_game());
+        std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
+        std::vector<std::string> move_list = pkmn::database::get_move_list(save->get_game());
+        std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
+
+        pkmn::pokemon_party::sptr party = save->get_pokemon_party();
+        for(int i = 0; i < (std::rand() % 6); ++i) {
+            party->set_pokemon(
+                i, 
+                get_random_pokemon(
+                    save->get_game(),
+                    pokemon_list,
+                    move_list,
+                    item_list
+                )
+            );
+        }
+        pkmn::pokemon_pc::sptr pc = save->get_pokemon_pc();
+        const pkmn::pokemon_box_list_t& boxes = pc->as_vector();
+        int capacity = boxes[0]->get_capacity();
+        for(size_t i = 0; i < boxes.size(); ++i) {
+            for(int j = 0; j < (std::rand() % capacity); ++j) {
+                boxes[i]->set_pokemon(
+                    j, 
+                    get_random_pokemon(
+                        save->get_game(),
+                        pokemon_list,
+                        move_list,
+                        item_list
+                    )
+                );
             }
         }
     }

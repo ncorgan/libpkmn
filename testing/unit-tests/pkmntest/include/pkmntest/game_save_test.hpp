@@ -15,7 +15,6 @@
 #include <gtest/gtest.h>
 
 #include <ctime>
-#include <random>
 #include <string>
 #include <utility>
 
@@ -31,10 +30,6 @@ namespace pkmntest {
 
             PKMNTEST_INLINE const game_save_test_params_t& get_params() {
                 return _params;
-            }
-
-            static PKMN_INLINE void SetUpTestCase() {
-                std::srand((unsigned int)std::time(NULL));
             }
 
             void load_save();
@@ -53,6 +48,10 @@ namespace pkmntest {
     };
 
     PKMNTEST_API void game_save_test_common_fields(
+        pkmn::game_save::sptr save
+    );
+
+    PKMNTEST_API void randomize_pokemon(
         pkmn::game_save::sptr save
     );
 

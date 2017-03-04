@@ -32,8 +32,9 @@ TEST_P(game_save_test, game_save_test) {
     pkmn::game_save::sptr save = get_game_save();
 
     pkmntest::game_save_test_common_fields(save);
+    pkmntest::randomize_pokemon(save);
 
-    fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%d.sav") % save->get_game().c_str() % rand());
+    fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%d.sav") % save->get_game().c_str() % std::rand());
     save->save_as(temp_save_path.string());
 
     pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());
