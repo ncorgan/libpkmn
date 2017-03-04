@@ -54,8 +54,10 @@ SET(PKMN_DOCS_DIR share/doc/pkmn)
 # Find C++ dependencies
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
+    date_time
     filesystem
     locale
+    random
     system
     thread
 )
