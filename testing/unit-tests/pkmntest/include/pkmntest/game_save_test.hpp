@@ -18,6 +18,10 @@
 #include <string>
 #include <utility>
 
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
+#endif
+
 namespace pkmntest {
 
     typedef std::tuple<std::string, std::string, std::string> game_save_test_params_t;
