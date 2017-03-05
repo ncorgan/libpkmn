@@ -19,7 +19,6 @@
 #include <boost/assign.hpp>
 #include <boost/filesystem.hpp>
 
-#include <iostream>
 #include <map>
 
 BOOST_STATIC_CONSTEXPR const char* TOO_LONG_OT_NAME = "LibPKMNLibPKMN";
@@ -281,13 +280,11 @@ namespace pkmntest {
                                       "",
                                       ((std::rand() % 99) + 2)
                                   );
-        //std::cout << ret->get_species() << std::endl;
         for(int i = 0; i < 4; ++i) {
             ret->set_move(
                 move_list[std::rand() % move_list.size()],
                 i
             );
-            //std::cout << " * " << ret->get_moves().at(i).move.get_name() << std::endl;
         }
 
         if(generation >= 2) {
@@ -300,7 +297,6 @@ namespace pkmntest {
                     );
                 } catch(std::invalid_argument&) {}
             }
-            //std::cout << " * " << ret->get_held_item().get_name() << std::endl;
         }
 
         return ret;

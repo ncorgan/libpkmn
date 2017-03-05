@@ -81,6 +81,9 @@ namespace pkmn {
             index
         );
 
+        // Set the entry in the species list.
+        NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
+
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon) {
@@ -93,9 +96,6 @@ namespace pkmn {
                 --(NATIVE_LIST_RCAST->count);
             }
         }
-
-        // Set the entry in the species list.
-        NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
 
         if(_generation == 1) {
             PKSAV_CALL(

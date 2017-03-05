@@ -115,15 +115,10 @@ namespace pkmn {
 
         // Update the number of Pokémon in the box if needed.
         std::string new_species = new_pokemon->get_species();
-        if(index == num_pokemon) {
-            std::string new_species = new_pokemon->get_species();
-            if(NATIVE_LIST_RCAST->species[index] == 0 and new_species != "None") {
-                ++(NATIVE_LIST_RCAST->count);
-            }
-        } else if(index == (num_pokemon-1)) {
-            if(NATIVE_LIST_RCAST->species[index] > 0 and new_species == "None") {
-                --(NATIVE_LIST_RCAST->count);
-            }
+        if(index == num_pokemon and new_species != "None") {
+            ++(NATIVE_LIST_RCAST->count);
+        } else if(index == (num_pokemon-1) and new_species == "None") {
+            --(NATIVE_LIST_RCAST->count);
         }
 
         // Set the entry in the species list.
