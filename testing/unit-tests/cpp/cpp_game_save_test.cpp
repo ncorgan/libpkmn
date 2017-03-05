@@ -82,6 +82,8 @@ namespace fs = boost::filesystem;
 
 namespace pkmntest {
 
+    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
+
     typedef std::tuple<std::string, std::string, std::string> game_save_test_params_t;
 
     class game_save_test: public ::testing::TestWithParam<game_save_test_params_t> {
@@ -94,12 +96,13 @@ namespace pkmntest {
                 return _params;
             }
 
-            void load_save();
-
         protected:
             void SetUp() {
                 _params = GetParam();
-                load_save();
+                std::string save_path = fs::path(PKSAV_TEST_SAVES / std::get<2>(_params)).string();
+                ASSERT_EQ(std::get<0>(_params), pkmn::game_save::detect_type(save_path));
+                _game_save = pkmn::game_save::from_file(save_path);
+                ASSERT_EQ(std::get<1>(_params), _game_save->get_game());
             }
 
         private:
@@ -136,15 +139,6 @@ namespace pkmntest {
                    MALE_ONLY_GAMES+5,
                    game
                ) != MALE_ONLY_GAMES+5;
-    }
-
-    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
-
-    void game_save_test::load_save() {
-        std::string save_path = fs::path(PKSAV_TEST_SAVES / std::get<2>(_params)).string();
-        ASSERT_EQ(std::get<0>(_params), pkmn::game_save::detect_type(save_path));
-        _game_save = pkmn::game_save::from_file(save_path);
-        ASSERT_EQ(std::get<1>(_params), _game_save->get_game());
     }
 
     static void test_trainer_name(
@@ -197,7 +191,7 @@ namespace pkmntest {
         }
     }
 
-    void game_save_test_common_fields(
+    static void game_save_test_common_fields(
         pkmn::game_save::sptr save
     ) {
         std::string game = save->get_game();
@@ -342,13 +336,22 @@ namespace pkmntest {
         return ret;
     }
 
+    void randomize_items(
+        pkmn::game_save::sptr save,
+        const std::vector<std::string> &item_list
+    ) {
+        // Clear out what items the save happens to have to put it in a known state.
+        (void)save;
+        (void)item_list;
+    }
+
     void randomize_pokemon(
-        pkmn::game_save::sptr save
+        pkmn::game_save::sptr save,
+        const std::vector<std::string> &item_list
     ) {
         int generation = game_generations.at(save->get_game());
         std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(generation, true);
         std::vector<std::string> move_list = pkmn::database::get_move_list(save->get_game());
-        std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
 
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         for(int i = 0; i < 6; ++i) {
@@ -442,7 +445,7 @@ namespace pkmntest {
         );
     }
 
-    void check_two_game_saves_equal(
+    static void compare_game_saves(
         pkmn::game_save::sptr save1,
         pkmn::game_save::sptr save2
     ) {
@@ -547,14 +550,23 @@ namespace pkmntest {
     TEST_P(game_save_test, game_save_test) {
         pkmn::game_save::sptr save = get_game_save();
 
+        std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
+
         pkmntest::game_save_test_common_fields(save);
-        pkmntest::randomize_pokemon(save);
+        pkmntest::randomize_items(
+            save,
+            item_list
+        );
+        pkmntest::randomize_pokemon(
+            save,
+            item_list
+        );
 
         fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%d.sav") % save->get_game().c_str() % std::rand());
         save->save_as(temp_save_path.string());
 
         pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());
-        pkmntest::check_two_game_saves_equal(save, save2);
+        pkmntest::compare_game_saves(save, save2);
 
         std::remove(temp_save_path.string().c_str());
     }
