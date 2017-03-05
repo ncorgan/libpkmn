@@ -274,8 +274,17 @@ namespace pkmntest {
     ) {
         int generation = game_generations.at(game);
 
+        // Don't deal with Deoxys issues here.
+        std::string species;
+        if(generation == 3) {
+            do {
+                species = pokemon_list[std::rand() % pokemon_list.size()];
+            } while(species == "Deoxys");
+        } else {
+            species = pokemon_list[std::rand() % pokemon_list.size()];
+        }
         pkmn::pokemon::sptr ret = pkmn::pokemon::make(
-                                      pokemon_list[std::rand() % pokemon_list.size()],
+                                      species,
                                       game,
                                       "",
                                       ((std::rand() % 99) + 2)
@@ -311,7 +320,7 @@ namespace pkmntest {
         std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
 
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
-        for(int i = 0; i < (std::rand() % 6); ++i) {
+        for(int i = 0; i < 6; ++i) {
             party->set_pokemon(
                 i, 
                 get_random_pokemon(
@@ -326,7 +335,7 @@ namespace pkmntest {
         const pkmn::pokemon_box_list_t& boxes = pc->as_vector();
         int capacity = boxes[0]->get_capacity();
         for(size_t i = 0; i < boxes.size(); ++i) {
-            for(int j = 0; j < (std::rand() % capacity); ++j) {
+            for(int j = 0; j < capacity; ++j) {
                 boxes[i]->set_pokemon(
                     j, 
                     get_random_pokemon(
