@@ -24,7 +24,6 @@ SET(pkmntest_libs
 )
 
 SET(pkmntest_sources
-    game_save_test.cpp
     item_test.cpp
     pokemon_test.cpp
     pokemon_pc_test.cpp
