@@ -14,9 +14,9 @@
 #include <pkmn/game_save.hpp>
 #include <pkmn/utils/paths.hpp>
 
-#include <pksav/gen1/pokemon.h>
-#include <pksav/gen2/pokemon.h>
-#include <pksav/gba/pokemon.h>
+#include <pksav/gen1.h>
+#include <pksav/gen2.h>
+#include <pksav/gba.h>
 
 #include <gtest/gtest.h>
 
@@ -31,6 +31,10 @@ BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_PID = 1351;
 BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
+
+BOOST_STATIC_CONSTEXPR int RUBY      = 7;
+BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
+BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
 
 static const std::string GB_GAMES[] = {
     "Red", "Blue", "Yellow",
@@ -384,6 +388,14 @@ namespace pkmntest {
     }
 
     // TODO: specific case for Gamecube games
+    BOOST_STATIC_CONSTEXPR size_t pksav_item_pc_sizes[] = {
+        0,
+        sizeof(pksav_gen1_item_pc_t),
+        sizeof(pksav_gen2_item_pc_t),
+        (sizeof(pksav_item_t)*50)
+    };
+
+    // TODO: specific case for Gamecube games
     BOOST_STATIC_CONSTEXPR size_t pksav_pc_pokemon_sizes[] = {
         0,
         sizeof(pksav_gen1_pc_pokemon_t),
@@ -471,6 +483,41 @@ namespace pkmntest {
 
         pkmn::item_bag::sptr item_bag1 = save1->get_item_bag();
         pkmn::item_bag::sptr item_bag2 = save2->get_item_bag();
+        void* native1 = item_bag1->get_native();
+        void* native2 = item_bag2->get_native();
+        size_t item_bag_size = 0;
+        switch(generation) {
+            case 1:
+                item_bag_size = sizeof(pksav_gen1_item_bag_t);
+                break;
+
+            case 2:
+                item_bag_size = sizeof(pksav_gen2_item_bag_t);
+                break;
+
+            case 3:
+                switch(save1->get_item_pc()->as_vector().at(0).item.get_item_id()) {
+                    case RUBY:
+                    case SAPPHIRE:
+                        item_bag_size = sizeof(pksav_rs_item_storage_t);
+                        break;
+
+                    case EMERALD:
+                        item_bag_size = sizeof(pksav_emerald_item_storage_t);
+                        break;
+
+                    default:
+                        item_bag_size = sizeof(pksav_frlg_item_storage_t);
+                        break;
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        // On the C++ level, check the underlying memory.
+        EXPECT_EQ(0, memcmp(native1, native2, item_bag_size));
 
         const pkmn::item_pockets_t& pockets1 = item_bag1->get_pockets();
         const pkmn::item_pockets_t& pockets2 = item_bag2->get_pockets();
@@ -490,6 +537,16 @@ namespace pkmntest {
             compare_item_lists(
                 save1->get_item_pc(),
                 save2->get_item_pc()
+            );
+
+            // On the C++ level, check the underlying memory.
+            EXPECT_EQ(
+                0,
+                memcmp(
+                    save1->get_item_pc()->get_native(),
+                    save2->get_item_pc()->get_native(),
+                    pksav_item_pc_sizes[generation]
+                )
             );
         }
 
