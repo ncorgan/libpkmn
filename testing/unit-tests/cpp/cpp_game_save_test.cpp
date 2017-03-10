@@ -345,6 +345,7 @@ namespace pkmntest {
         const std::vector<std::string> &item_list
     ) {
         // Clear out what items the save happens to have to put it in a known state.
+        // TODO: when clear() added to item_list
         (void)save;
         (void)item_list;
     }
