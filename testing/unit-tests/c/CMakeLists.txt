@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(
 SET(c_tests
     c_calculations_test
     c_database_entry_test
+    c_game_save_test
     c_items_test
     c_lists_test
     c_paths_test
@@ -31,7 +32,6 @@ FOREACH(test ${c_tests})
 ENDFOREACH(test ${c_tests})
 
 SET(configure_c_tests
-    c_game_save_test
     c_error_test
 )
 
