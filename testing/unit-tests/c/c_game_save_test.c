@@ -10,8 +10,7 @@
 #include <pkmn.h>
 
 #include <stdio.h>
-
-#define STRBUFFER_LEN 1024
+#include <string.h>
 
 #ifdef PKMN_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
@@ -19,13 +18,312 @@
 #    define FS_SEPARATOR "/"
 #endif
 
+#define TOO_LONG_OT_NAME "LibPKMNLibPKMN"
+#define LIBPKMN_OT_PID 1351
+#define LIBPKMN_OT_SID 32123
+#define MONEY_MAX_VALUE 999999
+
+#define STRBUFFER_LEN 1024
+static char strbuffer[STRBUFFER_LEN] = {0};
+
 static pkmn_error_t error = PKMN_ERROR_NONE;
 static char PKSAV_TEST_SAVES[STRBUFFER_LEN] = {0};
+
+static const char* RIVAL_NAME_SET_GAMES[] = {
+    "Ruby", "Sapphire", "Emerald",
+    "Black", "White",
+    "X", "Y"
+};
+
+static const char* MALE_ONLY_GAMES[] = {
+    "Red", "Blue", "Yellow",
+    "Gold", "Silver"
+};
+
+/*
+ * Utility functions
+ */
+
+static int game_to_generation(
+    const char* game
+) {
+    if(!strcmp(game, "Red") || !strcmp(game, "Blue") || !strcmp(game, "Yellow")) {
+        return 1;
+    } else if(!strcmp(game, "Gold") || !strcmp(game, "Silver") || !strcmp(game, "Crystal")) {
+        return 2;
+    } else if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") || !strcmp(game, "Emerald") ||
+              !strcmp(game, "FireRed") || !strcmp(game, "LeafGreen") ||
+              !strcmp(game, "Colosseum") || !strcmp(game, "XD"))
+    {
+        return 3;
+    } else if(!strcmp(game, "Diamond") || !strcmp(game, "Pearl") || !strcmp(game, "Platinum") ||
+              !strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver"))
+    {
+        return 4;
+    } else if(!strcmp(game, "Black") || !strcmp(game, "White") ||
+              !strcmp(game, "Black 2") || !strcmp(game, "White 2"))
+    {
+        return 5;
+    } else if(!strcmp(game, "X") || !strcmp(game, "Y") ||
+              !strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
+    {
+        return 6;
+    } else {
+        return 0;
+    }
+}
+
+static bool is_rival_name_set(
+    const char* game
+) {
+    for(size_t i = 0; i < 7; ++i) {
+        if(!strcmp(game, RIVAL_NAME_SET_GAMES[i])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool is_male_only(
+    const char* game
+) {
+    for(size_t i = 0; i < 5; ++i) {
+        if(!strcmp(game, MALE_ONLY_GAMES[i])) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 static void populate_pksav_test_saves() {
     char* value = getenv("PKSAV_TEST_SAVES");
     TEST_ASSERT_NOT_NULL(value);
     snprintf(PKSAV_TEST_SAVES, sizeof(PKSAV_TEST_SAVES), "%s", value);
+}
+
+/*
+ * Actual test functions
+ */
+
+static void game_save_test_trainer_name(
+    pkmn_game_save_handle_t game_save
+) {
+    TEST_ASSERT_NOT_NULL(game_save);
+
+    error = pkmn_game_save_set_trainer_name(
+                game_save,
+                ""
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+    error = pkmn_game_save_set_trainer_name(
+                game_save,
+                TOO_LONG_OT_NAME
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    error = pkmn_game_save_set_trainer_name(
+                game_save,
+                LIBPKMN_OT_NAME
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_game_save_get_trainer_name(
+                game_save,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+}
+
+static void game_save_test_trainer_id(
+    pkmn_game_save_handle_t game_save,
+    bool is_gb_game
+) {
+    TEST_ASSERT_NOT_NULL(game_save);
+
+    uint32_t trainer_id = 0;
+    uint16_t trainer_id_part = 0;
+
+    error = pkmn_game_save_get_trainer_id(
+                game_save,
+                &trainer_id
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL((is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID), trainer_id);
+
+    error = pkmn_game_save_get_trainer_public_id(
+                game_save,
+                &trainer_id_part
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(LIBPKMN_OT_PID, trainer_id_part);
+
+    error = pkmn_game_save_get_trainer_secret_id(
+                game_save,
+                &trainer_id_part
+            );
+    if(is_gb_game) {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    } else {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(LIBPKMN_OT_SID, trainer_id_part);
+    }
+}
+
+static void game_save_test_rival_name(
+    pkmn_game_save_handle_t game_save,
+    bool is_rival_name_set
+) {
+    TEST_ASSERT_NOT_NULL(game_save);
+
+    if(is_rival_name_set) {
+        error = pkmn_game_save_set_rival_name(
+                    game_save,
+                    LIBPKMN_OT_NAME
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    } else {
+        error = pkmn_game_save_set_rival_name(
+                    game_save,
+                    ""
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+        error = pkmn_game_save_set_rival_name(
+                    game_save,
+                    TOO_LONG_OT_NAME
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+        error = pkmn_game_save_set_rival_name(
+                    game_save,
+                    LIBPKMN_OT_NAME
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_game_save_get_rival_name(
+                    game_save,
+                    strbuffer,
+                    sizeof(strbuffer)
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+    }
+}
+
+static void game_save_test_common_fields(
+    pkmn_game_save_handle_t game_save,
+    const char* game
+) {
+    TEST_ASSERT_NOT_NULL(game_save);
+    TEST_ASSERT_NOT_NULL(game);
+
+    int generation = game_to_generation(game);
+
+    game_save_test_trainer_name(game_save);
+
+    bool is_gb_game = (generation <= 2);
+
+    error = pkmn_game_save_set_trainer_id(
+                game_save,
+                is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    game_save_test_trainer_id(
+        game_save,
+        is_gb_game
+    );
+
+    error = pkmn_game_save_set_trainer_public_id(
+                game_save,
+                LIBPKMN_OT_PID
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    game_save_test_trainer_id(
+        game_save,
+        is_gb_game
+    );
+
+    game_save_test_rival_name(
+        game_save,
+        is_rival_name_set(game)
+    );
+
+    pkmn_gender_t trainer_gender = PKMN_GENDERLESS;
+    if(is_male_only(game)) {
+        error = pkmn_game_save_get_trainer_gender(
+                    game_save,
+                    &trainer_gender
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
+
+        error = pkmn_game_save_set_trainer_gender(
+                    game_save,
+                    PKMN_FEMALE
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    } else {
+        error = pkmn_game_save_set_trainer_gender(
+                    game_save,
+                    PKMN_MALE
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_game_save_get_trainer_gender(
+                    game_save,
+                    &trainer_gender
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
+
+        error = pkmn_game_save_set_trainer_gender(
+                    game_save,
+                    PKMN_FEMALE
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_game_save_get_trainer_gender(
+                    game_save,
+                    &trainer_gender
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_gender);
+
+        error = pkmn_game_save_set_trainer_gender(
+                    game_save,
+                    PKMN_GENDERLESS
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+    }
+
+    error = pkmn_game_save_set_money(
+                game_save,
+                -1
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+
+    error = pkmn_game_save_set_money(
+                game_save,
+                MONEY_MAX_VALUE+1
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+
+    int money = 0;
+    error = pkmn_game_save_set_money(
+                game_save,
+                123456
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_game_save_get_money(
+                game_save,
+                &money
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(123456, money);
 }
 
 static void test_game_save(
@@ -62,6 +360,19 @@ static void test_game_save(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(game_save);
+
+    error = pkmn_game_save_get_game(
+                game_save,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
+
+    game_save_test_common_fields(
+        game_save,
+        game
+    );
 
     error = pkmn_game_save_free(&game_save);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
