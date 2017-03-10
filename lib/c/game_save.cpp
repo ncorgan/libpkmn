@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -328,6 +328,34 @@ pkmn_error_t pkmn_game_save_set_money(
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         handle->cpp->set_money(money);
+    )
+}
+
+pkmn_error_t pkmn_game_save_get_pokemon_party(
+    pkmn_game_save_handle_t handle,
+    pkmn_pokemon_party_handle_t* pokemon_party_handle_out
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_party_handle_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        (*pokemon_party_handle_out) = new pkmn_pokemon_party_t;
+        (*pokemon_party_handle_out)->cpp = handle->cpp->get_pokemon_party();
+        (*pokemon_party_handle_out)->last_error = "None";
+    )
+}
+
+pkmn_error_t pkmn_game_save_get_pokemon_pc(
+    pkmn_game_save_handle_t handle,
+    pkmn_pokemon_pc_handle_t* pokemon_pc_handle_out
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_pc_handle_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        (*pokemon_pc_handle_out) = new pkmn_pokemon_pc_t;
+        (*pokemon_pc_handle_out)->cpp = handle->cpp->get_pokemon_pc();
+        (*pokemon_pc_handle_out)->last_error = "None";
     )
 }
 

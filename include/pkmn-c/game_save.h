@@ -12,6 +12,8 @@
 
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/pokemon_party.h>
+#include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/types/gender.h>
 
@@ -148,6 +150,16 @@ PKMN_API pkmn_error_t pkmn_game_save_get_money(
 PKMN_API pkmn_error_t pkmn_game_save_set_money(
     pkmn_game_save_handle_t handle,
     int money
+);
+
+PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_party(
+    pkmn_game_save_handle_t handle,
+    pkmn_pokemon_party_handle_t* pokemon_party_handle_out
+);
+
+PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_pc(
+    pkmn_game_save_handle_t handle,
+    pkmn_pokemon_pc_handle_t* pokemon_pc_handle_out
 );
 
 PKMN_API pkmn_error_t pkmn_game_save_get_item_bag(

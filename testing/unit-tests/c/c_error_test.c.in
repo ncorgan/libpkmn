@@ -174,6 +174,8 @@ static void game_save_error_test() {
 
     pkmn_item_bag_handle_t item_bag = NULL;
     pkmn_item_list_handle_t item_pc = NULL;
+    pkmn_pokemon_party_handle_t pokemon_party = NULL;
+    pkmn_pokemon_pc_handle_t pokemon_pc = NULL;
 
     pkmn_game_save_type_t dummy_pkmn_game_save_type_t = PKMN_GAME_SAVE_TYPE_NONE;
 
@@ -518,6 +520,38 @@ static void game_save_error_test() {
                 dummy_int
             );
     TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_game_save_get_pokemon_party
+     */
+
+    error = pkmn_game_save_get_pokemon_party(
+                NULL, // handle
+                &pokemon_party
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_pokemon_party(
+                game_save,
+                NULL // pokemon_party_handle_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "pokemon_party_handle_out");
+
+    /*
+     * pkmn_game_save_get_pokemon_pc
+     */
+
+    error = pkmn_game_save_get_pokemon_pc(
+                NULL, // handle
+                &pokemon_pc
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_game_save_get_pokemon_pc(
+                game_save,
+                NULL // pokemon_pc_handle_out
+            );
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "pokemon_pc_handle_out");
 
     /*
      * pkmn_game_save_get_item_bag
