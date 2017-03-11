@@ -33,3 +33,6 @@ PKMN_JAVA_MAP(std::string, pkmn::shared_ptr<pkmn::item_list>, String, ItemList, 
 
 // Item Bag
 PKMN_JAVA_INCLUDE_AND_SPTR(item_bag, ItemBag);
+
+// Pokémon
+%include <java/pkmn_pokemon.i>

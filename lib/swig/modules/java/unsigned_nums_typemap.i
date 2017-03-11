@@ -18,10 +18,10 @@
 %typemap(in) unsigned short, unsigned int, unsigned long %{
     if($input < 0) {
         SWIG_JavaException(jenv, SWIG_OverflowError, "Number must be non-negative");
-        return 0;
+        return $null;
     } else if($input > ($type)(std::numeric_limits<$type>::max())) {
         SWIG_JavaException(jenv, SWIG_OverflowError, "Number is too large");
-        return 0;
+        return $null;
     } else {
         $1 = ($type)$input;
     }
