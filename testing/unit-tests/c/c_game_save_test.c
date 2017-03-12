@@ -10,7 +10,9 @@
 #include <pkmn.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #ifdef PKMN_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
@@ -476,6 +478,168 @@ static void game_save_test_common_fields(
     TEST_ASSERT_NULL(pokemon_pc);
 }
 
+static void get_random_pokemon(
+    const char* game,
+    const pkmn_string_list_t* pokemon_list,
+    const pkmn_string_list_t* move_list,
+    const pkmn_string_list_t* item_list,
+    pkmn_pokemon_handle_t* pokemon_out
+) {
+    TEST_ASSERT_NOT_NULL(game);
+    TEST_ASSERT_NOT_NULL(pokemon_list);
+    TEST_ASSERT_NOT_NULL(move_list);
+    TEST_ASSERT_NOT_NULL(item_list);
+    TEST_ASSERT_NOT_NULL(pokemon_out);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    int generation = game_to_generation(game);
+    const char* species = NULL;
+    if(generation == 3) {
+        do {
+            // Don't deal with Deoxys issues here.
+            species = pokemon_list->strings[rand() % pokemon_list->length];
+        } while(!strcmp(species, "Deoxys"));
+    } else {
+        species = pokemon_list->strings[rand() % pokemon_list->length];
+    }
+    TEST_ASSERT_NOT_NULL(species);
+
+    error = pkmn_pokemon_make(
+                pokemon_out,
+                species,
+                game,
+                "",
+                ((rand() % 99) + 2)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(*pokemon_out);
+
+    for(int i = 0; i < 4; ++i) {
+        error = pkmn_pokemon_set_move(
+                    *pokemon_out,
+                    move_list->strings[rand() % move_list->length],
+                    i
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+
+    if(generation >= 2) {
+        // Keep going until one is holdable
+        do {
+            error = pkmn_pokemon_set_held_item(
+                        *pokemon_out,
+                        item_list->strings[rand() % item_list->length]
+                    );
+        } while(error == PKMN_ERROR_INVALID_ARGUMENT);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+}
+
+static void randomize_pokemon(
+    pkmn_game_save_handle_t game_save,
+    const char* game,
+    const pkmn_string_list_t* item_list
+) {
+    TEST_ASSERT_NOT_NULL(game_save);
+    TEST_ASSERT_NOT_NULL(game);
+    TEST_ASSERT_NOT_NULL(item_list);
+
+    int generation = game_to_generation(game);
+    TEST_ASSERT_TRUE(generation > 0);
+
+    pkmn_string_list_t pokemon_list;
+    pkmn_string_list_t move_list;
+
+    error = pkmn_database_pokemon_list(
+                generation,
+                true,
+                &pokemon_list
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_database_move_list(
+                game,
+                &move_list
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    pkmn_pokemon_party_handle_t party = NULL;
+    error = pkmn_game_save_get_pokemon_party(
+                game_save,
+                &party
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(party);
+
+    for(int i = 0; i < 6; ++i) {
+        pkmn_pokemon_handle_t pokemon = NULL;
+        get_random_pokemon(
+            game,
+            &pokemon_list,
+            &move_list,
+            item_list,
+            &pokemon
+        );
+        TEST_ASSERT_NOT_NULL(pokemon);
+
+        error = pkmn_pokemon_party_set_pokemon(
+                    party,
+                    i,
+                    pokemon
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon_free(&pokemon);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_NULL(pokemon);
+    }
+
+    error = pkmn_pokemon_party_free(&party);
+    TEST_ASSERT_NULL(party);
+
+    pkmn_pokemon_pc_handle_t pc = NULL;
+    error = pkmn_game_save_get_pokemon_pc(
+                game_save,
+                &pc
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(pc);
+
+    pkmn_pokemon_box_list_t pokemon_boxes;
+    error = pkmn_pokemon_pc_as_array(
+                pc,
+                &pokemon_boxes
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_TRUE(pokemon_boxes.length > 0);
+
+    for(size_t i = 0; i < pokemon_boxes.length; ++i) {
+        TEST_ASSERT_NOT_NULL(pokemon_boxes.pokemon_boxes[i]);
+
+        pkmn_pokemon_list_t box_pokemon;
+        error = pkmn_pokemon_box_as_array(
+                    pokemon_boxes.pokemon_boxes[i],
+                    &box_pokemon
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon_list_free(&box_pokemon);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+
+    error = pkmn_pokemon_box_list_free(&pokemon_boxes);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_pokemon_party_free(&party);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NULL(party);
+
+    error = pkmn_string_list_free(&move_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_string_list_free(&pokemon_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
 static void test_game_save(
     pkmn_game_save_type_t save_type,
     const char* game,
@@ -488,6 +652,7 @@ static void test_game_save(
 
     pkmn_game_save_type_t save_type_from_file = PKMN_GAME_SAVE_TYPE_NONE;
     pkmn_game_save_handle_t game_save = NULL;
+    pkmn_string_list_t item_list;
 
     char save_filepath[STRBUFFER_LEN] = {0};
     snprintf(
@@ -519,10 +684,26 @@ static void test_game_save(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(game, strbuffer);
 
+    error = pkmn_database_item_list(
+                game,
+                &item_list
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_TRUE(item_list.length > 0);
+
     game_save_test_common_fields(
         game_save,
         game
     );
+    // TODO: randomize_items
+    randomize_pokemon(
+        game_save,
+        game,
+        &item_list
+    );
+
+    error = pkmn_string_list_free(&item_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     error = pkmn_game_save_free(&game_save);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -539,6 +720,7 @@ static void test_game_save(
 }
 
 PKMN_C_TEST_MAIN(
+    srand(time(NULL));
     populate_pksav_test_saves();
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW, "Red", "red_blue", "pokemon_red.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW, "Yellow", "yellow", "pokemon_yellow.sav");
