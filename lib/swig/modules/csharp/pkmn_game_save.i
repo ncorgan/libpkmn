@@ -11,12 +11,78 @@
 
 %rename(game_save_base) pkmn::game_save;
 
-%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__cptr "
-private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__sptr_eq "
-private";
+%csmethodmodifiers pkmn::game_save::get_filepath() "private";
+%csmethodmodifiers pkmn::game_save::get_game() "private";
+%csmethodmodifiers pkmn::game_save::get_trainer_name() "private";
+%csmethodmodifiers pkmn::game_save::set_trainer_name(const std::string&) "private";
+%csmethodmodifiers pkmn::game_save::get_trainer_id() "private";
+%csmethodmodifiers pkmn::game_save::set_trainer_id(uint32_t) "private";
+%csmethodmodifiers pkmn::game_save::get_trainer_public_id() "private";
+%csmethodmodifiers pkmn::game_save::set_trainer_public_id(uint16_t) "private";
+%csmethodmodifiers pkmn::game_save::get_trainer_secret_id() "private";
+%csmethodmodifiers pkmn::game_save::set_trainer_secret_id(uint16_t) "private";
+%csmethodmodifiers pkmn::game_save::get_trainer_gender() "private";
+%csmethodmodifiers pkmn::game_save::set_trainer_gender(const std::string&) "private";
+%csmethodmodifiers pkmn::game_save::get_rival_name() "private";
+%csmethodmodifiers pkmn::game_save::set_rival_name(const std::string&) "private";
+%csmethodmodifiers pkmn::game_save::get_money() "private";
+%csmethodmodifiers pkmn::game_save::set_money(int) "private";
+%csmethodmodifiers pkmn::game_save::get_pokemon_party() "private";
+%csmethodmodifiers pkmn::game_save::get_pokemon_pc() "private";
+%csmethodmodifiers pkmn::game_save::get_item_bag() "private";
+%csmethodmodifiers pkmn::game_save::get_item_pc() "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__cptr "private";
+%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__sptr_eq "private";
 
 %typemap(cscode) pkmn::shared_ptr<pkmn::game_save> %{
+    public string Filepath {
+        get {
+            return this.GetFilepath();
+        }
+    }
+
+    public string Game {
+        get {
+            return this.GetGame();
+        }
+    }
+
+    public string TrainerName {
+        get {
+            return this.GetTrainerName();
+        }
+        set {
+            this.SetTrainerName(value);
+        }
+    }
+
+    public uint TrainerID {
+        get {
+            return this.GetTrainerID();
+        }
+        set {
+            this.SetTrainerID(value);
+        }
+    }
+
+    public ushort TrainerPublicID {
+        get {
+            return this.GetTrainerPublicID();
+        }
+        set {
+            this.SetTrainerPublicID(value);
+        }
+    }
+
+    public ushort TrainerSecretID {
+        get {
+            return this.GetTrainerSecretID();
+        }
+        set {
+            this.SetTrainerSecretID(value);
+        }
+    }
+
     /// <summary> Returns the type of save at the given filepath.
     public static string DetectType(string filepath) {
         string ret = PKMNPINVOKE.detect_game_save_type(filepath);
@@ -24,6 +90,57 @@ private";
             throw PKMNPINVOKE.SWIGPendingException.Retrieve();
         }
         return ret;
+    }
+
+    public string TrainerGender {
+        get {
+            return this.GetTrainerGender();
+        }
+        set {
+            this.SetTrainerGender(value);
+        }
+    }
+
+    public string RivalName {
+        get {
+            return this.GetRivalName();
+        }
+        set {
+            this.SetRivalName(value);
+        }
+    }
+
+    public int Money {
+        get {
+            return this.GetMoney();
+        }
+        set {
+            this.SetMoney(value);
+        }
+    }
+
+    public PokemonParty PokemonParty {
+        get {
+            return this.GetPokemonParty();
+        }
+    }
+
+    public PokemonPC PokemonPC {
+        get {
+            return this.GetPokemonPC();
+        }
+    }
+
+    public ItemBag ItemBag {
+        get {
+            return this.GetItemBag();
+        }
+    }
+
+    public ItemList ItemPC {
+        get {
+            return this.GetItemPC();
+        }
     }
 
     /// <summary>Compares two GameSave instances to determine value equality.</summary>
