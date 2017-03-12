@@ -260,6 +260,20 @@ static void game_save_test_common_fields(
         is_gb_game
     );
 
+    error = pkmn_game_save_set_trainer_secret_id(
+                game_save,
+                LIBPKMN_OT_SID
+            );
+    if(is_gb_game) {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    } else {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        game_save_test_trainer_id(
+            game_save,
+            is_gb_game
+        );
+    }
+
     game_save_test_rival_name(
         game_save,
         is_rival_name_set(game)

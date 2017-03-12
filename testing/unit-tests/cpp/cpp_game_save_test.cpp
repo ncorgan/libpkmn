@@ -209,6 +209,14 @@ namespace pkmntest {
         test_trainer_id(save, is_gb_game(game));
         save->set_trainer_public_id(LIBPKMN_OT_PID);
         test_trainer_id(save, is_gb_game(game));
+        if(is_gb_game(game)) {
+            EXPECT_THROW(
+                save->set_trainer_secret_id(LIBPKMN_OT_SID);
+            , pkmn::feature_not_in_game_error);
+        } else {
+            save->set_trainer_secret_id(LIBPKMN_OT_SID);
+            test_trainer_id(save, is_gb_game(game));
+        }
 
         test_rival_name(save, is_rival_name_set(game));
 
