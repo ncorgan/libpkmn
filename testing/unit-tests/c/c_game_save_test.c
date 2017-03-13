@@ -1342,7 +1342,7 @@ static void test_game_save(
 }
 
 PKMN_C_TEST_MAIN(
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     populate_path_vars();
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW, "Red", "red_blue", "pokemon_red.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW, "Yellow", "yellow", "pokemon_yellow.sav");
