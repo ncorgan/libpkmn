@@ -42,7 +42,7 @@ public class CSharpGameSaveTest {
         PKMNTest.GameSaveTest.TestGameSave(
             "Gold/Silver",
             "Gold",
-            "gold_silver/pokemon_silver.sav"
+            "gold_silver/pokemon_gold.sav"
         );
     }
 
