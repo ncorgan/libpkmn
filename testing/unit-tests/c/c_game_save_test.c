@@ -663,7 +663,7 @@ static void randomize_pokemon(
 
             error = pkmn_pokemon_box_set_pokemon(
                         pokemon_boxes.pokemon_boxes[i],
-                        j,
+                        (int)j,
                         pokemon
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
