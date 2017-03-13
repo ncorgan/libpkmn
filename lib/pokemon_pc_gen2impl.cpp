@@ -54,18 +54,13 @@ namespace pkmn {
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             if(copy) {
-                for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
-                    NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
-                    *NATIVE_RCAST->boxes[i] = *boxes[i];
-                }
+                NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
+                *NATIVE_RCAST->boxes[i] = *boxes[i];
 
                 NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
                 *NATIVE_RCAST->box_names = *box_names;
             } else {
-                for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
-                    NATIVE_RCAST->boxes[i] = boxes[i];
-                }
-
+                NATIVE_RCAST->boxes[i] = boxes[i];
                 NATIVE_RCAST->box_names = box_names;
             }
         }
