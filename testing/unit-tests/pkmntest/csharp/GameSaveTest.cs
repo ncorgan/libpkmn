@@ -306,6 +306,7 @@ public class GameSaveTest {
         PKMN.ItemList itemList2
     ) {
         Assert.AreEqual(itemList1.Game, itemList2.Game);
+        Assert.AreEqual(itemList1.Name, itemList2.Name);
         Assert.AreEqual(itemList1.Capacity, itemList2.Capacity);
         Assert.AreEqual(itemList1.NumItems, itemList2.NumItems);
 
