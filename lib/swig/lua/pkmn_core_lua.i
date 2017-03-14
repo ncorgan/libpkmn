@@ -12,6 +12,7 @@ PKMN_LUA_INIT
 %import <pkmn_stl_lua.i>
 
 %{
+    #include <pkmn/game_save.hpp>
     #include <pkmn/item_slot.hpp>
     #include <pkmn/item_list.hpp>
     #include <pkmn/move_slot.hpp>
@@ -48,5 +49,9 @@ PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
 
 // Pokémon PC
 %include <lua/pkmn_pokemon_pc.i>
+
+// Game Save
+%include <pkmn/game_save.hpp>
+PKMN_LUA_SPTR(game_save)
 
 %include <pkmn_statics.i>

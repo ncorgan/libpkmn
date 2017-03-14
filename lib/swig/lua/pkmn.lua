@@ -15,6 +15,8 @@ pkmn.stl = require("pkmn_stl_lua")
 
 pkmn.core = require("pkmn_core_lua")
 
+pkmn.detect_game_save_type = pkmn.core.detect_game_save_type
+pkmn.game_save = pkmn.core.make_game_save
 pkmn.item_slot = pkmn.core.item_slot
 pkmn.item_slot_list = pkmn.core.item_slot_list
 pkmn.item_pockets = pkmn.core.item_pockets
