@@ -395,6 +395,10 @@ public class GameSaveTest {
         for(int i = 0; i < pokemonPC1.Count; ++i) {
             PKMN.PokemonBox pokemonBox1 = pokemonPC1[i];
             PKMN.PokemonBox pokemonBox2 = pokemonPC2[i];
+
+            if(generation >= 2) {
+                Assert.AreEqual(pokemonBox1.Name, pokemonBox2.Name);
+            }
             Assert.AreEqual(pokemonBox1.NumPokemon, pokemonBox2.NumPokemon);
             for(int j = 0; j < pokemonBox1.NumPokemon; ++j) {
                 ComparePokemon(

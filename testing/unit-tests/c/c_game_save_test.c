@@ -1173,9 +1173,50 @@ static void compare_game_saves(
     TEST_ASSERT_TRUE(pokemon_boxes2.length > 0);
     TEST_ASSERT_EQUAL(pokemon_boxes1.length, pokemon_boxes2.length);
 
+    if(generation >= 2) {
+        pkmn_string_list_t box_names1;
+        pkmn_string_list_t box_names2;
+
+        error = pkmn_pokemon_pc_get_box_names(
+                    pc1,
+                    &box_names1
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        error = pkmn_pokemon_pc_get_box_names(
+                    pc2,
+                    &box_names2
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL(box_names1.length, box_names2.length);
+        for(size_t i = 0; i < box_names1.length; ++i) {
+            TEST_ASSERT_EQUAL_STRING(box_names1.strings[i], box_names2.strings[i]);
+        }
+
+        error = pkmn_string_list_free(&box_names2);
+        error = pkmn_string_list_free(&box_names1);
+    }
+
     for(size_t i = 0; i < pokemon_boxes1.length; ++i) {
         TEST_ASSERT_NOT_NULL(pokemon_boxes1.pokemon_boxes[i]);
         TEST_ASSERT_NOT_NULL(pokemon_boxes2.pokemon_boxes[i]);
+
+        if(generation >= 2) {
+            error = pkmn_pokemon_box_get_name(
+                        pokemon_boxes1.pokemon_boxes[i],
+                        save1_strbuffer,
+                        sizeof(save1_strbuffer)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            error = pkmn_pokemon_box_get_name(
+                        pokemon_boxes2.pokemon_boxes[i],
+                        save2_strbuffer,
+                        sizeof(save2_strbuffer)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+            TEST_ASSERT_EQUAL_STRING(save1_strbuffer, save2_strbuffer);
+        }
 
         pkmn_pokemon_list_t box_pokemon1;
         pkmn_pokemon_list_t box_pokemon2;
