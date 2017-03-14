@@ -368,6 +368,13 @@ public class GameSaveTest {
             );
         }
 
+        if(generation <= 3) {
+            CompareItemLists(
+                save1.ItemPC,
+                save2.ItemPC
+            );
+        }
+
         Assert.AreEqual(save1.PokemonParty.NumPokemon, save2.PokemonParty.NumPokemon);
         for(int i = 0; i < 6; ++i) {
             ComparePokemon(
