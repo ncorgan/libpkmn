@@ -5,7 +5,6 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-from .game_save_tests import *
 from .gen1_items_tests import *
 from .gen1_pokemon_tests import *
 from .gen2_items_tests import *

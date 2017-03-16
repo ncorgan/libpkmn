@@ -189,11 +189,7 @@ MACRO(PKMN_ADD_LUA_TEST test_name)
 ENDMACRO(PKMN_ADD_LUA_TEST test_name)
 
 MACRO(PKMN_ADD_PYTHON_TEST test_name)
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py
-        ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.py
-    @ONLY)
-    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_BINARY_DIR}/${test_name}.py\"")
+    SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_PYTHON_TEST)
 

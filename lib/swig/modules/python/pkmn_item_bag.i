@@ -96,5 +96,9 @@
         return self->get()->get_pocket(key);
     }
 #endif
+
+    int __len__() {
+        return int(self->get()->get_pocket_names().size());
+    }
 }
 %template(item_bag_sptr) pkmn::shared_ptr<pkmn::item_bag>;

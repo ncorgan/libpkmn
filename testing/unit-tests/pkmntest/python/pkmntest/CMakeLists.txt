@@ -6,7 +6,6 @@
 #
 
 SET(pkmntest_python_sources
-    game_save_tests.py
     items_tests.py
     pokemon_tests.py
     gen1_items_tests.py
