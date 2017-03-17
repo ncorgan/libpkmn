@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,3 +26,6 @@ PKMN_PYTHON_PAIR(std::string, std::string, string_pair)
 
 // std::vector
 PKMN_PYTHON_VECTOR(std::string, string_list)
+#ifdef PKMN_WSTRING_WORKAROUND
+PKMN_PYTHON_VECTOR(std::wstring, wstring_list)
+#endif

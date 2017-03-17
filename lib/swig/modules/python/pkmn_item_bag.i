@@ -45,6 +45,18 @@
         return ret;
     }
 
+    std::vector<std::wstring> get_pocket_names() {
+        std::vector<std::string> pocket_names = self->get()->get_pocket_names();
+        std::vector<std::wstring> ret;
+        for(size_t i = 0; i < pocket_names.size(); ++i) {
+            ret.emplace_back(
+               boost::locale::conv::utf_to_utf<wchar_t>(pocket_names[i])
+            );
+        }
+
+        return ret;
+    }
+
     pkmn::item_list::sptr __getitem__(
         const std::wstring &key
     ) {

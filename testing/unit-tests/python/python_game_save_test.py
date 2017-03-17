@@ -232,7 +232,7 @@ class game_save_test(unittest.TestCase):
         self.assertEquals(len(bag1.get_pocket_names()), len(bag2.get_pocket_names()))
         for name in bag1.get_pocket_names():
             foo = bag1.get_pocket(name)
-            print(name)
+            foo = bag1[name]
 
     @parameterized.expand([
         ("Red/Blue/Yellow", "Red", "red_blue", "pokemon_red.sav"),
