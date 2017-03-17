@@ -8,8 +8,6 @@
 %{
     #include <pkmn/item_list.hpp>
 
-    #include <boost/locale/encoding_utf.hpp>
-
     #include <string>
 %}
 
@@ -18,8 +16,7 @@
 %rename(as_list) as_vector;
 %include <pkmn/item_list.hpp>
 
-#if SWIG_VERSION < 0x030008
-%include <std_wstring.i>
+#ifdef PKMN_WSTRING_WORKAROUND
 %warnfilter(508) pkmn::shared_ptr<pkmn::item_list>;
 #endif
 
@@ -46,14 +43,7 @@
             return not (self == rhs)
     %}
 
-/*
- * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
- * Python 2 "unicode" type to be converted to a char* or std::string. There's
- * no way for a SWIG project to bring this in, so we need this ugly workaround
- * when using earlier versions of SWIG.
- */
-#if SWIG_VERSION < 0x030008
-
+#ifdef PKMN_WSTRING_WORKAROUND
     void add(
         const std::wstring &item_name,
         int amount
@@ -73,13 +63,12 @@
             amount
         );
     }
-
 #endif
 
 }
 %template(item_list_sptr) pkmn::shared_ptr<pkmn::item_list>;
 
-#if SWIG_VERSION < 0x030008
+#ifdef PKMN_WSTRING_WORKAROUND
 PKMN_PYTHON_MAP(std::wstring, pkmn::item_list::sptr, item_pockets);
 #else
 PKMN_PYTHON_MAP(std::string, pkmn::item_list::sptr, item_pockets);

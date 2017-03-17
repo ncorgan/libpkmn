@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,8 +8,7 @@
 %{
     #include <pkmn/item_bag.hpp>
 
-    #include <boost/locale/encoding_utf.hpp>
-
+    #include <iostream>
     #include <string>
 %}
 
@@ -17,8 +16,7 @@
 
 %include <pkmn/item_bag.hpp>
 
-#if SWIG_VERSION < 0x030008
-%include <std_wstring.i>
+#ifdef PKMN_WSTRING_WORKAROUND
 %warnfilter(508) pkmn::shared_ptr<pkmn::item_bag>;
 #endif
 
@@ -35,13 +33,7 @@
             return not (self == rhs)
     %}
 
-/*
- * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
- * Python 2 "unicode" type to be converted to a char* or std::string. There's
- * no way for a SWIG project to bring this in, so we need this ugly workaround
- * when using earlier verisons of SWIG.
- */
-#if SWIG_VERSION < 0x030008
+#ifdef PKMN_WSTRING_WORKAROUND
     std::map<std::wstring, pkmn::item_list::sptr> get_pockets() {
         const pkmn::item_pockets_t& pockets = self->get()->get_pockets();
         std::map<std::wstring, pkmn::item_list::sptr> ret;
@@ -88,7 +80,6 @@
             amount
         );
     }
-
 #else
     pkmn::item_list::sptr __getitem__(
         const std::string &key

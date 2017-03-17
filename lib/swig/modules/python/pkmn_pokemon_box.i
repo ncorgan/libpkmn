@@ -7,27 +7,15 @@
 
 %{
     #include <pkmn/pokemon_box.hpp>
-
-#if SWIG_VERSION < 0x030008
-    #include <boost/locale/encoding_utf.hpp>
-#endif
-
 %}
 
-#if SWIG_VERSION < 0x030008
-%include <std_wstring.i>
+#ifdef PKMN_WSTRING_WORKAROUND
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon_box>;
 #endif
 
 %extend pkmn::shared_ptr<pkmn::pokemon_box> {
 
-/*
- * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
- * Python 2 "unicode" type to be converted to a char* or std::string. There's
- * no way for a SWIG project to bring this in, so we need this ugly workaround
- * when using earlier versions of SWIG.
- */
-#if SWIG_VERSION < 0x030008
+#ifdef PKMN_WSTRING_WORKAROUND
     void set_name(
         const std::wstring& name
     ) {
