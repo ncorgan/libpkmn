@@ -9,19 +9,7 @@
     #include <pkmn/pokemon_box.hpp>
 %}
 
-#ifdef PKMN_WSTRING_WORKAROUND
-%warnfilter(508) pkmn::shared_ptr<pkmn::pokemon_box>;
-#endif
-
 %extend pkmn::shared_ptr<pkmn::pokemon_box> {
-
-#ifdef PKMN_WSTRING_WORKAROUND
-    void set_name(
-        const std::wstring& name
-    ) {
-        self->get()->set_name(boost::locale::conv::utf_to_utf<char>(name));
-    }
-#endif
 
     pkmn::pokemon::sptr __getitem__(
         int index

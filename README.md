@@ -31,7 +31,7 @@ Build Dependencies
    * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
    * [PLY](https://pypi.python.org/pypi/ply)
  * Python API (optional)
-   * [SWIG](http://swig.org/)
+   * [SWIG](http://swig.org/) (minimum version 3.0.8 for Python 2)
    * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
    * [PLY](https://pypi.python.org/pypi/ply)
  * API Documentation (optional)
@@ -61,7 +61,7 @@ repository is automatically tested under the following configurations:
    * SWIG: 3.0.6
    * C#: .NET 3.5
    * Lua: 5.1.5, 5.2.4, 5.3.2
-   * Python: 2.7.12, 3.5.2
+   * Python: 3.5.2
 
 Tests are run with the following frameworks:
  * C++: [Google Test](https://github.com/google/googletest)
@@ -72,4 +72,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/02/20
+README last updated: 2017/03/16

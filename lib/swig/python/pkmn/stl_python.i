@@ -26,6 +26,3 @@ PKMN_PYTHON_PAIR(std::string, std::string, string_pair)
 
 // std::vector
 PKMN_PYTHON_VECTOR(std::string, string_list)
-#ifdef PKMN_WSTRING_WORKAROUND
-PKMN_PYTHON_VECTOR(std::wstring, wstring_list)
-#endif
