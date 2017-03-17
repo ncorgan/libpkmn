@@ -11,12 +11,6 @@ matrix:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Default/older GCC, dependencies, new SWIG
-    - compiler: gcc
-      env:
-        - DESIRED_QT_VERSION=4
-        - PYTHON_VERSION=2
-        - SWIG_VERSION=3
     # Newer GCC, dependencies
     - compiler: gcc
       addons:
@@ -37,12 +31,6 @@ matrix:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Default/older Clang, dependencies, new SWIG
-    - compiler: clang
-      env:
-        - DESIRED_QT_VERSION=4
-        - PYTHON_VERSION=2
-        - SWIG_VERSION=3
     # Newer Clang, dependencies
     - compiler: clang
       addons:
