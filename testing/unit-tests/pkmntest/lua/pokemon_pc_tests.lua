@@ -207,6 +207,7 @@ function pokemon_pc_tests.test_setting_pokemon_in_boxes(pc)
 end
 
 function pokemon_pc_tests.test_pokemon_pc(pc, game)
+    print(" * test_pokemon_pc")
     pokemon_pc_tests.test_empty_pokemon_pc(pc, game)
     pokemon_pc_tests.test_box_names(pc)
     pokemon_pc_tests.test_setting_pokemon_in_boxes(pc)
