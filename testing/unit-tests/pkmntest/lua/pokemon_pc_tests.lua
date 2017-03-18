@@ -27,6 +27,7 @@ pokemon_pc_tests.GAME_TO_GENERATION = {
 }
 
 function pokemon_pc_tests.test_empty_pokemon_box(box, game)
+    print(" * test_empty_pokemon_box")
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
 
     luaunit.assertEquals(box:get_game(), game)
@@ -58,6 +59,7 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
 end
 
 function pokemon_pc_tests.test_box_name(box)
+    print(" * test_box_name")
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[box:get_game()]
 
     if generation == 1
@@ -73,6 +75,7 @@ function pokemon_pc_tests.test_box_name(box)
 end
 
 function pokemon_pc_tests.test_setting_pokemon(box)
+    print(" * test_setting_pokemon")
     local game = box:get_game()
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[game]
 
@@ -160,6 +163,7 @@ function pokemon_pc_tests.test_pokemon_box(box, game)
 end
 
 function pokemon_pc_tests.test_empty_pokemon_pc(pc, game)
+    print(" * test_empty_pokemon_pc")
     luaunit.assertEquals(pc:get_game(), game)
     luaunit.assertEquals(pc:get_num_boxes(), #pc)
 
@@ -170,6 +174,7 @@ function pokemon_pc_tests.test_empty_pokemon_pc(pc, game)
 end
 
 function pokemon_pc_tests.test_box_names(pc)
+    print(" * test_box_names")
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[pc:get_game()]
 
     if generation == 1
@@ -192,6 +197,7 @@ function pokemon_pc_tests.test_box_names(pc)
 end
 
 function pokemon_pc_tests.test_setting_pokemon_in_boxes(pc)
+    print(" * test_setting_pokemon_in_boxes")
     for i = 1, #pc
     do
         pokemon_pc_tests.test_setting_pokemon(pc[i])
