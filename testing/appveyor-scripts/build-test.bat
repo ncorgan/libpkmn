@@ -36,9 +36,6 @@ if not !ERRORLEVEL!==0 goto fail
 msbuild /p:configuration=Release ALL_BUILD.vcxproj
 if not !ERRORLEVEL!==0 goto fail
 
-testing\unit-tests\lua\lua_pokemon_pc_test.bat
-testing\unit-tests\python\python_pokemon_pc_test.bat
-
 ctest -E "python_paths_test" --output-on-failure
 if not !ERRORLEVEL!==0 goto fail
 
