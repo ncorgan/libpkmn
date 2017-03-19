@@ -175,7 +175,7 @@ namespace pkmn {
          * Unfortuately, the count field may not be reliable, so we need to check
          * ourselves and fix it if it's wrong.
          */
-        if(NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0) {
+        if(num_pokemon > 0 and NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0) {
             for(int i = 0; i < num_pokemon; ++i) {
                 if(NATIVE_LIST_RCAST->entries[i].species == 0) {
                     NATIVE_LIST_RCAST->count = i;

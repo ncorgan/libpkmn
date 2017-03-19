@@ -34,11 +34,9 @@ namespace pkmn {
             std::memset(NATIVE_RCAST->boxes[i]->nicknames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->nicknames));
             std::memset(NATIVE_RCAST->boxes[i]->otnames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->otnames));
             NATIVE_RCAST->boxes[i]->species[20] = 0xFF;
-            std::cout << "   * Made box " << i << std::endl;
         }
         NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
         std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(pksav_gen2_pokemon_box_names_t));
-        std::cout << "   * Made box names" << std::endl;
 
         _our_mem = true;
 

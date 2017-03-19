@@ -17,7 +17,6 @@
 #include <stdexcept>
 
 #define NATIVE_LIST_RCAST reinterpret_cast<list_type*>(_native)
-#define NUM_LIST_SPECIES ((sizeof(NATIVE_LIST_RCAST->species)/sizeof(NATIVE_LIST_RCAST->species[0]))-1)
 
 namespace pkmn {
 
@@ -30,7 +29,7 @@ namespace pkmn {
         std::memset(_native, 0, sizeof(list_type));
         std::memset(NATIVE_LIST_RCAST->nicknames, 0x50, sizeof(NATIVE_LIST_RCAST->nicknames));
         std::memset(NATIVE_LIST_RCAST->otnames, 0x50, sizeof(NATIVE_LIST_RCAST->otnames));
-        NATIVE_LIST_RCAST->species[NUM_LIST_SPECIES] = 0xFF;
+        NATIVE_LIST_RCAST->species[6] = 0xFF;
         _our_mem = true;
 
         _from_native();
