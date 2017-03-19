@@ -245,8 +245,9 @@ namespace pkmntest {
     }
 
     // See pokemon_pc_gen2impl.hpp
+    BOOST_STATIC_CONSTEXPR int GEN2_NUM_BOXES = 14;
     typedef struct {
-        pksav_gen2_pokemon_pc_t* pc;
+        pksav_gen2_pokemon_box_t* boxes[GEN2_NUM_BOXES];
         pksav_gen2_pokemon_box_names_t* box_names;
     } gen2_pokemon_full_pc_t;
 
@@ -310,13 +311,13 @@ namespace pkmntest {
                 const std::vector<std::string>& box_names = pc->get_box_names();
                 for(size_t i = 0; i < pokemon_box_list.size(); ++i) {
                     const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
-                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].species[0]));
-                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].entries[0].species));
-                    EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].species[1]));
-                    EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].entries[1].species));
-                    EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].species[2]));
-                    EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_pc->pc->boxes[i].entries[2].species));
-                    EXPECT_EQ(pokemon_box_list.at(i)->get_native(), &native_pc->pc->boxes[i]);
+                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->species[0]));
+                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->entries[0].species));
+                    EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->species[1]));
+                    EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->entries[1].species));
+                    EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->species[2]));
+                    EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i]->entries[2].species));
+                    EXPECT_EQ(pokemon_box_list.at(i)->get_native(), native_pc->boxes[i]);
 
                     char box_name[10] = {0};
                     PKSAV_CALL(

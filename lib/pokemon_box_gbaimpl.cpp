@@ -9,6 +9,7 @@
 #include "pokemon_gbaimpl.hpp"
 
 #include <pksav/gba/text.h>
+#include <pksav/math/endian.h>
 
 #include <cstring>
 #include <stdexcept>
@@ -74,7 +75,7 @@ namespace pkmn {
     int pokemon_box_gbaimpl::get_num_pokemon() {
         int num_pokemon = 0;
         for(int i = 0; i < get_capacity(); ++i) {
-            if(NATIVE_RCAST->entries[i].blocks.growth.species > 0) {
+            if(pksav_littleendian16(NATIVE_RCAST->entries[i].blocks.growth.species) > 0) {
                 ++num_pokemon;
             }
         }
