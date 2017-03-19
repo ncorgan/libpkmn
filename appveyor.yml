@@ -3,11 +3,11 @@ environment:
   LUAROCKS_VER: 2.3.0
   matrix:
     - BITNESS: 32
-      PYTHON_VERSION: 27
+      PYTHON_VERSION: 35
       LUA_VER: 5.1.5
 
     - BITNESS: 64
-      PYTHON_VERSION: 27
+      PYTHON_VERSION: 35
       LUA_VER: 5.1.5
 
     - BITNESS: 32

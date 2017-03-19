@@ -26,39 +26,43 @@ namespace pkmn {
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
-        NATIVE_RCAST->pc = new pksav_gen2_pokemon_pc_t;
-        NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
-        _our_mem = true;
-
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
-            std::memset(&NATIVE_RCAST->pc->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
-            std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(pksav_gen2_pokemon_box_names_t));
-            NATIVE_RCAST->pc->boxes[i].species[20] = 0xFF;
+            NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
+            std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
+            std::memset(NATIVE_RCAST->boxes[i]->nicknames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->nicknames));
+            std::memset(NATIVE_RCAST->boxes[i]->otnames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->otnames));
+            NATIVE_RCAST->boxes[i]->species[20] = 0xFF;
         }
+        NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
+        std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(pksav_gen2_pokemon_box_names_t));
+
+        _our_mem = true;
 
         _from_native();
     }
 
     pokemon_pc_gen2impl::pokemon_pc_gen2impl(
         int game_id,
-        pksav_gen2_pokemon_pc_t* pc,
+        pksav_gen2_pokemon_box_t** boxes,
         pksav_gen2_pokemon_box_names_t* box_names,
         bool copy
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
-        for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
-            if(copy) {
-                NATIVE_RCAST->pc = new pksav_gen2_pokemon_pc_t;
-                NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
-
-                *NATIVE_RCAST->pc = *pc;
-                *NATIVE_RCAST->box_names = *box_names;
-            } else {
-                NATIVE_RCAST->pc = pc;
-                NATIVE_RCAST->box_names = box_names;
+        if(copy) {
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+                NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
+                *NATIVE_RCAST->boxes[i] = *boxes[i];
             }
+            NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
+            *NATIVE_RCAST->box_names = *box_names;
+        } else {
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+                NATIVE_RCAST->boxes[i] = boxes[i];
+            }
+            NATIVE_RCAST->box_names = box_names;
         }
+
         _our_mem = copy;
 
         _from_native();
@@ -67,7 +71,9 @@ namespace pkmn {
     pokemon_pc_gen2impl::~pokemon_pc_gen2impl() {
         // _our_mem applies to the struct members, not the struct itself
         if(_our_mem) {
-            delete NATIVE_RCAST->pc;
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+                delete NATIVE_RCAST->boxes[i];
+            }
             delete NATIVE_RCAST->box_names;
         }
 
@@ -84,7 +90,7 @@ namespace pkmn {
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             _box_list[i] = pkmn::make_shared<pokemon_box_gen2impl>(
                                _game_id,
-                               &NATIVE_RCAST->pc->boxes[i]
+                               NATIVE_RCAST->boxes[i]
                            );
 
             char box_name[10] = {0};

@@ -47,6 +47,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(DATABASE_PATH ${PKMN_BINARY_DIR}/libpkmn-database/database/libpkmn.db)
         SET(IMAGES_DIR ${PKMN_SOURCE_DIR}/images)
         SET(LIBPKMN_TEST_FILES ${PKMN_SOURCE_DIR}/testing/libpkmn-test-files)
+        SET(PKSAV_TEST_SAVES ${PKMN_SOURCE_DIR}/pksav/testing/pksav-test-saves)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
             "${TESTS_BINARY_DIR}/pkmntest/python"
@@ -91,6 +92,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
             STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
+            STRING(REPLACE "/" "\\" PKSAV_TEST_SAVES "${PKSAV_TEST_SAVES}")
             CONFIGURE_FILE(
                 ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
@@ -190,3 +192,27 @@ MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_PYTHON_TEST)
+
+#
+# Set locations of test saves.
+#
+SET(POKEMON_SAVE_DIR "${PKMN_SOURCE_DIR}/pksav/testing/pksav-test-saves")
+
+SET(POKEMON_RED_SAV     "${POKEMON_SAVE_DIR}/red_blue/pokemon_red.sav")
+SET(POKEMON_YELLOW_SAV  "${POKEMON_SAVE_DIR}/yellow/pokemon_yellow.sav")
+SET(POKEMON_GOLD_SAV    "${POKEMON_SAVE_DIR}/gold_silver/pokemon_gold.sav")
+SET(POKEMON_CRYSTAL_SAV "${POKEMON_SAVE_DIR}/crystal/pokemon_crystal.sav")
+SET(POKEMON_RUBY_SAV    "${POKEMON_SAVE_DIR}/ruby_sapphire/pokemon_ruby.sav")
+SET(POKEMON_EMERALD_SAV "${POKEMON_SAVE_DIR}/emerald/pokemon_emerald.sav")
+SET(POKEMON_FIRERED_SAV "${POKEMON_SAVE_DIR}/firered_leafgreen/pokemon_firered.sav")
+
+# Fix Windows paths
+IF(WIN32)
+    FILE(TO_CMAKE_PATH "${POKEMON_RED_SAV}" POKEMON_RED_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_YELLOW_SAV}" POKEMON_YELLOW_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_GOLD_SAV}" POKEMON_GOLD_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_CRYSTAL_SAV}" POKEMON_CRYSTAL_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_RUBY_SAV}" POKEMON_RUBY_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_EMERALD_SAV}" POKEMON_EMERALD_SAV)
+    FILE(TO_CMAKE_PATH "${POKEMON_FIRERED_SAV}" POKEMON_FIRERED_SAV)
+ENDIF(WIN32)

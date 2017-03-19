@@ -95,7 +95,17 @@ namespace pkmn {
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);
 
+        int num_pokemon = get_num_pokemon();
+
         for(int i = 0; i < PARTY_SIZE; ++i) {
+            /*
+             * Memory is not necessarily zeroed-out past the num_pokemon point,
+             * so we'll do it ourselves.
+             */
+            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc.blocks.growth.species) > 0) {
+                std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_gba_party_pokemon_t));
+            }
+
             _pokemon_list[i] = pkmn::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_LIST_RCAST->party[i],
                                    _game_id

@@ -15,6 +15,8 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/rng.hpp"
+
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
@@ -32,7 +34,6 @@
 #include <cstring>
 #include <ctime>
 #include <iostream>
-#include <random>
 #include <stdexcept>
 
 #define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
@@ -61,9 +62,8 @@ namespace pkmn {
         _effort  = &GBA_PC_RCAST->blocks.effort;
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
-        // TODO: Use PKSav PRNG after refactor merged in
-        std::srand((unsigned int)std::time(NULL));
-        GBA_PC_RCAST->personality = uint32_t(std::rand());
+        pkmn::rng<uint32_t> rng;
+        GBA_PC_RCAST->personality = rng.rand();
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(LIBPKMN_OT_ID);
 
         PKSAV_CALL(
@@ -93,19 +93,19 @@ namespace pkmn {
         _growth->friendship = uint8_t(_database_entry.get_base_friendship());
 
         // TODO: Use PKSav PRNG after refactor merged in
-        _effort->ev_hp    = uint32_t(std::rand());
-        _effort->ev_atk   = uint32_t(std::rand());
-        _effort->ev_def   = uint32_t(std::rand());
-        _effort->ev_spd   = uint32_t(std::rand());
-        _effort->ev_spatk = uint32_t(std::rand());
-        _effort->ev_spdef = uint32_t(std::rand());
+        _effort->ev_hp    = rng.rand();
+        _effort->ev_atk   = rng.rand();
+        _effort->ev_def   = rng.rand();
+        _effort->ev_spd   = rng.rand();
+        _effort->ev_spatk = rng.rand();
+        _effort->ev_spdef = rng.rand();
 
         set_location_met("Fateful encounter", false);
         set_level_met(level);
         set_original_game(get_game());
         set_ball("Premier Ball");
 
-        _misc->iv_egg_ability = uint32_t(std::rand());
+        _misc->iv_egg_ability = rng.rand();
         _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
         if(GBA_PC_RCAST->personality % 2) {
             _misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;

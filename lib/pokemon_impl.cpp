@@ -16,6 +16,7 @@
 #include "database/index_to_string.hpp"
 
 #include "io/3gpkm.hpp"
+#include "types/rng.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -25,7 +26,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -378,15 +378,15 @@ namespace pkmn {
         } else {
             *personality_ptr &= ~0xFF;
 
-            std::srand((unsigned int)std::time(NULL));
+            pkmn::rng<uint32_t> rng;
             if(pkmn_floats_close(chance_male, 0.875f)) {
-                *personality_ptr |= uint32_t(std::rand() % 31);
+                *personality_ptr |= rng.rand(0, 30);
             } else if(pkmn_floats_close(chance_male, 0.75f)) {
-                *personality_ptr |= uint32_t(std::rand() % 64);
+                *personality_ptr |= rng.rand(0, 63);
             } else if(pkmn_floats_close(chance_male, 0.5f)) {
-                *personality_ptr |= uint32_t(std::rand() % 127);
+                *personality_ptr |= rng.rand(0, 126);
             } else {
-                *personality_ptr |= uint32_t(std::rand() % 191);
+                *personality_ptr |= rng.rand(0, 190);
             }
         }
     }

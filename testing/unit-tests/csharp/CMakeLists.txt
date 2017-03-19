@@ -19,6 +19,7 @@ IF(NUNIT_FOUND)
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
+        CSharpGameSaveTest
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
