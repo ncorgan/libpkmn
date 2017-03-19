@@ -9,7 +9,6 @@ The goal of LibPKMN is to be the most portable, intuitive, and expansive save ed
 library for the main series Pokémon games.
 
 Feature Roadmap:
- * Game save abstraction
  * Java API
  * Ruby API
  * Dynamic Spinda sprite generation
@@ -72,4 +71,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/03/16
+README last updated: 2017/03/18
