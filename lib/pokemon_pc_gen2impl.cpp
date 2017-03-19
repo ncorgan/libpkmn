@@ -14,7 +14,6 @@
 #include <pksav/gen2/text.h>
 
 #include <cstring>
-#include <iostream>
 
 #define NATIVE_RCAST reinterpret_cast<pkmn::gen2_pokemon_full_pc_t*>(_native)
 
@@ -26,7 +25,6 @@ namespace pkmn {
         int game_id
     ): pokemon_pc_impl(game_id)
     {
-        std::cout << " * Begin pokemon_pc_gen2impl ctor" << std::endl;
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
@@ -41,7 +39,6 @@ namespace pkmn {
         _our_mem = true;
 
         _from_native();
-        std::cout << " * End pokemon_pc_gen2impl ctor" << std::endl;
     }
 
     pokemon_pc_gen2impl::pokemon_pc_gen2impl(
@@ -88,7 +85,6 @@ namespace pkmn {
     }
 
     void pokemon_pc_gen2impl::_from_native() {
-        std::cout << " * _from_native" << std::endl;
         _box_list.resize(GEN2_NUM_BOXES);
 
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
@@ -96,7 +92,6 @@ namespace pkmn {
                                _game_id,
                                NATIVE_RCAST->boxes[i]
                            );
-            std::cout << "   * Made box " << i << std::endl;
 
             char box_name[10] = {0};
             PKSAV_CALL(
@@ -106,7 +101,6 @@ namespace pkmn {
                     9
                 );
             )
-            std::cout << "   * box_name = \"" << std::string(box_name) << "\"" << std::endl;
             _box_list[i]->set_name(box_name);
         }
     }
