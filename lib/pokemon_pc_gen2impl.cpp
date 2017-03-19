@@ -31,6 +31,8 @@ namespace pkmn {
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
             NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
             std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
+            std::memset(NATIVE_RCAST->boxes[i]->nicknames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->nicknames));
+            std::memset(NATIVE_RCAST->boxes[i]->otnames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->otnames));
             NATIVE_RCAST->boxes[i]->species[20] = 0xFF;
             std::cout << "   * Made box " << i << std::endl;
         }
@@ -96,6 +98,7 @@ namespace pkmn {
                                _game_id,
                                NATIVE_RCAST->boxes[i]
                            );
+            std::cout << "   * Made box " << i << std::endl;
 
             char box_name[10] = {0};
             PKSAV_CALL(

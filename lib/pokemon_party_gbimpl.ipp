@@ -28,6 +28,8 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new list_type);
         std::memset(_native, 0, sizeof(list_type));
+        std::memset(NATIVE_LIST_RCAST->nicknames, 0x50, sizeof(NATIVE_LIST_RCAST->nicknames));
+        std::memset(NATIVE_LIST_RCAST->otnames, 0x50, sizeof(NATIVE_LIST_RCAST->otnames));
         NATIVE_LIST_RCAST->species[NUM_LIST_SPECIES] = 0xFF;
         _our_mem = true;
 
