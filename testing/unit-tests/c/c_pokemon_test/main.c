@@ -37,6 +37,27 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(blue_friendship_test);
     PKMN_C_TEST(yellow_friendship_test);
 
+    PKMN_C_TEST(red_form_test);
+    PKMN_C_TEST(blue_form_test);
+    PKMN_C_TEST(yellow_form_test);
+    PKMN_C_TEST(gold_form_test);
+    PKMN_C_TEST(silver_form_test);
+    PKMN_C_TEST(crystal_form_test);
+    PKMN_C_TEST(ruby_form_test);
+    PKMN_C_TEST(sapphire_form_test);
+    PKMN_C_TEST(emerald_form_test);
+    PKMN_C_TEST(firered_form_test);
+    PKMN_C_TEST(leafgreen_form_test);
+
+    PKMN_C_TEST(gold_gender_test);
+    PKMN_C_TEST(silver_gender_test);
+    PKMN_C_TEST(crystal_gender_test);
+    PKMN_C_TEST(ruby_gender_test);
+    PKMN_C_TEST(sapphire_gender_test);
+    PKMN_C_TEST(emerald_gender_test);
+    PKMN_C_TEST(firered_gender_test);
+    PKMN_C_TEST(leafgreen_gender_test);
+
     PKMN_C_TEST(gold_unown_test);
     PKMN_C_TEST(silver_unown_test);
     PKMN_C_TEST(crystal_unown_test);

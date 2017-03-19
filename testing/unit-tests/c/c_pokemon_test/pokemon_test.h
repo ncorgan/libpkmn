@@ -63,6 +63,31 @@ void red_friendship_test();
 void blue_friendship_test();
 void yellow_friendship_test();
 
+// Form
+
+void red_form_test();
+void blue_form_test();
+void yellow_form_test();
+void gold_form_test();
+void silver_form_test();
+void crystal_form_test();
+void ruby_form_test();
+void sapphire_form_test();
+void emerald_form_test();
+void firered_form_test();
+void leafgreen_form_test();
+
+// Gender
+
+void gold_gender_test();
+void silver_gender_test();
+void crystal_gender_test();
+void ruby_gender_test();
+void sapphire_gender_test();
+void emerald_gender_test();
+void firered_gender_test();
+void leafgreen_gender_test();
+
 // Unown
 
 void gold_unown_test();
