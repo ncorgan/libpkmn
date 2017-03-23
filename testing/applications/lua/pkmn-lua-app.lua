@@ -7,4 +7,4 @@
 
 local pkmn = require("pkmn")
 
-print("Database path: " + pkmn.get_database_path())
+print(string.format("Database path: %s", pkmn.paths.get_database_path()))
