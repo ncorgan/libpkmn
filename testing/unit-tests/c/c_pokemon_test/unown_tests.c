@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "util.h"
+#include <pkmntest-c/util.h>
 
 #include <pkmn-c/pokemon.h>
 #include <pkmn-c/calculations/form.h>

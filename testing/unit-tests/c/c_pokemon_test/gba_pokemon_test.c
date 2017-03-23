@@ -9,6 +9,8 @@
 
 #include "pokemon_test.h"
 
+#include <pkmntest-c/util.h>
+
 #include <pkmn.h>
 
 #include <string.h>
@@ -30,19 +32,6 @@ static const char* ribbons[] = {
     "Effort", "Marine", "Land", "Sky",
     "Country", "National", "Earth", "World"
 };
-
-static bool string_list_contains(
-    pkmn_string_list_t* string_list,
-    const char* string
-) {
-    for(size_t i = 0; i < string_list->length; ++i) {
-        if(!strcmp(string_list->strings[i], string)) {
-            return true;
-        }
-    }
-
-    return false;
-}
 
 static void check_initial_ribbons(
     pkmn_pokemon_handle_t pokemon

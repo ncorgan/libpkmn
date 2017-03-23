@@ -7,6 +7,8 @@
 
 #include "c_test_common.h"
 
+#include <pkmntest-c/util.h>
+
 #include <pkmn.h>
 
 #include <stdio.h>
@@ -48,39 +50,6 @@ static const char* MALE_ONLY_GAMES[] = {
     "Red", "Blue", "Yellow",
     "Gold", "Silver"
 };
-
-/*
- * Utility functions
- */
-
-static int game_to_generation(
-    const char* game
-) {
-    if(!strcmp(game, "Red") || !strcmp(game, "Blue") || !strcmp(game, "Yellow")) {
-        return 1;
-    } else if(!strcmp(game, "Gold") || !strcmp(game, "Silver") || !strcmp(game, "Crystal")) {
-        return 2;
-    } else if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") || !strcmp(game, "Emerald") ||
-              !strcmp(game, "FireRed") || !strcmp(game, "LeafGreen") ||
-              !strcmp(game, "Colosseum") || !strcmp(game, "XD"))
-    {
-        return 3;
-    } else if(!strcmp(game, "Diamond") || !strcmp(game, "Pearl") || !strcmp(game, "Platinum") ||
-              !strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver"))
-    {
-        return 4;
-    } else if(!strcmp(game, "Black") || !strcmp(game, "White") ||
-              !strcmp(game, "Black 2") || !strcmp(game, "White 2"))
-    {
-        return 5;
-    } else if(!strcmp(game, "X") || !strcmp(game, "Y") ||
-              !strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
-    {
-        return 6;
-    } else {
-        return 0;
-    }
-}
 
 static bool is_rival_name_set(
     const char* game

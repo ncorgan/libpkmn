@@ -27,7 +27,7 @@ SET(pkmn_cpp_test_libs
 
 SET(pkmn_c_test_libs
     pkmn-c
-    pkmntest-c
+    #pkmntest-c
     unity
 )
 
