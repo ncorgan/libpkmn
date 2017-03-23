@@ -6,6 +6,7 @@
  */
 
 #include <pkmntest/config.hpp>
+#include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_party.hpp>
@@ -16,42 +17,10 @@
 
 #include "pksav/pksav_call.hpp"
 
-#include <boost/assign.hpp>
-
 #include <gtest/gtest.h>
 
 #include <cstring>
 #include <string>
-
-// No database access here
-static const std::map<std::string, int> game_generations = boost::assign::map_list_of
-    ("Red", 1)
-    ("Blue", 1)
-    ("Yellow", 1)
-    ("Gold", 2)
-    ("Silver", 2)
-    ("Crystal", 2)
-    ("Ruby", 3)
-    ("Sapphire", 3)
-    ("Emerald", 3)
-    ("FireRed", 3)
-    ("LeafGreen", 3)
-    ("Colosseum", 3)
-    ("XD", 3)
-    ("Diamond", 4)
-    ("Pearl", 4)
-    ("Platinum", 4)
-    ("HeartGold", 4)
-    ("SoulSilver", 4)
-    ("Black", 5)
-    ("White", 5)
-    ("Black 2", 5)
-    ("White 2", 5)
-    ("X", 6)
-    ("Y", 6)
-    ("Omega Ruby", 6)
-    ("Alpha Sapphire", 6)
-;
 
 class pokemon_party_test: public ::testing::TestWithParam<std::string> {
     public:

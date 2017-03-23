@@ -45,6 +45,7 @@ SET(item_test_srcs
     cpp_item_test/gen1_item_test.cpp
     cpp_item_test/gen2_item_test.cpp
     cpp_item_test/gba_item_test.cpp
+    cpp_item_test/item_test_common.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
@@ -57,6 +58,7 @@ SET(pokemon_test_srcs
     cpp_pokemon_test/gender_test.cpp
     cpp_pokemon_test/pokemon_io_test.cpp
     cpp_pokemon_test/unown_tests.cpp
+    cpp_pokemon_test/pokemon_test_common.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_pokemon_test "${pokemon_test_srcs}")
 

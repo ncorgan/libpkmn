@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/item_test.hpp>
+#include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
@@ -31,7 +31,7 @@ static const std::vector<std::string> wrong_generation_all_pocket_items = boost:
     ("Black Sludge")("Poffin Items")("TM51")("Occa Berry")
 ;
 
-class gen2_item_list_test: public pkmntest::item_list_test {};
+class gen2_item_list_test: public item_list_test {};
 
 void gen2_item_pocket_test(
     pkmn::item_list::sptr item_pocket
@@ -41,10 +41,10 @@ void gen2_item_pocket_test(
     ASSERT_EQ(20, item_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
-    pkmntest::test_item_list_empty_slots(item_pocket);
+    test_item_list_empty_slots(item_pocket);
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         item_pocket,
         "Potion"
     );
@@ -53,7 +53,7 @@ void gen2_item_pocket_test(
     static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
         ("Bicycle")("Master Ball")("HM01")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         item_pocket,
         wrong_pocket_items
     );
@@ -62,7 +62,7 @@ void gen2_item_pocket_test(
     static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
         ("Black Flute")("Black Sludge")("Binding Band")("Beedrillite")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         item_pocket,
         wrong_generation_items
     );
@@ -72,7 +72,7 @@ void gen2_item_pocket_test(
         ("Potion")("HP Up")("Wht Apricorn")("Lucky Egg")
         ("Flower Mail")("Burn Heal")("PSNCureBerry")("Stick")
     ;
-    pkmntest::test_item_list_add_remove(
+    test_item_list_add_remove(
         item_pocket,
         item_names
     );
@@ -106,10 +106,10 @@ void gen2_key_item_pocket_test(
     ASSERT_EQ(26, key_item_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
-    pkmntest::test_item_list_empty_slots(key_item_pocket);
+    test_item_list_empty_slots(key_item_pocket);
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         key_item_pocket,
         "Bicycle"
     );
@@ -118,7 +118,7 @@ void gen2_key_item_pocket_test(
     static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
         ("Potion")("Master Ball")("HM01")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         key_item_pocket,
         wrong_pocket_items
     );
@@ -127,7 +127,7 @@ void gen2_key_item_pocket_test(
     static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
         ("Mach Bike")("Jade Orb")("Light Stone")("Aqua Suit")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         key_item_pocket,
         wrong_generation_items
     );
@@ -141,7 +141,7 @@ void gen2_key_item_pocket_test(
 
         EXPECT_EQ(0, key_item_pocket->get_num_items());
     } else {
-        pkmntest::test_item_list_invalid_items(
+        test_item_list_invalid_items(
             key_item_pocket,
             crystal_items
         );
@@ -152,7 +152,7 @@ void gen2_key_item_pocket_test(
         ("Bicycle")("Basement Key")("SecretPotion")("Mystery Egg")
         ("Silver Wing")("Lost Item")("SquirtBottle")("Rainbow Wing")
     ;
-    pkmntest::test_item_list_add_remove(
+    test_item_list_add_remove(
         key_item_pocket,
         item_names
     );
@@ -186,10 +186,10 @@ void gen2_ball_pocket_test(
     ASSERT_EQ(12, ball_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
-    pkmntest::test_item_list_empty_slots(ball_pocket); 
+    test_item_list_empty_slots(ball_pocket); 
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         ball_pocket,
         "Master Ball"
     );
@@ -198,7 +198,7 @@ void gen2_ball_pocket_test(
     static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
         ("Potion")("Bicycle")("HM01")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         ball_pocket,
         wrong_pocket_items
     );
@@ -207,7 +207,7 @@ void gen2_ball_pocket_test(
     static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
         ("Premier Ball")("Heal Ball")("Dream Ball")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         ball_pocket,
         wrong_generation_items
     );
@@ -217,7 +217,7 @@ void gen2_ball_pocket_test(
         ("Great Ball")("Poké Ball")("Park Ball")("Fast Ball")
         ("Master Ball")("Friend Ball")("Love Ball")("Level Ball")
     ;
-    pkmntest::test_item_list_add_remove(
+    test_item_list_add_remove(
         ball_pocket,
         item_names
     );
@@ -267,7 +267,7 @@ void gen2_tmhm_pocket_test(
     }
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         tmhm_pocket,
         "TM10"
     );
@@ -276,7 +276,7 @@ void gen2_tmhm_pocket_test(
     static const std::vector<std::string> wrong_pocket_items = boost::assign::list_of
         ("Potion")("Master Ball")("Bicycle")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         tmhm_pocket,
         wrong_pocket_items
     );
@@ -285,7 +285,7 @@ void gen2_tmhm_pocket_test(
     static const std::vector<std::string> wrong_generation_items = boost::assign::list_of
         ("TM51")
     ;
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         tmhm_pocket,
         wrong_generation_items
     );
@@ -349,13 +349,13 @@ void gen2_item_pc_test(
     ASSERT_EQ(50, item_pc->as_vector().size());
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         item_pc,
         "Potion"
     );
 
     // Make sure item slots start as correctly empty.
-    pkmntest::test_item_list_empty_slots(item_pc);
+    test_item_list_empty_slots(item_pc);
 
     // Crystal-specific items.
     if(item_pc->get_game() == "Crystal") {
@@ -366,20 +366,20 @@ void gen2_item_pc_test(
 
         EXPECT_EQ(0, item_pc->get_num_items());
     } else {
-        pkmntest::test_item_list_invalid_items(
+        test_item_list_invalid_items(
             item_pc,
             crystal_items
         );
     }
 
     // Make sure we can't add items from later generations.
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         item_pc,
         wrong_generation_all_pocket_items
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    pkmntest::test_item_list_add_remove(
+    test_item_list_add_remove(
         item_pc,
         all_pocket_item_names
     );
@@ -406,7 +406,7 @@ void gen2_item_pc_test(
     EXPECT_EQ(0xFF, native->terminator);
 }
 
-static const pkmntest::item_list_test_fcns_t gen2_test_fcns = boost::assign::map_list_of
+static const item_list_test_fcns_t gen2_test_fcns = boost::assign::map_list_of
     ("Items", &gen2_item_pocket_test)
     ("KeyItems", &gen2_key_item_pocket_test)
     ("Balls", &gen2_ball_pocket_test)
@@ -442,7 +442,7 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(item_list_params)
 );
 
-class gen2_item_bag_test: public pkmntest::item_bag_test {};
+class gen2_item_bag_test: public item_bag_test {};
 
 TEST_P(gen2_item_bag_test, item_bag_test) {
     const pkmn::item_bag::sptr& bag = get_item_bag();
@@ -602,14 +602,14 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
             EXPECT_EQ(0, key_item_slots.at(i).amount);
         }
     } else {
-        pkmntest::test_item_bag_invalid_items(
+        test_item_bag_invalid_items(
             bag,
             crystal_items
         );
     }
 
     // Make sure we can't add items from later generations.
-    pkmntest::test_item_bag_invalid_items(
+    test_item_bag_invalid_items(
         bag,
         wrong_generation_all_pocket_items
     );

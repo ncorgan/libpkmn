@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_test.hpp>
+#include "pokemon_test_common.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -37,7 +37,7 @@ static const std::vector<std::string> ribbons = boost::assign::list_of
     ("Country")("National")("Earth")("World")
 ;
 
-class gba_pokemon_test: public pkmntest::pokemon_test {};
+class gba_pokemon_test: public pokemon_test {};
 
 static void check_initial_ribbons_map(
     const std::map<std::string, bool>& ribbons_map
@@ -112,7 +112,7 @@ static void test_ribbons(
 TEST_P(gba_pokemon_test, gba_pokemon_test) {
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
-    pkmntest::pokemon_test_common(
+    pokemon_test_common(
         pokemon,
         {
             "Great Ball",
