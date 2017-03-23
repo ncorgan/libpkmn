@@ -22,22 +22,11 @@ SET(pkmntest_c_libs
     pkmn-c
 )
 
-CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_io_tests.c
-    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.c
-@ONLY)
-
 SET(pkmntest_c_sources
-    game_save_tests.c
     gen1_items_tests.c
-    gen1_pokemon_tests.c
     gen2_items_tests.c
-    gen2_pokemon_tests.c
     gba_items_tests.c
-    gba_pokemon_tests.c
     items_tests_common.c
-    ${CMAKE_CURRENT_BINARY_DIR}/pokemon_io_tests.c
-    pokemon_tests_common.c
     pokemon_party_tests.c
     pokemon_pc_tests.c
 )
