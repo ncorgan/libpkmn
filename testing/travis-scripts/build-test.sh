@@ -80,15 +80,21 @@ make
 [ $? -ne 0 ] && exit 1
 
 # Test external Lua project
-cd $REPO_TOPLEVEL/testing/applications/lua
-[ $? -ne 0 ] && exit 1
-lua pkmn-lua-app.lua
-[ $? -ne 0 ] && exit 1
+if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/lua ]
+then
+    cd $REPO_TOPLEVEL/testing/applications/lua
+    [ $? -ne 0 ] && exit 1
+    lua pkmn-lua-app.lua
+    [ $? -ne 0 ] && exit 1
+fi
 
 # Test external Python project
-cd $REPO_TOPLEVEL/testing/applications/python
-[ $? -ne 0 ] && exit 1
-python${PYTHON_VERSION} pkmn-python-app.py
-[ $? -ne 0 ] && exit 1
+if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/python ]
+then
+    cd $REPO_TOPLEVEL/testing/applications/python
+    [ $? -ne 0 ] && exit 1
+    python${PYTHON_VERSION} pkmn-python-app.py
+    [ $? -ne 0 ] && exit 1
+fi
 
 echo # So we can check the last error code
