@@ -23,7 +23,7 @@ FIND_PACKAGE(PKMN-C REQUIRED)
 ########################################################################
 INCLUDE_DIRECTORIES(${PKMN-C_INCLUDE_DIR})
 
-IF(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
+IF(${CMAKE_C_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
     SET(CMAKE_C_FLAGS "-O3 -std=gnu99 -Wall -Wextra -Werror -fvisibility=hidden")
 ENDIF()
 
