@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "items_tests_common.h"
-
-#include <pkmntest-c/gba_items_tests.h>
+#include "c_items_test.h"
 
 #include <pkmn-c/database/lists.h>
 
@@ -60,7 +58,7 @@ static void game_name_to_enum(
     }
 }
 
-void pkmntest_gba_item_pocket_test(
+void gba_item_pocket_test(
     pkmn_item_list_handle_t item_pocket,
     const char* game
 ) {
@@ -214,7 +212,7 @@ void pkmntest_gba_item_pocket_test(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gba_key_item_pocket_test(
+void gba_key_item_pocket_test(
     pkmn_item_list_handle_t key_item_pocket,
     const char* game
 ) {
@@ -388,7 +386,7 @@ void pkmntest_gba_key_item_pocket_test(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gba_ball_pocket_test(
+void gba_ball_pocket_test(
     pkmn_item_list_handle_t ball_pocket,
     const char* game
 ) {
@@ -523,7 +521,7 @@ void pkmntest_gba_ball_pocket_test(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gba_tmhm_pocket_test(
+void gba_tmhm_pocket_test(
     pkmn_item_list_handle_t tmhm_pocket,
     const char* game
 ) {
@@ -657,7 +655,7 @@ void pkmntest_gba_tmhm_pocket_test(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gba_berry_pocket_test(
+void gba_berry_pocket_test(
     pkmn_item_list_handle_t berry_pocket,
     const char* game
 ) {
@@ -793,7 +791,7 @@ void pkmntest_gba_berry_pocket_test(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gba_pc_test(
+void gba_pc_test(
     pkmn_item_list_handle_t pc,
     const char* game
 ) {
@@ -898,7 +896,7 @@ void pkmntest_gba_pc_test(
     TEST_ASSERT_EQUAL(full_item_list.length, 0);
 }
 
-void pkmntest_gba_item_bag_test(
+void gba_item_bag_test(
     pkmn_item_bag_handle_t bag,
     const char* game
 ) {
@@ -957,7 +955,7 @@ void pkmntest_gba_item_bag_test(
         ),
         PKMN_ERROR_NONE
     );
-    pkmntest_gba_item_pocket_test(
+    gba_item_pocket_test(
         item_list_handle,
         game
     );
@@ -978,7 +976,7 @@ void pkmntest_gba_item_bag_test(
         ),
         PKMN_ERROR_NONE
     );
-    pkmntest_gba_key_item_pocket_test(
+    gba_key_item_pocket_test(
         key_item_list_handle,
         game
     );
@@ -999,7 +997,7 @@ void pkmntest_gba_item_bag_test(
         ),
         PKMN_ERROR_NONE
     );
-    pkmntest_gba_ball_pocket_test(
+    gba_ball_pocket_test(
         ball_list_handle,
         game
     );
@@ -1022,7 +1020,7 @@ void pkmntest_gba_item_bag_test(
         ),
         PKMN_ERROR_NONE
     );
-    pkmntest_gba_tmhm_pocket_test(
+    gba_tmhm_pocket_test(
         tmhm_list_handle,
         game
     );
@@ -1045,7 +1043,7 @@ void pkmntest_gba_item_bag_test(
         ),
         PKMN_ERROR_NONE
     );
-    pkmntest_gba_berry_pocket_test(
+    gba_berry_pocket_test(
         berry_list_handle,
         game
     );

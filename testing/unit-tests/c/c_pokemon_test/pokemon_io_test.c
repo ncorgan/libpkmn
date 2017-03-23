@@ -5,8 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest-c/pokemon_io_tests.h>
-
 #include <pkmn-c/pokemon.h>
 
 #include <unity.h>

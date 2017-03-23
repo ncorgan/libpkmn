@@ -20,7 +20,6 @@ SET(c_tests
     c_calculations_test
     c_database_entry_test
     c_game_save_test
-    c_items_test
     c_lists_test
     c_paths_test
     c_pokemon_party_test
@@ -30,6 +29,15 @@ SET(c_tests
 FOREACH(test ${c_tests})
     PKMN_ADD_C_TEST(${test} ${test}.c)
 ENDFOREACH(test ${c_tests})
+
+SET(items_test_srcs
+    c_items_test/gen1_items_tests.c
+    c_items_test/gen2_items_tests.c
+    c_items_test/gba_items_tests.c
+    c_items_test/items_tests_common.c
+    c_items_test/main.c
+)
+PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
 
 SET(pokemon_test_srcs
     c_pokemon_test/gen1_pokemon_test.c

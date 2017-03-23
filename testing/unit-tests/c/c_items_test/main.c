@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,9 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmntest-c/gen1_items_tests.h>
-#include <pkmntest-c/gen2_items_tests.h>
-#include <pkmntest-c/gba_items_tests.h>
+#include "c_items_test.h"
 
 #include <pkmn.h>
 
@@ -24,7 +22,7 @@ static void gen1_red_item_list_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_list_test(items, "Red");
+    gen1_item_list_test(items, "Red");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -44,7 +42,7 @@ static void gen1_red_item_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_pc_test(pc, "Red");
+    gen1_pc_test(pc, "Red");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -64,7 +62,7 @@ static void gen1_red_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_bag_test(bag, "Red");
+    gen1_item_bag_test(bag, "Red");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -86,7 +84,7 @@ static void gen1_blue_item_list_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_list_test(items, "Blue");
+    gen1_item_list_test(items, "Blue");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -106,7 +104,7 @@ static void gen1_blue_item_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_pc_test(pc, "Blue");
+    gen1_pc_test(pc, "Blue");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -126,7 +124,7 @@ static void gen1_blue_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_bag_test(bag, "Blue");
+    gen1_item_bag_test(bag, "Blue");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -148,7 +146,7 @@ static void gen1_yellow_item_list_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_list_test(items, "Yellow");
+    gen1_item_list_test(items, "Yellow");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -168,7 +166,7 @@ static void gen1_yellow_item_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_pc_test(pc, "Yellow");
+    gen1_pc_test(pc, "Yellow");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -188,7 +186,7 @@ static void gen1_yellow_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_bag_test(bag, "Yellow");
+    gen1_item_bag_test(bag, "Yellow");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -210,7 +208,7 @@ static void gen2_gold_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_pocket_test(item_pocket, "Gold");
+    gen2_item_pocket_test(item_pocket, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -230,7 +228,7 @@ static void gen2_gold_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_key_item_pocket_test(key_item_pocket, "Gold");
+    gen2_key_item_pocket_test(key_item_pocket, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -250,7 +248,7 @@ static void gen2_gold_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_ball_pocket_test(ball_pocket, "Gold");
+    gen2_ball_pocket_test(ball_pocket, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -270,7 +268,7 @@ static void gen2_gold_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_tmhm_pocket_test(tmhm_pocket, "Gold");
+    gen2_tmhm_pocket_test(tmhm_pocket, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -290,7 +288,7 @@ static void gen2_gold_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_pc_test(pc, "Gold");
+    gen2_pc_test(pc, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -310,7 +308,7 @@ static void gen2_gold_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_bag_test(item_bag, "Gold");
+    gen2_item_bag_test(item_bag, "Gold");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -332,7 +330,7 @@ static void gen2_silver_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_pocket_test(item_pocket, "Silver");
+    gen2_item_pocket_test(item_pocket, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -352,7 +350,7 @@ static void gen2_silver_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_key_item_pocket_test(key_item_pocket, "Silver");
+    gen2_key_item_pocket_test(key_item_pocket, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -372,7 +370,7 @@ static void gen2_silver_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_ball_pocket_test(ball_pocket, "Silver");
+    gen2_ball_pocket_test(ball_pocket, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -392,7 +390,7 @@ static void gen2_silver_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_tmhm_pocket_test(tmhm_pocket, "Silver");
+    gen2_tmhm_pocket_test(tmhm_pocket, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -412,7 +410,7 @@ static void gen2_silver_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_pc_test(pc, "Silver");
+    gen2_pc_test(pc, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -432,7 +430,7 @@ static void gen2_silver_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_bag_test(item_bag, "Silver");
+    gen2_item_bag_test(item_bag, "Silver");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -454,7 +452,7 @@ static void gen2_crystal_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_pocket_test(item_pocket, "Crystal");
+    gen2_item_pocket_test(item_pocket, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -474,7 +472,7 @@ static void gen2_crystal_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_key_item_pocket_test(key_item_pocket, "Crystal");
+    gen2_key_item_pocket_test(key_item_pocket, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -494,7 +492,7 @@ static void gen2_crystal_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_ball_pocket_test(ball_pocket, "Crystal");
+    gen2_ball_pocket_test(ball_pocket, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -514,7 +512,7 @@ static void gen2_crystal_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_tmhm_pocket_test(tmhm_pocket, "Crystal");
+    gen2_tmhm_pocket_test(tmhm_pocket, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -534,7 +532,7 @@ static void gen2_crystal_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_pc_test(pc, "Crystal");
+    gen2_pc_test(pc, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -554,7 +552,7 @@ static void gen2_crystal_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen2_item_bag_test(item_bag, "Crystal");
+    gen2_item_bag_test(item_bag, "Crystal");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -576,7 +574,7 @@ static void gba_ruby_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_pocket_test(item_pocket, "Ruby");
+    gba_item_pocket_test(item_pocket, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -596,7 +594,7 @@ static void gba_ruby_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_key_item_pocket_test(key_item_pocket, "Ruby");
+    gba_key_item_pocket_test(key_item_pocket, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -616,7 +614,7 @@ static void gba_ruby_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_ball_pocket_test(ball_pocket, "Ruby");
+    gba_ball_pocket_test(ball_pocket, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -636,7 +634,7 @@ static void gba_ruby_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_tmhm_pocket_test(tmhm_pocket, "Ruby");
+    gba_tmhm_pocket_test(tmhm_pocket, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -656,7 +654,7 @@ static void gba_ruby_berry_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_berry_pocket_test(berry_pocket, "Ruby");
+    gba_berry_pocket_test(berry_pocket, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -676,7 +674,7 @@ static void gba_ruby_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_pc_test(pc, "Ruby");
+    gba_pc_test(pc, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -696,7 +694,7 @@ static void gba_ruby_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_bag_test(item_bag, "Ruby");
+    gba_item_bag_test(item_bag, "Ruby");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -718,7 +716,7 @@ static void gba_sapphire_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_pocket_test(item_pocket, "Sapphire");
+    gba_item_pocket_test(item_pocket, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -738,7 +736,7 @@ static void gba_sapphire_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_key_item_pocket_test(key_item_pocket, "Sapphire");
+    gba_key_item_pocket_test(key_item_pocket, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -758,7 +756,7 @@ static void gba_sapphire_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_ball_pocket_test(ball_pocket, "Sapphire");
+    gba_ball_pocket_test(ball_pocket, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -778,7 +776,7 @@ static void gba_sapphire_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_tmhm_pocket_test(tmhm_pocket, "Sapphire");
+    gba_tmhm_pocket_test(tmhm_pocket, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -798,7 +796,7 @@ static void gba_sapphire_berry_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_berry_pocket_test(berry_pocket, "Sapphire");
+    gba_berry_pocket_test(berry_pocket, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -818,7 +816,7 @@ static void gba_sapphire_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_pc_test(pc, "Sapphire");
+    gba_pc_test(pc, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -838,7 +836,7 @@ static void gba_sapphire_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_bag_test(item_bag, "Sapphire");
+    gba_item_bag_test(item_bag, "Sapphire");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -860,7 +858,7 @@ static void gba_emerald_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_pocket_test(item_pocket, "Emerald");
+    gba_item_pocket_test(item_pocket, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -880,7 +878,7 @@ static void gba_emerald_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_key_item_pocket_test(key_item_pocket, "Emerald");
+    gba_key_item_pocket_test(key_item_pocket, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -900,7 +898,7 @@ static void gba_emerald_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_ball_pocket_test(ball_pocket, "Emerald");
+    gba_ball_pocket_test(ball_pocket, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -920,7 +918,7 @@ static void gba_emerald_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_tmhm_pocket_test(tmhm_pocket, "Emerald");
+    gba_tmhm_pocket_test(tmhm_pocket, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -940,7 +938,7 @@ static void gba_emerald_berry_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_berry_pocket_test(berry_pocket, "Emerald");
+    gba_berry_pocket_test(berry_pocket, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -960,7 +958,7 @@ static void gba_emerald_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_pc_test(pc, "Emerald");
+    gba_pc_test(pc, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -980,7 +978,7 @@ static void gba_emerald_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_bag_test(item_bag, "Emerald");
+    gba_item_bag_test(item_bag, "Emerald");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -1002,7 +1000,7 @@ static void gba_firered_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_pocket_test(item_pocket, "FireRed");
+    gba_item_pocket_test(item_pocket, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1022,7 +1020,7 @@ static void gba_firered_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_key_item_pocket_test(key_item_pocket, "FireRed");
+    gba_key_item_pocket_test(key_item_pocket, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1042,7 +1040,7 @@ static void gba_firered_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_ball_pocket_test(ball_pocket, "FireRed");
+    gba_ball_pocket_test(ball_pocket, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1062,7 +1060,7 @@ static void gba_firered_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_tmhm_pocket_test(tmhm_pocket, "FireRed");
+    gba_tmhm_pocket_test(tmhm_pocket, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1082,7 +1080,7 @@ static void gba_firered_berry_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_berry_pocket_test(berry_pocket, "FireRed");
+    gba_berry_pocket_test(berry_pocket, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1102,7 +1100,7 @@ static void gba_firered_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_pc_test(pc, "FireRed");
+    gba_pc_test(pc, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1122,7 +1120,7 @@ static void gba_firered_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_bag_test(item_bag, "FireRed");
+    gba_item_bag_test(item_bag, "FireRed");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(
@@ -1144,7 +1142,7 @@ static void gba_leafgreen_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_pocket_test(item_pocket, "LeafGreen");
+    gba_item_pocket_test(item_pocket, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1164,7 +1162,7 @@ static void gba_leafgreen_key_item_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_key_item_pocket_test(key_item_pocket, "LeafGreen");
+    gba_key_item_pocket_test(key_item_pocket, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1184,7 +1182,7 @@ static void gba_leafgreen_ball_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_ball_pocket_test(ball_pocket, "LeafGreen");
+    gba_ball_pocket_test(ball_pocket, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1204,7 +1202,7 @@ static void gba_leafgreen_tmhm_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_tmhm_pocket_test(tmhm_pocket, "LeafGreen");
+    gba_tmhm_pocket_test(tmhm_pocket, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1224,7 +1222,7 @@ static void gba_leafgreen_berry_pocket_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_berry_pocket_test(berry_pocket, "LeafGreen");
+    gba_berry_pocket_test(berry_pocket, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1244,7 +1242,7 @@ static void gba_leafgreen_pc_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_pc_test(pc, "LeafGreen");
+    gba_pc_test(pc, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_list_free(
@@ -1264,7 +1262,7 @@ static void gba_leafgreen_item_bag_test() {
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gba_item_bag_test(item_bag, "LeafGreen");
+    gba_item_bag_test(item_bag, "LeafGreen");
 
     TEST_ASSERT_EQUAL(
         pkmn_item_bag_free(

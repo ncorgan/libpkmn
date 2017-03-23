@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "items_tests_common.h"
-
-#include <pkmntest-c/gen1_items_tests.h>
+#include "c_items_test.h"
 
 #include <pkmn-c/database/lists.h>
 
@@ -35,7 +33,7 @@ static const char* wrong_generation_item_names[] = {
     "Aqua Suit"
 };
 
-static void pkmntest_gen1_item_list_common(
+static void gen1_item_list_common(
     pkmn_item_list_handle_t items,
     const char* game
 ) {
@@ -94,7 +92,7 @@ static void pkmntest_gen1_item_list_common(
     TEST_ASSERT_EQUAL(valid_items.length, 0);
 }
 
-void pkmntest_gen1_item_list_test(
+void gen1_item_list_test(
     pkmn_item_list_handle_t items,
     const char* game
 ) {
@@ -140,10 +138,10 @@ void pkmntest_gen1_item_list_test(
     );
     TEST_ASSERT_EQUAL(num_items, 0);
 
-    pkmntest_gen1_item_list_common(items, game);
+    gen1_item_list_common(items, game);
 }
 
-void pkmntest_gen1_pc_test(
+void gen1_pc_test(
     pkmn_item_list_handle_t pc,
     const char* game
 ) {
@@ -188,10 +186,10 @@ void pkmntest_gen1_pc_test(
     );
     TEST_ASSERT_EQUAL(num_items, 0);
 
-    pkmntest_gen1_item_list_common(pc, game);
+    gen1_item_list_common(pc, game);
 }
 
-void pkmntest_gen1_item_bag_test(
+void gen1_item_bag_test(
     pkmn_item_bag_handle_t bag,
     const char* game
 ) {
@@ -243,7 +241,7 @@ void pkmntest_gen1_item_bag_test(
         PKMN_ERROR_NONE
     );
 
-    pkmntest_gen1_item_list_test(items, game);
+    gen1_item_list_test(items, game);
 
     // Make sure adding items through the bag adds to the pocket.
     int num_items = 0;

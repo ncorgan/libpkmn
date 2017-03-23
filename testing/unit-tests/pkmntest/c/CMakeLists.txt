@@ -23,10 +23,6 @@ SET(pkmntest_c_libs
 )
 
 SET(pkmntest_c_sources
-    gen1_items_tests.c
-    gen2_items_tests.c
-    gba_items_tests.c
-    items_tests_common.c
     pokemon_party_tests.c
     pokemon_pc_tests.c
 )
