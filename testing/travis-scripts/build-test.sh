@@ -81,6 +81,7 @@ make
 
 # Test external C# project
 if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/csharp ]
+then
     cd $REPO_TOPLEVEL/testing/applications/csharp/monodevelop/PKMNCSharpApp
     [ $? -ne 0 ] && exit 1
     xbuild PKMNCSharpApp.sln
