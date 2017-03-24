@@ -79,6 +79,16 @@ make
 ./pkmn-c-app
 [ $? -ne 0 ] && exit 1
 
+# Test external C# project
+if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/csharp ]
+    cd $REPO_TOPLEVEL/testing/applications/csharp/monodevelop/PKMNCSharpApp
+    [ $? -ne 0 ] && exit 1
+    xbuild PKMNCSharpApp.sln
+    [ $? -ne 0 ] && exit 1
+    PKMNCSharpApp/bin/Debug/PKMNCSharpApp.exe
+    [ $? -ne 0 ] && exit 1
+fi
+
 # Test external Lua project
 if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/lua ]
 then
