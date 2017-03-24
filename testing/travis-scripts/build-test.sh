@@ -12,8 +12,8 @@ cd test-env/pkmn-build
 [ $? -ne 0 ] && exit 1
 
 # Check source
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
+find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
+find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
 [ $? -ne 0 ] && exit 1
 
 if [ $PYTHON_VERSION -eq 2 ]
