@@ -32,7 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="pkmn-cs">
-      <HintPath>..\..\..\..\..\..\..\..\..\..\..\..\..\usr\local\bin\pkmn-cs.dll</HintPath>
+      <HintPath Condition="Exists('..\..\..\..\..\..\..\..\..\..\..\..\..\usr\local\bin\')">..\..\..\..\..\..\..\..\..\..\..\..\..\usr\local\bin\pkmn-cs.dll</HintPath>
+      <HintPath Condition="Exists('..\..\..\..\..\..\..\..\..\..\usr\local\bin\')">..\..\..\..\..\..\..\..\..\..\usr\local\bin\pkmn-cs.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
