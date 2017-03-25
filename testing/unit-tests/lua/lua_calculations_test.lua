@@ -266,6 +266,11 @@ function test_spinda_coords()
 
     luaunit.assertEquals(spinda_coords1, spinda_coords2)
     luaunit.assertNotEquals(spinda_coords1, spinda_coords3)
+
+    -- Test addition operator.
+    added_coords = spinda_coords1 + spinda_coords2
+    luaunit.assertEquals(246, added_coords.x)
+    luaunit.assertEquals(912, added_coords.y)
 end
 
 function test_spinda_spots()
@@ -298,6 +303,28 @@ function test_spinda_spots()
     --
     spots = pkmn.calculations.spinda_spot_offset(4064348759)
     luaunit.assertEquals(spots, spots1)
+    luaunit.assertNotEquals(spots, spots3)
+
+    -- Test addition operators.
+    added_spots = spots1 + spots2
+    luaunit.assertEquals(14, added_spots.left_ear.x)
+    luaunit.assertEquals(10, added_spots.left_ear.y)
+    luaunit.assertEquals(20, added_spots.right_ear.x)
+    luaunit.assertEquals(0, added_spots.right_ear.y)
+    luaunit.assertEquals(2, added_spots.left_face.x)
+    luaunit.assertEquals(8, added_spots.left_face.y)
+    luaunit.assertEquals(4, added_spots.right_face.x)
+    luaunit.assertEquals(30, added_spots.right_face.y)
+
+    added_spots = added_spots + pkmn.calculations.spinda_coords(1, 5)
+    luaunit.assertEquals(15, added_spots.left_ear.x)
+    luaunit.assertEquals(15, added_spots.left_ear.y)
+    luaunit.assertEquals(21, added_spots.right_ear.x)
+    luaunit.assertEquals(5, added_spots.right_ear.y)
+    luaunit.assertEquals(3, added_spots.left_face.x)
+    luaunit.assertEquals(13, added_spots.left_face.y)
+    luaunit.assertEquals(5, added_spots.right_face.x)
+    luaunit.assertEquals(35, added_spots.right_face.y)
 end
 
 function test_gb_stats()

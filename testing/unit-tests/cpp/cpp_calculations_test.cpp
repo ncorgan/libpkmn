@@ -751,6 +751,16 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     EXPECT_EQ(25, added_spots.right_face.x);
     EXPECT_EQ(84, added_spots.right_face.y);
 
+    added_spots = added_spots + pkmn::calculations::spinda_coords(1, 5);
+    EXPECT_EQ(42, added_spots.left_ear.x);
+    EXPECT_EQ(70, added_spots.left_ear.y);
+    EXPECT_EQ(51, added_spots.right_ear.x);
+    EXPECT_EQ(55, added_spots.right_ear.y);
+    EXPECT_EQ(25, added_spots.left_face.x);
+    EXPECT_EQ(78, added_spots.left_face.y);
+    EXPECT_EQ(26, added_spots.right_face.x);
+    EXPECT_EQ(89, added_spots.right_face.y);
+
     /*
      * Make sure known good inputs result in expected results.
      *
