@@ -20,6 +20,7 @@ SET(csharp_files
     PokemonListComboBox.cs
     RegionListComboBox.cs
     RibbonListComboBox.cs
+    SpindaOperators.cs
     SuperTrainingMedalListComboBox.cs
     TypeListComboBox.cs
 )
