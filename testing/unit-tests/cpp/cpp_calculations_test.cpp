@@ -672,14 +672,21 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     /*
      * Check (in)equality operators.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords1(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords2(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords3(456,123);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS1(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS2(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS3(456,123);
 
-    EXPECT_TRUE(coords1 == coords2);
-    EXPECT_FALSE(coords1 != coords2);
-    EXPECT_TRUE(coords1 != coords3);
-    EXPECT_FALSE(coords1 == coords3);
+    EXPECT_TRUE(COORDS1 == COORDS2);
+    EXPECT_FALSE(COORDS1 != COORDS2);
+    EXPECT_TRUE(COORDS1 != COORDS3);
+    EXPECT_FALSE(COORDS1 == COORDS3);
+
+    /*
+     * Test adding coordinates.
+     */
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords added_coords = COORDS1 + COORDS2;
+    EXPECT_EQ(246, added_coords.x);
+    EXPECT_EQ(912, added_coords.y);
 }
 
 TEST(cpp_calculations_test, spinda_spot_test) {
@@ -706,6 +713,19 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     );
     EXPECT_TRUE(SPOTS1 == SPOTS2);
     EXPECT_TRUE(SPOTS1 != SPOTS3);
+
+    /*
+     * Test adding spots.
+     */
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots added_spots = SPOTS1 + SPOTS2;
+    EXPECT_EQ(14, added_spots.left_ear.x);
+    EXPECT_EQ(10, added_spots.left_ear.y);
+    EXPECT_EQ(20, added_spots.right_ear.x);
+    EXPECT_EQ(0, added_spots.right_ear.y);
+    EXPECT_EQ(2, added_spots.left_face.x);
+    EXPECT_EQ(8, added_spots.left_face.y);
+    EXPECT_EQ(4, added_spots.right_face.x);
+    EXPECT_EQ(30, added_spots.right_face.y);
 
     /*
      * Make sure known good inputs result in expected results.
