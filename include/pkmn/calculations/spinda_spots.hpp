@@ -79,6 +79,15 @@ namespace pkmn { namespace calculations {
             return (this->x != rhs.x) or (this->y != rhs.y);
         }
 
+        PKMN_CONSTEXPR_OR_INLINE spinda_coords operator+(
+            const spinda_coords &rhs
+        ) const {
+            return spinda_coords(
+                       this->x + rhs.x,
+                       this->y + rhs.y
+                   );
+        }
+
         //! X coordinate.
         int x;
         //! Y coordinate.
@@ -211,6 +220,17 @@ namespace pkmn { namespace calculations {
                    (this->right_ear != rhs.right_ear) or \
                    (this->left_face != rhs.left_face) or \
                    (this->right_face != rhs.right_face);
+        }
+
+        PKMN_CONSTEXPR_OR_INLINE spinda_spots operator+(
+            const spinda_spots &rhs
+        ) const {
+            return spinda_spots(
+                       this->left_ear + rhs.left_ear,
+                       this->right_ear + rhs.right_ear,
+                       this->left_face + rhs.left_face,
+                       this->right_face + rhs.right_face
+                   );
         }
 
         //! Coordinates of spot on the left ear.

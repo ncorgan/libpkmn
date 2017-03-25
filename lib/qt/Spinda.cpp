@@ -15,7 +15,26 @@
 
 #include <boost/filesystem.hpp>
 
+#include <iostream>
+
 namespace fs = boost::filesystem;
+
+using namespace pkmn::calculations;
+
+/*
+ * Sources:
+ *  * https://web.archive.org/web/20130524201028/http://www.freewebs.com/gatorshark/SpindaDocumentation.htm
+ *  * https://github.com/magical/spinda
+ */
+
+// Game Boy Advance
+BOOST_STATIC_CONSTEXPR spinda_coords GEN3_ORIGIN(8,6);
+BOOST_STATIC_CONSTEXPR spinda_spots GEN3_COORDS(
+                                        spinda_coords(0,0),
+                                        spinda_coords(24,1),
+                                        spinda_coords(6,18),
+                                        spinda_coords(18,19)
+                                    );
 
 namespace pkmn { namespace qt {
 
@@ -44,7 +63,7 @@ namespace pkmn { namespace qt {
         QImage* imageOut
     ) {
         if(generation < 3 or generation > 5) {
-            throw pkmn::range_error("personality", 3, 5);
+            throw pkmn::range_error("generation", 3, 5);
         } else if(game_is_gamecube(generation)) {
             throw std::invalid_argument("No Gamecube support.");
         } else if(imageOut == nullptr) {
@@ -70,13 +89,22 @@ namespace pkmn { namespace qt {
         input_path = fs::path(spinda_entry.get_sprite_filepath(false, shiny));
 
         // Get spot offsets.
-        pkmn::calculations::spinda_spots spot_offset = pkmn::calculations::spinda_spot_offset(
-                                                           personality
-                                                       );
+        spinda_spots spot_offset = spinda_spot_offset(
+                                       personality
+                                   );
+        spinda_spots final_spot_coords;
         (void)spot_offset;
 
         if(!imageOut->load(QString::fromStdString(input_path.string()))) {
             throw std::runtime_error("Failed to load base Spinda sprite.");
+        }
+
+        switch(generation) {
+            case 3:
+                break;
+
+            default:
+                throw pkmn::unimplemented_error();
         }
     }
 
