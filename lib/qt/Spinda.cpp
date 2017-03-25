@@ -93,7 +93,6 @@ namespace pkmn { namespace qt {
                                        personality
                                    );
         spinda_spots final_spot_coords;
-        (void)spot_offset;
 
         if(!imageOut->load(QString::fromStdString(input_path.string()))) {
             throw std::runtime_error("Failed to load base Spinda sprite.");
@@ -101,6 +100,8 @@ namespace pkmn { namespace qt {
 
         switch(generation) {
             case 3:
+                final_spot_coords = GEN3_COORDS + spot_offset;
+                final_spot_coords += GEN3_ORIGIN;
                 break;
 
             default:

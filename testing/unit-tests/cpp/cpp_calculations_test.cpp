@@ -663,7 +663,7 @@ TEST(cpp_calculations_test, pokemon_size_test) {
                              (std::rand() % 32),
                              (std::rand() % 32)
                          );
-            EXPECT_LE(std::abs(size-height), height);
+            EXPECT_LE(std::fabs(size-height), height);
         }
     }
 }
@@ -684,9 +684,13 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     /*
      * Test adding coordinates.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords added_coords = COORDS1 + COORDS2;
+    pkmn::calculations::spinda_coords added_coords = COORDS1 + COORDS2;
     EXPECT_EQ(246, added_coords.x);
     EXPECT_EQ(912, added_coords.y);
+
+    added_coords += COORDS3;
+    EXPECT_EQ(702, added_coords.x);
+    EXPECT_EQ(1035, added_coords.y);
 }
 
 TEST(cpp_calculations_test, spinda_spot_test) {
@@ -717,7 +721,7 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     /*
      * Test adding spots.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots added_spots = SPOTS1 + SPOTS2;
+    pkmn::calculations::spinda_spots added_spots = SPOTS1 + SPOTS2;
     EXPECT_EQ(14, added_spots.left_ear.x);
     EXPECT_EQ(10, added_spots.left_ear.y);
     EXPECT_EQ(20, added_spots.right_ear.x);
@@ -726,6 +730,26 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     EXPECT_EQ(8, added_spots.left_face.y);
     EXPECT_EQ(4, added_spots.right_face.x);
     EXPECT_EQ(30, added_spots.right_face.y);
+
+    added_spots += SPOTS3;
+    EXPECT_EQ(21, added_spots.left_ear.x);
+    EXPECT_EQ(15, added_spots.left_ear.y);
+    EXPECT_EQ(30, added_spots.right_ear.x);
+    EXPECT_EQ(0, added_spots.right_ear.y);
+    EXPECT_EQ(4, added_spots.left_face.x);
+    EXPECT_EQ(23, added_spots.left_face.y);
+    EXPECT_EQ(5, added_spots.right_face.x);
+    EXPECT_EQ(34, added_spots.right_face.y);
+
+    added_spots += pkmn::calculations::spinda_coords(20, 50);
+    EXPECT_EQ(41, added_spots.left_ear.x);
+    EXPECT_EQ(65, added_spots.left_ear.y);
+    EXPECT_EQ(50, added_spots.right_ear.x);
+    EXPECT_EQ(50, added_spots.right_ear.y);
+    EXPECT_EQ(24, added_spots.left_face.x);
+    EXPECT_EQ(73, added_spots.left_face.y);
+    EXPECT_EQ(25, added_spots.right_face.x);
+    EXPECT_EQ(84, added_spots.right_face.y);
 
     /*
      * Make sure known good inputs result in expected results.

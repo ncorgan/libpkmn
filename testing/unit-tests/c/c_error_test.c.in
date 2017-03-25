@@ -2914,6 +2914,84 @@ static void calculations_size_error_test() {
  * <pkmn-c/calculations/spinda_spots.h>
  */
 static void calculations_spinda_spots_error_test() {
+    pkmn_spinda_coords_t dummy_coords;
+    pkmn_spinda_spots_t dummy_spots;
+
+    /*
+     * pkmn_calculations_add_spinda_coords
+     */
+
+    error = pkmn_calculations_add_spinda_coords(
+                NULL, // coords1
+                &dummy_coords,
+                &dummy_coords
+            );
+    TEST_NULL_POINTER_RETURN("coords1");
+
+    error = pkmn_calculations_add_spinda_coords(
+                &dummy_coords,
+                NULL, // coords2
+                &dummy_coords
+            );
+    TEST_NULL_POINTER_RETURN("coords2");
+
+    error = pkmn_calculations_add_spinda_coords(
+                &dummy_coords,
+                &dummy_coords,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
+    /*
+     * pkmn_calculations_add_spinda_spots
+     */
+
+    error = pkmn_calculations_add_spinda_spots(
+                NULL, // spots1
+                &dummy_spots,
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots1");
+
+    error = pkmn_calculations_add_spinda_spots(
+                &dummy_spots,
+                NULL, // spots2
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots2");
+
+    error = pkmn_calculations_add_spinda_spots(
+                &dummy_spots,
+                &dummy_spots,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
+    /*
+     * pkmn_calculations_add_spinda_coords_to_spots
+     */
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                NULL, // spots
+                &dummy_coords,
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots");
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                &dummy_spots,
+                NULL, // coords
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("coords");
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                &dummy_spots,
+                &dummy_coords,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
     /*
      * pkmn_calculations_spinda_spot_offset
      */
