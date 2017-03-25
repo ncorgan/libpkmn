@@ -28,6 +28,9 @@ namespace pkmn {
         } else {
             _native = reinterpret_cast<void*>(new pksav_gen2_item_bag_t);
             std::memset(_native, 0, sizeof(pksav_gen2_item_bag_t));
+            NATIVE_RCAST->item_pocket.terminator = 0xFF;
+            NATIVE_RCAST->key_item_pocket.terminator = 0xFF;
+            NATIVE_RCAST->ball_pocket.terminator = 0xFF;
             _our_mem = true;
         }
 

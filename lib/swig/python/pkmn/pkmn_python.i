@@ -15,6 +15,11 @@ PKMN_PYTHON_INIT
 
 %{
     #include <pkmn/build_info.hpp>
+
+    #include <pkmn/game_save.hpp>
+    #include <pkmn/item_list.hpp>
+    #include <pkmn/item_bag.hpp>
+
     #include <pkmn/utils/paths.hpp>
 %}
 
@@ -33,6 +38,11 @@ PKMN_PYTHON_INIT
 // For all sptrs, for some reason didn't get ignored from pkmn.i
 %ignore make;
 %ignore get_native;
+
+// Game Save
+%ignore detect_type;
+%include <pkmn/game_save.hpp>
+PKMN_PYTHON_SPTR(game_save)
 
 // Item List
 %include <python/pkmn_item_list.i>
@@ -56,6 +66,7 @@ PKMN_PYTHON_INIT
  * Remove access to bases of sptr'd classes, but don't give access to our
  * thin make wrapper.
  */
+%rename(__make_game_save)   make_game_save;
 %rename(__make_item_list)   make_item_list;
 %rename(__make_item_bag)    make_item_bag;
 %rename(__make_pokemon)     make_pokemon;
@@ -64,6 +75,7 @@ PKMN_PYTHON_INIT
 %rename(__make_pokemon_pc)  make_pokemon_pc;
 %include <pkmn_statics.i>
 %pythoncode %{
+    game_save     = __make_game_save;
     item_list     = __make_item_list;
     item_bag      = __make_item_bag;
     pokemon       = __make_pokemon;

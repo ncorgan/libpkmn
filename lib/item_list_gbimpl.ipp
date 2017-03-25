@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -23,6 +23,8 @@ namespace pkmn {
         if(ptr) {
             _native = ptr;
             _our_mem = false;
+
+            _from_native();
         } else {
             _native = reinterpret_cast<void*>(new list_type);
             std::memset(_native, 0, sizeof(list_type));
@@ -41,6 +43,7 @@ namespace pkmn {
         _native = reinterpret_cast<void*>(new list_type);
         *GBLIST_RCAST = list;
         _our_mem = true;
+        _from_native();
     }
 
     template<typename list_type>
@@ -73,6 +76,8 @@ namespace pkmn {
                                       );
             _item_slots[index].amount = GBLIST_RCAST->items[index].count;
         }
+
+        _num_items = GBLIST_RCAST->count;
     }
 
     template<typename list_type>
@@ -81,14 +86,25 @@ namespace pkmn {
     ) {
         item_list_scoped_lock lock(this);
 
+        bool count_set = false;
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 GBLIST_RCAST->items[i].index = uint8_t(_item_slots[i].item.get_item_index());
                 GBLIST_RCAST->items[i].count = uint8_t(_item_slots[i].amount);
+                if(not count_set and GBLIST_RCAST->items[i].index == 0) {
+                    GBLIST_RCAST->count = uint8_t(i);
+                    count_set = true;
+                }
             }
         } else {
             GBLIST_RCAST->items[index].index = uint8_t(_item_slots[index].item.get_item_index());
             GBLIST_RCAST->items[index].count = uint8_t(_item_slots[index].amount);
+            for(int i = 0; i < _capacity and not count_set; ++i) {
+                if(GBLIST_RCAST->items[i].index == 0) {
+                    GBLIST_RCAST->count = uint8_t(i);
+                    count_set = true;
+                }
+            }
         }
     }
 

@@ -18,57 +18,57 @@
 
 #include <pkmn/exception.hpp>
 
-#include "pkmn_boost_unit_test.hpp"
-
 #include <boost/assign.hpp>
+
+#include <gtest/gtest.h>
 
 #include <random>
 #include <ctime>
 #include <limits>
 
-BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
+TEST(cpp_calculations_test, gen2_unown_form_test) {
     /*
-     * Make sure expected exceptions are thrown
+     * Make sure expected exceptions are thrown.
      */
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               -1, 0, 0, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  -1, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               16, 0, 0, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  16, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, -1, 0, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, -1, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, 16, 0, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, 16, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, 0, -1, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, 0, -1, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, 0, 16, 0
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, 0, 16, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, 0, 0, -1
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, 0, 0, -1
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        std::string form = pkmn::calculations::gen2_unown_form(
-                               0, 0, 0, 16
-                           );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_unown_form(
+                  0, 0, 0, 16
+              );
     , pkmn::range_error);
 
     /*
@@ -79,15 +79,15 @@ BOOST_AUTO_TEST_CASE(gen2_unown_form_test) {
     std::string form1 = pkmn::calculations::gen2_unown_form(
                             10, 9, 1, 14
                         );
-    BOOST_CHECK_EQUAL(form1, "G");
+    EXPECT_EQ("G", form1);
 
     std::string form2 = pkmn::calculations::gen2_unown_form(
                             5, 15, 10, 5
                         );
-    BOOST_CHECK_EQUAL(form2, "S");
+    EXPECT_EQ("S", form2);
 }
 
-BOOST_AUTO_TEST_CASE(gen3_unown_form_test) {
+TEST(cpp_calculations_test, gen3_unown_form_test) {
     /*
      * Make sure known good inputs result in expected results.
      *
@@ -96,10 +96,10 @@ BOOST_AUTO_TEST_CASE(gen3_unown_form_test) {
     std::string form = pkmn::calculations::gen3_unown_form(
                            0x4C07DE71
                        );
-    BOOST_CHECK_EQUAL(form, "B");
+    EXPECT_EQ("B", form);
 }
 
-BOOST_AUTO_TEST_CASE(wurmple_becomes_silcoon_test) {
+TEST(cpp_calculations_test, wurmple_becomes_silcoon_test) {
     /*
      * Make sure known good inputs result in expected results.
      *
@@ -108,37 +108,37 @@ BOOST_AUTO_TEST_CASE(wurmple_becomes_silcoon_test) {
     bool before_gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
         0x5CF4091C, true
     );
-    BOOST_CHECK(before_gen5_1);
+    EXPECT_TRUE(before_gen5_1);
     bool before_gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
         0x091C5CF4, true
     );
-    BOOST_CHECK(not before_gen5_2);
+    EXPECT_FALSE(before_gen5_2);
 
     bool gen5_1 = pkmn::calculations::wurmple_becomes_silcoon(
         0x091C5CF4, false
     );
-    BOOST_CHECK(gen5_1);
+    EXPECT_TRUE(gen5_1);
     bool gen5_2 = pkmn::calculations::wurmple_becomes_silcoon(
         0x5CF4091C, false
     );
-    BOOST_CHECK(not gen5_2);
+    EXPECT_FALSE(gen5_2);
 }
 
-BOOST_AUTO_TEST_CASE(gen2_gender_test) {
+TEST(cpp_calculations_test, gen2_gender_test) {
     /*
-     * Make sure expected exceptions are thrown
+     * Make sure expected exceptions are thrown.
      */
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Not a species", 0
                              );
     , std::invalid_argument);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
                              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", 16
                              );
@@ -154,11 +154,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string nidorino1 = pkmn::calculations::gen2_pokemon_gender(
                                 "Nidorino", 0
                             );
-    BOOST_CHECK_EQUAL(nidorino1, "Male");
+    EXPECT_EQ("Male", nidorino1);
     std::string nidorino2 = pkmn::calculations::gen2_pokemon_gender(
                                 "Nidorino", 15
                             );
-    BOOST_CHECK_EQUAL(nidorino2, "Male");
+    EXPECT_EQ("Male", nidorino2);
 
     /*
      * 87.5% male, 12.5% female
@@ -166,11 +166,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string charmander1 = pkmn::calculations::gen2_pokemon_gender(
                                   "Charmander", 1
                               );
-    BOOST_CHECK_EQUAL(charmander1, "Female");
+    EXPECT_EQ("Female", charmander1);
     std::string charmander2 = pkmn::calculations::gen2_pokemon_gender(
                                   "Charmander", 2
                               );
-    BOOST_CHECK_EQUAL(charmander2, "Male");
+    EXPECT_EQ("Male", charmander2);
 
     /*
      * 75% male, 25% female
@@ -178,11 +178,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string growlithe1 = pkmn::calculations::gen2_pokemon_gender(
                                  "Growlithe", 3
                              );
-    BOOST_CHECK_EQUAL(growlithe1, "Female");
+    EXPECT_EQ("Female", growlithe1);
     std::string growlithe2 = pkmn::calculations::gen2_pokemon_gender(
                                  "Growlithe", 4
                              );
-    BOOST_CHECK_EQUAL(growlithe2, "Male");
+    EXPECT_EQ("Male", growlithe2);
 
     /*
      * 50% male, 50% female
@@ -190,11 +190,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string pidgey1 = pkmn::calculations::gen2_pokemon_gender(
                               "Pidgey", 6
                           );
-    BOOST_CHECK_EQUAL(pidgey1, "Female");
+    EXPECT_EQ("Female", pidgey1);
     std::string pidgey2 = pkmn::calculations::gen2_pokemon_gender(
                               "Pidgey", 7
                           );
-    BOOST_CHECK_EQUAL(pidgey2, "Male");
+    EXPECT_EQ("Male", pidgey2);
 
     /*
      * 25% male, 75% female
@@ -202,11 +202,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string vulpix1 = pkmn::calculations::gen2_pokemon_gender(
                               "Vulpix", 11
                           );
-    BOOST_CHECK_EQUAL(vulpix1, "Female");
+    EXPECT_EQ("Female", vulpix1);
     std::string vulpix2 = pkmn::calculations::gen2_pokemon_gender(
                               "Vulpix", 12
                           );
-    BOOST_CHECK_EQUAL(vulpix2, "Male");
+    EXPECT_EQ("Male", vulpix2);
 
     /*
      * All female
@@ -214,11 +214,11 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string nidorina1 = pkmn::calculations::gen2_pokemon_gender(
                                 "Nidorina", 0
                             );
-    BOOST_CHECK_EQUAL(nidorina1, "Female");
+    EXPECT_EQ("Female", nidorina1);
     std::string nidorina2 = pkmn::calculations::gen2_pokemon_gender(
                                 "Nidorina", 15
                             );
-    BOOST_CHECK_EQUAL(nidorina2, "Female");
+    EXPECT_EQ("Female", nidorina2);
 
     /*
      * Genderless
@@ -226,18 +226,18 @@ BOOST_AUTO_TEST_CASE(gen2_gender_test) {
     std::string magnemite1 = pkmn::calculations::gen2_pokemon_gender(
                                  "Magnemite", 0
                              );
-    BOOST_CHECK_EQUAL(magnemite1, "Genderless");
+    EXPECT_EQ("Genderless", magnemite1);
     std::string magnemite2 = pkmn::calculations::gen2_pokemon_gender(
                                  "Magnemite", 15
                              );
-    BOOST_CHECK_EQUAL(magnemite2, "Genderless");
+    EXPECT_EQ("Genderless", magnemite2);
 }
 
-BOOST_AUTO_TEST_CASE(modern_gender_test) {
+TEST(cpp_calculations_test, modern_gender_test) {
     /*
      * Make sure expected exceptions are thrown
      */
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         std::string gender = pkmn::calculations::modern_pokemon_gender(
                                  "Not a species", 0
                              );
@@ -253,12 +253,12 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string nidorino1 = pkmn::calculations::modern_pokemon_gender(
                                 "Nidorino", 0
                             );
-    BOOST_CHECK_EQUAL(nidorino1, "Male");
+    EXPECT_EQ("Male", nidorino1);
     std::string nidorino2 = pkmn::calculations::modern_pokemon_gender(
                                 "Nidorino",
                                 std::numeric_limits<uint32_t>::max()
                             );
-    BOOST_CHECK_EQUAL(nidorino2, "Male");
+    EXPECT_EQ("Male", nidorino2);
 
     /*
      * 87.5% male, 12.5% female
@@ -266,11 +266,11 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string charmander1 = pkmn::calculations::modern_pokemon_gender(
                                   "Charmander", 30
                               );
-    BOOST_CHECK_EQUAL(charmander1, "Female");
+    EXPECT_EQ("Female", charmander1);
     std::string charmander2 = pkmn::calculations::modern_pokemon_gender(
                                   "Charmander", 31
                               );
-    BOOST_CHECK_EQUAL(charmander2, "Male");
+    EXPECT_EQ("Male", charmander2);
 
     /*
      * 75% male, 25% female
@@ -278,11 +278,11 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string growlithe1 = pkmn::calculations::modern_pokemon_gender(
                                  "Growlithe", 63
                              );
-    BOOST_CHECK_EQUAL(growlithe1, "Female");
+    EXPECT_EQ("Female", growlithe1);
     std::string growlithe2 = pkmn::calculations::modern_pokemon_gender(
                                  "Growlithe", 64
                              );
-    BOOST_CHECK_EQUAL(growlithe2, "Male");
+    EXPECT_EQ("Male", growlithe2);
 
     /*
      * 50% male, 50% female
@@ -290,11 +290,11 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string pidgey1 = pkmn::calculations::modern_pokemon_gender(
                               "Pidgey", 126
                           );
-    BOOST_CHECK_EQUAL(pidgey1, "Female");
+    EXPECT_EQ("Female", pidgey1);
     std::string pidgey2 = pkmn::calculations::modern_pokemon_gender(
                               "Pidgey", 127
                           );
-    BOOST_CHECK_EQUAL(pidgey2, "Male");
+    EXPECT_EQ("Male", pidgey2);
 
     /*
      * 25% male, 75% female
@@ -302,11 +302,11 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string vulpix1 = pkmn::calculations::modern_pokemon_gender(
                               "Vulpix", 190
                           );
-    BOOST_CHECK_EQUAL(vulpix1, "Female");
+    EXPECT_EQ("Female", vulpix1);
     std::string vulpix2 = pkmn::calculations::modern_pokemon_gender(
                               "Vulpix", 191
                           );
-    BOOST_CHECK_EQUAL(vulpix2, "Male");
+    EXPECT_EQ("Male", vulpix2);
 
     /*
      * All female
@@ -314,12 +314,12 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string nidorina1 = pkmn::calculations::modern_pokemon_gender(
                                 "Nidorina", 0
                             );
-    BOOST_CHECK_EQUAL(nidorina1, "Female");
+    EXPECT_EQ("Female", nidorina1);
     std::string nidorina2 = pkmn::calculations::modern_pokemon_gender(
                                 "Nidorina",
                                 std::numeric_limits<uint32_t>::max()
                             );
-    BOOST_CHECK_EQUAL(nidorina2, "Female");
+    EXPECT_EQ("Female", nidorina2);
 
     /*
      * Genderless
@@ -327,55 +327,55 @@ BOOST_AUTO_TEST_CASE(modern_gender_test) {
     std::string magnemite1 = pkmn::calculations::modern_pokemon_gender(
                                  "Magnemite", 0
                              );
-    BOOST_CHECK_EQUAL(magnemite1, "Genderless");
+    EXPECT_EQ("Genderless", magnemite1);
     std::string magnemite2 = pkmn::calculations::modern_pokemon_gender(
                                  "Magnemite",
                                 std::numeric_limits<uint32_t>::max()
                              );
-    BOOST_CHECK_EQUAL(magnemite2, "Genderless");
+    EXPECT_EQ("Genderless", magnemite2);
 }
 
-BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
+TEST(cpp_calculations_test, gen2_hidden_power_test) {
     pkmn::calculations::hidden_power hidden_power;
     /*
      * Make sure expected exceptions are thrown
      */
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            -1, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            16, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, -1, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 16, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, -1, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 16, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, -1
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, 16
                        );
@@ -389,71 +389,71 @@ BOOST_AUTO_TEST_CASE(gen2_hidden_power_test) {
     hidden_power = pkmn::calculations::gen2_hidden_power(
                        15, 15, 15, 14
                    );
-    BOOST_CHECK_EQUAL(hidden_power.type, "Dark");
-    BOOST_CHECK_EQUAL(hidden_power.base_power, 69);
+    EXPECT_EQ("Dark", hidden_power.type);
+    EXPECT_EQ(69, hidden_power.base_power);
 }
 
-BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
+TEST(cpp_calculations_test, modern_hidden_power_test) {
     pkmn::calculations::hidden_power hidden_power;
     /*
      * Make sure expected exceptions are thrown
      */
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            -1, 0, 0, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            32, 0, 0, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, -1, 0, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 32, 0, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, -1, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 32, 0, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, -1, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 32, 0, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, -1, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 32, 0
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, -1
                        );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
+    EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, 32
                        );
@@ -467,11 +467,11 @@ BOOST_AUTO_TEST_CASE(modern_hidden_power_test) {
     hidden_power = pkmn::calculations::modern_hidden_power(
                        30, 31, 31, 31, 30, 31
                    );
-    BOOST_CHECK_EQUAL(hidden_power.type, "Grass");
-    BOOST_CHECK_EQUAL(hidden_power.base_power, 70);
+    EXPECT_EQ("Grass", hidden_power.type);
+    EXPECT_EQ(70, hidden_power.base_power);
 }
 
-BOOST_AUTO_TEST_CASE(gen3_gen4_nature_test) {
+TEST(cpp_calculations_test, gen3_gen4_nature_test) {
     static const std::vector<std::string> natures = boost::assign::list_of
         ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
         ("Bold")("Docile")("Relaxed")("Impish")("Lax")
@@ -482,59 +482,56 @@ BOOST_AUTO_TEST_CASE(gen3_gen4_nature_test) {
 
     std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
-        BOOST_CHECK_EQUAL(
+        EXPECT_EQ(
             pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
             natures[i]
         );
     }
 }
 
-BOOST_AUTO_TEST_CASE(gen2_shiny_test) {
-    bool shiny = false;
-    (void)shiny;
-
+TEST(cpp_calculations_test, gen2_shiny_test) {
     /*
      * Make sure expected exceptions are thrown
      */
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    -1, 0, 0, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  -1, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    16, 0, 0, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  16, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, -1, 0, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, -1, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, 16, 0, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, 16, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, 0, -1, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, 0, -1, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, 0, 16, 0
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, 0, 16, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, 0, 0, -1
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, 0, 0, -1
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        shiny = pkmn::calculations::gen2_shiny(
-                    0, 0, 0, 16
-                );
+    EXPECT_THROW(
+        (void)pkmn::calculations::gen2_shiny(
+                  0, 0, 0, 16
+              );
     , pkmn::range_error);
 
     /*
@@ -548,11 +545,11 @@ BOOST_AUTO_TEST_CASE(gen2_shiny_test) {
     bool shiny2 = pkmn::calculations::gen2_shiny(
                       6, 15, 7, 5
                   );
-    BOOST_CHECK(shiny1);
-    BOOST_CHECK(not shiny2);
+    EXPECT_TRUE(shiny1);
+    EXPECT_FALSE(shiny2);
 }
 
-BOOST_AUTO_TEST_CASE(modern_shiny_test) {
+TEST(cpp_calculations_test, modern_shiny_test) {
     /*
      * Make sure known good inputs result in expected results.
      *
@@ -567,11 +564,11 @@ BOOST_AUTO_TEST_CASE(modern_shiny_test) {
                       0xB58F0B2A,
                       398174488
                   );
-    BOOST_CHECK(shiny1);
-    BOOST_CHECK(shiny2);
+    EXPECT_TRUE(shiny1);
+    EXPECT_TRUE(shiny2);
 }
 
-BOOST_AUTO_TEST_CASE(pokemon_size_test) {
+TEST(cpp_calculations_test, pokemon_size_test) {
     /*
      * There are no known good calculations, so just check for reasonable values
      * for each relevant Pokémon.
@@ -586,65 +583,65 @@ BOOST_AUTO_TEST_CASE(pokemon_size_test) {
     ;
 
     // Test input validation.
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, -1, 0, 0, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, -1, 0, 0, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 32, 0, 0, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 32, 0, 0, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, -1, 0, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, -1, 0, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 32, 0, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 32, 0, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, -1, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, -1, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 32, 0, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 32, 0, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, -1, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, -1, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, 32, 0, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, 32, 0, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, 0, -1, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, 0, -1, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, 0, 32, 0
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, 0, 32, 0
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, 0, 0, -1
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, 0, 0, -1
+              );
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pkmn::calculations::pokemon_size(
-            "Barboach", 0, 0, 0, 0, 0, 0, 32
-        )
+    EXPECT_THROW(
+        (void)pkmn::calculations::pokemon_size(
+                  "Barboach", 0, 0, 0, 0, 0, 0, 32
+              );
     , pkmn::range_error);
 
     std::srand((unsigned int)std::time(NULL));
@@ -666,12 +663,12 @@ BOOST_AUTO_TEST_CASE(pokemon_size_test) {
                              (std::rand() % 32),
                              (std::rand() % 32)
                          );
-            BOOST_CHECK_LE(std::abs(size-height), height);
+            EXPECT_LE(std::abs(size-height), height);
         }
     }
 }
 
-BOOST_AUTO_TEST_CASE(spinda_coords_test) {
+TEST(cpp_calculations_test, spinda_coords_test) {
     /*
      * Check (in)equality operators.
      */
@@ -679,13 +676,13 @@ BOOST_AUTO_TEST_CASE(spinda_coords_test) {
     BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords2(123,456);
     BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords3(456,123);
 
-    BOOST_CHECK(coords1 == coords2);
-    BOOST_CHECK(not (coords1 != coords2));
-    BOOST_CHECK(coords1 != coords3);
-    BOOST_CHECK(not (coords1 == coords3));
+    EXPECT_TRUE(coords1 == coords2);
+    EXPECT_FALSE(coords1 != coords2);
+    EXPECT_TRUE(coords1 != coords3);
+    EXPECT_FALSE(coords1 == coords3);
 }
 
-BOOST_AUTO_TEST_CASE(spinda_spot_test) {
+TEST(cpp_calculations_test, spinda_spot_test) {
     /*
      * Check (in)equality operators.
      */
@@ -707,8 +704,8 @@ BOOST_AUTO_TEST_CASE(spinda_spot_test) {
         pkmn::calculations::spinda_coords(2,15),
         pkmn::calculations::spinda_coords(1,4)
     );
-    BOOST_CHECK(SPOTS1 == SPOTS2);
-    BOOST_CHECK(SPOTS1 != SPOTS3);
+    EXPECT_TRUE(SPOTS1 == SPOTS2);
+    EXPECT_TRUE(SPOTS1 != SPOTS3);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -719,49 +716,42 @@ BOOST_AUTO_TEST_CASE(spinda_spot_test) {
     pkmn::calculations::spinda_spots spots1 = pkmn::calculations::spinda_spot_offset(
                                                   4064348759
                                               );
-    BOOST_CHECK(spots1.left_ear   == SPOTS1.left_ear);
-    BOOST_CHECK(spots1.right_ear  == SPOTS1.right_ear);
-    BOOST_CHECK(spots1.left_face  == SPOTS1.left_face);
-    BOOST_CHECK(spots1.right_face == SPOTS1.right_face);
+    EXPECT_TRUE(spots1.left_ear   == SPOTS1.left_ear);
+    EXPECT_TRUE(spots1.right_ear  == SPOTS1.right_ear);
+    EXPECT_TRUE(spots1.left_face  == SPOTS1.left_face);
+    EXPECT_TRUE(spots1.right_face == SPOTS1.right_face);
 }
 
-/*
- * Off-by-one is acceptable for stat checks, but BOOST_CHECK_CLOSE
- * is for floats or doubles.
- */
-PKMN_INLINE void PKMN_CHECK_STAT_CLOSE(
+PKMN_INLINE void PKMN_EXPECT_STAT_CLOSE(
     int actual, int expected
 ) {
-    BOOST_CHECK(int(std::abs(actual-expected)) <= 1);
+    EXPECT_LE(int(std::abs(actual-expected)), 1);
 }
 
-BOOST_AUTO_TEST_CASE(gb_stat_test) {
-    int stat = 0;
-    (void)stat;
-
+TEST(cpp_calculations_test, gb_stat_test) {
     /*
      * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_gb_stat(
-                   "Not a stat", 1, 1, 1, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_gb_stat(
+            "Not a stat", 1, 1, 1, 1
+        );
     , std::invalid_argument);
 
     // Invalid EV
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_gb_stat(
-                   "Attack", 1, 1, 123456, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_gb_stat(
+            "Attack", 1, 1, 123456, 1
+        );
     , pkmn::range_error);
 
     // Invalid IV
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_gb_stat(
-                   "Attack", 1, 1, 1, 12345
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_gb_stat(
+            "Attack", 1, 1, 1, 12345
+        );
     , pkmn::range_error);
 
     /*
@@ -769,84 +759,81 @@ BOOST_AUTO_TEST_CASE(gb_stat_test) {
      *
      * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
      */
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "HP", 81, 35, 22850, 7
         ), 189
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Attack", 81, 55, 23140, 8
         ), 137
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Defense", 81, 30, 17280, 13
         ), 101
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Special", 81, 50, 19625, 9
         ), 128
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Special Attack", 81, 50, 19625, 9
         ), 128
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Special Defense", 81, 40, 19625, 9
         ), 112
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_gb_stat(
             "Speed", 81, 90, 24795, 5
         ), 190
     );
 }
 
-BOOST_AUTO_TEST_CASE(modern_stat_test) {
-    int stat = 0;
-    (void)stat;
-
+TEST(cpp_calculations_test, modern_stat_test) {
     /*
      * Make sure expected exceptions are thrown
      */
 
     // Invalid stat
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_modern_stat(
-                   "Not a stat", 1, 1.0f, 1, 1, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_modern_stat(
+            "Not a stat", 1, 1.0f, 1, 1, 1
+        );
     , std::invalid_argument);
 
     // No Special past Generation I
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_modern_stat(
-                   "Special", 1, 1.0f, 1, 1, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_modern_stat(
+            "Special", 1, 1.0f, 1, 1, 1
+        );
     , std::invalid_argument);
 
     // Invalid nature modifier
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_modern_stat(
-                   "Attack", 1, 0.666f, 1, 1, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_modern_stat(
+            "Attack", 1, 0.666f, 1, 1, 1
+        );
     , std::domain_error);
 
     // Invalid EV
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_modern_stat(
-                   "Attack", 1, 1.0f, 1, 12345, 1
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_modern_stat(
+            "Attack", 1, 1.0f, 1, 12345, 1
+        );
     , pkmn::range_error);
 
     // Invalid IV
-    BOOST_CHECK_THROW(
-        stat = pkmn::calculations::get_modern_stat(
-                   "Attack", 1, 1.0f, 1, 1, 12345
-               );
+    EXPECT_THROW(
+        pkmn::calculations::get_modern_stat(
+            "Attack", 1, 1.0f, 1, 1, 12345
+        );
     , pkmn::range_error);
 
     /*
@@ -854,32 +841,32 @@ BOOST_AUTO_TEST_CASE(modern_stat_test) {
      *
      * Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
      */
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "HP", 78, 1.0f, 108, 74, 24
         ), 289
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "Attack", 78, 1.1f, 130, 195, 12
         ), 280
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "Defense", 78, 1.0f, 95, 86, 30
         ), 193
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "Special Attack", 78, 0.9f, 80, 48, 16
         ), 136
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "Special Defense", 78, 1.0f, 85, 84, 23
         ), 171
     );
-    PKMN_CHECK_STAT_CLOSE(
+    PKMN_EXPECT_STAT_CLOSE(
         pkmn::calculations::get_modern_stat(
             "Speed", 78, 1.0f, 102, 23, 5
         ), 172

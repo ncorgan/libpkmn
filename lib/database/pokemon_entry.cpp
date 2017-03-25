@@ -461,13 +461,13 @@ namespace pkmn { namespace database {
     }
 
     /*
-     * Some Pokémon had different types before the introduction of the Fairy
-     * type.
+     * Some Pokémon had different types before the introduction of the Steel
+     * Fairy types.
      */
     BOOST_STATIC_CONSTEXPR int old_normal_only[]    = {35,36,125,126,173,175};
     BOOST_STATIC_CONSTEXPR int old_normal_primary[] = {176,468};
     BOOST_STATIC_CONSTEXPR int old_none_secondary[] = {
-        39,40,122,174,183,184,280,281,282,298,303,439,546,547
+        39,40,81,82,122,174,183,184,280,281,282,298,303,439,546,547
     };
 
     static PKMN_INLINE bool species_id_had_normal_only(
@@ -1119,6 +1119,7 @@ namespace pkmn { namespace database {
         "diamond-pearl",
         "diamond-pearl",
         "platinum",
+        "heartgold-soulsilver",
         "heartgold-soulsilver",
         "black-white",
         "black-white",

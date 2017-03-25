@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
-#include "pkmn_boost_unit_test.hpp"
+#include <gtest/gtest.h>
 
 #include <algorithm>
 
@@ -19,110 +19,107 @@ static PKMN_INLINE bool string_in_vector(
     return (std::find(vec.begin(), vec.end(), str) != vec.end());
 }
 
-BOOST_AUTO_TEST_CASE(ability_list_test) {
-    std::vector<std::string> abilities2, abilities3,
-                             abilities4, abilities5,
-                             abilities6, abilities7;
+TEST(cpp_lists_test, ability_list_test) {
+    std::vector<std::string> abilities3, abilities4,
+                             abilities5, abilities6;
 
-    BOOST_CHECK_THROW(
-        abilities2 = pkmn::database::get_ability_list(2);
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_list(2);
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        abilities7 = pkmn::database::get_ability_list(7);
+    EXPECT_THROW(
+        (void)pkmn::database::get_ability_list(7);
     , pkmn::range_error);
 
     abilities3 = pkmn::database::get_ability_list(3);
-    BOOST_CHECK(not string_in_vector(abilities3, "Adaptability"));
+    EXPECT_FALSE(string_in_vector(abilities3, "Adaptability"));
 
     abilities4 = pkmn::database::get_ability_list(4);
-    BOOST_CHECK(string_in_vector(abilities4, "Adaptability"));
-    BOOST_CHECK(not string_in_vector(abilities4, "Analytic"));
+    EXPECT_TRUE(string_in_vector(abilities4, "Adaptability"));
+    EXPECT_FALSE(string_in_vector(abilities4, "Analytic"));
 
     abilities5 = pkmn::database::get_ability_list(5);
-    BOOST_CHECK(string_in_vector(abilities5, "Analytic"));
-    BOOST_CHECK(not string_in_vector(abilities5, "Aerilate"));
+    EXPECT_TRUE(string_in_vector(abilities5, "Analytic"));
+    EXPECT_FALSE(string_in_vector(abilities5, "Aerilate"));
 
     abilities6 = pkmn::database::get_ability_list(6);
-    BOOST_CHECK(string_in_vector(abilities6, "Aerilate"));
+    EXPECT_TRUE(string_in_vector(abilities6, "Aerilate"));
 
-    BOOST_CHECK(abilities3.size() > 0);
-    BOOST_CHECK(abilities3.size() < abilities4.size());
-    BOOST_CHECK(abilities4.size() < abilities5.size());
-    BOOST_CHECK(abilities5.size() < abilities6.size());
+    EXPECT_TRUE(abilities3.size() > 0);
+    EXPECT_TRUE(abilities3.size() < abilities4.size());
+    EXPECT_TRUE(abilities4.size() < abilities5.size());
+    EXPECT_TRUE(abilities5.size() < abilities6.size());
 }
 
-BOOST_AUTO_TEST_CASE(game_list_test) {
-    std::vector<std::string> games0, games1,
-                             games2, games3,
-                             games4, games5,
-                             games6, games7;
+TEST(cpp_lists_test, game_list_test) {
+    std::vector<std::string> games1, games2,
+                             games3, games4,
+                             games5, games6;
 
     /*
      * Make sure invalid generations throw an exception.
      */
-    BOOST_CHECK_THROW(
-        games0 = pkmn::database::get_game_list(0, true);
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_list(0, true);
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        games7 = pkmn::database::get_game_list(7, true);
+    EXPECT_THROW(
+        (void)pkmn::database::get_game_list(7, true);
     , pkmn::range_error);
 
     /*
      * Generation I
      */
     games1 = pkmn::database::get_game_list(1, false);
-    BOOST_CHECK_EQUAL(games1.size(), 3);
+    EXPECT_EQ(3, games1.size());
     games1 = pkmn::database::get_game_list(1, true);
-    BOOST_CHECK_EQUAL(games1.size(), 3);
+    EXPECT_EQ(3, games1.size());
 
     /*
      * Generation II
      */
     games2 = pkmn::database::get_game_list(2, false);
-    BOOST_CHECK_EQUAL(games2.size(), 3);
+    EXPECT_EQ(3, games2.size());
     games2 = pkmn::database::get_game_list(2, true);
-    BOOST_CHECK_EQUAL(games2.size(), 6);
+    EXPECT_EQ(6, games2.size());
 
     /*
      * Generation III
      */
     games3 = pkmn::database::get_game_list(3, false);
-    BOOST_CHECK_EQUAL(games3.size(), 7);
+    EXPECT_EQ(7, games3.size());
     games3 = pkmn::database::get_game_list(3, true);
-    BOOST_CHECK_EQUAL(games3.size(), 13);
+    EXPECT_EQ(13, games3.size());
 
     /*
      * Generation IV
      */
     games4 = pkmn::database::get_game_list(4, false);
-    BOOST_CHECK_EQUAL(games4.size(), 5);
+    EXPECT_EQ(5, games4.size());
     games4 = pkmn::database::get_game_list(4, true);
-    BOOST_CHECK_EQUAL(games4.size(), 18);
+    EXPECT_EQ(18, games4.size());
 
     /*
      * Generation V
      */
     games5 = pkmn::database::get_game_list(5, false);
-    BOOST_CHECK_EQUAL(games5.size(), 4);
+    EXPECT_EQ(4, games5.size());
     games5 = pkmn::database::get_game_list(5, true);
-    BOOST_CHECK_EQUAL(games5.size(), 22);
+    EXPECT_EQ(22, games5.size());
 
     /*
      * Generation VI
      */
     games6 = pkmn::database::get_game_list(6, false);
-    BOOST_CHECK_EQUAL(games6.size(), 4);
+    EXPECT_EQ(4, games6.size());
     games6 = pkmn::database::get_game_list(6, true);
-    BOOST_CHECK_EQUAL(games6.size(), 26);
+    EXPECT_EQ(26, games6.size());
 }
 
-BOOST_AUTO_TEST_CASE(item_list_test) {
+TEST(cpp_lists_test, item_list_test) {
     /*
      * Make sure invalid games fail.
      */
-    std::vector<std::string> items_bad;
-    BOOST_CHECK_THROW(
-        items_bad = pkmn::database::get_item_list("Not a game");
+    EXPECT_THROW(
+        (void)pkmn::database::get_item_list("Not a game");
     , std::invalid_argument);
 
     /*
@@ -130,18 +127,18 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
      */
     std::vector<std::string> items_rb = pkmn::database::get_item_list("Red");
     std::vector<std::string> items_y  = pkmn::database::get_item_list("Yellow");
-    BOOST_CHECK(items_rb == items_y);
+    EXPECT_TRUE(items_rb == items_y);
 
     /*
      * Generation II
      */
     std::vector<std::string> items_gs = pkmn::database::get_item_list("Gold");
     std::vector<std::string> items_c  = pkmn::database::get_item_list("Crystal");
-    BOOST_CHECK(items_gs.size() < items_c.size());
-    BOOST_CHECK(not string_in_vector(items_gs, "GS Ball"));
-    BOOST_CHECK(string_in_vector(items_c, "GS Ball"));
-    BOOST_CHECK(not string_in_vector(items_gs, "Black Apricorn"));
-    BOOST_CHECK(string_in_vector(items_gs, "Blk Apricorn"));
+    EXPECT_LT(items_gs.size(), items_c.size());
+    EXPECT_FALSE(string_in_vector(items_gs, "GS Ball"));
+    EXPECT_TRUE(string_in_vector(items_c, "GS Ball"));
+    EXPECT_FALSE(string_in_vector(items_gs, "Black Apricorn"));
+    EXPECT_TRUE(string_in_vector(items_gs, "Blk Apricorn"));
 
     /*
      * Generation III
@@ -152,29 +149,29 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     std::vector<std::string> items_colo = pkmn::database::get_item_list("Colosseum");
     std::vector<std::string> items_xd   = pkmn::database::get_item_list("XD");
 
-    BOOST_CHECK(not string_in_vector(items_rs, "Magma Emblem"));
-    BOOST_CHECK(string_in_vector(items_e, "Magma Emblem"));
-    BOOST_CHECK(not string_in_vector(items_frlg, "Magma Emblem"));
-    BOOST_CHECK(not string_in_vector(items_colo, "Magma Emblem"));
-    BOOST_CHECK(not string_in_vector(items_xd, "Magma Emblem"));
+    EXPECT_FALSE(string_in_vector(items_rs, "Magma Emblem"));
+    EXPECT_TRUE(string_in_vector(items_e, "Magma Emblem"));
+    EXPECT_FALSE(string_in_vector(items_frlg, "Magma Emblem"));
+    EXPECT_FALSE(string_in_vector(items_colo, "Magma Emblem"));
+    EXPECT_FALSE(string_in_vector(items_xd, "Magma Emblem"));
 
-    BOOST_CHECK(not string_in_vector(items_rs, "Helix Fossil"));
-    BOOST_CHECK(not string_in_vector(items_e, "Helix Fossil"));
-    BOOST_CHECK(string_in_vector(items_frlg, "Helix Fossil"));
-    BOOST_CHECK(not string_in_vector(items_colo, "Helix Fossil"));
-    BOOST_CHECK(not string_in_vector(items_xd, "Helix Fossil"));
+    EXPECT_FALSE(string_in_vector(items_rs, "Helix Fossil"));
+    EXPECT_FALSE(string_in_vector(items_e, "Helix Fossil"));
+    EXPECT_TRUE(string_in_vector(items_frlg, "Helix Fossil"));
+    EXPECT_FALSE(string_in_vector(items_colo, "Helix Fossil"));
+    EXPECT_FALSE(string_in_vector(items_xd, "Helix Fossil"));
 
-    BOOST_CHECK(not string_in_vector(items_rs, "Time Flute"));
-    BOOST_CHECK(not string_in_vector(items_e, "Time Flute"));
-    BOOST_CHECK(not string_in_vector(items_frlg, "Time Flute"));
-    BOOST_CHECK(string_in_vector(items_colo, "Time Flute"));
-    BOOST_CHECK(not string_in_vector(items_xd, "Time Flute"));
+    EXPECT_FALSE(string_in_vector(items_rs, "Time Flute"));
+    EXPECT_FALSE(string_in_vector(items_e, "Time Flute"));
+    EXPECT_FALSE(string_in_vector(items_frlg, "Time Flute"));
+    EXPECT_TRUE(string_in_vector(items_colo, "Time Flute"));
+    EXPECT_FALSE(string_in_vector(items_xd, "Time Flute"));
 
-    BOOST_CHECK(not string_in_vector(items_rs, "Battle CD 01"));
-    BOOST_CHECK(not string_in_vector(items_e, "Battle CD 01"));
-    BOOST_CHECK(not string_in_vector(items_frlg, "Battle CD 01"));
-    BOOST_CHECK(not string_in_vector(items_colo, "Battle CD 01"));
-    BOOST_CHECK(string_in_vector(items_xd, "Battle CD 01"));
+    EXPECT_FALSE(string_in_vector(items_rs, "Battle CD 01"));
+    EXPECT_FALSE(string_in_vector(items_e, "Battle CD 01"));
+    EXPECT_FALSE(string_in_vector(items_frlg, "Battle CD 01"));
+    EXPECT_FALSE(string_in_vector(items_colo, "Battle CD 01"));
+    EXPECT_TRUE(string_in_vector(items_xd, "Battle CD 01"));
 
     /*
      * Generation IV
@@ -183,13 +180,13 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     std::vector<std::string> items_p    = pkmn::database::get_item_list("Platinum");
     std::vector<std::string> items_hgss = pkmn::database::get_item_list("HeartGold");
 
-    BOOST_CHECK(not string_in_vector(items_dp, "Griseous Orb"));
-    BOOST_CHECK(string_in_vector(items_p, "Griseous Orb"));
-    BOOST_CHECK(string_in_vector(items_hgss, "Griseous Orb"));
+    EXPECT_FALSE(string_in_vector(items_dp, "Griseous Orb"));
+    EXPECT_TRUE(string_in_vector(items_p, "Griseous Orb"));
+    EXPECT_TRUE(string_in_vector(items_hgss, "Griseous Orb"));
 
-    BOOST_CHECK(not string_in_vector(items_dp, "Dowsing MCHN"));
-    BOOST_CHECK(not string_in_vector(items_p, "Dowsing MCHN"));
-    BOOST_CHECK(string_in_vector(items_hgss, "Dowsing MCHN"));
+    EXPECT_FALSE(string_in_vector(items_dp, "Dowsing MCHN"));
+    EXPECT_FALSE(string_in_vector(items_p, "Dowsing MCHN"));
+    EXPECT_TRUE(string_in_vector(items_hgss, "Dowsing MCHN"));
 
     /*
      * Generation V
@@ -197,8 +194,8 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     std::vector<std::string> items_bw   = pkmn::database::get_item_list("Black");
     std::vector<std::string> items_b2w2 = pkmn::database::get_item_list("Black 2");
 
-    BOOST_CHECK(not string_in_vector(items_bw, "Colress MCHN"));
-    BOOST_CHECK(string_in_vector(items_b2w2, "Colress MCHN"));
+    EXPECT_FALSE(string_in_vector(items_bw, "Colress MCHN"));
+    EXPECT_TRUE(string_in_vector(items_b2w2, "Colress MCHN"));
 
     /*
      * Generation VI
@@ -206,12 +203,12 @@ BOOST_AUTO_TEST_CASE(item_list_test) {
     std::vector<std::string> items_xy   = pkmn::database::get_item_list("X");
     std::vector<std::string> items_oras = pkmn::database::get_item_list("Omega Ruby");
 
-    BOOST_CHECK(not string_in_vector(items_xy, "Slowbronite"));
-    BOOST_CHECK(string_in_vector(items_oras, "Slowbronite"));
+    EXPECT_FALSE(string_in_vector(items_xy, "Slowbronite"));
+    EXPECT_TRUE(string_in_vector(items_oras, "Slowbronite"));
 }
 
-BOOST_AUTO_TEST_CASE(location_list_test) {
-    std::vector<std::string> locations_bad, locations_gen1,
+TEST(cpp_lists_test, location_list_test) {
+    std::vector<std::string> locations_gen1,
                              locations_gs, locations_c,
                              locations_rs, locations_e,
                              locations_frlg, locations_colo,
@@ -223,266 +220,266 @@ BOOST_AUTO_TEST_CASE(location_list_test) {
     /*
      * Make sure invalid games fail.
      */
-    BOOST_CHECK_THROW(
-        locations_bad = pkmn::database::get_location_list("Not a game", true);
+    EXPECT_THROW(
+        (void)pkmn::database::get_location_list("Not a game", true);
     , std::invalid_argument);
 
     /*
      * Generation I (TODO)
      */
     locations_gen1 = pkmn::database::get_location_list("Red", true);
-    /*BOOST_CHECK_GT(locations_gen1.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_gen1, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_gen1, "Cerulean Cave"));*/
+    /*EXPECT_GT(locations_gen1.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_gen1, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_gen1, "Cerulean Cave"));*/
 
     locations_gen1 = pkmn::database::get_location_list("Red", false);
-    /*BOOST_CHECK_GT(locations_gen1.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_gen1, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_gen1, "Cerulean Cave"));*/
+    /*EXPECT_GT(locations_gen1.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_gen1, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_gen1, "Cerulean Cave"));*/
 
     /*
      * Gold/Silver
      */
     locations_gs = pkmn::database::get_location_list("Silver", true);
-    BOOST_CHECK_GT(locations_gs.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_gs, "Sprout Tower"));
-    BOOST_CHECK(string_in_vector(locations_gs, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_gs, "Battle Tower"));
+    EXPECT_GT(locations_gs.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_gs, "Sprout Tower"));
+    EXPECT_TRUE(string_in_vector(locations_gs, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_gs, "Battle Tower"));
 
     locations_gs = pkmn::database::get_location_list("Silver", false);
-    BOOST_CHECK_GT(locations_gs.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_gs, "Sprout Tower"));
-    BOOST_CHECK(string_in_vector(locations_gs, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_gs, "Battle Tower"));
+    EXPECT_GT(locations_gs.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_gs, "Sprout Tower"));
+    EXPECT_TRUE(string_in_vector(locations_gs, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_gs, "Battle Tower"));
 
     /*
      * Crystal
      */
     locations_c = pkmn::database::get_location_list("Crystal", true);
-    BOOST_CHECK_GT(locations_c.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_c, "Sprout Tower"));
-    BOOST_CHECK(string_in_vector(locations_c, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_c, "Battle Tower"));
+    EXPECT_GT(locations_c.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_c, "Sprout Tower"));
+    EXPECT_TRUE(string_in_vector(locations_c, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_c, "Battle Tower"));
 
     locations_c = pkmn::database::get_location_list("Crystal", false);
-    BOOST_CHECK_GT(locations_c.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_c, "Sprout Tower"));
-    BOOST_CHECK(string_in_vector(locations_c, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_c, "Battle Tower"));
+    EXPECT_GT(locations_c.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_c, "Sprout Tower"));
+    EXPECT_TRUE(string_in_vector(locations_c, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_c, "Battle Tower"));
 
     /*
      * Ruby/Sapphire
      */
     locations_rs = pkmn::database::get_location_list("Ruby", true);
-    BOOST_CHECK_GT(locations_rs.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_rs, "New Mauville"));
-    BOOST_CHECK(string_in_vector(locations_rs, "Artisan Cave"));
-    BOOST_CHECK(string_in_vector(locations_rs, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Pyrite Town"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Kaminko's House"));
+    EXPECT_GT(locations_rs.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_rs, "New Mauville"));
+    EXPECT_TRUE(string_in_vector(locations_rs, "Artisan Cave"));
+    EXPECT_TRUE(string_in_vector(locations_rs, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Pyrite Town"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Kaminko's House"));
 
     locations_rs = pkmn::database::get_location_list("Ruby", false);
-    BOOST_CHECK_GT(locations_rs.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_rs, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_rs, "Kaminko's House"));
+    EXPECT_GT(locations_rs.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_rs, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_rs, "Kaminko's House"));
 
     /*
      * Emerald
      */
     locations_e = pkmn::database::get_location_list("Emerald", true);
-    BOOST_CHECK_GT(locations_e.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_e, "New Mauville"));
-    BOOST_CHECK(string_in_vector(locations_e, "Artisan Cave"));
-    BOOST_CHECK(string_in_vector(locations_e, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_e, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_e, "Kaminko's House"));
+    EXPECT_GT(locations_e.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_e, "New Mauville"));
+    EXPECT_TRUE(string_in_vector(locations_e, "Artisan Cave"));
+    EXPECT_TRUE(string_in_vector(locations_e, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_e, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_e, "Kaminko's House"));
 
     locations_e = pkmn::database::get_location_list("Emerald", false);
-    BOOST_CHECK_GT(locations_e.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_e, "New Mauville"));
-    BOOST_CHECK(string_in_vector(locations_e, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_e, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_e, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_e, "Kaminko's House"));
+    EXPECT_GT(locations_e.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_e, "New Mauville"));
+    EXPECT_TRUE(string_in_vector(locations_e, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_e, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_e, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_e, "Kaminko's House"));
 
     /*
      * FireRed/LeafGreen
      */
     locations_frlg = pkmn::database::get_location_list("LeafGreen", true);
-    BOOST_CHECK_GT(locations_frlg.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_frlg, "New Mauville"));
-    BOOST_CHECK(string_in_vector(locations_frlg, "Artisan Cave"));
-    BOOST_CHECK(string_in_vector(locations_frlg, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_frlg, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_frlg, "Kaminko's House"));
+    EXPECT_GT(locations_frlg.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_frlg, "New Mauville"));
+    EXPECT_TRUE(string_in_vector(locations_frlg, "Artisan Cave"));
+    EXPECT_TRUE(string_in_vector(locations_frlg, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_frlg, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_frlg, "Kaminko's House"));
 
     locations_frlg = pkmn::database::get_location_list("LeafGreen", false);
-    BOOST_CHECK_GT(locations_frlg.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_frlg, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_frlg, "Artisan Cave"));
-    BOOST_CHECK(string_in_vector(locations_frlg, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_frlg, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_frlg, "Kaminko's House"));
+    EXPECT_GT(locations_frlg.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_frlg, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_frlg, "Artisan Cave"));
+    EXPECT_TRUE(string_in_vector(locations_frlg, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_frlg, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_frlg, "Kaminko's House"));
 
     /*
      * Colosseum
      */
     locations_colo = pkmn::database::get_location_list("Colosseum", true);
-    BOOST_CHECK_GT(locations_colo.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_colo, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_colo, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_colo, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_colo, "Realgamtwr Dome"));
-    BOOST_CHECK(string_in_vector(locations_colo, "Kaminko's House"));
+    EXPECT_GT(locations_colo.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_colo, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_colo, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_colo, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_colo, "Realgamtwr Dome"));
+    EXPECT_TRUE(string_in_vector(locations_colo, "Kaminko's House"));
 
     locations_colo = pkmn::database::get_location_list("Colosseum", false);
-    BOOST_CHECK_GT(locations_colo.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_colo, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_colo, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_colo, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_colo, "Realgamtwr Dome"));
-    BOOST_CHECK(not string_in_vector(locations_colo, "Kaminko's House"));
+    EXPECT_GT(locations_colo.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_colo, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_colo, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_colo, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_colo, "Realgamtwr Dome"));
+    EXPECT_FALSE(string_in_vector(locations_colo, "Kaminko's House"));
 
     /*
      * XD
      */
     locations_xd = pkmn::database::get_location_list("XD", true);
-    BOOST_CHECK_GT(locations_xd.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_xd, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_xd, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_xd, "Pallet Town"));
-    BOOST_CHECK(string_in_vector(locations_xd, "Realgamtwr Dome"));
-    BOOST_CHECK(string_in_vector(locations_xd, "Kaminko's House"));
+    EXPECT_GT(locations_xd.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_xd, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_xd, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_xd, "Pallet Town"));
+    EXPECT_TRUE(string_in_vector(locations_xd, "Realgamtwr Dome"));
+    EXPECT_TRUE(string_in_vector(locations_xd, "Kaminko's House"));
 
     locations_xd = pkmn::database::get_location_list("XD", false);
-    BOOST_CHECK_GT(locations_xd.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_xd, "New Mauville"));
-    BOOST_CHECK(not string_in_vector(locations_xd, "Artisan Cave"));
-    BOOST_CHECK(not string_in_vector(locations_xd, "Pallet Town"));
-    BOOST_CHECK(not string_in_vector(locations_xd, "Realgamtwr Dome"));
-    BOOST_CHECK(string_in_vector(locations_xd, "Kaminko's House"));
+    EXPECT_GT(locations_xd.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_xd, "New Mauville"));
+    EXPECT_FALSE(string_in_vector(locations_xd, "Artisan Cave"));
+    EXPECT_FALSE(string_in_vector(locations_xd, "Pallet Town"));
+    EXPECT_FALSE(string_in_vector(locations_xd, "Realgamtwr Dome"));
+    EXPECT_TRUE(string_in_vector(locations_xd, "Kaminko's House"));
 
     /*
      * Diamond/Pearl
      */
     locations_dp = pkmn::database::get_location_list("Diamond", true);
-    BOOST_CHECK_GT(locations_dp.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_dp, "Route 221"));
-    BOOST_CHECK(string_in_vector(locations_dp, "Distortion World"));
-    BOOST_CHECK(string_in_vector(locations_dp, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_dp, "PC Tokyo"));
+    EXPECT_GT(locations_dp.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_dp, "Route 221"));
+    EXPECT_TRUE(string_in_vector(locations_dp, "Distortion World"));
+    EXPECT_TRUE(string_in_vector(locations_dp, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_dp, "PC Tokyo"));
 
     locations_dp = pkmn::database::get_location_list("Diamond", false);
-    BOOST_CHECK_GT(locations_dp.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_dp, "Route 221"));
-    BOOST_CHECK(not string_in_vector(locations_dp, "Distortion World"));
-    BOOST_CHECK(not string_in_vector(locations_dp, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_dp, "PC Tokyo"));
+    EXPECT_GT(locations_dp.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_dp, "Route 221"));
+    EXPECT_FALSE(string_in_vector(locations_dp, "Distortion World"));
+    EXPECT_FALSE(string_in_vector(locations_dp, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_dp, "PC Tokyo"));
 
     /*
      * Platinum
      */
     locations_pt = pkmn::database::get_location_list("Platinum", true);
-    BOOST_CHECK_GT(locations_pt.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_pt, "Route 221"));
-    BOOST_CHECK(string_in_vector(locations_pt, "Distortion World"));
-    BOOST_CHECK(string_in_vector(locations_pt, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_pt, "PC Tokyo"));
+    EXPECT_GT(locations_pt.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_pt, "Route 221"));
+    EXPECT_TRUE(string_in_vector(locations_pt, "Distortion World"));
+    EXPECT_TRUE(string_in_vector(locations_pt, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_pt, "PC Tokyo"));
 
     locations_pt = pkmn::database::get_location_list("Platinum", false);
-    BOOST_CHECK_GT(locations_pt.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_pt, "Route 221"));
-    BOOST_CHECK(string_in_vector(locations_pt, "Distortion World"));
-    BOOST_CHECK(not string_in_vector(locations_pt, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_pt, "PC Tokyo"));
+    EXPECT_GT(locations_pt.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_pt, "Route 221"));
+    EXPECT_TRUE(string_in_vector(locations_pt, "Distortion World"));
+    EXPECT_FALSE(string_in_vector(locations_pt, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_pt, "PC Tokyo"));
 
     /*
      * HeartGold/SoulSilver
      */
     locations_hgss = pkmn::database::get_location_list("HeartGold", true);
-    BOOST_CHECK_GT(locations_hgss.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_hgss, "Route 221"));
-    BOOST_CHECK(string_in_vector(locations_hgss, "Distortion World"));
-    BOOST_CHECK(string_in_vector(locations_hgss, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_hgss, "PC Tokyo"));
+    EXPECT_GT(locations_hgss.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_hgss, "Route 221"));
+    EXPECT_TRUE(string_in_vector(locations_hgss, "Distortion World"));
+    EXPECT_TRUE(string_in_vector(locations_hgss, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_hgss, "PC Tokyo"));
 
     locations_hgss = pkmn::database::get_location_list("HeartGold", false);
-    BOOST_CHECK_GT(locations_hgss.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_hgss, "Route 221"));
-    BOOST_CHECK(not string_in_vector(locations_hgss, "Distortion World"));
-    BOOST_CHECK(string_in_vector(locations_hgss, "Sinjoh Ruins"));
-    BOOST_CHECK(string_in_vector(locations_hgss, "PC Tokyo"));
+    EXPECT_GT(locations_hgss.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_hgss, "Route 221"));
+    EXPECT_FALSE(string_in_vector(locations_hgss, "Distortion World"));
+    EXPECT_TRUE(string_in_vector(locations_hgss, "Sinjoh Ruins"));
+    EXPECT_TRUE(string_in_vector(locations_hgss, "PC Tokyo"));
 
     /*
      * Black/White
      */
     locations_bw = pkmn::database::get_location_list("White", true);
-    BOOST_CHECK_GT(locations_bw.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_bw, "Cold Storage"));
-    BOOST_CHECK(string_in_vector(locations_bw, "PWT"));
-    BOOST_CHECK(string_in_vector(locations_bw, "Castelia Sewers"));
-    BOOST_CHECK(string_in_vector(locations_bw, "PC Tokyo"));
+    EXPECT_GT(locations_bw.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_bw, "Cold Storage"));
+    EXPECT_TRUE(string_in_vector(locations_bw, "PWT"));
+    EXPECT_TRUE(string_in_vector(locations_bw, "Castelia Sewers"));
+    EXPECT_TRUE(string_in_vector(locations_bw, "PC Tokyo"));
 
     locations_bw = pkmn::database::get_location_list("White", false);
-    BOOST_CHECK_GT(locations_bw.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_bw, "Cold Storage"));
-    BOOST_CHECK(not string_in_vector(locations_bw, "PWT"));
-    BOOST_CHECK(not string_in_vector(locations_bw, "Castelia Sewers"));
-    BOOST_CHECK(string_in_vector(locations_bw, "PC Tokyo"));
+    EXPECT_GT(locations_bw.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_bw, "Cold Storage"));
+    EXPECT_FALSE(string_in_vector(locations_bw, "PWT"));
+    EXPECT_FALSE(string_in_vector(locations_bw, "Castelia Sewers"));
+    EXPECT_TRUE(string_in_vector(locations_bw, "PC Tokyo"));
 
     /*
      * Black 2/White 2
      */
     locations_b2w2 = pkmn::database::get_location_list("White 2", true);
-    BOOST_CHECK_GT(locations_b2w2.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_b2w2, "Cold Storage"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "PWT"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "Castelia Sewers"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "PC Tokyo"));
+    EXPECT_GT(locations_b2w2.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "Cold Storage"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "PWT"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "Castelia Sewers"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "PC Tokyo"));
 
     locations_b2w2 = pkmn::database::get_location_list("White 2", false);
-    BOOST_CHECK_GT(locations_b2w2.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_b2w2, "Cold Storage"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "PWT"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "Castelia Sewers"));
-    BOOST_CHECK(string_in_vector(locations_b2w2, "PC Tokyo"));
+    EXPECT_GT(locations_b2w2.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_b2w2, "Cold Storage"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "PWT"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "Castelia Sewers"));
+    EXPECT_TRUE(string_in_vector(locations_b2w2, "PC Tokyo"));
 
     /*
      * X/Y
      */
     locations_xy = pkmn::database::get_location_list("X", true);
-    BOOST_CHECK_GT(locations_xy.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_xy, "Zubat Roost"));
-    BOOST_CHECK(string_in_vector(locations_xy, "Route 101"));
-    BOOST_CHECK(string_in_vector(locations_xy, "PC Tokyo"));
+    EXPECT_GT(locations_xy.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_xy, "Zubat Roost"));
+    EXPECT_TRUE(string_in_vector(locations_xy, "Route 101"));
+    EXPECT_TRUE(string_in_vector(locations_xy, "PC Tokyo"));
 
     locations_xy = pkmn::database::get_location_list("X", false);
-    BOOST_CHECK_GT(locations_xy.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_xy, "Zubat Roost"));
-    BOOST_CHECK(not string_in_vector(locations_xy, "Route 101"));
-    BOOST_CHECK(string_in_vector(locations_xy, "PC Tokyo"));
+    EXPECT_GT(locations_xy.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_xy, "Zubat Roost"));
+    EXPECT_FALSE(string_in_vector(locations_xy, "Route 101"));
+    EXPECT_TRUE(string_in_vector(locations_xy, "PC Tokyo"));
 
     /*
      * Omega Ruby/Alpha Sapphire
      */
     locations_oras = pkmn::database::get_location_list("Omega Ruby", true);
-    BOOST_CHECK_GT(locations_oras.size(), 0);
-    BOOST_CHECK(string_in_vector(locations_oras, "Zubat Roost"));
-    BOOST_CHECK(string_in_vector(locations_oras, "Route 101"));
-    BOOST_CHECK(string_in_vector(locations_oras, "PC Tokyo"));
+    EXPECT_GT(locations_oras.size(), 0);
+    EXPECT_TRUE(string_in_vector(locations_oras, "Zubat Roost"));
+    EXPECT_TRUE(string_in_vector(locations_oras, "Route 101"));
+    EXPECT_TRUE(string_in_vector(locations_oras, "PC Tokyo"));
 
     locations_oras = pkmn::database::get_location_list("Omega Ruby", false);
-    BOOST_CHECK_GT(locations_oras.size(), 0);
-    BOOST_CHECK(not string_in_vector(locations_oras, "Zubat Roost"));
-    BOOST_CHECK(string_in_vector(locations_oras, "Route 101"));
-    BOOST_CHECK(string_in_vector(locations_oras, "PC Tokyo"));
+    EXPECT_GT(locations_oras.size(), 0);
+    EXPECT_FALSE(string_in_vector(locations_oras, "Zubat Roost"));
+    EXPECT_TRUE(string_in_vector(locations_oras, "Route 101"));
+    EXPECT_TRUE(string_in_vector(locations_oras, "PC Tokyo"));
 }
 
-BOOST_AUTO_TEST_CASE(move_list_test) {
-    std::vector<std::string> moves_bad,  moves_gen1,
+TEST(cpp_lists_test, move_list_test) {
+    std::vector<std::string> moves_gen1,
                              moves_gen2, moves_gba,
                              moves_colo, moves_xd,
                              moves_gen4, moves_gen5,
@@ -491,204 +488,203 @@ BOOST_AUTO_TEST_CASE(move_list_test) {
     /*
      * Make sure invalid games fail.
      */
-    BOOST_CHECK_THROW(
-        moves_bad = pkmn::database::get_type_list("Not a game");
+    EXPECT_THROW(
+        (void)pkmn::database::get_type_list("Not a game");
     , std::invalid_argument);
 
     /*
      * Generation I
      */
     moves_gen1 = pkmn::database::get_move_list("Red");
-    BOOST_CHECK_EQUAL(moves_gen1.size(), 165);
-    BOOST_CHECK_EQUAL(moves_gen1.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_gen1.back(), "Struggle");
+    EXPECT_EQ(165, moves_gen1.size());
+    EXPECT_EQ("Pound", moves_gen1.front());
+    EXPECT_EQ("Struggle", moves_gen1.back());
 
     /*
      * Generation II
      */
     moves_gen2 = pkmn::database::get_move_list("Gold");
-    BOOST_CHECK_EQUAL(moves_gen2.size(), 251);
-    BOOST_CHECK_EQUAL(moves_gen2.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_gen2.back(), "Beat Up");
+    EXPECT_EQ(251, moves_gen2.size());
+    EXPECT_EQ("Pound", moves_gen2.front());
+    EXPECT_EQ("Beat Up", moves_gen2.back());
 
     /*
      * Game Boy Advance
      */
     moves_gba = pkmn::database::get_move_list("Sapphire");
-    BOOST_CHECK_EQUAL(moves_gba.size(), 354);
-    BOOST_CHECK_EQUAL(moves_gba.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_gba.back(), "Psycho Boost");
+    EXPECT_EQ(354, moves_gba.size());
+    EXPECT_EQ("Pound", moves_gba.front());
+    EXPECT_EQ("Psycho Boost", moves_gba.back());
 
     /*
      * Colosseum
      */
     moves_colo = pkmn::database::get_move_list("Colosseum");
-    BOOST_CHECK_EQUAL(moves_colo.size(), 355);
-    BOOST_CHECK_EQUAL(moves_colo.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_colo.back(), "Shadow Rush");
+    EXPECT_EQ(355, moves_colo.size());
+    EXPECT_EQ("Pound", moves_colo.front());
+    EXPECT_EQ("Shadow Rush", moves_colo.back());
 
     /*
      * XD
      */
     moves_xd = pkmn::database::get_move_list("XD");
-    BOOST_CHECK_EQUAL(moves_xd.size(), 372);
-    BOOST_CHECK_EQUAL(moves_xd.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_xd.back(), "Shadow Sky");
+    EXPECT_EQ(372, moves_xd.size());
+    EXPECT_EQ("Pound", moves_xd.front());
+    EXPECT_EQ("Shadow Sky", moves_xd.back());
 
     /*
      * Generation IV
      */
     moves_gen4 = pkmn::database::get_move_list("SoulSilver");
-    BOOST_CHECK_EQUAL(moves_gen4.size(), 467);
-    BOOST_CHECK_EQUAL(moves_gen4.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_gen4.back(), "Shadow Force");
+    EXPECT_EQ(467, moves_gen4.size());
+    EXPECT_EQ("Pound", moves_gen4.front());
+    EXPECT_EQ("Shadow Force", moves_gen4.back());
 
     /*
      * Generation V
      */
     moves_gen5 = pkmn::database::get_move_list("White");
-    BOOST_CHECK_EQUAL(moves_gen5.size(), 559);
-    BOOST_CHECK_EQUAL(moves_gen5.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_gen5.back(), "Fusion Bolt");
+    EXPECT_EQ(559, moves_gen5.size());
+    EXPECT_EQ("Pound", moves_gen5.front());
+    EXPECT_EQ("Fusion Bolt", moves_gen5.back());
 
     /*
      * X/Y
      */
     moves_xy = pkmn::database::get_move_list("Y");
-    BOOST_CHECK_EQUAL(moves_xy.size(), 617);
-    BOOST_CHECK_EQUAL(moves_xy.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_xy.back(), "Light of Ruin");
+    EXPECT_EQ(617, moves_xy.size());
+    EXPECT_EQ("Pound", moves_xy.front());
+    EXPECT_EQ("Light of Ruin", moves_xy.back());
 
     /*
      * Omega Ruby/Alpha Sapphire
      */
     moves_oras = pkmn::database::get_move_list("Omega Ruby");
-    BOOST_CHECK_EQUAL(moves_oras.size(), 621);
-    BOOST_CHECK_EQUAL(moves_oras.front(), "Pound");
-    BOOST_CHECK_EQUAL(moves_oras.back(), "Hyperspace Fury");
+    EXPECT_EQ(621, moves_oras.size());
+    EXPECT_EQ("Pound", moves_oras.front());
+    EXPECT_EQ("Hyperspace Fury", moves_oras.back());
 }
 
-BOOST_AUTO_TEST_CASE(nature_list_test) {
+TEST(cpp_lists_test, nature_list_test) {
     std::vector<std::string> natures = pkmn::database::get_nature_list();
-    BOOST_CHECK_EQUAL(natures.size(), 25);
-    BOOST_CHECK_EQUAL(natures.front(), "Hardy");
-    BOOST_CHECK_EQUAL(natures.back(), "Quirky");
+    EXPECT_EQ(25, natures.size());
+    EXPECT_EQ("Hardy", natures.front());
+    EXPECT_EQ("Quirky", natures.back());
 }
 
-BOOST_AUTO_TEST_CASE(pokemon_list_test) {
-    std::vector<std::string> pokemon0, pokemon1,
-                             pokemon2, pokemon3,
-                             pokemon4, pokemon5,
-                             pokemon6, pokemon7;
+TEST(cpp_lists_test, pokemon_list_test) {
+    std::vector<std::string> pokemon1, pokemon2,
+                             pokemon3, pokemon4,
+                             pokemon5, pokemon6;
 
-    BOOST_CHECK_THROW(
-        pokemon0 = pkmn::database::get_pokemon_list(0, true);
+    EXPECT_THROW(
+        (void)pkmn::database::get_pokemon_list(0, true);
     , pkmn::range_error);
-    BOOST_CHECK_THROW(
-        pokemon7 = pkmn::database::get_pokemon_list(7, true);
+    EXPECT_THROW(
+        (void)pkmn::database::get_pokemon_list(7, true);
     , pkmn::range_error);
 
     /*
      * Generation I
      */
     pokemon1 = pkmn::database::get_pokemon_list(1, true);
-    BOOST_CHECK_EQUAL(pokemon1.size(), 151);
-    BOOST_CHECK_EQUAL(pokemon1.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon1.back(), "Mew");
+    EXPECT_EQ(151, pokemon1.size());
+    EXPECT_EQ("Bulbasaur", pokemon1.front());
+    EXPECT_EQ("Mew", pokemon1.back());
 
     pokemon1 = pkmn::database::get_pokemon_list(1, false);
-    BOOST_CHECK_EQUAL(pokemon1.size(), 151);
-    BOOST_CHECK_EQUAL(pokemon1.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon1.back(), "Mew");
+    EXPECT_EQ(151, pokemon1.size());
+    EXPECT_EQ("Bulbasaur", pokemon1.front());
+    EXPECT_EQ("Mew", pokemon1.back());
 
     /*
      * Generation II
      */
     pokemon2 = pkmn::database::get_pokemon_list(2, true);
-    BOOST_CHECK_EQUAL(pokemon2.size(),  251);
-    BOOST_CHECK_EQUAL(pokemon2.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon2.back(),  "Celebi");
+    EXPECT_EQ(251, pokemon2.size());
+    EXPECT_EQ("Bulbasaur", pokemon2.front());
+    EXPECT_EQ("Celebi", pokemon2.back());
 
     pokemon2 = pkmn::database::get_pokemon_list(2, false);
-    BOOST_CHECK_EQUAL(pokemon2.size(),  100);
-    BOOST_CHECK_EQUAL(pokemon2.front(), "Chikorita");
-    BOOST_CHECK_EQUAL(pokemon2.back(),  "Celebi");
+    EXPECT_EQ(100, pokemon2.size());
+    EXPECT_EQ("Chikorita", pokemon2.front());
+    EXPECT_EQ("Celebi", pokemon2.back());
 
     /*
      * Generation III
      */
     pokemon3 = pkmn::database::get_pokemon_list(3, true);
-    BOOST_CHECK_EQUAL(pokemon3.size(),  386);
-    BOOST_CHECK_EQUAL(pokemon3.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon3.back(),  "Deoxys");
+    EXPECT_EQ(386, pokemon3.size());
+    EXPECT_EQ("Bulbasaur", pokemon3.front());
+    EXPECT_EQ("Deoxys", pokemon3.back());
 
     pokemon3 = pkmn::database::get_pokemon_list(3, false);
-    BOOST_CHECK_EQUAL(pokemon3.size(),  135);
-    BOOST_CHECK_EQUAL(pokemon3.front(), "Treecko");
-    BOOST_CHECK_EQUAL(pokemon3.back(),  "Deoxys");
+    EXPECT_EQ(135, pokemon3.size());
+    EXPECT_EQ("Treecko", pokemon3.front());
+    EXPECT_EQ("Deoxys", pokemon3.back());
 
     /*
      * Generation IV
      */
     pokemon4 = pkmn::database::get_pokemon_list(4, true);
-    BOOST_CHECK_EQUAL(pokemon4.size(),  493);
-    BOOST_CHECK_EQUAL(pokemon4.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon4.back(),  "Arceus");
+    EXPECT_EQ(493, pokemon4.size());
+    EXPECT_EQ("Bulbasaur", pokemon4.front());
+    EXPECT_EQ("Arceus", pokemon4.back());
 
     pokemon4 = pkmn::database::get_pokemon_list(4, false);
-    BOOST_CHECK_EQUAL(pokemon4.size(),  107);
-    BOOST_CHECK_EQUAL(pokemon4.front(), "Turtwig");
-    BOOST_CHECK_EQUAL(pokemon4.back(),  "Arceus");
+    EXPECT_EQ(107, pokemon4.size());
+    EXPECT_EQ("Turtwig", pokemon4.front());
+    EXPECT_EQ("Arceus", pokemon4.back());
 
     /*
      * Generation V
      */
     pokemon5 = pkmn::database::get_pokemon_list(5, true);
-    BOOST_CHECK_EQUAL(pokemon5.size(),  649);
-    BOOST_CHECK_EQUAL(pokemon5.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon5.back(),  "Genesect");
+    EXPECT_EQ(649, pokemon5.size());
+    EXPECT_EQ("Bulbasaur", pokemon5.front());
+    EXPECT_EQ("Genesect", pokemon5.back());
 
     pokemon5 = pkmn::database::get_pokemon_list(5, false);
-    BOOST_CHECK_EQUAL(pokemon5.size(),  156);
-    BOOST_CHECK_EQUAL(pokemon5.front(), "Victini");
-    BOOST_CHECK_EQUAL(pokemon5.back(),  "Genesect");
+    EXPECT_EQ(156, pokemon5.size());
+    EXPECT_EQ("Victini", pokemon5.front());
+    EXPECT_EQ("Genesect", pokemon5.back());
 
     /*
      * Generation VI
      */
     pokemon6 = pkmn::database::get_pokemon_list(6, true);
-    BOOST_CHECK_EQUAL(pokemon6.size(),  721);
-    BOOST_CHECK_EQUAL(pokemon6.front(), "Bulbasaur");
-    BOOST_CHECK_EQUAL(pokemon6.back(),  "Volcanion");
+    EXPECT_EQ(721, pokemon6.size());
+    EXPECT_EQ("Bulbasaur", pokemon6.front());
+    EXPECT_EQ("Volcanion", pokemon6.back());
 
     pokemon6 = pkmn::database::get_pokemon_list(6, false);
-    BOOST_CHECK_EQUAL(pokemon6.size(),  72);
-    BOOST_CHECK_EQUAL(pokemon6.front(), "Chespin");
-    BOOST_CHECK_EQUAL(pokemon6.back(),  "Volcanion");
+    EXPECT_EQ(72, pokemon6.size());
+    EXPECT_EQ("Chespin", pokemon6.front());
+    EXPECT_EQ("Volcanion", pokemon6.back());
 }
 
-BOOST_AUTO_TEST_CASE(region_list_test) {
+TEST(cpp_lists_test, region_list_test) {
     std::vector<std::string> regions = pkmn::database::get_region_list();
-    BOOST_CHECK_EQUAL(regions.size(), 7);
-    BOOST_CHECK_EQUAL(regions.front(), "Kanto");
-    BOOST_CHECK_EQUAL(regions[3], "Orre");
-    BOOST_CHECK_EQUAL(regions.back(), "Kalos");
+    EXPECT_EQ(7, regions.size());
+    EXPECT_EQ("Kanto", regions.front());
+    EXPECT_EQ("Orre", regions[3]);
+    EXPECT_EQ("Kalos", regions.back());
 }
 
-BOOST_AUTO_TEST_CASE(ribbon_list_test) {
+TEST(cpp_lists_test, ribbon_list_test) {
     // TODO: make sure function checks for bad generation
     //       test good cases
 }
 
-BOOST_AUTO_TEST_CASE(super_training_medal_list_test) {
+TEST(cpp_lists_test, super_training_medal_list_test) {
     std::vector<std::string> super_training_medals = \
         pkmn::database::get_super_training_medal_list();
 
-    BOOST_CHECK_EQUAL(super_training_medals.size(), 30);
+    EXPECT_EQ(30, super_training_medals.size());
 }
 
-BOOST_AUTO_TEST_CASE(type_list_test) {
-    std::vector<std::string> types_bad,  types_gen1,
+TEST(cpp_lists_test, type_list_test) {
+    std::vector<std::string> types_gen1,
                              types_gen2, types_gba,
                              types_gcn,  types_gen4,
                              types_gen5, types_gen6;
@@ -696,8 +692,8 @@ BOOST_AUTO_TEST_CASE(type_list_test) {
     /*
      * Make sure invalid games fail.
      */
-    BOOST_CHECK_THROW(
-        types_bad = pkmn::database::get_type_list("Not a game");
+    EXPECT_THROW(
+        (void)pkmn::database::get_type_list("Not a game");
     , std::invalid_argument);
 
     /*
@@ -705,76 +701,76 @@ BOOST_AUTO_TEST_CASE(type_list_test) {
      */
     types_gen1 = pkmn::database::get_type_list("Red");
 
-    BOOST_CHECK_EQUAL(types_gen1.size(), 15);
-    BOOST_CHECK(not string_in_vector(types_gen1, "Dark"));
-    BOOST_CHECK(not string_in_vector(types_gen1, "Steel"));
-    BOOST_CHECK(not string_in_vector(types_gen1, "???"));
-    BOOST_CHECK(not string_in_vector(types_gen1, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gen1, "Fairy"));
+    EXPECT_EQ(15, types_gen1.size());
+    EXPECT_FALSE(string_in_vector(types_gen1, "Dark"));
+    EXPECT_FALSE(string_in_vector(types_gen1, "Steel"));
+    EXPECT_FALSE(string_in_vector(types_gen1, "???"));
+    EXPECT_FALSE(string_in_vector(types_gen1, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gen1, "Fairy"));
 
     /*
      * Generation II
      */
     types_gen2 = pkmn::database::get_type_list("Silver");
-    BOOST_CHECK_EQUAL(types_gen2.size(), 18);
-    BOOST_CHECK(string_in_vector(types_gen2, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gen2, "Steel"));
-    BOOST_CHECK(string_in_vector(types_gen2, "???"));
-    BOOST_CHECK(not string_in_vector(types_gen2, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gen2, "Fairy"));
+    EXPECT_EQ(18, types_gen2.size());
+    EXPECT_TRUE(string_in_vector(types_gen2, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gen2, "Steel"));
+    EXPECT_TRUE(string_in_vector(types_gen2, "???"));
+    EXPECT_FALSE(string_in_vector(types_gen2, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gen2, "Fairy"));
 
     /*
      * Game Boy Advance
      */
     types_gba = pkmn::database::get_type_list("Emerald");
-    BOOST_CHECK_EQUAL(types_gba.size(), 18);
-    BOOST_CHECK(string_in_vector(types_gba, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gba, "Steel"));
-    BOOST_CHECK(string_in_vector(types_gba, "???"));
-    BOOST_CHECK(not string_in_vector(types_gba, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gba, "Fairy"));
+    EXPECT_EQ(18, types_gba.size());
+    EXPECT_TRUE(string_in_vector(types_gba, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gba, "Steel"));
+    EXPECT_TRUE(string_in_vector(types_gba, "???"));
+    EXPECT_FALSE(string_in_vector(types_gba, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gba, "Fairy"));
 
     /*
      * Gamecube
      */
     types_gcn = pkmn::database::get_type_list("XD");
-    BOOST_CHECK_EQUAL(types_gcn.size(), 19);
-    BOOST_CHECK(string_in_vector(types_gcn, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gcn, "Steel"));
-    BOOST_CHECK(string_in_vector(types_gcn, "???"));
-    BOOST_CHECK(string_in_vector(types_gcn, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gcn, "Fairy"));
+    EXPECT_EQ(19, types_gcn.size());
+    EXPECT_TRUE(string_in_vector(types_gcn, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gcn, "Steel"));
+    EXPECT_TRUE(string_in_vector(types_gcn, "???"));
+    EXPECT_TRUE(string_in_vector(types_gcn, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gcn, "Fairy"));
 
     /*
      * Generation IV
      */
     types_gen4 = pkmn::database::get_type_list("Platinum");
-    BOOST_CHECK_EQUAL(types_gen4.size(), 18);
-    BOOST_CHECK(string_in_vector(types_gen4, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gen4, "Steel"));
-    BOOST_CHECK(string_in_vector(types_gen4, "???"));
-    BOOST_CHECK(not string_in_vector(types_gen4, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gen4, "Fairy"));
+    EXPECT_EQ(18, types_gen4.size());
+    EXPECT_TRUE(string_in_vector(types_gen4, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gen4, "Steel"));
+    EXPECT_TRUE(string_in_vector(types_gen4, "???"));
+    EXPECT_FALSE(string_in_vector(types_gen4, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gen4, "Fairy"));
 
     /*
      * Generation V
      */
     types_gen5 = pkmn::database::get_type_list("White 2");
-    BOOST_CHECK_EQUAL(types_gen5.size(), 17);
-    BOOST_CHECK(string_in_vector(types_gen5, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gen5, "Steel"));
-    BOOST_CHECK(not string_in_vector(types_gen5, "???"));
-    BOOST_CHECK(not string_in_vector(types_gen5, "Shadow"));
-    BOOST_CHECK(not string_in_vector(types_gen5, "Fairy"));
+    EXPECT_EQ(17, types_gen5.size());
+    EXPECT_TRUE(string_in_vector(types_gen5, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gen5, "Steel"));
+    EXPECT_FALSE(string_in_vector(types_gen5, "???"));
+    EXPECT_FALSE(string_in_vector(types_gen5, "Shadow"));
+    EXPECT_FALSE(string_in_vector(types_gen5, "Fairy"));
 
     /*
      * Generation VI
      */
     types_gen6 = pkmn::database::get_type_list("X");
-    BOOST_CHECK_EQUAL(types_gen6.size(), 18);
-    BOOST_CHECK(string_in_vector(types_gen6, "Dark"));
-    BOOST_CHECK(string_in_vector(types_gen6, "Steel"));
-    BOOST_CHECK(not string_in_vector(types_gen6, "???"));
-    BOOST_CHECK(not string_in_vector(types_gen6, "Shadow"));
-    BOOST_CHECK(string_in_vector(types_gen6, "Fairy"));
+    EXPECT_EQ(18, types_gen6.size());
+    EXPECT_TRUE(string_in_vector(types_gen6, "Dark"));
+    EXPECT_TRUE(string_in_vector(types_gen6, "Steel"));
+    EXPECT_FALSE(string_in_vector(types_gen6, "???"));
+    EXPECT_FALSE(string_in_vector(types_gen6, "Shadow"));
+    EXPECT_TRUE(string_in_vector(types_gen6, "Fairy"));
 }

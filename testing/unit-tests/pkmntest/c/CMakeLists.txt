@@ -28,6 +28,7 @@ CONFIGURE_FILE(
 @ONLY)
 
 SET(pkmntest_c_sources
+    game_save_tests.c
     gen1_items_tests.c
     gen1_pokemon_tests.c
     gen2_items_tests.c

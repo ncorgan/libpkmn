@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -105,6 +105,14 @@ namespace pkmn {
     }
 
     std::string get_tmp_dir() {
+        fs::path fs_path = env_var_to_fs_path(
+                              "PKMN_TMP_DIR",
+                              false
+                           );
+        if(!fs_path.empty()) {
+            return fs_path.string();
+        }
+
         /*
          * The Boost function checks the environment variables "TMP",
          * "TMPDIR", and "TEMP" but oddly returns "." if none of those

@@ -14,6 +14,7 @@
 %{
     #include <pkmn/config.hpp>
 
+    #include <pkmn/game_save.hpp>
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
     #include <pkmn/pokemon.hpp>
@@ -62,6 +63,22 @@
 %{
     #include <boost/locale/encoding_utf.hpp>
 
+    PKMN_INLINE std::string detect_game_save_type(
+        const std::wstring &filepath
+    ) {
+        return pkmn::game_save::detect_type(
+                   boost::locale::conv::utf_to_utf<char>(filepath)
+               );
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::game_save> make_game_save(
+        const std::wstring &filepath
+    ) {
+        return pkmn::game_save::from_file(
+            boost::locale::conv::utf_to_utf<char>(filepath)
+        );
+    }
+
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
         const std::wstring &name,
         const std::wstring &game
@@ -95,6 +112,8 @@
     }
 %}
 
+std::string detect_game_save_type(const std::wstring& filepath);
+pkmn::shared_ptr<pkmn::game_save> make_game_save(const std::wstring& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::wstring& name, const std::wstring& game);
 pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& species, const std::wstring& game,
                                              const std::wstring& form, int level);
@@ -103,6 +122,18 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& filepath);
 #else
 
 %{
+    PKMN_INLINE std::string detect_game_save_type(
+        const std::string &filepath
+    ) {
+        return pkmn::game_save::detect_type(filepath);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::game_save> make_game_save(
+        const std::string &filepath
+    ) {
+        return pkmn::game_save::from_file(filepath);
+    }
+
     PKMN_INLINE pkmn::shared_ptr<pkmn::item_list> make_item_list(
         const std::string &name,
         const std::string &game
@@ -126,6 +157,8 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& filepath);
     }
 %}
 
+std::string detect_game_save_type(const std::string& filepath);
+pkmn::shared_ptr<pkmn::game_save> make_game_save(const std::string& filepath);
 pkmn::shared_ptr<pkmn::item_list> make_item_list(const std::string& name, const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const std::string& game,
                                              const std::string& form, int level);

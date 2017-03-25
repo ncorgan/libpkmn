@@ -10,6 +10,7 @@
 #include <pkmn-c/build_info.h>
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
+#include <pkmn-c/game_save.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
 #include <pkmn-c/pokemon.h>

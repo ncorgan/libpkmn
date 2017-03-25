@@ -12,6 +12,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include "mem/scoped_lock.hpp"
+#include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -26,7 +27,6 @@
 #include <cstring>
 #include <ctime>
 #include <iostream>
-#include <random>
 #include <stdexcept>
 #include <unordered_map>
 
@@ -84,14 +84,13 @@ namespace pkmn {
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
-        // TODO: Use PKSav PRNG after refactor merged in
-        std::srand((unsigned int)std::time(0));
-        GEN1_PC_RCAST->ev_hp   = uint16_t(std::rand());
-        GEN1_PC_RCAST->ev_atk  = uint16_t(std::rand());
-        GEN1_PC_RCAST->ev_def  = uint16_t(std::rand());
-        GEN1_PC_RCAST->ev_spd  = uint16_t(std::rand());
-        GEN1_PC_RCAST->ev_spcl = uint16_t(std::rand());
-        GEN1_PC_RCAST->iv_data = uint16_t(std::rand());
+        pkmn::rng<uint16_t> rng;
+        GEN1_PC_RCAST->ev_hp   = rng.rand();
+        GEN1_PC_RCAST->ev_atk  = rng.rand();
+        GEN1_PC_RCAST->ev_def  = rng.rand();
+        GEN1_PC_RCAST->ev_spd  = rng.rand();
+        GEN1_PC_RCAST->ev_spcl = rng.rand();
+        GEN1_PC_RCAST->iv_data = rng.rand();
 
         // Populate abstractions
         _update_EV_map();

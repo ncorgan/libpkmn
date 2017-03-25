@@ -10,3 +10,6 @@
 [submodule "images"]
 	path = images
 	url = https://github.com/ncorgan/libpkmn-images
+[submodule "testing/googletest"]
+	path = testing/googletest
+	url = https://github.com/ncorgan/googletest

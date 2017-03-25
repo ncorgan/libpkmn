@@ -20,7 +20,7 @@ mkdir c:\projects\libpkmn\test-env\build
 cd c:\projects\libpkmn\test-env\build
 if not !ERRORLEVEL!==0 goto fail
 
-!PYTHON_PIP_EXE! install ply CppHeaderParser
+!PYTHON_PIP_EXE! install ply CppHeaderParser nose_parameterized
 if not !ERRORLEVEL!==0 goto fail
 
 cmake -G %CMAKE_GENERATOR_NAME% ^

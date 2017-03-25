@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,6 +16,7 @@
 #include "database/index_to_string.hpp"
 
 #include "io/3gpkm.hpp"
+#include "types/rng.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -25,7 +26,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include <iostream>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -378,15 +378,15 @@ namespace pkmn {
         } else {
             *personality_ptr &= ~0xFF;
 
-            std::srand((unsigned int)std::time(NULL));
+            pkmn::rng<uint32_t> rng;
             if(pkmn_floats_close(chance_male, 0.875f)) {
-                *personality_ptr |= uint32_t(std::rand() % 31);
+                *personality_ptr |= rng.rand(0, 30);
             } else if(pkmn_floats_close(chance_male, 0.75f)) {
-                *personality_ptr |= uint32_t(std::rand() % 64);
+                *personality_ptr |= rng.rand(0, 63);
             } else if(pkmn_floats_close(chance_male, 0.5f)) {
-                *personality_ptr |= uint32_t(std::rand() % 127);
+                *personality_ptr |= rng.rand(0, 126);
             } else {
-                *personality_ptr |= uint32_t(std::rand() % 191);
+                *personality_ptr |= rng.rand(0, 190);
             }
         }
     }
@@ -441,21 +441,8 @@ namespace pkmn {
             );
         )
 
-        _IVs[stat] = value;
-
-        // Setting any IV affects HP, so we have to update that as well.
-        if(stat != "HP") {
-            uint8_t IV_hp = 0;
-            PKSAV_CALL(
-                pksav_get_gb_IV(
-                    iv_data_ptr,
-                    PKSAV_STAT_HP,
-                    &IV_hp
-                );
-            )
-
-            _IVs["HP"] = int(IV_hp);
-        }
+        // Setting any IV affects HP, and vice versa, so we may as well update it all.
+        _init_gb_IV_map(iv_data_ptr);
 
         _populate_party_data();
     }

@@ -16,6 +16,8 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/rng.hpp"
+
 #include <pksav/common/stats.h>
 #include <pksav/gen2/time.h>
 #include <pksav/math/base256.h>
@@ -27,7 +29,6 @@
 #include <cstring>
 #include <ctime>
 #include <iostream>
-#include <random>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -60,27 +61,28 @@ namespace pkmn {
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
 
-        // TODO: Use PKSav PRNG after refactor merged in
-        time_t now = 0;
-        std::srand((unsigned int)std::time(&now));
-        GEN2_PC_RCAST->ev_hp   = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_atk  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_def  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_spd  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
+        pkmn::rng<uint16_t> rng;
+        GEN2_PC_RCAST->ev_hp   = rng.rand();
+        GEN2_PC_RCAST->ev_atk  = rng.rand();
+        GEN2_PC_RCAST->ev_def  = rng.rand();
+        GEN2_PC_RCAST->ev_spd  = rng.rand();
+        GEN2_PC_RCAST->ev_spcl = rng.rand();
 
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_IVs_from_form(
                 _database_entry.get_form()
             );
         } else {
-            GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
+            GEN2_PC_RCAST->iv_data = rng.rand();
         }
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_level_met(level);
         set_location_met("Special", false);
+
+        time_t now = 0;
+        std::time(&now);
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,

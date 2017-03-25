@@ -9,6 +9,7 @@
 #define PKMN_C_CPP_TO_C_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/game_save.hpp>
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
@@ -49,6 +50,12 @@
  */
 
 typedef struct {
+    pkmn::game_save::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_game_save_t;
+
+typedef struct {
     pkmn::item_bag::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
@@ -84,6 +91,7 @@ typedef struct {
     std::string last_error;
 } pkmn_pokemon_pc_t;
 
+#define PKMN_GAME_SAVE_DECLARED
 #define PKMN_ITEM_BAG_DECLARED
 #define PKMN_ITEM_LIST_DECLARED
 #define PKMN_POKEMON_DECLARED
