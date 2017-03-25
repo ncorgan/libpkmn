@@ -849,7 +849,7 @@ namespace pkmn {
                                           % pksav_littleendian32(GBA_PC_RCAST->personality));
 
             if(pkmn::qt::GenerateSpindaSpriteAtPath(
-                   3, 
+                   3,
                    pksav_littleendian32(GBA_PC_RCAST->personality),
                    shiny,
                    QString::fromStdString(spinda_sprite_filepath.string())
