@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
     ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
