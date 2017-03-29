@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         form.h
         gender.h
         hidden_power.h
+        nature.h
         shininess.h
         size.h
         spinda_spots.h

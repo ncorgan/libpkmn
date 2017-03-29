@@ -2847,6 +2847,21 @@ static void calculations_hidden_power_error_test() {
 }
 
 /*
+ * <pkmn-c/calculations/nature.h>
+ */
+static void calculations_nature_error_test() {
+    /*
+     * pkmn_calculations_gen3_gen4_nature
+     */
+    error = pkmn_calculations_gen3_gen4_nature(
+                0,
+                NULL, // nature_out
+                0
+            );
+    TEST_NULL_POINTER_RETURN("nature_out");
+}
+
+/*
  * <pkmn-c/calculations/shininess.h>
  */
 static void calculations_shininess_error_test() {
@@ -3461,6 +3476,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(calculations_form_error_test)
     PKMN_C_TEST(calculations_gender_error_test)
     PKMN_C_TEST(calculations_hidden_power_error_test)
+    PKMN_C_TEST(calculations_nature_error_test)
     PKMN_C_TEST(calculations_shininess_error_test)
     PKMN_C_TEST(calculations_size_error_test)
     PKMN_C_TEST(calculations_spinda_spots_error_test)

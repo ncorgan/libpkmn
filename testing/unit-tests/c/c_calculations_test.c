@@ -34,52 +34,52 @@ static void gen2_unown_form_test() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_unown_form(
                 16, 0, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, -1, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 16, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, -1, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 16, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, -1,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, 16,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -91,7 +91,7 @@ static void gen2_unown_form_test() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "G");
 
     error = pkmn_calculations_gen2_unown_form(
@@ -99,7 +99,7 @@ static void gen2_unown_form_test() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "S");
 }
 
@@ -114,7 +114,7 @@ static void gen3_unown_form_test() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "B");
 }
 
@@ -128,28 +128,28 @@ static void wurmple_becomes_silcoon_test() {
                 0x5CF4091C, true,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(bool_result);
 
     error = pkmn_calculations_wurmple_becomes_silcoon(
                 0x091C5CF4, true,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(!bool_result);
 
     error = pkmn_calculations_wurmple_becomes_silcoon(
                 0x091C5CF4, false,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(bool_result);
 
     error = pkmn_calculations_wurmple_becomes_silcoon(
                 0x5CF4091C, false,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(!bool_result);
 }
 
@@ -161,18 +161,18 @@ static void gen2_gender_test() {
                 "Not a species", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Bulbasaur", -1,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Bulbasaur", 16,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -185,14 +185,14 @@ static void gen2_gender_test() {
                 "Nidorino", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Nidorino", 15,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
 
     /*
      * 25% male, 75% female
@@ -201,14 +201,14 @@ static void gen2_gender_test() {
                 "Vulpix", 11,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Vulpix", 12,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
 
     /*
      * All female
@@ -217,14 +217,14 @@ static void gen2_gender_test() {
                 "Nidorina", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Nidorina", 15,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
 
     /*
      * Genderless
@@ -233,14 +233,14 @@ static void gen2_gender_test() {
                 "Magnemite", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_GENDERLESS);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Magnemite", 15,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_GENDERLESS);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
 }
 
 static void modern_gender_test() {
@@ -251,7 +251,7 @@ static void modern_gender_test() {
                 "Not a species", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -264,14 +264,14 @@ static void modern_gender_test() {
                 "Nidorino", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Nidorino", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
 
     /*
      * 25% male, 75% female
@@ -280,14 +280,14 @@ static void modern_gender_test() {
                 "Vulpix", 190,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Vulpix", 191,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_MALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
 
     /*
      * All female
@@ -296,14 +296,14 @@ static void modern_gender_test() {
                 "Nidorina", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Nidorina", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
 
     /*
      * Genderless
@@ -312,14 +312,14 @@ static void modern_gender_test() {
                 "Magnemite", 0,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_GENDERLESS);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Magnemite", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_gender_t_result, PKMN_GENDERLESS);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
 }
 
 static void gen2_hidden_power_test() {
@@ -330,52 +330,52 @@ static void gen2_hidden_power_test() {
                 -1, 0, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 16, 0, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, -1, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 16, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, -1, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 16, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, -1,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, 16,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     /*
@@ -389,7 +389,7 @@ static void gen2_hidden_power_test() {
             );
     TEST_ASSERT_NOT_NULL(pkmn_hidden_power_t_result.type);
     TEST_ASSERT_EQUAL_STRING(pkmn_hidden_power_t_result.type, "Dark");
-    TEST_ASSERT_EQUAL(pkmn_hidden_power_t_result.base_power, 69);
+    TEST_ASSERT_EQUAL(69, pkmn_hidden_power_t_result.base_power);
     pkmn_hidden_power_free(&pkmn_hidden_power_t_result);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 }
@@ -402,78 +402,78 @@ static void modern_hidden_power_test() {
         -1, 0, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         32, 0, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 32, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, -1, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 32, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, -1, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 32, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, -1, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 32, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 0, -1,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 32,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     /*
@@ -485,10 +485,31 @@ static void modern_hidden_power_test() {
                 30, 31, 31, 31, 30, 31,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(pkmn_hidden_power_t_result.type);
     TEST_ASSERT_EQUAL_STRING(pkmn_hidden_power_t_result.type, "Grass");
-    TEST_ASSERT_EQUAL(pkmn_hidden_power_t_result.base_power, 70);
+    TEST_ASSERT_EQUAL(70, pkmn_hidden_power_t_result.base_power);
+}
+
+static void gen3_gen4_nature_test() {
+    static const char* natures[] = {
+        "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+        "Bold", "Docile", "Relaxed", "Impish", "Lax",
+        "Timid", "Hasty", "Serious", "Jolly", "Naive",
+        "Modest", "Mild", "Quiet", "Bashful", "Rash",
+        "Calm", "Gentle", "Sassy", "Careful", "Quirky"
+    };
+
+    srand((unsigned int)time(0));
+    for(uint32_t i = 0; i < 25; ++i) {
+        error = pkmn_calculations_gen3_gen4_nature(
+                    (uint32_t)(((rand() % 50000) * 1000) + i),
+                    strbuffer,
+                    BUFFER_SIZE
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL_STRING(natures[i], strbuffer);
+    }
 }
 
 static void gen2_shiny_test() {
@@ -499,45 +520,45 @@ static void gen2_shiny_test() {
                 -1, 0, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_shiny(
                 16, 0, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, -1, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 16, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, 0, -1, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 16, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 0, -1,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 0, 16,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -548,13 +569,13 @@ static void gen2_shiny_test() {
                 7, 10, 10, 10,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(bool_result);
     error = pkmn_calculations_gen2_shiny(
                 6, 15, 7, 15,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT(!bool_result);
 }
 
@@ -588,51 +609,51 @@ static void pokemon_size_test() {
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, -1, 0, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 32, 0, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, -1, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 32, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, -1, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 32, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, -1, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 32, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, -1, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 32, 0, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 0, -1, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 0, 32, &size
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     /*
      * There are no known good calculations, so just check for reasonable values
@@ -651,7 +672,7 @@ static void pokemon_size_test() {
                     "",
                     &entry
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
         for(int j = 0; j < 10; ++j) {
             error = pkmn_calculations_pokemon_size(
@@ -665,13 +686,13 @@ static void pokemon_size_test() {
                         (rand() % 32),
                         &size
                     );
-            TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
             TEST_ASSERT(fabs(size-entry.height) < entry.height);
         }
 
         error = pkmn_database_pokemon_entry_free(&entry);
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
 }
 
@@ -704,15 +725,15 @@ static void spinda_spot_test() {
                 4064348759,
                 &pkmn_spinda_spots_t_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.left_ear.x, SPOTS1.left_ear.x);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.left_ear.y, SPOTS1.left_ear.y);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.right_ear.x, SPOTS1.right_ear.x);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.right_ear.y, SPOTS1.right_ear.y);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.left_face.x, SPOTS1.left_face.x);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.left_face.y, SPOTS1.left_face.y);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.right_face.x, SPOTS1.right_face.x);
-    TEST_ASSERT_EQUAL(pkmn_spinda_spots_t_result.right_face.y, SPOTS1.right_face.y);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(SPOTS1.left_ear.x, pkmn_spinda_spots_t_result.left_ear.x);
+    TEST_ASSERT_EQUAL(SPOTS1.left_ear.y, pkmn_spinda_spots_t_result.left_ear.y);
+    TEST_ASSERT_EQUAL(SPOTS1.right_ear.x, pkmn_spinda_spots_t_result.right_ear.x);
+    TEST_ASSERT_EQUAL(SPOTS1.right_ear.y, pkmn_spinda_spots_t_result.right_ear.y);
+    TEST_ASSERT_EQUAL(SPOTS1.left_face.x, pkmn_spinda_spots_t_result.left_face.x);
+    TEST_ASSERT_EQUAL(SPOTS1.left_face.y, pkmn_spinda_spots_t_result.left_face.y);
+    TEST_ASSERT_EQUAL(SPOTS1.right_face.x, pkmn_spinda_spots_t_result.right_face.x);
+    TEST_ASSERT_EQUAL(SPOTS1.right_face.y, pkmn_spinda_spots_t_result.right_face.y);
 }
 
 static void gb_stat_test() {
@@ -724,13 +745,13 @@ static void gb_stat_test() {
                 1, 1, 123456, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_gb_stat(
                 PKMN_STAT_ATTACK,
                 1, 1, 1, 12345,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
                 
     /*
      * Test with known good inputs.
@@ -742,14 +763,14 @@ static void gb_stat_test() {
                 81, 35, 22850, 7,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_INT_WITHIN(1, int_result, 189);
     error = pkmn_calculations_gb_stat(
                 PKMN_STAT_ATTACK,
                 81, 55, 23140, 8,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_INT_WITHIN(1, int_result, 137);
 }
 
@@ -761,27 +782,27 @@ static void modern_stat_test() {
                 (pkmn_stat_t)(100), 1, 1.0f, 1, 1, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_SPECIAL, 1, 1.0f, 1, 1, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_INVALID_ARGUMENT);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_ATTACK, 1, 0.666f, 1, 1, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_DOMAIN_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_DOMAIN_ERROR, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_ATTACK, 1, 1.0f, 1, 12345, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_ATTACK, 1, 1, 1, 1, 12345,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_RANGE_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
 
     /*
      * Test with known good inputs.
@@ -793,14 +814,14 @@ static void modern_stat_test() {
                 78, 1.0f, 108, 74, 24,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_INT_WITHIN(1, int_result, 289);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_ATTACK,
                 78, 1.1f, 130, 195, 12,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_INT_WITHIN(1, int_result, 280);
 }
 
@@ -812,6 +833,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(modern_gender_test)
     PKMN_C_TEST(gen2_hidden_power_test)
     PKMN_C_TEST(modern_hidden_power_test)
+    PKMN_C_TEST(gen3_gen4_nature_test)
     PKMN_C_TEST(gen2_shiny_test)
     PKMN_C_TEST(modern_shiny_test)
     PKMN_C_TEST(pokemon_size_test)
