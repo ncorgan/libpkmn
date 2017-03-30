@@ -9,6 +9,7 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/calculations/nature.hpp>
+#include <pkmn/calculations/personality.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
@@ -17,6 +18,7 @@
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn/exception.hpp>
+#include <pkmn/pokemon.hpp>
 
 #include <boost/assign.hpp>
 
@@ -471,20 +473,65 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
     EXPECT_EQ(70, hidden_power.base_power);
 }
 
-TEST(cpp_calculations_test, gen3_gen4_nature_test) {
-    static const std::vector<std::string> natures = boost::assign::list_of
-        ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
-        ("Bold")("Docile")("Relaxed")("Impish")("Lax")
-        ("Timid")("Hasty")("Serious")("Jolly")("Naive")
-        ("Modest")("Mild")("Quiet")("Bashful")("Rash")
-        ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
-    ;
+static const std::vector<std::string> natures = boost::assign::list_of
+    ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
+    ("Bold")("Docile")("Relaxed")("Impish")("Lax")
+    ("Timid")("Hasty")("Serious")("Jolly")("Naive")
+    ("Modest")("Mild")("Quiet")("Bashful")("Rash")
+    ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
+;
 
+TEST(cpp_calculations_test, gen3_gen4_nature_test) {
     std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
         EXPECT_EQ(
             pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
             natures[i]
+        );
+    }
+}
+
+/*
+ * Since randomness is involved, run all of these multiple times
+ * to be sure.
+ */
+TEST(cpp_calculations_test, personality_test) {
+    // Getting personality with a given nature for Generation III-IV
+    for(size_t i = 0; i < 50; ++i) {
+        for(size_t j = 0; j < natures.size(); ++j) {
+            uint32_t personality = pkmn::calculations::personality_with_gen3_gen4_nature(
+                                        natures[j]
+                                   );
+            EXPECT_EQ(
+               natures[j],
+               pkmn::calculations::gen3_gen4_nature(personality)
+            );
+        }
+    }
+
+    // Getting personality that's shiny or not
+    for(size_t i = 0; i < 50; ++i) {
+        uint32_t personality = pkmn::calculations::personality_with_shininess(
+                                   pkmn::pokemon::LIBPKMN_OT_ID,
+                                   false
+                               );
+        EXPECT_FALSE(
+            pkmn::calculations::modern_shiny(
+                personality,
+                pkmn::pokemon::LIBPKMN_OT_ID
+            )
+        );
+    }
+    for(size_t i = 0; i < 50; ++i) {
+        uint32_t personality = pkmn::calculations::personality_with_shininess(
+                                   pkmn::pokemon::LIBPKMN_OT_ID,
+                                   true
+                               );
+        EXPECT_TRUE(
+            pkmn::calculations::modern_shiny(
+                personality,
+                pkmn::pokemon::LIBPKMN_OT_ID
+            )
         );
     }
 }
