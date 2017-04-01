@@ -9,6 +9,10 @@
 
 #include <pkmn/config.hpp>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(PKMN_PLATFORM_MACOS)
 #include <mach/mach_time.h>
 #include <unistd.h>
@@ -67,6 +71,10 @@ static inline void cal_usleep(
     usleep(sleep_time);
 }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
