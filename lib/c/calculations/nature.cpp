@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/nature.hpp>
 
-pkmn_error_t pkmn_calculations_gen3_gen4_nature(
+pkmn_error_t pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,
     size_t buffer_len
@@ -21,7 +21,7 @@ pkmn_error_t pkmn_calculations_gen3_gen4_nature(
 
     PKMN_CPP_TO_C(
         return pkmn::std_string_to_c_str(
-                   pkmn::calculations::gen3_gen4_nature(
+                   pkmn::calculations::nature(
                        personality
                    ),
                    nature_out,

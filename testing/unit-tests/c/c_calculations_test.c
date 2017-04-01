@@ -491,7 +491,7 @@ static void modern_hidden_power_test() {
     TEST_ASSERT_EQUAL(70, pkmn_hidden_power_t_result.base_power);
 }
 
-static void gen3_gen4_nature_test() {
+static void _nature_test() {
     static const char* natures[] = {
         "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
         "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -502,7 +502,7 @@ static void gen3_gen4_nature_test() {
 
     srand((unsigned int)time(0));
     for(uint32_t i = 0; i < 25; ++i) {
-        error = pkmn_calculations_gen3_gen4_nature(
+        error = pkmn_calculations_nature(
                     (uint32_t)(((rand() % 50000) * 1000) + i),
                     strbuffer,
                     BUFFER_SIZE
@@ -833,7 +833,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(modern_gender_test)
     PKMN_C_TEST(gen2_hidden_power_test)
     PKMN_C_TEST(modern_hidden_power_test)
-    PKMN_C_TEST(gen3_gen4_nature_test)
+    PKMN_C_TEST(_nature_test)
     PKMN_C_TEST(gen2_shiny_test)
     PKMN_C_TEST(modern_shiny_test)
     PKMN_C_TEST(pokemon_size_test)

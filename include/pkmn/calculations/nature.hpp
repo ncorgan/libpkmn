@@ -14,7 +14,7 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_API std::string gen3_gen4_nature(
+    PKMN_API std::string nature(
         uint32_t personality
     );
 

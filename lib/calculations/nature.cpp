@@ -19,7 +19,7 @@ BOOST_STATIC_CONSTEXPR const char* NATURES[] = {
 
 namespace pkmn { namespace calculations {
 
-    std::string gen3_gen4_nature(
+    std::string nature(
         uint32_t personality
     ) {
         return NATURES[personality % 25];

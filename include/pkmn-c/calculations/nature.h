@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_calculations_gen3_gen4_nature(
+PKMN_API pkmn_error_t pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,
     size_t buffer_len

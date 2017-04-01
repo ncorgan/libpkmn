@@ -188,7 +188,7 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
 
-    def test_gen3_gen4_nature(self):
+    def test__nature(self):
         natures = [
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -201,14 +201,14 @@ class calculations_test(unittest.TestCase):
         # Which error applies depends on the SWIG version.
         try:
             with self.assertRaises(OverflowError):
-                pkmn.calculations.gen3_gen4_nature(-1)
+                pkmn.calculations.nature(-1)
         except:
             with self.assertRaises(TypeError):
-                pkmn.calculations.gen3_gen4_nature(0xFFFFFFFF+1)
+                pkmn.calculations.nature(0xFFFFFFFF+1)
 
         for i in range(len(natures)):
             self.assertEqual(
-                pkmn.calculations.gen3_gen4_nature((random.randint(0, 50000) * 1000) + i),
+                pkmn.calculations.nature((random.randint(0, 50000) * 1000) + i),
                 natures[i]
             )
 

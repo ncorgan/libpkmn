@@ -311,7 +311,7 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void Gen3Gen4NatureTest() {
+    public void NatureTest() {
         string[] natures = {
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -322,7 +322,7 @@ public class CSharpCalculationsTest {
 
         for(uint i = 0; i < natures.Length; ++i) {
             Assert.AreEqual(
-                PKMN.Calculations.Gen3Gen4Nature((uint)((rng.Next(0,50001) * 1000) + i)),
+                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i)),
                 natures[i]
             );
         }

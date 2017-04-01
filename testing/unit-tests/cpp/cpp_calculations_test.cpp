@@ -481,11 +481,11 @@ static const std::vector<std::string> natures = boost::assign::list_of
     ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
 ;
 
-TEST(cpp_calculations_test, gen3_gen4_nature_test) {
+TEST(cpp_calculations_test, _nature_test) {
     std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
         EXPECT_EQ(
-            pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
+            pkmn::calculations::nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
             natures[i]
         );
     }
@@ -536,7 +536,7 @@ TEST(cpp_calculations_test, personality_test) {
                             );
                             EXPECT_EQ(
                                natures[j],
-                               pkmn::calculations::gen3_gen4_nature(personality)
+                               pkmn::calculations::nature(personality)
                             );
                         }
                     }

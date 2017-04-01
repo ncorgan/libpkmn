@@ -2851,9 +2851,9 @@ static void calculations_hidden_power_error_test() {
  */
 static void calculations_nature_error_test() {
     /*
-     * pkmn_calculations_gen3_gen4_nature
+     * pkmn_calculations__nature
      */
-    error = pkmn_calculations_gen3_gen4_nature(
+    error = pkmn_calculations_nature(
                 0,
                 NULL, // nature_out
                 0

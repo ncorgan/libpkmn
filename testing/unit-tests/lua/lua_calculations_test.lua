@@ -153,10 +153,10 @@ function test_modern_hidden_power()
     luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
-function test_gen3_gen4_nature()
+function test__nature()
     -- Make sure SWIG+Lua catches values outside the uint32_t range.
-    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, -1)
-    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, 0xFFFFFFFF+1)
+    luaunit.assertError(pkmn.calculations.nature, -1)
+    luaunit.assertError(pkmn.calculations.nature, 0xFFFFFFFF+1)
 
     local natures = {
         "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
@@ -169,7 +169,7 @@ function test_gen3_gen4_nature()
     for i = 1, #natures
     do
         luaunit.assertEquals(
-            pkmn.calculations.gen3_gen4_nature((math.random(0,50000) * 1000) + i-1),
+            pkmn.calculations.nature((math.random(0,50000) * 1000) + i-1),
             natures[i]
         )
     end
