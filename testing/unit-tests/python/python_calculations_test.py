@@ -188,7 +188,7 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
 
-    def test__nature(self):
+    def test_nature(self):
         natures = [
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -211,6 +211,109 @@ class calculations_test(unittest.TestCase):
                 pkmn.calculations.nature((random.randint(0, 50000) * 1000) + i),
                 natures[i]
             )
+
+    #
+    # Given the amount of time the C++ test takes, this will just verify
+    # the API wrapper.
+    #
+    def test_personality(self):
+        # Test invalid ability.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.LIBPKMN_OT_ID,
+                              True,
+                              "Torrent",
+                              "Male",
+                              "Quiet"
+                          )
+
+        # Test invalid gender.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.LIBPKMN_OT_ID,
+                              True,
+                              "Blaze",
+                              "Not a gender",
+                              "Quiet"
+                          )
+
+        # Test invalid nature.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.LIBPKMN_OT_ID,
+                              True,
+                              "Blaze",
+                              "Male",
+                              "Not a nature"
+                          )
+
+        # Make sure the SWIG wrapper keeps personality within the proper bounds.
+        # Which error applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  -1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        except:
+            with self.assertRaises(TypeError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  -1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        try:
+            with self.assertRaises(OverflowError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  0xFFFFFFFF+1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        except:
+            with self.assertRaises(TypeError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  0xFFFFFFFF+1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+
+        # Test and validate a valid call.
+        personality = pkmn.calculations.generate_personality(
+                          "Charmander",
+                          pkmn.LIBPKMN_OT_ID,
+                          True,
+                          "Blaze",
+                          "Male",
+                          "Quiet"
+                      )
+        self.assertTrue(
+            pkmn.calculations.modern_shiny(
+                personality, pkmn.LIBPKMN_OT_ID
+            )
+        )
+        self.assertEquals(
+            "Male",
+            pkmn.calculations.modern_pokemon_gender(
+                "Charmander",
+                personality
+            )
+        )
 
     def test_gen2_shiny(self):
         # Make sure expected errors are raised.

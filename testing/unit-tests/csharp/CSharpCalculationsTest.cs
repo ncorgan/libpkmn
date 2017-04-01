@@ -329,6 +329,77 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
+    public void PersonalityTest() {
+        /*
+         * Given the amount of time the C++ test takes, this will just verify
+         * the API wrapper.
+         */
+
+        // Test invalid ability.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Torrent",
+                    "Male",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid gender.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Blaze",
+                    "Not a gender",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid nature.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Blaze",
+                    "Male",
+                    "Not a nature"
+                );
+            }
+        );
+
+        // Test and validate a valid call.
+        uint personality = PKMN.Calculations.GeneratePersonality(
+                               "Charmander",
+                               PKMN.Pokemon.LIBPKMN_OT_ID,
+                               true,
+                               "Blaze",
+                               "Male",
+                               "Quiet"
+                           );
+        Assert.AreEqual(
+            "Male",
+            PKMN.Calculations.ModernPokemonGender(
+                "Charmander", personality
+            )
+        );
+        Assert.IsTrue(
+            PKMN.Calculations.ModernShiny(
+                personality, PKMN.Pokemon.LIBPKMN_OT_ID
+            )
+        );
+    }
+
+    [Test]
     public void Gen2ShinyTest() {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(

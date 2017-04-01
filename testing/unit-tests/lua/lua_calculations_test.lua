@@ -153,7 +153,7 @@ function test_modern_hidden_power()
     luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
-function test__nature()
+function test_nature()
     -- Make sure SWIG+Lua catches values outside the uint32_t range.
     luaunit.assertError(pkmn.calculations.nature, -1)
     luaunit.assertError(pkmn.calculations.nature, 0xFFFFFFFF+1)
@@ -173,6 +173,77 @@ function test__nature()
             natures[i]
         )
     end
+end
+
+--
+-- Given the amount of time the C++ test takes, this will just verify
+-- the API wrapper.
+--
+function test_personality()
+    -- Test invalid ability.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.LIBPKMN_OT_ID,
+        true,
+        "Torrent",
+        "Male",
+        "Quiet"
+    )
+
+    -- Test invalid gender.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.LIBPKMN_OT_ID,
+        true,
+        "Blaze",
+        "Not a gender",
+        "Quiet"
+    )
+
+    -- Test invalid nature.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.LIBPKMN_OT_ID,
+        true,
+        "Blaze",
+        "Male",
+        "Not a nature"
+    )
+
+    -- Make sure Lua+SWIG catch invalid trainer IDs.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        -1,
+        true,
+        "Blaze",
+        "Male",
+        "Quiet"
+    )
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        0xFFFFFFFF+1,
+        true,
+        "Blaze",
+        "Male",
+        "Quiet"
+    )
+
+    -- Test and validate a valid call.
+    local personality = pkmn.calculations.generate_personality(
+                            "Charmander",
+                            pkmn.LIBPKMN_OT_ID,
+                            true,
+                            "Blaze",
+                            "Male",
+                            "Quiet"
+                        )
+    luaunit.assertEquals("Male", pkmn.calculations.modern_pokemon_gender("Charmander", personality))
+    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.LIBPKMN_OT_ID, personality))
 end
 
 function test_gen2_shiny()
