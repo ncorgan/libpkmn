@@ -6,12 +6,15 @@
  */
 
 #include <pkmn/calculations/personality.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
+#include "misc_common.hpp"
 #include "types/rng.hpp"
 
 #include <boost/assign/list_of.hpp>
 
 #include <algorithm>
+#include <stdexcept>
 #include <vector>
 
 static const std::vector<std::string> _natures = boost::assign::list_of
@@ -38,6 +41,54 @@ namespace pkmn { namespace calculations {
         uint32_t ret = _rng.rand();
         while((ret % 25) != index) {
             ++ret;
+        }
+
+        return ret;
+    }
+
+    uint32_t personality_with_gender(
+        const std::string &species,
+        const std::string &gender
+    ) {
+        uint32_t ret = _rng.rand();
+
+        pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
+        float chance_male = entry.get_chance_male();
+        float chance_female = entry.get_chance_female();
+
+        if(pkmn_floats_close((chance_male + chance_female), 0.0f)) {
+            if(gender != "Genderless") {
+                throw std::invalid_argument("This Pokémon is genderless.");
+            }
+        } else if(pkmn_floats_close(chance_male, 1.0f)) {
+            if(gender != "Male") {
+                throw std::invalid_argument("This Pokémon is male-only.");
+            }
+        } else if(pkmn_floats_close(chance_female, 1.0f)) {
+            if(gender != "Female") {
+                throw std::invalid_argument("This Pokémon is female-only.");
+            }
+        } else {
+            ret &= ~0xFF;
+            uint32_t threshold = 0;
+
+            if(pkmn_floats_close(chance_male, 0.875f)) {
+                threshold = 31;
+            } else if(pkmn_floats_close(chance_male, 0.75f)) {
+                threshold = 64;
+            } else if(pkmn_floats_close(chance_male, 0.5f)) {
+                threshold = 127;
+            } else {
+                threshold = 191;
+            }
+
+            if(gender == "Male") {
+                ret |= (_rng.rand() % (0xFF - threshold) + threshold);
+            } else if(gender == "Female") {
+                ret |= (_rng.rand() % threshold);
+            } else {
+                throw std::invalid_argument("Valid genders: Male, Female");
+            }
         }
 
         return ret;
