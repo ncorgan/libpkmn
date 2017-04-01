@@ -491,7 +491,7 @@ static void modern_hidden_power_test() {
     TEST_ASSERT_EQUAL(70, pkmn_hidden_power_t_result.base_power);
 }
 
-static void _nature_test() {
+static void nature_test() {
     static const char* natures[] = {
         "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
         "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -510,6 +510,137 @@ static void _nature_test() {
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(natures[i], strbuffer);
     }
+}
+
+/*
+ * Given the amount of time the C++ test takes, this will just verify
+ * the API wrapper.
+ */
+static void personality_test() {
+    uint32_t personality = 0;
+    bool shiny = false;
+    pkmn_gender_t gender = PKMN_GENDERLESS;
+
+    // Test invalid ability.
+    error = pkmn_calculations_generate_personality(
+                "Charmander",
+                LIBPKMN_OT_ID,
+                true,
+                "Torrent",
+                PKMN_MALE,
+                "Quiet",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    // Test invalid gender.
+    error = pkmn_calculations_generate_personality(
+                "Charmander",
+                LIBPKMN_OT_ID,
+                true,
+                "Blaze",
+                PKMN_GENDERLESS,
+                "Quiet",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    // Test invalid nature.
+    error = pkmn_calculations_generate_personality(
+                "Charmander",
+                LIBPKMN_OT_ID,
+                true,
+                "Blaze",
+                PKMN_MALE,
+                "Not a nature",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    // Test and validate calls with each gender.
+    error = pkmn_calculations_generate_personality(
+                "Charmander",
+                LIBPKMN_OT_ID,
+                true,
+                "Blaze",
+                PKMN_FEMALE,
+                "Quiet",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_EQUAL(0, personality);
+
+    error = pkmn_calculations_modern_shiny(
+                personality,
+                LIBPKMN_OT_ID,
+                &shiny
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_TRUE(shiny);
+
+    error = pkmn_calculations_modern_pokemon_gender(
+                "Charmander",
+                personality,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, gender);
+
+    error = pkmn_calculations_generate_personality(
+                "Charmander",
+                LIBPKMN_OT_ID,
+                true,
+                "Blaze",
+                PKMN_MALE,
+                "Quiet",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_EQUAL(0, personality);
+
+    error = pkmn_calculations_modern_shiny(
+                personality,
+                LIBPKMN_OT_ID,
+                &shiny
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_TRUE(shiny);
+
+    error = pkmn_calculations_modern_pokemon_gender(
+                "Charmander",
+                personality,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_MALE, gender);
+
+    error = pkmn_calculations_generate_personality(
+                "Magnemite",
+                LIBPKMN_OT_ID,
+                true,
+                "Magnet Pull",
+                PKMN_GENDERLESS,
+                "Quiet",
+                &personality
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_EQUAL(0, personality);
+
+    error = pkmn_calculations_modern_shiny(
+                personality,
+                LIBPKMN_OT_ID,
+                &shiny
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_TRUE(shiny);
+
+    error = pkmn_calculations_modern_pokemon_gender(
+                "Magnemite",
+                personality,
+                &gender
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, gender);
 }
 
 static void gen2_shiny_test() {
@@ -833,7 +964,8 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(modern_gender_test)
     PKMN_C_TEST(gen2_hidden_power_test)
     PKMN_C_TEST(modern_hidden_power_test)
-    PKMN_C_TEST(_nature_test)
+    PKMN_C_TEST(nature_test)
+    PKMN_C_TEST(personality_test)
     PKMN_C_TEST(gen2_shiny_test)
     PKMN_C_TEST(modern_shiny_test)
     PKMN_C_TEST(pokemon_size_test)
