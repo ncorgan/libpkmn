@@ -18,21 +18,9 @@ namespace pkmn { namespace calculations {
         const std::string &species,
         uint32_t trainer_id,
         bool shiny,
-        const std::string &gender
-    );
-
-    PKMN_API uint32_t personality_with_gen3_gen4_nature(
+        const std::string &ability,
+        const std::string &gender,
         const std::string &nature
-    );
-
-    PKMN_API uint32_t personality_with_gender(
-        const std::string &species,
-        const std::string &gender
-    );
-
-    PKMN_API uint32_t personality_with_shininess(
-        uint32_t trainer_id,
-        bool shiny
     );
 
 }}

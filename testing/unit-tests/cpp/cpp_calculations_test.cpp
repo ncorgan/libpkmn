@@ -491,176 +491,59 @@ TEST(cpp_calculations_test, gen3_gen4_nature_test) {
     }
 }
 
-/*
- * Since randomness is involved, run all of these multiple times
- * to be sure.
- */
+static const std::string species[4] = {"Charmander", "Growlithe", "Pidgey", "Vulpix"};
+static const std::string genders[2] = {"Male", "Female"};
+static const bool bools[2] = {true, false};
+
+static const std::string abilities[4][2] = {
+    {"Blaze", "None"},
+    {"Intimidate", "Flash Fire"},
+    {"Keen Eyes", "Tangled Feet"},
+    {"Flash Fire", "None"}
+};
+
 TEST(cpp_calculations_test, personality_test) {
     uint32_t personality = 0;
 
-    personality = pkmn::calculations::generate_personality(
-                      "Charmander",
-                      pkmn::pokemon::LIBPKMN_OT_ID,
-                      false,
-                      "Male"
-                  );
-    EXPECT_FALSE(
-        pkmn::calculations::modern_shiny(
-            personality,
-            pkmn::pokemon::LIBPKMN_OT_ID
-        )
-    );
-    EXPECT_EQ(
-        "Male",
-        pkmn::calculations::modern_pokemon_gender(
-            "Charmander",
-            personality
-        )
-    );
-
-    /*
-    // Getting personality with a given nature for Generation III-IV
-    for(size_t i = 0; i < 50; ++i) {
-        for(size_t j = 0; j < natures.size(); ++j) {
-            personality = pkmn::calculations::personality_with_gen3_gen4_nature(
-                              natures[j]
-                          );
-            EXPECT_EQ(
-               natures[j],
-               pkmn::calculations::gen3_gen4_nature(personality)
-            );
-        }
-    }
-
-    // Try to get personalities with invalid genders
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Magnemite",
-            "Male"
-        );
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Magnemite",
-            "Female"
-        );
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Nidorina",
-            "Genderless"
-        );
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Nidorina",
-            "Male"
-        );
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Nidorino",
-            "Genderless"
-        );
-    , std::invalid_argument);
-    EXPECT_THROW(
-        pkmn::calculations::personality_with_gender(
-            "Nidorino",
-            "Female"
-        );
-    , std::invalid_argument);
-
-    personality = pkmn::calculations::personality_with_gender(
-                      "Magnemite",
-                      "Genderless"
-                  );
-    EXPECT_EQ(
-        "Genderless",
-        pkmn::calculations::modern_pokemon_gender(
-            "Magnemite",
-            personality
-        )
-    );
-    personality = pkmn::calculations::personality_with_gender(
-                      "Nidorina",
-                      "Female"
-                  );
-    EXPECT_EQ(
-        "Female",
-        pkmn::calculations::modern_pokemon_gender(
-            "Nidorina",
-            personality
-        )
-    );
-    personality = pkmn::calculations::personality_with_gender(
-                      "Nidorino",
-                      "Male"
-                  );
-    EXPECT_EQ(
-        "Male",
-        pkmn::calculations::modern_pokemon_gender(
-            "Nidorino",
-            personality
-        )
-    );
-
-    // Getting personality with given gender
-    static const std::vector<std::string> pokemon = boost::assign::list_of
-        ("Charmander")("Growlithe")("Pidgey")("Vulpix")
-    ;
+    // Generation III
     for(size_t i = 0; i < 4; ++i) {
-        for(size_t j = 0; j < 50; ++j) {
-            personality = pkmn::calculations::personality_with_gender(
-                              pokemon[i],
-                              "Female"
-                          );
-            EXPECT_EQ(
-                "Female",
-                pkmn::calculations::modern_pokemon_gender(
-                    pokemon[i],
-                    personality
-                )
-            );
-            personality = pkmn::calculations::personality_with_gender(
-                              pokemon[i],
-                              "Male"
-                          );
-            EXPECT_EQ(
-                "Male",
-                pkmn::calculations::modern_pokemon_gender(
-                    pokemon[i],
-                    personality
-                )
-            );
+        for(size_t j = 0; j < natures.size(); ++j) {
+            for(size_t k = 0; k < 2; ++k) {
+                for(size_t l = 0; l < 2; ++l) {
+                    for(size_t m = 0; m < 2; ++m) {
+                        if(abilities[i][m] != "None") {
+                            personality = pkmn::calculations::generate_personality(
+                                              species[i],
+                                              pkmn::pokemon::LIBPKMN_OT_ID,
+                                              bools[k],
+                                              abilities[i][m],
+                                              genders[l],
+                                              natures[j]
+                                          );
+                            EXPECT_EQ(
+                                bools[k],
+                                pkmn::calculations::modern_shiny(
+                                    personality,
+                                    pkmn::pokemon::LIBPKMN_OT_ID
+                                )
+                            );
+                            EXPECT_EQ(
+                                genders[l],
+                                pkmn::calculations::modern_pokemon_gender(
+                                    species[i],
+                                    personality
+                                )
+                            );
+                            EXPECT_EQ(
+                               natures[j],
+                               pkmn::calculations::gen3_gen4_nature(personality)
+                            );
+                        }
+                    }
+                }
+            }
         }
     }
-
-    // Getting personality that's shiny or not
-    for(size_t i = 0; i < 50; ++i) {
-        personality = pkmn::calculations::personality_with_shininess(
-                          pkmn::pokemon::LIBPKMN_OT_ID,
-                          false
-                      );
-        EXPECT_FALSE(
-            pkmn::calculations::modern_shiny(
-                personality,
-                pkmn::pokemon::LIBPKMN_OT_ID
-            )
-        );
-    }
-    for(size_t i = 0; i < 50; ++i) {
-        personality = pkmn::calculations::personality_with_shininess(
-                          pkmn::pokemon::LIBPKMN_OT_ID,
-                          true
-                      );
-        EXPECT_TRUE(
-            pkmn::calculations::modern_shiny(
-                personality,
-                pkmn::pokemon::LIBPKMN_OT_ID
-            )
-        );
-    }
-    */
 }
 
 TEST(cpp_calculations_test, gen2_shiny_test) {
