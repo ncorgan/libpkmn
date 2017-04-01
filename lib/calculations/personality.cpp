@@ -60,19 +60,22 @@ namespace pkmn { namespace calculations {
         unsigned long long after_timestamp = 0;
         uint32_t ret = 0;
 
-        pkmn::database::pokemon_entry entry(species, "Ruby", "");
+        pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
         std::pair<std::string, std::string> abilities = entry.get_abilities();
+        std::string hidden_ability = entry.get_hidden_ability();
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
         // Validate ability input.
-        uint32_t ability_modulo = 0; // If first ability, keep this
+        uint32_t ability_modulo = 0; // If first or hiddenability, keep this
         if(ability == abilities.second) {
             if(ability != "None") {
                 ability_modulo = 1;
             } else {
                 throw std::invalid_argument("You cannot use \"None\".");
             }
+        } else if(ability != abilities.first and ability != hidden_ability) {
+            throw std::invalid_argument("Invalid ability.");
         }
 
         // Validate gender input.

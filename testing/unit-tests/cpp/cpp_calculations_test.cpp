@@ -481,7 +481,7 @@ static const std::vector<std::string> natures = boost::assign::list_of
     ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
 ;
 
-TEST(cpp_calculations_test, _nature_test) {
+TEST(cpp_calculations_test, nature_test) {
     std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
         EXPECT_EQ(
@@ -495,22 +495,205 @@ static const std::string species[4] = {"Charmander", "Growlithe", "Pidgey", "Vul
 static const std::string genders[2] = {"Male", "Female"};
 static const bool bools[2] = {true, false};
 
-static const std::string abilities[4][2] = {
-    {"Blaze", "None"},
-    {"Intimidate", "Flash Fire"},
-    {"Keen Eyes", "Tangled Feet"},
-    {"Flash Fire", "None"}
+static const std::string abilities[4][3] = {
+    {"Blaze", "None", "Solar Power"},
+    {"Intimidate", "Flash Fire", "Justified"},
+    {"Keen Eye", "Tangled Feet", "Big Pecks"},
+    {"Flash Fire", "None", "Drought"}
 };
 
 TEST(cpp_calculations_test, personality_test) {
     uint32_t personality = 0;
 
-    // Generation III
+    // Test invalid ability.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "None",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Torrent",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+
+    // Test invalid gender.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Blaze",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Genderless",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Genderless",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Poison Point",
+                          "Female",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Magnet Pull",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Magnet Pull",
+                          "Female",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Magnet Pull",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+
+    // Test invalid nature.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          true,
+                          "Magnet Pull",
+                          "Genderless",
+                          "Not a nature"
+                      );
+    , std::invalid_argument);
+
+    // Test every valid combination for single-gender Pokémon.
+    struct test_data {
+        std::string species;
+        std::string gender;
+        std::string abilities[3];
+    };
+
+    static const test_data test_values[3] = {
+        {"Magnemite", "Genderless", {"Magnet Pull", "Sturdy", "Analytic"}},
+        {"Nidorina", "Female", {"Poison Point", "Rivalry", "Hustle"}},
+        {"Nidorino", "Male", {"Poison Point", "Rivalry", "Hustle"}}
+    };
+    for(size_t i = 0; i < 3; ++i) {
+        for(size_t j = 0; j < natures.size(); ++j) {
+            for(size_t k = 0; k < 3; ++k) {
+                for(size_t l = 0; l < 2; ++l) {
+                    personality = pkmn::calculations::generate_personality(
+                                      test_values[i].species,
+                                      pkmn::pokemon::LIBPKMN_OT_ID,
+                                      bools[l],
+                                      test_values[i].abilities[k],
+                                      test_values[i].gender,
+                                      natures[j]
+                                  );
+                    EXPECT_EQ(
+                        bools[l],
+                        pkmn::calculations::modern_shiny(
+                            personality,
+                            pkmn::pokemon::LIBPKMN_OT_ID
+                        )
+                    );
+                    EXPECT_EQ(
+                        test_values[i].gender,
+                        pkmn::calculations::modern_pokemon_gender(
+                            test_values[i].species,
+                            personality
+                        )
+                    );
+                    EXPECT_EQ(
+                       natures[j],
+                       pkmn::calculations::nature(personality)
+                    );
+                }
+            }
+        }
+    }
+
+    // Test every valid combination for mixed-gender Pokémon.
     for(size_t i = 0; i < 4; ++i) {
         for(size_t j = 0; j < natures.size(); ++j) {
             for(size_t k = 0; k < 2; ++k) {
                 for(size_t l = 0; l < 2; ++l) {
-                    for(size_t m = 0; m < 2; ++m) {
+                    for(size_t m = 0; m < 3; ++m) {
                         if(abilities[i][m] != "None") {
                             personality = pkmn::calculations::generate_personality(
                                               species[i],
