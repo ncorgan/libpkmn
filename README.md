@@ -12,7 +12,6 @@ Feature Roadmap:
  * Java API
  * Ruby API
  * Spinda sprite generation
- * Personality generation
 
 Build Dependencies
 -------------------------------------
@@ -73,4 +72,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/03/19
+README last updated: 2017/04/01
