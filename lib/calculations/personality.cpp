@@ -5,6 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/config.hpp>
+ 
+// http://stackoverflow.com/q/6884093
+#ifdef PKMN_PLATFORM_WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 #include <pkmn/calculations/personality.hpp>
 
 #include <pkmn/calculations/shininess.hpp>
@@ -30,7 +38,7 @@ static const std::vector<std::string> natures = boost::assign::list_of
 
 static pkmn::rng<uint32_t> _rng;
 
-BOOST_STATIC_CONSTEXPR unsigned long long ONE_SECOND = 1e6;
+BOOST_STATIC_CONSTEXPR unsigned long long ONE_SECOND = (unsigned long long)1e6;
 
 namespace pkmn { namespace calculations {
 

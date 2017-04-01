@@ -9,7 +9,7 @@
 
 #include <boost/config.hpp>
 
-BOOST_STATIC_CONSTEXPR const char* NATURES[] = {
+static BOOST_CONSTEXPR const char* NATURES[] = {
     "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
     "Bold", "Docile", "Relaxed", "Impish", "Lax",
     "Timid", "Hasty", "Serious", "Jolly", "Naive",

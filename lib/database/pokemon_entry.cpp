@@ -1103,7 +1103,7 @@ namespace pkmn { namespace database {
         }
     }
 
-    BOOST_STATIC_CONSTEXPR const char* IMAGES_SUBDIR_STRINGS[] = {
+    static BOOST_CONSTEXPR const char* IMAGES_SUBDIR_STRINGS[] = {
         "",
         "red-blue",
         "red-blue",
