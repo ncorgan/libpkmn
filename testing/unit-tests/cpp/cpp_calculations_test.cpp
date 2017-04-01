@@ -498,6 +498,27 @@ TEST(cpp_calculations_test, gen3_gen4_nature_test) {
 TEST(cpp_calculations_test, personality_test) {
     uint32_t personality = 0;
 
+    personality = pkmn::calculations::generate_personality(
+                      "Charmander",
+                      pkmn::pokemon::LIBPKMN_OT_ID,
+                      false,
+                      "Male"
+                  );
+    EXPECT_FALSE(
+        pkmn::calculations::modern_shiny(
+            personality,
+            pkmn::pokemon::LIBPKMN_OT_ID
+        )
+    );
+    EXPECT_EQ(
+        "Male",
+        pkmn::calculations::modern_pokemon_gender(
+            "Charmander",
+            personality
+        )
+    );
+
+    /*
     // Getting personality with a given nature for Generation III-IV
     for(size_t i = 0; i < 50; ++i) {
         for(size_t j = 0; j < natures.size(); ++j) {
@@ -639,6 +660,7 @@ TEST(cpp_calculations_test, personality_test) {
             )
         );
     }
+    */
 }
 
 TEST(cpp_calculations_test, gen2_shiny_test) {

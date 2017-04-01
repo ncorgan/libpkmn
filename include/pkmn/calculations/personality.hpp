@@ -14,6 +14,13 @@
 
 namespace pkmn { namespace calculations {
 
+    PKMN_API uint32_t generate_personality(
+        const std::string &species,
+        uint32_t trainer_id,
+        bool shiny,
+        const std::string &gender
+    );
+
     PKMN_API uint32_t personality_with_gen3_gen4_nature(
         const std::string &nature
     );
