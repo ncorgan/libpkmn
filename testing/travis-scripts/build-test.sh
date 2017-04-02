@@ -79,33 +79,4 @@ make
 ./pkmn-c-app
 [ $? -ne 0 ] && exit 1
 
-# Test external C# project
-if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/csharp ]
-then
-    cd $REPO_TOPLEVEL/testing/applications/csharp/monodevelop/PKMNCSharpApp
-    [ $? -ne 0 ] && exit 1
-    xbuild PKMNCSharpApp.sln
-    [ $? -ne 0 ] && exit 1
-    PKMNCSharpApp/bin/Debug/PKMNCSharpApp.exe
-    [ $? -ne 0 ] && exit 1
-fi
-
-# Test external Lua project
-if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/lua ]
-then
-    cd $REPO_TOPLEVEL/testing/applications/lua
-    [ $? -ne 0 ] && exit 1
-    lua pkmn-lua-app.lua
-    [ $? -ne 0 ] && exit 1
-fi
-
-# Test external Python project
-if [ -d $REPO_TOPLEVEL/test-env/pkmn-build/lib/swig/python ]
-then
-    cd $REPO_TOPLEVEL/testing/applications/python
-    [ $? -ne 0 ] && exit 1
-    python${PYTHON_VERSION} pkmn-python-app.py
-    [ $? -ne 0 ] && exit 1
-fi
-
 echo # So we can check the last error code
