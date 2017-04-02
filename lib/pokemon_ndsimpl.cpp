@@ -11,6 +11,7 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/party_data.hpp"
@@ -197,6 +198,12 @@ namespace pkmn {
         }
     }
 
+    void pokemon_ndsimpl::set_form(
+        const std::string &form
+    ) {
+        (void)form;
+    }
+
     std::string pokemon_ndsimpl::get_nickname() {
         char nickname[11] = {0};
         if(_gen4) {
@@ -247,6 +254,26 @@ namespace pkmn {
                 );
             )
         }
+    }
+
+    std::string pokemon_ndsimpl::get_gender() {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::calculations::modern_pokemon_gender(
+                   _database_entry.get_name(),
+                   pksav_littleendian32(NDS_PC_RCAST->personality)
+               );
+    }
+
+    void pokemon_ndsimpl::set_gender(
+        const std::string &gender
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_modern_gender(
+            &NDS_PC_RCAST->personality,
+            gender
+        );
     }
 
     bool pokemon_ndsimpl::is_shiny() {

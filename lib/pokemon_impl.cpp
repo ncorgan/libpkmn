@@ -9,6 +9,7 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_ndsimpl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -73,6 +74,11 @@ namespace pkmn {
                 }
 
             case 4:
+                return pkmn::make_shared<pokemon_ndsimpl>(
+                           std::move(database_entry),
+                           level
+                       );
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();
