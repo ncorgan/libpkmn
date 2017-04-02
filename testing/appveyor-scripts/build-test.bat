@@ -56,16 +56,12 @@ cmake -G %CMAKE_GENERATOR_NAME% ..
 if not !ERRORLEVEL!==0 goto fail
 msbuild /p:configuration=Release ALL_BUILD.vcxproj
 if not !ERRORLEVEL!==0 goto fail
-Release\pkmn-cpp-app.exe
-if not !ERRORLEVEL!==0 goto fail
 
 mkdir c:\projects\libpkmn\testing\applications\c\build
 cd c:\projects\libpkmn\testing\applications\c\build
 cmake -G %CMAKE_GENERATOR_NAME% ..
 if not !ERRORLEVEL!==0 goto fail
 msbuild /p:configuration=Release ALL_BUILD.vcxproj
-if not !ERRORLEVEL!==0 goto fail
-Release\pkmn-c-app.exe
 if not !ERRORLEVEL!==0 goto fail
 
 goto pass
