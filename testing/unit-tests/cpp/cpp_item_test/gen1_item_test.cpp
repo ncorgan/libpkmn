@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/item_test.hpp>
+#include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
@@ -28,7 +28,7 @@ static const std::vector<std::string> wrong_generation_item_names = boost::assig
     ("Amulet Coin")("Apicot Berry")("Air Mail")("Air Balloon")("Aqua Suit")
 ;
 
-class gen1_item_list_test: public pkmntest::item_list_test {};
+class gen1_item_list_test: public item_list_test {};
 
 /*
  * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -61,22 +61,22 @@ static void gen1_item_list_test_common(
     pkmn::item_list::sptr list 
 ) {
     // Make sure item slots start as correctly empty.
-    pkmntest::test_item_list_empty_slots(list);
+    test_item_list_empty_slots(list);
 
     // Confirm exceptions are thrown when expected.
-    pkmntest::test_item_list_out_of_range_error(
+    test_item_list_out_of_range_error(
         list,
         "Potion"
     );
 
     // Confirm items from later generations can't be added.
-    pkmntest::test_item_list_invalid_items(
+    test_item_list_invalid_items(
         list,
         wrong_generation_item_names
     );
 
     // Start adding and removing stuff, and make sure the numbers are accurate.
-    pkmntest::test_item_list_add_remove(
+    test_item_list_add_remove(
         list,
         item_names
     );
@@ -114,7 +114,7 @@ static void gen1_item_pc_test(
     gen1_item_list_test_common(item_pc);
 }
 
-static const pkmntest::item_list_test_fcns_t gen1_test_fcns = boost::assign::map_list_of
+static const item_list_test_fcns_t gen1_test_fcns = boost::assign::map_list_of
     ("Items", &gen1_item_pocket_test)
     ("PC", &gen1_item_pc_test)
 ;
@@ -138,7 +138,7 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(item_list_params)
 );
 
-class gen1_item_bag_test: public pkmntest::item_bag_test {};
+class gen1_item_bag_test: public item_bag_test {};
 
 TEST_P(gen1_item_bag_test, item_bag_test) {
     const pkmn::item_bag::sptr& bag = get_item_bag();
