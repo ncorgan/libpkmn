@@ -2,22 +2,22 @@
 @echo off
 
 :: Set variables
+set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
-    set "PATH=C:\Program Files (x86)\PKMN\bin;%PATH%"
+    set "PATH=C:\Program Files (x86)\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files (x86)\PKMN\lib;%LIB%"
     set "INCLUDE=C:\Program Files (x86)\PKMN\include;%INCLUDE%"
 ) else (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
-    set "PATH=C:\Program Files\PKMN\bin;%PATH%"
+    set "PATH=C:\Program Files\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files\PKMN\lib;%LIB%"
     set "INCLUDE=C:\Program Files\PKMN\include;%INCLUDE%"
 )
-set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
 set PYTHON_PIP_EXE="!PYTHON_ROOT!\Scripts\pip.exe"
 
