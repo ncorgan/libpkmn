@@ -6,10 +6,16 @@ if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
+    set PATH=C:\Program Files (x86)\PKMN\bin;%PATH%
+    set LIB=C:\Program Files (x86)\PKMN\lib;%LIB%
+    set INCLUDE=C:\Program Files (x86)\PKMN\include;%INCLUDE%
 ) else (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
+    set PATH=C:\Program Files\PKMN\bin;%PATH%
+    set LIB=C:\Program Files\PKMN\lib;%LIB%
+    set INCLUDE=C:\Program Files\PKMN\include;%INCLUDE%
 )
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 set PYTHON_EXE="!PYTHON_ROOT!\python.exe"
@@ -38,6 +44,25 @@ if not !ERRORLEVEL!==0 goto fail
 
 ctest -E "python_paths_test" --output-on-failure
 if not !ERRORLEVEL!==0 goto fail
+
+:: So the log isn't too verbose
+echo Installing...
+msbuild /p:configuration=Release INSTALL.vcxproj 1>nul 2>nul
+if not !ERRORLEVEL!==0 goto fail
+
+mkdir c:\projects\libpkmn\testing\applications\cpp\build
+cd c:\projects\libpkmn\testing\applications\cpp\build
+cmake -G %CMAKE_GENERATOR_NAME% ..
+if not !ERRORLEVEL!==0 goto fail
+dir
+dir Release
+
+mkdir c:\projects\libpkmn\testing\applications\c\build
+cd c:\projects\libpkmn\testing\applications\c\build
+cmake -G %CMAKE_GENERATOR_NAME% ..
+if not !ERRORLEVEL!==0 goto fail
+dir
+dir Release
 
 goto pass
 
