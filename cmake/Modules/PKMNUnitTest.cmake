@@ -20,14 +20,15 @@ INCLUDE_DIRECTORIES(
 
 SET(pkmn_cpp_test_libs
     ${Boost_LIBRARIES}
+    gtest
     gtest_main
     pkmn
-    pkmntest
+    #pkmntest
 )
 
 SET(pkmn_c_test_libs
     pkmn-c
-    pkmntest-c
+    #pkmntest-c
     unity
 )
 

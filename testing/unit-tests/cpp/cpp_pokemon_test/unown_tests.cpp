@@ -8,7 +8,11 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <boost/filesystem.hpp>
+
 #include <gtest/gtest.h>
+
+namespace fs = boost::filesystem;
 
 class gen2_unown_test: public ::testing::TestWithParam<std::string> {};
 class gen3_unown_test: public ::testing::TestWithParam<std::string> {};
@@ -41,6 +45,8 @@ TEST_P(gen2_unown_test, gen2_unown_test) {
                                         IVs.at("Special")
                                     );
         EXPECT_EQ(form_from_IVs, unown->get_form());
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
 
     pkmn::pokemon::sptr unown = pkmn::pokemon::make(
@@ -89,6 +95,8 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
                                         5
                                     );
         EXPECT_EQ(*form_iter, unown->get_form());
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
 
     // Make sure setting the personality properly sets the form.

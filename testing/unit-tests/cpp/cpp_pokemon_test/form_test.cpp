@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/pokemon.hpp>
 
 #include <boost/assign.hpp>
@@ -34,36 +36,6 @@ static const std::string gen3_test_games[] = {
 class gen1_form_test: public ::testing::TestWithParam<std::string> {};
 class gen2_form_test: public ::testing::TestWithParam<std::string> {};
 class gba_form_test: public ::testing::TestWithParam<std::string> {};
-
-// No database access here
-static const std::map<std::string, int> game_generations = boost::assign::map_list_of
-    ("Red", 1)
-    ("Blue", 1)
-    ("Yellow", 1)
-    ("Gold", 2)
-    ("Silver", 2)
-    ("Crystal", 2)
-    ("Ruby", 3)
-    ("Sapphire", 3)
-    ("Emerald", 3)
-    ("FireRed", 3)
-    ("LeafGreen", 3)
-    ("Colosseum", 3)
-    ("XD", 3)
-    ("Diamond", 4)
-    ("Pearl", 4)
-    ("Platinum", 4)
-    ("HeartGold", 4)
-    ("SoulSilver", 4)
-    ("Black", 5)
-    ("White", 5)
-    ("Black 2", 5)
-    ("White 2", 5)
-    ("X", 6)
-    ("Y", 6)
-    ("Omega Ruby", 6)
-    ("Alpha Sapphire", 6)
-;
 
 static const std::vector<std::string> starters = boost::assign::list_of
     ("")("Bulbasaur")("Chikorita")("Treecko")("Turtwig")("Snivy")("Chespin")

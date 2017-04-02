@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_test.hpp>
+#include "pokemon_test_common.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
@@ -20,12 +20,12 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
-class gen2_pokemon_test: public pkmntest::pokemon_test {};
+class gen2_pokemon_test: public pokemon_test {};
 
 TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
-    pkmntest::pokemon_test_common(
+    pokemon_test_common(
         pokemon,
         {
             "Great Ball",
