@@ -714,7 +714,6 @@ namespace pkmn {
     }
 
     void pokemon_ndsimpl::_update_ribbons_map() {
-        throw pkmn::unimplemented_error();
     }
 
     void pokemon_ndsimpl::_update_EV_map() {
