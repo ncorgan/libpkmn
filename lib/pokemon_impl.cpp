@@ -74,12 +74,12 @@ namespace pkmn {
                 }
 
             case 4:
+            case 5:
                 return pkmn::make_shared<pokemon_ndsimpl>(
                            std::move(database_entry),
                            level
                        );
 
-            case 5:
             case 6:
                 throw pkmn::unimplemented_error();
 

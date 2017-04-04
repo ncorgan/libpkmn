@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,9 +7,11 @@
 
 #include "misc_common.hpp"
 #include "pokemon_ndsimpl.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "types/rng.hpp"
 
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
@@ -59,11 +61,48 @@ namespace pkmn {
         std::memset(_native_party, 0, sizeof(pksav_nds_pokemon_party_data_t));
         _our_party_mem = true;
 
+        pkmn::rng<uint8_t> rng8;
+        pkmn::rng<uint32_t> rng32;
+
         // Set _block pointers
         _blockA = &NDS_PC_RCAST->blocks.blockA;
         _blockB = &NDS_PC_RCAST->blocks.blockB;
         _blockC = &NDS_PC_RCAST->blocks.blockC;
         _blockD = &NDS_PC_RCAST->blocks.blockD;
+
+        _set_default_nickname();
+
+        // Populate fields
+        set_personality(rng32.rand()); // Will set other fields
+        NDS_PC_RCAST->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
+
+        _blockA->species = pksav_littleendian16(uint16_t(
+                               _database_entry.get_pokemon_index()
+                           ));
+        _blockA->ot_id.id = pksav_littleendian32(
+                                 pkmn::pokemon::LIBPKMN_OT_ID
+                            );
+        _blockA->friendship = uint8_t(_database_entry.get_base_friendship());
+        // TODO: country
+        _blockA->ev_hp = rng8.rand();
+        _blockA->ev_atk = rng8.rand();
+        _blockA->ev_def = rng8.rand();
+        _blockA->ev_spd = rng8.rand();
+        _blockA->ev_spatk = rng8.rand();
+        _blockA->ev_spdef = rng8.rand();
+
+        _blockB->iv_isegg_isnicknamed = rng32.rand();
+        _blockB->iv_isegg_isnicknamed &= ~PKSAV_NDS_ISEGG_MASK;
+        _blockB->iv_isegg_isnicknamed &= ~PKSAV_NDS_ISNICKNAMED_MASK;
+
+        set_nickname(_default_nickname);
+        set_original_game(_database_entry.get_game());
+        set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
+        // TODO: met dates, Pokerus
+        set_ball("Premier Ball");
+        set_level_met(level);
+        set_location_met("Faraway place", false);
+        set_location_met("Faraway place", true);
 
         // Populate abstractions
         _update_held_item();
@@ -104,6 +143,8 @@ namespace pkmn {
         _blockC = &NDS_PC_RCAST->blocks.blockC;
         _blockD = &NDS_PC_RCAST->blocks.blockD;
 
+        _set_default_nickname();
+
         // Populate abstractions
         _update_held_item();
         _update_ribbons_map();
@@ -137,6 +178,8 @@ namespace pkmn {
         _blockB = &NDS_PC_RCAST->blocks.blockB;
         _blockC = &NDS_PC_RCAST->blocks.blockC;
         _blockD = &NDS_PC_RCAST->blocks.blockD;
+
+        _set_default_nickname();
 
         // Populate abstractions
         _update_held_item();
@@ -177,6 +220,8 @@ namespace pkmn {
         _blockB = &NDS_PC_RCAST->blocks.blockB;
         _blockC = &NDS_PC_RCAST->blocks.blockC;
         _blockD = &NDS_PC_RCAST->blocks.blockD;
+
+        _set_default_nickname();
 
         // Populate abstractions
         _update_held_item();
@@ -253,6 +298,12 @@ namespace pkmn {
                     10
                 );
             )
+        }
+
+        if(nickname == _default_nickname) {
+            _blockB->iv_isegg_isnicknamed |= PKSAV_NDS_ISNICKNAMED_MASK;
+        } else {
+            _blockB->iv_isegg_isnicknamed &= ~PKSAV_NDS_ISNICKNAMED_MASK;
         }
     }
 
@@ -434,6 +485,8 @@ namespace pkmn {
     }
 
     std::string pokemon_ndsimpl::get_ability() {
+        pokemon_scoped_lock lock(this);
+
         return pkmn::database::ability_id_to_name(_blockA->ability);
     }
 
@@ -441,11 +494,17 @@ namespace pkmn {
         const std::string &ability
     ) {
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        std::string hidden_ability = _database_entry.get_hidden_ability();
+
+        pokemon_scoped_lock lock(this);
 
         if(ability == "None") {
             throw std::invalid_argument("The ability cannot be set to None.");
-        } else if(ability == abilities.first || ability == abilities.second) {
+        } else if(ability == abilities.first or ability == abilities.second) {
             _blockA->ability = uint8_t(pkmn::database::ability_name_to_id(ability));
+        } else if(ability == hidden_ability) {
+            _blockA->ability = uint8_t(pkmn::database::ability_name_to_id(ability));
+            // TODO: add hidden ability flag to PKSav, set here
         } else {
             std::string error_message;
             if(abilities.second == "None") {
@@ -462,6 +521,8 @@ namespace pkmn {
     }
 
     std::string pokemon_ndsimpl::get_ball() {
+        pokemon_scoped_lock lock(this);
+
         return pkmn::database::ball_id_to_name(
                    _hgss ? _blockD->ball_hgss
                          : _blockD->ball
@@ -471,6 +532,11 @@ namespace pkmn {
     void pokemon_ndsimpl::set_ball(
         const std::string &ball
     ) {
+        // Try to instantiate an item_entry to validate the ball.
+        (void)pkmn::database::item_entry(ball, get_game());
+
+        pokemon_scoped_lock lock(this);
+
         (_hgss ? _blockD->ball_hgss : _blockD->ball) = uint8_t(pkmn::database::ball_name_to_id(
                                                                    ball
                                                                ));
@@ -498,6 +564,8 @@ namespace pkmn {
     std::string pokemon_ndsimpl::get_location_met(
         bool as_egg
     ) {
+        pokemon_scoped_lock lock(this);
+
         return pkmn::database::location_index_to_name(
                    pksav_littleendian16(_plat ? as_egg ? _blockB->eggmet_plat
                                                        : _blockB->met_plat
@@ -512,6 +580,8 @@ namespace pkmn {
         const std::string &location,
         bool as_egg
     ) {
+        pokemon_scoped_lock lock(this);
+
         uint16_t* field = _plat ? as_egg ? &_blockB->eggmet_plat
                                          : &_blockB->met_plat
                                 : as_egg ? &_blockD->eggmet_dp
@@ -526,16 +596,27 @@ namespace pkmn {
     }
 
     std::string pokemon_ndsimpl::get_original_game() {
+        pokemon_scoped_lock lock(this);
+
         return pkmn::database::game_index_to_name(_blockC->hometown);
     }
 
     void pokemon_ndsimpl::set_original_game(
         const std::string &game
     ) {
+        pokemon_scoped_lock lock(this);
+
+        int generation = pkmn::database::game_name_to_generation(game);
+        if(generation < 3 or generation > _generation) {
+            throw std::invalid_argument("Invalid game.");
+        }
+
         _blockC->hometown = uint8_t(pkmn::database::game_name_to_index(game));
     }
 
     uint32_t pokemon_ndsimpl::get_personality() {
+        pokemon_scoped_lock lock(this);
+
         return pksav_littleendian32(NDS_PC_RCAST->personality);
     }
 
@@ -543,16 +624,22 @@ namespace pkmn {
     void pokemon_ndsimpl::set_personality(
         uint32_t personality
     ) {
+        pokemon_scoped_lock lock(this);
+
         NDS_PC_RCAST->personality = pksav_littleendian32(personality);
     }
 
     int pokemon_ndsimpl::get_experience() {
+        pokemon_scoped_lock lock(this);
+
         return int(pksav_littleendian32(_blockA->exp));
     }
 
     void pokemon_ndsimpl::set_experience(
         int experience
     ) {
+        pokemon_scoped_lock lock(this);
+
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
@@ -567,6 +654,8 @@ namespace pkmn {
     }
 
     int pokemon_ndsimpl::get_level() {
+        pokemon_scoped_lock lock(this);
+
         return int(NDS_PARTY_RCAST->level);
     }
 
@@ -577,8 +666,12 @@ namespace pkmn {
             throw pkmn::range_error("level", 0, 100);
         }
 
+        pokemon_scoped_lock lock(this);
+
         NDS_PARTY_RCAST->level = uint8_t(level);
-        _blockA->exp = uint32_t(_database_entry.get_experience_at_level(level));
+        _blockA->exp = pksav_littleendian32(uint32_t(
+                           _database_entry.get_experience_at_level(level)
+                       ));
 
         _populate_party_data();
         _update_stat_map();
@@ -631,6 +724,8 @@ namespace pkmn {
         if(index < 0 or index > 3) {
             throw pkmn::range_error("index", 0, 3);
         }
+        pokemon_scoped_lock lock(this);
+
 
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
@@ -661,6 +756,8 @@ namespace pkmn {
             throw std::out_of_range("Invalid stat.");
         }
 
+        pokemon_scoped_lock lock(this);
+
         if(stat == "HP") {
             _blockA->ev_hp = uint8_t(value);
         } else if(stat == "Attack") {
@@ -679,10 +776,19 @@ namespace pkmn {
         _populate_party_data();
     }
 
+    void pokemon_ndsimpl::_set_default_nickname() {
+        _default_nickname = _database_entry.get_name();
+        if(_gen4) {
+            _default_nickname = boost::algorithm::to_upper_copy(
+                                    _default_nickname
+                                );
+        }
+    }
+
     void pokemon_ndsimpl::_update_moves(
         int index
     ) {
-        _moves.reserve(4);
+        _moves.resize(4);
         switch(index) {
             case 0:
             case 1:

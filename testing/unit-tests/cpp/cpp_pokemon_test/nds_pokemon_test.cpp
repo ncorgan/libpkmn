@@ -39,7 +39,7 @@ TEST_P(gen4_pokemon_test, gen4_pokemon_test) {
             "Occa Berry",
             {"Berry", "Roseli Berry", "Galactic Key"},
 
-            "Faraway Place",
+            "Faraway place",
             {"Verity Cavern", "Lake of Rage"},
             {"Lilicove City", "Relic Castle"},
 
@@ -52,7 +52,7 @@ TEST_P(gen4_pokemon_test, gen4_pokemon_test) {
     );
 }
 
-static const std::vector<std::pair<std::string, std::string>> params = {
+static const std::vector<std::pair<std::string, std::string>> gen4_params = {
     {"Diamond", "Turtwig"},
     {"Pearl", "Chimchar"},
     {"Platinum", "Piplup"},
@@ -63,5 +63,45 @@ static const std::vector<std::pair<std::string, std::string>> params = {
 INSTANTIATE_TEST_CASE_P(
     cpp_gen4_pokemon_test,
     gen4_pokemon_test,
-    ::testing::ValuesIn(params)
+    ::testing::ValuesIn(gen4_params)
+);
+
+class gen5_pokemon_test: public pokemon_test {};
+
+TEST_P(gen5_pokemon_test, gen5_pokemon_test) {
+    pkmn::pokemon::sptr pokemon = get_pokemon();
+
+    pokemon_test_common(
+        pokemon,
+        {
+            "Dream Ball",
+            {"Beast Ball"},
+
+            "Lucky Punch",
+            {"Berry", "Roseli Berry", "Liberty Pass"},
+
+            "Faraway place",
+            {"Giant Chasm", "Castelia Gate"},
+            {"Viridian Forest", "Vaniville Town"},
+
+            {"Drill Run", "Iron Head", "Signal Beam", "Return"},
+            {"Ion Deluge"},
+
+            {"Ruby", "Diamond", "HeartGold", "Black"},
+            {"Gold", "X"}
+        }
+    );
+}
+
+static const std::vector<std::pair<std::string, std::string>> gen5_params = {
+    {"Black", "Snivy"},
+    {"White", "Tepig"},
+    {"Black 2", "Oshawott"},
+    {"White 2", "Snivy"},
+};
+
+INSTANTIATE_TEST_CASE_P(
+    cpp_gen5_pokemon_test,
+    gen5_pokemon_test,
+    ::testing::ValuesIn(gen5_params)
 );

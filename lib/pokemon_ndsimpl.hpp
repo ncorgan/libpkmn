@@ -180,6 +180,8 @@ namespace pkmn {
 
         private:
 
+            void _set_default_nickname();
+
             void _populate_party_data();
 
             void _update_moves(
@@ -192,6 +194,8 @@ namespace pkmn {
             void _update_stat_map();
 
             bool _gen4, _plat, _hgss;
+
+            std::string _default_nickname;
 
             pksav_nds_pokemon_blockA_t* _blockA;
             pksav_nds_pokemon_blockB_t* _blockB;
