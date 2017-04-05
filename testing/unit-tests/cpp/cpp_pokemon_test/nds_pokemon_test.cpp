@@ -16,6 +16,7 @@
 #include <pksav/common/stats.h>
 #include <pksav/common/nds_pokemon.h>
 #include <pksav/gen4/text.h>
+#include <pksav/gen5/text.h>
 #include <pksav/math/endian.h>
 
 #include <gtest/gtest.h>
@@ -27,7 +28,6 @@ static void test_nds_pokemon_common(
     pkmn::pokemon::sptr pokemon,
     bool gen4
 ) {
-    (void)gen4;
     // TODO: ribbons
 
     /*
@@ -39,8 +39,8 @@ static void test_nds_pokemon_common(
                                                    );
     const pksav_nds_pokemon_blockA_t* blockA = &native_pc_data->blocks.blockA;
     const pksav_nds_pokemon_blockB_t* blockB = &native_pc_data->blocks.blockB;
-    /*const pksav_nds_pokemon_blockC_t* blockC = &native_pc_data->blocks.blockC;
-    const pksav_nds_pokemon_blockD_t* blockD = &native_pc_data->blocks.blockD;*/
+    const pksav_nds_pokemon_blockC_t* blockC = &native_pc_data->blocks.blockC;
+    const pksav_nds_pokemon_blockD_t* blockD = &native_pc_data->blocks.blockD;
 
     EXPECT_EQ(pokemon->get_personality(), pksav_littleendian32(native_pc_data->personality));
     EXPECT_TRUE(native_pc_data->isdecrypted_isegg & PKSAV_NDS_PC_DATA_DECRYPTED_MASK);
@@ -161,13 +161,126 @@ static void test_nds_pokemon_common(
     for(size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(
             move_slots.at(i).move.get_move_id(),
-            int(blockB->moves[i])
+            int(pksav_littleendian16(blockB->moves[i]))
         );
         EXPECT_EQ(
             move_slots.at(i).pp,
             int(blockB->move_pps[i])
         );
     }
+
+    uint8_t IV;
+    const std::map<std::string, int>& IVs = pokemon->get_IVs();
+
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_HP,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("HP"), int(IV));
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_ATTACK,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("Attack"), int(IV));
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_DEFENSE,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("Defense"), int(IV));
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_SPEED,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("Speed"), int(IV));
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_SPATK,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("Special Attack"), int(IV));
+    PKSAV_CALL(
+        pksav_get_IV(
+            &blockB->iv_isegg_isnicknamed,
+            PKSAV_STAT_SPDEF,
+            &IV
+        )
+    );
+    EXPECT_EQ(IVs.at("Special Defense"), int(IV));
+
+    if(not gen4) {
+        EXPECT_EQ(
+            (pokemon->get_personality() % 25),
+            int(blockB->nature)
+        );
+    }
+
+    char nickname[11] = {0};
+    if(gen4) {
+        PKSAV_CALL(
+            pksav_text_from_gen4(
+                blockC->nickname,
+                nickname,
+                sizeof(nickname)
+            )
+        );
+    } else {
+        PKSAV_CALL(
+            pksav_text_from_gen5(
+                blockC->nickname,
+                nickname,
+                sizeof(nickname)
+            )
+        );
+    }
+    EXPECT_EQ(
+        pokemon->get_nickname(),
+        std::string(nickname)
+    );
+    // TODO: hometown
+
+    char otname[8] = {0};
+    if(gen4) {
+        PKSAV_CALL(
+            pksav_text_from_gen4(
+                blockD->otname,
+                otname,
+                sizeof(otname)
+            )
+        );
+    } else {
+        PKSAV_CALL(
+            pksav_text_from_gen5(
+                blockD->otname,
+                otname,
+                sizeof(otname)
+            )
+        );
+    }
+    EXPECT_EQ(
+        pokemon->get_trainer_name(),
+        std::string(otname)
+    );
+
+    // TODO: met dates, stuff that needs IDs
+
+    EXPECT_EQ(
+        pokemon->get_level_met(),
+        int(blockD->metlevel_otgender & PKSAV_NDS_LEVELMET_MASK)
+    );
 }
 
 class gen4_pokemon_test: public pokemon_test {};
