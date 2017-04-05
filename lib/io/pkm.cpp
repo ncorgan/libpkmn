@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -37,18 +37,20 @@ namespace pkmn { namespace io {
 
         const pksav_nds_pc_pokemon_t* native = reinterpret_cast<const pksav_nds_pc_pokemon_t*>(buffer.data());
         const pksav_nds_pokemon_blockA_t* blockA = &native->blocks.blockA;
+        const pksav_nds_pokemon_blockB_t* blockB = &native->blocks.blockB;
         const pksav_nds_pokemon_blockC_t* blockC = &native->blocks.blockC;
+
+        int game_id = 0;
+        int generation = 0;
 
         // Validate game
         try {
-            int game_id = pkmn::database::game_index_to_id(blockC->hometown);
-            int generation = pkmn::database::game_id_to_generation(game_id);
+            game_id = pkmn::database::game_index_to_id(blockC->hometown);
+            generation = pkmn::database::game_id_to_generation(game_id);
 
             if(generation < 3 or generation > 5) {
                 return false;
             }
-
-            *game_id_out = game_id;
         } catch(const std::invalid_argument&) {
             return false;
         }
@@ -57,12 +59,24 @@ namespace pkmn { namespace io {
         try {
             (void)pkmn::database::pokemon_index_to_id(
                       pksav_littleendian16(blockA->species),
-                      (*game_id_out)
+                      game_id
                   );
         } catch(const std::invalid_argument&) {
             return false;
         }
 
+        // Validate moves
+        try {
+            for(size_t i = 0; i < 4; ++i) {
+                (void)pkmn::database::move_entry(
+                          blockB->moves[i], game_id
+                      );
+            }
+        } catch(const std::invalid_argument&) {
+            return false;
+        }
+
+        *game_id_out = game_id;
         return true;
     }
 
@@ -74,10 +88,6 @@ namespace pkmn { namespace io {
         if(not vector_is_valid_pkm(buffer, &game_id)) {
             throw std::runtime_error("Invalid .pkm.");
         }
-
-        // Make sure it's from a valid game
-        BOOST_STATIC_CONSTEXPR int DIAMOND = 12;
-        game_id = std::max<int>(game_id, DIAMOND);
 
         return pkmn::make_shared<pokemon_ndsimpl>(
                    *reinterpret_cast<const pksav_nds_pc_pokemon_t*>(buffer.data()),

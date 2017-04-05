@@ -17,6 +17,7 @@
 #include "database/index_to_string.hpp"
 
 #include "io/3gpkm.hpp"
+#include "io/pkm.hpp"
 #include "types/rng.hpp"
 
 #include "pksav/pksav_call.hpp"
@@ -96,13 +97,15 @@ namespace pkmn {
         if(extension == ".3gpkm") {
             return pkmn::io::load_3gpkm(filepath);
         } else if(extension == ".pkm" or extension == ".pk6") {
-            throw pkmn::unimplemented_error();
+            return pkmn::io::load_pkm(filepath);
         } else {
             std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
             PKMN_UNUSED(int game_id) = 0;
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
                 return pkmn::io::load_3gpkm(buffer);
+            } else if(pkmn::io::vector_is_valid_pkm(buffer, &game_id)) {
+                return pkmn::io::load_pkm(buffer);
             } else {
                 throw std::runtime_error("Invalid file.");
             }
