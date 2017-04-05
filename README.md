@@ -9,9 +9,11 @@ The goal of LibPKMN is to be the most expansive library for editing main series 
 as analyzing all aspects of the games, allowing for full customization of the game's Pokémon.
 
 Feature Roadmap:
+ * Generation IV support
  * Java API
  * Ruby API
- * Spinda sprite generation
+ * Generation III-V Spinda sprite generation
+ * Pokémon Showdown import/export
 
 Build Dependencies
 -------------------------------------
@@ -68,8 +70,8 @@ Tests are run with the following frameworks:
  * C: [Unity](https://github.com/ThrowTheSwitch/Unity)
  * C#: [NUnit](https://www.nunit.org/)
  * Lua: [Luaunit](https://github.com/bluebird75/luaunit)
- * Python: [unittest](https://docs.python.org/3/library/unittest.html)
+ * Python: [unittest](https://docs.python.org/3/library/unittest.html) + [nose-parameterized](https://pypi.python.org/pypi/nose-parameterized/)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/04/01
+README last updated: 2017/04/05
