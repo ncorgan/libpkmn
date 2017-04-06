@@ -244,7 +244,7 @@ MACRO(SWIG_ADD_MODULE name language)
       )
   ELSEIF(PKMN_GCC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "-Wno-missing-field-initializers -Wno-unused-parameter -Wno-sign-compare -Wno-unused-variable ${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable -Wno-missing-field-initializers -Wno-unused-parameter -Wno-sign-compare -Wno-unused-variable ${PKMN_CXX_FLAGS}"
       )
   ELSEIF(MSVC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
