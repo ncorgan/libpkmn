@@ -240,17 +240,17 @@ MACRO(SWIG_ADD_MODULE name language)
   )
   IF(PKMN_CLANG)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-missing-field-initializers -Werror -Wno-deprecated-register"
+          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} -Wno-error -Wno-unused-parameter -Wno-sign-compare -Wno-unused-variable -Wno-missing-field-initializers -Werror -Wno-deprecated-register"
       )
   ELSEIF(PKMN_GCC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "-Wno-missing-field-initializers ${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "-Wno-missing-field-initializers -Wno-unused-parameter -Wno-sign-compare -Wno-unused-variable ${PKMN_CXX_FLAGS}"
       )
-  ELSE()
+  ELSEIF(MSVC)
       SET_SOURCE_FILES_PROPERTIES(${all_swig_sources}
-          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
+          PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS} /wd4244 /wd4267"
       )
-  ENDIF(PKMN_CLANG)
+  ENDIF()
   ADD_LIBRARY(${SWIG_MODULE_${name}_REAL_NAME}
     MODULE
     ${all_swig_sources}

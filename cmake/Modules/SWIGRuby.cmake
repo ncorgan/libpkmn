@@ -5,17 +5,9 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-SET(RUBY_INSTALL_DIR ${PKMN_LIBRARY_DIR}/ruby/${RUBY_VERSION})
+INCLUDE(PKMNPlatform)
 
-########################################################################
-# MSVC workaround for bug in SWIG Lua code generation
-# See: https://github.com/swig/swig/issues/465
-########################################################################
-IF(MSVC)
-    SET(PKMN_CXX_RUBY_FLAGS "${PKMN_CXX_FLAGS}")
-ELSE()
-    SET(PKMN_CXX_RUBY_FLAGS "-Wno-unused-parameter -Wno-sign-compare ${PKMN_CXX_FLAGS}")
-ENDIF(MSVC)
+SET(RUBY_INSTALL_DIR ${PKMN_LIBRARY_DIR}/ruby/${RUBY_VERSION})
 
 ########################################################################
 # Macro to build and install Ruby modules
@@ -58,10 +50,6 @@ MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
     SWIG_ADD_MODULE(${module_name} ruby ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
-
-    SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME}
-        PROPERTIES COMPILE_FLAGS "${PKMN_CXX_RUBY_FLAGS}"
-    )
 
     INSTALL(
         TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
