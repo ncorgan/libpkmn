@@ -7,9 +7,11 @@
 
 %module "PKMN::STL"
 
+%include <ruby/ruby_init.i>
+PKMN_RUBY_INIT
+
 %include <std_map.i>
 %include <std_string.i>
-%include <std_vector.i>
 
 /*
  * This file contains all pure STL wrappers. Other .i files can declare maps,
@@ -18,12 +20,12 @@
  */
 
 // std::map
-%template(StringBooleanHash) std::map<std::string, bool>;
-%template(StringStringHash)  std::map<std::string, std::string>;
-%template(StringIntHash)     std::map<std::string, int>;
+PKMN_RUBY_MAP(std::string, bool, StringBooleanHash);
+PKMN_RUBY_MAP(std::string, std::string, StringStringHash);
+PKMN_RUBY_MAP(std::string, int, StringIntHash);
 
 // std::pair
-%template(StringPair) std::pair<std::string, std::string>;
+PKMN_RUBY_PAIR(std::string, std::string, StringPair);
 
 // std::vector
-%template(StringList) std::vector<std::string>;
+PKMN_RUBY_VECTOR(std::string, StringList);
