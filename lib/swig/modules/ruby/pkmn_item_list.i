@@ -5,24 +5,33 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+%include <ruby/stl_macros.i>
+
 %{
     #include <pkmn/item_list.hpp>
 %}
 
+%include <std_string.i>
+
 %rename("as_list") as_vector;
+%rename("name") get_name;
+%rename("game") get_game;
+%rename("capacity") get_capacity;
+%rename("num_items") get_num_items;
+%rename("valid_items") get_valid_items;
 
-%rename("name") pkmn::database::item_entry::get_name() const;
-%rename("game") pkmn::database::item_entry::get_game() const;
-%rename("category") pkmn::database::item_entry::get_category() const;
-%rename("pocket") pkmn::database::item_entry::get_pocket() const;
-%rename("description") pkmn::database::item_entry::get_description() const;
-%rename("cost") pkmn::database::item_entry::get_cost() const;
-%rename("is_holdable?") pkmn::database::item_entry::holdable() const;
-%rename("fling_power") pkmn::database::item_entry::get_fling_power() const;
-%rename("fling_effect") pkmn::database::item_entry::get_fling_effect() const;
+%rename(ItemListInternal) pkmn::item_list;
+%include <pkmn/item_list.hpp>
 
-%ignore pkmn::database::item_entry::get_item_id;
-%ignore pkmn::database::item_entry::get_item_index;
-%ignore pkmn::database::item_entry::get_item_list_id;
-%ignore pkmn::database::item_entry::get_game_id;
-%include <pkmn/database/item_entry.hpp>
+%extend pkmn::shared_ptr<pkmn::item_list> {
+    unsigned int __len__() {
+        return self->get()->get_capacity();
+    }
+
+    pkmn::item_slot __getitem__(unsigned int index) {
+        return self->get()->at(index);
+    }
+}
+
+%template(ItemList) pkmn::shared_ptr<pkmn::item_list>;
+PKMN_RUBY_MAP(std::string, pkmn::item_list::sptr, StringItemPocketHash);

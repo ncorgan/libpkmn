@@ -10,6 +10,8 @@
 %include <ruby/ruby_init.i>
 PKMN_RUBY_INIT
 
+%include <pkmn_statics.i>
+
 %import <Database.i>
 %import <STL.i>
 
