@@ -6,6 +6,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+require_relative "PKMN/PKMN"
+
 require_relative "PKMN/Calculations"
 require_relative "PKMN/Database"
 require_relative "PKMN/STL"
