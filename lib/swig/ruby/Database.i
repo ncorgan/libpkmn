@@ -12,7 +12,7 @@ PKMN_RUBY_INIT
 
 %include <std_string.i>
 
-%import <pkmn_stl_ruby.i>
+%import <STL.i>
 
 %{
     #include <pkmn/database/levelup_move.hpp>
