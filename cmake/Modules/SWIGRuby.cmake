@@ -51,6 +51,10 @@ MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
 
+    ADD_DEPENDENCIES(${SWIG_MODULE_${module_name}_REAL_NAME}
+        ruby_CamelCase_i
+    )
+
     INSTALL(
         TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
         DESTINATION ${RUBY_INSTALL_DIR}/PKMN

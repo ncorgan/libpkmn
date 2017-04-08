@@ -5,6 +5,20 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+# Generate CamelCase conversions
+FILE(GLOB_RECURSE header_files "${PKMN_SOURCE_DIR}/include/*.hpp")
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py
+    DEPENDS ${header_files}
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=ruby --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
+    COMMENT "Generating ruby_CamelCase.i"
+)
+ADD_CUSTOM_TARGET(
+    ruby_CamelCase_i ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
+)
+
 INCLUDE(SWIGRuby)
 
 #
@@ -26,4 +40,5 @@ SET(SWIG_RUBY_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_RUBY_MODULE(pkmn_stl_ruby TRUE)
+SWIG_BUILD_RUBY_MODULE(pkmn_calculations_ruby TRUE)
+SWIG_BUILD_RUBY_MODULE(pkmn_stl_ruby          TRUE)
