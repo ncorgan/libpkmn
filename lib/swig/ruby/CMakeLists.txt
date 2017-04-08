@@ -41,4 +41,5 @@ SET(SWIG_RUBY_LIBRARIES
 )
 
 SWIG_BUILD_RUBY_MODULE(pkmn_calculations_ruby TRUE)
+SWIG_BUILD_RUBY_MODULE(pkmn_database_ruby     TRUE)
 SWIG_BUILD_RUBY_MODULE(pkmn_stl_ruby          TRUE)
