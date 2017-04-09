@@ -9,6 +9,33 @@
 
 namespace pkmn {
 
+    void pkmn_datetime_cpp_to_c(
+        const pkmn::datetime &datetime_cpp,
+        pkmn_datetime_t* datetime_c_out
+    ) {
+        datetime_c_out->year = datetime_cpp.year;
+        datetime_c_out->month = datetime_cpp.month;
+        datetime_c_out->day = datetime_cpp.day;
+        datetime_c_out->hour = datetime_cpp.hour;
+        datetime_c_out->minute = datetime_cpp.minute;
+        datetime_c_out->second = datetime_cpp.second;
+        datetime_c_out->frames = datetime_cpp.frames;
+    }
+
+    pkmn::datetime pkmn_datetime_c_to_cpp(
+        const pkmn_datetime_t* datetime_c
+    ) {
+        return pkmn::datetime(
+                   datetime_c->year,
+                   datetime_c->month,
+                   datetime_c->day,
+                   datetime_c->hour,
+                   datetime_c->minute,
+                   datetime_c->second,
+                   datetime_c->frames
+               );
+    }
+
     void pkmn_hidden_power_cpp_to_c(
         const pkmn::calculations::hidden_power &hp_cpp,
         pkmn_hidden_power_t* hp_c

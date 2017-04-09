@@ -23,11 +23,13 @@
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/types/datetime.hpp>
 
 #include <pkmn-c/error.h>
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/move_entry.h>
 #include <pkmn-c/database/pokemon_entry.h>
+#include <pkmn-c/types/datetime.h>
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -109,6 +111,15 @@ typedef struct {
 #include <pkmn-c/types/string_types.h>
 
 namespace pkmn {
+
+    void pkmn_datetime_cpp_to_c(
+        const pkmn::datetime &datetime_cpp,
+        pkmn_datetime_t* datetime_c_out
+    );
+
+    pkmn::datetime pkmn_datetime_c_to_cpp(
+        const pkmn_datetime_t* datetime_c
+    );
 
     void pkmn_hidden_power_cpp_to_c(
         const pkmn::calculations::hidden_power &hp_cpp,
