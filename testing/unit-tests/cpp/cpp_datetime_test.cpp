@@ -7,6 +7,8 @@
 
 #include <pkmn/types/datetime.hpp>
 
+#include <boost/config.hpp>
+
 #include <gtest/gtest.h>
 
 TEST(cpp_datetime_test, current_datetime_test) {
@@ -23,4 +25,14 @@ TEST(cpp_datetime_test, current_datetime_test) {
     EXPECT_GE(current_datetime.second, 0);
     EXPECT_LE(current_datetime.second, 59);
     EXPECT_EQ(0, current_datetime.frames);
+}
+
+TEST(cpp_datetime_test, equality_test) {
+    BOOST_STATIC_CONSTEXPR pkmn::datetime DATETIME1(1,2,3,4,5,6,7);
+    BOOST_STATIC_CONSTEXPR pkmn::datetime DATETIME2(1,2,3,4,5,6,7);
+    BOOST_STATIC_CONSTEXPR pkmn::datetime DATETIME3(3,2,1,4,5,6,7);
+
+    EXPECT_EQ(DATETIME1, DATETIME2);
+    EXPECT_NE(DATETIME1, DATETIME3);
+    EXPECT_NE(DATETIME2, DATETIME3);
 }

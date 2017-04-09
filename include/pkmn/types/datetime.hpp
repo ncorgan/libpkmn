@@ -46,11 +46,11 @@ namespace pkmn {
         ) const {
             return (this->year == rhs.year) and
                    (this->month == rhs.month) and
-                   (this->month == rhs.day) and
-                   (this->month == rhs.hour) and
-                   (this->month == rhs.minute) and
-                   (this->month == rhs.second) and
-                   (this->month == rhs.frames);
+                   (this->day == rhs.day) and
+                   (this->hour == rhs.hour) and
+                   (this->minute == rhs.minute) and
+                   (this->second == rhs.second) and
+                   (this->frames == rhs.frames);
         }
 
         PKMN_CONSTEXPR_OR_INLINE bool operator!=(
@@ -58,11 +58,11 @@ namespace pkmn {
         ) const {
             return (this->year != rhs.year) or
                    (this->month != rhs.month) or
-                   (this->month != rhs.day) or
-                   (this->month != rhs.hour) or
-                   (this->month != rhs.minute) or
-                   (this->month != rhs.second) or
-                   (this->month != rhs.frames);
+                   (this->day != rhs.day) or
+                   (this->hour != rhs.hour) or
+                   (this->minute != rhs.minute) or
+                   (this->second != rhs.second) or
+                   (this->frames != rhs.frames);
         }
     };
 
