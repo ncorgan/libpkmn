@@ -628,6 +628,10 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         NDS_PC_RCAST->personality = pksav_littleendian32(personality);
+
+        if(not _gen4) {
+            _blockB->nature = uint8_t(personality % 25);
+        }
     }
 
     int pokemon_ndsimpl::get_experience() {
