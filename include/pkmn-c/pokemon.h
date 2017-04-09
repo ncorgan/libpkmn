@@ -185,6 +185,17 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_friendship(
     int friendship
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_nature(
+    pkmn_pokemon_handle_t handle,
+    char* nature_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_nature(
+    pkmn_pokemon_handle_t handle,
+    const char* nature
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_ability(
     pkmn_pokemon_handle_t handle,
     char* ability_out,

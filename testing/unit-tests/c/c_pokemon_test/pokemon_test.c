@@ -1676,6 +1676,44 @@ static void test_setting_trainer_info(
     }
 }
 
+static void test_setting_nature(
+    pkmn_pokemon_handle_t pokemon
+) {
+    TEST_ASSERT_NOT_NULL(pokemon);
+
+    error = pkmn_pokemon_get_game(
+                pokemon,
+                game,
+                sizeof(game)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    int generation = game_to_generation(game);
+    TEST_ASSERT_NOT_EQUAL(-1, generation);
+
+    error = pkmn_pokemon_set_nature(
+                pokemon,
+                "Hardy"
+            );
+    if(generation >= 3) {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    } else {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    }
+
+    error = pkmn_pokemon_get_nature(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    if(generation >= 3) {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL_STRING("Hardy", strbuffer);
+    } else {
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    }
+}
+
 void pokemon_test_common(
     pkmn_pokemon_handle_t pokemon,
     pkmn_test_values_t* test_values
@@ -1719,4 +1757,5 @@ void pokemon_test_common(
     test_setting_personality(pokemon);
     test_setting_stats(pokemon);
     test_setting_trainer_info(pokemon);
+    test_setting_nature(pokemon);
 }

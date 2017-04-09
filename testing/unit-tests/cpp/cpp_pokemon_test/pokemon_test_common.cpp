@@ -730,6 +730,9 @@ static void test_setting_nature(
         EXPECT_THROW(
             pokemon->get_nature();
         , pkmn::feature_not_in_game_error);
+        EXPECT_THROW(
+            pokemon->set_nature("Hardy");
+        , pkmn::feature_not_in_game_error);
     }
 }
 

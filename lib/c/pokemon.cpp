@@ -449,6 +449,36 @@ pkmn_error_t pkmn_pokemon_set_friendship(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_nature(
+    pkmn_pokemon_handle_t handle,
+    char* nature_out,
+    size_t buffer_len
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nature_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_nature(),
+                    nature_out,
+                    buffer_len
+               );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_nature(
+    pkmn_pokemon_handle_t handle,
+    const char* nature
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nature, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_nature(nature)
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_ability(
     pkmn_pokemon_handle_t handle,
     char* ability_out,
