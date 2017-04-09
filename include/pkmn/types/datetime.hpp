@@ -66,6 +66,8 @@ namespace pkmn {
         }
     };
 
+    PKMN_API pkmn::datetime current_datetime();
+
 }
 
 #endif /* PKMN_TYPES_DATETIME_HPP */

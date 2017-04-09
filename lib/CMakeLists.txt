@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -33,6 +33,7 @@ ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(mem)
 ADD_SUBDIRECTORY(pksav)
+ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)
 
 #
@@ -59,6 +60,7 @@ SET(pkmn_sources
     ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources} # Will be empty without Qt support
+    ${pkmn_types_sources}
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp
