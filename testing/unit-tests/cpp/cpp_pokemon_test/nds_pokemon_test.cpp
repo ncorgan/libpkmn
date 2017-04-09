@@ -305,7 +305,7 @@ TEST_P(gen4_pokemon_test, gen4_pokemon_test) {
             {"Bulldoze", "Petal Blizzard"},
 
             {"Ruby", "Diamond", "HeartGold"},
-            {"Gold", "Black"}
+            {"Gold", "Black", "Omega Ruby"}
         }
     );
 

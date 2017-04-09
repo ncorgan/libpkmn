@@ -75,6 +75,7 @@ namespace pkmn {
         // Populate fields
         set_personality(rng32.rand()); // Will set other fields
         NDS_PC_RCAST->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
+        NDS_PC_RCAST->isdecrypted_isegg |= PKSAV_NDS_PARTY_DATA_DECRYPTED_MASK;
 
         _blockA->species = pksav_littleendian16(uint16_t(
                                _database_entry.get_pokemon_index()
@@ -726,7 +727,6 @@ namespace pkmn {
         }
         pokemon_scoped_lock lock(this);
 
-
         // This will throw an error if the move is invalid
         _moves[index].move = pkmn::database::move_entry(
                                  move,
@@ -734,7 +734,7 @@ namespace pkmn {
                              );
         _moves[index].pp = _moves[index].move.get_pp(0);
 
-        _blockB->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        _blockB->moves[index] = pksav_littleendian16(uint16_t(_moves[index].move.get_move_id()));
         _blockB->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
