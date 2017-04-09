@@ -239,17 +239,6 @@ function gba_pokemon_tests.pokemon_test(game)
     pokemon:set_nickname("foobarbaz")
     luaunit.assertEquals(pokemon:get_nickname(), "foobarbaz")
 
-    -- Gender and personality are tied, so make sure they affect each other.
-    pokemon:set_gender("Female")
-    luaunit.assertTrue(bit32.band(pokemon:get_personality(), 0xFF) < 0xFF)
-    pokemon:set_gender("Male")
-    luaunit.assertEquals(bit32.band(pokemon:get_personality(), 0xFF), 0xFF)
-
-    pokemon:set_personality(0x1234AB00)
-    luaunit.assertEquals(pokemon:get_gender(), "Female")
-    pokemon:set_personality(0xCD5678FF)
-    luaunit.assertEquals(pokemon:get_gender(), "Male")
-
     -- Setting shininess should affect personality. Also check personality.
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())

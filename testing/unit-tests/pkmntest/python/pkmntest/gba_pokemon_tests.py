@@ -209,17 +209,6 @@ class gba_pokemon_test(pokemon_tests):
         pokemon.set_nickname("foobarbaz")
         self.assertStringEqual(pokemon.get_nickname(), "foobarbaz")
 
-        # Gender is tied to personality, so make sure they affect each other.
-        pokemon.set_gender("Female")
-        self.assertLess(pokemon.get_personality() & 0xFF, 0xFF)
-        pokemon.set_gender("Male")
-        self.assertEqual(pokemon.get_personality() & 0xFF, 0xFF)
-
-        pokemon.set_personality(0x1234AB00)
-        self.assertEqual(pokemon.get_gender(), "Female")
-        pokemon.set_personality(0xCD5678FF)
-        self.assertEqual(pokemon.get_gender(), "Male")
-
         # Setting shininess should affect personality. Also check filepaths.
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
