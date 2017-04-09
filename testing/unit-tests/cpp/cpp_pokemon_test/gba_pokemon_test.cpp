@@ -151,26 +151,6 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
         test_ribbons(pokemon, *ribbon_iter);
     }
 
-    // Gender and personality are tied, so make sure they affect each other.
-    pokemon->set_gender("Female");
-    EXPECT_LT((pokemon->get_personality() & 0xFF), 0xFF);
-    pokemon->set_gender("Male");
-    EXPECT_EQ(0xFF, (pokemon->get_personality() & 0xFF));
-
-    pokemon->set_personality(0x1234AB00);
-    EXPECT_EQ("Female", pokemon->get_gender());
-    pokemon->set_personality(0xCD5678FF);
-    EXPECT_EQ("Male", pokemon->get_gender());
-
-    // Setting shininess should affect personality.
-    pokemon->set_shininess(false);
-    EXPECT_FALSE(pokemon->is_shiny());
-    uint32_t personality = pokemon->get_personality();
-
-    pokemon->set_shininess(true);
-    EXPECT_TRUE(pokemon->is_shiny());
-    EXPECT_NE(pokemon->get_personality(), personality);
-
     /*
      * On the C++ level, check the underlying PKSav struct and make
      * sure our abstractions match.

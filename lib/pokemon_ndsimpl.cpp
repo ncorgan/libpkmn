@@ -14,6 +14,7 @@
 #include "types/rng.hpp"
 
 #include <pkmn/calculations/gender.hpp>
+#include <pkmn/calculations/nature.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/party_data.hpp"
@@ -344,7 +345,6 @@ namespace pkmn {
 
         _set_modern_shininess(
             &NDS_PC_RCAST->personality,
-            &_blockA->ot_id.id,
             value
         );
     }
@@ -483,6 +483,18 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _blockA->friendship = uint8_t(friendship);
+    }
+
+    std::string pokemon_ndsimpl::get_nature() {
+        pokemon_scoped_lock lock(this);
+
+        if(_gen4) {
+            return pkmn::calculations::nature(
+                       pksav_littleendian32(NDS_PC_RCAST->personality)
+                   );
+        } else {
+            return pkmn::database::nature_index_to_name(_blockB->nature);
+        }
     }
 
     std::string pokemon_ndsimpl::get_ability() {

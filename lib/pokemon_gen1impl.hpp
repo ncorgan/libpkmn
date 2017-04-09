@@ -93,6 +93,8 @@ namespace pkmn {
                 int friendship
             );
 
+            std::string get_nature();
+
             std::string get_ability();
 
             void set_ability(

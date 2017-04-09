@@ -372,6 +372,10 @@ namespace pkmn {
         GEN2_PC_RCAST->friendship = uint8_t(friendship);
     }
 
+    std::string pokemon_gen2impl::get_nature() {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
+    }
+
     std::string pokemon_gen2impl::get_ability() {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }

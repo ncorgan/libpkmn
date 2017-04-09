@@ -161,7 +161,6 @@ namespace pkmn {
 
             void _set_modern_shininess(
                 uint32_t* personality_ptr,
-                const uint32_t* trainer_id_ptr,
                 bool value
             );
 

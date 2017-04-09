@@ -21,7 +21,7 @@ namespace pkmn { namespace mem {
                 T* impl
             ): _impl(impl)
             {
-                _impl->_mem_mutex.lock();
+                _impl->_mem_mutex.try_lock();
             }
 
             PKMN_INLINE ~scoped_lock() {

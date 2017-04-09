@@ -23,8 +23,10 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/calculations/personality.hpp>
 
 #include <pksav/common/markings.h>
+#include <pksav/math/endian.h>
 
 #include <boost/filesystem.hpp>
 
@@ -363,70 +365,38 @@ namespace pkmn {
         uint32_t* personality_ptr,
         const std::string &gender
     ) {
-        float chance_male = _database_entry.get_chance_male();
-        float chance_female = _database_entry.get_chance_female();
-
-        // Check for invalid genders.
-        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
-            if(gender != "Genderless") {
-                throw std::invalid_argument("This Pokémon is genderless.");
-            } else {
-                // Nothing to do.
-                return;
-            }
-        } else if(pkmn_floats_close(chance_male, 1.0f) and gender != "Male") {
-            throw std::invalid_argument("This Pokémon is male-only.");
-        } else if(pkmn_floats_close(chance_female, 1.0f) and gender != "Female") {
-            throw std::invalid_argument("This Pokémon is female-only.");
-        } else if(gender == "Genderless") {
-            throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
+        // Save time if possible.
+        if(get_gender() == gender) {
+            return;
         }
 
-        if(gender == "Male") {
-            *personality_ptr |= 0xFF;
-        } else {
-            *personality_ptr &= ~0xFF;
-
-            pkmn::rng<uint32_t> rng;
-            if(pkmn_floats_close(chance_male, 0.875f)) {
-                *personality_ptr |= rng.rand(0, 30);
-            } else if(pkmn_floats_close(chance_male, 0.75f)) {
-                *personality_ptr |= rng.rand(0, 63);
-            } else if(pkmn_floats_close(chance_male, 0.5f)) {
-                *personality_ptr |= rng.rand(0, 126);
-            } else {
-                *personality_ptr |= rng.rand(0, 190);
-            }
-        }
+        *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
+                               get_species(),
+                               get_trainer_id(),
+                               is_shiny(),
+                               get_ability(),
+                               gender,
+                               get_nature()
+                           ));
     }
 
     void pokemon_impl::_set_modern_shininess(
         uint32_t* personality_ptr,
-        const uint32_t* trainer_id_ptr,
         bool value
     ) {
-        uint16_t* p = reinterpret_cast<uint16_t*>(personality_ptr);
-        const uint16_t* t = reinterpret_cast<const uint16_t*>(trainer_id_ptr);
-
-        if(value) {
-            for(size_t i = 3; i < 16; ++i) {
-                size_t num_ones = 0;
-                if(p[0] & (1 << i)) ++num_ones;
-                if(p[1] & (1 << i)) ++num_ones;
-                if(t[0] & (1 << i)) ++num_ones;
-                if(t[1] & (1 << i)) ++num_ones;
-
-                if(num_ones % 2) {
-                    p[0] ^= (1 << i);
-                }
-            }
-        } else {
-            // Only one column has to satisfy the condition, so don't bother iterating
-            uint16_t sum = (p[0] & 1) + (p[1] & 1) + (t[0] & 1) + (t[1] & 1);
-            if((sum % 2) == 0) {
-                (*personality_ptr) ^= 1;
-            }
+        // Save time if possible.
+        if(is_shiny() == value) {
+            return;
         }
+
+        *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
+                               get_species(),
+                               get_trainer_id(),
+                               value,
+                               get_ability(),
+                               get_gender(),
+                               get_nature()
+                           ));
     }
 
     void pokemon_impl::_set_gb_IV(

@@ -290,6 +290,10 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gen1impl::get_nature() {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation I");
+    }
+
     std::string pokemon_gen1impl::get_ability() {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation I");
     }

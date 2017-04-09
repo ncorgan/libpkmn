@@ -117,6 +117,8 @@ namespace pkmn {
                 int friendship
             ) = 0;
 
+            virtual std::string get_nature() = 0;
+
             virtual std::string get_ability() = 0;
 
             virtual void set_ability(

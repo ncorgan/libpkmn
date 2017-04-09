@@ -19,6 +19,7 @@
 
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
+#include <pkmn/calculations/nature.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
@@ -330,7 +331,6 @@ namespace pkmn {
 
         _set_modern_shininess(
             &GBA_PC_RCAST->personality,
-            &GBA_PC_RCAST->ot_id.id,
             value
         );
 
@@ -473,6 +473,14 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _growth->friendship = uint8_t(friendship);
+    }
+
+    std::string pokemon_gbaimpl::get_nature() {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::calculations::nature(
+                   pksav_littleendian32(GBA_PC_RCAST->personality)
+               );
     }
 
     std::string pokemon_gbaimpl::get_ability() {
