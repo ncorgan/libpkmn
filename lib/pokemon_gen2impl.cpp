@@ -376,6 +376,12 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
 
+    void pokemon_gen2impl::set_nature(
+        PKMN_UNUSED(const std::string &nature)
+    ) {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
+    }
+
     std::string pokemon_gen2impl::get_ability() {
         throw pkmn::feature_not_in_game_error("Abilities", "Generation II");
     }

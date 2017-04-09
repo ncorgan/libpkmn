@@ -154,6 +154,11 @@ namespace pkmn {
 
             // Shared setters
 
+            void _set_nature(
+                uint32_t* personality_ptr,
+                const std::string &nature
+            );
+
             void _set_modern_gender(
                 uint32_t* personality_ptr,
                 const std::string &gender

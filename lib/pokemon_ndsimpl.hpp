@@ -99,6 +99,10 @@ namespace pkmn {
 
             std::string get_nature();
 
+            void set_nature(
+                const std::string &nature
+            );
+
             std::string get_ability();
 
             void set_ability(

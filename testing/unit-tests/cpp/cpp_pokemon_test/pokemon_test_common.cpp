@@ -720,6 +720,19 @@ static void test_setting_trainer_info(
     }
 }
 
+static void test_setting_nature(
+    pkmn::pokemon::sptr pokemon
+) {
+    if(game_generations.at(pokemon->get_game()) >= 3) {
+        pokemon->set_nature("Hardy");
+        EXPECT_EQ("Hardy", pokemon->get_nature());
+    } else {
+        EXPECT_THROW(
+            pokemon->get_nature();
+        , pkmn::feature_not_in_game_error);
+    }
+}
+
 void pokemon_test_common(
     pkmn::pokemon::sptr pokemon,
     const pkmn_test_values_t &test_values
@@ -760,4 +773,5 @@ void pokemon_test_common(
     test_setting_personality(pokemon);
     test_setting_stats(pokemon);
     test_setting_trainer_info(pokemon);
+    test_setting_nature(pokemon);
 }

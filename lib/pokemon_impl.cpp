@@ -361,6 +361,26 @@ namespace pkmn {
 
     // Shared setters
 
+
+    void pokemon_impl::_set_nature(
+        uint32_t* personality_ptr,
+        const std::string &nature
+    ) {
+        // Save time if possible.
+        if(get_nature() == nature) {
+            return;
+        }
+
+        *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
+                               get_species(),
+                               get_trainer_id(),
+                               is_shiny(),
+                               get_ability(),
+                               get_gender(),
+                               nature
+                           ));
+    }
+
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
         const std::string &gender

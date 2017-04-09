@@ -119,6 +119,10 @@ namespace pkmn {
 
             virtual std::string get_nature() = 0;
 
+            virtual void set_nature(
+                const std::string &nature
+            ) = 0;
+
             virtual std::string get_ability() = 0;
 
             virtual void set_ability(

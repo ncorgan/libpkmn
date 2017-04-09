@@ -483,6 +483,17 @@ namespace pkmn {
                );
     }
 
+    void pokemon_gbaimpl::set_nature(
+        const std::string &nature
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_nature(
+            &GBA_PC_RCAST->personality,
+            nature
+        );
+    }
+
     std::string pokemon_gbaimpl::get_ability() {
         pokemon_scoped_lock lock(this);
 

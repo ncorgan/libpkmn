@@ -497,6 +497,20 @@ namespace pkmn {
         }
     }
 
+    void pokemon_ndsimpl::set_nature(
+        const std::string &nature
+    ) {
+        pokemon_scoped_lock lock(this);
+
+        _set_nature(
+            &NDS_PC_RCAST->personality,
+            nature
+        );
+        if(not _gen4) {
+            _blockB->nature = uint8_t(pkmn::database::nature_name_to_index(nature));
+        }
+    }
+
     std::string pokemon_ndsimpl::get_ability() {
         pokemon_scoped_lock lock(this);
 
