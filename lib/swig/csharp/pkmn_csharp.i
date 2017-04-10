@@ -17,6 +17,8 @@ PKMN_CSHARP_INIT
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
 
+    #include <pkmn/types/datetime.hpp>
+
     #include <pkmn/utils/paths.hpp>
 
     #include <pkmn/build_info.hpp>
@@ -52,6 +54,9 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_pokemon_party "internal";
 %csmethodmodifiers make_pokemon_pc "internal";
 %include <pkmn_statics.i>
+
+// Datetime
+%include <pkmn/types/datetime.hpp>
 
 // Game Save
 %include <csharp/pkmn_game_save.i>

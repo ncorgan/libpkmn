@@ -33,6 +33,7 @@ EXECUTE_PROCESS(
 IF(LUAUNIT_FOUND)
     SET(lua_tests
         lua_calculations_test
+        lua_datetime_test
         lua_database_entry_test
         lua_game_save_test
         lua_items_test

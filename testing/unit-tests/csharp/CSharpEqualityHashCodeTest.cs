@@ -14,6 +14,21 @@ public class CSharpEqualityHashCodeTest {
      * LibPKMN classes
      */
     [Test]
+    public void DateTimeTest() {
+        PKMN.DateTime dateTime = new PKMN.DateTime(1,2,3,4,5,6,7);
+
+        PKMN.DateTime dateTimeSame = new PKMN.DateTime(1,2,3,4,5,6,7);
+        PKMN.DateTime dateTimeDifferent = new PKMN.DateTime(3,2,1,4,5,6,7);
+
+        Assert.AreEqual(dateTime, dateTime);
+        Assert.AreEqual(dateTime, dateTimeSame);
+        Assert.AreEqual(dateTime.GetHashCode(), dateTimeSame.GetHashCode());
+
+        Assert.AreNotEqual(dateTime, dateTimeDifferent);
+        Assert.AreNotEqual(dateTime.GetHashCode(), dateTimeDifferent.GetHashCode());
+    }
+
+    [Test]
     public void HiddenPowerTest() {
         PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower("Normal", 30);
 

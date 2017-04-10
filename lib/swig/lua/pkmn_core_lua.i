@@ -12,6 +12,8 @@ PKMN_LUA_INIT
 %import <pkmn_stl_lua.i>
 
 %{
+    #include <pkmn/types/datetime.hpp>
+
     #include <pkmn/game_save.hpp>
     #include <pkmn/item_slot.hpp>
     #include <pkmn/item_list.hpp>
@@ -23,6 +25,9 @@ PKMN_LUA_INIT
 %ignore get_native;
 %ignore get_native_pc_data;
 %ignore get_native_party_data;
+
+// Datetime
+%include <pkmn/types/datetime.hpp>
 
 // Item Slot
 %include <pkmn/item_slot.hpp>

@@ -18,7 +18,7 @@ namespace pkmn {
         pkmn::datetime ret;
         ret.year = now_tm->tm_year + 1900; // struct tm stores years since 1900
         ret.month = now_tm->tm_mon + 1;
-        ret.day = now_tm->tm_mday + 1;
+        ret.day = now_tm->tm_mday;
         ret.hour = now_tm->tm_hour;
         ret.minute = now_tm->tm_min;
         ret.second = now_tm->tm_sec;

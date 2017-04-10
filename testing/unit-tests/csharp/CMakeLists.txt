@@ -17,6 +17,7 @@ IF(NUNIT_FOUND)
     SET(csharp_tests
         CSharpBuildInfoTest
         CSharpCalculationsTest
+        CSharpDateTimeTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
         CSharpGameSaveTest
