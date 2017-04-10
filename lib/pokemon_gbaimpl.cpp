@@ -457,6 +457,19 @@ namespace pkmn {
         }
     }
 
+    pkmn::datetime pokemon_gbaimpl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
+    void pokemon_gbaimpl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
     int pokemon_gbaimpl::get_friendship() {
         pokemon_scoped_lock lock(this);
 

@@ -12,6 +12,7 @@
 
 #include <pkmn-c/database/pokemon_entry.h>
 
+#include <pkmn-c/types/datetime.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/string_types.h>
@@ -173,6 +174,18 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_gender(
 PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_gender(
     pkmn_pokemon_handle_t handle,
     pkmn_gender_t trainer_gender
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_get_date_met(
+    pkmn_pokemon_handle_t handle,
+    bool as_egg,
+    pkmn_datetime_t* datetime_out
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_date_met(
+    pkmn_pokemon_handle_t handle,
+    pkmn_datetime_t* datetime,
+    bool as_egg
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_friendship(

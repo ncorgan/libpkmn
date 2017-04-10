@@ -426,6 +426,38 @@ pkmn_error_t pkmn_pokemon_set_trainer_gender(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_date_met(
+    pkmn_pokemon_handle_t handle,
+    bool as_egg,
+    pkmn_datetime_t* datetime_out
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(datetime_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        pkmn::pkmn_datetime_cpp_to_c(
+            handle->cpp->get_date_met(as_egg),
+            datetime_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_date_met(
+    pkmn_pokemon_handle_t handle,
+    pkmn_datetime_t* datetime,
+    bool as_egg
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(datetime, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_date_met(
+            pkmn::pkmn_datetime_c_to_cpp(datetime),
+            as_egg
+        );
+    );
+}
+
 pkmn_error_t pkmn_pokemon_get_friendship(
     pkmn_pokemon_handle_t handle,
     int* friendship_out

@@ -354,6 +354,19 @@ namespace pkmn {
         }
     }
 
+    pkmn::datetime pokemon_gen2impl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation II.");
+    }
+
+    void pokemon_gen2impl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation II.");
+    }
+
     int pokemon_gen2impl::get_friendship() {
         pokemon_scoped_lock lock(this);
 

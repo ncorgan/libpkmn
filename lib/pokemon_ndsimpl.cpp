@@ -11,6 +11,7 @@
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "types/datetime_internal.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/calculations/gender.hpp>
@@ -64,6 +65,7 @@ namespace pkmn {
 
         pkmn::rng<uint8_t> rng8;
         pkmn::rng<uint32_t> rng32;
+        pkmn::datetime now = pkmn::current_datetime();
 
         // Set _block pointers
         _blockA = &NDS_PC_RCAST->blocks.blockA;
@@ -105,6 +107,8 @@ namespace pkmn {
         set_level_met(level);
         set_location_met("Faraway place", false);
         set_location_met("Faraway place", true);
+        set_date_met(now, false);
+        set_date_met(now, true);
 
         // Populate abstractions
         _update_held_item();
@@ -465,6 +469,24 @@ namespace pkmn {
         } else {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
+    }
+
+    pkmn::datetime pokemon_ndsimpl::get_date_met(
+        bool as_egg
+    ) {
+        return pkmn::pksav_date_to_libpkmn_datetime(
+                   as_egg ? &_blockD->eggmet_date : &_blockD->met_date
+               );
+    }
+
+    void pokemon_ndsimpl::set_date_met(
+        const pkmn::datetime &date,
+        bool as_egg
+    ) {
+        pkmn::libpkmn_datetime_to_pksav_date(
+            date,
+            as_egg ? &_blockD->eggmet_date : &_blockD->met_date
+        );
     }
 
     int pokemon_ndsimpl::get_friendship() {

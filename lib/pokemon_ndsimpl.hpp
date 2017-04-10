@@ -91,6 +91,15 @@ namespace pkmn {
                 const std::string &gender
             );
 
+            pkmn::datetime get_date_met(
+                bool as_egg
+            );
+
+            void set_date_met(
+                const pkmn::datetime &date,
+                bool as_egg
+            );
+
             int get_friendship();
 
             void set_friendship(

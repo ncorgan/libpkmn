@@ -19,6 +19,7 @@ static uint16_t dummy_uint16_t = 0;
 static uint32_t dummy_uint32_t = 0;
 static float dummy_float = 0;
 static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
+static pkmn_datetime_t dummy_pkmn_datetime_t;
 static pkmn_string_list_t dummy_pkmn_string_list_t = {
     .strings = NULL,
     .length = 0
@@ -1465,6 +1466,42 @@ static void pokemon_error_test() {
                 PKMN_MALE
             );
     TEST_NULL_POINTER_RETURN("handle");
+
+    /*
+     * pkmn_pokemon_get_date_met
+     */
+
+    error = pkmn_pokemon_get_date_met(
+                NULL, // handle
+                false,
+                &dummy_pkmn_datetime_t
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_date_met(
+                pokemon,
+                false,
+                NULL // datetime_out
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "datetime_out");
+
+    /*
+     * pkmn_pokemon_set_date_met
+     */
+
+    error = pkmn_pokemon_set_date_met(
+                NULL, // handle
+                &dummy_pkmn_datetime_t,
+                false
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_set_date_met(
+                pokemon,
+                NULL, // datetime
+                false
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "datetime");
 
     /*
      * pkmn_pokemon_get_friendship

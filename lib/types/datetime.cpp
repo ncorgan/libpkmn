@@ -5,7 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/exception.hpp>
+
 #include <pkmn/types/datetime.hpp>
+
+#include "datetime_internal.hpp"
+
+#include <boost/config.hpp>
 
 #include <ctime>
 
@@ -25,6 +31,31 @@ namespace pkmn {
         ret.frames = 0;
 
         return ret;
+    }
+
+    BOOST_STATIC_CONSTEXPR int MONTH_DAYS[] = {
+        31,28,31,30,31,30,31,31,30,31,30,31
+    };
+
+    void libpkmn_datetime_to_pksav_date(
+        const pkmn::datetime &libpkmn_date,
+        pksav_date_t* pksav_date_out
+    ) {
+        // Validate inputs, since this can come from a user.
+        if(libpkmn_date.year < 2000) {
+            throw std::out_of_range("year: minimum value 2000");
+        }
+        if(libpkmn_date.month < 1 or libpkmn_date.month > 12) {
+            throw pkmn::range_error("month", 1, 12);
+        }
+        if(libpkmn_date.day < 1 or libpkmn_date.day > MONTH_DAYS[libpkmn_date.month-1]) {
+            throw pkmn::range_error("day", 1, MONTH_DAYS[libpkmn_date.month-1]);
+        }
+
+        // Games store number of years since 2000.
+        pksav_date_out->year = uint8_t(libpkmn_date.year - 2000);
+        pksav_date_out->month = uint8_t(libpkmn_date.month);
+        pksav_date_out->day = uint8_t(libpkmn_date.day);
     }
 
 }
