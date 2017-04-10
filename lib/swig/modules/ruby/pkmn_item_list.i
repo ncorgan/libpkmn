@@ -24,6 +24,14 @@
 %include <pkmn/item_list.hpp>
 
 %extend pkmn::shared_ptr<pkmn::item_list> {
+
+    pkmn::shared_ptr<pkmn::item_list>(
+        const std::string& name,
+        const std::string& game
+    ) {
+        return new pkmn::shared_ptr<pkmn::item_list>(pkmn::item_list::make(name, game));
+    }
+
     unsigned int __len__() {
         return self->get()->get_capacity();
     }
