@@ -39,6 +39,10 @@
     pkmn::item_slot __getitem__(unsigned int index) {
         return self->get()->at(index);
     }
+
+    bool __eq__(const pkmn::shared_ptr<pkmn::item_list>& rhs) {
+        return ((*self) == rhs);
+    }
 }
 
 %template(ItemList) pkmn::shared_ptr<pkmn::item_list>;
