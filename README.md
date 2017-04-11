@@ -30,6 +30,7 @@ Build Dependencies
     * [SWIG](http://swig.org/)
       * Lua support: 2.0.12+
       * Python 2 support: 3.0.8+
+      * Ruby support: 3.0.3+
       * Others: 2.0.11+
     * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
     * [PLY](https://pypi.python.org/pypi/ply)
@@ -56,6 +57,7 @@ repository is automatically tested under the following configurations:
    * C#: Mono 3.2.8
    * Lua: 5.1.5
    * Python: 2.7.6, 3.4.3
+   * Ruby: 2.3.0
  * Windows Server 2012 R2 (x86, x64)
    * C/C++: MSVC 2015
      * Boost: 1.62.0
@@ -74,4 +76,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/04/05
+README last updated: 2017/04/10
