@@ -62,6 +62,9 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
             "${PKMN_BINARY_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
         )
+        SET(RUBYLIB
+            "${PKMN_BINARY_DIR}/lib/swig/ruby"
+        )
         IF(WIN32)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
@@ -90,6 +93,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
             STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
+            STRING(REPLACE "/" "\\" RUBYLIB "${RUBYLIB}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
             STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
@@ -193,6 +197,11 @@ MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_PYTHON_TEST)
+
+MACRO(PKMN_ADD_RUBY_TEST test_name)
+    SET(CMD "\"${RUBY_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.rb\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_RUBY_TEST)
 
 #
 # Set locations of test saves.
