@@ -11,6 +11,7 @@ PKMN_LUA_INIT
 %import <pkmn_stl_lua.i>
 
 %{
+    #include <pkmn/calculations/damage.hpp>
     #include <pkmn/calculations/form.hpp>
     #include <pkmn/calculations/gender.hpp>
     #include <pkmn/calculations/hidden_power.hpp>
@@ -22,6 +23,7 @@ PKMN_LUA_INIT
     #include <pkmn/calculations/stats.hpp>
 %}
 
+%include <pkmn/calculations/damage.hpp>
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/hidden_power.hpp>

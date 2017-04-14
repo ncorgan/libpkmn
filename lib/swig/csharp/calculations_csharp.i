@@ -14,6 +14,7 @@ PKMN_CSHARP_INIT
 %import <stl_csharp.i>
 
 %{
+    #include <pkmn/calculations/damage.hpp>
     #include <pkmn/calculations/form.hpp>
     #include <pkmn/calculations/gender.hpp>
     #include <pkmn/calculations/hidden_power.hpp>
@@ -28,6 +29,7 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
+%include <pkmn/calculations/damage.hpp>
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/hidden_power.hpp>
