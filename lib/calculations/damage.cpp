@@ -14,7 +14,7 @@ namespace pkmn { namespace calculations {
 
     pkmn::database::sptr _db;
 
-    float damage_modifier(
+    float type_damage_modifier(
         int generation,
         const std::string &attacking_type,
         const std::string &defending_type1,
@@ -83,6 +83,8 @@ namespace pkmn { namespace calculations {
              defending_type2 == "Steel"))
         {
             damage_modifier2 = 0.5f;
+        } else if(defending_type2 == "None") {
+            damage_modifier2 = 1.0f;
         } else {
             damage_modifier2 = float(pkmn::database::query_db_bind2<int, const std::string&, const std::string&>(
                                    _db, query, attacking_type, defending_type2
