@@ -23,7 +23,7 @@ namespace pkmn { namespace calculations {
         float defense,
         float modifier
     ) {
-        return ((((((2.0f * level) / 5.0f) + 2.0f) * power * (attack / defense)) / 50.0f) + 2.0f) * modifier;
+        return int(((((((2.0f * level) / 5.0f) + 2.0f) * power * (attack / defense)) / 50.0f) + 2.0f) * modifier);
     }
 
     static PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_chance(
