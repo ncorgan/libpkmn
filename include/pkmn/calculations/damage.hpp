@@ -13,6 +13,14 @@
 
 namespace pkmn { namespace calculations {
 
+    PKMN_API int damage(
+        int attacker_level,
+        int move_base_power,
+        int attack_stat,
+        int defense_stat,
+        float modifier
+    );
+
     PKMN_API float type_damage_modifier(
         int generation,
         const std::string &attacking_type,
