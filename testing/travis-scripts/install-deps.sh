@@ -11,7 +11,7 @@ REPO_TOPLEVEL=$PWD
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
 sudo apt-get -y install cmake cppcheck libboost1.55-all-dev libqt4-dev qtbase5-dev \
-                        libgtest-dev swig swig3.0 doxygen \
+                        libgtest-dev swig doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
 			liblua5.1-dev luarocks \

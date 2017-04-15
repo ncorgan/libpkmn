@@ -17,8 +17,10 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
           packages:
             - g++-6
+            - swig3.0
       env:
         - NEWCC=gcc-6
         - NEWCXX=g++-6
@@ -37,8 +39,10 @@ matrix:
         apt:
           sources:
             - llvm-toolchain-trusty-4.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
           packages:
             - clang-4.0
+            - swig3.0
       env:
         - NEWCC=clang-4.0
         - NEWCXX=clang++-4.0
