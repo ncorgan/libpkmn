@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015,2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,6 +21,11 @@
 
 // SWIG can't parse constexpr
 #define constexpr
+
+#ifdef PKMN_CONSTEXPR
+#undef PKMN_CONSTEXPR
+#endif
+#define PKMN_CONSTEXPR const
 
 /*
  * All SWIG modules will ignore the following functions/classes.
