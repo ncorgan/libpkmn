@@ -14,7 +14,7 @@ namespace pkmn { namespace calculations {
 
     pkmn::database::sptr _db;
 
-    BOOST_STATIC_CONSTEXPR int _damage(
+    PKMN_CONSTEXPR_OR_INLINE int _damage(
         float level,
         float power,
         float attack,
@@ -22,6 +22,50 @@ namespace pkmn { namespace calculations {
         float modifier
     ) {
         return ((((((2.0f * level) / 5.0f) + 2.0f) * power * (attack / defense)) / 50.0f) + 2.0f) * modifier;
+    }
+
+    PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_chance(
+        float speed,
+        bool rate_increased,
+        bool high_rate_move
+    ) {
+        return (speed / 512.0f) /
+               (rate_increased ? 4.0f : 1.0f) *
+               (high_rate_move ? 8.0f : 1.0f);
+    }
+
+    float gen1_critical_hit_chance(
+        int speed,
+        bool rate_increased,
+        bool high_rate_move
+    ) {
+        // Validate input parameters.
+        if(speed < 0) {
+            throw std::out_of_range("speed must be > 0.");
+        }
+
+        return _gen1_critical_hit_chance(
+                   float(speed),
+                   rate_increased,
+                   high_rate_move
+               );
+    }
+
+    PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_modifier(
+        float attacker_level
+    ) {
+        return ((2.0f * attacker_level) + 5.0f) / (attacker_level + 5.0f);
+    }
+
+    float gen1_critical_hit_modifier(
+        int attacker_level
+    ) {
+        // Validate input parameters (allow 255 for glitch Pokémon).
+        if(attacker_level < 1 or attacker_level > 255) {
+            throw pkmn::range_error("attacker_level", 1, 100);
+        }
+
+        return _gen1_critical_hit_modifier(float(attacker_level));
     }
 
     int damage(
@@ -48,7 +92,13 @@ namespace pkmn { namespace calculations {
             throw std::out_of_range("modifier must be > 0.0f.");
         }
 
-        return _damage(attacker_level, move_base_power, attack_stat, defense_stat, modifier);
+        return _damage(
+                   float(attacker_level),
+                   float(move_base_power),
+                   float(attack_stat),
+                   float(defense_stat),
+                   modifier
+               );
     }
 
     float type_damage_modifier(
