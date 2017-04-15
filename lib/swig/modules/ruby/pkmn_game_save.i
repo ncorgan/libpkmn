@@ -37,6 +37,9 @@
 %rename(GameSaveInternal) pkmn::game_save;
 %include <pkmn/game_save.hpp>
 
+// Suppress shadowing warning when adding static methods.
+%warnfilter(508) pkmn::shared_ptr<pkmn::game_save>;
+
 %extend pkmn::shared_ptr<pkmn::game_save> {
 
     pkmn::shared_ptr<pkmn::game_save>(

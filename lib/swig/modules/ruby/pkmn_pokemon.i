@@ -64,6 +64,9 @@
 %rename(PokemonInternal) pkmn::pokemon;
 %include <pkmn/pokemon.hpp>
 
+// Suppress shadowing warning when adding static variables.
+%warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;
+
 %extend pkmn::shared_ptr<pkmn::pokemon> {
 
     pkmn::shared_ptr<pkmn::pokemon>(
@@ -78,6 +81,9 @@
     bool __eq__(const pkmn::shared_ptr<pkmn::pokemon>& rhs) {
         return ((*self) == rhs);
     }
+
+    static const uint32_t LIBPKMN_OT_ID = pkmn::pokemon::LIBPKMN_OT_ID;
+    static const std::string LIBPKMN_OT_NAME = pkmn::pokemon::LIBPKMN_OT_NAME;
 }
 
 %template(Pokemon) pkmn::shared_ptr<pkmn::pokemon>;
