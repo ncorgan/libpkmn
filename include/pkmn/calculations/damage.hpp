@@ -29,6 +29,12 @@ namespace pkmn { namespace calculations {
         bool high_rate_move
     );
 
+    PKMN_API float stadium_critical_hit_chance(
+        int speed,
+        bool rate_increased,
+        bool high_rate_move
+    );
+
     PKMN_API float gen1_critical_hit_modifier(
         int attacker_level
     );
