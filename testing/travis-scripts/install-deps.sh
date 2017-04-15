@@ -22,5 +22,7 @@ sudo pip${PYTHON_VERSION} install CppHeaderParser nose_parameterized
 [ $? -ne 0 ] && exit 1
 sudo luarocks install luaunit
 [ $? -ne 0 ] && exit 1
+sudo gem install os test-unit
+[ $? -ne 0 ] && exit 1
 
 echo # So we can check the last error code
