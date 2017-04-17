@@ -275,7 +275,23 @@ static void test_nds_pokemon_common(
         std::string(otname)
     );
 
-    // TODO: met dates, stuff that needs IDs
+    pkmn::datetime eggmet_date = pokemon->get_date_met(true);
+    EXPECT_EQ(eggmet_date.year, int(blockD->eggmet_date.year + 2000));
+    EXPECT_EQ(eggmet_date.month, int(blockD->eggmet_date.month));
+    EXPECT_EQ(eggmet_date.day, int(blockD->eggmet_date.day));
+    EXPECT_EQ(0, eggmet_date.hour);
+    EXPECT_EQ(0, eggmet_date.minute);
+    EXPECT_EQ(0, eggmet_date.second);
+
+    pkmn::datetime met_date = pokemon->get_date_met(false);
+    EXPECT_EQ(met_date.year, int(blockD->met_date.year + 2000));
+    EXPECT_EQ(met_date.month, int(blockD->met_date.month));
+    EXPECT_EQ(met_date.day, int(blockD->met_date.day));
+    EXPECT_EQ(0, met_date.hour);
+    EXPECT_EQ(0, met_date.minute);
+    EXPECT_EQ(0, met_date.second);
+
+    // TODO: stuff that needs IDs
 
     EXPECT_EQ(
         pokemon->get_level_met(),

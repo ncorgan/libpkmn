@@ -102,7 +102,7 @@ namespace pkmn {
         set_nickname(_default_nickname);
         set_original_game(_database_entry.get_game());
         set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-        // TODO: met dates, Pokerus
+        // TODO: Pokerus
         set_ball("Premier Ball");
         set_level_met(level);
         set_location_met("Faraway place", false);
@@ -143,7 +143,7 @@ namespace pkmn {
         );
         _our_party_mem = true;
 
-        // Set _block pointers
+        // Set block pointers
         _blockA = &NDS_PC_RCAST->blocks.blockA;
         _blockB = &NDS_PC_RCAST->blocks.blockB;
         _blockC = &NDS_PC_RCAST->blocks.blockC;
