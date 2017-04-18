@@ -12,18 +12,14 @@ PKMN_RUBY_INIT
 
 %include <std_string.i>
 
-// TODO: SWIG version
-
 %{
     #include <pkmn/build_info.hpp>
 
     static const std::string BOOST_VERSION = pkmn::build_info::get_boost_version();
     static const std::string PKSAV_VERSION = pkmn::build_info::get_pksav_version();
     static const std::string SQLITE3_VERSION = pkmn::build_info::get_sqlite3_version();
-    static const std::string SQLITECPP_VERSION = pkmn::build_info::get_sqlitecpp_version();
 %}
 
 %constant std::string BOOST_VERSION;
 %constant std::string PKSAV_VERSION;
 %constant std::string SQLITE3_VERSION;
-%constant std::string SQLITECPP_VERSION;

@@ -13,3 +13,9 @@ require_relative "PKMN/Calculations"
 require_relative "PKMN/Database"
 require_relative "PKMN/Paths"
 require_relative "PKMN/STL"
+
+module PKMN
+    module BuildInfo
+        SWIG_VERSION = "@SWIG_VERSION@"
+    end
+end
