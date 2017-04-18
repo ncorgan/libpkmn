@@ -8,6 +8,7 @@
 SET(ruby_tests
     RubyBuildInfoTest
     RubyCalculationsTest
+    RubyDatabaseEntryTest
     RubyListsTest
     RubyPathsTest
 )
