@@ -352,4 +352,269 @@ class RubyListsTest < Test::Unit::TestCase
             )
         )
     end
+
+    def test_gen2_shiny
+        # Make sure expected errors are raised.
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(-1, 0, 0, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(16, 0, 0, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, -1, 0, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, 16, 0, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, 0, -1, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, 0, 16, 0)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, 0, 0, -1)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::gen2_shiny(0, 0, 0, 16)
+        end
+        
+        #
+        # Make sure known good inputs result in expected results.
+        #
+        # Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Shininess
+        #
+        assert(PKMN::Calculations::gen2_shiny(7, 10, 10, 10))
+        assert_equal(false, PKMN::Calculations::gen2_shiny(6, 15, 7, 15))
+    end
+
+    def test_modern_shiny
+        # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
+        assert_raise RangeError do
+            PKMN::Calculations::modern_shiny(-1, 0)
+        end
+        assert_raise RangeError do
+            PKMN::Calculations::modern_shiny(0xFFFFFFFF+1, 0)
+        end
+        assert_raise RangeError do
+            PKMN::Calculations::modern_shiny(0, -1)
+        end
+        assert_raise RangeError do
+            PKMN::Calculations::modern_shiny(0, 0xFFFFFFFF+1)
+        end
+        
+        #
+        # Make sure known good inputs result in expected results.
+        #
+        # Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
+        #         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
+        #
+        assert(PKMN::Calculations::modern_shiny(2814471828, 2545049318))
+        assert(PKMN::Calculations::modern_shiny(0xB58F0B2A, 398174488))
+    end
+
+    def test_pokemon_size
+        # Make sure SWIG+Ruby catches values outside the uint32_t bounds.
+        assert_raise RangeError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", -1, 0, 0, 0, 0, 0, 0
+            )
+        end
+        assert_raise RangeError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0xFFFFFFFF+1, 0, 0, 0, 0, 0, 0
+            )
+        end
+
+        # Test input validation.
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, -1, 0, 0, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 32, 0, 0, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, -1, 0, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 32, 0, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, -1, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 32, 0, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, -1, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 32, 0, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, -1, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 32, 0
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, -1
+            )
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::pokemon_size(
+                "Magikarp", 0, 0, 0, 0, 0, 0, 32
+            )
+        end
+
+        # There are no known good calculations, so just check for reasonable values
+        # for each relevant Pokemon.
+        pokemon_with_size_checks = [
+            PKMN::Database::PokemonEntry.new("Barboach", "Ruby", ""),
+            PKMN::Database::PokemonEntry.new("Shroomish", "Ruby", ""),
+            PKMN::Database::PokemonEntry.new("Seedot", "Emerald", ""),
+            PKMN::Database::PokemonEntry.new("Lotad", "Emerald", ""),
+            PKMN::Database::PokemonEntry.new("Magikarp", "FireRed", ""),
+            PKMN::Database::PokemonEntry.new("Heracross", "FireRed", "")
+        ]
+
+        (0..pokemon_with_size_checks.length-1).each do |i|
+            height = pokemon_with_size_checks[i].height
+            species = pokemon_with_size_checks[i].name
+
+            (0..9).each do
+                size = PKMN::Calculations::pokemon_size(
+                           species,
+                           rand(0...0xFFFFFF),
+                           rand(0...31),
+                           rand(0...31),
+                           rand(0...31),
+                           rand(0...31),
+                           rand(0...31),
+                           rand(0...31)
+                       )
+                assert((size-height).abs <= height)
+            end
+        end
+    end
+
+    def test_spinda_coords
+        # Check (in)equality operators.
+        spinda_coords1 = PKMN::Calculations::SpindaCoords.new(123, 456)
+        spinda_coords2 = PKMN::Calculations::SpindaCoords.new(123, 456)
+        spinda_coords3 = PKMN::Calculations::SpindaCoords.new(456, 123)
+
+        assert_equal(spinda_coords1, spinda_coords2)
+        assert_not_equal(spinda_coords1, spinda_coords3)
+    end
+
+    def test_spinda_spots
+        # Check comparisons.
+        spots1 = PKMN::Calculations::SpindaSpots.new(
+                     PKMN::Calculations::SpindaCoords.new(7, 5),
+                     PKMN::Calculations::SpindaCoords.new(10, 0),
+                     PKMN::Calculations::SpindaCoords.new(1, 4),
+                     PKMN::Calculations::SpindaCoords.new(2, 15)
+                 )
+        spots2 = PKMN::Calculations::SpindaSpots.new(
+                     PKMN::Calculations::SpindaCoords.new(7, 5),
+                     PKMN::Calculations::SpindaCoords.new(10, 0),
+                     PKMN::Calculations::SpindaCoords.new(1, 4),
+                     PKMN::Calculations::SpindaCoords.new(2, 15)
+                 )
+        spots3 = PKMN::Calculations::SpindaSpots.new(
+                     PKMN::Calculations::SpindaCoords.new(7, 5),
+                     PKMN::Calculations::SpindaCoords.new(10, 0),
+                     PKMN::Calculations::SpindaCoords.new(2, 15),
+                     PKMN::Calculations::SpindaCoords.new(1, 4)
+                 )
+        assert_equal(spots1, spots2)
+        assert_not_equal(spots1, spots3)
+
+        #
+        # Make sure known good inputs result in expected results, and test comparisons.
+        #
+        # Source: https://github.com/magical/spinda
+        #
+        spots = PKMN::Calculations::spinda_spot_offset(4064348759)
+        assert_equal(spots1, spots)
+    end
+
+    def assert_ints_almost_equal(a,b)
+        return (a == b or (a-1) == b or (a+1) == b)
+    end
+
+    def test_gb_stats
+        # Make sure expected errors are raised.
+        assert_raise ArgumentError do
+            PKMN::Calculations::get_gb_stat("Not a stat", 1, 1, 1, 1)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::get_gb_stat("Attack", 1, 1, 123456, 1)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::get_gb_stat("Attack", 1, 1, 1, 12345)
+        end
+
+        #
+        # Test with known good inputs.
+        #
+        # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generations_I_and_II
+        #
+        stat = PKMN::Calculations::get_gb_stat("HP", 81, 35, 22850, 7)
+        assert_ints_almost_equal(stat, 189)
+        stat = PKMN::Calculations::get_gb_stat("Attack", 81, 55, 23140, 8)
+        assert_ints_almost_equal(stat, 137)
+    end
+
+    def test_modern_stats
+        # Make sure expected errors are raised.
+        assert_raise ArgumentError do
+            PKMN::Calculations::get_modern_stat("Not a stat", 1, 1.0, 1, 1, 1)
+        end
+        assert_raise ArgumentError do
+            PKMN::Calculations::get_modern_stat("Special", 1, 1.0, 1, 1, 1)
+        end
+        assert_raise ArgumentError do
+            PKMN::Calculations::get_modern_stat("Attack", 1, 0.666, 1, 1, 1)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::get_modern_stat("Attack", 1, 1.0, 1, 12345, 1)
+        end
+        assert_raise IndexError do
+            PKMN::Calculations::get_modern_stat("Attack", 1, 1.0, 1, 1, 12345)
+        end
+
+        #
+        # Test with known good inputs.
+        #
+        # Source: http://bulbapedia.bulbagarden.net/wiki/Statistic#In_Generation_III_onward
+        #
+        stat = PKMN::Calculations::get_modern_stat("HP", 78, 1.0, 108, 74, 24)
+        assert_ints_almost_equal(stat, 289)
+        stat = PKMN::Calculations::get_modern_stat("Attack", 78, 1.1, 130, 195, 12)
+        assert_ints_almost_equal(stat, 280)
+    end
 end
