@@ -6,6 +6,7 @@
 #
 
 SET(ruby_tests
+    RubyBuildInfoTest
     RubyCalculationsTest
     RubyListsTest
     RubyPathsTest
