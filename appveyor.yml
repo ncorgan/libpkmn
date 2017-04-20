@@ -5,32 +5,26 @@ environment:
     - BITNESS: 32
       PYTHON_VERSION: 35
       LUA_VER: 5.1.5
-      RUBY_VER: 21
 
     - BITNESS: 64
       PYTHON_VERSION: 35
       LUA_VER: 5.1.5
-      RUBY_VER: 21
 
     - BITNESS: 32
       PYTHON_VERSION: 35
       LUA_VER: 5.2.4
-      RUBY_VER: 22
 
     - BITNESS: 64
       PYTHON_VERSION: 35
       LUA_VER: 5.2.4
-      RUBY_VER: 22
 
     - BITNESS: 32
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
-      RUBY_VER: 23
 
     - BITNESS: 64
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
-      RUBY_VER: 23
 
 configuration: Release
 

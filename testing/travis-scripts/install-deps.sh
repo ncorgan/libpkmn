@@ -16,7 +16,7 @@ sudo apt-get -y install cmake cppcheck libboost1.55-all-dev libqt4-dev qtbase5-d
 			default-jdk junit maven \
 			liblua5.1-dev luarocks \
 			libpython-dev libpython3-dev python3 python-pip python3-pip \
-			ruby${RUBY_VERSION} ruby${RUBY_VERSION}-dev
+			ruby ruby-all-dev
 [ $? -ne 0 ] && exit 1
 sudo pip${PYTHON_VERSION} install CppHeaderParser nose_parameterized
 [ $? -ne 0 ] && exit 1
