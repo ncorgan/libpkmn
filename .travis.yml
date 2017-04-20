@@ -10,6 +10,7 @@ matrix:
       env:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
+        - RUBY_VERSION=2.3
         - SWIG_VERSION=2
     # Newer GCC, dependencies
     - compiler: gcc
@@ -17,6 +18,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:brightbox/ruby-ng'
             - sourceline: 'ppa:rosmo/swig3.0.7'
           packages:
             - g++-6
@@ -26,12 +28,14 @@ matrix:
         - NEWCXX=g++-6
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
+        - RUBY_VERSION=2.4
         - SWIG_VERSION=3
     # Default/older Clang, dependencies
     - compiler: clang
       env:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
+        - RUBY_VERSION=2.3
         - SWIG_VERSION=2
     # Newer Clang, dependencies
     - compiler: clang
@@ -39,15 +43,18 @@ matrix:
         apt:
           sources:
             - llvm-toolchain-trusty-4.0
+            - sourceline: 'ppa:brightbox/ruby-ng'
             - sourceline: 'ppa:rosmo/swig3.0.7'
           packages:
             - clang-4.0
+            - ruby2.4
             - swig3.0
       env:
         - NEWCC=clang-4.0
         - NEWCXX=clang++-4.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
+        - RUBY_VERSION=2.4
         - SWIG_VERSION=3
 
 sudo: required
