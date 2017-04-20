@@ -8,6 +8,14 @@
 INCLUDE(SWIGRuby)
 
 #
+# This file needs to be in the working directory when SWIG is called.
+#
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/ruby/rubyfragments.swg
+    ${CMAKE_CURRENT_BINARY_DIR}/rubyfragments.swg
+@ONLY)
+
+#
 # Set variables needed for CMake macros
 #
 
