@@ -19,8 +19,7 @@ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
       return pchar_descriptor ? 
 	SWIG_NewPointerObj(%const_cast(carray,char *), pchar_descriptor, 0) : Qnil;
     } else {
-      VALUE ret = rb_str_new(carray, %numeric_cast(size,long));
-      return rb_str_export_to_enc(ret, rb_utf8_encoding());
+      return rb_enc_str_new(carray, %numeric_cast(size,long), rb_utf8_encoding());
     }
   } else {
     return Qnil;
