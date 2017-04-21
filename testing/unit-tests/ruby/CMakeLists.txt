@@ -11,6 +11,7 @@ SET(ruby_tests
     RubyDatabaseEntryTest
     RubyListsTest
     RubyPathsTest
+    RubyPokemonTest
 )
 
 FOREACH(test ${ruby_tests})

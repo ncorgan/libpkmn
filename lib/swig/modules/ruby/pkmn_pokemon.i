@@ -78,6 +78,12 @@
         return new pkmn::shared_ptr<pkmn::pokemon>(pkmn::pokemon::make(species, game, form, level));
     }
 
+    pkmn::shared_ptr<pkmn::pokemon>(
+        const std::string& filepath
+    ) {
+        return new pkmn::shared_ptr<pkmn::pokemon>(pkmn::pokemon::from_file(filepath));
+    }
+
     bool __eq__(const pkmn::shared_ptr<pkmn::pokemon>& rhs) {
         return ((*self) == rhs);
     }
