@@ -31,14 +31,14 @@ using namespace pkmn::calculations;
  */
 
 // Game Boy Advance
-BOOST_STATIC_CONSTEXPR spinda_coords GEN3_ORIGIN(8,6);
-BOOST_STATIC_CONSTEXPR spinda_spots GEN3_COORDS(
+BOOST_STATIC_CONSTEXPR spinda_coords GBA_ORIGIN(8,6);
+BOOST_STATIC_CONSTEXPR spinda_spots GBA_COORDS(
                                         spinda_coords(0,0),
                                         spinda_coords(24,1),
                                         spinda_coords(6,18),
                                         spinda_coords(18,19)
                                     );
-BOOST_STATIC_CONSTEXPR size_t GEN3_SPOT_HEIGHT = 13;
+BOOST_STATIC_CONSTEXPR size_t GBA_SPOT_HEIGHT = 13;
 
 // Colors
 
@@ -144,12 +144,12 @@ namespace pkmn { namespace qt {
         *imageOut = imageOut->convertToFormat(QImage::Format_ARGB32);
 
         const spinda_colors_t* spot_colors = NULL;
-        const char* (*spot_map)[GEN3_SPOT_HEIGHT] = {0};
+        const char* (*spot_map)[GBA_SPOT_HEIGHT] = {0};
 
         switch(generation) {
             case 3:
-                final_spot_coords = GEN3_COORDS + spot_offset;
-                final_spot_coords += GEN3_ORIGIN;
+                final_spot_coords = GBA_COORDS + spot_offset;
+                final_spot_coords += GBA_ORIGIN;
 
                 spot_colors = &GBA_SPINDA_SPOT_COLORS;
                 spot_map = GBA_SPINDA_SPOT_MAP;
@@ -159,35 +159,33 @@ namespace pkmn { namespace qt {
                 throw pkmn::unimplemented_error();
         }
 
-        // TODO: check for light, shade, choose color accordingly
-
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.left_ear,
             spot_map[0],
             spot_colors,
-            GEN3_SPOT_HEIGHT
+            GBA_SPOT_HEIGHT
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.right_ear,
             spot_map[1],
             spot_colors,
-            GEN3_SPOT_HEIGHT
+            GBA_SPOT_HEIGHT
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.left_face,
             spot_map[2],
             spot_colors,
-            GEN3_SPOT_HEIGHT
+            GBA_SPOT_HEIGHT
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.right_face,
             spot_map[3],
             spot_colors,
-            GEN3_SPOT_HEIGHT
+            GBA_SPOT_HEIGHT
         );
     }
 
