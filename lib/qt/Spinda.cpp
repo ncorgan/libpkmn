@@ -140,8 +140,8 @@ namespace pkmn { namespace qt {
             for(size_t j = 0; j < std::strlen(spot_map[0][i]); ++j) {
                 if(spot_map[0][i][j] == '*') {
                     imageOut->setPixel(
-                        final_spot_coords.left_ear.x,
-                        final_spot_coords.left_ear.y,
+                        final_spot_coords.left_ear.x+j,
+                        final_spot_coords.left_ear.y+i,
                         spot_colors->color_main.rgb()
                     );
                 }
@@ -149,12 +149,12 @@ namespace pkmn { namespace qt {
         }
 
         // Right ear
-        /*for(size_t i = 0; i < 13 && spot_map[1][i] != NULL; ++i) {
+        for(size_t i = 0; i < 13 && spot_map[1][i] != NULL; ++i) {
             for(size_t j = 0; j < std::strlen(spot_map[1][i]); ++j) {
                 if(spot_map[1][i][j] == '*') {
                     imageOut->setPixel(
-                        final_spot_coords.right_ear.x,
-                        final_spot_coords.right_ear.y,
+                        final_spot_coords.right_ear.x+j,
+                        final_spot_coords.right_ear.y+i,
                         spot_colors->color_main.rgb()
                     );
                 }
@@ -166,8 +166,8 @@ namespace pkmn { namespace qt {
             for(size_t j = 0; j < std::strlen(spot_map[2][i]); ++j) {
                 if(spot_map[2][i][j] == '*') {
                     imageOut->setPixel(
-                        final_spot_coords.left_face.x,
-                        final_spot_coords.left_face.y,
+                        final_spot_coords.left_face.x+j,
+                        final_spot_coords.left_face.y+i,
                         spot_colors->color_main.rgb()
                     );
                 }
@@ -179,13 +179,13 @@ namespace pkmn { namespace qt {
             for(size_t j = 0; j < std::strlen(spot_map[3][i]); ++j) {
                 if(spot_map[3][i][j] == '*') {
                     imageOut->setPixel(
-                        final_spot_coords.right_face.x,
-                        final_spot_coords.right_face.y,
+                        final_spot_coords.right_face.x+j,
+                        final_spot_coords.right_face.y+i,
                         spot_colors->color_main.rgb()
                     );
                 }
             }
-        }*/
+        }
     }
 
 }}
