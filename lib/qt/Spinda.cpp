@@ -115,6 +115,7 @@ namespace pkmn { namespace qt {
         if(!imageOut->load(QString::fromStdString(input_path.string()))) {
             throw std::runtime_error("Failed to load base Spinda sprite.");
         }
+        *imageOut = imageOut->convertToFormat(QImage::Format_ARGB32);
 
         const spinda_colors_t* spot_colors = NULL;
         const char* (*spot_map)[13] = {0};
@@ -148,7 +149,7 @@ namespace pkmn { namespace qt {
         }
 
         // Right ear
-        for(size_t i = 0; i < 13 && spot_map[1][i] != NULL; ++i) {
+        /*for(size_t i = 0; i < 13 && spot_map[1][i] != NULL; ++i) {
             for(size_t j = 0; j < std::strlen(spot_map[1][i]); ++j) {
                 if(spot_map[1][i][j] == '*') {
                     imageOut->setPixel(
@@ -184,7 +185,7 @@ namespace pkmn { namespace qt {
                     );
                 }
             }
-        }
+        }*/
     }
 
 }}
