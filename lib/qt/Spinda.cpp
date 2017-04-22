@@ -38,6 +38,7 @@ BOOST_STATIC_CONSTEXPR spinda_spots GEN3_COORDS(
                                         spinda_coords(6,18),
                                         spinda_coords(18,19)
                                     );
+BOOST_STATIC_CONSTEXPR size_t GEN3_SPOT_HEIGHT = 13;
 
 // Colors
 
@@ -74,6 +75,31 @@ namespace pkmn { namespace qt {
         return outputImage.save(filePath);
     }
 
+    static void drawSpindaSpot(
+        QImage* image,
+        const spinda_coords* coords,
+        const char** single_spot_map,
+        const spinda_colors_t* spot_colors,
+        size_t height
+    ) {
+        for(size_t i = 0; i < height && single_spot_map[i] != NULL; ++i) {
+            for(size_t j = 0; j < std::strlen(single_spot_map[i]); ++j) {
+                if(single_spot_map[i][j] == '*') {
+                    QPoint point(
+                               coords->x+j,
+                               coords->y+i
+                           );
+                    if(qAlpha(image->pixel(point)) > 0) {
+                        image->setPixel(
+                            point,
+                            spot_colors->color_main.rgb()
+                        );
+                    }
+                }
+            }
+        }
+    }
+
     void GenerateSpindaSprite(
         int generation,
         uint32_t personality,
@@ -84,7 +110,7 @@ namespace pkmn { namespace qt {
             throw pkmn::range_error("generation", 3, 5);
         } else if(game_is_gamecube(generation)) {
             throw std::invalid_argument("No Gamecube support.");
-        } else if(imageOut == nullptr) {
+        } else if(!imageOut) {
             throw std::invalid_argument("Null pointer passed into imageOut");
         }
 
@@ -118,7 +144,7 @@ namespace pkmn { namespace qt {
         *imageOut = imageOut->convertToFormat(QImage::Format_ARGB32);
 
         const spinda_colors_t* spot_colors = NULL;
-        const char* (*spot_map)[13] = {0};
+        const char* (*spot_map)[GEN3_SPOT_HEIGHT] = {0};
 
         switch(generation) {
             case 3:
@@ -135,57 +161,34 @@ namespace pkmn { namespace qt {
 
         // TODO: check for light, shade, choose color accordingly
 
-        // Left ear
-        for(size_t i = 0; i < 13 && spot_map[0][i] != NULL; ++i) {
-            for(size_t j = 0; j < std::strlen(spot_map[0][i]); ++j) {
-                if(spot_map[0][i][j] == '*') {
-                    imageOut->setPixel(
-                        final_spot_coords.left_ear.x+j,
-                        final_spot_coords.left_ear.y+i,
-                        spot_colors->color_main.rgb()
-                    );
-                }
-            }
-        }
-
-        // Right ear
-        for(size_t i = 0; i < 13 && spot_map[1][i] != NULL; ++i) {
-            for(size_t j = 0; j < std::strlen(spot_map[1][i]); ++j) {
-                if(spot_map[1][i][j] == '*') {
-                    imageOut->setPixel(
-                        final_spot_coords.right_ear.x+j,
-                        final_spot_coords.right_ear.y+i,
-                        spot_colors->color_main.rgb()
-                    );
-                }
-            }
-        }
-
-        // Left face
-        for(size_t i = 0; i < 13 && spot_map[2][i] != NULL; ++i) {
-            for(size_t j = 0; j < std::strlen(spot_map[2][i]); ++j) {
-                if(spot_map[2][i][j] == '*') {
-                    imageOut->setPixel(
-                        final_spot_coords.left_face.x+j,
-                        final_spot_coords.left_face.y+i,
-                        spot_colors->color_main.rgb()
-                    );
-                }
-            }
-        }
-
-        // Right face
-        for(size_t i = 0; i < 13 && spot_map[3][i] != NULL; ++i) {
-            for(size_t j = 0; j < std::strlen(spot_map[3][i]); ++j) {
-                if(spot_map[3][i][j] == '*') {
-                    imageOut->setPixel(
-                        final_spot_coords.right_face.x+j,
-                        final_spot_coords.right_face.y+i,
-                        spot_colors->color_main.rgb()
-                    );
-                }
-            }
-        }
+        drawSpindaSpot(
+            imageOut,
+            &final_spot_coords.left_ear,
+            spot_map[0],
+            spot_colors,
+            GEN3_SPOT_HEIGHT
+        );
+        drawSpindaSpot(
+            imageOut,
+            &final_spot_coords.right_ear,
+            spot_map[1],
+            spot_colors,
+            GEN3_SPOT_HEIGHT
+        );
+        drawSpindaSpot(
+            imageOut,
+            &final_spot_coords.left_face,
+            spot_map[2],
+            spot_colors,
+            GEN3_SPOT_HEIGHT
+        );
+        drawSpindaSpot(
+            imageOut,
+            &final_spot_coords.right_face,
+            spot_map[3],
+            spot_colors,
+            GEN3_SPOT_HEIGHT
+        );
     }
 
 }}
