@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
     ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
+    ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/include
@@ -20,6 +21,7 @@ INCLUDE_DIRECTORIES(
 SET(pkmn_libs
     ${Boost_LIBRARIES}
     pksav
+    PkmGC
     SQLiteCpp
 )
 

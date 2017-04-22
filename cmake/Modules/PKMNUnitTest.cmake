@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
+    ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/lib
@@ -23,12 +24,12 @@ SET(pkmn_cpp_test_libs
     gtest
     gtest_main
     pkmn
-    #pkmntest
+    pksav
+    PkmGC
 )
 
 SET(pkmn_c_test_libs
     pkmn-c
-    #pkmntest-c
     unity
 )
 
