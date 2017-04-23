@@ -67,6 +67,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
                 "${QTx_RUNTIME_DIR}"
+                "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/pksav/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
@@ -106,6 +107,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
                 "${PKMN_BINARY_DIR}/pksav/lib"
                 "${PKMN_BINARY_DIR}/lib"
                 "${PKMN_BINARY_DIR}/lib/c"
