@@ -8,7 +8,10 @@
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
+#include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
+
+#include "misc_common.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -110,9 +113,15 @@ namespace pkmn {
             // we'll error out until their item_bag implementations
             // are done.
             case 3:
-                return pkmn::make_shared<item_list_modernimpl>(
-                           item_list_id, game_id, nullptr, capacity, false
-                       );
+                if(game_is_gamecube(game_id)) {
+                    return pkmn::make_shared<item_list_gcnimpl>(
+                               item_list_id, game_id, nullptr, capacity, false
+                           );
+                } else {
+                    return pkmn::make_shared<item_list_modernimpl>(
+                               item_list_id, game_id, nullptr, capacity, false
+                           );
+                }
 
             case 4:
             case 5:
