@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -74,6 +74,7 @@ SET(pkmn_sources
     item_bag_gbaimpl.cpp
     item_list_impl.cpp
     item_list_gen2_tmhmimpl.cpp
+    item_list_gcnimpl.cpp
     item_list_modernimpl.cpp
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
