@@ -8,6 +8,9 @@
 #include "../pokemon_gen1impl.hpp"
 #include "../pokemon_gen2impl.hpp"
 #include "../pokemon_gbaimpl.hpp"
+#include "../pokemon_gcnimpl.hpp"
+
+#include "../pokemon_party_gcnimpl.hpp"
 
 #include "../misc_common.hpp"
 #include "pokemon_setter.hpp"
@@ -29,6 +32,16 @@
     dst_ptr = reinterpret_cast<void*>(new type); \
     *reinterpret_cast<type*>(dst_ptr) = *reinterpret_cast<type*>(src_ptr); \
 }
+
+#define GC_RCAST(src_ptr)   reinterpret_cast<LibPkmGC::GC::Pokemon*>(src_ptr)
+#define COLO_RCAST(src_ptr) reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(src_ptr)
+#define XD_RCAST(src_ptr)   reinterpret_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
+
+#define COLO_DCAST(src_ptr) dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(src_ptr)
+#define XD_DCAST(src_ptr)   dynamic_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
+
+BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
+BOOST_STATIC_CONSTEXPR int XD = 20;
 
 namespace pkmn { namespace mem {
 
@@ -170,7 +183,28 @@ namespace pkmn { namespace mem {
 
             case 3:
                 if(game_is_gamecube(party_pokemon->_database_entry.get_game_id())) {
-                    throw pkmn::unimplemented_error();
+                    if(game_id == COLOSSEUM) {
+                        party_pc_copy = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon(
+                                            *COLO_DCAST(
+                                                 reinterpret_cast<pkmn::gcn_pokemon_party_t*>(party_ptr)->pokemon[index]
+                                             )
+                                        ));
+
+                        *COLO_RCAST(party_ptr) = *COLO_RCAST(new_pokemon->_native_pc);
+                    } else {
+                        party_pc_copy = reinterpret_cast<void*>(new LibPkmGC::XD::Pokemon(
+                                            *XD_DCAST(
+                                                 reinterpret_cast<pkmn::gcn_pokemon_party_t*>(party_ptr)->pokemon[index]
+                                             )
+                                        ));
+
+                        *XD_RCAST(party_ptr) = *XD_RCAST(new_pokemon->_native_pc);
+                    }
+
+                    party->_pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+                                                      GC_RCAST(party_pc_copy),
+                                                      game_id
+                                                  );
                 } else {
                     RCAST_EQUAL_ALLOC(party_ptr, party_pc_copy, pksav_gba_pc_pokemon_t);
                     RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_gba_pokemon_party_data_t);
