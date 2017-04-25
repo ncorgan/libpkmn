@@ -98,7 +98,28 @@ namespace pkmn { namespace mem {
 
             case 3:
                 if(game_is_gamecube(box_pokemon->_database_entry.get_game_id())) {
-                    throw pkmn::unimplemented_error();
+                    if(game_id == COLOSSEUM) {
+                        box_pc_copy = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon(
+                                          *COLO_DCAST(
+                                               reinterpret_cast<pkmn::gcn_pokemon_party_t*>(box_ptr)->pokemon[index]
+                                           )
+                                      ));
+
+                        *COLO_RCAST(box_ptr) = *COLO_RCAST(new_pokemon->_native_pc);
+                    } else {
+                        box_pc_copy = reinterpret_cast<void*>(new LibPkmGC::XD::Pokemon(
+                                          *XD_DCAST(
+                                               reinterpret_cast<pkmn::gcn_pokemon_party_t*>(box_ptr)->pokemon[index]
+                                           )
+                                      ));
+
+                        *XD_RCAST(box_ptr) = *XD_RCAST(new_pokemon->_native_pc);
+                    }
+
+                    box->_pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+                                                    GC_RCAST(box_pc_copy),
+                                                    game_id
+                                                );
                 } else {
                     RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_gba_pc_pokemon_t);
                     RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_gba_pc_pokemon_t);
