@@ -14,9 +14,7 @@
 
 #include "database/database_common.hpp"
 
-#include <LibPkmGC/GC/Common/BagData.h>
-#include <LibPkmGC/Colosseum/Common/BagData.h>
-#include <LibPkmGC/XD/Common/BagData.h>
+#include "libpkmgc_includes.hpp"
 
 namespace pkmn {
 

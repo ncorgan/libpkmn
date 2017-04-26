@@ -9,9 +9,7 @@
 
 #include "pokemon_party_impl.hpp"
 
-#include <LibPkmGC/GC/Common/Pokemon.h>
-#include <LibPkmGC/Colosseum/Common/Pokemon.h>
-#include <LibPkmGC/XD/Common/Pokemon.h>
+#include "libpkmgc_includes.hpp"
 
 namespace pkmn {
 

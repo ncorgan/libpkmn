@@ -15,7 +15,6 @@
 #define XD_RCAST   reinterpret_cast<LibPkmGC::XD::PokemonBox*>(_native)
 
 BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-BOOST_STATIC_CONSTEXPR int XD = 20;
 
 namespace pkmn {
 

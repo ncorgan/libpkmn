@@ -41,7 +41,6 @@
 #define XD_DCAST(src_ptr)   dynamic_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
 
 BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-BOOST_STATIC_CONSTEXPR int XD = 20;
 
 namespace pkmn { namespace mem {
 

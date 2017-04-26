@@ -9,9 +9,7 @@
 
 #include "pokemon_box_impl.hpp"
 
-#include <LibPkmGC/GC/Common/PokemonBox.h>
-#include <LibPkmGC/Colosseum/Common/PokemonBox.h>
-#include <LibPkmGC/XD/Common/PokemonBox.h>
+#include "libpkmgc_includes.hpp"
 
 namespace pkmn {
 
