@@ -16,8 +16,13 @@
 #ifdef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
+
+#include <LibPkmGC/GC/SaveEditing/Save.h>
+#include <LibPkmGC/Colosseum/SaveEditing/Save.h>
+#include <LibPkmGC/XD/SaveEditing/Save.h>
 
 #include <LibPkmGC/GC/Common/BagData.h>
 #include <LibPkmGC/Colosseum/Common/BagData.h>

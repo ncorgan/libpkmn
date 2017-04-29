@@ -35,6 +35,7 @@ typedef enum {
     PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE,
     PKMN_GAME_SAVE_TYPE_EMERALD,
     PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN,
+    PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD
 } pkmn_game_save_type_t;
 
 #ifdef __cplusplus
