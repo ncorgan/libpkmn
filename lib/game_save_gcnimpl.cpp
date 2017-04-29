@@ -26,6 +26,9 @@ namespace pkmn {
 
     #define GCN_PC_ID (_colosseum ? 68 : 75)
 
+    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
+    BOOST_STATIC_CONSTEXPR int XD = 20;
+
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_BIN_SIZE = 0x60000;
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_GCI_SIZE = 0x60040;
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_BIN_SIZE = 0x56000;
@@ -45,11 +48,13 @@ namespace pkmn {
         bool has_gci_data = false;
         if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
             _colosseum = true;
+            _game_id = COLOSSEUM;
 
             has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), has_gci_data));
-        } if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
+        } else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
             _colosseum = false;
+            _game_id = XD;
 
             has_gci_data = (filesize == GCN_XD_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), has_gci_data));
@@ -60,7 +65,7 @@ namespace pkmn {
         size_t index = 0;
         _current_slot = _libpkmgc_save->getMostRecentValidSlot(0, &index);
         if(!_current_slot) {
-            throw std::invalid_argument("Not a valid Gamecube save.");
+            throw std::invalid_argument("Could not find a save slot.");
         }
 
         _pokemon_party = pkmn::make_shared<pokemon_party_gcnimpl>(
