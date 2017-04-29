@@ -9,6 +9,7 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_gcnimpl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -64,7 +65,10 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_gcnimpl>(
+                               std::move(database_entry),
+                               level
+                           );
                 } else {
                     return pkmn::make_shared<pokemon_gbaimpl>(
                                std::move(database_entry),

@@ -61,6 +61,52 @@ namespace pkmn {
         }
         _our_pc_mem = true;
 
+        pkmn::rng<LibPkmGC::u8> rng8;
+        pkmn::rng<LibPkmGC::u32> rng32;
+
+        GC_RCAST->species = LibPkmGC::PokemonSpeciesIndex(database_entry.get_pokemon_index());
+        GC_RCAST->heldItem = LibPkmGC::NoItem;
+        GC_RCAST->friendship = LibPkmGC::u8(database_entry.get_base_friendship());
+        GC_RCAST->locationCaught = 0; // Met in a distant land
+        GC_RCAST->ballCaughtWith = LibPkmGC::PremierBall;
+        GC_RCAST->levelMet = LibPkmGC::u8(level);
+        GC_RCAST->OTGender = LibPkmGC::Male;
+        GC_RCAST->OTName->fromUTF8(pkmn::pokemon::LIBPKMN_OT_NAME.c_str());
+        GC_RCAST->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_name()).c_str());
+        GC_RCAST->contestLuster = 0;
+        GC_RCAST->pokerusStatus = 0;
+        GC_RCAST->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));
+        GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID >> 16);
+        GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF);
+        GC_RCAST->PID = rng32.rand();
+
+        GC_RCAST->version.game = LibPkmGC::Colosseum_XD;
+        GC_RCAST->version.currentRegion = LibPkmGC::NTSC_U;
+        GC_RCAST->version.originalRegion = LibPkmGC::NTSC_U;
+        GC_RCAST->version.language = LibPkmGC::English;
+
+        GC_RCAST->obedient = true;
+        for(size_t i = 0; i < 12; ++i) {
+            GC_RCAST->specialRibbons[i] = false;
+        }
+        GC_RCAST->unimplementedRibbons = 0;
+
+        for(size_t i = 0; i < 4; ++i) {
+            GC_RCAST->moves[i].move = LibPkmGC::NoMove;
+            GC_RCAST->moves[i].currentPPs = 0;
+            GC_RCAST->moves[i].nbPPUpsUsed = 0;
+        }
+
+        for(size_t i = 0; i < 6; ++i) {
+            GC_RCAST->EVs[i] = rng8.rand();
+            GC_RCAST->IVs[i] = rng8.rand(0,31);
+        }
+
+        for(size_t i = 0; i < 5; ++i) {
+            GC_RCAST->contestStats[i] = 0;
+            GC_RCAST->contestAchievements[i] = LibPkmGC::NoContestWon;
+        }
+
         // Populate abstractions
         _update_held_item();
         _update_ribbons_map();
