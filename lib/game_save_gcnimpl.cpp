@@ -38,7 +38,7 @@ namespace pkmn {
         const std::string &filepath
     ): game_save_impl(filepath)
     {
-        size_t filesize = fs::file_size(filepath);
+        size_t filesize = size_t(fs::file_size(filepath));
         _data.resize(filesize);
 
         std::ifstream ifile(filepath);
