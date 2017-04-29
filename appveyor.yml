@@ -1,5 +1,5 @@
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_62_0
+  BOOST_ROOT: C:/Libraries/boost_1_62_0
   LUAROCKS_VER: 2.3.0
   matrix:
     - BITNESS: 32
