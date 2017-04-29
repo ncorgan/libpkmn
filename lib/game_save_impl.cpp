@@ -9,6 +9,7 @@
 #include "game_save_gen1impl.hpp"
 #include "game_save_gen2impl.hpp"
 #include "game_save_gbaimpl.hpp"
+#include "game_save_gcnimpl.hpp"
 #include "database/id_to_string.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -192,6 +193,9 @@ namespace pkmn {
             case PKMN_SAVE_TYPE_EMERALD:
             case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
                 return pkmn::make_shared<game_save_gbaimpl>(filepath);
+
+            case PKMN_SAVE_TYPE_COLOSSEUM_XD:
+                return pkmn::make_shared<game_save_gcnimpl>(filepath);
 
             case PKMN_SAVE_TYPE_NONE:
             default:
