@@ -28,7 +28,6 @@
 
 #include <cstring>
 #include <ctime>
-#include <iostream>
 #include <stdexcept>
 
 #define GC_RCAST   reinterpret_cast<LibPkmGC::GC::Pokemon*>(_native_pc)
@@ -64,7 +63,7 @@ namespace pkmn {
         pkmn::rng<LibPkmGC::u8> rng8;
         pkmn::rng<LibPkmGC::u32> rng32;
 
-        GC_RCAST->species = LibPkmGC::PokemonSpeciesIndex(database_entry.get_pokemon_index());
+        GC_RCAST->species = LibPkmGC::PokemonSpeciesIndex(_database_entry.get_pokemon_index());
         GC_RCAST->heldItem = LibPkmGC::NoItem;
         GC_RCAST->friendship = LibPkmGC::u8(database_entry.get_base_friendship());
         GC_RCAST->locationCaught = 0; // Met in a distant land
