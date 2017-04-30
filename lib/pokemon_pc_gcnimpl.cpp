@@ -17,7 +17,7 @@ namespace pkmn {
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new LibPkmGC::GC::PokemonBox*[GCN_NUM_BOXES]);
-        for(size_t i = 0; i < GCN_NUM_BOXES; ++i) {
+        for(int i = 0; i < GCN_NUM_BOXES; ++i) {
             if(_game_id == COLOSSEUM) {
                 NATIVE_RCAST[i] = new LibPkmGC::Colosseum::PokemonBox;
             } else {
@@ -42,7 +42,7 @@ namespace pkmn {
 
     pokemon_pc_gcnimpl::~pokemon_pc_gcnimpl() {
         if(_our_mem) {
-            for(size_t i = 0; i < GCN_NUM_BOXES; ++i) {
+            for(int i = 0; i < GCN_NUM_BOXES; ++i) {
                 if(_game_id == COLOSSEUM) {
                     delete reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(NATIVE_RCAST[i]);
                 } else {
