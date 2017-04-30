@@ -730,13 +730,13 @@ namespace pkmn {
             case 1:
             case 2:
             case 3:
-                /*_moves[index] = pkmn::move_slot(
+                _moves[index] = pkmn::move_slot(
                     pkmn::database::move_entry(
-                        pksav_littleendian16(_attacks->moves[index]),
+                        int(GC_RCAST->moves[index].move),
                         _database_entry.get_game_id()
                     ),
-                    _attacks->move_pps[index]
-                );*/
+                    GC_RCAST->moves[index].currentPPs
+                );
                 break;
 
             default:

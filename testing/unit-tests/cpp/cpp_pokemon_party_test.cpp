@@ -17,10 +17,17 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "libpkmgc_includes.hpp"
+
 #include <gtest/gtest.h>
 
 #include <cstring>
 #include <string>
+
+// From pokemon_party_gcnimpl.hpp
+typedef struct {
+    LibPkmGC::GC::Pokemon* pokemon[6];
+} gcn_pokemon_party_t;
 
 class pokemon_party_test: public ::testing::TestWithParam<std::string> {
     public:
@@ -174,7 +181,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     EXPECT_NE(original_first->get_native_pc_data(), party->get_pokemon(0)->get_native_pc_data());
     EXPECT_NE(original_second->get_native_pc_data(), party->get_pokemon(1)->get_native_pc_data());
 
-    // On the C++ level, check the underlying PKSav structs.
+    // On the C++ level, check the underlying representation.
     switch(generation) {
         case 1: {
             pksav_gen1_pokemon_party_t* native = reinterpret_cast<pksav_gen1_pokemon_party_t*>(party->get_native());
@@ -268,7 +275,16 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
         case 3:
             if(game == "Colosseum" or game == "XD") {
-                break;
+                gcn_pokemon_party_t* native = reinterpret_cast<gcn_pokemon_party_t*>(party->get_native());
+                EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), int(native->pokemon[0]->species));
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(native->pokemon[1]->species));
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), int(native->pokemon[2]->species));
+                EXPECT_EQ(0, int(native->pokemon[3]->species));
+                EXPECT_EQ(0, int(native->pokemon[4]->species));
+                EXPECT_EQ(0, int(native->pokemon[5]->species));
+                for(int i = 0; i < 6; ++i) {
+                    EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), native->pokemon[i]);
+                }
             } else {
                 pksav_gba_pokemon_party_t* native = reinterpret_cast<pksav_gba_pokemon_party_t*>(party->get_native());
                 EXPECT_EQ(3, native->count);
@@ -278,9 +294,8 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 EXPECT_EQ(0, native->party[3].pc.blocks.growth.species);
                 EXPECT_EQ(0, native->party[4].pc.blocks.growth.species);
                 EXPECT_EQ(0, native->party[5].pc.blocks.growth.species);
-                for(int i = 0; i < 3; ++i) {
+                for(int i = 0; i < 6; ++i) {
                     EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
-                    EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), native->party[i].pc.blocks.growth.species);
                 }
             }
 
@@ -300,7 +315,9 @@ static const std::string games[] = {
     "Sapphire",
     "Emerald",
     "FireRed",
-    "LeafGreen"
+    "LeafGreen",
+    "Colosseum",
+    "XD"
 };
 
 INSTANTIATE_TEST_CASE_P(
