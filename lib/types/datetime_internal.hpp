@@ -9,6 +9,7 @@
 #define INCLUDED_PKMN_DATETIME_INTERNAL_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/types/datetime.hpp>
 
 #include <pksav/common/datetime.h>
 
