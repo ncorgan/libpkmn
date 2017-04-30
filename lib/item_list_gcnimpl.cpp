@@ -39,7 +39,6 @@ namespace pkmn {
             _native = reinterpret_cast<void*>(new LibPkmGC::Item[capacity]);
             std::memset(_native, 0, sizeof(LibPkmGC::Item)*capacity);
             _our_mem = true;
-
         }
     }
 

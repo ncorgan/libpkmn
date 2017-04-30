@@ -79,7 +79,7 @@ namespace pkmn {
                         _current_slot->player->bag
                     );
         _item_pc = pkmn::make_shared<item_list_gcnimpl>(
-                       _game_id, GCN_PC_ID,
+                       GCN_PC_ID, _game_id,
                        _current_slot->PC->items,
                        235, false
                    );
