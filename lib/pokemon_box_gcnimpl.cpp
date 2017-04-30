@@ -54,7 +54,7 @@ namespace pkmn {
     }
 
     std::string pokemon_box_gcnimpl::get_name() {
-        return GC_RCAST->name->toUTF8();;
+        return GC_RCAST->name->toUTF8();
     }
 
     void pokemon_box_gcnimpl::set_name(
