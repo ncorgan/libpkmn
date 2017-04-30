@@ -9,6 +9,7 @@
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
+#include "pokemon_pc_gcnimpl.hpp"
 
 #include "misc_common.hpp"
 
@@ -38,7 +39,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_pc_gcnimpl>(game_id);
                 } else {
                     return pkmn::make_shared<pokemon_pc_gbaimpl>(game_id);
                 }

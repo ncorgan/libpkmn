@@ -28,6 +28,10 @@
 #include <LibPkmGC/Colosseum/Common/BagData.h>
 #include <LibPkmGC/XD/Common/BagData.h>
 
+#include <LibPkmGC/GC/Common/PCData.h>
+#include <LibPkmGC/Colosseum/Common/PCData.h>
+#include <LibPkmGC/XD/Common/PCData.h>
+
 #include <LibPkmGC/GC/Common/Pokemon.h>
 #include <LibPkmGC/Colosseum/Common/Pokemon.h>
 #include <LibPkmGC/XD/Common/Pokemon.h>
