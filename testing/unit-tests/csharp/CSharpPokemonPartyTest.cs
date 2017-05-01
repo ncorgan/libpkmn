@@ -130,4 +130,26 @@ public class CSharpPokemonPartyTest {
             "LeafGreen"
         );
     }
+
+    /*
+     * Colosseum
+     */
+    [Test]
+    public void ColosseumPokemonPartyTest() {
+        PKMNTest.PokemonPartyTests.TestPokemonParty(
+            new PKMN.PokemonParty("Colosseum"),
+            "Colosseum"
+        );
+    }
+
+    /*
+     * XD
+     */
+    [Test]
+    public void XDPokemonPartyTest() {
+        PKMNTest.PokemonPartyTests.TestPokemonParty(
+            new PKMN.PokemonParty("XD"),
+            "XD"
+        );
+    }
 }

@@ -195,3 +195,19 @@ class pokemon_party_tests(unittest.TestCase):
     def test_leafgreen_pokemon_party(self):
         party = pkmn.pokemon_party("LeafGreen")
         self.__test_pokemon_party(party, "LeafGreen")
+
+    #
+    # Colosseum
+    #
+
+    def test_colosseum_pokemon_party(self):
+        party = pkmn.pokemon_party("Colosseum")
+        self.__test_pokemon_party(party, "Colosseum")
+
+    #
+    # XD
+    #
+
+    def test_xd_pokemon_party(self):
+        party = pkmn.pokemon_party("XD")
+        self.__test_pokemon_party(party, "XD")

@@ -356,3 +356,27 @@ class pokemon_pc_tests(unittest.TestCase):
     def test_leafgreen_pokemon_pc(self):
         pc = pkmn.pokemon_pc("LeafGreen")
         self.__test_pokemon_pc(pc, "LeafGreen")
+
+    #
+    # Colosseum
+    #
+
+    def test_colosseum_pokemon_box(self):
+        box = pkmn.pokemon_box("Colosseum")
+        self.__test_pokemon_box(box, "Colosseum")
+
+    def test_colosseum_pokemon_pc(self):
+        pc = pkmn.pokemon_pc("Colosseum")
+        self.__test_pokemon_pc(pc, "Colosseum")
+
+    #
+    # XD
+    #
+
+    def test_xd_pokemon_box(self):
+        box = pkmn.pokemon_box("XD")
+        self.__test_pokemon_box(box, "XD")
+
+    def test_xd_pokemon_pc(self):
+        pc = pkmn.pokemon_pc("XD")
+        self.__test_pokemon_pc(pc, "XD")
