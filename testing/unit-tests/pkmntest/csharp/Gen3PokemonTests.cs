@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-public class GBAPokemonTests {
+public class Gen3PokemonTests {
 
     private static string[] Markings = {"Circle", "Triangle", "Square", "Heart"};
     private static string[] ContestTypes = {"Cool", "Beauty", "Cute", "Smart", "Tough"};

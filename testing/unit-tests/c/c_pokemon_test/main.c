@@ -48,6 +48,8 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_form_test);
     PKMN_C_TEST(firered_form_test);
     PKMN_C_TEST(leafgreen_form_test);
+    PKMN_C_TEST(colosseum_form_test);
+    PKMN_C_TEST(xd_form_test);
 
     PKMN_C_TEST(gold_gender_test);
     PKMN_C_TEST(silver_gender_test);
@@ -57,6 +59,8 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_gender_test);
     PKMN_C_TEST(firered_gender_test);
     PKMN_C_TEST(leafgreen_gender_test);
+    PKMN_C_TEST(colosseum_gender_test);
+    PKMN_C_TEST(xd_gender_test);
 
     PKMN_C_TEST(gold_unown_test);
     PKMN_C_TEST(silver_unown_test);
@@ -66,4 +70,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_unown_test);
     PKMN_C_TEST(firered_unown_test);
     PKMN_C_TEST(leafgreen_unown_test);
+    PKMN_C_TEST(colosseum_unown_test);
+    PKMN_C_TEST(xd_unown_test);
 )

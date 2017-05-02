@@ -12,8 +12,8 @@ SET(pkmntest_python_sources
     gen1_pokemon_tests.py
     gen2_items_tests.py
     gen2_pokemon_tests.py
+    gen3_pokemon_tests.py
     gba_items_tests.py
-    gba_pokemon_tests.py
     pokemon_io_tests.py
     pokemon_party_tests.py
     pokemon_pc_tests.py

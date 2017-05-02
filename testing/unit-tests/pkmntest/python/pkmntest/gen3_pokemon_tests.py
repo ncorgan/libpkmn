@@ -22,7 +22,7 @@ RIBBONS = ["Champion", "Winning", "Victory", "Artist",
            "Country", "National", "Earth", "World"]
 STATS = ["HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"]
 
-class gba_pokemon_test(pokemon_tests):
+class gen3_pokemon_test(pokemon_tests):
 
     def unown_form_test(self, game):
         unown_entry = pkmn.database.pokemon_entry("Unown", "Omega Ruby", "")
@@ -139,7 +139,7 @@ class gba_pokemon_test(pokemon_tests):
             pokemon.set_IV(stat, val)
             self.assertEqual(pokemon.get_IVs()[stat], val)
 
-    def gba_pokemon_test(self, pokemon, species, game):
+    def gen3_pokemon_test(self, pokemon, species, game):
         #
         # Check known starting values, and confirm that we can't query values
         # that didn't exist in Generation III.
@@ -427,7 +427,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Ruby",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -447,7 +447,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Sapphire",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -467,7 +467,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Emerald",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -487,7 +487,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "FireRed",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -507,5 +507,31 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "LeafGreen",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
+
+    #
+    # Colosseum
+    #
+
+    def test_colosseum_invalid_pokemon(self):
+        self.invalid_pokemon_test("Colosseum")
+
+    def test_colosseum_gender(self):
+        self.gender_test("Colosseum")
+
+    def test_colosseum_unown_forms(self):
+        self.unown_form_test("Colosseum")
+
+    #
+    # XD
+    #
+
+    def test_xd_invalid_pokemon(self):
+        self.invalid_pokemon_test("XD")
+
+    def test_xd_gender(self):
+        self.gender_test("XD")
+
+    def test_xd_unown_forms(self):
+        self.unown_form_test("XD")

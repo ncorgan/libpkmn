@@ -202,19 +202,28 @@ function pokemon_tests.gen2_forms_test(game)
     for i = 1, #letters
     do
         local unown = pkmn.pokemon("Unown", game, letters:sub(i,i), 10)
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        end
     end
 
     if generation > 2
     then
         local unown = pkmn.pokemon("Unown", game, "!", 10)
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        end
 
         unown = pkmn.pokemon("Unown", game, "?", 10)
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(unown:get_sprite_filepath()))
+        end
     else
         luaunit.assertError(pkmn.pokemon, "Unown", game, "!", 10)
         luaunit.assertError(pkmn.pokemon, "Unown", game, "?", 10)
@@ -273,8 +282,11 @@ function pokemon_tests.gen3_forms_test(game)
     for i = 1, #castform_forms
     do
         local castform = pkmn.pokemon("Castform", game, castform_forms[i], 30)
-        luaunit.assertTrue(pokemon_tests.file_exists(castform:get_icon_filepath()))
-        luaunit.assertTrue(pokemon_tests.file_exists(castform:get_sprite_filepath()))
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(pokemon_tests.file_exists(castform:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(castform:get_sprite_filepath()))
+        end
     end
 
     -- Primal Reversion should only work in OR/AS.
@@ -282,8 +294,11 @@ function pokemon_tests.gen3_forms_test(game)
     for i = 1, 2
     do
         local pokemon = pkmn.pokemon(species[i], game, "", 70)
-        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
-        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+            luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        end
 
         if game == "Omega Ruby" or game == "Alpha Sapphire"
         then
@@ -299,8 +314,11 @@ function pokemon_tests.gen3_forms_test(game)
         if game == "Ruby" or game == "Sapphire" or game == "Colosseum" or game == "XD"
         then
             local deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
+            if game ~= "Colosseum" and game ~= "XD"
+            then
+                luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_icon_filepath()))
+                luaunit.assertTrue(pokemon_tests.file_exists(deoxys:get_sprite_filepath()))
+            end
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Normal", 70)
         end

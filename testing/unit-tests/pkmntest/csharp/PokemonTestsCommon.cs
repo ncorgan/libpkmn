@@ -185,8 +185,10 @@ public class PokemonTestsCommon {
             if(form.Equals("!") || form.Equals("?")) {
                 if(generation > 2) {
                     PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
-                    Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
-                    Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
+                    if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+                        Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                        Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
+                    }
                 } else {
                     Assert.Throws<ArgumentOutOfRangeException>(
                         delegate {
@@ -196,8 +198,10 @@ public class PokemonTestsCommon {
                 }
             } else {
                 PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
-                Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
-                Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
+                if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+                    Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
+                    Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
+                }
             }
         }
     }
@@ -237,17 +241,23 @@ public class PokemonTestsCommon {
         PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
         foreach(string form in castformEntry.Forms) {
             PKMN.Pokemon castform = new PKMN.Pokemon("Castform", game, form, 30);
-            Assert.IsTrue(System.IO.File.Exists(castform.IconFilepath));
-            Assert.IsTrue(System.IO.File.Exists(castform.SpriteFilepath));
+            if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+                Assert.IsTrue(System.IO.File.Exists(castform.IconFilepath));
+                Assert.IsTrue(System.IO.File.Exists(castform.SpriteFilepath));
+            }
         }
 
         // Primal Reversion forms should only work in OR/AS.
         PKMN.Pokemon groudon = new PKMN.Pokemon("Groudon", game, "", 70);
-        Assert.IsTrue(System.IO.File.Exists(groudon.IconFilepath));
-        Assert.IsTrue(System.IO.File.Exists(groudon.SpriteFilepath));
+        if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+            Assert.IsTrue(System.IO.File.Exists(groudon.IconFilepath));
+            Assert.IsTrue(System.IO.File.Exists(groudon.SpriteFilepath));
+        }
         PKMN.Pokemon kyogre = new PKMN.Pokemon("Kyogre", game, "", 70);
-        Assert.IsTrue(System.IO.File.Exists(kyogre.IconFilepath));
-        Assert.IsTrue(System.IO.File.Exists(kyogre.SpriteFilepath));
+        if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+            Assert.IsTrue(System.IO.File.Exists(kyogre.IconFilepath));
+            Assert.IsTrue(System.IO.File.Exists(kyogre.SpriteFilepath));
+        }
 
         if(game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
             new PKMN.Pokemon("Groudon", game, "Primal Reversion", 70);
@@ -269,8 +279,10 @@ public class PokemonTestsCommon {
         if(generation == 3) {
             if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Colosseum") || game.Equals("XD")) {
                 PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Normal", 70);
-                Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
-                Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
+                if(!game.Equals("Colosseum") && !game.Equals("XD")) {
+                    Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
+                    Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
+                }
             } else {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
