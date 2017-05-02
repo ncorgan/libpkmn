@@ -34,6 +34,15 @@
 #define COLO_RCAST reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(_native_pc)
 #define XD_RCAST   reinterpret_cast<LibPkmGC::XD::Pokemon*>(_native_pc)
 
+typedef enum {
+    PKMN_GCN_STAT_HP = 0,
+    PKMN_GCN_STAT_ATTACK,
+    PKMN_GCN_STAT_DEFENSE,
+    PKMN_GCN_STAT_SPATK,
+    PKMN_GCN_STAT_SPDEF,
+    PKMN_GCN_STAT_SPEED
+} pkmn_stat_t;
+
 namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
@@ -594,8 +603,31 @@ namespace pkmn {
         const std::string &stat,
         int value
     ) {
-        (void)stat;
-        (void)value;
+        if(not pkmn_string_is_modern_stat(stat.c_str())) {
+            throw std::invalid_argument("Invalid stat.");
+        } else if(not pkmn_IV_in_bounds(value, true)) {
+            throw pkmn::range_error(stat, 0, 31);
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        if(stat == "HP") {
+            GC_RCAST->IVs[PKMN_GCN_STAT_HP] = LibPkmGC::u8(value);
+        } else if(stat == "Attack") {
+            GC_RCAST->IVs[PKMN_GCN_STAT_ATTACK] = LibPkmGC::u8(value);
+        } else if(stat == "Defense") {
+            GC_RCAST->IVs[PKMN_GCN_STAT_DEFENSE] = LibPkmGC::u8(value);
+        } else if(stat == "Speed") {
+            GC_RCAST->IVs[PKMN_GCN_STAT_SPEED] = LibPkmGC::u8(value);
+        } else if(stat == "Special Attack") {
+            GC_RCAST->IVs[PKMN_GCN_STAT_SPATK] = LibPkmGC::u8(value);
+        } else {
+            GC_RCAST->IVs[PKMN_GCN_STAT_SPDEF] = LibPkmGC::u8(value);
+        }
+
+        _IVs[stat] = value;
+
+        _populate_party_data();
     }
 
     void pokemon_gcnimpl::set_marking(
@@ -693,16 +725,22 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        (void)value;
         if(stat == "HP") {
+            GC_RCAST->EVs[PKMN_GCN_STAT_HP] = LibPkmGC::u8(value);
         } else if(stat == "Attack") {
+            GC_RCAST->EVs[PKMN_GCN_STAT_ATTACK] = LibPkmGC::u8(value);
         } else if(stat == "Defense") {
+            GC_RCAST->EVs[PKMN_GCN_STAT_DEFENSE] = LibPkmGC::u8(value);
         } else if(stat == "Speed") {
+            GC_RCAST->EVs[PKMN_GCN_STAT_SPEED] = LibPkmGC::u8(value);
         } else if(stat == "Special Attack") {
+            GC_RCAST->EVs[PKMN_GCN_STAT_SPATK] = LibPkmGC::u8(value);
         } else {
+            GC_RCAST->EVs[PKMN_GCN_STAT_SPDEF] = LibPkmGC::u8(value);
         }
 
-        _update_EV_map();
+        _EVs[stat] = value;
+
         _populate_party_data();
     }
 
@@ -760,21 +798,21 @@ namespace pkmn {
     }
 
     void pokemon_gcnimpl::_update_EV_map() {
-        /*_EVs["HP"]              = int(_effort->ev_hp);
-        _EVs["Attack"]          = int(_effort->ev_atk);
-        _EVs["Defense"]         = int(_effort->ev_def);
-        _EVs["Speed"]           = int(_effort->ev_spd);
-        _EVs["Special Attack"]  = int(_effort->ev_spatk);
-        _EVs["Special Defense"] = int(_effort->ev_spdef);*/
+        _EVs["HP"]              = int(GC_RCAST->EVs[PKMN_GCN_STAT_HP]);
+        _EVs["Attack"]          = int(GC_RCAST->EVs[PKMN_GCN_STAT_ATTACK]);
+        _EVs["Defense"]         = int(GC_RCAST->EVs[PKMN_GCN_STAT_DEFENSE]);
+        _EVs["Speed"]           = int(GC_RCAST->EVs[PKMN_GCN_STAT_SPEED]);
+        _EVs["Special Attack"]  = int(GC_RCAST->EVs[PKMN_GCN_STAT_SPATK]);
+        _EVs["Special Defense"] = int(GC_RCAST->EVs[PKMN_GCN_STAT_SPDEF]);
     }
 
     void pokemon_gcnimpl::_update_stat_map() {
-        /*_stats["HP"]              = int(pksav_littleendian16(GBA_PARTY_RCAST->max_hp));
-        _stats["Attack"]          = int(pksav_littleendian16(GBA_PARTY_RCAST->atk));
-        _stats["Defense"]         = int(pksav_littleendian16(GBA_PARTY_RCAST->def));
-        _stats["Speed"]           = int(pksav_littleendian16(GBA_PARTY_RCAST->spd));
-        _stats["Special Attack"]  = int(pksav_littleendian16(GBA_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_littleendian16(GBA_PARTY_RCAST->spdef));*/
+        _stats["HP"]              = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_HP]);
+        _stats["Attack"]          = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_ATTACK]);
+        _stats["Defense"]         = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_DEFENSE]);
+        _stats["Speed"]           = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_SPEED]);
+        _stats["Special Attack"]  = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_SPATK]);
+        _stats["Special Defense"] = int(GC_RCAST->partyData.stats[PKMN_GCN_STAT_SPDEF]);
     }
 
     void pokemon_gcnimpl::_set_unown_form_from_personality() {
@@ -809,5 +847,14 @@ namespace pkmn {
             pid_as_bytes[i] &= ~0x3;
             pid_as_bytes[i] |= ((num & (0x3 << (2*i))) >> (2*i));
         }
+    }
+
+    void pokemon_gcnimpl::_init_IV_map() {
+        _IVs["HP"]              = int(GC_RCAST->IVs[PKMN_GCN_STAT_HP]);
+        _IVs["Attack"]          = int(GC_RCAST->IVs[PKMN_GCN_STAT_ATTACK]);
+        _IVs["Defense"]         = int(GC_RCAST->IVs[PKMN_GCN_STAT_DEFENSE]);
+        _IVs["Speed"]           = int(GC_RCAST->IVs[PKMN_GCN_STAT_SPEED]);
+        _IVs["Special Attack"]  = int(GC_RCAST->IVs[PKMN_GCN_STAT_SPATK]);
+        _IVs["Special Defense"] = int(GC_RCAST->IVs[PKMN_GCN_STAT_SPDEF]);
     }
 }
