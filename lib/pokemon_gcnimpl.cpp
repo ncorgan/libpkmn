@@ -246,7 +246,10 @@ namespace pkmn {
     std::string pokemon_gcnimpl::get_gender() {
         pokemon_scoped_lock lock(this);
 
-        return GENDER_BIMAP.left.at(GC_RCAST->getGender());
+        return pkmn::calculations::modern_pokemon_gender(
+                   _database_entry.get_name(),
+                   GC_RCAST->PID
+               );
     }
 
     void pokemon_gcnimpl::set_gender(
