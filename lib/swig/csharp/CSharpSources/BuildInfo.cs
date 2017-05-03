@@ -16,6 +16,13 @@ namespace PKMN {
             }
         }
 
+        /// <summary>The version of LibPkmGC used to build the LibPKMN core library.</summary>
+        public static string LibPkmGCVersion {
+            get {
+                return PKMN.GetLibPkmGCVersion();
+            }
+        }
+
         /// <summary>The version of PKSav used to build the LibPKMN core library.</summary>
         public static string PKSavVersion {
             get {
