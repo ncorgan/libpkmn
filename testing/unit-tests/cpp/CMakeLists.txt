@@ -53,7 +53,7 @@ SET(pokemon_test_srcs
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp
     cpp_pokemon_test/gen2_pokemon_test.cpp
-    cpp_pokemon_test/gen3_pokemon_test.cpp
+    cpp_pokemon_test/gen3_pokemon_tests.cpp
     cpp_pokemon_test/gen1_friendship_test.cpp
     cpp_pokemon_test/gender_test.cpp
     cpp_pokemon_test/pokemon_io_test.cpp
