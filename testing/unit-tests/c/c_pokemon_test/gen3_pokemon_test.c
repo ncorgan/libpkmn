@@ -172,7 +172,7 @@ static void test_ribbons(
     }
 }
 
-static void gba_pokemon_test(
+static void gen3_pokemon_test(
     const char* species,
     const char* game
 ) {
@@ -226,21 +226,21 @@ static void gba_pokemon_test(
 }
 
 void ruby_pokemon_test() {
-    gba_pokemon_test("Torchic", "Ruby");
+    gen3_pokemon_test("Torchic", "Ruby");
 }
 
 void sapphire_pokemon_test() {
-    gba_pokemon_test("Mudkip", "Sapphire");
+    gen3_pokemon_test("Mudkip", "Sapphire");
 }
 
 void emerald_pokemon_test() {
-    gba_pokemon_test("Treecko", "Emerald");
+    gen3_pokemon_test("Treecko", "Emerald");
 }
 
 void firered_pokemon_test() {
-    gba_pokemon_test("Charmander", "FireRed");
+    gen3_pokemon_test("Charmander", "FireRed");
 }
 
 void leafgreen_pokemon_test() {
-    gba_pokemon_test("Bulbasaur", "LeafGreen");
+    gen3_pokemon_test("Bulbasaur", "LeafGreen");
 }
