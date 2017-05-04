@@ -341,7 +341,8 @@ static const std::vector<std::pair<std::string, std::string>> params = {
     {"Sapphire", "Mudkip"},
     {"Emerald", "Treecko"},
     {"FireRed", "Charmander"},
-    {"LeafGreen", "Bulbasaur"}
+    {"LeafGreen", "Bulbasaur"},
+    {"Colosseum", "Espeon"}
 };
 
 INSTANTIATE_TEST_CASE_P(
