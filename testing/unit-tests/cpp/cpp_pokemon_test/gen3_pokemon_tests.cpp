@@ -129,7 +129,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
             {"Swallow", "Flamethrower", "Return", "Fire Blast"},
             {"Shadow Sky", "Roost"},
 
-            {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"}, // TODO: test Colosseum/XD
+            {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD", "Colosseum/XD"},
             {"Gold", "HeartGold"}
         }
     );
@@ -347,7 +347,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
             {"Berry", "Mach Bike"},
 
             "Distant land",
-            {"Petalburg Woods", "Viridian Forest"},
+            {"Phenac City", "Orre Colosseum"},
             {"New Bark Town", "Twinleaf Town"},
 
             {"Swallow", "Flamethrower", "Return", "Fire Blast"},

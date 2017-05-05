@@ -595,7 +595,11 @@ namespace pkmn {
         uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
         original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
 
-        return pkmn::database::game_index_to_name(original_game);
+        if(original_game == 15) {
+            return "Colosseum/XD";
+        } else {
+            return pkmn::database::game_index_to_name(original_game);
+        }
     }
 
     void pokemon_gbaimpl::set_original_game(
@@ -603,14 +607,20 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
-        int generation = pkmn::database::game_name_to_generation(game);
+        std::string game_to_test;
+        if(game == "Colosseum/XD") {
+            game_to_test = "Colosseum";
+        } else {
+            game_to_test = game;
+        }
+        int generation = pkmn::database::game_name_to_generation(game_to_test);
         if(generation != 3) {
             throw std::invalid_argument("Game must be from Generation III.");
         }
 
         _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
-                                           game
+                                           game_to_test
                                        ));
 
         _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
