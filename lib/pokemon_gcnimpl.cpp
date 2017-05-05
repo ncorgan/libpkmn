@@ -34,6 +34,11 @@
 #define COLO_RCAST reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(_native_pc)
 #define XD_RCAST   reinterpret_cast<LibPkmGC::XD::Pokemon*>(_native_pc)
 
+/*
+ * LibPkmGC stores some values in arrays, with little indication as to what each
+ * index actually corresponds to, so these enums make things easier.
+ */
+
 typedef enum {
     LIBPKMGC_STAT_HP = 0,
     LIBPKMGC_STAT_ATTACK,
@@ -51,6 +56,21 @@ typedef enum {
     LIBPKMGC_CONTEST_STAT_TOUGH
 } libpkmgc_contest_stat_t;
 
+typedef enum {
+    LIBPKMGC_RIBBON_CHAMPION = 0,
+    LIBPKMGC_RIBBON_WINNING,
+    LIBPKMGC_RIBBON_VICTORY,
+    LIBPKMGC_RIBBON_ARTIST,
+    LIBPKMGC_RIBBON_EFFORT,
+    LIBPKMGC_RIBBON_MARINE,
+    LIBPKMGC_RIBBON_LAND,
+    LIBPKMGC_RIBBON_SKY,
+    LIBPKMGC_RIBBON_COUNTRY,
+    LIBPKMGC_RIBBON_NATIONAL,
+    LIBPKMGC_RIBBON_EARTH,
+    LIBPKMGC_RIBBON_WORLD
+} libpkmgc_ribbon_t;
+
 namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
@@ -58,11 +78,44 @@ namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
+    typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
+    static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
+        (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")
+        (LIBPKMGC_CONTEST_STAT_BEAUTY, "Beauty")
+        (LIBPKMGC_CONTEST_STAT_CUTE,   "Cute")
+        (LIBPKMGC_CONTEST_STAT_SMART,  "Smart")
+        (LIBPKMGC_CONTEST_STAT_TOUGH,  "Tough")
+    ;
+
+    static const std::map<std::string, LibPkmGC::ContestAchievementLevel> CONTEST_LEVEL_MAP =
+    boost::assign::map_list_of<std::string, LibPkmGC::ContestAchievementLevel>
+        ("",       LibPkmGC::NormalContestWon)
+        ("Super",  LibPkmGC::SuperContestWon)
+        ("Hyper",  LibPkmGC::HyperContestWon)
+        ("Master", LibPkmGC::MasterContestWon)
+    ;
+
     typedef boost::bimap<LibPkmGC::Gender, std::string> gender_bimap_t;
     static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-        (LibPkmGC::Male, "Male")
-        (LibPkmGC::Female, "Female")
+        (LibPkmGC::Male,       "Male")
+        (LibPkmGC::Female,     "Female")
         (LibPkmGC::Genderless, "Genderless")
+    ;
+
+    typedef boost::bimap<libpkmgc_ribbon_t, std::string> ribbon_bimap_t;
+    static const ribbon_bimap_t RIBBON_BIMAP = boost::assign::list_of<ribbon_bimap_t::relation>
+        (LIBPKMGC_RIBBON_CHAMPION, "Champion")
+        (LIBPKMGC_RIBBON_WINNING,  "Winning")
+        (LIBPKMGC_RIBBON_VICTORY,  "Victory")
+        (LIBPKMGC_RIBBON_ARTIST,   "Artist")
+        (LIBPKMGC_RIBBON_EFFORT,   "Effort")
+        (LIBPKMGC_RIBBON_MARINE,   "Marine")
+        (LIBPKMGC_RIBBON_LAND,     "Land")
+        (LIBPKMGC_RIBBON_SKY,      "Sky")
+        (LIBPKMGC_RIBBON_COUNTRY,  "Country")
+        (LIBPKMGC_RIBBON_NATIONAL, "National")
+        (LIBPKMGC_RIBBON_EARTH,    "Earth")
+        (LIBPKMGC_RIBBON_WORLD,    "World")
     ;
 
     pokemon_gcnimpl::pokemon_gcnimpl(
@@ -688,45 +741,20 @@ namespace pkmn {
         _markings[marking] = value;
     }
 
-    /*static const std::map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
-        ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
-        ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
-        ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
-        ("Artist",   PKSAV_GEN3_ARTIST_RIBBON_MASK)
-        ("Effort",   PKSAV_GEN3_EFFORT_RIBBON_MASK)
-        ("Marine",   PKSAV_GEN3_MARINE_RIBBON_MASK)
-        ("Land",     PKSAV_GEN3_LAND_RIBBON_MASK)
-        ("Sky",      PKSAV_GEN3_SKY_RIBBON_MASK)
-        ("Country",  PKSAV_GEN3_COUNTRY_RIBBON_MASK)
-        ("National", PKSAV_GEN3_NATIONAL_RIBBON_MASK)
-        ("Earth",    PKSAV_GEN3_EARTH_RIBBON_MASK)
-        ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
-    ;
+    /*
+        // Contest ribbons
+        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
+            _ribbons[iter->first]             = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
+            _ribbons[iter->first + " Super"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
+            _ribbons[iter->first + " Hyper"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
+            _ribbons[iter->first + " Master"] = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
+        }
 
-    static const std::map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
-        ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
-        ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
-        ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
-        ("Hyper",  PKSAV_GEN3_CONTEST_RIBBON_HYPER)
-        ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
-    ;
-
-    static const std::map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_MASK)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
-    ;
-
-    static const std::map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_OFFSET)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_OFFSET)
-    ;*/
-
+        // Non-contest ribbons
+        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
+            _ribbons[iter->first] = GC_RCAST->specialRibbons[iter->second];
+        }
+     */
     void pokemon_gcnimpl::set_ribbon(
         const std::string &ribbon,
         bool value
@@ -737,8 +765,30 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        (void)ribbon;
-        (void)value;
+        // Non-contest ribbon
+        if(RIBBON_BIMAP.right.count(ribbon) > 0) {
+            GC_RCAST->specialRibbons[RIBBON_BIMAP.right.at(ribbon)] = value;
+            _ribbons[ribbon] = value;
+        } else {
+            std::vector<std::string> ribbon_parts;
+            boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
+
+            // Validate input (which should already have been validated)
+            if((ribbon_parts.size() == 0 or ribbon_parts.size() > 2) or
+               (CONTEST_STAT_BIMAP.right.count(ribbon_parts.at(0)) == 0) or
+               (ribbon_parts.size() == 2 and
+                CONTEST_LEVEL_MAP.count(ribbon_parts.at(1)) == 0)
+              )
+            {
+                throw std::invalid_argument("Invalid ribbon.");
+            }
+
+            GC_RCAST->contestAchievements[CONTEST_STAT_BIMAP.right.at(ribbon_parts[0])] =
+                value ? CONTEST_LEVEL_MAP.at(ribbon_parts[1])
+                      : LibPkmGC::ContestAchievementLevel(CONTEST_LEVEL_MAP.at(ribbon_parts[1])-1);
+
+            _update_ribbons_map();
+        }
     }
 
     void pokemon_gcnimpl::set_contest_stat(
@@ -863,6 +913,18 @@ namespace pkmn {
     }
 
     void pokemon_gcnimpl::_update_ribbons_map() {
+        // Contest ribbons
+        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
+            _ribbons[iter->first]             = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
+            _ribbons[iter->first + " Super"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
+            _ribbons[iter->first + " Hyper"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
+            _ribbons[iter->first + " Master"] = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
+        }
+
+        // Non-contest ribbons
+        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
+            _ribbons[iter->first] = GC_RCAST->specialRibbons[iter->second];
+        }
     }
 
     void pokemon_gcnimpl::_update_EV_map() {
