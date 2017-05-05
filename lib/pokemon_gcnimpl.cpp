@@ -566,7 +566,6 @@ namespace pkmn {
         } else {
             pokemon_scoped_lock lock(this);
 
-            // TODO: fix size of field in LibPkmGC
             return pkmn::database::location_index_to_name(
                        GC_RCAST->locationCaught,
                        _database_entry.get_game_id()
@@ -583,8 +582,7 @@ namespace pkmn {
         } else {
             pokemon_scoped_lock lock(this);
 
-            // TODO: fix size of field in LibPkmGC
-            GC_RCAST->locationCaught = LibPkmGC::u8(pkmn::database::location_name_to_index(
+            GC_RCAST->locationCaught = LibPkmGC::u16(pkmn::database::location_name_to_index(
                                            location,
                                            _database_entry.get_game_id()
                                        ));

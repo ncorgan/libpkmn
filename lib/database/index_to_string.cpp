@@ -113,9 +113,19 @@ namespace pkmn { namespace database {
                 "SELECT max(range_start) FROM gamecube_location_index_ranges WHERE colosseum=? AND "
                 "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
-            return pkmn::database::query_db_bind2<int, int, const std::string&>(
-                       _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
-                   );
+            int ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
+                          _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
+                      );
+
+            /*
+             * Even if the value is not in the gamecube_location_index_ranges table, it will
+             * still return 0.
+             */
+            if(ret == 0) {
+                throw std::invalid_argument("This location exists but not in a Gamecube game.");
+            } else {
+                return ret;
+            }
         } else {
             /*
              * Veekun's database stores location indices by generation, but some version
