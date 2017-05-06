@@ -9,6 +9,7 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/calculations/shininess.hpp>
 
 #include "pksav/pksav_call.hpp"
 
@@ -568,6 +569,32 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
             }
         }
     }
+    EXPECT_EQ(pokemon->get_level(), int(native->partyData.level));
+
+    EXPECT_EQ(
+        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_trainer_id()),
+        native->isShiny()
+    );
+    EXPECT_NE(
+        (pokemon->get_ability() == pokemon->get_database_entry().get_abilities().first),
+        native->hasSecondAbility()
+    );
+    EXPECT_EQ(
+        GENDER_BIMAP.right.at(pokemon->get_gender()),
+        native->getGender()
+    );
+    EXPECT_EQ(
+        pokemon->get_level(),
+        int(native->calculateLevelFromExp())
+    );
+    EXPECT_GE(
+        pokemon->get_experience(),
+        int(native->calculateExpFromLevel(native->partyData.level))
+    );
+    EXPECT_LT(
+        pokemon->get_experience(),
+        int(native->calculateExpFromLevel(native->partyData.level+1))
+    );
 }
 
 static const std::vector<std::pair<std::string, std::string>> gba_params = {
