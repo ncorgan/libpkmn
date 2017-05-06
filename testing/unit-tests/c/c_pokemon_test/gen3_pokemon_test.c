@@ -172,7 +172,7 @@ static void test_ribbons(
     }
 }
 
-static void gen3_pokemon_test(
+static void gba_pokemon_test(
     const char* species,
     const char* game
 ) {
@@ -206,8 +206,67 @@ static void gen3_pokemon_test(
         .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
         .invalid_moves = (char*[]){"Shadow Sky", "Roost", NULL},
 
-        // TODO: test Colosseum/XD
-        .valid_original_games = (char*[]){"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",  NULL},
+        .valid_original_games = (char*[]){
+            "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+            "Colosseum", "XD", "Colosseum/XD",
+            NULL
+        },
+        .invalid_original_games = (char*[]){"Gold", "HeartGold", NULL}
+    };
+
+    pokemon_test_common(
+        pokemon,
+        &test_values
+    );
+
+    // Test ribbons.
+    check_initial_ribbons(pokemon);
+    test_contest_ribbons(pokemon);
+    test_ribbons(pokemon);
+
+    error = pkmn_pokemon_free(&pokemon);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+static void gcn_pokemon_test(
+    const char* species,
+    const char* game
+) {
+    TEST_ASSERT_NOT_NULL(species);
+    TEST_ASSERT_NOT_NULL(game);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    pkmn_pokemon_handle_t pokemon = NULL;
+
+    error = pkmn_pokemon_make(
+                &pokemon,
+                species,
+                game,
+                "",
+                30
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(pokemon);
+
+    pkmn_test_values_t test_values = {
+        .valid_ball = "Great Ball",
+        .invalid_balls = (char*[]){"Friend Ball", "Heal Ball", NULL},
+
+        .valid_item = "Razz Berry",
+        .invalid_items = (char*[]){"Berry", "Mach Bike", NULL},
+
+        .expected_original_location = "Distant land",
+        .valid_locations = (char*[]){"Phenac City", "Orre Colosseum", NULL},
+        .invalid_locations = (char*[]){"New Bark Town", "Twinleaf Town", NULL},
+
+        .moves = (char*[]){"Swallow", "Flamethrower", "Return", "Fire Blast", NULL},
+        .invalid_moves = (char*[]){"Roost", "Flame Burst", NULL},
+
+        .valid_original_games = (char*[]){
+            "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+            "Colosseum", "XD", "Colosseum/XD",
+            NULL
+        },
         .invalid_original_games = (char*[]){"Gold", "HeartGold", NULL}
     };
 
@@ -226,21 +285,29 @@ static void gen3_pokemon_test(
 }
 
 void ruby_pokemon_test() {
-    gen3_pokemon_test("Torchic", "Ruby");
+    gba_pokemon_test("Torchic", "Ruby");
 }
 
 void sapphire_pokemon_test() {
-    gen3_pokemon_test("Mudkip", "Sapphire");
+    gba_pokemon_test("Mudkip", "Sapphire");
 }
 
 void emerald_pokemon_test() {
-    gen3_pokemon_test("Treecko", "Emerald");
+    gba_pokemon_test("Treecko", "Emerald");
 }
 
 void firered_pokemon_test() {
-    gen3_pokemon_test("Charmander", "FireRed");
+    gba_pokemon_test("Charmander", "FireRed");
 }
 
 void leafgreen_pokemon_test() {
-    gen3_pokemon_test("Bulbasaur", "LeafGreen");
+    gba_pokemon_test("Bulbasaur", "LeafGreen");
+}
+
+void colosseum_pokemon_test() {
+    gcn_pokemon_test("Espeon", "Colosseum");
+}
+
+void xd_pokemon_test() {
+    gcn_pokemon_test("Umbreon", "XD");
 }

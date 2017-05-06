@@ -31,6 +31,9 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(firered_pokemon_test);
     PKMN_C_TEST(leafgreen_pokemon_test);
 
+    PKMN_C_TEST(colosseum_pokemon_test);
+    PKMN_C_TEST(xd_pokemon_test);
+
     PKMN_C_TEST(test_3gpkm);
 
     PKMN_C_TEST(red_friendship_test);

@@ -53,6 +53,11 @@ void emerald_pokemon_test();
 void firered_pokemon_test();
 void leafgreen_pokemon_test();
 
+// Gamecube tests
+
+void colosseum_pokemon_test();
+void xd_pokemon_test();
+
 // I/O
 
 void test_3gpkm();
