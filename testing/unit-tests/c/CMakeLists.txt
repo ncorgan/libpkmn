@@ -19,6 +19,7 @@ INCLUDE_DIRECTORIES(
 SET(c_tests
     c_calculations_test
     c_database_entry_test
+    c_error_test
     c_game_save_test
     c_lists_test
     c_paths_test
@@ -52,18 +53,6 @@ SET(pokemon_test_srcs
     c_pokemon_test/main.c
 )
 PKMN_ADD_C_TEST(c_pokemon_test "${pokemon_test_srcs}")
-
-SET(configure_c_tests
-    c_error_test
-)
-
-FOREACH(test ${configure_c_tests})
-    CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${test}.c.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${test}.c
-    @ONLY)
-    PKMN_ADD_C_TEST(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test}.c)
-ENDFOREACH(test ${configure_c_tests})
 
 # Separately add C++ -> C test
 SET(cpp_to_c_test_srcs

@@ -7,12 +7,25 @@
 
 #include "c_test_common.h"
 
+#ifdef PKMN_PLATFORM_WIN32
+#    include <windows.h>
+#else
+#    include <unistd.h>
+#endif
+
+#ifdef PKMN_PLATFORM_WIN32
+#    define FS_SEPARATOR "\\"
+#else
+#    define FS_SEPARATOR "/"
+#endif
+
 #include <pkmn.h>
 
 static pkmn_error_t error = PKMN_ERROR_NONE;
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
+static char PKSAV_TEST_SAVES[STRBUFFER_LEN] = {0};
 static bool dummy_bool = 0;
 static int dummy_int = 0;
 static uint16_t dummy_uint16_t = 0;
@@ -26,6 +39,12 @@ static pkmn_string_list_t dummy_pkmn_string_list_t = {
 static pkmn_pokemon_handle_t dummy_pokemon = NULL;
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
+
+static void populate_pksav_saves() {
+    char* value = getenv("PKSAV_TEST_SAVES");
+    TEST_ASSERT_NOT_NULL(value);
+    snprintf(PKSAV_TEST_SAVES, sizeof(PKSAV_TEST_SAVES), "%s", value);
+}
 
 #define TEST_NULL_POINTER_RETURN(param_name) \
 { \
@@ -163,10 +182,18 @@ static void build_info_error_test() {
  * <pkmn-c/game_save.h>
  */
 static void game_save_error_test() {
+
+    char save_filepath[STRBUFFER_LEN] = {0};
+    snprintf(
+        save_filepath,
+        sizeof(save_filepath),
+        "%s%sred_blue%spokemon_red.sav",
+        PKSAV_TEST_SAVES, FS_SEPARATOR, FS_SEPARATOR
+    );
     pkmn_game_save_handle_t game_save = NULL;
     error = pkmn_game_save_from_file(
                 &game_save,
-                "@POKEMON_RED_SAV@"
+                save_filepath
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -3518,6 +3545,8 @@ static void utils_paths_error_test() {
 }
 
 PKMN_C_TEST_MAIN(
+    populate_pksav_saves();
+
     PKMN_C_TEST(build_info_error_test)
     PKMN_C_TEST(game_save_error_test)
     PKMN_C_TEST(item_bag_error_test)
