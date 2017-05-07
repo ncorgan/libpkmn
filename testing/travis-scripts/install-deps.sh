@@ -18,6 +18,7 @@ sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
 			libpython-dev libpython3-dev python3 python-pip python3-pip
 [ $? -ne 0 ] && exit 1
 if [ "$NEWCXX" = "" ]
+then
     sudo apt-get -y install libboost1.55-all-dev
     [ $? -ne 0 ] && exit 1
 fi
