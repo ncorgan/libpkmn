@@ -64,7 +64,7 @@ repository is automatically tested under the following configurations:
    * Python: 2.7.6, 3.4.3
  * Windows Server 2012 R2 (x64)
    * C/C++: MSVC 2015 (Win32, x64)
-     * Boost: 1.62.0
+     * Boost: 1.59.0, 1.62.0, 1.63.0
      * Qt: 5.7.1
    * SWIG: 3.0.6
    * C#: .NET 3.5
