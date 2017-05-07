@@ -19,7 +19,8 @@ sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
 [ $? -ne 0 ] && exit 1
 if [ "$NEWCXX" = "" ]
     sudo apt-get -y install libboost1.55-all-dev
-end
+    [ $? -ne 0 ] && exit 1
+fi
 sudo pip${PYTHON_VERSION} install CppHeaderParser nose_parameterized
 [ $? -ne 0 ] && exit 1
 sudo luarocks install luaunit
