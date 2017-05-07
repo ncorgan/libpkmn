@@ -56,7 +56,7 @@ repository is automatically tested under the following configurations:
    * C/C++
      * GCC: 4.8.4, 6.2.0
      * Clang: 3.5.0, 4.0.0
-     * Boost: 1.55.0
+     * Boost: 1.55.0, 1.60.0
      * Qt: 4.8.6, 5.2.1
    * SWIG: 2.0.11, 3.0.2
    * C#: Mono 3.2.8
@@ -64,7 +64,7 @@ repository is automatically tested under the following configurations:
    * Python: 2.7.6, 3.4.3
  * Windows Server 2012 R2 (x64)
    * C/C++: MSVC 2015 (Win32, x64)
-     * Boost: 1.62.0
+     * Boost: 1.59.0, 1.62.0, 1.63.0
      * Qt: 5.7.1
    * SWIG: 3.0.6
    * C#: .NET 3.5
@@ -80,4 +80,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/04/23
+README last updated: 2017/05/07
