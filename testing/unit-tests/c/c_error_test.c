@@ -7,6 +7,8 @@
 
 #include "c_test_common.h"
 
+#include <pkmn.h>
+
 #ifdef PKMN_PLATFORM_WIN32
 #    include <windows.h>
 #else
@@ -18,8 +20,6 @@
 #else
 #    define FS_SEPARATOR "/"
 #endif
-
-#include <pkmn.h>
 
 static pkmn_error_t error = PKMN_ERROR_NONE;
 
