@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "item_bag_gen1impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_bag_gbaimpl.hpp"
+#include "item_bag_gen4impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -56,6 +57,10 @@ namespace pkmn {
                 }
 
             case 4:
+                return pkmn::make_shared<item_bag_gen4impl>(
+                           game_id, nullptr
+                       );
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();
