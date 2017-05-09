@@ -9,6 +9,7 @@
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
+#include "pokemon_pc_gen4impl.hpp"
 
 #include "misc_common.hpp"
 
@@ -44,6 +45,8 @@ namespace pkmn {
                 }
 
             case 4:
+                return pkmn::make_shared<pokemon_pc_gen4impl>(game_id);
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();

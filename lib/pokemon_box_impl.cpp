@@ -7,6 +7,7 @@
 
 #include "pokemon_box_impl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
+#include "pokemon_box_gen4impl.hpp"
 
 #include "pokemon_box_gbimpl.hpp"
 
@@ -46,6 +47,8 @@ namespace pkmn {
                 }
 
             case 4:
+                return pkmn::make_shared<pokemon_box_gen4impl>(game_id);
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();
