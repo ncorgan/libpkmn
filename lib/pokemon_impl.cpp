@@ -98,8 +98,10 @@ namespace pkmn {
         std::string extension = fs::extension(filepath);
         if(extension == ".3gpkm") {
             return pkmn::io::load_3gpkm(filepath);
-        } else if(extension == ".pkm" or extension == ".pk6") {
+        } else if(extension == ".pkm") {
             return pkmn::io::load_pkm(filepath);
+        } else if(extension == ".pk6") {
+            throw pkmn::unimplemented_error();
         } else {
             std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
             PKMN_UNUSED(int game_id) = 0;
