@@ -41,7 +41,7 @@ TEST(pokemon_io_test, test_3gpkm) {
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));
     EXPECT_EQ("Emerald", mightyena->get_original_game());
     EXPECT_EQ(3557601241, mightyena->get_personality());
-    EXPECT_EQ(128734 , mightyena->get_experience());
+    EXPECT_EQ(128734, mightyena->get_experience());
     EXPECT_EQ(50, mightyena->get_level());
 
     const std::map<std::string, bool>& mightyena_markings = mightyena->get_markings();
@@ -101,4 +101,35 @@ TEST(pokemon_io_test, test_3gpkm) {
     EXPECT_EQ(87, mightyena_stats.at("Speed"));
     EXPECT_EQ(79, mightyena_stats.at("Special Attack"));
     EXPECT_EQ(88, mightyena_stats.at("Special Defense"));
+}
+
+TEST(pokemon_io_test, test_pkm) {
+    const fs::path PKM_DIR = LIBPKMN_TEST_FILES / "pkm";
+
+    pkmn::pokemon::sptr riolu = pkmn::pokemon::from_file(
+                                    (PKM_DIR / "riolu.pkm").string()
+                                );
+    EXPECT_EQ("Riolu", riolu->get_species());
+    EXPECT_EQ("Diamond", riolu->get_game());
+    EXPECT_EQ("Standard", riolu->get_form());
+    EXPECT_EQ("RIOLU", riolu->get_nickname());
+    EXPECT_FALSE(riolu->is_shiny());
+    EXPECT_EQ("None", riolu->get_held_item().get_name());
+    EXPECT_EQ("Sayuri", riolu->get_trainer_name());
+    EXPECT_EQ(11536, riolu->get_trainer_public_id());
+    EXPECT_EQ(15275, riolu->get_trainer_secret_id());
+    EXPECT_EQ(1001073936, riolu->get_trainer_id());
+    EXPECT_EQ("Female", riolu->get_trainer_gender());
+    EXPECT_EQ(159, riolu->get_friendship());
+    EXPECT_EQ("Steadfast" , riolu->get_ability());
+    EXPECT_EQ("Poké Ball", riolu->get_ball());
+    EXPECT_EQ(0, riolu->get_level_met());
+    EXPECT_EQ("Pokémon Day Care", riolu->get_location_met(false));
+    EXPECT_EQ("Day-Care Couple", riolu->get_location_met(true));
+    EXPECT_EQ("Diamond", riolu->get_original_game());
+    EXPECT_EQ(2139634962, riolu->get_personality());
+    EXPECT_EQ(0, riolu->get_experience());
+    EXPECT_EQ(1, riolu->get_level());
+
+    // TODO
 }
