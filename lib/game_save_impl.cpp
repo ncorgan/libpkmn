@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "game_save_gen1impl.hpp"
 #include "game_save_gen2impl.hpp"
 #include "game_save_gbaimpl.hpp"
+#include "game_save_gen4impl.hpp"
 #include "database/id_to_string.hpp"
 
 #include "pksav/pksav_call.hpp"
@@ -16,6 +17,7 @@
 #include <pksav/gen1/save.h>
 #include <pksav/gen2/save.h>
 #include <pksav/gba/save.h>
+#include <pksav/gen4/save.h>
 
 #include <boost/filesystem.hpp>
 
@@ -32,7 +34,10 @@ namespace pkmn {
         PKMN_SAVE_TYPE_CRYSTAL,
         PKMN_SAVE_TYPE_RUBY_SAPPHIRE,
         PKMN_SAVE_TYPE_EMERALD,
-        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN
+        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN,
+        PKMN_SAVE_TYPE_DIAMOND_PEARL,
+        PKMN_SAVE_TYPE_PLATINUM,
+        PKMN_SAVE_TYPE_HEARTGOLD_SOULSILVER
     } pkmn_save_type_t;
 
     static BOOST_CONSTEXPR const char* SAVE_TYPE_NAMES[] = {
@@ -42,11 +47,15 @@ namespace pkmn {
         "Crystal",
         "Ruby/Sapphire",
         "Emerald",
-        "FireRed/LeafGreen"
+        "FireRed/LeafGreen",
+        "Diamond/Pearl",
+        "Platinum",
+        "HeartGold/SoulSilver"
     };
 
-    BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE  = 0x8000;
-    BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE = 0x10000;
+    BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE   = 0x8000;
+    BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE  = 0x10000;
+    BOOST_STATIC_CONSTEXPR size_t GEN4_SAVE_SIZE = 0x40000;
 
     static pkmn_save_type_t _detect_type(
         const std::string &filepath
@@ -63,6 +72,47 @@ namespace pkmn {
         ifile.close();
 
         bool type_found = false;
+
+        if(filesize >= GEN4_SAVE_SIZE) {
+            // Check for a Diamond/Pearl save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen4_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GEN4_DP,
+                    &type_found
+                );
+            );
+            if(type_found) {
+                return PKMN_SAVE_TYPE_DIAMOND_PEARL;
+            }
+
+            // Check for a Platinum save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen4_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GEN4_PLATINUM,
+                    &type_found
+                );
+            );
+            if(type_found) {
+                return PKMN_SAVE_TYPE_PLATINUM;
+            }
+
+            // Check for a HeartGold/SoulSilver save.
+            PKSAV_CALL(
+                pksav_buffer_is_gen4_save(
+                    raw.data(),
+                    filesize,
+                    PKSAV_GEN4_HGSS,
+                    &type_found
+                );
+            );
+            if(type_found) {
+                return PKMN_SAVE_TYPE_HEARTGOLD_SOULSILVER;
+            }
+        }
 
         if(filesize >= GBA_SAVE_SIZE) {
             // Check for a Ruby/Sapphire save.
@@ -171,6 +221,11 @@ namespace pkmn {
             case PKMN_SAVE_TYPE_EMERALD:
             case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
                 return pkmn::make_shared<game_save_gbaimpl>(filepath);
+
+            case PKMN_SAVE_TYPE_DIAMOND_PEARL:
+            case PKMN_SAVE_TYPE_PLATINUM:
+            case PKMN_SAVE_TYPE_HEARTGOLD_SOULSILVER:
+                return pkmn::make_shared<game_save_gen4impl>(filepath);
 
             case PKMN_SAVE_TYPE_NONE:
             default:
