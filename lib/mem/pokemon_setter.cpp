@@ -8,6 +8,7 @@
 #include "../pokemon_gen1impl.hpp"
 #include "../pokemon_gen2impl.hpp"
 #include "../pokemon_gbaimpl.hpp"
+#include "../pokemon_ndsimpl.hpp"
 
 #include "../misc_common.hpp"
 #include "pokemon_setter.hpp"
@@ -94,6 +95,15 @@ namespace pkmn { namespace mem {
                                                     game_id
                                                 );
                 }
+                break;
+
+            case 4:
+                RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_nds_pc_pokemon_t);
+                RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_nds_pc_pokemon_t);
+                box->_pokemon_list[index] = pkmn::make_shared<pokemon_ndsimpl>(
+                                                reinterpret_cast<pksav_nds_pc_pokemon_t*>(box_ptr),
+                                                game_id
+                                            );
                 break;
 
             default:
@@ -183,6 +193,19 @@ namespace pkmn { namespace mem {
                                                       game_id
                                                   );
                 }
+                break;
+
+            case 4:
+                RCAST_EQUAL_ALLOC(party_ptr, party_pc_copy, pksav_nds_pc_pokemon_t);
+                RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_nds_pokemon_party_data_t);
+
+                RCAST_EQUAL(new_pokemon->_native_pc, party_ptr, pksav_nds_pc_pokemon_t);
+                RCAST_EQUAL(new_pokemon->_native_party, party_party_ptr, pksav_nds_pokemon_party_data_t);
+
+                party->_pokemon_list[index] = pkmn::make_shared<pokemon_ndsimpl>(
+                                                  reinterpret_cast<pksav_nds_party_pokemon_t*>(party_ptr),
+                                                  game_id
+                                              );
                 break;
 
             default:

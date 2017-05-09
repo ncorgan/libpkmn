@@ -8,6 +8,7 @@
 #include "pokemon_party_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
+#include "pokemon_party_gen4impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -45,6 +46,8 @@ namespace pkmn {
                 }
 
             case 4:
+                return pkmn::make_shared<pokemon_party_gen4impl>(game_id);
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();
