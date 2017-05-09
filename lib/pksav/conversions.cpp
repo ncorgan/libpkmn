@@ -226,8 +226,6 @@ namespace pksav {
     BOOST_STATIC_CONSTEXPR int FIRERED = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
 
-    BOOST_STATIC_CONSTEXPR int DIAMOND = 12;
-    BOOST_STATIC_CONSTEXPR int PEARL = 13;
     BOOST_STATIC_CONSTEXPR int PLATINUM = 14;
     BOOST_STATIC_CONSTEXPR int HEARTGOLD = 15;
     BOOST_STATIC_CONSTEXPR int SOULSILVER = 16;
@@ -300,9 +298,9 @@ namespace pksav {
 
         // Korea was stored differently between generations.
         if(pksav_littleendian16(from->language) == 0x0206) {
-            nds_blockA->country = pksav_littleendian16(0x8);
+            nds_blockA->country = 0x8;
         } else {
-            nds_blockA->country = pksav_littleendian16(pksav_littleendian16(from->language) - 0x0200);
+            nds_blockA->country = uint8_t(pksav_littleendian16(from->language) - 0x0200);
         }
 
         // EVs and contest stats are stored with the same layout, so just copy them all at once.
