@@ -630,7 +630,7 @@ namespace pkmn {
     ) {
         if(not pkmn_string_is_modern_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, true)) {
+        } else if(not pkmn::EV_in_bounds(value, true)) {
             throw std::out_of_range("Invalid stat.");
         }
 

@@ -802,10 +802,10 @@ namespace pkmn {
         const std::string &stat,
         int value
     ) {
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, true)) {
-            pkmn::throw_out_of_range(stat, 0, 255);
+        if(not pkmn::string_is_modern_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
+        } else if(not pkmn::EV_in_bounds(value, true)) {
+            pkmn::throw_out_of_range("stat", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);

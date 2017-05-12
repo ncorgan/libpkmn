@@ -81,22 +81,22 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_HP, true)) {
+        if(not pkmn::IV_in_bounds(IV_HP, true)) {
             pkmn::throw_out_of_range("IV_HP", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_attack, true)) {
+        if(not pkmn::IV_in_bounds(IV_attack, true)) {
             pkmn::throw_out_of_range("IV_attack", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, true)) {
+        if(not pkmn::IV_in_bounds(IV_defense, true)) {
             pkmn::throw_out_of_range("IV_defense", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, true)) {
+        if(not pkmn::IV_in_bounds(IV_speed, true)) {
             pkmn::throw_out_of_range("IV_speed", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
+        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
             pkmn::throw_out_of_range("IV_spatk", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
+        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
             pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 

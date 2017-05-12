@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -40,13 +40,13 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         // Input validation
-        if(not pkmn_string_is_gen2_stat(stat.c_str())) {
-            throw std::invalid_argument("stat: invalid stat");
+        if(not pkmn::string_is_gen2_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN2_STATS);
         }
-        if(not pkmn_EV_in_bounds(EV, false)) {
+        if(not pkmn::EV_in_bounds(EV, false)) {
             pkmn::throw_out_of_range("EV", 0, 65535);
         }
-        if(not pkmn_IV_in_bounds(IV, false)) {
+        if(not pkmn::IV_in_bounds(IV, false)) {
             pkmn::throw_out_of_range("IV", 0, 15);
         }
 
@@ -83,19 +83,19 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         // Input validation
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("stat: invalid stat");
+        if(not pkmn::string_is_modern_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
         }
-        if(not pkmn_floats_close(nature_modifier, 0.9f) and
-           not pkmn_floats_close(nature_modifier, 1.0f) and
-           not pkmn_floats_close(nature_modifier, 1.1f))
+        if(not pkmn::floats_close(nature_modifier, 0.9f) and
+           not pkmn::floats_close(nature_modifier, 1.0f) and
+           not pkmn::floats_close(nature_modifier, 1.1f))
         {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }
-        if(not pkmn_EV_in_bounds(EV, true)) {
+        if(not pkmn::EV_in_bounds(EV, true)) {
             pkmn::throw_out_of_range("EV", 0, 255);
         }
-        if(not pkmn_IV_in_bounds(IV, true)) {
+        if(not pkmn::IV_in_bounds(IV, true)) {
             pkmn::throw_out_of_range("IV", 0, 31);
         }
 

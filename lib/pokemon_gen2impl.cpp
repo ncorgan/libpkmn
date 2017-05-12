@@ -193,27 +193,27 @@ namespace pkmn {
         float chance_male = _database_entry.get_chance_male();
         float chance_female = _database_entry.get_chance_female();
 
-        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
+        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f)) {
             if(gender != "Genderless") {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
         } else {
             if(gender == "Male") {
-                if(pkmn_floats_close(chance_male, 0.0f)) {
+                if(pkmn::floats_close(chance_male, 0.0f)) {
                     throw std::invalid_argument("This Pokémon is female-only.");
                 } else {
                     set_IV("Attack", 15);
                 }
             } else if(gender == "Female") {
-                if(pkmn_floats_close(chance_female, 0.0f)) {
+                if(pkmn::floats_close(chance_female, 0.0f)) {
                     throw std::invalid_argument("This Pokémon is male-only.");
                 } else {
                     // Set the IV to the max it can be while still being female.
-                    if(pkmn_floats_close(chance_male, 0.875f)) {
+                    if(pkmn::floats_close(chance_male, 0.875f)) {
                         set_IV("Attack", 1);
-                    } else if(pkmn_floats_close(chance_male, 0.75f)) {
+                    } else if(pkmn::floats_close(chance_male, 0.75f)) {
                         set_IV("Attack", 3);
-                    } else if(pkmn_floats_close(chance_male, 0.5f)) {
+                    } else if(pkmn::floats_close(chance_male, 0.5f)) {
                         set_IV("Attack", 6);
                     } else {
                         set_IV("Attack", 11);
@@ -609,10 +609,10 @@ namespace pkmn {
         int value
     ) {
         // Generation II uses Generation I stats for EV's
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, false)) {
-            pkmn::throw_out_of_range(stat, 0, 65535);
+        if(not pkmn::string_is_gen1_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
+        } else if(not pkmn::EV_in_bounds(value, false)) {
+            pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);

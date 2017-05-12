@@ -32,19 +32,19 @@ namespace pkmn { namespace calculations {
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
-        if(pkmn_floats_close(chance_male, 0.0f) and
-           pkmn_floats_close(chance_female, 0.0f)
+        if(pkmn::floats_close(chance_male, 0.0f) and
+           pkmn::floats_close(chance_female, 0.0f)
         ) {
             return "Genderless";
-        } else if(pkmn_floats_close(chance_male, 1.0f)) {
+        } else if(pkmn::floats_close(chance_male, 1.0f)) {
             return "Male";
-        } else if(pkmn_floats_close(chance_male, 0.875f)) {
+        } else if(pkmn::floats_close(chance_male, 0.875f)) {
             return (IV_attack < 2) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.75f)) {
+        } else if(pkmn::floats_close(chance_male, 0.75f)) {
             return (IV_attack < 4) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.5f)) {
+        } else if(pkmn::floats_close(chance_male, 0.5f)) {
             return (IV_attack < 7) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.25f)) {
+        } else if(pkmn::floats_close(chance_male, 0.25f)) {
             return (IV_attack < 12) ? "Female" : "Male";
         } else {
             return "Female";
@@ -61,19 +61,19 @@ namespace pkmn { namespace calculations {
         float chance_male = entry.get_chance_male();
         float chance_female = entry.get_chance_female();
 
-        if(pkmn_floats_close(chance_male, 0.0f) and
-           pkmn_floats_close(chance_female, 0.0f)
+        if(pkmn::floats_close(chance_male, 0.0f) and
+           pkmn::floats_close(chance_female, 0.0f)
         ) {
             return "Genderless";
-        } else if(pkmn_floats_close(chance_male, 1.0f)) {
+        } else if(pkmn::floats_close(chance_male, 1.0f)) {
             return "Male";
-        } else if(pkmn_floats_close(chance_male, 0.875f)) {
+        } else if(pkmn::floats_close(chance_male, 0.875f)) {
             return (truncated_pid < 31) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.75f)) {
+        } else if(pkmn::floats_close(chance_male, 0.75f)) {
             return (truncated_pid < 64) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.5f)) {
+        } else if(pkmn::floats_close(chance_male, 0.5f)) {
             return (truncated_pid < 127) ? "Female" : "Male";
-        } else if(pkmn_floats_close(chance_male, 0.25f)) {
+        } else if(pkmn::floats_close(chance_male, 0.25f)) {
             return (truncated_pid < 191) ? "Female" : "Male";
         } else {
             return "Female";

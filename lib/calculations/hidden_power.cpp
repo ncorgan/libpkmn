@@ -54,16 +54,16 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_attack, false)) {
+        if(not pkmn::IV_in_bounds(IV_attack, false)) {
             pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, false)) {
+        if(not pkmn::IV_in_bounds(IV_defense, false)) {
             pkmn::throw_out_of_range("IV_defense", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, false)) {
+        if(not pkmn::IV_in_bounds(IV_speed, false)) {
             pkmn::throw_out_of_range("IV_speed", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_special, false)) {
+        if(not pkmn::IV_in_bounds(IV_special, false)) {
             pkmn::throw_out_of_range("IV_special", 0, 15);
         }
 
@@ -113,22 +113,22 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_HP, true)) {
+        if(not pkmn::IV_in_bounds(IV_HP, true)) {
             pkmn::throw_out_of_range("IV_HP", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_attack, true)) {
+        if(not pkmn::IV_in_bounds(IV_attack, true)) {
             pkmn::throw_out_of_range("IV_attack", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, true)) {
+        if(not pkmn::IV_in_bounds(IV_defense, true)) {
             pkmn::throw_out_of_range("IV_defense", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, true)) {
+        if(not pkmn::IV_in_bounds(IV_speed, true)) {
             pkmn::throw_out_of_range("IV_speed", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
+        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
             pkmn::throw_out_of_range("IV_spatk", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
+        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
             pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 

@@ -33,7 +33,7 @@
 #define GEN1_PC_RCAST    reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc)
 #define GEN1_PARTY_RCAST reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
 
-static std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
+static const std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
     ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
     ("Fighting", PKSAV_GEN1_TYPE_FIGHTING)
     ("Flying",   PKSAV_GEN1_TYPE_FLYING)
@@ -480,10 +480,10 @@ namespace pkmn {
         const std::string &stat,
         int value
     ) {
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, false)) {
-            pkmn::throw_out_of_range(stat, 0, 65535);
+        if(not pkmn::string_is_gen1_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
+        } else if(not pkmn::EV_in_bounds(value, false)) {
+            pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
