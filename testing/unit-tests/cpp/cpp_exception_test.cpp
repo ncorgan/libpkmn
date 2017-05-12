@@ -85,6 +85,36 @@ TEST(cpp_exception_test, test_invalid_argument)
     } catch(...) {
         FAIL() << "Did not throw std::invalid_argument";
     }
+
+    // This can happen when converting a number passed in from a SWIG wrapper.
+    static const std::vector<float> float_values = boost::assign::list_of
+        (0.1900000001f)(1.370000002f)(50.000003f)(12.34000004f)
+    ;
+    const std::string float_expected_msg = "float_param: valid values 0.19, 1.37, 50.00, 12.34.";
+
+    try {
+        pkmn::throw_invalid_argument("float_param", float_values);
+        FAIL() << "Did not throw.";
+    } catch(const std::invalid_argument& e) {
+        EXPECT_EQ(float_expected_msg, std::string(e.what()));
+    } catch(...) {
+        FAIL() << "Did not throw std::invalid_argument";
+    }
+
+    // This can happen when converting a number passed in from a SWIG wrapper.
+    static const std::vector<double> double_values = boost::assign::list_of
+        (0.1900000001)(1.370000002)(50.000003)(12.34000004)
+    ;
+    const std::string double_expected_msg = "double_param: valid values 0.19, 1.37, 50.00, 12.34.";
+
+    try {
+        pkmn::throw_invalid_argument("double_param", double_values);
+        FAIL() << "Did not throw.";
+    } catch(const std::invalid_argument& e) {
+        EXPECT_EQ(double_expected_msg, std::string(e.what()));
+    } catch(...) {
+        FAIL() << "Did not throw std::invalid_argument";
+    }
 }
 
 TEST(cpp_exception_test, test_out_of_range)
@@ -111,6 +141,34 @@ TEST(cpp_exception_test, test_out_of_range)
         FAIL() << "Did not throw";
     } catch(const std::out_of_range& e) {
         EXPECT_EQ(ushort_expected_msg, std::string(e.what()));
+    } catch(...) {
+        FAIL() << "Did not throw std::out_of_range";
+    }
+
+    // This can happen when converting a number passed in from a SWIG wrapper.
+    const float float_min = 12.230000005f;
+    const float float_max = 45.670000009f;
+    const std::string float_expected_msg = "float_param: valid values 12.23-45.67.";
+
+    try {
+        pkmn::throw_out_of_range("float_param", float_min, float_max);
+        FAIL() << "Did not throw";
+    } catch(const std::out_of_range& e) {
+        EXPECT_EQ(float_expected_msg, std::string(e.what()));
+    } catch(...) {
+        FAIL() << "Did not throw std::out_of_range";
+    }
+
+    // This can happen when converting a number passed in from a SWIG wrapper.
+    const double double_min = 12.230000005;
+    const double double_max = 45.670000009;
+    const std::string double_expected_msg = "double_param: valid values 12.23-45.67.";
+
+    try {
+        pkmn::throw_out_of_range("double_param", double_min, double_max);
+        FAIL() << "Did not throw";
+    } catch(const std::out_of_range& e) {
+        EXPECT_EQ(double_expected_msg, std::string(e.what()));
     } catch(...) {
         FAIL() << "Did not throw std::out_of_range";
     }

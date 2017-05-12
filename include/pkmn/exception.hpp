@@ -12,6 +12,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #ifdef PKMN_PLATFORM_WIN32
@@ -82,6 +83,11 @@ namespace pkmn {
         const std::vector<T>& valid_values
     ) {
         std::ostringstream err_msg;
+        if(std::is_floating_point<T>::value) {
+            err_msg.precision(2);
+            err_msg << std::fixed;
+        }
+
         err_msg << field;
         err_msg << ": valid values ";
         for(auto iter = valid_values.begin(); iter != valid_values.end(); ++iter) {
@@ -102,14 +108,20 @@ namespace pkmn {
         T min,
         T max
     ) {
-        std::string err_msg(field);
-        err_msg.append(": valid values ");
-        err_msg.append(std::to_string(min));
-        err_msg.append("-");
-        err_msg.append(std::to_string(max));
-        err_msg.append(".");
+        std::ostringstream err_msg;
+        if(std::is_floating_point<T>::value) {
+            err_msg.precision(2);
+            err_msg << std::fixed;
+        }
 
-        throw std::out_of_range(err_msg.c_str());
+        err_msg << field;
+        err_msg << ": valid values ";
+        err_msg << min;
+        err_msg << "-";
+        err_msg << max;
+        err_msg << ".";
+
+        throw std::out_of_range(err_msg.str().c_str());
     }
 
 }
