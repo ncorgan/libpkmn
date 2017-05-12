@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,8 +9,10 @@
 
 #include <pkmn/config.hpp>
 
+#include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #ifdef PKMN_PLATFORM_WIN32
 #    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
@@ -73,6 +75,42 @@ namespace pkmn {
                 std::runtime_error("Currently unimplemented.")
             {}
     };
+
+    template <typename T>
+    PKMN_INLINE void throw_invalid_argument(
+        const std::string& field,
+        const std::vector<T>& valid_values
+    ) {
+        std::ostringstream err_msg;
+        err_msg << field;
+        err_msg << ": valid values ";
+        for(auto iter = valid_values.begin(); iter != valid_values.end(); ++iter) {
+            if(iter != valid_values.begin()) {
+                err_msg << ", ";
+            }
+
+            err_msg << (*iter);
+        }
+        err_msg << ".";
+
+        throw std::invalid_argument(err_msg.str().c_str());
+    }
+
+    template <typename T>
+    PKMN_INLINE void throw_out_of_range(
+        const std::string& field,
+        T min,
+        T max
+    ) {
+        std::string err_msg(field);
+        err_msg.append(": valid values ");
+        err_msg.append(std::to_string(min));
+        err_msg.append("-");
+        err_msg.append(std::to_string(max));
+        err_msg.append(".");
+
+        throw std::out_of_range(err_msg.c_str());
+    }
 
 }
 
