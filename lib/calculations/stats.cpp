@@ -44,10 +44,10 @@ namespace pkmn { namespace calculations {
             throw std::invalid_argument("stat: invalid stat");
         }
         if(not pkmn_EV_in_bounds(EV, false)) {
-            throw pkmn::range_error("EV", 0, 65535);
+            pkmn::throw_out_of_range("EV", 0, 65535);
         }
         if(not pkmn_IV_in_bounds(IV, false)) {
-            throw pkmn::range_error("IV", 0, 15);
+            pkmn::throw_out_of_range("IV", 0, 15);
         }
 
         if(stat == "HP") {
@@ -93,10 +93,10 @@ namespace pkmn { namespace calculations {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }
         if(not pkmn_EV_in_bounds(EV, true)) {
-            throw pkmn::range_error("EV", 0, 255);
+            pkmn::throw_out_of_range("EV", 0, 255);
         }
         if(not pkmn_IV_in_bounds(IV, true)) {
-            throw pkmn::range_error("IV", 0, 31);
+            pkmn::throw_out_of_range("IV", 0, 31);
         }
 
         if(stat == "HP") {

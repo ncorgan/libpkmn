@@ -428,7 +428,7 @@ namespace pkmn {
         if(not pkmn_string_is_gen1_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_IV_in_bounds(value, false)) {
-            throw pkmn::range_error(stat, 0, 15);
+            pkmn::throw_out_of_range(stat, 0, 15);
         }
 
         pokemon_scoped_lock lock(this);
@@ -455,7 +455,7 @@ namespace pkmn {
         if(not pkmn_string_is_modern_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_IV_in_bounds(value, true)) {
-            throw pkmn::range_error(stat, 0, 31);
+            pkmn::throw_out_of_range(stat, 0, 31);
         }
 
         pokemon_scoped_lock lock(this);
@@ -490,7 +490,7 @@ namespace pkmn {
             throw std::invalid_argument("Invalid contest stat.");
         }
         if(value < 0 or value > 255) {
-            throw pkmn::range_error("value", 0, 255);
+            pkmn::throw_out_of_range("value", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);

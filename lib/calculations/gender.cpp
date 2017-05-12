@@ -25,7 +25,7 @@ namespace pkmn { namespace calculations {
     ) {
         // Input validation
         if(IV_attack < 0 or IV_attack > 15) {
-            throw pkmn::range_error("IV_attack", 0, 15);
+            pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
 
         pkmn::database::pokemon_entry entry(species, "Crystal", "");

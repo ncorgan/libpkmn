@@ -70,7 +70,7 @@ void test_item_list_out_of_range_error(
     );
 
     TEST_ASSERT_EQUAL(
-        PKMN_ERROR_RANGE_ERROR,
+        PKMN_ERROR_OUT_OF_RANGE,
         pkmn_item_list_add(
             list,
             item_name,
@@ -78,7 +78,7 @@ void test_item_list_out_of_range_error(
         )
     );
     TEST_ASSERT_EQUAL(
-        PKMN_ERROR_RANGE_ERROR,
+        PKMN_ERROR_OUT_OF_RANGE,
         pkmn_item_list_add(
             list,
             item_name,
@@ -86,7 +86,7 @@ void test_item_list_out_of_range_error(
         )
     );
     TEST_ASSERT_EQUAL(
-        PKMN_ERROR_RANGE_ERROR,
+        PKMN_ERROR_OUT_OF_RANGE,
         pkmn_item_list_remove(
             list,
             item_name,
@@ -94,7 +94,7 @@ void test_item_list_out_of_range_error(
         )
     );
     TEST_ASSERT_EQUAL(
-        PKMN_ERROR_RANGE_ERROR,
+        PKMN_ERROR_OUT_OF_RANGE,
         pkmn_item_list_remove(
             list,
             item_name,

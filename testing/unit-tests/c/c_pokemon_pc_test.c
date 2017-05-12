@@ -75,13 +75,13 @@ static void test_empty_pokemon_box(
                 -1,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_box_get_pokemon(
                 box,
                 capacity,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     for(int i = 0; i < capacity; ++i) {
         error = pkmn_pokemon_get_species(
@@ -221,13 +221,13 @@ static void test_setting_pokemon_in_box(
                 -1,
                 original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_box_set_pokemon(
                 box,
                 capacity,
                 original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Create new Pokémon and place in box. The original variables should
@@ -413,7 +413,7 @@ static void test_setting_pokemon_in_box(
                     4,
                     bulbasaur
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
         error = pkmn_pokemon_box_get_num_pokemon(
             box,
             &num_pokemon
@@ -714,13 +714,13 @@ static void test_empty_pokemon_pc(
                 -1,
                 &pokemon_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_pc_get_box(
                 pc,
                 num_boxes,
                 &pokemon_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     pkmn_pokemon_box_list_t pokemon_box_list;
     error = pkmn_pokemon_pc_as_array(

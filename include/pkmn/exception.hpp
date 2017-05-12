@@ -58,17 +58,6 @@ namespace pkmn {
             );
     };
 
-    //! A convenience subclass for throwing std::out_of_range with a given message format.
-    class PKMN_API range_error: public std::out_of_range {
-        public:
-            //! Throw the exception for the given property and range.
-            range_error(
-                const std::string &value,
-                int min,
-                int max
-            );
-    };
-
     //! An exception thrown when an exposed function is not implemented for a given game.
     class unimplemented_error: public std::runtime_error {
         public:

@@ -288,10 +288,10 @@ static void test_setting_friendship(
         EXPECT_EQ(123, pokemon->get_friendship());
         EXPECT_THROW(
             pokemon->set_friendship(-1);
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_THROW(
             pokemon->set_friendship(256);
-        , pkmn::range_error);
+        , std::out_of_range);
     } else {
         EXPECT_THROW(
             pokemon->get_friendship();
@@ -338,10 +338,10 @@ static void test_setting_levels(
 
     EXPECT_THROW(
         pokemon->set_level(-1);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         pokemon->set_level(101);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     int level = 50;
     pokemon->set_level(level);
@@ -358,7 +358,7 @@ static void test_setting_levels(
         case 1:
             EXPECT_THROW(
                 pokemon->set_level(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->get_level_met();
             , pkmn::feature_not_in_game_error);
@@ -370,13 +370,13 @@ static void test_setting_levels(
         case 2:
             EXPECT_THROW(
                 pokemon->set_level(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(101);
-            , pkmn::range_error);
+            , std::out_of_range);
 
             pokemon->set_level_met(5);
             EXPECT_EQ(5, pokemon->get_level_met());
@@ -385,13 +385,13 @@ static void test_setting_levels(
         default:
             EXPECT_THROW(
                 pokemon->set_level(-1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(-1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(101);
-            , pkmn::range_error);
+            , std::out_of_range);
 
             pokemon->set_level_met(5);
             EXPECT_EQ(5, pokemon->get_level_met());
@@ -512,10 +512,10 @@ static void test_setting_moves(
 
     EXPECT_THROW(
         pokemon->set_move(move_names[0], -1);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         pokemon->set_move(move_names[0], 4);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
@@ -705,7 +705,7 @@ static void test_setting_trainer_info(
     } else {
         EXPECT_THROW(
             pokemon->set_trainer_id(0xFFFF+1)
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_THROW(
             pokemon->set_trainer_secret_id(0xFFFF)
         , pkmn::feature_not_in_game_error);

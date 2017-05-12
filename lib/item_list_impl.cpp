@@ -202,7 +202,7 @@ namespace pkmn {
         int position
     ) {
         if(position < 0 or position >= _capacity) {
-            throw pkmn::range_error("position", 0, (_capacity-1));
+            pkmn::throw_out_of_range("position", 0, (_capacity-1));
         }
 
         return _item_slots.at(position);
@@ -214,7 +214,7 @@ namespace pkmn {
     ) {
         // Input validation
         if(amount < 1 or amount > 99) {
-            throw pkmn::range_error("amount", 1, 99);
+            pkmn::throw_out_of_range("amount", 1, 99);
         }
 
         /*
@@ -270,7 +270,7 @@ namespace pkmn {
     ) {
         // Input validation
         if(amount < 1 or amount > 99) {
-            throw pkmn::range_error("amount", 1, 99);
+            pkmn::throw_out_of_range("amount", 1, 99);
         }
 
         /*

@@ -33,16 +33,16 @@ namespace pkmn { namespace calculations {
         int IV_special
     ) {
         if(not pkmn_IV_in_bounds(IV_attack, false)) {
-            throw pkmn::range_error("IV_attack", 0, 15);
+            pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_defense, false)) {
-            throw pkmn::range_error("IV_defense", 0, 15);
+            pkmn::throw_out_of_range("IV_defense", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_speed, false)) {
-            throw pkmn::range_error("IV_speed", 0, 15);
+            pkmn::throw_out_of_range("IV_speed", 0, 15);
         }
         if(not pkmn_IV_in_bounds(IV_special, false)) {
-            throw pkmn::range_error("IV_special", 0, 15);
+            pkmn::throw_out_of_range("IV_special", 0, 15);
         }
 
         std::string ret = "?";

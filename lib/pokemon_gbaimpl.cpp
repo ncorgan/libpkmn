@@ -467,7 +467,7 @@ namespace pkmn {
         int friendship
     ) {
         if(friendship < 0 or friendship > 255) {
-            throw pkmn::range_error("friendship", 0 , 255);
+            pkmn::throw_out_of_range("friendship", 0 , 255);
         }
 
         pokemon_scoped_lock lock(this);
@@ -549,7 +549,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 0 or level > 100) {
-            throw pkmn::range_error("Level caught", 0, 100);
+            pkmn::throw_out_of_range("Level caught", 0, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -646,7 +646,7 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw pkmn::range_error("experience", 0, max_experience);
+            pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
         pokemon_scoped_lock lock(this);
@@ -668,7 +668,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 1 or level > 100) {
-            throw pkmn::range_error("level", 1, 100);
+            pkmn::throw_out_of_range("level", 1, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -782,7 +782,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw pkmn::range_error("index", 0, 3);
+            pkmn::throw_out_of_range("index", 0, 3);
         }
 
         pokemon_scoped_lock lock(this);
@@ -805,7 +805,7 @@ namespace pkmn {
         if(not pkmn_string_is_modern_stat(stat.c_str())) {
             throw std::invalid_argument("Invalid stat.");
         } else if(not pkmn_EV_in_bounds(value, true)) {
-            throw pkmn::range_error(stat, 0, 255);
+            pkmn::throw_out_of_range(stat, 0, 255);
         }
 
         pokemon_scoped_lock lock(this);

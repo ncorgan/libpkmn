@@ -26,7 +26,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw pkmn::range_error("generation", 3, 6);
+            pkmn::throw_out_of_range("generation", 3, 6);
         }
 
         // Connect to database
@@ -50,7 +50,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw pkmn::range_error("generation", 1, 6);
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database
@@ -408,7 +408,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw pkmn::range_error("generation", 1, 6);
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database

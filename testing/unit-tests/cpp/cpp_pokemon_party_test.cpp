@@ -108,10 +108,10 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     // Make sure we can't set them at invalid indices.
     EXPECT_THROW(
         party->set_pokemon(-1, bulbasaur);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         party->set_pokemon(6, bulbasaur);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     party->set_pokemon(0, bulbasaur);
     EXPECT_EQ(1, party->get_num_pokemon());
@@ -153,7 +153,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
     EXPECT_THROW(
         party->set_pokemon(4, bulbasaur);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_EQ(3, party->get_num_pokemon());
     EXPECT_EQ("None", party->get_pokemon(4)->get_species());
 

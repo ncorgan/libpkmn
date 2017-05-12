@@ -398,7 +398,7 @@ namespace pkmn {
         int friendship
     ) {
         if(friendship < 0 or friendship > 255) {
-            throw pkmn::range_error("friendship", 0, 255);
+            pkmn::throw_out_of_range("friendship", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);
@@ -459,7 +459,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 0 or level > 100) {
-            throw pkmn::range_error("Level caught", 0, 100);
+            pkmn::throw_out_of_range("Level caught", 0, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -529,7 +529,7 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw pkmn::range_error("experience", 0, max_experience);
+            pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
         _blockA->exp = pksav_littleendian32(uint32_t(experience));
@@ -547,7 +547,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 0 or level > 100) {
-            throw pkmn::range_error("level", 0, 100);
+            pkmn::throw_out_of_range("level", 0, 100);
         }
 
         NDS_PARTY_RCAST->level = uint8_t(level);
@@ -602,7 +602,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw pkmn::range_error("index", 0, 3);
+            pkmn::throw_out_of_range("index", 0, 3);
         }
 
         // This will throw an error if the move is invalid

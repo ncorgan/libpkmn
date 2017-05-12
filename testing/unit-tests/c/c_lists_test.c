@@ -20,7 +20,7 @@ static void ability_list_test() {
     error_code = pkmn_database_ability_list(
                      0, &abilities
                  );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error_code);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error_code);
 
     error_code = pkmn_database_ability_list(
                      6, &abilities
@@ -48,7 +48,7 @@ static void game_list_test() {
                      7, true,
                      &games
                  );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error_code);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error_code);
 
     error_code = pkmn_database_game_list(
                      6, true,
@@ -184,7 +184,7 @@ static void pokemon_list_test() {
                     0, true,
                     &pokemon
                 );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error_code);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error_code);
 
     error_code = pkmn_database_pokemon_list(
                      1, true,

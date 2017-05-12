@@ -130,10 +130,10 @@ void pokemon_box_test_common(
     // Make sure we can't set them at invalid indices.
     EXPECT_THROW(
         box->set_pokemon(-1, bulbasaur);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         box->set_pokemon(box->get_capacity(), bulbasaur);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     box->set_pokemon(0, bulbasaur);
     EXPECT_EQ(1, box->get_num_pokemon());
@@ -173,7 +173,7 @@ void pokemon_box_test_common(
 
         EXPECT_THROW(
             box->set_pokemon(4, bulbasaur);
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_EQ(3, box->get_num_pokemon());
         EXPECT_EQ("None", box->get_pokemon(4)->get_species());
     } else {
