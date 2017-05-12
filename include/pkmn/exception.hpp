@@ -66,6 +66,11 @@ namespace pkmn {
             {}
     };
 
+    //! Throw a std::invalid_argument, specifying all valid arguments in the error message.
+    /*!
+     * \param field the variable whose value is invalid
+     * \param valid_values a list of valid values for the field
+     */
     template <typename T>
     PKMN_INLINE void throw_invalid_argument(
         const std::string& field,
@@ -91,6 +96,12 @@ namespace pkmn {
         throw std::invalid_argument(err_msg.str().c_str());
     }
 
+    //! Throw a std::out_of_range, specifying the min and max bounds.
+    /*!
+     * \param field the variable whose value is invalid
+     * \param min the minimum value
+     * \param max the maximum value
+     */
     template <typename T>
     PKMN_INLINE void throw_out_of_range(
         const std::string& field,
