@@ -8,12 +8,18 @@ LibPKMN
 The goal of LibPKMN is to be the most expansive library for editing main series Pokémon game saves, as well
 as analyzing all aspects of the games, allowing for full customization of the game's Pokémon.
 
-Feature Roadmap:
- * Generation IV support
+Features in development:
+ * Damage calculations
+ * Generation IV save support
+ * Colosseum/XD save support
  * Java API
  * Ruby API
  * Generation III-V Spinda sprite generation
+
+Future planned features:
+ * Generation V-VI save support
  * Pokémon Showdown import/export
+ * QR code import/export
 
 Build Dependencies
 -------------------------------------
@@ -51,16 +57,16 @@ repository is automatically tested under the following configurations:
    * C/C++
      * GCC: 4.8.4, 6.2.0
      * Clang: 3.5.0, 4.0.0
-     * Boost: 1.55.0
+     * Boost: 1.55.0, 1.60.0
      * Qt: 4.8.6, 5.2.1
    * SWIG: 2.0.11, 3.0.2
    * C#: Mono 3.2.8
    * Lua: 5.1.5
    * Python: 2.7.6, 3.4.3
    * Ruby: 2.3.0
- * Windows Server 2012 R2 (x86, x64)
-   * C/C++: MSVC 2015
-     * Boost: 1.62.0
+ * Windows Server 2012 R2 (x64)
+   * C/C++: MSVC 2015 (Win32, x64)
+     * Boost: 1.59.0, 1.62.0, 1.63.0
      * Qt: 5.7.1
    * SWIG: 3.0.6
    * C#: .NET 3.5
@@ -76,4 +82,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/04/10
+README last updated: 2017/05/07

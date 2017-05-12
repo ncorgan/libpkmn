@@ -45,11 +45,11 @@ namespace pkmn { namespace calculations {
     static uint32_t get_gender_threshold(
         float chance_male
     ) {
-        if(pkmn_floats_close(chance_male, 0.875f)) {
+        if(pkmn::floats_close(chance_male, 0.875f)) {
             return 31;
-        } else if(pkmn_floats_close(chance_male, 0.75f)) {
+        } else if(pkmn::floats_close(chance_male, 0.75f)) {
             return 64;
-        } else if(pkmn_floats_close(chance_male, 0.5f)) {
+        } else if(pkmn::floats_close(chance_male, 0.5f)) {
             return 127;
         } else {
             return 191;
@@ -87,15 +87,15 @@ namespace pkmn { namespace calculations {
         }
 
         // Validate gender input.
-        if(pkmn_floats_close((chance_male + chance_female), 0.0f)) {
+        if(pkmn::floats_close((chance_male + chance_female), 0.0f)) {
             if(gender != "Genderless") {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
-        } else if(pkmn_floats_close(chance_male, 1.0f)) {
+        } else if(pkmn::floats_close(chance_male, 1.0f)) {
             if(gender != "Male") {
                 throw std::invalid_argument("This Pokémon is male-only.");
             }
-        } else if(pkmn_floats_close(chance_female, 1.0f)) {
+        } else if(pkmn::floats_close(chance_female, 1.0f)) {
             if(gender != "Female") {
                 throw std::invalid_argument("This Pokémon is female-only.");
             }

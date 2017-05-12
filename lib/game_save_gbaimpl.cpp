@@ -260,7 +260,7 @@ namespace pkmn {
         int money
     ) {
         if(money < 0 or money > MONEY_MAX_VALUE) {
-            throw pkmn::range_error("money", 0, MONEY_MAX_VALUE);
+            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
         }
 
         *_pksav_save.money = pksav_littleendian32(uint32_t(money));

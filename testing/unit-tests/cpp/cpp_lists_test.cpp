@@ -25,10 +25,10 @@ TEST(cpp_lists_test, ability_list_test) {
 
     EXPECT_THROW(
         (void)pkmn::database::get_ability_list(2);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::database::get_ability_list(7);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     abilities3 = pkmn::database::get_ability_list(3);
     EXPECT_FALSE(string_in_vector(abilities3, "Adaptability"));
@@ -60,10 +60,10 @@ TEST(cpp_lists_test, game_list_test) {
      */
     EXPECT_THROW(
         (void)pkmn::database::get_game_list(0, true);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::database::get_game_list(7, true);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Generation I
@@ -579,10 +579,10 @@ TEST(cpp_lists_test, pokemon_list_test) {
 
     EXPECT_THROW(
         (void)pkmn::database::get_pokemon_list(0, true);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::database::get_pokemon_list(7, true);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Generation I

@@ -743,12 +743,12 @@ static void test_setting_levels(
                 pokemon,
                 -1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_set_level(
                 pokemon,
                 101
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     int level = 0;
     int level_at_experience = 0;
@@ -817,7 +817,7 @@ static void test_setting_levels(
                         pokemon,
                         1
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             error = pkmn_pokemon_get_level_met(
                         pokemon,
                         &level_met
@@ -835,17 +835,17 @@ static void test_setting_levels(
                         pokemon,
                         1
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             error = pkmn_pokemon_set_level_met(
                         pokemon,
                         1
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             error = pkmn_pokemon_set_level_met(
                         pokemon,
                         101
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             break;
 
         default:
@@ -853,17 +853,17 @@ static void test_setting_levels(
                         pokemon,
                         -1
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             error = pkmn_pokemon_set_level_met(
                         pokemon,
                         -1
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
             error = pkmn_pokemon_set_level_met(
                         pokemon,
                         101
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+            TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
             error = pkmn_pokemon_set_level_met(
                         pokemon,
@@ -1171,13 +1171,13 @@ static void test_setting_moves(
                 move_names[0],
                 -1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_set_move(
                 pokemon,
                 move_names[0],
                 4
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     pkmn_move_slots_t move_slots;
     error = pkmn_pokemon_get_moves(
@@ -1631,7 +1631,7 @@ static void test_setting_trainer_info(
                     pokemon,
                     0xFFFF+1
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
         error = pkmn_pokemon_set_trainer_secret_id(
                     pokemon,
                     0xFFFF

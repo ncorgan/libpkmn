@@ -1,28 +1,33 @@
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_62_0
   LUAROCKS_VER: 2.3.0
   matrix:
     - BITNESS: 32
+      BOOST_VERSION: 1_59
       PYTHON_VERSION: 35
       LUA_VER: 5.1.5
 
     - BITNESS: 64
+      BOOST_VERSION: 1_59
       PYTHON_VERSION: 35
       LUA_VER: 5.1.5
 
     - BITNESS: 32
+      BOOST_VERSION: 1_62
       PYTHON_VERSION: 35
       LUA_VER: 5.2.4
 
     - BITNESS: 64
+      BOOST_VERSION: 1_62
       PYTHON_VERSION: 35
       LUA_VER: 5.2.4
 
     - BITNESS: 32
+      BOOST_VERSION: 1_63
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
 
     - BITNESS: 64
+      BOOST_VERSION: 1_63
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
 

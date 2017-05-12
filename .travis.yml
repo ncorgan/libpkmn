@@ -18,8 +18,10 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
           packages:
             - g++-6
+            - libboost1.60-all-dev
             - swig3.0
       env:
         - NEWCC=gcc-6
@@ -40,8 +42,10 @@ matrix:
           sources:
             - llvm-toolchain-trusty-4.0
             - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
           packages:
             - clang-4.0
+            - libboost1.60-all-dev
             - swig3.0
       env:
         - NEWCC=clang-4.0

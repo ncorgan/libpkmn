@@ -300,13 +300,13 @@ static void game_save_test_common_fields(
                 game_save,
                 -1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_game_save_set_money(
                 game_save,
                 MONEY_MAX_VALUE+1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     int money = 0;
     error = pkmn_game_save_set_money(

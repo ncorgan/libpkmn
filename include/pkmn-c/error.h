@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,9 +14,8 @@ typedef enum {
 
     PKMN_ERROR_PKSAV_ERROR = 1,
 
-    PKMN_ERROR_RANGE_ERROR = 10,
-    PKMN_ERROR_UNIMPLEMENTED_ERROR = 11,
-    PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR = 12,
+    PKMN_ERROR_UNIMPLEMENTED_ERROR = 10,
+    PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR = 11,
 
     PKMN_ERROR_NULL_POINTER = 20,
     PKMN_ERROR_BUFFER_TOO_SMALL = 21,
@@ -27,7 +26,7 @@ typedef enum {
     PKMN_ERROR_OUT_OF_RANGE = 33,
     PKMN_ERROR_LOGIC_ERROR = 39,
 
-    PKMN_ERROR_STD_RANGE_ERROR = 40,
+    PKMN_ERROR_RANGE_ERROR = 40,
     PKMN_ERROR_OVERFLOW_ERROR = 41,
     PKMN_ERROR_UNDERFLOW_ERROR = 42,
     PKMN_ERROR_RUNTIME_ERROR = 49,

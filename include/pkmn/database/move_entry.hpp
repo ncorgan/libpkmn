@@ -151,7 +151,7 @@ namespace pkmn { namespace database {
              * return -1.
              *
              * \param num_pp_ups Number of PP Ups applied (0-3, 3 for PP Max)
-             * \throws pkmn::range_error if num_pp_ups is not [0-3]
+             * \throws std::out_of_range if num_pp_ups is not [0-3]
              */
             int get_pp(
                 int num_pp_ups

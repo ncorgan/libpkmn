@@ -2,6 +2,7 @@
 @echo off
 
 :: Set variables
+set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
