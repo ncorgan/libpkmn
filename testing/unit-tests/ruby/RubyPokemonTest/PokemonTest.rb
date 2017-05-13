@@ -447,4 +447,89 @@ class PokemonTest < MiniTest::Test
             end
         end
     end
+
+    def _test_setting_original_game(pokemon, games, invalid_games)
+        assert(games.length > 0)
+
+        generation == @@GAME_GENERATIONS[pokemon.game]
+
+        if generation >= 3
+            games.each do |game|
+                pokemon.game = game
+                assert_equal(game, pokemon.game)
+            end
+
+            invalid_games.each do |game|
+                assert_raises ArgumentError do
+                    pokemon.game = game
+                end
+            end
+        else
+            assert_raises RuntimeError do
+                pokemon.game
+            end
+            assert_raises RuntimeError do
+                pokemon.game = games[0]
+            end
+        end
+    end
+
+    def _test_setting_personality(pokemon)
+        generation = @@GAME_GENERATIONS[pokemon.game]
+
+        if generation >= 3
+            pokemon.personality = 0x7F3AB3A8
+            assert_equal(0x7F3AB3A8, pokemon.personality)
+        else
+            assert_raises RuntimeError do
+                pokemon.personality
+            end
+            assert_raises RuntimeError do
+                pokemon.personality = 0
+            end
+        end
+    end
+
+    def _test_setting_stats(pokemon)
+    end
+
+    def _test_setting_trainer_info(pokemon)
+        generation = @@GAME_GENERATIONS[pokemon.game]
+
+        assert_raises ArgumentError do
+            pokemon.nickname = ""
+        end
+        assert_raises ArgumentError do
+            pokemon.nickname = "Too long nickname"
+        end
+        pokemon.nickname = "foobarbaz"
+        assert_equal("foobarbaz", pokemon.nickname)
+
+        assert_raises ArgumentError do
+            pokemon.trainer_name = ""
+        end
+        assert_raises ArgumentError do
+            pokemon.trainer_name = "Too long trainer_name"
+        end
+        pokemon.trainer_name = "foobar"
+        assert_equal("foobar", pokemon.trainer_name)
+
+        if generation >= 2
+            pokemon.trainer_gender = "Male"
+            assert_equal("Male", pokemon.trainer_gender)
+            pokemon.trainer_gender = "Female"
+            assert_equal("Female", pokemon.trainer_gender)
+
+            assert_raises ArgumentError do
+                pokemon.trainer_gender = "Genderless"
+            end
+        else
+            assert_raises RuntimeError do
+                pokemon.trainer_gender
+            end
+            assert_raises RuntimeError do
+                pokemon.trainer_gender = "Male"
+            end
+        end
+    end
 end
