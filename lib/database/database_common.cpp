@@ -171,14 +171,12 @@ namespace pkmn { namespace database {
 
         // Colosseum
         (62,15) // Items
-        (63,19) // Key Items
         (64,16) // Poké Balls
         (65,17) // TMs & HMs
         (66,18) // Berries
 
         // XD 
         (69,15) // Items
-        (70,19) // Key Items
         (71,16) // Poké Balls
         (72,17) // TMs & HMs
         (73,18) // Berries
@@ -239,6 +237,14 @@ namespace pkmn { namespace database {
 
             while(gcn_stmt.executeStep()) {
                 ret.emplace_back((const char*)gcn_stmt.getColumn(0));
+            }
+
+            // For TM pockets, remove the HMs.
+            BOOST_STATIC_CONSTEXPR int COLO_TM_LIST = 65;
+            BOOST_STATIC_CONSTEXPR int XD_TM_LIST = 72;
+            if(list_id == COLO_TM_LIST or list_id == XD_TM_LIST)
+            {
+                ret.erase(ret.begin(), ret.begin()+8);
             }
         } else {
             static BOOST_CONSTEXPR const char* all_pockets_query = \
