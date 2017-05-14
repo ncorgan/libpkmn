@@ -149,6 +149,12 @@ TEST(cpp_lists_test, item_list_test) {
     std::vector<std::string> items_colo = pkmn::database::get_item_list("Colosseum");
     std::vector<std::string> items_xd   = pkmn::database::get_item_list("XD");
 
+    EXPECT_TRUE(string_in_vector(items_rs, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_e, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_frlg, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_colo, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_xd, "Potion"));
+
     EXPECT_FALSE(string_in_vector(items_rs, "Magma Emblem"));
     EXPECT_TRUE(string_in_vector(items_e, "Magma Emblem"));
     EXPECT_FALSE(string_in_vector(items_frlg, "Magma Emblem"));

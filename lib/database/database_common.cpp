@@ -12,6 +12,7 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
@@ -19,6 +20,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 
 #define PKMN_COMPAT_NUM 7
 
@@ -164,6 +166,24 @@ namespace pkmn { namespace database {
         }
     }
 
+    static const std::unordered_map<int, int> GCN_LIST_TO_RUBY_LIST = boost::assign::map_list_of
+        (-1,-1) // PC
+
+        // Colosseum
+        (62,15) // Items
+        (63,19) // Key Items
+        (64,16) // Poké Balls
+        (65,17) // TMs & HMs
+        (66,18) // Berries
+
+        // XD 
+        (69,15) // Items
+        (70,19) // Key Items
+        (71,16) // Poké Balls
+        (72,17) // TMs & HMs
+        (73,18) // Berries
+    ;
+
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
@@ -172,82 +192,20 @@ namespace pkmn { namespace database {
         (void)_get_connection();
 
         int generation = pkmn::database::game_id_to_generation(game_id);
-
-        /*
-         * Gamecube games have the same item ranges as Ruby/Sapphire for
-         * non-Gamecube exclusive items.
-         */
-        int version_group_id = game_is_gamecube(game_id)
-                                   ? 5
-                                   : pkmn::database::game_id_to_version_group(game_id);
-
-        static BOOST_CONSTEXPR const char* all_pockets_query = \
-            "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
-            "AND item_id IN (SELECT items.id FROM items "
-            "INNER JOIN item_game_indices ON "
-            "(items.id=item_game_indices.item_id) WHERE "
-            "item_game_indices.generation_id=? AND "
-            "item_game_indices.game_index>=? AND item_game_indices.game_index<=?)";
-
-        static BOOST_CONSTEXPR const char* single_pocket_query = \
-            "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
-            "AND item_id IN (SELECT items.id FROM items "
-            "INNER JOIN item_game_indices ON "
-            "(items.id=item_game_indices.item_id) WHERE "
-            "item_game_indices.generation_id=? AND "
-            "item_game_indices.game_index>=? AND item_game_indices.game_index<=?) "
-            "AND item_id IN (SELECT items.id FROM items WHERE id IN (SELECT "
-            "items.id FROM items INNER JOIN item_categories ON "
-            "(items.category_id=item_categories.id) WHERE item_categories.pocket_id "
-            "IN (SELECT item_categories.pocket_id FROM item_categories INNER JOIN "
-            "veekun_pocket_to_libpkmn_list ON "
-            "(item_categories.pocket_id=veekun_pocket_to_libpkmn_list.veekun_pocket_id) "
-            "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
-
-        // TODO: can we make the statement just once?
+        int version_group_id = pkmn::database::game_id_to_version_group(game_id);
         bool all_pockets = (list_id == -1);
-        const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
-        for(int i = 0; i < 4; ++i) {
-            if(not item_range_empty(version_group_id, i)) {
-                SQLite::Statement stmt((*_db), query);
-                stmt.bind(1, generation);
-                stmt.bind(2, version_group_item_index_bounds[version_group_id][i][0]);
-                stmt.bind(3, version_group_item_index_bounds[version_group_id][i][1]);
-                if(not all_pockets) {
-                    stmt.bind(4, version_group_id);
-                    stmt.bind(5, list_id);
-                }
 
-                while(stmt.executeStep()) {
-                    /*
-                     * Some items' names changed in Generation IV (TODO: confirm this or V).
-                     * If the function is called for an older game, substitute in old names
-                     * as needed.
-                     */
-                    BOOST_STATIC_CONSTEXPR int XY = 25;
-                    if(game_id <= XY) {
-                        std::string old_name;
-                        static BOOST_CONSTEXPR const char* old_name_query = \
-                            "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
-                            "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
-                        if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                               _db, old_name_query, old_name,
-                               int(stmt.getColumn(0)), version_group_id
-                           ))
-                        {
-                            ret.push_back(old_name);
-                        } else {
-                            ret.push_back((const char*)stmt.getColumn(1));
-                        }
-                    } else {
-                        ret.push_back((const char*)stmt.getColumn(1));
-                    }
-                }
-            }
-        }
-
-        // Since Gamecube indices are stored separately, we need to do this over again
         if(game_is_gamecube(game_id)) {
+            /*
+             * Gamecube games have the same item ranges as Ruby/Sapphire for
+             * non-Gamecube exclusive items, so just call the function with Ruby
+             * parameters.
+             */
+            BOOST_STATIC_CONSTEXPR int RUBY = 7;
+            if(GCN_LIST_TO_RUBY_LIST.count(list_id) > 0) {
+                _get_item_list(ret, GCN_LIST_TO_RUBY_LIST.at(list_id), RUBY);
+            }
+
             static BOOST_CONSTEXPR const char* gcn_all_pockets_query = \
                 "SELECT name FROM item_names WHERE local_language_id=9 "
                 "AND item_id IN (SELECT DISTINCT items.id FROM items "
@@ -275,11 +233,75 @@ namespace pkmn { namespace database {
             SQLite::Statement gcn_stmt((*_db), gcn_query);
             gcn_stmt.bind(1, (colosseum ? 1 : 0));
             if(not all_pockets) {
-                gcn_stmt.bind(2, list_id);
+                gcn_stmt.bind(2, version_group_id);
+                gcn_stmt.bind(3, list_id);
             }
 
             while(gcn_stmt.executeStep()) {
-                ret.push_back((const char*)gcn_stmt.getColumn(0));
+                ret.emplace_back((const char*)gcn_stmt.getColumn(0));
+            }
+        } else {
+            static BOOST_CONSTEXPR const char* all_pockets_query = \
+                "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
+                "AND item_id IN (SELECT items.id FROM items "
+                "INNER JOIN item_game_indices ON "
+                "(items.id=item_game_indices.item_id) WHERE "
+                "item_game_indices.generation_id=? AND "
+                "item_game_indices.game_index>=? AND item_game_indices.game_index<=?)";
+
+            static BOOST_CONSTEXPR const char* single_pocket_query = \
+                "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
+                "AND item_id IN (SELECT items.id FROM items "
+                "INNER JOIN item_game_indices ON "
+                "(items.id=item_game_indices.item_id) WHERE "
+                "item_game_indices.generation_id=? AND "
+                "item_game_indices.game_index>=? AND item_game_indices.game_index<=?) "
+                "AND item_id IN (SELECT items.id FROM items WHERE id IN (SELECT "
+                "items.id FROM items INNER JOIN item_categories ON "
+                "(items.category_id=item_categories.id) WHERE item_categories.pocket_id "
+                "IN (SELECT item_categories.pocket_id FROM item_categories INNER JOIN "
+                "veekun_pocket_to_libpkmn_list ON "
+                "(item_categories.pocket_id=veekun_pocket_to_libpkmn_list.veekun_pocket_id) "
+                "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
+
+            const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
+            for(int i = 0; i < 4; ++i) {
+                if(not item_range_empty(version_group_id, i)) {
+                    SQLite::Statement stmt((*_db), query);
+                    stmt.bind(1, generation);
+                    stmt.bind(2, version_group_item_index_bounds[version_group_id][i][0]);
+                    stmt.bind(3, version_group_item_index_bounds[version_group_id][i][1]);
+                    if(not all_pockets) {
+                        stmt.bind(4, version_group_id);
+                        stmt.bind(5, list_id);
+                    }
+
+                    while(stmt.executeStep()) {
+                        /*
+                         * Some items' names changed in Generation IV (TODO: confirm this or V).
+                         * If the function is called for an older game, substitute in old names
+                         * as needed.
+                         */
+                        BOOST_STATIC_CONSTEXPR int XY = 25;
+                        if(game_id <= XY) {
+                            std::string old_name;
+                            static BOOST_CONSTEXPR const char* old_name_query = \
+                                "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
+                                "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
+                            if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                                   _db, old_name_query, old_name,
+                                   int(stmt.getColumn(0)), version_group_id
+                               ))
+                            {
+                                ret.emplace_back(old_name);
+                            } else {
+                                ret.emplace_back((const char*)stmt.getColumn(1));
+                            }
+                        } else {
+                            ret.emplace_back((const char*)stmt.getColumn(1));
+                        }
+                    }
+                }
             }
         }
 
