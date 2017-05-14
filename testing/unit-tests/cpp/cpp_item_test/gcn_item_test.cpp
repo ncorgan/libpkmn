@@ -48,7 +48,7 @@ class gcn_item_list_test: public item_list_test {};
  * On the C++ level, make sure the LibPKMN abstraction matches the underlying
  * LibPkmGC class.
  */
-static void check_libpkmgc_struct(
+static void check_libpkmgc_class(
     const pkmn::item_slots_t& item_slots,
     const LibPkmGC::Item* native_items,
     int expected_num_items
@@ -89,15 +89,109 @@ void gcn_item_pocket_test(
     EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "Potion") != valid_items.end());
     EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
 
-    check_libpkmgc_struct(
+    check_libpkmgc_class(
         item_pocket->as_vector(),
         reinterpret_cast<const LibPkmGC::Item*>(item_pocket->get_native()),
         item_pocket->get_num_items()
     );
 }
 
+void gcn_key_item_pocket_test(
+    pkmn::item_list::sptr key_item_pocket
+) {
+    ASSERT_EQ("Key Items", key_item_pocket->get_name());
+
+    bool colosseum = (key_item_pocket->get_game() == "Colosseum");
+    std::string gcn_item = colosseum ? "Ein File S" : "Miror Radar";
+
+    int capacity = 43;
+    ASSERT_EQ(capacity, key_item_pocket->get_capacity());
+    ASSERT_EQ(size_t(capacity), key_item_pocket->as_vector().size());
+
+    // Make sure item slots start as correctly empty.
+    test_item_list_empty_slots(key_item_pocket);
+
+    // Confirm exceptions are thrown when expected.
+    test_item_list_out_of_range_error(
+        key_item_pocket,
+        gcn_item
+    );
+
+    const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
+    EXPECT_GT(valid_items.size(), 0);
+    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), gcn_item) != valid_items.end());
+
+    check_libpkmgc_class(
+        key_item_pocket->as_vector(),
+        reinterpret_cast<const LibPkmGC::Item*>(key_item_pocket->get_native()),
+        key_item_pocket->get_num_items()
+    );
+}
+
+void gcn_ball_pocket_test(
+    pkmn::item_list::sptr ball_pocket
+) {
+    ASSERT_EQ("Poké Balls", ball_pocket->get_name());
+
+    int capacity = 16;
+    ASSERT_EQ(capacity, ball_pocket->get_capacity());
+    ASSERT_EQ(size_t(capacity), ball_pocket->as_vector().size());
+
+    // Make sure item slots start as correctly empty.
+    test_item_list_empty_slots(ball_pocket);
+
+    // Confirm exceptions are thrown when expected.
+    test_item_list_out_of_range_error(
+        ball_pocket,
+        "Poké Ball"
+    );
+
+    const std::vector<std::string>& valid_items = ball_pocket->get_valid_items();
+    EXPECT_GT(valid_items.size(), 0);
+
+    check_libpkmgc_class(
+        ball_pocket->as_vector(),
+        reinterpret_cast<const LibPkmGC::Item*>(ball_pocket->get_native()),
+        ball_pocket->get_num_items()
+    );
+}
+
+void gcn_tmhm_pocket_test(
+    pkmn::item_list::sptr tmhm_pocket
+) {
+    ASSERT_EQ("TMs & HMs", tmhm_pocket->get_name());
+
+    int capacity = 64;
+    ASSERT_EQ(capacity, tmhm_pocket->get_capacity());
+    ASSERT_EQ(size_t(capacity), tmhm_pocket->as_vector().size());
+
+    // Make sure item slots start as correctly empty.
+    test_item_list_empty_slots(tmhm_pocket);
+
+    // Confirm exceptions are thrown when expected.
+    test_item_list_out_of_range_error(
+        tmhm_pocket,
+        "TM01"
+    );
+
+    // Gamecube games have no TMs.
+    const std::vector<std::string>& valid_items = tmhm_pocket->get_valid_items();
+    EXPECT_EQ(50, valid_items.size());
+    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "TM01") != valid_items.end());
+    EXPECT_TRUE(std::find(valid_items.begin(), valid_items.end(), "HM01") == valid_items.end());
+
+    check_libpkmgc_class(
+        tmhm_pocket->as_vector(),
+        reinterpret_cast<const LibPkmGC::Item*>(tmhm_pocket->get_native()),
+        tmhm_pocket->get_num_items()
+    );
+}
+
 static const item_list_test_fcns_t gcn_test_fcns = boost::assign::map_list_of
     ("Items", &gcn_item_pocket_test)
+    ("Key Items", &gcn_key_item_pocket_test)
+    ("Poké Balls", &gcn_ball_pocket_test)
+    ("TMs & HMs", &gcn_tmhm_pocket_test)
 ;
 
 TEST_P(gcn_item_list_test, item_list_test) {
@@ -106,7 +200,13 @@ TEST_P(gcn_item_list_test, item_list_test) {
 
 static const std::vector<std::pair<std::string, std::string>> item_list_params = {
     {"Colosseum", "Items"},
-    {"XD", "Items"}
+    {"Colosseum", "Key Items"},
+    {"Colosseum", "Poké Balls"},
+    {"Colosseum", "TMs & HMs"},
+    {"XD", "Items"},
+    {"XD", "Key Items"},
+    {"XD", "Poké Balls"},
+    {"XD", "TMs & HMs"}
 };
 
 INSTANTIATE_TEST_CASE_P(
