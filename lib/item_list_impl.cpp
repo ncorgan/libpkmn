@@ -109,9 +109,6 @@ namespace pkmn {
                         throw std::runtime_error("Invalid list.");
                 }
 
-            // Technically, this works for everything past this, but
-            // we'll error out until their item_bag implementations
-            // are done.
             case 3:
                 if(game_is_gamecube(game_id)) {
                     return pkmn::make_shared<item_list_gcnimpl>(
@@ -123,6 +120,9 @@ namespace pkmn {
                            );
                 }
 
+            // Technically, this works for everything past this, but
+            // we'll error out until their item_bag implementations
+            // are done.
             case 4:
             case 5:
             case 6:

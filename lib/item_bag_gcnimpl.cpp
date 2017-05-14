@@ -57,7 +57,7 @@ namespace pkmn {
     #define ITEM_POCKET_ID ((_game_id == COLOSSEUM) ? 62 : 69)
     #define KEY_ITEM_POCKET_ID ((_game_id == COLOSSEUM) ? 63 : 70)
     #define BALL_POCKET_ID ((_game_id == COLOSSEUM) ? 64 : 71)
-    #define TMHM_POCKET_ID ((_game_id == COLOSSEUM) ? 65 : 72)
+    #define TM_POCKET_ID ((_game_id == COLOSSEUM) ? 65 : 72)
     #define BERRY_POCKET_ID ((_game_id == COLOSSEUM) ? 66 : 73)
     #define COLOGNE_POCKET_ID ((_game_id == COLOSSEUM) ? 67 : 74)
     BOOST_STATIC_CONSTEXPR int BATTLE_CD_POCKET_ID = 91;
@@ -80,11 +80,11 @@ namespace pkmn {
                                           sizeof(GC_RCAST->pokeballs)/sizeof(LibPkmGC::Item),
                                           false
                                       );
-        _item_pockets["TMs & HMs"] = pkmn::make_shared<item_list_gcnimpl>(
-                                         TMHM_POCKET_ID, _game_id, GC_RCAST->TMs,
-                                         sizeof(GC_RCAST->TMs)/sizeof(LibPkmGC::Item),
-                                         false
-                                     );
+        _item_pockets["TMs"] = pkmn::make_shared<item_list_gcnimpl>(
+                                   TM_POCKET_ID, _game_id, GC_RCAST->TMs,
+                                   sizeof(GC_RCAST->TMs)/sizeof(LibPkmGC::Item),
+                                   false
+                               );
         _item_pockets["Berries"] = pkmn::make_shared<item_list_gcnimpl>(
                                        BERRY_POCKET_ID, _game_id, GC_RCAST->berries,
                                        sizeof(GC_RCAST->berries)/sizeof(LibPkmGC::Item),

@@ -159,7 +159,7 @@ void gcn_ball_pocket_test(
 void gcn_tmhm_pocket_test(
     pkmn::item_list::sptr tmhm_pocket
 ) {
-    ASSERT_EQ("TMs & HMs", tmhm_pocket->get_name());
+    ASSERT_EQ("TMs", tmhm_pocket->get_name());
 
     int capacity = 64;
     ASSERT_EQ(capacity, tmhm_pocket->get_capacity());
@@ -191,7 +191,7 @@ static const item_list_test_fcns_t gcn_test_fcns = boost::assign::map_list_of
     ("Items", &gcn_item_pocket_test)
     ("Key Items", &gcn_key_item_pocket_test)
     ("Poké Balls", &gcn_ball_pocket_test)
-    ("TMs & HMs", &gcn_tmhm_pocket_test)
+    ("TMs", &gcn_tmhm_pocket_test)
 ;
 
 TEST_P(gcn_item_list_test, item_list_test) {
@@ -202,11 +202,11 @@ static const std::vector<std::pair<std::string, std::string>> item_list_params =
     {"Colosseum", "Items"},
     {"Colosseum", "Key Items"},
     {"Colosseum", "Poké Balls"},
-    {"Colosseum", "TMs & HMs"},
+    {"Colosseum", "TMs"},
     {"XD", "Items"},
     {"XD", "Key Items"},
     {"XD", "Poké Balls"},
-    {"XD", "TMs & HMs"}
+    {"XD", "TMs"}
 };
 
 INSTANTIATE_TEST_CASE_P(
@@ -460,7 +460,7 @@ void gba_tmhm_pocket_test(
         ASSERT_EQ("TM Case", tmhm_pocket->get_name());
         capacity = 58;
     } else {
-        ASSERT_EQ("TMs & HMs", tmhm_pocket->get_name());
+        ASSERT_EQ("TMs", tmhm_pocket->get_name());
         capacity = 64;
     }
     ASSERT_EQ(capacity, tmhm_pocket->get_capacity());
@@ -615,7 +615,7 @@ static const item_list_test_fcns_t gba_test_fcns = boost::assign::map_list_of
     ("Items", &gba_item_pocket_test)
     ("Key Items", &gba_key_item_pocket_test)
     ("Poké Balls", &gba_ball_pocket_test)
-    ("TMs & HMs", &gba_tmhm_pocket_test)
+    ("TMs", &gba_tmhm_pocket_test)
     ("TM Case", &gba_tmhm_pocket_test)
     ("Berries", &gba_berry_pocket_test)
     ("Berry Pouch", &gba_berry_pocket_test)
@@ -630,19 +630,19 @@ static const std::vector<std::pair<std::string, std::string>> item_list_params =
     {"Ruby", "Items"},
     {"Ruby", "Key Items"},
     {"Ruby", "Poké Balls"},
-    {"Ruby", "TMs & HMs"},
+    {"Ruby", "TMs"},
     {"Ruby", "Berries"},
     {"Ruby", "PC"},
     {"Sapphire", "Items"},
     {"Sapphire", "Key Items"},
     {"Sapphire", "Poké Balls"},
-    {"Sapphire", "TMs & HMs"},
+    {"Sapphire", "TMs"},
     {"Sapphire", "Berries"},
     {"Sapphire", "PC"},
     {"Emerald", "Items"},
     {"Emerald", "Key Items"},
     {"Emerald", "Poké Balls"},
-    {"Emerald", "TMs & HMs"},
+    {"Emerald", "TMs"},
     {"Emerald", "Berries"},
     {"Emerald", "PC"},
     {"FireRed", "Items"},
@@ -673,7 +673,7 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     const std::string& game = get_game();
     bool is_frlg = (game == "FireRed" or game == "LeafGreen");
     std::string berry_pocket_name = is_frlg ? "Berry Pouch" : "Berries";
-    std::string tmhm_pocket_name = is_frlg ? "TM Case" : "TMs & HMs";
+    std::string tmhm_pocket_name = is_frlg ? "TM Case" : "TMs";
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
     ASSERT_EQ(5, pockets.size());
@@ -711,7 +711,7 @@ TEST_P(gba_item_bag_test, item_bag_test) {
         ASSERT_EQ(0, bag->get_pocket("TM Case")->get_num_items());
         ASSERT_EQ(0, bag->get_pocket("Berry Pouch")->get_num_items());
     } else {
-        ASSERT_EQ(0, bag->get_pocket("TMs & HMs")->get_num_items());
+        ASSERT_EQ(0, bag->get_pocket("TMs")->get_num_items());
         ASSERT_EQ(0, bag->get_pocket("Berries")->get_num_items());
     }
     for(int i = 0; i < 8; ++i) {
