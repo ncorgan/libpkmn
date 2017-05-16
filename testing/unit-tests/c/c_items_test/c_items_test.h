@@ -155,12 +155,16 @@ void gcn_cologne_pocket_test(
 );
 
 void xd_battle_cd_pocket_test(
-    pkmn_item_list_handle_t battle_cd_pocket,
-    const char* game
+    pkmn_item_list_handle_t battle_cd_pocket
 );
 
 void gcn_item_pc_test(
     pkmn_item_list_handle_t pc,
+    const char* game
+);
+
+void gcn_item_bag_test(
+    pkmn_item_bag_handle_t bag,
     const char* game
 );
 
