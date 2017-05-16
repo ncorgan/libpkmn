@@ -781,6 +781,11 @@ namespace pkmn {
                 throw std::invalid_argument("Invalid ribbon.");
             }
 
+            if(ribbon_parts.size() == 1)
+            {
+                ribbon_parts.emplace_back("");
+            }
+
             GC_RCAST->contestAchievements[CONTEST_STAT_BIMAP.right.at(ribbon_parts[0])] =
                 value ? CONTEST_LEVEL_MAP.at(ribbon_parts[1])
                       : LibPkmGC::ContestAchievementLevel(CONTEST_LEVEL_MAP.at(ribbon_parts[1])-1);
