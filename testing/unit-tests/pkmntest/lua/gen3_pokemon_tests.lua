@@ -200,8 +200,14 @@ function gen3_pokemon_tests.pokemon_test(game)
 
     luaunit.assertError(pokemon.get_location_met, pokemon, true)
 
-    luaunit.assertEquals(pokemon:get_location_met(false), "Fateful encounter")
-    luaunit.assertEquals(pokemon:get_original_game(), pokemon:get_game())
+    if game == "Colosseum" or game == "XD"
+    then
+        luaunit.assertEquals(pokemon:get_location_met(false), "Distant land")
+        luaunit.assertEquals(pokemon:get_original_game(), "Colosseum/XD")
+    else
+        luaunit.assertEquals(pokemon:get_location_met(false), "Fateful encounter")
+        luaunit.assertEquals(pokemon:get_original_game(), pokemon:get_game())
+    end
 
     luaunit.assertEquals(
         pokemon:get_experience(),
@@ -225,8 +231,11 @@ function gen3_pokemon_tests.pokemon_test(game)
     gen3_pokemon_tests.check_stats_map(pokemon:get_IVs())
     gen3_pokemon_tests.check_stats_map(pokemon:get_stats())
 
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    end
 
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
@@ -254,16 +263,21 @@ function gen3_pokemon_tests.pokemon_test(game)
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
     local personality = pokemon:get_personality()
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
-
-    -- This will fail if "shiny" is anywhere in the filepath.
-    luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        -- This will fail if "shiny" is anywhere in the filepath.
+        luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    end
 
     pokemon:set_shininess(true)
     luaunit.assertTrue(pokemon:is_shiny())
     luaunit.assertNotEquals(pokemon:get_personality(), personality)
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
-    luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    end
 
     luaunit.assertError(pokemon.set_held_item, pokemon, "Not an item")
 
@@ -337,6 +351,9 @@ function gen3_pokemon_tests.pokemon_test(game)
     if game == "FireRed" or game == "LeafGreen"
     then
         location = "Viridian Forest"
+    elseif game == "Colosseum" or game == "XD"
+    then
+        location = "Phenac City"
     else
         location = "Petalburg Woods"
     end
@@ -473,6 +490,10 @@ function test_gen3_colosseum_unown_form()
     gen3_pokemon_tests.unown_form_test("Colosseum")
 end
 
+function test_gen3_colosseum_pokemon()
+    gen3_pokemon_tests.pokemon_test("Colosseum")
+end
+
 -- XD
 
 function test_gen3_xd_invalid_pokemon()
@@ -485,4 +506,8 @@ end
 
 function test_gen3_xd_unown_form()
     gen3_pokemon_tests.unown_form_test("XD")
+end
+
+function test_gen3_xd_pokemon()
+    gen3_pokemon_tests.pokemon_test("XD")
 end
