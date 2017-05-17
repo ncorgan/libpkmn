@@ -266,10 +266,10 @@ public class CSharpPokemonTest {
         PKMNTest.Gen3PokemonTests.UnownFormTest("Colosseum");
     }
 
-    /*[Test]
+    [Test]
     public void Gen3ColosseumPokemonTest() {
         PKMNTest.Gen3PokemonTests.PokemonTest("Colosseum");
-    }*/
+    }
 
     /*
      * XD
@@ -289,10 +289,10 @@ public class CSharpPokemonTest {
         PKMNTest.Gen3PokemonTests.UnownFormTest("XD");
     }
 
-    /*[Test]
+    [Test]
     public void Gen3XDPokemonTest() {
         PKMNTest.Gen3PokemonTests.PokemonTest("XD");
-    }*/
+    }
 
     /*
      * I/O
