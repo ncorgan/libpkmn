@@ -75,7 +75,7 @@ namespace pkmn {
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;
 
             std::vector<LibPkmGC::u8> _data;
-            bool _colosseum;
+            bool _colosseum, _has_gci_data;
     };
 
 }

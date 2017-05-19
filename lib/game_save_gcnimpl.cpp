@@ -9,7 +9,7 @@
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
 #include "pokemon_party_gcnimpl.hpp"
-//#include "pokemon_pc_gcnimpl.hpp"
+#include "pokemon_pc_gcnimpl.hpp"
 
 #include "pksav/pksav_call.hpp"
 
@@ -25,9 +25,6 @@ namespace fs = boost::filesystem;
 namespace pkmn {
 
     #define GCN_PC_ID (_colosseum ? 68 : 75)
-
-    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-    BOOST_STATIC_CONSTEXPR int XD = 20;
 
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_BIN_SIZE = 0x60000;
     BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_GCI_SIZE = 0x60040;
@@ -45,19 +42,19 @@ namespace pkmn {
         ifile.read((char*)_data.data(), filesize);
         ifile.close();
 
-        bool has_gci_data = false;
+        _has_gci_data = false;
         if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
             _colosseum = true;
             _game_id = COLOSSEUM;
 
-            has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), has_gci_data));
+            _has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
+            _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), _has_gci_data));
         } else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
             _colosseum = false;
             _game_id = XD;
 
-            has_gci_data = (filesize == GCN_XD_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), has_gci_data));
+            _has_gci_data = (filesize == GCN_XD_GCI_SIZE);
+            _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), _has_gci_data));
         } else {
             throw std::invalid_argument("Not a valid Gamecube save.");
         }
@@ -72,7 +69,10 @@ namespace pkmn {
                              _game_id,
                              _current_slot->player->trainer->party
                          );
-        // TODO: PC
+        _pokemon_pc = pkmn::make_shared<pokemon_pc_gcnimpl>(
+                          _game_id,
+                          _current_slot->PC->boxes
+                      );
 
         _item_bag = pkmn::make_shared<item_bag_gcnimpl>(
                         _game_id,
@@ -90,7 +90,11 @@ namespace pkmn {
     void game_save_gcnimpl::save_as(
         const std::string &filepath
     ) {
-        _libpkmgc_save->save();
+        _libpkmgc_save->saveEncrypted((LibPkmGC::u8*)_data.data(), _has_gci_data);
+
+        std::ofstream ofile(filepath, std::ios::binary);
+        ofile.write((const char*)_data.data(), _data.size());
+        ofile.close();
 
         _filepath = fs::absolute(filepath).string();
     }
