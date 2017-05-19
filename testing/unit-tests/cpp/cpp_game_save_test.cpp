@@ -43,14 +43,15 @@ static const std::string GB_GAMES[] = {
 };
 
 static const std::string RIVAL_NAME_SET_GAMES[] = {
-    "Ruby", "Sapphire", "Emerald",
+    "Ruby", "Sapphire", "Emerald", "Colosseum", "XD"
     "Black", "White",
     "X", "Y"
 };
 
 static const std::string MALE_ONLY_GAMES[] = {
     "Red", "Blue", "Yellow",
-    "Gold", "Silver"
+    "Gold", "Silver",
+    "Colosseum", "XD"
 };
 
 namespace fs = boost::filesystem;
@@ -89,31 +90,34 @@ namespace pkmntest {
     static PKMN_INLINE bool is_gb_game(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(GB_GAMES)/sizeof(GB_GAMES[0]);
         return std::find(
                    GB_GAMES,
-                   GB_GAMES+6,
+                   GB_GAMES+arr_size,
                    game
-               ) != GB_GAMES+6;
+               ) != GB_GAMES+arr_size;
     }
 
     static PKMN_INLINE bool is_rival_name_set(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
         return std::find(
                    RIVAL_NAME_SET_GAMES,
-                   RIVAL_NAME_SET_GAMES+7,
+                   RIVAL_NAME_SET_GAMES+arr_size,
                    game
-               ) != RIVAL_NAME_SET_GAMES+7;
+               ) != RIVAL_NAME_SET_GAMES+arr_size;
     }
 
     static PKMN_INLINE bool is_male_only(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
         return std::find(
                    MALE_ONLY_GAMES,
-                   MALE_ONLY_GAMES+5,
+                   MALE_ONLY_GAMES+arr_size,
                    game
-               ) != MALE_ONLY_GAMES+5;
+               ) != MALE_ONLY_GAMES+arr_size;
     }
 
     static void test_trainer_name(
@@ -410,7 +414,8 @@ namespace pkmntest {
         pkmn::pokemon::sptr pokemon1,
         pkmn::pokemon::sptr pokemon2
     ) {
-        int generation = game_generations.at(pokemon1->get_game());
+        std::string game = pokemon1->get_game();
+        int generation = game_generations.at(game);
 
         // Names are stored separately in Generations I-II.
         if(generation < 3) {
@@ -419,22 +424,25 @@ namespace pkmntest {
         }
 
         // On the C++ level, check the underlying memory.
-        EXPECT_EQ(
-            0,
-            memcmp(
-                pokemon1->get_native_pc_data(),
-                pokemon2->get_native_pc_data(),
-                pksav_pc_pokemon_sizes[generation]
-            )
-        );
-        EXPECT_EQ(
-            0,
-            memcmp(
-                pokemon1->get_native_party_data(),
-                pokemon2->get_native_party_data(),
-                pksav_pokemon_party_data_sizes[generation]
-            )
-        );
+        if(game != "Colosseum" and game != "XD")
+        {
+            EXPECT_EQ(
+                0,
+                memcmp(
+                    pokemon1->get_native_pc_data(),
+                    pokemon2->get_native_pc_data(),
+                    pksav_pc_pokemon_sizes[generation]
+                )
+            );
+            EXPECT_EQ(
+                0,
+                memcmp(
+                    pokemon1->get_native_party_data(),
+                    pokemon2->get_native_party_data(),
+                    pksav_pokemon_party_data_sizes[generation]
+                )
+            );
+        }
     }
 
     static void compare_game_saves(
@@ -497,7 +505,10 @@ namespace pkmntest {
         }
 
         // On the C++ level, check the underlying memory.
-        EXPECT_EQ(0, memcmp(native1, native2, item_bag_size));
+        if(game != "Colosseum" and game != "XD")
+        {
+            EXPECT_EQ(0, memcmp(native1, native2, item_bag_size));
+        }
 
         const pkmn::item_pockets_t& pockets1 = item_bag1->get_pockets();
         const pkmn::item_pockets_t& pockets2 = item_bag2->get_pockets();
