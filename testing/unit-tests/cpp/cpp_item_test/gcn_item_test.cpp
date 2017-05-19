@@ -39,9 +39,6 @@ static const std::vector<std::string> xd_wrong_game_all_pocket_items = boost::as
     ("Berry")("Occa Berry")
 ;
 
-//BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-//BOOST_STATIC_CONSTEXPR int XD        = 20;
-
 class gcn_item_list_test: public item_list_test {};
 
 /*
