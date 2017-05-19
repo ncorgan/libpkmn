@@ -61,13 +61,8 @@ namespace pkmn {
 
         size_t index = 0;
         _current_slot = _libpkmgc_save->getMostRecentValidSlot(0, &index);
-        if(!_current_slot)
-        {
-            _current_slot = _libpkmgc_save->getMostRecentSlot();
-            if(!_current_slot)
-            {
-                throw std::invalid_argument("Could not find a save slot.");
-            }
+        if(!_current_slot) {
+            throw std::invalid_argument("Could not find a save slot.");
         }
 
         _pokemon_party = pkmn::make_shared<pokemon_party_gcnimpl>(
