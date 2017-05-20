@@ -38,7 +38,7 @@ namespace pkmn {
         size_t filesize = size_t(fs::file_size(filepath));
         _data.resize(filesize);
 
-        std::ifstream ifile(filepath);
+        std::ifstream ifile(filepath, std::ios::binary);
         ifile.read((char*)_data.data(), filesize);
         ifile.close();
 
