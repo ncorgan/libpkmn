@@ -149,15 +149,9 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_trainer_gender(
-        const std::string &trainer_gender
+        PKMN_UNUSED(const std::string &trainer_gender)
     ) {
-        if(trainer_gender == "Male") {
-            _current_slot->player->trainerGender = LibPkmGC::Male;
-        } else if(trainer_gender == "Female") {
-            _current_slot->player->trainerGender = LibPkmGC::Female;
-        } else {
-            throw std::invalid_argument("trainer_gender: valid values \"Male\", \"Female\"");
-        }
+        throw pkmn::feature_not_in_game_error("All trainers are male in Gamecube games.");
     }
 
     std::string game_save_gcnimpl::get_rival_name() {

@@ -208,15 +208,12 @@ namespace pkmntest {
 
         if(is_male_only(game)) {
             EXPECT_EQ("Male", save->get_trainer_gender());
-            if(game != "Colosseum" and game != "XD")
-            {
-                EXPECT_THROW(
-                    save->set_trainer_gender("Male");
-                , pkmn::feature_not_in_game_error);
-                EXPECT_THROW(
-                    save->set_trainer_gender("Female");
-                , pkmn::feature_not_in_game_error);
-            }
+            EXPECT_THROW(
+                save->set_trainer_gender("Male");
+            , pkmn::feature_not_in_game_error);
+            EXPECT_THROW(
+                save->set_trainer_gender("Female");
+            , pkmn::feature_not_in_game_error);
         } else {
             save->set_trainer_gender("Male");
             EXPECT_EQ("Male", save->get_trainer_gender());

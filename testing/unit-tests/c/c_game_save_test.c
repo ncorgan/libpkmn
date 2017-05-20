@@ -39,22 +39,26 @@ static char strbuffer[STRBUFFER_LEN] = {0};
 static pkmn_error_t error = PKMN_ERROR_NONE;
 static char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
 static char PKSAV_TEST_SAVES[STRBUFFER_LEN] = {0};
+static char LIBPKMN_TEST_FILES[STRBUFFER_LEN] = {0};
 
 static const char* RIVAL_NAME_SET_GAMES[] = {
     "Ruby", "Sapphire", "Emerald",
+    "Colosseum", "XD",
     "Black", "White",
     "X", "Y"
 };
 
 static const char* MALE_ONLY_GAMES[] = {
     "Red", "Blue", "Yellow",
-    "Gold", "Silver"
+    "Gold", "Silver",
+    "Colosseum", "XD"
 };
 
 static bool is_rival_name_set(
     const char* game
 ) {
-    for(size_t i = 0; i < 7; ++i) {
+    size_t length = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
+    for(size_t i = 0; i < length; ++i) {
         if(!strcmp(game, RIVAL_NAME_SET_GAMES[i])) {
             return true;
         }
@@ -66,7 +70,8 @@ static bool is_rival_name_set(
 static bool is_male_only(
     const char* game
 ) {
-    for(size_t i = 0; i < 5; ++i) {
+    size_t length = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
+    for(size_t i = 0; i < length; ++i) {
         if(!strcmp(game, MALE_ONLY_GAMES[i])) {
             return true;
         }
@@ -84,6 +89,10 @@ static void populate_path_vars() {
     char* value = getenv("PKSAV_TEST_SAVES");
     TEST_ASSERT_NOT_NULL(value);
     snprintf(PKSAV_TEST_SAVES, sizeof(PKSAV_TEST_SAVES), "%s", value);
+
+    value = getenv("LIBPKMN_TEST_FILES");
+    TEST_ASSERT_NOT_NULL(value);
+    snprintf(LIBPKMN_TEST_FILES, sizeof(LIBPKMN_TEST_FILES), "%s", value);
 }
 
 /*
@@ -1245,13 +1254,15 @@ static void test_game_save(
     pkmn_game_save_type_t save_type_from_file = PKMN_GAME_SAVE_TYPE_NONE;
     pkmn_game_save_handle_t game_save = NULL;
     pkmn_string_list_t item_list;
+    bool gamecube = !strcmp(game, "Colosseum") || !strcmp(game, "XD");
 
     char save_filepath[STRBUFFER_LEN] = {0};
     snprintf(
         save_filepath,
         sizeof(save_filepath),
         "%s%s%s%s%s",
-        PKSAV_TEST_SAVES, FS_SEPARATOR, subdir, FS_SEPARATOR, filename
+        gamecube ? LIBPKMN_TEST_FILES : PKSAV_TEST_SAVES,
+        FS_SEPARATOR, subdir, FS_SEPARATOR, filename
     );
 
     error = pkmn_game_save_detect_type(
@@ -1361,4 +1372,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE, "Ruby", "ruby_sapphire", "pokemon_ruby.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_EMERALD, "Emerald", "emerald", "pokemon_emerald.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN, "FireRed", "firered_leafgreen", "pokemon_firered.sav");
+    PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD, "Colosseum", "gamecube_saves", "pokemon_colosseum.gci");
+    PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD, "XD", "gamecube_saves", "pokemon_xd.gci");
 )
