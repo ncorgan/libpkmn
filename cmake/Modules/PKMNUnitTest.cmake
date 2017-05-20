@@ -52,7 +52,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(PKSAV_TEST_SAVES ${PKMN_SOURCE_DIR}/pksav/testing/pksav-test-saves)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
-            "${TESTS_BINARY_DIR}/pkmntest/python"
+            "${TESTS_SOURCE_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
