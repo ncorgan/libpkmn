@@ -833,6 +833,16 @@ namespace pkmn {
 
         pkmn::database::move_entry entry(move, get_game());
 
+        /*
+         * Shadow moves are not stored in the save data itself and replace the given
+         * move on demand, whether it be in-battle or on a stats screen. As such,
+         * don't allow it to be set here.
+         */
+        if(entry.get_type() == "Shadow")
+        {
+            throw std::invalid_argument("You cannot set Shadow moves.");
+        }
+
         GC_RCAST->moves[index].move = LibPkmGC::PokemonMoveIndex(entry.get_move_id());
         GC_RCAST->moves[index].currentPPs = LibPkmGC::u8(entry.get_pp(0));
         GC_RCAST->moves[index].nbPPUpsUsed = 0;

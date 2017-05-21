@@ -297,6 +297,7 @@ namespace pkmntest {
     ) {
         int generation = game_generations.at(game);
         pkmn::rng<uint32_t> rng;
+        (void)move_list;
 
         // Don't deal with Deoxys issues here.
         std::string species;
@@ -314,10 +315,12 @@ namespace pkmntest {
                                       ((rng.rand() % 99) + 2)
                                   );
         for(int i = 0; i < 4; ++i) {
-            ret->set_move(
-                move_list[rng.rand() % move_list.size()],
-                i
-            );
+            std::string move = "";
+            do
+            {
+                move = move_list[rng.rand() % move_list.size()];
+            } while(move.find("Shadow") == 0);
+            ret->set_move(move, i);
         }
 
         if(generation >= 2) {
@@ -447,6 +450,15 @@ namespace pkmntest {
             EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
             EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
 
+            const pkmn::move_slots_t& moves1 = pokemon1->get_moves();
+            const pkmn::move_slots_t& moves2 = pokemon2->get_moves();
+            for(size_t i = 0; i < 4; ++i)
+            {
+                // These may be different if Shadow moves were mistakenly allowed to be set.
+                EXPECT_EQ(moves1.at(i).move.get_move_id(), moves2.at(i).move.get_move_id());
+                EXPECT_EQ(native1->moves[i].move, native2->moves[i].move);
+                EXPECT_EQ(native1->moves[i].currentPPs, native2->moves[i].currentPPs);
+            }
             for(size_t i = 0; i < 6; ++i)
             {
                 EXPECT_EQ(native1->EVs[i], native2->EVs[i]);

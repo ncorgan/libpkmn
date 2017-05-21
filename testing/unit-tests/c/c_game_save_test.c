@@ -520,9 +520,16 @@ static void get_random_pokemon(
     TEST_ASSERT_NOT_NULL(*pokemon_out);
 
     for(int i = 0; i < 4; ++i) {
+        const char* move = NULL;
+        size_t index = 0;
+        do
+        {
+            index = rand() % move_list->length;
+            move = move_list->strings[index];
+        } while(strstr(move_list->strings[index], "Shadow"));
         error = pkmn_pokemon_set_move(
                     *pokemon_out,
-                    move_list->strings[rand() % move_list->length],
+                    move,
                     i
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
