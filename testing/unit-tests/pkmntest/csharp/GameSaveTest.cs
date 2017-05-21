@@ -16,6 +16,7 @@ public class GameSaveTest {
     private static System.Random rng = new System.Random();
 
     private static string PKSAV_TEST_SAVES = System.Environment.GetEnvironmentVariable("PKSAV_TEST_SAVES");
+    private static string LIBPKMN_TEST_FILES = System.Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
     private static string PKMN_TMP_DIR = PKMN.Paths.GetTmpDir();
 
     private static ushort LIBPKMN_OT_PID = 1351;
@@ -25,13 +26,15 @@ public class GameSaveTest {
 
     private static string[] RIVAL_NAME_SET_GAMES = {
         "Ruby", "Sapphire", "Emerald",
+        "Colosseum", "XD",
         "Black", "White",
         "X", "Y"
     };
 
     private static string[] MALE_ONLY_GAMES = {
         "Red", "Blue", "Yellow",
-        "Gold", "Silver"
+        "Gold", "Silver",
+        "Colosseum", "XD"
     };
 
     /*
@@ -250,10 +253,12 @@ public class GameSaveTest {
                                );
 
         for(int i = 0; i < 4; ++i) {
-            ret.SetMove(
-                moveList[rng.Next(0, moveList.Count)],
-                i
-            );
+            string move = "";
+            do
+            {
+                move = moveList[rng.Next(0, moveList.Count)];
+            } while(move.StartsWith("Shadow"));
+            ret.SetMove(move, i);
         }
 
         if(generation >= 2) {
@@ -414,7 +419,15 @@ public class GameSaveTest {
         string game,
         string subPath
     ) {
-        string saveFilepath = Path.GetFullPath(Path.Combine(PKSAV_TEST_SAVES, subPath));
+        string saveFilepath = "";
+        if(game.Equals("Colosseum") || game.Equals("XD"))
+        {
+            saveFilepath = Path.GetFullPath(Path.Combine(LIBPKMN_TEST_FILES, subPath));
+        }
+        else
+        {
+            saveFilepath = Path.GetFullPath(Path.Combine(PKSAV_TEST_SAVES, subPath));
+        }
         Assert.AreEqual(PKMN.GameSave.DetectType(saveFilepath), type);
 
         PKMN.GameSave gameSave = new PKMN.GameSave(saveFilepath);
