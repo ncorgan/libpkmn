@@ -595,6 +595,27 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         pokemon->get_experience(),
         int(native->calculateExpFromLevel(native->partyData.level+1))
     );
+
+    // Confirm setting the Shadow form works properly under the hood.
+    bool colosseum = (get_game() == "Colosseum");
+    std::string species = colosseum ? "Ledian" : "Ledyba";
+    LibPkmGC::u16 shadow_pokemon_id = colosseum ? 22 : 83;
+
+    pkmn::pokemon::sptr shadow_pokemon = pkmn::pokemon::make(
+                                             species,
+                                             get_game(),
+                                             "",
+                                             50
+                                         );
+    const LibPkmGC::GC::Pokemon* native_shadow_pokemon = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(
+                                                             shadow_pokemon->get_native_pc_data()
+                                                         );
+    EXPECT_EQ("Standard", shadow_pokemon->get_form());
+    EXPECT_EQ(0, native_shadow_pokemon->shadowPkmID);
+
+    shadow_pokemon->set_form("Shadow");
+    EXPECT_EQ("Shadow", shadow_pokemon->get_form());
+    EXPECT_EQ(shadow_pokemon_id, native_shadow_pokemon->shadowPkmID);
 }
 
 static const std::vector<std::pair<std::string, std::string>> gba_params = {

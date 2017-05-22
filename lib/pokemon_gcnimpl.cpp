@@ -73,6 +73,8 @@ typedef enum {
 
 namespace pkmn {
 
+    static pkmn::database::sptr _db;
+
     BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
     BOOST_STATIC_CONSTEXPR int XD = 20;
 
@@ -123,6 +125,9 @@ namespace pkmn {
         int level
     ): pokemon_impl(std::move(database_entry))
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         if(_database_entry.get_game_id() == COLOSSEUM) {
             _native_pc = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon);
         } else {
@@ -204,6 +209,9 @@ namespace pkmn {
            game_id
        )
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         _native_pc = reinterpret_cast<void*>(native);
         _our_pc_mem = false;
 
@@ -231,6 +239,9 @@ namespace pkmn {
            COLOSSEUM
        )
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         _native_pc = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon(native));
         _our_pc_mem = true;
 
@@ -258,6 +269,9 @@ namespace pkmn {
            XD 
        )
     {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         _native_pc = reinterpret_cast<void*>(new LibPkmGC::XD::Pokemon(native));
         _our_pc_mem = true;
 
@@ -291,10 +305,30 @@ namespace pkmn {
     void pokemon_gcnimpl::set_form(
         const std::string &form
     ) {
+        bool was_shadow = (_database_entry.get_form() == "Shadow");
         _database_entry.set_form(form);
 
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_personality_from_form();
+        }
+
+        if(was_shadow and form != "Shadow")
+        {
+            GC_RCAST->shadowPkmID = 0;
+        }
+        else if(form == "Shadow")
+        {
+            static const char* shadow_query = \
+                "SELECT shadow_pokemon_id FROM shadow_pokemon WHERE species_id=? AND "
+                "colosseum=?";
+
+            GC_RCAST->shadowPkmID = LibPkmGC::u16(
+                                        pkmn::database::query_db_bind2<int, int, int>(
+                                            _db, shadow_query,
+                                            _database_entry.get_species_id(),
+                                            ((_database_entry.get_game_id() == COLOSSEUM) ? 1 : 0)
+                                        )
+                                    );
         }
     }
 

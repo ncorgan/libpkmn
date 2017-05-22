@@ -447,6 +447,7 @@ namespace pkmntest {
             EXPECT_EQ(native1->SID, native2->SID);
             EXPECT_EQ(native1->TID, native2->TID);
             EXPECT_EQ(native1->PID, native2->PID);
+            EXPECT_EQ(native1->shadowPkmID, native2->shadowPkmID);
             EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
             EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
 
