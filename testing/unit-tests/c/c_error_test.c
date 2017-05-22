@@ -3145,6 +3145,16 @@ static void database_lists_error_test() {
     TEST_NULL_POINTER_RETURN("game_list_out");
 
     /*
+     * pkmn_database_gamecube_shadow_pokemon_list
+     */
+
+    error = pkmn_database_gamecube_shadow_pokemon_list(
+                false,
+                NULL // gamecube_shadow_pokemon_list_out
+            );
+    TEST_NULL_POINTER_RETURN("gamecube_shadow_pokemon_list_out");
+
+    /*
      * pkmn_database_item_list
      */
 

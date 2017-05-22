@@ -114,6 +114,15 @@ TEST(cpp_lists_test, game_list_test) {
     EXPECT_EQ(26, games6.size());
 }
 
+TEST(cpp_lists_test, gamecube_shadow_pokemon_list_test)
+{
+    std::vector<std::string> colosseum_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(true);
+    EXPECT_EQ(48, colosseum_shadow_pokemon.size());
+
+    std::vector<std::string> xd_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(false);
+    EXPECT_EQ(83, xd_shadow_pokemon.size());
+}
+
 TEST(cpp_lists_test, item_list_test) {
     /*
      * Make sure invalid games fail.
