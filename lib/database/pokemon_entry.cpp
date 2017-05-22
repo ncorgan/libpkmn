@@ -1012,6 +1012,10 @@ namespace pkmn { namespace database {
             } else if(form_iter == forms.begin()) {
                 // Standard form, whatever that may be named
                 _form_id = _pokemon_id = _species_id;
+                if(game_is_gamecube(_game_id))
+                {
+                    _shadow = false;
+                }
             } else {
 
                 if(game_is_gamecube(_game_id) and form_name == "Shadow")

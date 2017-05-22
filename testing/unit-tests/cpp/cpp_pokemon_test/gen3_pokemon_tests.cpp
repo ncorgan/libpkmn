@@ -616,6 +616,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     shadow_pokemon->set_form("Shadow");
     EXPECT_EQ("Shadow", shadow_pokemon->get_form());
     EXPECT_EQ(shadow_pokemon_id, native_shadow_pokemon->shadowPkmID);
+
+    shadow_pokemon->set_form("Standard");
+    EXPECT_EQ("Standard", shadow_pokemon->get_form());
+    EXPECT_EQ(0, native_shadow_pokemon->shadowPkmID);
 }
 
 static const std::vector<std::pair<std::string, std::string>> gba_params = {
