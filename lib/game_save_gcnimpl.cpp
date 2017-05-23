@@ -11,6 +11,8 @@
 #include "pokemon_party_gcnimpl.hpp"
 #include "pokemon_pc_gcnimpl.hpp"
 
+#include "misc_common.hpp"
+
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -172,7 +174,7 @@ namespace pkmn {
         int money
     ) {
         if(money < 0 or money > MONEY_MAX_VALUE) {
-            throw pkmn::range_error("money", 0, MONEY_MAX_VALUE);
+            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
         }
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);

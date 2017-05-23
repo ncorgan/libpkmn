@@ -71,7 +71,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > (PARTY_SIZE-1)) {
-            throw pkmn::range_error("index", 0, (PARTY_SIZE-1));
+            pkmn::throw_out_of_range("index", 0, (PARTY_SIZE-1));
         }
 
         return _pokemon_list.at(index);

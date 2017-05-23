@@ -362,16 +362,16 @@ namespace pkmn {
         float chance_female = _database_entry.get_chance_female();
 
         // Check for invalid genders.
-        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
+        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f)) {
             if(gender != "Genderless") {
                 throw std::invalid_argument("This Pokémon is genderless.");
             } else {
                 // Nothing to do.
                 return;
             }
-        } else if(pkmn_floats_close(chance_male, 1.0f) and gender != "Male") {
+        } else if(pkmn::floats_close(chance_male, 1.0f) and gender != "Male") {
             throw std::invalid_argument("This Pokémon is male-only.");
-        } else if(pkmn_floats_close(chance_female, 1.0f) and gender != "Female") {
+        } else if(pkmn::floats_close(chance_female, 1.0f) and gender != "Female") {
             throw std::invalid_argument("This Pokémon is female-only.");
         } else if(gender == "Genderless") {
             throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
@@ -383,11 +383,11 @@ namespace pkmn {
             *personality_ptr &= ~0xFF;
 
             pkmn::rng<uint32_t> rng;
-            if(pkmn_floats_close(chance_male, 0.875f)) {
+            if(pkmn::floats_close(chance_male, 0.875f)) {
                 *personality_ptr |= rng.rand(0, 30);
-            } else if(pkmn_floats_close(chance_male, 0.75f)) {
+            } else if(pkmn::floats_close(chance_male, 0.75f)) {
                 *personality_ptr |= rng.rand(0, 63);
-            } else if(pkmn_floats_close(chance_male, 0.5f)) {
+            } else if(pkmn::floats_close(chance_male, 0.5f)) {
                 *personality_ptr |= rng.rand(0, 126);
             } else {
                 *personality_ptr |= rng.rand(0, 190);
@@ -429,10 +429,10 @@ namespace pkmn {
         int value,
         uint16_t* iv_data_ptr
     ) {
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_IV_in_bounds(value, false)) {
-            throw pkmn::range_error(stat, 0, 15);
+        if(not pkmn::string_is_gen1_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
+        } else if(not pkmn::IV_in_bounds(value, false)) {
+            pkmn::throw_out_of_range("stat", 0, 15);
         }
 
         pokemon_scoped_lock lock(this);
@@ -456,10 +456,10 @@ namespace pkmn {
         int value,
         uint32_t* iv_data_ptr
     ) {
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_IV_in_bounds(value, true)) {
-            throw pkmn::range_error(stat, 0, 31);
+        if(not pkmn::string_is_modern_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
+        } else if(not pkmn::IV_in_bounds(value, true)) {
+            pkmn::throw_out_of_range("stat", 0, 31);
         }
 
         pokemon_scoped_lock lock(this);
@@ -494,7 +494,7 @@ namespace pkmn {
             throw std::invalid_argument("Invalid contest stat.");
         }
         if(value < 0 or value > 255) {
-            throw pkmn::range_error("value", 0, 255);
+            pkmn::throw_out_of_range("value", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);

@@ -226,10 +226,10 @@ namespace pkmntest {
 
         EXPECT_THROW(
             save->set_money(-1);
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_THROW(
             save->set_money(MONEY_MAX_VALUE+1);
-        , pkmn::range_error);
+        , std::out_of_range);
 
         save->set_money(123456);
         EXPECT_EQ(123456, save->get_money());

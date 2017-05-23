@@ -8,7 +8,10 @@
 #include "pokemon_pc_gcnimpl.hpp"
 #include "pokemon_box_gcnimpl.hpp"
 
+#include "misc_common.hpp"
+
 #define NATIVE_RCAST reinterpret_cast<LibPkmGC::GC::PokemonBox**>(_native)
+#define GCN_NUM_BOXES (_game_id == COLOSSEUM ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
 namespace pkmn {
 

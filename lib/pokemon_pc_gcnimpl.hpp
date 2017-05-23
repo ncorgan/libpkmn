@@ -13,12 +13,8 @@
 
 namespace pkmn {
 
-    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-    BOOST_STATIC_CONSTEXPR int XD = 20;
-
     BOOST_STATIC_CONSTEXPR int COLOSSEUM_NUM_BOXES = 3;
     BOOST_STATIC_CONSTEXPR int XD_NUM_BOXES = 8;
-    #define GCN_NUM_BOXES (_game_id == COLOSSEUM ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
     class pokemon_pc_gcnimpl: public pokemon_pc_impl {
         public:

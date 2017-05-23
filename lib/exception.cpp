@@ -32,13 +32,4 @@ namespace pkmn {
               % pksav_strerror(pksav_error_t(pksav_error_code)))
        ) {}
 
-    range_error::range_error(
-        const std::string &value,
-        int min,
-        int max
-    ): std::out_of_range(
-           str(boost::format("%s: valid values %d-%d")
-               % value.c_str() % min % max)
-       ) {}
-
 }

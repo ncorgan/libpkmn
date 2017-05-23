@@ -41,8 +41,6 @@
 #define COLO_DCAST(src_ptr) dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(src_ptr)
 #define XD_DCAST(src_ptr)   dynamic_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
 
-BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-
 namespace pkmn { namespace mem {
 
     void set_pokemon_in_box(

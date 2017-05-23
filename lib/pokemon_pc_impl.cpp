@@ -69,7 +69,7 @@ namespace pkmn {
     ) {
         int num_boxes = get_num_boxes();
         if(index < 0 or index > (num_boxes-1)) {
-            throw pkmn::range_error("index", 0, (num_boxes-1));
+            pkmn::throw_out_of_range("index", 0, (num_boxes-1));
         }
 
         return _box_list.at(index);
