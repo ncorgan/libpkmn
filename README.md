@@ -11,7 +11,6 @@ as analyzing all aspects of the games, allowing for full customization of the ga
 Features in development:
  * Damage calculations
  * Generation IV save support
- * Colosseum/XD save support
  * Java API
  * Ruby API
  * Generation III-V Spinda sprite generation
@@ -80,4 +79,4 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/05/07
+README last updated: 2017/05/23
