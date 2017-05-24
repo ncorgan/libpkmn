@@ -19,7 +19,6 @@
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include "misc_common.hpp"
-#include "time.h"
 #include "types/rng.hpp"
 
 #include <boost/assign/list_of.hpp>
@@ -35,8 +34,6 @@ static const std::vector<std::string> natures = boost::assign::list_of
     ("Modest")("Mild")("Quiet")("Bashful")("Rash")
     ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
 ;
-
-static pkmn::rng<uint32_t> _rng;
 
 BOOST_STATIC_CONSTEXPR unsigned long long ONE_SECOND = (unsigned long long)1e6;
 
@@ -64,8 +61,6 @@ namespace pkmn { namespace calculations {
         const std::string &gender,
         const std::string &nature
     ) {
-        unsigned long long before_timestamp = 0;
-        unsigned long long after_timestamp = 0;
         uint32_t ret = 0;
 
         pkmn::database::pokemon_entry entry(species, "Omega Ruby", "");
@@ -111,20 +106,20 @@ namespace pkmn { namespace calculations {
         uint32_t index = uint32_t(iter - natures.begin());
 
         // Start trying to find a valid value.
-        before_timestamp = cal_highres_timestamp();
         uint32_t gender_threshold = get_gender_threshold(chance_male);
         bool found = false;
         size_t count = 0;
+        pkmn::rng<uint32_t> rng;
         do {
-            ret = _rng.rand();
+            ret = rng.rand();
 
             // Set the gender if applicable.
             if(gender == "Male") {
                 ret &= ~0xFF;
-                ret |= (_rng.rand() % (0xFF - gender_threshold) + gender_threshold);
+                ret |= (rng.rand() % (0xFF - gender_threshold) + gender_threshold);
             } else if(gender == "Female") {
                 ret &= ~0xFF;
-                ret |= (_rng.rand() % gender_threshold);
+                ret |= (rng.rand() % gender_threshold);
             }
 
             if(modern_shiny(ret, trainer_id) == shiny and
@@ -134,13 +129,8 @@ namespace pkmn { namespace calculations {
                 found = true;
             }
 
-            after_timestamp = cal_highres_timestamp();
             ++count;
-        } while(not found and (after_timestamp - before_timestamp) < ONE_SECOND);
-
-        if(not found) {
-            throw std::runtime_error("Failed to generate a valid personality.");
-        }
+        } while(not found);
 
         return ret;
     }
