@@ -116,7 +116,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw pkmn::range_error("amount", 1, 99);
+            pkmn::throw_out_of_range("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());
@@ -144,7 +144,7 @@ namespace pkmn {
         int amount
     ) {
         if(amount < 1 or amount > 99) {
-            throw pkmn::range_error("amount", 1, 99);
+            pkmn::throw_out_of_range("amount", 1, 99);
         }
 
         pkmn::database::item_entry item(name, get_game());

@@ -37,6 +37,7 @@ replacements = dict(Ev = "EV",
                     Pc = "PC",
                     TmHm = "TMHM",
                     Pksav = "PKSav",
+                    Libpkmgc = "LibPkmGC",
                     Sqlite3 = "SQLite3",
                     Sqlitecpp = "SQLiteCpp",
                     Datetime = "DateTime"

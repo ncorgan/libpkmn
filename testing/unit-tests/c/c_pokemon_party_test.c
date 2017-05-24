@@ -51,13 +51,13 @@ static void test_empty_pokemon_party(
                 -1,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_party_get_pokemon(
                 party,
                 6,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     for(int i = 0; i < 6; ++i) {
         error = pkmn_pokemon_get_species(
@@ -139,13 +139,13 @@ static void test_setting_pokemon_in_party(
                 -1,
                 original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_party_set_pokemon(
                 party,
                 6,
                 original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Create new Pokémon and place in party. The original variables should
@@ -330,7 +330,7 @@ static void test_setting_pokemon_in_party(
                 4,
                 bulbasaur
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_party_get_num_pokemon(
         party,
         &num_pokemon
@@ -566,6 +566,18 @@ static void leafgreen_pokemon_party_test() {
     pokemon_party_test_common("LeafGreen");
 }
 
+// Colosseum
+
+static void colosseum_pokemon_party_test() {
+    pokemon_party_test_common("Colosseum");
+}
+
+// XD
+
+static void xd_pokemon_party_test() {
+    pokemon_party_test_common("XD");
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(red_pokemon_party_test)
     PKMN_C_TEST(blue_pokemon_party_test)
@@ -580,4 +592,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_pokemon_party_test)
     PKMN_C_TEST(firered_pokemon_party_test)
     PKMN_C_TEST(leafgreen_pokemon_party_test)
+
+    PKMN_C_TEST(colosseum_pokemon_party_test)
+    PKMN_C_TEST(xd_pokemon_party_test)
 )

@@ -16,6 +16,11 @@ public class CSharpBuildInfoTest {
     }
 
     [Test]
+    public void LibPkmGCVersionTest() {
+        Assert.Greater(PKMN.BuildInfo.LibPkmGCVersion.Length, 0);
+    }
+
+    [Test]
     public void PKSavVersionTest() {
         Assert.Greater(PKMN.BuildInfo.PKSavVersion.Length, 0);
     }

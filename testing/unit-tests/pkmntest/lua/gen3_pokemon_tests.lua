@@ -9,18 +9,18 @@ local pkmn = require("pkmn")
 local luaunit = require("luaunit")
 local pokemon_tests = require("pokemon_tests")
 
-local gba_pokemon_tests = {}
+local gen3_pokemon_tests = {}
 
-gba_pokemon_tests.MARKINGS = {"Circle", "Triangle", "Square", "Heart"}
-gba_pokemon_tests.CONTEST_TYPES = {"Cool", "Beauty", "Cute", "Smart", "Tough"}
-gba_pokemon_tests.CONTEST_LEVELS = {"", " Super", " Hyper", " Master"}
-gba_pokemon_tests.RIBBONS = {"Champion", "Winning", "Victory", "Artist",
+gen3_pokemon_tests.MARKINGS = {"Circle", "Triangle", "Square", "Heart"}
+gen3_pokemon_tests.CONTEST_TYPES = {"Cool", "Beauty", "Cute", "Smart", "Tough"}
+gen3_pokemon_tests.CONTEST_LEVELS = {"", " Super", " Hyper", " Master"}
+gen3_pokemon_tests.RIBBONS = {"Champion", "Winning", "Victory", "Artist",
                              "Effort", "Marine", "Land", "Sky",
                              "Country", "National", "Earth", "World"}
-gba_pokemon_tests.STATS = {"HP", "Attack", "Defense", "Speed",
+gen3_pokemon_tests.STATS = {"HP", "Attack", "Defense", "Speed",
                            "Special Attack", "Special Defense"}
 
-function gba_pokemon_tests.unown_form_test(game)
+function gen3_pokemon_tests.unown_form_test(game)
     local unown_forms = pkmn.database.pokemon_entry("Unown", "Omega Ruby", ""):get_forms()
     for i = 1, #unown_forms
     do
@@ -44,31 +44,31 @@ function gba_pokemon_tests.unown_form_test(game)
     end
 end
 
-function gba_pokemon_tests.check_markings_map(markings_map)
+function gen3_pokemon_tests.check_markings_map(markings_map)
     luaunit.assertEquals(#markings_map, 4)
 
-    for i = 1, #gba_pokemon_tests.MARKINGS
+    for i = 1, #gen3_pokemon_tests.MARKINGS
     do
-        luaunit.assertTrue(markings_map:has_key(gba_pokemon_tests.MARKINGS[i]))
-        luaunit.assertFalse(markings_map[gba_pokemon_tests.MARKINGS[i]])
+        luaunit.assertTrue(markings_map:has_key(gen3_pokemon_tests.MARKINGS[i]))
+        luaunit.assertFalse(markings_map[gen3_pokemon_tests.MARKINGS[i]])
     end
 
     luaunit.assertFalse(markings_map:has_key("Star"))
     luaunit.assertFalse(markings_map:has_key("Diamond"))
 end
 
-function gba_pokemon_tests.check_ribbons_map(ribbons_map)
+function gen3_pokemon_tests.check_ribbons_map(ribbons_map)
     luaunit.assertEquals(#ribbons_map, 32)
 
     -- Check contest ribbons.
-    for i = 1, #gba_pokemon_tests.CONTEST_TYPES
+    for i = 1, #gen3_pokemon_tests.CONTEST_TYPES
     do
-        for j = 1, #gba_pokemon_tests.CONTEST_LEVELS
+        for j = 1, #gen3_pokemon_tests.CONTEST_LEVELS
         do
             local ribbon_name = string.format(
                                     "%s%s",
-                                    gba_pokemon_tests.CONTEST_TYPES[i],
-                                    gba_pokemon_tests.CONTEST_LEVELS[j]
+                                    gen3_pokemon_tests.CONTEST_TYPES[i],
+                                    gen3_pokemon_tests.CONTEST_LEVELS[j]
                                 )
             luaunit.assertTrue(ribbons_map:has_key(ribbon_name))
             luaunit.assertFalse(ribbons_map[ribbon_name])
@@ -76,20 +76,20 @@ function gba_pokemon_tests.check_ribbons_map(ribbons_map)
     end
 
     -- Check other ribbons.
-    for i = 1, #gba_pokemon_tests.RIBBONS
+    for i = 1, #gen3_pokemon_tests.RIBBONS
     do
-        luaunit.assertTrue(ribbons_map:has_key(gba_pokemon_tests.RIBBONS[i]))
-        luaunit.assertFalse(ribbons_map[gba_pokemon_tests.RIBBONS[i]])
+        luaunit.assertTrue(ribbons_map:has_key(gen3_pokemon_tests.RIBBONS[i]))
+        luaunit.assertFalse(ribbons_map[gen3_pokemon_tests.RIBBONS[i]])
     end
 end
 
-function gba_pokemon_tests.check_contest_stats_map(contest_stats_map)
+function gen3_pokemon_tests.check_contest_stats_map(contest_stats_map)
     luaunit.assertEquals(#contest_stats_map, 6)
 
-    for i = 1, #gba_pokemon_tests.CONTEST_TYPES
+    for i = 1, #gen3_pokemon_tests.CONTEST_TYPES
     do
-        luaunit.assertTrue(contest_stats_map:has_key(gba_pokemon_tests.CONTEST_TYPES[i]))
-        luaunit.assertEquals(contest_stats_map[gba_pokemon_tests.CONTEST_TYPES[i]], 0)
+        luaunit.assertTrue(contest_stats_map:has_key(gen3_pokemon_tests.CONTEST_TYPES[i]))
+        luaunit.assertEquals(contest_stats_map[gen3_pokemon_tests.CONTEST_TYPES[i]], 0)
     end
 
     luaunit.assertTrue(contest_stats_map:has_key("Feel"))
@@ -97,7 +97,7 @@ function gba_pokemon_tests.check_contest_stats_map(contest_stats_map)
     luaunit.assertFalse(contest_stats_map:has_key("Sheen"))
 end
 
-function gba_pokemon_tests.check_stats_map(stats_map)
+function gen3_pokemon_tests.check_stats_map(stats_map)
     local stats = {"HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"}
     for i = 1, #stats
     do
@@ -107,25 +107,25 @@ function gba_pokemon_tests.check_stats_map(stats_map)
     luaunit.assertFalse(stats_map:has_key("Special"))
 end
 
-function gba_pokemon_tests.markings_test(pokemon)
-    for i = 1, #gba_pokemon_tests.MARKINGS
+function gen3_pokemon_tests.markings_test(pokemon)
+    for i = 1, #gen3_pokemon_tests.MARKINGS
     do
-        luaunit.assertFalse(pokemon:get_markings()[gba_pokemon_tests.MARKINGS[i]])
-        pokemon:set_marking(gba_pokemon_tests.MARKINGS[i], true)
-        luaunit.assertTrue(pokemon:get_markings()[gba_pokemon_tests.MARKINGS[i]])
+        luaunit.assertFalse(pokemon:get_markings()[gen3_pokemon_tests.MARKINGS[i]])
+        pokemon:set_marking(gen3_pokemon_tests.MARKINGS[i], true)
+        luaunit.assertTrue(pokemon:get_markings()[gen3_pokemon_tests.MARKINGS[i]])
     end
 end
 
-function gba_pokemon_tests.ribbons_test(pokemon)
+function gen3_pokemon_tests.ribbons_test(pokemon)
     -- Check contest ribbons.
-    for i = 1, #gba_pokemon_tests.CONTEST_TYPES
+    for i = 1, #gen3_pokemon_tests.CONTEST_TYPES
     do
-        for j = 1, #gba_pokemon_tests.CONTEST_LEVELS
+        for j = 1, #gen3_pokemon_tests.CONTEST_LEVELS
         do
             local ribbon_name = string.format(
                                     "%s%s",
-                                    gba_pokemon_tests.CONTEST_TYPES[i],
-                                    gba_pokemon_tests.CONTEST_LEVELS[j]
+                                    gen3_pokemon_tests.CONTEST_TYPES[i],
+                                    gen3_pokemon_tests.CONTEST_LEVELS[j]
                                 )
             luaunit.assertFalse(pokemon:get_ribbons()[ribbon_name])
             pokemon:set_ribbon(ribbon_name, true)
@@ -134,43 +134,43 @@ function gba_pokemon_tests.ribbons_test(pokemon)
     end
 
     -- Check other ribbons.
-    for i = 1, #gba_pokemon_tests.RIBBONS
+    for i = 1, #gen3_pokemon_tests.RIBBONS
     do
-        luaunit.assertFalse(pokemon:get_ribbons()[gba_pokemon_tests.RIBBONS[i]])
-        pokemon:set_ribbon(gba_pokemon_tests.RIBBONS[i], true)
-        luaunit.assertTrue(pokemon:get_ribbons()[gba_pokemon_tests.RIBBONS[i]])
+        luaunit.assertFalse(pokemon:get_ribbons()[gen3_pokemon_tests.RIBBONS[i]])
+        pokemon:set_ribbon(gen3_pokemon_tests.RIBBONS[i], true)
+        luaunit.assertTrue(pokemon:get_ribbons()[gen3_pokemon_tests.RIBBONS[i]])
     end
 end
 
-function gba_pokemon_tests.contest_stats_test(pokemon)
-    for i = 1, #gba_pokemon_tests.CONTEST_TYPES
+function gen3_pokemon_tests.contest_stats_test(pokemon)
+    for i = 1, #gen3_pokemon_tests.CONTEST_TYPES
     do
-        luaunit.assertEquals(pokemon:get_contest_stats()[gba_pokemon_tests.CONTEST_TYPES[i]], 0)
+        luaunit.assertEquals(pokemon:get_contest_stats()[gen3_pokemon_tests.CONTEST_TYPES[i]], 0)
         local value = math.random(0, 255)
-        pokemon:set_contest_stat(gba_pokemon_tests.CONTEST_TYPES[i], value)
-        luaunit.assertEquals(pokemon:get_contest_stats()[gba_pokemon_tests.CONTEST_TYPES[i]], value)
+        pokemon:set_contest_stat(gen3_pokemon_tests.CONTEST_TYPES[i], value)
+        luaunit.assertEquals(pokemon:get_contest_stats()[gen3_pokemon_tests.CONTEST_TYPES[i]], value)
     end
 end
 
-function gba_pokemon_tests.EVs_test(pokemon)
-    for i = 1, #gba_pokemon_tests.STATS
+function gen3_pokemon_tests.EVs_test(pokemon)
+    for i = 1, #gen3_pokemon_tests.STATS
     do
         local value = math.random(0, 255)
-        pokemon:set_EV(gba_pokemon_tests.STATS[i], value)
-        luaunit.assertEquals(pokemon:get_EVs()[gba_pokemon_tests.STATS[i]], value)
+        pokemon:set_EV(gen3_pokemon_tests.STATS[i], value)
+        luaunit.assertEquals(pokemon:get_EVs()[gen3_pokemon_tests.STATS[i]], value)
     end
 end
 
-function gba_pokemon_tests.IVs_test(pokemon)
-    for i = 1, #gba_pokemon_tests.STATS
+function gen3_pokemon_tests.IVs_test(pokemon)
+    for i = 1, #gen3_pokemon_tests.STATS
     do
         local value = math.random(0, 31)
-        pokemon:set_IV(gba_pokemon_tests.STATS[i], value)
-        luaunit.assertEquals(pokemon:get_IVs()[gba_pokemon_tests.STATS[i]], value)
+        pokemon:set_IV(gen3_pokemon_tests.STATS[i], value)
+        luaunit.assertEquals(pokemon:get_IVs()[gen3_pokemon_tests.STATS[i]], value)
     end
 end
 
-function gba_pokemon_tests.pokemon_test(game)
+function gen3_pokemon_tests.pokemon_test(game)
     local species = "Torchic"
     local pokemon = pkmn.pokemon(species, game, "", 30)
 
@@ -200,8 +200,14 @@ function gba_pokemon_tests.pokemon_test(game)
 
     luaunit.assertError(pokemon.get_location_met, pokemon, true)
 
-    luaunit.assertEquals(pokemon:get_location_met(false), "Fateful encounter")
-    luaunit.assertEquals(pokemon:get_original_game(), pokemon:get_game())
+    if game == "Colosseum" or game == "XD"
+    then
+        luaunit.assertEquals(pokemon:get_location_met(false), "Distant land")
+        luaunit.assertEquals(pokemon:get_original_game(), "Colosseum/XD")
+    else
+        luaunit.assertEquals(pokemon:get_location_met(false), "Fateful encounter")
+        luaunit.assertEquals(pokemon:get_original_game(), pokemon:get_game())
+    end
 
     luaunit.assertEquals(
         pokemon:get_experience(),
@@ -209,9 +215,9 @@ function gba_pokemon_tests.pokemon_test(game)
     )
     luaunit.assertEquals(pokemon:get_level(), 30)
 
-    gba_pokemon_tests.check_markings_map(pokemon:get_markings())
-    gba_pokemon_tests.check_ribbons_map(pokemon:get_ribbons())
-    gba_pokemon_tests.check_contest_stats_map(pokemon:get_contest_stats())
+    gen3_pokemon_tests.check_markings_map(pokemon:get_markings())
+    gen3_pokemon_tests.check_ribbons_map(pokemon:get_ribbons())
+    gen3_pokemon_tests.check_contest_stats_map(pokemon:get_contest_stats())
 
     local move_slots = pokemon:get_moves()
     luaunit.assertEquals(#move_slots, 4)
@@ -221,12 +227,15 @@ function gba_pokemon_tests.pokemon_test(game)
         luaunit.assertEquals(move_slots[i].pp, 0)
     end
 
-    gba_pokemon_tests.check_stats_map(pokemon:get_EVs())
-    gba_pokemon_tests.check_stats_map(pokemon:get_IVs())
-    gba_pokemon_tests.check_stats_map(pokemon:get_stats())
+    gen3_pokemon_tests.check_stats_map(pokemon:get_EVs())
+    gen3_pokemon_tests.check_stats_map(pokemon:get_IVs())
+    gen3_pokemon_tests.check_stats_map(pokemon:get_stats())
 
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_icon_filepath()))
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+    end
 
     --
     -- Make sure the getters and setters agree. Also make sure it fails when
@@ -243,16 +252,21 @@ function gba_pokemon_tests.pokemon_test(game)
     pokemon:set_shininess(false)
     luaunit.assertFalse(pokemon:is_shiny())
     local personality = pokemon:get_personality()
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
-
-    -- This will fail if "shiny" is anywhere in the filepath.
-    luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        -- This will fail if "shiny" is anywhere in the filepath.
+        luaunit.assertEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    end
 
     pokemon:set_shininess(true)
     luaunit.assertTrue(pokemon:is_shiny())
     luaunit.assertNotEquals(pokemon:get_personality(), personality)
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
-    luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertTrue(pokemon_tests.file_exists(pokemon:get_sprite_filepath()))
+        luaunit.assertNotEquals(string.find(pokemon:get_sprite_filepath(), "shiny"), nil)
+    end
 
     luaunit.assertError(pokemon.set_held_item, pokemon, "Not an item")
 
@@ -326,6 +340,9 @@ function gba_pokemon_tests.pokemon_test(game)
     if game == "FireRed" or game == "LeafGreen"
     then
         location = "Viridian Forest"
+    elseif game == "Colosseum" or game == "XD"
+    then
+        location = "Phenac City"
     else
         location = "Petalburg Woods"
     end
@@ -351,99 +368,135 @@ function gba_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.set_contest_stat, pokemon, "Cool", 256)
     luaunit.assertError(pokemon.set_contest_stat, pokemon, "Not a stat", -1)
 
-    gba_pokemon_tests.markings_test(pokemon)
-    gba_pokemon_tests.ribbons_test(pokemon)
-    gba_pokemon_tests.contest_stats_test(pokemon)
-    gba_pokemon_tests.EVs_test(pokemon)
-    gba_pokemon_tests.IVs_test(pokemon)
+    gen3_pokemon_tests.markings_test(pokemon)
+    gen3_pokemon_tests.ribbons_test(pokemon)
+    gen3_pokemon_tests.contest_stats_test(pokemon)
+    gen3_pokemon_tests.EVs_test(pokemon)
+    gen3_pokemon_tests.IVs_test(pokemon)
 end
 
 -- Ruby
 
-function test_gba_ruby_invalid_pokemon()
+function test_gen3_ruby_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Ruby")
 end
 
-function test_gba_ruby_gender()
+function test_gen3_ruby_gender()
     pokemon_tests.gender_test("Ruby")
 end
 
-function test_gba_ruby_unown_form()
-    gba_pokemon_tests.unown_form_test("Ruby")
+function test_gen3_ruby_unown_form()
+    gen3_pokemon_tests.unown_form_test("Ruby")
 end
 
-function test_gba_ruby_pokemon()
-    gba_pokemon_tests.pokemon_test("Ruby")
+function test_gen3_ruby_pokemon()
+    gen3_pokemon_tests.pokemon_test("Ruby")
 end
 
 -- Sapphire
 
-function test_gba_sapphire_invalid_pokemon()
+function test_gen3_sapphire_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Sapphire")
 end
 
-function test_gba_ruby_gender()
+function test_gen3_ruby_gender()
     pokemon_tests.gender_test("Ruby")
 end
 
-function test_gba_sapphire_unown_form()
-    gba_pokemon_tests.unown_form_test("Sapphire")
+function test_gen3_sapphire_unown_form()
+    gen3_pokemon_tests.unown_form_test("Sapphire")
 end
 
-function test_gba_sapphire_pokemon()
-    gba_pokemon_tests.pokemon_test("Sapphire")
+function test_gen3_sapphire_pokemon()
+    gen3_pokemon_tests.pokemon_test("Sapphire")
 end
 
 -- Emerald
 
-function test_gba_emerald_invalid_pokemon()
+function test_gen3_emerald_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Emerald")
 end
 
-function test_gba_sapphire_gender()
+function test_gen3_sapphire_gender()
     pokemon_tests.gender_test("Sapphire")
 end
 
-function test_gba_emerald_unown_form()
-    gba_pokemon_tests.unown_form_test("Emerald")
+function test_gen3_emerald_unown_form()
+    gen3_pokemon_tests.unown_form_test("Emerald")
 end
 
-function test_gba_emerald_pokemon()
-    gba_pokemon_tests.pokemon_test("Emerald")
+function test_gen3_emerald_pokemon()
+    gen3_pokemon_tests.pokemon_test("Emerald")
 end
 
 -- FireRed
 
-function test_gba_firered_invalid_pokemon()
+function test_gen3_firered_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("FireRed")
 end
 
-function test_gba_firered_gender()
+function test_gen3_firered_gender()
     pokemon_tests.gender_test("FireRed")
 end
 
-function test_gba_firered_unown_form()
-    gba_pokemon_tests.unown_form_test("FireRed")
+function test_gen3_firered_unown_form()
+    gen3_pokemon_tests.unown_form_test("FireRed")
 end
 
-function test_gba_firered_pokemon()
-    gba_pokemon_tests.pokemon_test("FireRed")
+function test_gen3_firered_pokemon()
+    gen3_pokemon_tests.pokemon_test("FireRed")
 end
 
 -- LeafGreen
 
-function test_gba_leafgreen_invalid_pokemon()
+function test_gen3_leafgreen_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("LeafGreen")
 end
 
-function test_gba_leafgreen_gender()
+function test_gen3_leafgreen_gender()
     pokemon_tests.gender_test("LeafGreen")
 end
 
-function test_gba_leafgreen_unown_form()
-    gba_pokemon_tests.unown_form_test("LeafGreen")
+function test_gen3_leafgreen_unown_form()
+    gen3_pokemon_tests.unown_form_test("LeafGreen")
 end
 
-function test_gba_leafgreen_pokemon()
-    gba_pokemon_tests.pokemon_test("LeafGreen")
+function test_gen3_leafgreen_pokemon()
+    gen3_pokemon_tests.pokemon_test("LeafGreen")
+end
+
+-- Colosseum
+
+function test_gen3_colosseum_invalid_pokemon()
+    pokemon_tests.invalid_pokemon_test("Colosseum")
+end
+
+function test_gen3_colosseum_gender()
+    pokemon_tests.gender_test("Colosseum")
+end
+
+function test_gen3_colosseum_unown_form()
+    gen3_pokemon_tests.unown_form_test("Colosseum")
+end
+
+function test_gen3_colosseum_pokemon()
+    gen3_pokemon_tests.pokemon_test("Colosseum")
+end
+
+-- XD
+
+function test_gen3_xd_invalid_pokemon()
+    pokemon_tests.invalid_pokemon_test("XD")
+end
+
+function test_gen3_xd_gender()
+    pokemon_tests.gender_test("XD")
+end
+
+function test_gen3_xd_unown_form()
+    gen3_pokemon_tests.unown_form_test("XD")
+end
+
+function test_gen3_xd_pokemon()
+    gen3_pokemon_tests.pokemon_test("XD")
 end

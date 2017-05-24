@@ -9,6 +9,7 @@
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
+#include "pokemon_pc_gcnimpl.hpp"
 #include "pokemon_pc_gen4impl.hpp"
 
 #include "misc_common.hpp"
@@ -39,7 +40,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_pc_gcnimpl>(game_id);
                 } else {
                     return pkmn::make_shared<pokemon_pc_gbaimpl>(game_id);
                 }
@@ -71,7 +72,7 @@ namespace pkmn {
     ) {
         int num_boxes = get_num_boxes();
         if(index < 0 or index > (num_boxes-1)) {
-            throw pkmn::range_error("index", 0, (num_boxes-1));
+            pkmn::throw_out_of_range("index", 0, (num_boxes-1));
         }
 
         return _box_list.at(index);

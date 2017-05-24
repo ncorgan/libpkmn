@@ -20,7 +20,8 @@ public class PokemonPCTests {
         } else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal")) {
             return 2;
         } else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                  game.Equals("FireRed") || game.Equals("LeafGreen")) {
+                  game.Equals("FireRed") || game.Equals("LeafGreen") ||
+                  game.Equals("Colosseum") || game.Equals("XD")) {
             return 3;
         } else {
             return 0;

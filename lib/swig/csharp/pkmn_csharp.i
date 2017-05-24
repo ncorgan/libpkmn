@@ -33,6 +33,7 @@ PKMN_CSHARP_INIT
 
 // Build Info
 %csmethodmodifiers pkmn::build_info::get_boost_version "internal";
+%csmethodmodifiers pkmn::build_info::get_libpkmgc_version "internal";
 %csmethodmodifiers pkmn::build_info::get_pksav_version "internal";
 %csmethodmodifiers pkmn::build_info::get_sqlite3_version "internal";
 %csmethodmodifiers pkmn::build_info::get_sqlitecpp_version "internal";

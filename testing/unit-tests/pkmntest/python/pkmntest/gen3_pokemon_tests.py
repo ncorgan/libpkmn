@@ -22,7 +22,7 @@ RIBBONS = ["Champion", "Winning", "Victory", "Artist",
            "Country", "National", "Earth", "World"]
 STATS = ["HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"]
 
-class gba_pokemon_test(pokemon_tests):
+class gen3_pokemon_test(pokemon_tests):
 
     def unown_form_test(self, game):
         unown_entry = pkmn.database.pokemon_entry("Unown", "Omega Ruby", "")
@@ -139,7 +139,7 @@ class gba_pokemon_test(pokemon_tests):
             pokemon.set_IV(stat, val)
             self.assertEqual(pokemon.get_IVs()[stat], val)
 
-    def gba_pokemon_test(self, pokemon, species, game):
+    def gen3_pokemon_test(self, pokemon, species, game):
         #
         # Check known starting values, and confirm that we can't query values
         # that didn't exist in Generation III.
@@ -165,15 +165,24 @@ class gba_pokemon_test(pokemon_tests):
             pokemon.get_database_entry().get_base_friendship()
         )
 
-        self.assertStringEqual(pokemon.get_ability(), "Blaze")
+        abilities = pokemon.get_database_entry().get_abilities()
+        if abilities[1] == "None":
+            self.assertStringEqual(pokemon.get_ability(), abilities[0])
+        else:
+            self.assertStringEqual(pokemon.get_ability(), abilities[pokemon.get_personality() % 2])
+
         self.assertStringEqual(pokemon.get_ball(), "Premier Ball")
         self.assertEqual(pokemon.get_level_met(), pokemon.get_level())
 
         with self.assertRaises(RuntimeError):
             pokemon.get_location_met(True)
 
-        self.assertStringEqual(pokemon.get_location_met(False), "Fateful encounter")
-        self.assertStringEqual(pokemon.get_original_game(), pokemon.get_game())
+        if game in ["Colosseum", "XD"]:
+            self.assertStringEqual(pokemon.get_location_met(False), "Distant land")
+            self.assertStringEqual(pokemon.get_original_game(), "Colosseum/XD")
+        else:
+            self.assertStringEqual(pokemon.get_location_met(False), "Fateful encounter")
+            self.assertStringEqual(pokemon.get_original_game(), pokemon.get_game())
 
         self.assertEqual(
             pokemon.get_experience(),
@@ -193,8 +202,9 @@ class gba_pokemon_test(pokemon_tests):
         self.check_stats_map(pokemon.get_IVs())
         self.check_stats_map(pokemon.get_stats())
 
-        self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
-        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+        if game not in ["Colosseum", "XD"]:
+            self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+            self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
 
         #
         # Make sure the getters and setters agree. Also make sure it fails when
@@ -213,16 +223,19 @@ class gba_pokemon_test(pokemon_tests):
         pokemon.set_shininess(False)
         self.assertFalse(pokemon.is_shiny())
         personality = pokemon.get_personality()
-        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
 
-        # This will fail if "shiny" is anywhere in the filepath.
-        self.assertFalse("shiny" in pokemon.get_sprite_filepath())
+        if game not in ["Colosseum", "XD"]:
+            self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+
+            # This will fail if "shiny" is anywhere in the filepath.
+            self.assertFalse("shiny" in pokemon.get_sprite_filepath())
 
         pokemon.set_shininess(True)
         self.assertTrue(pokemon.is_shiny())
         self.assertNotEqual(pokemon.get_personality(), personality)
-        self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
-        self.assertTrue("shiny" in pokemon.get_sprite_filepath())
+        if game not in ["Colosseum", "XD"]:
+            self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+            self.assertTrue("shiny" in pokemon.get_sprite_filepath())
 
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Not an item")
@@ -319,8 +332,8 @@ class gba_pokemon_test(pokemon_tests):
         with self.assertRaises(IndexError):
             pokemon.set_friendship(256)
 
-        pokemon.set_ability("Blaze")
-        self.assertStringEqual(pokemon.get_ability(), "Blaze")
+        pokemon.set_ability(abilities[0])
+        self.assertStringEqual(pokemon.get_ability(), abilities[0])
 
         with self.assertRaises(ValueError):
             pokemon.set_ability("None")
@@ -331,9 +344,9 @@ class gba_pokemon_test(pokemon_tests):
 
         # Hidden ability
         with self.assertRaises(ValueError):
-            pokemon.set_ability("Speed Boost")
+            pokemon.set_ability(pkmn.database.pokemon_entry(pokemon.get_species(), "Omega Ruby", "").get_hidden_ability())
 
-        self.assertStringEqual(pokemon.get_ability(), "Blaze")
+        self.assertStringEqual(pokemon.get_ability(), abilities[0])
 
         pokemon.set_ball("Great Ball")
         self.assertStringEqual(pokemon.get_ball(), "Great Ball")
@@ -353,6 +366,8 @@ class gba_pokemon_test(pokemon_tests):
 
         if game in ["FireRed", "LeafGreen"]:
             location = "Viridian Forest"
+        elif game in ["Colosseum", "XD"]:
+            location = "Phenac City"
         else:
             location = "Petalburg Woods"
         pokemon.set_location_met(location, False)
@@ -416,7 +431,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Ruby",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -436,7 +451,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Sapphire",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -456,7 +471,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "Emerald",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -476,7 +491,7 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "FireRed",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
         )
 
     #
@@ -496,5 +511,45 @@ class gba_pokemon_test(pokemon_tests):
         self.pokemon_test_common(
             "Torchic",
             "LeafGreen",
-            self.gba_pokemon_test
+            self.gen3_pokemon_test
+        )
+
+    #
+    # Colosseum
+    #
+
+    def test_colosseum_invalid_pokemon(self):
+        self.invalid_pokemon_test("Colosseum")
+
+    def test_colosseum_gender(self):
+        self.gender_test("Colosseum")
+
+    def test_colosseum_unown_forms(self):
+        self.unown_form_test("Colosseum")
+
+    def test_colosseum_pokemon(self):
+        self.pokemon_test_common(
+            "Espeon",
+            "Colosseum",
+            self.gen3_pokemon_test
+        )
+
+    #
+    # XD
+    #
+
+    def test_xd_invalid_pokemon(self):
+        self.invalid_pokemon_test("XD")
+
+    def test_xd_gender(self):
+        self.gender_test("XD")
+
+    def test_xd_unown_forms(self):
+        self.unown_form_test("XD")
+
+    def test_xd_pokemon(self):
+        self.pokemon_test_common(
+            "Umbreon",
+            "XD",
+            self.gen3_pokemon_test
         )

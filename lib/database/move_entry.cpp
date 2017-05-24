@@ -303,7 +303,7 @@ namespace pkmn { namespace database {
         if(_none or _invalid) {
             return -1;
         } else if(num_pp_ups < 0 or num_pp_ups > 3) {
-            throw pkmn::range_error("num_pp_ups", 0, 3);
+            pkmn::throw_out_of_range("num_pp_ups", 0, 3);
         }
 
         static BOOST_CONSTEXPR const char* main_query = \

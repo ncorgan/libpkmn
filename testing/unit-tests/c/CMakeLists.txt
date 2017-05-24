@@ -36,6 +36,7 @@ SET(items_test_srcs
     c_items_test/gen1_items_tests.c
     c_items_test/gen2_items_tests.c
     c_items_test/gba_items_tests.c
+    c_items_test/gcn_items_tests.c
     c_items_test/items_tests_common.c
     c_items_test/main.c
 )
@@ -44,7 +45,7 @@ PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
 SET(pokemon_test_srcs
     c_pokemon_test/gen1_pokemon_test.c
     c_pokemon_test/gen2_pokemon_test.c
-    c_pokemon_test/gba_pokemon_test.c
+    c_pokemon_test/gen3_pokemon_test.c
     c_pokemon_test/pokemon_test.c
     c_pokemon_test/form_test.c
     c_pokemon_test/gen1_friendship_test.c

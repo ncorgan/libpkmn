@@ -46,10 +46,10 @@ namespace pkmn {
             throw std::out_of_range("year: minimum value 2000");
         }
         if(libpkmn_date.month < 1 or libpkmn_date.month > 12) {
-            throw pkmn::range_error("month", 1, 12);
+            pkmn::throw_out_of_range("month", 1, 12);
         }
         if(libpkmn_date.day < 1 or libpkmn_date.day > MONTH_DAYS[libpkmn_date.month-1]) {
-            throw pkmn::range_error("day", 1, MONTH_DAYS[libpkmn_date.month-1]);
+            pkmn::throw_out_of_range("day", 1, MONTH_DAYS[libpkmn_date.month-1]);
         }
 
         // Games store number of years since 2000.

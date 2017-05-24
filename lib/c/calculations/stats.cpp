@@ -26,7 +26,7 @@ static void enforce_enum(
     pkmn_stat_t stat
 ) {
     if(stat < PKMN_STAT_HP or stat > PKMN_STAT_SPDEF) {
-        throw pkmn::range_error("stat", PKMN_STAT_HP, PKMN_STAT_SPDEF);
+        pkmn::throw_out_of_range("stat", PKMN_STAT_HP, PKMN_STAT_SPDEF);
     }
 }
 

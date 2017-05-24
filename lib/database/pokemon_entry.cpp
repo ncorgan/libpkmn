@@ -63,14 +63,15 @@ namespace pkmn { namespace database {
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
     BOOST_STATIC_CONSTEXPR int XD        = 20;
     BOOST_STATIC_CONSTEXPR int X         = 23;
     BOOST_STATIC_CONSTEXPR int Y         = 24;
     BOOST_STATIC_CONSTEXPR int OMEGARUBY = 25;
 
-    BOOST_STATIC_CONSTEXPR int RS   = 5;
-    BOOST_STATIC_CONSTEXPR int HGSS = 10;
-    BOOST_STATIC_CONSTEXPR int ORAS = 16;
+    BOOST_STATIC_CONSTEXPR int RS        = 5;
+    BOOST_STATIC_CONSTEXPR int HGSS      = 10;
+    BOOST_STATIC_CONSTEXPR int ORAS      = 16;
 
     static PKMN_CONSTEXPR_OR_INLINE bool form_id_is_cosplay_pikachu(
         int form_id
@@ -119,7 +120,8 @@ namespace pkmn { namespace database {
     ):
         _pokemon_index(pokemon_index),
         _game_id(game_id),
-        _none(pokemon_index == 0)
+        _none(pokemon_index == 0),
+        _shadow(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -229,7 +231,8 @@ namespace pkmn { namespace database {
         const std::string &form_name
     ):
         _none(species_name == "None"),
-        _invalid(false)
+        _invalid(false),
+        _shadow(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -339,6 +342,8 @@ namespace pkmn { namespace database {
             return "None";
         } else if(_invalid) {
             return "Unknown";
+        } else if(_shadow) {
+            return "Shadow";
         }
 
         if(_form_id == _species_id) {
@@ -939,6 +944,24 @@ namespace pkmn { namespace database {
             ret.emplace_back("???");
         }
 
+        // If this is a Gamecube game, check for a Shadow form.
+        if(_game_id == COLOSSEUM or _game_id == XD)
+        {
+            static const char* shadow_query = \
+                "SELECT shadow_pokemon_id FROM shadow_pokemon WHERE species_id=? AND "
+                "colosseum=?";
+
+            int shadow_pokemon_id = -1;
+            bool has_shadow = pkmn::database::maybe_query_db_bind2<int, int, int>(
+                                  _db, shadow_query, shadow_pokemon_id, _species_id,
+                                  ((_game_id == COLOSSEUM) ? 1 : 0)
+                              );
+            if(has_shadow)
+            {
+                ret.emplace_back("Shadow");
+            }
+        }
+
         return ret;
     }
 
@@ -989,73 +1012,92 @@ namespace pkmn { namespace database {
             } else if(form_iter == forms.begin()) {
                 // Standard form, whatever that may be named
                 _form_id = _pokemon_id = _species_id;
+                if(game_is_gamecube(_game_id))
+                {
+                    _shadow = false;
+                }
             } else {
-                // Set the form and Pokémon ID
-                static BOOST_CONSTEXPR const char* query = \
-                    "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
-                    "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?) "
-                    "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)";
 
-                SQLite::Statement stmt((*_db), query);
-                stmt.bind(1, form_name);
-                stmt.bind(2, _species_id);
-                stmt.executeStep();
-                /*
-                 * Now that we have the form ID, check some of the hardcoded cases
-                 * before assigning the proper IDs.
-                 */
-                int form_id = stmt.getColumn(0);
-
-                if(_generation == 3 and _species_id == DEOXYS_ID) {
-                    switch(_game_id) {
-                        case FIRERED:
-                            if(form_id != DEOXYS_ATTACK_FORM_ID) {
-                                throw std::invalid_argument(
-                                          "Deoxys can only be in its Attack Forme in FireRed."
-                                      );
-                            }
-                            break;
-
-                        case LEAFGREEN:
-                            if(form_id != DEOXYS_DEFENSE_FORM_ID) {
-                                throw std::invalid_argument(
-                                          "Deoxys can only be in its Defense Forme in LeafGreen."
-                                      );
-                            }
-                            break;
-
-                        case EMERALD:
-                            if(form_id != DEOXYS_SPEED_FORM_ID) {
-                                throw std::invalid_argument(
-                                          "Deoxys can only be in its Speed Forme in Emerald."
-                                      );
-                            }
-                            break;
-
-                        default:
-                            if(form_id != _species_id) {
-                                throw std::invalid_argument(
-                                    str(boost::format("Deoxys can only be in its Normal Forme in %s.")
-                                            % this->get_game().c_str()
-                                       )
-                                );
-                            }
-                            break;
+                if(game_is_gamecube(_game_id) and form_name == "Shadow")
+                {
+                    // Track this separately because there are no IDs associated with it.
+                    set_form(forms.front());
+                    _shadow = true;
+                }
+                else
+                {
+                    if(game_is_gamecube(_game_id))
+                    {
+                        _shadow = false;
                     }
 
-                    _pokemon_index = DEOXYS_GEN3_INDEX;
-                } else if(_version_group_id != HGSS and form_id == SPIKY_EARED_PICHU_ID) {
-                    throw pkmn::feature_not_in_game_error("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
-                } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
-                    throw std::invalid_argument(
-                        str(boost::format("%s can only be in its Normal Forme in X/Y.")
-                                % form_name.c_str()
-                           )
-                    );
-                }
+                    // Set the form and Pokémon ID
+                    static BOOST_CONSTEXPR const char* query = \
+                        "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
+                        "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?) "
+                        "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)";
 
-                _form_id    = stmt.getColumn(0);
-                _pokemon_id = stmt.getColumn(1);
+                    SQLite::Statement stmt((*_db), query);
+                    stmt.bind(1, form_name);
+                    stmt.bind(2, _species_id);
+                    stmt.executeStep();
+                    /*
+                     * Now that we have the form ID, check some of the hardcoded cases
+                     * before assigning the proper IDs.
+                     */
+                    int form_id = stmt.getColumn(0);
+
+                    if(_generation == 3 and _species_id == DEOXYS_ID) {
+                        switch(_game_id) {
+                            case FIRERED:
+                                if(form_id != DEOXYS_ATTACK_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Attack Forme in FireRed."
+                                          );
+                                }
+                                break;
+
+                            case LEAFGREEN:
+                                if(form_id != DEOXYS_DEFENSE_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Defense Forme in LeafGreen."
+                                          );
+                                }
+                                break;
+
+                            case EMERALD:
+                                if(form_id != DEOXYS_SPEED_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Speed Forme in Emerald."
+                                          );
+                                }
+                                break;
+
+                            default:
+                                if(form_id != _species_id) {
+                                    throw std::invalid_argument(
+                                        str(boost::format("Deoxys can only be in its Normal Forme in %s.")
+                                                % this->get_game().c_str()
+                                           )
+                                    );
+                                }
+                                break;
+                        }
+
+                        _pokemon_index = DEOXYS_GEN3_INDEX;
+                    } else if(_version_group_id != HGSS and form_id == SPIKY_EARED_PICHU_ID) {
+                        throw pkmn::feature_not_in_game_error("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
+                    } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
+                        throw std::invalid_argument(
+                            str(boost::format("%s can only be in its Normal Forme in X/Y.")
+                                    % form_name.c_str()
+                               )
+                        );
+                    }
+
+                    _form_id    = stmt.getColumn(0);
+                    _pokemon_id = stmt.getColumn(1);
+                }
             }
         }
 

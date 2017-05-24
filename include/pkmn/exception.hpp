@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,8 +9,11 @@
 
 #include <pkmn/config.hpp>
 
+#include <sstream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
+#include <vector>
 
 #ifdef PKMN_PLATFORM_WIN32
 #    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
@@ -55,17 +58,6 @@ namespace pkmn {
             );
     };
 
-    //! A convenience subclass for throwing std::out_of_range with a given message format.
-    class PKMN_API range_error: public std::out_of_range {
-        public:
-            //! Throw the exception for the given property and range.
-            range_error(
-                const std::string &value,
-                int min,
-                int max
-            );
-    };
-
     //! An exception thrown when an exposed function is not implemented for a given game.
     class unimplemented_error: public std::runtime_error {
         public:
@@ -73,6 +65,64 @@ namespace pkmn {
                 std::runtime_error("Currently unimplemented.")
             {}
     };
+
+    //! Throw a std::invalid_argument, specifying all valid arguments in the error message.
+    /*!
+     * \param field the variable whose value is invalid
+     * \param valid_values a list of valid values for the field
+     */
+    template <typename T>
+    PKMN_INLINE void throw_invalid_argument(
+        const std::string& field,
+        const std::vector<T>& valid_values
+    ) {
+        std::ostringstream err_msg;
+        if(std::is_floating_point<T>::value) {
+            err_msg.precision(2);
+            err_msg << std::fixed;
+        }
+
+        err_msg << field;
+        err_msg << ": valid values ";
+        for(auto iter = valid_values.begin(); iter != valid_values.end(); ++iter) {
+            if(iter != valid_values.begin()) {
+                err_msg << ", ";
+            }
+
+            err_msg << (*iter);
+        }
+        err_msg << ".";
+
+        throw std::invalid_argument(err_msg.str().c_str());
+    }
+
+    //! Throw a std::out_of_range, specifying the min and max bounds.
+    /*!
+     * \param field the variable whose value is invalid
+     * \param min the minimum value
+     * \param max the maximum value
+     */
+    template <typename T>
+    PKMN_INLINE void throw_out_of_range(
+        const std::string& field,
+        T min,
+        T max
+    ) {
+        std::ostringstream err_msg;
+        if(std::is_floating_point<T>::value) {
+            err_msg.precision(2);
+            err_msg << std::fixed;
+        }
+
+        err_msg << field;
+        err_msg << ": valid values ";
+        err_msg << min;
+        err_msg << "-";
+        err_msg << max;
+        err_msg << ".";
+
+        throw std::out_of_range(err_msg.str().c_str());
+    }
 
 }
 

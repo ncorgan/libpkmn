@@ -9,6 +9,7 @@
 #include "item_bag_gen1impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_bag_gbaimpl.hpp"
+#include "item_bag_gcnimpl.hpp"
 #include "item_bag_gen4impl.hpp"
 
 #include "database/database_common.hpp"
@@ -49,7 +50,9 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<item_bag_gcnimpl>(
+                               game_id, nullptr
+                           );
                 } else {
                     return pkmn::make_shared<item_bag_gbaimpl>(
                                game_id, nullptr

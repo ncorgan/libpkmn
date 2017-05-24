@@ -30,7 +30,9 @@ BOOST_STATIC_CONSTEXPR int STAT_MAX      = 65536;
 static void check_initial_values(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    std::string game = pokemon->get_game();
+
+    int generation = game_generations.at(game);
     EXPECT_EQ("Standard", pokemon->get_form());
 
     if(generation >= 5) {
@@ -60,7 +62,13 @@ static void check_initial_values(
 
     if(generation >= 3) {
         EXPECT_EQ("Premier Ball", pokemon->get_ball());
-        EXPECT_EQ(pokemon->get_game(), pokemon->get_original_game());
+
+        // There is no distinction between Colosseum and XD in the game storage.
+        if(game == "Colosseum" or game == "XD") {
+            EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
+        } else {
+            EXPECT_EQ(game, pokemon->get_original_game());
+        }
     }
 
     EXPECT_EQ(
@@ -80,8 +88,10 @@ static void check_initial_values(
         EXPECT_EQ(0, iter->pp);
     }
 
-    EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
-    EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+    if(game != "Colosseum" and game != "XD") {
+        EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+    }
 }
 
 static void check_initial_maps(
@@ -288,10 +298,10 @@ static void test_setting_friendship(
         EXPECT_EQ(123, pokemon->get_friendship());
         EXPECT_THROW(
             pokemon->set_friendship(-1);
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_THROW(
             pokemon->set_friendship(256);
-        , pkmn::range_error);
+        , std::out_of_range);
     } else {
         EXPECT_THROW(
             pokemon->get_friendship();
@@ -338,10 +348,10 @@ static void test_setting_levels(
 
     EXPECT_THROW(
         pokemon->set_level(-1);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         pokemon->set_level(101);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     int level = 50;
     pokemon->set_level(level);
@@ -358,7 +368,7 @@ static void test_setting_levels(
         case 1:
             EXPECT_THROW(
                 pokemon->set_level(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->get_level_met();
             , pkmn::feature_not_in_game_error);
@@ -370,13 +380,13 @@ static void test_setting_levels(
         case 2:
             EXPECT_THROW(
                 pokemon->set_level(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(101);
-            , pkmn::range_error);
+            , std::out_of_range);
 
             pokemon->set_level_met(5);
             EXPECT_EQ(5, pokemon->get_level_met());
@@ -385,13 +395,13 @@ static void test_setting_levels(
         default:
             EXPECT_THROW(
                 pokemon->set_level(-1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(-1);
-            , pkmn::range_error);
+            , std::out_of_range);
             EXPECT_THROW(
                 pokemon->set_level_met(101);
-            , pkmn::range_error);
+            , std::out_of_range);
 
             pokemon->set_level_met(5);
             EXPECT_EQ(5, pokemon->get_level_met());
@@ -512,10 +522,10 @@ static void test_setting_moves(
 
     EXPECT_THROW(
         pokemon->set_move(move_names[0], -1);
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         pokemon->set_move(move_names[0], 4);
-    , pkmn::range_error);
+    , std::out_of_range);
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
@@ -541,7 +551,11 @@ static void test_setting_original_game(
     if(generation >= 3) {
         for(int i = 0; i < int(games.size()); ++i) {
             pokemon->set_original_game(games[i]);
-            EXPECT_EQ(games[i], pokemon->get_original_game());
+            if(games[i] == "Colosseum" or games[i] == "XD") {
+                EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
+            } else {
+                EXPECT_EQ(games[i], pokemon->get_original_game());
+            }
         }
         for(int i = 0; i < int(invalid_games.size()); ++i) {
             EXPECT_THROW(
@@ -705,7 +719,7 @@ static void test_setting_trainer_info(
     } else {
         EXPECT_THROW(
             pokemon->set_trainer_id(0xFFFF+1)
-        , pkmn::range_error);
+        , std::out_of_range);
         EXPECT_THROW(
             pokemon->set_trainer_secret_id(0xFFFF)
         , pkmn::feature_not_in_game_error);
@@ -740,6 +754,8 @@ void pokemon_test_common(
     pkmn::pokemon::sptr pokemon,
     const pkmn_test_values_t &test_values
 ) {
+    std::string game = pokemon->get_game();
+
     check_initial_maps(pokemon);
     check_initial_values(pokemon);
     test_setting_ability(pokemon);
@@ -748,7 +764,9 @@ void pokemon_test_common(
         test_values.valid_ball,
         test_values.invalid_balls
     );
-    test_image_filepaths(pokemon);
+    if(game != "Colosseum" and game != "XD") {
+        test_image_filepaths(pokemon);
+    }
     test_setting_friendship(pokemon);
     test_setting_item(
         pokemon,

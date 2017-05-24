@@ -24,7 +24,7 @@
         int index
     ) {
         if(index < 1 or index > 4) {
-            throw pkmn::range_error("index", 1, 4);
+            pkmn::throw_out_of_range("index", 1, 4);
         }
 
         self->get()->set_move(move_name, index-1);

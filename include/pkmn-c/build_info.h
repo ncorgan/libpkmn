@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,6 +18,11 @@ extern "C" {
 
 PKMN_API pkmn_error_t pkmn_get_boost_version(
     char* boost_version_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_get_libpkmgc_version(
+    char* libpkmgc_version_out,
     size_t buffer_len
 );
 

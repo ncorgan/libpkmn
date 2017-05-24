@@ -225,3 +225,11 @@ void firered_gender_test() {
 void leafgreen_gender_test() {
     gender_test("LeafGreen");
 }
+
+void colosseum_gender_test() {
+    gender_test("Colosseum");
+}
+
+void xd_gender_test() {
+    gender_test("XD");
+}

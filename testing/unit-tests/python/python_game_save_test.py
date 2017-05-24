@@ -15,6 +15,7 @@ import os
 import random
 import sys
 
+LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 PKSAV_TEST_SAVES = os.environ["PKSAV_TEST_SAVES"]
 PKMN_TMP_DIR = pkmn.get_tmp_dir()
 
@@ -26,10 +27,12 @@ MONEY_MAX_VALUE = 999999
 GB_GAMES = ["Red", "Blue", "Yellow",
             "Gold", "Silver", "Crystal"]
 RIVAL_NAME_SET_GAMES = ["Ruby", "Sapphire", "Emerald",
+                        "Colosseum", "XD",
                         "Black", "White",
                         "X", "Y"]
 MALE_ONLY_GAMES = ["Red", "Blue", "Yellow",
-                   "Gold", "Silver"]
+                   "Gold", "Silver",
+                   "Colosseum", "XD"]
 
 GAME_GENERATIONS = dict(
     Red = 1,
@@ -219,7 +222,11 @@ class game_save_test(unittest.TestCase):
         ret = pkmn.pokemon(species, game, "", random.randint(2, 100))
 
         for i in range(4):
-            ret.set_move(move_list[random.randint(0, len(move_list)-1)], i)
+            while True:
+                move = move_list[random.randint(0, len(move_list)-1)]
+                if not move.startswith("Shadow"):
+                    break
+            ret.set_move(move, i)
 
         if generation >= 2:
             while True:
@@ -326,10 +333,15 @@ class game_save_test(unittest.TestCase):
         ("Crystal", "Crystal", "crystal", "pokemon_crystal.sav"),
         ("Ruby/Sapphire", "Ruby", "ruby_sapphire", "pokemon_ruby.sav"),
         ("Emerald", "Emerald", "emerald", "pokemon_emerald.sav"),
-        ("FireRed/LeafGreen", "FireRed", "firered_leafgreen", "pokemon_firered.sav")
+        ("FireRed/LeafGreen", "FireRed", "firered_leafgreen", "pokemon_firered.sav"),
+        ("Colosseum/XD", "Colosseum", "gamecube_saves", "pokemon_colosseum.gci"),
+        ("Colosseum/XD", "XD", "gamecube_saves", "pokemon_xd.gci")
     ], testcase_func_name=test_name_func)
     def test_game_save(self, expected_type, expected_game, subdir, filename):
-        filepath = os.path.join(PKSAV_TEST_SAVES, subdir, filename)
+        if expected_game == "Colosseum" or expected_game == "XD":
+            filepath = os.path.join(LIBPKMN_TEST_FILES, subdir, filename)
+        else:
+            filepath = os.path.join(PKSAV_TEST_SAVES, subdir, filename)
         self.assertEquals(pkmn.detect_game_save_type(filepath), expected_type)
 
         self.save = pkmn.game_save(filepath)

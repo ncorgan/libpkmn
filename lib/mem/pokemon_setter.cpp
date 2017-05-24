@@ -8,7 +8,10 @@
 #include "../pokemon_gen1impl.hpp"
 #include "../pokemon_gen2impl.hpp"
 #include "../pokemon_gbaimpl.hpp"
+#include "../pokemon_gcnimpl.hpp"
 #include "../pokemon_ndsimpl.hpp"
+
+#include "libpkmgc_includes.hpp"
 
 #include "../misc_common.hpp"
 #include "pokemon_setter.hpp"
@@ -21,6 +24,7 @@
 #include <pksav/gba/pokemon.h>
 #include <pksav/common/nds_pokemon.h>
 
+#include <iostream>
 #include <stdexcept>
 
 #define RCAST_EQUAL(src_ptr,dst_ptr,type) \
@@ -30,6 +34,13 @@
     dst_ptr = reinterpret_cast<void*>(new type); \
     *reinterpret_cast<type*>(dst_ptr) = *reinterpret_cast<type*>(src_ptr); \
 }
+
+#define GC_RCAST(src_ptr)   reinterpret_cast<LibPkmGC::GC::Pokemon*>(src_ptr)
+#define COLO_RCAST(src_ptr) reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(src_ptr)
+#define XD_RCAST(src_ptr)   reinterpret_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
+
+#define COLO_DCAST(src_ptr) dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(src_ptr)
+#define XD_DCAST(src_ptr)   dynamic_cast<LibPkmGC::XD::Pokemon*>(src_ptr)
 
 namespace pkmn { namespace mem {
 
@@ -86,7 +97,17 @@ namespace pkmn { namespace mem {
 
             case 3:
                 if(game_is_gamecube(box_pokemon->_database_entry.get_game_id())) {
-                    throw pkmn::unimplemented_error();
+                    box_pc_copy = reinterpret_cast<void*>(GC_RCAST(box_ptr)->clone());
+                    if(game_id == COLOSSEUM) {
+                        *COLO_DCAST(GC_RCAST(box_ptr)) = *COLO_DCAST(GC_RCAST(new_pokemon->_native_pc));
+                    } else {
+                        *XD_DCAST(GC_RCAST(box_ptr)) = *XD_DCAST(GC_RCAST(new_pokemon->_native_pc));
+                    }
+
+                    box->_pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+                                                    GC_RCAST(box_ptr),
+                                                    game_id
+                                                );
                 } else {
                     RCAST_EQUAL_ALLOC(box_ptr, box_pc_copy, pksav_gba_pc_pokemon_t);
                     RCAST_EQUAL(new_pokemon->_native_pc, box_ptr, pksav_gba_pc_pokemon_t);
@@ -180,7 +201,17 @@ namespace pkmn { namespace mem {
 
             case 3:
                 if(game_is_gamecube(party_pokemon->_database_entry.get_game_id())) {
-                    throw pkmn::unimplemented_error();
+                    party_pc_copy = reinterpret_cast<void*>(GC_RCAST(party_ptr)->clone());
+                    if(game_id == COLOSSEUM) {
+                        *COLO_DCAST(GC_RCAST(party_ptr)) = *COLO_DCAST(GC_RCAST(new_pokemon->_native_pc));
+                    } else {
+                        *XD_DCAST(GC_RCAST(party_ptr)) = *XD_DCAST(GC_RCAST(new_pokemon->_native_pc));
+                    }
+
+                    party->_pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+                                                      GC_RCAST(party_ptr),
+                                                      game_id
+                                                  );
                 } else {
                     RCAST_EQUAL_ALLOC(party_ptr, party_pc_copy, pksav_gba_pc_pokemon_t);
                     RCAST_EQUAL_ALLOC(party_party_ptr, party_party_copy, pksav_gba_pokemon_party_data_t);

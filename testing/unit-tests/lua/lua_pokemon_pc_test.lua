@@ -164,5 +164,33 @@ function test_leafgreen_pokemon_pc()
     pokemon_pc_tests.test_pokemon_pc(pc, "LeafGreen")
 end
 
+---
+--- Colosseum
+---
+
+function test_colosseum_pokemon_box()
+    box = pkmn.pokemon_box("Colosseum")
+    pokemon_pc_tests.test_pokemon_box(box, "Colosseum")
+end
+
+function test_colosseum_pokemon_pc()
+    pc = pkmn.pokemon_pc("Colosseum")
+    pokemon_pc_tests.test_pokemon_pc(pc, "Colosseum")
+end
+
+---
+--- XD
+---
+
+function test_xd_pokemon_box()
+    box = pkmn.pokemon_box("XD")
+    pokemon_pc_tests.test_pokemon_box(box, "XD")
+end
+
+function test_xd_pokemon_pc()
+    pc = pkmn.pokemon_pc("XD")
+    pokemon_pc_tests.test_pokemon_pc(pc, "XD")
+end
+
 local runner = luaunit.LuaUnit.new()
 os.exit(runner:runSuite())

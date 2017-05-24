@@ -95,8 +95,11 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
                                         5
                                     );
         EXPECT_EQ(*form_iter, unown->get_form());
-        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+
+        if(game != "Colosseum" and game != "XD") {
+            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        }
     }
 
     // Make sure setting the personality properly sets the form.
@@ -120,7 +123,11 @@ TEST_P(gen3_unown_test, gen3_unown_test) {
     }
 }
 
-static const std::string gen2_games[] = {"Gold", "Silver", "Crystal"};
+static const std::string gen2_games[] = {
+    "Gold",
+    "Silver",
+    "Crystal"
+};
 
 INSTANTIATE_TEST_CASE_P(
     cpp_gen2_unown_test,
@@ -128,8 +135,15 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::ValuesIn(gen2_games)
 );
 
-// TODO: Gamecube
-static const std::string gen3_games[] = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"};
+static const std::string gen3_games[] = {
+    "Ruby",
+    "Sapphire",
+    "Emerald",
+    "FireRed",
+    "LeafGreen",
+    "Colosseum",
+    "XD"
+};
 
 INSTANTIATE_TEST_CASE_P(
     cpp_gen3_unown_test,

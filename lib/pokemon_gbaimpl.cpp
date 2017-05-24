@@ -480,7 +480,7 @@ namespace pkmn {
         int friendship
     ) {
         if(friendship < 0 or friendship > 255) {
-            throw pkmn::range_error("friendship", 0 , 255);
+            pkmn::throw_out_of_range("friendship", 0 , 255);
         }
 
         pokemon_scoped_lock lock(this);
@@ -581,7 +581,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 0 or level > 100) {
-            throw pkmn::range_error("Level caught", 0, 100);
+            pkmn::throw_out_of_range("Level caught", 0, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -627,7 +627,11 @@ namespace pkmn {
         uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
         original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
 
-        return pkmn::database::game_index_to_name(original_game);
+        if(original_game == 15) {
+            return "Colosseum/XD";
+        } else {
+            return pkmn::database::game_index_to_name(original_game);
+        }
     }
 
     void pokemon_gbaimpl::set_original_game(
@@ -635,14 +639,20 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
-        int generation = pkmn::database::game_name_to_generation(game);
+        std::string game_to_test;
+        if(game == "Colosseum/XD") {
+            game_to_test = "Colosseum";
+        } else {
+            game_to_test = game;
+        }
+        int generation = pkmn::database::game_name_to_generation(game_to_test);
         if(generation != 3) {
             throw std::invalid_argument("Game must be from Generation III.");
         }
 
         _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
-                                           game
+                                           game_to_test
                                        ));
 
         _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
@@ -678,7 +688,7 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw pkmn::range_error("experience", 0, max_experience);
+            pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
         pokemon_scoped_lock lock(this);
@@ -700,7 +710,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 1 or level > 100) {
-            throw pkmn::range_error("level", 1, 100);
+            pkmn::throw_out_of_range("level", 1, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -814,7 +824,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw pkmn::range_error("index", 0, 3);
+            pkmn::throw_out_of_range("index", 0, 3);
         }
 
         pokemon_scoped_lock lock(this);
@@ -834,10 +844,10 @@ namespace pkmn {
         const std::string &stat,
         int value
     ) {
-        if(not pkmn_string_is_modern_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, true)) {
-            throw pkmn::range_error(stat, 0, 255);
+        if(not pkmn::string_is_modern_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
+        } else if(not pkmn::EV_in_bounds(value, true)) {
+            pkmn::throw_out_of_range("stat", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);

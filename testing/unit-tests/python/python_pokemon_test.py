@@ -18,7 +18,7 @@ if __name__ == "__main__":
     suite2 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gen2_pokemon_test)
     test_program2 = unittest.TextTestRunner(verbosity=3).run(suite2)
 
-    suite3 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gba_pokemon_test)
+    suite3 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gen3_pokemon_test)
     test_program3 = unittest.TextTestRunner(verbosity=3).run(suite3)
 
     suite4 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.pokemon_io_test)

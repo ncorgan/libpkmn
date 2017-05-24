@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-public class GBAPokemonTests {
+public class Gen3PokemonTests {
 
     private static string[] Markings = {"Circle", "Triangle", "Square", "Heart"};
     private static string[] ContestTypes = {"Cool", "Beauty", "Cute", "Smart", "Tough"};
@@ -234,8 +234,16 @@ public class GBAPokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.GetLocationMet(false), "Fateful encounter");
-        Assert.AreEqual(pokemon.OriginalGame, pokemon.Game);
+        if(game.Equals("Colosseum") || game.Equals("XD"))
+        {
+            Assert.AreEqual(pokemon.GetLocationMet(false), "Distant land");
+            Assert.AreEqual(pokemon.OriginalGame, "Colosseum/XD");
+        }
+        else
+        {
+            Assert.AreEqual(pokemon.GetLocationMet(false), "Fateful encounter");
+            Assert.AreEqual(pokemon.OriginalGame, pokemon.Game);
+        }
         Assert.AreEqual(
             pokemon.Experience,
             pokemon.DatabaseEntry.GetExperienceAtLevel(30)
@@ -255,8 +263,11 @@ public class GBAPokemonTests {
         CheckStatsMap(pokemon.IVs);
         CheckStatsMap(pokemon.Stats);
 
-        Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
-        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
+            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        }
 
         /*
          * Make sure the getters and setters agree. Also make sure it fails when
@@ -280,16 +291,22 @@ public class GBAPokemonTests {
         pokemon.IsShiny = false;
         Assert.IsFalse(pokemon.IsShiny);
         uint personality = pokemon.Personality;
-        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
 
-        // This will fail if "shiny" is anywhere in the filepath.
-        Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+            // This will fail if "shiny" is anywhere in the filepath.
+            Assert.AreEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+        }
 
         pokemon.IsShiny = true;
         Assert.IsTrue(pokemon.IsShiny);
         Assert.AreNotEqual(pokemon.Personality, personality);
-        Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
-        Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
+            Assert.AreNotEqual(pokemon.SpriteFilepath.IndexOf("shiny"), -1);
+        }
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
@@ -421,6 +438,8 @@ public class GBAPokemonTests {
         string location;
         if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
             location = "Viridian Forest";
+        } else if(game.Equals("Colosseum") || game.Equals("XD")) {
+            location = "Phenac City";
         } else {
             location = "Petalburg Woods";
         }

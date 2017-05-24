@@ -236,7 +236,7 @@ static void gen2_unown_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 
-static void gba_unown_test(
+static void gen3_unown_test(
     const char* game
 ) {
     TEST_ASSERT_NOT_NULL(game);
@@ -289,21 +289,23 @@ static void gba_unown_test(
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
 
-        error = pkmn_pokemon_get_icon_filepath(
-                    unown,
-                    strbuffer,
-                    sizeof(strbuffer)
-                );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_TRUE(file_exists(strbuffer));
+        if(strcmp(game, "Colosseum") && strcmp(game, "XD")) {
+            error = pkmn_pokemon_get_icon_filepath(
+                        unown,
+                        strbuffer,
+                        sizeof(strbuffer)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            TEST_ASSERT_TRUE(file_exists(strbuffer));
 
-        error = pkmn_pokemon_get_sprite_filepath(
-                    unown,
-                    strbuffer,
-                    sizeof(strbuffer)
-                );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_TRUE(file_exists(strbuffer));
+            error = pkmn_pokemon_get_sprite_filepath(
+                        unown,
+                        strbuffer,
+                        sizeof(strbuffer)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            TEST_ASSERT_TRUE(file_exists(strbuffer));
+        }
 
         error = pkmn_pokemon_free(&unown);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
@@ -377,21 +379,29 @@ void crystal_unown_test() {
 }
 
 void ruby_unown_test() {
-    gba_unown_test("Ruby");
+    gen3_unown_test("Ruby");
 }
 
 void sapphire_unown_test() {
-    gba_unown_test("Sapphire");
+    gen3_unown_test("Sapphire");
 }
 
 void emerald_unown_test() {
-    gba_unown_test("Emerald");
+    gen3_unown_test("Emerald");
 }
 
 void firered_unown_test() {
-    gba_unown_test("FireRed");
+    gen3_unown_test("FireRed");
 }
 
 void leafgreen_unown_test() {
-    gba_unown_test("LeafGreen");
+    gen3_unown_test("LeafGreen");
+}
+
+void colosseum_unown_test() {
+    gen3_unown_test("Colosseum");
+}
+
+void xd_unown_test() {
+    gen3_unown_test("XD");
 }

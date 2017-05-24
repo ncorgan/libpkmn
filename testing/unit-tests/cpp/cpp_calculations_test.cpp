@@ -36,42 +36,42 @@ TEST(cpp_calculations_test, gen2_unown_form_test) {
         (void)pkmn::calculations::gen2_unown_form(
                   -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   16, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 16, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 16, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 0, 16
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -139,12 +139,12 @@ TEST(cpp_calculations_test, gen2_gender_test) {
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
                              );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", 16
                              );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -346,42 +346,42 @@ TEST(cpp_calculations_test, gen2_hidden_power_test) {
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            -1, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            16, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, -1, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 16, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, -1, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 16, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, -1
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, 16
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -404,62 +404,62 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
         hidden_power = pkmn::calculations::modern_hidden_power(
                            -1, 0, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            32, 0, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, -1, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 32, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, -1, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 32, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, -1, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 32, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, -1, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 32, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, -1
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, 32
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -737,42 +737,42 @@ TEST(cpp_calculations_test, gen2_shiny_test) {
         (void)pkmn::calculations::gen2_shiny(
                   -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   16, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 16, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 16, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 0, 16
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -827,62 +827,62 @@ TEST(cpp_calculations_test, pokemon_size_test) {
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, -1, 0, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 32, 0, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, -1, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 32, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 32, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 32, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 32, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 0, 32
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     std::srand((unsigned int)std::time(NULL));
     for(auto pokemon_iter = pokemon_with_size_checks.begin();
@@ -985,14 +985,14 @@ TEST(cpp_calculations_test, gb_stat_test) {
         pkmn::calculations::get_gb_stat(
             "Attack", 1, 1, 123456, 1
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_gb_stat(
             "Attack", 1, 1, 1, 12345
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Test with known good inputs.
@@ -1067,14 +1067,14 @@ TEST(cpp_calculations_test, modern_stat_test) {
         pkmn::calculations::get_modern_stat(
             "Attack", 1, 1.0f, 1, 12345, 1
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
             "Attack", 1, 1.0f, 1, 1, 12345
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Test with known good inputs.
