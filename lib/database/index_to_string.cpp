@@ -8,6 +8,7 @@
 #include "../misc_common.hpp"
 
 #include "database_common.hpp"
+#include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
 #include <boost/config.hpp>
@@ -44,6 +45,33 @@ namespace pkmn { namespace database {
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
                    _db, query, game_name
+               );
+    }
+
+    /*
+     * Calling the id_to_string and id_to_index functions is not ideal, but the logic in
+     * those functions is complicated enough to warrant not duplicating code.
+     */
+
+    std::string item_index_to_name(
+        int item_index,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_name(
+                   pkmn::database::item_index_to_id(item_index, game_id),
+                   pkmn::database::game_id_to_version_group(game_id)
+               );
+    }
+
+    int item_name_to_index(
+        const std::string& item_name,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_index(
+                   pkmn::database::item_name_to_id(item_name),
+                   game_id
                );
     }
 
