@@ -34,6 +34,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 
@@ -752,19 +753,29 @@ namespace pkmn {
         );
     }
 
+    static const std::vector<std::string> contest_types = boost::assign::list_of
+        ("Cool")("Beauty")("Cute")("Smart")("Tough")
+    ;
+    static const std::vector<std::string> hoenn_contest_levels = boost::assign::list_of
+        ("")("Super")("Hyper")("Master")
+    ;
+    static const std::vector<std::string> sinnoh_contest_levels = boost::assign::list_of
+        ("")("Great")("Ultra")("Master")
+    ;
+
     static const std::map<std::string, pksav_nds_hoenn_ribbon_mask_t> hoenn_ribbons = boost::assign::map_list_of
-        ("Hoenn Champion", PKSAV_NDS_HOENN_CHAMPION_RIBBON_MASK)
-        ("Hoenn Winning", PKSAV_NDS_HOENN_WINNING_RIBBON_MASK)
-        ("Hoenn Victory", PKSAV_NDS_HOENN_VICTORY_RIBBON_MASK)
-        ("Hoenn Artist", PKSAV_NDS_HOENN_ARTIST_RIBBON_MASK)
-        ("Hoenn Effort", PKSAV_NDS_HOENN_EFFORT_RIBBON_MASK)
-        ("Hoenn Battle Champion", PKSAV_NDS_HOENN_BATTLE_CHAMPION_RIBBON_MASK)
+        ("Hoenn Champion",          PKSAV_NDS_HOENN_CHAMPION_RIBBON_MASK)
+        ("Hoenn Winning",           PKSAV_NDS_HOENN_WINNING_RIBBON_MASK)
+        ("Hoenn Victory",           PKSAV_NDS_HOENN_VICTORY_RIBBON_MASK)
+        ("Hoenn Artist",            PKSAV_NDS_HOENN_ARTIST_RIBBON_MASK)
+        ("Hoenn Effort",            PKSAV_NDS_HOENN_EFFORT_RIBBON_MASK)
+        ("Hoenn Battle Champion",   PKSAV_NDS_HOENN_BATTLE_CHAMPION_RIBBON_MASK)
         ("Hoenn Regional Champion", PKSAV_NDS_HOENN_REGIONAL_CHAMPION_RIBBON_MASK)
         ("Hoenn National Champion", PKSAV_NDS_HOENN_NATIONAL_CHAMPION_RIBBON_MASK)
-        ("Hoenn Country", PKSAV_NDS_HOENN_COUNTRY_RIBBON_MASK)
-        ("Hoenn National", PKSAV_NDS_HOENN_NATIONAL_RIBBON_MASK)
-        ("Hoenn Earth", PKSAV_NDS_HOENN_EARTH_RIBBON_MASK)
-        ("Hoenn World", PKSAV_NDS_HOENN_WORLD_RIBBON_MASK)
+        ("Hoenn Country",           PKSAV_NDS_HOENN_COUNTRY_RIBBON_MASK)
+        ("Hoenn National",          PKSAV_NDS_HOENN_NATIONAL_RIBBON_MASK)
+        ("Hoenn Earth",             PKSAV_NDS_HOENN_EARTH_RIBBON_MASK)
+        ("Hoenn World",             PKSAV_NDS_HOENN_WORLD_RIBBON_MASK)
     ;
 
     static const std::map<std::string, pksav_nds_sinnoh_ribbon1_mask_t> sinnoh_ribbons1 = boost::assign::map_list_of
@@ -816,12 +827,103 @@ namespace pkmn {
         ("Premier",        PKSAV_NDS_UNOVA_PREMIER_RIBBON_MASK)
     ;
 
+    // Assume the ribbon name has been validated at this point.
+    void pokemon_ndsimpl::_set_contest_ribbon(
+        const std::string &ribbon,
+        bool value
+    )
+    {
+        std::vector<std::string> ribbon_parts;
+        boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
+        if(ribbon_parts.size() == 0 or ribbon_parts.size() > 3)
+        {
+            throw std::invalid_argument("Invalid ribbon name.");
+        }
+
+        bool hoenn = (ribbon_parts[0] == "Hoenn");
+        if(hoenn)
+        {
+            ribbon_parts.erase(ribbon_parts.begin());
+            if(ribbon_parts.size() != 2)
+            {
+                throw std::invalid_argument("Invalid ribbon name.");
+            }
+        }
+
+        size_t contest_type_pos = 0;
+        std::vector<std::string>::const_iterator contest_type_iter = std::find(contest_types.begin(), contest_types.end(), ribbon_parts[0]);
+        if(contest_type_iter != contest_types.end())
+        {
+            contest_type_pos = size_t(std::distance(contest_types.begin(), contest_type_iter));
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid ribbon name.");
+        }
+
+        size_t contest_level_pos = 0;
+        if(ribbon_parts.size() == 2)
+        {
+            std::vector<std::string>::const_iterator contest_level_iter;
+            if(hoenn)
+            {
+                contest_level_iter = std::find(hoenn_contest_levels.begin(), hoenn_contest_levels.end(), ribbon_parts[1]);
+                contest_level_pos = size_t(std::distance(hoenn_contest_levels.begin(), contest_level_iter));
+            }
+            else
+            {
+                contest_level_iter = std::find(sinnoh_contest_levels.begin(), sinnoh_contest_levels.end(), ribbon_parts[1]);
+                contest_level_pos = size_t(std::distance(sinnoh_contest_levels.begin(), contest_level_iter));
+            }
+        }
+
+        uint32_t base_enum = uint32_t(4 * contest_type_pos);
+        if(hoenn)
+        {
+            if(value)
+            {
+                for(uint32_t i = 0; i <= contest_level_pos; ++i)
+                {
+                    uint32_t mask = 1 << (base_enum + i);
+                    _blockB->hoenn_ribbons |= mask;
+                }
+            }
+            else
+            {
+                for(uint32_t i = 3; i >= contest_level_pos; ++i)
+                {
+                    uint32_t mask = 1 << (base_enum + i);
+                    _blockB->hoenn_ribbons &= ~mask;
+                }
+            }
+        }
+        else
+        {
+            if(value)
+            {
+                for(uint32_t i = 0; i <= contest_level_pos; ++i)
+                {
+                    uint32_t mask = 1 << (base_enum + i);
+                    _blockC->sinnoh_ribbons3 |= mask;
+                }
+            }
+            else
+            {
+                for(uint32_t i = 3; i >= contest_level_pos; ++i)
+                {
+                    uint32_t mask = 1 << (base_enum + i);
+                    _blockC->sinnoh_ribbons3 &= ~mask;
+                }
+            }
+        }
+    }
+
     void pokemon_ndsimpl::set_ribbon(
         const std::string &ribbon,
         bool value
     )
     {
-        if(_ribbons.find(ribbon) != _ribbons.end())
+        if(_ribbons.find(ribbon) == _ribbons.end())
         {
             throw std::invalid_argument("Invalid ribbon.");
         }
@@ -870,6 +972,8 @@ namespace pkmn {
                 );
             }
         }
+
+        _update_ribbons_map();
     }
 
     void pokemon_ndsimpl::set_contest_stat(
@@ -984,7 +1088,55 @@ namespace pkmn {
         }
     }
 
-    void pokemon_ndsimpl::_update_ribbons_map() {
+    void pokemon_ndsimpl::_update_ribbons_map()
+    {
+        for(auto iter = hoenn_ribbons.begin(); iter != hoenn_ribbons.end(); ++iter)
+        {
+            _ribbons[iter->first] = (_blockB->hoenn_ribbons & iter->second);
+        }
+        for(auto iter = sinnoh_ribbons1.begin(); iter != sinnoh_ribbons1.end(); ++iter)
+        {
+            _ribbons[iter->first] = (_blockA->sinnoh_ribbons1 & iter->second);
+        }
+        if(_gen4)
+        {
+            for(auto iter = sinnoh_ribbons2.begin(); iter != sinnoh_ribbons2.end(); ++iter)
+            {
+                _ribbons[iter->first] = (_blockA->sinnoh_ribbons2 & iter->second);
+            }
+        }
+        else
+        {
+            for(auto iter = unova_ribbons.begin(); iter != unova_ribbons.end(); ++iter)
+            {
+                _ribbons[iter->first] = (_blockA->unova_ribbons & iter->second);
+            }
+        }
+
+        // Contest ribbons
+        std::string hoenn_ribbon_name;
+        std::string sinnoh_ribbon_name;
+        for(uint32_t i = 0; i < contest_types.size(); ++i)
+        {
+            for(uint32_t j = 0; j < hoenn_contest_levels.size(); ++j)
+            {
+                hoenn_ribbon_name = "Hoenn " + contest_types[i];
+                sinnoh_ribbon_name = contest_types[i];
+
+                if(hoenn_contest_levels[j] != "")
+                {
+                    hoenn_ribbon_name  += " ";
+                    sinnoh_ribbon_name += " ";
+                }
+
+                hoenn_ribbon_name  += hoenn_contest_levels[j];
+                sinnoh_ribbon_name += sinnoh_contest_levels[j];
+
+                uint32_t mask = 1 << (4 * i + j);
+                _ribbons[hoenn_ribbon_name]  = _blockB->hoenn_ribbons & mask;
+                _ribbons[sinnoh_ribbon_name] = _blockC->sinnoh_ribbons3 & mask;
+            }
+        }
     }
 
     void pokemon_ndsimpl::_update_EV_map() {
