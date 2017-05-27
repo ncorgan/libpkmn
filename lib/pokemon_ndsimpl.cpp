@@ -21,7 +21,7 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
-#include <pksav/common/gen3_ribbons.h>
+#include <pksav/common/nds_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
 #include <pksav/gen4/text.h>
@@ -752,11 +752,124 @@ namespace pkmn {
         );
     }
 
+    static const std::map<std::string, pksav_nds_hoenn_ribbon_mask_t> hoenn_ribbons = boost::assign::map_list_of
+        ("Hoenn Champion", PKSAV_NDS_HOENN_CHAMPION_RIBBON_MASK)
+        ("Hoenn Winning", PKSAV_NDS_HOENN_WINNING_RIBBON_MASK)
+        ("Hoenn Victory", PKSAV_NDS_HOENN_VICTORY_RIBBON_MASK)
+        ("Hoenn Artist", PKSAV_NDS_HOENN_ARTIST_RIBBON_MASK)
+        ("Hoenn Effort", PKSAV_NDS_HOENN_EFFORT_RIBBON_MASK)
+        ("Hoenn Battle Champion", PKSAV_NDS_HOENN_BATTLE_CHAMPION_RIBBON_MASK)
+        ("Hoenn Regional Champion", PKSAV_NDS_HOENN_REGIONAL_CHAMPION_RIBBON_MASK)
+        ("Hoenn National Champion", PKSAV_NDS_HOENN_NATIONAL_CHAMPION_RIBBON_MASK)
+        ("Hoenn Country", PKSAV_NDS_HOENN_COUNTRY_RIBBON_MASK)
+        ("Hoenn National", PKSAV_NDS_HOENN_NATIONAL_RIBBON_MASK)
+        ("Hoenn Earth", PKSAV_NDS_HOENN_EARTH_RIBBON_MASK)
+        ("Hoenn World", PKSAV_NDS_HOENN_WORLD_RIBBON_MASK)
+    ;
+
+    static const std::map<std::string, pksav_nds_sinnoh_ribbon1_mask_t> sinnoh_ribbons1 = boost::assign::map_list_of
+        ("Sinnoh Champ",   PKSAV_NDS_SINNOH_CHAMP_RIBBON_MASK)
+        ("Ability",        PKSAV_NDS_SINNOH_ABILITY_RIBBON_MASK)
+        ("Great Ability",  PKSAV_NDS_SINNOH_GREAT_ABILITY_RIBBON_MASK)
+        ("Double Ability", PKSAV_NDS_SINNOH_DOUBLE_ABILITY_RIBBON_MASK)
+        ("Multi Ability",  PKSAV_NDS_SINNOH_MULTI_ABILITY_RIBBON_MASK)
+        ("Pair Ability",   PKSAV_NDS_SINNOH_PAIR_ABILITY_RIBBON_MASK)
+        ("World Ability",  PKSAV_NDS_SINNOH_WORLD_ABILITY_RIBBON_MASK)
+        ("Alert",          PKSAV_NDS_SINNOH_ALERT_RIBBON_MASK)
+        ("Shock",          PKSAV_NDS_SINNOH_SHOCK_RIBBON_MASK)
+        ("Downcast",       PKSAV_NDS_SINNOH_DOWNCAST_RIBBON_MASK)
+        ("Careless",       PKSAV_NDS_SINNOH_CARELESS_RIBBON_MASK)
+        ("Relax",          PKSAV_NDS_SINNOH_RELAX_RIBBON_MASK)
+        ("Snooze",         PKSAV_NDS_SINNOH_SNOOZE_RIBBON_MASK)
+        ("Smile",          PKSAV_NDS_SINNOH_SMILE_RIBBON_MASK)
+        ("Gorgeous",       PKSAV_NDS_SINNOH_GORGEOUS_RIBBON_MASK)
+        ("Royal",          PKSAV_NDS_SINNOH_ROYAL_RIBBON_MASK)
+    ;
+
+    static const std::map<std::string, pksav_nds_sinnoh_ribbon2_mask_t> sinnoh_ribbons2 = boost::assign::map_list_of
+        ("Gorgeous Royal", PKSAV_NDS_SINNOH_GORGEOUS_ROYAL_RIBBON_MASK)
+        ("Footprint",      PKSAV_NDS_SINNOH_FOOTPRINT_RIBBON_MASK)
+        ("Record",         PKSAV_NDS_SINNOH_RECORD_RIBBON_MASK)
+        ("History",        PKSAV_NDS_SINNOH_HISTORY_RIBBON_MASK)
+        ("Legend",         PKSAV_NDS_SINNOH_LEGEND_RIBBON_MASK)
+        ("Red",            PKSAV_NDS_SINNOH_RED_RIBBON_MASK)
+        ("Green",          PKSAV_NDS_SINNOH_GREEN_RIBBON_MASK)
+        ("Blue",           PKSAV_NDS_SINNOH_BLUE_RIBBON_MASK)
+        ("Festival",       PKSAV_NDS_SINNOH_FESTIVAL_RIBBON_MASK)
+        ("Carnival",       PKSAV_NDS_SINNOH_CARNIVAL_RIBBON_MASK)
+        ("Classic",        PKSAV_NDS_SINNOH_CLASSIC_RIBBON_MASK)
+        ("Premier",        PKSAV_NDS_SINNOH_PREMIER_RIBBON_MASK)
+    ;
+
+    static const std::map<std::string, pksav_nds_unova_ribbon_mask_t> unova_ribbons = boost::assign::map_list_of
+        ("Gorgeous Royal", PKSAV_NDS_UNOVA_GORGEOUS_ROYAL_RIBBON_MASK)
+        ("Footprint",      PKSAV_NDS_UNOVA_FOOTPRINT_RIBBON_MASK)
+        ("Record",         PKSAV_NDS_UNOVA_RECORD_RIBBON_MASK)
+        ("Event",          PKSAV_NDS_UNOVA_EVENT_RIBBON_MASK)
+        ("Legend",         PKSAV_NDS_UNOVA_LEGEND_RIBBON_MASK)
+        ("World Champion", PKSAV_NDS_UNOVA_WORLD_CHAMPION_RIBBON_MASK)
+        ("Birthday",       PKSAV_NDS_UNOVA_BIRTHDAY_RIBBON_MASK)
+        ("Special",        PKSAV_NDS_UNOVA_SPECIAL_RIBBON_MASK)
+        ("Souvenir",       PKSAV_NDS_UNOVA_SOUVENIR_RIBBON_MASK)
+        ("Wishing",        PKSAV_NDS_UNOVA_WISHING_RIBBON_MASK)
+        ("Classic",        PKSAV_NDS_UNOVA_CLASSIC_RIBBON_MASK)
+        ("Premier",        PKSAV_NDS_UNOVA_PREMIER_RIBBON_MASK)
+    ;
+
     void pokemon_ndsimpl::set_ribbon(
-        PKMN_UNUSED(const std::string &ribbon),
-        PKMN_UNUSED(bool value)
-    ) {
-        throw pkmn::unimplemented_error();
+        const std::string &ribbon,
+        bool value
+    )
+    {
+        if(_ribbons.find(ribbon) != _ribbons.end())
+        {
+            throw std::invalid_argument("Invalid ribbon.");
+        }
+
+        pokemon_scoped_lock lock(this);
+
+        if(hoenn_ribbons.find(ribbon) != hoenn_ribbons.end())
+        {
+            _set_ribbon<uint32_t, pksav_nds_hoenn_ribbon_mask_t>(
+                ribbon,
+                value,
+                &_blockB->hoenn_ribbons,
+                hoenn_ribbons
+            );
+        }
+        else if(sinnoh_ribbons1.find(ribbon) != sinnoh_ribbons1.end())
+        {
+            _set_ribbon<uint16_t, pksav_nds_sinnoh_ribbon1_mask_t>(
+                ribbon,
+                value,
+                &_blockA->sinnoh_ribbons1,
+                sinnoh_ribbons1
+            );
+        }
+        else if(_gen4)
+        {
+            if(sinnoh_ribbons2.find(ribbon) != sinnoh_ribbons2.end())
+            {
+                _set_ribbon<uint16_t, pksav_nds_sinnoh_ribbon2_mask_t>(
+                    ribbon,
+                    value,
+                    &_blockA->sinnoh_ribbons2,
+                    sinnoh_ribbons2
+                );
+            }
+        }
+        else
+        {
+            if(unova_ribbons.find(ribbon) != unova_ribbons.end())
+            {
+                _set_ribbon<uint16_t, pksav_nds_unova_ribbon_mask_t>(
+                    ribbon,
+                    value,
+                    &_blockA->unova_ribbons,
+                    unova_ribbons
+                );
+            }
+        }
     }
 
     void pokemon_ndsimpl::set_contest_stat(
