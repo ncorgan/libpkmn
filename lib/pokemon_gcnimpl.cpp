@@ -776,20 +776,6 @@ namespace pkmn {
         _markings[marking] = value;
     }
 
-    /*
-        // Contest ribbons
-        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first]             = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
-            _ribbons[iter->first + " Super"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
-            _ribbons[iter->first + " Hyper"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
-            _ribbons[iter->first + " Master"] = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
-        }
-
-        // Non-contest ribbons
-        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first] = GC_RCAST->specialRibbons[iter->second];
-        }
-     */
     void pokemon_gcnimpl::set_ribbon(
         const std::string &ribbon,
         bool value

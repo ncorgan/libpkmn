@@ -84,10 +84,6 @@ namespace pkmn { namespace database {
             /*
              * We know the item existed in this generation, but we need to
              * confirm that it existed in this specific game.
-             *
-             * For Gamecube games, use Ruby/Sapphire to check for valid
-             * items since the indices are the same, and the database
-             * doesn't know those items are in the Gamecube games.
              */
             BOOST_STATIC_CONSTEXPR int RS = 5;
             int version_group_id = pkmn::database::game_id_to_version_group(game_id);
@@ -97,6 +93,17 @@ namespace pkmn { namespace database {
 
             if(item_index_valid(ret, version_group_id)) {
                 return ret;
+            } else if(game_is_gamecube(game_id)) {
+                // This may share a name but be in the Gamecube indices.
+                bool colosseum = (game_id == 19);
+
+                static BOOST_CONSTEXPR const char* gcn_query = \
+                    "SELECT game_index FROM gamecube_item_game_indices "
+                    "WHERE item_id=? AND colosseum=?";
+
+                return pkmn::database::query_db_bind2<int, int, int>(
+                           _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                       );
             } else {
                 throw std::invalid_argument(
                          str(boost::format("The item with ID %d did not exist in this game.") % item_id)
