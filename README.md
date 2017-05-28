@@ -8,6 +8,13 @@ LibPKMN
 The goal of LibPKMN is to be the most expansive library for editing main series Pokémon game saves, as well
 as analyzing all aspects of the games, allowing for full customization of the game's Pokémon.
 
+Supported games:
+ * Red/Blue/Yellow
+ * Gold/Silver/Crystal
+ * Ruby/Sapphire/Emerald
+ * FireRed/LeafGreen
+ * Colosseum/XD
+
 Features in development:
  * Damage calculations
  * Generation IV save support
@@ -79,4 +86,13 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/05/23
+Acknowledgments
+-------------------------------------
+
+This project is largely possible thanks to Alex "Eevee" Munroe ([@eevee](https://github.com/eevee)) whose extensive SQLite database on all things Pokémon underlies the majority of this code's functionality.
+
+A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey85)) for consulting on game mechanics.
+
+This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
+
+README last updated: 2017/05/28
