@@ -9,7 +9,6 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/move_slot.hpp>
-#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/shared_ptr.hpp>
@@ -75,7 +74,7 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual const pkmn::database::item_entry& get_held_item() = 0;
+            virtual std::string get_held_item() = 0;
 
             virtual void set_held_item(
                 const std::string &held_item

@@ -170,14 +170,14 @@ function gen2_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(IVs["Special"], 10)
 
     luaunit.assertError(pokemon.set_held_item, pokemon, "Not an item")
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "None")
+    luaunit.assertEquals(pokemon:get_held_item(), "None")
 
     -- Valid item, not holdable
     luaunit.assertError(pokemon.set_held_item, pokemon, "Bicycle")
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "None")
+    luaunit.assertEquals(pokemon:get_held_item(), "None")
 
     pokemon:set_held_item("Berry")
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "Berry")
+    luaunit.assertEquals(pokemon:get_held_item(), "Berry")
 
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "")
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "Too long trainer name")

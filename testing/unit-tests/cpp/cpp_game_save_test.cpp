@@ -325,7 +325,7 @@ namespace pkmntest {
 
         if(generation >= 2) {
             // Keep going until one is holdable
-            while(ret->get_held_item().get_item_id() == 0) {
+            while(ret->get_held_item() == "None") {
                 try {
                     ret->set_held_item(
                         item_list[rng.rand() % item_list.size()]

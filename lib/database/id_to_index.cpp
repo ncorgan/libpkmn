@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -98,7 +98,9 @@ namespace pkmn { namespace database {
             if(item_index_valid(ret, version_group_id)) {
                 return ret;
             } else {
-                throw std::invalid_argument("This item did not exist in this game.");
+                throw std::invalid_argument(
+                         str(boost::format("The item with ID %d did not exist in this game.") % item_id)
+                      );
             }
         } else {
             if(game_is_gamecube(game_id)) {

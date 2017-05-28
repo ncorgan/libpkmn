@@ -182,7 +182,7 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_form(), "Standard")
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "None")
+    luaunit.assertEquals(pokemon:get_held_item(), "None")
     luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
     luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
 
@@ -288,7 +288,7 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.set_held_item, pokemon, "Mach Bike")
 
     pokemon:set_held_item("Razz Berry")
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "Razz Berry")
+    luaunit.assertEquals(pokemon:get_held_item(), "Razz Berry")
 
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "")
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "Too long trainer name")

@@ -13,6 +13,8 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
+#include <pkmn/database/item_entry.hpp>
+
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -28,7 +30,6 @@
 
 #include <cstring>
 #include <ctime>
-#include <iostream>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -91,7 +92,6 @@ namespace pkmn {
         )
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         set_level(level);
@@ -111,7 +111,6 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -134,7 +133,6 @@ namespace pkmn {
         _our_party_mem = false;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -255,6 +253,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gen2impl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_index_to_name(
+                   GEN2_PC_RCAST->held_item,
+                   _database_entry.get_game_id()
+               );
+    }
+
     void pokemon_gen2impl::set_held_item(
         const std::string &held_item
     ) {
@@ -271,8 +279,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
-
-        _update_held_item();
     }
 
     std::string pokemon_gen2impl::get_trainer_name() {
@@ -657,15 +663,6 @@ namespace pkmn {
                 for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
-        }
-    }
-
-    void pokemon_gen2impl::_update_held_item() {
-        if(int(GEN2_PC_RCAST->held_item) != _held_item.get_item_index()) {
-            _held_item = pkmn::database::item_entry(
-                             GEN2_PC_RCAST->held_item,
-                             _database_entry.get_game_id()
-                         );
         }
     }
 

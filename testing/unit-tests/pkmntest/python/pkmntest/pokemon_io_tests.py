@@ -25,7 +25,7 @@ class pokemon_io_test(unittest.TestCase):
         self.assertEqual(mightyena.get_form(), "Standard")
         self.assertEqual(mightyena.get_nickname(), "MIGHTYENA")
         self.assertFalse(mightyena.is_shiny())
-        self.assertEqual(mightyena.get_held_item().get_name(), "Heart Scale")
+        self.assertEqual(mightyena.get_held_item(), "Heart Scale")
         self.assertEqual(mightyena.get_trainer_name(), "A")
         self.assertEqual(mightyena.get_trainer_public_id(), 61415)
         self.assertEqual(mightyena.get_trainer_secret_id(), 3417)

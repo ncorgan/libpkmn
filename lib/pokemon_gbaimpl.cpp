@@ -21,6 +21,8 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
@@ -116,7 +118,6 @@ namespace pkmn {
         _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -152,7 +153,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -187,7 +187,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -224,7 +223,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -339,6 +337,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gbaimpl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_index_to_name(
+                   pksav_littleendian16(_growth->held_item),
+                   _database_entry.get_game_id()
+               );
+    }
+
     void pokemon_gbaimpl::set_held_item(
         const std::string &held_item
     ) {
@@ -355,8 +363,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
-
-        _update_held_item();
     }
 
     std::string pokemon_gbaimpl::get_trainer_name() {
@@ -913,15 +919,6 @@ namespace pkmn {
                 for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
-        }
-    }
-
-    void pokemon_gbaimpl::_update_held_item() {
-        if(int(pksav_littleendian16(_growth->held_item)) != _held_item.get_item_index()) {
-            _held_item = pkmn::database::item_entry(
-                             pksav_littleendian16(_growth->held_item),
-                             _database_entry.get_game_id()
-                         );
         }
     }
 

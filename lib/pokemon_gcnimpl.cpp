@@ -21,6 +21,8 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
@@ -181,7 +183,6 @@ namespace pkmn {
         set_original_game("Colosseum/XD");
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -213,7 +214,6 @@ namespace pkmn {
         _our_pc_mem = false;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -243,7 +243,6 @@ namespace pkmn {
         _our_pc_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -273,7 +272,6 @@ namespace pkmn {
         _our_pc_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -396,6 +394,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gcnimpl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_entry(
+                   GC_RCAST->heldItem,
+                   _database_entry.get_game_id()
+               ).get_name();
+    }
+
     void pokemon_gcnimpl::set_held_item(
         const std::string &held_item
     ) {
@@ -412,8 +420,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
-
-        _held_item = std::move(item);
     }
 
     std::string pokemon_gcnimpl::get_trainer_name() {
@@ -950,10 +956,6 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
-    }
-
-    void pokemon_gcnimpl::_update_held_item() {
-        _held_item = pkmn::database::item_entry("None", get_game());
     }
 
     void pokemon_gcnimpl::_update_ribbons_map() {

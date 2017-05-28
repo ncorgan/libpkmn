@@ -28,7 +28,7 @@ public class PokemonIOTests {
         Assert.AreEqual(mightyena.Form, "Standard");
         Assert.AreEqual(mightyena.Nickname, "MIGHTYENA");
         Assert.IsFalse(mightyena.IsShiny);
-        Assert.AreEqual(mightyena.GetHeldItem().Name, "Heart Scale");
+        Assert.AreEqual(mightyena.HeldItem, "Heart Scale");
         Assert.AreEqual(mightyena.TrainerName, "A");
         Assert.AreEqual(mightyena.TrainerPublicID, 61415);
         Assert.AreEqual(mightyena.TrainerSecretID, 3417);

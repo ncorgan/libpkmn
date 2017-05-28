@@ -88,7 +88,7 @@ public class Gen2PokemonTests {
         Assert.AreEqual(pokemon.Form, "Standard");
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
-        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
+        Assert.AreEqual(pokemon.HeldItem, "None");
         Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
         Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
         Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
@@ -218,21 +218,21 @@ public class Gen2PokemonTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetHeldItem("Not an item");
+                pokemon.HeldItem = "Not an item";
             }
         );
-        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
+        Assert.AreEqual(pokemon.HeldItem, "None");
 
         // Valid item, but not holdable
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.SetHeldItem("Bicycle");
+                pokemon.HeldItem = "Bicycle";
             }
         );
-        Assert.AreEqual(pokemon.GetHeldItem().Name, "None");
+        Assert.AreEqual(pokemon.HeldItem, "None");
 
-        pokemon.SetHeldItem("Berry");
-        Assert.AreEqual(pokemon.GetHeldItem().Name, "Berry");
+        pokemon.HeldItem = "Berry";
+        Assert.AreEqual(pokemon.HeldItem, "Berry");
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {

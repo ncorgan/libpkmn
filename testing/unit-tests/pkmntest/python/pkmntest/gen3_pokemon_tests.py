@@ -148,7 +148,7 @@ class gen3_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_form(), "Standard")
         self.assertStringEqual(pokemon.get_game(), game)
         self.assertStringEqual(pokemon.get_nickname(), species.upper())
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "None")
+        self.assertStringEqual(pokemon.get_held_item(), "None")
         self.assertStringEqual(pokemon.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
         self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
 
@@ -259,10 +259,10 @@ class gen3_pokemon_test(pokemon_tests):
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Mach Bike")
 
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "None")
+        self.assertStringEqual(pokemon.get_held_item(), "None")
 
         pokemon.set_held_item("Razz Berry")
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "Razz Berry")
+        self.assertStringEqual(pokemon.get_held_item(), "Razz Berry")
 
         with self.assertRaises(ValueError):
             pokemon.set_trainer_name("")

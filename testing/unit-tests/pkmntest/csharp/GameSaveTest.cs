@@ -263,11 +263,12 @@ public class GameSaveTest {
 
         if(generation >= 2) {
             // Keep going until one is holdable
+            PKMN.Database.ItemEntry itemEntry;
             do {
-                try {
-                    ret.SetHeldItem(itemList[rng.Next(0, itemList.Count)]);
-                } catch(ArgumentOutOfRangeException) {}
-            } while(ret.GetHeldItem().Name.Equals("None"));
+                itemEntry = new PKMN.Database.ItemEntry(itemList[rng.Next(0, itemList.Count)], game);
+            } while(!itemEntry.isHoldable);
+
+            ret.HeldItem = itemEntry.Name;
         }
 
         return ret;
@@ -337,7 +338,7 @@ public class GameSaveTest {
         }
 
         if(GameToGeneration(pokemon1.Game) >= 2) {
-            Assert.AreEqual(pokemon1.GetHeldItem().Name, pokemon2.GetHeldItem().Name);
+            Assert.AreEqual(pokemon1.HeldItem, pokemon2.HeldItem);
         }
     }
 

@@ -189,6 +189,11 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
     }
 
+    std::string pokemon_gen1impl::get_held_item()
+    {
+        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
+    }
+
     void pokemon_gen1impl::set_held_item(
         PKMN_UNUSED(const std::string &held_item)
     ) {

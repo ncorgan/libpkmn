@@ -17,6 +17,7 @@
 #include <boost/algorithm/string/compare.hpp>
 
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -182,6 +183,13 @@ namespace pkmn { namespace database {
         (73,18) // Berries
     ;
 
+    PKMN_INLINE bool is_item_invalid_for_gamecube(
+        const std::string& item
+    )
+    {
+        return (item.find("HM") == 0) or (item.find("Fossil") != std::string::npos) or (item.find("Amber") != std::string::npos);
+    }
+
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
@@ -239,13 +247,13 @@ namespace pkmn { namespace database {
                 ret.emplace_back((const char*)gcn_stmt.getColumn(0));
             }
 
-            // For TM pockets, remove the HMs.
-            BOOST_STATIC_CONSTEXPR int COLO_TM_LIST = 65;
-            BOOST_STATIC_CONSTEXPR int XD_TM_LIST = 72;
-            if(list_id == COLO_TM_LIST or list_id == XD_TM_LIST)
-            {
-                ret.erase(ret.begin(), ret.begin()+8);
-            }
+            // Gamecube games have no HMs or fossils.
+            auto remove_iter = std::remove_if(
+                                   ret.begin(),
+                                   ret.end(),
+                                   is_item_invalid_for_gamecube
+                               );
+            ret.erase(remove_iter, ret.end());
         } else {
             static BOOST_CONSTEXPR const char* all_pockets_query = \
                 "SELECT item_id,name FROM item_names WHERE local_language_id=9 "

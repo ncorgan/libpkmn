@@ -86,7 +86,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetHeldItem();
+                pokemon.HeldItem = "Potion";
             }
         );
 
@@ -210,7 +210,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetHeldItem("Potion");
+                pokemon.HeldItem = "Potion";
             }
         );
 

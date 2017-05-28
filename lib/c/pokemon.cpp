@@ -274,7 +274,7 @@ pkmn_error_t pkmn_pokemon_get_held_item(
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
                     handle,
-                    handle->cpp->get_held_item().get_name(),
+                    handle->cpp->get_held_item(),
                     held_item_out,
                     buffer_len
                );

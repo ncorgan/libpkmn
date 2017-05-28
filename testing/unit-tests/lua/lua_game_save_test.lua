@@ -262,7 +262,7 @@ function game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_l
         -- Keep going until one is holdable
         repeat
             pcall(ret.set_held_item, ret, item_list[math.random(1, #item_list)])
-        until ret:get_held_item():get_name() ~= "None"
+        until ret:get_held_item() ~= "None"
     end
 
     return ret
@@ -321,7 +321,7 @@ function game_save_test.compare_pokemon(pokemon1, pokemon2)
 
     if game_save_test.GAME_TO_GENERATION[pokemon1:get_game()] >= 2
     then
-        luaunit.assertEquals(pokemon1:get_held_item():get_name(), pokemon2:get_held_item():get_name())
+        luaunit.assertEquals(pokemon1:get_held_item(), pokemon2:get_held_item())
     end
 end
 

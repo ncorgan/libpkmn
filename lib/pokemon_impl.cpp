@@ -112,7 +112,6 @@ namespace pkmn {
         int game_id
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
-       _held_item(pkmn::database::item_entry(0, game_id)),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
@@ -120,8 +119,7 @@ namespace pkmn {
         pkmn::database::pokemon_entry&& database_entry
     ): pokemon(),
        _database_entry(std::move(database_entry)),
-       _held_item(pkmn::database::item_entry(0, database_entry.get_game_id())),
-       _generation(pkmn::database::game_id_to_generation(database_entry.get_game_id()))
+       _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id()))
     {}
 
     std::string pokemon_impl::get_species() {
@@ -138,14 +136,6 @@ namespace pkmn {
 
     const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry() {
         return _database_entry;
-    }
-
-    const pkmn::database::item_entry& pokemon_impl::get_held_item() {
-        if(_generation == 1) {
-            throw pkmn::feature_not_in_game_error("Held items", "Generation I");
-        }
-
-        return _held_item;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_markings() {

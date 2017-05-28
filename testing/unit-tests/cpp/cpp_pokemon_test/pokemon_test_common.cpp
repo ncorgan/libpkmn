@@ -43,7 +43,7 @@ static void check_initial_values(
     EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_NAME, pokemon->get_trainer_name());
 
     if(generation >= 2) {
-        EXPECT_EQ("None", pokemon->get_held_item().get_name());
+        EXPECT_EQ("None", pokemon->get_held_item());
     }
 
     EXPECT_EQ("Male", pokemon->get_trainer_gender());
@@ -321,7 +321,7 @@ static void test_setting_item(
 
     if(generation >= 2) {
         pokemon->set_held_item(item_name);
-        EXPECT_EQ(item_name, pokemon->get_held_item().get_name());
+        EXPECT_EQ(item_name, pokemon->get_held_item());
 
         EXPECT_THROW(
             pokemon->set_held_item("Not an item");

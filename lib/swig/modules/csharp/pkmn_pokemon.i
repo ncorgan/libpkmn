@@ -32,6 +32,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::is_shiny "private";
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
+%csmethodmodifiers pkmn::pokemon::get_held_item "private";
+%csmethodmodifiers pkmn::pokemon::set_held_item "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::set_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_public_id "private";
@@ -125,7 +127,14 @@ using Database;"
         }
     }
 
-    // How to do held item?
+    public string HeldItem {
+        get {
+            return GetHeldItem();
+        }
+        set {
+            SetHeldItem(value);
+        }
+    }
 
     public string TrainerName {
         get {
