@@ -35,8 +35,6 @@ static const std::vector<std::string> natures = boost::assign::list_of
     ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
 ;
 
-BOOST_STATIC_CONSTEXPR unsigned long long ONE_SECOND = (unsigned long long)1e6;
-
 namespace pkmn { namespace calculations {
 
     static uint32_t get_gender_threshold(
