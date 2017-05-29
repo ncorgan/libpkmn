@@ -72,7 +72,7 @@ TEST(pokemon_io_test, test_3gpkm) {
     const pkmn::move_slots_t mightyena_moves = mightyena->get_moves();
     EXPECT_EQ(4, mightyena_moves.size());
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move.get_name());
+        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move);
     }
 
     const std::map<std::string, int>& mightyena_EVs = mightyena->get_EVs();

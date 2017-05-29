@@ -195,7 +195,7 @@ class gen3_pokemon_test(pokemon_tests):
         self.check_contest_stats_map(pokemon.get_contest_stats())
 
         for move_slot in pokemon.get_moves():
-            self.assertStringEqual(move_slot.move.get_name(), "None")
+            self.assertStringEqual(move_slot.move, "None")
             self.assertEqual(move_slot.pp, 0)
 
         self.check_stats_map(pokemon.get_EVs())

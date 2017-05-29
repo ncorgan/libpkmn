@@ -456,7 +456,7 @@ namespace pkmntest {
             for(size_t i = 0; i < 4; ++i)
             {
                 // These may be different if Shadow moves were mistakenly allowed to be set.
-                EXPECT_EQ(moves1.at(i).move.get_move_id(), moves2.at(i).move.get_move_id());
+                EXPECT_EQ(moves1.at(i).move, moves2.at(i).move);
                 EXPECT_EQ(native1->moves[i].move, native2->moves[i].move);
                 EXPECT_EQ(native1->moves[i].currentPPs, native2->moves[i].currentPPs);
             }

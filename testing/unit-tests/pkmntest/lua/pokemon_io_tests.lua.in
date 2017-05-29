@@ -104,7 +104,7 @@ function test_3gpkm()
     luaunit.assertEquals(#mightyena_moves, 4)
     for i = 1, 4
     do
-        luaunit.assertEquals(mightyena_moves[i].move:get_name(), expected_mightyena_moves[i])
+        luaunit.assertEquals(mightyena_moves[i].move, expected_mightyena_moves[i])
     end
 
     local mightyena_EVs = mightyena:get_EVs()

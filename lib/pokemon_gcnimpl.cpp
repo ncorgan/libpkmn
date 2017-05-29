@@ -904,16 +904,6 @@ namespace pkmn {
         _populate_party_data();
     }
 
-    void pokemon_gcnimpl::_set_contest_ribbon(
-        const std::string &ribbon,
-        bool value
-    ) {
-        (void)ribbon;
-        (void)value;
-
-        _update_ribbons_map();
-    }
-
     void pokemon_gcnimpl::_populate_party_data() {
         GC_RCAST->resetPartyData();
         _update_stat_map();
@@ -929,9 +919,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        int(GC_RCAST->moves[index].move),
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        int(GC_RCAST->moves[index].move), 3
                     ),
                     GC_RCAST->moves[index].currentPPs
                 );

@@ -223,7 +223,7 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(#move_slots, 4)
     for i = 1, #move_slots
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), "None")
+        luaunit.assertEquals(move_slots[i].move, "None")
         luaunit.assertEquals(move_slots[i].pp, 0)
     end
 

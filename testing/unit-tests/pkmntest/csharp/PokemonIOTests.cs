@@ -68,7 +68,7 @@ public class PokemonIOTests {
         };
         Assert.AreEqual(mightyena.Moves.Count, 4);
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(mightyena.Moves[i].Move.Name, expectedMightyenaMoves[i]);
+            Assert.AreEqual(mightyena.Moves[i].Move, expectedMightyenaMoves[i]);
         }
 
         Assert.AreEqual(mightyena.EVs.Count, 6);

@@ -117,7 +117,7 @@ function gen2_pokemon_tests.pokemon_test(game)
 
     for i = 1, #move_slots
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), "None")
+        luaunit.assertEquals(move_slots[i].move, "None")
         luaunit.assertEquals(move_slots[i].pp, 0)
     end
 
@@ -230,7 +230,7 @@ function gen2_pokemon_tests.pokemon_test(game)
 
     luaunit.assertError(pokemon.set_move, pokemon, "Ember", 0)
     luaunit.assertError(pokemon.set_move, pokemon, "Bounce", 1)
-    luaunit.assertEquals(pokemon:get_moves()[1].move:get_name(), "None")
+    luaunit.assertEquals(pokemon:get_moves()[1].move, "None")
 
     local move_names = {"Ember", "Flamethrower", "Slash", "Fire Blast"}
     for i = 1, #move_names
@@ -241,8 +241,11 @@ function gen2_pokemon_tests.pokemon_test(game)
     move_slots = pokemon:get_moves()
     for i = 1, #move_slots
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), move_names[i])
-        luaunit.assertEquals(move_slots[i].pp, move_slots[i].move:get_pp(0))
+        luaunit.assertEquals(move_slots[i].move, move_names[i])
+        luaunit.assertEquals(
+            move_slots[i].pp,
+            pkmn.database.move_entry(move_slots[i].move, pokemon:get_game()):get_pp(0)
+        )
     end
 
     luaunit.assertError(pokemon.set_EV, pokemon, "Not a stat", 1)

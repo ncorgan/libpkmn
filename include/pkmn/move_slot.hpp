@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,8 +8,8 @@
 #define PKMN_MOVE_SLOT_HPP
 
 #include <pkmn/config.hpp>
-#include <pkmn/database/move_entry.hpp>
 
+#include <string>
 #include <vector>
 
 namespace pkmn {
@@ -17,7 +17,7 @@ namespace pkmn {
     /*!
      * @brief A slot in an move list.
      *
-     * An move list is made up of a list of move slots, each of which contains
+     * A move list is made up of a list of move slots, each of which contains
      * a unique move type and the PP of that move in the given pocket. This
      * struct represents a single one of those slots.
      */
@@ -27,8 +27,8 @@ namespace pkmn {
          *
          * The move entry represents an invalid move.
          */
-        PKMN_CONSTEXPR_OR_INLINE move_slot():
-            move(pkmn::database::move_entry()),
+        PKMN_INLINE move_slot():
+            move("None"),
             pp(0) {}
 
         /*!
@@ -36,14 +36,14 @@ namespace pkmn {
          *
          * This calls the copy constructor for the move entry.
          *
-         * \param slot_move Move entry
-         * \param slot_pp Move's current PP
+         * \param move_name Move name
+         * \param move_pp Move's current PP
          */
-        PKMN_CONSTEXPR_OR_INLINE move_slot(
-            const pkmn::database::move_entry &slot_move,
-            int slot_pp
-        ): move(slot_move),
-           pp(slot_pp) {}
+        PKMN_INLINE move_slot(
+            const std::string& move_name,
+            int move_pp
+        ): move(move_name),
+           pp(move_pp) {}
 
 #ifndef SWIG
         /*!
@@ -54,17 +54,17 @@ namespace pkmn {
          * \param slot_move Move entry
          * \param slot_pp Move's current PP
          */
-        PKMN_CONSTEXPR_OR_INLINE move_slot(
-            pkmn::database::move_entry&& slot_move,
-            int slot_pp
-        ): move(std::move(slot_move)),
-           pp(slot_pp) {}
+        PKMN_INLINE move_slot(
+            std::string&& move_name,
+            int move_pp 
+        ): move(std::move(move_name)),
+           pp(std::move(move_pp)) {}
 #endif
 
         /*!
          * @brief The move in the given slot.
          */
-        pkmn::database::move_entry move;
+        std::string move;
         /*!
          * @brief Move's current PP is in the given slot.
          */
@@ -75,7 +75,7 @@ namespace pkmn {
     /*!
      * @brief Equality check between two move slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
+    PKMN_INLINE bool operator==(
         const move_slot &lhs,
         const move_slot &rhs
     ) {
@@ -86,7 +86,7 @@ namespace pkmn {
     /*!
      * @brief Inequality check between two move slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+    PKMN_INLINE bool operator!=(
         const move_slot &lhs,
         const move_slot &rhs
     ) {

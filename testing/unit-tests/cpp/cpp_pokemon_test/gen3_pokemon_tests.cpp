@@ -236,7 +236,10 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_slots.at(i).move.get_move_id(), int(attacks->moves[i]));
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id(),
+            int(attacks->moves[i])
+        );
         EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
     }
 
@@ -531,7 +534,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves.at(i).move.get_move_id(), int(native->moves[i].move));
+        EXPECT_EQ(
+            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
+            int(native->moves[i].move)
+        );
         EXPECT_EQ(moves.at(i).pp, int(native->moves[i].currentPPs));
     }
 

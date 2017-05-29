@@ -315,7 +315,7 @@ function game_save_test.compare_pokemon(pokemon1, pokemon2)
     local moves2 = pokemon2:get_moves()
     for i = 1, 4
     do
-        luaunit.assertEquals(moves1[i].move:get_name(), moves2[i].move:get_name())
+        luaunit.assertEquals(moves1[i].move, moves2[i].move)
         luaunit.assertEquals(moves1[i].pp, moves2[i].pp)
     end
 

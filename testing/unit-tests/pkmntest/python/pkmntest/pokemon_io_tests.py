@@ -63,7 +63,7 @@ class pokemon_io_test(unittest.TestCase):
         mightyena_moves = mightyena.get_moves()
         self.assertEqual(len(mightyena_moves), 4)
         for i in range(4):
-            self.assertEqual(mightyena_moves[i].move.get_name(), expected_move_names[i])
+            self.assertEqual(mightyena_moves[i].move, expected_move_names[i])
 
         mightyena_EVs = mightyena.get_EVs()
         self.assertEqual(len(mightyena_EVs), 6)

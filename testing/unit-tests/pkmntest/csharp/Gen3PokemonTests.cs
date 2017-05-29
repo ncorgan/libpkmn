@@ -255,7 +255,7 @@ public class Gen3PokemonTests {
         CheckContestStatsMap(pokemon.ContestStats);
 
         foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
-            Assert.AreEqual(moveSlot.Move.Name, "None");
+            Assert.AreEqual(moveSlot.Move, "None");
             Assert.AreEqual(moveSlot.PP, 0);
         }
 

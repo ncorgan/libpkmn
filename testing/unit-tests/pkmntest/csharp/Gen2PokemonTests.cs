@@ -157,7 +157,7 @@ public class Gen2PokemonTests {
         );
 
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.Name, "None");
+            Assert.AreEqual(pokemon.Moves[i].Move, "None");
             Assert.AreEqual(pokemon.Moves[i].PP, 0);
         }
 
@@ -336,7 +336,7 @@ public class Gen2PokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.Moves[0].Move.Name, "None");
+        Assert.AreEqual(pokemon.Moves[0].Move, "None");
 
         string[] moveNames = {"Ember", "Flamethrower", "Slash", "Fire Blast"};
         for(int i = 0; i < 4; ++i) {
@@ -344,8 +344,11 @@ public class Gen2PokemonTests {
         }
 
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.Name, moveNames[i]);
-            Assert.AreEqual(pokemon.Moves[i].PP, pokemon.Moves[i].Move.GetPP(0));
+            Assert.AreEqual(pokemon.Moves[i].Move, moveNames[i]);
+            Assert.AreEqual(
+                pokemon.Moves[i].PP,
+                new PKMN.Database.MoveEntry(pokemon.Moves[i].Move, game).GetPP(0)
+            );
         }
 
         Assert.Throws<ArgumentOutOfRangeException>(

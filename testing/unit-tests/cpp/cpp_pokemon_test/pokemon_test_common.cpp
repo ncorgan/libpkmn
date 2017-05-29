@@ -84,7 +84,7 @@ static void check_initial_values(
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     EXPECT_EQ(4, move_slots.size());
     for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->move.get_name());
+        EXPECT_EQ("None", iter->move);
         EXPECT_EQ(0, iter->pp);
     }
 
@@ -529,8 +529,11 @@ static void test_setting_moves(
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_names[i], move_slots.at(i).move.get_name());
-        EXPECT_EQ(move_slots.at(i).move.get_pp(0), move_slots.at(i).pp);
+        EXPECT_EQ(move_names[i], move_slots.at(i).move);
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, pokemon->get_game()).get_pp(0),
+            move_slots.at(i).pp
+        );
     }
 
     for(int i = 0; i < int(invalid_move_names.size()); ++i) {

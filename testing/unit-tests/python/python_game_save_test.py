@@ -275,7 +275,7 @@ class game_save_test(unittest.TestCase):
         moves1 = pokemon1.get_moves()
         moves2 = pokemon2.get_moves()
         for i in range(4):
-            self.assertEquals(moves1[i].move.get_name(), moves2[i].move.get_name())
+            self.assertEquals(moves1[i].move, moves2[i].move)
             self.assertEquals(moves1[i].pp, moves2[i].pp)
 
         if GAME_GENERATIONS[pokemon1.get_game()] >= 2:

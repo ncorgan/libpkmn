@@ -26,7 +26,7 @@ function pokemon_party_tests.test_empty_pokemon_party(party, game)
         local moves = party[i]:get_moves()
         for i = 1, #moves
         do
-            luaunit.assertEquals(moves[i].move:get_name(), "None")
+            luaunit.assertEquals(moves[i].move, "None")
             luaunit.assertEquals(moves[i].pp, 0)
         end
     end

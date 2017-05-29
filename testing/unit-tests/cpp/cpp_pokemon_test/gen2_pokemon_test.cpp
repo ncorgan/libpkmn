@@ -134,7 +134,10 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     );
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(uint8_t(move_slots.at(i).move.get_move_id()), native_pc->moves[i]);
+        EXPECT_EQ(
+            uint8_t(pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id()),
+            native_pc->moves[i]
+        );
         EXPECT_EQ(uint8_t(move_slots.at(i).pp), (native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK));
     }
     EXPECT_EQ(uint16_t(pokemon->get_trainer_id()), pksav_bigendian16(native_pc->ot_id));

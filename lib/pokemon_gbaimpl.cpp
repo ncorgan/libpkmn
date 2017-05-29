@@ -803,14 +803,15 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        _attacks->moves[index] = pksav_littleendian16(uint16_t(_moves[index].move.get_move_id()));
+        _attacks->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
         _attacks->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -907,9 +908,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        pksav_littleendian16(_attacks->moves[index]),
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        pksav_littleendian16(_attacks->moves[index]), 3
                     ),
                     _attacks->move_pps[index]
                 );
