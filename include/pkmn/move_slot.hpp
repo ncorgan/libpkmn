@@ -51,8 +51,8 @@ namespace pkmn {
          *
          * This calls the move constructor for the move entry.
          *
-         * \param slot_move Move entry
-         * \param slot_pp Move's current PP
+         * \param move_name Move entry
+         * \param move_pp Move's current PP
          */
         PKMN_INLINE move_slot(
             std::string&& move_name,
