@@ -60,13 +60,13 @@ class gen1_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.get_held_item()
 
-        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
 
         with self.assertRaises(RuntimeError):
             pokemon.get_trainer_secret_id()
 
-        self.assertEqual(pokemon.get_trainer_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertEqual(pokemon.get_trainer_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
         self.assertStringEqual(pokemon.get_trainer_gender(), "Male")
 
         with self.assertRaises(RuntimeError):

@@ -66,7 +66,7 @@ namespace pkmn {
 
         pkmn::rng<uint32_t> rng;
         GBA_PC_RCAST->personality = rng.rand();
-        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(LIBPKMN_OT_ID);
+        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -82,7 +82,7 @@ namespace pkmn {
 
         PKSAV_CALL(
             pksav_text_to_gba(
-                LIBPKMN_OT_NAME.c_str(),
+                DEFAULT_TRAINER_NAME.c_str(),
                 GBA_PC_RCAST->otname,
                 7
             );

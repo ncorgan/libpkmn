@@ -11,5 +11,5 @@ from .stl_python import *
 from . import calculations
 from . import database
 
-LIBPKMN_OT_ID = 2105214279
-LIBPKMN_OT_NAME = "LibPKMN"
+DEFAULT_TRAINER_ID = 2105214279
+DEFAULT_TRAINER_NAME = "LibPKMN"

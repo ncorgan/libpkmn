@@ -33,8 +33,8 @@ namespace fs = boost::filesystem;
 
 namespace pkmn {
 
-    const uint32_t pkmn::pokemon::LIBPKMN_OT_ID = 2105214279;
-    const std::string pkmn::pokemon::LIBPKMN_OT_NAME = "LibPKMN";
+    const uint32_t pkmn::pokemon::DEFAULT_TRAINER_ID = 2105214279;
+    const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
     pokemon::sptr pokemon::make(
         const std::string &species,

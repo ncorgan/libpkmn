@@ -183,15 +183,15 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
     luaunit.assertEquals(pokemon:get_held_item(), "None")
-    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
 
     luaunit.assertEquals(
         pokemon:get_trainer_secret_id(),
-        bit32.rshift(bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF0000), 16)
+        bit32.rshift(bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF0000), 16)
     )
 
-    luaunit.assertEquals(pokemon:get_trainer_id(), pkmn.LIBPKMN_OT_ID)
+    luaunit.assertEquals(pokemon:get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
     luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
     luaunit.assertEquals(pokemon:get_friendship(), pokemon:get_database_entry():get_base_friendship())
     luaunit.assertEquals(pokemon:get_ability(), "Blaze")

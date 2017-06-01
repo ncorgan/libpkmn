@@ -144,13 +144,13 @@ namespace pkmn {
         GC_RCAST->ballCaughtWith = LibPkmGC::PremierBall;
         GC_RCAST->levelMet = LibPkmGC::u8(level);
         GC_RCAST->OTGender = LibPkmGC::Male;
-        GC_RCAST->OTName->fromUTF8(pkmn::pokemon::LIBPKMN_OT_NAME.c_str());
+        GC_RCAST->OTName->fromUTF8(pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str());
         GC_RCAST->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_name()).c_str());
         GC_RCAST->contestLuster = 0;
         GC_RCAST->pokerusStatus = 0;
         GC_RCAST->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));
-        GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID >> 16);
-        GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF);
+        GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID >> 16);
+        GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF);
         GC_RCAST->PID = rng32.rand();
 
         GC_RCAST->version.game = LibPkmGC::Colosseum_XD;

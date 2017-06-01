@@ -62,8 +62,8 @@ game_save_test.PKMN_TMP_DIR = pkmn.paths.get_tmp_dir()
 game_save_test.MAX_UINT16 = 0xFFFF
 game_save_test.MAX_UINT32 = 0xFFFFFFFF
 
-game_save_test.LIBPKMN_OT_PID = 1351
-game_save_test.LIBPKMN_OT_SID = 32123
+game_save_test.DEFAULT_TRAINER_PID = 1351
+game_save_test.DEFAULT_TRAINER_SID = 32123
 game_save_test.MONEY_MAX = 999999
 
 game_save_test.MALE_ONLY_GAMES = {
@@ -109,13 +109,13 @@ end
 function game_save_test.test_trainer_id(save, is_gb_game)
     if is_gb_game
     then
-        luaunit.assertEquals(save:get_trainer_id(), game_save_test.LIBPKMN_OT_PID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.LIBPKMN_OT_PID)
+        luaunit.assertEquals(save:get_trainer_id(), game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
         luaunit.assertError(save.get_trainer_secret_id, save)
     else
-        luaunit.assertEquals(save:get_trainer_id(), pkmn.LIBPKMN_OT_ID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.LIBPKMN_OT_PID)
-        luaunit.assertEquals(save:get_trainer_secret_id(), game_save_test.LIBPKMN_OT_SID)
+        luaunit.assertEquals(save:get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
+        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save:get_trainer_secret_id(), game_save_test.DEFAULT_TRAINER_SID)
     end
 end
 
@@ -134,20 +134,20 @@ function game_save_test.test_common_fields(save)
     -- Trainer ID
     if is_gb_game
     then
-        save:set_trainer_id(game_save_test.LIBPKMN_OT_PID)
+        save:set_trainer_id(game_save_test.DEFAULT_TRAINER_PID)
     else
-        save:set_trainer_id(pkmn.LIBPKMN_OT_ID)
+        save:set_trainer_id(pkmn.DEFAULT_TRAINER_ID)
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 
-    save:set_trainer_public_id(game_save_test.LIBPKMN_OT_PID)
+    save:set_trainer_public_id(game_save_test.DEFAULT_TRAINER_PID)
     game_save_test.test_trainer_id(save, is_gb_game)
 
     if is_gb_game
     then
-        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.LIBPKMN_OT_SID)
+        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.DEFAULT_TRAINER_SID)
     else
-        save:set_trainer_secret_id(game_save_test.LIBPKMN_OT_SID)
+        save:set_trainer_secret_id(game_save_test.DEFAULT_TRAINER_SID)
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 

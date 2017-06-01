@@ -18,8 +18,8 @@
 
 #include <stdint.h>
 
-#define LIBPKMN_OT_ID   2105214279
-#define LIBPKMN_OT_NAME "LibPKMN"
+#define PKMN_DEFAULT_TRAINER_ID   2105214279
+#define PKMN_DEFAULT_TRAINER_NAME "LibPKMN"
 
 #if !defined(PKMN_POKEMON_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_pokemon_t;

@@ -89,9 +89,9 @@ public class Gen2PokemonTests {
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
         Assert.AreEqual(pokemon.HeldItem, "None");
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
-        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
 
         Assert.Throws<ApplicationException>(
             delegate {

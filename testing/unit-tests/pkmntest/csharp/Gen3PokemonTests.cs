@@ -218,10 +218,10 @@ public class Gen3PokemonTests {
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
         Assert.AreEqual(pokemon.HeldItem, "None");
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerSecretID, ((PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF0000) >> 16));
-        Assert.AreEqual(pokemon.TrainerID, PKMN.Pokemon.LIBPKMN_OT_ID);
+        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerSecretID, ((PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16));
+        Assert.AreEqual(pokemon.TrainerID, PKMN.Pokemon.DEFAULT_TRAINER_ID);
         Assert.AreEqual(pokemon.TrainerGender, "Male");
         Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.BaseFriendship);
         Assert.AreEqual(pokemon.Ability, "Blaze");

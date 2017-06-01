@@ -20,8 +20,8 @@ PKSAV_TEST_SAVES = os.environ["PKSAV_TEST_SAVES"]
 PKMN_TMP_DIR = pkmn.get_tmp_dir()
 
 TOO_LONG_OT_NAME = "LibPKMNLibPKMN"
-LIBPKMN_OT_PID = 1351
-LIBPKMN_OT_SID = 32123
+DEFAULT_TRAINER_PID = 1351
+DEFAULT_TRAINER_SID = 32123
 MONEY_MAX_VALUE = 999999
 
 GB_GAMES = ["Red", "Blue", "Yellow",
@@ -61,45 +61,45 @@ class game_save_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.save.set_trainer_name(TOO_LONG_OT_NAME)
 
-        self.save.set_trainer_name(pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(self.save.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
+        self.save.set_trainer_name(pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(self.save.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
 
     def __test_rival_name(self):
         if self.save.get_game() in RIVAL_NAME_SET_GAMES:
             with self.assertRaises(RuntimeError):
-                self.save.set_rival_name(pkmn.LIBPKMN_OT_NAME)
+                self.save.set_rival_name(pkmn.DEFAULT_TRAINER_NAME)
         else:
             with self.assertRaises(ValueError):
                 self.save.set_rival_name("")
             with self.assertRaises(ValueError):
                 self.save.set_rival_name(TOO_LONG_OT_NAME)
 
-            self.save.set_rival_name(pkmn.LIBPKMN_OT_NAME)
-            self.assertEqual(self.save.get_rival_name(), pkmn.LIBPKMN_OT_NAME)
+            self.save.set_rival_name(pkmn.DEFAULT_TRAINER_NAME)
+            self.assertEqual(self.save.get_rival_name(), pkmn.DEFAULT_TRAINER_NAME)
 
     def __test_trainer_id(self):
         is_gb_game = (self.save.get_game() in GB_GAMES)
         self.assertEqual(
             self.save.get_trainer_id(),
-            (LIBPKMN_OT_PID if is_gb_game else pkmn.LIBPKMN_OT_ID)
+            (DEFAULT_TRAINER_PID if is_gb_game else pkmn.DEFAULT_TRAINER_ID)
         )
-        self.assertEqual(self.save.get_trainer_public_id(), LIBPKMN_OT_PID)
+        self.assertEqual(self.save.get_trainer_public_id(), DEFAULT_TRAINER_PID)
         if is_gb_game:
             with self.assertRaises(RuntimeError):
                 self.save.get_trainer_secret_id()
         else:
-            self.assertEqual(self.save.get_trainer_secret_id(), LIBPKMN_OT_SID)
+            self.assertEqual(self.save.get_trainer_secret_id(), DEFAULT_TRAINER_SID)
 
     def __test_common_fields(self):
         self.__test_trainer_name()
 
         is_gb_game = (self.save.get_game() in GB_GAMES)
         self.save.set_trainer_id(
-            (LIBPKMN_OT_PID if is_gb_game else pkmn.LIBPKMN_OT_ID)
+            (DEFAULT_TRAINER_PID if is_gb_game else pkmn.DEFAULT_TRAINER_ID)
         )
         self.__test_trainer_id()
 
-        self.save.set_trainer_public_id(LIBPKMN_OT_PID)
+        self.save.set_trainer_public_id(DEFAULT_TRAINER_PID)
         self.__test_trainer_id()
 
         # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
@@ -128,9 +128,9 @@ class game_save_test(unittest.TestCase):
                 self.save.set_trainer_id(0xFFFF+1)
 
             with self.assertRaises(IndexError):
-                self.save.set_trainer_id(pkmn.LIBPKMN_OT_ID)
+                self.save.set_trainer_id(pkmn.DEFAULT_TRAINER_ID)
             with self.assertRaises(RuntimeError):
-                self.save.set_trainer_secret_id(LIBPKMN_OT_SID)
+                self.save.set_trainer_secret_id(DEFAULT_TRAINER_SID)
         else:
             try:
                 with self.assertRaises(OverflowError):
@@ -151,7 +151,7 @@ class game_save_test(unittest.TestCase):
                 with self.assertRaises(TypeError):
                     self.save.set_trainer_public_id(-1)
 
-            self.save.set_trainer_secret_id(LIBPKMN_OT_SID)
+            self.save.set_trainer_secret_id(DEFAULT_TRAINER_SID)
             self.__test_trainer_id()
 
         self.__test_rival_name()

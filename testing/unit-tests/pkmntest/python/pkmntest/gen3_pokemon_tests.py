@@ -149,15 +149,15 @@ class gen3_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_game(), game)
         self.assertStringEqual(pokemon.get_nickname(), species.upper())
         self.assertStringEqual(pokemon.get_held_item(), "None")
-        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
 
         self.assertEqual(
             pokemon.get_trainer_secret_id(),
-            ((pkmn.LIBPKMN_OT_ID & 0xFFFF0000) >> 16)
+            ((pkmn.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16)
         )
 
-        self.assertEqual(pokemon.get_trainer_id(), pkmn.LIBPKMN_OT_ID)
+        self.assertEqual(pokemon.get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
         self.assertStringEqual(pokemon.get_trainer_gender(), "Male")
 
         self.assertEqual(
@@ -310,7 +310,7 @@ class gen3_pokemon_test(pokemon_tests):
         except:
             with self.assertRaises(TypeError):
                 pokemon.set_trainer_secret_id(0xFFFFF)
-        self.assertEqual(pokemon.get_trainer_id(), pkmn.LIBPKMN_OT_ID)
+        self.assertEqual(pokemon.get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
 
         pokemon.set_trainer_id(0x1234ABCD)
         self.assertEqual(pokemon.get_trainer_id(), 0x1234ABCD)

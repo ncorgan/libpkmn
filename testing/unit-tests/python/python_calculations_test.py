@@ -221,7 +221,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.LIBPKMN_OT_ID,
+                              pkmn.DEFAULT_TRAINER_ID,
                               True,
                               "Torrent",
                               "Male",
@@ -232,7 +232,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.LIBPKMN_OT_ID,
+                              pkmn.DEFAULT_TRAINER_ID,
                               True,
                               "Blaze",
                               "Not a gender",
@@ -243,7 +243,7 @@ class calculations_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             personality = pkmn.calculations.generate_personality(
                               "Charmander",
-                              pkmn.LIBPKMN_OT_ID,
+                              pkmn.DEFAULT_TRAINER_ID,
                               True,
                               "Blaze",
                               "Male",
@@ -296,7 +296,7 @@ class calculations_test(unittest.TestCase):
         # Test and validate a valid call.
         personality = pkmn.calculations.generate_personality(
                           "Charmander",
-                          pkmn.LIBPKMN_OT_ID,
+                          pkmn.DEFAULT_TRAINER_ID,
                           True,
                           "Blaze",
                           "Male",
@@ -304,7 +304,7 @@ class calculations_test(unittest.TestCase):
                       )
         self.assertTrue(
             pkmn.calculations.modern_shiny(
-                personality, pkmn.LIBPKMN_OT_ID
+                personality, pkmn.DEFAULT_TRAINER_ID
             )
         )
         self.assertEquals(

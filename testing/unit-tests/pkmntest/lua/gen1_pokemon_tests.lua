@@ -57,12 +57,12 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.is_shiny, pokemon)
     luaunit.assertError(pokemon.get_held_item, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
 
     luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
     luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
 
     luaunit.assertError(pokemon.get_friendship, pokemon)

@@ -76,7 +76,7 @@ static void check_initial_values(
                 sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+    TEST_ASSERT_EQUAL_STRING(PKMN_DEFAULT_TRAINER_NAME, strbuffer);
 
     if(generation >= 2) {
         error = pkmn_pokemon_get_held_item(
@@ -102,7 +102,7 @@ static void check_initial_values(
                 &trainer_public_id
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL((LIBPKMN_OT_ID & 0xFFFF), trainer_public_id);
+    TEST_ASSERT_EQUAL((PKMN_DEFAULT_TRAINER_ID & 0xFFFF), trainer_public_id);
 
     uint32_t trainer_id = 0;
     uint32_t expected_trainer_id = 0;
@@ -113,11 +113,11 @@ static void check_initial_values(
                     &trainer_secret_id
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(((LIBPKMN_OT_ID & 0xFFFF0000) >> 16), trainer_secret_id);
+        TEST_ASSERT_EQUAL(((PKMN_DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), trainer_secret_id);
 
-        expected_trainer_id = LIBPKMN_OT_ID;
+        expected_trainer_id = PKMN_DEFAULT_TRAINER_ID;
     } else {
-        expected_trainer_id = (LIBPKMN_OT_ID & 0xFFFF);
+        expected_trainer_id = (PKMN_DEFAULT_TRAINER_ID & 0xFFFF);
     }
 
     error = pkmn_pokemon_get_trainer_id(

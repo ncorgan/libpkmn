@@ -71,7 +71,7 @@ namespace pkmn {
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
                     );
-        _trainer_name = LIBPKMN_OT_NAME;
+        _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
         GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
@@ -83,7 +83,7 @@ namespace pkmn {
 
         // TODO: catch rate
 
-        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         pkmn::rng<uint16_t> rng;
         GEN1_PC_RCAST->ev_hp   = rng.rand();

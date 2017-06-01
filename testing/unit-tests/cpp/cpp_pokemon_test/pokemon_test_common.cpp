@@ -40,20 +40,20 @@ static void check_initial_values(
     } else {
         EXPECT_EQ(boost::algorithm::to_upper_copy(pokemon->get_species()), pokemon->get_nickname());
     }
-    EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_NAME, pokemon->get_trainer_name());
+    EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_trainer_name());
 
     if(generation >= 2) {
         EXPECT_EQ("None", pokemon->get_held_item());
     }
 
     EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    EXPECT_EQ(uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_public_id());
+    EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_public_id());
 
     if(generation >= 3) {
-        EXPECT_EQ(uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
-        EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_ID, pokemon->get_trainer_id());
+        EXPECT_EQ(uint16_t((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
+        EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_ID, pokemon->get_trainer_id());
     } else {
-        EXPECT_EQ((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_id());
+        EXPECT_EQ((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_id());
     }
 
     if(generation >= 2) {
