@@ -48,7 +48,14 @@ typedef struct {
     QColor color_dark;
 } spinda_colors_t;
 
-static const spinda_colors_t GBA_SPINDA_SPOT_COLORS = {
+static const spinda_colors_t GBA_SPINDA_FACE_COLORS =
+{
+    QColor(0xE0, 0xD0, 0xA0),
+    QColor(0xF0, 0xE0, 0xA8),
+    QColor(0xC0, 0xB0, 0x80)
+};
+static const spinda_colors_t GBA_SPINDA_SPOT_COLORS =
+{
     QColor(0xD8, 0x68, 0x38),
     QColor(0xD8, 0x88, 0x48),
     QColor(0xB0, 0x58, 0x28)
@@ -62,7 +69,8 @@ namespace pkmn { namespace qt {
         uint32_t personality,
         bool shiny,
         const QString &filePath
-    ) {
+    )
+    {
         QImage outputImage;
 
         GenerateSpindaSprite(
@@ -79,21 +87,44 @@ namespace pkmn { namespace qt {
         QImage* image,
         const spinda_coords* coords,
         const char** single_spot_map,
+        const spinda_colors_t* face_colors,
         const spinda_colors_t* spot_colors,
         size_t height
-    ) {
-        for(size_t i = 0; i < height && single_spot_map[i] != NULL; ++i) {
-            for(size_t j = 0; j < std::strlen(single_spot_map[i]); ++j) {
-                if(single_spot_map[i][j] == '*') {
+    )
+    {
+        for(size_t i = 0; i < height && single_spot_map[i] != NULL; ++i)
+        {
+            for(size_t j = 0; j < std::strlen(single_spot_map[i]); ++j)
+            {
+                if(single_spot_map[i][j] == '*')
+                {
                     QPoint point(
                                coords->x+j,
                                coords->y+i
                            );
-                    if(qAlpha(image->pixel(point)) > 0) {
-                        image->setPixel(
-                            point,
-                            spot_colors->color_main.rgb()
-                        );
+                    if(qAlpha(image->pixel(point)) > 0)
+                    {
+                        if(image->pixel(point) == face_colors->color_main.rgb())
+                        {
+                            image->setPixel(
+                                point,
+                                spot_colors->color_main.rgb()
+                            );
+                        }
+                        else if(image->pixel(point) == face_colors->color_light.rgb())
+                        {
+                            image->setPixel(
+                                point,
+                                spot_colors->color_light.rgb()
+                            );
+                        }
+                        else if(image->pixel(point) == face_colors->color_dark.rgb())
+                        {
+                            image->setPixel(
+                                point,
+                                spot_colors->color_dark.rgb()
+                            );
+                        }
                     }
                 }
             }
@@ -105,19 +136,24 @@ namespace pkmn { namespace qt {
         uint32_t personality,
         bool shiny,
         QImage* imageOut
-    ) {
-        if(generation < 3 or generation > 5) {
+    )
+    {
+        if(generation < 3 or generation > 5)
+        {
             throw pkmn::range_error("generation", 3, 5);
-        } else if(game_is_gamecube(generation)) {
+        } else if(game_is_gamecube(generation))
+        {
             throw std::invalid_argument("No Gamecube support.");
-        } else if(!imageOut) {
+        } else if(!imageOut)
+        {
             throw std::invalid_argument("Null pointer passed into imageOut");
         }
 
         // There is no variation in sprite within a generation, so the generation is enough.
         fs::path input_path;
         pkmn::database::pokemon_entry spinda_entry;
-        switch(generation) {
+        switch(generation)
+        {
             case 3:
                 spinda_entry = pkmn::database::pokemon_entry("Spinda", "Ruby", "");
                 break;
@@ -138,21 +174,25 @@ namespace pkmn { namespace qt {
                                    );
         spinda_spots final_spot_coords;
 
-        if(!imageOut->load(QString::fromStdString(input_path.string()))) {
+        if(!imageOut->load(QString::fromStdString(input_path.string())))
+        {
             throw std::runtime_error("Failed to load base Spinda sprite.");
         }
         *imageOut = imageOut->convertToFormat(QImage::Format_ARGB32);
 
+        const spinda_colors_t* face_colors = NULL;
         const spinda_colors_t* spot_colors = NULL;
         const char* (*spot_map)[GBA_SPOT_HEIGHT] = {0};
 
-        switch(generation) {
+        switch(generation)
+        {
             case 3:
                 final_spot_coords = GBA_COORDS + spot_offset;
                 final_spot_coords += GBA_ORIGIN;
 
+                face_colors = &GBA_SPINDA_FACE_COLORS;
                 spot_colors = &GBA_SPINDA_SPOT_COLORS;
-                spot_map = GBA_SPINDA_SPOT_MAP;
+                spot_map    = GBA_SPINDA_SPOT_MAP;
                 break;
 
             default:
@@ -163,6 +203,7 @@ namespace pkmn { namespace qt {
             imageOut,
             &final_spot_coords.left_ear,
             spot_map[0],
+            face_colors,
             spot_colors,
             GBA_SPOT_HEIGHT
         );
@@ -170,6 +211,7 @@ namespace pkmn { namespace qt {
             imageOut,
             &final_spot_coords.right_ear,
             spot_map[1],
+            face_colors,
             spot_colors,
             GBA_SPOT_HEIGHT
         );
@@ -177,6 +219,7 @@ namespace pkmn { namespace qt {
             imageOut,
             &final_spot_coords.left_face,
             spot_map[2],
+            face_colors,
             spot_colors,
             GBA_SPOT_HEIGHT
         );
@@ -184,6 +227,7 @@ namespace pkmn { namespace qt {
             imageOut,
             &final_spot_coords.right_face,
             spot_map[3],
+            face_colors,
             spot_colors,
             GBA_SPOT_HEIGHT
         );
