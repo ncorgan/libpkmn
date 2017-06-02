@@ -16,6 +16,13 @@
 #include <cstdio>
 #include <unordered_map>
 
+static const std::unordered_map<std::string, int> GAME_GENERATIONS = boost::assign::map_list_of
+    ("Red", 1)("Blue", 1)("Yellow", 1)
+    ("Gold", 2)("Silver", 2)("Crystal", 2)
+    ("Ruby", 3)("Sapphire", 3)("Emerald", 3)("FireRed", 3)("LeafGreen", 3)
+    ("Colosseum", 3)("XD", 3)
+;
+
 typedef boost::bimap<std::string, pkmn_gender_t> gender_bimap_t;
 static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
     ("Male",       PKMN_MALE)
@@ -215,30 +222,39 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
         std::string current_nickname = handle->cpp->get_nickname();
         std::string current_trainer_name = handle->cpp->get_trainer_name();
         uint32_t current_trainer_id = handle->cpp->get_trainer_id();
-        std::string current_gender = handle->cpp->get_gender();
+        std::string current_trainer_gender = handle->cpp->get_trainer_gender();
 
         try
         {
             handle->cpp->set_nickname(trainer_info->nickname);
             handle->cpp->set_trainer_name(trainer_info->trainer_name);
             handle->cpp->set_trainer_id(trainer_info->trainer_id.id);
-            handle->cpp->set_nickname(trainer_info->nickname);
+            if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
+            {
+                handle->cpp->set_trainer_gender(GENDER_BIMAP.right.at(trainer_info->trainer_gender));
+            }
         }
         catch(const std::exception& e)
         {
             handle->cpp->set_nickname(current_nickname);
             handle->cpp->set_trainer_name(current_trainer_name);
             handle->cpp->set_trainer_id(current_trainer_id);
-            handle->cpp->set_gender(current_gender);
+            if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
+            {
+                handle->cpp->set_trainer_gender(current_trainer_gender);
+            }
 
-            throw e;
+            throw;
         }
         catch(...)
         {
             handle->cpp->set_nickname(current_nickname);
             handle->cpp->set_trainer_name(current_trainer_name);
             handle->cpp->set_trainer_id(current_trainer_id);
-            handle->cpp->set_gender(current_gender);
+            if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
+            {
+                handle->cpp->set_trainer_gender(current_trainer_gender);
+            }
 
             return PKMN_ERROR_UNKNOWN_ERROR;
         }

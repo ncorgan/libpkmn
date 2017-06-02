@@ -1538,10 +1538,14 @@ static void test_setting_trainer_info(
         setting_trainer_info.trainer_name,
         getting_trainer_info.trainer_name
     );
-    TEST_ASSERT_EQUAL(
-        setting_trainer_info.trainer_gender,
-        getting_trainer_info.trainer_gender
-    );
+
+    if(generation >= 2)
+    {
+        TEST_ASSERT_EQUAL(
+            setting_trainer_info.trainer_gender,
+            getting_trainer_info.trainer_gender
+        );
+    }
 }
 
 void pokemon_test_common(
