@@ -15,6 +15,7 @@
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/string_types.h>
+#include <pkmn-c/types/trainer_info.h>
 
 #include <stdint.h>
 
@@ -82,15 +83,14 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(
     pkmn_database_pokemon_entry_t* database_entry_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_get_nickname(
+PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_info(
     pkmn_pokemon_handle_t handle,
-    char* nickname_out,
-    size_t buffer_len
+    pkmn_trainer_info_t* trainer_info_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
+PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_info(
     pkmn_pokemon_handle_t handle,
-    const char* nickname
+    const pkmn_trainer_info_t* trainer_info
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_gender(
@@ -122,57 +122,6 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_held_item(
 PKMN_API pkmn_error_t pkmn_pokemon_set_held_item(
     pkmn_pokemon_handle_t handle,
     const char* held_item
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_name(
-    pkmn_pokemon_handle_t handle,
-    char* trainer_name_out,
-    size_t buffer_len
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_name(
-    pkmn_pokemon_handle_t handle,
-    const char* trainer_name
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_public_id(
-    pkmn_pokemon_handle_t handle,
-    uint16_t* trainer_public_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_secret_id(
-    pkmn_pokemon_handle_t handle,
-    uint16_t* trainer_secret_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_id(
-    pkmn_pokemon_handle_t handle,
-    uint32_t* trainer_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_public_id(
-    pkmn_pokemon_handle_t handle,
-    uint16_t trainer_public_id
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_secret_id(
-    pkmn_pokemon_handle_t handle,
-    uint16_t trainer_secret_id
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_id(
-    pkmn_pokemon_handle_t handle,
-    uint32_t trainer_id
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_gender(
-    pkmn_pokemon_handle_t handle,
-    pkmn_gender_t* trainer_gender_out
-);
-
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_gender(
-    pkmn_pokemon_handle_t handle,
-    pkmn_gender_t trainer_gender
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_get_friendship(

@@ -779,6 +779,29 @@ static void compare_pokemon(
     char pokemon1_strbuffer[STRBUFFER_LEN] = {0};
     char pokemon2_strbuffer[STRBUFFER_LEN] = {0};
 
+    pkmn_trainer_info_t pokemon1_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+    pkmn_trainer_info_t pokemon2_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+
     error = pkmn_pokemon_get_species(
                 pokemon1,
                 pokemon1_strbuffer,
@@ -807,33 +830,24 @@ static void compare_pokemon(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
 
-    error = pkmn_pokemon_get_nickname(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon1,
-                pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                &pokemon1_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_nickname(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon2,
-                pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                &pokemon2_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
-
-    error = pkmn_pokemon_get_trainer_name(
-                pokemon1,
-                pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_trainer_name(
-                pokemon2,
-                pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_trainer_info.nickname,
+        pokemon2_trainer_info.nickname
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_trainer_info.trainer_name,
+        pokemon2_trainer_info.trainer_name
+    );
 }
 
 static void compare_game_saves(

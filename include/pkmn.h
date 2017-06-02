@@ -43,6 +43,7 @@
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/stats.h>
 #include <pkmn-c/types/string_types.h>
+#include <pkmn-c/types/trainer_info.h>
 
 #include <pkmn-c/utils/paths.h>
 
