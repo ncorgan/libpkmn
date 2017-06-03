@@ -51,9 +51,8 @@ IF(PKMN_ENABLE_QT)
     LIST(APPEND pkmn_libs
         ${QTx_LIBRARIES}
     )
-
-    ADD_SUBDIRECTORY(qt)
 ENDIF(PKMN_ENABLE_QT)
+ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
@@ -61,7 +60,7 @@ SET(pkmn_sources
     ${pkmn_io_sources}
     ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
-    ${pkmn_qt_sources} # Will be empty without Qt support
+    ${pkmn_qt_sources}
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp

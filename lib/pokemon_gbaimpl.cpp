@@ -22,9 +22,7 @@
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/utils/paths.hpp>
 
-#if defined(PKMN_QT4) || defined(PKMN_QT5)
 #include <pkmn/qt/Spinda.hpp>
-#endif
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
@@ -847,7 +845,6 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_sprite_filepath() {
-#if defined(PKMN_QT4) || defined(PKMN_QT5)
         BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
 
         if(_database_entry.get_species_id() == SPINDA_ID) {
@@ -858,11 +855,11 @@ namespace pkmn {
                                           % (shiny ? 1 : 0)
                                           % pksav_littleendian32(GBA_PC_RCAST->personality));
 
-            if(pkmn::qt::GenerateSpindaSpriteAtPath(
+            if(pkmn::qt::GenerateSpindaSpriteAtFilepath(
                    3,
                    pksav_littleendian32(GBA_PC_RCAST->personality),
                    shiny,
-                   QString::fromStdString(spinda_sprite_filepath.string())
+                   spinda_sprite_filepath.string()
                )
             ) {
                 return spinda_sprite_filepath.string();
@@ -870,11 +867,8 @@ namespace pkmn {
                 throw std::runtime_error("Failed to generate Spinda sprite.");
             }
         } else {
-#endif
             return pokemon_impl::get_sprite_filepath();
-#if defined(PKMN_QT4) || defined(PKMN_QT5)
         }
-#endif
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(

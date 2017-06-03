@@ -5,14 +5,25 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/qt/Spinda.hpp>
+
+#if defined(PKMN_QT4) || defined(PKMN_QT5)
+
 #include "../misc_common.hpp"
 #include "SpindaSpotMap.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-#include <pkmn/qt/Spinda.hpp>
 #include <pkmn/utils/paths.hpp>
+
+#ifdef PKMN_QT4
+#include <QtCore/QString>
+#include <QtGui/QImage>
+#else
+#include <QImage>
+#include <QString>
+#endif
 
 #include <boost/filesystem.hpp>
 
@@ -69,25 +80,6 @@ static const spinda_colors_t GBA_SPINDA_SPOT_COLORS_SHINY =
 
 namespace pkmn { namespace qt {
 
-    bool GenerateSpindaSpriteAtPath(
-        int generation,
-        uint32_t personality,
-        bool shiny,
-        const QString &filePath
-    )
-    {
-        QImage outputImage;
-
-        GenerateSpindaSprite(
-            generation,
-            personality,
-            shiny,
-            &outputImage
-        );
-
-        return outputImage.save(filePath);
-    }
-
     static void drawSpindaSpot(
         QImage* image,
         const spinda_coords* coords,
@@ -136,7 +128,7 @@ namespace pkmn { namespace qt {
         }
     }
 
-    void GenerateSpindaSprite(
+    static void GenerateSpindaSprite(
         int generation,
         uint32_t personality,
         bool shiny,
@@ -240,4 +232,41 @@ namespace pkmn { namespace qt {
         );
     }
 
+    bool GenerateSpindaSpriteAtFilepath(
+        int generation,
+        uint32_t personality,
+        bool shiny,
+        const std::string& filepath
+    )
+    {
+        QImage outputImage;
+
+        GenerateSpindaSprite(
+            generation,
+            personality,
+            shiny,
+            &outputImage
+        );
+
+        return outputImage.save(QString::fromStdString(filepath));
+    }
+
 }}
+
+#else
+
+namespace pkmn { namespace qt {
+
+    bool GenerateSpindaSpriteAtFilepath(
+        PKMN_UNUSED(int generation),
+        PKMN_UNUSED(uint32_t personality),
+        PKMN_UNUSED(bool shiny),
+        PKMN_UNUSED(const std::string& filepath)
+    )
+    {
+        throw pkmn::feature_not_in_build_error("Qt support");
+    }
+
+}}
+
+#endif

@@ -9,30 +9,16 @@
 
 #include <pkmn/config.hpp>
 
-#ifdef PKMN_QT4
-#include <QtCore/QString>
-#include <QtGui/QImage>
-#else
-#include <QImage>
-#include <QString>
-#endif
-
 #include <cstdint>
+#include <string>
 
 namespace pkmn { namespace qt {
 
-    PKMN_API bool GenerateSpindaSpriteAtPath(
+    PKMN_API bool GenerateSpindaSpriteAtFilepath(
         int generation,
         uint32_t personality,
         bool shiny,
-        const QString &filePath
-    );
-
-    PKMN_API void GenerateSpindaSprite(
-        int generation,
-        uint32_t personality,
-        bool shiny,
-        QImage* imageOut
+        const std::string& filepath
     );
 
 }}
