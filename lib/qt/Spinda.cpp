@@ -80,7 +80,8 @@ static const spinda_colors_t GBA_SPINDA_SPOT_COLORS_SHINY =
 };
 
 // Generation IV-V
-BOOST_STATIC_CONSTEXPR spinda_coords NDS_ORIGIN(17, 7);
+BOOST_STATIC_CONSTEXPR spinda_coords GEN4_ORIGIN(17, 7);
+BOOST_STATIC_CONSTEXPR spinda_coords GEN5_ORIGIN(23, 15);
 BOOST_STATIC_CONSTEXPR spinda_spots NDS_COORDS(
                                         spinda_coords(0,0),
                                         spinda_coords(24,2),
@@ -225,7 +226,7 @@ namespace pkmn { namespace qt {
             // Generation already validated
             default:
                 final_spot_coords = NDS_COORDS + spot_offset;
-                final_spot_coords += NDS_ORIGIN;
+                final_spot_coords += (generation == 4) ? GEN4_ORIGIN : GEN5_ORIGIN;
 
                 face_colors = &NDS_SPINDA_FACE_COLORS;
                 spot_colors = shiny ? &NDS_SPINDA_SPOT_COLORS_SHINY : &NDS_SPINDA_SPOT_COLORS;
