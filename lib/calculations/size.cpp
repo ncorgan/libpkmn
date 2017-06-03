@@ -81,23 +81,23 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_HP, true)) {
-            throw pkmn::range_error("IV_HP", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_HP, true)) {
+            pkmn::throw_out_of_range("IV_HP", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_attack, true)) {
-            throw pkmn::range_error("IV_attack", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_attack, true)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, true)) {
-            throw pkmn::range_error("IV_defense", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_defense, true)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, true)) {
-            throw pkmn::range_error("IV_speed", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_speed, true)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
-            throw pkmn::range_error("IV_spatk", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
+            pkmn::throw_out_of_range("IV_spatk", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
-            throw pkmn::range_error("IV_spdef", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
+            pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);

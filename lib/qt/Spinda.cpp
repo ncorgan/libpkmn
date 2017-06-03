@@ -145,7 +145,7 @@ namespace pkmn { namespace qt {
     {
         if(generation < 3 or generation > 5)
         {
-            throw pkmn::range_error("generation", 3, 5);
+            pkmn::throw_out_of_range("generation", 3, 5);
         }
         else if(game_is_gamecube(generation))
         {

@@ -21,6 +21,7 @@ static const std::map<std::string, pkmn_game_save_type_t> game_save_types = boos
     ("Ruby/Sapphire", PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE)
     ("Emerald", PKMN_GAME_SAVE_TYPE_EMERALD)
     ("FireRed/LeafGreen", PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN)
+    ("Colosseum/XD", PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD)
 ;
 
 static const std::map<std::string, pkmn_gender_t> genders = boost::assign::map_list_of

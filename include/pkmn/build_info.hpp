@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,6 +17,11 @@ namespace pkmn { namespace build_info {
      * @brief Returns the version of Boost used in this build of LibPKMN.
      */
     PKMN_API std::string get_boost_version();
+
+    /*!
+     * @brief Returns the version of LibPkmGC used in this build of LibPKMN.
+     */
+    PKMN_API std::string get_libpkmgc_version();
 
     /*!
      * @brief Returns the version of PKSav used in this build of LibPKMN.

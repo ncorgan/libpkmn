@@ -7,6 +7,7 @@
 
 #include "pokemon_box_impl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
+#include "pokemon_box_gcnimpl.hpp"
 
 #include "pokemon_box_gbimpl.hpp"
 
@@ -40,7 +41,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_box_gcnimpl>(game_id);
                 } else {
                     return pkmn::make_shared<pokemon_box_gbaimpl>(game_id);
                 }
@@ -72,7 +73,7 @@ namespace pkmn {
     ) {
         int capacity = get_capacity();
         if(index < 0 or index > (capacity-1)) {
-            throw pkmn::range_error("index", 0, (capacity-1));
+            pkmn::throw_out_of_range("index", 0, (capacity-1));
         }
 
         return _pokemon_list.at(index);
@@ -84,7 +85,7 @@ namespace pkmn {
     ) {
         int capacity = get_capacity();
         if(index < 0 or index > (capacity-1)) {
-            throw pkmn::range_error("index", 0, (capacity-1));
+            pkmn::throw_out_of_range("index", 0, (capacity-1));
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }

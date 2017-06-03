@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,6 +11,7 @@
 
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
+#include <pkmn/qt/GamecubeShadowPokemonListComboBox.hpp>
 #include <pkmn/qt/ItemListComboBox.hpp>
 #include <pkmn/qt/LocationListComboBox.hpp>
 #include <pkmn/qt/MoveListComboBox.hpp>
@@ -51,6 +52,22 @@ void QtWidgetsTest::testGameListComboBox() {
         games.setCurrentIndex(25);
         QCOMPARE(games.currentText(), QString("Alpha Sapphire"));
     } catch(const std::exception &e) {
+        QFAIL(e.what());
+    }
+}
+
+void QtWidgetsTest::testGamecubeShadowPokemonListComboBox()
+{
+    try
+    {
+        pkmn::qt::GamecubeShadowPokemonListComboBox colosseumShadowPokemon(true, nullptr);
+        QCOMPARE(colosseumShadowPokemon.count(), 48);
+
+        pkmn::qt::GamecubeShadowPokemonListComboBox xdShadowPokemon(false, nullptr);
+        QCOMPARE(xdShadowPokemon.count(), 83);
+    }
+    catch(const std::exception &e)
+    {
         QFAIL(e.what());
     }
 }

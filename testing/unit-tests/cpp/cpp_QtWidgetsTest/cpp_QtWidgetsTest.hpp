@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,6 +18,7 @@ class QtWidgetsTest: public QObject
         void testGetQtVersion();
         void testAbilityListComboBox();
         void testGameListComboBox();
+        void testGamecubeShadowPokemonListComboBox();
         void testItemListComboBox();
         void testLocationListComboBox();
         void testMoveListComboBox();

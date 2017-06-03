@@ -21,6 +21,7 @@ PKMN_CSHARP_INIT
 
 %rename(AbilityList) get_ability_list;
 %rename(GameList) get_game_list;
+%rename(GamecubeShadowPokemonList) get_gamecube_shadow_pokemon_list;
 %rename(ItemList) get_item_list;
 %rename(LocationList) get_location_list;
 %rename(MoveList) get_move_list;

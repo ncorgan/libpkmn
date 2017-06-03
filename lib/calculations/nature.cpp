@@ -9,7 +9,7 @@
 
 #include <boost/config.hpp>
 
-BOOST_STATIC_CONSTEXPR const char* NATURES[] = {
+static BOOST_CONSTEXPR const char* NATURES[] = {
     "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
     "Bold", "Docile", "Relaxed", "Impish", "Lax",
     "Timid", "Hasty", "Serious", "Jolly", "Naive",
@@ -19,7 +19,7 @@ BOOST_STATIC_CONSTEXPR const char* NATURES[] = {
 
 namespace pkmn { namespace calculations {
 
-    std::string gen3_gen4_nature(
+    std::string nature(
         uint32_t personality
     ) {
         return NATURES[personality % 25];

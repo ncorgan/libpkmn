@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -485,6 +485,133 @@ public class CSharpItemsTest {
         PKMNTest.GBAItemsTest.ItemBagTest(
             new PKMN.ItemBag("LeafGreen"),
             "LeafGreen"
+        );
+    }
+
+    /*
+     * Colosseum
+     */
+    [Test]
+    public void GCNColosseumItemPocketTest() {
+        PKMNTest.GCNItemsTest.ItemPocketTest(
+            new PKMN.ItemList("Items", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumKeyItemPocketTest() {
+        PKMNTest.GCNItemsTest.KeyItemPocketTest(
+            new PKMN.ItemList("Key Items", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumBallPocketTest() {
+        PKMNTest.GCNItemsTest.BallPocketTest(
+            new PKMN.ItemList("Poké Balls", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumTMPocketTest() {
+        PKMNTest.GCNItemsTest.TMPocketTest(
+            new PKMN.ItemList("TMs", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumBerryPocketTest() {
+        PKMNTest.GCNItemsTest.BerryPocketTest(
+            new PKMN.ItemList("Berries", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumColognePocketTest() {
+        PKMNTest.GCNItemsTest.ColognePocketTest(
+            new PKMN.ItemList("Colognes", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumItemPCTest() {
+        PKMNTest.GCNItemsTest.ItemPCTest(
+            new PKMN.ItemList("PC", "Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void GCNColosseumItemBagTest() {
+        PKMNTest.GCNItemsTest.ItemBagTest(
+            new PKMN.ItemBag("Colosseum"),
+            "Colosseum"
+        );
+    }
+
+    /*
+     * XD
+     */
+    [Test]
+    public void GCNXDItemPocketTest() {
+        PKMNTest.GCNItemsTest.ItemPocketTest(
+            new PKMN.ItemList("Items", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDKeyItemPocketTest() {
+        PKMNTest.GCNItemsTest.KeyItemPocketTest(
+            new PKMN.ItemList("Key Items", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDBallPocketTest() {
+        PKMNTest.GCNItemsTest.BallPocketTest(
+            new PKMN.ItemList("Poké Balls", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDTMPocketTest() {
+        PKMNTest.GCNItemsTest.TMPocketTest(
+            new PKMN.ItemList("TMs", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDBerryPocketTest() {
+        PKMNTest.GCNItemsTest.BerryPocketTest(
+            new PKMN.ItemList("Berries", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDColognePocketTest() {
+        PKMNTest.GCNItemsTest.ColognePocketTest(
+            new PKMN.ItemList("Colognes", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDBattleCDPocketTest() {
+        PKMNTest.GCNItemsTest.BattleCDPocketTest(
+            new PKMN.ItemList("Battle CDs", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDItemPCTest() {
+        PKMNTest.GCNItemsTest.ItemPCTest(
+            new PKMN.ItemList("PC", "XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void GCNXDItemBagTest() {
+        PKMNTest.GCNItemsTest.ItemBagTest(
+            new PKMN.ItemBag("XD"),
+            "XD"
         );
     }
 }

@@ -11,7 +11,7 @@ import pkmn
 import os
 import unittest
 
-LIBPKMN_TEST_FILES = "@LIBPKMN_TEST_FILES@"
+LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 
 class pokemon_io_test(unittest.TestCase):
 

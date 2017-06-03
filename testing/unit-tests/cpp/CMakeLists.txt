@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 
 SET(cpp_tests
     cpp_calculations_test
+    cpp_exception_test
     cpp_game_save_test
     cpp_lists_test
     cpp_paths_test
@@ -45,6 +46,8 @@ SET(item_test_srcs
     cpp_item_test/gen1_item_test.cpp
     cpp_item_test/gen2_item_test.cpp
     cpp_item_test/gba_item_test.cpp
+    cpp_item_test/gcn_item_test.cpp
+    cpp_item_test/item_test_common.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
@@ -52,11 +55,12 @@ SET(pokemon_test_srcs
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp
     cpp_pokemon_test/gen2_pokemon_test.cpp
-    cpp_pokemon_test/gba_pokemon_test.cpp
+    cpp_pokemon_test/gen3_pokemon_tests.cpp
     cpp_pokemon_test/gen1_friendship_test.cpp
     cpp_pokemon_test/gender_test.cpp
     cpp_pokemon_test/pokemon_io_test.cpp
     cpp_pokemon_test/unown_tests.cpp
+    cpp_pokemon_test/pokemon_test_common.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_pokemon_test "${pokemon_test_srcs}")
 

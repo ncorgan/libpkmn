@@ -7,15 +7,14 @@
 #
 
 REPO_TOPLEVEL=$PWD
-mkdir -p test-env
-cd test-env
+mkdir -p test-env/pkmn-build
+cd test-env/pkmn-build
 [ $? -ne 0 ] && exit 1
 
 # Check source
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
+find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
+find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
 [ $? -ne 0 ] && exit 1
-
 
 if [ $PYTHON_VERSION -eq 2 ]
 then
@@ -47,6 +46,37 @@ cmake -DCMAKE_BUILD_TYPE=Release \
 make
 [ $? -ne 0 ] && exit 1
 ctest -E ".*GUI" --output-on-failure
+[ $? -ne 0 ] && exit 1
+# So the log isn't too verbose
+echo Installing...
+sudo make install > /dev/null 2>&1
+[ $? -ne 0 ] && exit 1
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+sudo ldconfig
+[ $? -ne 0 ] && exit 1
+
+# Test external C++ project
+mkdir $REPO_TOPLEVEL/test-env/cpp-app
+[ $? -ne 0 ] && exit 1
+cd $REPO_TOPLEVEL/test-env/cpp-app
+[ $? -ne 0 ] && exit 1
+cmake $REPO_TOPLEVEL/testing/applications/cpp
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-cpp-app
+[ $? -ne 0 ] && exit 1
+
+# Test external C project
+mkdir $REPO_TOPLEVEL/test-env/c-app
+[ $? -ne 0 ] && exit 1
+cd $REPO_TOPLEVEL/test-env/c-app
+[ $? -ne 0 ] && exit 1
+cmake $REPO_TOPLEVEL/testing/applications/c
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-c-app
 [ $? -ne 0 ] && exit 1
 
 echo # So we can check the last error code

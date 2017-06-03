@@ -90,16 +90,6 @@ pkmn_error_t throw_pksav_error(
     )
 }
 
-pkmn_error_t throw_pkmn_range_error(
-    const std::string &value,
-    int min,
-    int max
-) {
-    PKMN_CPP_TO_C(
-        throw pkmn::range_error(value, min, max);
-    )
-}
-
 pkmn_error_t throw_pkmn_unimplemented_error() {
     PKMN_CPP_TO_C(
         throw pkmn::unimplemented_error();
@@ -124,10 +114,6 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     error = throw_pksav_error(PKSAV_ERROR_INVALID_SAVE);
     EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
     EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
-
-    error = throw_pkmn_range_error("var", 1, 10);
-    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
-    EXPECT_STREQ("var: valid values 1-10", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error();
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -154,7 +140,7 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_STREQ("logic_error", pkmn_strerror());
 
     error = throw_exception<std::range_error>("range_error");
-    EXPECT_EQ(PKMN_ERROR_STD_RANGE_ERROR, error);
+    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
     EXPECT_STREQ("range_error", pkmn_strerror());
 
     error = throw_exception<std::overflow_error>("overflow_error");
@@ -233,17 +219,6 @@ pkmn_error_t throw_pksav_error_with_handle(
     )
 }
 
-pkmn_error_t throw_pkmn_range_error_with_handle(
-    const std::string &value,
-    int min,
-    int max,
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::range_error(value, min, max);
-    )
-}
-
 pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
     pkmn_test_handle_t* handle
 ) {
@@ -280,13 +255,6 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
     EXPECT_EQ("PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
     EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
-
-    error = throw_pkmn_range_error_with_handle(
-        "var", 1, 10, &test_handle
-    );
-    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
-    EXPECT_EQ("var: valid values 1-10", test_handle.last_error);
-    EXPECT_STREQ("var: valid values 1-10", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -331,7 +299,7 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_exception_with_handle<std::range_error>(
         "range_error", &test_handle
     );
-    EXPECT_EQ(PKMN_ERROR_STD_RANGE_ERROR, error);
+    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
     EXPECT_EQ("range_error", test_handle.last_error);
     EXPECT_STREQ("range_error", pkmn_strerror());
 

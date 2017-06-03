@@ -32,11 +32,11 @@ static void appdata_dir_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 #ifdef PKMN_PLATFORM_WIN32
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "C:\\libpkmn\\appdata\\dir");
+    TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\appdata\\dir", strbuffer);
 #else
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "/libpkmn/appdata/dir");
+    TEST_ASSERT_EQUAL_STRING("/libpkmn/appdata/dir", strbuffer);
 #endif
 }
 
@@ -49,7 +49,7 @@ static void database_path_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 
     /*
      * Make sure a call to an existing file fails if it's not a valid SQLite
@@ -66,7 +66,7 @@ static void database_path_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_RUNTIME_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 
     // Now just make sure it fails with a non-existent file.
 #ifdef PKMN_PLATFORM_WIN32
@@ -79,7 +79,7 @@ static void database_path_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_RUNTIME_ERROR);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 }
 
 static void images_dir_test() {
@@ -93,11 +93,11 @@ static void images_dir_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 #ifdef PKMN_PLATFORM_WIN32
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "C:\\libpkmn\\images\\dir");
+    TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\images\\dir", strbuffer);
 #else
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "/libpkmn/images/dir");
+    TEST_ASSERT_EQUAL_STRING("/libpkmn/images/dir", strbuffer);
 #endif
 }
 
@@ -106,7 +106,7 @@ static void tmp_dir_test() {
                      strbuffer,
                      sizeof(strbuffer)
                  );
-    TEST_ASSERT_EQUAL(error_code, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 }
 
 PKMN_C_TEST_MAIN(

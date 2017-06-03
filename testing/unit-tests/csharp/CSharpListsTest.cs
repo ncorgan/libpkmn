@@ -41,6 +41,15 @@ public class CSharpListsTest {
     }
 
     [Test]
+    public void GamecubeShadowPokemonListTest() {
+        PKMN.StringList colosseumShadowPokemonList = PKMN.Database.Lists.GamecubeShadowPokemonList(true);
+        Assert.AreEqual(colosseumShadowPokemonList.Count, 48);
+
+        PKMN.StringList xdShadowPokemonList = PKMN.Database.Lists.GamecubeShadowPokemonList(false);
+        Assert.AreEqual(xdShadowPokemonList.Count, 83);
+    }
+
+    [Test]
     public void ItemListTest() {
         // Make sure trying to create an invalid list results in an exception
         Assert.Throws<ArgumentOutOfRangeException>(

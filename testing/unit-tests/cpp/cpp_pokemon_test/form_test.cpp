@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest/util.hpp>
+
 #include <pkmn/pokemon.hpp>
 
 #include <boost/assign.hpp>
@@ -19,51 +21,21 @@ namespace fs = boost::filesystem;
 static const std::string gen1_test_games[] = {
     "Red", "Blue", "Yellow",
     "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
 };
 
 static const std::string gen2_test_games[] = {
     "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
 };
 
 static const std::string gen3_test_games[] = {
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
 };
 
 class gen1_form_test: public ::testing::TestWithParam<std::string> {};
 class gen2_form_test: public ::testing::TestWithParam<std::string> {};
-class gba_form_test: public ::testing::TestWithParam<std::string> {};
-
-// No database access here
-static const std::map<std::string, int> game_generations = boost::assign::map_list_of
-    ("Red", 1)
-    ("Blue", 1)
-    ("Yellow", 1)
-    ("Gold", 2)
-    ("Silver", 2)
-    ("Crystal", 2)
-    ("Ruby", 3)
-    ("Sapphire", 3)
-    ("Emerald", 3)
-    ("FireRed", 3)
-    ("LeafGreen", 3)
-    ("Colosseum", 3)
-    ("XD", 3)
-    ("Diamond", 4)
-    ("Pearl", 4)
-    ("Platinum", 4)
-    ("HeartGold", 4)
-    ("SoulSilver", 4)
-    ("Black", 5)
-    ("White", 5)
-    ("Black 2", 5)
-    ("White 2", 5)
-    ("X", 6)
-    ("Y", 6)
-    ("Omega Ruby", 6)
-    ("Alpha Sapphire", 6)
-;
+class gen3_form_test: public ::testing::TestWithParam<std::string> {};
 
 static const std::vector<std::string> starters = boost::assign::list_of
     ("")("Bulbasaur")("Chikorita")("Treecko")("Turtwig")("Snivy")("Chespin")
@@ -308,8 +280,10 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         unown_forms.at(i),
                                         10
                                     );
-        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        if(game != "Colosseum" and game != "XD") {
+            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        }
     }
     if(generation == 2) {
         EXPECT_THROW(
@@ -335,8 +309,10 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         "!",
                                         10
                                     );
-        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        if(game != "Colosseum" and game != "XD") {
+            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        }
 
         unown = pkmn::pokemon::make(
                     "Unown",
@@ -344,12 +320,14 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                     "?",
                     10
                 );
-        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        if(game != "Colosseum" and game != "XD") {
+            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
+        }
     }
 }
 
-TEST_P(gba_form_test, test_gba_pokemon_forms) {
+TEST_P(gen3_form_test, test_gba_pokemon_forms) {
     std::string game = GetParam();
     int generation = game_generations.at(game);
 
@@ -412,8 +390,10 @@ TEST_P(gba_form_test, test_gba_pokemon_forms) {
                                            *iter,
                                            30
                                        );
-        EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
+        if(game != "Colosseum" and game != "XD") {
+            EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
+        }
     }
 
     // Primal Reversion forms should only work in OR/AS.
@@ -423,8 +403,10 @@ TEST_P(gba_form_test, test_gba_pokemon_forms) {
                                       "",
                                       70
                                   );
-    EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
-    EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
+    if(game != "Colosseum" and game != "XD") {
+        EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
+    }
 
     pkmn::pokemon::sptr kyogre = pkmn::pokemon::make(
                                      "Kyogre",
@@ -432,8 +414,10 @@ TEST_P(gba_form_test, test_gba_pokemon_forms) {
                                      "",
                                      70
                                  );
-    EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
-    EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
+    if(game != "Colosseum" and game != "XD") {
+        EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
+    }
 
     if(game == "Omega Ruby" or game == "Alpha Sapphire") {
         (void)pkmn::pokemon::make(
@@ -477,8 +461,10 @@ TEST_P(gba_form_test, test_gba_pokemon_forms) {
                          "Normal",
                          70
                      );
-            EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
+            if(game != "Colosseum" and game != "XD") {
+                EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
+                EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
+            }
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -582,7 +568,7 @@ INSTANTIATE_TEST_CASE_P(
 );
 
 INSTANTIATE_TEST_CASE_P(
-    cpp_gba_form_test,
-    gba_form_test,
+    cpp_gen3_form_test,
+    gen3_form_test,
     ::testing::ValuesIn(gen3_test_games)
 );

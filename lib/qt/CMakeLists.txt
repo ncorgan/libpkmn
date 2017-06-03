@@ -12,6 +12,7 @@ INCLUDE_DIRECTORIES(
 SET(pkmn_qt_classes
     AbilityListComboBox
     GameListComboBox
+    GamecubeShadowPokemonListComboBox
     ItemListComboBox
     LocationListComboBox
     MoveListComboBox

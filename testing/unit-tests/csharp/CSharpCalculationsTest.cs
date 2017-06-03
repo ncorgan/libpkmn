@@ -311,7 +311,7 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void Gen3Gen4NatureTest() {
+    public void NatureTest() {
         string[] natures = {
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -322,10 +322,81 @@ public class CSharpCalculationsTest {
 
         for(uint i = 0; i < natures.Length; ++i) {
             Assert.AreEqual(
-                PKMN.Calculations.Gen3Gen4Nature((uint)((rng.Next(0,50001) * 1000) + i)),
+                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i)),
                 natures[i]
             );
         }
+    }
+
+    [Test]
+    public void PersonalityTest() {
+        /*
+         * Given the amount of time the C++ test takes, this will just verify
+         * the API wrapper.
+         */
+
+        // Test invalid ability.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Torrent",
+                    "Male",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid gender.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Blaze",
+                    "Not a gender",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid nature.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.LIBPKMN_OT_ID,
+                    true,
+                    "Blaze",
+                    "Male",
+                    "Not a nature"
+                );
+            }
+        );
+
+        // Test and validate a valid call.
+        uint personality = PKMN.Calculations.GeneratePersonality(
+                               "Charmander",
+                               PKMN.Pokemon.LIBPKMN_OT_ID,
+                               true,
+                               "Blaze",
+                               "Male",
+                               "Quiet"
+                           );
+        Assert.AreEqual(
+            "Male",
+            PKMN.Calculations.ModernPokemonGender(
+                "Charmander", personality
+            )
+        );
+        Assert.IsTrue(
+            PKMN.Calculations.ModernShiny(
+                personality, PKMN.Pokemon.LIBPKMN_OT_ID
+            )
+        );
     }
 
     [Test]
