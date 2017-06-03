@@ -5,14 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/exception.hpp>
 #include <pkmn/qt/Spinda.hpp>
 
-#if defined(PKMN_QT4) || defined(PKMN_QT5)
+#ifdef PKMN_ENABLE_QT
 
 #include "../misc_common.hpp"
 #include "SpindaSpotMap.hpp"
 
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/utils/paths.hpp>

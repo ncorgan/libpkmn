@@ -845,6 +845,7 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_sprite_filepath() {
+#ifdef PKMN_ENABLE_QT
         BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
 
         if(_database_entry.get_species_id() == SPINDA_ID) {
@@ -867,8 +868,11 @@ namespace pkmn {
                 throw std::runtime_error("Failed to generate Spinda sprite.");
             }
         } else {
+#endif
             return pokemon_impl::get_sprite_filepath();
+#ifdef PKMN_ENABLE_QT
         }
+#endif
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(
