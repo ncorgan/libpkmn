@@ -41,6 +41,16 @@ using namespace pkmn::calculations;
  *  * https://github.com/magical/spinda
  */
 
+typedef struct
+{
+    QColor color_main;
+    QColor color_light;
+    QColor color_dark;
+} spinda_colors_t;
+
+// Avoid compilation issues from different sizes.
+BOOST_STATIC_CONSTEXPR size_t MAX_SPOT_HEIGHT = 13;
+
 // Game Boy Advance
 BOOST_STATIC_CONSTEXPR spinda_coords GBA_ORIGIN(8,6);
 BOOST_STATIC_CONSTEXPR spinda_spots GBA_COORDS(
@@ -49,15 +59,6 @@ BOOST_STATIC_CONSTEXPR spinda_spots GBA_COORDS(
                                         spinda_coords(6,18),
                                         spinda_coords(18,19)
                                     );
-BOOST_STATIC_CONSTEXPR size_t GBA_SPOT_HEIGHT = 13;
-
-// Colors
-
-typedef struct {
-    QColor color_main;
-    QColor color_light;
-    QColor color_dark;
-} spinda_colors_t;
 
 static const spinda_colors_t GBA_SPINDA_FACE_COLORS =
 {
@@ -78,6 +79,34 @@ static const spinda_colors_t GBA_SPINDA_SPOT_COLORS_SHINY =
     QColor(0x70, 0x80, 0x18)
 };
 
+// Generation IV-V
+BOOST_STATIC_CONSTEXPR spinda_coords NDS_ORIGIN(17, 7);
+BOOST_STATIC_CONSTEXPR spinda_spots NDS_COORDS(
+                                        spinda_coords(0,0),
+                                        spinda_coords(24,2),
+                                        spinda_coords(3,18),
+                                        spinda_coords(15,18)
+                                    );
+
+static const spinda_colors_t NDS_SPINDA_FACE_COLORS =
+{
+    QColor(0xE6, 0xD5, 0xA4),
+    QColor(0xF6, 0xEE, 0xBD),
+    QColor(0xCD, 0xA4, 0x73)
+};
+static const spinda_colors_t NDS_SPINDA_SPOT_COLORS =
+{
+    QColor(0xEE, 0x52, 0x4A),
+    QColor(0xEE, 0x52, 0x4A), // No light color in DS sprites
+    QColor(0xBD, 0x4A, 0x31)
+};
+static const spinda_colors_t NDS_SPINDA_SPOT_COLORS_SHINY =
+{
+    QColor(0xA4, 0xCD, 0x10),
+    QColor(0xA4, 0xCD, 0x10), // No light color in DS sprites
+    QColor(0x7B, 0x9C, 0x00)
+};
+
 namespace pkmn { namespace qt {
 
     static void drawSpindaSpot(
@@ -85,11 +114,10 @@ namespace pkmn { namespace qt {
         const spinda_coords* coords,
         const char** single_spot_map,
         const spinda_colors_t* face_colors,
-        const spinda_colors_t* spot_colors,
-        size_t height
+        const spinda_colors_t* spot_colors
     )
     {
-        for(size_t i = 0; i < height && single_spot_map[i] != NULL; ++i)
+        for(size_t i = 0; i < MAX_SPOT_HEIGHT and single_spot_map[i] != NULL; ++i)
         {
             for(size_t j = 0; j < std::strlen(single_spot_map[i]); ++j)
             {
@@ -181,7 +209,7 @@ namespace pkmn { namespace qt {
 
         const spinda_colors_t* face_colors = NULL;
         const spinda_colors_t* spot_colors = NULL;
-        const char* (*spot_map)[GBA_SPOT_HEIGHT] = {0};
+        const char* (*spot_map)[MAX_SPOT_HEIGHT] = {0};
 
         switch(generation)
         {
@@ -191,11 +219,19 @@ namespace pkmn { namespace qt {
 
                 face_colors = &GBA_SPINDA_FACE_COLORS;
                 spot_colors = shiny ? &GBA_SPINDA_SPOT_COLORS_SHINY : &GBA_SPINDA_SPOT_COLORS;
-                spot_map    = GBA_SPINDA_SPOT_MAP;
+                spot_map = GBA_SPINDA_SPOT_MAP;
                 break;
 
+            // Generation already validated
             default:
-                throw pkmn::unimplemented_error();
+                final_spot_coords = NDS_COORDS + spot_offset;
+                final_spot_coords += NDS_ORIGIN;
+
+                face_colors = &NDS_SPINDA_FACE_COLORS;
+                spot_colors = shiny ? &NDS_SPINDA_SPOT_COLORS_SHINY : &NDS_SPINDA_SPOT_COLORS;
+                spot_map = NDS_SPINDA_SPOT_MAP;
+                break;
+
         }
 
         drawSpindaSpot(
@@ -203,32 +239,28 @@ namespace pkmn { namespace qt {
             &final_spot_coords.left_ear,
             spot_map[0],
             face_colors,
-            spot_colors,
-            GBA_SPOT_HEIGHT
+            spot_colors
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.right_ear,
             spot_map[1],
             face_colors,
-            spot_colors,
-            GBA_SPOT_HEIGHT
+            spot_colors
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.left_face,
             spot_map[2],
             face_colors,
-            spot_colors,
-            GBA_SPOT_HEIGHT
+            spot_colors
         );
         drawSpindaSpot(
             imageOut,
             &final_spot_coords.right_face,
             spot_map[3],
             face_colors,
-            spot_colors,
-            GBA_SPOT_HEIGHT
+            spot_colors
         );
     }
 
