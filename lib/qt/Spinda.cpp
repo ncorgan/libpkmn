@@ -125,8 +125,8 @@ namespace pkmn { namespace qt {
                 if(single_spot_map[i][j] == '*')
                 {
                     QPoint point(
-                               coords->x+j,
-                               coords->y+i
+                               int(coords->x+j),
+                               int(coords->y+i)
                            );
                     if(qAlpha(image->pixel(point)) > 0)
                     {
