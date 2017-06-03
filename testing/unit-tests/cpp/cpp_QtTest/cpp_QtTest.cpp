@@ -9,6 +9,8 @@
 
 #include <pkmn/build_info.hpp>
 
+#include <pkmn/database/pokemon_entry.hpp>
+
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
 #include <pkmn/qt/GamecubeShadowPokemonListComboBox.hpp>
@@ -19,8 +21,24 @@
 #include <pkmn/qt/PokemonListComboBox.hpp>
 #include <pkmn/qt/RegionListComboBox.hpp>
 #include <pkmn/qt/RibbonListComboBox.hpp>
+#include <pkmn/qt/Spinda.hpp>
 #include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
 #include <pkmn/qt/TypeListComboBox.hpp>
+
+#include <pkmn/utils/paths.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+
+#ifdef PKMN_QT4
+#include <QtCore/QString>
+#include <QtGui/QImage>
+#else
+#include <QImage>
+#include <QString>
+#endif
+
+namespace fs = boost::filesystem;
 
 void QtTest::testGetQtVersion() {
     QString versionFromLibPKMN(pkmn::build_info::get_qt_version().c_str());
@@ -170,6 +188,52 @@ void QtTest::testSuperTrainingMedalListComboBox() {
         QCOMPARE(superTrainingMedals.currentText(), QString("The Battle for the Best!"));
     } catch(const std::exception &e) {
         QFAIL(e.what());
+    }
+}
+
+void QtTest::testSpinda()
+{
+    fs::path PKMN_TMP_DIR(pkmn::get_tmp_dir());
+
+    static const std::vector<std::string> GAMES{
+        "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+        "Diamond", "Pearl", "Platinum", "HeartGold", "SoulSilver",
+        "Black", "White", "Black 2", "White 2"
+    };
+    static const std::vector<int> GENERATIONS{
+        3,3,3,3,3,
+        4,4,4,4,4,
+        5,5,5,5
+    };
+    for(size_t i = 0; i < GAMES.size(); ++i)
+    {
+        pkmn::database::pokemon_entry Spinda("Spinda", "Ruby", "");
+        QImage baseSpindaSprite(QString::fromStdString(Spinda.get_sprite_filepath(false, false)));
+        QImage baseSpindaShinySprite(QString::fromStdString(Spinda.get_sprite_filepath(false, true)));
+
+        std::string spindaFilepath = fs::path(PKMN_TMP_DIR / "spinda_0.png").string();
+        QVERIFY(pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                    GENERATIONS[i],
+                    0x88888888,
+                    false,
+                    spindaFilepath
+                ));
+        QVERIFY(fs::exists(fs::path(spindaFilepath)));
+        QVERIFY(QImage(QString::fromStdString(spindaFilepath)) != baseSpindaSprite);
+
+        std::string spindaShinyFilepath = fs::path(PKMN_TMP_DIR / "spinda_1.png").string();
+        QVERIFY(pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                    GENERATIONS[i],
+                    0x88888888,
+                    false,
+                    spindaShinyFilepath
+                ));
+        QVERIFY(fs::exists(fs::path(spindaShinyFilepath)));
+        QVERIFY(QImage(QString::fromStdString(spindaShinyFilepath)) != baseSpindaShinySprite);
+
+        // Remove generated files.
+        std::remove(spindaFilepath.c_str());
+        std::remove(spindaShinyFilepath.c_str());
     }
 }
 

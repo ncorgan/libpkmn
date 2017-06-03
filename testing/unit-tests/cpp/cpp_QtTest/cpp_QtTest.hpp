@@ -26,6 +26,7 @@ class QtTest: public QObject
         void testPokemonListComboBox();
         void testRegionListComboBox();
         void testRibbonListComboBox();
+        void testSpinda();
         void testSuperTrainingMedalListComboBox();
         void testTypeListComboBox();
 };
