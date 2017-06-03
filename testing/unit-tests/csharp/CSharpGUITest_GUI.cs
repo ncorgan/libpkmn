@@ -6,12 +6,17 @@
  */
 
 using System;
+using System.IO;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpWinFormsTest {
+public class CSharpWinFormsTest
+{
+    private static string PKMN_TMP_DIR = PKMN.Paths.GetTmpDir();
+
     [Test]
-    public void AbilityListComboBoxTest() {
+    public void AbilityListComboBoxTest()
+    {
         PKMN.GUI.AbilityListComboBox abilityListComboBox = new PKMN.GUI.AbilityListComboBox(6);
         Assert.AreEqual(abilityListComboBox.Items.Count, 191);
         Assert.AreEqual(abilityListComboBox.Items[0], "Adaptability");
@@ -19,7 +24,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void GameListComboBoxTest() {
+    public void GameListComboBoxTest()
+    {
         PKMN.GUI.GameListComboBox gameListComboBox = new PKMN.GUI.GameListComboBox(6, true);
         Assert.AreEqual(gameListComboBox.Items.Count, 26);
         Assert.AreEqual(gameListComboBox.Items[0], "Red");
@@ -27,7 +33,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void ItemListComboBoxTest() {
+    public void ItemListComboBoxTest()
+    {
         PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox("HeartGold");
         Assert.AreEqual(itemListComboBox.Items.Count, 513);
         Assert.AreEqual(itemListComboBox.Items[0], "Adamant Orb");
@@ -35,7 +42,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void LocationListComboBoxTest() {
+    public void LocationListComboBoxTest()
+    {
         PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox("Emerald", false);
         Assert.AreEqual(locationListComboBox.Items.Count, 106);
         Assert.AreEqual(locationListComboBox.Items[0], "Abandoned Ship");
@@ -43,7 +51,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void MoveListComboBoxTest() {
+    public void MoveListComboBoxTest()
+    {
         PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox("Red");
         Assert.AreEqual(moveListComboBox.Items.Count, 165);
         Assert.AreEqual(moveListComboBox.Items[0], "Pound");
@@ -51,7 +60,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void NatureListComboBoxTest() {
+    public void NatureListComboBoxTest()
+    {
         PKMN.GUI.NatureListComboBox natureListComboBox = new PKMN.GUI.NatureListComboBox();
         Assert.AreEqual(natureListComboBox.Items.Count, 25);
         Assert.AreEqual(natureListComboBox.Items[0], "Hardy");
@@ -59,7 +69,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void PokemonListComboBoxTest() {
+    public void PokemonListComboBoxTest()
+    {
         PKMN.GUI.PokemonListComboBox pokemonListComboBox = new PKMN.GUI.PokemonListComboBox(1, true);
         Assert.AreEqual(pokemonListComboBox.Items.Count, 151);
         Assert.AreEqual(pokemonListComboBox.Items[0], "Bulbasaur");
@@ -67,7 +78,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void RegionListComboBoxTest() {
+    public void RegionListComboBoxTest()
+    {
         PKMN.GUI.RegionListComboBox regionListComboBox = new PKMN.GUI.RegionListComboBox();
         Assert.AreEqual(regionListComboBox.Items.Count, 7);
         Assert.AreEqual(regionListComboBox.Items[0], "Kanto");
@@ -76,11 +88,52 @@ public class CSharpWinFormsTest {
 
     [Test]
     [Ignore("Not implemented yet")]
-    public void RibbonListComboBoxTest() {
+    public void RibbonListComboBoxTest()
+    {
     }
 
     [Test]
-    public void SuperTrainingMedalListComboBoxTest() {
+    public void SpindaTest()
+    {
+        for(int generation = 3; generation <= 5; ++generation)
+        {
+            string spindaPath = Path.GetFullPath(
+                                    Path.Combine(
+                                        PKMN_TMP_DIR,
+                                        "spinda_0.png"
+                                    )
+                                );
+
+            PKMN.GUI.GenerateSpindaSpriteAtFilepath(
+                generation,
+                0x88888888,
+                false,
+                spindaPath
+            );
+            Assert.IsTrue(File.Exists(spindaPath));
+            File.Delete(spindaPath);
+
+            spindaPath = Path.GetFullPath(
+                             Path.Combine(
+                                 PKMN_TMP_DIR,
+                                 "spinda_1.png"
+                             )
+                        );
+
+            PKMN.GUI.GenerateSpindaSpriteAtFilepath(
+                generation,
+                0x88888888,
+                true,
+                spindaPath
+            );
+            Assert.IsTrue(File.Exists(spindaPath));
+            File.Delete(spindaPath);
+        }
+    }
+
+    [Test]
+    public void SuperTrainingMedalListComboBoxTest()
+    {
         PKMN.GUI.SuperTrainingMedalListComboBox superTrainingMedalListComboBox = new PKMN.GUI.SuperTrainingMedalListComboBox();
         Assert.AreEqual(superTrainingMedalListComboBox.Items.Count, 30);
         Assert.AreEqual(superTrainingMedalListComboBox.Items[0], "Sp. Atk Level 1");
@@ -88,7 +141,8 @@ public class CSharpWinFormsTest {
     }
 
     [Test]
-    public void TypeListComboBoxTest() {
+    public void TypeListComboBoxTest()
+    {
         PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox("Alpha Sapphire");
         Assert.AreEqual(typeListComboBox.Items.Count, 18);
         Assert.AreEqual(typeListComboBox.Items[0], "Normal");
