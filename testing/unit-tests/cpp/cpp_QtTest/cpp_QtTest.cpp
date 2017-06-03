@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "cpp_QtWidgetsTest.hpp"
+#include "cpp_QtTest.hpp"
 
 #include <pkmn/build_info.hpp>
 
@@ -22,13 +22,13 @@
 #include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
 #include <pkmn/qt/TypeListComboBox.hpp>
 
-void QtWidgetsTest::testGetQtVersion() {
+void QtTest::testGetQtVersion() {
     QString versionFromLibPKMN(pkmn::build_info::get_qt_version().c_str());
     QString versionFromQt(qVersion());
     QCOMPARE(versionFromLibPKMN, versionFromQt);
 }
 
-void QtWidgetsTest::testAbilityListComboBox() {
+void QtTest::testAbilityListComboBox() {
     try {
         pkmn::qt::AbilityListComboBox abilities(6, nullptr);
         QCOMPARE(abilities.count(), 191);
@@ -42,7 +42,7 @@ void QtWidgetsTest::testAbilityListComboBox() {
     }
 }
 
-void QtWidgetsTest::testGameListComboBox() {
+void QtTest::testGameListComboBox() {
     try {
         pkmn::qt::GameListComboBox games(6, true, nullptr);
         QCOMPARE(games.count(), 26);
@@ -56,7 +56,7 @@ void QtWidgetsTest::testGameListComboBox() {
     }
 }
 
-void QtWidgetsTest::testGamecubeShadowPokemonListComboBox()
+void QtTest::testGamecubeShadowPokemonListComboBox()
 {
     try
     {
@@ -72,7 +72,7 @@ void QtWidgetsTest::testGamecubeShadowPokemonListComboBox()
     }
 }
 
-void QtWidgetsTest::testItemListComboBox() {
+void QtTest::testItemListComboBox() {
     try {
         pkmn::qt::ItemListComboBox items(QString("HeartGold"), nullptr);
         QCOMPARE(items.count(), 513);
@@ -86,7 +86,7 @@ void QtWidgetsTest::testItemListComboBox() {
     }
 }
 
-void QtWidgetsTest::testLocationListComboBox() {
+void QtTest::testLocationListComboBox() {
     try {
         pkmn::qt::LocationListComboBox locations(QString("Emerald"), false, nullptr);
         QCOMPARE(locations.count(), 106);
@@ -100,7 +100,7 @@ void QtWidgetsTest::testLocationListComboBox() {
     }
 }
 
-void QtWidgetsTest::testMoveListComboBox() {
+void QtTest::testMoveListComboBox() {
     try {
         pkmn::qt::MoveListComboBox moves(QString("Red"), nullptr);
         QCOMPARE(moves.count(), 165);
@@ -114,7 +114,7 @@ void QtWidgetsTest::testMoveListComboBox() {
     }
 }
 
-void QtWidgetsTest::testNatureListComboBox() {
+void QtTest::testNatureListComboBox() {
     try {
         pkmn::qt::NatureListComboBox natures(nullptr);
         QCOMPARE(natures.count(), 25);
@@ -128,7 +128,7 @@ void QtWidgetsTest::testNatureListComboBox() {
     }
 }
 
-void QtWidgetsTest::testPokemonListComboBox() {
+void QtTest::testPokemonListComboBox() {
     try {
         pkmn::qt::PokemonListComboBox pokemon(1, true, nullptr);
         QCOMPARE(pokemon.count(), 151);
@@ -142,7 +142,7 @@ void QtWidgetsTest::testPokemonListComboBox() {
     }
 }
 
-void QtWidgetsTest::testRegionListComboBox() {
+void QtTest::testRegionListComboBox() {
     try {
         pkmn::qt::RegionListComboBox regions(nullptr);
         QCOMPARE(regions.count(), 7);
@@ -156,10 +156,10 @@ void QtWidgetsTest::testRegionListComboBox() {
     }
 }
 
-void QtWidgetsTest::testRibbonListComboBox() {
+void QtTest::testRibbonListComboBox() {
 }
 
-void QtWidgetsTest::testSuperTrainingMedalListComboBox() {
+void QtTest::testSuperTrainingMedalListComboBox() {
     try {
         pkmn::qt::SuperTrainingMedalListComboBox superTrainingMedals(nullptr);
         QCOMPARE(superTrainingMedals.count(), 30);
@@ -173,7 +173,7 @@ void QtWidgetsTest::testSuperTrainingMedalListComboBox() {
     }
 }
 
-void QtWidgetsTest::testTypeListComboBox() {
+void QtTest::testTypeListComboBox() {
     try {
         pkmn::qt::TypeListComboBox types(QString("Alpha Sapphire"), nullptr);
         QCOMPARE(types.count(), 18);
@@ -187,5 +187,5 @@ void QtWidgetsTest::testTypeListComboBox() {
     }
 }
 
-QTEST_MAIN(QtWidgetsTest)
-#include "../moc_cpp_QtWidgetsTest.cpp"
+QTEST_MAIN(QtTest)
+#include "../moc_cpp_QtTest.cpp"

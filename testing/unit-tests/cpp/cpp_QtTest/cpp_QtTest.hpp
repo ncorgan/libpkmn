@@ -10,7 +10,7 @@
 
 #include <QtTest/QtTest>
 
-class QtWidgetsTest: public QObject
+class QtTest: public QObject
 {
     Q_OBJECT
 
