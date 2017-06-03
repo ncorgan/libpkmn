@@ -103,6 +103,10 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_STREQ("None", pkmn_strerror());
 
+    error = throw_exception<pkmn::feature_not_in_build_error>("Qt support");
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
+
     error = throw_feature_not_in_game_error("Contests", "Generation I");
     EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     EXPECT_STREQ("Contests not in Generation I", pkmn_strerror());
@@ -234,6 +238,13 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_nothing_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_EQ("None", test_handle.last_error);
+
+    error = throw_exception_with_handle<pkmn::feature_not_in_build_error>(
+        "Qt support", &test_handle
+    );
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_EQ("This feature is not part of this build of LibPKMN: Qt support", test_handle.last_error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
 
     error = throw_feature_not_in_game_error_with_handle(
         "Contests", "Generation I", &test_handle

@@ -13,6 +13,25 @@
 
 #include <gtest/gtest.h>
 
+TEST(cpp_exception_test, test_feature_not_in_build_error)
+{
+    const std::string expected_msg = "This feature is not part of this build of LibPKMN: Qt support";
+
+    try
+    {
+        throw pkmn::feature_not_in_build_error("Qt support");
+        FAIL() << "Did not throw";
+    }
+    catch(const pkmn::feature_not_in_build_error& e)
+    {
+        EXPECT_EQ(expected_msg, std::string(e.what()));
+    }
+    catch(...)
+    {
+        FAIL() << "Did not throw pkmn::feature_not_in_build_error";
+    }
+}
+
 TEST(cpp_exception_test, test_feature_not_in_game_error)
 {
     const std::string expected_msg = "Ribbons not in Generation II";

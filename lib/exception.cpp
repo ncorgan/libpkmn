@@ -13,6 +13,13 @@
 
 namespace pkmn {
 
+    feature_not_in_build_error::feature_not_in_build_error(
+        const std::string &feature
+    ): std::runtime_error(
+        str(boost::format("This feature is not part of this build of LibPKMN: %s")
+            % feature.c_str())
+       ) {}
+
     feature_not_in_game_error::feature_not_in_game_error(
         const std::string &msg
     ): std::runtime_error(msg) {}
