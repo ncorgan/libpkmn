@@ -21,6 +21,7 @@ SET(c_tests
     c_database_entry_test
     c_error_test
     c_game_save_test
+    c_gui_test
     c_lists_test
     c_paths_test
     c_pokemon_party_test

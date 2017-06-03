@@ -3564,6 +3564,33 @@ static void database_pokemon_entry_error_test() {
 }
 
 /*
+ * <pkmn-c/gui/spinda.h>
+ */
+static void gui_spinda_test()
+{
+    /*
+     * pkmn_gui_generate_spinda_sprite_at_filepath
+     */
+    error = pkmn_gui_generate_spinda_sprite_at_filepath(
+                0,
+                0,
+                false,
+                NULL, // filepath
+                &dummy_bool
+            );
+    TEST_NULL_POINTER_RETURN("filepath");
+
+    error = pkmn_gui_generate_spinda_sprite_at_filepath(
+                0,
+                0,
+                false,
+                strbuffer,
+                NULL // successful_out
+            );
+    TEST_NULL_POINTER_RETURN("successful_out");
+}
+
+/*
  * <pkmn-c/utils/paths.h>
  */
 static void utils_paths_error_test() {
@@ -3656,5 +3683,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_lists_error_test)
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
+    PKMN_C_TEST(gui_spinda_test)
     PKMN_C_TEST(utils_paths_error_test)
 )

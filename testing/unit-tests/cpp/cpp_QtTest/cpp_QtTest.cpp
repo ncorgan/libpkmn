@@ -225,7 +225,7 @@ void QtTest::testSpinda()
         QVERIFY(pkmn::qt::GenerateSpindaSpriteAtFilepath(
                     GENERATIONS[i],
                     0x88888888,
-                    false,
+                    true,
                     spindaShinyFilepath
                 ));
         QVERIFY(fs::exists(fs::path(spindaShinyFilepath)));
