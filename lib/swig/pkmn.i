@@ -14,6 +14,7 @@
     #include <pkmn/config.hpp>
 %}
 
+%ignore PKMN_ENABLE_QT;
 %ignore PKMN_QT4;
 %ignore PKMN_QT5;
 

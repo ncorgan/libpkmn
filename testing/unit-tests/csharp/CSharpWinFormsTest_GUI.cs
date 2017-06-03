@@ -12,7 +12,7 @@ using NUnit.Framework;
 public class CSharpWinFormsTest {
     [Test]
     public void AbilityListComboBoxTest() {
-        PKMN.WinForms.AbilityListComboBox abilityListComboBox = new PKMN.WinForms.AbilityListComboBox(6);
+        PKMN.GUI.AbilityListComboBox abilityListComboBox = new PKMN.GUI.AbilityListComboBox(6);
         Assert.AreEqual(abilityListComboBox.Items.Count, 191);
         Assert.AreEqual(abilityListComboBox.Items[0], "Adaptability");
         Assert.AreEqual(abilityListComboBox.Items[190], "Zen Mode");
@@ -20,7 +20,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void GameListComboBoxTest() {
-        PKMN.WinForms.GameListComboBox gameListComboBox = new PKMN.WinForms.GameListComboBox(6, true);
+        PKMN.GUI.GameListComboBox gameListComboBox = new PKMN.GUI.GameListComboBox(6, true);
         Assert.AreEqual(gameListComboBox.Items.Count, 26);
         Assert.AreEqual(gameListComboBox.Items[0], "Red");
         Assert.AreEqual(gameListComboBox.Items[25], "Alpha Sapphire");
@@ -28,7 +28,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void ItemListComboBoxTest() {
-        PKMN.WinForms.ItemListComboBox itemListComboBox = new PKMN.WinForms.ItemListComboBox("HeartGold");
+        PKMN.GUI.ItemListComboBox itemListComboBox = new PKMN.GUI.ItemListComboBox("HeartGold");
         Assert.AreEqual(itemListComboBox.Items.Count, 513);
         Assert.AreEqual(itemListComboBox.Items[0], "Adamant Orb");
         Assert.AreEqual(itemListComboBox.Items[512], "Zoom Lens");
@@ -36,7 +36,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void LocationListComboBoxTest() {
-        PKMN.WinForms.LocationListComboBox locationListComboBox = new PKMN.WinForms.LocationListComboBox("Emerald", false);
+        PKMN.GUI.LocationListComboBox locationListComboBox = new PKMN.GUI.LocationListComboBox("Emerald", false);
         Assert.AreEqual(locationListComboBox.Items.Count, 106);
         Assert.AreEqual(locationListComboBox.Items[0], "Abandoned Ship");
         Assert.AreEqual(locationListComboBox.Items[105], "Victory Road");
@@ -44,7 +44,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void MoveListComboBoxTest() {
-        PKMN.WinForms.MoveListComboBox moveListComboBox = new PKMN.WinForms.MoveListComboBox("Red");
+        PKMN.GUI.MoveListComboBox moveListComboBox = new PKMN.GUI.MoveListComboBox("Red");
         Assert.AreEqual(moveListComboBox.Items.Count, 165);
         Assert.AreEqual(moveListComboBox.Items[0], "Pound");
         Assert.AreEqual(moveListComboBox.Items[164], "Struggle");
@@ -52,7 +52,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void NatureListComboBoxTest() {
-        PKMN.WinForms.NatureListComboBox natureListComboBox = new PKMN.WinForms.NatureListComboBox();
+        PKMN.GUI.NatureListComboBox natureListComboBox = new PKMN.GUI.NatureListComboBox();
         Assert.AreEqual(natureListComboBox.Items.Count, 25);
         Assert.AreEqual(natureListComboBox.Items[0], "Hardy");
         Assert.AreEqual(natureListComboBox.Items[24], "Quirky");
@@ -60,7 +60,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void PokemonListComboBoxTest() {
-        PKMN.WinForms.PokemonListComboBox pokemonListComboBox = new PKMN.WinForms.PokemonListComboBox(1, true);
+        PKMN.GUI.PokemonListComboBox pokemonListComboBox = new PKMN.GUI.PokemonListComboBox(1, true);
         Assert.AreEqual(pokemonListComboBox.Items.Count, 151);
         Assert.AreEqual(pokemonListComboBox.Items[0], "Bulbasaur");
         Assert.AreEqual(pokemonListComboBox.Items[150], "Mew");
@@ -68,7 +68,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void RegionListComboBoxTest() {
-        PKMN.WinForms.RegionListComboBox regionListComboBox = new PKMN.WinForms.RegionListComboBox();
+        PKMN.GUI.RegionListComboBox regionListComboBox = new PKMN.GUI.RegionListComboBox();
         Assert.AreEqual(regionListComboBox.Items.Count, 7);
         Assert.AreEqual(regionListComboBox.Items[0], "Kanto");
         Assert.AreEqual(regionListComboBox.Items[6], "Kalos");
@@ -81,7 +81,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void SuperTrainingMedalListComboBoxTest() {
-        PKMN.WinForms.SuperTrainingMedalListComboBox superTrainingMedalListComboBox = new PKMN.WinForms.SuperTrainingMedalListComboBox();
+        PKMN.GUI.SuperTrainingMedalListComboBox superTrainingMedalListComboBox = new PKMN.GUI.SuperTrainingMedalListComboBox();
         Assert.AreEqual(superTrainingMedalListComboBox.Items.Count, 30);
         Assert.AreEqual(superTrainingMedalListComboBox.Items[0], "Sp. Atk Level 1");
         Assert.AreEqual(superTrainingMedalListComboBox.Items[29], "The Battle for the Best!");
@@ -89,7 +89,7 @@ public class CSharpWinFormsTest {
 
     [Test]
     public void TypeListComboBoxTest() {
-        PKMN.WinForms.TypeListComboBox typeListComboBox = new PKMN.WinForms.TypeListComboBox("Alpha Sapphire");
+        PKMN.GUI.TypeListComboBox typeListComboBox = new PKMN.GUI.TypeListComboBox("Alpha Sapphire");
         Assert.AreEqual(typeListComboBox.Items.Count, 18);
         Assert.AreEqual(typeListComboBox.Items[0], "Normal");
         Assert.AreEqual(typeListComboBox.Items[17], "Fairy");
