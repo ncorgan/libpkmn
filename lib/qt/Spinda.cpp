@@ -60,7 +60,12 @@ static const spinda_colors_t GBA_SPINDA_SPOT_COLORS =
     QColor(0xD8, 0x88, 0x48),
     QColor(0xB0, 0x58, 0x28)
 };
-
+static const spinda_colors_t GBA_SPINDA_SPOT_COLORS_SHINY =
+{
+    QColor(0x90, 0xA0, 0x38),
+    QColor(0xB0, 0xC0, 0x58),
+    QColor(0x70, 0x80, 0x18)
+};
 
 namespace pkmn { namespace qt {
 
@@ -141,10 +146,12 @@ namespace pkmn { namespace qt {
         if(generation < 3 or generation > 5)
         {
             throw pkmn::range_error("generation", 3, 5);
-        } else if(game_is_gamecube(generation))
+        }
+        else if(game_is_gamecube(generation))
         {
             throw std::invalid_argument("No Gamecube support.");
-        } else if(!imageOut)
+        }
+        else if(!imageOut)
         {
             throw std::invalid_argument("Null pointer passed into imageOut");
         }
@@ -191,7 +198,7 @@ namespace pkmn { namespace qt {
                 final_spot_coords += GBA_ORIGIN;
 
                 face_colors = &GBA_SPINDA_FACE_COLORS;
-                spot_colors = &GBA_SPINDA_SPOT_COLORS;
+                spot_colors = shiny ? &GBA_SPINDA_SPOT_COLORS_SHINY : &GBA_SPINDA_SPOT_COLORS;
                 spot_map    = GBA_SPINDA_SPOT_MAP;
                 break;
 
