@@ -3575,19 +3575,9 @@ static void gui_spinda_test()
                 0,
                 0,
                 false,
-                NULL, // filepath
-                &dummy_bool
+                NULL // filepath
             );
     TEST_NULL_POINTER_RETURN("filepath");
-
-    error = pkmn_gui_generate_spinda_sprite_at_filepath(
-                0,
-                0,
-                false,
-                strbuffer,
-                NULL // successful_out
-            );
-    TEST_NULL_POINTER_RETURN("successful_out");
 }
 
 /*

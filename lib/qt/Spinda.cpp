@@ -265,7 +265,7 @@ namespace pkmn { namespace qt {
         );
     }
 
-    bool GenerateSpindaSpriteAtFilepath(
+    void GenerateSpindaSpriteAtFilepath(
         int generation,
         uint32_t personality,
         bool shiny,
@@ -281,7 +281,11 @@ namespace pkmn { namespace qt {
             &outputImage
         );
 
-        return outputImage.save(QString::fromStdString(filepath));
+        bool successful = outputImage.save(QString::fromStdString(filepath));
+        if(not successful)
+        {
+            throw std::runtime_error("Failed to generate Spinda sprite.");
+        }
     }
 
 }}
@@ -290,7 +294,7 @@ namespace pkmn { namespace qt {
 
 namespace pkmn { namespace qt {
 
-    bool GenerateSpindaSpriteAtFilepath(
+    void GenerateSpindaSpriteAtFilepath(
         PKMN_UNUSED(int generation),
         PKMN_UNUSED(uint32_t personality),
         PKMN_UNUSED(bool shiny),

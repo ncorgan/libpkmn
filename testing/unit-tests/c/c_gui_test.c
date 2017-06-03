@@ -37,10 +37,20 @@ static bool file_exists(
     }
 }
 
+static inline void delete_file(
+    const char* filepath
+)
+{
+#ifdef PKMN_PLATFORM_WIN32
+    TEST_ASSERT_NOT_EQUAL(0, DeleteFile(filepath));
+#else
+    TEST_ASSERT_EQUAL(0, remove(filepath));
+#endif
+}
+
 static void spinda_test()
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
-    bool successful = false;
 
     char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
     error = pkmn_get_tmp_dir(
@@ -64,18 +74,11 @@ static void spinda_test()
                     generation,
                     0x88888888,
                     false,
-                    filepath,
-                    &successful
+                    filepath
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_TRUE(successful);
         TEST_ASSERT_TRUE(file_exists(filepath));
-
-#ifdef PKMN_PLATFORM_WIN32
-        TEST_ASSERT_NOT_EQUAL(0, DeleteFile(filepath));
-#else
-        TEST_ASSERT_EQUAL(0, remove(filepath));
-#endif
+        delete_file(filepath);
 
         snprintf(
             filepath,
@@ -89,18 +92,11 @@ static void spinda_test()
                     generation,
                     0x88888888,
                     true,
-                    filepath,
-                    &successful
+                    filepath
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_TRUE(successful);
         TEST_ASSERT_TRUE(file_exists(filepath));
-
-#ifdef PKMN_PLATFORM_WIN32
-        TEST_ASSERT_NOT_EQUAL(0, DeleteFile(filepath));
-#else
-        TEST_ASSERT_EQUAL(0, remove(filepath));
-#endif
+        delete_file(filepath);
     }
 }
 

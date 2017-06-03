@@ -212,22 +212,22 @@ void QtTest::testSpinda()
         QImage baseSpindaShinySprite(QString::fromStdString(Spinda.get_sprite_filepath(false, true)));
 
         std::string spindaFilepath = fs::path(PKMN_TMP_DIR / "spinda_0.png").string();
-        QVERIFY(pkmn::qt::GenerateSpindaSpriteAtFilepath(
-                    GENERATIONS[i],
-                    0x88888888,
-                    false,
-                    spindaFilepath
-                ));
+        pkmn::qt::GenerateSpindaSpriteAtFilepath(
+            GENERATIONS[i],
+            0x88888888,
+            false,
+            spindaFilepath
+        );
         QVERIFY(fs::exists(fs::path(spindaFilepath)));
         QVERIFY(QImage(QString::fromStdString(spindaFilepath)) != baseSpindaSprite);
 
         std::string spindaShinyFilepath = fs::path(PKMN_TMP_DIR / "spinda_1.png").string();
-        QVERIFY(pkmn::qt::GenerateSpindaSpriteAtFilepath(
-                    GENERATIONS[i],
-                    0x88888888,
-                    true,
-                    spindaShinyFilepath
-                ));
+        pkmn::qt::GenerateSpindaSpriteAtFilepath(
+            GENERATIONS[i],
+            0x88888888,
+            true,
+            spindaShinyFilepath
+        );
         QVERIFY(fs::exists(fs::path(spindaShinyFilepath)));
         QVERIFY(QImage(QString::fromStdString(spindaShinyFilepath)) != baseSpindaShinySprite);
 

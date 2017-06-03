@@ -17,19 +17,17 @@ pkmn_error_t pkmn_gui_generate_spinda_sprite_at_filepath(
     int generation,
     uint32_t personality,
     bool shiny,
-    const char* filepath,
-    bool* successful_out
+    const char* filepath
 )
 {
     PKMN_CHECK_NULL_PARAM(filepath);
-    PKMN_CHECK_NULL_PARAM(successful_out);
 
     PKMN_CPP_TO_C(
-        *successful_out = pkmn::qt::GenerateSpindaSpriteAtFilepath(
-                              generation,
-                              personality,
-                              shiny,
-                              filepath
-                          );
+        pkmn::qt::GenerateSpindaSpriteAtFilepath(
+            generation,
+            personality,
+            shiny,
+            filepath
+        );
     )
 }

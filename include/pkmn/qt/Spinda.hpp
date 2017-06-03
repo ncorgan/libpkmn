@@ -14,7 +14,7 @@
 
 namespace pkmn { namespace qt {
 
-    PKMN_API bool GenerateSpindaSpriteAtFilepath(
+    PKMN_API void GenerateSpindaSpriteAtFilepath(
         int generation,
         uint32_t personality,
         bool shiny,

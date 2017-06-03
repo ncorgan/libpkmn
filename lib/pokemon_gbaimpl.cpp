@@ -856,17 +856,14 @@ namespace pkmn {
                                           % (shiny ? 1 : 0)
                                           % pksav_littleendian32(GBA_PC_RCAST->personality));
 
-            if(pkmn::qt::GenerateSpindaSpriteAtFilepath(
-                   3,
-                   pksav_littleendian32(GBA_PC_RCAST->personality),
-                   shiny,
-                   spinda_sprite_filepath.string()
-               )
-            ) {
-                return spinda_sprite_filepath.string();
-            } else {
-                throw std::runtime_error("Failed to generate Spinda sprite.");
-            }
+            pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                3,
+                pksav_littleendian32(GBA_PC_RCAST->personality),
+                shiny,
+                spinda_sprite_filepath.string()
+            );
+
+            return spinda_sprite_filepath.string();
         } else {
 #endif
             return pokemon_impl::get_sprite_filepath();
