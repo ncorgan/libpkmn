@@ -113,6 +113,12 @@ public class CSharpWinFormsTest
             Assert.IsTrue(File.Exists(spindaPath));
             File.Delete(spindaPath);
 
+            PKMN.GUI.GenerateSpindaSprite(
+                 generation,
+                 0x88888888,
+                 false
+            );
+
             spindaPath = Path.GetFullPath(
                              Path.Combine(
                                  PKMN_TMP_DIR,
@@ -128,6 +134,12 @@ public class CSharpWinFormsTest
             );
             Assert.IsTrue(File.Exists(spindaPath));
             File.Delete(spindaPath);
+
+            PKMN.GUI.GenerateSpindaSprite(
+                 generation,
+                 0x88888888,
+                 true
+            );
         }
     }
 

@@ -4,10 +4,40 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+using System;
+using System.Drawing;
+using System.IO;
+
 namespace PKMN
 {
     public partial class GUI
     {
+        public static Image GenerateSpindaSprite(
+            int generation,
+            uint personality,
+            bool shiny
+        )
+        {
+            string tmpDir = Paths.GetTmpDir();
+            string filename = String.Format(
+                                  "spinda_{0}_{1}.png",
+                                  System.Diagnostics.Process.GetCurrentProcess().Id,
+                                  new Random().Next()
+                              );
+            string filepath = Path.GetFullPath(Path.Combine(tmpDir, filename));
+
+            GenerateSpindaSpriteAtFilepath(
+                generation,
+                personality,
+                shiny,
+                filepath
+            );
+
+            Image ret = Image.FromFile(filepath);
+            File.Delete(filepath);
+            return ret;
+        }
+
         public class AbilityListComboBox: System.Windows.Forms.ComboBox
         {
             public AbilityListComboBox(int generation)
