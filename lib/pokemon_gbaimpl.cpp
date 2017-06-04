@@ -20,6 +20,9 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/utils/paths.hpp>
+
+#include <pkmn/qt/Spinda.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
@@ -29,6 +32,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
@@ -38,6 +42,8 @@
 
 #define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
 #define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+
+namespace fs = boost::filesystem;
 
 namespace pkmn {
 
@@ -836,6 +842,34 @@ namespace pkmn {
 
         _update_EV_map();
         _populate_party_data();
+    }
+
+    std::string pokemon_gbaimpl::get_sprite_filepath() {
+#ifdef PKMN_ENABLE_QT
+        BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
+
+        if(_database_entry.get_species_id() == SPINDA_ID) {
+            bool shiny = is_shiny();
+            fs::path spinda_sprite_filepath(pkmn::get_tmp_dir());
+            spinda_sprite_filepath /= str(boost::format("spinda_%d_%d_%u.png")
+                                          % _generation
+                                          % (shiny ? 1 : 0)
+                                          % pksav_littleendian32(GBA_PC_RCAST->personality));
+
+            pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                3,
+                pksav_littleendian32(GBA_PC_RCAST->personality),
+                shiny,
+                spinda_sprite_filepath.string()
+            );
+
+            return spinda_sprite_filepath.string();
+        } else {
+#endif
+            return pokemon_impl::get_sprite_filepath();
+#ifdef PKMN_ENABLE_QT
+        }
+#endif
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(

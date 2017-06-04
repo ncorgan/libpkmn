@@ -5,9 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "cpp_QtWidgetsTest.hpp"
+#include "env.hpp"
+
+#include "cpp_QtTest.hpp"
 
 #include <pkmn/build_info.hpp>
+
+#include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn/qt/AbilityListComboBox.hpp>
 #include <pkmn/qt/GameListComboBox.hpp>
@@ -19,16 +23,32 @@
 #include <pkmn/qt/PokemonListComboBox.hpp>
 #include <pkmn/qt/RegionListComboBox.hpp>
 #include <pkmn/qt/RibbonListComboBox.hpp>
+#include <pkmn/qt/Spinda.hpp>
 #include <pkmn/qt/SuperTrainingMedalListComboBox.hpp>
 #include <pkmn/qt/TypeListComboBox.hpp>
 
-void QtWidgetsTest::testGetQtVersion() {
+#include <pkmn/utils/paths.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+
+#ifdef PKMN_QT4
+#include <QtCore/QString>
+#include <QtGui/QImage>
+#else
+#include <QImage>
+#include <QString>
+#endif
+
+namespace fs = boost::filesystem;
+
+void QtTest::testGetQtVersion() {
     QString versionFromLibPKMN(pkmn::build_info::get_qt_version().c_str());
     QString versionFromQt(qVersion());
     QCOMPARE(versionFromLibPKMN, versionFromQt);
 }
 
-void QtWidgetsTest::testAbilityListComboBox() {
+void QtTest::testAbilityListComboBox() {
     try {
         pkmn::qt::AbilityListComboBox abilities(6, nullptr);
         QCOMPARE(abilities.count(), 191);
@@ -42,7 +62,7 @@ void QtWidgetsTest::testAbilityListComboBox() {
     }
 }
 
-void QtWidgetsTest::testGameListComboBox() {
+void QtTest::testGameListComboBox() {
     try {
         pkmn::qt::GameListComboBox games(6, true, nullptr);
         QCOMPARE(games.count(), 26);
@@ -56,7 +76,7 @@ void QtWidgetsTest::testGameListComboBox() {
     }
 }
 
-void QtWidgetsTest::testGamecubeShadowPokemonListComboBox()
+void QtTest::testGamecubeShadowPokemonListComboBox()
 {
     try
     {
@@ -72,7 +92,7 @@ void QtWidgetsTest::testGamecubeShadowPokemonListComboBox()
     }
 }
 
-void QtWidgetsTest::testItemListComboBox() {
+void QtTest::testItemListComboBox() {
     try {
         pkmn::qt::ItemListComboBox items(QString("HeartGold"), nullptr);
         QCOMPARE(items.count(), 513);
@@ -86,7 +106,7 @@ void QtWidgetsTest::testItemListComboBox() {
     }
 }
 
-void QtWidgetsTest::testLocationListComboBox() {
+void QtTest::testLocationListComboBox() {
     try {
         pkmn::qt::LocationListComboBox locations(QString("Emerald"), false, nullptr);
         QCOMPARE(locations.count(), 106);
@@ -100,7 +120,7 @@ void QtWidgetsTest::testLocationListComboBox() {
     }
 }
 
-void QtWidgetsTest::testMoveListComboBox() {
+void QtTest::testMoveListComboBox() {
     try {
         pkmn::qt::MoveListComboBox moves(QString("Red"), nullptr);
         QCOMPARE(moves.count(), 165);
@@ -114,7 +134,7 @@ void QtWidgetsTest::testMoveListComboBox() {
     }
 }
 
-void QtWidgetsTest::testNatureListComboBox() {
+void QtTest::testNatureListComboBox() {
     try {
         pkmn::qt::NatureListComboBox natures(nullptr);
         QCOMPARE(natures.count(), 25);
@@ -128,7 +148,7 @@ void QtWidgetsTest::testNatureListComboBox() {
     }
 }
 
-void QtWidgetsTest::testPokemonListComboBox() {
+void QtTest::testPokemonListComboBox() {
     try {
         pkmn::qt::PokemonListComboBox pokemon(1, true, nullptr);
         QCOMPARE(pokemon.count(), 151);
@@ -142,7 +162,7 @@ void QtWidgetsTest::testPokemonListComboBox() {
     }
 }
 
-void QtWidgetsTest::testRegionListComboBox() {
+void QtTest::testRegionListComboBox() {
     try {
         pkmn::qt::RegionListComboBox regions(nullptr);
         QCOMPARE(regions.count(), 7);
@@ -156,10 +176,10 @@ void QtWidgetsTest::testRegionListComboBox() {
     }
 }
 
-void QtWidgetsTest::testRibbonListComboBox() {
+void QtTest::testRibbonListComboBox() {
 }
 
-void QtWidgetsTest::testSuperTrainingMedalListComboBox() {
+void QtTest::testSuperTrainingMedalListComboBox() {
     try {
         pkmn::qt::SuperTrainingMedalListComboBox superTrainingMedals(nullptr);
         QCOMPARE(superTrainingMedals.count(), 30);
@@ -173,7 +193,67 @@ void QtWidgetsTest::testSuperTrainingMedalListComboBox() {
     }
 }
 
-void QtWidgetsTest::testTypeListComboBox() {
+void QtTest::testSpinda()
+{
+    fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
+    fs::path PKMN_TMP_DIR(pkmn::get_tmp_dir());
+    boost::format SPINDA_FORMAT("spinda_%d_0_%u.png");
+    boost::format SPINDA_SHINY_FORMAT("spinda_%d_1_%u.png");
+
+    const uint32_t personality       = 0x88888888;
+    const uint32_t personality_shiny = 0xF81C8021;
+
+    for(int generation = 3; generation <= 5; ++generation)
+    {
+        std::string testFilesSpindaFilepath = fs::path(
+                                                  LIBPKMN_TEST_FILES /
+                                                  str(boost::format("spinda-qt%c") % qVersion()[0]) /
+                                                  str(SPINDA_FORMAT % generation % personality)
+                                              ).string();
+        QVERIFY(fs::exists(testFilesSpindaFilepath));
+        QImage testFilesSpindaImage(QString::fromStdString(testFilesSpindaFilepath));
+
+        std::string testSpindaFilepath = fs::path(
+                                             PKMN_TMP_DIR /
+                                             str(SPINDA_FORMAT % generation % personality)
+                                         ).string();
+        pkmn::qt::GenerateSpindaSpriteAtFilepath(
+            generation,
+            personality,
+            false,
+            testSpindaFilepath
+        );
+        QVERIFY(fs::exists(testSpindaFilepath));
+        QImage testSpindaImage(QString::fromStdString(testSpindaFilepath));
+        std::remove(testSpindaFilepath.c_str());
+        QCOMPARE(testFilesSpindaImage, testSpindaImage);
+
+        testFilesSpindaFilepath = fs::path(
+                                      LIBPKMN_TEST_FILES /
+                                      str(boost::format("spinda-qt%c") % qVersion()[0]) /
+                                      str(SPINDA_SHINY_FORMAT % generation % personality_shiny)
+                                  ).string();
+        QVERIFY(fs::exists(testFilesSpindaFilepath));
+        testFilesSpindaImage = QImage(QString::fromStdString(testFilesSpindaFilepath));
+
+        testSpindaFilepath = fs::path(
+                                 PKMN_TMP_DIR /
+                                 str(SPINDA_SHINY_FORMAT % generation %  personality_shiny)
+                             ).string();
+        pkmn::qt::GenerateSpindaSpriteAtFilepath(
+            generation,
+            personality_shiny,
+            true,
+            testSpindaFilepath
+        );
+        QVERIFY(fs::exists(testSpindaFilepath));
+        testSpindaImage = QImage(QString::fromStdString(testSpindaFilepath));
+        std::remove(testSpindaFilepath.c_str());
+        QCOMPARE(testFilesSpindaImage, testSpindaImage);
+    }
+}
+
+void QtTest::testTypeListComboBox() {
     try {
         pkmn::qt::TypeListComboBox types(QString("Alpha Sapphire"), nullptr);
         QCOMPARE(types.count(), 18);
@@ -187,5 +267,5 @@ void QtWidgetsTest::testTypeListComboBox() {
     }
 }
 
-QTEST_MAIN(QtWidgetsTest)
-#include "../moc_cpp_QtWidgetsTest.cpp"
+QTEST_MAIN(QtTest)
+#include "../moc_cpp_QtTest.cpp"

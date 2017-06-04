@@ -10,6 +10,7 @@ local pkmn = {}
 pkmn.buildinfo = require("pkmn_buildinfo_lua")
 pkmn.calculations = require("pkmn_calculations_lua")
 pkmn.database = require("pkmn_database_lua")
+pkmn.gui = require("pkmn_gui_lua")
 pkmn.paths = require("pkmn_paths_lua")
 pkmn.stl = require("pkmn_stl_lua")
 

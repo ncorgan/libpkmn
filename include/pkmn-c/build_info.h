@@ -31,6 +31,11 @@ PKMN_API pkmn_error_t pkmn_get_pksav_version(
     size_t buffer_len
 );
 
+PKMN_API pkmn_error_t pkmn_get_qt_version(
+    char* qt_version_out,
+    size_t buffer_len
+);
+
 PKMN_API pkmn_error_t pkmn_get_sqlite3_version(
     char* sqlite3_version_out,
     size_t buffer_len

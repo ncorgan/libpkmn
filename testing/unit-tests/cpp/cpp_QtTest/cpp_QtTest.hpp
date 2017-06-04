@@ -10,7 +10,7 @@
 
 #include <QtTest/QtTest>
 
-class QtWidgetsTest: public QObject
+class QtTest: public QObject
 {
     Q_OBJECT
 
@@ -26,6 +26,7 @@ class QtWidgetsTest: public QObject
         void testPokemonListComboBox();
         void testRegionListComboBox();
         void testRibbonListComboBox();
+        void testSpinda();
         void testSuperTrainingMedalListComboBox();
         void testTypeListComboBox();
 };

@@ -146,6 +146,22 @@ static void build_info_error_test() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
+     * pkmn_get_qt_version
+     */
+
+    error = pkmn_get_qt_version(
+                NULL, // qt_version_out
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("qt_version_out");
+
+    error = pkmn_get_qt_version(
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+
+    /*
      * pkmn_get_sqlite3_version
      */
 
@@ -3009,6 +3025,84 @@ static void calculations_size_error_test() {
  * <pkmn-c/calculations/spinda_spots.h>
  */
 static void calculations_spinda_spots_error_test() {
+    pkmn_spinda_coords_t dummy_coords;
+    pkmn_spinda_spots_t dummy_spots;
+
+    /*
+     * pkmn_calculations_add_spinda_coords
+     */
+
+    error = pkmn_calculations_add_spinda_coords(
+                NULL, // coords1
+                &dummy_coords,
+                &dummy_coords
+            );
+    TEST_NULL_POINTER_RETURN("coords1");
+
+    error = pkmn_calculations_add_spinda_coords(
+                &dummy_coords,
+                NULL, // coords2
+                &dummy_coords
+            );
+    TEST_NULL_POINTER_RETURN("coords2");
+
+    error = pkmn_calculations_add_spinda_coords(
+                &dummy_coords,
+                &dummy_coords,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
+    /*
+     * pkmn_calculations_add_spinda_spots
+     */
+
+    error = pkmn_calculations_add_spinda_spots(
+                NULL, // spots1
+                &dummy_spots,
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots1");
+
+    error = pkmn_calculations_add_spinda_spots(
+                &dummy_spots,
+                NULL, // spots2
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots2");
+
+    error = pkmn_calculations_add_spinda_spots(
+                &dummy_spots,
+                &dummy_spots,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
+    /*
+     * pkmn_calculations_add_spinda_coords_to_spots
+     */
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                NULL, // spots
+                &dummy_coords,
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("spots");
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                &dummy_spots,
+                NULL, // coords
+                &dummy_spots
+            );
+    TEST_NULL_POINTER_RETURN("coords");
+
+    error = pkmn_calculations_add_spinda_coords_to_spots(
+                &dummy_spots,
+                &dummy_coords,
+                NULL // result_out
+            );
+    TEST_NULL_POINTER_RETURN("result_out");
+
     /*
      * pkmn_calculations_spinda_spot_offset
      */
@@ -3486,6 +3580,23 @@ static void database_pokemon_entry_error_test() {
 }
 
 /*
+ * <pkmn-c/gui/spinda.h>
+ */
+static void gui_spinda_test()
+{
+    /*
+     * pkmn_gui_generate_spinda_sprite_at_filepath
+     */
+    error = pkmn_gui_generate_spinda_sprite_at_filepath(
+                0,
+                0,
+                false,
+                NULL // filepath
+            );
+    TEST_NULL_POINTER_RETURN("filepath");
+}
+
+/*
  * <pkmn-c/utils/paths.h>
  */
 static void utils_paths_error_test() {
@@ -3578,5 +3689,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_lists_error_test)
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
+    PKMN_C_TEST(gui_spinda_test)
     PKMN_C_TEST(utils_paths_error_test)
 )

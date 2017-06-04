@@ -465,6 +465,15 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(spinda_coords1 == spinda_coords3)
         self.assertTrue(spinda_coords1 != spinda_coords3)
 
+        # Check addition operators.
+        added_coords = spinda_coords1 + spinda_coords2
+        self.assertEquals(246, added_coords.x)
+        self.assertEquals(912, added_coords.y)
+
+        added_coords += spinda_coords3
+        self.assertEquals(702, added_coords.x)
+        self.assertEquals(1035, added_coords.y)
+
     def test_spinda_spots(self):
         # Check (in)equality operators.
         spots1 = pkmn.calculations.spinda_spots(
@@ -498,6 +507,47 @@ class calculations_test(unittest.TestCase):
         spots = pkmn.calculations.spinda_spot_offset(4064348759)
         self.assertTrue(spots == spots1)
         self.assertFalse(spots != spots1)
+
+        # Check addition operators.
+        added_spots = spots1 + spots2
+        self.assertEquals(14, added_spots.left_ear.x)
+        self.assertEquals(10, added_spots.left_ear.y)
+        self.assertEquals(20, added_spots.right_ear.x)
+        self.assertEquals(0, added_spots.right_ear.y)
+        self.assertEquals(2, added_spots.left_face.x)
+        self.assertEquals(8, added_spots.left_face.y)
+        self.assertEquals(4, added_spots.right_face.x)
+        self.assertEquals(30, added_spots.right_face.y)
+
+        added_spots += spots3
+        self.assertEquals(21, added_spots.left_ear.x)
+        self.assertEquals(15, added_spots.left_ear.y)
+        self.assertEquals(30, added_spots.right_ear.x)
+        self.assertEquals(0, added_spots.right_ear.y)
+        self.assertEquals(4, added_spots.left_face.x)
+        self.assertEquals(23, added_spots.left_face.y)
+        self.assertEquals(5, added_spots.right_face.x)
+        self.assertEquals(34, added_spots.right_face.y)
+
+        added_spots += pkmn.calculations.spinda_coords(20, 50)
+        self.assertEquals(41, added_spots.left_ear.x)
+        self.assertEquals(65, added_spots.left_ear.y)
+        self.assertEquals(50, added_spots.right_ear.x)
+        self.assertEquals(50, added_spots.right_ear.y)
+        self.assertEquals(24, added_spots.left_face.x)
+        self.assertEquals(73, added_spots.left_face.y)
+        self.assertEquals(25, added_spots.right_face.x)
+        self.assertEquals(84, added_spots.right_face.y)
+
+        added_spots = added_spots + pkmn.calculations.spinda_coords(1, 5)
+        self.assertEquals(42, added_spots.left_ear.x)
+        self.assertEquals(70, added_spots.left_ear.y)
+        self.assertEquals(51, added_spots.right_ear.x)
+        self.assertEquals(55, added_spots.right_ear.y)
+        self.assertEquals(25, added_spots.left_face.x)
+        self.assertEquals(78, added_spots.left_face.y)
+        self.assertEquals(26, added_spots.right_face.x)
+        self.assertEquals(89, added_spots.right_face.y)
 
     def assertIntsAlmostEqual(self, a, b):
         a_minus_one = a-1

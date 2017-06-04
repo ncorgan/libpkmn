@@ -8,6 +8,7 @@
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
     ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
@@ -50,9 +51,8 @@ IF(PKMN_ENABLE_QT)
     LIST(APPEND pkmn_libs
         ${QTx_LIBRARIES}
     )
-
-    ADD_SUBDIRECTORY(qt)
 ENDIF(PKMN_ENABLE_QT)
+ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
@@ -60,7 +60,7 @@ SET(pkmn_sources
     ${pkmn_io_sources}
     ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
-    ${pkmn_qt_sources} # Will be empty without Qt support
+    ${pkmn_qt_sources}
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp
