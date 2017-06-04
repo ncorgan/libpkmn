@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "env.hpp"
+
 #include "cpp_QtTest.hpp"
 
 #include <pkmn/build_info.hpp>
@@ -193,47 +195,60 @@ void QtTest::testSuperTrainingMedalListComboBox() {
 
 void QtTest::testSpinda()
 {
+    fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
     fs::path PKMN_TMP_DIR(pkmn::get_tmp_dir());
+    boost::format SPINDA_FORMAT("spinda_%d_%d_%u.png");
 
-    static const std::vector<std::string> GAMES{
-        "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
-        "Diamond", "Pearl", "Platinum", "HeartGold", "SoulSilver",
-        "Black", "White", "Black 2", "White 2"
-    };
-    static const std::vector<int> GENERATIONS{
-        3,3,3,3,3,
-        4,4,4,4,4,
-        5,5,5,5
-    };
-    for(size_t i = 0; i < GAMES.size(); ++i)
+    const uint32_t personality       = 0x88888888;
+    const uint32_t personality_shiny = 0xF81C8021;
+
+    for(int generation = 3; generation <= 5; ++generation)
     {
-        pkmn::database::pokemon_entry Spinda("Spinda", "Ruby", "");
-        QImage baseSpindaSprite(QString::fromStdString(Spinda.get_sprite_filepath(false, false)));
-        QImage baseSpindaShinySprite(QString::fromStdString(Spinda.get_sprite_filepath(false, true)));
+        std::string testFilesSpindaFilepath = fs::path(
+                                                  LIBPKMN_TEST_FILES /
+                                                  "spinda" /
+                                                  str(SPINDA_FORMAT % generation % 0 % personality)
+                                              ).string();
+        QVERIFY(fs::exists(testFilesSpindaFilepath));
+        QImage testFilesSpindaImage(QString::fromStdString(testFilesSpindaFilepath));
 
-        std::string spindaFilepath = fs::path(PKMN_TMP_DIR / "spinda_0.png").string();
+        std::string testSpindaFilepath = fs::path(
+                                             PKMN_TMP_DIR /
+                                             str(SPINDA_FORMAT % generation % 0 % personality)
+                                         ).string();
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
-            GENERATIONS[i],
-            0x88888888,
+            generation,
+            personality,
             false,
-            spindaFilepath
+            testSpindaFilepath
         );
-        QVERIFY(fs::exists(fs::path(spindaFilepath)));
-        QVERIFY(QImage(QString::fromStdString(spindaFilepath)) != baseSpindaSprite);
+        QVERIFY(fs::exists(testSpindaFilepath));
+        QImage testSpindaImage(QString::fromStdString(testSpindaFilepath));
+        std::remove(testSpindaFilepath.c_str());
+        QCOMPARE(testFilesSpindaImage, testSpindaImage);
 
-        std::string spindaShinyFilepath = fs::path(PKMN_TMP_DIR / "spinda_1.png").string();
+        testFilesSpindaFilepath = fs::path(
+                                      LIBPKMN_TEST_FILES /
+                                      "spinda" /
+                                      str(SPINDA_FORMAT % generation % 1 % personality_shiny)
+                                  ).string();
+        QVERIFY(fs::exists(testFilesSpindaFilepath));
+        testFilesSpindaImage = QImage(QString::fromStdString(testFilesSpindaFilepath));
+
+        testSpindaFilepath = fs::path(
+                                 PKMN_TMP_DIR /
+                                 str(SPINDA_FORMAT % generation % 1 % personality_shiny)
+                             ).string();
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
-            GENERATIONS[i],
-            0x88888888,
+            generation,
+            personality_shiny,
             true,
-            spindaShinyFilepath
+            testSpindaFilepath
         );
-        QVERIFY(fs::exists(fs::path(spindaShinyFilepath)));
-        QVERIFY(QImage(QString::fromStdString(spindaShinyFilepath)) != baseSpindaShinySprite);
-
-        // Remove generated files.
-        std::remove(spindaFilepath.c_str());
-        std::remove(spindaShinyFilepath.c_str());
+        QVERIFY(fs::exists(testSpindaFilepath));
+        testSpindaImage = QImage(QString::fromStdString(testSpindaFilepath));
+        std::remove(testSpindaFilepath.c_str());
+        QCOMPARE(testFilesSpindaImage, testSpindaImage);
     }
 }
 
