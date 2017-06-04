@@ -6,13 +6,15 @@
  */
 
 using System;
+using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpWinFormsTest
+public class CSharpGUITest
 {
-    private static string PKMN_TMP_DIR = PKMN.Paths.GetTmpDir();
+    private static string LIBPKMN_TEST_FILES = Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
+    private static string PKMN_TMP_DIR       = PKMN.Paths.GetTmpDir();
 
     [Test]
     public void AbilityListComboBoxTest()
@@ -92,54 +94,110 @@ public class CSharpWinFormsTest
     {
     }
 
+    private void CompareImages(
+        Image image1,
+        Image image2
+    )
+    {
+        Bitmap image1Bitmap = (Bitmap)image1;
+        Bitmap image2Bitmap = (Bitmap)image2;
+        Assert.AreNotEqual(image1Bitmap, null);
+        Assert.AreNotEqual(image2Bitmap, null);
+
+        Assert.AreEqual(image1Bitmap.Size, image2Bitmap.Size);
+        for(int i = 0; i < image1Bitmap.Width; ++i)
+        {
+            for(int j = 0; j < image1Bitmap.Height; ++j)
+            {
+                Assert.AreEqual(
+                    image1Bitmap.GetPixel(i, j),
+                    image2Bitmap.GetPixel(i, j)
+                );
+            }
+        }
+    }
+
     [Test]
     public void SpindaTest()
     {
+        string spindaFormat = "spinda_{0}_{1}_{2}.png";
+
+        uint personality      = 0x88888888;
+        uint personalityShiny = 0xF81C8021;
+
         for(int generation = 3; generation <= 5; ++generation)
         {
-            string spindaPath = Path.GetFullPath(
-                                    Path.Combine(
-                                        PKMN_TMP_DIR,
-                                        "spinda_0.png"
-                                    )
-                                );
+            string spindaFilename = String.Format(spindaFormat, generation, 0, personality);
 
+            string testFilesSpindaPath = Path.GetFullPath(
+                                             Path.Combine(
+                                                 LIBPKMN_TEST_FILES,
+                                                 "spinda",
+                                                 spindaFilename
+                                             )
+                                         );
+            Assert.IsTrue(File.Exists(testFilesSpindaPath));
+            Image testFilesSpinda = Image.FromFile(testFilesSpindaPath);
+
+            string testSpindaPath = Path.GetFullPath(
+                                        Path.Combine(
+                                            PKMN_TMP_DIR,
+                                            spindaFilename
+                                        )
+                                    );
             PKMN.GUI.GenerateSpindaSpriteAtFilepath(
                 generation,
-                0x88888888,
+                personality,
                 false,
-                spindaPath
+                testSpindaPath
             );
-            Assert.IsTrue(File.Exists(spindaPath));
-            File.Delete(spindaPath);
+            Assert.IsTrue(File.Exists(testSpindaPath));
+            Image testSpindaFromFilepath = Image.FromFile(testSpindaPath);
+            CompareImages(testFilesSpinda, testSpindaFromFilepath);
+            File.Delete(testSpindaPath);
 
-            PKMN.GUI.GenerateSpindaSprite(
-                 generation,
-                 0x88888888,
-                 false
+            Image testSpinda = PKMN.GUI.GenerateSpindaSprite(
+                                   generation,
+                                   personality,
+                                   false
+                               );
+            CompareImages(testFilesSpinda, testSpinda);
+
+            spindaFilename = String.Format(spindaFormat, generation, 1, personalityShiny);
+
+            testFilesSpindaPath = Path.GetFullPath(
+                Path.Combine(
+                    LIBPKMN_TEST_FILES,
+                    "spinda",
+                    spindaFilename
+                )
             );
+            Assert.IsTrue(File.Exists(testFilesSpindaPath));
+            testFilesSpinda = Image.FromFile(testFilesSpindaPath);
 
-            spindaPath = Path.GetFullPath(
-                             Path.Combine(
-                                 PKMN_TMP_DIR,
-                                 "spinda_1.png"
-                             )
-                        );
-
+            testSpindaPath = Path.GetFullPath(
+                Path.Combine(
+                    PKMN_TMP_DIR,
+                    spindaFilename
+                )
+            );
             PKMN.GUI.GenerateSpindaSpriteAtFilepath(
                 generation,
-                0x88888888,
+                personalityShiny,
                 true,
-                spindaPath
+                testSpindaPath
             );
-            Assert.IsTrue(File.Exists(spindaPath));
-            File.Delete(spindaPath);
+            Assert.IsTrue(File.Exists(testSpindaPath));
+            testSpindaFromFilepath = Image.FromFile(testSpindaPath);
+            CompareImages(testFilesSpinda, testSpindaFromFilepath);
+            File.Delete(testSpindaPath);
 
-            PKMN.GUI.GenerateSpindaSprite(
-                 generation,
-                 0x88888888,
-                 true
-            );
+            testSpinda = PKMN.GUI.GenerateSpindaSprite(
+                             generation,
+                             personalityShiny,
+                             true
+                         );
+            CompareImages(testFilesSpinda, testSpinda);
         }
     }
 
