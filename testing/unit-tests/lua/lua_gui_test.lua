@@ -18,6 +18,7 @@ utils = {}
 -- http://stackoverflow.com/a/30960054
 function utils.is_windows()
     local shared_lib_ext = package.cpath:match("%p[\\|/]?%p(%a+)")
+    print(shared_lib_ext)
     return (shared_lib_ext == "dll")
 end
 
@@ -59,6 +60,7 @@ function utils.compare_two_files(filepath1, filepath2)
 
     local data1 = file1:read("*all")
     local data2 = file2:read("*all")
+    print(string.format("%u %u", #data1, #data2))
 
     file1:close()
     file2:close()
@@ -72,7 +74,7 @@ end
 function test_spinda()
     if pkmn.buildinfo.get_qt_version() ~= "N/A"
     then
-        local SPINDA_FORMAT = "spinda_%d_%d_%d.png"
+        local SPINDA_FORMAT = "spinda_%d_%d_%u.png"
 
         local personality       = 0x88888888
         local personality_shiny = 0xF81C8021
