@@ -207,14 +207,14 @@ void QtTest::testSpinda()
         std::string testFilesSpindaFilepath = fs::path(
                                                   LIBPKMN_TEST_FILES /
                                                   str(boost::format("spinda-qt%c") % qVersion()[0]) /
-                                                  str(SPINDA_FORMAT % generation % 0 % personality)
+                                                  str(SPINDA_FORMAT % generation % 0 % personality) // cppcheck-suppress *
                                               ).string();
         QVERIFY(fs::exists(testFilesSpindaFilepath));
         QImage testFilesSpindaImage(QString::fromStdString(testFilesSpindaFilepath));
 
         std::string testSpindaFilepath = fs::path(
                                              PKMN_TMP_DIR /
-                                             str(SPINDA_FORMAT % generation % 0 % personality)
+                                             str(SPINDA_FORMAT % generation % 0 % personality) // cppcheck-suppress *
                                          ).string();
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
             generation,
