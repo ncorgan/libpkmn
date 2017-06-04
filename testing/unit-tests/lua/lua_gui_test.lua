@@ -18,7 +18,6 @@ utils = {}
 -- http://stackoverflow.com/a/30960054
 function utils.is_windows()
     local shared_lib_ext = package.cpath:match("%p[\\|/]?%p(%a+)")
-    print(shared_lib_ext)
     return (shared_lib_ext == "dll")
 end
 
@@ -48,19 +47,16 @@ function utils.file_exists(name)
 end
 
 function utils.compare_two_files(filepath1, filepath2)
-    print(filepath1)
     luaunit.assertTrue(utils.file_exists(filepath1))
     local file1 = io.open(filepath1, "rb")
     luaunit.assertNotEquals(file1, null)
 
-    print(filepath2)
     luaunit.assertTrue(utils.file_exists(filepath2))
     local file2 = io.open(filepath2, "rb")
     luaunit.assertNotEquals(file2, null)
 
     local data1 = file1:read("*all")
     local data2 = file2:read("*all")
-    print(string.format("%u %u", #data1, #data2))
 
     file1:close()
     file2:close()
@@ -83,7 +79,14 @@ function test_spinda()
         do
             local spinda_filename = string.format(SPINDA_FORMAT, generation, 0, personality)
 
-            local test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
+            local test_files_spinda_filepath = utils.concat_paths(
+                                                   LIBPKMN_TEST_FILES,
+                                                   string.format(
+                                                       "spinda-qt%s",
+                                                       string.sub(pkmn.buildinfo.get_qt_version(), 0, 1)
+                                                   ),
+                                                   spinda_filename
+                                               )
             local test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
 
             pkmn.gui.generate_spinda_sprite_at_filepath(
@@ -98,7 +101,14 @@ function test_spinda()
 
             spinda_filename = string.format(SPINDA_FORMAT, generation, 1, personality_shiny)
 
-            test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
+            local test_files_spinda_filepath = utils.concat_paths(
+                                                   LIBPKMN_TEST_FILES,
+                                                   string.format(
+                                                       "spinda-qt%s",
+                                                       string.sub(pkmn.buildinfo.get_qt_version(), 0, 1)
+                                                   ),
+                                                   spinda_filename
+                                               )
             test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
 
             pkmn.gui.generate_spinda_sprite_at_filepath(

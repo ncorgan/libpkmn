@@ -206,7 +206,7 @@ void QtTest::testSpinda()
     {
         std::string testFilesSpindaFilepath = fs::path(
                                                   LIBPKMN_TEST_FILES /
-                                                  "spinda" /
+                                                  str(boost::format("spinda-qt%c") % qVersion()[0]) /
                                                   str(SPINDA_FORMAT % generation % 0 % personality)
                                               ).string();
         QVERIFY(fs::exists(testFilesSpindaFilepath));
@@ -229,7 +229,7 @@ void QtTest::testSpinda()
 
         testFilesSpindaFilepath = fs::path(
                                       LIBPKMN_TEST_FILES /
-                                      "spinda" /
+                                      str(boost::format("spinda-qt%c") % qVersion()[0]) /
                                       str(SPINDA_FORMAT % generation % 1 % personality_shiny)
                                   ).string();
         QVERIFY(fs::exists(testFilesSpindaFilepath));

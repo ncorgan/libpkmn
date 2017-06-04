@@ -135,7 +135,7 @@ public class CSharpGUITest
                                                  Path.Combine(
                                                      LIBPKMN_TEST_FILES,
                                                      Path.Combine(
-                                                         "spinda",
+                                                         String.Format("spinda-qt{0}", PKMN.BuildInfo.QtVersion[0]),
                                                          spindaFilename
                                                      )
                                                  )
@@ -173,7 +173,7 @@ public class CSharpGUITest
                     Path.Combine(
                         LIBPKMN_TEST_FILES,
                         Path.Combine(
-                            "spinda",
+                            String.Format("spinda-qt{0}", PKMN.BuildInfo.QtVersion[0]),
                             spindaFilename
                         )
                     )

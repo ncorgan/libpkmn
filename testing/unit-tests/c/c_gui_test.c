@@ -125,7 +125,7 @@ static void spinda_test()
 
     if(strcmp(qt_version, "N/A"))
     {
-        const char* SPINDA_FORMAT = "spinda_%d_%u_%d.png";
+        const char* SPINDA_FORMAT = "spinda_%d_%d_%u.png";
 
         const uint32_t personality       = 0x88888888;
         const uint32_t personality_shiny = 0xF81C8021;
@@ -155,19 +155,21 @@ static void spinda_test()
             snprintf(
                 test_files_spinda_filepath,
                 sizeof(test_files_spinda_filepath),
-                "%s%sspinda%s%s",
+                "%s%sspinda-qt%c%s%s",
                 LIBPKMN_TEST_FILES,
                 FS_SEPARATOR,
+                qt_version[0],
                 FS_SEPARATOR,
                 spinda_filename
             );
+            TEST_ASSERT_TRUE(file_exists(test_files_spinda_filepath));
 
             char test_spinda_filepath[STRBUFFER_LEN] = {0};
             snprintf(
                 test_spinda_filepath,
                 sizeof(test_spinda_filepath),
-                "%s%sspinda%s%s",
-                LIBPKMN_TEST_FILES,
+                "%s%s%s%s",
+                PKMN_TMP_DIR,
                 FS_SEPARATOR,
                 FS_SEPARATOR,
                 spinda_filename
@@ -196,18 +198,20 @@ static void spinda_test()
             snprintf(
                 test_files_spinda_filepath,
                 sizeof(test_files_spinda_filepath),
-                "%s%sspinda%s%s",
+                "%s%sspinda-qt%c%s%s",
                 LIBPKMN_TEST_FILES,
                 FS_SEPARATOR,
+                qt_version[0],
                 FS_SEPARATOR,
                 spinda_filename
             );
+            TEST_ASSERT_TRUE(file_exists(test_files_spinda_filepath));
 
             snprintf(
                 test_spinda_filepath,
                 sizeof(test_spinda_filepath),
-                "%s%sspinda%s%s",
-                LIBPKMN_TEST_FILES,
+                "%s%s%s%s",
+                PKMN_TMP_DIR,
                 FS_SEPARATOR,
                 FS_SEPARATOR,
                 spinda_filename
