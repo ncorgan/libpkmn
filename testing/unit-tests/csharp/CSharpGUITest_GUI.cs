@@ -134,8 +134,10 @@ public class CSharpGUITest
                 string testFilesSpindaPath = Path.GetFullPath(
                                                  Path.Combine(
                                                      LIBPKMN_TEST_FILES,
-                                                     "spinda",
-                                                     spindaFilename
+                                                     Path.Combine(
+                                                         "spinda",
+                                                         spindaFilename
+                                                     )
                                                  )
                                              );
                 Assert.IsTrue(File.Exists(testFilesSpindaPath));
@@ -170,8 +172,10 @@ public class CSharpGUITest
                 testFilesSpindaPath = Path.GetFullPath(
                     Path.Combine(
                         LIBPKMN_TEST_FILES,
-                        "spinda",
-                        spindaFilename
+                        Path.Combine(
+                            "spinda",
+                            spindaFilename
+                        )
                     )
                 );
                 Assert.IsTrue(File.Exists(testFilesSpindaPath));
