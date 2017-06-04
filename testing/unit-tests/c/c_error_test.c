@@ -146,6 +146,22 @@ static void build_info_error_test() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
+     * pkmn_get_qt_version
+     */
+
+    error = pkmn_get_qt_version(
+                NULL, // qt_version_out
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("qt_version_out");
+
+    error = pkmn_get_qt_version(
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+
+    /*
      * pkmn_get_sqlite3_version
      */
 

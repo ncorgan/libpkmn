@@ -26,6 +26,11 @@ public class CSharpBuildInfoTest {
     }
 
     [Test]
+    public void QtVersionTest() {
+        Assert.Greater(PKMN.BuildInfo.QtVersion.Length, 0);
+    }
+
+    [Test]
     public void SQLite3VersionTest() {
         Assert.Greater(PKMN.BuildInfo.SQLite3Version.Length, 0);
     }

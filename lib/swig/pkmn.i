@@ -27,8 +27,6 @@
  * All SWIG modules will ignore the following functions/classes.
  */
 
-%ignore pkmn::build_info::get_qt_version;
-
 %ignore pkmn::database::item_entry::item_entry(int, int);
 %ignore pkmn::database::move_entry::move_entry(int, int);
 %ignore pkmn::database::pokemon_entry::pokemon_entry(int, int);

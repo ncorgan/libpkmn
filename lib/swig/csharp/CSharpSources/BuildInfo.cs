@@ -30,6 +30,13 @@ namespace PKMN {
             }
         }
 
+        /// <summary>The version of Qt used to build the LibPKMN core library.</summary>
+        public static string QtVersion {
+            get {
+                return PKMN.GetQtVersion();
+            }
+        }
+
         /// <summary>The version of SQLite3 used to build the LibPKMN core library.</summary>
         public static string SQLite3Version {
             get {

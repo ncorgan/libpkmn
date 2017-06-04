@@ -119,104 +119,121 @@ static void spinda_test()
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    const char* SPINDA_FORMAT = "spinda_%d_%u_%d.png";
-
-    const uint32_t personality       = 0x88888888;
-    const uint32_t personality_shiny = 0xF81C8021;
-
-    const char* LIBPKMN_TEST_FILES = getenv("LIBPKMN_TEST_FILES");
-
-    char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
-    error = pkmn_get_tmp_dir(
-                PKMN_TMP_DIR,
-                sizeof(PKMN_TMP_DIR)
-            );
+    char qt_version[STRBUFFER_LEN] = {0};
+    error = pkmn_get_qt_version(qt_version, sizeof(qt_version));
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    for(int generation = 3; generation <= 5; ++generation)
+    if(strcmp(qt_version, "N/A"))
     {
-        char spinda_filename[STRBUFFER_LEN] = {0};
-        snprintf(
-            spinda_filename,
-            sizeof(spinda_filename),
-            SPINDA_FORMAT,
-            generation,
-            0,
-            personality
-        );
+        const char* SPINDA_FORMAT = "spinda_%d_%u_%d.png";
 
-        char test_files_spinda_filepath[STRBUFFER_LEN] = {0};
-        snprintf(
-            test_files_spinda_filepath,
-            sizeof(test_files_spinda_filepath),
-            "%s%sspinda%s%s",
-            LIBPKMN_TEST_FILES,
-            FS_SEPARATOR,
-            FS_SEPARATOR,
-            spinda_filename
-        );
+        const uint32_t personality       = 0x88888888;
+        const uint32_t personality_shiny = 0xF81C8021;
 
-        char test_spinda_filepath[STRBUFFER_LEN] = {0};
-        snprintf(
-            test_spinda_filepath,
-            sizeof(test_spinda_filepath),
-            "%s%sspinda%s%s",
-            LIBPKMN_TEST_FILES,
-            FS_SEPARATOR,
-            FS_SEPARATOR,
-            spinda_filename
-        );
+        const char* LIBPKMN_TEST_FILES = getenv("LIBPKMN_TEST_FILES");
 
+        char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
+        error = pkmn_get_tmp_dir(
+                    PKMN_TMP_DIR,
+                    sizeof(PKMN_TMP_DIR)
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        for(int generation = 3; generation <= 5; ++generation)
+        {
+            char spinda_filename[STRBUFFER_LEN] = {0};
+            snprintf(
+                spinda_filename,
+                sizeof(spinda_filename),
+                SPINDA_FORMAT,
+                generation,
+                0,
+                personality
+            );
+
+            char test_files_spinda_filepath[STRBUFFER_LEN] = {0};
+            snprintf(
+                test_files_spinda_filepath,
+                sizeof(test_files_spinda_filepath),
+                "%s%sspinda%s%s",
+                LIBPKMN_TEST_FILES,
+                FS_SEPARATOR,
+                FS_SEPARATOR,
+                spinda_filename
+            );
+
+            char test_spinda_filepath[STRBUFFER_LEN] = {0};
+            snprintf(
+                test_spinda_filepath,
+                sizeof(test_spinda_filepath),
+                "%s%sspinda%s%s",
+                LIBPKMN_TEST_FILES,
+                FS_SEPARATOR,
+                FS_SEPARATOR,
+                spinda_filename
+            );
+
+            error = pkmn_gui_generate_spinda_sprite_at_filepath(
+                        generation,
+                        personality,
+                        false,
+                        test_spinda_filepath
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
+            TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
+            delete_file(test_spinda_filepath);
+
+            snprintf(
+                spinda_filename,
+                sizeof(spinda_filename),
+                SPINDA_FORMAT,
+                generation,
+                1,
+                personality_shiny
+            );
+
+            snprintf(
+                test_files_spinda_filepath,
+                sizeof(test_files_spinda_filepath),
+                "%s%sspinda%s%s",
+                LIBPKMN_TEST_FILES,
+                FS_SEPARATOR,
+                FS_SEPARATOR,
+                spinda_filename
+            );
+
+            snprintf(
+                test_spinda_filepath,
+                sizeof(test_spinda_filepath),
+                "%s%sspinda%s%s",
+                LIBPKMN_TEST_FILES,
+                FS_SEPARATOR,
+                FS_SEPARATOR,
+                spinda_filename
+            );
+
+            error = pkmn_gui_generate_spinda_sprite_at_filepath(
+                        generation,
+                        personality_shiny,
+                        true,
+                        test_spinda_filepath
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
+            TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
+            delete_file(test_spinda_filepath);
+        }
+    }
+    else
+    {
         error = pkmn_gui_generate_spinda_sprite_at_filepath(
-                    generation,
-                    personality,
+                    0,
+                    0,
                     false,
-                    test_spinda_filepath
+                    ""
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
-        TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
-        delete_file(test_spinda_filepath);
-
-        snprintf(
-            spinda_filename,
-            sizeof(spinda_filename),
-            SPINDA_FORMAT,
-            generation,
-            1,
-            personality_shiny
-        );
-
-        snprintf(
-            test_files_spinda_filepath,
-            sizeof(test_files_spinda_filepath),
-            "%s%sspinda%s%s",
-            LIBPKMN_TEST_FILES,
-            FS_SEPARATOR,
-            FS_SEPARATOR,
-            spinda_filename
-        );
-
-        snprintf(
-            test_spinda_filepath,
-            sizeof(test_spinda_filepath),
-            "%s%sspinda%s%s",
-            LIBPKMN_TEST_FILES,
-            FS_SEPARATOR,
-            FS_SEPARATOR,
-            spinda_filename
-        );
-
-        error = pkmn_gui_generate_spinda_sprite_at_filepath(
-                    generation,
-                    personality_shiny,
-                    true,
-                    test_spinda_filepath
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
-        TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
-        delete_file(test_spinda_filepath);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
     }
 }
 

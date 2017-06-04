@@ -60,42 +60,47 @@ function utils.compare_two_files(filepath1, filepath2)
 end
 
 function test_spinda()
-    local SPINDA_FORMAT = "spinda_%d_%d_%d.png"
+    if pkmn.buildinfo.get_qt_version() ~= "N/A"
+    then
+        local SPINDA_FORMAT = "spinda_%d_%d_%d.png"
 
-    local personality       = 0x88888888
-    local personality_shiny = 0xF81C8021
+        local personality       = 0x88888888
+        local personality_shiny = 0xF81C8021
 
-    for generation = 3, 5
-    do
-        local spinda_filename = string.format(SPINDA_FORMAT, generation, 0, personality)
+        for generation = 3, 5
+        do
+            local spinda_filename = string.format(SPINDA_FORMAT, generation, 0, personality)
 
-        local test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
-        local test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
+            local test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
+            local test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
 
-        pkmn.gui.generate_spinda_sprite_at_filepath(
-            generation,
-            personality,
-            false,
-            test_spinda_filepath
-        )
-        luaunit.assertTrue(utils.file_exists(test_spinda_filepath))
-        utils.compare_two_files(test_spinda_filepath, test_files_spinda_filepath)
-        os.remove(test_spinda_filepath)
+            pkmn.gui.generate_spinda_sprite_at_filepath(
+                generation,
+                personality,
+                false,
+                test_spinda_filepath
+            )
+            luaunit.assertTrue(utils.file_exists(test_spinda_filepath))
+            utils.compare_two_files(test_spinda_filepath, test_files_spinda_filepath)
+            os.remove(test_spinda_filepath)
 
-        spinda_filename = string.format(SPINDA_FORMAT, generation, 1, personality_shiny)
+            spinda_filename = string.format(SPINDA_FORMAT, generation, 1, personality_shiny)
 
-        test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
-        test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
+            test_files_spinda_filepath = utils.concat_paths(LIBPKMN_TEST_FILES, "spinda", spinda_filename)
+            test_spinda_filepath = utils.concat_paths(PKMN_TMP_DIR, spinda_filename)
 
-        pkmn.gui.generate_spinda_sprite_at_filepath(
-            generation,
-            personality_shiny,
-            true,
-            test_spinda_filepath
-        )
-        luaunit.assertTrue(utils.file_exists(test_spinda_filepath))
-        utils.compare_two_files(test_spinda_filepath, test_files_spinda_filepath)
-        os.remove(test_spinda_filepath)
+            pkmn.gui.generate_spinda_sprite_at_filepath(
+                generation,
+                personality_shiny,
+                true,
+                test_spinda_filepath
+            )
+            luaunit.assertTrue(utils.file_exists(test_spinda_filepath))
+            utils.compare_two_files(test_spinda_filepath, test_files_spinda_filepath)
+            os.remove(test_spinda_filepath)
+        end
+    else
+        luaunit.assertError(pkmn.gui.generate_spinda_sprite_at_filepath, 0, 0, false, "")
     end
 end
 
