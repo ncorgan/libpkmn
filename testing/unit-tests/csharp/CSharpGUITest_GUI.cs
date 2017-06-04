@@ -120,7 +120,7 @@ public class CSharpGUITest
     [Test]
     public void SpindaTest()
     {
-        if(PKMN.BuildInfo.QtVersion != "N/A")
+        if(!PKMN.BuildInfo.QtVersion.Equals("N/A"))
         {
             string spindaFormat = "spinda_{0}_{1}_{2}.png";
 
@@ -208,7 +208,7 @@ public class CSharpGUITest
         }
         else
         {
-            Assert.Throws<PlatformNotSupportedException>(
+            Assert.Throws<ApplicationException>(
                 delegate
                 {
                     PKMN.GUI.GenerateSpindaSpriteAtFilepath(
@@ -220,7 +220,7 @@ public class CSharpGUITest
                 }
             );
 
-            Assert.Throws<PlatformNotSupportedException>(
+            Assert.Throws<ApplicationException>(
                 delegate
                 {
                     PKMN.GUI.GenerateSpindaSprite(
