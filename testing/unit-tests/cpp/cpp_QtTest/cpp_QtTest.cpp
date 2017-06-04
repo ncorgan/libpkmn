@@ -204,17 +204,20 @@ void QtTest::testSpinda()
 
     for(int generation = 3; generation <= 5; ++generation)
     {
+        // To suppress CppCheck false positive when using 0 in boost::format
+        int shiny_num = 0;
+
         std::string testFilesSpindaFilepath = fs::path(
                                                   LIBPKMN_TEST_FILES /
                                                   str(boost::format("spinda-qt%c") % qVersion()[0]) /
-                                                  str(SPINDA_FORMAT % generation % 0 % personality)
+                                                  str(SPINDA_FORMAT % generation % shiny_num % personality)
                                               ).string();
         QVERIFY(fs::exists(testFilesSpindaFilepath));
         QImage testFilesSpindaImage(QString::fromStdString(testFilesSpindaFilepath));
 
         std::string testSpindaFilepath = fs::path(
                                              PKMN_TMP_DIR /
-                                             str(SPINDA_FORMAT % generation % 0 % personality)
+                                             str(SPINDA_FORMAT % generation % shiny_num % personality)
                                          ).string();
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
             generation,
@@ -227,17 +230,18 @@ void QtTest::testSpinda()
         std::remove(testSpindaFilepath.c_str());
         QCOMPARE(testFilesSpindaImage, testSpindaImage);
 
+        shiny_num = 1;
         testFilesSpindaFilepath = fs::path(
                                       LIBPKMN_TEST_FILES /
                                       str(boost::format("spinda-qt%c") % qVersion()[0]) /
-                                      str(SPINDA_FORMAT % generation % 1 % personality_shiny)
+                                      str(SPINDA_FORMAT % generation % shiny_num % personality_shiny)
                                   ).string();
         QVERIFY(fs::exists(testFilesSpindaFilepath));
         testFilesSpindaImage = QImage(QString::fromStdString(testFilesSpindaFilepath));
 
         testSpindaFilepath = fs::path(
                                  PKMN_TMP_DIR /
-                                 str(SPINDA_FORMAT % generation % 1 % personality_shiny)
+                                 str(SPINDA_FORMAT % generation % shiny_num % personality_shiny)
                              ).string();
         pkmn::qt::GenerateSpindaSpriteAtFilepath(
             generation,
