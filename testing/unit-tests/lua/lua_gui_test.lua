@@ -47,8 +47,15 @@ function utils.file_exists(name)
 end
 
 function utils.compare_two_files(filepath1, filepath2)
+    print(filepath1)
+    luaunit.assertTrue(utils.file_exists(filepath1))
     local file1 = io.open(filepath1, "rb")
+    luaunit.assertNotEquals(file1, null)
+
+    print(filepath2)
+    luaunit.assertTrue(utils.file_exists(filepath2))
     local file2 = io.open(filepath2, "rb")
+    luaunit.assertNotEquals(file2, null)
 
     local data1 = file1:read("*all")
     local data2 = file2:read("*all")
@@ -56,6 +63,9 @@ function utils.compare_two_files(filepath1, filepath2)
     file1:close()
     file2:close()
 
+    -- The next call would encompass this, but it makes the error checking
+    -- more granular.
+    luaunit.assertEquals(#data1, #data2)
     luaunit.assertEquals(data1, data2)
 end
 
