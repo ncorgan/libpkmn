@@ -31,6 +31,18 @@ void test_3gpkm() {
     const char* LIBPKMN_TEST_FILES = getenv("LIBPKMN_TEST_FILES");
     TEST_ASSERT_NOT_NULL(LIBPKMN_TEST_FILES);
 
+    pkmn_trainer_info_t trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_GENDERLESS
+    };
+
     snprintf(
         strbuffer,
         sizeof(strbuffer),
@@ -70,13 +82,17 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
-    error = pkmn_pokemon_get_nickname(
+    error = pkmn_pokemon_get_trainer_info(
                 mightyena,
-                strbuffer,
-                sizeof(strbuffer)
+                &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
+    TEST_ASSERT_EQUAL_STRING("MIGHTYENA", trainer_info.nickname);
+    TEST_ASSERT_EQUAL_STRING("A", trainer_info.trainer_name);
+    TEST_ASSERT_EQUAL(61415, trainer_info.trainer_id.public_id);
+    TEST_ASSERT_EQUAL(3417, trainer_info.trainer_id.secret_id);
+    TEST_ASSERT_EQUAL(223997927, trainer_info.trainer_id.id);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_info.trainer_gender);
 
     bool is_shiny = false;
     error = pkmn_pokemon_is_shiny(
@@ -93,46 +109,6 @@ void test_3gpkm() {
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Heart Scale", strbuffer);
-
-    error = pkmn_pokemon_get_trainer_name(
-                mightyena,
-                strbuffer,
-                sizeof(strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("A", strbuffer);
-
-    uint16_t trainer_public_id = 0;
-    error = pkmn_pokemon_get_trainer_public_id(
-                mightyena,
-                &trainer_public_id
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(61415, trainer_public_id);
-
-    uint16_t trainer_secret_id = 0;
-    error = pkmn_pokemon_get_trainer_secret_id(
-                mightyena,
-                &trainer_secret_id
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(3417, trainer_secret_id);
-
-    uint32_t trainer_id = 0;
-    error = pkmn_pokemon_get_trainer_id(
-                mightyena,
-                &trainer_id
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(223997927, trainer_id);
-
-    pkmn_gender_t trainer_gender = PKMN_MALE;
-    error = pkmn_pokemon_get_trainer_gender(
-                mightyena,
-                &trainer_gender
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_gender);
 
     int friendship = 0;
     error = pkmn_pokemon_get_friendship(

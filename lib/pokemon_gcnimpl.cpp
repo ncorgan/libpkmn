@@ -21,6 +21,8 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
@@ -142,13 +144,13 @@ namespace pkmn {
         GC_RCAST->ballCaughtWith = LibPkmGC::PremierBall;
         GC_RCAST->levelMet = LibPkmGC::u8(level);
         GC_RCAST->OTGender = LibPkmGC::Male;
-        GC_RCAST->OTName->fromUTF8(pkmn::pokemon::LIBPKMN_OT_NAME.c_str());
+        GC_RCAST->OTName->fromUTF8(pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str());
         GC_RCAST->name->fromUTF8(boost::algorithm::to_upper_copy(_database_entry.get_name()).c_str());
         GC_RCAST->contestLuster = 0;
         GC_RCAST->pokerusStatus = 0;
         GC_RCAST->experience = LibPkmGC::u32(_database_entry.get_experience_at_level(level));
-        GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID >> 16);
-        GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF);
+        GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID >> 16);
+        GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF);
         GC_RCAST->PID = rng32.rand();
 
         GC_RCAST->version.game = LibPkmGC::Colosseum_XD;
@@ -181,7 +183,6 @@ namespace pkmn {
         set_original_game("Colosseum/XD");
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -213,7 +214,6 @@ namespace pkmn {
         _our_pc_mem = false;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -243,7 +243,6 @@ namespace pkmn {
         _our_pc_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -273,7 +272,6 @@ namespace pkmn {
         _our_pc_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_IV_map();
@@ -396,6 +394,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gcnimpl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_entry(
+                   GC_RCAST->heldItem,
+                   _database_entry.get_game_id()
+               ).get_name();
+    }
+
     void pokemon_gcnimpl::set_held_item(
         const std::string &held_item
     ) {
@@ -412,8 +420,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
-
-        _held_item = std::move(item);
     }
 
     std::string pokemon_gcnimpl::get_trainer_name() {
@@ -770,20 +776,6 @@ namespace pkmn {
         _markings[marking] = value;
     }
 
-    /*
-        // Contest ribbons
-        for(auto iter = CONTEST_STAT_BIMAP.right.begin(); iter != CONTEST_STAT_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first]             = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::NormalContestWon);
-            _ribbons[iter->first + " Super"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::SuperContestWon);
-            _ribbons[iter->first + " Hyper"]  = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::HyperContestWon);
-            _ribbons[iter->first + " Master"] = (GC_RCAST->contestAchievements[iter->second] >= LibPkmGC::MasterContestWon);
-        }
-
-        // Non-contest ribbons
-        for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {
-            _ribbons[iter->first] = GC_RCAST->specialRibbons[iter->second];
-        }
-     */
     void pokemon_gcnimpl::set_ribbon(
         const std::string &ribbon,
         bool value
@@ -912,16 +904,6 @@ namespace pkmn {
         _populate_party_data();
     }
 
-    void pokemon_gcnimpl::_set_contest_ribbon(
-        const std::string &ribbon,
-        bool value
-    ) {
-        (void)ribbon;
-        (void)value;
-
-        _update_ribbons_map();
-    }
-
     void pokemon_gcnimpl::_populate_party_data() {
         GC_RCAST->resetPartyData();
         _update_stat_map();
@@ -937,9 +919,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        int(GC_RCAST->moves[index].move),
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        int(GC_RCAST->moves[index].move), 3
                     ),
                     GC_RCAST->moves[index].currentPPs
                 );
@@ -950,10 +931,6 @@ namespace pkmn {
                     _update_moves(i);
                 }
         }
-    }
-
-    void pokemon_gcnimpl::_update_held_item() {
-        _held_item = pkmn::database::item_entry("None", get_game());
     }
 
     void pokemon_gcnimpl::_update_ribbons_map() {

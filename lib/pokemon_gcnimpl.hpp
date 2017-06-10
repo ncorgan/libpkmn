@@ -55,6 +55,8 @@ namespace pkmn {
                 bool value
             );
 
+            std::string get_held_item();
+
             void set_held_item(
                 const std::string &held_item
             );
@@ -177,11 +179,6 @@ namespace pkmn {
             );
 
         private:
-
-            void _set_contest_ribbon(
-                const std::string &ribbon,
-                bool value
-            );
 
             void _populate_party_data();
 

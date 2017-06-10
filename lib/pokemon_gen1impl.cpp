@@ -8,6 +8,7 @@
 #include "misc_common.hpp"
 #include "pokemon_gen1impl.hpp"
 
+#include "database/id_to_string.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -70,7 +71,7 @@ namespace pkmn {
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
                     );
-        _trainer_name = LIBPKMN_OT_NAME;
+        _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
         GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
@@ -82,7 +83,7 @@ namespace pkmn {
 
         // TODO: catch rate
 
-        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         pkmn::rng<uint16_t> rng;
         GEN1_PC_RCAST->ev_hp   = rng.rand();
@@ -187,6 +188,11 @@ namespace pkmn {
         PKMN_UNUSED(bool value)
     ) {
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+    }
+
+    std::string pokemon_gen1impl::get_held_item()
+    {
+        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
     void pokemon_gen1impl::set_held_item(
@@ -465,14 +471,15 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        GEN1_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        GEN1_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
         GEN1_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -536,9 +543,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        GEN1_PC_RCAST->moves[index],
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        GEN1_PC_RCAST->moves[index], 1
                     ),
                     (GEN1_PC_RCAST->move_pps[index] & PKSAV_GEN1_MOVE_PP_MASK)
                 );

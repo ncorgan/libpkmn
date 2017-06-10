@@ -36,7 +36,7 @@ public class PokemonPartyTests {
             Assert.AreEqual(party[i].Game, game);
 
             for(int j = 0; j < party[i].Moves.Count; ++j) {
-                Assert.AreEqual(party[i].Moves[j].Move.Name, "None");
+                Assert.AreEqual(party[i].Moves[j].Move, "None");
                 Assert.AreEqual(party[i].Moves[j].PP, 0);
             }
         }

@@ -36,6 +36,18 @@ static void check_initial_values(
 ) {
     TEST_ASSERT_NOT_NULL(pokemon);
 
+    pkmn_trainer_info_t trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_GENDERLESS
+    };
+
     int generation = game_to_generation(game);
     TEST_ASSERT_NOT_EQUAL(-1, generation);
 
@@ -47,36 +59,59 @@ static void check_initial_values(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
-    static char nickname[STRBUFFER_LEN] = {0};
-    error = pkmn_pokemon_get_nickname(
-                pokemon,
-                nickname,
-                sizeof(nickname)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_get_species(
                 pokemon,
                 strbuffer,
                 sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    if(generation < 5) {
+    if(generation < 5)
+    {
         int i = 0;
-        while(strbuffer[i]) {
+        while(strbuffer[i])
+        {
             strbuffer[i] = toupper(strbuffer[i]);
             ++i;
         }
     }
-    TEST_ASSERT_EQUAL_STRING(strbuffer, nickname);
 
-    error = pkmn_pokemon_get_trainer_name(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon,
-                strbuffer,
-                sizeof(strbuffer)
+                &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        strbuffer,
+        trainer_info.nickname
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        PKMN_DEFAULT_TRAINER_NAME,
+        trainer_info.trainer_name
+    );
+    TEST_ASSERT_EQUAL(
+        (PKMN_DEFAULT_TRAINER_ID & 0xFFFF),
+        trainer_info.trainer_id.public_id
+    );
+    if(generation >= 3)
+    {
+        TEST_ASSERT_EQUAL(
+            (PKMN_DEFAULT_TRAINER_ID >> 16),
+            trainer_info.trainer_id.secret_id
+        );
+        TEST_ASSERT_EQUAL(
+            PKMN_DEFAULT_TRAINER_ID,
+            trainer_info.trainer_id.id
+        );
+    }
+    else
+    {
+        TEST_ASSERT_EQUAL(0, trainer_info.trainer_id.secret_id);
+        TEST_ASSERT_EQUAL(
+            (PKMN_DEFAULT_TRAINER_ID & 0xFFFF),
+            trainer_info.trainer_id.id
+        );
+    }
+    TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
 
     if(generation >= 2) {
         error = pkmn_pokemon_get_held_item(
@@ -87,45 +122,6 @@ static void check_initial_values(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING("None", strbuffer);
     }
-
-    pkmn_gender_t trainer_gender = PKMN_GENDERLESS;
-    error = pkmn_pokemon_get_trainer_gender(
-                pokemon,
-                &trainer_gender
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
-
-    uint16_t trainer_public_id = 0;
-    error = pkmn_pokemon_get_trainer_public_id(
-                pokemon,
-                &trainer_public_id
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL((LIBPKMN_OT_ID & 0xFFFF), trainer_public_id);
-
-    uint32_t trainer_id = 0;
-    uint32_t expected_trainer_id = 0;
-    if(generation >= 3) {
-        uint16_t trainer_secret_id = 0;
-        error = pkmn_pokemon_get_trainer_secret_id(
-                    pokemon,
-                    &trainer_secret_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(((LIBPKMN_OT_ID & 0xFFFF0000) >> 16), trainer_secret_id);
-
-        expected_trainer_id = LIBPKMN_OT_ID;
-    } else {
-        expected_trainer_id = (LIBPKMN_OT_ID & 0xFFFF);
-    }
-
-    error = pkmn_pokemon_get_trainer_id(
-                pokemon,
-                &trainer_id
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(expected_trainer_id, trainer_id);
 
     pkmn_database_pokemon_entry_t pokemon_entry;
     error = pkmn_pokemon_get_database_entry(
@@ -1457,6 +1453,29 @@ static void test_setting_trainer_info(
 ) {
     TEST_ASSERT_NOT_NULL(pokemon);
 
+    pkmn_trainer_info_t getting_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_GENDERLESS
+    };
+    pkmn_trainer_info_t setting_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_FEMALE
+    };
+
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
@@ -1467,215 +1486,65 @@ static void test_setting_trainer_info(
     int generation = game_to_generation(game);
     TEST_ASSERT_NOT_EQUAL(-1, generation);
 
-    error = pkmn_pokemon_set_nickname(
+    strncpy(
+        setting_trainer_info.nickname,
+        "Too long nickname",
+        sizeof(setting_trainer_info.nickname)
+    );
+    error = pkmn_pokemon_set_trainer_info(
                 pokemon,
-                ""
+                &setting_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_set_nickname(
+
+    strncpy(
+        setting_trainer_info.nickname,
+        "foobarbaz",
+        sizeof(setting_trainer_info.nickname)
+    );
+    strncpy(
+        setting_trainer_info.trainer_name,
+        "Too long trainer name",
+        sizeof(setting_trainer_info.trainer_name)
+    );
+    error = pkmn_pokemon_set_trainer_info(
                 pokemon,
-                "Too long nickname"
+                &setting_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_set_nickname(
+
+    strncpy(
+        setting_trainer_info.trainer_name,
+        "foobar",
+        sizeof(setting_trainer_info.trainer_name)
+    );
+    error = pkmn_pokemon_set_trainer_info(
                 pokemon,
-                "foobarbaz"
+                &setting_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_nickname(
+
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon,
-                strbuffer,
-                sizeof(strbuffer)
+                &getting_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("foobarbaz", strbuffer);
 
-    error = pkmn_pokemon_set_trainer_name(
-                pokemon,
-                ""
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_set_trainer_name(
-                pokemon,
-                "Too long trainer name"
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_set_trainer_name(
-                pokemon,
-                "foobar"
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_trainer_name(
-                pokemon,
-                strbuffer,
-                sizeof(strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("foobar", strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        setting_trainer_info.nickname,
+        getting_trainer_info.nickname
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        setting_trainer_info.trainer_name,
+        getting_trainer_info.trainer_name
+    );
 
-    if(generation >= 2) {
-        pkmn_gender_t trainer_gender = PKMN_GENDERLESS;
-
-        error = pkmn_pokemon_set_trainer_gender(
-                    pokemon,
-                    PKMN_MALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_gender(
-                    pokemon,
-                    &trainer_gender
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
-
-        error = pkmn_pokemon_set_trainer_gender(
-                    pokemon,
-                    PKMN_FEMALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_gender(
-                    pokemon,
-                    &trainer_gender
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_gender);
-
-        error = pkmn_pokemon_set_trainer_gender(
-                    pokemon,
-                    PKMN_GENDERLESS
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    } else {
-        error = pkmn_pokemon_set_trainer_gender(
-                    pokemon,
-                    PKMN_MALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-    }
-
-    uint32_t trainer_id = 0;
-    uint16_t trainer_public_id = 0;
-    if(generation >= 3) {
-        uint16_t trainer_secret_id = 0;
-
-        error = pkmn_pokemon_set_trainer_id(
-                    pokemon,
-                    0x1234ABCD
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_id(
-                    pokemon,
-                    &trainer_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x1234ABCD, trainer_id);
-        error = pkmn_pokemon_get_trainer_public_id(
-                    pokemon,
-                    &trainer_public_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0xABCD, trainer_public_id);
-        error = pkmn_pokemon_get_trainer_secret_id(
-                    pokemon,
-                    &trainer_secret_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x1234, trainer_secret_id);
-
-        error = pkmn_pokemon_set_trainer_public_id(
-                    pokemon,
-                    0x1A2B
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_id(
-                    pokemon,
-                    &trainer_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x12341A2B, trainer_id);
-        error = pkmn_pokemon_get_trainer_public_id(
-                    pokemon,
-                    &trainer_public_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x1A2B, trainer_public_id);
-        error = pkmn_pokemon_get_trainer_secret_id(
-                    pokemon,
-                    &trainer_secret_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x1234, trainer_secret_id);
-
-        error = pkmn_pokemon_set_trainer_secret_id(
-                    pokemon,
-                    0x3C4D
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_id(
-                    pokemon,
-                    &trainer_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x3C4D1A2B, trainer_id);
-        error = pkmn_pokemon_get_trainer_public_id(
-                    pokemon,
-                    &trainer_public_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x1A2B, trainer_public_id);
-        error = pkmn_pokemon_get_trainer_secret_id(
-                    pokemon,
-                    &trainer_secret_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x3C4D, trainer_secret_id);
-    } else {
-        error = pkmn_pokemon_set_trainer_id(
-                    pokemon,
-                    0xFFFF+1
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-        error = pkmn_pokemon_set_trainer_secret_id(
-                    pokemon,
-                    0xFFFF
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-
-        error = pkmn_pokemon_set_trainer_id(
-                    pokemon,
-                    0xABCD
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_id(
-                    pokemon,
-                    &trainer_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0xABCD, trainer_id);
-        error = pkmn_pokemon_get_trainer_public_id(
-                    pokemon,
-                    &trainer_public_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0xABCD, trainer_public_id);
-
-        error = pkmn_pokemon_set_trainer_public_id(
-                    pokemon,
-                    0x9876
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_trainer_id(
-                    pokemon,
-                    &trainer_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x9876, trainer_id);
-        error = pkmn_pokemon_get_trainer_public_id(
-                    pokemon,
-                    &trainer_public_id
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(0x9876, trainer_public_id);
+    if(generation >= 2)
+    {
+        TEST_ASSERT_EQUAL(
+            setting_trainer_info.trainer_gender,
+            getting_trainer_info.trainer_gender
+        );
     }
 }
 

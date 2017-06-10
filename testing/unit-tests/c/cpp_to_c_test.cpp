@@ -512,7 +512,7 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
 
 TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
     pkmn::move_slot move_slot_cpp(
-        pkmn::database::move_entry("Tackle", "Red"),
+        "Tackle",
         50
     );
 
@@ -534,15 +534,15 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
 TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     pkmn::move_slots_t move_slots_cpp{
         pkmn::move_slot(
-            pkmn::database::move_entry("Tackle", "Red"),
+            "Tackle",
             50
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Pound", "Silver"),
+            "Pound",
             28
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Metronome", "LeafGreen"),
+            "Metronome",
             1
         )
     };

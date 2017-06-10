@@ -77,7 +77,7 @@ class pokemon_pc_tests(unittest.TestCase):
             self.assertEqual(pokemon.get_game(), game)
 
             for slot in pokemon.get_moves():
-                self.assertEqual(slot.move.get_name(), "None")
+                self.assertEqual(slot.move, "None")
                 self.assertEqual(slot.pp, 0)
 
     def __test_box_name(self, box):

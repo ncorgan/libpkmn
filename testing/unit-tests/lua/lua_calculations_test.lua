@@ -184,7 +184,7 @@ function test_personality()
     luaunit.assertError(
         pkmn.calculations.generate_personality,
         "Charmander",
-        pkmn.LIBPKMN_OT_ID,
+        pkmn.DEFAULT_TRAINER_ID,
         true,
         "Torrent",
         "Male",
@@ -195,7 +195,7 @@ function test_personality()
     luaunit.assertError(
         pkmn.calculations.generate_personality,
         "Charmander",
-        pkmn.LIBPKMN_OT_ID,
+        pkmn.DEFAULT_TRAINER_ID,
         true,
         "Blaze",
         "Not a gender",
@@ -206,7 +206,7 @@ function test_personality()
     luaunit.assertError(
         pkmn.calculations.generate_personality,
         "Charmander",
-        pkmn.LIBPKMN_OT_ID,
+        pkmn.DEFAULT_TRAINER_ID,
         true,
         "Blaze",
         "Male",
@@ -236,14 +236,14 @@ function test_personality()
     -- Test and validate a valid call.
     local personality = pkmn.calculations.generate_personality(
                             "Charmander",
-                            pkmn.LIBPKMN_OT_ID,
+                            pkmn.DEFAULT_TRAINER_ID,
                             true,
                             "Blaze",
                             "Male",
                             "Quiet"
                         )
     luaunit.assertEquals("Male", pkmn.calculations.modern_pokemon_gender("Charmander", personality))
-    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.LIBPKMN_OT_ID, personality))
+    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.DEFAULT_TRAINER_ID, personality))
 end
 
 function test_gen2_shiny()

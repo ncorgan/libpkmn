@@ -7,11 +7,14 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gen2impl.hpp"
+#include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
+
+#include <pkmn/database/item_entry.hpp>
 
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -28,7 +31,6 @@
 
 #include <cstring>
 #include <ctime>
-#include <iostream>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -54,12 +56,12 @@ namespace pkmn {
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
                     );
-        _trainer_name = LIBPKMN_OT_NAME;
+        _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
         GEN2_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
-        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         pkmn::rng<uint16_t> rng;
         GEN2_PC_RCAST->ev_hp   = rng.rand();
@@ -91,7 +93,6 @@ namespace pkmn {
         )
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         set_level(level);
@@ -111,7 +112,6 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -134,7 +134,6 @@ namespace pkmn {
         _our_party_mem = false;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -255,6 +254,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gen2impl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_index_to_name(
+                   GEN2_PC_RCAST->held_item,
+                   _database_entry.get_game_id()
+               );
+    }
+
     void pokemon_gen2impl::set_held_item(
         const std::string &held_item
     ) {
@@ -271,8 +280,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
-
-        _update_held_item();
     }
 
     std::string pokemon_gen2impl::get_trainer_name() {
@@ -583,14 +590,15 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        GEN2_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        GEN2_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
         GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -645,9 +653,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        GEN2_PC_RCAST->moves[index],
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        GEN2_PC_RCAST->moves[index], 2
                     ),
                     (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_MOVE_PP_MASK)
                 );
@@ -657,15 +664,6 @@ namespace pkmn {
                 for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
-        }
-    }
-
-    void pokemon_gen2impl::_update_held_item() {
-        if(int(GEN2_PC_RCAST->held_item) != _held_item.get_item_index()) {
-            _held_item = pkmn::database::item_entry(
-                             GEN2_PC_RCAST->held_item,
-                             _database_entry.get_game_id()
-                         );
         }
     }
 

@@ -72,8 +72,7 @@ TEST_P(pokemon_party_test, empty_party_test) {
         const pkmn::move_slots_t& move_slots = (*party_iter)->get_moves();
         ASSERT_EQ(4, move_slots.size());
         for(auto move_iter = move_slots.begin(); move_iter != move_slots.end(); ++move_iter) {
-            EXPECT_EQ("None", move_iter->move.get_name());
-            EXPECT_EQ(get_game(), move_iter->move.get_game());
+            EXPECT_EQ("None", move_iter->move);
             EXPECT_EQ(0, move_iter->pp);
         }
     }

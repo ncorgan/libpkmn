@@ -509,7 +509,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Charmander",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "None",
                           "Male",
@@ -519,7 +519,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Charmander",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Torrent",
                           "Male",
@@ -531,7 +531,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Charmander",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Blaze",
                           "Not a gender",
@@ -541,7 +541,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorina",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Not a gender",
@@ -551,7 +551,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorina",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Genderless",
@@ -561,7 +561,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorina",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Male",
@@ -571,7 +571,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorino",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Not a gender",
@@ -581,7 +581,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorino",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Genderless",
@@ -591,7 +591,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Nidorino",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Poison Point",
                           "Female",
@@ -601,7 +601,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Magnemite",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Magnet Pull",
                           "Not a gender",
@@ -611,7 +611,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Magnemite",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Magnet Pull",
                           "Female",
@@ -621,7 +621,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Magnemite",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Magnet Pull",
                           "Male",
@@ -633,7 +633,7 @@ TEST(cpp_calculations_test, personality_test) {
     EXPECT_THROW(
         personality = pkmn::calculations::generate_personality(
                           "Magnemite",
-                          pkmn::pokemon::LIBPKMN_OT_ID,
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Magnet Pull",
                           "Genderless",
@@ -659,7 +659,7 @@ TEST(cpp_calculations_test, personality_test) {
                 for(size_t l = 0; l < 2; ++l) {
                     personality = pkmn::calculations::generate_personality(
                                       test_values[i].species,
-                                      pkmn::pokemon::LIBPKMN_OT_ID,
+                                      pkmn::pokemon::DEFAULT_TRAINER_ID,
                                       bools[l],
                                       test_values[i].abilities[k],
                                       test_values[i].gender,
@@ -669,7 +669,7 @@ TEST(cpp_calculations_test, personality_test) {
                         bools[l],
                         pkmn::calculations::modern_shiny(
                             personality,
-                            pkmn::pokemon::LIBPKMN_OT_ID
+                            pkmn::pokemon::DEFAULT_TRAINER_ID
                         )
                     );
                     EXPECT_EQ(
@@ -697,7 +697,7 @@ TEST(cpp_calculations_test, personality_test) {
                         if(abilities[i][m] != "None") {
                             personality = pkmn::calculations::generate_personality(
                                               species[i],
-                                              pkmn::pokemon::LIBPKMN_OT_ID,
+                                              pkmn::pokemon::DEFAULT_TRAINER_ID,
                                               bools[k],
                                               abilities[i][m],
                                               genders[l],
@@ -707,7 +707,7 @@ TEST(cpp_calculations_test, personality_test) {
                                 bools[k],
                                 pkmn::calculations::modern_shiny(
                                     personality,
-                                    pkmn::pokemon::LIBPKMN_OT_ID
+                                    pkmn::pokemon::DEFAULT_TRAINER_ID
                                 )
                             );
                             EXPECT_EQ(

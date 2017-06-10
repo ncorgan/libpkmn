@@ -182,16 +182,16 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(pokemon:get_form(), "Standard")
     luaunit.assertEquals(pokemon:get_game(), game)
     luaunit.assertEquals(pokemon:get_nickname(), string.upper(species))
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "None")
-    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_held_item(), "None")
+    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
 
     luaunit.assertEquals(
         pokemon:get_trainer_secret_id(),
-        bit32.rshift(bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF0000), 16)
+        bit32.rshift(bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF0000), 16)
     )
 
-    luaunit.assertEquals(pokemon:get_trainer_id(), pkmn.LIBPKMN_OT_ID)
+    luaunit.assertEquals(pokemon:get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
     luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
     luaunit.assertEquals(pokemon:get_friendship(), pokemon:get_database_entry():get_base_friendship())
     luaunit.assertEquals(pokemon:get_ability(), "Blaze")
@@ -223,7 +223,7 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(#move_slots, 4)
     for i = 1, #move_slots
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), "None")
+        luaunit.assertEquals(move_slots[i].move, "None")
         luaunit.assertEquals(move_slots[i].pp, 0)
     end
 
@@ -288,7 +288,7 @@ function gen3_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.set_held_item, pokemon, "Mach Bike")
 
     pokemon:set_held_item("Razz Berry")
-    luaunit.assertEquals(pokemon:get_held_item():get_name(), "Razz Berry")
+    luaunit.assertEquals(pokemon:get_held_item(), "Razz Berry")
 
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "")
     luaunit.assertError(pokemon.set_trainer_name, pokemon, "Too long trainer name")

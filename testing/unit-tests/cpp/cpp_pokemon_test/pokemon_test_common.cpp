@@ -40,20 +40,20 @@ static void check_initial_values(
     } else {
         EXPECT_EQ(boost::algorithm::to_upper_copy(pokemon->get_species()), pokemon->get_nickname());
     }
-    EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_NAME, pokemon->get_trainer_name());
+    EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_trainer_name());
 
     if(generation >= 2) {
-        EXPECT_EQ("None", pokemon->get_held_item().get_name());
+        EXPECT_EQ("None", pokemon->get_held_item());
     }
 
     EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    EXPECT_EQ(uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_public_id());
+    EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_public_id());
 
     if(generation >= 3) {
-        EXPECT_EQ(uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
-        EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_ID, pokemon->get_trainer_id());
+        EXPECT_EQ(uint16_t((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
+        EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_ID, pokemon->get_trainer_id());
     } else {
-        EXPECT_EQ((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_id());
+        EXPECT_EQ((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_id());
     }
 
     if(generation >= 2) {
@@ -84,7 +84,7 @@ static void check_initial_values(
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     EXPECT_EQ(4, move_slots.size());
     for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->move.get_name());
+        EXPECT_EQ("None", iter->move);
         EXPECT_EQ(0, iter->pp);
     }
 
@@ -321,7 +321,7 @@ static void test_setting_item(
 
     if(generation >= 2) {
         pokemon->set_held_item(item_name);
-        EXPECT_EQ(item_name, pokemon->get_held_item().get_name());
+        EXPECT_EQ(item_name, pokemon->get_held_item());
 
         EXPECT_THROW(
             pokemon->set_held_item("Not an item");
@@ -529,8 +529,11 @@ static void test_setting_moves(
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_names[i], move_slots.at(i).move.get_name());
-        EXPECT_EQ(move_slots.at(i).move.get_pp(0), move_slots.at(i).pp);
+        EXPECT_EQ(move_names[i], move_slots.at(i).move);
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, pokemon->get_game()).get_pp(0),
+            move_slots.at(i).pp
+        );
     }
 
     for(int i = 0; i < int(invalid_move_names.size()); ++i) {

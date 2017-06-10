@@ -10,6 +10,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/database/item_entry.hpp>
 
 #include "pksav/pksav_call.hpp"
 
@@ -225,14 +226,20 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_HEART);
 
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(pksav_littleendian16(growth->species)));
-    EXPECT_EQ(pokemon->get_held_item().get_item_index(), int(pksav_littleendian16(growth->held_item)));
+    EXPECT_EQ(
+        pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
+        int(pksav_littleendian16(growth->held_item))
+    );
     EXPECT_EQ(pokemon->get_experience(), int(pksav_littleendian32(growth->exp)));
     // TODO: PP Up
     EXPECT_EQ(pokemon->get_friendship(), int(growth->friendship));
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_slots.at(i).move.get_move_id(), int(attacks->moves[i]));
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id(),
+            int(attacks->moves[i])
+        );
         EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
     }
 
@@ -500,7 +507,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     ASSERT_EQ(nullptr, pokemon->get_native_party_data());
 
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native->species));
-    EXPECT_EQ(pokemon->get_held_item().get_item_index(), int(native->heldItem));
+    EXPECT_EQ(
+        pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
+        int(native->heldItem)
+    );
     EXPECT_EQ(pokemon->get_friendship(), int(native->friendship));
     EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
@@ -524,7 +534,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves.at(i).move.get_move_id(), int(native->moves[i].move));
+        EXPECT_EQ(
+            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
+            int(native->moves[i].move)
+        );
         EXPECT_EQ(moves.at(i).pp, int(native->moves[i].currentPPs));
     }
 

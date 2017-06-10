@@ -31,8 +31,8 @@
 #include <map>
 
 static BOOST_CONSTEXPR const char* TOO_LONG_OT_NAME = "LibPKMNLibPKMN";
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_PID = 1351;
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_SID = 32123;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_PID = 1351;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
@@ -141,22 +141,22 @@ namespace pkmntest {
             save->set_trainer_name(TOO_LONG_OT_NAME);
         , std::invalid_argument);
 
-        save->set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-        EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_trainer_name());
+        save->set_trainer_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+        EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_trainer_name());
     }
 
     static void test_trainer_id(
         pkmn::game_save::sptr save,
         bool is_gb_game
     ) {
-        EXPECT_EQ((is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID), save->get_trainer_id());
-        EXPECT_EQ(LIBPKMN_OT_PID, save->get_trainer_public_id());
+        EXPECT_EQ((is_gb_game ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID), save->get_trainer_id());
+        EXPECT_EQ(DEFAULT_TRAINER_PID, save->get_trainer_public_id());
         if(is_gb_game) {
             EXPECT_THROW(
                 save->get_trainer_secret_id();
             , pkmn::feature_not_in_game_error);
         } else {
-            EXPECT_EQ(LIBPKMN_OT_SID, save->get_trainer_secret_id());
+            EXPECT_EQ(DEFAULT_TRAINER_SID, save->get_trainer_secret_id());
         }
     }
 
@@ -166,7 +166,7 @@ namespace pkmntest {
     ) {
         if(is_rival_name_set) {
             EXPECT_THROW(
-                save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
+                save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
             , pkmn::feature_not_in_game_error);
         } else {
             EXPECT_THROW(
@@ -176,8 +176,8 @@ namespace pkmntest {
                 save->set_rival_name(TOO_LONG_OT_NAME);
             , std::invalid_argument);
 
-            save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-            EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_rival_name());
+            save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+            EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_rival_name());
         }
     }
 
@@ -190,17 +190,17 @@ namespace pkmntest {
         test_trainer_name(save);
 
         save->set_trainer_id(
-            is_gb_game(game) ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
+            is_gb_game(game) ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID
         );
         test_trainer_id(save, is_gb_game(game));
-        save->set_trainer_public_id(LIBPKMN_OT_PID);
+        save->set_trainer_public_id(DEFAULT_TRAINER_PID);
         test_trainer_id(save, is_gb_game(game));
         if(is_gb_game(game)) {
             EXPECT_THROW(
-                save->set_trainer_secret_id(LIBPKMN_OT_SID);
+                save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             , pkmn::feature_not_in_game_error);
         } else {
-            save->set_trainer_secret_id(LIBPKMN_OT_SID);
+            save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             test_trainer_id(save, is_gb_game(game));
         }
 
@@ -325,7 +325,7 @@ namespace pkmntest {
 
         if(generation >= 2) {
             // Keep going until one is holdable
-            while(ret->get_held_item().get_item_id() == 0) {
+            while(ret->get_held_item() == "None") {
                 try {
                     ret->set_held_item(
                         item_list[rng.rand() % item_list.size()]
@@ -456,7 +456,7 @@ namespace pkmntest {
             for(size_t i = 0; i < 4; ++i)
             {
                 // These may be different if Shadow moves were mistakenly allowed to be set.
-                EXPECT_EQ(moves1.at(i).move.get_move_id(), moves2.at(i).move.get_move_id());
+                EXPECT_EQ(moves1.at(i).move, moves2.at(i).move);
                 EXPECT_EQ(native1->moves[i].move, native2->moves[i].move);
                 EXPECT_EQ(native1->moves[i].currentPPs, native2->moves[i].currentPPs);
             }

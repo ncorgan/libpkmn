@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,8 +13,8 @@
  * These functions convert between in-game indices and their corresponding
  * strings.
  *
- * Doing this in a single transaction is significantly faster than passing
- * *_index_to_id into *_id_to_name, and vice versa.
+ * When possible, doing this in a single transaction is significantly faster
+ * than passing *_index_to_id into *_id_to_name, and vice versa.
  */
 
 namespace pkmn { namespace database {
@@ -29,6 +29,20 @@ namespace pkmn { namespace database {
 
     int game_name_to_index(
         const std::string &game_name
+    );
+
+    /*
+     * Items
+     */
+
+    std::string item_index_to_name(
+        int item_index,
+        int game_id
+    );
+
+    int item_name_to_index(
+        const std::string& item_name,
+        int game_id
     );
 
     /*

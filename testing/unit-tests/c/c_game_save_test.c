@@ -29,8 +29,8 @@
 #endif
 
 #define TOO_LONG_OT_NAME "LibPKMNLibPKMN"
-#define LIBPKMN_OT_PID 1351
-#define LIBPKMN_OT_SID 32123
+#define PKMN_DEFAULT_TRAINER_PID 1351
+#define PKMN_DEFAULT_TRAINER_SID 32123
 #define MONEY_MAX_VALUE 999999
 
 #define STRBUFFER_LEN 1024
@@ -117,7 +117,7 @@ static void game_save_test_trainer_name(
 
     error = pkmn_game_save_set_trainer_name(
                 game_save,
-                LIBPKMN_OT_NAME
+                PKMN_DEFAULT_TRAINER_NAME
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -127,7 +127,7 @@ static void game_save_test_trainer_name(
                 sizeof(strbuffer)
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+    TEST_ASSERT_EQUAL_STRING(PKMN_DEFAULT_TRAINER_NAME, strbuffer);
 }
 
 static void game_save_test_trainer_id(
@@ -144,14 +144,14 @@ static void game_save_test_trainer_id(
                 &trainer_id
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL((is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID), trainer_id);
+    TEST_ASSERT_EQUAL((is_gb_game ? PKMN_DEFAULT_TRAINER_PID : PKMN_DEFAULT_TRAINER_ID), trainer_id);
 
     error = pkmn_game_save_get_trainer_public_id(
                 game_save,
                 &trainer_id_part
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(LIBPKMN_OT_PID, trainer_id_part);
+    TEST_ASSERT_EQUAL(PKMN_DEFAULT_TRAINER_PID, trainer_id_part);
 
     error = pkmn_game_save_get_trainer_secret_id(
                 game_save,
@@ -161,7 +161,7 @@ static void game_save_test_trainer_id(
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     } else {
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(LIBPKMN_OT_SID, trainer_id_part);
+        TEST_ASSERT_EQUAL(PKMN_DEFAULT_TRAINER_SID, trainer_id_part);
     }
 }
 
@@ -174,7 +174,7 @@ static void game_save_test_rival_name(
     if(is_rival_name_set) {
         error = pkmn_game_save_set_rival_name(
                     game_save,
-                    LIBPKMN_OT_NAME
+                    PKMN_DEFAULT_TRAINER_NAME
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     } else {
@@ -191,7 +191,7 @@ static void game_save_test_rival_name(
 
         error = pkmn_game_save_set_rival_name(
                     game_save,
-                    LIBPKMN_OT_NAME
+                    PKMN_DEFAULT_TRAINER_NAME
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -201,7 +201,7 @@ static void game_save_test_rival_name(
                     sizeof(strbuffer)
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+        TEST_ASSERT_EQUAL_STRING(PKMN_DEFAULT_TRAINER_NAME, strbuffer);
     }
 }
 
@@ -220,7 +220,7 @@ static void game_save_test_common_fields(
 
     error = pkmn_game_save_set_trainer_id(
                 game_save,
-                is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
+                is_gb_game ? PKMN_DEFAULT_TRAINER_PID : PKMN_DEFAULT_TRAINER_ID
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     game_save_test_trainer_id(
@@ -230,7 +230,7 @@ static void game_save_test_common_fields(
 
     error = pkmn_game_save_set_trainer_public_id(
                 game_save,
-                LIBPKMN_OT_PID
+                PKMN_DEFAULT_TRAINER_PID
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     game_save_test_trainer_id(
@@ -240,7 +240,7 @@ static void game_save_test_common_fields(
 
     error = pkmn_game_save_set_trainer_secret_id(
                 game_save,
-                LIBPKMN_OT_SID
+                PKMN_DEFAULT_TRAINER_SID
             );
     if(is_gb_game) {
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
@@ -779,6 +779,29 @@ static void compare_pokemon(
     char pokemon1_strbuffer[STRBUFFER_LEN] = {0};
     char pokemon2_strbuffer[STRBUFFER_LEN] = {0};
 
+    pkmn_trainer_info_t pokemon1_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+    pkmn_trainer_info_t pokemon2_trainer_info =
+    {
+        .nickname = {0},
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+
     error = pkmn_pokemon_get_species(
                 pokemon1,
                 pokemon1_strbuffer,
@@ -807,33 +830,24 @@ static void compare_pokemon(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
 
-    error = pkmn_pokemon_get_nickname(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon1,
-                pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                &pokemon1_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_nickname(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon2,
-                pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                &pokemon2_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
-
-    error = pkmn_pokemon_get_trainer_name(
-                pokemon1,
-                pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_trainer_name(
-                pokemon2,
-                pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_trainer_info.nickname,
+        pokemon2_trainer_info.nickname
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_trainer_info.trainer_name,
+        pokemon2_trainer_info.trainer_name
+    );
 }
 
 static void compare_game_saves(
