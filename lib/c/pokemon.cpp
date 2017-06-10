@@ -234,7 +234,7 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
                 handle->cpp->set_trainer_gender(GENDER_BIMAP.right.at(trainer_info->trainer_gender));
             }
         }
-        catch(const std::exception& e)
+        catch(const std::exception&)
         {
             handle->cpp->set_nickname(current_nickname);
             handle->cpp->set_trainer_name(current_trainer_name);
