@@ -32,7 +32,6 @@ typedef union
 
 typedef struct
 {
-    char nickname[PKMN_NICKNAME_LENGTH];
     char trainer_name[PKMN_TRAINER_NAME_LENGTH];
     pkmn_trainer_id_t trainer_id;
     pkmn_gender_t trainer_gender;

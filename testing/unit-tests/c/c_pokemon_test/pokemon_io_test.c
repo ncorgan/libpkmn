@@ -33,7 +33,6 @@ void test_3gpkm() {
 
     pkmn_trainer_info_t trainer_info =
     {
-        .nickname = {0},
         .trainer_name = {0},
         .trainer_id =
         {
@@ -82,12 +81,19 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
+    error = pkmn_pokemon_get_nickname(
+                mightyena,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
+
     error = pkmn_pokemon_get_trainer_info(
                 mightyena,
                 &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("MIGHTYENA", trainer_info.nickname);
     TEST_ASSERT_EQUAL_STRING("A", trainer_info.trainer_name);
     TEST_ASSERT_EQUAL(61415, trainer_info.trainer_id.public_id);
     TEST_ASSERT_EQUAL(3417, trainer_info.trainer_id.secret_id);

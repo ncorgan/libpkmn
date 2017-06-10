@@ -16,6 +16,7 @@
 #include <pkmn-c/pokemon_pc.h>
 
 #include <pkmn-c/types/gender.h>
+#include <pkmn-c/types/trainer_info.h>
 
 #include <stdint.h>
 
@@ -186,94 +187,35 @@ PKMN_API pkmn_error_t pkmn_game_save_get_game(
 );
 
 /*!
- * @brief Returns the name of the player character.
+ * @brief Returns the trainer's name, ID, and gender.
  *
  * \param handle The handle to the game save to check
- * \param trainer_name_out The buffer in which to return the trainer name
- * \param buffer_len The size of the buffer passed into trainer_name_out
+ * \param trainer_info_out Where to return the trainer info
  * \returns ::PKMN_ERROR_NONE upon successful completion
- * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_name_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if trainer_name_out is too small for the return string
+ * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_info_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_name(
+PKMN_API pkmn_error_t pkmn_game_save_get_trainer_info(
     pkmn_game_save_handle_t handle,
-    char* trainer_name_out,
-    size_t buffer_len
+    pkmn_trainer_info_t* trainer_info_out
 );
 
 /*!
- * @brief Sets the name of the player character.
+ * @brief Sets the trainer's name, ID, and gender.
  *
- * Valid player names are 1-7 characters.
+ * Trainer IDs are how the game determines if a given Pokémon was originally caught by
+ * a given trainer. In Generation I-II games, trainer IDs are 16-bit. In Generation III
+ * and beyond, another 16-bit "secret ID" was added, making the full ID 32 bits. In
+ * Generation I-II saves, if the secret ID field is set, it will result in an error.
  *
  * \param handle The handle to the game save to check
- * \param trainer_name The trainer name to set
+ * \param trainer_info The trainer info to set
  * \returns ::PKMN_ERROR_NONE upon successful completion
- * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given string is empty or longer than 7 characters
- * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_name is NULL
+ * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_info is NULL
+ * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the secret ID is not 0 for a Generation I-II save
  */
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_name(
+PKMN_API pkmn_error_t pkmn_game_save_set_trainer_info(
     pkmn_game_save_handle_t handle,
-    const char* trainer_name
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_id(
-    pkmn_game_save_handle_t handle,
-    uint32_t* trainer_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_id(
-    pkmn_game_save_handle_t handle,
-    uint32_t trainer_id
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_public_id(
-    pkmn_game_save_handle_t handle,
-    uint16_t* trainer_public_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_public_id(
-    pkmn_game_save_handle_t handle,
-    uint16_t trainer_public_id
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_secret_id(
-    pkmn_game_save_handle_t handle,
-    uint16_t* trainer_secret_id_out
-);
-
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_secret_id(
-    pkmn_game_save_handle_t handle,
-    uint16_t trainer_secret_id
-);
-
-/*!
- * @brief Returns whether the player character is male or female.
- *
- * \param handle The handle to the game save to use
- * \param gender_out The gender enum in which to return the result
- * \returns ::PKMN_ERROR_NONE upon successful completion
- * \returns ::PKMN_ERROR_NULL_POINTER if handle or gender_out is NULL
- */
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_gender(
-    pkmn_game_save_handle_t handle,
-    pkmn_gender_t* gender_out
-);
-
-/*!
- * @brief Sets whether the player character is male or female.
- *
- * Pokémon Crystal was the first game that introduced a female playable character,
- * and Pokémon Colosseum and XD had a single male character. As such, using this function for
- * Gamecube saves or for games before Crystal will result in an error.
- *
- * \param handle The handle to the game save to use
- * \param gender The gender to set (valid values: PKMN_MALE, PKMN_FEMALE)
- * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the game only has one gender of playable character
- */
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_gender(
-    pkmn_game_save_handle_t handle,
-    pkmn_gender_t gender
+    pkmn_trainer_info_t* trainer_info
 );
 
 /*!

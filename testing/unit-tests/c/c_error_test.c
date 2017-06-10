@@ -28,7 +28,6 @@ static char strbuffer[STRBUFFER_LEN] = {0};
 static char PKSAV_TEST_SAVES[STRBUFFER_LEN] = {0};
 static bool dummy_bool = 0;
 static int dummy_int = 0;
-static uint16_t dummy_uint16_t = 0;
 static uint32_t dummy_uint32_t = 0;
 static float dummy_float = 0;
 static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
@@ -222,6 +221,8 @@ static void game_save_error_test() {
 
     pkmn_game_save_type_t dummy_pkmn_game_save_type_t = PKMN_GAME_SAVE_TYPE_NONE;
 
+    pkmn_trainer_info_t trainer_info;
+
     /*
      * pkmn_game_save_detect_type
      */
@@ -353,149 +354,36 @@ static void game_save_error_test() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
-     * pkmn_game_save_get_trainer_name
+     * pkmn_game_save_get_trainer_info
      */
 
-    error = pkmn_game_save_get_trainer_name(
+    error = pkmn_game_save_get_trainer_info(
                 NULL, // handle
-                strbuffer,
-                STRBUFFER_LEN
+                &trainer_info
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_game_save_get_trainer_name(
+    error = pkmn_game_save_get_trainer_info(
                 game_save,
-                NULL, // trainer_name_out
-                STRBUFFER_LEN
+                NULL // trainer_info_out
             );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_name_out");
-
-    error = pkmn_game_save_get_trainer_name(
-        game_save,
-        strbuffer,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_info_out");
 
     /*
-     * pkmn_game_save_set_trainer_name
+     * pkmn_game_save_set_trainer_info
      */
 
-    error = pkmn_game_save_set_trainer_name(
+    error = pkmn_game_save_set_trainer_info(
                 NULL, // handle
-                strbuffer
+                &trainer_info
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_game_save_set_trainer_name(
+    error = pkmn_game_save_set_trainer_info(
                 game_save,
-                NULL // trainer_name
+                NULL // trainer_info
             );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_name");
-
-    /*
-     * pkmn_game_save_get_trainer_id
-     */
-
-    error = pkmn_game_save_get_trainer_id(
-                NULL, // handle
-                &dummy_uint32_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    error = pkmn_game_save_get_trainer_id(
-                game_save,
-                NULL // trainer_id_out
-            );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_id_out");
-
-    /*
-     * pkmn_game_save_set_trainer_id
-     */
-
-    error = pkmn_game_save_set_trainer_id(
-                NULL, // handle
-                dummy_uint32_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    /*
-     * pkmn_game_save_get_trainer_public_id
-     */
-
-    error = pkmn_game_save_get_trainer_public_id(
-                NULL, // handle
-                &dummy_uint16_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    error = pkmn_game_save_get_trainer_public_id(
-                game_save,
-                NULL // trainer_public_id_out
-            );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_public_id_out");
-
-    /*
-     * pkmn_game_save_set_trainer_public_id
-     */
-
-    error = pkmn_game_save_set_trainer_public_id(
-                NULL, // handle
-                dummy_uint16_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    /*
-     * pkmn_game_save_get_trainer_secret_id
-     */
-
-    error = pkmn_game_save_get_trainer_secret_id(
-                NULL, // handle
-                &dummy_uint16_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    error = pkmn_game_save_get_trainer_secret_id(
-                game_save,
-                NULL // trainer_secret_id_out
-            );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_secret_id_out");
-
-    /*
-     * pkmn_game_save_set_trainer_secret_id
-     */
-
-    error = pkmn_game_save_set_trainer_secret_id(
-                NULL, // handle
-                dummy_uint16_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    /*
-     * pkmn_game_save_get_trainer_gender
-     */
-
-    error = pkmn_game_save_get_trainer_gender(
-                NULL, // handle
-                &dummy_pkmn_gender_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
-
-    error = pkmn_game_save_get_trainer_gender(
-                game_save,
-                NULL // gender_out
-            );
-    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "gender_out");
-
-    /*
-     * pkmn_game_save_set_trainer_gender
-     */
-
-    error = pkmn_game_save_set_trainer_gender(
-                NULL, // handle
-                dummy_pkmn_gender_t
-            );
-    TEST_NULL_POINTER_RETURN("handle");
+    TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_info");
 
     /*
      * pkmn_game_save_get_rival_name
@@ -1234,6 +1122,10 @@ static void pokemon_error_test() {
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form");
 
+    /*
+     * pkmn_pokemon_get_game
+     */
+
     error = pkmn_pokemon_get_game(
                 pokemon,
                 strbuffer,
@@ -1256,6 +1148,47 @@ static void pokemon_error_test() {
                 NULL // database_entry_out
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "database_entry_out");
+
+    /*
+     * pkmn_pokemon_get_nickname
+     */
+
+    error = pkmn_pokemon_get_nickname(
+                NULL, // handle
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_get_nickname(
+                pokemon,
+                NULL, // nickname_out
+                sizeof(strbuffer)
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname_out");
+
+    error = pkmn_pokemon_get_nickname(
+                pokemon,
+                strbuffer,
+                0
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+
+    /*
+     * pkmn_pokemon_set_nickname
+     */
+
+    error = pkmn_pokemon_set_nickname(
+                NULL, // handle
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("handle");
+
+    error = pkmn_pokemon_set_nickname(
+                pokemon,
+                NULL // nickname
+            );
+    TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname");
 
     /*
      * pkmn_pokemon_get_trainer_info

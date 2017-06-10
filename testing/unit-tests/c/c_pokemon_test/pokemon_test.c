@@ -38,7 +38,6 @@ static void check_initial_values(
 
     pkmn_trainer_info_t trainer_info =
     {
-        .nickname = {0},
         .trainer_name = {0},
         .trainer_id =
         {
@@ -59,31 +58,39 @@ static void check_initial_values(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
+    char expected_nickname[STRBUFFER_LEN] = {0};
     error = pkmn_pokemon_get_species(
                 pokemon,
-                strbuffer,
-                sizeof(strbuffer)
+                expected_nickname,
+                sizeof(expected_nickname)
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     if(generation < 5)
     {
         int i = 0;
-        while(strbuffer[i])
+        while(expected_nickname[i])
         {
-            strbuffer[i] = toupper(strbuffer[i]);
+            expected_nickname[i] = toupper(expected_nickname[i]);
             ++i;
         }
     }
+
+    error = pkmn_pokemon_get_nickname(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(
+        expected_nickname,
+        strbuffer
+    );
 
     error = pkmn_pokemon_get_trainer_info(
                 pokemon,
                 &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(
-        strbuffer,
-        trainer_info.nickname
-    );
     TEST_ASSERT_EQUAL_STRING(
         PKMN_DEFAULT_TRAINER_NAME,
         trainer_info.trainer_name
@@ -1455,8 +1462,6 @@ static void test_setting_trainer_info(
 
     pkmn_trainer_info_t getting_trainer_info =
     {
-        .nickname = {0},
-        .trainer_name = {0},
         .trainer_id =
         {
             .public_id = 0,
@@ -1466,7 +1471,6 @@ static void test_setting_trainer_info(
     };
     pkmn_trainer_info_t setting_trainer_info =
     {
-        .nickname = {0},
         .trainer_name = {0},
         .trainer_id =
         {
@@ -1486,22 +1490,23 @@ static void test_setting_trainer_info(
     int generation = game_to_generation(game);
     TEST_ASSERT_NOT_EQUAL(-1, generation);
 
-    strncpy(
-        setting_trainer_info.nickname,
-        "Too long nickname",
-        sizeof(setting_trainer_info.nickname)
-    );
-    error = pkmn_pokemon_set_trainer_info(
+    error = pkmn_pokemon_set_nickname(
                 pokemon,
-                &setting_trainer_info
+                "Too long nickname"
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+    error = pkmn_pokemon_set_nickname(
+                pokemon,
+                "foobarbaz"
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_pokemon_get_nickname(
+                pokemon,
+                strbuffer,
+                sizeof(strbuffer)
+            );
+    TEST_ASSERT_EQUAL_STRING("foobarbaz", strbuffer);
 
-    strncpy(
-        setting_trainer_info.nickname,
-        "foobarbaz",
-        sizeof(setting_trainer_info.nickname)
-    );
     strncpy(
         setting_trainer_info.trainer_name,
         "Too long trainer name",
@@ -1530,10 +1535,6 @@ static void test_setting_trainer_info(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    TEST_ASSERT_EQUAL_STRING(
-        setting_trainer_info.nickname,
-        getting_trainer_info.nickname
-    );
     TEST_ASSERT_EQUAL_STRING(
         setting_trainer_info.trainer_name,
         getting_trainer_info.trainer_name

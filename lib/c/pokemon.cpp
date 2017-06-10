@@ -182,6 +182,38 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_nickname(
+    pkmn_pokemon_handle_t handle,
+    char* nickname_out,
+    size_t buffer_len
+)
+{
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname_out, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
+                    handle,
+                    handle->cpp->get_nickname(),
+                    nickname_out,
+                    buffer_len
+               );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_nickname(
+    pkmn_pokemon_handle_t handle,
+    const char* nickname
+)
+{
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname, handle);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_nickname(nickname);
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_trainer_info(
     pkmn_pokemon_handle_t handle,
     pkmn_trainer_info_t* trainer_info_out
@@ -191,11 +223,6 @@ pkmn_error_t pkmn_pokemon_get_trainer_info(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(trainer_info_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        std::strncpy(
-            trainer_info_out->nickname,
-            handle->cpp->get_nickname().c_str(),
-            sizeof(trainer_info_out->nickname)
-        );
         std::strncpy(
             trainer_info_out->trainer_name,
             handle->cpp->get_trainer_name().c_str(),
@@ -219,14 +246,12 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
          * Preserve what's here in case we need to restore it if not every call
          * succeeds.
          */
-        std::string current_nickname = handle->cpp->get_nickname();
         std::string current_trainer_name = handle->cpp->get_trainer_name();
         uint32_t current_trainer_id = handle->cpp->get_trainer_id();
         std::string current_trainer_gender = handle->cpp->get_trainer_gender();
 
         try
         {
-            handle->cpp->set_nickname(trainer_info->nickname);
             handle->cpp->set_trainer_name(trainer_info->trainer_name);
             handle->cpp->set_trainer_id(trainer_info->trainer_id.id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
@@ -236,7 +261,6 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
         }
         catch(const std::exception&)
         {
-            handle->cpp->set_nickname(current_nickname);
             handle->cpp->set_trainer_name(current_trainer_name);
             handle->cpp->set_trainer_id(current_trainer_id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
@@ -248,7 +272,6 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
         }
         catch(...)
         {
-            handle->cpp->set_nickname(current_nickname);
             handle->cpp->set_trainer_name(current_trainer_name);
             handle->cpp->set_trainer_id(current_trainer_id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)

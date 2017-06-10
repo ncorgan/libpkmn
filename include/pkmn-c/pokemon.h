@@ -83,6 +83,17 @@ PKMN_API pkmn_error_t pkmn_pokemon_get_database_entry(
     pkmn_database_pokemon_entry_t* database_entry_out
 );
 
+PKMN_API pkmn_error_t pkmn_pokemon_get_nickname(
+    pkmn_pokemon_handle_t handle,
+    char* nickname_out,
+    size_t buffer_len
+);
+
+PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
+    pkmn_pokemon_handle_t,
+    const char* nickname
+);
+
 PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_info(
     pkmn_pokemon_handle_t handle,
     pkmn_trainer_info_t* trainer_info_out
