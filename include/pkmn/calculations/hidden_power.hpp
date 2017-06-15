@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -37,7 +37,7 @@ namespace pkmn { namespace calculations {
         PKMN_INLINE hidden_power(
             std::string&& hidden_power_type,
             int hidden_power_base_power
-        ): type(hidden_power_type),
+        ): type(std::move(hidden_power_type)),
            base_power(hidden_power_base_power) {}
 #endif
 
