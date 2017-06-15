@@ -6,13 +6,13 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_database_headers
+    SET(pkmn_qt_headers
         Spinda.hpp
     )
 
     INSTALL(
-        FILES ${pkmn_database_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/database
+        FILES ${pkmn_qt_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/qt
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
