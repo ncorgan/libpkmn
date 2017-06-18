@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -44,7 +44,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_coords(
             spinda_coords&& other
-        ): x(other.x), y(other.y) {}
+        ): x(std::move(other.x)), y(std::move(other.y)) {}
 
         /*!
          * @brief Assignment operator.
@@ -286,7 +286,7 @@ namespace pkmn { namespace calculations {
     };
 
     /*!
-     * @brief Calculates offsets of Spinda's spots in a Generation III .
+     * @brief Calculates offsets of the spots on a Generation III-V Spinda.
      *
      * The locations of Spinda's four spots are calculated based on the Spinda's
      * personality. As such, there are 2^32 combinations.
