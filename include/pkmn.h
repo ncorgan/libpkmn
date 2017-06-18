@@ -17,6 +17,7 @@
 #include <pkmn-c/pokemon_box.h>
 #include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>
+#include <pkmn-c/version.h>
 
 #include <pkmn-c/calculations/form.h>
 #include <pkmn-c/calculations/gender.h>

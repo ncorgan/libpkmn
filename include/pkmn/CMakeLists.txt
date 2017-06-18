@@ -10,6 +10,17 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
 )
 
+#
+# Create version header based on CMake variables
+#
+MATH(EXPR PKMN_VERSION_NUMBER "(${PKMN_VERSION_MAJOR} * 1000000) +
+                               (${PKMN_VERSION_MINOR} * 1000) +
+                                ${PKMN_VERSION_PATCH}")
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
+)
+
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_headers
         build_info.hpp
@@ -24,6 +35,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         pokemon_box.hpp
         pokemon_party.hpp
         pokemon_pc.hpp
+        ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
     )
 
     INSTALL(

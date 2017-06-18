@@ -32,7 +32,9 @@ pkmn.pokemon_box_list = pkmn.core.pokemon_box_list
 pkmn.pokemon_party = pkmn.core.make_pokemon_party
 pkmn.pokemon_pc = pkmn.core.make_pokemon_pc
 
-pkmn.DEFAULT_TRAINER_ID = 2105214279;
-pkmn.DEFAULT_TRAINER_NAME = "LibPKMN";
+pkmn.DEFAULT_TRAINER_ID = 2105214279
+pkmn.DEFAULT_TRAINER_NAME = "LibPKMN"
+
+pkmn.VERSION = "@PKMN_VERSION@"
 
 return pkmn
