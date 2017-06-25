@@ -358,7 +358,7 @@ namespace pkmn {
             throw std::invalid_argument("\"None\" entries must have an amount of 0.");
         }
         pkmn::database::item_entry entry(slot.item, get_game());
-        if(slot.item != "None" and entry.get_pocket() != get_name())
+        if(get_name() != "PC" and slot.item != "None" and entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item does not belong in this pocket.");
         }
