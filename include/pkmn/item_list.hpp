@@ -136,11 +136,10 @@ namespace pkmn {
                 int new_position
             ) = 0;
 
-            // TODO: make pure virtual when all implementations created
             virtual void set_item(
-                PKMN_UNUSED(int position),
-                PKMN_UNUSED(const pkmn::item_slot& slot)
-            ) {};
+                int position,
+                const pkmn::item_slot& slot
+            ) = 0;
 
             /*!
              * @brief Returns a list of the items that can be added to this list.

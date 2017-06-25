@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -175,6 +175,23 @@ pkmn_error_t pkmn_item_list_move(
         handle->cpp->move(
             old_position,
             new_position
+        );
+    )
+}
+
+pkmn_error_t pkmn_item_list_set_item(
+    pkmn_item_list_handle_t handle,
+    int position,
+    const char* item_name,
+    int amount
+) {
+    PKMN_CHECK_NULL_PARAM(handle);
+    PKMN_CHECK_NULL_PARAM(item_name);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(handle,
+        handle->cpp->set_item(
+            position,
+            {item_name, amount}
         );
     )
 }

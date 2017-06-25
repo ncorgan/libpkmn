@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -83,6 +83,13 @@ PKMN_API pkmn_error_t pkmn_item_list_move(
     pkmn_item_list_handle_t handle,
     int old_position,
     int new_position
+);
+
+PKMN_API pkmn_error_t pkmn_item_list_set_item(
+    pkmn_item_list_handle_t handle,
+    int position,
+    const char* item_name,
+    int amount
 );
 
 PKMN_API pkmn_error_t pkmn_item_list_get_valid_items(
