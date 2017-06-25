@@ -238,6 +238,120 @@ void test_item_list_add_remove(
     );
     TEST_ASSERT_EQUAL(0, num_items_before);
 
+    // Test setting by index.
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            0,
+            item_names[0],
+            50
+        )
+    );
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            1,
+            item_names[1],
+            40
+        )
+    );
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            2,
+            item_names[2],
+            30
+        )
+    );
+
+    const char* item_names1[] = {item_names[0], item_names[1], item_names[2]};
+    int item_amounts1[] = {50, 40, 30};
+    test_item_slots(
+        list,
+        item_names1,
+        item_amounts1,
+        3
+    );
+
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_OUT_OF_RANGE,
+        pkmn_item_list_set_item(
+            list,
+            10,
+            "Ultra Ball",
+            5
+        )
+    );
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_INVALID_ARGUMENT,
+        pkmn_item_list_set_item(
+            list,
+            0,
+            "None",
+            5
+        )
+    );
+
+    const char* item_names2[] = {item_names[0], item_names[1], item_names[2]};
+    int item_amounts2[] = {50, 40, 30};
+    test_item_slots(
+        list,
+        item_names2,
+        item_amounts2,
+        3
+    );
+
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            1,
+            "None",
+            0
+        )
+    );
+
+    const char* item_names3[] = {item_names[0], item_names[2], "None"};
+    int item_amounts3[] = {50, 30, 0};
+    test_item_slots(
+        list,
+        item_names3,
+        item_amounts3,
+        2
+    );
+
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            0,
+            "None",
+            0
+        )
+    );
+    TEST_ASSERT_EQUAL(
+        PKMN_ERROR_NONE,
+        pkmn_item_list_set_item(
+            list,
+            0,
+            "None",
+            0
+        )
+    );
+
+    const char* item_names4[] = {"None", "None", "None"};
+    int item_amounts4[] = {0, 0, 0};
+    test_item_slots(
+        list,
+        item_names4,
+        item_amounts4,
+        0
+    );
+
+    // Test add/remove functions.
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
         pkmn_item_list_add(
@@ -263,12 +377,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names1[] = {item_names[0], item_names[1], item_names[2]};
-    int item_amounts1[] = {30, 99, 1};
+    const char* item_names5[] = {item_names[0], item_names[1], item_names[2]};
+    int item_amounts5[] = {30, 99, 1};
     test_item_slots(
         list,
-        item_names1,
-        item_amounts1,
+        item_names5,
+        item_amounts5,
         3
     );
 
@@ -281,12 +395,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names2[] = {item_names[0], item_names[1], item_names[2]};
-    int item_amounts2[] = {30, 99, 16};
+    const char* item_names6[] = {item_names[0], item_names[1], item_names[2]};
+    int item_amounts6[] = {30, 99, 16};
     test_item_slots(
         list,
-        item_names2,
-        item_amounts2,
+        item_names6,
+        item_amounts6,
         3
     );
 
@@ -299,12 +413,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names3[] = {item_names[0], item_names[1], item_names[2]};
-    int item_amounts3[] = {30, 79, 16};
+    const char* item_names7[] = {item_names[0], item_names[1], item_names[2]};
+    int item_amounts7[] = {30, 79, 16};
     test_item_slots(
         list,
-        item_names3,
-        item_amounts3,
+        item_names7,
+        item_amounts7,
         3
     );
 
@@ -317,12 +431,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names4[] = {item_names[1], item_names[0], item_names[2]};
-    int item_amounts4[] = {79, 30, 16};
+    const char* item_names8[] = {item_names[1], item_names[0], item_names[2]};
+    int item_amounts8[] = {79, 30, 16};
     test_item_slots(
         list,
-        item_names4,
-        item_amounts4,
+        item_names8,
+        item_amounts8,
         3
     );
 
@@ -335,12 +449,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names5[] = {item_names[1], item_names[2], "None"};
-    int item_amounts5[] = {79, 16, 0};
+    const char* item_names9[] = {item_names[1], item_names[2], "None"};
+    int item_amounts9[] = {79, 16, 0};
     test_item_slots(
         list,
-        item_names5,
-        item_amounts5,
+        item_names9,
+        item_amounts9,
         2
     );
 
@@ -353,12 +467,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names6[] = {item_names[1], item_names[2], item_names[3]};
-    int item_amounts6[] = {79, 16, 90};
+    const char* item_names10[] = {item_names[1], item_names[2], item_names[3]};
+    int item_amounts10[] = {79, 16, 90};
     test_item_slots(
         list,
-        item_names6,
-        item_amounts6,
+        item_names10,
+        item_amounts10,
         3
     );
 
@@ -371,12 +485,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names7[] = {item_names[1], item_names[2], item_names[3], item_names[4]};
-    int item_amounts7[] = {79, 16, 90, 2};
+    const char* item_names11[] = {item_names[1], item_names[2], item_names[3], item_names[4]};
+    int item_amounts11[] = {79, 16, 90, 2};
     test_item_slots(
         list,
-        item_names7,
-        item_amounts7,
+        item_names11,
+        item_amounts11,
         4
     );
 
@@ -389,12 +503,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names8[] = {item_names[1], item_names[2], item_names[3], item_names[4]};
-    int item_amounts8[] = {49, 16, 90, 2};
+    const char* item_names12[] = {item_names[1], item_names[2], item_names[3], item_names[4]};
+    int item_amounts12[] = {49, 16, 90, 2};
     test_item_slots(
         list,
-        item_names8,
-        item_amounts8,
+        item_names12,
+        item_amounts12,
         4
     );
 
@@ -407,13 +521,13 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names9[] = {item_names[1], item_names[2], item_names[3], item_names[4],
+    const char* item_names13[] = {item_names[1], item_names[2], item_names[3], item_names[4],
                                  item_names[5]};
-    int item_amounts9[] = {49, 16, 90, 2, 12};
+    int item_amounts13[] = {49, 16, 90, 2, 12};
     test_item_slots(
         list,
-        item_names9,
-        item_amounts9,
+        item_names13,
+        item_amounts13,
         5
     );
 
@@ -426,12 +540,12 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names10[] = {item_names[1], item_names[3], item_names[4], item_names[5]};
-    int item_amounts10[] = {49, 90, 2, 12};
+    const char* item_names14[] = {item_names[1], item_names[3], item_names[4], item_names[5]};
+    int item_amounts14[] = {49, 90, 2, 12};
     test_item_slots(
         list,
-        item_names10,
-        item_amounts10,
+        item_names14,
+        item_amounts14,
         4
     );
 
@@ -444,13 +558,13 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names11[] = {item_names[1], item_names[3], item_names[4], item_names[5],
+    const char* item_names15[] = {item_names[1], item_names[3], item_names[4], item_names[5],
                                   item_names[6]};
-    int item_amounts11[] = {49, 90, 2, 12, 65};
+    int item_amounts15[] = {49, 90, 2, 12, 65};
     test_item_slots(
         list,
-        item_names11,
-        item_amounts11,
+        item_names15,
+        item_amounts15,
         5
     );
 
@@ -463,13 +577,13 @@ void test_item_list_add_remove(
         )
     );
 
-    const char* item_names12[] = {item_names[1], item_names[3], item_names[4], item_names[5],
+    const char* item_names16[] = {item_names[1], item_names[3], item_names[4], item_names[5],
                                   item_names[6], item_names[7]};
-    int item_amounts12[] = {49, 90, 2, 12, 65, 6};
+    int item_amounts16[] = {49, 90, 2, 12, 65, 6};
     test_item_slots(
         list,
-        item_names12,
-        item_amounts12,
+        item_names16,
+        item_amounts16,
         6
     );
 

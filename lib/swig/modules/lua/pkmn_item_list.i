@@ -32,7 +32,7 @@
     {
         if (index == 0)
             throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_item(index, slot);
+        self->get()->set_item(index-1, slot);
     }
 
     bool __eq__(

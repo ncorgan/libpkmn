@@ -88,6 +88,60 @@ internal class ItemsTestsCommon {
     ) {
         Assert.AreEqual(itemNames.Length, 8);
 
+        // Test setting by index.
+        itemList[0] = new PKMN.ItemSlot(itemNames[0], 50);
+        itemList[1] = new PKMN.ItemSlot(itemNames[1], 40);
+        itemList[2] = new PKMN.ItemSlot(itemNames[2], 30);
+
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
+        Assert.AreEqual(itemList[0].Amount, 50);
+        Assert.AreEqual(itemList[1].Item, itemNames[1]);
+        Assert.AreEqual(itemList[1].Amount, 40);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
+        Assert.AreEqual(itemList[2].Amount, 30);
+        Assert.AreEqual(itemList.NumItems, 3);
+
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate {
+                itemList[10] = new PKMN.ItemSlot("Ultra Ball", 5);
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                itemList[0] = new PKMN.ItemSlot("None", 5);
+            }
+        );
+
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
+        Assert.AreEqual(itemList[0].Amount, 50);
+        Assert.AreEqual(itemList[1].Item, itemNames[1]);
+        Assert.AreEqual(itemList[1].Amount, 40);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
+        Assert.AreEqual(itemList[2].Amount, 30);
+        Assert.AreEqual(itemList.NumItems, 3);
+
+        itemList[1] = new PKMN.ItemSlot("None", 0);
+
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
+        Assert.AreEqual(itemList[0].Amount, 50);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
+        Assert.AreEqual(itemList[1].Amount, 30);
+        Assert.AreEqual(itemList[2].Item, "None");
+        Assert.AreEqual(itemList[2].Amount, 0);
+        Assert.AreEqual(itemList.NumItems, 2);
+
+        itemList[0] = new PKMN.ItemSlot("None", 0);
+        itemList[0] = new PKMN.ItemSlot("None", 0);
+
+        Assert.AreEqual(itemList[0].Item, "None");
+        Assert.AreEqual(itemList[0].Amount, 0);
+        Assert.AreEqual(itemList[1].Item, "None");
+        Assert.AreEqual(itemList[1].Amount, 0);
+        Assert.AreEqual(itemList[2].Item, "None");
+        Assert.AreEqual(itemList[2].Amount, 0);
+        Assert.AreEqual(itemList.NumItems, 0);
+
+        // Test add/remove functions.
         itemList.Add(itemNames[0], 30);
         itemList.Add(itemNames[1], 99);
         itemList.Add(itemNames[2], 1);
