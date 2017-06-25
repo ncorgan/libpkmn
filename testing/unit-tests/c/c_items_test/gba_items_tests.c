@@ -1062,7 +1062,7 @@ void gba_item_bag_test(
      * first item slot.
      */
     pkmn_item_slot_t item_slot = {
-        .item = NULL,
+        .item = {0},
         .amount = 0
     };
 
@@ -1087,11 +1087,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Potion", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1103,11 +1098,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Mach Bike", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1119,11 +1109,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Great Ball", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1135,11 +1120,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("TM01", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1151,9 +1131,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Aspear Berry", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(pkmn_item_slot_free(&item_slot),
-                      PKMN_ERROR_NONE);
-    TEST_ASSERT_NULL(item_slot.item);
 
     /*
      * Make sure adding items through the bag adds to the proper pockets.
@@ -1181,11 +1158,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1197,11 +1169,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1213,11 +1180,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1229,11 +1191,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1245,11 +1202,6 @@ void gba_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     // Make sure we can't add items from later generations.
     test_item_bag_invalid_items(

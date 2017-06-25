@@ -971,7 +971,7 @@ void gen2_item_bag_test(
      * first item slot.
      */
     pkmn_item_slot_t item_slot = {
-        .item = NULL,
+        .item = {0},
         .amount = 0
     };
 
@@ -996,11 +996,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Potion", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1012,11 +1007,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Bicycle", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1028,11 +1018,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("Great Ball", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1044,11 +1029,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("TM28", item_slot.item);
     TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     /*
      * Make sure removing items through the bag removes from the proper pockets.
@@ -1076,11 +1056,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1092,11 +1067,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1108,11 +1078,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     TEST_ASSERT_EQUAL(
         PKMN_ERROR_NONE,
@@ -1124,11 +1089,6 @@ void gen2_item_bag_test(
     );
     TEST_ASSERT_EQUAL_STRING("TM28", item_slot.item);
     TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
 
     // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
     if(strcmp(game, "Crystal") == 0) {
@@ -1152,11 +1112,6 @@ void gen2_item_bag_test(
             );
             TEST_ASSERT_EQUAL_STRING(crystal_items[i], item_slot.item);
             TEST_ASSERT_EQUAL(1, item_slot.amount);
-            TEST_ASSERT_EQUAL(
-                pkmn_item_slot_free(&item_slot),
-                PKMN_ERROR_NONE
-            );
-            TEST_ASSERT_NULL(item_slot.item);
 
             TEST_ASSERT_EQUAL(
                 PKMN_ERROR_NONE,
@@ -1177,11 +1132,6 @@ void gen2_item_bag_test(
             );
             TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
             TEST_ASSERT_EQUAL(0, item_slot.amount);
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_slot_free(&item_slot)
-            );
-            TEST_ASSERT_NULL(item_slot.item);
         }
     } else {
         test_item_bag_invalid_items(

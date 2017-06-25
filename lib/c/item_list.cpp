@@ -8,7 +8,239 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
+#include <boost/thread/mutex.hpp>
+
 #include <pkmn-c/item_list.h>
+
+#include <cstdio>
+
+#define INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
+
+typedef struct
+{
+    pkmn::item_list::sptr cpp;
+    std::string last_error;
+    boost::mutex error_mutex;
+} pkmn_item_list_internal_t;
+
+// The caller is expected to be exception-safe.
+void init_item_list(
+    pkmn_item_list2_t* item_list
+)
+{
+    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+    std::strncpy(
+        item_list->name,
+        cpp->get_name().c_str(),
+        sizeof(item_list->name)
+    );
+    std::strncpy(
+        item_list->game,
+        cpp->get_game().c_str(),
+        sizeof(item_list->game)
+    );
+    item_list->num_items = cpp->get_num_items();
+    item_list->capacity = cpp->get_capacity();
+
+    item_list->item_slots.item_slots =
+        (pkmn_item_slot_t*)std::malloc(
+                               cpp->get_capacity()*sizeof(pkmn_item_slot_t)
+                           );
+    item_list->item_slots.length = item_list->capacity;
+
+}
+
+void update_item_list(
+    pkmn_item_list2_t* item_list
+)
+{
+    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+    for(size_t i = 0; i < item_list->capacity; ++i)
+    {
+        const pkmn::item_slot& slot_cpp = cpp->at(int(i));
+
+        std::strncpy(
+            item_list->item_slots.item_slots[i].item,
+            slot_cpp.item.c_str(),
+            sizeof(item_list->item_slots.item_slots[i].item)
+        );
+        item_list->item_slots.item_slots[i].amount = slot_cpp.amount;
+    }
+}
+
+pkmn_error_t pkmn_item_list2_init(
+    const char* name,
+    const char* game,
+    pkmn_item_list2_t* item_list_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(name);
+    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(item_list_out);
+
+    PKMN_CPP_TO_C(
+        pkmn::item_list::sptr cpp = pkmn::item_list::make(name, game);
+        item_list_out->_internal = new pkmn_item_list_internal_t;
+        INTERNAL_RCAST(item_list_out->_internal)->cpp = cpp;
+
+        init_item_list(item_list_out);
+        update_item_list(item_list_out);
+    )
+}
+
+pkmn_error_t pkmn_item_list2_free(
+    pkmn_item_list2_t* item_list
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+
+    item_list->name[0] = '\0';
+    item_list->game[0] = '\0';
+    item_list->num_items = 0;
+    item_list->capacity = 0;
+    std::free(item_list->item_slots.item_slots);
+    item_list->item_slots.length = 0;
+
+    PKMN_CPP_TO_C(
+        delete INTERNAL_RCAST(item_list->_internal);
+        item_list->_internal = NULL;
+    )
+}
+
+const char* pkmn_item_list2_strerror(
+    pkmn_item_list2_t* item_list
+)
+{
+    if(!item_list)
+    {
+        return NULL;
+    }
+
+    try
+    {
+        boost::mutex::scoped_lock lock(INTERNAL_RCAST(item_list->_internal)->error_mutex);
+        return INTERNAL_RCAST(item_list->_internal)->last_error.c_str();
+    }
+    catch(...)
+    {
+        return NULL;
+    }
+}
+
+pkmn_error_t pkmn_item_list2_add(
+    pkmn_item_list2_t* item_list,
+    const char* item,
+    int amount
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+    // TODO: cleaner macro
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, INTERNAL_RCAST(item_list->_internal));
+
+    // TODO: cleaner macro
+    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_list->_internal),
+        pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+        cpp->add(
+            item,
+            amount
+        );
+
+        update_item_list(item_list);
+    )
+}
+
+pkmn_error_t pkmn_item_list2_remove(
+    pkmn_item_list2_t* item_list,
+    const char* item,
+    int amount
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+    // TODO: cleaner macro
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, INTERNAL_RCAST(item_list->_internal));
+
+    // TODO: cleaner macro
+    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_list->_internal),
+        pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+        cpp->remove(
+            item,
+            amount
+        );
+
+        update_item_list(item_list);
+    )
+}
+
+pkmn_error_t pkmn_item_list2_move(
+    pkmn_item_list2_t* item_list,
+    int old_position,
+    int new_position
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+
+    // TODO: cleaner macro
+    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_list->_internal),
+        pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+        cpp->move(
+            old_position,
+            new_position
+        );
+
+        update_item_list(item_list);
+    )
+}
+
+pkmn_error_t pkmn_item_list2_set_item(
+    pkmn_item_list2_t* item_list,
+    int position,
+    const char* item,
+    int amount
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+    // TODO: cleaner macro
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, INTERNAL_RCAST(item_list->_internal));
+
+    // TODO: cleaner macro
+    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_list->_internal),
+        pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+        cpp->set_item(
+            position,
+            {item, amount}
+        );
+
+        update_item_list(item_list);
+    )
+}
+
+pkmn_error_t pkmn_item_list2_get_valid_items(
+    pkmn_item_list2_t* item_list,
+    pkmn_string_list_t* valid_items_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(item_list);
+    // TODO: cleaner macro
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(valid_items_out, INTERNAL_RCAST(item_list->_internal));
+
+    // TODO: cleaner macro
+    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_list->_internal),
+        pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+        pkmn::std_vector_std_string_to_string_list(
+            cpp->get_valid_items(),
+            valid_items_out
+        );
+    )
+}
+
+// OLD BELOW
 
 pkmn_error_t pkmn_item_list_make(
     pkmn_item_list_handle_t* handle_ptr,

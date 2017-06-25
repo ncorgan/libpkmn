@@ -696,7 +696,7 @@ static void item_list_error_test() {
     pkmn_item_list_handle_t null_item_list = NULL;
 
     pkmn_item_slot_t dummy_pkmn_item_slot_t = {
-        .item = NULL,
+        .item = {0},
         .amount = 0
     };
 

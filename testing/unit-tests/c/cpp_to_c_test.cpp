@@ -384,10 +384,6 @@ TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
 
     EXPECT_STREQ("Potion", item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
-
-    pkmn_item_slot_free(&item_slot_c);
-    EXPECT_EQ(NULL, item_slot_c.item);
-    EXPECT_EQ(0, item_slot_c.amount);
 }
 
 TEST(cpp_to_c_test, item_slots_cpp_to_c_test) {

@@ -13,6 +13,8 @@
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/string_types.h>
 
+#define PKMN_ITEM_LIST_BUFFER_SIZE 64
+
 #if !defined(PKMN_ITEM_LIST_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_list_t;
 typedef struct pkmn_item_list_t pkmn_item_list_t;
@@ -24,6 +26,66 @@ typedef pkmn_item_list_t* pkmn_item_list_handle_t;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// This will replace the handle being passed around.
+typedef struct
+{
+    char name[PKMN_ITEM_LIST_BUFFER_SIZE];
+    char game[PKMN_ITEM_LIST_BUFFER_SIZE];
+
+    size_t num_items;
+    size_t capacity;
+    pkmn_item_slots_t item_slots;
+
+    void* _internal;
+
+} pkmn_item_list2_t;
+
+PKMN_API pkmn_error_t pkmn_item_list2_init(
+    const char* name,
+    const char* game,
+    pkmn_item_list2_t* item_list_out
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_free(
+    pkmn_item_list2_t* item_list
+);
+
+PKMN_API const char* pkmn_item_list2_strerror(
+    pkmn_item_list2_t* item_list
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_add(
+    pkmn_item_list2_t* item_list,
+    const char* item,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_remove(
+    pkmn_item_list2_t* item_list,
+    const char* item,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_move(
+    pkmn_item_list2_t* item_list,
+    int old_position,
+    int new_position
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_set_item(
+    pkmn_item_list2_t* item_list,
+    int position,
+    const char* item,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_list2_get_valid_items(
+    pkmn_item_list2_t* item_list,
+    pkmn_string_list_t* valid_items_out
+);
+
+// OLD BELOW
 
 PKMN_API pkmn_error_t pkmn_item_list_make(
     pkmn_item_list_handle_t* handle_ptr,

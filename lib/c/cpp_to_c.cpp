@@ -59,8 +59,11 @@ namespace pkmn {
         const pkmn::item_slot &islot_cpp,
         pkmn_item_slot_t* islot_c
     ) {
-        islot_c->item = (char*)std::malloc(islot_cpp.item.size() + 1);
-        std::strcpy(islot_c->item, islot_cpp.item.c_str());
+        std::strncpy(
+            islot_c->item,
+            islot_cpp.item.c_str(),
+            sizeof(islot_c->item)
+        );
         islot_c->item[islot_cpp.item.size()] = '\0';
 
         islot_c->amount = islot_cpp.amount;
