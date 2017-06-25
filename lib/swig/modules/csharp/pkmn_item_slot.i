@@ -11,10 +11,5 @@
     #include <pkmn/item_slot.hpp>
 %}
 
-%typemap(csimports) pkmn::item_slot "
-using System;
-using System.Runtime.InteropServices;
-using Database;"
-
 %include <pkmn/item_slot.hpp>
 PKMN_CSHARP_VECTOR(pkmn::item_slot, ItemSlot, ItemSlotList)

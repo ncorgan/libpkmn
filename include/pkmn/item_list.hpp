@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -50,8 +50,8 @@ namespace pkmn {
              * \throws std::runtime_error If an unimplemented game is given
              */
             static sptr make(
-                const std::string &name,
-                const std::string &game
+                const std::string& name,
+                const std::string& game
             );
 
             #ifndef __DOXYGEN__
@@ -102,7 +102,7 @@ namespace pkmn {
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void add(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) = 0;
 
@@ -119,7 +119,7 @@ namespace pkmn {
              * \throws std::out_of_range If amount is outside the range [1,99]
              */
             virtual void remove(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) = 0;
 
@@ -135,6 +135,12 @@ namespace pkmn {
                 int old_position,
                 int new_position
             ) = 0;
+
+            // TODO: make pure virtual when all implementations created
+            virtual void set_item(
+                PKMN_UNUSED(int position),
+                PKMN_UNUSED(const pkmn::item_slot& slot)
+            ) {};
 
             /*!
              * @brief Returns a list of the items that can be added to this list.
