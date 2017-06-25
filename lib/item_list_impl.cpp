@@ -349,9 +349,13 @@ namespace pkmn {
     {
         // Input validation.
         int end_boundary = std::min<int>(_num_items, _capacity-1);
-        if(position < 0 or position >= end_boundary)
+        if(position < 0 or position > end_boundary)
         {
             pkmn::throw_out_of_range("position", 0, end_boundary);
+        }
+        if(slot.item == "None" and slot.amount != 0)
+        {
+            throw std::invalid_argument("\"None\" entries must have an amount of 0.");
         }
         pkmn::database::item_entry entry(slot.item, get_game());
         if(slot.item != "None" and entry.get_pocket() != get_name())
@@ -366,12 +370,13 @@ namespace pkmn {
         _item_slots[position] = slot;
         if(slot.item == "None" and position < end_boundary)
         {
-            for(int i = position+1; i < _num_items-1; ++i)
-            {
-                _item_slots[i-1] = std::move(_item_slots[i]);
-            }
-
-            _item_slots[_num_items-1] = pkmn::item_slot("None", 0);
+            _item_slots.erase(_item_slots.begin()+position);
+            _item_slots.emplace_back(std::move(pkmn::item_slot("None", 0)));
+            --_num_items;
+        }
+        else
+        {
+            ++_num_items;
         }
 
         _to_native();
