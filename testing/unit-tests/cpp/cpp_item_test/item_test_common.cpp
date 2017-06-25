@@ -16,8 +16,7 @@ void test_item_list_empty_slots(
     const pkmn::item_slots_t& item_slots = list->as_vector();
     ASSERT_EQ(list->get_capacity(), item_slots.size());
     for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->item.get_name());
-        EXPECT_EQ(game, iter->item.get_game());
+        EXPECT_EQ("None", iter->item);
         EXPECT_EQ(0, iter->amount);
     }
 }
@@ -84,130 +83,130 @@ void test_item_list_add_remove(
     list->add(item_names[1], 99);
     list->add(item_names[2], 1);
 
-    EXPECT_EQ(item_names[0], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
     EXPECT_EQ(30, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[1], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(1).item);
     EXPECT_EQ(99, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
     EXPECT_EQ(1, item_slots.at(2).amount);
     EXPECT_EQ(3, list->get_num_items());
 
     list->add(item_names[2], 15);
-    EXPECT_EQ(item_names[0], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
     EXPECT_EQ(30, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[1], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(1).item);
     EXPECT_EQ(99, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
     EXPECT_EQ(16, item_slots.at(2).amount);
     EXPECT_EQ(3, list->get_num_items());
 
     list->remove(item_names[1], 20);
-    EXPECT_EQ(item_names[0], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
     EXPECT_EQ(30, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[1], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(1).item);
     EXPECT_EQ(79, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
     EXPECT_EQ(16, item_slots.at(2).amount);
     EXPECT_EQ(3, list->get_num_items());
 
     list->move(0, 1);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(79, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[0], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[0], item_slots.at(1).item);
     EXPECT_EQ(30, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
     EXPECT_EQ(16, item_slots.at(2).amount);
     EXPECT_EQ(3, list->get_num_items());
 
     list->remove(item_names[0], 30);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(79, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
     EXPECT_EQ(16, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
     EXPECT_EQ(2, list->get_num_items());
 
     list->add(item_names[3], 90);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(79, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
     EXPECT_EQ(16, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(2).item);
     EXPECT_EQ(90, item_slots.at(2).amount);
     EXPECT_EQ(3, list->get_num_items());
 
     list->add(item_names[4], 2);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(79, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
     EXPECT_EQ(16, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(2).item);
     EXPECT_EQ(90, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(3).item);
     EXPECT_EQ(2, item_slots.at(3).amount);
     EXPECT_EQ(4, list->get_num_items());
 
     list->remove(item_names[1], 30);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(49, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
     EXPECT_EQ(16, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(2).item);
     EXPECT_EQ(90, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(3).item);
     EXPECT_EQ(2, item_slots.at(3).amount);
     EXPECT_EQ(4, list->get_num_items());
 
     list->add(item_names[5], 12);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(49, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[2], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
     EXPECT_EQ(16, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(2).item);
     EXPECT_EQ(90, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(3).item);
     EXPECT_EQ(2, item_slots.at(3).amount);
-    EXPECT_EQ(item_names[5], item_slots.at(4).item.get_name());
+    EXPECT_EQ(item_names[5], item_slots.at(4).item);
     EXPECT_EQ(12, item_slots.at(4).amount);
     EXPECT_EQ(5, list->get_num_items());
 
     list->remove(item_names[2], 16);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(49, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(1).item);
     EXPECT_EQ(90, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(2).item);
     EXPECT_EQ(2, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[5], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[5], item_slots.at(3).item);
     EXPECT_EQ(12, item_slots.at(3).amount);
     EXPECT_EQ(4, list->get_num_items());
 
     list->add(item_names[6], 65);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(49, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(1).item);
     EXPECT_EQ(90, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(2).item);
     EXPECT_EQ(2, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[5], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[5], item_slots.at(3).item);
     EXPECT_EQ(12, item_slots.at(3).amount);
-    EXPECT_EQ(item_names[6], item_slots.at(4).item.get_name());
+    EXPECT_EQ(item_names[6], item_slots.at(4).item);
     EXPECT_EQ(65, item_slots.at(4).amount);
     EXPECT_EQ(5, list->get_num_items());
 
     list->add(item_names[7], 6);
-    EXPECT_EQ(item_names[1], item_slots.at(0).item.get_name());
+    EXPECT_EQ(item_names[1], item_slots.at(0).item);
     EXPECT_EQ(49, item_slots.at(0).amount);
-    EXPECT_EQ(item_names[3], item_slots.at(1).item.get_name());
+    EXPECT_EQ(item_names[3], item_slots.at(1).item);
     EXPECT_EQ(90, item_slots.at(1).amount);
-    EXPECT_EQ(item_names[4], item_slots.at(2).item.get_name());
+    EXPECT_EQ(item_names[4], item_slots.at(2).item);
     EXPECT_EQ(2, item_slots.at(2).amount);
-    EXPECT_EQ(item_names[5], item_slots.at(3).item.get_name());
+    EXPECT_EQ(item_names[5], item_slots.at(3).item);
     EXPECT_EQ(12, item_slots.at(3).amount);
-    EXPECT_EQ(item_names[6], item_slots.at(4).item.get_name());
+    EXPECT_EQ(item_names[6], item_slots.at(4).item);
     EXPECT_EQ(65, item_slots.at(4).amount);
-    EXPECT_EQ(item_names[7], item_slots.at(5).item.get_name());
+    EXPECT_EQ(item_names[7], item_slots.at(5).item);
     EXPECT_EQ(6, item_slots.at(5).amount);
     EXPECT_EQ(6, list->get_num_items());
 }

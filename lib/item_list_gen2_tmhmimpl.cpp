@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,18 +12,13 @@
 #include <pkmn/exception.hpp>
 
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 
 BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
 BOOST_STATIC_CONSTEXPR int TM50_ID = 354;
 BOOST_STATIC_CONSTEXPR int HM01_ID = 397;
 BOOST_STATIC_CONSTEXPR int HM07_ID = 403;
-
-// Item indices aren't contiguous
-BOOST_STATIC_CONSTEXPR int TM01_INDEX = 191;
-BOOST_STATIC_CONSTEXPR int TM05_INDEX = 196;
-BOOST_STATIC_CONSTEXPR int TM29_INDEX = 221;
-BOOST_STATIC_CONSTEXPR int HM01_INDEX = 243;
 
 static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_TM(int num) {
     return (num >= TM01_ID and num <= TM50_ID);
@@ -43,22 +38,23 @@ namespace pkmn {
         void* ptr
     ): item_list_impl(item_list_id, game_id)
     {
+        static const char* TM_FORMAT = "TM%02d";
+        static const char* HM_FORMAT = "HM%02d";
+        char name[5] = {0};
+        for(int i = 1; i <= 50; ++i)
+        {
+            std::snprintf(name, sizeof(name), TM_FORMAT, i);
+            _item_slots[i-1].item = name;
+        }
+        for(int i = 1; i <= 7; ++i)
+        {
+            std::snprintf(name, sizeof(name), HM_FORMAT, i);
+            _item_slots[50+i-1].item = name;
+        }
+
         if(ptr) {
             _native = ptr;
             _our_mem = false;
-
-            for(int i = 0; i < 4; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-            }
 
             _from_native();
         } else {
@@ -66,21 +62,8 @@ namespace pkmn {
             std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
 
-            for(int i = 0; i < 5; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
+            for(int i = 0; i < 57; ++i) {
                 _item_slots[i].amount = 0;
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-                _item_slots[50+i].amount = 0;
             }
         }
     }

@@ -54,24 +54,20 @@ public class CSharpEqualityHashCodeTest {
     [Test]
     public void ItemSlotTest() {
         PKMN.ItemSlot itemSlot = new PKMN.ItemSlot(
-                                         new PKMN.Database.ItemEntry("Potion", "Red"),
+                                         "Potion",
                                          10
                                      );
 
         PKMN.ItemSlot itemSlotSame = new PKMN.ItemSlot(
-                                             new PKMN.Database.ItemEntry("Potion", "Red"),
+                                             "Potion",
                                              10
                                          );
         PKMN.ItemSlot itemSlotDifferentItem = new PKMN.ItemSlot(
-                                                      new PKMN.Database.ItemEntry("Great Ball", "Red"),
-                                                      10
-                                                  );
-        PKMN.ItemSlot itemSlotDifferentGame = new PKMN.ItemSlot(
-                                                      new PKMN.Database.ItemEntry("Potion", "Blue"),
+                                                      "Great Ball",
                                                       10
                                                   );
         PKMN.ItemSlot itemSlotDifferentAmount = new PKMN.ItemSlot(
-                                                        new PKMN.Database.ItemEntry("Potion", "Red"),
+                                                        "Potion",
                                                         5
                                                     );
 
@@ -81,9 +77,6 @@ public class CSharpEqualityHashCodeTest {
 
         Assert.AreNotEqual(itemSlot, itemSlotDifferentItem);
         Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentItem.GetHashCode());
-
-        Assert.AreNotEqual(itemSlot, itemSlotDifferentGame);
-        Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentGame.GetHashCode());
 
         Assert.AreNotEqual(itemSlot, itemSlotDifferentAmount);
         Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentAmount.GetHashCode());
@@ -454,19 +447,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotList = new PKMN.ItemSlotList();
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Potion", "Red"),
+                    "Potion",
                     10
                 )
         );
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
+                    "Great Ball",
                     3
                 )
         );
         itemSlotList.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
+                    "Razz Berry",
                     5
                 )
         );
@@ -474,19 +467,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotListSame = new PKMN.ItemSlotList();
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Potion", "Red"),
+                    "Potion",
                     10
                 )
         );
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
+                    "Great Ball",
                     3
                 )
         );
         itemSlotListSame.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
+                    "Razz Berry",
                     5
                 )
         );
@@ -494,19 +487,19 @@ public class CSharpEqualityHashCodeTest {
         PKMN.ItemSlotList itemSlotListReversed = new PKMN.ItemSlotList();
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Razz Berry", "Ruby"),
+                    "Razz Berry",
                     5
                 )
         );
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Great Ball", "Gold"),
+                    "Great Ball",
                     3
                 )
         );
         itemSlotListReversed.Add(
             new PKMN.ItemSlot(
-                    new PKMN.Database.ItemEntry("Potion", "Red"),
+                    "Potion",
                     10
                 )
         );

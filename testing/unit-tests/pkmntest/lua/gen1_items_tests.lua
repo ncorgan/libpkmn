@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -91,10 +91,10 @@ function gen1_items_tests.test_item_bag(bag, game)
     end
     for i = 1, #items
     do
-        luaunit.assertEquals(pockets["Items"][i].item:get_name(), items[i])
+        luaunit.assertEquals(pockets["Items"][i].item, items[i])
         luaunit.assertEquals(pockets["Items"][i].amount, i)
     end
-    luaunit.assertEquals(pockets["Items"][9].item:get_name(), "None")
+    luaunit.assertEquals(pockets["Items"][9].item, "None")
     luaunit.assertEquals(pockets["Items"][9].amount, 0)
 
     for i = 1, #items
@@ -103,7 +103,7 @@ function gen1_items_tests.test_item_bag(bag, game)
     end
     for i = 1, #items+1
     do
-        luaunit.assertEquals(pockets["Items"][i].item:get_name(), "None")
+        luaunit.assertEquals(pockets["Items"][i].item, "None")
         luaunit.assertEquals(pockets["Items"][i].amount, 0)
     end
 end

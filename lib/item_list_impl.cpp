@@ -179,10 +179,9 @@ namespace pkmn {
                         _version_group_id
                     );
 
-        pkmn::database::item_entry none_item(0, _game_id);
         _item_slots.resize(_capacity);
         for(int i = 0; i < _capacity; ++i) {
-            _item_slots[i].item = none_item;
+            _item_slots[i].item = "None";
             _item_slots[i].amount = 0;
         }
     }
@@ -239,7 +238,8 @@ namespace pkmn {
                           item_name
                       );
         for(int i = 0; i < _num_items; ++i) {
-            if(_item_slots[i].item.get_item_id() == item_id) {
+            if(pkmn::database::item_entry(_item_slots[i].item, get_game()).get_item_id() == item_id)
+            {
                 if(_item_slots[i].amount == 99) {
                     throw std::runtime_error("Cannot add any more of this item.");
                 } else if((_item_slots[i].amount + amount) > 99) {
@@ -271,7 +271,7 @@ namespace pkmn {
                       );
             }
 
-            _item_slots[_num_items].item = entry;
+            _item_slots[_num_items].item = item_name;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
@@ -295,7 +295,8 @@ namespace pkmn {
                           item_name
                       );
         for(int i = 0; i < _num_items; ++i) {
-            if(_item_slots[i].item.get_item_id() == item_id) {
+            if(pkmn::database::item_entry(_item_slots[i].item, get_game()).get_item_id() == item_id)
+            {
                 if(_item_slots[i].amount < amount) {
                     throw std::runtime_error(
                               str(boost::format("Can only remove %d items.") %
@@ -306,7 +307,7 @@ namespace pkmn {
                     if(_item_slots[i].amount == 0) {
                         _item_slots.erase(_item_slots.begin()+i);
                         _item_slots.resize(_capacity);
-                        _item_slots.back().item = pkmn::database::item_entry(0, _game_id);
+                        _item_slots.back().item = "None";
                         _num_items--;
                         _to_native();
                     }

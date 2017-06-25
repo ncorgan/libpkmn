@@ -377,21 +377,21 @@ public class GCNItemsTest {
         colognePocket.Remove("Excite Scent", 3);
         colognePocket.Remove("Vivid Scent", 1);
 
-        Assert.AreEqual(colognePocket[0].Item.Name, "Joy Scent");
+        Assert.AreEqual(colognePocket[0].Item, "Joy Scent");
         Assert.AreEqual(colognePocket[0].Amount, 3);
-        Assert.AreEqual(colognePocket[1].Item.Name, "Vivid Scent");
+        Assert.AreEqual(colognePocket[1].Item, "Vivid Scent");
         Assert.AreEqual(colognePocket[1].Amount, 2);
-        Assert.AreEqual(colognePocket[2].Item.Name, "None");
+        Assert.AreEqual(colognePocket[2].Item, "None");
         Assert.AreEqual(colognePocket[2].Amount, 0);
 
         colognePocket.Remove("Joy Scent", 3);
         colognePocket.Remove("Vivid Scent", 2);
 
-        Assert.AreEqual(colognePocket[0].Item.Name, "None");
+        Assert.AreEqual(colognePocket[0].Item, "None");
         Assert.AreEqual(colognePocket[0].Amount, 0);
-        Assert.AreEqual(colognePocket[1].Item.Name, "None");
+        Assert.AreEqual(colognePocket[1].Item, "None");
         Assert.AreEqual(colognePocket[1].Amount, 0);
-        Assert.AreEqual(colognePocket[2].Item.Name, "None");
+        Assert.AreEqual(colognePocket[2].Item, "None");
         Assert.AreEqual(colognePocket[2].Amount, 0);
 
         Assert.AreEqual(colognePocket.ValidItems.Count, 3);
@@ -510,49 +510,49 @@ public class GCNItemsTest {
             itemBag.Add(itemName, 5);
         }
 
-        Assert.AreEqual(ItemBag["Items"][0].Item.Name, "Potion");
+        Assert.AreEqual(ItemBag["Items"][0].Item, "Potion");
         Assert.AreEqual(ItemBag["Items"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Items"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Items"][1].Item, "None");
         Assert.AreEqual(ItemBag["Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Key Items"][0].Item.Name, keyItem);
+        Assert.AreEqual(ItemBag["Key Items"][0].Item, keyItem);
         Assert.AreEqual(ItemBag["Key Items"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Key Items"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Key Items"][1].Item, "None");
         Assert.AreEqual(ItemBag["Key Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Item.Name, "Great Ball");
+        Assert.AreEqual(ItemBag["Poké Balls"][0].Item, "Great Ball");
         Assert.AreEqual(ItemBag["Poké Balls"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Poké Balls"][1].Item, "None");
         Assert.AreEqual(ItemBag["Poké Balls"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["TMs"][0].Item.Name, "TM01");
+        Assert.AreEqual(ItemBag["TMs"][0].Item, "TM01");
         Assert.AreEqual(ItemBag["TMs"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["TMs"][1].Item.Name, "TM02");
+        Assert.AreEqual(ItemBag["TMs"][1].Item, "TM02");
         Assert.AreEqual(ItemBag["TMs"][1].Amount, 5);
-        Assert.AreEqual(ItemBag["TMs"][2].Item.Name, "None");
+        Assert.AreEqual(ItemBag["TMs"][2].Item, "None");
         Assert.AreEqual(ItemBag["TMs"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Berries"][0].Item.Name, "Aspear Berry");
+        Assert.AreEqual(ItemBag["Berries"][0].Item, "Aspear Berry");
         Assert.AreEqual(ItemBag["Berries"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Berries"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Berries"][1].Item, "None");
         Assert.AreEqual(ItemBag["Berries"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Colognes"][0].Item.Name, "Joy Scent");
+        Assert.AreEqual(ItemBag["Colognes"][0].Item, "Joy Scent");
         Assert.AreEqual(ItemBag["Colognes"][0].Amount, 5);
 
         if(colosseum)
         {
-            Assert.AreEqual(ItemBag["Colognes"][1].Item.Name, "Excite Scent");
+            Assert.AreEqual(ItemBag["Colognes"][1].Item, "Excite Scent");
             Assert.AreEqual(ItemBag["Colognes"][1].Amount, 5);
-            Assert.AreEqual(ItemBag["Colognes"][2].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Colognes"][2].Item, "None");
             Assert.AreEqual(ItemBag["Colognes"][2].Amount, 0);
         }
         else
         {
-            Assert.AreEqual(ItemBag["Colognes"][1].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Colognes"][1].Item, "None");
             Assert.AreEqual(ItemBag["Colognes"][1].Amount, 0);
 
-            Assert.AreEqual(ItemBag["Battle CDs"][0].Item.Name, "Battle CD 01");
+            Assert.AreEqual(ItemBag["Battle CDs"][0].Item, "Battle CD 01");
             Assert.AreEqual(ItemBag["Battle CDs"][0].Amount, 5);
         }
 
@@ -561,49 +561,49 @@ public class GCNItemsTest {
             itemBag.Remove(itemName, 5);
         }
 
-        Assert.AreEqual(ItemBag["Items"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Items"][0].Item, "None");
         Assert.AreEqual(ItemBag["Items"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Items"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Items"][1].Item, "None");
         Assert.AreEqual(ItemBag["Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Key Items"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Key Items"][0].Item, "None");
         Assert.AreEqual(ItemBag["Key Items"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Key Items"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Key Items"][1].Item, "None");
         Assert.AreEqual(ItemBag["Key Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Poké Balls"][0].Item, "None");
         Assert.AreEqual(ItemBag["Poké Balls"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Poké Balls"][1].Item, "None");
         Assert.AreEqual(ItemBag["Poké Balls"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["TMs"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["TMs"][0].Item, "None");
         Assert.AreEqual(ItemBag["TMs"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["TMs"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["TMs"][1].Item, "None");
         Assert.AreEqual(ItemBag["TMs"][1].Amount, 0);
-        Assert.AreEqual(ItemBag["TMs"][2].Item.Name, "None");
+        Assert.AreEqual(ItemBag["TMs"][2].Item, "None");
         Assert.AreEqual(ItemBag["TMs"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Berries"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Berries"][0].Item, "None");
         Assert.AreEqual(ItemBag["Berries"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Berries"][1].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Berries"][1].Item, "None");
         Assert.AreEqual(ItemBag["Berries"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Colognes"][0].Item.Name, "None");
+        Assert.AreEqual(ItemBag["Colognes"][0].Item, "None");
         Assert.AreEqual(ItemBag["Colognes"][0].Amount, 0);
 
         if(colosseum)
         {
-            Assert.AreEqual(ItemBag["Colognes"][1].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Colognes"][1].Item, "None");
             Assert.AreEqual(ItemBag["Colognes"][1].Amount, 0);
-            Assert.AreEqual(ItemBag["Colognes"][2].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Colognes"][2].Item, "None");
             Assert.AreEqual(ItemBag["Colognes"][2].Amount, 0);
         }
         else
         {
-            Assert.AreEqual(ItemBag["Colognes"][1].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Colognes"][1].Item, "None");
             Assert.AreEqual(ItemBag["Colognes"][1].Amount, 0);
 
-            Assert.AreEqual(ItemBag["Battle CDs"][0].Item.Name, "None");
+            Assert.AreEqual(ItemBag["Battle CDs"][0].Item, "None");
             Assert.AreEqual(ItemBag["Battle CDs"][0].Amount, 0);
         }
 

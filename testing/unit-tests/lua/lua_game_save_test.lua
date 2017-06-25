@@ -299,7 +299,7 @@ function game_save_test.compare_item_lists(item_list1, item_list2)
 
     for i = 1, #item_list1
     do
-        luaunit.assertEquals(item_list1[i].item:get_name(), item_list2[i].item:get_name())
+        luaunit.assertEquals(item_list1[i].item, item_list2[i].item)
         luaunit.assertEquals(item_list1[i].amount, item_list2[i].amount)
     end
 end

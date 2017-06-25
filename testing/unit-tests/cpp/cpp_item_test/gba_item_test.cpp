@@ -43,11 +43,15 @@ class gba_item_list_test: public item_list_test {};
  */
 static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
+    const std::string& game,
     int expected_num_items,
     const pksav_item_t* native_items
 ) {
     for(int i = 0; i < expected_num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(pksav_littleendian16(native_items[i].index)));
+        EXPECT_EQ(
+            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            int(pksav_littleendian16(native_items[i].index))
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(pksav_littleendian16(native_items[i].count)));
     }
 
@@ -60,20 +64,20 @@ void gba_item_pocket_test(
 ) {
     ASSERT_EQ("Items", item_pocket->get_name());
 
+    std::string game = item_pocket->get_game();
+
     int capacity = 0;
-    switch(item_pocket->at(0).item.get_game_id()) {
-        case RUBY:
-        case SAPPHIRE:
-            capacity = 20;
-            break;
-
-        case EMERALD:
-            capacity = 30;
-            break;
-
-        default:
-            capacity = 42;
-            break;
+    if(game == "Ruby" or game == "Sapphire")
+    {
+        capacity = 20;
+    }
+    else if(game == "Emerald")
+    {
+        capacity = 30;
+    }
+    else
+    {
+        capacity = 42;
     }
     ASSERT_EQ(capacity, item_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), item_pocket->as_vector().size());
@@ -130,6 +134,7 @@ void gba_item_pocket_test(
 
     check_pksav_struct(
         item_pocket->as_vector(),
+        game,
         item_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(item_pocket->get_native())
     );
@@ -140,13 +145,15 @@ void gba_key_item_pocket_test(
 ) {
     ASSERT_EQ("Key Items", key_item_pocket->get_name());
 
-    int game_id = key_item_pocket->at(0).item.get_game_id();
     std::string game = key_item_pocket->get_game();
 
     int capacity = 0;
-    if(game_id == RUBY or game_id == SAPPHIRE) {
+    if(game == "Ruby" or game == "Sapphire")
+    {
         capacity = 20;
-    } else {
+    }
+    else
+    {
         capacity = 30;
     }
     ASSERT_EQ(capacity, key_item_pocket->get_capacity());
@@ -222,6 +229,7 @@ void gba_key_item_pocket_test(
 
     check_pksav_struct(
         key_item_pocket->as_vector(),
+        game,
         key_item_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(key_item_pocket->get_native())
     );
@@ -232,12 +240,15 @@ void gba_ball_pocket_test(
 ) {
     ASSERT_EQ("Poké Balls", ball_pocket->get_name());
 
-    int game_id = ball_pocket->at(0).item.get_game_id();
+    std::string game = ball_pocket->get_game();
 
     int capacity = 0;
-    if(game_id == FIRERED or game_id == LEAFGREEN) {
+    if(game == "FireRed" or game == "LeafGreen")
+    {
         capacity = 13;
-    } else {
+    }
+    else
+    {
         capacity = 16;
     }
     ASSERT_EQ(capacity, ball_pocket->get_capacity());
@@ -285,6 +296,7 @@ void gba_ball_pocket_test(
 
     check_pksav_struct(
         ball_pocket->as_vector(),
+        game,
         ball_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(ball_pocket->get_native())
     );
@@ -293,17 +305,19 @@ void gba_ball_pocket_test(
 void gba_tmhm_pocket_test(
     pkmn::item_list::sptr tmhm_pocket
 ) {
-    int game_id = tmhm_pocket->at(0).item.get_game_id();
+    std::string game = tmhm_pocket->get_game();
 
     int capacity = 0;
-    if(game_id == FIRERED or game_id == LEAFGREEN) {
+    if(game == "FireRed" or game == "LeafGreen")
+    {
         ASSERT_EQ("TM Case", tmhm_pocket->get_name());
         capacity = 58;
-    } else {
+    }
+    else
+    {
         ASSERT_EQ("TMs & HMs", tmhm_pocket->get_name());
         capacity = 64;
     }
-    ASSERT_EQ(capacity, tmhm_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), tmhm_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty
@@ -348,6 +362,7 @@ void gba_tmhm_pocket_test(
 
     check_pksav_struct(
         tmhm_pocket->as_vector(),
+        game,
         tmhm_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(tmhm_pocket->get_native())
     );
@@ -356,13 +371,16 @@ void gba_tmhm_pocket_test(
 void gba_berry_pocket_test(
     pkmn::item_list::sptr berry_pocket
 ) {
-    int game_id = berry_pocket->at(0).item.get_game_id();
+    std::string game = berry_pocket->get_game();
 
     int capacity = 0;
-    if(game_id == FIRERED or game_id == LEAFGREEN) {
+    if(game == "FireRed" or game == "LeafGreen")
+    {
         ASSERT_EQ("Berry Pouch", berry_pocket->get_name());
         capacity = 43;
-    } else {
+    }
+    else
+    {
         ASSERT_EQ("Berries", berry_pocket->get_name());
         capacity = 46;
     }
@@ -411,6 +429,7 @@ void gba_berry_pocket_test(
 
     check_pksav_struct(
         berry_pocket->as_vector(),
+        game,
         berry_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(berry_pocket->get_native())
     );
@@ -446,6 +465,7 @@ void gba_item_pc_test(
 
     check_pksav_struct(
         item_pc->as_vector(),
+        item_pc->get_game(),
         item_pc->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(item_pc->get_native())
     );
@@ -567,35 +587,35 @@ TEST_P(gba_item_bag_test, item_bag_test) {
     const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket(tmhm_pocket_name)->as_vector();
     const pkmn::item_slots_t& berry_slots = bag->get_pocket(berry_pocket_name)->as_vector();
 
-    EXPECT_EQ("Potion", item_slots.at(0).item.get_name());
+    EXPECT_EQ("Potion", item_slots.at(0).item);
     EXPECT_EQ(5, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("Mach Bike", key_item_slots.at(0).item.get_name());
+    EXPECT_EQ("Mach Bike", key_item_slots.at(0).item);
     EXPECT_EQ(5, key_item_slots.at(0).amount);
-    EXPECT_EQ("Wailmer Pail", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("Wailmer Pail", key_item_slots.at(1).item);
     EXPECT_EQ(5, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
     EXPECT_EQ(5, ball_slots.at(0).amount);
-    EXPECT_EQ("Master Ball", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("Master Ball", ball_slots.at(1).item);
     EXPECT_EQ(5, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item.get_name());
+    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
     EXPECT_EQ(5, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("HM04", tm_hm_slots.at(1).item.get_name());
+    EXPECT_EQ("HM04", tm_hm_slots.at(1).item);
     EXPECT_EQ(5, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(2).item.get_name());
+    EXPECT_EQ("None", tm_hm_slots.at(2).item);
     EXPECT_EQ(0, tm_hm_slots.at(2).amount);
 
-    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item.get_name());
+    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item);
     EXPECT_EQ(5, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
     /*
@@ -603,91 +623,104 @@ TEST_P(gba_item_bag_test, item_bag_test) {
      * PKSav struct.
      */
     const pksav_gba_item_storage_t* native = reinterpret_cast<const pksav_gba_item_storage_t*>(bag->get_native());
-    switch(item_slots.at(0).item.get_game_id()) {
-        case RUBY:
-        case SAPPHIRE:
-            check_pksav_struct(
-                item_slots,
-                1,
-                native->rs.items
-            );
-            check_pksav_struct(
-                key_item_slots,
-                2,
-                native->rs.key_items
-            );
-            check_pksav_struct(
-                ball_slots,
-                2,
-                native->rs.balls
-            );
-            check_pksav_struct(
-                tm_hm_slots,
-                2,
-                native->rs.tms_hms
-            );
-            check_pksav_struct(
-                berry_slots,
-                1,
-                native->rs.berries
-            );
-            break;
-
-        case EMERALD:
-            check_pksav_struct(
-                item_slots,
-                1,
-                native->emerald.items
-            );
-            check_pksav_struct(
-                key_item_slots,
-                2,
-                native->emerald.key_items
-            );
-            check_pksav_struct(
-                ball_slots,
-                2,
-                native->emerald.balls
-            );
-            check_pksav_struct(
-                tm_hm_slots,
-                2,
-                native->emerald.tms_hms
-            );
-            check_pksav_struct(
-                berry_slots,
-                1,
-                native->emerald.berries
-            );
-            break;
-
-        default:
-            check_pksav_struct(
-                item_slots,
-                1,
-                native->frlg.items
-            );
-            check_pksav_struct(
-                key_item_slots,
-                2,
-                native->frlg.key_items
-            );
-            check_pksav_struct(
-                ball_slots,
-                2,
-                native->frlg.balls
-            );
-            check_pksav_struct(
-                tm_hm_slots,
-                2,
-                native->frlg.tms_hms
-            );
-            check_pksav_struct(
-                berry_slots,
-                1,
-                native->frlg.berries
-            );
-            break;
+    if(game == "Ruby" or game == "Sapphire")
+    {
+        check_pksav_struct(
+            item_slots,
+            game,
+            1,
+            native->rs.items
+        );
+        check_pksav_struct(
+            key_item_slots,
+            game,
+            2,
+            native->rs.key_items
+        );
+        check_pksav_struct(
+            ball_slots,
+            game,
+            2,
+            native->rs.balls
+        );
+        check_pksav_struct(
+            tm_hm_slots,
+            game,
+            2,
+            native->rs.tms_hms
+        );
+        check_pksav_struct(
+            berry_slots,
+            game,
+            1,
+            native->rs.berries
+        );
+    }
+    else if(game == "Emerald")
+    {
+        check_pksav_struct(
+            item_slots,
+            game,
+            1,
+            native->emerald.items
+        );
+        check_pksav_struct(
+            key_item_slots,
+            game,
+            2,
+            native->emerald.key_items
+        );
+        check_pksav_struct(
+            ball_slots,
+            game,
+            2,
+            native->emerald.balls
+        );
+        check_pksav_struct(
+            tm_hm_slots,
+            game,
+            2,
+            native->emerald.tms_hms
+        );
+        check_pksav_struct(
+            berry_slots,
+            game,
+            1,
+            native->emerald.berries
+        );
+    }
+    else
+    {
+        check_pksav_struct(
+            item_slots,
+            game,
+            1,
+            native->frlg.items
+        );
+        check_pksav_struct(
+            key_item_slots,
+            game,
+            2,
+            native->frlg.key_items
+        );
+        check_pksav_struct(
+            ball_slots,
+            game,
+            2,
+            native->frlg.balls
+        );
+        check_pksav_struct(
+            tm_hm_slots,
+            game,
+            2,
+            native->frlg.tms_hms
+        );
+        check_pksav_struct(
+            berry_slots,
+            game,
+            1,
+            native->frlg.berries
+        );
     }
 
     // Make sure removing items through the bag removes from the proper pockets.
@@ -698,35 +731,35 @@ TEST_P(gba_item_bag_test, item_bag_test) {
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("None", tm_hm_slots.at(0).item.get_name());
+    EXPECT_EQ("None", tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(1).item.get_name());
+    EXPECT_EQ("None", tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_hm_slots.at(2).item.get_name());
+    EXPECT_EQ("None", tm_hm_slots.at(2).item);
     EXPECT_EQ(0, tm_hm_slots.at(2).amount);
 
-    EXPECT_EQ("None", berry_slots.at(0).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(0).item);
     EXPECT_EQ(0, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
     // Make sure we can't add items from other generations or invalid Generation III games.

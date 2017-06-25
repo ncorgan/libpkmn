@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -61,14 +61,14 @@ namespace pkmn {
                 _item_slots[i].item = pkmn::database::item_entry(
                                           pksav_littleendian16(NATIVE_RCAST[i].index),
                                           _game_id
-                                      );
+                                      ).get_name();
                 _item_slots[i].amount = pksav_littleendian16(NATIVE_RCAST[i].count);
             }
         } else {
             _item_slots[index].item = pkmn::database::item_entry(
                                           pksav_littleendian16(NATIVE_RCAST[index].index),
                                           _game_id
-                                      );
+                                      ).get_name();
             _item_slots[index].amount = pksav_littleendian16(NATIVE_RCAST[index].count);
         }
     }
@@ -81,7 +81,10 @@ namespace pkmn {
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 NATIVE_RCAST[i].index = pksav_littleendian16(uint16_t(
-                                            _item_slots[i].item.get_item_index()
+                                            pkmn::database::item_entry(
+                                                _item_slots[i].item,
+                                                get_game()
+                                            ).get_item_index()
                                         ));
                 NATIVE_RCAST[i].count = pksav_littleendian16(uint16_t(
                                             _item_slots[i].amount
@@ -89,7 +92,10 @@ namespace pkmn {
             }
         } else {
             NATIVE_RCAST[index].index = pksav_littleendian16(uint16_t(
-                                            _item_slots[index].item.get_item_index()
+                                            pkmn::database::item_entry(
+                                                _item_slots[index].item,
+                                                get_game()
+                                            ).get_item_index()
                                         ));
             NATIVE_RCAST[index].count = pksav_littleendian16(uint16_t(
                                             _item_slots[index].amount

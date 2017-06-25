@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,7 @@
 #include <pkmn/config.hpp>
 #include <pkmn/database/item_entry.hpp>
 
+#include <string>
 #include <vector>
 
 namespace pkmn {
@@ -17,7 +18,7 @@ namespace pkmn {
     /*!
      * @brief A slot in an item list.
      *
-     * An item list is made up of a list of item slots, each of which contains
+     * An item list is made up of a list of item names, each of which contains
      * a unique item type and the amount of that item in the given pocket. This
      * struct represents a single one of those slots.
      */
@@ -25,46 +26,46 @@ namespace pkmn {
         /*!
          * @brief Default constructor.
          *
-         * The item entry represents an invalid item.
+         * This represents an empty item.
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot():
-            item(pkmn::database::item_entry()),
+        PKMN_INLINE item_slot():
+            item("None"),
             amount(0) {}
 
         /*!
          * @brief Constructor that takes in copies of each member.
          *
-         * This calls the copy constructor for the item entry.
+         * This calls the copy constructor for the string.
          *
-         * \param slot_item item entry
-         * \param slot_amount how many of the item
+         * \param item_name item name
+         * \param item_amount how many of the item
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot(
-            const pkmn::database::item_entry &slot_item,
-            int slot_amount
-        ): item(slot_item),
-           amount(slot_amount) {}
+        PKMN_INLINE item_slot(
+            const std::string& item_name,
+            int item_amount
+        ): item(item_name),
+           amount(item_amount) {}
 
 #ifndef SWIG
         /*!
          * @brief Constructor that takes in references to each member.
          *
-         * This calls the move constructor for the item entry.
+         * This calls the move constructor for the string.
          *
-         * \param slot_item item entry
-         * \param slot_amount how many of the item
+         * \param item_name item entry
+         * \param item_amount how many of the item
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot(
-            pkmn::database::item_entry&& slot_item,
-            int slot_amount
-        ): item(std::move(slot_item)),
-           amount(slot_amount) {}
+        PKMN_INLINE item_slot(
+            std::string&& item_name,
+            int item_amount
+        ): item(std::move(item_name)),
+           amount(item_amount) {}
 #endif
 
         /*!
          * @brief The item in the given slot.
          */
-        pkmn::database::item_entry item;
+        std::string item;
         /*!
          * @brief How many of the item is in the given slot.
          */
@@ -75,9 +76,9 @@ namespace pkmn {
     /*!
      * @brief Equality check between two item slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
-        const item_slot &lhs,
-        const item_slot &rhs
+    PKMN_INLINE bool operator==(
+        const item_slot& lhs,
+        const item_slot& rhs
     ) {
         return (lhs.item == rhs.item) and \
                (lhs.amount == rhs.amount);
@@ -86,9 +87,9 @@ namespace pkmn {
     /*!
      * @brief Inequality check between two item slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-        const item_slot &lhs,
-        const item_slot &rhs
+    PKMN_INLINE bool operator!=(
+        const item_slot& lhs,
+        const item_slot& rhs
     ) {
         return (lhs.item != rhs.item) or \
                (lhs.amount != rhs.amount);
