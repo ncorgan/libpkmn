@@ -23,11 +23,7 @@ typedef struct pkmn_item_list_t pkmn_item_list_t;
 
 typedef pkmn_item_list_t* pkmn_item_list_handle_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// This will replace the handle being passed around.
+// TODO: this will replace the handle being passed around.
 typedef struct
 {
     char name[PKMN_ITEM_LIST_BUFFER_SIZE];
@@ -40,6 +36,10 @@ typedef struct
     void* _internal;
 
 } pkmn_item_list2_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 PKMN_API pkmn_error_t pkmn_item_list2_init(
     const char* name,

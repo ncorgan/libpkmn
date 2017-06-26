@@ -16,13 +16,6 @@
 
 #define INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
 
-typedef struct
-{
-    pkmn::item_list::sptr cpp;
-    std::string last_error;
-    boost::mutex error_mutex;
-} pkmn_item_list_internal_t;
-
 // The caller is expected to be exception-safe.
 void init_item_list(
     pkmn_item_list2_t* item_list
@@ -48,9 +41,9 @@ void init_item_list(
                                cpp->get_capacity()*sizeof(pkmn_item_slot_t)
                            );
     item_list->item_slots.length = item_list->capacity;
-
 }
 
+// The caller is expected to be exception-safe.
 void update_item_list(
     pkmn_item_list2_t* item_list
 )

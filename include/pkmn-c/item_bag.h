@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,7 +11,10 @@
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/types/item_pockets.h>
 #include <pkmn-c/types/string_types.h>
+
+#define PKMN_ITEM_BAG_BUFFER_SIZE 64
 
 #if !defined(PKMN_ITEM_BAG_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_bag_t;
@@ -21,9 +24,46 @@ typedef struct pkmn_item_bag_t pkmn_item_bag_t;
 
 typedef pkmn_item_bag_t* pkmn_item_bag_handle_t;
 
+// TODO: this will replace the handle being passed around.
+typedef struct
+{
+    char game[PKMN_ITEM_LIST_BUFFER_SIZE];
+    pkmn_item_pockets_t pockets;
+
+    void* _internal;
+
+} pkmn_item_bag2_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+PKMN_API pkmn_error_t pkmn_item_bag2_init(
+    const char* game,
+    pkmn_item_bag2_t* item_bag_out
+);
+
+PKMN_API pkmn_error_t pkmn_item_bag2_free(
+    pkmn_item_bag2_t* item_bag
+);
+
+PKMN_API const char* pkmn_item_bag2_strerror(
+    pkmn_item_bag2_t* item_list
+);
+
+PKMN_API pkmn_error_t pkmn_item_bag2_add(
+    pkmn_item_bag2_t* item_bag,
+    const char* item,
+    int amount
+);
+
+PKMN_API pkmn_error_t pkmn_item_bag2_remove(
+    pkmn_item_bag2_t* item_bag,
+    const char* item,
+    int amount
+);
+
+// OLD BELOW
 
 PKMN_API pkmn_error_t pkmn_item_bag_make(
     pkmn_item_bag_handle_t* handle_ptr,
