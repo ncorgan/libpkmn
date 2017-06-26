@@ -132,6 +132,16 @@ pkmn_error_t pkmn_item_bag2_add(
             item,
             amount
         );
+
+        // Only update the pocket the item corresponds to.
+        pkmn::database::item_entry entry(item, cpp->get_game());
+        for(size_t i = 0; i < item_bag->pockets.num_pockets; ++i)
+        {
+            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names[i]))
+            {
+                update_item_list(&item_bag->pockets.pockets[i]);
+            }
+        }
     )
 }
 
@@ -153,6 +163,16 @@ pkmn_error_t pkmn_item_bag2_remove(
             item,
             amount
         );
+
+        // Only update the pocket the item corresponds to.
+        pkmn::database::item_entry entry(item, cpp->get_game());
+        for(size_t i = 0; i < item_bag->pockets.num_pockets; ++i)
+        {
+            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names[i]))
+            {
+                update_item_list(&item_bag->pockets.pockets[i]);
+            }
+        }
     )
 }
 
