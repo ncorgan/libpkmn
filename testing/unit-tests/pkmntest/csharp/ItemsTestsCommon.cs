@@ -111,6 +111,11 @@ internal class ItemsTestsCommon {
                 itemList[0] = new PKMN.ItemSlot("None", 5);
             }
         );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                itemList[1] = new PKMN.ItemSlot(itemNames[0], 1);
+            }
+        );
 
         Assert.AreEqual(itemList[0].Item, itemNames[0]);
         Assert.AreEqual(itemList[0].Amount, 50);

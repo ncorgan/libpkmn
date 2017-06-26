@@ -57,6 +57,7 @@ function items_tests.item_list_test_add_remove(items, item_names)
 
     luaunit.assertError(pkmn.item_list_sptr.set_item, 10, pkmn.item_slot("Ultra Ball", 5))
     luaunit.assertError(pkmn.item_list_sptr.set_item, 1, pkmn.item_slot("None", 5))
+    luaunit.assertError(pkmn.item_list_sptr.set_item, 2, pkmn.item_slot(item_names[1], 1))
 
     luaunit.assertEquals(item_names[1], items[1].item)
     luaunit.assertEquals(50, items[1].amount)

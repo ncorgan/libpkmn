@@ -116,6 +116,8 @@ class items_tests(unittest.TestCase):
             items[10] = pkmn.item_slot("Master Ball", 5)
         with self.assertRaises(ValueError):
             items[0] = pkmn.item_slot("None", 5)
+        with self.assertRaises(ValueError):
+            items[1] = pkmn.item_slot(item_names[0], 1)
 
         items[1] = pkmn.item_slot("None", 0)
 

@@ -366,6 +366,17 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("amount", 0, 99);
         }
+        for(int i = 0; i < _num_items; ++i)
+        {
+            if(_item_slots[i].item == slot.item)
+            {
+                std::string err_msg = "This item is already present in slot ";
+                err_msg.append(std::to_string(i));
+                err_msg.append(".");
+
+                throw std::invalid_argument(err_msg.c_str());
+            }
+        }
 
         _item_slots[position] = slot;
         if(slot.item == "None" and position < end_boundary)

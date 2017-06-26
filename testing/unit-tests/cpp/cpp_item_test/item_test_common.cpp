@@ -97,6 +97,9 @@ void test_item_list_add_remove(
     EXPECT_THROW(
         list->set_item(0, pkmn::item_slot("None", 5))
     , std::invalid_argument);
+    EXPECT_THROW(
+        list->set_item(1, pkmn::item_slot(item_names[0], 1))
+    , std::invalid_argument);
     EXPECT_EQ(item_names[0], item_slots.at(0).item);
     EXPECT_EQ(50, item_slots.at(0).amount);
     EXPECT_EQ(item_names[1], item_slots.at(1).item);
