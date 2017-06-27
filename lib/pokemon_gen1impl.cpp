@@ -139,6 +139,48 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_pc_pokemon_t& pc,
+        int game_id
+    ): pokemon_impl(pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _populate_party_data();
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(party.pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        *GEN1_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
     pokemon_gen1impl::~pokemon_gen1impl() {
         if(_our_pc_mem) {
             delete GEN1_PC_RCAST;

@@ -144,6 +144,56 @@ namespace pkmn {
         }
     }
 
+    pokemon_gen2impl::pokemon_gen2impl(
+        const pksav_gen2_pc_pokemon_t& pc,
+        int game_id
+    ): pokemon_impl(pc.species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        *GEN2_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        _populate_party_data();
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _set_unown_form_from_IVs();
+        }
+    }
+
+    pokemon_gen2impl::pokemon_gen2impl(
+        const pksav_gen2_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(party.pc.species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        *GEN2_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        *GEN2_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _set_unown_form_from_IVs();
+        }
+    }
+
     pokemon_gen2impl::~pokemon_gen2impl() {
         if(_our_pc_mem) {
             delete GEN2_PC_RCAST;

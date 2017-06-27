@@ -28,6 +28,14 @@ namespace pkmn {
                 pksav_gen1_party_pokemon_t* party,
                 int game_id
             );
+            pokemon_gen1impl(
+                const pksav_gen1_pc_pokemon_t& pc,
+                int game_id
+            );
+            pokemon_gen1impl(
+                const pksav_gen1_party_pokemon_t& party,
+                int game_id
+            );
 
             ~pokemon_gen1impl();
 
