@@ -108,6 +108,11 @@ namespace pkmn { namespace swig {
                 _pokemon->set_IV(stat, value);
             }
 
+            PKMN_INLINE pkmn::pokemon::sptr get_internal()
+            {
+                return _pokemon;
+            }
+
         private:
             pkmn::pokemon::sptr _pokemon;
     };
@@ -153,6 +158,11 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_marking(stat, value);
+            }
+
+            PKMN_INLINE pkmn::pokemon::sptr get_internal()
+            {
+                return _pokemon;
             }
 
         private:
@@ -202,6 +212,11 @@ namespace pkmn { namespace swig {
                 _pokemon->set_ribbon(stat, value);
             }
 
+            PKMN_INLINE pkmn::pokemon::sptr get_internal()
+            {
+                return _pokemon;
+            }
+
         private:
             pkmn::pokemon::sptr _pokemon;
     };
@@ -247,6 +262,11 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_contest_stat(stat, value);
+            }
+
+            PKMN_INLINE pkmn::pokemon::sptr get_internal()
+            {
+                return _pokemon;
             }
 
         private:

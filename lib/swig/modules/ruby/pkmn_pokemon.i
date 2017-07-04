@@ -86,54 +86,78 @@
 
 %include "cpp_wrappers/pokemon.hpp"
 
-%extend pkmn::swig::pokemon_EV_map
-{
-    VALUE keys()
+// Needed to avoid compile error
+%{
+    namespace swig
     {
-        const std::map<std::string, int>& internal = self->get_internal()->get_EVs();
-
-        std::map<std::string, int>::size_type size = internal.size();
-        int rubysize = (size <= (std::map<std::string, int>::size_type) INT_MAX) ? (int) size : -1;
-        if (rubysize < 0)
+        template <> struct traits<bool>
         {
-            SWIG_RUBY_THREAD_BEGIN_BLOCK;
-            rb_raise(rb_eRuntimeError, "map size not valid in Ruby");
-            SWIG_RUBY_THREAD_END_BLOCK;
-            return Qnil;
-        }
-        VALUE ary = rb_ary_new2(rubysize);
-        std::map<std::string, int>::const_iterator i = internal.begin();
-        std::map<std::string, int>::const_iterator e = internal.end();
-        for ( ; i != e; ++i )
-        {
-            rb_ary_push( ary, swig::from(i->first) );
-        }
-        return ary;
+            typedef pointer_category category;
+            static const char* type_name()
+            {
+                return "bool";
+            }
+        };
     }
+%}
 
-    pkmn::swig::pokemon_EV_map* each()
+// Based on SWIG's std_map.i
+%define EXTEND_POKEMON_MAP(field, val_type)
+    %extend pkmn::swig::pokemon_ ## field ## _map
     {
-        if ( !rb_block_given_p() )
-            rb_raise( rb_eArgError, "no block given");
-
-        const std::map<std::string, int>& internal = self->get_internal()->get_EVs();
-
-        VALUE k, v;
-        std::map<std::string, int>::const_iterator i = internal.begin();
-        std::map<std::string, int>::const_iterator e = internal.end();
-        for ( ; i != e; ++i )
+        VALUE keys()
         {
-            const std::map<std::string, int>::key_type&    key = i->first;
-            const std::map<std::string, int>::mapped_type& val = i->second;
+            const std::map<std::string, val_type>& internal = self->get_internal()->get_ ## field ## s();
 
-            k = swig::from<std::map<std::string, int>::key_type>(key);
-            v = swig::from<std::map<std::string, int>::mapped_type>(val);
-            rb_yield_values(2, k, v);
+            std::map<std::string, val_type>::size_type size = internal.size();
+            int rubysize = (size <= (std::map<std::string, val_type>::size_type) INT_MAX) ? (int) size : -1;
+            if (rubysize < 0)
+            {
+                SWIG_RUBY_THREAD_BEGIN_BLOCK;
+                rb_raise(rb_eRuntimeError, "map size not valid in Ruby");
+                SWIG_RUBY_THREAD_END_BLOCK;
+                return Qnil;
+            }
+            VALUE ary = rb_ary_new2(rubysize);
+            std::map<std::string, val_type>::const_iterator i = internal.begin();
+            std::map<std::string, val_type>::const_iterator e = internal.end();
+            for ( ; i != e; ++i )
+            {
+                rb_ary_push( ary, swig::from(i->first) );
+            }
+            return ary;
         }
 
-        return self;
+        pkmn::swig::pokemon_ ## field ## _map* each()
+        {
+            if ( !rb_block_given_p() )
+                rb_raise( rb_eArgError, "no block given");
+
+            const std::map<std::string, val_type>& internal = self->get_internal()->get_ ## field ## s();
+
+            VALUE k, v;
+            std::map<std::string, val_type>::const_iterator i = internal.begin();
+            std::map<std::string, val_type>::const_iterator e = internal.end();
+            for ( ; i != e; ++i )
+            {
+                const std::map<std::string, val_type>::key_type&    key = i->first;
+                const std::map<std::string, val_type>::mapped_type& val = i->second;
+
+                k = swig::from<std::map<std::string, val_type>::key_type>(key);
+                v = swig::from<std::map<std::string, val_type>::mapped_type>(val);
+                rb_yield_values(2, k, v);
+            }
+
+            return self;
+        }
     }
-}
+%enddef
+
+EXTEND_POKEMON_MAP(EV, int);
+EXTEND_POKEMON_MAP(IV, int);
+EXTEND_POKEMON_MAP(marking, bool);
+EXTEND_POKEMON_MAP(ribbon, bool);
+EXTEND_POKEMON_MAP(contest_stat, int);
 
 // Suppress shadowing warning when adding static variables.
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;
