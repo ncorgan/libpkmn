@@ -5,16 +5,107 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef SWIG_POKEMON_HPP
-#define SWIG_POKEMON_HPP
+#ifndef CPP_WRAPPERS_POKEMON_HPP
+#define CPP_WRAPPERS_POKEMON_HPP
 
 #include <pkmn/config.hpp>
-
 #include <pkmn/pokemon.hpp>
 
-#include "swig_map_wrappers.hpp"
-
 namespace pkmn { namespace swig {
+
+    class pokemon_EV_map
+    {
+        public:
+            pokemon_EV_map():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_EV_map(
+                pkmn::pokemon::sptr pokemon
+            ): _pokemon(pokemon)
+            {}
+
+            PKMN_INLINE int get_EV(
+                const std::string& stat
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                const std::map<std::string, int>& EVs = _pokemon->get_EVs();
+                if(EVs.count(stat) == 0)
+                {
+                    throw std::invalid_argument("Invalid stat.");
+                }
+
+                return EVs.at(stat);
+            }
+
+            PKMN_INLINE void set_EV(
+                const std::string& stat,
+                int value
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_EV(stat, value);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+    };
+
+    class pokemon_IV_map
+    {
+        public:
+            pokemon_IV_map():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_IV_map(
+                pkmn::pokemon::sptr pokemon
+            ): _pokemon(pokemon)
+            {}
+
+            PKMN_INLINE int get_IV(
+                const std::string& stat
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                const std::map<std::string, int>& IVs = _pokemon->get_IVs();
+                if(IVs.count(stat) == 0)
+                {
+                    throw std::invalid_argument("Invalid stat.");
+                }
+
+                return IVs.at(stat);
+            }
+
+            PKMN_INLINE void set_IV(
+                const std::string& stat,
+                int value
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_IV(stat, value);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+    };
 
     /*
      * This class is a thin wrapper around pkmn::pokemon::sptr and

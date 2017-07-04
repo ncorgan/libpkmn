@@ -5,8 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "swig/modules/swig_map_wrappers.hpp"
-#include "swig/modules/swig_pokemon.hpp"
+#include "swig/modules/cpp_wrappers/pokemon.hpp"
 
 #include <boost/filesystem.hpp>
 
