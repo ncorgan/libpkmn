@@ -9,6 +9,26 @@
 
 #include <gtest/gtest.h>
 
+TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
+{
+    pkmn::swig::pokemon_EV_map EV_map;
+    pkmn::swig::pokemon_IV_map IV_map;
+
+    EXPECT_THROW(
+        EV_map.get_EV("HP");
+    , std::runtime_error);
+    EXPECT_THROW(
+        EV_map.set_EV("HP", 0);
+    , std::runtime_error);
+
+    EXPECT_THROW(
+        IV_map.get_IV("HP");
+    , std::runtime_error);
+    EXPECT_THROW(
+        IV_map.set_IV("HP", 0);
+    , std::runtime_error);
+}
+
 TEST(cpp_swig_wrapper_test, test_pokemon_maps)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(

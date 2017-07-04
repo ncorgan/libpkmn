@@ -16,6 +16,10 @@ namespace pkmn { namespace swig {
     class pokemon_EV_map
     {
         public:
+            pokemon_EV_map():
+                _pokemon(nullptr)
+            {}
+
             pokemon_EV_map(
                 pkmn::pokemon::sptr pokemon
             ): _pokemon(pokemon)
@@ -25,6 +29,11 @@ namespace pkmn { namespace swig {
                 const std::string& stat
             )
             {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
                 const std::map<std::string, int>& EVs = _pokemon->get_EVs();
                 if(EVs.count(stat) == 0)
                 {
@@ -39,6 +48,11 @@ namespace pkmn { namespace swig {
                 int value
             )
             {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
                 _pokemon->set_EV(stat, value);
             }
 
@@ -49,6 +63,10 @@ namespace pkmn { namespace swig {
     class pokemon_IV_map
     {
         public:
+            pokemon_IV_map():
+                _pokemon(nullptr)
+            {}
+
             pokemon_IV_map(
                 pkmn::pokemon::sptr pokemon
             ): _pokemon(pokemon)
@@ -58,6 +76,11 @@ namespace pkmn { namespace swig {
                 const std::string& stat
             )
             {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
                 const std::map<std::string, int>& IVs = _pokemon->get_IVs();
                 if(IVs.count(stat) == 0)
                 {
@@ -72,6 +95,11 @@ namespace pkmn { namespace swig {
                 int value
             )
             {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
                 _pokemon->set_IV(stat, value);
             }
 
