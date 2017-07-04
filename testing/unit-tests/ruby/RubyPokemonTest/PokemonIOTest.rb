@@ -63,7 +63,6 @@ class PokemonIO < PokemonTest
             assert_equal(mightyena_moves[i], mightyena.moves[i].move)
         end
 
-        assert_equal(6, mightyena.EVs.size)
         assert_equal(30, mightyena.EVs["HP"])
         assert_equal(110, mightyena.EVs["Attack"])
         assert_equal(32, mightyena.EVs["Defense"])
@@ -71,7 +70,6 @@ class PokemonIO < PokemonTest
         assert_equal(17, mightyena.EVs["Special Attack"])
         assert_equal(83, mightyena.EVs["Special Defense"])
 
-        assert_equal(6, mightyena.IVs.size)
         assert_equal(26, mightyena.IVs["HP"])
         assert_equal(28, mightyena.IVs["Attack"])
         assert_equal(4, mightyena.IVs["Defense"])
@@ -79,7 +77,6 @@ class PokemonIO < PokemonTest
         assert_equal(25, mightyena.IVs["Special Attack"])
         assert_equal(26, mightyena.IVs["Special Defense"])
 
-        assert_equal(6, mightyena.stats.size)
         assert_equal(146, mightyena.stats["HP"])
         assert_equal(122, mightyena.stats["Attack"])
         assert_equal(81, mightyena.stats["Defense"])

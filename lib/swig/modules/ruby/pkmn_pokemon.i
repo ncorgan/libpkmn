@@ -9,10 +9,31 @@
 
 %{
     #include <pkmn/pokemon.hpp>
+
+    #include "cpp_wrappers/pokemon.hpp"
 %}
 
 %include <std_string.i>
 
+// map renames
+%rename("PokemonEVHash") pokemon_EV_map;
+%rename("__getitem__") get_EV;
+%rename("__setitem__") set_EV;
+%rename("PokemonIVHash") pokemon_IV_map;
+%rename("__getitem__") get_IV;
+%rename("__setitem__") set_IV;
+%rename("PokemonMarkingHash") pokemon_marking_map;
+%rename("__getitem__") get_marking;
+%rename("__setitem__") set_marking;
+%rename("PokemonRibbonHash") pokemon_ribbon_map;
+%rename("__getitem__") get_ribbon;
+%rename("__setitem__") set_ribbon;
+%rename("PokemonContestStatHash") pokemon_contest_stat_map;
+%rename("__getitem__") get_contest_stat;
+%rename("__setitem__") set_contest_stat;
+
+// pkmn::swig::pokemon renames
+%rename("Pokemon") pokemon;
 %rename("species") get_species;
 %rename("game") get_game;
 %rename("form") get_form;
@@ -62,36 +83,15 @@
 %rename("icon_filepath") get_icon_filepath;
 %rename("sprite_filepath") get_sprite_filepath;
 
-%rename(PokemonInternal) pkmn::pokemon;
-%include <pkmn/pokemon.hpp>
+%include "cpp_wrappers/pokemon.hpp"
 
 // Suppress shadowing warning when adding static variables.
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;
 
-%extend pkmn::shared_ptr<pkmn::pokemon> {
-
-    pkmn::shared_ptr<pkmn::pokemon>(
-        const std::string& species,
-        const std::string& game,
-        const std::string& form,
-        int level
-    ) {
-        return new pkmn::shared_ptr<pkmn::pokemon>(pkmn::pokemon::make(species, game, form, level));
-    }
-
-    pkmn::shared_ptr<pkmn::pokemon>(
-        const std::string& filepath
-    ) {
-        return new pkmn::shared_ptr<pkmn::pokemon>(pkmn::pokemon::from_file(filepath));
-    }
-
-    bool __eq__(const pkmn::shared_ptr<pkmn::pokemon>& rhs) {
-        return ((*self) == rhs);
-    }
-
+%extend pkmn::swig::pokemon
+{
     static const uint32_t DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
     static const std::string DEFAULT_TRAINER_NAME = pkmn::pokemon::DEFAULT_TRAINER_NAME;
 }
 
-%template(Pokemon) pkmn::shared_ptr<pkmn::pokemon>;
-PKMN_RUBY_VECTOR(pkmn::pokemon::sptr, PokemonList);
+PKMN_RUBY_VECTOR(pkmn::swig::pokemon, PokemonList);

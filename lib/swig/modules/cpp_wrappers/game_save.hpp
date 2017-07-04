@@ -51,6 +51,13 @@ namespace pkmn { namespace swig {
                 return pkmn::game_save::detect_type(filepath);
             }
 
+            bool operator==(
+                const game_save& rhs
+            ) const
+            {
+                return (_game_save == rhs._game_save);
+            }
+
             PKMN_INLINE std::string get_filepath()
             {
                 return _game_save->get_filepath();

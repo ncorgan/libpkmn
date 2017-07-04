@@ -8,11 +8,12 @@
 %include <ruby/stl_macros.i>
 
 %{
-    #include <pkmn/game_save.hpp>
+    #include "cpp_wrappers/game_save.hpp"
 %}
 
 %include <std_string.i>
 
+%rename("GameSave") game_save;
 %rename("filepath") get_filepath;
 %rename("game") get_game;
 %rename("trainer_name") get_trainer_name;
@@ -34,27 +35,17 @@
 %rename("item_bag") get_item_bag;
 %rename("item_pc") get_item_pc;
 
-%rename(GameSaveInternal) pkmn::game_save;
-%include <pkmn/game_save.hpp>
+%include "cpp_wrappers/game_save.hpp"
 
 // Suppress shadowing warning when adding static methods.
 %warnfilter(508) pkmn::shared_ptr<pkmn::game_save>;
 
-%extend pkmn::shared_ptr<pkmn::game_save> {
-
-    pkmn::shared_ptr<pkmn::game_save>(
+%extend pkmn::swig::game_save
+{
+    static std::string detect_type(
         const std::string& filepath
-    ) {
-        return new pkmn::shared_ptr<pkmn::game_save>(pkmn::game_save::from_file(filepath));
-    }
-
-    static std::string detect_type(const std::string& filepath) {
-        return pkmn::game_save::detect_type(filepath);
-    }
-
-    bool __eq__(const pkmn::shared_ptr<pkmn::game_save>& rhs) {
-        return ((*self) == rhs);
+    )
+    {
+        return pkmn::swig::game_save::detect_type(filepath);
     }
 }
-
-%template(GameSave) pkmn::shared_ptr<pkmn::game_save>;

@@ -43,6 +43,13 @@ namespace pkmn { namespace swig {
                _pokemon_list(other._pokemon_list)
             {}
 
+            bool operator==(
+                const pokemon_box& rhs
+            ) const
+            {
+                return (_pokemon_box == rhs._pokemon_box);
+            }
+
             PKMN_INLINE std::string get_name()
             {
                 return _pokemon_box->get_name();

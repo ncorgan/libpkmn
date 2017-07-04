@@ -33,10 +33,10 @@ class UnownTest < PokemonTest
         end
 
         # Make sure setting IVs properly changes the form.
-        unown.set_IV("Attack", 10)
-        unown.set_IV("Defense", 9)
-        unown.set_IV("Speed", 1)
-        unown.set_IV("Special", 14)
+        unown.IVs["Attack"] = 10
+        unown.IVs["Defense"] = 9
+        unown.IVs["Speed"] = 1
+        unown.IVs["Special"] = 14
         assert_equal("G", unown.form)
     end
 

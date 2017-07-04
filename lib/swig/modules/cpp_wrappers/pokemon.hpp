@@ -293,6 +293,13 @@ namespace pkmn { namespace swig {
                 _init();
             }
 
+            bool operator==(
+                const pokemon& rhs
+            ) const
+            {
+                return (_pokemon == rhs._pokemon);
+            }
+
             PKMN_INLINE pkmn::pokemon::sptr get_internal() const
             {
                 return _pokemon;
