@@ -144,6 +144,16 @@ namespace pkmn { namespace swig {
                 _IV_map = pokemon_IV_map(_pokemon);
             }
 
+            pokemon(
+                const pokemon& other
+            ): _pokemon(other._pokemon)
+            {}
+
+            PKMN_INLINE pkmn::pokemon::sptr get_internal() const
+            {
+                return _pokemon;
+            }
+
             PKMN_INLINE std::string get_species()
             {
                 return _pokemon->get_species();
