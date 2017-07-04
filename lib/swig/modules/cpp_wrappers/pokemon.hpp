@@ -56,6 +56,11 @@ namespace pkmn { namespace swig {
                 _pokemon->set_EV(stat, value);
             }
 
+            PKMN_INLINE pkmn::pokemon::sptr get_internal()
+            {
+                return _pokemon;
+            }
+
         private:
             pkmn::pokemon::sptr _pokemon;
     };

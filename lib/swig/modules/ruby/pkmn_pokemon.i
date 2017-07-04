@@ -15,7 +15,8 @@
 
 %include <std_string.i>
 
-// map renames
+// map renames/ignores
+%ignore get_internal;
 %rename("PokemonEVHash") pokemon_EV_map;
 %rename("__getitem__") get_EV;
 %rename("__setitem__") set_EV;
@@ -84,6 +85,55 @@
 %rename("sprite_filepath") get_sprite_filepath;
 
 %include "cpp_wrappers/pokemon.hpp"
+
+%extend pkmn::swig::pokemon_EV_map
+{
+    VALUE keys()
+    {
+        const std::map<std::string, int>& internal = self->get_internal()->get_EVs();
+
+        std::map<std::string, int>::size_type size = internal.size();
+        int rubysize = (size <= (std::map<std::string, int>::size_type) INT_MAX) ? (int) size : -1;
+        if (rubysize < 0)
+        {
+            SWIG_RUBY_THREAD_BEGIN_BLOCK;
+            rb_raise(rb_eRuntimeError, "map size not valid in Ruby");
+            SWIG_RUBY_THREAD_END_BLOCK;
+            return Qnil;
+        }
+        VALUE ary = rb_ary_new2(rubysize);
+        std::map<std::string, int>::const_iterator i = internal.begin();
+        std::map<std::string, int>::const_iterator e = internal.end();
+        for ( ; i != e; ++i )
+        {
+            rb_ary_push( ary, swig::from(i->first) );
+        }
+        return ary;
+    }
+
+    pkmn::swig::pokemon_EV_map* each()
+    {
+        if ( !rb_block_given_p() )
+            rb_raise( rb_eArgError, "no block given");
+
+        const std::map<std::string, int>& internal = self->get_internal()->get_EVs();
+
+        VALUE k, v;
+        std::map<std::string, int>::const_iterator i = internal.begin();
+        std::map<std::string, int>::const_iterator e = internal.end();
+        for ( ; i != e; ++i )
+        {
+            const std::map<std::string, int>::key_type&    key = i->first;
+            const std::map<std::string, int>::mapped_type& val = i->second;
+
+            k = swig::from<std::map<std::string, int>::key_type>(key);
+            v = swig::from<std::map<std::string, int>::mapped_type>(val);
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
+    }
+}
 
 // Suppress shadowing warning when adding static variables.
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;
