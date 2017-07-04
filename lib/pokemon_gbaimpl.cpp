@@ -20,6 +20,11 @@
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/utils/paths.hpp>
+
+#include <pkmn/qt/Spinda.hpp>
+
+#include <pkmn/database/item_entry.hpp>
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
@@ -29,6 +34,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
@@ -38,6 +44,8 @@
 
 #define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
 #define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+
+namespace fs = boost::filesystem;
 
 namespace pkmn {
 
@@ -64,7 +72,7 @@ namespace pkmn {
 
         pkmn::rng<uint32_t> rng;
         GBA_PC_RCAST->personality = rng.rand();
-        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(LIBPKMN_OT_ID);
+        GBA_PC_RCAST->ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -80,7 +88,7 @@ namespace pkmn {
 
         PKSAV_CALL(
             pksav_text_to_gba(
-                LIBPKMN_OT_NAME.c_str(),
+                DEFAULT_TRAINER_NAME.c_str(),
                 GBA_PC_RCAST->otname,
                 7
             );
@@ -116,7 +124,6 @@ namespace pkmn {
         _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -152,7 +159,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -187,7 +193,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -224,7 +229,6 @@ namespace pkmn {
         _misc    = &GBA_PC_RCAST->blocks.misc;
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_misc->iv_egg_ability);
@@ -339,6 +343,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gbaimpl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_index_to_name(
+                   pksav_littleendian16(_growth->held_item),
+                   _database_entry.get_game_id()
+               );
+    }
+
     void pokemon_gbaimpl::set_held_item(
         const std::string &held_item
     ) {
@@ -355,8 +369,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
-
-        _update_held_item();
     }
 
     std::string pokemon_gbaimpl::get_trainer_name() {
@@ -595,7 +607,11 @@ namespace pkmn {
         uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
         original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
 
-        return pkmn::database::game_index_to_name(original_game);
+        if(original_game == 15) {
+            return "Colosseum/XD";
+        } else {
+            return pkmn::database::game_index_to_name(original_game);
+        }
     }
 
     void pokemon_gbaimpl::set_original_game(
@@ -603,14 +619,20 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
-        int generation = pkmn::database::game_name_to_generation(game);
+        std::string game_to_test;
+        if(game == "Colosseum/XD") {
+            game_to_test = "Colosseum";
+        } else {
+            game_to_test = game;
+        }
+        int generation = pkmn::database::game_name_to_generation(game_to_test);
         if(generation != 3) {
             throw std::invalid_argument("Game must be from Generation III.");
         }
 
         _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
-                                           game
+                                           game_to_test
                                        ));
 
         _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
@@ -787,14 +809,15 @@ namespace pkmn {
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        _attacks->moves[index] = pksav_littleendian16(uint16_t(_moves[index].move.get_move_id()));
+        _attacks->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
         _attacks->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -826,6 +849,34 @@ namespace pkmn {
 
         _update_EV_map();
         _populate_party_data();
+    }
+
+    std::string pokemon_gbaimpl::get_sprite_filepath() {
+#ifdef PKMN_ENABLE_QT
+        BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
+
+        if(_database_entry.get_species_id() == SPINDA_ID) {
+            bool shiny = is_shiny();
+            fs::path spinda_sprite_filepath(pkmn::get_tmp_dir());
+            spinda_sprite_filepath /= str(boost::format("spinda_%d_%d_%u.png")
+                                          % _generation
+                                          % (shiny ? 1 : 0)
+                                          % pksav_littleendian32(GBA_PC_RCAST->personality));
+
+            pkmn::qt::GenerateSpindaSpriteAtFilepath(
+                3,
+                pksav_littleendian32(GBA_PC_RCAST->personality),
+                shiny,
+                spinda_sprite_filepath.string()
+            );
+
+            return spinda_sprite_filepath.string();
+        } else {
+#endif
+            return pokemon_impl::get_sprite_filepath();
+#ifdef PKMN_ENABLE_QT
+        }
+#endif
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(
@@ -891,9 +942,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        pksav_littleendian16(_attacks->moves[index]),
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        pksav_littleendian16(_attacks->moves[index]), 3
                     ),
                     _attacks->move_pps[index]
                 );
@@ -903,15 +953,6 @@ namespace pkmn {
                 for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
-        }
-    }
-
-    void pokemon_gbaimpl::_update_held_item() {
-        if(int(pksav_littleendian16(_growth->held_item)) != _held_item.get_item_index()) {
-            _held_item = pkmn::database::item_entry(
-                             pksav_littleendian16(_growth->held_item),
-                             _database_entry.get_game_id()
-                         );
         }
     }
 

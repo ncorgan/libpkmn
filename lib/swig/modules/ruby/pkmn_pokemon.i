@@ -24,7 +24,8 @@
 %rename("gender=") set_gender;
 %rename("is_shiny?") is_shiny;
 %rename("is_shiny=") set_shininess;
-// TODO: held item
+%rename("held_item") get_held_item;
+%rename("held_item=") set_held_item;
 %rename("trainer_name") get_trainer_name;
 %rename("trainer_name=") set_trainer_name;
 %rename("trainer_public_id") get_trainer_public_id;
@@ -88,8 +89,8 @@
         return ((*self) == rhs);
     }
 
-    static const uint32_t LIBPKMN_OT_ID = pkmn::pokemon::LIBPKMN_OT_ID;
-    static const std::string LIBPKMN_OT_NAME = pkmn::pokemon::LIBPKMN_OT_NAME;
+    static const uint32_t DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
+    static const std::string DEFAULT_TRAINER_NAME = pkmn::pokemon::DEFAULT_TRAINER_NAME;
 }
 
 %template(Pokemon) pkmn::shared_ptr<pkmn::pokemon>;

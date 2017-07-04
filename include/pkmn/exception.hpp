@@ -21,6 +21,16 @@
 
 namespace pkmn {
 
+    //! An exception thrown when a user tries to use an optional feature not built into in this installation.
+    class PKMN_API feature_not_in_build_error: public std::runtime_error
+    {
+        public:
+            //! Throw the exception for the given feature.
+            feature_not_in_build_error(
+                const std::string &feature
+            );
+    };
+
     //! An exception thrown when a given functionality does not exist in the given game.
     /*!
      * As the series progressed, features were added, so when these newer features are

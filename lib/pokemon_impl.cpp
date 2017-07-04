@@ -9,6 +9,7 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_gcnimpl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -32,8 +33,8 @@ namespace fs = boost::filesystem;
 
 namespace pkmn {
 
-    const uint32_t pkmn::pokemon::LIBPKMN_OT_ID = 2105214279;
-    const std::string pkmn::pokemon::LIBPKMN_OT_NAME = "LibPKMN";
+    const uint32_t pkmn::pokemon::DEFAULT_TRAINER_ID = 2105214279;
+    const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
 
     pokemon::sptr pokemon::make(
         const std::string &species,
@@ -64,7 +65,10 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_gcnimpl>(
+                               std::move(database_entry),
+                               level
+                           );
                 } else {
                     return pkmn::make_shared<pokemon_gbaimpl>(
                                std::move(database_entry),
@@ -108,7 +112,6 @@ namespace pkmn {
         int game_id
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
-       _held_item(pkmn::database::item_entry(0, game_id)),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
@@ -116,8 +119,7 @@ namespace pkmn {
         pkmn::database::pokemon_entry&& database_entry
     ): pokemon(),
        _database_entry(std::move(database_entry)),
-       _held_item(pkmn::database::item_entry(0, database_entry.get_game_id())),
-       _generation(pkmn::database::game_id_to_generation(database_entry.get_game_id()))
+       _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id()))
     {}
 
     std::string pokemon_impl::get_species() {
@@ -134,14 +136,6 @@ namespace pkmn {
 
     const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry() {
         return _database_entry;
-    }
-
-    const pkmn::database::item_entry& pokemon_impl::get_held_item() {
-        if(_generation == 1) {
-            throw pkmn::feature_not_in_game_error("Held items", "Generation I");
-        }
-
-        return _held_item;
     }
 
     const std::map<std::string, bool>& pokemon_impl::get_markings() {

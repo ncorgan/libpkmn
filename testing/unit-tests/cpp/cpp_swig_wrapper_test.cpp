@@ -19,7 +19,6 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
                                   );
     pkmn::swig::pokemon_EV_map EV_map(pokemon);
     pkmn::swig::pokemon_IV_map IV_map(pokemon);
-    pkmn::swig::pokemon_stat_map stat_map(pokemon);
 
     // Set EV through the Pokémon, query through the wrapper class.
     pokemon->set_EV("Attack", 25);
@@ -40,10 +39,4 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     IV_map.set_IV("Defense", 2);
     EXPECT_EQ(2, IV_map.get_IV("Defense"));
     EXPECT_EQ(2, pokemon->get_IVs().at("Defense"));
-
-    const std::map<std::string, int>& stat_map_from_pokemon = pokemon->get_stats();
-    for(auto iter = stat_map_from_pokemon.begin(); iter != stat_map_from_pokemon.end(); ++iter)
-    {
-        EXPECT_EQ(iter->second, stat_map.get_stat(iter->first));
-    }
 }

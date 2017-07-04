@@ -524,7 +524,7 @@ static void personality_test() {
     // Test invalid ability.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Torrent",
                 PKMN_MALE,
@@ -536,7 +536,7 @@ static void personality_test() {
     // Test invalid gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_GENDERLESS,
@@ -548,7 +548,7 @@ static void personality_test() {
     // Test invalid nature.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_MALE,
@@ -560,7 +560,7 @@ static void personality_test() {
     // Test and validate calls with each gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_FEMALE,
@@ -572,7 +572,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -588,7 +588,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_MALE,
@@ -600,7 +600,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -616,7 +616,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Magnemite",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Magnet Pull",
                 PKMN_GENDERLESS,
@@ -628,7 +628,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);

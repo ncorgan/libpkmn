@@ -61,20 +61,20 @@ class PokemonTest < MiniTest::Test
             assert_equal(pokemon.species.upcase, pokemon.nickname)
         end
 
-        assert_equal(PKMN::Pokemon::LIBPKMN_OT_NAME, pokemon.trainer_name)
+        assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_NAME, pokemon.trainer_name)
 
         if generation >= 2
             assert_equal("None", pokemon.held_item.name)
         end
 
         assert_equal("Male", pokemon.trainer_gender)
-        assert_equal(PKMN::Pokemon::LIBPKMN_OT_ID & 0xFFFF, pokemon.trainer_public_id)
+        assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_ID & 0xFFFF, pokemon.trainer_public_id)
 
         if generation >= 3
-            assert_equal(PKMN::Pokemon::LIBPKMN_OT_ID >> 16, pokemon.trainer_secret_id)
-            assert_equal(PKMN::Pokemon::LIBPKMN_OT_ID, pokemon.trainer_id)
+            assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_ID >> 16, pokemon.trainer_secret_id)
+            assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_ID, pokemon.trainer_id)
         else
-            assert_equal(PKMN::Pokemon::LIBPKMN_OT_ID & 0xFFFF, pokemon.trainer_id)
+            assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_ID & 0xFFFF, pokemon.trainer_id)
         end
 
         if generation >= 2

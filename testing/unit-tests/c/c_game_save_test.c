@@ -29,8 +29,8 @@
 #endif
 
 #define TOO_LONG_OT_NAME "LibPKMNLibPKMN"
-#define LIBPKMN_OT_PID 1351
-#define LIBPKMN_OT_SID 32123
+#define PKMN_DEFAULT_TRAINER_PID 1351
+#define PKMN_DEFAULT_TRAINER_SID 32123
 #define MONEY_MAX_VALUE 999999
 
 #define STRBUFFER_LEN 1024
@@ -39,22 +39,26 @@ static char strbuffer[STRBUFFER_LEN] = {0};
 static pkmn_error_t error = PKMN_ERROR_NONE;
 static char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
 static char PKSAV_TEST_SAVES[STRBUFFER_LEN] = {0};
+static char LIBPKMN_TEST_FILES[STRBUFFER_LEN] = {0};
 
 static const char* RIVAL_NAME_SET_GAMES[] = {
     "Ruby", "Sapphire", "Emerald",
+    "Colosseum", "XD",
     "Black", "White",
     "X", "Y"
 };
 
 static const char* MALE_ONLY_GAMES[] = {
     "Red", "Blue", "Yellow",
-    "Gold", "Silver"
+    "Gold", "Silver",
+    "Colosseum", "XD"
 };
 
 static bool is_rival_name_set(
     const char* game
 ) {
-    for(size_t i = 0; i < 7; ++i) {
+    size_t length = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
+    for(size_t i = 0; i < length; ++i) {
         if(!strcmp(game, RIVAL_NAME_SET_GAMES[i])) {
             return true;
         }
@@ -66,7 +70,8 @@ static bool is_rival_name_set(
 static bool is_male_only(
     const char* game
 ) {
-    for(size_t i = 0; i < 5; ++i) {
+    size_t length = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
+    for(size_t i = 0; i < length; ++i) {
         if(!strcmp(game, MALE_ONLY_GAMES[i])) {
             return true;
         }
@@ -84,75 +89,170 @@ static void populate_path_vars() {
     char* value = getenv("PKSAV_TEST_SAVES");
     TEST_ASSERT_NOT_NULL(value);
     snprintf(PKSAV_TEST_SAVES, sizeof(PKSAV_TEST_SAVES), "%s", value);
+
+    value = getenv("LIBPKMN_TEST_FILES");
+    TEST_ASSERT_NOT_NULL(value);
+    snprintf(LIBPKMN_TEST_FILES, sizeof(LIBPKMN_TEST_FILES), "%s", value);
 }
 
 /*
  * Actual test functions
  */
 
-static void game_save_test_trainer_name(
-    pkmn_game_save_handle_t game_save
-) {
-    TEST_ASSERT_NOT_NULL(game_save);
-
-    error = pkmn_game_save_set_trainer_name(
-                game_save,
-                ""
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_game_save_set_trainer_name(
-                game_save,
-                TOO_LONG_OT_NAME
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-
-    error = pkmn_game_save_set_trainer_name(
-                game_save,
-                LIBPKMN_OT_NAME
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    error = pkmn_game_save_get_trainer_name(
-                game_save,
-                strbuffer,
-                sizeof(strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
-}
-
 static void game_save_test_trainer_id(
     pkmn_game_save_handle_t game_save,
     bool is_gb_game
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(game_save);
 
-    uint32_t trainer_id = 0;
-    uint16_t trainer_id_part = 0;
-
-    error = pkmn_game_save_get_trainer_id(
+    pkmn_trainer_info_t trainer_info =
+    {
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .id = 0
+        },
+        .trainer_gender = PKMN_FEMALE
+    };
+    error = pkmn_game_save_get_trainer_info(
                 game_save,
-                &trainer_id
+                &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL((is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID), trainer_id);
+    TEST_ASSERT_EQUAL((is_gb_game ? PKMN_DEFAULT_TRAINER_PID : PKMN_DEFAULT_TRAINER_ID), trainer_info.trainer_id.id);
+    TEST_ASSERT_EQUAL(PKMN_DEFAULT_TRAINER_PID, trainer_info.trainer_id.public_id);
+    TEST_ASSERT_EQUAL((is_gb_game ? 0 : PKMN_DEFAULT_TRAINER_SID), trainer_info.trainer_id.secret_id);
+}
 
-    error = pkmn_game_save_get_trainer_public_id(
+static void game_save_test_trainer_info(
+    pkmn_game_save_handle_t game_save,
+    const char* game
+)
+{
+    TEST_ASSERT_NOT_NULL(game_save);
+
+    int generation = game_to_generation(game);
+    bool is_gb_game = (generation <= 2);
+
+    pkmn_trainer_info_t trainer_info =
+    {
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .id = 0
+        },
+        .trainer_gender = PKMN_FEMALE
+    };
+
+    error = pkmn_game_save_get_trainer_info(
                 game_save,
-                &trainer_id_part
+                &trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(LIBPKMN_OT_PID, trainer_id_part);
 
-    error = pkmn_game_save_get_trainer_secret_id(
+    strncpy(
+        trainer_info.trainer_name,
+        TOO_LONG_OT_NAME,
+        sizeof(trainer_info.trainer_name)
+    );
+    error = pkmn_game_save_set_trainer_info(
                 game_save,
-                &trainer_id_part
+                &trainer_info
             );
-    if(is_gb_game) {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-    } else {
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    strncpy(
+        trainer_info.trainer_name,
+        PKMN_DEFAULT_TRAINER_NAME,
+        sizeof(trainer_info.trainer_name)
+    );
+    error = pkmn_game_save_set_trainer_info(
+                game_save,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_game_save_get_trainer_info(
+                game_save,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(
+        PKMN_DEFAULT_TRAINER_NAME,
+        trainer_info.trainer_name
+    );
+
+    trainer_info.trainer_id.id = is_gb_game ? PKMN_DEFAULT_TRAINER_PID : PKMN_DEFAULT_TRAINER_ID;
+    error = pkmn_game_save_set_trainer_info(
+                game_save,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    game_save_test_trainer_id(
+        game_save,
+        is_gb_game
+    );
+
+    trainer_info.trainer_id.public_id = PKMN_DEFAULT_TRAINER_PID;
+    error = pkmn_game_save_set_trainer_info(
+                game_save,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    game_save_test_trainer_id(
+        game_save,
+        is_gb_game
+    );
+
+    trainer_info.trainer_id.secret_id = is_gb_game ? 0 : PKMN_DEFAULT_TRAINER_SID;
+    error = pkmn_game_save_set_trainer_info(
+                game_save,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    game_save_test_trainer_id(
+        game_save,
+        is_gb_game
+    );
+
+    if(is_male_only(game))
+    {
+        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
+    }
+    else
+    {
+        trainer_info.trainer_gender = PKMN_MALE;
+        error = pkmn_game_save_set_trainer_info(
+                    game_save,
+                    &trainer_info
+                );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(LIBPKMN_OT_SID, trainer_id_part);
+        error = pkmn_game_save_get_trainer_info(
+                    game_save,
+                    &trainer_info
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
+
+        trainer_info.trainer_gender = PKMN_FEMALE;
+        error = pkmn_game_save_set_trainer_info(
+                    game_save,
+                    &trainer_info
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        error = pkmn_game_save_get_trainer_info(
+                    game_save,
+                    &trainer_info
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_info.trainer_gender);
+
+        trainer_info.trainer_gender = PKMN_GENDERLESS;
+        error = pkmn_game_save_set_trainer_info(
+                    game_save,
+                    &trainer_info
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
 }
 
@@ -165,7 +265,7 @@ static void game_save_test_rival_name(
     if(is_rival_name_set) {
         error = pkmn_game_save_set_rival_name(
                     game_save,
-                    LIBPKMN_OT_NAME
+                    PKMN_DEFAULT_TRAINER_NAME
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     } else {
@@ -182,7 +282,7 @@ static void game_save_test_rival_name(
 
         error = pkmn_game_save_set_rival_name(
                     game_save,
-                    LIBPKMN_OT_NAME
+                    PKMN_DEFAULT_TRAINER_NAME
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -192,7 +292,7 @@ static void game_save_test_rival_name(
                     sizeof(strbuffer)
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING(LIBPKMN_OT_NAME, strbuffer);
+        TEST_ASSERT_EQUAL_STRING(PKMN_DEFAULT_TRAINER_NAME, strbuffer);
     }
 }
 
@@ -205,96 +305,17 @@ static void game_save_test_common_fields(
 
     int generation = game_to_generation(game);
 
-    game_save_test_trainer_name(game_save);
+    game_save_test_trainer_info(
+        game_save,
+        game
+    );
 
     bool is_gb_game = (generation <= 2);
-
-    error = pkmn_game_save_set_trainer_id(
-                game_save,
-                is_gb_game ? LIBPKMN_OT_PID : LIBPKMN_OT_ID
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    game_save_test_trainer_id(
-        game_save,
-        is_gb_game
-    );
-
-    error = pkmn_game_save_set_trainer_public_id(
-                game_save,
-                LIBPKMN_OT_PID
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    game_save_test_trainer_id(
-        game_save,
-        is_gb_game
-    );
-
-    error = pkmn_game_save_set_trainer_secret_id(
-                game_save,
-                LIBPKMN_OT_SID
-            );
-    if(is_gb_game) {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-    } else {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        game_save_test_trainer_id(
-            game_save,
-            is_gb_game
-        );
-    }
 
     game_save_test_rival_name(
         game_save,
         is_rival_name_set(game)
     );
-
-    pkmn_gender_t trainer_gender = PKMN_GENDERLESS;
-    if(is_male_only(game)) {
-        error = pkmn_game_save_get_trainer_gender(
-                    game_save,
-                    &trainer_gender
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
-
-        error = pkmn_game_save_set_trainer_gender(
-                    game_save,
-                    PKMN_FEMALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-    } else {
-        error = pkmn_game_save_set_trainer_gender(
-                    game_save,
-                    PKMN_MALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_game_save_get_trainer_gender(
-                    game_save,
-                    &trainer_gender
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_gender);
-
-        error = pkmn_game_save_set_trainer_gender(
-                    game_save,
-                    PKMN_FEMALE
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_game_save_get_trainer_gender(
-                    game_save,
-                    &trainer_gender
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_gender);
-
-        error = pkmn_game_save_set_trainer_gender(
-                    game_save,
-                    PKMN_GENDERLESS
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    }
 
     error = pkmn_game_save_set_money(
                 game_save,
@@ -511,9 +532,16 @@ static void get_random_pokemon(
     TEST_ASSERT_NOT_NULL(*pokemon_out);
 
     for(int i = 0; i < 4; ++i) {
+        const char* move = NULL;
+        size_t index = 0;
+        do
+        {
+            index = rand() % move_list->length;
+            move = move_list->strings[index];
+        } while(strstr(move_list->strings[index], "Shadow"));
         error = pkmn_pokemon_set_move(
                     *pokemon_out,
-                    move_list->strings[rand() % move_list->length],
+                    move,
                     i
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -763,6 +791,27 @@ static void compare_pokemon(
     char pokemon1_strbuffer[STRBUFFER_LEN] = {0};
     char pokemon2_strbuffer[STRBUFFER_LEN] = {0};
 
+    pkmn_trainer_info_t pokemon1_trainer_info =
+    {
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+    pkmn_trainer_info_t pokemon2_trainer_info =
+    {
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_MALE
+    };
+
     error = pkmn_pokemon_get_species(
                 pokemon1,
                 pokemon1_strbuffer,
@@ -805,19 +854,20 @@ static void compare_pokemon(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
 
-    error = pkmn_pokemon_get_trainer_name(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon1,
-                pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                &pokemon1_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_trainer_name(
+    error = pkmn_pokemon_get_trainer_info(
                 pokemon2,
-                pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                &pokemon2_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_trainer_info.trainer_name,
+        pokemon2_trainer_info.trainer_name
+    );
 }
 
 static void compare_game_saves(
@@ -829,6 +879,9 @@ static void compare_game_saves(
 
     char save1_strbuffer[STRBUFFER_LEN] = {0};
     char save2_strbuffer[STRBUFFER_LEN] = {0};
+
+    pkmn_trainer_info_t trainer_info1;
+    pkmn_trainer_info_t trainer_info2;
 
     char game[STRBUFFER_LEN] = {0};
 
@@ -847,81 +900,30 @@ static void compare_game_saves(
     TEST_ASSERT_EQUAL_STRING(game, save2_strbuffer);
 
     int generation = game_to_generation(save1_strbuffer);
-    bool is_gb_game = (generation <= 2);
 
-    error = pkmn_game_save_get_trainer_name(
+    error = pkmn_game_save_get_trainer_info(
                 save1,
-                save1_strbuffer,
-                sizeof(save1_strbuffer)
+                &trainer_info1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_game_save_get_trainer_name(
+    error = pkmn_game_save_get_trainer_info(
                 save2,
-                save2_strbuffer,
-                sizeof(save2_strbuffer)
+                &trainer_info2
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(save1_strbuffer, save2_strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        trainer_info1.trainer_name,
+        trainer_info2.trainer_name
+    );
+    TEST_ASSERT_EQUAL(
+        trainer_info1.trainer_id.id,
+        trainer_info2.trainer_id.id
+    );
+    TEST_ASSERT_EQUAL(
+        trainer_info1.trainer_gender,
+        trainer_info2.trainer_gender
+    );
 
-    uint32_t trainer_id1 = 0;
-    uint32_t trainer_id2 = 0;
-    error = pkmn_game_save_get_trainer_id(
-                save1,
-                &trainer_id1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_game_save_get_trainer_id(
-                save2,
-                &trainer_id2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(trainer_id1, trainer_id2);
-
-    uint16_t trainer_public_id1 = 0;
-    uint16_t trainer_public_id2 = 0;
-    error = pkmn_game_save_get_trainer_public_id(
-                save1,
-                &trainer_public_id1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_game_save_get_trainer_public_id(
-                save2,
-                &trainer_public_id2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(trainer_public_id1, trainer_public_id2);
-
-    if(!is_gb_game) {
-        uint16_t trainer_secret_id1 = 0;
-        uint16_t trainer_secret_id2 = 0;
-        error = pkmn_game_save_get_trainer_secret_id(
-                    save1,
-                    &trainer_secret_id1
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_game_save_get_trainer_secret_id(
-                    save2,
-                    &trainer_secret_id2
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(trainer_secret_id1, trainer_secret_id2);
-    }
-    if(!is_male_only(game)) {
-        pkmn_gender_t gender1 = PKMN_GENDERLESS;
-        pkmn_gender_t gender2 = PKMN_GENDERLESS;
-
-        error = pkmn_game_save_get_trainer_gender(
-                    save1,
-                    &gender1
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_game_save_get_trainer_gender(
-                    save2,
-                    &gender2
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(gender1, gender2);
-    }
     if(!is_rival_name_set(game)) {
         error = pkmn_game_save_get_rival_name(
                     save1,
@@ -1245,13 +1247,15 @@ static void test_game_save(
     pkmn_game_save_type_t save_type_from_file = PKMN_GAME_SAVE_TYPE_NONE;
     pkmn_game_save_handle_t game_save = NULL;
     pkmn_string_list_t item_list;
+    bool gamecube = !strcmp(game, "Colosseum") || !strcmp(game, "XD");
 
     char save_filepath[STRBUFFER_LEN] = {0};
     snprintf(
         save_filepath,
         sizeof(save_filepath),
         "%s%s%s%s%s",
-        PKSAV_TEST_SAVES, FS_SEPARATOR, subdir, FS_SEPARATOR, filename
+        gamecube ? LIBPKMN_TEST_FILES : PKSAV_TEST_SAVES,
+        FS_SEPARATOR, subdir, FS_SEPARATOR, filename
     );
 
     error = pkmn_game_save_detect_type(
@@ -1361,4 +1365,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_RUBY_SAPPHIRE, "Ruby", "ruby_sapphire", "pokemon_ruby.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_EMERALD, "Emerald", "emerald", "pokemon_emerald.sav");
     PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_FIRERED_LEAFGREEN, "FireRed", "firered_leafgreen", "pokemon_firered.sav");
+    PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD, "Colosseum", "gamecube_saves", "pokemon_colosseum.gci");
+    PKMN_C_GAME_SAVE_TEST(PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD, "XD", "gamecube_saves", "pokemon_xd.gci");
 )

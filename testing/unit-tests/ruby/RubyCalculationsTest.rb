@@ -276,7 +276,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::LIBPKMN_OT_ID,
+                PKMN::Pokemon::DEFAULT_TRAINER_ID,
                 true,
                 "Torrent",
                 "Male",
@@ -288,7 +288,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::LIBPKMN_OT_ID,
+                PKMN::Pokemon::DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 "Not a gender",
@@ -300,7 +300,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::LIBPKMN_OT_ID,
+                PKMN::Pokemon::DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 "Male",
@@ -333,7 +333,7 @@ class RubyListsTest < Test::Unit::TestCase
         # Test and validate a valid call.
         personality = PKMN::Calculations::generate_personality(
                           "Charmander",
-                          PKMN::Pokemon::LIBPKMN_OT_ID,
+                          PKMN::Pokemon::DEFAULT_TRAINER_ID,
                           true,
                           "Blaze",
                           "Male",
@@ -341,7 +341,7 @@ class RubyListsTest < Test::Unit::TestCase
                       )
         assert(
             PKMN::Calculations::modern_shiny(
-                personality, PKMN::Pokemon::LIBPKMN_OT_ID
+                personality, PKMN::Pokemon::DEFAULT_TRAINER_ID
             )
         )
         assert_equal(

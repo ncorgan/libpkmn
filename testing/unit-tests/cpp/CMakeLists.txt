@@ -47,6 +47,7 @@ SET(item_test_srcs
     cpp_item_test/gen1_item_test.cpp
     cpp_item_test/gen2_item_test.cpp
     cpp_item_test/gba_item_test.cpp
+    cpp_item_test/gcn_item_test.cpp
     cpp_item_test/item_test_common.cpp
 )
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
@@ -55,7 +56,7 @@ SET(pokemon_test_srcs
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp
     cpp_pokemon_test/gen2_pokemon_test.cpp
-    cpp_pokemon_test/gba_pokemon_test.cpp
+    cpp_pokemon_test/gen3_pokemon_tests.cpp
     cpp_pokemon_test/gen1_friendship_test.cpp
     cpp_pokemon_test/gender_test.cpp
     cpp_pokemon_test/pokemon_io_test.cpp
@@ -72,6 +73,6 @@ IF(PKMN_ENABLE_QT)
         ${QTx_LIBRARIES}
     )
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest_GUI cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
-    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest_GUI PROPERTIES AUTOMOC ON)
+    PKMN_ADD_CPP_TEST(cpp_QtTest_GUI cpp_QtTest/cpp_QtTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_QtTest_GUI PROPERTIES AUTOMOC ON)
 ENDIF(PKMN_ENABLE_QT)

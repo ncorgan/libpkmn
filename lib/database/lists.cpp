@@ -76,6 +76,25 @@ namespace pkmn { namespace database {
         return ret;
     }
 
+    std::vector<std::string> get_gamecube_shadow_pokemon_list(
+        bool colosseum
+    )
+    {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        static BOOST_CONSTEXPR const char* shadow_pokemon_query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND pokemon_species_id IN "
+            "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?)";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, shadow_pokemon_query, ret, (colosseum ? 1 : 0)
+        );
+        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
+        return ret;
+    }
+
     std::vector<std::string> get_item_list(
         const std::string &game
     ) {

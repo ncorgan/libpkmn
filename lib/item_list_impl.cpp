@@ -8,7 +8,10 @@
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
+#include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
+
+#include "misc_common.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -106,14 +109,20 @@ namespace pkmn {
                         throw std::runtime_error("Invalid list.");
                 }
 
+            case 3:
+                if(game_is_gamecube(game_id)) {
+                    return pkmn::make_shared<item_list_gcnimpl>(
+                               item_list_id, game_id, nullptr, capacity, false
+                           );
+                } else {
+                    return pkmn::make_shared<item_list_modernimpl>(
+                               item_list_id, game_id, nullptr, capacity, false
+                           );
+                }
+
             // Technically, this works for everything past this, but
             // we'll error out until their item_bag implementations
             // are done.
-            case 3:
-                return pkmn::make_shared<item_list_modernimpl>(
-                           item_list_id, game_id, nullptr, capacity, false
-                       );
-
             case 4:
             case 5:
             case 6:
@@ -131,6 +140,8 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int RS_PC_ID = 20;
     BOOST_STATIC_CONSTEXPR int EMERALD_PC_ID = 26;
     BOOST_STATIC_CONSTEXPR int FRLG_PC_ID = 32;
+    BOOST_STATIC_CONSTEXPR int COLO_PC_ID = 68;
+    BOOST_STATIC_CONSTEXPR int XD_PC_ID = 75;
 
     static PKMN_CONSTEXPR_OR_INLINE bool ITEM_LIST_ID_IS_PC(
         int item_list_id
@@ -141,7 +152,9 @@ namespace pkmn {
                (item_list_id == CRYSTAL_PC_ID) or
                (item_list_id == RS_PC_ID) or
                (item_list_id == EMERALD_PC_ID) or
-               (item_list_id == FRLG_PC_ID);
+               (item_list_id == FRLG_PC_ID) or
+               (item_list_id == COLO_PC_ID) or
+               (item_list_id == XD_PC_ID);
     }
 
     item_list_impl::item_list_impl(
@@ -296,6 +309,10 @@ namespace pkmn {
                         _item_slots.back().item = pkmn::database::item_entry(0, _game_id);
                         _num_items--;
                         _to_native();
+                    }
+                    else
+                    {
+                        _to_native(i);
                     }
                     return;
                 }

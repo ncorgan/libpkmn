@@ -93,4 +93,28 @@ public class CSharpGameSaveTest {
             "firered_leafgreen/pokemon_firered.sav"
         );
     }
+
+    /*
+     * Colosseum
+     */
+    [Test]
+    public void ColosseumGameSaveTest() {
+        PKMNTest.GameSaveTest.TestGameSave(
+            "Colosseum/XD",
+            "Colosseum",
+            "gamecube_saves/pokemon_colosseum.gci"
+        );
+    }
+
+    /*
+     * XD
+     */
+    [Test]
+    public void XDGameSaveTest() {
+        PKMNTest.GameSaveTest.TestGameSave(
+            "Colosseum/XD",
+            "XD",
+            "gamecube_saves/pokemon_xd.gci"
+        );
+    }
 }

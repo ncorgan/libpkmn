@@ -965,6 +965,8 @@ BOX_AND_PC_TEST_FCNS(sapphire, "Sapphire")
 BOX_AND_PC_TEST_FCNS(emerald, "Emerald")
 BOX_AND_PC_TEST_FCNS(firered, "FireRed")
 BOX_AND_PC_TEST_FCNS(leafgreen, "LeafGreen")
+BOX_AND_PC_TEST_FCNS(colosseum, "Colosseum")
+BOX_AND_PC_TEST_FCNS(xd, "XD")
 
 #define BOX_AND_PC_TESTS(test_game) \
     PKMN_C_TEST(test_game ## _pokemon_box_test) \
@@ -982,4 +984,6 @@ PKMN_C_TEST_MAIN(
     BOX_AND_PC_TESTS(emerald)
     BOX_AND_PC_TESTS(firered)
     BOX_AND_PC_TESTS(leafgreen)
+    BOX_AND_PC_TESTS(colosseum)
+    BOX_AND_PC_TESTS(xd)
 )

@@ -65,6 +65,34 @@ static void game_list_test() {
     TEST_ASSERT_EQUAL(0, games.length);
 }
 
+static void gamecube_shadow_pokemon_list_test() {
+    pkmn_string_list_t gamecube_shadow_pokemon = {
+        .strings = NULL,
+        .length = 0
+    };
+    pkmn_error_t error_code = PKMN_ERROR_NONE;
+
+    error_code = pkmn_database_gamecube_shadow_pokemon_list(
+                     true, &gamecube_shadow_pokemon
+                 );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
+    TEST_ASSERT_EQUAL(48, gamecube_shadow_pokemon.length);
+
+    pkmn_string_list_free(&gamecube_shadow_pokemon);
+    TEST_ASSERT_NULL(gamecube_shadow_pokemon.strings);
+    TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon.length);
+
+    error_code = pkmn_database_gamecube_shadow_pokemon_list(
+                     false, &gamecube_shadow_pokemon
+                 );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
+    TEST_ASSERT_EQUAL(83, gamecube_shadow_pokemon.length);
+
+    pkmn_string_list_free(&gamecube_shadow_pokemon);
+    TEST_ASSERT_NULL(gamecube_shadow_pokemon.strings);
+    TEST_ASSERT_EQUAL(0, gamecube_shadow_pokemon.length);
+}
+
 static void item_list_test() {
     pkmn_string_list_t items = {
         .strings = NULL,
@@ -279,6 +307,7 @@ static void type_list_test() {
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(ability_list_test)
     PKMN_C_TEST(game_list_test)
+    PKMN_C_TEST(gamecube_shadow_pokemon_list_test)
     PKMN_C_TEST(item_list_test)
     PKMN_C_TEST(location_list_test)
     PKMN_C_TEST(move_list_test)

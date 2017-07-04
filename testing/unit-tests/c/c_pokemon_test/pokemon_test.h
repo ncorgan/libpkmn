@@ -53,6 +53,11 @@ void emerald_pokemon_test();
 void firered_pokemon_test();
 void leafgreen_pokemon_test();
 
+// Gamecube tests
+
+void colosseum_pokemon_test();
+void xd_pokemon_test();
+
 // I/O
 
 void test_3gpkm();
@@ -76,6 +81,8 @@ void sapphire_form_test();
 void emerald_form_test();
 void firered_form_test();
 void leafgreen_form_test();
+void colosseum_form_test();
+void xd_form_test();
 
 // Gender
 
@@ -87,6 +94,8 @@ void sapphire_gender_test();
 void emerald_gender_test();
 void firered_gender_test();
 void leafgreen_gender_test();
+void colosseum_gender_test();
+void xd_gender_test();
 
 // Unown
 
@@ -98,5 +107,7 @@ void sapphire_unown_test();
 void emerald_unown_test();
 void firered_unown_test();
 void leafgreen_unown_test();
+void colosseum_unown_test();
+void xd_unown_test();
 
 #endif /* POKEMON_TEST_H */

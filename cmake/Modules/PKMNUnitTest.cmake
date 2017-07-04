@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
+    ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/lib
@@ -23,12 +24,12 @@ SET(pkmn_cpp_test_libs
     gtest
     gtest_main
     pkmn
-    #pkmntest
+    pksav
+    PkmGC
 )
 
 SET(pkmn_c_test_libs
     pkmn-c
-    #pkmntest-c
     unity
 )
 
@@ -51,7 +52,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         SET(PKSAV_TEST_SAVES ${PKMN_SOURCE_DIR}/pksav/testing/pksav-test-saves)
         SET(PYTHONPATH
             "${PKMN_BINARY_DIR}/lib/swig/python"
-            "${TESTS_BINARY_DIR}/pkmntest/python"
+            "${TESTS_SOURCE_DIR}/pkmntest/python"
         )
         SET(CLASSPATH
             "${CMAKE_CURRENT_BINARY_DIR}"
@@ -69,6 +70,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
                 "${QTx_RUNTIME_DIR}"
+                "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/pksav/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/lib/c/${CMAKE_BUILD_TYPE}"
@@ -109,6 +111,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
                 "${PKMN_BINARY_DIR}/pksav/lib"
                 "${PKMN_BINARY_DIR}/lib"
                 "${PKMN_BINARY_DIR}/lib/c"

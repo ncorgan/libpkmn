@@ -16,22 +16,25 @@ public class GameSaveTest {
     private static System.Random rng = new System.Random();
 
     private static string PKSAV_TEST_SAVES = System.Environment.GetEnvironmentVariable("PKSAV_TEST_SAVES");
+    private static string LIBPKMN_TEST_FILES = System.Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
     private static string PKMN_TMP_DIR = PKMN.Paths.GetTmpDir();
 
-    private static ushort LIBPKMN_OT_PID = 1351;
-    private static ushort LIBPKMN_OT_SID = 32123;
+    private static ushort DEFAULT_TRAINER_PID = 1351;
+    private static ushort DEFAULT_TRAINER_SID = 32123;
 
     private static int MONEY_MAX = 999999;
 
     private static string[] RIVAL_NAME_SET_GAMES = {
         "Ruby", "Sapphire", "Emerald",
+        "Colosseum", "XD",
         "Black", "White",
         "X", "Y"
     };
 
     private static string[] MALE_ONLY_GAMES = {
         "Red", "Blue", "Yellow",
-        "Gold", "Silver"
+        "Gold", "Silver",
+        "Colosseum", "XD"
     };
 
     /*
@@ -91,7 +94,7 @@ public class GameSaveTest {
 
         Assert.AreEqual(
             gameSave.TrainerID,
-            gbGame ? LIBPKMN_OT_PID : PKMN.Pokemon.LIBPKMN_OT_ID
+            gbGame ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID
         );
         if(gbGame) {
             Assert.Throws<ApplicationException>(
@@ -100,7 +103,7 @@ public class GameSaveTest {
                 }
             );
         } else {
-            Assert.AreEqual(gameSave.TrainerSecretID, LIBPKMN_OT_SID);
+            Assert.AreEqual(gameSave.TrainerSecretID, DEFAULT_TRAINER_SID);
         }
     }
 
@@ -124,18 +127,18 @@ public class GameSaveTest {
         Assert.AreEqual(gameSave.TrainerName, "LibPKMN");
 
         // Trainer ID
-        gameSave.TrainerID = isGBGame(game) ? LIBPKMN_OT_PID : PKMN.Pokemon.LIBPKMN_OT_ID;
+        gameSave.TrainerID = isGBGame(game) ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID;
         TestTrainerID(gameSave);
-        gameSave.TrainerPublicID = LIBPKMN_OT_PID;
+        gameSave.TrainerPublicID = DEFAULT_TRAINER_PID;
         TestTrainerID(gameSave);
         if(isGBGame(game)) {
             Assert.Throws<ApplicationException>(
                 delegate {
-                    gameSave.TrainerSecretID = LIBPKMN_OT_SID;
+                    gameSave.TrainerSecretID = DEFAULT_TRAINER_SID;
                 }
             );
         } else {
-            gameSave.TrainerSecretID = LIBPKMN_OT_SID;
+            gameSave.TrainerSecretID = DEFAULT_TRAINER_SID;
             TestTrainerID(gameSave);
         }
 
@@ -143,12 +146,12 @@ public class GameSaveTest {
         if(isRivalNameSet(game)) {
             Assert.Throws<ApplicationException>(
                 delegate {
-                   gameSave.RivalName = PKMN.Pokemon.LIBPKMN_OT_NAME;
+                   gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
                 }
             );
         } else {
-           gameSave.RivalName = PKMN.Pokemon.LIBPKMN_OT_NAME;
-           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.LIBPKMN_OT_NAME);
+           gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
+           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
         }
 
         // Trainer Gender
@@ -250,19 +253,22 @@ public class GameSaveTest {
                                );
 
         for(int i = 0; i < 4; ++i) {
-            ret.SetMove(
-                moveList[rng.Next(0, moveList.Count)],
-                i
-            );
+            string move = "";
+            do
+            {
+                move = moveList[rng.Next(0, moveList.Count)];
+            } while(move.StartsWith("Shadow"));
+            ret.SetMove(move, i);
         }
 
         if(generation >= 2) {
             // Keep going until one is holdable
+            PKMN.Database.ItemEntry itemEntry;
             do {
-                try {
-                    ret.SetHeldItem(itemList[rng.Next(0, itemList.Count)]);
-                } catch(ArgumentOutOfRangeException) {}
-            } while(ret.GetHeldItem().Name.Equals("None"));
+                itemEntry = new PKMN.Database.ItemEntry(itemList[rng.Next(0, itemList.Count)], game);
+            } while(!itemEntry.isHoldable);
+
+            ret.HeldItem = itemEntry.Name;
         }
 
         return ret;
@@ -327,12 +333,12 @@ public class GameSaveTest {
         Assert.AreEqual(pokemon1.TrainerName, pokemon2.TrainerName);
 
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon1.Moves[i].Move.Name, pokemon2.Moves[i].Move.Name);
+            Assert.AreEqual(pokemon1.Moves[i].Move, pokemon2.Moves[i].Move);
             Assert.AreEqual(pokemon1.Moves[i].PP, pokemon2.Moves[i].PP);
         }
 
         if(GameToGeneration(pokemon1.Game) >= 2) {
-            Assert.AreEqual(pokemon1.GetHeldItem().Name, pokemon2.GetHeldItem().Name);
+            Assert.AreEqual(pokemon1.HeldItem, pokemon2.HeldItem);
         }
     }
 
@@ -414,7 +420,15 @@ public class GameSaveTest {
         string game,
         string subPath
     ) {
-        string saveFilepath = Path.GetFullPath(Path.Combine(PKSAV_TEST_SAVES, subPath));
+        string saveFilepath = "";
+        if(game.Equals("Colosseum") || game.Equals("XD"))
+        {
+            saveFilepath = Path.GetFullPath(Path.Combine(LIBPKMN_TEST_FILES, subPath));
+        }
+        else
+        {
+            saveFilepath = Path.GetFullPath(Path.Combine(PKSAV_TEST_SAVES, subPath));
+        }
         Assert.AreEqual(PKMN.GameSave.DetectType(saveFilepath), type);
 
         PKMN.GameSave gameSave = new PKMN.GameSave(saveFilepath);

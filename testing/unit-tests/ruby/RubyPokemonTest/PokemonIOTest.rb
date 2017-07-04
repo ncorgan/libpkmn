@@ -24,7 +24,7 @@ class PokemonIO < PokemonTest
         assert_equal("Standard", mightyena.form)
         assert_equal("MIGHTYENA", mightyena.nickname)
         assert(!mightyena.is_shiny?)
-        assert_equal("Heart Scale", mightyena.get_held_item().name)
+        assert_equal("Heart Scale", mightyena.held_item)
         assert_equal("A", mightyena.trainer_name)
         assert_equal(61415, mightyena.trainer_public_id)
         assert_equal(3417, mightyena.trainer_secret_id)
@@ -60,7 +60,7 @@ class PokemonIO < PokemonTest
         mightyena_moves = ["Crunch", "Strength", "Shadow Ball", "Double-Edge"]
         assert_equal(4, mightyena.moves.length)
         (0..3).each do |i|
-            assert_equal(mightyena_moves[i], mightyena.moves[i].move.name)
+            assert_equal(mightyena_moves[i], mightyena.moves[i].move)
         end
 
         assert_equal(6, mightyena.EVs.size)

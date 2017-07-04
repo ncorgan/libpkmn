@@ -16,6 +16,15 @@
 extern "C" {
 #endif
 
+//! Returns the nature of a Pokémon with the given personality.
+/*!
+ * \param personality Personality
+ * \param nature_out Where to return the nature
+ * \param buffer_len The length of the buffer passed into nature_out
+ * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if nature_out is NULL
+ * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into nature_out is too short
+ */
 PKMN_API pkmn_error_t pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,

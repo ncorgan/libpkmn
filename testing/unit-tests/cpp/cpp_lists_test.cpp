@@ -114,6 +114,15 @@ TEST(cpp_lists_test, game_list_test) {
     EXPECT_EQ(26, games6.size());
 }
 
+TEST(cpp_lists_test, gamecube_shadow_pokemon_list_test)
+{
+    std::vector<std::string> colosseum_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(true);
+    EXPECT_EQ(48, colosseum_shadow_pokemon.size());
+
+    std::vector<std::string> xd_shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(false);
+    EXPECT_EQ(83, xd_shadow_pokemon.size());
+}
+
 TEST(cpp_lists_test, item_list_test) {
     /*
      * Make sure invalid games fail.
@@ -148,6 +157,12 @@ TEST(cpp_lists_test, item_list_test) {
     std::vector<std::string> items_frlg = pkmn::database::get_item_list("FireRed");
     std::vector<std::string> items_colo = pkmn::database::get_item_list("Colosseum");
     std::vector<std::string> items_xd   = pkmn::database::get_item_list("XD");
+
+    EXPECT_TRUE(string_in_vector(items_rs, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_e, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_frlg, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_colo, "Potion"));
+    EXPECT_TRUE(string_in_vector(items_xd, "Potion"));
 
     EXPECT_FALSE(string_in_vector(items_rs, "Magma Emblem"));
     EXPECT_TRUE(string_in_vector(items_e, "Magma Emblem"));

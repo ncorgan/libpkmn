@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "item_bag_gen1impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_bag_gbaimpl.hpp"
+#include "item_bag_gcnimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -48,7 +49,9 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<item_bag_gcnimpl>(
+                               game_id, nullptr
+                           );
                 } else {
                     return pkmn::make_shared<item_bag_gbaimpl>(
                                game_id, nullptr

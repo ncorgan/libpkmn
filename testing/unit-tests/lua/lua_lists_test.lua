@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -26,6 +26,14 @@ function test_game_list()
     luaunit.assertEquals(#game_list, 26)
     luaunit.assertEquals(game_list[1], "Red")
     luaunit.assertEquals(game_list[26], "Alpha Sapphire")
+end
+
+function test_gamecube_shadow_pokemon_list()
+    local colosseum_shadow_pokemon_list = pkmn.database.get_gamecube_shadow_pokemon_list(true)
+    luaunit.assertEquals(#colosseum_shadow_pokemon_list, 48)
+
+    local xd_shadow_pokemon_list = pkmn.database.get_gamecube_shadow_pokemon_list(false)
+    luaunit.assertEquals(#xd_shadow_pokemon_list, 83)
 end
 
 function test_item_list()

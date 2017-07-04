@@ -41,8 +41,10 @@ replacements = dict(Ev = "EV",
                     Pc = "PC",
                     TmHm = "TMHM",
                     Pksav = "PKSav",
+                    Libpkmgc = "LibPkmGC",
                     Sqlite3 = "SQLite3",
-                    Sqlitecpp = "SQLiteCpp"
+                    Sqlitecpp = "SQLiteCpp",
+                    Generatespindaspriteatfilepath = "GenerateSpindaSpriteAtFilepath"
                    )
 
 def generate_new_name(old_name, pascal):

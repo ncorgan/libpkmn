@@ -28,7 +28,7 @@ TEST(pokemon_io_test, test_3gpkm) {
     EXPECT_EQ("Standard", mightyena->get_form());
     EXPECT_EQ("MIGHTYENA", mightyena->get_nickname());
     EXPECT_FALSE(mightyena->is_shiny());
-    EXPECT_EQ("Heart Scale", mightyena->get_held_item().get_name());
+    EXPECT_EQ("Heart Scale", mightyena->get_held_item());
     EXPECT_EQ("A", mightyena->get_trainer_name());
     EXPECT_EQ(61415, mightyena->get_trainer_public_id());
     EXPECT_EQ(3417, mightyena->get_trainer_secret_id());
@@ -72,7 +72,7 @@ TEST(pokemon_io_test, test_3gpkm) {
     const pkmn::move_slots_t mightyena_moves = mightyena->get_moves();
     EXPECT_EQ(4, mightyena_moves.size());
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move.get_name());
+        EXPECT_EQ(expected_mightyena_moves[i], mightyena_moves[i].move);
     }
 
     const std::map<std::string, int>& mightyena_EVs = mightyena->get_EVs();

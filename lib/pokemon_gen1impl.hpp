@@ -53,6 +53,8 @@ namespace pkmn {
                 bool value
             );
 
+            std::string get_held_item();
+
             void set_held_item(
                 const std::string &held_item
             );

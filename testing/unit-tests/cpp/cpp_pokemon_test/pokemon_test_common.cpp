@@ -30,7 +30,9 @@ BOOST_STATIC_CONSTEXPR int STAT_MAX      = 65536;
 static void check_initial_values(
     pkmn::pokemon::sptr pokemon
 ) {
-    int generation = game_generations.at(pokemon->get_game());
+    std::string game = pokemon->get_game();
+
+    int generation = game_generations.at(game);
     EXPECT_EQ("Standard", pokemon->get_form());
 
     if(generation >= 5) {
@@ -38,20 +40,20 @@ static void check_initial_values(
     } else {
         EXPECT_EQ(boost::algorithm::to_upper_copy(pokemon->get_species()), pokemon->get_nickname());
     }
-    EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_NAME, pokemon->get_trainer_name());
+    EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_trainer_name());
 
     if(generation >= 2) {
-        EXPECT_EQ("None", pokemon->get_held_item().get_name());
+        EXPECT_EQ("None", pokemon->get_held_item());
     }
 
     EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    EXPECT_EQ(uint16_t(pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_public_id());
+    EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_public_id());
 
     if(generation >= 3) {
-        EXPECT_EQ(uint16_t((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
-        EXPECT_EQ(pkmn::pokemon::LIBPKMN_OT_ID, pokemon->get_trainer_id());
+        EXPECT_EQ(uint16_t((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
+        EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_ID, pokemon->get_trainer_id());
     } else {
-        EXPECT_EQ((pkmn::pokemon::LIBPKMN_OT_ID & 0xFFFF), pokemon->get_trainer_id());
+        EXPECT_EQ((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_id());
     }
 
     if(generation >= 2) {
@@ -60,7 +62,13 @@ static void check_initial_values(
 
     if(generation >= 3) {
         EXPECT_EQ("Premier Ball", pokemon->get_ball());
-        EXPECT_EQ(pokemon->get_game(), pokemon->get_original_game());
+
+        // There is no distinction between Colosseum and XD in the game storage.
+        if(game == "Colosseum" or game == "XD") {
+            EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
+        } else {
+            EXPECT_EQ(game, pokemon->get_original_game());
+        }
     }
 
     EXPECT_EQ(
@@ -76,12 +84,14 @@ static void check_initial_values(
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     EXPECT_EQ(4, move_slots.size());
     for(auto iter = move_slots.begin(); iter != move_slots.end(); ++iter) {
-        EXPECT_EQ("None", iter->move.get_name());
+        EXPECT_EQ("None", iter->move);
         EXPECT_EQ(0, iter->pp);
     }
 
-    EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
-    EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+    if(game != "Colosseum" and game != "XD") {
+        EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+    }
 }
 
 static void check_initial_maps(
@@ -311,7 +321,7 @@ static void test_setting_item(
 
     if(generation >= 2) {
         pokemon->set_held_item(item_name);
-        EXPECT_EQ(item_name, pokemon->get_held_item().get_name());
+        EXPECT_EQ(item_name, pokemon->get_held_item());
 
         EXPECT_THROW(
             pokemon->set_held_item("Not an item");
@@ -519,8 +529,11 @@ static void test_setting_moves(
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_names[i], move_slots.at(i).move.get_name());
-        EXPECT_EQ(move_slots.at(i).move.get_pp(0), move_slots.at(i).pp);
+        EXPECT_EQ(move_names[i], move_slots.at(i).move);
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, pokemon->get_game()).get_pp(0),
+            move_slots.at(i).pp
+        );
     }
 
     for(int i = 0; i < int(invalid_move_names.size()); ++i) {
@@ -541,7 +554,11 @@ static void test_setting_original_game(
     if(generation >= 3) {
         for(int i = 0; i < int(games.size()); ++i) {
             pokemon->set_original_game(games[i]);
-            EXPECT_EQ(games[i], pokemon->get_original_game());
+            if(games[i] == "Colosseum" or games[i] == "XD") {
+                EXPECT_EQ("Colosseum/XD", pokemon->get_original_game());
+            } else {
+                EXPECT_EQ(games[i], pokemon->get_original_game());
+            }
         }
         for(int i = 0; i < int(invalid_games.size()); ++i) {
             EXPECT_THROW(
@@ -724,6 +741,8 @@ void pokemon_test_common(
     pkmn::pokemon::sptr pokemon,
     const pkmn_test_values_t &test_values
 ) {
+    std::string game = pokemon->get_game();
+
     check_initial_maps(pokemon);
     check_initial_values(pokemon);
     test_setting_ability(pokemon);
@@ -732,7 +751,9 @@ void pokemon_test_common(
         test_values.valid_ball,
         test_values.invalid_balls
     );
-    test_image_filepaths(pokemon);
+    if(game != "Colosseum" and game != "XD") {
+        test_image_filepaths(pokemon);
+    }
     test_setting_friendship(pokemon);
     test_setting_item(
         pokemon,

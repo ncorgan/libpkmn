@@ -566,6 +566,18 @@ static void leafgreen_pokemon_party_test() {
     pokemon_party_test_common("LeafGreen");
 }
 
+// Colosseum
+
+static void colosseum_pokemon_party_test() {
+    pokemon_party_test_common("Colosseum");
+}
+
+// XD
+
+static void xd_pokemon_party_test() {
+    pokemon_party_test_common("XD");
+}
+
 PKMN_C_TEST_MAIN(
     PKMN_C_TEST(red_pokemon_party_test)
     PKMN_C_TEST(blue_pokemon_party_test)
@@ -580,4 +592,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(emerald_pokemon_party_test)
     PKMN_C_TEST(firered_pokemon_party_test)
     PKMN_C_TEST(leafgreen_pokemon_party_test)
+
+    PKMN_C_TEST(colosseum_pokemon_party_test)
+    PKMN_C_TEST(xd_pokemon_party_test)
 )

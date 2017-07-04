@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -32,6 +32,13 @@ class lists_test(unittest.TestCase):
         self.assertEqual(len(game_list), 26)
         self.assertEqual(game_list[0], "Red")
         self.assertEqual(game_list[-1], "Alpha Sapphire")
+
+    def test_gamecube_shadow_pokemon_list(self):
+        colosseum_shadow_pokemon_list = pkmn.database.get_gamecube_shadow_pokemon_list(True)
+        self.assertEqual(len(colosseum_shadow_pokemon_list), 48)
+
+        xd_shadow_pokemon_list = pkmn.database.get_gamecube_shadow_pokemon_list(False)
+        self.assertEqual(len(xd_shadow_pokemon_list), 83)
 
     def test_item_list(self):
         # Make sure trying to create an invalid list results in an error

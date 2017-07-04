@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -34,6 +34,15 @@ namespace pkmn { namespace database {
     PKMN_API std::vector<std::string> get_game_list(
         int generation,
         bool include_previous
+    );
+
+    /*!
+     * @brief Returns an alphabetized list of Shadow Pokémon available in the specified Gamecube game.
+     *
+     * \param colosseum return Pokémon from Colosseum, XD otherwise
+     */
+    PKMN_API std::vector<std::string> get_gamecube_shadow_pokemon_list(
+        bool colosseum
     );
 
     /*!

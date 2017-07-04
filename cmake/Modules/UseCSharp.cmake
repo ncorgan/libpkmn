@@ -22,7 +22,7 @@
 # This file is based on the work of GDCM:
 #   http://gdcm.svn.sf.net/viewvc/gdcm/trunk/CMake/UseCSharp.cmake
 # Copyright (c) 2006-2010 Mathieu Malaterre <mathieu.malaterre@gmail.com>
-#                    2016 Nicholas Corgan <n.corgan@gmail.com>
+#               2016-2017 Nicholas Corgan <n.corgan@gmail.com>
 #
 
 # TODO: ADD SUPPORT FOR LINK LIBRARIES
@@ -42,7 +42,7 @@ endmacro( CSHARP_ADD_EXECUTABLE )
 
 # Private macro
 macro( CSHARP_ADD_PROJECT type name )
-  set( refs "/reference:System.dll;/reference:System.Windows.Forms.dll" )
+  set( refs "/reference:System.dll;/reference:System.Drawing.dll;/reference:System.Windows.Forms.dll" )
   set( sources )
   set( sources_dep )
 

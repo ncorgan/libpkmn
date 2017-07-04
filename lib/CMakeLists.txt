@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,9 +8,11 @@
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
     ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
+    ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_BINARY_DIR}/pksav/include
     ${PKMN_SOURCE_DIR}/pksav/include
     ${PKMN_BINARY_DIR}/include
@@ -20,6 +22,7 @@ INCLUDE_DIRECTORIES(
 SET(pkmn_libs
     ${Boost_LIBRARIES}
     pksav
+    PkmGC
     SQLiteCpp
 )
 
@@ -48,9 +51,8 @@ IF(PKMN_ENABLE_QT)
     LIST(APPEND pkmn_libs
         ${QTx_LIBRARIES}
     )
-
-    ADD_SUBDIRECTORY(qt)
 ENDIF(PKMN_ENABLE_QT)
+ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
@@ -58,7 +60,7 @@ SET(pkmn_sources
     ${pkmn_io_sources}
     ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
-    ${pkmn_qt_sources} # Will be empty without Qt support
+    ${pkmn_qt_sources}
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp
@@ -66,25 +68,32 @@ SET(pkmn_sources
     game_save_gen1impl.cpp
     game_save_gen2impl.cpp
     game_save_gbaimpl.cpp
+    game_save_gcnimpl.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_bag_gen2impl.cpp
     item_bag_gbaimpl.cpp
+    item_bag_gcnimpl.cpp
     item_list_impl.cpp
     item_list_gen2_tmhmimpl.cpp
+    item_list_gcnimpl.cpp
     item_list_modernimpl.cpp
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
     pokemon_gen2impl.cpp
     pokemon_gbaimpl.cpp
+    pokemon_gcnimpl.cpp
     pokemon_box_impl.cpp
     pokemon_box_gbaimpl.cpp
+    pokemon_box_gcnimpl.cpp
     pokemon_party_impl.cpp
     pokemon_party_gbaimpl.cpp
+    pokemon_party_gcnimpl.cpp
     pokemon_pc_impl.cpp
     pokemon_pc_gen1impl.cpp
     pokemon_pc_gen2impl.cpp
     pokemon_pc_gbaimpl.cpp
+    pokemon_pc_gcnimpl.cpp
 )
 
 #

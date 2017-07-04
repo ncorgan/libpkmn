@@ -20,7 +20,8 @@ public class PokemonPCTests {
         } else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal")) {
             return 2;
         } else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                  game.Equals("FireRed") || game.Equals("LeafGreen")) {
+                  game.Equals("FireRed") || game.Equals("LeafGreen") ||
+                  game.Equals("Colosseum") || game.Equals("XD")) {
             return 3;
         } else {
             return 0;
@@ -62,7 +63,7 @@ public class PokemonPCTests {
             Assert.AreEqual(box[i].Game, game);
 
             for(int j = 0; j < box[i].Moves.Count; ++j) {
-                Assert.AreEqual(box[i].Moves[j].Move.Name, "None");
+                Assert.AreEqual(box[i].Moves[j].Move, "None");
                 Assert.AreEqual(box[i].Moves[j].PP, 0);
             }
         }

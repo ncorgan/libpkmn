@@ -13,6 +13,8 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include "libpkmgc_includes.hpp"
+
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
@@ -136,7 +138,7 @@ void pokemon_box_test_common(
     , std::out_of_range);
 
     box->set_pokemon(0, bulbasaur);
-    EXPECT_EQ(1, box->get_num_pokemon());
+    ASSERT_EQ(1, box->get_num_pokemon());
     box->set_pokemon(1, charmander);
     EXPECT_EQ(2, box->get_num_pokemon());
 
@@ -210,7 +212,7 @@ void pokemon_box_test_common(
     EXPECT_NE(original_first->get_native_pc_data(), box->get_pokemon(0)->get_native_pc_data());
     EXPECT_NE(original_second->get_native_pc_data(), box->get_pokemon(1)->get_native_pc_data());
 
-    // On the C++ level, check the underlying PKSav struct.
+    // On the C++ level, check the underlying representation.
     switch(generation) {
         case 1: {
             const pksav_gen1_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen1_pokemon_box_t*>(box->get_native());
@@ -258,6 +260,13 @@ void pokemon_box_test_common(
 
         case 3: {
             if(game == "Colosseum" or game == "XD") {
+                const LibPkmGC::GC::PokemonBox* native_box = reinterpret_cast<const LibPkmGC::GC::PokemonBox*>(box->get_native());
+                const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
+                for(size_t i = 0; i < pokemon_list.size(); ++i) {
+                    EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), native_box->pkm[i]);
+                }
+
+                EXPECT_EQ(box->get_name(), std::string(native_box->name->toUTF8()));
             } else {
                 const pksav_gba_pokemon_box_t* native_box = reinterpret_cast<const pksav_gba_pokemon_box_t*>(box->get_native());
                 const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
@@ -363,6 +372,18 @@ void pokemon_pc_test_common(
 
         case 3: {
             if(game == "Colosseum" or game == "XD") {
+                const LibPkmGC::GC::PokemonBox** native_boxes = reinterpret_cast<const LibPkmGC::GC::PokemonBox**>(pc->get_native());
+                const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
+                const std::vector<std::string>& box_names = pc->get_box_names();
+                for(size_t i = 0; i < pokemon_box_list.size(); ++i) {
+                    const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
+                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[0]->species));
+                    EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[1]->species));
+                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[0]->species));
+                    EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[2]->species));
+                    EXPECT_EQ(pokemon_box_list.at(i)->get_native(), native_boxes[i]);
+                    EXPECT_EQ(std::string(native_boxes[i]->name->toUTF8()), box_names.at(i));
+                }
             } else {
                 const pksav_gba_pokemon_pc_t* native_pc = reinterpret_cast<const pksav_gba_pokemon_pc_t*>(pc->get_native());
                 const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
@@ -405,7 +426,9 @@ static const std::string games[] = {
     "Sapphire",
     "Emerald",
     "FireRed",
-    "LeafGreen"
+    "LeafGreen",
+    "Colosseum",
+    "XD"
 };
 
 namespace pkmntest {

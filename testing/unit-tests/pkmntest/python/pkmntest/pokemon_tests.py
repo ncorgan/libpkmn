@@ -143,8 +143,9 @@ class pokemon_tests(unittest.TestCase):
         # Unown's "!" and "?" forms aren't in Generation II.
         for letter in string.ascii_uppercase:
             unown = pkmn.pokemon("Unown", game, letter, 10)
-            self.assertTrue(os.path.exists(unown.get_icon_filepath()))
-            self.assertTrue(os.path.exists(unown.get_sprite_filepath()))
+            if game not in ["Colosseum", "XD"]:
+                self.assertTrue(os.path.exists(unown.get_icon_filepath()))
+                self.assertTrue(os.path.exists(unown.get_sprite_filepath()))
 
         if generation > 2:
             pkmn.pokemon("Unown", game, "!", 10)
@@ -178,14 +179,16 @@ class pokemon_tests(unittest.TestCase):
         # Castform should always work.
         for form in pkmn.database.pokemon_entry("Castform", "Omega Ruby", "").get_forms():
             castform = pkmn.pokemon("Castform", game, form, 30)
-            self.assertTrue(os.path.exists(castform.get_icon_filepath()))
-            self.assertTrue(os.path.exists(castform.get_sprite_filepath()))
+            if game not in ["Colosseum", "XD"]:
+                self.assertTrue(os.path.exists(castform.get_icon_filepath()))
+                self.assertTrue(os.path.exists(castform.get_sprite_filepath()))
 
         # Primal Reversion should only work in OR/AS.
         for species in ["Groudon", "Kyogre"]:
             pokemon = pkmn.pokemon(species, game, "", 70)
-            self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
-            self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
+            if game not in ["Colosseum", "XD"]:
+                self.assertTrue(os.path.exists(pokemon.get_icon_filepath()))
+                self.assertTrue(os.path.exists(pokemon.get_sprite_filepath()))
             if game in ["Omega Ruby", "Alpha Sapphire"]:
                 pkmn.pokemon(species, game, "Primal Reversion", 70)
             else:
@@ -196,8 +199,9 @@ class pokemon_tests(unittest.TestCase):
         if generation == 3:
             if game in ["Ruby", "Sapphire", "Colosseum", "XD"]:
                 deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
-                self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
-                self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
+                if game not in ["Colosseum", "XD"]:
+                    self.assertTrue(os.path.exists(deoxys.get_icon_filepath()))
+                    self.assertTrue(os.path.exists(deoxys.get_sprite_filepath()))
             else:
                 with self.assertRaises(ValueError):
                     deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)

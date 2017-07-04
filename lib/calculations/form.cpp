@@ -16,7 +16,7 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_CONSTEXPR_OR_INLINE char gen2_unown_letter(
+    PKMN_INLINE char gen2_unown_letter(
         uint8_t IV_attack, uint8_t IV_defense,
         uint8_t IV_speed, uint8_t IV_special
     ) {
@@ -53,7 +53,7 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    PKMN_CONSTEXPR_OR_INLINE char gen3_unown_letter(
+    PKMN_INLINE char gen3_unown_letter(
         const uint8_t* bytes
     ) {
         return ((((bytes[3] & 0x3) << 6) |

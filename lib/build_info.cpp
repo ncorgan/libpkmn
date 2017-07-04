@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,13 +8,15 @@
 #include <pkmn/build_info.hpp>
 
 #include <boost/version.hpp>
+#include <LibPkmGC/Core/Config.h>
 #include <pksav/version.h>
 #include <sqlite3.h>
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include <boost/format.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-#if defined(PKMN_QT4) || defined(PKMN_QT5)
+#ifdef PKMN_ENABLE_QT
 #include <QtGlobal>
 #else
 #define QT_VERSION_STR "N/A"
@@ -26,6 +28,13 @@ namespace pkmn { namespace build_info {
         return boost::algorithm::replace_first_copy<std::string>(
                    std::string(BOOST_LIB_VERSION), "_", "."
                );
+    }
+
+    std::string get_libpkmgc_version() {
+        return str(boost::format("%d.%d.%d")
+                   % LIBPKMGC_VERSION_MAJOR
+                   % LIBPKMGC_VERSION_MINOR
+                   % LIBPKMGC_VERSION_BUILD);
     }
 
     std::string get_pksav_version() {

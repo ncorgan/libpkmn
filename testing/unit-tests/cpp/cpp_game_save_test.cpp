@@ -6,6 +6,7 @@
  */
 
 #include "env.hpp"
+#include "types/rng.hpp"
 
 #include <pkmntest/config.hpp>
 #include <pkmntest/util.hpp>
@@ -19,6 +20,8 @@
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
 
+#include "libpkmgc_includes.hpp"
+
 #include <gtest/gtest.h>
 
 #include <boost/assign.hpp>
@@ -28,8 +31,8 @@
 #include <map>
 
 static BOOST_CONSTEXPR const char* TOO_LONG_OT_NAME = "LibPKMNLibPKMN";
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_PID = 1351;
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_SID = 32123;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_PID = 1351;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
@@ -43,20 +46,22 @@ static const std::string GB_GAMES[] = {
 };
 
 static const std::string RIVAL_NAME_SET_GAMES[] = {
-    "Ruby", "Sapphire", "Emerald",
+    "Ruby", "Sapphire", "Emerald", "Colosseum", "XD",
     "Black", "White",
     "X", "Y"
 };
 
 static const std::string MALE_ONLY_GAMES[] = {
     "Red", "Blue", "Yellow",
-    "Gold", "Silver"
+    "Gold", "Silver",
+    "Colosseum", "XD"
 };
 
 namespace fs = boost::filesystem;
 
 namespace pkmntest {
 
+    static const fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 
     typedef std::tuple<std::string, std::string, std::string> game_save_test_params_t;
@@ -71,10 +76,16 @@ namespace pkmntest {
                 return _params;
             }
 
+            PKMNTEST_INLINE bool is_gamecube()
+            {
+                return _gamecube;
+            }
+
         protected:
             void SetUp() {
                 _params = GetParam();
-                std::string save_path = fs::path(PKSAV_TEST_SAVES / std::get<2>(_params)).string();
+                _gamecube = (std::get<1>(_params) == "Colosseum" or std::get<1>(_params) == "XD");
+                std::string save_path = fs::path((_gamecube ? LIBPKMN_TEST_FILES : PKSAV_TEST_SAVES) / std::get<2>(_params)).string();
                 ASSERT_EQ(std::get<0>(_params), pkmn::game_save::detect_type(save_path));
                 _game_save = pkmn::game_save::from_file(save_path);
                 ASSERT_EQ(std::get<1>(_params), _game_save->get_game());
@@ -83,37 +94,41 @@ namespace pkmntest {
         private:
 
             game_save_test_params_t _params;
+            bool _gamecube;
             pkmn::game_save::sptr _game_save;
     };
 
     static PKMN_INLINE bool is_gb_game(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(GB_GAMES)/sizeof(GB_GAMES[0]);
         return std::find(
                    GB_GAMES,
-                   GB_GAMES+6,
+                   GB_GAMES+arr_size,
                    game
-               ) != GB_GAMES+6;
+               ) != GB_GAMES+arr_size;
     }
 
     static PKMN_INLINE bool is_rival_name_set(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
         return std::find(
                    RIVAL_NAME_SET_GAMES,
-                   RIVAL_NAME_SET_GAMES+7,
+                   RIVAL_NAME_SET_GAMES+arr_size,
                    game
-               ) != RIVAL_NAME_SET_GAMES+7;
+               ) != RIVAL_NAME_SET_GAMES+arr_size;
     }
 
     static PKMN_INLINE bool is_male_only(
         const std::string &game
     ) {
+        size_t arr_size = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
         return std::find(
                    MALE_ONLY_GAMES,
-                   MALE_ONLY_GAMES+5,
+                   MALE_ONLY_GAMES+arr_size,
                    game
-               ) != MALE_ONLY_GAMES+5;
+               ) != MALE_ONLY_GAMES+arr_size;
     }
 
     static void test_trainer_name(
@@ -126,22 +141,22 @@ namespace pkmntest {
             save->set_trainer_name(TOO_LONG_OT_NAME);
         , std::invalid_argument);
 
-        save->set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-        EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_trainer_name());
+        save->set_trainer_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+        EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_trainer_name());
     }
 
     static void test_trainer_id(
         pkmn::game_save::sptr save,
         bool is_gb_game
     ) {
-        EXPECT_EQ((is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID), save->get_trainer_id());
-        EXPECT_EQ(LIBPKMN_OT_PID, save->get_trainer_public_id());
+        EXPECT_EQ((is_gb_game ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID), save->get_trainer_id());
+        EXPECT_EQ(DEFAULT_TRAINER_PID, save->get_trainer_public_id());
         if(is_gb_game) {
             EXPECT_THROW(
                 save->get_trainer_secret_id();
             , pkmn::feature_not_in_game_error);
         } else {
-            EXPECT_EQ(LIBPKMN_OT_SID, save->get_trainer_secret_id());
+            EXPECT_EQ(DEFAULT_TRAINER_SID, save->get_trainer_secret_id());
         }
     }
 
@@ -151,7 +166,7 @@ namespace pkmntest {
     ) {
         if(is_rival_name_set) {
             EXPECT_THROW(
-                save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
+                save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
             , pkmn::feature_not_in_game_error);
         } else {
             EXPECT_THROW(
@@ -161,8 +176,8 @@ namespace pkmntest {
                 save->set_rival_name(TOO_LONG_OT_NAME);
             , std::invalid_argument);
 
-            save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-            EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_rival_name());
+            save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+            EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_rival_name());
         }
     }
 
@@ -175,17 +190,17 @@ namespace pkmntest {
         test_trainer_name(save);
 
         save->set_trainer_id(
-            is_gb_game(game) ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
+            is_gb_game(game) ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID
         );
         test_trainer_id(save, is_gb_game(game));
-        save->set_trainer_public_id(LIBPKMN_OT_PID);
+        save->set_trainer_public_id(DEFAULT_TRAINER_PID);
         test_trainer_id(save, is_gb_game(game));
         if(is_gb_game(game)) {
             EXPECT_THROW(
-                save->set_trainer_secret_id(LIBPKMN_OT_SID);
+                save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             , pkmn::feature_not_in_game_error);
         } else {
-            save->set_trainer_secret_id(LIBPKMN_OT_SID);
+            save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             test_trainer_id(save, is_gb_game(game));
         }
 
@@ -281,36 +296,39 @@ namespace pkmntest {
         const std::vector<std::string> &item_list
     ) {
         int generation = game_generations.at(game);
+        pkmn::rng<uint32_t> rng;
+        (void)move_list;
 
         // Don't deal with Deoxys issues here.
         std::string species;
         if(generation == 3) {
             do {
-                species = pokemon_list[std::rand() % pokemon_list.size()];
+                species = pokemon_list[rng.rand() % pokemon_list.size()];
             } while(species == "Deoxys");
         } else {
-            species = pokemon_list[std::rand() % pokemon_list.size()];
+            species = pokemon_list[rng.rand() % pokemon_list.size()];
         }
         pkmn::pokemon::sptr ret = pkmn::pokemon::make(
                                       species,
                                       game,
                                       "",
-                                      ((std::rand() % 99) + 2)
+                                      ((rng.rand() % 99) + 2)
                                   );
         for(int i = 0; i < 4; ++i) {
-            ret->set_move(
-                move_list[std::rand() % move_list.size()],
-                i
-            );
+            std::string move = "";
+            do
+            {
+                move = move_list[rng.rand() % move_list.size()];
+            } while(move.find("Shadow") == 0);
+            ret->set_move(move, i);
         }
 
         if(generation >= 2) {
-
             // Keep going until one is holdable
-            while(ret->get_held_item().get_item_id() == 0) {
+            while(ret->get_held_item() == "None") {
                 try {
                     ret->set_held_item(
-                        item_list[std::rand() % item_list.size()]
+                        item_list[rng.rand() % item_list.size()]
                     );
                 } catch(std::invalid_argument&) {}
             }
@@ -410,7 +428,8 @@ namespace pkmntest {
         pkmn::pokemon::sptr pokemon1,
         pkmn::pokemon::sptr pokemon2
     ) {
-        int generation = game_generations.at(pokemon1->get_game());
+        std::string game = pokemon1->get_game();
+        int generation = game_generations.at(game);
 
         // Names are stored separately in Generations I-II.
         if(generation < 3) {
@@ -418,23 +437,68 @@ namespace pkmntest {
             EXPECT_EQ(pokemon1->get_trainer_name(), pokemon2->get_trainer_name());
         }
 
-        // On the C++ level, check the underlying memory.
-        EXPECT_EQ(
-            0,
-            memcmp(
-                pokemon1->get_native_pc_data(),
-                pokemon2->get_native_pc_data(),
-                pksav_pc_pokemon_sizes[generation]
-            )
-        );
-        EXPECT_EQ(
-            0,
-            memcmp(
-                pokemon1->get_native_party_data(),
-                pokemon2->get_native_party_data(),
-                pksav_pokemon_party_data_sizes[generation]
-            )
-        );
+        // On the C++ level, check the underlying representation.
+        if(game == "Colosseum" or game == "XD")
+        {
+            const LibPkmGC::GC::Pokemon* native1 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon1->get_native_pc_data());
+            const LibPkmGC::GC::Pokemon* native2 = reinterpret_cast<const LibPkmGC::GC::Pokemon*>(pokemon2->get_native_pc_data());
+
+            EXPECT_EQ(native1->species, native2->species);
+            EXPECT_EQ(native1->SID, native2->SID);
+            EXPECT_EQ(native1->TID, native2->TID);
+            EXPECT_EQ(native1->PID, native2->PID);
+            EXPECT_EQ(native1->shadowPkmID, native2->shadowPkmID);
+            EXPECT_STREQ(native1->name->toUTF8(), native2->name->toUTF8());
+            EXPECT_STREQ(native1->OTName->toUTF8(), native2->OTName->toUTF8());
+
+            const pkmn::move_slots_t& moves1 = pokemon1->get_moves();
+            const pkmn::move_slots_t& moves2 = pokemon2->get_moves();
+            for(size_t i = 0; i < 4; ++i)
+            {
+                // These may be different if Shadow moves were mistakenly allowed to be set.
+                EXPECT_EQ(moves1.at(i).move, moves2.at(i).move);
+                EXPECT_EQ(native1->moves[i].move, native2->moves[i].move);
+                EXPECT_EQ(native1->moves[i].currentPPs, native2->moves[i].currentPPs);
+            }
+            for(size_t i = 0; i < 6; ++i)
+            {
+                EXPECT_EQ(native1->EVs[i], native2->EVs[i]);
+                EXPECT_EQ(native1->IVs[i], native2->IVs[i]);
+                EXPECT_EQ(native1->partyData.stats[i], native2->partyData.stats[i]);
+            }
+        }
+        else
+        {
+            EXPECT_EQ(
+                0,
+                memcmp(
+                    pokemon1->get_native_pc_data(),
+                    pokemon2->get_native_pc_data(),
+                    pksav_pc_pokemon_sizes[generation]
+                )
+            );
+            EXPECT_EQ(
+                0,
+                memcmp(
+                    pokemon1->get_native_party_data(),
+                    pokemon2->get_native_party_data(),
+                    pksav_pokemon_party_data_sizes[generation]
+                )
+            );
+        }
+    }
+
+    static void compare_libpkmgc_items(
+        const LibPkmGC::Item* items1,
+        const LibPkmGC::Item* items2,
+        size_t length
+    )
+    {
+        for(size_t i = 0; i < length; ++i)
+        {
+            EXPECT_EQ(items1[i].index, items2[i].index);
+            EXPECT_EQ(items1[i].quantity, items2[i].quantity);
+        }
     }
 
     static void compare_game_saves(
@@ -497,7 +561,54 @@ namespace pkmntest {
         }
 
         // On the C++ level, check the underlying memory.
-        EXPECT_EQ(0, memcmp(native1, native2, item_bag_size));
+        if(game == "Colosseum" or game == "XD")
+        {
+            const LibPkmGC::GC::BagData* native1 = reinterpret_cast<LibPkmGC::GC::BagData*>(item_bag1->get_native());
+            const LibPkmGC::GC::BagData* native2 = reinterpret_cast<LibPkmGC::GC::BagData*>(item_bag2->get_native());
+
+            compare_libpkmgc_items(
+                native1->regularItems,
+                native2->regularItems,
+                native1->nbRegularItems
+            );
+            compare_libpkmgc_items(
+                native1->keyItems,
+                native2->keyItems,
+                43
+            );
+            compare_libpkmgc_items(
+                native1->pokeballs,
+                native2->pokeballs,
+                16
+            );
+            compare_libpkmgc_items(
+                native1->TMs,
+                native2->TMs,
+                64
+            );
+            compare_libpkmgc_items(
+                native1->berries,
+                native2->berries,
+                46
+            );
+            compare_libpkmgc_items(
+                native1->colognes,
+                native2->colognes,
+                3
+            );
+            if(game == "XD")
+            {
+                compare_libpkmgc_items(
+                    dynamic_cast<const LibPkmGC::XD::BagData*>(native1)->battleCDs,
+                    dynamic_cast<const LibPkmGC::XD::BagData*>(native2)->battleCDs,
+                    60
+                );
+            }
+        }
+        else
+        {
+            EXPECT_EQ(0, memcmp(native1, native2, item_bag_size));
+        }
 
         const pkmn::item_pockets_t& pockets1 = item_bag1->get_pockets();
         const pkmn::item_pockets_t& pockets2 = item_bag2->get_pockets();
@@ -520,14 +631,25 @@ namespace pkmntest {
             );
 
             // On the C++ level, check the underlying memory.
-            EXPECT_EQ(
-                0,
-                memcmp(
-                    save1->get_item_pc()->get_native(),
-                    save2->get_item_pc()->get_native(),
-                    pksav_item_pc_sizes[generation]
-                )
-            );
+            if(game == "Colosseum" or game == "XD")
+            {
+                compare_libpkmgc_items(
+                    reinterpret_cast<const LibPkmGC::Item*>(save1->get_item_pc()->get_native()),
+                    reinterpret_cast<const LibPkmGC::Item*>(save2->get_item_pc()->get_native()),
+                    235
+                );
+            }
+            else
+            {
+                EXPECT_EQ(
+                    0,
+                    memcmp(
+                        save1->get_item_pc()->get_native(),
+                        save2->get_item_pc()->get_native(),
+                        pksav_item_pc_sizes[generation]
+                    )
+                );
+            }
         }
 
         pkmn::pokemon_party::sptr party1 = save1->get_pokemon_party();
@@ -581,7 +703,9 @@ namespace pkmntest {
         game_save_test_params_t("Crystal", "Crystal", "crystal/pokemon_crystal.sav"),
         game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"),
         game_save_test_params_t("Emerald", "Emerald", "emerald/pokemon_emerald.sav"),
-        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav")
+        game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),
+        game_save_test_params_t("Colosseum/XD", "Colosseum", "gamecube_saves/pokemon_colosseum.gci"),
+        game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")
     };
 
     TEST_P(game_save_test, game_save_test) {
@@ -599,7 +723,7 @@ namespace pkmntest {
             item_list
         );
 
-        fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%d.sav") % save->get_game().c_str() % std::rand());
+        fs::path temp_save_path = TMP_DIR / str(boost::format("%s_%u.sav") % save->get_game().c_str() % pkmn::rng<uint32_t>().rand());
         save->save_as(temp_save_path.string());
 
         pkmn::game_save::sptr save2 = pkmn::game_save::from_file(temp_save_path.string());

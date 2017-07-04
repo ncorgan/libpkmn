@@ -7,6 +7,7 @@
 
 #include "pokemon_box_impl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
+#include "pokemon_box_gcnimpl.hpp"
 
 #include "pokemon_box_gbimpl.hpp"
 
@@ -40,7 +41,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_box_gcnimpl>(game_id);
                 } else {
                     return pkmn::make_shared<pokemon_box_gbaimpl>(game_id);
                 }

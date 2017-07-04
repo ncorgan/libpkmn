@@ -15,21 +15,24 @@ import os
 import random
 import sys
 
+LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 PKSAV_TEST_SAVES = os.environ["PKSAV_TEST_SAVES"]
 PKMN_TMP_DIR = pkmn.get_tmp_dir()
 
 TOO_LONG_OT_NAME = "LibPKMNLibPKMN"
-LIBPKMN_OT_PID = 1351
-LIBPKMN_OT_SID = 32123
+DEFAULT_TRAINER_PID = 1351
+DEFAULT_TRAINER_SID = 32123
 MONEY_MAX_VALUE = 999999
 
 GB_GAMES = ["Red", "Blue", "Yellow",
             "Gold", "Silver", "Crystal"]
 RIVAL_NAME_SET_GAMES = ["Ruby", "Sapphire", "Emerald",
+                        "Colosseum", "XD",
                         "Black", "White",
                         "X", "Y"]
 MALE_ONLY_GAMES = ["Red", "Blue", "Yellow",
-                   "Gold", "Silver"]
+                   "Gold", "Silver",
+                   "Colosseum", "XD"]
 
 GAME_GENERATIONS = dict(
     Red = 1,
@@ -58,45 +61,45 @@ class game_save_test(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.save.set_trainer_name(TOO_LONG_OT_NAME)
 
-        self.save.set_trainer_name(pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(self.save.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
+        self.save.set_trainer_name(pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(self.save.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
 
     def __test_rival_name(self):
         if self.save.get_game() in RIVAL_NAME_SET_GAMES:
             with self.assertRaises(RuntimeError):
-                self.save.set_rival_name(pkmn.LIBPKMN_OT_NAME)
+                self.save.set_rival_name(pkmn.DEFAULT_TRAINER_NAME)
         else:
             with self.assertRaises(ValueError):
                 self.save.set_rival_name("")
             with self.assertRaises(ValueError):
                 self.save.set_rival_name(TOO_LONG_OT_NAME)
 
-            self.save.set_rival_name(pkmn.LIBPKMN_OT_NAME)
-            self.assertEqual(self.save.get_rival_name(), pkmn.LIBPKMN_OT_NAME)
+            self.save.set_rival_name(pkmn.DEFAULT_TRAINER_NAME)
+            self.assertEqual(self.save.get_rival_name(), pkmn.DEFAULT_TRAINER_NAME)
 
     def __test_trainer_id(self):
         is_gb_game = (self.save.get_game() in GB_GAMES)
         self.assertEqual(
             self.save.get_trainer_id(),
-            (LIBPKMN_OT_PID if is_gb_game else pkmn.LIBPKMN_OT_ID)
+            (DEFAULT_TRAINER_PID if is_gb_game else pkmn.DEFAULT_TRAINER_ID)
         )
-        self.assertEqual(self.save.get_trainer_public_id(), LIBPKMN_OT_PID)
+        self.assertEqual(self.save.get_trainer_public_id(), DEFAULT_TRAINER_PID)
         if is_gb_game:
             with self.assertRaises(RuntimeError):
                 self.save.get_trainer_secret_id()
         else:
-            self.assertEqual(self.save.get_trainer_secret_id(), LIBPKMN_OT_SID)
+            self.assertEqual(self.save.get_trainer_secret_id(), DEFAULT_TRAINER_SID)
 
     def __test_common_fields(self):
         self.__test_trainer_name()
 
         is_gb_game = (self.save.get_game() in GB_GAMES)
         self.save.set_trainer_id(
-            (LIBPKMN_OT_PID if is_gb_game else pkmn.LIBPKMN_OT_ID)
+            (DEFAULT_TRAINER_PID if is_gb_game else pkmn.DEFAULT_TRAINER_ID)
         )
         self.__test_trainer_id()
 
-        self.save.set_trainer_public_id(LIBPKMN_OT_PID)
+        self.save.set_trainer_public_id(DEFAULT_TRAINER_PID)
         self.__test_trainer_id()
 
         # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
@@ -125,9 +128,9 @@ class game_save_test(unittest.TestCase):
                 self.save.set_trainer_id(0xFFFF+1)
 
             with self.assertRaises(IndexError):
-                self.save.set_trainer_id(pkmn.LIBPKMN_OT_ID)
+                self.save.set_trainer_id(pkmn.DEFAULT_TRAINER_ID)
             with self.assertRaises(RuntimeError):
-                self.save.set_trainer_secret_id(LIBPKMN_OT_SID)
+                self.save.set_trainer_secret_id(DEFAULT_TRAINER_SID)
         else:
             try:
                 with self.assertRaises(OverflowError):
@@ -148,7 +151,7 @@ class game_save_test(unittest.TestCase):
                 with self.assertRaises(TypeError):
                     self.save.set_trainer_public_id(-1)
 
-            self.save.set_trainer_secret_id(LIBPKMN_OT_SID)
+            self.save.set_trainer_secret_id(DEFAULT_TRAINER_SID)
             self.__test_trainer_id()
 
         self.__test_rival_name()
@@ -219,7 +222,11 @@ class game_save_test(unittest.TestCase):
         ret = pkmn.pokemon(species, game, "", random.randint(2, 100))
 
         for i in range(4):
-            ret.set_move(move_list[random.randint(0, len(move_list)-1)], i)
+            while True:
+                move = move_list[random.randint(0, len(move_list)-1)]
+                if not move.startswith("Shadow"):
+                    break
+            ret.set_move(move, i)
 
         if generation >= 2:
             while True:
@@ -268,11 +275,11 @@ class game_save_test(unittest.TestCase):
         moves1 = pokemon1.get_moves()
         moves2 = pokemon2.get_moves()
         for i in range(4):
-            self.assertEquals(moves1[i].move.get_name(), moves2[i].move.get_name())
+            self.assertEquals(moves1[i].move, moves2[i].move)
             self.assertEquals(moves1[i].pp, moves2[i].pp)
 
         if GAME_GENERATIONS[pokemon1.get_game()] >= 2:
-            self.assertEquals(pokemon1.get_held_item().get_name(), pokemon2.get_held_item().get_name())
+            self.assertEquals(pokemon1.get_held_item(), pokemon2.get_held_item())
 
     def __compare_game_saves(self):
         game = self.save.get_game()
@@ -326,10 +333,15 @@ class game_save_test(unittest.TestCase):
         ("Crystal", "Crystal", "crystal", "pokemon_crystal.sav"),
         ("Ruby/Sapphire", "Ruby", "ruby_sapphire", "pokemon_ruby.sav"),
         ("Emerald", "Emerald", "emerald", "pokemon_emerald.sav"),
-        ("FireRed/LeafGreen", "FireRed", "firered_leafgreen", "pokemon_firered.sav")
+        ("FireRed/LeafGreen", "FireRed", "firered_leafgreen", "pokemon_firered.sav"),
+        ("Colosseum/XD", "Colosseum", "gamecube_saves", "pokemon_colosseum.gci"),
+        ("Colosseum/XD", "XD", "gamecube_saves", "pokemon_xd.gci")
     ], testcase_func_name=test_name_func)
     def test_game_save(self, expected_type, expected_game, subdir, filename):
-        filepath = os.path.join(PKSAV_TEST_SAVES, subdir, filename)
+        if expected_game == "Colosseum" or expected_game == "XD":
+            filepath = os.path.join(LIBPKMN_TEST_FILES, subdir, filename)
+        else:
+            filepath = os.path.join(PKSAV_TEST_SAVES, subdir, filename)
         self.assertEquals(pkmn.detect_game_save_type(filepath), expected_type)
 
         self.save = pkmn.game_save(filepath)
