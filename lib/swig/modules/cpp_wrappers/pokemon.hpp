@@ -107,6 +107,147 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr _pokemon;
     };
 
+    class pokemon_marking_map
+    {
+        public:
+            pokemon_marking_map():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_marking_map(
+                pkmn::pokemon::sptr pokemon
+            ): _pokemon(pokemon)
+            {}
+
+            PKMN_INLINE bool get_marking(
+                const std::string& marking
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                const std::map<std::string, bool>& markings = _pokemon->get_markings();
+                if(markings.count(marking) == 0)
+                {
+                    throw std::invalid_argument("Invalid marking.");
+                }
+
+                return markings.at(marking);
+            }
+
+            PKMN_INLINE void set_marking(
+                const std::string& stat,
+                bool value
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_marking(stat, value);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+    };
+
+    class pokemon_ribbon_map
+    {
+        public:
+            pokemon_ribbon_map():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_ribbon_map(
+                pkmn::pokemon::sptr pokemon
+            ): _pokemon(pokemon)
+            {}
+
+            PKMN_INLINE bool get_ribbon(
+                const std::string& ribbon
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                const std::map<std::string, bool>& ribbons = _pokemon->get_ribbons();
+                if(ribbons.count(ribbon) == 0)
+                {
+                    throw std::invalid_argument("Invalid ribbon.");
+                }
+
+                return ribbons.at(ribbon);
+            }
+
+            PKMN_INLINE void set_ribbon(
+                const std::string& stat,
+                bool value
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_ribbon(stat, value);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+    };
+
+    class pokemon_contest_stat_map
+    {
+        public:
+            pokemon_contest_stat_map():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_contest_stat_map(
+                pkmn::pokemon::sptr pokemon
+            ): _pokemon(pokemon)
+            {}
+
+            PKMN_INLINE int get_contest_stat(
+                const std::string& stat
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                const std::map<std::string, int>& contest_stats = _pokemon->get_contest_stats();
+                if(contest_stats.count(stat) == 0)
+                {
+                    throw std::invalid_argument("Invalid contest stat.");
+                }
+
+                return contest_stats.at(stat);
+            }
+
+            PKMN_INLINE void set_contest_stat(
+                const std::string& stat,
+                int value
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_contest_stat(stat, value);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+    };
+
     /*
      * This class is a thin wrapper around pkmn::pokemon::sptr and
      * will be what some SWIG wrappers will use instead of the class
@@ -125,8 +266,7 @@ namespace pkmn { namespace swig {
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
             {
-                _EV_map = pokemon_EV_map(_pokemon);
-                _IV_map = pokemon_IV_map(_pokemon);
+                _init();
             }
 
             pokemon(
@@ -136,22 +276,22 @@ namespace pkmn { namespace swig {
                 int level
             ): _pokemon(pkmn::pokemon::make(species, game, form, level))
             {
-                _EV_map = pokemon_EV_map(_pokemon);
-                _IV_map = pokemon_IV_map(_pokemon);
+                _init();
             }
 
             pokemon(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
-                _EV_map = pokemon_EV_map(_pokemon);
-                _IV_map = pokemon_IV_map(_pokemon);
+                _init();
             }
 
             pokemon(
                 const pokemon& other
             ): _pokemon(other._pokemon)
-            {}
+            {
+                _init();
+            }
 
             PKMN_INLINE pkmn::pokemon::sptr get_internal() const
             {
@@ -404,19 +544,29 @@ namespace pkmn { namespace swig {
                 _pokemon->set_level(level);
             }
 
-            // TODO: markings map
-            // TODO: ribbons map
-            // TODO: contest stats map
-            // TODO: move slots
-
-            PKMN_INLINE pokemon_EV_map get_EVs()
+            PKMN_INLINE pokemon_EV_map& get_EVs()
             {
                 return _EV_map;
             }
 
-            PKMN_INLINE pokemon_IV_map get_IVs()
+            PKMN_INLINE pokemon_IV_map& get_IVs()
             {
                 return _IV_map;
+            }
+
+            PKMN_INLINE pokemon_marking_map& get_markings()
+            {
+                return _marking_map;
+            }
+
+            PKMN_INLINE pokemon_ribbon_map& get_ribbons()
+            {
+                return _ribbon_map;
+            }
+
+            PKMN_INLINE pokemon_contest_stat_map& get_contest_stats()
+            {
+                return _contest_stat_map;
             }
 
             // Stats are read-only, so no need to wrap.
@@ -439,6 +589,18 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr _pokemon;
             pokemon_EV_map _EV_map;
             pokemon_IV_map _IV_map;
+            pokemon_marking_map _marking_map;
+            pokemon_ribbon_map _ribbon_map;
+            pokemon_contest_stat_map _contest_stat_map;
+
+            void _init()
+            {
+                _EV_map = pokemon_EV_map(_pokemon);
+                _IV_map = pokemon_IV_map(_pokemon);
+                _marking_map = pokemon_marking_map(_pokemon);
+                _ribbon_map = pokemon_ribbon_map(_pokemon);
+                _contest_stat_map = pokemon_contest_stat_map(_pokemon);
+            }
     };
 
 }}

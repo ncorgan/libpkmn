@@ -23,6 +23,9 @@ TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
 {
     pkmn::swig::pokemon_EV_map EV_map;
     pkmn::swig::pokemon_IV_map IV_map;
+    pkmn::swig::pokemon_marking_map marking_map;
+    pkmn::swig::pokemon_ribbon_map ribbon_map;
+    pkmn::swig::pokemon_contest_stat_map contest_stat_map;
 
     EXPECT_THROW(
         EV_map.get_EV("HP");
@@ -37,6 +40,27 @@ TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
     EXPECT_THROW(
         IV_map.set_IV("HP", 0);
     , std::runtime_error);
+
+    EXPECT_THROW(
+        marking_map.get_marking("Circle");
+    , std::runtime_error);
+    EXPECT_THROW(
+        marking_map.set_marking("Circle", true);
+    , std::runtime_error);
+
+    EXPECT_THROW(
+        ribbon_map.get_ribbon("Cool");
+    , std::runtime_error);
+    EXPECT_THROW(
+        ribbon_map.set_ribbon("Cool", true);
+    , std::runtime_error);
+
+    EXPECT_THROW(
+        contest_stat_map.get_contest_stat("Beauty");
+    , std::runtime_error);
+    EXPECT_THROW(
+        contest_stat_map.set_contest_stat("Beauty", 0);
+    , std::runtime_error);
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon_maps)
@@ -49,26 +73,59 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
                                   );
     pkmn::swig::pokemon_EV_map EV_map(pokemon);
     pkmn::swig::pokemon_IV_map IV_map(pokemon);
+    pkmn::swig::pokemon_marking_map marking_map(pokemon);
+    pkmn::swig::pokemon_ribbon_map ribbon_map(pokemon);
+    pkmn::swig::pokemon_contest_stat_map contest_stat_map(pokemon);
 
-    // Set EV through the Pokémon, query through the wrapper class.
+    // Set EV through the Pokémon.
     pokemon->set_EV("Attack", 25);
     EXPECT_EQ(25, pokemon->get_EVs().at("Attack"));
     EXPECT_EQ(25, EV_map.get_EV("Attack"));
 
-    // Set EV through the wrapper class, query through the Pokémon.
+    // Set EV through the wrapper class.
     EV_map.set_EV("Defense", 5);
     EXPECT_EQ(5, EV_map.get_EV("Defense"));
     EXPECT_EQ(5, pokemon->get_EVs().at("Defense"));
 
-    // Set IV through the Pokémon, query through the wrapper class.
+    // Set IV through the Pokémon.
     pokemon->set_IV("Attack", 11);
     EXPECT_EQ(11, pokemon->get_IVs().at("Attack"));
     EXPECT_EQ(11, IV_map.get_IV("Attack"));
 
-    // Set IV through the wrapper class, query through the Pokémon.
+    // Set IV through the wrapper class.
     IV_map.set_IV("Defense", 2);
     EXPECT_EQ(2, IV_map.get_IV("Defense"));
     EXPECT_EQ(2, pokemon->get_IVs().at("Defense"));
+
+    // Set marking through the Pokémon.
+    pokemon->set_marking("Circle", true);
+    EXPECT_TRUE(pokemon->get_markings().at("Circle"));
+    EXPECT_TRUE(marking_map.get_marking("Circle"));
+
+    // Set marking through the wrapper class.
+    marking_map.set_marking("Square", true);
+    EXPECT_TRUE(marking_map.get_marking("Square"));
+    EXPECT_TRUE(pokemon->get_markings().at("Square"));
+
+    // Set marking through the Pokémon.
+    pokemon->set_ribbon("Cool", true);
+    EXPECT_TRUE(pokemon->get_ribbons().at("Cool"));
+    EXPECT_TRUE(ribbon_map.get_ribbon("Cool"));
+
+    // Set ribbon through the wrapper class.
+    ribbon_map.set_ribbon("Champion", true);
+    EXPECT_TRUE(ribbon_map.get_ribbon("Champion"));
+    EXPECT_TRUE(pokemon->get_ribbons().at("Champion"));
+
+    // Set contest stat through the Pokémon.
+    pokemon->set_contest_stat("Beauty", 10);
+    EXPECT_EQ(10, pokemon->get_contest_stats().at("Beauty"));
+    EXPECT_EQ(10, contest_stat_map.get_contest_stat("Beauty"));
+
+    // Set contest stat through the wrapper class.
+    pokemon->set_contest_stat("Tough", 123);
+    EXPECT_EQ(123, contest_stat_map.get_contest_stat("Tough"));
+    EXPECT_EQ(123, pokemon->get_contest_stats().at("Tough"));
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon)
@@ -136,13 +193,22 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_level(50);
     EXPECT_EQ(50, swig_pokemon.get_level());
 
-    // TODO: wrapped markings, ribbons, contest stats, move storage
+    // TODO: move storage when implemented
 
     swig_pokemon.get_EVs().set_EV("Attack", 5);
     EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV("Attack"));
 
     swig_pokemon.get_IVs().set_IV("Attack", 5);
     EXPECT_EQ(5, swig_pokemon.get_IVs().get_IV("Attack"));
+
+    swig_pokemon.get_markings().set_marking("Triangle", true);
+    EXPECT_TRUE(swig_pokemon.get_markings().get_marking("Triangle"));
+
+    swig_pokemon.get_ribbons().set_ribbon("Cool Hyper", true);
+    EXPECT_TRUE(swig_pokemon.get_ribbons().get_ribbon("Cool Hyper"));
+
+    swig_pokemon.get_contest_stats().set_contest_stat("Smart", 5);
+    EXPECT_EQ(5, swig_pokemon.get_contest_stats().get_contest_stat("Smart"));
 
     const std::map<std::string, int>& stats = swig_pokemon.get_stats();
     EXPECT_EQ(6, stats.size());
