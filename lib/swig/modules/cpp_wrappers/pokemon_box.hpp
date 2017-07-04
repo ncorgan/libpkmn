@@ -19,6 +19,10 @@ namespace pkmn { namespace swig {
     class pokemon_box
     {
         public:
+            pokemon_box():
+                _pokemon_box(nullptr)
+            {}
+
             pokemon_box(
                 const pkmn::pokemon_box::sptr& cpp_pokemon_box
             ): _pokemon_box(cpp_pokemon_box)
@@ -114,4 +118,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* SWIG_POKEMON_BOX_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_BOX_HPP */

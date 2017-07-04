@@ -19,6 +19,10 @@ namespace pkmn { namespace swig {
     class pokemon_pc
     {
         public:
+            pokemon_pc():
+                _pokemon_pc(nullptr)
+            {}
+
             pokemon_pc(
                 const pkmn::pokemon_pc::sptr& cpp_pokemon_pc
             ): _pokemon_pc(cpp_pokemon_pc)
@@ -90,4 +94,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* SWIG_POKEMON_PC_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_PC_HPP */

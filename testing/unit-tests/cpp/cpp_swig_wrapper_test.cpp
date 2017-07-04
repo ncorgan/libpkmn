@@ -5,7 +5,13 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "env.hpp"
+
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
+#include "swig/modules/cpp_wrappers/pokemon_party.hpp"
+#include "swig/modules/cpp_wrappers/pokemon_box.hpp"
+#include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
+#include "swig/modules/cpp_wrappers/game_save.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -143,4 +149,124 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
 
     EXPECT_TRUE(fs::exists(swig_pokemon.get_icon_filepath()));
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
+}
+
+TEST(cpp_swig_wrapper_test, test_pokemon_party)
+{
+    pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
+
+    EXPECT_EQ("FireRed", swig_pokemon_party.get_game());
+    EXPECT_EQ(0, swig_pokemon_party.get_num_pokemon());
+
+    for(size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
+    }
+
+    std::vector<pkmn::swig::pokemon> party_vec = swig_pokemon_party.as_vector();
+    ASSERT_EQ(6, party_vec.size());
+    for(size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ("None", party_vec[i].get_species());
+    }
+
+    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
+    swig_pokemon_party.set_pokemon(0, new_pokemon);
+
+    EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
+}
+
+TEST(cpp_swig_wrapper_test, test_pokemon_box)
+{
+    pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
+
+    EXPECT_EQ("FireRed", swig_pokemon_box.get_game());
+    EXPECT_EQ(0, swig_pokemon_box.get_num_pokemon());
+
+    int capacity = swig_pokemon_box.get_capacity();
+
+    for(size_t i = 0; i < capacity; ++i)
+    {
+        EXPECT_EQ("None", swig_pokemon_box.get_pokemon(i).get_species());
+    }
+
+    std::vector<pkmn::swig::pokemon> box_vec = swig_pokemon_box.as_vector();
+    EXPECT_EQ(size_t(swig_pokemon_box.get_capacity()), box_vec.size());
+    for(int i = 0; i < capacity; ++i)
+    {
+        EXPECT_EQ("None", box_vec[i].get_species());
+    }
+
+    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
+    swig_pokemon_box.set_pokemon(0, new_pokemon);
+
+    EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
+}
+
+TEST(cpp_swig_wrapper_test, test_pokemon_pc)
+{
+    pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
+
+    EXPECT_EQ("FireRed", swig_pokemon_pc.get_game());
+
+    std::vector<pkmn::swig::pokemon_box> pc_vec = swig_pokemon_pc.as_vector();
+    EXPECT_EQ(size_t(swig_pokemon_pc.get_num_boxes()), pc_vec.size());
+
+    for(size_t i = 0; i < pc_vec.size(); ++i)
+    {
+        EXPECT_EQ(swig_pokemon_pc.get_box_names()[i], pc_vec[i].get_name());
+    }
+
+    pc_vec[4].set_name("COOL BOX");
+    EXPECT_EQ("COOL BOX", swig_pokemon_pc.get_box_names()[4]);
+
+    pc_vec[4].set_pokemon(4, pkmn::swig::pokemon("Charizard", "FireRed", "", 50));
+    EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
+}
+
+TEST(cpp_swig_wrapper_test, test_game_save)
+{
+    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
+
+    fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
+
+    pkmn::swig::game_save swig_game_save(save_filepath.string());
+
+    EXPECT_EQ(save_filepath.string(), swig_game_save.get_filepath());
+    EXPECT_EQ("FireRed", swig_game_save.get_game());
+
+    swig_game_save.set_trainer_name("foobar");
+    EXPECT_EQ("foobar", swig_game_save.get_trainer_name());
+
+    swig_game_save.set_trainer_id(0xABCD1234);
+    EXPECT_EQ(0xABCD1234, swig_game_save.get_trainer_id());
+
+    swig_game_save.set_trainer_public_id(0x9753);
+    EXPECT_EQ(0x9753, swig_game_save.get_trainer_public_id());
+
+    swig_game_save.set_trainer_secret_id(0xFCA0);
+    EXPECT_EQ(0xFCA0, swig_game_save.get_trainer_secret_id());
+
+    swig_game_save.set_trainer_gender("Female");
+    EXPECT_EQ("Female", swig_game_save.get_trainer_gender());
+
+    swig_game_save.set_rival_name("abcdef");
+    EXPECT_EQ("abcdef", swig_game_save.get_rival_name());
+
+    swig_game_save.set_money(12345);
+    EXPECT_EQ(12345, swig_game_save.get_money());
+
+    /*
+     * These are the underlying calls for a fairly representative use case. This is the
+     * equivalent C# code.
+     *
+     * PKMN.GameSave gameSave = new PKMN.GameSave(filepath);
+     * gameSave.PokemonParty[1].EVs["Attack"] = 20;
+     * gameSave.PokemonPC[5][20].IVs["Attack"] = 5;
+     */
+    swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV("Attack", 20);
+    swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV("HP", 5);
+
+    EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV("Attack"));
+    EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV("HP"));
 }

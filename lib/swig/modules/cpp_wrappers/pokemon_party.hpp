@@ -19,6 +19,10 @@ namespace pkmn { namespace swig {
     class pokemon_party
     {
         public:
+            pokemon_party():
+                _pokemon_party(nullptr)
+            {}
+
             pokemon_party(
                 const pkmn::pokemon_party::sptr& cpp_pokemon_party
             ): _pokemon_party(cpp_pokemon_party)
@@ -96,4 +100,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* SWIG_POKEMON_PARTY_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_PARTY_HPP */

@@ -117,6 +117,10 @@ namespace pkmn { namespace swig {
     class pokemon
     {
         public:
+            pokemon():
+                _pokemon(nullptr)
+            {}
+
             pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
@@ -439,4 +443,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* SWIG_POKEMON_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_HPP */
