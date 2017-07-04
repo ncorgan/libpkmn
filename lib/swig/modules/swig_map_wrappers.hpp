@@ -79,31 +79,6 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr _pokemon;
     };
 
-    class pokemon_stat_map
-    {
-        public:
-            pokemon_stat_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            PKMN_INLINE int get_stat(
-                const std::string& stat
-            )
-            {
-                const std::map<std::string, int>& stats = _pokemon->get_stats();
-                if(stats.count(stat) == 0)
-                {
-                    throw std::invalid_argument("Invalid stat.");
-                }
-
-                return stats.at(stat);
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
 }}
 
 #endif /* SWIG_MAP_WRAPPERS_HPP */
