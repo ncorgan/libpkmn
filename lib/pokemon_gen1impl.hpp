@@ -39,6 +39,10 @@ namespace pkmn {
 
             ~pokemon_gen1impl();
 
+            pokemon::sptr to_game(
+                const std::string& game
+            );
+
             void set_form(
                 const std::string &form
             );

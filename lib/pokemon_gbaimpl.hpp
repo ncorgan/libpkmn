@@ -33,11 +33,7 @@ namespace pkmn {
                 int game_id
             );
             pokemon_gbaimpl(
-                const pksav_gba_pc_pokemon_t& pc,
-                int game_id
-            );
-            pokemon_gbaimpl(
-                const pksav_gba_party_pokemon_t& party,
+                const pksav_gba_party_pokemon_t &party,
                 int game_id
             );
 

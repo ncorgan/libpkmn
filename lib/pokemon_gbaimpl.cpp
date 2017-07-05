@@ -242,6 +242,42 @@ namespace pkmn {
         }
     }
 
+    pokemon_gbaimpl::pokemon_gbaimpl(
+        const pksav_gba_party_pokemon_t &party,
+        int game_id
+    ): pokemon_impl(
+           pksav_littleendian16(party.pc.blocks.growth.species),
+           game_id
+       )
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        *GBA_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        *GBA_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Set block pointers
+        _growth  = &GBA_PC_RCAST->blocks.growth;
+        _attacks = &GBA_PC_RCAST->blocks.attacks;
+        _effort  = &GBA_PC_RCAST->blocks.effort;
+        _misc    = &GBA_PC_RCAST->blocks.misc;
+
+        // Populate abstractions
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
+    }
+
     pokemon_gbaimpl::~pokemon_gbaimpl() {
         if(_our_pc_mem) {
             delete GBA_PC_RCAST;

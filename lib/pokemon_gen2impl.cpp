@@ -6,7 +6,9 @@
  */
 
 #include "misc_common.hpp"
+#include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
@@ -16,6 +18,7 @@
 
 #include <pkmn/database/item_entry.hpp>
 
+#include "pksav/conversions.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -201,6 +204,44 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GEN2_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gen2impl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gen2_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GEN2_PC_RCAST;
+        pksav_pokemon.party_data = *GEN2_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 1:
+            {
+                pksav_gen1_party_pokemon_t gen1_pksav_pokemon;
+                pksav::gen2_party_pokemon_to_gen1(
+                    &pksav_pokemon,
+                    &gen1_pksav_pokemon
+                );
+                ret = pkmn::make_shared<pokemon_gen1impl>(gen1_pksav_pokemon, game_id);
+                break;
+            }
+
+            case 2:
+            {
+                ret = pkmn::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
+                break;
+            }
+
+            default:
+                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation I-II.");
+        }
+
+        return ret;
     }
 
     void pokemon_gen2impl::set_form(
