@@ -41,7 +41,7 @@ namespace pkmn { namespace conversions {
         pkmn::database::get_connection(_db);
 
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT base_friendship FROM pokemon_species WHERE id="
+            "SELECT base_happiness FROM pokemon_species WHERE id="
             "(SELECT species_id FROM pokemon WHERE id="
             "(SELECT pokemon_id FROM pokemon_game_indices WHERE "
             "version_id=? AND game_index=?))";

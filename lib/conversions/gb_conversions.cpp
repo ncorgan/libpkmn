@@ -27,13 +27,14 @@ namespace pkmn { namespace conversions {
     void gen1_pc_pokemon_to_gen2(
         const pksav_gen1_pc_pokemon_t* from,
         pksav_gen2_pc_pokemon_t* to
-    ) {
+    )
+    {
         // Connect to database
         pkmn::database::get_connection(_db);
 
         std::memset(to, 0, sizeof(*to));
         to->species = uint8_t(convert_pokemon_game_index(
-                          pksav_bigendian16(from->species),
+                          from->species,
                           1, 4
                       ));
         /*
@@ -42,7 +43,7 @@ namespace pkmn { namespace conversions {
          */
         std::memcpy(&to->held_item, &from->catch_rate, 26);
         to->friendship = uint8_t(pokemon_index_to_base_friendship(
-                             pksav_bigendian16(to->species), 4
+                             to->species, 4
                          ));
         // Leave Pokérus field at 0
 
@@ -61,7 +62,8 @@ namespace pkmn { namespace conversions {
     void gen1_party_pokemon_to_gen2(
         const pksav_gen1_party_pokemon_t* from,
         pksav_gen2_party_pokemon_t* to
-    ) {
+    )
+    {
         // PC data
         gen1_pc_pokemon_to_gen2(
             &from->pc,
@@ -81,13 +83,14 @@ namespace pkmn { namespace conversions {
     void gen2_pc_pokemon_to_gen1(
         const pksav_gen2_pc_pokemon_t* from,
         pksav_gen1_pc_pokemon_t* to
-    ) {
+    )
+    {
         // Connect to database
         pkmn::database::get_connection(_db);
 
         std::memset(to, 0, sizeof(*to));
         to->species = uint8_t(convert_pokemon_game_index(
-                          pksav_bigendian16(from->species),
+                          from->species,
                           4, 1
                       ));
 
@@ -128,7 +131,7 @@ namespace pkmn { namespace conversions {
 
         to->types[0] = uint8_t(pkmn::database::query_db_bind1<int, int>(
                                    _db, type1_query,
-                                   pksav_bigendian16(from->species)
+                                   from->species
                               ));
 
         static BOOST_CONSTEXPR const char* type2_query = \
@@ -141,7 +144,7 @@ namespace pkmn { namespace conversions {
         int dummy_type2 = 0;
         if(pkmn::database::maybe_query_db_bind1<int, int>(
                _db, type2_query, dummy_type2,
-               pksav_bigendian16(from->species)
+               from->species
            ))
         {
             to->types[1] = uint8_t(dummy_type2);
@@ -160,7 +163,8 @@ namespace pkmn { namespace conversions {
     void gen2_party_pokemon_to_gen1(
         const pksav_gen2_party_pokemon_t* from,
         pksav_gen1_party_pokemon_t* to
-    ) {
+    )
+    {
         // PC data
         gen2_pc_pokemon_to_gen1(
             &from->pc,
