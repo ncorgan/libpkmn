@@ -59,8 +59,10 @@ TEST_P(conversions_test, conversions_test)
                                             50
                                         );
 
-    // TODO: account for dest_game generation
-    int generation = game_generations.at(params.origin_game);
+    int origin_generation = game_generations.at(params.origin_game);
+    int dest_generation = game_generations.at(params.dest_game);
+    int min_generation = std::min<int>(origin_generation, dest_generation);
+    std::string game_for_lists = (min_generation == origin_generation) ? params.origin_game : params.dest_game;
 
     // Set random values. TODO: EVs, IVs
     pkmn::rng<int> int_rng;
@@ -69,8 +71,8 @@ TEST_P(conversions_test, conversions_test)
     pkmn::rng<uint32_t> uint32_rng;
     pkmn::rng<size_t> size_rng;
 
-    std::vector<std::string> items = pkmn::database::get_item_list(params.origin_game);
-    std::vector<std::string> moves = pkmn::database::get_move_list(params.origin_game);
+    std::vector<std::string> items = pkmn::database::get_item_list(game_for_lists);
+    std::vector<std::string> moves = pkmn::database::get_move_list(game_for_lists);
 
     for(int i = 0; i < 4; ++i)
     {
@@ -80,7 +82,7 @@ TEST_P(conversions_test, conversions_test)
         );
     }
 
-    if(generation >= 3)
+    if(origin_generation >= 3)
     {
         first_pokemon->set_trainer_id(uint32_rng.rand());
 
@@ -99,7 +101,7 @@ TEST_P(conversions_test, conversions_test)
         first_pokemon->set_trainer_id(uint16_rng.rand());
     }
 
-    if(generation >= 2)
+    if(origin_generation >= 2)
     {
         // Make sure the item is holdable.
         std::string held_item = "";
@@ -135,7 +137,6 @@ TEST_P(conversions_test, conversions_test)
     EXPECT_EQ(first_pokemon->get_trainer_name(), second_pokemon->get_trainer_name());
     EXPECT_EQ(first_pokemon->get_trainer_id(), second_pokemon->get_trainer_id());
     EXPECT_EQ(first_pokemon->get_trainer_public_id(), second_pokemon->get_trainer_public_id());
-    EXPECT_EQ(first_pokemon->get_trainer_gender(), second_pokemon->get_trainer_gender());
     EXPECT_EQ(first_pokemon->get_experience(), second_pokemon->get_experience());
     EXPECT_EQ(first_pokemon->get_level(), second_pokemon->get_level());
 
@@ -147,7 +148,7 @@ TEST_P(conversions_test, conversions_test)
         EXPECT_EQ(first_pokemon_move_slots[i].pp, second_pokemon_move_slots[i].pp);
     }
 
-    if(generation >= 3)
+    if(min_generation >= 3)
     {
         EXPECT_EQ(first_pokemon->get_trainer_secret_id(), second_pokemon->get_trainer_secret_id());
         EXPECT_EQ(first_pokemon->get_ability(), second_pokemon->get_ability());
@@ -157,9 +158,9 @@ TEST_P(conversions_test, conversions_test)
 
         // TODO: markings, ribbons, contest stats
     }
-
-    if(generation >= 2)
+    if(min_generation >= 2)
     {
+        EXPECT_EQ(first_pokemon->get_trainer_gender(), second_pokemon->get_trainer_gender());
         EXPECT_EQ(first_pokemon->get_gender(), second_pokemon->get_gender());
         EXPECT_EQ(first_pokemon->is_shiny(), second_pokemon->is_shiny());
         EXPECT_EQ(first_pokemon->get_held_item(), second_pokemon->get_held_item());
@@ -168,12 +169,12 @@ TEST_P(conversions_test, conversions_test)
     }
 }
 
-// TODO: Generation II -> I
 static const conversions_test_params_t TEST_PARAMS[] =
 {
     {"Bulbasaur", "", "Red", "Yellow"},
     {"Squirtle", "", "Blue", "Gold"},
     {"Cyndaquil", "", "Gold", "Crystal"},
+    {"Charmander", "", "Silver", "Blue"}
 };
 
 INSTANTIATE_TEST_CASE_P(
