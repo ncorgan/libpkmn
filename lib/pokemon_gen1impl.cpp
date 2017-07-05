@@ -9,9 +9,9 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
+#include "conversions/gb_conversions.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
-#include "pksav/conversions.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -216,7 +216,7 @@ namespace pkmn {
             case 2:
             {
                 pksav_gen2_party_pokemon_t gen2_pksav_pokemon;
-                pksav::gen1_party_pokemon_to_gen2(
+                pkmn::conversions::gen1_party_pokemon_to_gen2(
                     &pksav_pokemon,
                     &gen2_pksav_pokemon
                 );

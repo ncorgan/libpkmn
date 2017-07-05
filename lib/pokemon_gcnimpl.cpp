@@ -7,6 +7,7 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gcnimpl.hpp"
+
 #include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
