@@ -242,6 +242,9 @@ namespace pkmn {
                 throw std::invalid_argument("Generation II Pokémon can only be converted to Generation I-II.");
         }
 
+        ret->set_nickname(get_nickname());
+        ret->set_trainer_name(get_trainer_name());
+
         return ret;
     }
 
