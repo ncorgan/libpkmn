@@ -170,6 +170,16 @@ namespace pkmn { namespace conversions {
             &from->pc,
             &to->pc
         );
+
+        // Party data
+        std::memset(&to->party_data, 0, sizeof(to->party_data));
+        to->party_data.level = from->pc.level;
+        to->pc.condition = from->party_data.condition;
+        // Leave unused field at 0
+        to->pc.current_hp = from->party_data.current_hp;
+        // The next four fields are identical
+        memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
+        // TODO: how does Sp.Atk,Sp.Def translate to Special?
     }
 
 }}

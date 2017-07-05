@@ -101,7 +101,7 @@ TEST_P(conversions_test, conversions_test)
         first_pokemon->set_trainer_id(uint16_rng.rand());
     }
 
-    if(origin_generation >= 2)
+    if(min_generation >= 2)
     {
         // Make sure the item is holdable.
         std::string held_item = "";
@@ -111,6 +111,9 @@ TEST_P(conversions_test, conversions_test)
         } while(not pkmn::database::item_entry(held_item, params.origin_game).holdable());
 
         first_pokemon->set_held_item(held_item);
+    }
+    if(origin_generation >= 2)
+    {
         first_pokemon->set_gender(random_bool() ? "Male" : "Female");
         first_pokemon->set_shininess(random_bool());
         first_pokemon->set_friendship(uint8_rng.rand());
