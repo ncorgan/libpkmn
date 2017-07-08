@@ -177,7 +177,19 @@ static const conversions_test_params_t TEST_PARAMS[] =
     {"Bulbasaur", "", "Red", "Yellow"},
     {"Squirtle", "", "Blue", "Gold"},
     {"Cyndaquil", "", "Gold", "Crystal"},
-    {"Charmander", "", "Silver", "Blue"}
+    {"Charmander", "", "Silver", "Blue"},
+    {"Eevee", "", "Ruby", "Colosseum"},
+    {"Espeon", "", "Emerald", "Colosseum"},
+    {"Umbreon", "", "FireRed", "Colosseum"},
+    {"Eevee", "", "Ruby", "XD"},
+    {"Espeon", "", "Emerald", "XD"},
+    {"Umbreon", "", "FireRed", "XD"}
+    /*{"Eevee", "", "Colosseum", "Sapphire"},
+    {"Espeon", "", "Colosseum", "Emerald"},
+    {"Umbreon", "", "Colosseum", "LeafGreen"},
+    {"Eevee", "", "XD", "Sapphire"},
+    {"Espeon", "", "XD", "Emerald"},
+    {"Umbreon", "", "XD", "LeafGreen"}*/
 };
 
 INSTANTIATE_TEST_CASE_P(

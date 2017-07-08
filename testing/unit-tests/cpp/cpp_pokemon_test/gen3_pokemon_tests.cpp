@@ -349,43 +349,6 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(stats.at("Special Defense"), int(pksav_littleendian16(native_party_data->spdef)));
 }
 
-/*
- * LibPkmGC stores some values in arrays, with little indication as to what each
- * index actually corresponds to, so these enums make things easier.
- */
-
-typedef enum {
-    LIBPKMGC_STAT_HP = 0,
-    LIBPKMGC_STAT_ATTACK,
-    LIBPKMGC_STAT_DEFENSE,
-    LIBPKMGC_STAT_SPATK,
-    LIBPKMGC_STAT_SPDEF,
-    LIBPKMGC_STAT_SPEED
-} libpkmgc_stat_t;
-
-typedef enum {
-    LIBPKMGC_CONTEST_STAT_COOL = 0,
-    LIBPKMGC_CONTEST_STAT_BEAUTY,
-    LIBPKMGC_CONTEST_STAT_CUTE,
-    LIBPKMGC_CONTEST_STAT_SMART,
-    LIBPKMGC_CONTEST_STAT_TOUGH
-} libpkmgc_contest_stat_t;
-
-typedef enum {
-    LIBPKMGC_RIBBON_CHAMPION = 0,
-    LIBPKMGC_RIBBON_WINNING,
-    LIBPKMGC_RIBBON_VICTORY,
-    LIBPKMGC_RIBBON_ARTIST,
-    LIBPKMGC_RIBBON_EFFORT,
-    LIBPKMGC_RIBBON_MARINE,
-    LIBPKMGC_RIBBON_LAND,
-    LIBPKMGC_RIBBON_SKY,
-    LIBPKMGC_RIBBON_COUNTRY,
-    LIBPKMGC_RIBBON_NATIONAL,
-    LIBPKMGC_RIBBON_EARTH,
-    LIBPKMGC_RIBBON_WORLD
-} libpkmgc_ribbon_t;
-
 typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
 static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
     (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")

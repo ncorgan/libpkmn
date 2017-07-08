@@ -8,4 +8,5 @@
 SET(pkmn_conversions_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/conversions_common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gb_conversions.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gen3_conversions.cpp
 PARENT_SCOPE)
