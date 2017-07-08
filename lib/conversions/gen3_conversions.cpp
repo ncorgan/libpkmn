@@ -81,9 +81,14 @@ namespace pkmn { namespace conversions {
         const pksav_gba_pokemon_misc_t* from_misc = &from->blocks.misc;
 
         to->species = LibPkmGC::PokemonSpeciesIndex(pksav_littleendian16(from_growth->species));
+        to->heldItem = LibPkmGC::ItemIndex(pksav_littleendian16(from_growth->held_item));
         to->friendship = from_growth->friendship;
         to->locationCaught = 0; // Should be "Met in a distant land" in both games
-        // TODO: ball
+
+        uint16_t ball = (from_misc->origin_info & PKSAV_GBA_BALL_MASK);
+        ball >>= PKSAV_GBA_BALL_OFFSET;
+        to->ballCaughtWith = LibPkmGC::ItemIndex(ball);
+
         to->OTGender = (from_misc->origin_info & PKSAV_GBA_OTGENDER_MASK) ? LibPkmGC::Female
                                                                           : LibPkmGC::Male;
 
@@ -92,7 +97,7 @@ namespace pkmn { namespace conversions {
             pksav_text_from_gba(
                 from->otname,
                 otname,
-                sizeof(otname)
+                7
             );
         );
         to->OTName->fromUTF8(otname);
@@ -102,7 +107,7 @@ namespace pkmn { namespace conversions {
             pksav_text_from_gba(
                 from->nickname,
                 nickname,
-                sizeof(nickname)
+                10
             );
         );
         to->name->fromUTF8(nickname);
@@ -118,7 +123,7 @@ namespace pkmn { namespace conversions {
         to->experience = pksav_littleendian32(from_growth->exp);
         to->SID = pksav_littleendian16(from->ot_id.sid);
         to->TID = pksav_littleendian16(from->ot_id.pid);
-        to->PID = pksav_littleendian16(from->personality);
+        to->PID = pksav_littleendian32(from->personality);
 
         to->version.game = LibPkmGC::GameIndex(
                                (from_misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK) >> PKSAV_GBA_ORIGIN_GAME_OFFSET
@@ -185,6 +190,7 @@ namespace pkmn { namespace conversions {
         to->contestAchievements[LIBPKMGC_CONTEST_STAT_TOUGH] = LibPkmGC::ContestAchievementLevel(tough_ribbons);
 
         // Let LibPkmGC do the work.
+        to->setSecondAbilityFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK));
         to->setEggFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK));
         to->updateLevelFromExp();
         to->updateStats();

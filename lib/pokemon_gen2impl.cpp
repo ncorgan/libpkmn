@@ -84,7 +84,8 @@ namespace pkmn {
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        set_level_met(level);
+        // The max for level met is 63, but that shouldn't restrict this.
+        set_level_met(std::min<int>(level, 63));
         set_location_met("Special", false);
 
         time_t now = 0;
@@ -235,6 +236,7 @@ namespace pkmn {
             case 2:
             {
                 ret = pkmn::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
+                ret->set_level_met(get_level());
                 break;
             }
 
@@ -503,8 +505,8 @@ namespace pkmn {
     void pokemon_gen2impl::set_level_met(
         int level
     ) {
-        if(level < 2 or level > 100) {
-            pkmn::throw_out_of_range("Level caught", 2, 100);
+        if(level < 2 or level > 63) {
+            pkmn::throw_out_of_range("Level caught", 2, 63);
         }
 
         pokemon_scoped_lock lock(this);

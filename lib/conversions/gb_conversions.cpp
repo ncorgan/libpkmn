@@ -54,7 +54,7 @@ namespace pkmn { namespace conversions {
          * TODO: time of day, fix PKSav mask names
          */
         to->caught_data = (to->caught_data & ~PKSAV_GEN2_LEVEL_CAUGHT_MASK)
-                        | (from->level << PKSAV_GEN2_LEVEL_CAUGHT_OFFSET);
+                        | (uint16_t(from->level) << PKSAV_GEN2_LEVEL_CAUGHT_OFFSET);
 
         to->level = from->level;
     }

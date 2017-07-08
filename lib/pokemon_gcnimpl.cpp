@@ -116,6 +116,7 @@ namespace pkmn {
         GC_RCAST->SID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID >> 16);
         GC_RCAST->TID = LibPkmGC::u16(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF);
         GC_RCAST->PID = rng32.rand();
+        GC_RCAST->setSecondAbilityFlag(bool(GC_RCAST->PID & 2));
 
         GC_RCAST->version.game = LibPkmGC::Colosseum_XD;
         GC_RCAST->version.currentRegion = LibPkmGC::NTSC_U;
@@ -485,35 +486,51 @@ namespace pkmn {
         GC_RCAST->friendship = LibPkmGC::u8(friendship);
     }
 
-    std::string pokemon_gcnimpl::get_ability() {
+    std::string pokemon_gcnimpl::get_ability()
+    {
         pokemon_scoped_lock lock(this);
 
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(abilities.second == "None") {
+        if(abilities.second == "None")
+        {
             return abilities.first;
-        } else {
-            return pkmn::database::ability_id_to_name(int(GC_RCAST->getAbility()));
+        }
+        else
+        {
+            // Don't use LibPkmGC's call, it has some mistakes.
+            return GC_RCAST->hasSecondAbility() ? abilities.second : abilities.first;
         }
     }
 
     void pokemon_gcnimpl::set_ability(
         const std::string &ability
-    ) {
+    )
+    {
         pokemon_scoped_lock lock(this);
 
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
-        if(ability == "None") {
+        if(ability == "None")
+        {
             throw std::invalid_argument("The ability cannot be set to None.");
-        } else if(ability == abilities.first) {
+        }
+        else if(ability == abilities.first)
+        {
             GC_RCAST->setSecondAbilityFlag(false);
-        } else if(ability == abilities.second) {
+        }
+        else if(ability == abilities.second)
+        {
             GC_RCAST->setSecondAbilityFlag(true);
-        } else {
+        }
+        else
+        {
             std::string error_message;
-            if(abilities.second == "None") {
+            if(abilities.second == "None")
+            {
                 error_message = str(boost::format("ability: valid values \"%s\"")
                                     % abilities.first.c_str());
-            } else {
+            }
+            else
+            {
                 error_message = str(boost::format("ability: valid values \"%s\", \"%s\"")
                                     % abilities.first.c_str()
                                     % abilities.second.c_str());
@@ -635,12 +652,15 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_personality(
         uint32_t personality
-    ) {
+    )
+    {
         pokemon_scoped_lock lock(this);
 
+        // TODO: personality determines ability
         GC_RCAST->PID = personality;
 
-        if(_database_entry.get_species_id() == UNOWN_ID) {
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
             _set_unown_form_from_personality();
         }
     }

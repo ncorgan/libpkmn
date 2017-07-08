@@ -743,6 +743,7 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
+        // TODO: personality determines ability
         GBA_PC_RCAST->personality = pksav_littleendian32(personality);
 
         if(_database_entry.get_species_id() == UNOWN_ID) {

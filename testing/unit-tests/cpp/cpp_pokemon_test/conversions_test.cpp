@@ -123,12 +123,15 @@ TEST_P(conversions_test, conversions_test)
             first_pokemon->set_trainer_gender(random_bool() ? "Male" : "Female");
         }
 
-        first_pokemon->set_level_met(int_rng.rand(2, 100));
+        // The max level met value in Generation II is 63.
+        first_pokemon->set_level_met(int_rng.rand(2, (origin_generation == 2) ? 63 : 100));
     }
 
     first_pokemon->set_nickname(random_string(10));
     first_pokemon->set_trainer_name(random_string(7));
-    first_pokemon->set_level(int_rng.rand(2, 100));
+
+        // The max level met value in Generation II is 63, which restricts this as well.
+    first_pokemon->set_level(int_rng.rand(2, (dest_generation == 2) ? 63 : 100));
 
     // Convert to the second game and compare.
     pkmn::pokemon::sptr second_pokemon = first_pokemon->to_game(params.dest_game);
@@ -168,7 +171,7 @@ TEST_P(conversions_test, conversions_test)
         EXPECT_EQ(first_pokemon->is_shiny(), second_pokemon->is_shiny());
         EXPECT_EQ(first_pokemon->get_held_item(), second_pokemon->get_held_item());
         EXPECT_EQ(first_pokemon->get_friendship(), second_pokemon->get_friendship());
-        EXPECT_EQ(first_pokemon->get_level_met(), second_pokemon->get_level_met());
+        EXPECT_EQ(first_pokemon->get_level(), second_pokemon->get_level_met());
     }
 }
 
