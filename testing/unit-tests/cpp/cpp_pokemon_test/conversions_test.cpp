@@ -130,7 +130,7 @@ TEST_P(conversions_test, conversions_test)
     first_pokemon->set_nickname(random_string(10));
     first_pokemon->set_trainer_name(random_string(7));
 
-        // The max level met value in Generation II is 63, which restricts this as well.
+    // The max level met value in Generation II is 63, which restricts this as well.
     first_pokemon->set_level(int_rng.rand(2, (dest_generation == 2) ? 63 : 100));
 
     // Convert to the second game and compare.

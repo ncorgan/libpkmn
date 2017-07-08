@@ -236,7 +236,8 @@ namespace pkmn {
             case 2:
             {
                 ret = pkmn::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
-                ret->set_level_met(get_level());
+                // 63 is the max this value can be.
+                ret->set_level_met(std::min<int>(63, get_level()));
                 break;
             }
 
