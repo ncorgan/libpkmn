@@ -7,6 +7,9 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_gcnimpl.hpp"
+
+#include "conversions/gen3_conversions.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
@@ -285,6 +288,61 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GBA_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gbaimpl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gba_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GBA_PC_RCAST;
+        pksav_pokemon.party_data = *GBA_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 3:
+                if(game_is_gamecube(game_id))
+                {
+                    if(game_id == COLOSSEUM)
+                    {
+                        LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
+                        pkmn::conversions::gba_party_pokemon_to_gcn(
+                            &pksav_pokemon,
+                            &colosseum_pokemon
+                        );
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                    }
+                    else
+                    {
+                        LibPkmGC::XD::Pokemon xd_pokemon;
+                        pkmn::conversions::gba_party_pokemon_to_gcn(
+                            &pksav_pokemon,
+                            &xd_pokemon
+                        );
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                    }
+                }
+                else
+                {
+                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret->set_original_game(get_game());
+                }
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
+        }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_form(
