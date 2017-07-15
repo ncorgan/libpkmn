@@ -76,8 +76,19 @@ TEST_P(conversions_test, conversions_test)
 
     for(int i = 0; i < 4; ++i)
     {
+        /*
+         * This will get rid of some legitimate moves, like Shadow Ball, but not
+         * enough to cause an issue.
+         */
+        std::string move_name;
+        do
+        {
+            move_name = moves[size_rng.rand(0, moves.size()-1)];
+        }
+        while(move_name.find("Shadow") == 0);
+
         first_pokemon->set_move(
-            moves[size_rng.rand(0, moves.size()-1)],
+            move_name,
             i
         );
     }
@@ -103,7 +114,10 @@ TEST_P(conversions_test, conversions_test)
 
     if(min_generation >= 2)
     {
-        // Make sure the item is holdable.
+        /*
+         * Make sure the item is holdable. For Generation III, no GCN_exclusive items appear
+         * to be holdable.
+         */
         std::string held_item = "";
         do
         {
@@ -125,6 +139,25 @@ TEST_P(conversions_test, conversions_test)
 
         // The max level met value in Generation II is 63.
         first_pokemon->set_level_met(int_rng.rand(2, (origin_generation == 2) ? 63 : 100));
+    }
+    if(origin_generation >= 3)
+    {
+        // Randomize markings, ribbons, and contest stats.
+        const std::map<std::string, bool>& markings = first_pokemon->get_markings();
+        for(auto iter = markings.begin(); iter != markings.end(); ++iter)
+        {
+            first_pokemon->set_marking(iter->first, random_bool());
+        }
+        const std::map<std::string, bool>& ribbons = first_pokemon->get_ribbons();
+        for(auto iter = ribbons.begin(); iter != ribbons.end(); ++iter)
+        {
+            first_pokemon->set_ribbon(iter->first, random_bool());
+        }
+        const std::map<std::string, int>& contest_stats = first_pokemon->get_contest_stats();
+        for(auto iter = contest_stats.begin(); iter != contest_stats.end(); ++iter)
+        {
+            first_pokemon->set_contest_stat(iter->first, int_rng.rand(0, 255));
+        }
     }
 
     first_pokemon->set_nickname(random_string(10));
@@ -162,7 +195,13 @@ TEST_P(conversions_test, conversions_test)
         EXPECT_EQ(first_pokemon->get_original_game(), second_pokemon->get_original_game());
         EXPECT_EQ(first_pokemon->get_personality(), second_pokemon->get_personality());
 
-        // TODO: markings, ribbons, contest stats
+        if(origin_generation == dest_generation)
+        {
+            EXPECT_TRUE(first_pokemon->get_markings() == second_pokemon->get_markings());
+            EXPECT_TRUE(first_pokemon->get_ribbons() == second_pokemon->get_ribbons());
+            EXPECT_TRUE(first_pokemon->get_contest_stats() == second_pokemon->get_contest_stats());
+        }
+        // TODO: else specific functions to check
     }
     if(min_generation >= 2)
     {
@@ -186,9 +225,9 @@ static const conversions_test_params_t TEST_PARAMS[] =
     {"Umbreon", "", "FireRed", "Colosseum"},
     {"Eevee", "", "Ruby", "XD"},
     {"Espeon", "", "Emerald", "XD"},
-    {"Umbreon", "", "FireRed", "XD"}
-    /*{"Eevee", "", "Colosseum", "Sapphire"},
-    {"Espeon", "", "Colosseum", "Emerald"},
+    {"Umbreon", "", "FireRed", "XD"},
+    {"Eevee", "", "Colosseum", "Sapphire"}
+    /*{"Espeon", "", "Colosseum", "Emerald"},
     {"Umbreon", "", "Colosseum", "LeafGreen"},
     {"Eevee", "", "XD", "Sapphire"},
     {"Espeon", "", "XD", "Emerald"},

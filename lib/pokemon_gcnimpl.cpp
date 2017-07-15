@@ -7,6 +7,9 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gcnimpl.hpp"
+#include "pokemon_gbaimpl.hpp"
+
+#include "conversions/gen3_conversions.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
@@ -260,6 +263,72 @@ namespace pkmn {
                 delete XD_RCAST;
             }
         }
+    }
+
+    pokemon::sptr pokemon_gcnimpl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 3:
+                if(game_is_gamecube(game_id))
+                {
+                    if(game_id == COLOSSEUM)
+                    {
+                        LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
+                        if(_database_entry.get_game_id() == COLOSSEUM)
+                        {
+                            colosseum_pokemon = *COLO_RCAST;
+                        }
+                        else
+                        {
+                            colosseum_pokemon = LibPkmGC::Colosseum::Pokemon(*XD_RCAST);
+                        }
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                    }
+                    else
+                    {
+                        LibPkmGC::XD::Pokemon xd_pokemon;
+                        if(_database_entry.get_game_id() == XD)
+                        {
+                            xd_pokemon = *XD_RCAST;
+                        }
+                        else
+                        {
+                            xd_pokemon = LibPkmGC::XD::Pokemon(*COLO_RCAST);
+                        }
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                    }
+                }
+                else
+                {
+                    pksav_gba_party_pokemon_t pksav_pokemon;
+                    pkmn::conversions::gcn_pokemon_to_gba_party(
+                        GC_RCAST,
+                        &pksav_pokemon
+                    );
+
+                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                }
+
+                ret->set_original_game(get_original_game());
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
+        }
+
+        return ret;
     }
 
     void pokemon_gcnimpl::set_form(
