@@ -1165,8 +1165,11 @@ namespace pkmn { namespace database {
         "heartgold-soulsilver",
         "black-white",
         "black-white",
-        "colosseum-xd",
-        "colosseum-xd",
+
+        // Use Ruby/Sapphire sprites for Gamecube games
+        "ruby-sapphire",
+        "ruby-sapphire",
+
         "black2-white2",
         "black2-white2",
         "x-y",
@@ -1218,7 +1221,7 @@ namespace pkmn { namespace database {
         bool female,
         bool shiny
     ) const {
-        if(_generation > 5 or game_is_gamecube(_game_id)) {
+        if(_generation > 5) {
             throw pkmn::unimplemented_error();
         }
 
