@@ -122,7 +122,8 @@ TEST_P(conversions_test, conversions_test)
         do
         {
             held_item = items[size_rng.rand(0, items.size()-1)];
-        } while(not pkmn::database::item_entry(held_item, params.origin_game).holdable());
+        } while(not pkmn::database::item_entry(held_item, params.origin_game).holdable() or
+                (held_item.find("Scent") != std::string::npos));
 
         first_pokemon->set_held_item(held_item);
     }
@@ -226,12 +227,14 @@ static const conversions_test_params_t TEST_PARAMS[] =
     {"Eevee", "", "Ruby", "XD"},
     {"Espeon", "", "Emerald", "XD"},
     {"Umbreon", "", "FireRed", "XD"},
-    {"Eevee", "", "Colosseum", "Sapphire"}
-    /*{"Espeon", "", "Colosseum", "Emerald"},
+    {"Eevee", "", "Colosseum", "Sapphire"},
+    {"Espeon", "", "Colosseum", "Emerald"},
     {"Umbreon", "", "Colosseum", "LeafGreen"},
+    {"Vaporeon", "", "Colosseum", "XD"},
     {"Eevee", "", "XD", "Sapphire"},
     {"Espeon", "", "XD", "Emerald"},
-    {"Umbreon", "", "XD", "LeafGreen"}*/
+    {"Umbreon", "", "XD", "LeafGreen"},
+    {"Vaporeon", "", "XD", "Colosseum"}
 };
 
 INSTANTIATE_TEST_CASE_P(

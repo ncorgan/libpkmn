@@ -304,6 +304,8 @@ namespace pkmn {
                         }
                         ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
+
+                    ret->set_level_met(get_level());
                 }
                 else
                 {
