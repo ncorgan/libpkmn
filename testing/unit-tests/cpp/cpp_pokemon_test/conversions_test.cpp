@@ -133,7 +133,7 @@ TEST_P(conversions_test, conversions_test)
         first_pokemon->set_shininess(random_bool());
         first_pokemon->set_friendship(uint8_rng.rand());
 
-        if(params.origin_game != "Gold" and params.origin_game != "Crystal")
+        if(params.origin_game != "Gold" and params.origin_game != "Silver")
         {
             first_pokemon->set_trainer_gender(random_bool() ? "Male" : "Female");
         }

@@ -301,4 +301,40 @@ public class CSharpPokemonTest {
     public void _3GPKMTest() {
         PKMNTest.PokemonIOTests.Test3GPKM();
     }
+
+    /*
+     * Conversions
+     */
+    [TestCase("Bulbasaur", "", "Red", "Yellow")]
+    [TestCase("Squirtle", "", "Blue", "Gold")]
+    [TestCase("Cyndaquil", "", "Gold", "Crystal")]
+    [TestCase("Charmander", "", "Silver", "Blue")]
+    [TestCase("Eevee", "", "Ruby", "Colosseum")]
+    [TestCase("Espeon", "", "Emerald", "Colosseum")]
+    [TestCase("Umbreon", "", "FireRed", "Colosseum")]
+    [TestCase("Eevee", "", "Ruby", "XD")]
+    [TestCase("Espeon", "", "Emerald", "XD")]
+    [TestCase("Umbreon", "", "FireRed", "XD")]
+    [TestCase("Eevee", "", "Colosseum", "Sapphire")]
+    [TestCase("Espeon", "", "Colosseum", "Emerald")]
+    [TestCase("Umbreon", "", "Colosseum", "LeafGreen")]
+    [TestCase("Vaporeon", "", "Colosseum", "XD")]
+    [TestCase("Eevee", "", "XD", "Sapphire")]
+    [TestCase("Espeon", "", "XD", "Emerald")]
+    [TestCase("Umbreon", "", "XD", "LeafGreen")]
+    [TestCase("Vaporeon", "", "XD", "Colosseum")]
+    public void PokemonConversionsTest(
+        string species,
+        string form,
+        string originGame,
+        string destGame
+    )
+    {
+        PKMNTest.PokemonConversionsTest.ConversionsTest(
+            species,
+            form,
+            originGame,
+            destGame
+        );
+    }
 }
