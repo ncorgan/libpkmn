@@ -16,9 +16,6 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
-#include "pksav/party_data.hpp"
-#include "pksav/pksav_call.hpp"
-
 #include "types/rng.hpp"
 
 #include <pkmn/calculations/form.hpp>
