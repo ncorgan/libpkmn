@@ -8,6 +8,8 @@
 %include <ruby/stl_macros.i>
 
 %{
+    #include <type_traits>
+
     #include <pkmn/pokemon.hpp>
 
     #include "cpp_wrappers/pokemon.hpp"
@@ -144,7 +146,14 @@
                 const std::map<std::string, val_type>::mapped_type& val = i->second;
 
                 k = swig::from<std::map<std::string, val_type>::key_type>(key);
-                v = swig::from<std::map<std::string, val_type>::mapped_type>(val);
+                if(std::is_same<val_type, bool>::value)
+                {
+                    v = val ? Qtrue : Qfalse;
+                }
+                else
+                {
+                    v = swig::from<std::map<std::string, val_type>::mapped_type>(val);
+                }
                 rb_yield_values(2, k, v);
             }
 
