@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -44,7 +44,7 @@ namespace pkmn { namespace calculations {
          */
         PKMN_CONSTEXPR_OR_INLINE spinda_coords(
             spinda_coords&& other
-        ): x(other.x), y(other.y) {}
+        ): x(std::move(other.x)), y(std::move(other.y)) {}
 
         /*!
          * @brief Assignment operator.
@@ -77,6 +77,23 @@ namespace pkmn { namespace calculations {
             const spinda_coords &rhs
         ) const {
             return (this->x != rhs.x) or (this->y != rhs.y);
+        }
+
+        PKMN_CONSTEXPR_OR_INLINE spinda_coords operator+(
+            const spinda_coords &rhs
+        ) const {
+            return spinda_coords(
+                       this->x + rhs.x,
+                       this->y + rhs.y
+                   );
+        }
+
+        PKMN_INLINE spinda_coords& operator+=(
+            const spinda_coords &rhs
+        ) {
+            this->x += rhs.x;
+            this->y += rhs.y;
+            return *this;
         }
 
         //! X coordinate.
@@ -213,6 +230,48 @@ namespace pkmn { namespace calculations {
                    (this->right_face != rhs.right_face);
         }
 
+        PKMN_CONSTEXPR_OR_INLINE spinda_spots operator+(
+            const spinda_spots &rhs
+        ) const {
+            return spinda_spots(
+                       this->left_ear + rhs.left_ear,
+                       this->right_ear + rhs.right_ear,
+                       this->left_face + rhs.left_face,
+                       this->right_face + rhs.right_face
+                   );
+        }
+
+        PKMN_CONSTEXPR_OR_INLINE spinda_spots operator+(
+            const spinda_coords &rhs
+        ) const {
+            return spinda_spots(
+                       this->left_ear + rhs,
+                       this->right_ear + rhs,
+                       this->left_face + rhs,
+                       this->right_face + rhs
+                   );
+        }
+
+        PKMN_INLINE spinda_spots& operator+=(
+            const spinda_spots &rhs
+        ) {
+            this->left_ear += rhs.left_ear;
+            this->right_ear += rhs.right_ear;
+            this->left_face += rhs.left_face;
+            this->right_face += rhs.right_face;
+            return *this;
+        }
+
+        PKMN_INLINE spinda_spots& operator+=(
+            const spinda_coords &rhs
+        ) {
+            this->left_ear += rhs;
+            this->right_ear += rhs;
+            this->left_face += rhs;
+            this->right_face += rhs;
+            return *this;
+        }
+
         //! Coordinates of spot on the left ear.
         spinda_coords left_ear;
 
@@ -227,7 +286,7 @@ namespace pkmn { namespace calculations {
     };
 
     /*!
-     * @brief Calculates offsets of Spinda's spots in a Generation III .
+     * @brief Calculates offsets of the spots on a Generation III-V Spinda.
      *
      * The locations of Spinda's four spots are calculated based on the Spinda's
      * personality. As such, there are 2^32 combinations.

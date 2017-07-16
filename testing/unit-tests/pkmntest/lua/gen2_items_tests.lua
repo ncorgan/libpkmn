@@ -78,8 +78,8 @@ function gen2_items_tests.test_key_item_pocket(key_item_pocket, game)
     else
         for i = 1, #gen2_items_tests.crystal_items
         do
-            luaunit.assertError(pkmn.core.item_list_sptr.add, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
-            luaunit.assertError(pkmn.core.item_list_sptr.remove, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
+            luaunit.assertError(pkmn.item_list_sptr.add, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
+            luaunit.assertError(pkmn.item_list_sptr.remove, key_item_pocket, gen2_items_tests.crystal_items[i], 1)
         end
     end
     luaunit.assertEquals(key_item_pocket:get_num_items(), 0)

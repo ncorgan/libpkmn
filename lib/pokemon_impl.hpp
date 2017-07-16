@@ -73,8 +73,6 @@ namespace pkmn {
 
             const pkmn::database::pokemon_entry& get_database_entry();
 
-            const pkmn::database::item_entry& get_held_item();
-
             const std::map<std::string, bool>& get_markings();
 
             const std::map<std::string, bool>& get_ribbons();
@@ -116,7 +114,6 @@ namespace pkmn {
             std::map<std::string, bool> _markings, _ribbons;
 
             pkmn::database::pokemon_entry _database_entry;
-            pkmn::database::item_entry _held_item;
 
             int _generation;
 
@@ -209,7 +206,6 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
-            virtual void _update_held_item() {}
             virtual void _update_ribbons_map() {}
             virtual void _update_EV_map() = 0;
             virtual void _update_stat_map() = 0;

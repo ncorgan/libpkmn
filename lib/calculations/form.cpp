@@ -16,7 +16,7 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_CONSTEXPR_OR_INLINE char gen2_unown_letter(
+    PKMN_INLINE char gen2_unown_letter(
         uint8_t IV_attack, uint8_t IV_defense,
         uint8_t IV_speed, uint8_t IV_special
     ) {
@@ -32,17 +32,17 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        if(not pkmn_IV_in_bounds(IV_attack, false)) {
-            throw pkmn::range_error("IV_attack", 0, 15);
+        if(not pkmn::IV_in_bounds(IV_attack, false)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, false)) {
-            throw pkmn::range_error("IV_defense", 0, 15);
+        if(not pkmn::IV_in_bounds(IV_defense, false)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, false)) {
-            throw pkmn::range_error("IV_speed", 0, 15);
+        if(not pkmn::IV_in_bounds(IV_speed, false)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_special, false)) {
-            throw pkmn::range_error("IV_special", 0, 15);
+        if(not pkmn::IV_in_bounds(IV_special, false)) {
+            pkmn::throw_out_of_range("IV_special", 0, 15);
         }
 
         std::string ret = "?";
@@ -53,7 +53,7 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    PKMN_CONSTEXPR_OR_INLINE char gen3_unown_letter(
+    PKMN_INLINE char gen3_unown_letter(
         const uint8_t* bytes
     ) {
         return ((((bytes[3] & 0x3) << 6) |

@@ -18,6 +18,7 @@ PKMN_CSHARP_INIT
     #include <pkmn/calculations/gender.hpp>
     #include <pkmn/calculations/hidden_power.hpp>
     #include <pkmn/calculations/nature.hpp>
+    #include <pkmn/calculations/personality.hpp>
     #include <pkmn/calculations/shininess.hpp>
     #include <pkmn/calculations/size.hpp>
     #include <pkmn/calculations/spinda_spots.hpp>
@@ -31,6 +32,7 @@ PKMN_CSHARP_INIT
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/hidden_power.hpp>
 %include <pkmn/calculations/nature.hpp>
+%include <pkmn/calculations/personality.hpp>
 %include <pkmn/calculations/shininess.hpp>
 %include <pkmn/calculations/size.hpp>
 %include <pkmn/calculations/spinda_spots.hpp>

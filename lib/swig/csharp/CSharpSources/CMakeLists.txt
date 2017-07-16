@@ -6,22 +6,13 @@
 #
 
 SET(csharp_files
-    AbilityListComboBox.cs
     AssemblyInfo.cs
     BuildInfo.cs
     DatabaseProperties.cs
-    GameListComboBox.cs
     Equality.cs
     HashCodeBuilder.cs
-    ItemListComboBox.cs
-    LocationListComboBox.cs
-    MoveListComboBox.cs
-    NatureListComboBox.cs
-    PokemonListComboBox.cs
-    RegionListComboBox.cs
-    RibbonListComboBox.cs
-    SuperTrainingMedalListComboBox.cs
-    TypeListComboBox.cs
+    ManualGUI.cs
+    SpindaOperators.cs
 )
 
 FOREACH(cs ${csharp_files})

@@ -16,7 +16,7 @@ namespace pkmn {
     static PKMN_CONSTEXPR int GEN2_NUM_BOXES = 14;
 
     typedef struct {
-        pksav_gen2_pokemon_pc_t* pc;
+        pksav_gen2_pokemon_box_t* boxes[GEN2_NUM_BOXES];
         pksav_gen2_pokemon_box_names_t* box_names;
     } gen2_pokemon_full_pc_t;
 
@@ -28,7 +28,7 @@ namespace pkmn {
             );
             pokemon_pc_gen2impl(
                 int game_id,
-                pksav_gen2_pokemon_pc_t* native_pc,
+                pksav_gen2_pokemon_box_t** native,
                 pksav_gen2_pokemon_box_names_t* native_box_names,
                 bool copy
             );

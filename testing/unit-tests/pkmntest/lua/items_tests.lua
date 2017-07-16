@@ -20,23 +20,23 @@ function items_tests.item_list_test_empty_slot(items)
 end
 
 function items_tests.item_list_test_out_of_range_error(items, item_name)
-    luaunit.assertError(pkmn.core.item_list_sptr.add, items, item_name, 0)
-    luaunit.assertError(pkmn.core.item_list_sptr.add, items, item_name, 100)
-    luaunit.assertError(pkmn.core.item_list_sptr.remove, items, item_name, 0)
-    luaunit.assertError(pkmn.core.item_list_sptr.remove, items, item_name, 100)
+    luaunit.assertError(pkmn.item_list_sptr.add, items, item_name, 0)
+    luaunit.assertError(pkmn.item_list_sptr.add, items, item_name, 100)
+    luaunit.assertError(pkmn.item_list_sptr.remove, items, item_name, 0)
+    luaunit.assertError(pkmn.item_list_sptr.remove, items, item_name, 100)
 end
 
 function items_tests.item_bag_test_invalid_items(bag, item_names)
     for i = 1, #item_names
     do
-        luaunit.assertError(pkmn.core.item_bag_sptr.add, bag, item_names[i], 1)
+        luaunit.assertError(pkmn.item_bag_sptr.add, bag, item_names[i], 1)
     end
 end
 
 function items_tests.item_list_test_invalid_items(items, item_names)
     for i = 1, #item_names
     do
-        luaunit.assertError(pkmn.core.item_list_sptr.add, items, item_names[i], 1)
+        luaunit.assertError(pkmn.item_list_sptr.add, items, item_names[i], 1)
     end
 end
 

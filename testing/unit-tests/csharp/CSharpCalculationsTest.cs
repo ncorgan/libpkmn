@@ -311,7 +311,7 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void Gen3Gen4NatureTest() {
+    public void NatureTest() {
         string[] natures = {
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -322,10 +322,81 @@ public class CSharpCalculationsTest {
 
         for(uint i = 0; i < natures.Length; ++i) {
             Assert.AreEqual(
-                PKMN.Calculations.Gen3Gen4Nature((uint)((rng.Next(0,50001) * 1000) + i)),
+                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i)),
                 natures[i]
             );
         }
+    }
+
+    [Test]
+    public void PersonalityTest() {
+        /*
+         * Given the amount of time the C++ test takes, this will just verify
+         * the API wrapper.
+         */
+
+        // Test invalid ability.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    true,
+                    "Torrent",
+                    "Male",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid gender.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    true,
+                    "Blaze",
+                    "Not a gender",
+                    "Quiet"
+                );
+            }
+        );
+
+        // Test invalid nature.
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate {
+                PKMN.Calculations.GeneratePersonality(
+                    "Charmander",
+                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    true,
+                    "Blaze",
+                    "Male",
+                    "Not a nature"
+                );
+            }
+        );
+
+        // Test and validate a valid call.
+        uint personality = PKMN.Calculations.GeneratePersonality(
+                               "Charmander",
+                               PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                               true,
+                               "Blaze",
+                               "Male",
+                               "Quiet"
+                           );
+        Assert.AreEqual(
+            "Male",
+            PKMN.Calculations.ModernPokemonGender(
+                "Charmander", personality
+            )
+        );
+        Assert.IsTrue(
+            PKMN.Calculations.ModernShiny(
+                personality, PKMN.Pokemon.DEFAULT_TRAINER_ID
+            )
+        );
     }
 
     [Test]
@@ -501,6 +572,15 @@ public class CSharpCalculationsTest {
         Assert.AreNotEqual(spindaCoords1, spindaCoords3);
         Assert.AreEqual(spindaCoords1.GetHashCode(), spindaCoords2.GetHashCode());
         Assert.AreNotEqual(spindaCoords1.GetHashCode(), spindaCoords3.GetHashCode());
+
+        // Check addition operators.
+        PKMN.SpindaCoords addedCoords = spindaCoords1 + spindaCoords2;
+        Assert.AreEqual(addedCoords.X, 246);
+        Assert.AreEqual(addedCoords.Y, 912);
+
+        addedCoords += spindaCoords3;
+        Assert.AreEqual(addedCoords.X, 702);
+        Assert.AreEqual(addedCoords.Y, 1035);
     }
 
     [Test]
@@ -537,6 +617,31 @@ public class CSharpCalculationsTest {
          */
         PKMN.SpindaSpots spindaSpots = PKMN.Calculations.SpindaSpotOffset(4064348759);
         Assert.AreEqual(spindaSpots, spindaSpots1);
+
+        // Test addition operators.
+        spindaSpots = spindaSpots + spindaSpots2;
+        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(14, 10));
+        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(20, 0));
+        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(2, 8));
+        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(4, 30));
+
+        spindaSpots += spindaSpots3;
+        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(21, 15));
+        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(30, 0));
+        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(4, 23));
+        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(5, 34));
+
+        spindaSpots = spindaSpots + new PKMN.SpindaCoords(2, 5);
+        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(23, 20));
+        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(32, 5));
+        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(6, 28));
+        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(7, 39));
+
+        spindaSpots += new PKMN.SpindaCoords(5, 2);
+        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(28, 22));
+        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(37, 7));
+        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(11, 30));
+        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(12, 41));
     }
 
     [Test]

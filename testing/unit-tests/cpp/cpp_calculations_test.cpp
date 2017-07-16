@@ -9,6 +9,7 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 #include <pkmn/calculations/nature.hpp>
+#include <pkmn/calculations/personality.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/calculations/spinda_spots.hpp>
@@ -17,6 +18,7 @@
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn/exception.hpp>
+#include <pkmn/pokemon.hpp>
 
 #include <boost/assign.hpp>
 
@@ -34,42 +36,42 @@ TEST(cpp_calculations_test, gen2_unown_form_test) {
         (void)pkmn::calculations::gen2_unown_form(
                   -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   16, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 16, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 16, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_unown_form(
                   0, 0, 0, 16
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -137,12 +139,12 @@ TEST(cpp_calculations_test, gen2_gender_test) {
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", -1
                              );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         std::string gender = pkmn::calculations::gen2_pokemon_gender(
                                  "Bulbasaur", 16
                              );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -344,42 +346,42 @@ TEST(cpp_calculations_test, gen2_hidden_power_test) {
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            -1, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            16, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, -1, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 16, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, -1, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 16, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, -1
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::gen2_hidden_power(
                            0, 0, 0, 16
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -402,62 +404,62 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
         hidden_power = pkmn::calculations::modern_hidden_power(
                            -1, 0, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            32, 0, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, -1, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 32, 0, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, -1, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 32, 0, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, -1, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 32, 0, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, -1, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 32, 0
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, -1
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         hidden_power = pkmn::calculations::modern_hidden_power(
                            0, 0, 0, 0, 0, 32
                        );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -471,21 +473,259 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
     EXPECT_EQ(70, hidden_power.base_power);
 }
 
-TEST(cpp_calculations_test, gen3_gen4_nature_test) {
-    static const std::vector<std::string> natures = boost::assign::list_of
-        ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
-        ("Bold")("Docile")("Relaxed")("Impish")("Lax")
-        ("Timid")("Hasty")("Serious")("Jolly")("Naive")
-        ("Modest")("Mild")("Quiet")("Bashful")("Rash")
-        ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
-    ;
+static const std::vector<std::string> natures = boost::assign::list_of
+    ("Hardy")("Lonely")("Brave")("Adamant")("Naughty")
+    ("Bold")("Docile")("Relaxed")("Impish")("Lax")
+    ("Timid")("Hasty")("Serious")("Jolly")("Naive")
+    ("Modest")("Mild")("Quiet")("Bashful")("Rash")
+    ("Calm")("Gentle")("Sassy")("Careful")("Quirky")
+;
 
+TEST(cpp_calculations_test, nature_test) {
     std::srand((unsigned int)std::time(NULL));
     for(uint32_t i = 0; i < natures.size(); ++i) {
         EXPECT_EQ(
-            pkmn::calculations::gen3_gen4_nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
+            pkmn::calculations::nature(uint32_t(((std::rand() % 50000) * 1000) + i)),
             natures[i]
         );
+    }
+}
+
+static const std::string species[4] = {"Charmander", "Growlithe", "Pidgey", "Vulpix"};
+static const std::string genders[2] = {"Male", "Female"};
+static const bool bools[2] = {true, false};
+
+static const std::string abilities[4][3] = {
+    {"Blaze", "None", "Solar Power"},
+    {"Intimidate", "Flash Fire", "Justified"},
+    {"Keen Eye", "Tangled Feet", "Big Pecks"},
+    {"Flash Fire", "None", "Drought"}
+};
+
+TEST(cpp_calculations_test, personality_test) {
+    uint32_t personality = 0;
+
+    // Test invalid ability.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "None",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Torrent",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+
+    // Test invalid gender.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Charmander",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Blaze",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Genderless",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorina",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Genderless",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Nidorino",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Poison Point",
+                          "Female",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Magnet Pull",
+                          "Not a gender",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Magnet Pull",
+                          "Female",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Magnet Pull",
+                          "Male",
+                          "Quiet"
+                      );
+    , std::invalid_argument);
+
+    // Test invalid nature.
+    EXPECT_THROW(
+        personality = pkmn::calculations::generate_personality(
+                          "Magnemite",
+                          pkmn::pokemon::DEFAULT_TRAINER_ID,
+                          true,
+                          "Magnet Pull",
+                          "Genderless",
+                          "Not a nature"
+                      );
+    , std::invalid_argument);
+
+    // Test every valid combination for single-gender Pokémon.
+    struct test_data {
+        std::string species;
+        std::string gender;
+        std::string abilities[3];
+    };
+
+    static const test_data test_values[3] = {
+        {"Magnemite", "Genderless", {"Magnet Pull", "Sturdy", "Analytic"}},
+        {"Nidorina", "Female", {"Poison Point", "Rivalry", "Hustle"}},
+        {"Nidorino", "Male", {"Poison Point", "Rivalry", "Hustle"}}
+    };
+    for(size_t i = 0; i < 3; ++i) {
+        for(size_t j = 0; j < natures.size(); ++j) {
+            for(size_t k = 0; k < 3; ++k) {
+                for(size_t l = 0; l < 2; ++l) {
+                    personality = pkmn::calculations::generate_personality(
+                                      test_values[i].species,
+                                      pkmn::pokemon::DEFAULT_TRAINER_ID,
+                                      bools[l],
+                                      test_values[i].abilities[k],
+                                      test_values[i].gender,
+                                      natures[j]
+                                  );
+                    EXPECT_EQ(
+                        bools[l],
+                        pkmn::calculations::modern_shiny(
+                            personality,
+                            pkmn::pokemon::DEFAULT_TRAINER_ID
+                        )
+                    );
+                    EXPECT_EQ(
+                        test_values[i].gender,
+                        pkmn::calculations::modern_pokemon_gender(
+                            test_values[i].species,
+                            personality
+                        )
+                    );
+                    EXPECT_EQ(
+                       natures[j],
+                       pkmn::calculations::nature(personality)
+                    );
+                }
+            }
+        }
+    }
+
+    // Test every valid combination for mixed-gender Pokémon.
+    for(size_t i = 0; i < 4; ++i) {
+        for(size_t j = 0; j < natures.size(); ++j) {
+            for(size_t k = 0; k < 2; ++k) {
+                for(size_t l = 0; l < 2; ++l) {
+                    for(size_t m = 0; m < 3; ++m) {
+                        if(abilities[i][m] != "None") {
+                            personality = pkmn::calculations::generate_personality(
+                                              species[i],
+                                              pkmn::pokemon::DEFAULT_TRAINER_ID,
+                                              bools[k],
+                                              abilities[i][m],
+                                              genders[l],
+                                              natures[j]
+                                          );
+                            EXPECT_EQ(
+                                bools[k],
+                                pkmn::calculations::modern_shiny(
+                                    personality,
+                                    pkmn::pokemon::DEFAULT_TRAINER_ID
+                                )
+                            );
+                            EXPECT_EQ(
+                                genders[l],
+                                pkmn::calculations::modern_pokemon_gender(
+                                    species[i],
+                                    personality
+                                )
+                            );
+                            EXPECT_EQ(
+                               natures[j],
+                               pkmn::calculations::nature(personality)
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -497,42 +737,42 @@ TEST(cpp_calculations_test, gen2_shiny_test) {
         (void)pkmn::calculations::gen2_shiny(
                   -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   16, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 16, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 16, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::gen2_shiny(
                   0, 0, 0, 16
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -587,62 +827,62 @@ TEST(cpp_calculations_test, pokemon_size_test) {
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, -1, 0, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 32, 0, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, -1, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 32, 0, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, -1, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 32, 0, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, -1, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 32, 0, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, -1, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 32, 0
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 0, -1
               );
-    , pkmn::range_error);
+    , std::out_of_range);
     EXPECT_THROW(
         (void)pkmn::calculations::pokemon_size(
                   "Barboach", 0, 0, 0, 0, 0, 0, 32
               );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     std::srand((unsigned int)std::time(NULL));
     for(auto pokemon_iter = pokemon_with_size_checks.begin();
@@ -663,7 +903,7 @@ TEST(cpp_calculations_test, pokemon_size_test) {
                              (std::rand() % 32),
                              (std::rand() % 32)
                          );
-            EXPECT_LE(std::abs(size-height), height);
+            EXPECT_LE(std::fabs(size-height), height);
         }
     }
 }
@@ -672,14 +912,25 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     /*
      * Check (in)equality operators.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords1(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords2(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords coords3(456,123);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS1(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS2(123,456);
+    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS3(456,123);
 
-    EXPECT_TRUE(coords1 == coords2);
-    EXPECT_FALSE(coords1 != coords2);
-    EXPECT_TRUE(coords1 != coords3);
-    EXPECT_FALSE(coords1 == coords3);
+    EXPECT_TRUE(COORDS1 == COORDS2);
+    EXPECT_FALSE(COORDS1 != COORDS2);
+    EXPECT_TRUE(COORDS1 != COORDS3);
+    EXPECT_FALSE(COORDS1 == COORDS3);
+
+    /*
+     * Test adding coordinates.
+     */
+    pkmn::calculations::spinda_coords added_coords = COORDS1 + COORDS2;
+    EXPECT_EQ(246, added_coords.x);
+    EXPECT_EQ(912, added_coords.y);
+
+    added_coords += COORDS3;
+    EXPECT_EQ(702, added_coords.x);
+    EXPECT_EQ(1035, added_coords.y);
 }
 
 TEST(cpp_calculations_test, spinda_spot_test) {
@@ -706,6 +957,49 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     );
     EXPECT_TRUE(SPOTS1 == SPOTS2);
     EXPECT_TRUE(SPOTS1 != SPOTS3);
+
+    /*
+     * Test adding spots.
+     */
+    pkmn::calculations::spinda_spots added_spots = SPOTS1 + SPOTS2;
+    EXPECT_EQ(14, added_spots.left_ear.x);
+    EXPECT_EQ(10, added_spots.left_ear.y);
+    EXPECT_EQ(20, added_spots.right_ear.x);
+    EXPECT_EQ(0, added_spots.right_ear.y);
+    EXPECT_EQ(2, added_spots.left_face.x);
+    EXPECT_EQ(8, added_spots.left_face.y);
+    EXPECT_EQ(4, added_spots.right_face.x);
+    EXPECT_EQ(30, added_spots.right_face.y);
+
+    added_spots += SPOTS3;
+    EXPECT_EQ(21, added_spots.left_ear.x);
+    EXPECT_EQ(15, added_spots.left_ear.y);
+    EXPECT_EQ(30, added_spots.right_ear.x);
+    EXPECT_EQ(0, added_spots.right_ear.y);
+    EXPECT_EQ(4, added_spots.left_face.x);
+    EXPECT_EQ(23, added_spots.left_face.y);
+    EXPECT_EQ(5, added_spots.right_face.x);
+    EXPECT_EQ(34, added_spots.right_face.y);
+
+    added_spots += pkmn::calculations::spinda_coords(20, 50);
+    EXPECT_EQ(41, added_spots.left_ear.x);
+    EXPECT_EQ(65, added_spots.left_ear.y);
+    EXPECT_EQ(50, added_spots.right_ear.x);
+    EXPECT_EQ(50, added_spots.right_ear.y);
+    EXPECT_EQ(24, added_spots.left_face.x);
+    EXPECT_EQ(73, added_spots.left_face.y);
+    EXPECT_EQ(25, added_spots.right_face.x);
+    EXPECT_EQ(84, added_spots.right_face.y);
+
+    added_spots = added_spots + pkmn::calculations::spinda_coords(1, 5);
+    EXPECT_EQ(42, added_spots.left_ear.x);
+    EXPECT_EQ(70, added_spots.left_ear.y);
+    EXPECT_EQ(51, added_spots.right_ear.x);
+    EXPECT_EQ(55, added_spots.right_ear.y);
+    EXPECT_EQ(25, added_spots.left_face.x);
+    EXPECT_EQ(78, added_spots.left_face.y);
+    EXPECT_EQ(26, added_spots.right_face.x);
+    EXPECT_EQ(89, added_spots.right_face.y);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -745,14 +1039,14 @@ TEST(cpp_calculations_test, gb_stat_test) {
         pkmn::calculations::get_gb_stat(
             "Attack", 1, 1, 123456, 1
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_gb_stat(
             "Attack", 1, 1, 1, 12345
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Test with known good inputs.
@@ -827,14 +1121,14 @@ TEST(cpp_calculations_test, modern_stat_test) {
         pkmn::calculations::get_modern_stat(
             "Attack", 1, 1.0f, 1, 12345, 1
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     // Invalid IV
     EXPECT_THROW(
         pkmn::calculations::get_modern_stat(
             "Attack", 1, 1.0f, 1, 1, 12345
         );
-    , pkmn::range_error);
+    , std::out_of_range);
 
     /*
      * Test with known good inputs.

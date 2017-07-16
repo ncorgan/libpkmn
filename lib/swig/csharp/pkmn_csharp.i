@@ -31,7 +31,9 @@ PKMN_CSHARP_INIT
 
 // Build Info
 %csmethodmodifiers pkmn::build_info::get_boost_version "internal";
+%csmethodmodifiers pkmn::build_info::get_libpkmgc_version "internal";
 %csmethodmodifiers pkmn::build_info::get_pksav_version "internal";
+%csmethodmodifiers pkmn::build_info::get_qt_version "internal";
 %csmethodmodifiers pkmn::build_info::get_sqlite3_version "internal";
 %csmethodmodifiers pkmn::build_info::get_sqlitecpp_version "internal";
 %include <pkmn/build_info.hpp>
@@ -43,6 +45,8 @@ std::string GetSWIGVersion();
 %ignore get_native;
 
 // Bring in our wrapped make functions, don't expose them
+%csmethodmodifiers detect_game_save_type "internal";
+%csmethodmodifiers make_game_save "internal";
 %csmethodmodifiers make_item_bag "internal";
 %csmethodmodifiers make_item_list "internal";
 %csmethodmodifiers make_pokemon "internal";
@@ -50,6 +54,9 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_pokemon_party "internal";
 %csmethodmodifiers make_pokemon_pc "internal";
 %include <pkmn_statics.i>
+
+// Game Save
+%include <csharp/pkmn_game_save.i>
 
 // Item Slot
 %include <csharp/pkmn_item_slot.i>

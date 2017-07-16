@@ -7,14 +7,19 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gen2impl.hpp"
+#include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
+#include <pkmn/database/item_entry.hpp>
+
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
+
+#include "types/rng.hpp"
 
 #include <pksav/common/stats.h>
 #include <pksav/gen2/time.h>
@@ -26,8 +31,6 @@
 
 #include <cstring>
 #include <ctime>
-#include <iostream>
-#include <random>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
@@ -53,34 +56,35 @@ namespace pkmn {
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
                     );
-        _trainer_name = LIBPKMN_OT_NAME;
+        _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
         GEN2_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
-        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+        GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
-        // TODO: Use PKSav PRNG after refactor merged in
-        time_t now = 0;
-        std::srand((unsigned int)std::time(&now));
-        GEN2_PC_RCAST->ev_hp   = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_atk  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_def  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_spd  = uint16_t(std::rand());
-        GEN2_PC_RCAST->ev_spcl = uint16_t(std::rand());
+        pkmn::rng<uint16_t> rng;
+        GEN2_PC_RCAST->ev_hp   = rng.rand();
+        GEN2_PC_RCAST->ev_atk  = rng.rand();
+        GEN2_PC_RCAST->ev_def  = rng.rand();
+        GEN2_PC_RCAST->ev_spd  = rng.rand();
+        GEN2_PC_RCAST->ev_spcl = rng.rand();
 
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_IVs_from_form(
                 _database_entry.get_form()
             );
         } else {
-            GEN2_PC_RCAST->iv_data = uint16_t(std::rand());
+            GEN2_PC_RCAST->iv_data = rng.rand();
         }
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
         set_level_met(level);
         set_location_met("Special", false);
+
+        time_t now = 0;
+        std::time(&now);
         PKSAV_CALL(
             pksav_gen2_set_caught_data_time_field(
                 &now,
@@ -89,7 +93,6 @@ namespace pkmn {
         )
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         set_level(level);
@@ -109,7 +112,6 @@ namespace pkmn {
         _our_party_mem = true;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -132,7 +134,6 @@ namespace pkmn {
         _our_party_mem = false;
 
         // Populate abstractions
-        _update_held_item();
         _update_EV_map();
         _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
         _update_stat_map();
@@ -191,27 +192,27 @@ namespace pkmn {
         float chance_male = _database_entry.get_chance_male();
         float chance_female = _database_entry.get_chance_female();
 
-        if(pkmn_floats_close(chance_male, 0.0f) and pkmn_floats_close(chance_female, 0.0f)) {
+        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f)) {
             if(gender != "Genderless") {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
         } else {
             if(gender == "Male") {
-                if(pkmn_floats_close(chance_male, 0.0f)) {
+                if(pkmn::floats_close(chance_male, 0.0f)) {
                     throw std::invalid_argument("This Pokémon is female-only.");
                 } else {
                     set_IV("Attack", 15);
                 }
             } else if(gender == "Female") {
-                if(pkmn_floats_close(chance_female, 0.0f)) {
+                if(pkmn::floats_close(chance_female, 0.0f)) {
                     throw std::invalid_argument("This Pokémon is male-only.");
                 } else {
                     // Set the IV to the max it can be while still being female.
-                    if(pkmn_floats_close(chance_male, 0.875f)) {
+                    if(pkmn::floats_close(chance_male, 0.875f)) {
                         set_IV("Attack", 1);
-                    } else if(pkmn_floats_close(chance_male, 0.75f)) {
+                    } else if(pkmn::floats_close(chance_male, 0.75f)) {
                         set_IV("Attack", 3);
-                    } else if(pkmn_floats_close(chance_male, 0.5f)) {
+                    } else if(pkmn::floats_close(chance_male, 0.5f)) {
                         set_IV("Attack", 6);
                     } else {
                         set_IV("Attack", 11);
@@ -253,6 +254,16 @@ namespace pkmn {
         }
     }
 
+    std::string pokemon_gen2impl::get_held_item()
+    {
+        pokemon_scoped_lock lock(this);
+
+        return pkmn::database::item_index_to_name(
+                   GEN2_PC_RCAST->held_item,
+                   _database_entry.get_game_id()
+               );
+    }
+
     void pokemon_gen2impl::set_held_item(
         const std::string &held_item
     ) {
@@ -269,8 +280,6 @@ namespace pkmn {
         pokemon_scoped_lock lock(this);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
-
-        _update_held_item();
     }
 
     std::string pokemon_gen2impl::get_trainer_name() {
@@ -323,7 +332,7 @@ namespace pkmn {
         uint32_t id
     ) {
         if(id > 65535) {
-            throw pkmn::range_error("id", 0, 65535);
+            pkmn::throw_out_of_range("id", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -362,7 +371,7 @@ namespace pkmn {
         int friendship
     ) {
         if(friendship < 0 or friendship > 255) {
-            throw pkmn::range_error("friendship", 0, 255);
+            pkmn::throw_out_of_range("friendship", 0, 255);
         }
 
         pokemon_scoped_lock lock(this);
@@ -400,7 +409,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 2 or level > 100) {
-            throw pkmn::range_error("Level caught", 2, 100);
+            pkmn::throw_out_of_range("Level caught", 2, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -486,7 +495,7 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw pkmn::range_error("experience", 0, max_experience);
+            pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
         pokemon_scoped_lock lock(this);
@@ -515,7 +524,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 2 or level > 100) {
-            throw pkmn::range_error("level", 2, 100);
+            pkmn::throw_out_of_range("level", 2, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -576,19 +585,20 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw pkmn::range_error("index", 0, 3);
+            pkmn::throw_out_of_range("index", 0, 3);
         }
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        GEN2_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        GEN2_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
         GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -607,10 +617,10 @@ namespace pkmn {
         int value
     ) {
         // Generation II uses Generation I stats for EV's
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, false)) {
-            throw pkmn::range_error(stat, 0, 65535);
+        if(not pkmn::string_is_gen1_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
+        } else if(not pkmn::EV_in_bounds(value, false)) {
+            pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -643,9 +653,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        GEN2_PC_RCAST->moves[index],
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        GEN2_PC_RCAST->moves[index], 2
                     ),
                     (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_MOVE_PP_MASK)
                 );
@@ -655,15 +664,6 @@ namespace pkmn {
                 for(int i = 0; i < 4; ++i) {
                     _update_moves(i);
                 }
-        }
-    }
-
-    void pokemon_gen2impl::_update_held_item() {
-        if(int(GEN2_PC_RCAST->held_item) != _held_item.get_item_index()) {
-            _held_item = pkmn::database::item_entry(
-                             GEN2_PC_RCAST->held_item,
-                             _database_entry.get_game_id()
-                         );
         }
     }
 

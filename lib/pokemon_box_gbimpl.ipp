@@ -30,6 +30,8 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new list_type);
         std::memset(_native, 0, sizeof(list_type));
+        std::memset(NATIVE_LIST_RCAST->nicknames, 0x50, sizeof(NATIVE_LIST_RCAST->nicknames));
+        std::memset(NATIVE_LIST_RCAST->otnames, 0x50, sizeof(NATIVE_LIST_RCAST->otnames));
         NATIVE_LIST_RCAST->species[NUM_LIST_SPECIES] = 0xFF;
         _our_mem = true;
 
@@ -99,7 +101,7 @@ namespace pkmn {
         int max_index = std::min<int>(capacity-1, num_pokemon);
 
         if(index < 0 or index > max_index) {
-            throw pkmn::range_error("index", 0, max_index);
+            pkmn::throw_out_of_range("index", 0, max_index);
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
@@ -115,15 +117,10 @@ namespace pkmn {
 
         // Update the number of Pokémon in the box if needed.
         std::string new_species = new_pokemon->get_species();
-        if(index == num_pokemon) {
-            std::string new_species = new_pokemon->get_species();
-            if(NATIVE_LIST_RCAST->species[index] == 0 and new_species != "None") {
-                ++(NATIVE_LIST_RCAST->count);
-            }
-        } else if(index == (num_pokemon-1)) {
-            if(NATIVE_LIST_RCAST->species[index] > 0 and new_species == "None") {
-                --(NATIVE_LIST_RCAST->count);
-            }
+        if(index == num_pokemon and new_species != "None") {
+            ++(NATIVE_LIST_RCAST->count);
+        } else if(index == (num_pokemon-1) and new_species == "None") {
+            --(NATIVE_LIST_RCAST->count);
         }
 
         // Set the entry in the species list.
@@ -172,7 +169,33 @@ namespace pkmn {
         char nickname[11] = {0};
         char otname[8] = {0};
 
+        int num_pokemon = get_num_pokemon();
+
+        /*
+         * Unfortuately, the count field may not be reliable, so we need to check
+         * ourselves and fix it if it's wrong.
+         */
+        if(num_pokemon > 0 and NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0) {
+            for(int i = 0; i < num_pokemon; ++i) {
+                if(NATIVE_LIST_RCAST->entries[i].species == 0) {
+                    NATIVE_LIST_RCAST->count = i;
+                    break;
+                }
+            }
+        }
+
         for(int i = 0; i < capacity; ++i) {
+            /*
+             * Memory is not necessarily zeroed-out past the num_pokemon point,
+             * so we'll do it ourselves.
+             */
+            if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0) {
+                NATIVE_LIST_RCAST->species[i] = 0;
+                std::memset(&NATIVE_LIST_RCAST->entries[i], 0, sizeof(pksav_pokemon_type));
+                std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
+                std::memset(NATIVE_LIST_RCAST->otnames[i], 0x50, sizeof(NATIVE_LIST_RCAST->otnames[i]));
+            }
+
             _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(
                                    &NATIVE_LIST_RCAST->entries[i],
                                    _game_id

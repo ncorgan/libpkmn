@@ -10,8 +10,10 @@ SET(pkmntest_cs_srcs
     Gen1PokemonTests.cs
     Gen2ItemsTests.cs
     Gen2PokemonTests.cs
+    Gen3PokemonTests.cs
     GBAItemsTests.cs
-    GBAPokemonTests.cs
+    GCNItemsTests.cs
+    GameSaveTest.cs
     ItemsTestsCommon.cs
     PokemonIOTests.cs
     PokemonPartyTests.cs

@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmntest/pokemon_test.hpp>
+#include "pokemon_test_common.hpp"
 
 #include <pkmn/exception.hpp>
 #include "pksav/pksav_call.hpp"
@@ -17,19 +17,19 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
-class gen1_pokemon_test: public pkmntest::pokemon_test {};
+class gen1_pokemon_test: public pokemon_test {};
 
 TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     pkmn::pokemon::sptr pokemon = get_pokemon();
 
-    pkmntest::pokemon_test_common(
+    pokemon_test_common(
         pokemon,
         {
             "Great Ball",
             {"Great Ball"},
 
-            "Berry",
-            {"Berry"},
+            "Potion",
+            {"Potion"},
 
             "Special",
             {"Route 1"},
@@ -66,7 +66,10 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves.at(i).move.get_move_id(), int(native_pc->moves[i]));
+        EXPECT_EQ(
+            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
+            int(native_pc->moves[i])
+        );
         EXPECT_EQ(moves.at(i).pp, int(native_pc->move_pps[i]));
     }
 

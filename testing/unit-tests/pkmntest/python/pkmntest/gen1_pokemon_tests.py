@@ -60,13 +60,13 @@ class gen1_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.get_held_item()
 
-        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
 
         with self.assertRaises(RuntimeError):
             pokemon.get_trainer_secret_id()
 
-        self.assertEqual(pokemon.get_trainer_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertEqual(pokemon.get_trainer_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
         self.assertStringEqual(pokemon.get_trainer_gender(), "Male")
 
         with self.assertRaises(RuntimeError):
@@ -99,7 +99,7 @@ class gen1_pokemon_test(pokemon_tests):
         move_slots = pokemon.get_moves()
         self.assertEqual(len(move_slots), 4)
         for move_slot in move_slots:
-            self.assertEqual(move_slot.move.get_name(), "None")
+            self.assertEqual(move_slot.move, "None")
             self.assertEqual(move_slot.pp, 0)
 
         self.gen1_check_stat_map(pokemon.get_EVs())
@@ -202,15 +202,18 @@ class gen1_pokemon_test(pokemon_tests):
         with self.assertRaises(ValueError):
             pokemon.set_move("Synthesis", 0)
 
-        self.assertEqual(pokemon.get_moves()[0].move.get_name(), "None")
+        self.assertEqual(pokemon.get_moves()[0].move, "None")
 
         move_names = ["Ember", "Flamethrower", "Slash", "Fire Blast"]
         for i, move_name in enumerate(move_names):
             pokemon.set_move(move_name, i)
 
         for i, move in enumerate(pokemon.get_moves()):
-            self.assertEqual(move.move.get_name(), move_names[i])
-            self.assertEqual(move.pp, move.move.get_pp(0))
+            self.assertEqual(move.move, move_names[i])
+            self.assertEqual(
+                move.pp,
+                pkmn.database.move_entry(move.move, game).get_pp(0)
+            )
 
         with self.assertRaises(ValueError):
             pokemon.set_EV("Not a stat", 1)

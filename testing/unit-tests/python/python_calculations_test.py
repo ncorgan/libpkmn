@@ -188,7 +188,7 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
 
-    def test_gen3_gen4_nature(self):
+    def test_nature(self):
         natures = [
             "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
             "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -201,16 +201,119 @@ class calculations_test(unittest.TestCase):
         # Which error applies depends on the SWIG version.
         try:
             with self.assertRaises(OverflowError):
-                pkmn.calculations.gen3_gen4_nature(-1)
+                pkmn.calculations.nature(-1)
         except:
             with self.assertRaises(TypeError):
-                pkmn.calculations.gen3_gen4_nature(0xFFFFFFFF+1)
+                pkmn.calculations.nature(0xFFFFFFFF+1)
 
         for i in range(len(natures)):
             self.assertEqual(
-                pkmn.calculations.gen3_gen4_nature((random.randint(0, 50000) * 1000) + i),
+                pkmn.calculations.nature((random.randint(0, 50000) * 1000) + i),
                 natures[i]
             )
+
+    #
+    # Given the amount of time the C++ test takes, this will just verify
+    # the API wrapper.
+    #
+    def test_personality(self):
+        # Test invalid ability.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.DEFAULT_TRAINER_ID,
+                              True,
+                              "Torrent",
+                              "Male",
+                              "Quiet"
+                          )
+
+        # Test invalid gender.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.DEFAULT_TRAINER_ID,
+                              True,
+                              "Blaze",
+                              "Not a gender",
+                              "Quiet"
+                          )
+
+        # Test invalid nature.
+        with self.assertRaises(ValueError):
+            personality = pkmn.calculations.generate_personality(
+                              "Charmander",
+                              pkmn.DEFAULT_TRAINER_ID,
+                              True,
+                              "Blaze",
+                              "Male",
+                              "Not a nature"
+                          )
+
+        # Make sure the SWIG wrapper keeps personality within the proper bounds.
+        # Which error applies depends on the SWIG version.
+        try:
+            with self.assertRaises(OverflowError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  -1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        except:
+            with self.assertRaises(TypeError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  -1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        try:
+            with self.assertRaises(OverflowError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  0xFFFFFFFF+1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+        except:
+            with self.assertRaises(TypeError):
+                personality = pkmn.calculations.generate_personality(
+                                  "Charmander",
+                                  0xFFFFFFFF+1,
+                                  True,
+                                  "Blaze",
+                                  "Male",
+                                  "Quiet"
+                              )
+
+        # Test and validate a valid call.
+        personality = pkmn.calculations.generate_personality(
+                          "Charmander",
+                          pkmn.DEFAULT_TRAINER_ID,
+                          True,
+                          "Blaze",
+                          "Male",
+                          "Quiet"
+                      )
+        self.assertTrue(
+            pkmn.calculations.modern_shiny(
+                personality, pkmn.DEFAULT_TRAINER_ID
+            )
+        )
+        self.assertEquals(
+            "Male",
+            pkmn.calculations.modern_pokemon_gender(
+                "Charmander",
+                personality
+            )
+        )
 
     def test_gen2_shiny(self):
         # Make sure expected errors are raised.
@@ -362,6 +465,15 @@ class calculations_test(unittest.TestCase):
         self.assertFalse(spinda_coords1 == spinda_coords3)
         self.assertTrue(spinda_coords1 != spinda_coords3)
 
+        # Check addition operators.
+        added_coords = spinda_coords1 + spinda_coords2
+        self.assertEquals(246, added_coords.x)
+        self.assertEquals(912, added_coords.y)
+
+        added_coords += spinda_coords3
+        self.assertEquals(702, added_coords.x)
+        self.assertEquals(1035, added_coords.y)
+
     def test_spinda_spots(self):
         # Check (in)equality operators.
         spots1 = pkmn.calculations.spinda_spots(
@@ -395,6 +507,47 @@ class calculations_test(unittest.TestCase):
         spots = pkmn.calculations.spinda_spot_offset(4064348759)
         self.assertTrue(spots == spots1)
         self.assertFalse(spots != spots1)
+
+        # Check addition operators.
+        added_spots = spots1 + spots2
+        self.assertEquals(14, added_spots.left_ear.x)
+        self.assertEquals(10, added_spots.left_ear.y)
+        self.assertEquals(20, added_spots.right_ear.x)
+        self.assertEquals(0, added_spots.right_ear.y)
+        self.assertEquals(2, added_spots.left_face.x)
+        self.assertEquals(8, added_spots.left_face.y)
+        self.assertEquals(4, added_spots.right_face.x)
+        self.assertEquals(30, added_spots.right_face.y)
+
+        added_spots += spots3
+        self.assertEquals(21, added_spots.left_ear.x)
+        self.assertEquals(15, added_spots.left_ear.y)
+        self.assertEquals(30, added_spots.right_ear.x)
+        self.assertEquals(0, added_spots.right_ear.y)
+        self.assertEquals(4, added_spots.left_face.x)
+        self.assertEquals(23, added_spots.left_face.y)
+        self.assertEquals(5, added_spots.right_face.x)
+        self.assertEquals(34, added_spots.right_face.y)
+
+        added_spots += pkmn.calculations.spinda_coords(20, 50)
+        self.assertEquals(41, added_spots.left_ear.x)
+        self.assertEquals(65, added_spots.left_ear.y)
+        self.assertEquals(50, added_spots.right_ear.x)
+        self.assertEquals(50, added_spots.right_ear.y)
+        self.assertEquals(24, added_spots.left_face.x)
+        self.assertEquals(73, added_spots.left_face.y)
+        self.assertEquals(25, added_spots.right_face.x)
+        self.assertEquals(84, added_spots.right_face.y)
+
+        added_spots = added_spots + pkmn.calculations.spinda_coords(1, 5)
+        self.assertEquals(42, added_spots.left_ear.x)
+        self.assertEquals(70, added_spots.left_ear.y)
+        self.assertEquals(51, added_spots.right_ear.x)
+        self.assertEquals(55, added_spots.right_ear.y)
+        self.assertEquals(25, added_spots.left_face.x)
+        self.assertEquals(78, added_spots.left_face.y)
+        self.assertEquals(26, added_spots.right_face.x)
+        self.assertEquals(89, added_spots.right_face.y)
 
     def assertIntsAlmostEqual(self, a, b):
         a_minus_one = a-1

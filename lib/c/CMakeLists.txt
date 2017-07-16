@@ -21,15 +21,18 @@ SET(pkmn_c_libs
 
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(gui)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_c_sources
     ${pkmn_c_calculations_sources}
     ${pkmn_c_database_sources}
+    ${pkmn_c_gui_sources}
     ${pkmn_c_utils_sources}
     build_info.cpp
     cpp_to_c.cpp
     error.cpp
+    game_save.cpp
     item_bag.cpp
     item_list.cpp
     pokemon.cpp

@@ -45,7 +45,7 @@ function test_3gpkm()
     luaunit.assertEquals(mightyena:get_form(), "Standard")
     luaunit.assertEquals(mightyena:get_nickname(), "MIGHTYENA")
     luaunit.assertFalse(mightyena:is_shiny())
-    luaunit.assertEquals(mightyena:get_held_item():get_name(), "Heart Scale")
+    luaunit.assertEquals(mightyena:get_held_item(), "Heart Scale")
     luaunit.assertEquals(mightyena:get_trainer_name(), "A")
     luaunit.assertEquals(mightyena:get_trainer_public_id(), 61415)
     luaunit.assertEquals(mightyena:get_trainer_secret_id(), 3417)
@@ -104,7 +104,7 @@ function test_3gpkm()
     luaunit.assertEquals(#mightyena_moves, 4)
     for i = 1, 4
     do
-        luaunit.assertEquals(mightyena_moves[i].move:get_name(), expected_mightyena_moves[i])
+        luaunit.assertEquals(mightyena_moves[i].move, expected_mightyena_moves[i])
     end
 
     local mightyena_EVs = mightyena:get_EVs()

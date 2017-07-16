@@ -153,10 +153,10 @@ function test_modern_hidden_power()
     luaunit.assertNotEquals(hidden_power, hidden_power_different_base_power)
 end
 
-function test_gen3_gen4_nature()
+function test_nature()
     -- Make sure SWIG+Lua catches values outside the uint32_t range.
-    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, -1)
-    luaunit.assertError(pkmn.calculations.gen3_gen4_nature, 0xFFFFFFFF+1)
+    luaunit.assertError(pkmn.calculations.nature, -1)
+    luaunit.assertError(pkmn.calculations.nature, 0xFFFFFFFF+1)
 
     local natures = {
         "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
@@ -169,10 +169,81 @@ function test_gen3_gen4_nature()
     for i = 1, #natures
     do
         luaunit.assertEquals(
-            pkmn.calculations.gen3_gen4_nature((math.random(0,50000) * 1000) + i-1),
+            pkmn.calculations.nature((math.random(0,50000) * 1000) + i-1),
             natures[i]
         )
     end
+end
+
+--
+-- Given the amount of time the C++ test takes, this will just verify
+-- the API wrapper.
+--
+function test_personality()
+    -- Test invalid ability.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.DEFAULT_TRAINER_ID,
+        true,
+        "Torrent",
+        "Male",
+        "Quiet"
+    )
+
+    -- Test invalid gender.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.DEFAULT_TRAINER_ID,
+        true,
+        "Blaze",
+        "Not a gender",
+        "Quiet"
+    )
+
+    -- Test invalid nature.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        pkmn.DEFAULT_TRAINER_ID,
+        true,
+        "Blaze",
+        "Male",
+        "Not a nature"
+    )
+
+    -- Make sure Lua+SWIG catch invalid trainer IDs.
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        -1,
+        true,
+        "Blaze",
+        "Male",
+        "Quiet"
+    )
+    luaunit.assertError(
+        pkmn.calculations.generate_personality,
+        "Charmander",
+        0xFFFFFFFF+1,
+        true,
+        "Blaze",
+        "Male",
+        "Quiet"
+    )
+
+    -- Test and validate a valid call.
+    local personality = pkmn.calculations.generate_personality(
+                            "Charmander",
+                            pkmn.DEFAULT_TRAINER_ID,
+                            true,
+                            "Blaze",
+                            "Male",
+                            "Quiet"
+                        )
+    luaunit.assertEquals("Male", pkmn.calculations.modern_pokemon_gender("Charmander", personality))
+    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.DEFAULT_TRAINER_ID, personality))
 end
 
 function test_gen2_shiny()
@@ -266,6 +337,11 @@ function test_spinda_coords()
 
     luaunit.assertEquals(spinda_coords1, spinda_coords2)
     luaunit.assertNotEquals(spinda_coords1, spinda_coords3)
+
+    -- Test addition operator.
+    added_coords = spinda_coords1 + spinda_coords2
+    luaunit.assertEquals(246, added_coords.x)
+    luaunit.assertEquals(912, added_coords.y)
 end
 
 function test_spinda_spots()
@@ -298,6 +374,28 @@ function test_spinda_spots()
     --
     spots = pkmn.calculations.spinda_spot_offset(4064348759)
     luaunit.assertEquals(spots, spots1)
+    luaunit.assertNotEquals(spots, spots3)
+
+    -- Test addition operators.
+    added_spots = spots1 + spots2
+    luaunit.assertEquals(14, added_spots.left_ear.x)
+    luaunit.assertEquals(10, added_spots.left_ear.y)
+    luaunit.assertEquals(20, added_spots.right_ear.x)
+    luaunit.assertEquals(0, added_spots.right_ear.y)
+    luaunit.assertEquals(2, added_spots.left_face.x)
+    luaunit.assertEquals(8, added_spots.left_face.y)
+    luaunit.assertEquals(4, added_spots.right_face.x)
+    luaunit.assertEquals(30, added_spots.right_face.y)
+
+    added_spots = added_spots + pkmn.calculations.spinda_coords(1, 5)
+    luaunit.assertEquals(15, added_spots.left_ear.x)
+    luaunit.assertEquals(15, added_spots.left_ear.y)
+    luaunit.assertEquals(21, added_spots.right_ear.x)
+    luaunit.assertEquals(5, added_spots.right_ear.y)
+    luaunit.assertEquals(3, added_spots.left_face.x)
+    luaunit.assertEquals(13, added_spots.left_face.y)
+    luaunit.assertEquals(5, added_spots.right_face.x)
+    luaunit.assertEquals(35, added_spots.right_face.y)
 end
 
 function test_gb_stats()

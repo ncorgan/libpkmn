@@ -90,16 +90,6 @@ pkmn_error_t throw_pksav_error(
     )
 }
 
-pkmn_error_t throw_pkmn_range_error(
-    const std::string &value,
-    int min,
-    int max
-) {
-    PKMN_CPP_TO_C(
-        throw pkmn::range_error(value, min, max);
-    )
-}
-
 pkmn_error_t throw_pkmn_unimplemented_error() {
     PKMN_CPP_TO_C(
         throw pkmn::unimplemented_error();
@@ -113,6 +103,10 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_STREQ("None", pkmn_strerror());
 
+    error = throw_exception<pkmn::feature_not_in_build_error>("Qt support");
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
+
     error = throw_feature_not_in_game_error("Contests", "Generation I");
     EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     EXPECT_STREQ("Contests not in Generation I", pkmn_strerror());
@@ -124,10 +118,6 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     error = throw_pksav_error(PKSAV_ERROR_INVALID_SAVE);
     EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
     EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
-
-    error = throw_pkmn_range_error("var", 1, 10);
-    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
-    EXPECT_STREQ("var: valid values 1-10", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error();
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -154,7 +144,7 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_STREQ("logic_error", pkmn_strerror());
 
     error = throw_exception<std::range_error>("range_error");
-    EXPECT_EQ(PKMN_ERROR_STD_RANGE_ERROR, error);
+    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
     EXPECT_STREQ("range_error", pkmn_strerror());
 
     error = throw_exception<std::overflow_error>("overflow_error");
@@ -233,17 +223,6 @@ pkmn_error_t throw_pksav_error_with_handle(
     )
 }
 
-pkmn_error_t throw_pkmn_range_error_with_handle(
-    const std::string &value,
-    int min,
-    int max,
-    pkmn_test_handle_t* handle
-) {
-    PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::range_error(value, min, max);
-    )
-}
-
 pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
     pkmn_test_handle_t* handle
 ) {
@@ -259,6 +238,13 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_nothing_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_EQ("None", test_handle.last_error);
+
+    error = throw_exception_with_handle<pkmn::feature_not_in_build_error>(
+        "Qt support", &test_handle
+    );
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_EQ("This feature is not part of this build of LibPKMN: Qt support", test_handle.last_error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
 
     error = throw_feature_not_in_game_error_with_handle(
         "Contests", "Generation I", &test_handle
@@ -280,13 +266,6 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
     EXPECT_EQ("PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
     EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
-
-    error = throw_pkmn_range_error_with_handle(
-        "var", 1, 10, &test_handle
-    );
-    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
-    EXPECT_EQ("var: valid values 1-10", test_handle.last_error);
-    EXPECT_STREQ("var: valid values 1-10", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -331,7 +310,7 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_exception_with_handle<std::range_error>(
         "range_error", &test_handle
     );
-    EXPECT_EQ(PKMN_ERROR_STD_RANGE_ERROR, error);
+    EXPECT_EQ(PKMN_ERROR_RANGE_ERROR, error);
     EXPECT_EQ("range_error", test_handle.last_error);
     EXPECT_STREQ("range_error", pkmn_strerror());
 
@@ -533,7 +512,7 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
 
 TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
     pkmn::move_slot move_slot_cpp(
-        pkmn::database::move_entry("Tackle", "Red"),
+        "Tackle",
         50
     );
 
@@ -555,15 +534,15 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
 TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     pkmn::move_slots_t move_slots_cpp{
         pkmn::move_slot(
-            pkmn::database::move_entry("Tackle", "Red"),
+            "Tackle",
             50
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Pound", "Silver"),
+            "Pound",
             28
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Metronome", "LeafGreen"),
+            "Metronome",
             1
         )
     };

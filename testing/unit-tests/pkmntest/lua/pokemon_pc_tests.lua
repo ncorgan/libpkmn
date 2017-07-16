@@ -51,7 +51,7 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
         local moves = box[i]:get_moves()
         for i = 1, #moves
         do
-            luaunit.assertEquals(moves[i].move:get_name(), "None")
+            luaunit.assertEquals(moves[i].move, "None")
             luaunit.assertEquals(moves[i].pp, 0)
         end
     end
@@ -63,7 +63,7 @@ function pokemon_pc_tests.test_box_name(box)
     if generation == 1
     then
         luaunit.assertError(box.set_name, box, "ABCDEFGH")
-        luaunit.assertError(box.get_name)
+        luaunit.assertError(box.get_name, box)
     else
         luaunit.assertError(box.set_name, box, "ABCDEFGHI")
         
@@ -80,8 +80,8 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     local original_second = box[2]
 
     -- Make sure we can't set Pokémon at invalid indices.
-    luaunit.assertError(box.set_pokemon, 0, original_first)
-    luaunit.assertError(box.set_pokemon, (#box+1), original_second)
+    luaunit.assertError(box.set_pokemon, box, 0, original_first)
+    luaunit.assertError(box.set_pokemon, box, (#box+1), original_second)
 
     -- Create Pokémon and place in box. The original variables should
     -- still have the same underlying Pokémon.
@@ -99,7 +99,7 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     luaunit.assertEquals(box:get_num_pokemon(), 2)
 
     -- Make sure we can't copy a Pokémon to itself.
-    luaunit.assertError(box.set_pokemon, 2, box[2])
+    luaunit.assertError(box.set_pokemon, box, 2, box[2])
     luaunit.assertEquals(box:get_num_pokemon(), 2)
 
     -- Copy a Pokémon whose memory is already part of the box.
@@ -122,7 +122,7 @@ function pokemon_pc_tests.test_setting_pokemon(box)
         luaunit.assertEquals(box:get_num_pokemon(), 3)
         luaunit.assertEquals(box[2]:get_species(), "Charmander")
 
-        luaunit.assertError(box.set_pokemon, 5, bulbasaur)
+        luaunit.assertError(box.set_pokemon, box, 5, bulbasaur)
         luaunit.assertEquals(box:get_num_pokemon(), 3)
         luaunit.assertEquals(box[5]:get_species(), "None")
     else

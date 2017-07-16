@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +16,6 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
-#include <iostream>
 #include <stdexcept>
 
 namespace pkmn { namespace database {
@@ -27,7 +26,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw pkmn::range_error("generation", 3, 6);
+            pkmn::throw_out_of_range("generation", 3, 6);
         }
 
         // Connect to database
@@ -51,7 +50,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw pkmn::range_error("generation", 1, 6);
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database
@@ -74,6 +73,25 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
+        return ret;
+    }
+
+    std::vector<std::string> get_gamecube_shadow_pokemon_list(
+        bool colosseum
+    )
+    {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        static BOOST_CONSTEXPR const char* shadow_pokemon_query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND pokemon_species_id IN "
+            "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?)";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, shadow_pokemon_query, ret, (colosseum ? 1 : 0)
+        );
+        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
         return ret;
     }
 
@@ -206,7 +224,6 @@ namespace pkmn { namespace database {
 
         if(not to_erase.empty()) {
             for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i) {
-                std::cout << i << std::endl;
                 ret.erase(ret.begin() + to_erase[i]);
             }
         }
@@ -410,7 +427,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw pkmn::range_error("generation", 1, 6);
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database

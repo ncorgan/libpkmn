@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -31,7 +31,10 @@ PKMN_BUILD_DOXYGEN_DOCS("${hpp_files}" "cpp" "C++")
 
 # C documentation
 IF(PKMN_ENABLE_C)
-    FILE(GLOB_RECURSE h_files ${CMAKE_SOURCE_DIR}/include/pkmn-c/*.h)
+    FILE(GLOB_RECURSE h_files
+        ${PKMN_SOURCE_DIR}/include/pkmn-c/*.h
+        ${PKMN_BINARY_DIR}/include/pkmn-c/*.h
+    )
     PKMN_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
 ENDIF(PKMN_ENABLE_C)
 

@@ -91,8 +91,7 @@ namespace pkmn { namespace database {
             std::string get_category() const;
 
             /*!
-             * @brief Returns which pocket this item would correspond to in
-             *        the given game.
+             * @brief Returns which pocket would store this item in the given game.
              */
             std::string get_pocket() const;
 

@@ -14,7 +14,8 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_API std::string gen3_gen4_nature(
+    //! Returns the nature of a Pokémon with the given personality.
+    PKMN_API std::string nature(
         uint32_t personality
     );
 

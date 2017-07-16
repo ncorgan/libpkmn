@@ -19,13 +19,14 @@ IF(NUNIT_FOUND)
         CSharpCalculationsTest
         CSharpDatabaseEntryTest
         CSharpEqualityHashCodeTest
+        CSharpGameSaveTest
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
         CSharpPokemonTest
         CSharpPokemonPartyTest
         CSharpPokemonPCTest
-        CSharpWinFormsTest_GUI
+        CSharpGUITest_GUI
     )
 
     SET(csharp_pkmn_dlls
