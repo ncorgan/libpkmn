@@ -35,6 +35,14 @@
 %rename("__getitem__") get_contest_stat;
 %rename("__setitem__") set_contest_stat;
 
+// Move slots
+%rename("PokemonMoveSlotWrapper") pokemon_move_slot_wrapper;
+%rename("move") get_move;
+%rename("move=") set_move;
+%rename("pp") get_pp;
+%rename("PokemonMoveSlotsWrapper") pokemon_move_slots_wrapper;
+%rename("__getitem__") get_move_slot;
+
 // pkmn::swig::pokemon renames
 %rename("Pokemon") pokemon;
 %rename("species") get_species;

@@ -193,7 +193,12 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_level(50);
     EXPECT_EQ(50, swig_pokemon.get_level());
 
-    // TODO: move storage when implemented
+    EXPECT_EQ("None", swig_pokemon.get_moves().get_move_slot(0).get_move());
+    EXPECT_EQ(0, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+
+    swig_pokemon.get_moves().get_move_slot(0).set_move("Fissure");
+    EXPECT_EQ("Fissure", swig_pokemon.get_moves().get_move_slot(0).get_move());
+    EXPECT_EQ(5, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
     swig_pokemon.get_EVs().set_EV("Attack", 5);
     EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV("Attack"));

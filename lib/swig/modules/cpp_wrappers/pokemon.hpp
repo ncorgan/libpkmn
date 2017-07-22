@@ -9,6 +9,7 @@
 #define CPP_WRAPPERS_POKEMON_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
 
 namespace pkmn { namespace swig {
@@ -271,6 +272,111 @@ namespace pkmn { namespace swig {
 
         private:
             pkmn::pokemon::sptr _pokemon;
+    };
+
+    class pokemon_move_slot_wrapper
+    {
+        public:
+            pokemon_move_slot_wrapper():
+                _pokemon(nullptr),
+                _index(0)
+            {}
+
+            pokemon_move_slot_wrapper(
+                const pkmn::pokemon::sptr& cpp_pokemon,
+                int index
+            ): _pokemon(cpp_pokemon),
+               _index(index)
+            {}
+
+            const std::string& get_move()
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                return _pokemon->get_moves().at(_index).move;
+            }
+
+            void set_move(
+                const std::string& move
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                _pokemon->set_move(move, _index);
+            }
+
+            int get_pp()
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                return _pokemon->get_moves().at(_index).pp;
+            }
+
+            // TODO: set_pp when underlying function implemented
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+            int _index;
+    };
+
+    class pokemon_move_slots_wrapper
+    {
+        public:
+            pokemon_move_slots_wrapper():
+                _pokemon(nullptr)
+            {}
+
+            pokemon_move_slots_wrapper(
+                const pkmn::pokemon::sptr& cpp_pokemon
+            ): _pokemon(cpp_pokemon)
+            {
+                _init();
+            }
+
+            pokemon_move_slot_wrapper& get_move_slot(
+                int index
+            )
+            {
+                if(!_pokemon)
+                {
+                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
+                }
+
+                // TODO: Lua check
+                if(index < 0 or index > 3)
+                {
+                    pkmn::throw_out_of_range("index", 0, 3);
+                }
+
+                return _moves.at(index);
+            }
+
+        private:
+            pkmn::pokemon::sptr _pokemon;
+
+            std::vector<pokemon_move_slot_wrapper> _moves;
+
+            void _init()
+            {
+                for(int i = 0; i < 4; ++i)
+                {
+                    _moves.emplace_back(
+                        pokemon_move_slot_wrapper(
+                            _pokemon,
+                            i
+                        )
+                    );
+                }
+            }
     };
 
     /*
@@ -601,6 +707,11 @@ namespace pkmn { namespace swig {
                 return _contest_stat_map;
             }
 
+            PKMN_INLINE pokemon_move_slots_wrapper& get_moves()
+            {
+                return _move_slots_wrapper;
+            }
+
             // Stats are read-only, so no need to wrap.
             PKMN_INLINE const std::map<std::string, int>& get_stats()
             {
@@ -624,6 +735,7 @@ namespace pkmn { namespace swig {
             pokemon_marking_map _marking_map;
             pokemon_ribbon_map _ribbon_map;
             pokemon_contest_stat_map _contest_stat_map;
+            pokemon_move_slots_wrapper _move_slots_wrapper;
 
             void _init()
             {
@@ -632,6 +744,7 @@ namespace pkmn { namespace swig {
                 _marking_map = pokemon_marking_map(_pokemon);
                 _ribbon_map = pokemon_ribbon_map(_pokemon);
                 _contest_stat_map = pokemon_contest_stat_map(_pokemon);
+                _move_slots_wrapper = pokemon_move_slots_wrapper(_pokemon);
             }
     };
 
