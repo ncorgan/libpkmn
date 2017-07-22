@@ -26,9 +26,14 @@ function utils.random_bool()
     return (math.random(0, 255) > 127)
 end
 
+-- TODO
+function utils.check_maps_equal(map1, map2)
+    return true
+end
+
 function utils.random_string(len)
     ret = ""
-    for i = 0, len
+    for i = 1, len
     do
         n = math.random(32, 126)
         if n == 96
@@ -38,6 +43,8 @@ function utils.random_string(len)
 
         ret = ret .. string.char(n)
     end
+
+    return ret
 end
 
 local pokemon_conversions_tests = {}
@@ -130,7 +137,81 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
 
     if origin_generation >= 3
     then
-        print(first_pokemon:get_markings())
+        markings = first_pokemon:get_markings():keys()
+        for i = 1, #markings
+        do
+            first_pokemon:set_marking(markings[i], utils.random_bool())
+        end
+
+        ribbons = first_pokemon:get_ribbons():keys()
+        for i = 1, #ribbons
+        do
+            first_pokemon:set_ribbon(ribbons[i], utils.random_bool())
+        end
+
+        contest_stats = first_pokemon:get_contest_stats():keys()
+        for i = 1, #contest_stats
+        do
+            first_pokemon:set_contest_stat(contest_stats[i], math.random(0, 255))
+        end
+    end
+
+    first_pokemon:set_nickname(utils.random_string(10))
+    first_pokemon:set_trainer_name(utils.random_string(7))
+
+    -- The max level met in Generation II is 63, which restricts this as well.
+    if origin_generation >= 3
+    then
+        first_pokemon:set_level(math.random(0, 100))
+    else
+        first_pokemon:set_level(math.random(2, 63))
+    end
+
+    -- Convert to the second game and compare.
+    local second_pokemon = first_pokemon:to_game(dest_game)
+
+    luaunit.assertEquals(first_pokemon:get_species(), second_pokemon:get_species())
+    luaunit.assertEquals(dest_game, second_pokemon:get_game())
+    luaunit.assertEquals(first_pokemon:get_form(), second_pokemon:get_form())
+    luaunit.assertEquals(first_pokemon:get_nickname(), second_pokemon:get_nickname())
+    luaunit.assertEquals(first_pokemon:get_trainer_name(), second_pokemon:get_trainer_name())
+    luaunit.assertEquals(first_pokemon:get_trainer_id(), second_pokemon:get_trainer_id())
+    luaunit.assertEquals(first_pokemon:get_trainer_public_id(), second_pokemon:get_trainer_public_id())
+    luaunit.assertEquals(first_pokemon:get_experience(), second_pokemon:get_experience())
+    luaunit.assertEquals(first_pokemon:get_level(), second_pokemon:get_level())
+
+    for i = 1, 4
+    do
+        luaunit.assertEquals(first_pokemon:get_moves()[i].move, second_pokemon:get_moves()[i].move)
+        luaunit.assertEquals(first_pokemon:get_moves()[i].pp, second_pokemon:get_moves()[i].pp)
+    end
+
+    if min_generation >= 3
+    then
+        luaunit.assertEquals(first_pokemon:get_trainer_secret_id(), second_pokemon:get_trainer_secret_id())
+        luaunit.assertEquals(first_pokemon:get_ability(), second_pokemon:get_ability())
+        luaunit.assertEquals(first_pokemon:get_ball(), second_pokemon:get_ball())
+        luaunit.assertEquals(first_pokemon:get_original_game(), second_pokemon:get_original_game())
+        luaunit.assertEquals(first_pokemon:get_personality(), second_pokemon:get_personality())
+
+        if origin_generation == dest_generation
+        then
+            utils.check_maps_equal(first_pokemon:get_markings(), second_pokemon:get_markings())
+            utils.check_maps_equal(first_pokemon:get_contest_stats(), second_pokemon:get_contest_stats())
+            utils.check_maps_equal(first_pokemon:get_ribbons(), second_pokemon:get_ribbons())
+            utils.check_maps_equal(first_pokemon:get_EVs(), second_pokemon:get_EVs())
+            utils.check_maps_equal(first_pokemon:get_IVs(), second_pokemon:get_IVs())
+        end
+    end
+
+    if min_generation >= 2
+    then
+        luaunit.assertEquals(first_pokemon:get_trainer_gender(), second_pokemon:get_trainer_gender())
+        luaunit.assertEquals(first_pokemon:get_gender(), second_pokemon:get_gender())
+        luaunit.assertEquals(first_pokemon:is_shiny(), second_pokemon:is_shiny())
+        luaunit.assertEquals(first_pokemon:get_held_item(), second_pokemon:get_held_item())
+        luaunit.assertEquals(first_pokemon:get_friendship(), second_pokemon:get_friendship())
+        luaunit.assertEquals(first_pokemon:get_level(), second_pokemon:get_level_met())
     end
 end
 
