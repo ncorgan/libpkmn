@@ -75,6 +75,12 @@ namespace std {
                 }
                 return ret;
             }
+            bool __eq__(const map<K,T>& rhs) {
+                return (*self) == rhs;
+            }
+            bool __ne__(const map<K,T>& rhs) {
+                return (*self) != rhs;
+            }
         }
     };
 }

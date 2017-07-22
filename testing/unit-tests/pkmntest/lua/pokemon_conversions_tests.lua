@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -24,11 +24,6 @@ end
 
 function utils.random_bool()
     return (math.random(0, 255) > 127)
-end
-
--- TODO
-function utils.check_maps_equal(map1, map2)
-    return true
 end
 
 function utils.random_string(len)
@@ -162,7 +157,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
     -- The max level met in Generation II is 63, which restricts this as well.
     if origin_generation >= 3
     then
-        first_pokemon:set_level(math.random(0, 100))
+        first_pokemon:set_level(math.random(1, 100))
     else
         first_pokemon:set_level(math.random(2, 63))
     end
@@ -196,11 +191,11 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
 
         if origin_generation == dest_generation
         then
-            utils.check_maps_equal(first_pokemon:get_markings(), second_pokemon:get_markings())
-            utils.check_maps_equal(first_pokemon:get_contest_stats(), second_pokemon:get_contest_stats())
-            utils.check_maps_equal(first_pokemon:get_ribbons(), second_pokemon:get_ribbons())
-            utils.check_maps_equal(first_pokemon:get_EVs(), second_pokemon:get_EVs())
-            utils.check_maps_equal(first_pokemon:get_IVs(), second_pokemon:get_IVs())
+            luaunit.assertEquals(first_pokemon:get_markings(), second_pokemon:get_markings())
+            luaunit.assertEquals(first_pokemon:get_contest_stats(), second_pokemon:get_contest_stats())
+            luaunit.assertEquals(first_pokemon:get_ribbons(), second_pokemon:get_ribbons())
+            luaunit.assertEquals(first_pokemon:get_EVs(), second_pokemon:get_EVs())
+            luaunit.assertEquals(first_pokemon:get_IVs(), second_pokemon:get_IVs())
         end
     end
 
