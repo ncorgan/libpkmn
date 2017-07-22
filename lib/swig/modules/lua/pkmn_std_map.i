@@ -68,6 +68,13 @@ namespace std {
                 std::map<K,T >::iterator i = self->find(key);
                 return i != self->end();
             }
+            std::vector<K> keys() {
+                std::vector<K> ret;
+                for(auto iter = self->begin(); iter != self->end(); ++iter) {
+                    ret.emplace_back(iter->first);
+                }
+                return ret;
+            }
         }
     };
 }
