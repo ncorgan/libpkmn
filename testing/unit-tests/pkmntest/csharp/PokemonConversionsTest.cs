@@ -62,7 +62,7 @@ public class PokemonConversionsTest {
         string destGame
     )
     {
-        PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, "", 50);
+        PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, form, 50);
 
         int originGeneration = GameToGeneration(originGame);
         int destGeneration = GameToGeneration(destGame);

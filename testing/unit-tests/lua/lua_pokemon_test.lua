@@ -14,6 +14,7 @@ local tests = {
     require("gen1_pokemon_tests"),
     require("gen2_pokemon_tests"),
     require("gen3_pokemon_tests"),
+    require("pokemon_conversions_tests"),
     require("pokemon_io_tests")
 }
 
