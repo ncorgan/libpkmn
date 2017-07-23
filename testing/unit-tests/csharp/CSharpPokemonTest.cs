@@ -151,23 +151,48 @@ public class CSharpPokemonTest {
     /*
      * Conversions
      */
+    // Generation I -> Generation I
     [TestCase("Bulbasaur", "", "Red", "Yellow")]
+
+    // Generation I -> Generation II
     [TestCase("Squirtle", "", "Blue", "Gold")]
+
+    // Generation II -> Generation II
     [TestCase("Cyndaquil", "", "Gold", "Crystal")]
+    [TestCase("Totodile", "", "Crystal", "Gold")]
+
+    // Generation II -> Generation I
     [TestCase("Charmander", "", "Silver", "Blue")]
+
+    // GBA -> GBA
+    [TestCase("Torchic", "", "Ruby", "Sapphire")]
+    [TestCase("Mudkip", "", "Ruby", "Emerald")]
+    [TestCase("Treecko", "", "Ruby", "FireRed")]
+    [TestCase("Torchic", "", "Emerald", "Sapphire")]
+    [TestCase("Mudkip", "", "Emerald", "Emerald")]
+    [TestCase("Treecko", "", "Emerald", "FireRed")]
+    [TestCase("Charmander", "", "FireRed", "Sapphire")]
+    [TestCase("Squirtle", "", "FireRed", "Emerald")]
+    [TestCase("Bulbasaur", "", "FireRed", "FireRed")]
+
+    // GBA -> GCN
     [TestCase("Eevee", "", "Ruby", "Colosseum")]
     [TestCase("Espeon", "", "Emerald", "Colosseum")]
     [TestCase("Umbreon", "", "FireRed", "Colosseum")]
     [TestCase("Eevee", "", "Ruby", "XD")]
     [TestCase("Espeon", "", "Emerald", "XD")]
     [TestCase("Umbreon", "", "FireRed", "XD")]
+
+    // GCN -> GBA
     [TestCase("Eevee", "", "Colosseum", "Sapphire")]
     [TestCase("Espeon", "", "Colosseum", "Emerald")]
     [TestCase("Umbreon", "", "Colosseum", "LeafGreen")]
-    [TestCase("Vaporeon", "", "Colosseum", "XD")]
     [TestCase("Eevee", "", "XD", "Sapphire")]
     [TestCase("Espeon", "", "XD", "Emerald")]
     [TestCase("Umbreon", "", "XD", "LeafGreen")]
+
+    // GCN -> GCN
+    [TestCase("Vaporeon", "", "Colosseum", "XD")]
     [TestCase("Vaporeon", "", "XD", "Colosseum")]
     public void PokemonConversionsTest(
         string species,

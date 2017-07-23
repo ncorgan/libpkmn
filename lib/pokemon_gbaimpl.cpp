@@ -329,6 +329,7 @@ namespace pkmn {
                 else
                 {
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret->set_level_met(get_level());
                     ret->set_original_game(get_game());
                 }
                 break;

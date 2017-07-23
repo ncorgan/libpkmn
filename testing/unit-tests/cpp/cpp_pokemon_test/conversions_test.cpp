@@ -217,23 +217,48 @@ TEST_P(conversions_test, conversions_test)
 
 static const conversions_test_params_t TEST_PARAMS[] =
 {
+    // Generation I -> Generation I
     {"Bulbasaur", "", "Red", "Yellow"},
+
+    // Generation I -> Generation II
     {"Squirtle", "", "Blue", "Gold"},
+
+    // Generation II -> Generation II
     {"Cyndaquil", "", "Gold", "Crystal"},
+    {"Totodile", "", "Crystal", "Gold"},
+
+    // Generation II -> Generation I
     {"Charmander", "", "Silver", "Blue"},
+
+    // GBA -> GBA
+    {"Torchic", "", "Ruby", "Sapphire"},
+    {"Mudkip", "", "Ruby", "Emerald"},
+    {"Treecko", "", "Ruby", "FireRed"},
+    {"Torchic", "", "Emerald", "Sapphire"},
+    {"Mudkip", "", "Emerald", "Emerald"},
+    {"Treecko", "", "Emerald", "FireRed"},
+    {"Charmander", "", "FireRed", "Sapphire"},
+    {"Squirtle", "", "FireRed", "Emerald"},
+    {"Bulbasaur", "", "FireRed", "FireRed"},
+
+    // GBA -> GCN
     {"Eevee", "", "Ruby", "Colosseum"},
     {"Espeon", "", "Emerald", "Colosseum"},
     {"Umbreon", "", "FireRed", "Colosseum"},
     {"Eevee", "", "Ruby", "XD"},
     {"Espeon", "", "Emerald", "XD"},
     {"Umbreon", "", "FireRed", "XD"},
+
+    // GCN -> GBA
     {"Eevee", "", "Colosseum", "Sapphire"},
     {"Espeon", "", "Colosseum", "Emerald"},
     {"Umbreon", "", "Colosseum", "LeafGreen"},
-    {"Vaporeon", "", "Colosseum", "XD"},
     {"Eevee", "", "XD", "Sapphire"},
     {"Espeon", "", "XD", "Emerald"},
     {"Umbreon", "", "XD", "LeafGreen"},
+
+    // GCN -> GCN
+    {"Vaporeon", "", "Colosseum", "XD"},
     {"Vaporeon", "", "XD", "Colosseum"}
 };
 
