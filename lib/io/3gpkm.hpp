@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -24,11 +24,6 @@ namespace pkmn { namespace io {
     );
 
     pkmn::pokemon::sptr load_3gpkm(
-        const std::string &filepath
-    );
-
-    void save_3gpkm(
-        pkmn::pokemon::sptr libpkmn_pokemon,
         const std::string &filepath
     );
 
