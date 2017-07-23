@@ -36,7 +36,7 @@ def random_bool():
 
 # https://stackoverflow.com/a/2030081
 def random_string(length):
-       return ''.join(random.choice(string.lowercase if random_bool() else string.uppercase) for i in range(length))
+       return ''.join(random.choice(string.ascii_lowercase if random_bool() else string.ascii_uppercase) for i in range(length))
 
 def test_name_func(testcase_func, param_num, param):
     return "{0}_from_{1}_to_{2}".format(testcase_func.__name__, param.args[2], param.args[3])
