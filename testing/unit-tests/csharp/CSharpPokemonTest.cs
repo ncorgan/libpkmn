@@ -192,8 +192,10 @@ public class CSharpPokemonTest {
     [TestCase("Umbreon", "", "XD", "LeafGreen")]
 
     // GCN -> GCN
-    [TestCase("Vaporeon", "", "Colosseum", "XD")]
-    [TestCase("Vaporeon", "", "XD", "Colosseum")]
+    [TestCase("Vaporeon", "", "Colosseum", "Colosseum")]
+    [TestCase("Jolteon", "", "Colosseum", "XD")]
+    [TestCase("Vaporeon", "", "XD", "XD")]
+    [TestCase("Jolteon", "", "XD", "Colosseum")]
     public void PokemonConversionsTest(
         string species,
         string form,

@@ -30,10 +30,10 @@ function utils.random_string(len)
     ret = ""
     for i = 1, len
     do
-        n = math.random(32, 126)
-        if n == 96
+        n = math.random(65, 90)
+        if utils.random_bool()
         then
-            n = math.random(32, 95)
+            n = math.random(97, 122)
         end
 
         ret = ret .. string.char(n)
@@ -210,8 +210,121 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
     end
 end
 
-function test_pokemon_conversion_ruby_to_xd()
+-- Luaunit doesn't support parameterized tests, so this will have to do.
+
+function test_pokemon_conversion_from_gen1()
+    -- To Generation I
+    pokemon_conversions_tests.conversions_test(
+        "Bulbasaur", "", "Red", "Yellow"
+    )
+
+    -- To Generation II
+    pokemon_conversions_tests.conversions_test(
+        "Squirtle", "", "Blue", "Gold"
+    )
+end
+
+function test_pokemon_conversion_from_gen2()
+    -- To Generation II
+    pokemon_conversions_tests.conversions_test(
+        "Cyndaquil", "", "Gold", "Crystal"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Totodile", "", "Crystal", "Gold"
+    )
+
+    -- To Generation I
+    pokemon_conversions_tests.conversions_test(
+        "Charmander", "", "Silver", "Blue"
+    )
+end
+
+function test_pokemon_conversion_from_gba()
+    -- To GBA
+    pokemon_conversions_tests.conversions_test(
+        "Torchic", "", "Ruby", "Sapphire"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Mudkip", "", "Ruby", "Emerald"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Treecko", "", "Ruby", "FireRed"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Torchic", "", "Emerald", "Sapphire"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Mudkip", "", "Emerald", "Emerald"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Treecko", "", "Emerald", "FireRed"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Charmander", "", "FireRed", "Ruby"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Squirtle", "", "FireRed", "Emerald"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Bulbasaur", "", "FireRed", "FireRed"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Bulbasaur", "", "FireRed", "FireRed"
+    )
+
+    -- To GCN
+    pokemon_conversions_tests.conversions_test(
+        "Eevee", "", "Ruby", "Colosseum"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Espeon", "", "Emerald", "Colosseum"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Umbreon", "", "FireRed", "Colosseum"
+    )
     pokemon_conversions_tests.conversions_test(
         "Eevee", "", "Ruby", "XD"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Espeon", "", "Emerald", "XD"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Umbreon", "", "FireRed", "XD"
+    )
+end
+
+function test_pokemon_conversion_from_gcn()
+    -- To GBA
+    pokemon_conversions_tests.conversions_test(
+        "Eevee", "", "Colosseum", "Sapphire"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Espeon", "", "Colosseum", "Emerald"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Umbreon", "", "Colosseum", "LeafGreen"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Eevee", "", "XD", "Sapphire"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Espeon", "", "XD", "Emerald"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Umbreon", "", "XD", "LeafGreen"
+    )
+
+    -- To GCN
+    pokemon_conversions_tests.conversions_test(
+        "Vaporeon", "", "Colosseum", "Colosseum"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Jolteon", "", "Colosseum", "XD"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Vaporeon", "", "XD", "XD"
+    )
+    pokemon_conversions_tests.conversions_test(
+        "Jolteon", "", "XD", "Colosseum"
     )
 end

@@ -258,8 +258,10 @@ static const conversions_test_params_t TEST_PARAMS[] =
     {"Umbreon", "", "XD", "LeafGreen"},
 
     // GCN -> GCN
-    {"Vaporeon", "", "Colosseum", "XD"},
-    {"Vaporeon", "", "XD", "Colosseum"}
+    {"Vaporeon", "", "Colosseum", "Colosseum"},
+    {"Jolteon", "", "Colosseum", "XD"},
+    {"Vaporeon", "", "XD", "XD"},
+    {"Jolteon", "", "XD", "Colosseum"}
 };
 
 INSTANTIATE_TEST_CASE_P(
