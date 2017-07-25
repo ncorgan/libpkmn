@@ -15,14 +15,6 @@ namespace pkmn { namespace calculations {
 
     PKMN_CONSTEXPR float STAB_MODIFIER = 1.5f;
 
-    PKMN_API int damage(
-        int attacker_level,
-        int move_base_power,
-        int attack_stat,
-        int defense_stat,
-        float modifier
-    );
-
     PKMN_API float gen1_critical_hit_chance(
         int speed,
         bool rate_increased,
@@ -50,6 +42,14 @@ namespace pkmn { namespace calculations {
         const std::string &attacking_type,
         const std::string &defending_type1,
         const std::string &defending_type2
+    );
+
+    PKMN_API int damage(
+        int attacker_level,
+        int move_base_power,
+        int attack_stat,
+        int defense_stat,
+        float modifier
     );
 
 }}
