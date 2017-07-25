@@ -14,7 +14,7 @@
 #include <boost/assign.hpp>
 
 #include <cmath>
-#include <map>
+#include <unordered_map>
 
 struct size_xyz_t {
     size_xyz_t(uint16_t _x, uint16_t _y, uint16_t _z):
@@ -25,7 +25,7 @@ struct size_xyz_t {
     uint16_t z;
 };
 
-static const std::map<uint16_t, size_xyz_t> XYZ = boost::assign::map_list_of<uint16_t, size_xyz_t>
+static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_list_of<uint16_t, size_xyz_t>
     (9,     size_xyz_t(290,1,0))
     (109,   size_xyz_t(300,1,10))
     (309,   size_xyz_t(400,2,110))
@@ -81,23 +81,23 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_HP, true)) {
-            throw pkmn::range_error("IV_HP", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_HP, true)) {
+            pkmn::throw_out_of_range("IV_HP", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_attack, true)) {
-            throw pkmn::range_error("IV_attack", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_attack, true)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, true)) {
-            throw pkmn::range_error("IV_defense", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_defense, true)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, true)) {
-            throw pkmn::range_error("IV_speed", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_speed, true)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
-            throw pkmn::range_error("IV_spatk", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
+            pkmn::throw_out_of_range("IV_spatk", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
-            throw pkmn::range_error("IV_spdef", 0, 31);
+        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
+            pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);

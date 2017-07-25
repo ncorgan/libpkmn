@@ -207,4 +207,40 @@ public class CSharpPokemonPCTest {
             "LeafGreen"
         );
     }
+
+    /*
+     * Colosseum
+     */
+    [Test]
+    public void ColosseumPokemonBoxTest() {
+        PKMNTest.PokemonPCTests.TestPokemonBox(
+            new PKMN.PokemonBox("Colosseum"),
+            "Colosseum"
+        );
+    }
+    [Test]
+    public void ColosseumPokemonPCTest() {
+        PKMNTest.PokemonPCTests.TestPokemonPC(
+            new PKMN.PokemonPC("Colosseum"),
+            "Colosseum"
+        );
+    }
+
+    /*
+     * XD
+     */
+    [Test]
+    public void XDPokemonBoxTest() {
+        PKMNTest.PokemonPCTests.TestPokemonBox(
+            new PKMN.PokemonBox("XD"),
+            "XD"
+        );
+    }
+    [Test]
+    public void XDPokemonPCTest() {
+        PKMNTest.PokemonPCTests.TestPokemonPC(
+            new PKMN.PokemonPC("XD"),
+            "XD"
+        );
+    }
 }

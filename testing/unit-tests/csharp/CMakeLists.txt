@@ -26,7 +26,7 @@ IF(NUNIT_FOUND)
         CSharpPokemonTest
         CSharpPokemonPartyTest
         CSharpPokemonPCTest
-        CSharpWinFormsTest_GUI
+        CSharpGUITest_GUI
     )
 
     SET(csharp_pkmn_dlls

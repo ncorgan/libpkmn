@@ -7,7 +7,11 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gen1impl.hpp"
+#include "pokemon_gen2impl.hpp"
 
+#include "conversions/gb_conversions.hpp"
+#include "database/database_common.hpp"
+#include "database/id_to_string.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -33,7 +37,7 @@
 #define GEN1_PC_RCAST    reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc)
 #define GEN1_PARTY_RCAST reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
 
-static std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
+static const std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
     ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
     ("Fighting", PKSAV_GEN1_TYPE_FIGHTING)
     ("Flying",   PKSAV_GEN1_TYPE_FLYING)
@@ -70,7 +74,7 @@ namespace pkmn {
         _nickname = boost::algorithm::to_upper_copy(
                         _database_entry.get_name()
                     );
-        _trainer_name = LIBPKMN_OT_NAME;
+        _trainer_name = DEFAULT_TRAINER_NAME;
 
         // Set internal members
         GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
@@ -82,7 +86,7 @@ namespace pkmn {
 
         // TODO: catch rate
 
-        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(LIBPKMN_OT_ID & 0xFFFF));
+        GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
         pkmn::rng<uint16_t> rng;
         GEN1_PC_RCAST->ev_hp   = rng.rand();
@@ -138,6 +142,48 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_pc_pokemon_t& pc,
+        int game_id
+    ): pokemon_impl(pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _populate_party_data();
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(party.pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        *GEN1_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
     pokemon_gen1impl::~pokemon_gen1impl() {
         if(_our_pc_mem) {
             delete GEN1_PC_RCAST;
@@ -145,6 +191,48 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GEN1_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gen1impl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gen1_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GEN1_PC_RCAST;
+        pksav_pokemon.party_data = *GEN1_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 1:
+            {
+                ret = pkmn::make_shared<pokemon_gen1impl>(pksav_pokemon, game_id);
+                break;
+            }
+
+            case 2:
+            {
+                pksav_gen2_party_pokemon_t gen2_pksav_pokemon;
+                pkmn::conversions::gen1_party_pokemon_to_gen2(
+                    &pksav_pokemon,
+                    &gen2_pksav_pokemon
+                );
+                ret = pkmn::make_shared<pokemon_gen2impl>(gen2_pksav_pokemon, game_id);
+                ret->set_level_met(std::min<int>(63, get_level()));
+                break;
+            }
+
+            default:
+                throw std::invalid_argument("Generation I Pokémon can only be converted to Generation I-II.");
+        }
+
+        ret->set_nickname(get_nickname());
+        ret->set_trainer_name(get_trainer_name());
+
+        return ret;
     }
 
     void pokemon_gen1impl::set_form(
@@ -187,6 +275,11 @@ namespace pkmn {
         PKMN_UNUSED(bool value)
     ) {
         throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+    }
+
+    std::string pokemon_gen1impl::get_held_item()
+    {
+        throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
     void pokemon_gen1impl::set_held_item(
@@ -243,7 +336,7 @@ namespace pkmn {
         uint32_t id
     ) {
         if(id > 65535) {
-            throw pkmn::range_error("id", 0, 65535);
+            pkmn::throw_out_of_range("id", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -281,7 +374,7 @@ namespace pkmn {
            _database_entry.get_species_id() == PIKACHU)
         {
             if(friendship < 0 or friendship > 255) {
-                throw pkmn::range_error("friendship", 0, 255);
+                pkmn::throw_out_of_range("friendship", 0, 255);
             } else {
                 _yellow_pikachu_friendship = uint8_t(friendship);
             }
@@ -374,7 +467,7 @@ namespace pkmn {
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience) {
-            throw pkmn::range_error("experience", 0, max_experience);
+            pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
         pokemon_scoped_lock lock(this);
@@ -404,7 +497,7 @@ namespace pkmn {
         int level
     ) {
         if(level < 2 or level > 100) {
-            throw pkmn::range_error("level", 2, 100);
+            pkmn::throw_out_of_range("level", 2, 100);
         }
 
         pokemon_scoped_lock lock(this);
@@ -460,19 +553,20 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > 3) {
-            throw pkmn::range_error("index", 0, 3);
+            pkmn::throw_out_of_range("index", 0, 3);
         }
 
         pokemon_scoped_lock lock(this);
 
-        // This will throw an error if the move is invalid
-        _moves[index].move = pkmn::database::move_entry(
-                                 move,
-                                 get_game()
-                             );
-        _moves[index].pp = _moves[index].move.get_pp(0);
+        // This will throw an error if the move is invalid.
+        pkmn::database::move_entry entry(
+            move,
+            get_game()
+        );
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
 
-        GEN1_PC_RCAST->moves[index] = uint8_t(_moves[index].move.get_move_id());
+        GEN1_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
         GEN1_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
@@ -480,10 +574,10 @@ namespace pkmn {
         const std::string &stat,
         int value
     ) {
-        if(not pkmn_string_is_gen1_stat(stat.c_str())) {
-            throw std::invalid_argument("Invalid stat.");
-        } else if(not pkmn_EV_in_bounds(value, false)) {
-            throw pkmn::range_error(stat, 0, 65535);
+        if(not pkmn::string_is_gen1_stat(stat)) {
+            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
+        } else if(not pkmn::EV_in_bounds(value, false)) {
+            pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
         pokemon_scoped_lock lock(this);
@@ -536,9 +630,8 @@ namespace pkmn {
             case 2:
             case 3:
                 _moves[index] = pkmn::move_slot(
-                    pkmn::database::move_entry(
-                        GEN1_PC_RCAST->moves[index],
-                        _database_entry.get_game_id()
+                    pkmn::database::move_id_to_name(
+                        GEN1_PC_RCAST->moves[index], 1
                     ),
                     (GEN1_PC_RCAST->move_pps[index] & PKSAV_GEN1_MOVE_PP_MASK)
                 );

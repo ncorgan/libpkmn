@@ -109,5 +109,23 @@ function test_leafgreen_pokemon_party()
     pokemon_party_tests.test_pokemon_party(party, "LeafGreen")
 end
 
+---
+--- Colosseum
+---
+
+function test_colosseum_pokemon_party()
+    party = pkmn.pokemon_party("Colosseum")
+    pokemon_party_tests.test_pokemon_party(party, "Colosseum")
+end
+
+---
+--- XD
+---
+
+function test_xd_pokemon_party()
+    party = pkmn.pokemon_party("XD")
+    pokemon_party_tests.test_pokemon_party(party, "XD")
+end
+
 local runner = luaunit.LuaUnit.new()
 os.exit(runner:runSuite())

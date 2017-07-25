@@ -9,7 +9,6 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/move_slot.hpp>
-#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/shared_ptr.hpp>
@@ -41,9 +40,13 @@ namespace pkmn {
                 const std::string &filepath
             );
 
-            static const uint32_t LIBPKMN_OT_ID;
+            static const uint32_t DEFAULT_TRAINER_ID;
 
-            static const std::string LIBPKMN_OT_NAME;
+            static const std::string DEFAULT_TRAINER_NAME;
+
+            virtual sptr to_game(
+                const std::string& game
+            ) = 0;
 
             virtual std::string get_species() = 0;
 
@@ -75,7 +78,7 @@ namespace pkmn {
                 bool value
             ) = 0;
 
-            virtual const pkmn::database::item_entry& get_held_item() = 0;
+            virtual std::string get_held_item() = 0;
 
             virtual void set_held_item(
                 const std::string &held_item

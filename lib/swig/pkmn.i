@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,7 @@
     #include <pkmn/config.hpp>
 %}
 
+%ignore PKMN_ENABLE_QT;
 %ignore PKMN_QT4;
 %ignore PKMN_QT5;
 
@@ -31,8 +32,6 @@
  * All SWIG modules will ignore the following functions/classes.
  */
 
-%ignore pkmn::build_info::get_qt_version;
-
 %ignore pkmn::database::item_entry::item_entry(int, int);
 %ignore pkmn::database::move_entry::move_entry(int, int);
 %ignore pkmn::database::pokemon_entry::pokemon_entry(int, int);
@@ -48,4 +47,6 @@
 #if !defined(SWIGLUA) && !defined(SWIGPYTHON)
 %ignore operator ==;
 %ignore operator !=;
+%ignore operator +;
+%ignore operator +=;
 #endif

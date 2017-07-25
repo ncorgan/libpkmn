@@ -93,7 +93,7 @@ namespace pkmn { namespace calculations {
     ) {
         // Validate input parameters (allow 255 for glitch Pokémon).
         if(attacker_level < 1 or attacker_level > 255) {
-            throw pkmn::range_error("attacker_level", 1, 100);
+            pkmn::throw_out_of_range("attacker_level", 1, 100);
         }
 
         return _gen1_critical_hit_modifier(float(attacker_level));
@@ -107,7 +107,7 @@ namespace pkmn { namespace calculations {
     ) {
         // Validate generation.
         if(generation < 1 or generation > 6) {
-            throw pkmn::range_error("generation", 1, 6);
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Validate types.
@@ -188,7 +188,7 @@ namespace pkmn { namespace calculations {
     ) {
         // Validate input parameters (allow 255 for glitch Pokémon).
         if(attacker_level < 1 or attacker_level > 255) {
-            throw pkmn::range_error("attacker_level", 1, 100);
+            pkmn::throw_out_of_range("attacker_level", 1, 100);
         }
         if(move_base_power < 0) {
             throw std::out_of_range("move_base_power must be > 0.");

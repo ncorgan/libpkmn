@@ -11,8 +11,8 @@
 %}
 
 // SWIG doesn't deal well with read-only static variables
-%ignore pkmn::pokemon::LIBPKMN_OT_ID;
-%ignore pkmn::pokemon::LIBPKMN_OT_NAME;
+%ignore pkmn::pokemon::DEFAULT_TRAINER_ID;
+%ignore pkmn::pokemon::DEFAULT_TRAINER_NAME;
 %ignore pkmn::pokemon::set_move;
 
 %include <pkmn/pokemon.hpp>
@@ -24,7 +24,7 @@
         int index
     ) {
         if(index < 1 or index > 4) {
-            throw pkmn::range_error("index", 1, 4);
+            pkmn::throw_out_of_range("index", 1, 4);
         }
 
         self->get()->set_move(move_name, index-1);

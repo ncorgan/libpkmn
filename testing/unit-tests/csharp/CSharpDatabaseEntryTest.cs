@@ -39,7 +39,7 @@ public class CSharpDatabaseEntryTest {
         // Just make sure it works
         string description = itemEntry.Description;
 
-        Assert.IsTrue(itemEntry.isHoldable);
+        Assert.IsTrue(itemEntry.IsHoldable);
         Assert.AreEqual(itemEntry.FlingPower, 0);
         Assert.AreEqual(itemEntry.FlingEffect, "None");
 

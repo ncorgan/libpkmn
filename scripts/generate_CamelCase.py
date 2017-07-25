@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -37,8 +37,10 @@ replacements = dict(Ev = "EV",
                     Pc = "PC",
                     TmHm = "TMHM",
                     Pksav = "PKSav",
+                    Libpkmgc = "LibPkmGC",
                     Sqlite3 = "SQLite3",
-                    Sqlitecpp = "SQLiteCpp"
+                    Sqlitecpp = "SQLiteCpp",
+                    Generatespindaspriteatfilepath = "GenerateSpindaSpriteAtFilepath"
                    )
 
 def generate_new_name(old_name, pascal):

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 #include "../misc_common.hpp"
 
 #include "database_common.hpp"
+#include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
 #include <boost/config.hpp>
@@ -44,6 +45,33 @@ namespace pkmn { namespace database {
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
                    _db, query, game_name
+               );
+    }
+
+    /*
+     * Calling the id_to_string and id_to_index functions is not ideal, but the logic in
+     * those functions is complicated enough to warrant not duplicating code.
+     */
+
+    std::string item_index_to_name(
+        int item_index,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_name(
+                   pkmn::database::item_index_to_id(item_index, game_id),
+                   pkmn::database::game_id_to_version_group(game_id)
+               );
+    }
+
+    int item_name_to_index(
+        const std::string& item_name,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_index(
+                   pkmn::database::item_name_to_id(item_name),
+                   game_id
                );
     }
 
@@ -113,9 +141,19 @@ namespace pkmn { namespace database {
                 "SELECT max(range_start) FROM gamecube_location_index_ranges WHERE colosseum=? AND "
                 "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
-            return pkmn::database::query_db_bind2<int, int, const std::string&>(
-                       _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
-                   );
+            int ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
+                          _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
+                      );
+
+            /*
+             * Even if the value is not in the gamecube_location_index_ranges table, it will
+             * still return 0.
+             */
+            if(ret == 0) {
+                throw std::invalid_argument("This location exists but not in a Gamecube game.");
+            } else {
+                return ret;
+            }
         } else {
             /*
              * Veekun's database stores location indices by generation, but some version

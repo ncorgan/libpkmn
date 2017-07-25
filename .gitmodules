@@ -13,3 +13,6 @@
 [submodule "testing/googletest"]
 	path = testing/googletest
 	url = https://github.com/ncorgan/googletest
+[submodule "PkmGCTools"]
+	path = PkmGCTools
+	url = https://github.com/ncorgan/PkmGCTools

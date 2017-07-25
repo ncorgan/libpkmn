@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -67,15 +67,15 @@ void pkmn_set_error(
     } catch(const pkmn::pksav_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_PKSAV_ERROR; \
-    } catch(const pkmn::range_error &e) { \
-        pkmn_set_error(e.what()); \
-        return PKMN_ERROR_RANGE_ERROR; \
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
     } catch(const pkmn::feature_not_in_game_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
+    } catch(const pkmn::feature_not_in_build_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_INVALID_ARGUMENT; \
@@ -93,7 +93,7 @@ void pkmn_set_error(
         return PKMN_ERROR_LOGIC_ERROR; \
     } catch(const std::range_error &e) { \
         pkmn_set_error(e.what()); \
-        return PKMN_ERROR_STD_RANGE_ERROR; \
+        return PKMN_ERROR_RANGE_ERROR; \
     } catch(const std::overflow_error &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_OVERFLOW_ERROR; \
@@ -124,10 +124,6 @@ void pkmn_set_error(
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
         return PKMN_ERROR_PKSAV_ERROR; \
-    } catch(const pkmn::range_error &e) { \
-        pkmn_set_error(e.what()); \
-        h->last_error = e.what(); \
-        return PKMN_ERROR_RANGE_ERROR; \
     } catch(const pkmn::unimplemented_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
@@ -136,6 +132,10 @@ void pkmn_set_error(
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
         return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
+    } catch(const pkmn::feature_not_in_build_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
@@ -159,7 +159,7 @@ void pkmn_set_error(
     } catch(const std::range_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \
-        return PKMN_ERROR_STD_RANGE_ERROR; \
+        return PKMN_ERROR_RANGE_ERROR; \
     } catch(const std::overflow_error &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \

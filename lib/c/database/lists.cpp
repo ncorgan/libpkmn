@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -42,6 +42,21 @@ pkmn_error_t pkmn_database_game_list(
             ),
             game_list_out
         )
+    )
+}
+
+pkmn_error_t pkmn_database_gamecube_shadow_pokemon_list(
+    bool colosseum,
+    pkmn_string_list_t* gamecube_shadow_pokemon_list_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(gamecube_shadow_pokemon_list_out);
+
+    PKMN_CPP_TO_C(
+        pkmn::std_vector_std_string_to_string_list(
+            pkmn::database::get_gamecube_shadow_pokemon_list(colosseum),
+            gamecube_shadow_pokemon_list_out
+        );
     )
 }
 

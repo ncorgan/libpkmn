@@ -102,7 +102,9 @@ static const std::string games[] = {
     "Sapphire",
     "Emerald",
     "FireRed",
-    "LeafGreen"
+    "LeafGreen",
+    "Colosseum",
+    "XD"
 };
 
 INSTANTIATE_TEST_CASE_P(

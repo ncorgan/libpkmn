@@ -57,12 +57,12 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.is_shiny, pokemon)
     luaunit.assertError(pokemon.get_held_item, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
 
     luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.LIBPKMN_OT_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
     luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
 
     luaunit.assertError(pokemon.get_friendship, pokemon)
@@ -85,7 +85,7 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertEquals(#move_slots, 4)
     for i = 1, #move_slots
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), "None")
+        luaunit.assertEquals(move_slots[i].move, "None")
         luaunit.assertEquals(move_slots[i].pp, 0)
     end
 
@@ -150,7 +150,7 @@ function gen1_pokemon_tests.pokemon_test(game)
 
     luaunit.assertError(pokemon.set_move, "Ember", 0)
     luaunit.assertError(pokemon.set_move, "Synthesis", 1)
-    luaunit.assertEquals(pokemon:get_moves()[1].move:get_name(), "None")
+    luaunit.assertEquals(pokemon:get_moves()[1].move, "None")
 
     local move_names = {"Ember", "Flamethrower", "Slash", "Fire Blast"}
     for i = 1, #move_names
@@ -161,8 +161,11 @@ function gen1_pokemon_tests.pokemon_test(game)
     move_slots = pokemon:get_moves()
     for i = 1, #move_names
     do
-        luaunit.assertEquals(move_slots[i].move:get_name(), move_names[i])
-        luaunit.assertEquals(move_slots[i].pp, move_slots[i].move:get_pp(0))
+        luaunit.assertEquals(move_slots[i].move, move_names[i])
+        luaunit.assertEquals(
+            move_slots[i].pp,
+            pkmn.database.move_entry(move_slots[i].move, pokemon:get_game()):get_pp(0)
+        )
     end
 
     luaunit.assertError(pokemon.set_EV, pokemon, "Not a stat", 1)

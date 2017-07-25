@@ -10,13 +10,18 @@ REPO_TOPLEVEL=$PWD
 
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
-sudo apt-get -y install cmake cppcheck libboost1.55-all-dev libqt4-dev qtbase5-dev \
-                        libgtest-dev swig swig3.0 doxygen \
+sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
+                        swig swig3.0 doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
 			liblua5.1-dev luarocks \
 			libpython-dev libpython3-dev python3 python-pip python3-pip
 [ $? -ne 0 ] && exit 1
+if [ "$NEWCXX" = "" ]
+then
+    sudo apt-get -y install libboost1.55-all-dev
+    [ $? -ne 0 ] && exit 1
+fi
 sudo pip${PYTHON_VERSION} install CppHeaderParser nose_parameterized
 [ $? -ne 0 ] && exit 1
 sudo luarocks install luaunit

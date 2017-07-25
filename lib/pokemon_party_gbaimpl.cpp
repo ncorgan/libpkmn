@@ -5,9 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef PKMN_POKEMON_PARTY_GBAIMPL_IPP
-#define PKMN_POKEMON_PARTY_GBAIMPL_IPP
-
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
 
@@ -63,7 +60,7 @@ namespace pkmn {
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
         if(index < 0 or index > max_index) {
-            throw pkmn::range_error("index", 0, max_index);
+            pkmn::throw_out_of_range("index", 0, max_index);
         } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
@@ -80,7 +77,6 @@ namespace pkmn {
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon) {
-            std::string new_species = new_pokemon->get_species();
             if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None") {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
             }
@@ -113,5 +109,3 @@ namespace pkmn {
         }
     }
 }
-
-#endif /* PKMN_POKEMON_PARTY_GBAIMPL_IPP */

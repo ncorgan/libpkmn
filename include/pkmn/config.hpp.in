@@ -56,7 +56,8 @@
 /***************************************************************************
  * C++ components
  ***************************************************************************/
-#cmakedefine PKMN_QT4 1
-#cmakedefine PKMN_QT5 1
+#cmakedefine PKMN_ENABLE_QT 1
+#cmakedefine PKMN_QT4       1
+#cmakedefine PKMN_QT5       1
 
 #endif /* PKMN_CONFIG_HPP */

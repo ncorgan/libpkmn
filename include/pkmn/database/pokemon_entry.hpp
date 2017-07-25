@@ -44,7 +44,8 @@ namespace pkmn { namespace database {
                 _generation(0),
                 _version_group_id(0),
                 _none(true),
-                _invalid(false)
+                _invalid(false),
+                _shadow(false)
             {}
 
             #ifndef __DOXYGEN__
@@ -170,7 +171,7 @@ namespace pkmn { namespace database {
         private:
             int _species_id, _pokemon_id, _form_id, _pokemon_index;
             int _game_id, _generation, _version_group_id;
-            bool _none, _invalid;
+            bool _none, _invalid, _shadow;
     };
 
 }}

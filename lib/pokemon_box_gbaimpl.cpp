@@ -66,7 +66,7 @@ namespace pkmn {
         const std::string &name
     ) {
         if(name.size() > 8) {
-            throw std::invalid_argument("Generation II box names have a maximum length of 8.");
+            throw std::invalid_argument("Generation III box names have a maximum length of 8.");
         }
 
         _box_name = name;

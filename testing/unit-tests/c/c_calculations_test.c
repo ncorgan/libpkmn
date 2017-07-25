@@ -34,52 +34,52 @@ static void gen2_unown_form_test() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 16, 0, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, -1, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 16, 0, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, -1, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 16, 0,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, -1,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, 16,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -167,12 +167,12 @@ static void gen2_gender_test() {
                 "Bulbasaur", -1,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Bulbasaur", 16,
                 &pkmn_gender_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -330,52 +330,52 @@ static void gen2_hidden_power_test() {
                 -1, 0, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 16, 0, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, -1, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 16, 0, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, -1, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 16, 0,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, -1,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, 16,
                 &pkmn_hidden_power_t_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     /*
@@ -402,78 +402,78 @@ static void modern_hidden_power_test() {
         -1, 0, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         32, 0, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 32, 0, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, -1, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 32, 0, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, -1, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 32, 0, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, -1, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 32, 0,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 0, -1,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 32,
         &pkmn_hidden_power_t_result
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     TEST_ASSERT_NULL(pkmn_hidden_power_t_result.type);
 
     /*
@@ -524,7 +524,7 @@ static void personality_test() {
     // Test invalid ability.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Torrent",
                 PKMN_MALE,
@@ -536,7 +536,7 @@ static void personality_test() {
     // Test invalid gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_GENDERLESS,
@@ -548,7 +548,7 @@ static void personality_test() {
     // Test invalid nature.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_MALE,
@@ -560,7 +560,7 @@ static void personality_test() {
     // Test and validate calls with each gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_FEMALE,
@@ -572,7 +572,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -588,7 +588,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 PKMN_MALE,
@@ -600,7 +600,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -616,7 +616,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Magnemite",
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Magnet Pull",
                 PKMN_GENDERLESS,
@@ -628,7 +628,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                LIBPKMN_OT_ID,
+                PKMN_DEFAULT_TRAINER_ID,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -651,45 +651,45 @@ static void gen2_shiny_test() {
                 -1, 0, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_shiny(
                 16, 0, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, -1, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 16, 0, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, 0, -1, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 16, 0,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 0, -1,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_shiny(
                 0, 0, 0, 16,
                 &bool_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -740,51 +740,51 @@ static void pokemon_size_test() {
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, -1, 0, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 32, 0, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, -1, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 32, 0, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, -1, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 32, 0, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, -1, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 32, 0, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, -1, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 32, 0, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 0, -1, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_pokemon_size(
                 "Magikarp", 0, 0, 0, 0, 0, 0, 32, &size
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * There are no known good calculations, so just check for reasonable values
@@ -876,13 +876,13 @@ static void gb_stat_test() {
                 1, 1, 123456, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gb_stat(
                 PKMN_STAT_ATTACK,
                 1, 1, 1, 12345,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
                 
     /*
      * Test with known good inputs.
@@ -913,7 +913,7 @@ static void modern_stat_test() {
                 (pkmn_stat_t)(100), 1, 1.0f, 1, 1, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_SPECIAL, 1, 1.0f, 1, 1, 1,
                 &int_result
@@ -928,12 +928,12 @@ static void modern_stat_test() {
                 PKMN_STAT_ATTACK, 1, 1.0f, 1, 12345, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_ATTACK, 1, 1, 1, 1, 12345,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_RANGE_ERROR, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     /*
      * Test with known good inputs.

@@ -57,6 +57,7 @@ SWIG_CSHARP_INIT()
 
 SWIG_BUILD_CSHARP_MODULE(calculations_csharp Calculations TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE PKMN.Database)
+SWIG_BUILD_CSHARP_MODULE(gui_csharp GUI TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(lists_csharp Lists TRUE PKMN.Database)
 SWIG_BUILD_CSHARP_MODULE(paths_csharp Paths TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(pkmn_csharp PKMN TRUE PKMN)
@@ -65,6 +66,7 @@ SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE PKMN)
 SET(swig_modules
     calculations_csharp
     database_csharp
+    gui_csharp
     lists_csharp
     paths_csharp
     pkmn_csharp

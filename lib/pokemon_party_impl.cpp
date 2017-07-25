@@ -8,6 +8,7 @@
 #include "pokemon_party_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
+#include "pokemon_party_gcnimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -39,7 +40,7 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    throw pkmn::unimplemented_error();
+                    return pkmn::make_shared<pokemon_party_gcnimpl>(game_id);
                 } else {
                     return pkmn::make_shared<pokemon_party_gbaimpl>(game_id);
                 }
@@ -70,7 +71,7 @@ namespace pkmn {
         int index
     ) {
         if(index < 0 or index > (PARTY_SIZE-1)) {
-            throw pkmn::range_error("index", 0, (PARTY_SIZE-1));
+            pkmn::throw_out_of_range("index", 0, (PARTY_SIZE-1));
         }
 
         return _pokemon_list.at(index);

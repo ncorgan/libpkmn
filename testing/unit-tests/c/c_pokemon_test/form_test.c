@@ -295,7 +295,7 @@ static void test_gen2_pokemon_forms(
     TEST_ASSERT_NULL(pokemon);
 }
 
-static void test_gba_pokemon_forms(
+static void test_gen3_pokemon_forms(
     const char* game
 ) {
     TEST_ASSERT_NOT_NULL(game);
@@ -557,29 +557,41 @@ void crystal_form_test() {
 void ruby_form_test() {
     test_gen1_pokemon_forms("Ruby");
     test_gen2_pokemon_forms("Ruby");
-    test_gba_pokemon_forms("Ruby");
+    test_gen3_pokemon_forms("Ruby");
 }
 
 void sapphire_form_test() {
     test_gen1_pokemon_forms("Sapphire");
     test_gen2_pokemon_forms("Sapphire");
-    test_gba_pokemon_forms("Sapphire");
+    test_gen3_pokemon_forms("Sapphire");
 }
 
 void emerald_form_test() {
     test_gen1_pokemon_forms("Emerald");
     test_gen2_pokemon_forms("Emerald");
-    test_gba_pokemon_forms("Emerald");
+    test_gen3_pokemon_forms("Emerald");
 }
 
 void firered_form_test() {
     test_gen1_pokemon_forms("FireRed");
     test_gen2_pokemon_forms("FireRed");
-    test_gba_pokemon_forms("FireRed");
+    test_gen3_pokemon_forms("FireRed");
 }
 
 void leafgreen_form_test() {
     test_gen1_pokemon_forms("LeafGreen");
     test_gen2_pokemon_forms("LeafGreen");
-    test_gba_pokemon_forms("LeafGreen");
+    test_gen3_pokemon_forms("LeafGreen");
+}
+
+void colosseum_form_test() {
+    test_gen1_pokemon_forms("Colosseum");
+    test_gen2_pokemon_forms("Colosseum");
+    test_gen3_pokemon_forms("Colosseum");
+}
+
+void xd_form_test() {
+    test_gen1_pokemon_forms("XD");
+    test_gen2_pokemon_forms("XD");
+    test_gen3_pokemon_forms("XD");
 }

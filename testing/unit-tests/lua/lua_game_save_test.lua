@@ -10,6 +10,8 @@ local luaunit = require("luaunit")
 
 local utils = {}
 
+math.randomseed(os.time())
+
 -- http://stackoverflow.com/a/30960054
 function utils.is_windows()
     local shared_lib_ext = package.cpath:match("%p[\\|/]?%p(%a+)")
@@ -54,22 +56,24 @@ game_save_test.GAME_TO_GENERATION = {
 }
 
 game_save_test.PKSAV_TEST_SAVES = pkmn.paths.getenv("PKSAV_TEST_SAVES")
+game_save_test.LIBPKMN_TEST_FILES = pkmn.paths.getenv("LIBPKMN_TEST_FILES")
 game_save_test.PKMN_TMP_DIR = pkmn.paths.get_tmp_dir()
 
 game_save_test.MAX_UINT16 = 0xFFFF
 game_save_test.MAX_UINT32 = 0xFFFFFFFF
 
-game_save_test.LIBPKMN_OT_PID = 1351
-game_save_test.LIBPKMN_OT_SID = 32123
+game_save_test.DEFAULT_TRAINER_PID = 1351
+game_save_test.DEFAULT_TRAINER_SID = 32123
 game_save_test.MONEY_MAX = 999999
 
 game_save_test.MALE_ONLY_GAMES = {
     "Red", "Blue", "Yellow",
-    "Gold", "Silver"
+    "Gold", "Silver",
+    "Colosseum", "XD"
 }
 
 game_save_test.RIVAL_NAME_SET_GAMES = {
-    "Ruby", "Sapphire", "Emerald",
+    "Ruby", "Sapphire", "Emerald", "Colosseum", "XD",
     "Black", "White",
     "X", "Y"
 }
@@ -105,13 +109,13 @@ end
 function game_save_test.test_trainer_id(save, is_gb_game)
     if is_gb_game
     then
-        luaunit.assertEquals(save:get_trainer_id(), game_save_test.LIBPKMN_OT_PID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.LIBPKMN_OT_PID)
+        luaunit.assertEquals(save:get_trainer_id(), game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
         luaunit.assertError(save.get_trainer_secret_id, save)
     else
-        luaunit.assertEquals(save:get_trainer_id(), pkmn.LIBPKMN_OT_ID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.LIBPKMN_OT_PID)
-        luaunit.assertEquals(save:get_trainer_secret_id(), game_save_test.LIBPKMN_OT_SID)
+        luaunit.assertEquals(save:get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
+        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save:get_trainer_secret_id(), game_save_test.DEFAULT_TRAINER_SID)
     end
 end
 
@@ -130,20 +134,20 @@ function game_save_test.test_common_fields(save)
     -- Trainer ID
     if is_gb_game
     then
-        save:set_trainer_id(game_save_test.LIBPKMN_OT_PID)
+        save:set_trainer_id(game_save_test.DEFAULT_TRAINER_PID)
     else
-        save:set_trainer_id(pkmn.LIBPKMN_OT_ID)
+        save:set_trainer_id(pkmn.DEFAULT_TRAINER_ID)
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 
-    save:set_trainer_public_id(game_save_test.LIBPKMN_OT_PID)
+    save:set_trainer_public_id(game_save_test.DEFAULT_TRAINER_PID)
     game_save_test.test_trainer_id(save, is_gb_game)
 
     if is_gb_game
     then
-        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.LIBPKMN_OT_SID)
+        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.DEFAULT_TRAINER_SID)
     else
-        save:set_trainer_secret_id(game_save_test.LIBPKMN_OT_SID)
+        save:set_trainer_secret_id(game_save_test.DEFAULT_TRAINER_SID)
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 
@@ -246,7 +250,11 @@ function game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_l
 
     for i = 1, 4
     do
-        ret:set_move(move_list[math.random(1, #move_list)], i)
+        local move = ""
+        repeat
+            move = move_list[math.random(1, #move_list)]
+        until string.find(move, "Shadow") == nil
+        ret:set_move(move, i)
     end
 
     if generation >= 2
@@ -254,7 +262,7 @@ function game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_l
         -- Keep going until one is holdable
         repeat
             pcall(ret.set_held_item, ret, item_list[math.random(1, #item_list)])
-        until ret:get_held_item():get_name() ~= "None"
+        until ret:get_held_item() ~= "None"
     end
 
     return ret
@@ -307,13 +315,13 @@ function game_save_test.compare_pokemon(pokemon1, pokemon2)
     local moves2 = pokemon2:get_moves()
     for i = 1, 4
     do
-        luaunit.assertEquals(moves1[i].move:get_name(), moves2[i].move:get_name())
+        luaunit.assertEquals(moves1[i].move, moves2[i].move)
         luaunit.assertEquals(moves1[i].pp, moves2[i].pp)
     end
 
     if game_save_test.GAME_TO_GENERATION[pokemon1:get_game()] >= 2
     then
-        luaunit.assertEquals(pokemon1:get_held_item():get_name(), pokemon2:get_held_item():get_name())
+        luaunit.assertEquals(pokemon1:get_held_item(), pokemon2:get_held_item())
     end
 end
 
@@ -394,7 +402,13 @@ function game_save_test.compare_game_saves(save1, save2)
 end
 
 function game_save_test.test_game_save(expected_type, expected_game, subdir, filename)
-    local save_filepath = utils.concat_paths(game_save_test.PKSAV_TEST_SAVES, subdir, filename)
+    local save_filepath = ""
+    if expected_game == "Colosseum" or expected_game == "XD"
+    then
+        save_filepath = utils.concat_paths(game_save_test.LIBPKMN_TEST_FILES, subdir, filename)
+    else
+        save_filepath = utils.concat_paths(game_save_test.PKSAV_TEST_SAVES, subdir, filename)
+    end
     luaunit.assertEquals(pkmn.detect_game_save_type(save_filepath), expected_type)
 
     local save = pkmn.game_save(save_filepath)
@@ -481,6 +495,24 @@ function test_firered_game_save()
         "FireRed",
         "firered_leafgreen",
         "pokemon_firered.sav"
+    )
+end
+
+function test_colosseum_game_save()
+    game_save_test.test_game_save(
+        "Colosseum/XD",
+        "Colosseum",
+        "gamecube_saves",
+        "pokemon_colosseum.gci"
+    )
+end
+
+function test_xd_game_save()
+    game_save_test.test_game_save(
+        "Colosseum/XD",
+        "XD",
+        "gamecube_saves",
+        "pokemon_xd.gci"
     )
 end
 

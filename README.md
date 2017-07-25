@@ -8,13 +8,18 @@ LibPKMN
 The goal of LibPKMN is to be the most expansive library for editing main series Pokémon game saves, as well
 as analyzing all aspects of the games, allowing for full customization of the game's Pokémon.
 
+Supported games:
+ * Red/Blue/Yellow
+ * Gold/Silver/Crystal
+ * Ruby/Sapphire/Emerald
+ * FireRed/LeafGreen
+ * Colosseum/XD
+
 Features in development:
  * Damage calculations
  * Generation IV save support
- * Colosseum/XD save support
  * Java API
  * Ruby API
- * Generation III-V Spinda sprite generation
 
 Future planned features:
  * Generation V-VI save support
@@ -56,7 +61,7 @@ repository is automatically tested under the following configurations:
    * C/C++
      * GCC: 4.8.4, 6.2.0
      * Clang: 3.5.0, 4.0.0
-     * Boost: 1.55.0
+     * Boost: 1.55.0, 1.60.0
      * Qt: 4.8.6, 5.2.1
    * SWIG: 2.0.11, 3.0.2
    * C#: Mono 3.2.8
@@ -64,7 +69,7 @@ repository is automatically tested under the following configurations:
    * Python: 2.7.6, 3.4.3
  * Windows Server 2012 R2 (x64)
    * C/C++: MSVC 2015 (Win32, x64)
-     * Boost: 1.62.0
+     * Boost: 1.59.0, 1.62.0, 1.63.0
      * Qt: 5.7.1
    * SWIG: 3.0.6
    * C#: .NET 3.5
@@ -80,4 +85,13 @@ Tests are run with the following frameworks:
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
-README last updated: 2017/04/23
+Acknowledgments
+-------------------------------------
+
+This project is largely possible thanks to Alex "Eevee" Munroe ([@eevee](https://github.com/eevee)) whose extensive SQLite database on all things Pokémon underlies the majority of this code's functionality.
+
+A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey85)) for consulting on game mechanics.
+
+This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
+
+README last updated: 2017/06/04

@@ -16,8 +16,18 @@ public class CSharpBuildInfoTest {
     }
 
     [Test]
+    public void LibPkmGCVersionTest() {
+        Assert.Greater(PKMN.BuildInfo.LibPkmGCVersion.Length, 0);
+    }
+
+    [Test]
     public void PKSavVersionTest() {
         Assert.Greater(PKMN.BuildInfo.PKSavVersion.Length, 0);
+    }
+
+    [Test]
+    public void QtVersionTest() {
+        Assert.Greater(PKMN.BuildInfo.QtVersion.Length, 0);
     }
 
     [Test]

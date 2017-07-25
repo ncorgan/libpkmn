@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +18,7 @@ namespace pkmn { namespace database {
      * @brief Returns an alphabetized list of abilities available in the given generation.
      *
      * \param generation which generation
-     * \throws pkmn::range_error if generation is not [3-6]
+     * \throws std::out_of_range if generation is not [3-6]
      */
     PKMN_API std::vector<std::string> get_ability_list(
         int generation
@@ -29,11 +29,20 @@ namespace pkmn { namespace database {
      *
      * \param generation which generation
      * \param include_previous whether or not to include games in generations earlier than the given one
-     * \throws pkmn::range_error if generation is not [1-6]
+     * \throws std::out_of_range if generation is not [1-6]
      */
     PKMN_API std::vector<std::string> get_game_list(
         int generation,
         bool include_previous
+    );
+
+    /*!
+     * @brief Returns an alphabetized list of Shadow Pokémon available in the specified Gamecube game.
+     *
+     * \param colosseum return Pokémon from Colosseum, XD otherwise
+     */
+    PKMN_API std::vector<std::string> get_gamecube_shadow_pokemon_list(
+        bool colosseum
     );
 
     /*!
@@ -81,7 +90,7 @@ namespace pkmn { namespace database {
      *
      * \param generation which generation
      * \param include_previous include Pokémon from previous generations.
-     * \throws pkmn::range_error if generation is not [1-6]
+     * \throws std::out_of_range if generation is not [1-6]
      */
     PKMN_API std::vector<std::string> get_pokemon_list(
         int generation,
@@ -97,7 +106,7 @@ namespace pkmn { namespace database {
      * @brief Returns a list (ordered as in-game) of ribbons available in the given generation.
      *
      * \param generation which generation
-     * \throws pkmn::range_error if generation is not [3-6]
+     * \throws std::out_of_range if generation is not [3-6]
      */
     PKMN_API std::vector<std::string> get_ribbon_list(
         int generation

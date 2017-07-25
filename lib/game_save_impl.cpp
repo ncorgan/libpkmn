@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,8 +9,10 @@
 #include "game_save_gen1impl.hpp"
 #include "game_save_gen2impl.hpp"
 #include "game_save_gbaimpl.hpp"
+#include "game_save_gcnimpl.hpp"
 #include "database/id_to_string.hpp"
 
+#include "libpkmgc_includes.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/gen1/save.h>
@@ -20,6 +22,7 @@
 #include <boost/filesystem.hpp>
 
 #include <fstream>
+#include <iostream>
 
 namespace fs = boost::filesystem;
 
@@ -32,7 +35,8 @@ namespace pkmn {
         PKMN_SAVE_TYPE_CRYSTAL,
         PKMN_SAVE_TYPE_RUBY_SAPPHIRE,
         PKMN_SAVE_TYPE_EMERALD,
-        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN
+        PKMN_SAVE_TYPE_FIRERED_LEAFGREEN,
+        PKMN_SAVE_TYPE_COLOSSEUM_XD,
     } pkmn_save_type_t;
 
     static BOOST_CONSTEXPR const char* SAVE_TYPE_NAMES[] = {
@@ -42,11 +46,17 @@ namespace pkmn {
         "Crystal",
         "Ruby/Sapphire",
         "Emerald",
-        "FireRed/LeafGreen"
+        "FireRed/LeafGreen",
+        "Colosseum/XD"
     };
 
     BOOST_STATIC_CONSTEXPR size_t GB_SAVE_SIZE  = 0x8000;
     BOOST_STATIC_CONSTEXPR size_t GBA_SAVE_SIZE = 0x10000;
+
+    BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_BIN_SIZE = 0x60000;
+    BOOST_STATIC_CONSTEXPR size_t GCN_COLOSSEUM_GCI_SIZE = 0x60040;
+    BOOST_STATIC_CONSTEXPR size_t GCN_XD_BIN_SIZE = 0x56000;
+    BOOST_STATIC_CONSTEXPR size_t GCN_XD_GCI_SIZE = 0x56040;
 
     static pkmn_save_type_t _detect_type(
         const std::string &filepath
@@ -61,6 +71,19 @@ namespace pkmn {
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
         ifile.read((char*)raw.data(), filesize);
         ifile.close();
+
+        pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
+        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
+            gcn_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(raw.data(), (filesize == GCN_COLOSSEUM_GCI_SIZE)));
+        } if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
+            gcn_save.reset(new LibPkmGC::XD::SaveEditing::Save(raw.data(), (filesize == GCN_XD_GCI_SIZE)));
+        }
+        if(gcn_save) {
+            size_t index = 0;
+            if(gcn_save->getMostRecentValidSlot(0, &index)) {
+                return PKMN_SAVE_TYPE_COLOSSEUM_XD;
+            }
+        }
 
         bool type_found = false;
 
@@ -171,6 +194,9 @@ namespace pkmn {
             case PKMN_SAVE_TYPE_EMERALD:
             case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
                 return pkmn::make_shared<game_save_gbaimpl>(filepath);
+
+            case PKMN_SAVE_TYPE_COLOSSEUM_XD:
+                return pkmn::make_shared<game_save_gcnimpl>(filepath);
 
             case PKMN_SAVE_TYPE_NONE:
             default:

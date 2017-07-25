@@ -51,7 +51,7 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
         local moves = box[i]:get_moves()
         for i = 1, #moves
         do
-            luaunit.assertEquals(moves[i].move:get_name(), "None")
+            luaunit.assertEquals(moves[i].move, "None")
             luaunit.assertEquals(moves[i].pp, 0)
         end
     end

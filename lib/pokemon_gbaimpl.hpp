@@ -32,8 +32,16 @@ namespace pkmn {
                 const pksav_gba_pc_pokemon_t &pc,
                 int game_id
             );
+            pokemon_gbaimpl(
+                const pksav_gba_party_pokemon_t &party,
+                int game_id
+            );
 
             ~pokemon_gbaimpl();
+
+            pokemon::sptr to_game(
+                const std::string& game
+            );
 
             void set_form(
                 const std::string &form
@@ -56,6 +64,8 @@ namespace pkmn {
             void set_shininess(
                 bool value
             );
+
+            std::string get_held_item();
 
             void set_held_item(
                 const std::string &held_item
@@ -178,6 +188,8 @@ namespace pkmn {
                 int value
             );
 
+            std::string get_sprite_filepath();
+
         private:
 
             void _set_contest_ribbon(
@@ -194,7 +206,6 @@ namespace pkmn {
             void _set_unown_form_from_personality();
             void _set_unown_personality_from_form();
 
-            void _update_held_item();
             void _update_markings_map();
             void _update_ribbons_map();
             void _update_EV_map();

@@ -31,6 +31,17 @@ void test_3gpkm() {
     const char* LIBPKMN_TEST_FILES = getenv("LIBPKMN_TEST_FILES");
     TEST_ASSERT_NOT_NULL(LIBPKMN_TEST_FILES);
 
+    pkmn_trainer_info_t trainer_info =
+    {
+        .trainer_name = {0},
+        .trainer_id =
+        {
+            .public_id = 0,
+            .secret_id = 0
+        },
+        .trainer_gender = PKMN_GENDERLESS
+    };
+
     snprintf(
         strbuffer,
         sizeof(strbuffer),
@@ -43,7 +54,7 @@ void test_3gpkm() {
                 &mightyena,
                 strbuffer
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(mightyena);
 
     error = pkmn_pokemon_get_species(
@@ -51,39 +62,50 @@ void test_3gpkm() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Mightyena");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Mightyena", strbuffer);
 
     error = pkmn_pokemon_get_game(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Emerald");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Emerald", strbuffer);
 
     error = pkmn_pokemon_get_form(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Standard");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
     error = pkmn_pokemon_get_nickname(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "MIGHTYENA");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
+
+    error = pkmn_pokemon_get_trainer_info(
+                mightyena,
+                &trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("A", trainer_info.trainer_name);
+    TEST_ASSERT_EQUAL(61415, trainer_info.trainer_id.public_id);
+    TEST_ASSERT_EQUAL(3417, trainer_info.trainer_id.secret_id);
+    TEST_ASSERT_EQUAL(223997927, trainer_info.trainer_id.id);
+    TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_info.trainer_gender);
 
     bool is_shiny = false;
     error = pkmn_pokemon_is_shiny(
                 mightyena,
                 &is_shiny
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_FALSE(is_shiny);
 
     error = pkmn_pokemon_get_held_item(
@@ -91,80 +113,40 @@ void test_3gpkm() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Heart Scale");
-
-    error = pkmn_pokemon_get_trainer_name(
-                mightyena,
-                strbuffer,
-                sizeof(strbuffer)
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "A");
-
-    uint16_t trainer_public_id = 0;
-    error = pkmn_pokemon_get_trainer_public_id(
-                mightyena,
-                &trainer_public_id
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(trainer_public_id, 61415);
-
-    uint16_t trainer_secret_id = 0;
-    error = pkmn_pokemon_get_trainer_secret_id(
-                mightyena,
-                &trainer_secret_id
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(trainer_secret_id, 3417);
-
-    uint32_t trainer_id = 0;
-    error = pkmn_pokemon_get_trainer_id(
-                mightyena,
-                &trainer_id
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(trainer_id, 223997927);
-
-    pkmn_gender_t trainer_gender = PKMN_MALE;
-    error = pkmn_pokemon_get_trainer_gender(
-                mightyena,
-                &trainer_gender
-            );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(trainer_gender, PKMN_FEMALE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Heart Scale", strbuffer);
 
     int friendship = 0;
     error = pkmn_pokemon_get_friendship(
                 mightyena,
                 &friendship
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(friendship, 254);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(254, friendship);
 
     error = pkmn_pokemon_get_ability(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Intimidate");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Intimidate", strbuffer);
 
     error = pkmn_pokemon_get_ball(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Great Ball");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Great Ball", strbuffer);
 
     int level_met = 0;
     error = pkmn_pokemon_get_level_met(
                 mightyena,
                 &level_met
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(level_met, 25);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(25, level_met);
 
     error = pkmn_pokemon_get_location_met(
                 mightyena,
@@ -172,48 +154,48 @@ void test_3gpkm() {
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Route 120");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Route 120", strbuffer);
 
     error = pkmn_pokemon_get_original_game(
                 mightyena,
                 strbuffer,
                 sizeof(strbuffer)
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL_STRING(strbuffer, "Emerald");
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING("Emerald", strbuffer);
 
     uint32_t personality = 0;
     error = pkmn_pokemon_get_personality(
                 mightyena,
                 &personality
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(personality, 3557601241);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(3557601241, personality);
 
     int experience = 0;
     error = pkmn_pokemon_get_experience(
                 mightyena,
                 &experience
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(experience, 128734);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(128734, experience);
 
     int level = 0;
     error = pkmn_pokemon_get_level(
                 mightyena,
                 &level
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(level, 50);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(50, level);
 
     pkmn_string_list_t marking_names;
     error = pkmn_pokemon_get_marking_names(
                 mightyena,
                 &marking_names
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(marking_names.length, 4);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(4, marking_names.length);
 
     bool has_marking = false;
     for(size_t i = 0; i < marking_names.length; ++i) {
@@ -222,20 +204,20 @@ void test_3gpkm() {
                     marking_names.strings[i],
                     &has_marking
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_FALSE(has_marking);
     }
 
     error = pkmn_string_list_free(&marking_names);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     pkmn_string_list_t ribbon_names;
     error = pkmn_pokemon_get_ribbon_names(
                 mightyena,
                 &ribbon_names
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(ribbon_names.length, 32);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(32, ribbon_names.length);
 
     bool has_ribbon = false;
     for(size_t i = 0; i < ribbon_names.length; ++i) {
@@ -244,7 +226,7 @@ void test_3gpkm() {
                     ribbon_names.strings[i],
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         if(strcmp(ribbon_names.strings[i], "Champion") == 0) {
             TEST_ASSERT_TRUE(has_ribbon);
         } else {
@@ -253,15 +235,15 @@ void test_3gpkm() {
     }
 
     error = pkmn_string_list_free(&ribbon_names);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     pkmn_string_list_t contest_stat_names;
     error = pkmn_pokemon_get_contest_stat_names(
                 mightyena,
                 &contest_stat_names
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(contest_stat_names.length, 6);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(6, contest_stat_names.length);
 
     int contest_stat = 0;
     for(size_t i = 0; i < ribbon_names.length; ++i) {
@@ -270,12 +252,12 @@ void test_3gpkm() {
                     contest_stat_names.strings[i],
                     &contest_stat
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(contest_stat, 0);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(0, contest_stat);
     }
 
     error = pkmn_string_list_free(&contest_stat_names);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     static const char* expected_mightyena_moves[] = {
         "Crunch", "Strength", "Shadow Ball", "Double-Edge"
@@ -286,14 +268,14 @@ void test_3gpkm() {
                 mightyena,
                 &mightyena_moves
             );
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-    TEST_ASSERT_EQUAL(mightyena_moves.length, 4);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(4, mightyena_moves.length);
     for(size_t i = 0; i < mightyena_moves.length; ++i) {
-        TEST_ASSERT_EQUAL_STRING(mightyena_moves.move_slots[i].move, expected_mightyena_moves[i]);
+        TEST_ASSERT_EQUAL_STRING(expected_mightyena_moves[i], mightyena_moves.move_slots[i].move);
     }
 
     error = pkmn_move_slots_free(&mightyena_moves);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     static const struct expected_stat expected_EVs[] = {
         {"HP", 30},
@@ -311,8 +293,8 @@ void test_3gpkm() {
                     expected_EVs[i].name,
                     &EV
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(EV, expected_EVs[i].value);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(expected_EVs[i].value, EV);
     }
 
     static const struct expected_stat expected_IVs[] = {
@@ -331,8 +313,8 @@ void test_3gpkm() {
                     expected_IVs[i].name,
                     &IV
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(IV, expected_IVs[i].value);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(expected_IVs[i].value, IV);
     }
 
     static const struct expected_stat expected_stats[] = {
@@ -351,11 +333,11 @@ void test_3gpkm() {
                     expected_stats[i].name,
                     &stat
                 );
-        TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
-        TEST_ASSERT_EQUAL(stat, expected_stats[i].value);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(expected_stats[i].value, stat);
     }
 
     error = pkmn_pokemon_free(&mightyena);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(mightyena);
 }

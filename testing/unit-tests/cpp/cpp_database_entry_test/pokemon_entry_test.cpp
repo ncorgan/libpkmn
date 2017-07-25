@@ -590,7 +590,7 @@ static void _pokemon_entry_test(
     EXPECT_GT(pokemon_entry_gcn.get_tm_hm_moves().size(), 0);
     EXPECT_GT(pokemon_entry_gcn.get_egg_moves().size(), 0);
     EXPECT_GT(pokemon_entry_gcn.get_tutor_moves().size(), 0);
-    EXPECT_EQ(1, pokemon_entry_gcn.get_forms().size()); // TODO: Shadow
+    EXPECT_EQ(2, pokemon_entry_gcn.get_forms().size());
     EXPECT_EQ(1, pokemon_entry_gcn.get_evolutions().size());
     EXPECT_EQ(285, pokemon_entry_gcn.get_species_id());
     EXPECT_EQ(285, pokemon_entry_gcn.get_pokemon_id());

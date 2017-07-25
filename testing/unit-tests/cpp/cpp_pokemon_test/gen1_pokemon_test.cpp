@@ -66,7 +66,10 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves.at(i).move.get_move_id(), int(native_pc->moves[i]));
+        EXPECT_EQ(
+            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
+            int(native_pc->moves[i])
+        );
         EXPECT_EQ(moves.at(i).pp, int(native_pc->move_pps[i]));
     }
 

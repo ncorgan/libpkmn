@@ -141,7 +141,7 @@ namespace pkmn {
         uint32_t trainer_id
     ) {
         if(trainer_id >= 65535) {
-            throw pkmn::range_error("trainer_id", 0, 65535);
+            pkmn::throw_out_of_range("trainer_id", 0, 65535);
         }
 
         *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
@@ -223,7 +223,7 @@ namespace pkmn {
         int money
     ) {
         if(money < 0 or money > MONEY_MAX_VALUE) {
-            throw pkmn::range_error("money", 0, MONEY_MAX_VALUE);
+            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
         }
 
         PKSAV_CALL(

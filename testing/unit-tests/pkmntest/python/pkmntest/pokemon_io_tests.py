@@ -11,7 +11,7 @@ import pkmn
 import os
 import unittest
 
-LIBPKMN_TEST_FILES = "@LIBPKMN_TEST_FILES@"
+LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 
 class pokemon_io_test(unittest.TestCase):
 
@@ -25,7 +25,7 @@ class pokemon_io_test(unittest.TestCase):
         self.assertEqual(mightyena.get_form(), "Standard")
         self.assertEqual(mightyena.get_nickname(), "MIGHTYENA")
         self.assertFalse(mightyena.is_shiny())
-        self.assertEqual(mightyena.get_held_item().get_name(), "Heart Scale")
+        self.assertEqual(mightyena.get_held_item(), "Heart Scale")
         self.assertEqual(mightyena.get_trainer_name(), "A")
         self.assertEqual(mightyena.get_trainer_public_id(), 61415)
         self.assertEqual(mightyena.get_trainer_secret_id(), 3417)
@@ -63,7 +63,7 @@ class pokemon_io_test(unittest.TestCase):
         mightyena_moves = mightyena.get_moves()
         self.assertEqual(len(mightyena_moves), 4)
         for i in range(4):
-            self.assertEqual(mightyena_moves[i].move.get_name(), expected_move_names[i])
+            self.assertEqual(mightyena_moves[i].move, expected_move_names[i])
 
         mightyena_EVs = mightyena.get_EVs()
         self.assertEqual(len(mightyena_EVs), 6)
