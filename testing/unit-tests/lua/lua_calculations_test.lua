@@ -10,6 +10,43 @@ local pkmn = require("pkmn")
 
 math.randomseed(os.time())
 
+function test_damage()
+    -- Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+    -- Only taking types into account
+    --
+    -- "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+    -- uses Ice Fang (an Ice-type physical move with a power of 65) against
+    -- a Garchomp with an effective Defense stat of 163 in Generation VI,
+    -- and does not land a critical hit."
+    --
+    -- The article itself results in the wrong value, but the value I'm
+    -- testing for below was based on its equations.
+    local ice_fang = pkmn.database.move_entry("Ice Fang", "X")
+    local glaceon = pkmn.database.pokemon_entry("Glaceon", "X", "")
+    local garchomp = pkmn.database.pokemon_entry("Garchomp", "X", "")
+
+    local modifier = 1.0
+    modifier = modifier * pkmn.calculations.type_damage_modifier(
+                              6,
+                              glaceon:get_types().first,
+                              garchomp:get_types().first,
+                              garchomp:get_types().second
+                          )
+    modifier = modifier * pkmn.calculations.STAB_MODIFIER;
+    luaunit.assertEquals(6.0, modifier)
+
+    luaunit.assertEquals(65, ice_fang:get_base_power())
+    local damage = pkmn.calculations.damage(
+                       75,
+                       ice_fang:get_base_power(),
+                       123,
+                       163,
+                       modifier
+                   )
+    luaunit.assertEquals(200, damage);
+end
+
 function test_gen2_unown_form()
     -- Make sure expected errors are thrown.
     luaunit.assertError(pkmn.calculations.gen2_unown_form, -1, 0, 0, 0)

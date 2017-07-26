@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmn/calculations/damage.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
@@ -15,6 +16,7 @@
 #include <pkmn/calculations/spinda_spots.hpp>
 #include <pkmn/calculations/stats.hpp>
 
+#include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
 #include <pkmn/exception.hpp>
@@ -27,6 +29,44 @@
 #include <random>
 #include <ctime>
 #include <limits>
+
+TEST(cpp_calculations_test, damage_test)
+{
+    // Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+    // Only taking types into account
+    //
+    // "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+    // uses Ice Fang (an Ice-type physical move with a power of 65) against
+    // a Garchomp with an effective Defense stat of 163 in Generation VI,
+    // and does not land a critical hit."
+    //
+    // The article itself results in the wrong value, but the value I'm
+    // testing for below was based on its equations.
+    pkmn::database::move_entry ice_fang("Ice Fang", "X");
+    pkmn::database::pokemon_entry glaceon("Glaceon", "X", "");
+    pkmn::database::pokemon_entry garchomp("Garchomp", "X", "");
+
+    float modifier = 1.0f;
+    modifier *= pkmn::calculations::type_damage_modifier(
+                    6,
+                    glaceon.get_types().first,
+                    garchomp.get_types().first,
+                    garchomp.get_types().second
+                );
+    modifier *= pkmn::calculations::STAB_MODIFIER;
+    EXPECT_DOUBLE_EQ(6.0, modifier);
+
+    ASSERT_EQ(65, ice_fang.get_base_power());
+    int damage = pkmn::calculations::damage(
+                     75,
+                     ice_fang.get_base_power(),
+                     123,
+                     163,
+                     modifier
+                 );
+    EXPECT_EQ(200, damage);
+}
 
 TEST(cpp_calculations_test, gen2_unown_form_test) {
     /*

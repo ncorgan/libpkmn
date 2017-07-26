@@ -14,6 +14,45 @@ public class CSharpCalculationsTest {
     private static Random rng = new Random();
 
     [Test]
+    public void DamageTest()
+    {
+        // Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+        // Only taking types into account
+        //
+        // "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+        // uses Ice Fang (an Ice-type physical move with a power of 65) against
+        // a Garchomp with an effective Defense stat of 163 in Generation VI,
+        // and does not land a critical hit."
+        //
+        // The article itself results in the wrong value, but the value I'm
+        // testing for below was based on its equations.
+        PKMN.Database.MoveEntry iceFang = new PKMN.Database.MoveEntry("Ice Fang", "X");
+        PKMN.Database.PokemonEntry glaceon = new PKMN.Database.PokemonEntry("Glaceon", "X", "");
+        PKMN.Database.PokemonEntry garchomp = new PKMN.Database.PokemonEntry("Garchomp", "X", "");
+
+        float modifier = 1.0f;
+        modifier *= PKMN.Calculations.TypeDamageModifier(
+                        6,
+                        glaceon.Types.First,
+                        garchomp.Types.First,
+                        garchomp.Types.Second
+                    );
+        modifier *= PKMN.Calculations.STABModifier;
+        Assert.AreEqual(6.0f, modifier);
+
+        Assert.AreEqual(65, iceFang.BasePower);
+        int damage = PKMN.Calculations.Damage(
+                         75,
+                         iceFang.BasePower,
+                         123,
+                         163,
+                         modifier
+                     );
+        Assert.AreEqual(200, damage);
+    }
+
+    [Test]
     public void Gen2UnownFormTest() {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
