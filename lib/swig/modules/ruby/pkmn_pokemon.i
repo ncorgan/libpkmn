@@ -20,18 +20,23 @@
 // map renames/ignores
 %ignore get_internal;
 %rename("PokemonEVHash") pokemon_EV_map;
+%rename("has_key?") has_key;
 %rename("__getitem__") get_EV;
 %rename("__setitem__") set_EV;
 %rename("PokemonIVHash") pokemon_IV_map;
+%rename("has_key?") has_key;
 %rename("__getitem__") get_IV;
 %rename("__setitem__") set_IV;
 %rename("PokemonMarkingHash") pokemon_marking_map;
+%rename("has_key?") has_key;
 %rename("__getitem__") get_marking;
 %rename("__setitem__") set_marking;
 %rename("PokemonRibbonHash") pokemon_ribbon_map;
+%rename("has_key?") has_key;
 %rename("__getitem__") get_ribbon;
 %rename("__setitem__") set_ribbon;
 %rename("PokemonContestStatHash") pokemon_contest_stat_map;
+%rename("has_key?") has_key;
 %rename("__getitem__") get_contest_stat;
 %rename("__setitem__") set_contest_stat;
 
@@ -42,6 +47,7 @@
 %rename("pp") get_pp;
 %rename("PokemonMoveSlotsWrapper") pokemon_move_slots_wrapper;
 %rename("__getitem__") get_move_slot;
+%rename("length") size;
 
 // pkmn::swig::pokemon renames
 %rename("Pokemon") pokemon;
@@ -175,6 +181,51 @@ EXTEND_POKEMON_MAP(IV, int);
 EXTEND_POKEMON_MAP(marking, bool);
 EXTEND_POKEMON_MAP(ribbon, bool);
 EXTEND_POKEMON_MAP(contest_stat, int);
+
+%extend pkmn::swig::pokemon_move_slots_wrapper
+{
+    pkmn::swig::pokemon_move_slots_wrapper* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+
+            VALUE r;
+            for(int i = 0; i < 4; ++i)
+            {
+                // This is...fragile.
+                r = SWIG_NewPointerObj(
+                        SWIG_as_voidptr(&(self->get_move_slot(i))),
+                        SWIGTYPE_p_pkmn__swig__pokemon_move_slot_wrapper,
+                        0
+                    );
+
+                rb_yield(r);
+            }
+        }
+
+        return self;
+    }
+}
+
+/*
+    Sequence* each()
+      {
+	if ( !rb_block_given_p() )
+	  rb_raise( rb_eArgError, "no block given");
+
+	VALUE r;
+	Sequence::const_iterator i = self->begin();
+	Sequence::const_iterator e = self->end();
+	for ( ; i != e; ++i )
+	  {
+	    r = swig::from< Sequence::value_type >(*i);
+	    rb_yield(r);
+	  }
+	
+	return self;
+      }
+ */
 
 // Suppress shadowing warning when adding static variables.
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;

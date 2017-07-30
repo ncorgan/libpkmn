@@ -57,6 +57,13 @@ namespace pkmn { namespace swig {
                 _pokemon->set_EV(stat, value);
             }
 
+            PKMN_INLINE bool has_key(
+                const std::string& key
+            )
+            {
+                return (_pokemon->get_EVs().count(key) > 0);
+            }
+
             PKMN_INLINE pkmn::pokemon::sptr get_internal()
             {
                 return _pokemon;
@@ -107,6 +114,13 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_IV(stat, value);
+            }
+
+            PKMN_INLINE bool has_key(
+                const std::string& key
+            )
+            {
+                return (_pokemon->get_IVs().count(key) > 0);
             }
 
             PKMN_INLINE pkmn::pokemon::sptr get_internal()
@@ -161,6 +175,13 @@ namespace pkmn { namespace swig {
                 _pokemon->set_marking(stat, value);
             }
 
+            PKMN_INLINE bool has_key(
+                const std::string& key
+            )
+            {
+                return (_pokemon->get_markings().count(key) > 0);
+            }
+
             PKMN_INLINE pkmn::pokemon::sptr get_internal()
             {
                 return _pokemon;
@@ -213,6 +234,13 @@ namespace pkmn { namespace swig {
                 _pokemon->set_ribbon(stat, value);
             }
 
+            PKMN_INLINE bool has_key(
+                const std::string& key
+            )
+            {
+                return (_pokemon->get_ribbons().count(key) > 0);
+            }
+
             PKMN_INLINE pkmn::pokemon::sptr get_internal()
             {
                 return _pokemon;
@@ -263,6 +291,13 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_contest_stat(stat, value);
+            }
+
+            PKMN_INLINE bool has_key(
+                const std::string& key
+            )
+            {
+                return (_pokemon->get_contest_stats().count(key) > 0);
             }
 
             PKMN_INLINE pkmn::pokemon::sptr get_internal()
@@ -358,6 +393,11 @@ namespace pkmn { namespace swig {
                 }
 
                 return _moves.at(index);
+            }
+
+            size_t size()
+            {
+                return _moves.size();
             }
 
         private:
@@ -694,16 +734,25 @@ namespace pkmn { namespace swig {
 
             PKMN_INLINE pokemon_marking_map& get_markings()
             {
+                // To throw pkmn::unimplemented_error if appropriate.
+                (void)_pokemon->get_markings();
+
                 return _marking_map;
             }
 
             PKMN_INLINE pokemon_ribbon_map& get_ribbons()
             {
+                // To throw pkmn::unimplemented_error if appropriate.
+                (void)_pokemon->get_ribbons();
+
                 return _ribbon_map;
             }
 
             PKMN_INLINE pokemon_contest_stat_map& get_contest_stats()
             {
+                // To throw pkmn::unimplemented_error if appropriate.
+                (void)_pokemon->get_contest_stats();
+
                 return _contest_stat_map;
             }
 

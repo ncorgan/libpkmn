@@ -21,6 +21,8 @@ class PokemonTest < MiniTest::Test
 
     @@STAT_MAX = 65536
 
+    @@RNG = Random.new
+
     @@GAME_GENERATIONS = {
         "Red" => 1,
         "Blue" => 1,
@@ -50,7 +52,7 @@ class PokemonTest < MiniTest::Test
         "Alpha Sapphire" => 6
     }
 
-    def check_initial_values(pokemon)
+    def _check_initial_values(pokemon)
         generation = @@GAME_GENERATIONS[pokemon.game]
 
         assert_equal("Standard", pokemon.form)
@@ -99,25 +101,25 @@ class PokemonTest < MiniTest::Test
             assert_equal(0, move.pp)
         end
 
-        assert(Pathname.new(pokemon.icon_filepath).exists?)
-        assert(Pathname.new(pokemon.sprite_filepath).exists?)
+        assert(Pathname.new(pokemon.icon_filepath).exist?)
+        assert(Pathname.new(pokemon.sprite_filepath).exist?)
     end
 
-    def check_initial_maps(pokemon)
+    def _check_initial_maps(pokemon)
         generation = @@GAME_GENERATIONS[pokemon.game]
 
         [pokemon.EVs, pokemon.IVs, pokemon.stats].each do |map|
             ["HP", "Attack", "Defense", "Speed"].each do |stat|
-                assert(map.has_key(stat))
+                assert(map.has_key?(stat))
             end
             if generation >= 3
-                assert(!map.has_key("Special"))
-                assert(map.has_key("Special Attack"))
-                assert(map.has_key("Special Defense"))
+                assert(!map.has_key?("Special"))
+                assert(map.has_key?("Special Attack"))
+                assert(map.has_key?("Special Defense"))
             else
-                assert(map.has_key("Special"))
-                assert(!map.has_key("Special Attack"))
-                assert(!map.has_key("Special Defense"))
+                assert(map.has_key?("Special"))
+                assert(!map.has_key?("Special Attack"))
+                assert(!map.has_key?("Special Defense"))
             end
         end
 
@@ -141,31 +143,31 @@ class PokemonTest < MiniTest::Test
 
         if generation >= 3
             ["Cool", "Beauty", "Cute", "Smart", "Tough"].each do |stat|
-                assert(pokemon.contest_stats.has_key(stat))
+                assert(pokemon.contest_stats.has_key?(stat))
                 assert_equal(0, pokemon.contest_stats[stat])
             end
             if generation == 3
-                assert(pokemon.contest_stats.has_key("Feel"))
-                assert(!pokemon.contest_stats.has_key("Sheen"))
+                assert(pokemon.contest_stats.has_key?("Feel"))
+                assert(!pokemon.contest_stats.has_key?("Sheen"))
                 assert_equal(0, pokemon.contest_stats["Feel"])
             else
-                assert(!pokemon.contest_stats.has_key("Feel"))
-                assert(pokemon.contest_stats.has_key("Sheen"))
+                assert(!pokemon.contest_stats.has_key?("Feel"))
+                assert(pokemon.contest_stats.has_key?("Sheen"))
                 assert_equal(0, pokemon.contest_stats["Sheen"])
             end
 
             ["Circle", "Triangle", "Square", "Heart"].each do |marking|
-                assert(pokemon.markings.has_key(marking))
+                assert(pokemon.markings.has_key?(marking))
                 assert(!pokemon.markings[marking])
             end
             if generation > 3
                 ["Star", "Diamond"].each do |marking|
-                    assert(pokemon.markings.has_key(marking))
+                    assert(pokemon.markings.has_key?(marking))
                     assert(!pokemon.markings[marking])
                 end
             else
-                assert(!pokemon.markings.has_key("Star"))
-                assert(!pokemon.markings.has_key("Diamond"))
+                assert(!pokemon.markings.has_key?("Star"))
+                assert(!pokemon.markings.has_key?("Diamond"))
             end
         else
             assert_raises RuntimeError do
@@ -221,10 +223,10 @@ class PokemonTest < MiniTest::Test
                 pokemon.ability = "Wonder Guard"
             end
         else
-            assert_raises ArgumentError do
+            assert_raises RuntimeError do
                 pokemon.ability
             end
-            assert_raises ArgumentError do
+            assert_raises RuntimeError do
                 pokemon.ability = "Wonder Guard"
             end
         end
@@ -266,10 +268,10 @@ class PokemonTest < MiniTest::Test
                 pokemon.friendship = 256
             end
         else
-            assert_raises IndexError do
+            assert_raises RuntimeError do
                 pokemon.friendship
             end
-            assert_raises IndexError do
+            assert_raises RuntimeError do
                 pokemon.friendship = 123
             end
         end
@@ -291,7 +293,7 @@ class PokemonTest < MiniTest::Test
         end
     end
 
-    def _test_setting_level(pokemon)
+    def _test_setting_levels(pokemon)
         generation = @@GAME_GENERATIONS[pokemon.game]
 
         assert_raises IndexError do
@@ -307,18 +309,18 @@ class PokemonTest < MiniTest::Test
 
         pokemon.experience = 123456
         assert_equal(123456, pokemon.experience)
-        assert(pokemon.database_entry.get_experience_at_level(pokemon.level-1) < experience)
-        assert(pokemon.database_entry.get_experience_at_level(pokemon.level) <= experience)
+        assert(pokemon.database_entry.get_experience_at_level(pokemon.level-1) < pokemon.experience)
+        assert(pokemon.database_entry.get_experience_at_level(pokemon.level) <= pokemon.experience)
 
         case generation
         when 1
             assert_raises IndexError do
                 pokemon.level = 1
             end
-            assert_raises ArgumentError do
+            assert_raises RuntimeError do
                 pokemon.level_met
             end
-            assert_raises ArgumentError do
+            assert_raises RuntimeError do
                 pokemon.level_met = 10
             end
         when 2
@@ -417,7 +419,7 @@ class PokemonTest < MiniTest::Test
                 pokemon.markings["Circle"]
             end
             assert_raises RuntimeError do
-                pokemon.set_marking("Circle", false)
+                pokemon.markings["Circle"] = false
             end
         end
     end
@@ -426,24 +428,24 @@ class PokemonTest < MiniTest::Test
         assert_equal(4, pokemon.moves.length)
 
         (0..3).each do |i|
-            pokemon.set_move(valid_moves[i], i)
+            pokemon.moves[i].move = valid_moves[i]
         end
 
         assert_raises IndexError do
-            pokemon.set_move(valid_moves[0], -1)
+            pokemon.moves[-1].move = valid_moves[0]
         end
         assert_raises IndexError do
-            pokemon.set_move(valid_moves[0], 4)
+            pokemon.moves[4].move = valid_moves[0]
         end
 
         (0..3).each do |i|
-            assert_equal(valid_moves[i], pokemon.moves[i].move.name)
-            assert_equal(pokemon.moves[i].move.get_pp(0), pokemon.moves[i].pp)
+            assert_equal(valid_moves[i], pokemon.moves[i].move)
+            assert_equal(PKMN::Database::MoveEntry.new(valid_moves[i], pokemon.game).get_pp(0), pokemon.moves[i].pp)
         end
 
         invalid_moves.each do |invalid_move|
             assert_raises ArgumentError do
-                pokemon.set_move(invalid_move, 0)
+                pokemon.moves[0].move = invalid_move
             end
         end
     end
@@ -451,25 +453,25 @@ class PokemonTest < MiniTest::Test
     def _test_setting_original_game(pokemon, games, invalid_games)
         assert(games.length > 0)
 
-        generation == @@GAME_GENERATIONS[pokemon.game]
+        generation = @@GAME_GENERATIONS[pokemon.game]
 
         if generation >= 3
             games.each do |game|
-                pokemon.game = game
-                assert_equal(game, pokemon.game)
+                pokemon.original_game = game
+                assert_equal(game, pokemon.original_game)
             end
 
             invalid_games.each do |game|
                 assert_raises ArgumentError do
-                    pokemon.game = game
+                    pokemon.original_game = game
                 end
             end
         else
             assert_raises RuntimeError do
-                pokemon.game
+                pokemon.original_game
             end
             assert_raises RuntimeError do
-                pokemon.game = games[0]
+                pokemon.original_game = games[0]
             end
         end
     end
@@ -479,6 +481,16 @@ class PokemonTest < MiniTest::Test
 
         if generation >= 3
             pokemon.personality = 0x7F3AB3A8
+            assert_equal(0x7F3AB3A8, pokemon.personality)
+
+            # Make sure SWIG+Ruby catches invalid inputs.
+            assert_raises RangeError do
+                pokemon.personality = -1
+            end
+            assert_raises RangeError do
+                pokemon.personality = 0xFFFFFFFF+1
+            end
+
             assert_equal(0x7F3AB3A8, pokemon.personality)
         else
             assert_raises RuntimeError do
@@ -491,6 +503,38 @@ class PokemonTest < MiniTest::Test
     end
 
     def _test_setting_stats(pokemon)
+        pokemon.EVs.each do |ev|
+            new_value = 0
+            if @@GAME_GENERATIONS[pokemon.game] >= 3
+                new_value = @@RNG.rand(@@MODERN_EV_MAX+1)
+            else
+                new_value = @@RNG.rand(@@GB_EV_MAX+1)
+            end
+
+            pokemon.EVs[ev] = new_value
+            assert_equal(new_value, pokemon.EVs[ev])
+        end
+
+        pokemon.IVs.each do |iv|
+            new_value = 0
+            if @@GAME_GENERATIONS[pokemon.game] >= 3
+                new_value = @@RNG.rand(@@MODERN_IV_MAX+1)
+            else
+                new_value = @@RNG.rand(@@GB_IV_MAX+1)
+            end
+
+            pokemon.IVs[iv] = new_value
+            assert_equal(new_value, pokemon.IVs[iv])
+        end
+
+        if @@GAME_GENERATIONS[pokemon.game] >= 3
+            pokemon.contest_stats.each do |contest_stat|
+                new_value = @@RNG.rand(256)
+
+                pokemon.contest_stats[contest_stat] = new_value
+                assert_equal(new_value, pokemon.contest_stats[contest_stat])
+            end
+        end
     end
 
     def _test_setting_trainer_info(pokemon)
@@ -524,12 +568,49 @@ class PokemonTest < MiniTest::Test
                 pokemon.trainer_gender = "Genderless"
             end
         else
-            assert_raises RuntimeError do
-                pokemon.trainer_gender
-            end
+            assert_equal("Male", pokemon.trainer_gender)
             assert_raises RuntimeError do
                 pokemon.trainer_gender = "Male"
             end
         end
+    end
+
+    def pokemon_test_common(pokemon, params)
+        _check_initial_maps(pokemon)
+        _check_initial_values(pokemon)
+        _test_setting_ability(pokemon)
+        _test_setting_ball(
+            pokemon,
+            params.valid_ball,
+            params.invalid_balls
+        )
+        _test_image_filepaths(pokemon)
+        _test_setting_friendship(pokemon)
+        _test_setting_item(
+            pokemon,
+            params.valid_items,
+            params.invalid_items
+        )
+        _test_setting_levels(pokemon)
+        _test_setting_location_met(
+            pokemon,
+            params.expected_original_location,
+            params.valid_locations,
+            params.invalid_locations
+        )
+        _test_setting_markings(pokemon)
+        _test_setting_moves(
+            pokemon,
+            params.valid_moves,
+            params.invalid_moves
+        )
+        _test_setting_original_game(
+            pokemon,
+            params.valid_original_games,
+            params.invalid_original_games
+        )
+        _test_setting_personality(pokemon)
+        _test_setting_stats(pokemon)
+        _test_setting_trainer_info(pokemon)
     end
 end

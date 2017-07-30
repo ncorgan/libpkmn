@@ -87,6 +87,10 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     EXPECT_EQ(5, EV_map.get_EV("Defense"));
     EXPECT_EQ(5, pokemon->get_EVs().at("Defense"));
 
+    // Test has_key.
+    EXPECT_TRUE(EV_map.has_key("HP"));
+    EXPECT_FALSE(EV_map.has_key("Not a key"));
+
     // Set IV through the Pokémon.
     pokemon->set_IV("Attack", 11);
     EXPECT_EQ(11, pokemon->get_IVs().at("Attack"));
@@ -96,6 +100,10 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     IV_map.set_IV("Defense", 2);
     EXPECT_EQ(2, IV_map.get_IV("Defense"));
     EXPECT_EQ(2, pokemon->get_IVs().at("Defense"));
+
+    // Test has_key.
+    EXPECT_TRUE(IV_map.has_key("HP"));
+    EXPECT_FALSE(IV_map.has_key("Not a key"));
 
     // Set marking through the Pokémon.
     pokemon->set_marking("Circle", true);
@@ -107,7 +115,11 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     EXPECT_TRUE(marking_map.get_marking("Square"));
     EXPECT_TRUE(pokemon->get_markings().at("Square"));
 
-    // Set marking through the Pokémon.
+    // Test has_key.
+    EXPECT_TRUE(marking_map.has_key("Circle"));
+    EXPECT_FALSE(marking_map.has_key("Not a key"));
+
+    // Set ribbon through the Pokémon.
     pokemon->set_ribbon("Cool", true);
     EXPECT_TRUE(pokemon->get_ribbons().at("Cool"));
     EXPECT_TRUE(ribbon_map.get_ribbon("Cool"));
@@ -116,6 +128,10 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     ribbon_map.set_ribbon("Champion", true);
     EXPECT_TRUE(ribbon_map.get_ribbon("Champion"));
     EXPECT_TRUE(pokemon->get_ribbons().at("Champion"));
+
+    // Test has_key.
+    EXPECT_TRUE(ribbon_map.has_key("Cool"));
+    EXPECT_FALSE(ribbon_map.has_key("Not a key"));
 
     // Set contest stat through the Pokémon.
     pokemon->set_contest_stat("Beauty", 10);
@@ -126,6 +142,10 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     pokemon->set_contest_stat("Tough", 123);
     EXPECT_EQ(123, contest_stat_map.get_contest_stat("Tough"));
     EXPECT_EQ(123, pokemon->get_contest_stats().at("Tough"));
+
+    // Test has_key.
+    EXPECT_TRUE(contest_stat_map.has_key("Cool"));
+    EXPECT_FALSE(contest_stat_map.has_key("Not a key"));
 }
 
 TEST(cpp_swig_wrapper_test, test_pokemon)
