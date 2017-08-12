@@ -37,8 +37,8 @@ class PokemonTestParams
             @invalid_balls
         end
 
-        def valid_items
-            @valid_items
+        def valid_item
+            @valid_item
         end
 
         def invalid_items
@@ -82,8 +82,8 @@ class PokemonTestParams
             @invalid_balls = value
         end
 
-        def valid_items=(value)
-            @valid_items = value
+        def valid_item=(value)
+            @valid_item = value
         end
 
         def invalid_items=(value)

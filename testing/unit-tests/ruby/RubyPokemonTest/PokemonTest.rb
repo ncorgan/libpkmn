@@ -66,7 +66,7 @@ class PokemonTest < MiniTest::Test
         assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_NAME, pokemon.trainer_name)
 
         if generation >= 2
-            assert_equal("None", pokemon.held_item.name)
+            assert_equal("None", pokemon.held_item)
         end
 
         assert_equal("Male", pokemon.trainer_gender)
@@ -108,7 +108,7 @@ class PokemonTest < MiniTest::Test
     def _check_initial_maps(pokemon)
         generation = @@GAME_GENERATIONS[pokemon.game]
 
-        [pokemon.EVs, pokemon.IVs, pokemon.stats].each do |map|
+        [pokemon.EVs, pokemon.IVs].each do |map|
             ["HP", "Attack", "Defense", "Speed"].each do |stat|
                 assert(map.has_key?(stat))
             end
@@ -121,6 +121,19 @@ class PokemonTest < MiniTest::Test
                 assert(!map.has_key?("Special Attack"))
                 assert(!map.has_key?("Special Defense"))
             end
+        end
+
+        ["HP", "Attack", "Defense", "Speed"].each do |stat|
+            assert(pokemon.stats.has_key?(stat))
+        end
+        if generation >= 2
+            assert(!pokemon.stats.has_key?("Special"))
+            assert(pokemon.stats.has_key?("Special Attack"))
+            assert(pokemon.stats.has_key?("Special Defense"))
+        else
+            assert(pokemon.stats.has_key?("Special"))
+            assert(!pokemon.stats.has_key?("Special Attack"))
+            assert(!pokemon.stats.has_key?("Special Defense"))
         end
 
         pokemon.EVs.each do |stat|
@@ -281,12 +294,12 @@ class PokemonTest < MiniTest::Test
         generation = @@GAME_GENERATIONS[pokemon.game]
 
         if generation >= 2
-            pokemon.set_held_item(item_name)
-            assert_equal(item_name, pokemon.get_held_item().name)
+            pokemon.held_item = item_name
+            assert_equal(item_name, pokemon.held_item)
 
             invalid_item_names.each do |invalid_item_name|
                 assert_raises ArgumentError do
-                    pokemon.set_held_item(invalid_item_name)
+                    pokemon.held_item = invalid_item_name
                 end
             end
         else
@@ -371,10 +384,10 @@ class PokemonTest < MiniTest::Test
                 pokemon.set_location_met(valid_locations[0], false)
             end
         when 2..3
-            assert_equals(expected_original_location, pokemon.get_location_met(false))
+            assert_equal(expected_original_location, pokemon.get_location_met(false))
             valid_locations.each do |location|
                 pokemon.set_location_met(location, false)
-                assert_equals(location, pokemon.get_location_met(false))
+                assert_equal(location, pokemon.get_location_met(false))
             end
             invalid_locations.each do |location|
                 assert_raises ArgumentError do
@@ -390,10 +403,10 @@ class PokemonTest < MiniTest::Test
             end
         else
             [true, false].each do |as_egg|
-                assert_equals(expected_original_location, pokemon.get_location_met(as_egg))
+                assert_equal(expected_original_location, pokemon.get_location_met(as_egg))
                 valid_locations.each do |location|
                     pokemon.set_location_met(location, as_egg)
-                    assert_equals(location, pokemon.get_location_met(as_egg))
+                    assert_equal(location, pokemon.get_location_met(as_egg))
                 end
                 invalid_locations.each do |location|
                     assert_raises ArgumentError do
@@ -588,7 +601,7 @@ class PokemonTest < MiniTest::Test
         _test_setting_friendship(pokemon)
         _test_setting_item(
             pokemon,
-            params.valid_items,
+            params.valid_item,
             params.invalid_items
         )
         _test_setting_levels(pokemon)

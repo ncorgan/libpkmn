@@ -22,8 +22,8 @@ class Gen1PokemonTest < PokemonTest
         test_params = PokemonTestParams.new
         test_params.valid_ball = "Great Ball"
         test_params.invalid_balls = ["Great Ball"]
-        test_params.valid_ball = "Potion"
-        test_params.invalid_balls = ["Potion"]
+        test_params.valid_item = "Potion"
+        test_params.invalid_items = ["Potion"]
         test_params.expected_original_location = "Special"
         test_params.valid_locations = ["Route 1"]
         test_params.invalid_locations = ["Route 1"]
