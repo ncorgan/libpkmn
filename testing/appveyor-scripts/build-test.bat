@@ -4,6 +4,8 @@
 :: Set variables
 set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
+set "INCLUDE=C:\Ruby%RUBY_VERSION%\include;%INCLUDE%"
+set "LIB=C:\Ruby%RUBY_VERSION%\lib;%LIB%"
 set "PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%"
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
