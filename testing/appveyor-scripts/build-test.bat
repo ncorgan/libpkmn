@@ -4,8 +4,6 @@
 :: Set variables
 set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
 set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
-set "INCLUDE=C:\Ruby%RUBY_VERSION%\include;%INCLUDE%"
-set "LIB=C:\Ruby%RUBY_VERSION%\lib;%LIB%"
 set "PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%"
 if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
@@ -33,6 +31,9 @@ if not !ERRORLEVEL!==0 goto fail
 !PYTHON_PIP_EXE! install ply CppHeaderParser nose_parameterized
 if not !ERRORLEVEL!==0 goto fail
 
+"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['rubyhdrdir'])"
+"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['rubylibdir'])"
+"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['libdir'])"
 cmake -G %CMAKE_GENERATOR_NAME% ^
     -DAPPVEYOR=TRUE ^
     -DCMAKE_BUILD_TYPE=Release ^
