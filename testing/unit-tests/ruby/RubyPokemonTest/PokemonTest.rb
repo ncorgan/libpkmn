@@ -85,7 +85,11 @@ class PokemonTest < MiniTest::Test
 
         if generation >= 3
             assert_equal("Premier Ball", pokemon.ball)
-            assert_equal(pokemon.game, pokemon.original_game)
+            if pokemon.game == "Colosseum" or pokemon.game == "XD"
+                assert_equal("Colosseum/XD", pokemon.original_game)
+            else
+                assert_equal(pokemon.game, pokemon.original_game)
+            end
         end
 
         assert_equal(pokemon.database_entry.get_experience_at_level(30), pokemon.experience)
@@ -422,9 +426,9 @@ class PokemonTest < MiniTest::Test
 
         if generation >= 3
             pokemon.markings.each do |marking|
-                pokemon.set_marking(marking, false)
+                pokemon.markings[marking] = false
                 assert(!pokemon.markings[marking])
-                pokemon.set_marking(marking, true)
+                pokemon.markings[marking] = true
                 assert(pokemon.markings[marking])
             end
         else
@@ -471,7 +475,11 @@ class PokemonTest < MiniTest::Test
         if generation >= 3
             games.each do |game|
                 pokemon.original_game = game
-                assert_equal(game, pokemon.original_game)
+                if game.include? "Colosseum" or game.include? "XD"
+                    assert_equal("Colosseum/XD", pokemon.original_game)
+                else
+                    assert_equal(game, pokemon.original_game)
+                end
             end
 
             invalid_games.each do |game|

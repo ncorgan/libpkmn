@@ -31,6 +31,12 @@ class UnownTest < PokemonTest
             assert(Pathname.new(unown.icon_filepath).exist?)
             assert(Pathname.new(unown.sprite_filepath).exist?)
         end
+        
+        # Make sure setting the form after the Unown exists sets the form.
+        unown_forms.each do |form|
+            unown.form = form
+            assert_equal(form, unown.form)
+        end
 
         # Make sure setting IVs properly changes the form.
         unown.IVs["Attack"] = 10
@@ -51,6 +57,12 @@ class UnownTest < PokemonTest
             assert(Pathname.new(unown.icon_filepath).exist?)
             assert(Pathname.new(unown.sprite_filepath).exist?)
         end
+        
+        # Make sure setting the form after the Unown exists sets the form.
+        unown_forms.each do |form|
+            unown.form = form
+            assert_equal(form, unown.form)
+        end
 
         # Make sure setting the personality properly sets the form.
         unown.personality = 0x4C07DE71
@@ -66,7 +78,7 @@ class UnownTest < PokemonTest
     end
 
     GEN2_PARAMS = ["Gold", "Silver", "Crystal"]
-    GEN3_PARAMS = ["Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"]
+    GEN3_PARAMS = ["Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"]
 
     GEN2_PARAMS.each do |game|
         define_method("test_gen2_unown_#{game}") do
