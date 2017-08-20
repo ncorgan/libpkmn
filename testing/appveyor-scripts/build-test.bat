@@ -9,6 +9,7 @@ if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
+    set RUBY_LIBRARY="C:\Ruby%RUBY_VERSION%\lib\libmsvcrt-ruby%RUBY_VERSION%0.dll.a"
     set "PATH=C:\Program Files (x86)\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files (x86)\PKMN\lib;%LIB%"
     set "INCLUDE=C:\Program Files (x86)\PKMN\include;%INCLUDE%"
@@ -16,6 +17,7 @@ if "%BITNESS%"=="32" (
     set CMAKE_GENERATOR_NAME="Visual Studio 14 2015 Win64"
     set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
+    set RUBY_LIBRARY="C:\Ruby%RUBY_VERSION%\lib\libx64-msvcrt-ruby%RUBY_VERSION%0.dll.a"
     set "PATH=C:\Program Files\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files\PKMN\lib;%LIB%"
     set "INCLUDE=C:\Program Files\PKMN\include;%INCLUDE%"
@@ -31,15 +33,13 @@ if not !ERRORLEVEL!==0 goto fail
 !PYTHON_PIP_EXE! install ply CppHeaderParser nose_parameterized
 if not !ERRORLEVEL!==0 goto fail
 
-"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['rubyhdrdir'])"
-"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['rubylibdir'])"
-"C:\Ruby%RUBY_VERSION%\bin\ruby.exe" -r rbconfig -e "puts(RbConfig::CONFIG['libdir'])"
 cmake -G %CMAKE_GENERATOR_NAME% ^
     -DAPPVEYOR=TRUE ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DDESIRED_QT_VERSION=5 ^
     -DBOOST_ROOT="%BOOST_ROOT%" ^
     -DBoost_LIBRARY_DIRS=%BOOST_LIBRARY_DIR% ^
+    -DRUBY_LIBRARY=%RUBY_LIBRARY% ^
     -DPYTHON_EXECUTABLE=!PYTHON_EXE! ^
     ..\..
 if not !ERRORLEVEL!==0 goto fail
