@@ -249,7 +249,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_party)
     EXPECT_EQ("FireRed", swig_pokemon_party.get_game());
     EXPECT_EQ(0, swig_pokemon_party.get_num_pokemon());
 
-    for(size_t i = 0; i < 6; ++i)
+    for(int i = 0; i < 6; ++i)
     {
         EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
     }
@@ -276,7 +276,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_box)
 
     int capacity = swig_pokemon_box.get_capacity();
 
-    for(size_t i = 0; i < capacity; ++i)
+    for(int i = 0; i < capacity; ++i)
     {
         EXPECT_EQ("None", swig_pokemon_box.get_pokemon(i).get_species());
     }
