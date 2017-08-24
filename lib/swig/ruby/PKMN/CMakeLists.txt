@@ -40,3 +40,10 @@ SWIG_BUILD_RUBY_MODULE(Calculations TRUE)
 SWIG_BUILD_RUBY_MODULE(Database     TRUE)
 SWIG_BUILD_RUBY_MODULE(Paths        TRUE)
 SWIG_BUILD_RUBY_MODULE(STL          TRUE)
+
+#
+# The PKMN module's SWIG file needs to have a different filename
+# because pkmn.i is already in use, and Windows uses a case-insensitive
+# filesystem.
+#
+SET_TARGET_PROPERTIES(${SWIG_MODULE_PKMNRuby_REAL_NAME} PROPERTIES OUTPUT_NAME "PKMN")
