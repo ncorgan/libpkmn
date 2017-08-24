@@ -16,6 +16,58 @@ require "os"
 require "pathname"
 
 class Gen3PokemonTest < PokemonTest
+    @@CONTEST_TYPES = ["Cool", "Beauty", "Cute", "Smart", "Tough"]
+    @@CONTEST_LEVELS = ["Super", "Hyper", "Master"]
+    @@RIBBONS = ["Champion", "Winning", "Victory", "Artist",
+                 "Effort", "Marine", "Land", "Sky",
+                 "Country", "National", "Earth", "World"]
+
+    @@RNG = Random.new
+
+    def _check_initial_ribbons_map(pokemon)
+        @@CONTEST_TYPES.each do |contest_type|
+            assert(pokemon.ribbons.has_key?(contest_type))
+
+            @@CONTEST_LEVELS.each do |contest_level|
+                ribbon_name = contest_type + " " + contest_level
+                assert(pokemon.ribbons.has_key?(ribbon_name))
+            end
+        end
+
+        @@RIBBONS.each do |ribbon|
+            assert(pokemon.ribbons.has_key?(ribbon))
+        end
+    end
+
+    def _test_contest_ribbons(pokemon)
+        @@CONTEST_TYPES.each do |contest_type|
+            ribbon_name = contest_type
+            super_ribbon_name = contest_type + " Super"
+            hyper_ribbon_name = contest_type + " Hyper"
+            master_ribbon_name = contest_type + " Master"
+
+            pokemon.ribbons[hyper_ribbon_name] = true
+            assert(pokemon.ribbons[ribbon_name])
+            assert(pokemon.ribbons[super_ribbon_name])
+            assert(pokemon.ribbons[hyper_ribbon_name])
+            assert(!pokemon.ribbons[master_ribbon_name])
+
+            pokemon.ribbons[super_ribbon_name] = false
+            assert(pokemon.ribbons[ribbon_name])
+            assert(!pokemon.ribbons[super_ribbon_name])
+            assert(!pokemon.ribbons[hyper_ribbon_name])
+            assert(!pokemon.ribbons[master_ribbon_name])
+        end
+    end
+
+    def _test_ribbons(pokemon)
+        @@RIBBONS.each do |ribbon|
+            random_bool = (@@RNG.rand(100) > 50)
+            pokemon.ribbons[ribbon] = random_bool
+            assert_equal(random_bool, pokemon.ribbons[ribbon])
+        end
+    end
+
     def _gen3_test_common(pokemon)
         # Gender and personality are tied, so make sure they affect each other.
         pokemon.gender = "Female"
@@ -33,6 +85,10 @@ class Gen3PokemonTest < PokemonTest
         assert(!pokemon.is_shiny?)
         pokemon.is_shiny = true
         assert(pokemon.is_shiny?)
+
+        _check_initial_ribbons_map(pokemon)
+        _test_contest_ribbons(pokemon)
+        _test_ribbons(pokemon)
     end
 
     def _gba_pokemon_test(game_params)
