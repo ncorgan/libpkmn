@@ -23,15 +23,15 @@
 
 %extend pkmn::swig::pokemon_pc
 {
-    unsigned int __len__()
+    int __len__()
     {
-        return (unsigned int)self->get_num_boxes();
+        return self->get_num_boxes();
     }
 
     pkmn::swig::pokemon_box __getitem__(
-        unsigned int index
+        int index
     )
     {
-        return self->get_box((int)index);
+        return self->get_box(index);
     }
 }

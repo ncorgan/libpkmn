@@ -377,7 +377,7 @@ namespace pkmn { namespace swig {
                 _init();
             }
 
-            pokemon_move_slot_wrapper& get_move_slot(
+            pokemon_move_slot_wrapper get_move_slot(
                 int index
             )
             {

@@ -114,6 +114,15 @@
                 return "bool";
             }
         };
+
+        template <> struct traits<pkmn::swig::pokemon_move_slot_wrapper>
+        {
+            typedef pointer_category category;
+            static const char* type_name()
+            {
+                return "pkmn::swig::pokemon_move_slot_wrapper";
+            }
+        };
     }
 %}
 
@@ -187,45 +196,18 @@ EXTEND_POKEMON_MAP(contest_stat, int);
     pkmn::swig::pokemon_move_slots_wrapper* each()
     {
         if(!rb_block_given_p())
-        {
             rb_raise(rb_eArgError, "no block given");
 
-            VALUE r;
-            for(int i = 0; i < 4; ++i)
-            {
-                // This is...fragile.
-                r = SWIG_NewPointerObj(
-                        SWIG_as_voidptr(&(self->get_move_slot(i))),
-                        SWIGTYPE_p_pkmn__swig__pokemon_move_slot_wrapper,
-                        0
-                    );
-
-                rb_yield(r);
-            }
+        VALUE r;
+        for(int i = 0; i < 4; ++i)
+        {
+            r = swig::from<pkmn::swig::pokemon_move_slot_wrapper>(self->get_move_slot(i));
+            rb_yield(r);
         }
 
         return self;
     }
 }
-
-/*
-    Sequence* each()
-      {
-	if ( !rb_block_given_p() )
-	  rb_raise( rb_eArgError, "no block given");
-
-	VALUE r;
-	Sequence::const_iterator i = self->begin();
-	Sequence::const_iterator e = self->end();
-	for ( ; i != e; ++i )
-	  {
-	    r = swig::from< Sequence::value_type >(*i);
-	    rb_yield(r);
-	  }
-	
-	return self;
-      }
- */
 
 // Suppress shadowing warning when adding static variables.
 %warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;

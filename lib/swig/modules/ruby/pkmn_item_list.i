@@ -32,11 +32,11 @@
         return new pkmn::shared_ptr<pkmn::item_list>(pkmn::item_list::make(name, game));
     }
 
-    unsigned int __len__() {
+    int __len__() {
         return self->get()->get_capacity();
     }
 
-    pkmn::item_slot __getitem__(unsigned int index) {
+    pkmn::item_slot __getitem__(int index) {
         return self->get()->at(index);
     }
 

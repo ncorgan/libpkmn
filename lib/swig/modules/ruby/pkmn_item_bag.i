@@ -28,8 +28,8 @@
         return new pkmn::shared_ptr<pkmn::item_bag>(pkmn::item_bag::make(game));
     }
 
-    unsigned int __len__() {
-        return int(self->get()->get_pockets().size());
+    int __len__() {
+        return self->get()->get_pockets().size();
     }
 
     pkmn::shared_ptr<pkmn::item_list> __getitem__(const std::string& index) {
