@@ -101,7 +101,7 @@ class PokemonTest < MiniTest::Test
 
         assert_equal(4, pokemon.moves.length)
         pokemon.moves.each do |move|
-            assert_equal("None", move.move.name)
+            assert_equal("None", move.move)
             assert_equal(0, move.pp)
         end
 
