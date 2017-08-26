@@ -21,8 +21,16 @@ class RubyBuildInfoTest < Test::Unit::TestCase
         assert(PKMN::BuildInfo::PKSAV_VERSION.length > 0)
     end
 
+    def test_qt_version
+        assert(PKMN::BuildInfo::QT_VERSION.length > 0)
+    end
+
     def test_sqlite3_version
         assert(PKMN::BuildInfo::SQLITE3_VERSION.length > 0)
+    end
+
+    def test_sqlitecpp_version
+        assert(PKMN::BuildInfo::SQLITECPP_VERSION.length > 0)
     end
 
     def test_swig_version
