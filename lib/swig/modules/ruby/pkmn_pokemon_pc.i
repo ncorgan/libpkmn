@@ -34,4 +34,21 @@
     {
         return self->get_box(index);
     }
+
+    pkmn::swig::pokemon_pc* each()
+    {
+        if ( !rb_block_given_p() )
+            rb_raise( rb_eArgError, "no block given");
+
+        const std::vector<pkmn::swig::pokemon_box>& pokemon_box_list = self->as_vector();
+
+        VALUE r;
+        for(auto iter = pokemon_box_list.begin(); iter != pokemon_box_list.end(); ++iter)
+        {
+            r = swig::from<std::vector<pkmn::swig::pokemon_box>::value_type>(*iter);
+            rb_yield(r);
+        }
+
+        return self;
+    }
 }

@@ -13,6 +13,7 @@ SET(ruby_tests
     RubyPathsTest
     RubyPokemonTest
     RubyPokemonPartyTest
+    RubyPokemonPCTest
 )
 
 FOREACH(test ${ruby_tests})
