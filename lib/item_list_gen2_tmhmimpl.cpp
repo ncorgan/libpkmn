@@ -9,9 +9,11 @@
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 
 BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
@@ -43,45 +45,30 @@ namespace pkmn {
         void* ptr
     ): item_list_impl(item_list_id, game_id)
     {
-        if(ptr) {
+        char name_buffer[16] = {0};
+        for(int i = 0; i < 50; ++i)
+        {
+            std::snprintf(name_buffer, sizeof(name_buffer), "TM%02d", i+1);
+            _item_slots[i].item = name_buffer;
+        }
+        for(int i = 0; i < 7; ++i)
+        {
+            std::snprintf(name_buffer, sizeof(name_buffer), "HM%02d", i+1);
+            _item_slots[50+i].item = name_buffer;
+        }
+
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
 
-            for(int i = 0; i < 4; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-            }
-
             _from_native();
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new pksav_gen2_tmhm_pocket_t);
             std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
-
-            for(int i = 0; i < 5; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-                _item_slots[50+i].amount = 0;
-            }
         }
     }
 

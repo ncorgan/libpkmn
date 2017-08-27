@@ -302,21 +302,21 @@ class gcn_items_test(items_tests):
         cologne_pocket.remove("Excite Scent", 3)
         cologne_pocket.remove("Vivid Scent", 1)
 
-        self.assertEquals("Joy Scent", cologne_pocket[0].item.get_name())
+        self.assertEquals("Joy Scent", cologne_pocket[0].item)
         self.assertEquals(3, cologne_pocket[0].amount)
-        self.assertEquals("Vivid Scent", cologne_pocket[1].item.get_name())
+        self.assertEquals("Vivid Scent", cologne_pocket[1].item)
         self.assertEquals(2, cologne_pocket[1].amount)
-        self.assertEquals("None", cologne_pocket[2].item.get_name())
+        self.assertEquals("None", cologne_pocket[2].item)
         self.assertEquals(0, cologne_pocket[2].amount)
 
         cologne_pocket.remove("Joy Scent", 3)
         cologne_pocket.remove("Vivid Scent", 2)
 
-        self.assertEquals("None", cologne_pocket[0].item.get_name())
+        self.assertEquals("None", cologne_pocket[0].item)
         self.assertEquals(0, cologne_pocket[0].amount)
-        self.assertEquals("None", cologne_pocket[1].item.get_name())
+        self.assertEquals("None", cologne_pocket[1].item)
         self.assertEquals(0, cologne_pocket[1].amount)
-        self.assertEquals("None", cologne_pocket[2].item.get_name())
+        self.assertEquals("None", cologne_pocket[2].item)
         self.assertEquals(0, cologne_pocket[2].amount)
 
         valid_items = cologne_pocket.get_valid_items()
@@ -436,95 +436,95 @@ class gcn_items_test(items_tests):
         for item in items:
             bag.add(item, 5)
 
-        self.assertEqual(bag["Items"][0].item.get_name(), "Potion")
+        self.assertEqual(bag["Items"][0].item, "Potion")
         self.assertEqual(bag["Items"][0].amount, 5)
-        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].item, "None")
         self.assertEqual(bag["Items"][1].amount, 0)
 
         key_item = "Ein File S" if colosseum else "Gonzap's Key"
-        self.assertEqual(bag["Key Items"][0].item.get_name(), key_item)
+        self.assertEqual(bag["Key Items"][0].item, key_item)
         self.assertEqual(bag["Key Items"][0].amount, 5)
-        self.assertEqual(bag["Key Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][1].item, "None")
         self.assertEqual(bag["Key Items"][1].amount, 0)
 
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item.get_name(), "Great Ball")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, "Great Ball")
         self.assertEqual(bag[u"Pok\u00e9 Balls"][0].amount, 5)
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item.get_name(), "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, "None")
         self.assertEqual(bag[u"Pok\u00e9 Balls"][1].amount, 0)
 
-        self.assertEqual(bag["TMs"][0].item.get_name(), "TM01")
+        self.assertEqual(bag["TMs"][0].item, "TM01")
         self.assertEqual(bag["TMs"][0].amount, 5)
-        self.assertEqual(bag["TMs"][1].item.get_name(), "TM02")
+        self.assertEqual(bag["TMs"][1].item, "TM02")
         self.assertEqual(bag["TMs"][1].amount, 5)
-        self.assertEqual(bag["TMs"][2].item.get_name(), "None")
+        self.assertEqual(bag["TMs"][2].item, "None")
         self.assertEqual(bag["TMs"][2].amount, 0)
 
-        self.assertEqual(bag["Berries"][0].item.get_name(), "Aspear Berry")
+        self.assertEqual(bag["Berries"][0].item, "Aspear Berry")
         self.assertEqual(bag["Berries"][0].amount, 5)
-        self.assertEqual(bag["Berries"][1].item.get_name(), "None")
+        self.assertEqual(bag["Berries"][1].item, "None")
         self.assertEqual(bag["Berries"][1].amount, 0)
 
-        self.assertEqual(bag["Colognes"][0].item.get_name(), "Joy Scent")
+        self.assertEqual(bag["Colognes"][0].item, "Joy Scent")
         self.assertEqual(bag["Colognes"][0].amount, 5)
         if colosseum:
-            self.assertEqual(bag["Colognes"][1].item.get_name(), "Excite Scent")
+            self.assertEqual(bag["Colognes"][1].item, "Excite Scent")
             self.assertEqual(bag["Colognes"][1].amount, 5)
-            self.assertEqual(bag["Colognes"][2].item.get_name(), "None")
+            self.assertEqual(bag["Colognes"][2].item, "None")
             self.assertEqual(bag["Colognes"][2].amount, 0)
         else:
-            self.assertEqual(bag["Colognes"][1].item.get_name(), "None")
+            self.assertEqual(bag["Colognes"][1].item, "None")
             self.assertEqual(bag["Colognes"][1].amount, 0)
 
-            self.assertEqual(bag["Battle CDs"][0].item.get_name(), "Battle CD 01")
+            self.assertEqual(bag["Battle CDs"][0].item, "Battle CD 01")
             self.assertEqual(bag["Battle CDs"][0].amount, 5)
-            self.assertEqual(bag["Battle CDs"][1].item.get_name(), "None")
+            self.assertEqual(bag["Battle CDs"][1].item, "None")
             self.assertEqual(bag["Battle CDs"][1].amount, 0)
 
         # Make sure removing items through the bag removes from the proper pocket.
         for item in items:
             bag.remove(item, 5)
 
-        self.assertEqual(bag["Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Items"][0].item, "None")
         self.assertEqual(bag["Items"][0].amount, 0)
-        self.assertEqual(bag["Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Items"][1].item, "None")
         self.assertEqual(bag["Items"][1].amount, 0)
 
-        self.assertEqual(bag["Key Items"][0].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][0].item, "None")
         self.assertEqual(bag["Key Items"][0].amount, 0)
-        self.assertEqual(bag["Key Items"][1].item.get_name(), "None")
+        self.assertEqual(bag["Key Items"][1].item, "None")
         self.assertEqual(bag["Key Items"][1].amount, 0)
 
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item.get_name(), "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][0].item, "None")
         self.assertEqual(bag[u"Pok\u00e9 Balls"][0].amount, 0)
-        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item.get_name(), "None")
+        self.assertEqual(bag[u"Pok\u00e9 Balls"][1].item, "None")
         self.assertEqual(bag[u"Pok\u00e9 Balls"][1].amount, 0)
 
-        self.assertEqual(bag["TMs"][0].item.get_name(), "None")
+        self.assertEqual(bag["TMs"][0].item, "None")
         self.assertEqual(bag["TMs"][0].amount, 0)
-        self.assertEqual(bag["TMs"][1].item.get_name(), "None")
+        self.assertEqual(bag["TMs"][1].item, "None")
         self.assertEqual(bag["TMs"][1].amount, 0)
-        self.assertEqual(bag["TMs"][2].item.get_name(), "None")
+        self.assertEqual(bag["TMs"][2].item, "None")
         self.assertEqual(bag["TMs"][2].amount, 0)
 
-        self.assertEqual(bag["Berries"][0].item.get_name(), "None")
+        self.assertEqual(bag["Berries"][0].item, "None")
         self.assertEqual(bag["Berries"][0].amount, 0)
-        self.assertEqual(bag["Berries"][1].item.get_name(), "None")
+        self.assertEqual(bag["Berries"][1].item, "None")
         self.assertEqual(bag["Berries"][1].amount, 0)
 
-        self.assertEqual(bag["Colognes"][0].item.get_name(), "None")
+        self.assertEqual(bag["Colognes"][0].item, "None")
         self.assertEqual(bag["Colognes"][0].amount, 0)
         if colosseum:
-            self.assertEqual(bag["Colognes"][1].item.get_name(), "None")
+            self.assertEqual(bag["Colognes"][1].item, "None")
             self.assertEqual(bag["Colognes"][1].amount, 0)
-            self.assertEqual(bag["Colognes"][2].item.get_name(), "None")
+            self.assertEqual(bag["Colognes"][2].item, "None")
             self.assertEqual(bag["Colognes"][2].amount, 0)
         else:
-            self.assertEqual(bag["Colognes"][1].item.get_name(), "None")
+            self.assertEqual(bag["Colognes"][1].item, "None")
             self.assertEqual(bag["Colognes"][1].amount, 0)
 
-            self.assertEqual(bag["Battle CDs"][0].item.get_name(), "None")
+            self.assertEqual(bag["Battle CDs"][0].item, "None")
             self.assertEqual(bag["Battle CDs"][0].amount, 0)
-            self.assertEqual(bag["Battle CDs"][1].item.get_name(), "None")
+            self.assertEqual(bag["Battle CDs"][1].item, "None")
             self.assertEqual(bag["Battle CDs"][1].amount, 0)
 
     #

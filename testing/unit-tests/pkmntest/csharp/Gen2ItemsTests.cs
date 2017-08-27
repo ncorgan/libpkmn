@@ -175,12 +175,12 @@ public class Gen2ItemsTest {
         Assert.AreEqual(tmhmPocket.AsList().Count, 57);
         for(int i = 1; i <= 50; ++i) {
             string name = String.Format("TM{0:D2}", i);
-            Assert.AreEqual(tmhmPocket[i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[i-1].Item, name);
             Assert.AreEqual(tmhmPocket[i-1].Amount, 0);
         }
         for(int i = 1; i <= 7; ++i) {
             string name = String.Format("HM{0:D2}", i);
-            Assert.AreEqual(tmhmPocket[50+i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[50+i-1].Item, name);
             Assert.AreEqual(tmhmPocket[50+i-1].Amount, 0);
         }
 
@@ -207,14 +207,14 @@ public class Gen2ItemsTest {
             string name = String.Format("TM{0:D2}", i);
             tmhmPocket.Add(name, 50);
             Assert.AreEqual(tmhmPocket.NumItems, i);
-            Assert.AreEqual(tmhmPocket[i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[i-1].Item, name);
             Assert.AreEqual(tmhmPocket[i-1].Amount, 50);
         }
         for(int i = 50; i >= 1; --i) {
             string name = String.Format("TM{0:D2}", i);
             tmhmPocket.Remove(name, 50);
             Assert.AreEqual(tmhmPocket.NumItems, i-1);
-            Assert.AreEqual(tmhmPocket[i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[i-1].Item, name);
             Assert.AreEqual(tmhmPocket[i-1].Amount, 0);
         }
 
@@ -222,14 +222,14 @@ public class Gen2ItemsTest {
             string name = String.Format("HM{0:D2}", i);
             tmhmPocket.Add(name, 1);
             Assert.AreEqual(tmhmPocket.NumItems, i);
-            Assert.AreEqual(tmhmPocket[50+i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[50+i-1].Item, name);
             Assert.AreEqual(tmhmPocket[50+i-1].Amount, 1);
         }
         for(int i = 7; i >= 1; --i) {
             string name = String.Format("HM{0:D2}", i);
             tmhmPocket.Remove(name, 1);
             Assert.AreEqual(tmhmPocket.NumItems, i-1);
-            Assert.AreEqual(tmhmPocket[50+i-1].Item.Name, name);
+            Assert.AreEqual(tmhmPocket[50+i-1].Item, name);
             Assert.AreEqual(tmhmPocket[50+i-1].Amount, 0);
         }
 
@@ -310,34 +310,34 @@ public class Gen2ItemsTest {
             itemBag.Add(itemName, 5);
         }
 
-        Assert.AreEqual(itemPockets["Items"][0].Item.Name, "Potion");
+        Assert.AreEqual(itemPockets["Items"][0].Item, "Potion");
         Assert.AreEqual(itemPockets["Items"][0].Amount, 5);
-        Assert.AreEqual(itemPockets["Items"][1].Item.Name, "Berry");
+        Assert.AreEqual(itemPockets["Items"][1].Item, "Berry");
         Assert.AreEqual(itemPockets["Items"][1].Amount, 5);
-        Assert.AreEqual(itemPockets["Items"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Items"][2].Item, "None");
         Assert.AreEqual(itemPockets["Items"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["KeyItems"][0].Item.Name, "Bicycle");
+        Assert.AreEqual(itemPockets["KeyItems"][0].Item, "Bicycle");
         Assert.AreEqual(itemPockets["KeyItems"][0].Amount, 5);
-        Assert.AreEqual(itemPockets["KeyItems"][1].Item.Name, "SquirtBottle");
+        Assert.AreEqual(itemPockets["KeyItems"][1].Item, "SquirtBottle");
         Assert.AreEqual(itemPockets["KeyItems"][1].Amount, 5);
-        Assert.AreEqual(itemPockets["KeyItems"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["KeyItems"][2].Item, "None");
         Assert.AreEqual(itemPockets["KeyItems"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["Balls"][0].Item.Name, "Great Ball");
+        Assert.AreEqual(itemPockets["Balls"][0].Item, "Great Ball");
         Assert.AreEqual(itemPockets["Balls"][0].Amount, 5);
-        Assert.AreEqual(itemPockets["Balls"][1].Item.Name, "Friend Ball");
+        Assert.AreEqual(itemPockets["Balls"][1].Item, "Friend Ball");
         Assert.AreEqual(itemPockets["Balls"][1].Amount, 5);
-        Assert.AreEqual(itemPockets["Balls"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Balls"][2].Item, "None");
         Assert.AreEqual(itemPockets["Balls"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["TM/HM"][0].Item.Name, "TM01");
+        Assert.AreEqual(itemPockets["TM/HM"][0].Item, "TM01");
         Assert.AreEqual(itemPockets["TM/HM"][0].Amount, 0);
-        Assert.AreEqual(itemPockets["TM/HM"][1].Item.Name, "TM02");
+        Assert.AreEqual(itemPockets["TM/HM"][1].Item, "TM02");
         Assert.AreEqual(itemPockets["TM/HM"][1].Amount, 0);
-        Assert.AreEqual(itemPockets["TM/HM"][27].Item.Name, "TM28");
+        Assert.AreEqual(itemPockets["TM/HM"][27].Item, "TM28");
         Assert.AreEqual(itemPockets["TM/HM"][27].Amount, 5);
-        Assert.AreEqual(itemPockets["TM/HM"][50].Item.Name, "HM01");
+        Assert.AreEqual(itemPockets["TM/HM"][50].Item, "HM01");
         Assert.AreEqual(itemPockets["TM/HM"][50].Amount, 5);
 
         // Make sure removing items through the bag removes from the proper pockets.
@@ -345,46 +345,46 @@ public class Gen2ItemsTest {
             itemBag.Remove(itemName, 5);
         }
 
-        Assert.AreEqual(itemPockets["Items"][0].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Items"][0].Item, "None");
         Assert.AreEqual(itemPockets["Items"][0].Amount, 0);
-        Assert.AreEqual(itemPockets["Items"][1].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Items"][1].Item, "None");
         Assert.AreEqual(itemPockets["Items"][1].Amount, 0);
-        Assert.AreEqual(itemPockets["Items"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Items"][2].Item, "None");
         Assert.AreEqual(itemPockets["Items"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["KeyItems"][0].Item.Name, "None");
+        Assert.AreEqual(itemPockets["KeyItems"][0].Item, "None");
         Assert.AreEqual(itemPockets["KeyItems"][0].Amount, 0);
-        Assert.AreEqual(itemPockets["KeyItems"][1].Item.Name, "None");
+        Assert.AreEqual(itemPockets["KeyItems"][1].Item, "None");
         Assert.AreEqual(itemPockets["KeyItems"][1].Amount, 0);
-        Assert.AreEqual(itemPockets["KeyItems"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["KeyItems"][2].Item, "None");
         Assert.AreEqual(itemPockets["KeyItems"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["Balls"][0].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Balls"][0].Item, "None");
         Assert.AreEqual(itemPockets["Balls"][0].Amount, 0);
-        Assert.AreEqual(itemPockets["Balls"][1].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Balls"][1].Item, "None");
         Assert.AreEqual(itemPockets["Balls"][1].Amount, 0);
-        Assert.AreEqual(itemPockets["Balls"][2].Item.Name, "None");
+        Assert.AreEqual(itemPockets["Balls"][2].Item, "None");
         Assert.AreEqual(itemPockets["Balls"][2].Amount, 0);
 
-        Assert.AreEqual(itemPockets["TM/HM"][0].Item.Name, "TM01");
+        Assert.AreEqual(itemPockets["TM/HM"][0].Item, "TM01");
         Assert.AreEqual(itemPockets["TM/HM"][0].Amount, 0);
-        Assert.AreEqual(itemPockets["TM/HM"][1].Item.Name, "TM02");
+        Assert.AreEqual(itemPockets["TM/HM"][1].Item, "TM02");
         Assert.AreEqual(itemPockets["TM/HM"][1].Amount, 0);
-        Assert.AreEqual(itemPockets["TM/HM"][27].Item.Name, "TM28");
+        Assert.AreEqual(itemPockets["TM/HM"][27].Item, "TM28");
         Assert.AreEqual(itemPockets["TM/HM"][27].Amount, 0);
-        Assert.AreEqual(itemPockets["TM/HM"][50].Item.Name, "HM01");
+        Assert.AreEqual(itemPockets["TM/HM"][50].Item, "HM01");
         Assert.AreEqual(itemPockets["TM/HM"][50].Amount, 0);
 
         // Make sure we can't add Crystal-specific items with a Gold/Silver bag.
         if(game.Equals("Crystal")) {
             for(int i = 0; i < CrystalItemNames.Length; ++i) {
                 itemBag.Add(CrystalItemNames[i], 1);
-                Assert.AreEqual(itemPockets["KeyItems"][i].Item.Name, CrystalItemNames[i]);
+                Assert.AreEqual(itemPockets["KeyItems"][i].Item, CrystalItemNames[i]);
                 Assert.AreEqual(itemPockets["KeyItems"][i].Amount, 1);
             }
             for(int i = CrystalItemNames.Length-1; i >= 0; --i) {
                 itemBag.Remove(CrystalItemNames[i], 1);
-                Assert.AreEqual(itemPockets["KeyItems"][i].Item.Name, "None");
+                Assert.AreEqual(itemPockets["KeyItems"][i].Item, "None");
                 Assert.AreEqual(itemPockets["KeyItems"][i].Amount, 0);
             }
         } else {
