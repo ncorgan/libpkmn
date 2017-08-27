@@ -43,6 +43,23 @@
     bool __eq__(const pkmn::shared_ptr<pkmn::item_list>& rhs) {
         return ((*self) == rhs);
     }
+
+    pkmn::item_list::sptr* each()
+    {
+        if ( !rb_block_given_p() )
+            rb_raise( rb_eArgError, "no block given");
+
+        const std::vector<pkmn::item_slot>& item_slots = self->get()->as_vector();
+
+        VALUE r;
+        for(auto iter = item_slots.begin(); iter != item_slots.end(); ++iter)
+        {
+            r = swig::from<pkmn::item_slot>(*iter);
+            rb_yield(r);
+        }
+
+        return self;
+    }
 }
 
 %template(ItemList) pkmn::shared_ptr<pkmn::item_list>;

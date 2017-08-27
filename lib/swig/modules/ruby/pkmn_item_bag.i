@@ -39,6 +39,23 @@
     bool __eq__(const pkmn::shared_ptr<pkmn::item_bag>& rhs) {
         return ((*self) == rhs);
     }
+
+    pkmn::item_bag::sptr* each()
+    {
+        if ( !rb_block_given_p() )
+            rb_raise( rb_eArgError, "no block given");
+
+        const pkmn::item_pockets_t& item_pockets = self->get()->get_pockets();
+
+        VALUE r;
+        for(auto iter = item_pockets.begin(); iter != item_pockets.end(); ++iter)
+        {
+            r = swig::from<pkmn::item_list::sptr>(iter->second);
+            rb_yield(r);
+        }
+
+        return self;
+    }
 }
 
 %template(ItemBag) pkmn::shared_ptr<pkmn::item_bag>;

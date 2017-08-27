@@ -11,6 +11,7 @@ SET(ruby_tests
     RubyDatabaseEntryTest
     RubyGameSaveTest
     RubyGUITest
+    RubyItemTest
     RubyListsTest
     RubyPathsTest
     RubyPokemonTest
