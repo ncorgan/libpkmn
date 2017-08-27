@@ -44,6 +44,10 @@ namespace pkmn {
 
             static const std::string DEFAULT_TRAINER_NAME;
 
+            virtual sptr to_game(
+                const std::string& game
+            ) = 0;
+
             virtual std::string get_species() = 0;
 
             virtual std::string get_game() = 0;

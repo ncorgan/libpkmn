@@ -32,6 +32,7 @@ SET(pkmn_libs
 
 ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(calculations)
+ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(mem)
@@ -56,6 +57,7 @@ ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
+    ${pkmn_conversions_sources}
     ${pkmn_database_sources}
     ${pkmn_io_sources}
     ${pkmn_mem_sources}

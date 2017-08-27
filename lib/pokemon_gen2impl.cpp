@@ -6,7 +6,11 @@
  */
 
 #include "misc_common.hpp"
+#include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
+
+#include "conversions/gb_conversions.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
@@ -80,7 +84,8 @@ namespace pkmn {
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        set_level_met(level);
+        // The max for level met is 63, but that shouldn't restrict this.
+        set_level_met(std::min<int>(level, 63));
         set_location_met("Special", false);
 
         time_t now = 0;
@@ -144,6 +149,56 @@ namespace pkmn {
         }
     }
 
+    pokemon_gen2impl::pokemon_gen2impl(
+        const pksav_gen2_pc_pokemon_t& pc,
+        int game_id
+    ): pokemon_impl(pc.species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        *GEN2_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        _populate_party_data();
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _set_unown_form_from_IVs();
+        }
+    }
+
+    pokemon_gen2impl::pokemon_gen2impl(
+        const pksav_gen2_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(party.pc.species, game_id)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
+        *GEN2_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen2_pokemon_party_data_t);
+        *GEN2_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID)
+        {
+            _set_unown_form_from_IVs();
+        }
+    }
+
     pokemon_gen2impl::~pokemon_gen2impl() {
         if(_our_pc_mem) {
             delete GEN2_PC_RCAST;
@@ -151,6 +206,49 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GEN2_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gen2impl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gen2_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GEN2_PC_RCAST;
+        pksav_pokemon.party_data = *GEN2_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 1:
+            {
+                pksav_gen1_party_pokemon_t gen1_pksav_pokemon;
+                pkmn::conversions::gen2_party_pokemon_to_gen1(
+                    &pksav_pokemon,
+                    &gen1_pksav_pokemon
+                );
+                ret = pkmn::make_shared<pokemon_gen1impl>(gen1_pksav_pokemon, game_id);
+                break;
+            }
+
+            case 2:
+            {
+                ret = pkmn::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
+                // 63 is the max this value can be.
+                ret->set_level_met(std::min<int>(63, get_level()));
+                break;
+            }
+
+            default:
+                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation I-II.");
+        }
+
+        ret->set_nickname(get_nickname());
+        ret->set_trainer_name(get_trainer_name());
+
+        return ret;
     }
 
     void pokemon_gen2impl::set_form(
@@ -408,8 +506,8 @@ namespace pkmn {
     void pokemon_gen2impl::set_level_met(
         int level
     ) {
-        if(level < 2 or level > 100) {
-            pkmn::throw_out_of_range("Level caught", 2, 100);
+        if(level < 2 or level > 63) {
+            pkmn::throw_out_of_range("Level caught", 2, 63);
         }
 
         pokemon_scoped_lock lock(this);

@@ -7,6 +7,9 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_gcnimpl.hpp"
+
+#include "conversions/gen3_conversions.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
@@ -242,6 +245,42 @@ namespace pkmn {
         }
     }
 
+    pokemon_gbaimpl::pokemon_gbaimpl(
+        const pksav_gba_party_pokemon_t &party,
+        int game_id
+    ): pokemon_impl(
+           pksav_littleendian16(party.pc.blocks.growth.species),
+           game_id
+       )
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        *GBA_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        *GBA_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Set block pointers
+        _growth  = &GBA_PC_RCAST->blocks.growth;
+        _attacks = &GBA_PC_RCAST->blocks.attacks;
+        _effort  = &GBA_PC_RCAST->blocks.effort;
+        _misc    = &GBA_PC_RCAST->blocks.misc;
+
+        // Populate abstractions
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_misc->iv_egg_ability);
+        _init_contest_stat_map(&_effort->contest_stats);
+        _init_markings_map(&GBA_PC_RCAST->markings);
+        _update_stat_map();
+        _update_moves(-1);
+
+        if(_database_entry.get_species_id() == UNOWN_ID) {
+            _set_unown_personality_from_form();
+        }
+    }
+
     pokemon_gbaimpl::~pokemon_gbaimpl() {
         if(_our_pc_mem) {
             delete GBA_PC_RCAST;
@@ -249,6 +288,62 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GBA_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gbaimpl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gba_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GBA_PC_RCAST;
+        pksav_pokemon.party_data = *GBA_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 3:
+                if(game_is_gamecube(game_id))
+                {
+                    if(game_id == COLOSSEUM)
+                    {
+                        LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
+                        pkmn::conversions::gba_party_pokemon_to_gcn(
+                            &pksav_pokemon,
+                            &colosseum_pokemon
+                        );
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                    }
+                    else
+                    {
+                        LibPkmGC::XD::Pokemon xd_pokemon;
+                        pkmn::conversions::gba_party_pokemon_to_gcn(
+                            &pksav_pokemon,
+                            &xd_pokemon
+                        );
+                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                    }
+                }
+                else
+                {
+                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret->set_level_met(get_level());
+                    ret->set_original_game(get_game());
+                }
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
+        }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_form(
@@ -649,6 +744,7 @@ namespace pkmn {
     ) {
         pokemon_scoped_lock lock(this);
 
+        // TODO: personality determines ability
         GBA_PC_RCAST->personality = pksav_littleendian32(personality);
 
         if(_database_entry.get_species_id() == UNOWN_ID) {

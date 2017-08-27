@@ -30,11 +30,11 @@ matrix:
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
     # Default/older Clang, dependencies
-    - compiler: clang
-      env:
-        - DESIRED_QT_VERSION=4
-        - PYTHON_VERSION=2
-        - SWIG_VERSION=2
+    #- compiler: clang
+    #  env:
+    #    - DESIRED_QT_VERSION=4
+    #    - PYTHON_VERSION=2
+    #    - SWIG_VERSION=2
     # Newer Clang, dependencies
     - compiler: clang
       addons:

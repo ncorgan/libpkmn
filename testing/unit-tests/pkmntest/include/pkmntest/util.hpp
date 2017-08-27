@@ -11,9 +11,9 @@
 #include <boost/format.hpp>
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
-static const std::map<std::string, int> game_generations = boost::assign::map_list_of
+static const std::unordered_map<std::string, int> game_generations = boost::assign::map_list_of
     ("Red", 1)
     ("Blue", 1)
     ("Yellow", 1)

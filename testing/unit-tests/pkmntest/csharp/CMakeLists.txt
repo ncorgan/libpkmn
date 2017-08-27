@@ -15,6 +15,7 @@ SET(pkmntest_cs_srcs
     GCNItemsTests.cs
     GameSaveTest.cs
     ItemsTestsCommon.cs
+    PokemonConversionsTest.cs
     PokemonIOTests.cs
     PokemonPartyTests.cs
     PokemonPCTests.cs
