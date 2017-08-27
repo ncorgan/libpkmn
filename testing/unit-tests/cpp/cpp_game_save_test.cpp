@@ -36,10 +36,6 @@ BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
-BOOST_STATIC_CONSTEXPR int RUBY      = 7;
-BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
-BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
-
 static const std::string GB_GAMES[] = {
     "Red", "Blue", "Yellow",
     "Gold",  "Silver", "Crystal"
