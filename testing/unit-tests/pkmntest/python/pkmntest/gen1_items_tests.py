@@ -93,17 +93,17 @@ class gen1_items_test(items_tests):
             bag.add(items[i], i+1)
 
         for i in range(len(items)):
-            self.assertEqual(pockets["Items"][i].item.get_name(), items[i])
+            self.assertEqual(pockets["Items"][i].item, items[i])
             self.assertEqual(pockets["Items"][i].amount, i+1)
 
-        self.assertEqual(pockets["Items"][8].item.get_name(), "None")
+        self.assertEqual(pockets["Items"][8].item, "None")
         self.assertEqual(pockets["Items"][8].amount, 0)
 
         for i in range(len(items)):
             bag.remove(items[i], i+1)
 
         for i in range(len(items)+1):
-            self.assertEqual(pockets["Items"][i].item.get_name(), "None")
+            self.assertEqual(pockets["Items"][i].item, "None")
             self.assertEqual(pockets["Items"][i].amount, 0)
 
     #

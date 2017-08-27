@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
@@ -36,6 +37,7 @@ class gen1_item_list_test: public item_list_test {};
  */
 static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
+    const std::string& game,
     int expected_num_items,
     const void* ptr,
     bool pc
@@ -43,7 +45,13 @@ static void check_pksav_struct(
     const pksav_gen1_item_pc_t* native = reinterpret_cast<const pksav_gen1_item_pc_t*>(ptr);
     EXPECT_EQ(expected_num_items, int(native->count));
     for(int i = 0; i < expected_num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                game
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
 
@@ -88,6 +96,7 @@ static void gen1_item_list_test_common(
 
     check_pksav_struct(
         list->as_vector(),
+        list->get_game(),
         list->get_num_items(),
         list->get_native(),
         (list->get_name() == "PC")
@@ -167,14 +176,15 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
         );
     }
     for(int i = 0; i < 8; ++i) {
-        EXPECT_EQ(item_names[i], item_slots.at(i).item.get_name());
+        EXPECT_EQ(item_names[i], item_slots.at(i).item);
         EXPECT_EQ(i+1, item_slots.at(i).amount);
     }
-    EXPECT_EQ("None", item_slots.at(8).item.get_name());
+    EXPECT_EQ("None", item_slots.at(8).item);
     EXPECT_EQ(0, item_slots.at(8).amount);
 
     check_pksav_struct(
         item_slots,
+        item_pocket->get_game(),
         8,
         bag->get_native(),
         false
@@ -188,7 +198,7 @@ TEST_P(gen1_item_bag_test, item_bag_test) {
         );
     }
     for(int i = 0; i < 9; ++i) {
-        EXPECT_EQ("None", item_slots.at(i).item.get_name());
+        EXPECT_EQ("None", item_slots.at(i).item);
         EXPECT_EQ(0, item_slots.at(i).amount);
     }
 }

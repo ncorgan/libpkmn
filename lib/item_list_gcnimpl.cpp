@@ -7,6 +7,8 @@
 
 #include "item_list_gcnimpl.hpp"
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <pksav/math/endian.h>
 
 #include <algorithm>
@@ -50,8 +52,6 @@ namespace pkmn {
         }
     }
 
-    // TODO: endianness?
-
     void item_list_gcnimpl::_from_native(
         int index
     ) {
@@ -62,14 +62,14 @@ namespace pkmn {
                 _item_slots[i].item = pkmn::database::item_entry(
                                           int(NATIVE_RCAST[i].index),
                                           _game_id
-                                      );
+                                      ).get_name();
                 _item_slots[i].amount = int(NATIVE_RCAST[i].quantity);
             }
         } else {
             _item_slots[index].item = pkmn::database::item_entry(
                                           int(NATIVE_RCAST[index].index),
                                           _game_id
-                                      );
+                                      ).get_name();
             _item_slots[index].amount = int(NATIVE_RCAST[index].quantity);
         }
     }
@@ -82,7 +82,10 @@ namespace pkmn {
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
                 NATIVE_RCAST[i].index = LibPkmGC::ItemIndex(
-                                            _item_slots[i].item.get_item_index()
+                                            pkmn::database::item_entry(
+                                                _item_slots[i].item,
+                                                get_game()
+                                            ).get_item_index()
                                         );
                 NATIVE_RCAST[i].quantity = LibPkmGC::u16(
                                                _item_slots[i].amount
@@ -90,7 +93,10 @@ namespace pkmn {
             }
         } else {
             NATIVE_RCAST[index].index = LibPkmGC::ItemIndex(
-                                            _item_slots[index].item.get_item_index()
+                                            pkmn::database::item_entry(
+                                                _item_slots[index].item,
+                                                get_game()
+                                            ).get_item_index()
                                         );
             NATIVE_RCAST[index].quantity = LibPkmGC::u16(
                                                _item_slots[index].amount

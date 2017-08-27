@@ -317,7 +317,7 @@ public class GameSaveTest {
         Assert.AreEqual(itemList1.NumItems, itemList2.NumItems);
 
         for(int i = 0; i < itemList1.Capacity; ++i) {
-            Assert.AreEqual(itemList1[i].Item.Name, itemList2[i].Item.Name);
+            Assert.AreEqual(itemList1[i].Item, itemList2[i].Item);
             Assert.AreEqual(itemList1[i].Amount, itemList2[i].Amount);
         }
     }

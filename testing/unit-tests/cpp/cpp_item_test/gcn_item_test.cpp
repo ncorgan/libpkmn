@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -47,11 +48,18 @@ class gcn_item_list_test: public item_list_test {};
  */
 static void check_libpkmgc_class(
     const pkmn::item_slots_t& item_slots,
+    const std::string& game,
     const LibPkmGC::Item* native_items,
     int expected_num_items
 ) {
     for(int i = 0; i < expected_num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native_items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                game
+            ).get_item_index(),
+            int(native_items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native_items[i].quantity));
     }
 
@@ -122,6 +130,7 @@ void gcn_item_pocket_test(
 
     check_libpkmgc_class(
         item_pocket->as_vector(),
+        item_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(item_pocket->get_native()),
         item_pocket->get_num_items()
     );
@@ -205,6 +214,7 @@ void gcn_key_item_pocket_test(
 
     check_libpkmgc_class(
         key_item_pocket->as_vector(),
+        key_item_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(key_item_pocket->get_native()),
         key_item_pocket->get_num_items()
     );
@@ -265,6 +275,7 @@ void gcn_ball_pocket_test(
 
     check_libpkmgc_class(
         ball_pocket->as_vector(),
+        ball_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(ball_pocket->get_native()),
         ball_pocket->get_num_items()
     );
@@ -328,6 +339,7 @@ void gcn_tm_pocket_test(
 
     check_libpkmgc_class(
         tm_pocket->as_vector(),
+        tm_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(tm_pocket->get_native()),
         tm_pocket->get_num_items()
     );
@@ -389,6 +401,7 @@ void gcn_berry_pocket_test(
 
     check_libpkmgc_class(
         berry_pocket->as_vector(),
+        berry_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(berry_pocket->get_native()),
         berry_pocket->get_num_items()
     );
@@ -435,11 +448,11 @@ void gcn_cologne_pocket_test(
     cologne_pocket->remove("Excite Scent", 3);
     cologne_pocket->remove("Vivid Scent", 1);
 
-    EXPECT_EQ("Joy Scent", item_slots.at(0).item.get_name());
+    EXPECT_EQ("Joy Scent", item_slots.at(0).item);
     EXPECT_EQ(3, item_slots.at(0).amount);
-    EXPECT_EQ("Vivid Scent", item_slots.at(1).item.get_name());
+    EXPECT_EQ("Vivid Scent", item_slots.at(1).item);
     EXPECT_EQ(2, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
     const std::vector<std::string>& valid_items = cologne_pocket->get_valid_items();
@@ -448,6 +461,7 @@ void gcn_cologne_pocket_test(
 
     check_libpkmgc_class(
         cologne_pocket->as_vector(),
+        cologne_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(cologne_pocket->get_native()),
         cologne_pocket->get_num_items()
     );
@@ -496,6 +510,7 @@ void gcn_battle_cd_pocket_test(
 
     check_libpkmgc_class(
         battle_cd_pocket->as_vector(),
+        battle_cd_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(battle_cd_pocket->get_native()),
         battle_cd_pocket->get_num_items()
     );
@@ -532,6 +547,7 @@ void gcn_item_pc_test(
 
     check_libpkmgc_class(
         item_pc->as_vector(),
+        item_pc->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(item_pc->get_native()),
         item_pc->get_num_items()
     );
@@ -661,50 +677,50 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     const pkmn::item_slots_t& cologne_slots = bag->get_pocket("Colognes")->as_vector();
     std::string gcn_item = colosseum ? "Ein File S" : "Gonzap's Key";
 
-    EXPECT_EQ("Potion", item_slots.at(0).item.get_name());
+    EXPECT_EQ("Potion", item_slots.at(0).item);
     EXPECT_EQ(5, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ(gcn_item, key_item_slots.at(0).item.get_name());
+    EXPECT_EQ(gcn_item, key_item_slots.at(0).item);
     EXPECT_EQ(5, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
     EXPECT_EQ(5, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
 
-    EXPECT_EQ("TM01", tm_slots.at(0).item.get_name());
+    EXPECT_EQ("TM01", tm_slots.at(0).item);
     EXPECT_EQ(5, tm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_slots.at(1).item.get_name());
+    EXPECT_EQ("TM02", tm_slots.at(1).item);
     EXPECT_EQ(5, tm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_slots.at(2).item.get_name());
+    EXPECT_EQ("None", tm_slots.at(2).item);
     EXPECT_EQ(0, tm_slots.at(2).amount);
 
-    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item.get_name());
+    EXPECT_EQ("Aspear Berry", berry_slots.at(0).item);
     EXPECT_EQ(5, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
-    EXPECT_EQ("Joy Scent", cologne_slots.at(0).item.get_name());
+    EXPECT_EQ("Joy Scent", cologne_slots.at(0).item);
     EXPECT_EQ(5, cologne_slots.at(0).amount);
 
     if(colosseum)
     {
-        EXPECT_EQ("Excite Scent", cologne_slots.at(1).item.get_name());
+        EXPECT_EQ("Excite Scent", cologne_slots.at(1).item);
         EXPECT_EQ(5, cologne_slots.at(1).amount);
     }
     else
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item.get_name());
+        EXPECT_EQ("None", cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
 
         const pkmn::item_slots_t& battle_cd_slots = bag->get_pocket("Battle CDs")->as_vector();
-        EXPECT_EQ("Battle CD 01", battle_cd_slots.at(0).item.get_name());
+        EXPECT_EQ("Battle CD 01", battle_cd_slots.at(0).item);
         EXPECT_EQ(5, battle_cd_slots.at(0).amount);
-        EXPECT_EQ("None", battle_cd_slots.at(1).item.get_name());
+        EXPECT_EQ("None", battle_cd_slots.at(1).item);
         EXPECT_EQ(0, battle_cd_slots.at(1).amount);
     }
 
@@ -715,31 +731,37 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     const LibPkmGC::GC::BagData* native = reinterpret_cast<const LibPkmGC::GC::BagData*>(bag->get_native());
     check_libpkmgc_class(
         item_slots,
+        game,
         native->regularItems,
         1
     );
     check_libpkmgc_class(
         key_item_slots,
+        game,
         native->keyItems,
         1
     );
     check_libpkmgc_class(
         ball_slots,
+        game,
         native->pokeballs,
         1
     );
     check_libpkmgc_class(
         tm_slots,
+        game,
         native->TMs,
         2
     );
     check_libpkmgc_class(
         berry_slots,
+        game,
         native->berries,
         1
     );
     check_libpkmgc_class(
         cologne_slots,
+        game,
         native->colognes,
         (colosseum ? 2 : 1)
     );
@@ -747,6 +769,7 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     {
         check_libpkmgc_class(
             bag->get_pocket("Battle CDs")->as_vector(),
+            game,
             dynamic_cast<const LibPkmGC::XD::BagData*>(native)->battleCDs,
             1
         );
@@ -760,50 +783,50 @@ TEST_P(gcn_item_bag_test, item_bag_test)
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
 
-    EXPECT_EQ("None", tm_slots.at(0).item.get_name());
+    EXPECT_EQ("None", tm_slots.at(0).item);
     EXPECT_EQ(0, tm_slots.at(0).amount);
-    EXPECT_EQ("None", tm_slots.at(1).item.get_name());
+    EXPECT_EQ("None", tm_slots.at(1).item);
     EXPECT_EQ(0, tm_slots.at(1).amount);
-    EXPECT_EQ("None", tm_slots.at(2).item.get_name());
+    EXPECT_EQ("None", tm_slots.at(2).item);
     EXPECT_EQ(0, tm_slots.at(2).amount);
 
-    EXPECT_EQ("None", berry_slots.at(0).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(0).item);
     EXPECT_EQ(0, berry_slots.at(0).amount);
-    EXPECT_EQ("None", berry_slots.at(1).item.get_name());
+    EXPECT_EQ("None", berry_slots.at(1).item);
     EXPECT_EQ(0, berry_slots.at(1).amount);
 
-    EXPECT_EQ("None", cologne_slots.at(0).item.get_name());
+    EXPECT_EQ("None", cologne_slots.at(0).item);
     EXPECT_EQ(0, cologne_slots.at(0).amount);
 
     if(colosseum)
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item.get_name());
+        EXPECT_EQ("None", cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
     }
     else
     {
-        EXPECT_EQ("None", cologne_slots.at(1).item.get_name());
+        EXPECT_EQ("None", cologne_slots.at(1).item);
         EXPECT_EQ(0, cologne_slots.at(1).amount);
 
         const pkmn::item_slots_t& battle_cd_slots = bag->get_pocket("Battle CDs")->as_vector();
-        EXPECT_EQ("None", battle_cd_slots.at(0).item.get_name());
+        EXPECT_EQ("None", battle_cd_slots.at(0).item);
         EXPECT_EQ(0, battle_cd_slots.at(0).amount);
-        EXPECT_EQ("None", battle_cd_slots.at(1).item.get_name());
+        EXPECT_EQ("None", battle_cd_slots.at(1).item);
         EXPECT_EQ(0, battle_cd_slots.at(1).amount);
     }
 
