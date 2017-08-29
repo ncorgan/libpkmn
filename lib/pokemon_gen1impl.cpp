@@ -7,7 +7,10 @@
 
 #include "misc_common.hpp"
 #include "pokemon_gen1impl.hpp"
+#include "pokemon_gen2impl.hpp"
 
+#include "conversions/gb_conversions.hpp"
+#include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -139,6 +142,48 @@ namespace pkmn {
         _update_moves(-1);
     }
 
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_pc_pokemon_t& pc,
+        int game_id
+    ): pokemon_impl(pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _populate_party_data();
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    pokemon_gen1impl::pokemon_gen1impl(
+        const pksav_gen1_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(party.pc.species, game_id),
+       _yellow_pikachu_friendship(0)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        *GEN1_PC_RCAST = party.pc;
+        _our_pc_mem = true;
+
+        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        *GEN1_PARTY_RCAST = party.party_data;
+        _our_party_mem = true;
+
+        // Populate abstractions
+        _update_EV_map();
+        _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
     pokemon_gen1impl::~pokemon_gen1impl() {
         if(_our_pc_mem) {
             delete GEN1_PC_RCAST;
@@ -146,6 +191,48 @@ namespace pkmn {
         if(_our_party_mem) {
             delete GEN1_PARTY_RCAST;
         }
+    }
+
+    pokemon::sptr pokemon_gen1impl::to_game(
+        const std::string& game
+    )
+    {
+        pkmn::pokemon::sptr ret;
+
+        pksav_gen1_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *GEN1_PC_RCAST;
+        pksav_pokemon.party_data = *GEN1_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 1:
+            {
+                ret = pkmn::make_shared<pokemon_gen1impl>(pksav_pokemon, game_id);
+                break;
+            }
+
+            case 2:
+            {
+                pksav_gen2_party_pokemon_t gen2_pksav_pokemon;
+                pkmn::conversions::gen1_party_pokemon_to_gen2(
+                    &pksav_pokemon,
+                    &gen2_pksav_pokemon
+                );
+                ret = pkmn::make_shared<pokemon_gen2impl>(gen2_pksav_pokemon, game_id);
+                ret->set_level_met(std::min<int>(63, get_level()));
+                break;
+            }
+
+            default:
+                throw std::invalid_argument("Generation I Pokémon can only be converted to Generation I-II.");
+        }
+
+        ret->set_nickname(get_nickname());
+        ret->set_trainer_name(get_trainer_name());
+
+        return ret;
     }
 
     void pokemon_gen1impl::set_form(

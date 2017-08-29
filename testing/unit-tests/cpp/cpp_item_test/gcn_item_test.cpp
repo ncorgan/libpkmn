@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -53,7 +54,10 @@ static void check_libpkmgc_class(
 ) {
     for(int i = 0; i < expected_num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                game
+            ).get_item_index(),
             int(native_items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native_items[i].quantity));
@@ -126,7 +130,7 @@ void gcn_item_pocket_test(
 
     check_libpkmgc_class(
         item_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        item_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(item_pocket->get_native()),
         item_pocket->get_num_items()
     );
@@ -210,7 +214,7 @@ void gcn_key_item_pocket_test(
 
     check_libpkmgc_class(
         key_item_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        key_item_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(key_item_pocket->get_native()),
         key_item_pocket->get_num_items()
     );
@@ -271,7 +275,7 @@ void gcn_ball_pocket_test(
 
     check_libpkmgc_class(
         ball_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        ball_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(ball_pocket->get_native()),
         ball_pocket->get_num_items()
     );
@@ -335,7 +339,7 @@ void gcn_tm_pocket_test(
 
     check_libpkmgc_class(
         tm_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        tm_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(tm_pocket->get_native()),
         tm_pocket->get_num_items()
     );
@@ -397,7 +401,7 @@ void gcn_berry_pocket_test(
 
     check_libpkmgc_class(
         berry_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        berry_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(berry_pocket->get_native()),
         berry_pocket->get_num_items()
     );
@@ -457,7 +461,7 @@ void gcn_cologne_pocket_test(
 
     check_libpkmgc_class(
         cologne_pocket->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        cologne_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(cologne_pocket->get_native()),
         cologne_pocket->get_num_items()
     );
@@ -506,7 +510,7 @@ void gcn_battle_cd_pocket_test(
 
     check_libpkmgc_class(
         battle_cd_pocket->as_vector(),
-        "XD",
+        battle_cd_pocket->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(battle_cd_pocket->get_native()),
         battle_cd_pocket->get_num_items()
     );
@@ -543,7 +547,7 @@ void gcn_item_pc_test(
 
     check_libpkmgc_class(
         item_pc->as_vector(),
-        colosseum ? "Colosseum" : "XD",
+        item_pc->get_game(),
         reinterpret_cast<const LibPkmGC::Item*>(item_pc->get_native()),
         item_pc->get_num_items()
     );
@@ -727,37 +731,37 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     const LibPkmGC::GC::BagData* native = reinterpret_cast<const LibPkmGC::GC::BagData*>(bag->get_native());
     check_libpkmgc_class(
         item_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->regularItems,
         1
     );
     check_libpkmgc_class(
         key_item_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->keyItems,
         1
     );
     check_libpkmgc_class(
         ball_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->pokeballs,
         1
     );
     check_libpkmgc_class(
         tm_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->TMs,
         2
     );
     check_libpkmgc_class(
         berry_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->berries,
         1
     );
     check_libpkmgc_class(
         cologne_slots,
-        colosseum ? "Colosseum" : "XD",
+        game,
         native->colognes,
         (colosseum ? 2 : 1)
     );
@@ -765,7 +769,7 @@ TEST_P(gcn_item_bag_test, item_bag_test)
     {
         check_libpkmgc_class(
             bag->get_pocket("Battle CDs")->as_vector(),
-            "XD",
+            game,
             dynamic_cast<const LibPkmGC::XD::BagData*>(native)->battleCDs,
             1
         );

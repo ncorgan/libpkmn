@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
@@ -39,8 +40,6 @@ void gen2_item_pocket_test(
     ASSERT_EQ("Items", item_pocket->get_name());
     ASSERT_EQ(20, item_pocket->get_capacity());
     ASSERT_EQ(20, item_pocket->as_vector().size());
-
-    std::string game = item_pocket->get_game();
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(item_pocket);
@@ -93,7 +92,10 @@ void gen2_item_pocket_test(
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                item_pocket->get_game()
+            ).get_item_index(),
             int(native->items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
@@ -109,8 +111,6 @@ void gen2_key_item_pocket_test(
     ASSERT_EQ("KeyItems", key_item_pocket->get_name());
     ASSERT_EQ(26, key_item_pocket->get_capacity());
     ASSERT_EQ(26, key_item_pocket->as_vector().size());
-
-    std::string game = key_item_pocket->get_game();
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(key_item_pocket);
@@ -178,7 +178,10 @@ void gen2_key_item_pocket_test(
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                key_item_pocket->get_game()
+            ).get_item_index(),
             int(native->items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
@@ -194,8 +197,6 @@ void gen2_ball_pocket_test(
     ASSERT_EQ("Balls", ball_pocket->get_name());
     ASSERT_EQ(12, ball_pocket->get_capacity());
     ASSERT_EQ(12, ball_pocket->as_vector().size());
-
-    std::string game = ball_pocket->get_game();
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(ball_pocket); 
@@ -248,7 +249,10 @@ void gen2_ball_pocket_test(
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                ball_pocket->get_game()
+            ).get_item_index(),
             int(native->items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
@@ -264,8 +268,6 @@ void gen2_tmhm_pocket_test(
     ASSERT_EQ("TM/HM", tmhm_pocket->get_name());
     ASSERT_EQ(57, tmhm_pocket->get_capacity());
     ASSERT_EQ(57, tmhm_pocket->as_vector().size());
-
-    std::string game = tmhm_pocket->get_game();
 
     // Make sure item slots start as correctly empty.
     const pkmn::item_slots_t& item_slots = tmhm_pocket->as_vector();
@@ -365,8 +367,6 @@ void gen2_item_pc_test(
     ASSERT_EQ(50, item_pc->get_capacity());
     ASSERT_EQ(50, item_pc->as_vector().size());
 
-    std::string game = item_pc->get_game();
-
     // Confirm exceptions are thrown when expected.
     test_item_list_out_of_range_error(
         item_pc,
@@ -418,7 +418,10 @@ void gen2_item_pc_test(
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                item_pc->get_game()
+            ).get_item_index(),
             int(native->items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
@@ -468,7 +471,6 @@ class gen2_item_bag_test: public item_bag_test {};
 
 TEST_P(gen2_item_bag_test, item_bag_test) {
     const pkmn::item_bag::sptr& bag = get_item_bag();
-    std::string game = bag->get_game();
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
     ASSERT_EQ(4, pockets.size());
@@ -549,7 +551,10 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ(2, native->item_pocket.count);
     for(int i = 0; i < 3; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
             int(native->item_pocket.items[i].index)
         );
         EXPECT_EQ(item_slots.at(i).amount, int(native->item_pocket.items[i].count));
@@ -558,7 +563,10 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ(2, native->key_item_pocket.count);
     for(int i = 0; i < 3; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(key_item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                key_item_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
             int(native->key_item_pocket.items[i].index)
         );
         EXPECT_EQ(key_item_slots.at(i).amount, int(native->key_item_pocket.items[i].count));
@@ -567,7 +575,10 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ(2, native->ball_pocket.count);
     for(int i = 0; i < 3; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(ball_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                ball_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
             int(native->ball_pocket.items[i].index)
         );
         EXPECT_EQ(ball_slots.at(i).amount, int(native->ball_pocket.items[i].count));

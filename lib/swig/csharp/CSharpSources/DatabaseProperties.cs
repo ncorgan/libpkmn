@@ -31,7 +31,7 @@ public partial class ItemEntry {
         get { return GetCost(); }
     }
 
-    public bool isHoldable {
+    public bool IsHoldable {
         get { return Holdable(); }
     }
 

@@ -223,9 +223,11 @@ namespace pkmn {
     void item_list_impl::add(
         const std::string &item_name,
         int amount
-    ) {
+    )
+    {
         // Input validation
-        if(amount < 1 or amount > 99) {
+        if(amount < 1 or amount > 99)
+        {
             pkmn::throw_out_of_range("amount", 1, 99);
         }
 
@@ -234,21 +236,23 @@ namespace pkmn {
          * that amount. If not, see if there's room to add another
          * item.
          */
-        int item_id = pkmn::database::item_name_to_id(
-                          item_name
-                      );
-        for(int i = 0; i < _num_items; ++i) {
-            if(pkmn::database::item_entry(_item_slots[i].item, get_game()).get_item_id() == item_id)
+        for(int i = 0; i < _num_items; ++i)
+        {
+            if(_item_slots[i].item == item_name)
             {
-                if(_item_slots[i].amount == 99) {
+                if(_item_slots[i].amount == 99)
+                {
                     throw std::runtime_error("Cannot add any more of this item.");
-                } else if((_item_slots[i].amount + amount) > 99) {
+                } else if((_item_slots[i].amount + amount) > 99)
+                {
                     int new_amount = _item_slots[i].amount + amount;
                     throw std::runtime_error(
                               str(boost::format("Can only add %d more items.") %
                                   (new_amount - amount))
                           );
-                } else {
+                }
+                else
+                {
                     _item_slots[i].amount += amount;
                     _to_native(i);
                     return;
@@ -280,9 +284,11 @@ namespace pkmn {
     void item_list_impl::remove(
         const std::string &item_name,
         int amount
-    ) {
+    )
+    {
         // Input validation
-        if(amount < 1 or amount > 99) {
+        if(amount < 1 or amount > 99)
+        {
             pkmn::throw_out_of_range("amount", 1, 99);
         }
 
@@ -291,23 +297,24 @@ namespace pkmn {
          * and if there are no more, remove the item from the list and
          * shift everything over.
          */
-        int item_id = pkmn::database::item_name_to_id(
-                          item_name
-                      );
-        for(int i = 0; i < _num_items; ++i) {
-            if(pkmn::database::item_entry(_item_slots[i].item, get_game()).get_item_id() == item_id)
+        for(int i = 0; i < _num_items; ++i)
+        {
+            if(_item_slots[i].item == item_name)
             {
-                if(_item_slots[i].amount < amount) {
+                if(_item_slots[i].amount < amount)
+                {
                     throw std::runtime_error(
                               str(boost::format("Can only remove %d items.") %
                                   _item_slots[i].amount)
                           );
-                } else {
+                }
+                else
+                {
                     _item_slots[i].amount -= amount;
-                    if(_item_slots[i].amount == 0) {
+                    if(_item_slots[i].amount == 0)
+                    {
                         _item_slots.erase(_item_slots.begin()+i);
                         _item_slots.resize(_capacity);
-                        _item_slots.back().item = "None";
                         _num_items--;
                         _to_native();
                     }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -99,48 +99,6 @@ class items_tests(unittest.TestCase):
 
         self.assertEqual(items.get_num_items(), 0)
 
-        # Test setting by index.
-        items[0] = pkmn.item_slot(item_names[0], 50)
-        items[1] = pkmn.item_slot(item_names[1], 40)
-        items[2] = pkmn.item_slot(item_names[2], 30)
-
-        self.assertStringEqual(items[0].item, item_names[0])
-        self.assertEqual(items[0].amount, 50)
-        self.assertStringEqual(items[1].item, item_names[1])
-        self.assertEqual(items[1].amount, 40)
-        self.assertStringEqual(items[2].item, item_names[2])
-        self.assertEqual(items[2].amount, 30)
-        self.assertEqual(items.get_num_items(), 3)
-
-        with self.assertRaises(IndexError):
-            items[10] = pkmn.item_slot("Master Ball", 5)
-        with self.assertRaises(ValueError):
-            items[0] = pkmn.item_slot("None", 5)
-        with self.assertRaises(ValueError):
-            items[1] = pkmn.item_slot(item_names[0], 1)
-
-        items[1] = pkmn.item_slot("None", 0)
-
-        self.assertStringEqual(items[0].item, item_names[0])
-        self.assertEqual(items[0].amount, 50)
-        self.assertStringEqual(items[1].item, item_names[2])
-        self.assertEqual(items[1].amount, 30)
-        self.assertStringEqual(items[2].item, "None")
-        self.assertEqual(items[2].amount, 0)
-        self.assertEqual(items.get_num_items(), 2)
-
-        items[0] = pkmn.item_slot("None", 0)
-        items[0] = pkmn.item_slot("None", 0)
-
-        self.assertStringEqual(items[0].item, "None")
-        self.assertEqual(items[0].amount, 0)
-        self.assertStringEqual(items[1].item, "None")
-        self.assertEqual(items[1].amount, 0)
-        self.assertStringEqual(items[2].item, "None")
-        self.assertEqual(items[2].amount, 0)
-        self.assertEqual(items.get_num_items(), 0)
-
-        # Test add/remove functions.
         items.add(item_names[0], 30)
         items.add(item_names[1], 99)
         items.add(item_names[2], 1)

@@ -29,6 +29,7 @@ SET(cpp_tests
     cpp_paths_test
     cpp_pokemon_party_test
     cpp_pokemon_pc_test
+    cpp_swig_wrapper_test
 )
 
 FOREACH(test ${cpp_tests})
@@ -52,6 +53,7 @@ SET(item_test_srcs
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
 SET(pokemon_test_srcs
+    cpp_pokemon_test/conversions_test.cpp
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp
     cpp_pokemon_test/gen2_pokemon_test.cpp

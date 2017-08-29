@@ -9,6 +9,7 @@
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
 #include <algorithm>
@@ -52,19 +53,18 @@ namespace pkmn {
             _item_slots[50+i-1].item = name;
         }
 
-        if(ptr) {
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
 
             _from_native();
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new pksav_gen2_tmhm_pocket_t);
             std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
-
-            for(int i = 0; i < 57; ++i) {
-                _item_slots[i].amount = 0;
-            }
         }
     }
 

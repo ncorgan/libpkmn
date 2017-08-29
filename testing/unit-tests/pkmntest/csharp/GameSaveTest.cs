@@ -266,7 +266,7 @@ public class GameSaveTest {
             PKMN.Database.ItemEntry itemEntry;
             do {
                 itemEntry = new PKMN.Database.ItemEntry(itemList[rng.Next(0, itemList.Count)], game);
-            } while(!itemEntry.isHoldable);
+            } while(!itemEntry.IsHoldable);
 
             ret.HeldItem = itemEntry.Name;
         }

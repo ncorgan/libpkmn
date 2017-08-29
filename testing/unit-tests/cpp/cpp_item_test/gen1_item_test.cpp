@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
@@ -44,7 +45,13 @@ static void check_pksav_struct(
     const pksav_gen1_item_pc_t* native = reinterpret_cast<const pksav_gen1_item_pc_t*>(ptr);
     EXPECT_EQ(expected_num_items, int(native->count));
     for(int i = 0; i < expected_num_items; ++i) {
-        EXPECT_EQ(pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                game
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
 

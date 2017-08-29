@@ -536,11 +536,11 @@ namespace pkmntest {
                 break;
 
             case 3:
-                if(game == "Ruby" or game == "Sapphire")
+                if(save1->get_game() == "Ruby" or game == "Sapphire")
                 {
                     item_bag_size = sizeof(pksav_rs_item_storage_t);
                 }
-                else if(game == "Emerald")
+                else if(save1->get_game() == "Emerald")
                 {
                     item_bag_size = sizeof(pksav_emerald_item_storage_t);
                 }

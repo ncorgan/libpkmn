@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/stats.h>
@@ -29,12 +30,6 @@ static const std::vector<std::string> wrong_game_all_pocket_items = boost::assig
     ("Berry")("Occa Berry")
 ;
 
-BOOST_STATIC_CONSTEXPR int RUBY      = 7;
-BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
-BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
-BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
-BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
-
 class gba_item_list_test: public item_list_test {};
 
 /*
@@ -49,7 +44,10 @@ static void check_pksav_struct(
 ) {
     for(int i = 0; i < expected_num_items; ++i) {
         EXPECT_EQ(
-            pkmn::database::item_entry(item_slots.at(i).item, game).get_item_index(),
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                game
+            ).get_item_index(),
             int(pksav_littleendian16(native_items[i].index))
         );
         EXPECT_EQ(item_slots.at(i).amount, int(pksav_littleendian16(native_items[i].count)));
@@ -64,9 +62,9 @@ void gba_item_pocket_test(
 ) {
     ASSERT_EQ("Items", item_pocket->get_name());
 
+    int capacity = 0;
     std::string game = item_pocket->get_game();
 
-    int capacity = 0;
     if(game == "Ruby" or game == "Sapphire")
     {
         capacity = 20;
@@ -134,7 +132,7 @@ void gba_item_pocket_test(
 
     check_pksav_struct(
         item_pocket->as_vector(),
-        game,
+        item_pocket->get_game(),
         item_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(item_pocket->get_native())
     );
@@ -229,7 +227,7 @@ void gba_key_item_pocket_test(
 
     check_pksav_struct(
         key_item_pocket->as_vector(),
-        game,
+        key_item_pocket->get_game(),
         key_item_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(key_item_pocket->get_native())
     );
@@ -296,7 +294,7 @@ void gba_ball_pocket_test(
 
     check_pksav_struct(
         ball_pocket->as_vector(),
-        game,
+        ball_pocket->get_game(),
         ball_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(ball_pocket->get_native())
     );
@@ -305,9 +303,10 @@ void gba_ball_pocket_test(
 void gba_tmhm_pocket_test(
     pkmn::item_list::sptr tmhm_pocket
 ) {
+    int capacity = 0;
+
     std::string game = tmhm_pocket->get_game();
 
-    int capacity = 0;
     if(game == "FireRed" or game == "LeafGreen")
     {
         ASSERT_EQ("TM Case", tmhm_pocket->get_name());
@@ -318,6 +317,7 @@ void gba_tmhm_pocket_test(
         ASSERT_EQ("TMs & HMs", tmhm_pocket->get_name());
         capacity = 64;
     }
+    ASSERT_EQ(capacity, tmhm_pocket->get_capacity());
     ASSERT_EQ(size_t(capacity), tmhm_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty
@@ -362,7 +362,7 @@ void gba_tmhm_pocket_test(
 
     check_pksav_struct(
         tmhm_pocket->as_vector(),
-        game,
+        tmhm_pocket->get_game(),
         tmhm_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(tmhm_pocket->get_native())
     );
@@ -371,9 +371,10 @@ void gba_tmhm_pocket_test(
 void gba_berry_pocket_test(
     pkmn::item_list::sptr berry_pocket
 ) {
+    int capacity = 0;
+
     std::string game = berry_pocket->get_game();
 
-    int capacity = 0;
     if(game == "FireRed" or game == "LeafGreen")
     {
         ASSERT_EQ("Berry Pouch", berry_pocket->get_name());
@@ -429,7 +430,7 @@ void gba_berry_pocket_test(
 
     check_pksav_struct(
         berry_pocket->as_vector(),
-        game,
+        berry_pocket->get_game(),
         berry_pocket->get_num_items(),
         reinterpret_cast<const pksav_item_t*>(berry_pocket->get_native())
     );

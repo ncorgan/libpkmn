@@ -7,6 +7,8 @@
 
 #include "item_list_gcnimpl.hpp"
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <pksav/math/endian.h>
 
 #include <algorithm>

@@ -32,8 +32,16 @@ namespace pkmn {
                 const pksav_gba_pc_pokemon_t &pc,
                 int game_id
             );
+            pokemon_gbaimpl(
+                const pksav_gba_party_pokemon_t &party,
+                int game_id
+            );
 
             ~pokemon_gbaimpl();
+
+            pokemon::sptr to_game(
+                const std::string& game
+            );
 
             void set_form(
                 const std::string &form

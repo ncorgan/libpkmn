@@ -28,8 +28,20 @@ namespace pkmn {
                 pksav_gen1_party_pokemon_t* party,
                 int game_id
             );
+            pokemon_gen1impl(
+                const pksav_gen1_pc_pokemon_t& pc,
+                int game_id
+            );
+            pokemon_gen1impl(
+                const pksav_gen1_party_pokemon_t& party,
+                int game_id
+            );
 
             ~pokemon_gen1impl();
+
+            pokemon::sptr to_game(
+                const std::string& game
+            );
 
             void set_form(
                 const std::string &form

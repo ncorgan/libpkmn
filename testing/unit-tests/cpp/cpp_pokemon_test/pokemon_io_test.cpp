@@ -41,7 +41,7 @@ TEST(pokemon_io_test, test_3gpkm) {
     EXPECT_EQ("Route 120", mightyena->get_location_met(false));
     EXPECT_EQ("Emerald", mightyena->get_original_game());
     EXPECT_EQ(3557601241, mightyena->get_personality());
-    EXPECT_EQ(128734 , mightyena->get_experience());
+    EXPECT_EQ(128734, mightyena->get_experience());
     EXPECT_EQ(50, mightyena->get_level());
 
     const std::map<std::string, bool>& mightyena_markings = mightyena->get_markings();

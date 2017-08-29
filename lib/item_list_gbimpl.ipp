@@ -7,6 +7,8 @@
 #ifndef PKMN_ITEM_LIST_GBIMPL_IPP
 #define PKMN_ITEM_LIST_GBIMPL_IPP
 
+#include <pkmn/database/item_entry.hpp>
+
 #include <cstring>
 
 #define GBLIST_RCAST reinterpret_cast<list_type*>(_native)
