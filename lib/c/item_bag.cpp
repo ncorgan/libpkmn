@@ -24,11 +24,11 @@ void init_item_bag(
 {
     pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
 
-    std::strncpy(
-        item_bag->game,
-        cpp->get_game().c_str(),
-        sizeof(item_bag->game)
-    );
+    std::string game = cpp->get_game();
+    item_bag->game = (char*)std::calloc(game.size() + 1, 1);
+    std::strcpy(item_bag->game, game.c_str());
+    item_bag->game[game.size()] = '\0';
+
     item_bag->pockets.num_pockets = cpp->get_pockets().size();
     item_bag->pockets.pockets =
         (pkmn_item_list2_t*)std::malloc(sizeof(pkmn_item_list2_t)*item_bag->pockets.num_pockets);
@@ -84,7 +84,7 @@ pkmn_error_t pkmn_item_bag2_free(
 {
     PKMN_CHECK_NULL_PARAM(item_bag);
 
-    item_bag->game[0] = '\0';
+    item_bag->game = NULL;
 
     pkmn_item_pockets_free(&item_bag->pockets);
 
@@ -105,8 +105,14 @@ const char* pkmn_item_bag2_strerror(
 
     try
     {
-        boost::mutex::scoped_lock lock(INTERNAL_RCAST(item_bag->_internal)->error_mutex);
-        return INTERNAL_RCAST(item_bag->_internal)->last_error.c_str();
+        pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag->_internal);
+        if(!internal_ptr)
+        {
+            return NULL;
+        }
+
+        boost::mutex::scoped_lock lock(internal_ptr->error_mutex);
+        return internal_ptr->last_error.c_str();
     }
     catch(...)
     {
@@ -120,13 +126,11 @@ pkmn_error_t pkmn_item_bag2_add(
     int amount
 )
 {
-    PKMN_CHECK_NULL_PARAM(item_bag);
-    // TODO: cleaner macro
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, INTERNAL_RCAST(item_bag->_internal));
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag);
+    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag->_internal);
 
-    // TODO: cleaner macro
-    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_bag->_internal),
-        pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::item_bag::sptr cpp = internal_ptr->cpp;
 
         cpp->add(
             item,
@@ -151,13 +155,11 @@ pkmn_error_t pkmn_item_bag2_remove(
     int amount
 )
 {
-    PKMN_CHECK_NULL_PARAM(item_bag);
-    // TODO: cleaner macro
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, INTERNAL_RCAST(item_bag->_internal));
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag);
+    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag->_internal);
 
-    // TODO: cleaner macro
-    PKMN_CPP_TO_C_WITH_HANDLE(INTERNAL_RCAST(item_bag->_internal),
-        pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::item_bag::sptr cpp = internal_ptr->cpp;
 
         cpp->remove(
             item,

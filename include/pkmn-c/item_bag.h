@@ -14,8 +14,6 @@
 #include <pkmn-c/types/item_pockets.h>
 #include <pkmn-c/types/string_types.h>
 
-#define PKMN_ITEM_BAG_BUFFER_SIZE 64
-
 #if !defined(PKMN_ITEM_BAG_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_bag_t;
 typedef struct pkmn_item_bag_t pkmn_item_bag_t;
@@ -27,7 +25,7 @@ typedef pkmn_item_bag_t* pkmn_item_bag_handle_t;
 // TODO: this will replace the handle being passed around.
 typedef struct
 {
-    char game[PKMN_ITEM_LIST_BUFFER_SIZE];
+    char* game;
     pkmn_item_pockets_t pockets;
 
     void* _internal;

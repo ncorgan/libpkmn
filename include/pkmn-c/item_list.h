@@ -13,8 +13,6 @@
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/string_types.h>
 
-#define PKMN_ITEM_LIST_BUFFER_SIZE 64
-
 #if !defined(PKMN_ITEM_LIST_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_item_list_t;
 typedef struct pkmn_item_list_t pkmn_item_list_t;
@@ -26,8 +24,8 @@ typedef pkmn_item_list_t* pkmn_item_list_handle_t;
 // TODO: this will replace the handle being passed around.
 typedef struct
 {
-    char name[PKMN_ITEM_LIST_BUFFER_SIZE];
-    char game[PKMN_ITEM_LIST_BUFFER_SIZE];
+    char* name;
+    char* game;
 
     size_t num_items;
     size_t capacity;
