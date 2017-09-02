@@ -109,91 +109,6 @@ static void populate_pksav_saves() {
 }
 
 /*
- * <pkmn-c/build_info.h>
- */
-static void build_info_error_test() {
-    /*
-     * pkmn_get_boost_version
-     */
-
-    error = pkmn_get_boost_version(
-                NULL, // boost_version_out
-                sizeof(strbuffer)
-            );
-    TEST_NULL_POINTER_RETURN("boost_version_out");
-
-    error = pkmn_get_boost_version(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
-
-    /*
-     * pkmn_get_pksav_version
-     */
-
-    error = pkmn_get_pksav_version(
-                NULL, // pksav_version_out
-                sizeof(strbuffer)
-            );
-    TEST_NULL_POINTER_RETURN("pksav_version_out");
-
-    error = pkmn_get_pksav_version(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
-
-    /*
-     * pkmn_get_qt_version
-     */
-
-    error = pkmn_get_qt_version(
-                NULL, // qt_version_out
-                sizeof(strbuffer)
-            );
-    TEST_NULL_POINTER_RETURN("qt_version_out");
-
-    error = pkmn_get_qt_version(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
-
-    /*
-     * pkmn_get_sqlite3_version
-     */
-
-    error = pkmn_get_sqlite3_version(
-                NULL, // sqlite3_version_out
-                sizeof(strbuffer)
-            );
-    TEST_NULL_POINTER_RETURN("sqlite3_version_out");
-
-    error = pkmn_get_sqlite3_version(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
-
-    /*
-     * pkmn_get_sqlitecpp_version
-     */
-
-    error = pkmn_get_sqlitecpp_version(
-                NULL, // sqlitecpp_version_out
-                sizeof(strbuffer)
-            );
-    TEST_NULL_POINTER_RETURN("sqlitecpp_version_out");
-
-    error = pkmn_get_sqlitecpp_version(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
-}
-
-/*
  * <pkmn-c/game_save.h>
  */
 static void game_save_error_test() {
@@ -3464,7 +3379,6 @@ static void utils_paths_error_test() {
 PKMN_C_TEST_MAIN(
     populate_pksav_saves();
 
-    PKMN_C_TEST(build_info_error_test)
     PKMN_C_TEST(game_save_error_test)
     PKMN_C_TEST(item_bag_error_test)
     PKMN_C_TEST(item_list_error_test)
