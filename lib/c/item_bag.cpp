@@ -24,30 +24,31 @@ void init_item_bag(
 {
     pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
 
-    std::string game = cpp->get_game();
-    item_bag->game = (char*)std::calloc(game.size() + 1, 1);
-    std::strcpy(item_bag->game, game.c_str());
-    item_bag->game[game.size()] = '\0';
-
-    item_bag->pockets.num_pockets = cpp->get_pockets().size();
-    item_bag->pockets.pockets =
-        (pkmn_item_list2_t*)std::malloc(sizeof(pkmn_item_list2_t)*item_bag->pockets.num_pockets);
-    item_bag->pockets.pocket_names =
-        (char**)std::malloc(sizeof(char*)*item_bag->pockets.num_pockets);
+    pkmn::std_string_to_c_str_alloc(
+        cpp->get_game(),
+        &item_bag->game
+    );
 
     const pkmn::item_pockets_t& pockets_cpp = cpp->get_pockets();
-    size_t i = 0;
-    for(auto pocket_iter = pockets_cpp.begin(); pocket_iter != pockets_cpp.end(), ++i; ++pocket_iter)
-    {
-        pkmn::std_string_to_c_str_alloc(
-            pocket_iter->first,
-            &item_bag->pockets.pocket_names[i]
-        );
-        item_bag->pockets.pockets->_internal = new pkmn_item_list_internal_t;
-        LIST_INTERNAL_RCAST(item_bag->pockets.pockets[i]._internal)->cpp = pocket_iter->second;
+    item_bag->pockets.num_pockets = pockets_cpp.size();
+    item_bag->pockets.pockets =
+        (pkmn_item_list2_t*)std::calloc(sizeof(pkmn_item_list2_t)*pockets_cpp.size(), 1);
+    item_bag->pockets.pocket_names.strings =
+        (char**)std::calloc(sizeof(char*)*pockets_cpp.size(), 1);
+    item_bag->pockets.pocket_names.length = pockets_cpp.size();
 
+    const std::vector<std::string>& pocket_names = cpp->get_pocket_names();
+    for(size_t i = 0; i < pocket_names.size(); ++i)
+    {
+        item_bag->pockets.pockets[i]._internal = new pkmn_item_list_internal_t;
+        LIST_INTERNAL_RCAST(item_bag->pockets.pockets[i]._internal)->cpp = pockets_cpp.at(pocket_names[i]);
         init_item_list(&item_bag->pockets.pockets[i]);
     }
+
+    pkmn::std_vector_std_string_to_string_list(
+        pocket_names,
+        &item_bag->pockets.pocket_names
+    );
 }
 
 // The caller is expected to be exception-safe.
@@ -120,6 +121,35 @@ const char* pkmn_item_bag2_strerror(
     }
 }
 
+pkmn_error_t pkmn_item_bag2_get_pocket(
+    pkmn_item_bag2_t* item_bag,
+    const char* pocket_name,
+    pkmn_item_list2_t** item_list_out
+)
+{
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag);
+    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag->_internal);
+
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pocket_name, internal_ptr);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_list_out, internal_ptr);
+
+    bool was_pocket_found = false;
+
+    for(size_t i = 0; i < item_bag->pockets.num_pockets; ++i)
+    {
+        if(!std::strcmp(pocket_name, item_bag->pockets.pockets[i].name))
+        {
+            *item_list_out = &item_bag->pockets.pockets[i];
+            was_pocket_found = true;
+            break;
+        }
+    }
+
+    return was_pocket_found ? PKMN_ERROR_NONE : PKMN_ERROR_INVALID_ARGUMENT;
+}
+
+// TODO: null checks below
+
 pkmn_error_t pkmn_item_bag2_add(
     pkmn_item_bag2_t* item_bag,
     const char* item,
@@ -141,7 +171,7 @@ pkmn_error_t pkmn_item_bag2_add(
         pkmn::database::item_entry entry(item, cpp->get_game());
         for(size_t i = 0; i < item_bag->pockets.num_pockets; ++i)
         {
-            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names[i]))
+            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names.strings[i]))
             {
                 update_item_list(&item_bag->pockets.pockets[i]);
             }
@@ -170,7 +200,7 @@ pkmn_error_t pkmn_item_bag2_remove(
         pkmn::database::item_entry entry(item, cpp->get_game());
         for(size_t i = 0; i < item_bag->pockets.num_pockets; ++i)
         {
-            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names[i]))
+            if(!std::strcmp(entry.get_pocket().c_str(), item_bag->pockets.pocket_names.strings[i]))
             {
                 update_item_list(&item_bag->pockets.pockets[i]);
             }

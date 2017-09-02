@@ -11,12 +11,16 @@
 
 #include <pkmn.h>
 
-int main(int argc, char** argv)
-{
-    (void)argc;
-    (void)argv;
-    return 0;
-}
+#define GEN1_UNITY_TESTS(game) \
+    PKMN_C_TEST(test_gen1_item_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen1_item_pc_ ## game ) \
+    PKMN_C_TEST(test_gen1_item_bag_ ## game )
+
+PKMN_C_TEST_MAIN(
+    GEN1_UNITY_TESTS(Red)
+    GEN1_UNITY_TESTS(Blue)
+    GEN1_UNITY_TESTS(Yellow)
+)
 
 // Red
 

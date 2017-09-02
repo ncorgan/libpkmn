@@ -11,12 +11,14 @@
 #include <pkmn-c/error.h>
 #include <pkmn-c/item_list.h>
 
+#include <pkmn-c/types/string_types.h>
+
 #include <stdlib.h>
 
 typedef struct
 {
     pkmn_item_list2_t* pockets;
-    char** pocket_names;
+    pkmn_string_list_t pocket_names;
 
     size_t num_pockets;
 } pkmn_item_pockets_t;
@@ -37,10 +39,9 @@ static PKMN_INLINE pkmn_error_t pkmn_item_pockets_free(
     for(size_t i = 0; i < item_pockets->num_pockets; ++i)
     {
         pkmn_item_list2_free(&item_pockets->pockets[i]);
-        free(item_pockets->pocket_names[i]);
     }
     free(item_pockets->pockets);
-    free(item_pockets->pocket_names);
+    pkmn_string_list_free(&item_pockets->pocket_names);
 
     return PKMN_ERROR_NONE;
 }

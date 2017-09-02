@@ -23,15 +23,14 @@ void init_item_list(
 {
     pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
 
-    std::string name = cpp->get_name();
-    item_list->name = (char*)std::calloc(name.size() + 1, 1);
-    std::strcpy(item_list->name, name.c_str());
-    item_list->name[name.size()] = '\0';
-
-    std::string game = cpp->get_game();
-    item_list->game = (char*)std::calloc(game.size() + 1, 1);
-    std::strcpy(item_list->game, game.c_str());
-    item_list->game[game.size()] = '\0';
+    pkmn::std_string_to_c_str_alloc(
+        cpp->get_name(),
+        &item_list->name
+    );
+    pkmn::std_string_to_c_str_alloc(
+        cpp->get_game(),
+        &item_list->game
+    );
 
     item_list->num_items = cpp->get_num_items();
     item_list->capacity = cpp->get_capacity();
@@ -61,6 +60,8 @@ void update_item_list(
         );
         item_list->item_slots.item_slots[i].amount = slot_cpp.amount;
     }
+
+    item_list->num_items = cpp->get_num_items();
 }
 
 pkmn_error_t pkmn_item_list2_init(

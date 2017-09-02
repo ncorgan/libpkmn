@@ -360,28 +360,38 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("position", 0, end_boundary);
         }
-        if(slot.item == "None" and slot.amount != 0)
+        if(slot.item == "None")
         {
-            throw std::invalid_argument("\"None\" entries must have an amount of 0.");
-        }
-        pkmn::database::item_entry entry(slot.item, get_game());
-        if(get_name() != "PC" and slot.item != "None" and entry.get_pocket() != get_name())
-        {
-            throw std::invalid_argument("This item does not belong in this pocket.");
-        }
-        if(slot.amount < 0 or slot.amount > 99)
-        {
-            pkmn::throw_out_of_range("amount", 0, 99);
-        }
-        for(int i = 0; i < _num_items; ++i)
-        {
-            if(_item_slots[i].item == slot.item)
+            if(slot.amount != 0)
             {
-                std::string err_msg = "This item is already present in slot ";
-                err_msg.append(std::to_string(i));
-                err_msg.append(".");
+                throw std::invalid_argument("\"None\" entries must have an amount of 0.");
+            }
+            else if(slot.amount < 0 or slot.amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 0, 99);
+            }
+        }
+        else
+        {
+            pkmn::database::item_entry entry(slot.item, get_game());
+            if(get_name() != "PC" and slot.item != "None" and entry.get_pocket() != get_name())
+            {
+                throw std::invalid_argument("This item does not belong in this pocket.");
+            }
+            if(slot.amount < 1 or slot.amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 1, 99);
+            }
+            for(int i = 0; i < _num_items; ++i)
+            {
+                if((_item_slots[i].item == slot.item) && (i != position))
+                {
+                    std::string err_msg = "This item is already present in slot ";
+                    err_msg.append(std::to_string(i));
+                    err_msg.append(".");
 
-                throw std::invalid_argument(err_msg.c_str());
+                    throw std::invalid_argument(err_msg.c_str());
+                }
             }
         }
 

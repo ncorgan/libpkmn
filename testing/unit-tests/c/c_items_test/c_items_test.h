@@ -13,13 +13,40 @@
 
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+void test_item_list_empty_slots(
+    pkmn_item_list2_t* list
+);
 
-#ifdef __cplusplus
-}
-#endif
+void test_item_list_out_of_range_error(
+    pkmn_item_list2_t* list,
+    const char* item_name
+);
+
+void test_item_list_invalid_items(
+    pkmn_item_list2_t* list,
+    const char** item_names,
+    size_t num_items
+);
+
+void test_item_list_set_item(
+    pkmn_item_list2_t* list,
+    const char** item_names,
+    size_t num_items
+);
+
+void test_item_list_add_remove(
+    pkmn_item_list2_t* list,
+    const char** item_names,
+    size_t num_items
+);
+
+#define GEN1_TEST_FCNS(game) \
+    void test_gen1_item_pocket_ ## game (); \
+    void test_gen1_item_pc_ ## game (); \
+    void test_gen1_item_bag_ ## game ();
+
+GEN1_TEST_FCNS(Red);
+GEN1_TEST_FCNS(Blue);
+GEN1_TEST_FCNS(Yellow);
 
 #endif /* C_ITEMS_TEST_H */
