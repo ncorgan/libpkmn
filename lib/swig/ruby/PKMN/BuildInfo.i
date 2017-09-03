@@ -16,6 +16,7 @@ PKMN_RUBY_INIT
     #include <pkmn/build_info.hpp>
 
     static const std::string BOOST_VERSION = pkmn::build_info::get_boost_version();
+    static const std::string LIBPKMGC_VERSION = pkmn::build_info::get_libpkmgc_version();
     static const std::string PKSAV_VERSION = pkmn::build_info::get_pksav_version();
     static const std::string QT_VERSION = pkmn::build_info::get_qt_version();
     static const std::string SQLITE3_VERSION = pkmn::build_info::get_sqlite3_version();
@@ -23,6 +24,7 @@ PKMN_RUBY_INIT
 %}
 
 %constant std::string BOOST_VERSION;
+%constant std::string LIBPKMGC_VERSION;
 %constant std::string PKSAV_VERSION;
 %constant std::string QT_VERSION;
 %constant std::string SQLITE3_VERSION;

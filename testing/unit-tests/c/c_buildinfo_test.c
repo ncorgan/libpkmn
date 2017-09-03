@@ -9,6 +9,8 @@
 
 #include <pkmn.h>
 
+#include <string.h>
+
 static void boost_version_test()
 {
     const char* boost_version = pkmn_boost_version();

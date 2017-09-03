@@ -27,4 +27,6 @@ pkmn.DEFAULT_TRAINER_NAME = "LibPKMN"
 
 pkmn.VERSION = "@PKMN_VERSION@"
 
+pkmn.buildinfo.SWIG_VERSION = "@SWIG_VERSION@"
+
 return pkmn

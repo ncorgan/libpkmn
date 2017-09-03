@@ -17,6 +17,10 @@ class RubyBuildInfoTest < Test::Unit::TestCase
         assert(PKMN::BuildInfo::BOOST_VERSION.length > 0)
     end
 
+    def test_libpkmgc_version
+        assert(PKMN::BuildInfo::LIBPKMGC_VERSION.length > 0)
+    end
+
     def test_pksav_version
         assert(PKMN::BuildInfo::PKSAV_VERSION.length > 0)
     end
