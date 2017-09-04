@@ -29,6 +29,7 @@ SET(cpp_tests
     cpp_paths_test
     cpp_pokemon_party_test
     cpp_pokemon_pc_test
+    cpp_swig_wrapper_test
 )
 
 FOREACH(test ${cpp_tests})

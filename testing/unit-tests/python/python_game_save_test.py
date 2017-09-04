@@ -261,7 +261,7 @@ class game_save_test(unittest.TestCase):
         self.assertEquals(item_list1.get_num_items(), item_list2.get_num_items())
 
         for i in range(len(item_list1)):
-            self.assertEquals(item_list1[i].item.get_name(), item_list2[i].item.get_name())
+            self.assertEquals(item_list1[i].item, item_list2[i].item)
             self.assertEquals(item_list1[i].amount, item_list2[i].amount)
         return
 

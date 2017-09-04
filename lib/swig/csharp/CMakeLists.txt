@@ -11,7 +11,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py
     DEPENDS ${header_files}
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
-    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
     COMMENT "Generating csharp_CamelCase.i"
 )
 ADD_CUSTOM_TARGET(

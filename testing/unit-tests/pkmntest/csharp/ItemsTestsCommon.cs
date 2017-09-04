@@ -14,10 +14,8 @@ internal class ItemsTestsCommon {
     public static void TestItemListEmptySlots(
         PKMN.ItemList itemList
     ) {
-        PKMN.Database.ItemEntry noneEntry = new PKMN.Database.ItemEntry("None", itemList.Game);
-
         foreach(PKMN.ItemSlot itemSlot in itemList.AsList()) {
-            Assert.AreEqual(itemSlot.Item, noneEntry);
+            Assert.AreEqual(itemSlot.Item, "None");
             Assert.AreEqual(itemSlot.Amount, 0);
         }
     }
@@ -90,136 +88,134 @@ internal class ItemsTestsCommon {
     ) {
         Assert.AreEqual(itemNames.Length, 8);
 
-        PKMN.Database.ItemEntry noneEntry = new PKMN.Database.ItemEntry("None", itemList.Game);
-
         itemList.Add(itemNames[0], 30);
         itemList.Add(itemNames[1], 99);
         itemList.Add(itemNames[2], 1);
 
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[0]);
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
         Assert.AreEqual(itemList[0].Amount, 30);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[1].Item, itemNames[1]);
         Assert.AreEqual(itemList[1].Amount, 99);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
         Assert.AreEqual(itemList[2].Amount, 1);
         Assert.AreEqual(itemList.NumItems, 3);
 
         itemList.Add(itemNames[2], 15);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[0]);
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
         Assert.AreEqual(itemList[0].Amount, 30);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[1].Item, itemNames[1]);
         Assert.AreEqual(itemList[1].Amount, 99);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
         Assert.AreEqual(itemList[2].Amount, 16);
         Assert.AreEqual(itemList.NumItems, 3);
 
         itemList.Remove(itemNames[1], 20);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[0]);
+        Assert.AreEqual(itemList[0].Item, itemNames[0]);
         Assert.AreEqual(itemList[0].Amount, 30);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[1].Item, itemNames[1]);
         Assert.AreEqual(itemList[1].Amount, 79);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
         Assert.AreEqual(itemList[2].Amount, 16);
         Assert.AreEqual(itemList.NumItems, 3);
 
         itemList.Move(0, 1);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 79);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[0]);
+        Assert.AreEqual(itemList[1].Item, itemNames[0]);
         Assert.AreEqual(itemList[1].Amount, 30);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[2].Item, itemNames[2]);
         Assert.AreEqual(itemList[2].Amount, 16);
         Assert.AreEqual(itemList.NumItems, 3);
 
         itemList.Remove(itemNames[0], 30);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 79);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
         Assert.AreEqual(itemList[1].Amount, 16);
-        Assert.AreEqual(itemList[2].Item, noneEntry);
+        Assert.AreEqual(itemList[2].Item, "None");
         Assert.AreEqual(itemList[2].Amount, 0);
         Assert.AreEqual(itemList.NumItems, 2);
 
         itemList.Add(itemNames[3], 90);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 79);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
         Assert.AreEqual(itemList[1].Amount, 16);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[2].Item, itemNames[3]);
         Assert.AreEqual(itemList[2].Amount, 90);
         Assert.AreEqual(itemList.NumItems, 3);
 
         itemList.Add(itemNames[4], 2);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 79);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
         Assert.AreEqual(itemList[1].Amount, 16);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[2].Item, itemNames[3]);
         Assert.AreEqual(itemList[2].Amount, 90);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[3].Item, itemNames[4]);
         Assert.AreEqual(itemList[3].Amount, 2);
         Assert.AreEqual(itemList.NumItems, 4);
 
         itemList.Remove(itemNames[1], 30);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 49);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
         Assert.AreEqual(itemList[1].Amount, 16);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[2].Item, itemNames[3]);
         Assert.AreEqual(itemList[2].Amount, 90);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[3].Item, itemNames[4]);
         Assert.AreEqual(itemList[3].Amount, 2);
         Assert.AreEqual(itemList.NumItems, 4);
 
         itemList.Add(itemNames[5], 12);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 49);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[2]);
+        Assert.AreEqual(itemList[1].Item, itemNames[2]);
         Assert.AreEqual(itemList[1].Amount, 16);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[2].Item, itemNames[3]);
         Assert.AreEqual(itemList[2].Amount, 90);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[3].Item, itemNames[4]);
         Assert.AreEqual(itemList[3].Amount, 2);
-        Assert.AreEqual(itemList[4].Item.Name, itemNames[5]);
+        Assert.AreEqual(itemList[4].Item, itemNames[5]);
         Assert.AreEqual(itemList[4].Amount, 12);
         Assert.AreEqual(itemList.NumItems, 5);
 
         itemList.Remove(itemNames[2], 16);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 49);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[1].Item, itemNames[3]);
         Assert.AreEqual(itemList[1].Amount, 90);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[2].Item, itemNames[4]);
         Assert.AreEqual(itemList[2].Amount, 2);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[5]);
+        Assert.AreEqual(itemList[3].Item, itemNames[5]);
         Assert.AreEqual(itemList[3].Amount, 12);
         Assert.AreEqual(itemList.NumItems, 4);
 
         itemList.Add(itemNames[6], 65);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 49);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[1].Item, itemNames[3]);
         Assert.AreEqual(itemList[1].Amount, 90);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[2].Item, itemNames[4]);
         Assert.AreEqual(itemList[2].Amount, 2);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[5]);
+        Assert.AreEqual(itemList[3].Item, itemNames[5]);
         Assert.AreEqual(itemList[3].Amount, 12);
-        Assert.AreEqual(itemList[4].Item.Name, itemNames[6]);
+        Assert.AreEqual(itemList[4].Item, itemNames[6]);
         Assert.AreEqual(itemList[4].Amount, 65);
         Assert.AreEqual(itemList.NumItems, 5);
 
         itemList.Add(itemNames[7], 6);
-        Assert.AreEqual(itemList[0].Item.Name, itemNames[1]);
+        Assert.AreEqual(itemList[0].Item, itemNames[1]);
         Assert.AreEqual(itemList[0].Amount, 49);
-        Assert.AreEqual(itemList[1].Item.Name, itemNames[3]);
+        Assert.AreEqual(itemList[1].Item, itemNames[3]);
         Assert.AreEqual(itemList[1].Amount, 90);
-        Assert.AreEqual(itemList[2].Item.Name, itemNames[4]);
+        Assert.AreEqual(itemList[2].Item, itemNames[4]);
         Assert.AreEqual(itemList[2].Amount, 2);
-        Assert.AreEqual(itemList[3].Item.Name, itemNames[5]);
+        Assert.AreEqual(itemList[3].Item, itemNames[5]);
         Assert.AreEqual(itemList[3].Amount, 12);
-        Assert.AreEqual(itemList[4].Item.Name, itemNames[6]);
+        Assert.AreEqual(itemList[4].Item, itemNames[6]);
         Assert.AreEqual(itemList[4].Amount, 65);
-        Assert.AreEqual(itemList[5].Item.Name, itemNames[7]);
+        Assert.AreEqual(itemList[5].Item, itemNames[7]);
         Assert.AreEqual(itemList[5].Amount, 6);
         Assert.AreEqual(itemList.NumItems, 6);
 

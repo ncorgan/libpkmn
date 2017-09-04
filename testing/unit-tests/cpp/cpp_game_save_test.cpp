@@ -36,10 +36,6 @@ BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
-BOOST_STATIC_CONSTEXPR int RUBY      = 7;
-BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
-BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
-
 static const std::string GB_GAMES[] = {
     "Red", "Blue", "Yellow",
     "Gold",  "Silver", "Crystal"
@@ -419,7 +415,7 @@ namespace pkmntest {
         const pkmn::item_slots_t& item_slots2 = list2->as_vector();
         ASSERT_EQ(item_slots1.size(), item_slots2.size());
         for(size_t i = 0; i < item_slots1.size(); ++i) {
-            EXPECT_EQ(item_slots1[i].item.get_item_id(), item_slots2[i].item.get_item_id());
+            EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
             EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
         }
     }
@@ -540,19 +536,17 @@ namespace pkmntest {
                 break;
 
             case 3:
-                switch(save1->get_item_pc()->as_vector().at(0).item.get_item_id()) {
-                    case RUBY:
-                    case SAPPHIRE:
-                        item_bag_size = sizeof(pksav_rs_item_storage_t);
-                        break;
-
-                    case EMERALD:
-                        item_bag_size = sizeof(pksav_emerald_item_storage_t);
-                        break;
-
-                    default:
-                        item_bag_size = sizeof(pksav_frlg_item_storage_t);
-                        break;
+                if(save1->get_game() == "Ruby" or game == "Sapphire")
+                {
+                    item_bag_size = sizeof(pksav_rs_item_storage_t);
+                }
+                else if(save1->get_game() == "Emerald")
+                {
+                    item_bag_size = sizeof(pksav_emerald_item_storage_t);
+                }
+                else
+                {
+                    item_bag_size = sizeof(pksav_frlg_item_storage_t);
                 }
                 break;
 

@@ -370,10 +370,7 @@ TEST(cpp_to_c_test, hidden_power_cpp_to_c_test) {
 }
 
 TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
-    pkmn::item_slot item_slot_cpp(
-        pkmn::database::item_entry("Potion", "Red"),
-        50
-    );
+    pkmn::item_slot item_slot_cpp("Potion", 50);
 
     pkmn_item_slot_t item_slot_c;
 
@@ -392,18 +389,9 @@ TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
 
 TEST(cpp_to_c_test, item_slots_cpp_to_c_test) {
     pkmn::item_slots_t item_slots_cpp{
-        pkmn::item_slot(
-            pkmn::database::item_entry("Potion", "Red"),
-            50
-        ),
-        pkmn::item_slot(
-            pkmn::database::item_entry("Berry", "Silver"),
-            28
-        ),
-        pkmn::item_slot(
-            pkmn::database::item_entry("Berry Pouch", "LeafGreen"),
-            1
-        )
+        pkmn::item_slot("Potion", 50),
+        pkmn::item_slot("Berry", 28),
+        pkmn::item_slot("Berry Pouch", 1)
     };
 
     pkmn_item_slots_t item_slots_c = { NULL, 0 };

@@ -19,7 +19,6 @@ Features in development:
  * Damage calculations
  * Generation IV save support
  * Java API
- * Ruby API
 
 Future planned features:
  * Generation V-VI save support
@@ -41,12 +40,14 @@ Build Dependencies
     * [SWIG](http://swig.org/)
       * Lua support: 2.0.12+
       * Python 2 support: 3.0.8+
+      * Ruby support: 3.0.3+
       * Others: 2.0.11+
     * [CppHeaderParser](https://pypi.python.org/pypi/CppHeaderParser/)
     * [PLY](https://pypi.python.org/pypi/ply)
   * C# ([.NET](https://www.microsoft.com/net)/[Mono](http://www.mono-project.com/))
   * [Lua](https://www.lua.org) (5.1+)
   * [Python](https://www.python.org) (2.7+ or 3.3+)
+  * [Ruby](https://www.ruby-lang.org) (2.1.0+)
 * Documentation
   * [Doxygen](https://www.stack.nl/~dimitri/doxygen/)
 
@@ -67,6 +68,7 @@ repository is automatically tested under the following configurations:
    * C#: Mono 3.2.8
    * Lua: 5.1.5
    * Python: 2.7.6, 3.4.3
+   * Ruby: 2.3.0
  * Windows Server 2012 R2 (x64)
    * C/C++: MSVC 2015 (Win32, x64)
      * Boost: 1.59.0, 1.62.0, 1.63.0
@@ -82,6 +84,7 @@ Tests are run with the following frameworks:
  * C#: [NUnit](https://www.nunit.org/)
  * Lua: [Luaunit](https://github.com/bluebird75/luaunit)
  * Python: [unittest](https://docs.python.org/3/library/unittest.html) + [nose-parameterized](https://pypi.python.org/pypi/nose-parameterized/)
+ * Ruby: [test-unit](https://github.com/test-unit/test-unit) + [minitest](https://github.com/seattlerb/minitest)
 
 All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 
@@ -94,4 +97,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/06/04
+README last updated: 2017/08/27
