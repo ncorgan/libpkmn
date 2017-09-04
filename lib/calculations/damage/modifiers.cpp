@@ -12,7 +12,7 @@
 
 namespace pkmn { namespace calculations {
 
-    pkmn::database::sptr _db;
+    static pkmn::database::sptr _db;
 
     float type_damage_modifier(
         int generation,

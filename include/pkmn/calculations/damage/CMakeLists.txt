@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         critical_hit.hpp
         damage.hpp
         modifiers.hpp
+        moves.hpp
     )
 
     INSTALL(

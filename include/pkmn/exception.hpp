@@ -134,6 +134,21 @@ namespace pkmn {
         throw std::out_of_range(err_msg.str().c_str());
     }
 
+    //! If the given value is outside the given range, throw out_of_range.
+    template <typename T>
+    PKMN_INLINE void enforce_value_range(
+        const std::string& field,
+        T min,
+        T max,
+        T value
+    )
+    {
+        if(value < min or value > max)
+        {
+            throw_out_of_range(field, min, max);
+        }
+    }
+
 }
 
 #ifdef PKMN_PLATFORM_WIN32
