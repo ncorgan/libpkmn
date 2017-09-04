@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <algorithm>
+
 namespace pkmn { namespace calculations {
 
     PKMN_API int crush_grip_power(
