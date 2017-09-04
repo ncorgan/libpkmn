@@ -14,7 +14,6 @@ PKMN_CSHARP_INIT
 %import <stl_csharp.i>
 
 %{
-    #include <pkmn/calculations/damage.hpp>
     #include <pkmn/calculations/form.hpp>
     #include <pkmn/calculations/gender.hpp>
     #include <pkmn/calculations/hidden_power.hpp>
@@ -24,13 +23,19 @@ PKMN_CSHARP_INIT
     #include <pkmn/calculations/size.hpp>
     #include <pkmn/calculations/spinda_spots.hpp>
     #include <pkmn/calculations/stats.hpp>
+
+    #include <pkmn/calculations/damage/critical_hit.hpp>
+    #include <pkmn/calculations/damage/damage.hpp>
+    #include <pkmn/calculations/damage/modifiers.hpp>
 %}
 
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
 %rename(STABModifier) STAB_MODIFIER;
-%include <pkmn/calculations/damage.hpp>
+%include <pkmn/calculations/damage/critical_hit.hpp>
+%include <pkmn/calculations/damage/damage.hpp>
+%include <pkmn/calculations/damage/modifiers.hpp>
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>

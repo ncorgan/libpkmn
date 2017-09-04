@@ -6,7 +6,6 @@
 #
 
 SET(pkmn_calculations_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/damage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/form.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gender.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hidden_power.cpp
@@ -16,4 +15,7 @@ SET(pkmn_calculations_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/size.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/spinda_spots.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/stats.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/damage/critical_hit.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/damage/damage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/damage/modifiers.cpp
 PARENT_SCOPE)

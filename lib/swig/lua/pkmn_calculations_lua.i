@@ -11,7 +11,6 @@ PKMN_LUA_INIT
 %import <pkmn_stl_lua.i>
 
 %{
-    #include <pkmn/calculations/damage.hpp>
     #include <pkmn/calculations/form.hpp>
     #include <pkmn/calculations/gender.hpp>
     #include <pkmn/calculations/hidden_power.hpp>
@@ -21,9 +20,12 @@ PKMN_LUA_INIT
     #include <pkmn/calculations/size.hpp>
     #include <pkmn/calculations/spinda_spots.hpp>
     #include <pkmn/calculations/stats.hpp>
+
+    #include <pkmn/calculations/damage/critical_hit.hpp>
+    #include <pkmn/calculations/damage/damage.hpp>
+    #include <pkmn/calculations/damage/modifiers.hpp>
 %}
 
-%include <pkmn/calculations/damage.hpp>
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>
 %include <pkmn/calculations/hidden_power.hpp>
@@ -33,3 +35,7 @@ PKMN_LUA_INIT
 %include <pkmn/calculations/size.hpp>
 %include <pkmn/calculations/spinda_spots.hpp>
 %include <pkmn/calculations/stats.hpp>
+
+%include <pkmn/calculations/damage/critical_hit.hpp>
+%include <pkmn/calculations/damage/damage.hpp>
+%include <pkmn/calculations/damage/modifiers.hpp>

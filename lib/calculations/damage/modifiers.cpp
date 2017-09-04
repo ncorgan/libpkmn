@@ -6,98 +6,13 @@
  */
 
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/damage.hpp>
+#include <pkmn/calculations/damage/modifiers.hpp>
 
 #include "../database/database_common.hpp"
 
 namespace pkmn { namespace calculations {
 
     pkmn::database::sptr _db;
-
-    // Constexpr functions that assume bounds have been checked
-
-    static PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_chance(
-        float speed,
-        bool rate_increased,
-        bool high_rate_move
-    ) {
-        return (speed / 512.0f) /
-               (rate_increased ? 4.0f : 1.0f) *
-               (high_rate_move ? 8.0f : 1.0f);
-    }
-
-    static PKMN_CONSTEXPR_OR_INLINE float _stadium_critical_hit_chance(
-        float speed,
-        bool rate_increased,
-        bool high_rate_move
-    ) {
-        return (speed + (rate_increased ? 236.0f : 76.0f)) /
-               (1024.0f / (rate_increased ? 2.0f : 1.0f)
-                        / (high_rate_move ? 8.0f : 1.0f));
-    }
-
-    static PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_modifier(
-        float attacker_level
-    ) {
-        return ((2.0f * attacker_level) + 5.0f) / (attacker_level + 5.0f);
-    }
-
-    static PKMN_CONSTEXPR_OR_INLINE int _damage(
-        float level,
-        float power,
-        float attack,
-        float defense,
-        float modifier
-    ) {
-        return int(((((((2.0f * level) / 5.0f) + 2.0f) * power * (attack / defense)) / 50.0f) + 2.0f) * modifier);
-    }
-
-    // Exported functions
-
-    float gen1_critical_hit_chance(
-        int speed,
-        bool rate_increased,
-        bool high_rate_move
-    ) {
-        // Validate input parameters.
-        if(speed < 0) {
-            throw std::out_of_range("speed must be > 0.");
-        }
-
-        return _gen1_critical_hit_chance(
-                   float(speed),
-                   rate_increased,
-                   high_rate_move
-               );
-    }
-
-    float stadium_critical_hit_chance(
-        int speed,
-        bool rate_increased,
-        bool high_rate_move
-    ) {
-        // Validate input parameters.
-        if(speed < 0) {
-            throw std::out_of_range("speed must be > 0.");
-        }
-
-        return _stadium_critical_hit_chance(
-                   float(speed),
-                   rate_increased,
-                   high_rate_move
-               );
-    }
-
-    float gen1_critical_hit_modifier(
-        int attacker_level
-    ) {
-        // Validate input parameters (allow 255 for glitch Pokémon).
-        if(attacker_level < 1 or attacker_level > 255) {
-            pkmn::throw_out_of_range("attacker_level", 1, 100);
-        }
-
-        return _gen1_critical_hit_modifier(float(attacker_level));
-    }
 
     float type_damage_modifier(
         int generation,
@@ -177,39 +92,6 @@ namespace pkmn { namespace calculations {
         }
 
         return (damage_modifier1 * damage_modifier2);
-    }
-
-    int damage(
-        int attacker_level,
-        int move_base_power,
-        int attack_stat,
-        int defense_stat,
-        float modifier
-    ) {
-        // Validate input parameters (allow 255 for glitch Pokémon).
-        if(attacker_level < 1 or attacker_level > 255) {
-            pkmn::throw_out_of_range("attacker_level", 1, 100);
-        }
-        if(move_base_power < 0) {
-            throw std::out_of_range("move_base_power must be > 0.");
-        }
-        if(attack_stat < 0) {
-            throw std::out_of_range("attack_stat must be > 0.");
-        }
-        if(defense_stat < 0) {
-            throw std::out_of_range("defense_stat must be > 0.");
-        }
-        if(modifier < 0.0f) {
-            throw std::out_of_range("modifier must be > 0.0f.");
-        }
-
-        return _damage(
-                   float(attacker_level),
-                   float(move_base_power),
-                   float(attack_stat),
-                   float(defense_stat),
-                   modifier
-               );
     }
 
 }}

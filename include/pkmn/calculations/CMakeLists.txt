@@ -7,7 +7,6 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_calculations_headers
-        damage.hpp
         form.hpp
         gender.hpp
         hidden_power.hpp
@@ -25,3 +24,5 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
+
+ADD_SUBDIRECTORY(damage)
