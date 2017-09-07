@@ -3,23 +3,19 @@
 
 :: Set variables
 set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
+dir %BOOST_ROOT%
+set CMAKE_PREFIX_PATH=%QT_DIR%
 if "x%CMAKE_GENERATOR_NAME:2017=%"=="x%CMAKE_GENERATOR_NAME%" (
     set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-15.0"
 ) else (
     set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
 )
 if "%BITNESS%"=="32" (
-    if "x%CMAKE_GENERATOR_NAME:2017=%"=="x%CMAKE_GENERATOR_NAME%" (
-        set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2017
-    ) else (
-        set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
-    )
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
     set "PATH=C:\Program Files (x86)\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files (x86)\PKMN\lib;%LIB%"
     set "INCLUDE=C:\Program Files (x86)\PKMN\include;%INCLUDE%"
 ) else (
-    set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%-x64
     set "PATH=C:\Program Files\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files\PKMN\lib;%LIB%"
