@@ -43,14 +43,16 @@ environment:
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
 
-    - BITNESS: 32
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      BITNESS: 32
       CMAKE_GENERATOR_NAME: "Visual Studio 15 2017"
       BOOST_VERSION: 1_64
       QT_DIR: "C:\\Qt\\5.9.1\\msvc2017"
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
 
-    - BITNESS: 64
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      BITNESS: 64
       CMAKE_GENERATOR_NAME: "Visual Studio 15 2017 Win64"
       BOOST_VERSION: 1_64
       QT_DIR: "C:\\Qt\\5.9.1\\msvc2017_64"
