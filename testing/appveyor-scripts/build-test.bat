@@ -28,7 +28,7 @@ if not !ERRORLEVEL!==0 goto fail
 !PYTHON_PIP_EXE! install ply CppHeaderParser nose_parameterized
 if not !ERRORLEVEL!==0 goto fail
 
-cmake -G %CMAKE_GENERATOR_NAME% ^
+cmake -G "%CMAKE_GENERATOR_NAME%" ^
     -DAPPVEYOR=TRUE ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DDESIRED_QT_VERSION=5 ^
