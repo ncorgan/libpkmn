@@ -1,11 +1,9 @@
 language: generic
-
-os:
- - linux
+os: linux
+dist: trusty
 
 matrix:
   include:
-    # Default/older GCC, dependencies
     - compiler: gcc
       env:
         - CC=gcc
@@ -13,7 +11,23 @@ matrix:
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Newer GCC, dependencies
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - g++-5
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=gcc-5
+        - CXX=g++-5
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
     - compiler: gcc
       addons:
         apt:
@@ -31,6 +45,23 @@ matrix:
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - g++-7
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=gcc-7
+        - CXX=g++-7
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
     # Default/older Clang, dependencies
     #- compiler: clang
     #  env:
@@ -39,7 +70,6 @@ matrix:
     #    - DESIRED_QT_VERSION=4
     #    - PYTHON_VERSION=2
     #    - SWIG_VERSION=2
-    # Newer Clang, dependencies
     - compiler: clang
       addons:
         apt:
@@ -54,6 +84,23 @@ matrix:
       env:
         - CC=clang-4.0
         - CXX=clang++-4.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - clang-5.0
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=clang-5.0
+        - CXX=clang++-5.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
