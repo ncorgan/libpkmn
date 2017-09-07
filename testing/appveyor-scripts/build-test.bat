@@ -3,9 +3,17 @@
 
 :: Set variables
 set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
-set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
+if "x%CMAKE_GENERATOR_NAME:2017=%"=="x%CMAKE_GENERATOR_NAME%" (
+    set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-15.0"
+) else (
+    set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
+)
 if "%BITNESS%"=="32" (
-    set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
+    if "x%CMAKE_GENERATOR_NAME:2017=%"=="x%CMAKE_GENERATOR_NAME%" (
+        set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2017
+    ) else (
+        set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015
+    )
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
     set "PATH=C:\Program Files (x86)\PKMN\bin;%BOOST_LIBRARY_DIR%;%CMAKE_PREFIX_PATH%\bin;%PATH%"
     set "LIB=C:\Program Files (x86)\PKMN\lib;%LIB%"
@@ -52,16 +60,16 @@ if not !ERRORLEVEL!==0 goto fail
 
 mkdir c:\projects\libpkmn\testing\applications\cpp\build
 cd c:\projects\libpkmn\testing\applications\cpp\build
-cmake -G %CMAKE_GENERATOR_NAME% ..
+cmake -G "%CMAKE_GENERATOR_NAME%" ..
 if not !ERRORLEVEL!==0 goto fail
-msbuild /p:configuration=Release ALL_BUILD.vcxproj
+cmake --build . --config "Release"
 if not !ERRORLEVEL!==0 goto fail
 
 mkdir c:\projects\libpkmn\testing\applications\c\build
 cd c:\projects\libpkmn\testing\applications\c\build
-cmake -G %CMAKE_GENERATOR_NAME% ..
+cmake -G "%CMAKE_GENERATOR_NAME%" ..
 if not !ERRORLEVEL!==0 goto fail
-msbuild /p:configuration=Release ALL_BUILD.vcxproj
+cmake --build . --config "Release"
 if not !ERRORLEVEL!==0 goto fail
 
 goto pass
