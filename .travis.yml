@@ -8,6 +8,8 @@ matrix:
     # Default/older GCC, dependencies
     - compiler: gcc
       env:
+        - CC=gcc
+        - CXX=g++
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
@@ -24,14 +26,16 @@ matrix:
             - libboost1.60-all-dev
             - swig3.0
       env:
-        - NEWCC=gcc-6
-        - NEWCXX=g++-6
+        - CC=gcc-6
+        - CXX=g++-6
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
     # Default/older Clang, dependencies
     #- compiler: clang
     #  env:
+    #    - CC=clang
+    #    - CXX=clang++
     #    - DESIRED_QT_VERSION=4
     #    - PYTHON_VERSION=2
     #    - SWIG_VERSION=2
@@ -48,8 +52,8 @@ matrix:
             - libboost1.60-all-dev
             - swig3.0
       env:
-        - NEWCC=clang-4.0
-        - NEWCXX=clang++-4.0
+        - CC=clang-4.0
+        - CXX=clang++-4.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3

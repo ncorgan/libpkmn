@@ -30,12 +30,6 @@ else
     PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.4m.so
 fi
 
-if [ "$NEWCC" != "" ]
-then
-    export CC=$NEWCC
-    export CXX=$NEWCXX
-fi
-
 cmake -DCMAKE_BUILD_TYPE=Release \
   -DDESIRED_QT_VERSION=$DESIRED_QT_VERSION \
   -DSWIG_EXECUTABLE=/usr/bin/swig${SWIG_VERSION}.0 \
