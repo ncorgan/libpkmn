@@ -17,7 +17,7 @@
 
 static void AbilityListTest() {
     @try {
-        PKStringArray* abilities = [PKLists getAbilityList:@6];
+        PKStringArray* abilities = [PKLists getAbilityList:@7];
 
         NSUInteger size = [abilities count];
         if(size != 191) {

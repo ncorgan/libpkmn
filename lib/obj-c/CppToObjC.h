@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,48 +29,27 @@
 
 #import <Foundation/Foundation.h>
 
+#include <cstdio>
 #include <map>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
+#include "CXXException.h"
+
 #define PKMN_CPP_TO_OBJC(...) \
 { \
-    NSString* errMsg; \
-    NSString* objCErrName; \
-    bool thrown = false; \
     @try { \
-        try { __VA_ARGS__ } \
-        catch(const std::out_of_range &e) { \
-            errMsg = [NSString stringWithUTF8String:e.what()]; \
-            objCErrName = @"NSRangeException"; \
-            thrown = true; \
-        } catch(const std::logic_error &e) { \
-            errMsg = [NSString stringWithUTF8String:e.what()]; \
-            objCErrName = @"NSInvalidArgumentException"; \
-            thrown = true; \
-        } catch(const std::runtime_error &e) { \
-            errMsg = [NSString stringWithUTF8String:e.what()]; \
-            objCErrName = @"NSGenericException"; \
-            thrown = true; \
-        } catch(const std::exception &e) { \
-            errMsg = [NSString stringWithUTF8String:e.what()]; \
-            objCErrName = @"NSGenericException"; \
-            thrown = true; \
-        } catch(...) { \
-            errMsg = @"Unknown error."; \
-            objCErrName = @"NSGenericException"; \
-            thrown = true; \
-        } \
-        if(thrown) { \
-            @throw [NSException \
-                        exceptionWithName:objCErrName \
-                        reason:errMsg \
-                        userInfo:nil \
-                   ]; \
-        } \
+        __VA_ARGS__; \
     } \
-    @catch(NSException* e) { \
+    @catch(CXXException* cppException) { \
+        printf("Caught CXXException\n"); \
+        std::string errorMessage = [CppToObjC getMessageFromCXXException:cppException]; \
+        printf("errorMessage = %s\n", errorMessage.c_str()); \
+        @throw; \
+    } \
+    @catch(id anyObject) { \
+        (void)anyObject; \
         @throw; \
     } \
     @finally { \
@@ -150,6 +129,8 @@
 @end
 
 @interface CppToObjC: NSObject
+
++ (std::string)getMessageFromCXXException: (CXXException*)cxxException;
 
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
 

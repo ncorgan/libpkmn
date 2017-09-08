@@ -1,11 +1,51 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #import "CppToObjC.h"
+
+/** From the CodeSourcery ABI Spec, with C++ pointers turned to void*, and
+ * other parts abridged. */
+
+typedef enum
+{
+  _URC_FOREIGN_EXCEPTION_CAUGHT = 1
+} _Unwind_Reason_Code;
+
+struct _Unwind_Exception;
+
+typedef void (*_Unwind_Exception_Cleanup_Fn) (_Unwind_Reason_Code,
+                                              struct _Unwind_Exception *);
+struct _Unwind_Exception
+{
+  uint64_t exception_class;
+  _Unwind_Exception_Cleanup_Fn exception_cleanup;
+  unsigned long private_1;
+  unsigned long private_2;
+} __attribute__((__aligned__));
+
+_Unwind_Reason_Code _Unwind_Resume_or_Rethrow(struct _Unwind_Exception *);
+
+
+struct __cxa_exception
+{
+  void *exceptionType;
+  void (*exceptionDestructor) (void *);
+  void (*unexpectedHandler) (void *);
+  void (*terminateHandler) (void *);
+  void *nextException;
+
+  int                   handlerCount;
+  int                   handlerSwitchValue;
+  const char *          actionRecord;
+  const char *          languageSpecificData;
+  void *                        catchTemp;
+  void *                        adjustedPtr;
+  struct _Unwind_Exception      unwindHeader;
+};
 
 @implementation PKItemDatabaseEntryFromCpp
 
@@ -172,6 +212,24 @@
 @end
 
 @implementation CppToObjC
+
++ (std::string)getMessageFromCXXException: (CXXException*)cxxException
+{
+    // return (uint8_t*)(__bridge void*)object + ivar_getOffset(ivar);
+
+    id object = (id)cxxException;
+    Ivar ivar = class_getInstanceVariable(object_getClass(object), "ex");
+    void* ivar_ptr = (uint8_t*)(__bridge void*)object + ivar_getOffset(ivar);
+
+    struct _Unwind_Exception* unwind_exception_ptr = *((struct _Unwind_Exception**)ivar_ptr);
+    char* ptr = (char*)unwind_exception_ptr;
+    ptr -= __builtin_offsetof(struct __cxa_exception, unwindHeader);
+
+    struct __cxa_exception* cxa_exception_ptr = (struct __cxa_exception*)ptr;
+    void* thrown_object_ptr = cxa_exception_ptr + 1;
+
+    return static_cast<const std::exception*>(thrown_object_ptr)->what();
+}
 
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
