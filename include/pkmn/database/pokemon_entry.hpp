@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -44,7 +44,8 @@ namespace pkmn { namespace database {
                 _generation(0),
                 _version_group_id(0),
                 _none(true),
-                _invalid(false)
+                _invalid(false),
+                _shadow(false)
             {}
 
             #ifndef __DOXYGEN__
@@ -80,7 +81,7 @@ namespace pkmn { namespace database {
 
             bool has_gender_differences() const;
 
-            int get_base_happiness() const;
+            int get_base_friendship() const;
 
             std::pair<std::string, std::string> get_types() const;
 
@@ -119,6 +120,15 @@ namespace pkmn { namespace database {
             void set_form(
                 const std::string &form_name
             );
+
+            std::string get_icon_filepath(
+                bool female
+            ) const;
+
+            std::string get_sprite_filepath(
+                bool female,
+                bool shiny
+            ) const;
 
             #ifndef __DOXYGEN__
             PKMN_CONSTEXPR_OR_INLINE int get_species_id() const {
@@ -161,7 +171,7 @@ namespace pkmn { namespace database {
         private:
             int _species_id, _pokemon_id, _form_id, _pokemon_index;
             int _game_id, _generation, _version_group_id;
-            bool _none, _invalid;
+            bool _none, _invalid, _shadow;
     };
 
 }}

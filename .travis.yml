@@ -2,7 +2,57 @@ language: cpp
 
 os:
  - linux
- - osx
+
+matrix:
+  include:
+    # Default/older GCC, dependencies
+    - compiler: gcc
+      env:
+        - DESIRED_QT_VERSION=4
+        - PYTHON_VERSION=2
+        - SWIG_VERSION=2
+    # Newer GCC, dependencies
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - g++-6
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - NEWCC=gcc-6
+        - NEWCXX=g++-6
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    # Default/older Clang, dependencies
+    #- compiler: clang
+    #  env:
+    #    - DESIRED_QT_VERSION=4
+    #    - PYTHON_VERSION=2
+    #    - SWIG_VERSION=2
+    # Newer Clang, dependencies
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - clang-4.0
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - NEWCC=clang-4.0
+        - NEWCXX=clang++-4.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
 
 sudo: required
 dist: trusty

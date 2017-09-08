@@ -42,15 +42,13 @@ PKMN_API const char* pkmn_item_list_strerror(
 PKMN_API pkmn_error_t pkmn_item_list_get_name(
     pkmn_item_list_handle_t handle,
     char* name_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_item_list_get_game(
     pkmn_item_list_handle_t handle,
     char* game_out,
-    size_t buffer_len,
-    size_t* actual_strlen_out
+    size_t buffer_len
 );
 
 PKMN_API pkmn_error_t pkmn_item_list_get_capacity(
@@ -89,14 +87,12 @@ PKMN_API pkmn_error_t pkmn_item_list_move(
 
 PKMN_API pkmn_error_t pkmn_item_list_get_valid_items(
     pkmn_item_list_handle_t handle,
-    pkmn_string_list_t* string_list_out,
-    size_t* list_length_out
+    pkmn_string_list_t* string_list_out
 );
 
 PKMN_API pkmn_error_t pkmn_item_list_as_array(
     pkmn_item_list_handle_t handle,
-    pkmn_item_slots_t* array_out,
-    size_t* list_length_out
+    pkmn_item_slots_t* array_out
 );
 
 #ifdef __cplusplus

@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 
-#include <iostream>
 #include <stdexcept>
 
 namespace pkmn { namespace database {
@@ -25,7 +26,7 @@ namespace pkmn { namespace database {
         int generation
     ) {
         if(generation < 3 or generation > 6) {
-            throw std::out_of_range("generation: valid range 3-6");
+            pkmn::throw_out_of_range("generation", 3, 6);
         }
 
         // Connect to database
@@ -49,7 +50,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database
@@ -72,6 +73,25 @@ namespace pkmn { namespace database {
             ret, generation
         );
 
+        return ret;
+    }
+
+    std::vector<std::string> get_gamecube_shadow_pokemon_list(
+        bool colosseum
+    )
+    {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        static BOOST_CONSTEXPR const char* shadow_pokemon_query = \
+            "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND pokemon_species_id IN "
+            "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?)";
+
+        std::vector<std::string> ret;
+        pkmn::database::query_db_list_bind1<std::string, int>(
+            _db, shadow_pokemon_query, ret, (colosseum ? 1 : 0)
+        );
+        std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
         return ret;
     }
 
@@ -204,7 +224,6 @@ namespace pkmn { namespace database {
 
         if(not to_erase.empty()) {
             for(size_t i = (to_erase.size()-1); i < to_erase.size(); --i) {
-                std::cout << i << std::endl;
                 ret.erase(ret.begin() + to_erase[i]);
             }
         }
@@ -296,7 +315,7 @@ namespace pkmn { namespace database {
                     "     (location_game_indices.game_index>=? AND location_game_indices.game_index<=?)))",
                 };
 
-                for(size_t i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
+                for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
                     SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
                     stmt.bind(1, generation);
                     stmt.bind(2, version_group_region_ids[version_group_id][i]);
@@ -387,9 +406,13 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_nature_list() {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
         static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM nature_names WHERE local_language_id=9 AND "
-            "nature_id IN (SELECT id FROM natures) ORDER BY name";
+            "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
+            "(nature_names.nature_id=natures.id) WHERE nature_names.local_language_id=9 "
+            "ORDER BY natures.game_index";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
@@ -404,7 +427,7 @@ namespace pkmn { namespace database {
         bool include_previous
     ) {
         if(generation < 1 or generation > 6) {
-            throw std::out_of_range("generation: valid range 1-6");
+            pkmn::throw_out_of_range("generation", 1, 6);
         }
 
         // Connect to database

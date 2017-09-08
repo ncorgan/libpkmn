@@ -8,6 +8,7 @@
 #include "../misc_common.hpp"
 #include "../database/database_common.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 
 #include <boost/config.hpp>
@@ -43,7 +44,7 @@ namespace pkmn { namespace calculations {
         return int(std::floor<int>(((5 * (v + (w<<1) + (x<<2) + (y<<3)) + Z) / 2) + 31));
     }
 
-    hidden_power_t gen2_hidden_power(
+    hidden_power gen2_hidden_power(
         int IV_attack,
         int IV_defense,
         int IV_speed,
@@ -53,17 +54,17 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_attack, false)) {
-            throw std::out_of_range("IV_attack: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_attack, false)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, false)) {
-            throw std::out_of_range("IV_defense: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_defense, false)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, false)) {
-            throw std::out_of_range("IV_speed: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_speed, false)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_special, false)) {
-            throw std::out_of_range("IV_special: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_special, false)) {
+            pkmn::throw_out_of_range("IV_special", 0, 15);
         }
 
         uint8_t v = MSB(IV_special);
@@ -72,14 +73,13 @@ namespace pkmn { namespace calculations {
         uint8_t y = MSB(IV_attack);
         uint8_t Z = (IV_special % 4);
 
-        hidden_power_t ret;
-        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+        return hidden_power(
+                   pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
                        gen2_hidden_power_type(IV_attack, IV_defense)
-                   );
-        ret.base_power = gen2_hidden_power_base_power(v, w, x, y, Z);
-
-        return ret;
+                   ),
+                   gen2_hidden_power_base_power(v, w, x, y, Z)
+               );
     }
 
     // Least significant bit
@@ -101,7 +101,7 @@ namespace pkmn { namespace calculations {
         return int(std::floor<int>((((u + (v<<1) + (w<<2) + (x<<3) + (y<<4) + (z<<5)) * 40) / 63) + 30));
     }
 
-    hidden_power_t modern_hidden_power(
+    hidden_power modern_hidden_power(
         int IV_HP,
         int IV_attack,
         int IV_defense,
@@ -113,23 +113,23 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn_IV_in_bounds(IV_HP, true)) {
-            throw std::out_of_range("IV_HP: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_HP, true)) {
+            pkmn::throw_out_of_range("IV_HP", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_attack, true)) {
-            throw std::out_of_range("IV_attack: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_attack, true)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, true)) {
-            throw std::out_of_range("IV_defense: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_defense, true)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, true)) {
-            throw std::out_of_range("IV_speed: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_speed, true)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spatk, true)) {
-            throw std::out_of_range("IV_spatk: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
+            pkmn::throw_out_of_range("IV_spatk", 0, 31);
         }
-        if(not pkmn_IV_in_bounds(IV_spdef, true)) {
-            throw std::out_of_range("IV_spdef: valid range 0-31");
+        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
+            pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 
         uint8_t a = LSB(IV_HP);
@@ -146,14 +146,13 @@ namespace pkmn { namespace calculations {
         uint8_t y = LSB2(IV_spatk);
         uint8_t z = LSB2(IV_spdef);
 
-        hidden_power_t ret;
-        ret.type = pkmn::database::query_db_bind1<std::string, int>(
+        return hidden_power(
+                   pkmn::database::query_db_bind1<std::string, int>(
                        _db, stat_name_query,
                        modern_hidden_power_type(a, b, c, d, e, f)
-                   );
-        ret.base_power = modern_hidden_power_base_power(u, v, w, x, y, z);
-
-        return ret;
+                   ),
+                   modern_hidden_power_base_power(u, v, w, x, y, z)
+               );
     }
 
 }}

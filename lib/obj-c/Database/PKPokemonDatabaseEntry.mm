@@ -106,9 +106,9 @@
     )
 }
 
-- (NSNumber*)getBaseHappiness {
+- (NSNumber*)getBaseFriendship {
     PKMN_CPP_TO_OBJC(
-        return @(CAST_TO_CPP(self)->get_base_happiness());
+        return @(CAST_TO_CPP(self)->get_base_friendship());
     )
 }
 

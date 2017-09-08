@@ -1,25 +1,29 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "database_common.hpp"
+#include "../misc_common.hpp"
 
 #include <pkmn/utils/paths.hpp>
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 
-#define PKMN_COMPAT_NUM 3
+#define PKMN_COMPAT_NUM 11
 
 namespace pkmn { namespace database {
 
@@ -163,6 +167,50 @@ namespace pkmn { namespace database {
         }
     }
 
+    static void _get_gamecube_items(
+        std::vector<std::string>& ret,
+        int list_id,
+        bool colosseum
+    )
+    {
+        int version_group_id = colosseum ? 12 : 13;
+        bool all_pockets = (list_id == -1);
+
+        static BOOST_CONSTEXPR const char* gcn_all_pockets_query = \
+            "SELECT name FROM item_names WHERE local_language_id=9 "
+            "AND item_id IN (SELECT DISTINCT items.id FROM items "
+            "INNER JOIN gamecube_item_game_indices ON "
+            "(items.id=gamecube_item_game_indices.item_id) WHERE "
+            "gamecube_item_game_indices.colosseum=?)";
+
+        static BOOST_CONSTEXPR const char* gcn_single_pocket_query = \
+            "SELECT name FROM item_names WHERE local_language_id=9 "
+            "AND item_id IN (SELECT DISTINCT items.id FROM items "
+            "INNER JOIN gamecube_item_game_indices ON "
+            "(items.id=gamecube_item_game_indices.item_id) WHERE "
+            "gamecube_item_game_indices.colosseum=?) "
+            "AND item_id IN (SELECT items.id FROM items WHERE id IN (SELECT "
+            "items.id FROM items INNER JOIN item_categories ON "
+            "(items.category_id=item_categories.id) WHERE item_categories.pocket_id "
+            "IN (SELECT item_categories.pocket_id FROM item_categories INNER JOIN "
+            "veekun_pocket_to_libpkmn_list ON "
+            "(item_categories.pocket_id=veekun_pocket_to_libpkmn_list.veekun_pocket_id) "
+            "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
+
+        const char* gcn_query = (all_pockets ? gcn_all_pockets_query
+                                             : gcn_single_pocket_query);
+        SQLite::Statement gcn_stmt((*_db), gcn_query);
+        gcn_stmt.bind(1, (colosseum ? 1 : 0));
+        if(not all_pockets) {
+            gcn_stmt.bind(2, version_group_id);
+            gcn_stmt.bind(3, list_id);
+        }
+
+        while(gcn_stmt.executeStep()) {
+            ret.emplace_back((const char*)gcn_stmt.getColumn(0));
+        }
+    }
+
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
@@ -171,14 +219,8 @@ namespace pkmn { namespace database {
         (void)_get_connection();
 
         int generation = pkmn::database::game_id_to_generation(game_id);
-
-        /*
-         * Gamecube games have the same item ranges as Ruby/Sapphire for
-         * non-Gamecube exclusive items.
-         */
-        int version_group_id = pkmn::database::game_is_gamecube(game_id)
-                                   ? 5
-                                   : pkmn::database::game_id_to_version_group(game_id);
+        int version_group_id = pkmn::database::game_id_to_version_group(game_id);
+        bool all_pockets = (list_id == -1);
 
         static BOOST_CONSTEXPR const char* all_pockets_query = \
             "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
@@ -203,8 +245,6 @@ namespace pkmn { namespace database {
             "(item_categories.pocket_id=veekun_pocket_to_libpkmn_list.veekun_pocket_id) "
             "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
 
-        // TODO: can we make the statement just once?
-        bool all_pockets = (list_id == -1);
         const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
         for(int i = 0; i < 4; ++i) {
             if(not item_range_empty(version_group_id, i)) {
@@ -234,52 +274,23 @@ namespace pkmn { namespace database {
                                int(stmt.getColumn(0)), version_group_id
                            ))
                         {
-                            ret.push_back(old_name);
+                            ret.emplace_back(old_name);
                         } else {
-                            ret.push_back((const char*)stmt.getColumn(1));
+                            ret.emplace_back((const char*)stmt.getColumn(1));
                         }
                     } else {
-                        ret.push_back((const char*)stmt.getColumn(1));
+                        ret.emplace_back((const char*)stmt.getColumn(1));
                     }
                 }
             }
         }
 
-        // Since Gamecube indices are stored separately, we need to do this over again
         if(game_is_gamecube(game_id)) {
-            static BOOST_CONSTEXPR const char* gcn_all_pockets_query = \
-                "SELECT name FROM item_names WHERE local_language_id=9 "
-                "AND item_id IN (SELECT DISTINCT items.id FROM items "
-                "INNER JOIN gamecube_item_game_indices ON "
-                "(items.id=gamecube_item_game_indices.item_id) WHERE "
-                "gamecube_item_game_indices.colosseum=?)";
-
-            static BOOST_CONSTEXPR const char* gcn_single_pocket_query = \
-                "SELECT name FROM item_names WHERE local_language_id=9 "
-                "AND item_id IN (SELECT DISTINCT items.id FROM items "
-                "INNER JOIN gamecube_item_game_indices ON "
-                "(items.id=gamecube_item_game_indices.item_id) WHERE "
-                "gamecube_item_game_indices.colosseum=?) "
-                "AND item_id IN (SELECT items.id FROM items WHERE id IN (SELECT "
-                "items.id FROM items INNER JOIN item_categories ON "
-                "(items.category_id=item_categories.id) WHERE item_categories.pocket_id "
-                "IN (SELECT item_categories.pocket_id FROM item_categories INNER JOIN "
-                "veekun_pocket_to_libpkmn_list ON "
-                "(item_categories.pocket_id=veekun_pocket_to_libpkmn_list.veekun_pocket_id) "
-                "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
-
-            bool colosseum = (game_id == 19);
-            const char* gcn_query = (all_pockets ? gcn_all_pockets_query
-                                                 : gcn_single_pocket_query);
-            SQLite::Statement gcn_stmt((*_db), gcn_query);
-            gcn_stmt.bind(1, (colosseum ? 1 : 0));
-            if(not all_pockets) {
-                gcn_stmt.bind(2, list_id);
-            }
-
-            while(gcn_stmt.executeStep()) {
-                ret.push_back((const char*)gcn_stmt.getColumn(0));
-            }
+            _get_gamecube_items(
+                ret,
+                list_id,
+                (game_id == 19)
+            );
         }
 
         // Sort alphabetically

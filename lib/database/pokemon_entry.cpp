@@ -1,21 +1,27 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../misc_common.hpp"
 #include "database_common.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/exception.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/utils/paths.hpp>
+
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include <pkmn/database/pokemon_entry.hpp>
-
 #include <unordered_map>
+
+namespace fs = boost::filesystem;
 
 namespace pkmn { namespace database {
 
@@ -49,15 +55,23 @@ namespace pkmn { namespace database {
 
     BOOST_STATIC_CONSTEXPR int ARCEUS_ID = 493;
 
+    BOOST_STATIC_CONSTEXPR int SWAMPERT_MEGA_ID = 10064;
+
+    BOOST_STATIC_CONSTEXPR int VOLCANION_ID = 721;
+
     BOOST_STATIC_CONSTEXPR int RUBY      = 7;
     BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
     BOOST_STATIC_CONSTEXPR int FIRERED   = 10;
     BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
+    BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
     BOOST_STATIC_CONSTEXPR int XD        = 20;
+    BOOST_STATIC_CONSTEXPR int X         = 23;
+    BOOST_STATIC_CONSTEXPR int Y         = 24;
+    BOOST_STATIC_CONSTEXPR int OMEGARUBY = 25;
 
-    BOOST_STATIC_CONSTEXPR int RS   = 5;
-    BOOST_STATIC_CONSTEXPR int HGSS = 10;
-    BOOST_STATIC_CONSTEXPR int ORAS = 16;
+    BOOST_STATIC_CONSTEXPR int RS        = 5;
+    BOOST_STATIC_CONSTEXPR int HGSS      = 10;
+    BOOST_STATIC_CONSTEXPR int ORAS      = 16;
 
     static PKMN_CONSTEXPR_OR_INLINE bool form_id_is_cosplay_pikachu(
         int form_id
@@ -72,7 +86,7 @@ namespace pkmn { namespace database {
     ) {
         return (pokemon_index == UNOWN_INDEX) or
                (pokemon_index >= (XD ? (UNOWN_B_INDEX + 2) : UNOWN_B_INDEX) and
-                pokemon_index >= (XD ? (UNOWN_QUESTION_INDEX + 2) : UNOWN_QUESTION_INDEX));
+                pokemon_index <= (XD ? (UNOWN_QUESTION_INDEX + 2) : UNOWN_QUESTION_INDEX));
     }
 
     static void _query_to_move_list(
@@ -106,7 +120,8 @@ namespace pkmn { namespace database {
     ):
         _pokemon_index(pokemon_index),
         _game_id(game_id),
-        _none(pokemon_index == 0)
+        _none(pokemon_index == 0),
+        _shadow(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -216,7 +231,8 @@ namespace pkmn { namespace database {
         const std::string &form_name
     ):
         _none(species_name == "None"),
-        _invalid(false)
+        _invalid(false),
+        _shadow(false)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -326,6 +342,8 @@ namespace pkmn { namespace database {
             return "None";
         } else if(_invalid) {
             return "Unknown";
+        } else if(_shadow) {
+            return "Shadow";
         }
 
         if(_form_id == _species_id) {
@@ -433,7 +451,7 @@ namespace pkmn { namespace database {
                 ) > 0);
     }
 
-    int pokemon_entry::get_base_happiness() const {
+    int pokemon_entry::get_base_friendship() const {
         // Happiness was introduced in Generation II
         if(_none or _invalid or _generation == 1) {
             return -1;
@@ -448,13 +466,13 @@ namespace pkmn { namespace database {
     }
 
     /*
-     * Some Pokémon had different types before the introduction of the Fairy
-     * type.
+     * Some Pokémon had different types before the introduction of the Steel
+     * Fairy types.
      */
     BOOST_STATIC_CONSTEXPR int old_normal_only[]    = {35,36,125,126,173,175};
     BOOST_STATIC_CONSTEXPR int old_normal_primary[] = {176,468};
     BOOST_STATIC_CONSTEXPR int old_none_secondary[] = {
-        39,40,122,174,183,184,280,281,282,298,303,439,546,547
+        39,40,81,82,122,174,183,184,280,281,282,298,303,439,546,547
     };
 
     static PKMN_INLINE bool species_id_had_normal_only(
@@ -478,7 +496,7 @@ namespace pkmn { namespace database {
 
     static const std::pair<std::string, std::string> normal_only_pair = std::make_pair(
         "Normal", "None"
-    );    
+    );
 
     std::pair<std::string, std::string> pokemon_entry::get_types() const {
         if(_none) {
@@ -926,6 +944,24 @@ namespace pkmn { namespace database {
             ret.emplace_back("???");
         }
 
+        // If this is a Gamecube game, check for a Shadow form.
+        if(_game_id == COLOSSEUM or _game_id == XD)
+        {
+            static const char* shadow_query = \
+                "SELECT shadow_pokemon_id FROM shadow_pokemon WHERE species_id=? AND "
+                "colosseum=?";
+
+            int shadow_pokemon_id = -1;
+            bool has_shadow = pkmn::database::maybe_query_db_bind2<int, int, int>(
+                                  _db, shadow_query, shadow_pokemon_id, _species_id,
+                                  ((_game_id == COLOSSEUM) ? 1 : 0)
+                              );
+            if(has_shadow)
+            {
+                ret.emplace_back("Shadow");
+            }
+        }
+
         return ret;
     }
 
@@ -963,81 +999,106 @@ namespace pkmn { namespace database {
         if(_none or _invalid) {
             return;
         } else if(form_name == "") {
-            _form_id = _pokemon_id = _pokemon_index = _species_id;
+            _form_id = _pokemon_id = _species_id;
         } else {
             /*
              * Start by checking which forms exist in this game. If not, immediately
              * throw an error.
              */
             std::vector<std::string> forms = this->get_forms();
-            if(std::find(forms.begin(), forms.end(), form_name) == forms.end()) {
+            auto form_iter = std::find(forms.begin(), forms.end(), form_name);
+            if(form_iter == forms.end()) {
                 throw std::invalid_argument("Invalid form.");
-            }
-
-            // Set the form and Pokémon ID
-            static BOOST_CONSTEXPR const char* query = \
-                "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
-                "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?)";
-
-            SQLite::Statement stmt((*_db), query);
-            stmt.bind(1, form_name);
-            stmt.executeStep();
-            /*
-             * Now that we have the form ID, check some of the hardcoded cases
-             * before assigning the proper IDs.
-             */
-            int form_id = stmt.getColumn(0);
-
-            if(_generation == 3 and _species_id == DEOXYS_ID) {
-                switch(_game_id) {
-                    case FIRERED:
-                        if(form_id != DEOXYS_ATTACK_ID) {
-                            throw std::invalid_argument(
-                                      "Deoxys can only be in its Attack Forme in FireRed."
-                                  );
-                        }
-                        break;
-
-                    case LEAFGREEN:
-                        if(form_id != DEOXYS_DEFENSE_ID) {
-                            throw std::invalid_argument(
-                                      "Deoxys can only be in its Defense Forme in LeafGreen."
-                                  );
-                        }
-                        break;
-
-                    case EMERALD:
-                        if(form_id != DEOXYS_SPEED_ID) {
-                            throw std::invalid_argument(
-                                      "Deoxys can only be in its Speed Forme in Emerald."
-                                  );
-                        }
-                        break;
-
-                    default:
-                        if(form_id != DEOXYS_NORMAL_ID) {
-                            throw std::invalid_argument(
-                                str(boost::format("Deoxys can only be in its Normal Forme in %s.")
-                                        % this->get_game().c_str()
-                                   )
-                            );
-                        }
-                        break;
+            } else if(form_iter == forms.begin()) {
+                // Standard form, whatever that may be named
+                _form_id = _pokemon_id = _species_id;
+                if(game_is_gamecube(_game_id))
+                {
+                    _shadow = false;
                 }
+            } else {
 
-                _pokemon_index = DEOXYS_GEN3_INDEX;
-            } else if(_version_group_id != HGSS and form_id == SPIKY_EARED_PICHU_ID) {
-                throw std::invalid_argument("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
-            } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
-                throw std::invalid_argument(
-                    str(boost::format("%s can only be in its Normal Forme in Omega Ruby/Alpha Sapphire.")
-                            % form_name.c_str()
-                       )
-                );
+                if(game_is_gamecube(_game_id) and form_name == "Shadow")
+                {
+                    // Track this separately because there are no IDs associated with it.
+                    set_form(forms.front());
+                    _shadow = true;
+                }
+                else
+                {
+                    if(game_is_gamecube(_game_id))
+                    {
+                        _shadow = false;
+                    }
+
+                    // Set the form and Pokémon ID
+                    static BOOST_CONSTEXPR const char* query = \
+                        "SELECT id,pokemon_id FROM pokemon_forms WHERE id="
+                        "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?) "
+                        "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)";
+
+                    SQLite::Statement stmt((*_db), query);
+                    stmt.bind(1, form_name);
+                    stmt.bind(2, _species_id);
+                    stmt.executeStep();
+                    /*
+                     * Now that we have the form ID, check some of the hardcoded cases
+                     * before assigning the proper IDs.
+                     */
+                    int form_id = stmt.getColumn(0);
+
+                    if(_generation == 3 and _species_id == DEOXYS_ID) {
+                        switch(_game_id) {
+                            case FIRERED:
+                                if(form_id != DEOXYS_ATTACK_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Attack Forme in FireRed."
+                                          );
+                                }
+                                break;
+
+                            case LEAFGREEN:
+                                if(form_id != DEOXYS_DEFENSE_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Defense Forme in LeafGreen."
+                                          );
+                                }
+                                break;
+
+                            case EMERALD:
+                                if(form_id != DEOXYS_SPEED_FORM_ID) {
+                                    throw std::invalid_argument(
+                                              "Deoxys can only be in its Speed Forme in Emerald."
+                                          );
+                                }
+                                break;
+
+                            default:
+                                if(form_id != _species_id) {
+                                    throw std::invalid_argument(
+                                        str(boost::format("Deoxys can only be in its Normal Forme in %s.")
+                                                % this->get_game().c_str()
+                                           )
+                                    );
+                                }
+                                break;
+                        }
+
+                        _pokemon_index = DEOXYS_GEN3_INDEX;
+                    } else if(_version_group_id != HGSS and form_id == SPIKY_EARED_PICHU_ID) {
+                        throw pkmn::feature_not_in_game_error("Spiky-Eared Pichu is only in HeartGold/SoulSilver.");
+                    } else if(form_id_is_cosplay_pikachu(form_id) and _version_group_id != ORAS) {
+                        throw std::invalid_argument(
+                            str(boost::format("%s can only be in its Normal Forme in X/Y.")
+                                    % form_name.c_str()
+                               )
+                        );
+                    }
+
+                    _form_id    = stmt.getColumn(0);
+                    _pokemon_id = stmt.getColumn(1);
+                }
             }
-
-            _form_id    = stmt.getColumn(0);
-            _pokemon_id = stmt.getColumn(1);
         }
 
         if(_generation == 3 and _species_id == UNOWN_INDEX) {
@@ -1052,11 +1113,150 @@ namespace pkmn { namespace database {
                 "SELECT game_index FROM pokemon_game_indices WHERE pokemon_id=? "
                 "AND version_id=?";
 
-            int game_id = game_is_gamecube(_game_id) ? RUBY : _game_id;
-            _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
-                                 _db, pokemon_index_query, _pokemon_id, game_id
-                             );
+            /*
+             * Some of the Veekun database's contributors haven't taken into account
+             * that the "pokemon_game_indices" table stores indices by version_id, so
+             * indices need to be added for ALL games they apply to. Here, we're just
+             * hoping they added to at least the lowest-indexed game.
+             */
+            int game_id = 0;
+            if(game_is_gamecube(_game_id)) {
+                game_id = RUBY;
+            } else if(_game_id == Y) {
+                game_id = X;
+            } else if(_game_id >= OMEGARUBY) {
+                game_id = (_form_id >= SWAMPERT_MEGA_ID) ? OMEGARUBY : X;
+            } else {
+                game_id = _game_id;
+            }
+
+            /*
+             * Not every form has an index, so if this query fails, default to the primary one
+             * and hope for the best.
+             */
+            if(not pkmn::database::maybe_query_db_bind2<int, int, int>(
+                       _db, pokemon_index_query, _pokemon_index, _pokemon_id, game_id
+                   )
+            ) {
+                _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
+                                     _db, pokemon_index_query, _species_id, game_id
+                                 );
+            }
         }
+    }
+
+    static BOOST_CONSTEXPR const char* IMAGES_SUBDIR_STRINGS[] = {
+        "",
+        "red-blue",
+        "red-blue",
+        "yellow",
+        "gold",
+        "silver",
+        "crystal",
+        "ruby-sapphire",
+        "ruby-sapphire",
+        "emerald",
+        "firered-leafgreen",
+        "firered-leafgreen",
+        "diamond-pearl",
+        "diamond-pearl",
+        "platinum",
+        "heartgold-soulsilver",
+        "heartgold-soulsilver",
+        "black-white",
+        "black-white",
+
+        // Use Ruby/Sapphire sprites for Gamecube games
+        "ruby-sapphire",
+        "ruby-sapphire",
+
+        "black2-white2",
+        "black2-white2",
+        "x-y",
+        "x-y",
+        "omegaruby-alphasapphire",
+        "omegaruby-alphasapphire"
+    };
+
+    static BOOST_CONSTEXPR const char* image_name_query = \
+        "SELECT image_name FROM libpkmn_pokemon_form_names WHERE form_id=?";
+
+    static PKMN_INLINE bool has_different_female_icon(
+        int species_id
+    ) {
+        return (species_id == 521 or species_id == 592 or species_id == 593);
+    }
+
+    std::string pokemon_entry::get_icon_filepath(
+        bool female
+    ) const {
+        if(_species_id > VOLCANION_ID) {
+            throw pkmn::unimplemented_error();
+        }
+
+        fs::path icon_filepath(pkmn::get_images_dir());
+        icon_filepath /= "pokemon-icons";
+        if(_none or _invalid) {
+            icon_filepath /= "0.png";
+        } else {
+            if(female and has_different_female_icon(_species_id)) {
+                icon_filepath /= "female";
+            }
+
+            std::string form_suffix;
+            (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
+                      _db, image_name_query, form_suffix, _form_id
+                  );
+            if(not form_suffix.empty()) {
+                form_suffix.insert(0, "-");
+            }
+
+            icon_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
+        }
+
+        return icon_filepath.string();
+    }
+
+    std::string pokemon_entry::get_sprite_filepath(
+        bool female,
+        bool shiny
+    ) const {
+        if(_generation > 5) {
+            throw pkmn::unimplemented_error();
+        }
+
+        fs::path sprite_filepath(pkmn::get_images_dir());
+        sprite_filepath /= str(boost::format("generation-%d") % _generation);
+        sprite_filepath /= IMAGES_SUBDIR_STRINGS[_game_id];
+
+        if(_none) {
+            sprite_filepath /= "0.png";
+        } else if(_invalid) {
+            sprite_filepath /= "substitute.png";
+        } else {
+            if(shiny) {
+                if(_generation > 1) {
+                    sprite_filepath /= "shiny";
+                } else {
+                    throw pkmn::feature_not_in_game_error("Shininess", "Generation I");
+                }
+            }
+            if(female and has_gender_differences()) {
+                sprite_filepath /= "female";
+            }
+
+            std::string form_suffix;
+            (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
+                      _db, image_name_query, form_suffix, _form_id
+                  );
+            if(not form_suffix.empty()) {
+                form_suffix.insert(0, "-");
+            }
+
+            sprite_filepath /= str(boost::format("%d%s.png") % _species_id % form_suffix.c_str());
+        }
+
+        return sprite_filepath.string();
     }
 
 }}

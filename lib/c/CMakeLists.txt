@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -21,17 +21,24 @@ SET(pkmn_c_libs
 
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(gui)
 ADD_SUBDIRECTORY(utils)
 
 SET(pkmn_c_sources
     ${pkmn_c_calculations_sources}
     ${pkmn_c_database_sources}
+    ${pkmn_c_gui_sources}
     ${pkmn_c_utils_sources}
     build_info.cpp
     cpp_to_c.cpp
     error.cpp
+    game_save.cpp
     item_bag.cpp
     item_list.cpp
+    pokemon.cpp
+    pokemon_box.cpp
+    pokemon_party.cpp
+    pokemon_pc.cpp
 )
 
 

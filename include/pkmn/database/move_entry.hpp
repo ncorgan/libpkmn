@@ -93,7 +93,7 @@ namespace pkmn { namespace database {
             std::string get_type() const;
 
             /*!
-             * @brief Returns a description of this item.
+             * @brief Returns a description of this move.
              *
              * If this entry corresponds to a "None" move, this function will
              * return the string "None".
@@ -103,26 +103,122 @@ namespace pkmn { namespace database {
              */
             std::string get_description() const;
 
+            /*!
+             * @brief Returns which Pokémon this move will target in battle.
+             *
+             * If this entry corresponds to a "None" move, this function will
+             * return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_target() const;
 
+            /*!
+             * @brief Returns this move's damage class (Physical, Special, Status).
+             *
+             * This value affects whether Attack+Defense or Special Attack+Defense will
+             * be used in calculating a move's damage.
+             *
+             * In Generation I through the Game Boy Advance games, this value is tied to
+             * the move's type. However, starting with the Gamecube games, their values were
+             * separated. For example, Fire Punch is a Special move in Generation I but a
+             * Physical move in Generation IV.
+             *
+             * If this entry corresponds to a "None" move, this function will
+             * return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_damage_class() const;
 
+            /*!
+             * @brief Returns this move's base power.
+             *
+             * This value, alongside the attacker's (Special) Attack and the defender's (Special)
+             * Defense, is used in determining how much damage an attack does.
+             *
+             * If this entry corresponds to a "None" or "Invalid" move, this function will
+             * return -1.
+             */
             int get_base_power() const;
 
+            /*!
+             * @brief Return the maximum number of Power Points (PP) this move has with the given amount of PP Up.
+             *
+             * If this entry corresponds to a "None" or "Invalid" move, this function will
+             * return -1.
+             *
+             * \param num_pp_ups Number of PP Ups applied (0-3, 3 for PP Max)
+             * \throws std::out_of_range if num_pp_ups is not [0-3]
+             */
             int get_pp(
                 int num_pp_ups
             ) const;
 
+            /*!
+             * @brief Returns the move's accuracy (0.0-1.0).
+             *
+             * If this entry corresponds to a "None" or "Invalid" move, this function will
+             * return -1.0.
+             */
             float get_accuracy() const;
 
+            /*!
+             * @brief Returns the move's priority (-8 - +8).
+             *
+             * In a single turn, a move with a higher priority will always be performed before a move with a
+             * lower priority. If the moves have the same priority, the Pokémons' Speed stats will be
+             * used to determine the order.
+             *
+             * If this entry corresponds to a "None" or "Invalid" move, this function will
+             * return -9.
+             */
             int get_priority() const;
 
+            /*!
+             * @brief Returns a move's effect, if any, other than damage.
+             *
+             * If this entry corresponds to a "None" move, this function will
+             * return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_effect() const;
 
+            /*!
+             * @brief Return the move's type when used in a Contest.
+             *
+             * If this entry corresponds to a "None" move, or this move's game is Generation I-II
+             * or Gamecube, this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_contest_type() const;
 
+            /*!
+             * @brief Return the move's effect when used in a Contest.
+             *
+             * If this entry corresponds to a "None" move, or this move's game is Generation I-II
+             * or Gamecube, this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_contest_effect() const;
 
+            /*!
+             * @brief Return the move's effect when used in a Super Contest.
+             *
+             * If this entry corresponds to a "None" move, or this move's game is 
+             * not from Generation IV, this function will return the string "None".
+             *
+             * If this entry corresponds to an invalid move, this function will
+             * return the string "Unknown".
+             */
             std::string get_super_contest_effect() const;
 
             #ifndef __DOXYGEN__

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,8 +8,8 @@
 #define PKMN_ITEM_SLOT_HPP
 
 #include <pkmn/config.hpp>
-#include <pkmn/database/item_entry.hpp>
 
+#include <string>
 #include <vector>
 
 namespace pkmn {
@@ -27,8 +27,8 @@ namespace pkmn {
          *
          * The item entry represents an invalid item.
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot():
-            item(pkmn::database::item_entry()),
+        item_slot():
+            item("None"),
             amount(0) {}
 
         /*!
@@ -39,8 +39,8 @@ namespace pkmn {
          * \param slot_item item entry
          * \param slot_amount how many of the item
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot(
-            const pkmn::database::item_entry &slot_item,
+        item_slot(
+            const std::string& slot_item,
             int slot_amount
         ): item(slot_item),
            amount(slot_amount) {}
@@ -54,17 +54,17 @@ namespace pkmn {
          * \param slot_item item entry
          * \param slot_amount how many of the item
          */
-        PKMN_CONSTEXPR_OR_INLINE item_slot(
-            pkmn::database::item_entry&& slot_item,
+        item_slot(
+            std::string&& slot_item,
             int slot_amount
-        ): item(slot_item),
+        ): item(std::move(slot_item)),
            amount(slot_amount) {}
 #endif
 
         /*!
          * @brief The item in the given slot.
          */
-        pkmn::database::item_entry item;
+        std::string item;
         /*!
          * @brief How many of the item is in the given slot.
          */
@@ -75,7 +75,7 @@ namespace pkmn {
     /*!
      * @brief Equality check between two item slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
+    PKMN_INLINE bool operator==(
         const item_slot &lhs,
         const item_slot &rhs
     ) {
@@ -86,7 +86,7 @@ namespace pkmn {
     /*!
      * @brief Inequality check between two item slots.
      */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+    PKMN_INLINE bool operator!=(
         const item_slot &lhs,
         const item_slot &rhs
     ) {

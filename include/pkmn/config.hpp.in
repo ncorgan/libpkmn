@@ -34,6 +34,7 @@
 #    define PKMN_UNUSED(x)      x
 #endif
 
+#define PKMN_CONSTEXPR           @PKMN_CONSTEXPR@
 #define PKMN_CONSTEXPR_OR_INLINE @PKMN_CONSTEXPR_OR_INLINE@
 
 #ifdef PKMN_DLL_EXPORTS
@@ -51,5 +52,12 @@
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #    define PKMN_PLATFORM_MACOS
 #endif
+
+/***************************************************************************
+ * C++ components
+ ***************************************************************************/
+#cmakedefine PKMN_ENABLE_QT 1
+#cmakedefine PKMN_QT4       1
+#cmakedefine PKMN_QT5       1
 
 #endif /* PKMN_CONFIG_HPP */

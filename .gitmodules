@@ -4,3 +4,15 @@
 [submodule "libpkmn-database"]
 	path = libpkmn-database
 	url = https://github.com/ncorgan/libpkmn-database
+[submodule "testing/libpkmn-test-files"]
+	path = testing/libpkmn-test-files
+	url = https://github.com/ncorgan/libpkmn-test-files
+[submodule "images"]
+	path = images
+	url = https://github.com/ncorgan/libpkmn-images
+[submodule "testing/googletest"]
+	path = testing/googletest
+	url = https://github.com/ncorgan/googletest
+[submodule "PkmGCTools"]
+	path = PkmGCTools
+	url = https://github.com/ncorgan/PkmGCTools

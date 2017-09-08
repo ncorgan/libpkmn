@@ -5,65 +5,73 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+IF(PKMN_ENABLE_QT)
+    CMAKE_POLICY(SET CMP0020 NEW)
+ENDIF(PKMN_ENABLE_QT)
+
 INCLUDE(PKMNUnitTest)
-ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
-INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${PKMN_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpp_database_entry_test
-)
+# Find dependencies and set subcomponents
+PKMN_APPEND_SUBCOMPONENT("C++ Tests")
 
-SET(cpp_tests
-    cpp_calculations_test
-    cpp_items_test
-    cpp_lists_test
-    cpp_paths_test
-)
+IF(PKMN_ENABLE_C)
+    PKMN_APPEND_SUBCOMPONENT("C Tests")
+ENDIF(PKMN_ENABLE_C)
+
+IF(PKMN_ENABLE_CSHARP)
+    FIND_PACKAGE(NUnit)
+    PKMN_APPEND_SUBCOMPONENT("C# Tests")
+ENDIF(PKMN_ENABLE_CSHARP)
 
 ADD_SUBDIRECTORY(pkmntest)
 
-FOREACH(test ${cpp_tests})
-    PKMN_ADD_CPP_TEST(${test} ${test}.cpp)
-ENDFOREACH(test ${cpp_tests})
-
-# Tests with multiple files have to be done separately
-SET(database_entry_test_srcs
-    cpp_database_entry_test/item_entry_tests.cpp
-    cpp_database_entry_test/move_entry_tests.cpp
-    cpp_database_entry_test/pokemon_entry_tests.cpp
-    cpp_database_entry_test/cpp_database_entry_test.cpp
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}/pkmntest/include
 )
-PKMN_ADD_CPP_TEST(cpp_database_entry_test "${database_entry_test_srcs}")
 
+#
+# C++ tests
+#
+ADD_SUBDIRECTORY(cpp)
+
+#
+# C tests
+#
 IF(PKMN_ENABLE_C)
-    INCLUDE_DIRECTORIES(
-        ${CMAKE_CURRENT_SOURCE_DIR}/../Unity
-    )
-
-    SET(c_tests
-        c_database_test
-        c_items_test
-        c_lists_test
-        c_paths_test
-    )
-
-    FOREACH(test ${c_tests})
-        PKMN_ADD_C_TEST(${test} ${test}.c)
-    ENDFOREACH(test ${c_tests})
+    ADD_SUBDIRECTORY(c)
 ENDIF(PKMN_ENABLE_C)
 
+#
+# Objective-C tests
+#
 IF(PKMN_ENABLE_OBJC)
-    INCLUDE_DIRECTORIES(
-        ${CMAKE_CURRENT_SOURCE_DIR}/../Unity
-    )
-
-    SET(objc_tests
-        ObjCListsTest
-    )
-
-    FOREACH(test ${objc_tests})
-        PKMN_ADD_OBJC_TEST(${test} ${test}.m)
-    ENDFOREACH(test ${objc_tests})
+    ADD_SUBDIRECTORY(obj-c)
 ENDIF(PKMN_ENABLE_OBJC)
+
+#
+# C# tests
+#
+IF(PKMN_ENABLE_CSHARP)
+    ADD_SUBDIRECTORY(csharp)
+ENDIF(PKMN_ENABLE_CSHARP)
+
+#
+# Lua tests
+#
+IF(PKMN_ENABLE_LUA)
+    ADD_SUBDIRECTORY(lua)
+ENDIF(PKMN_ENABLE_LUA)
+
+#
+# Python tests
+#
+IF(PKMN_ENABLE_PYTHON)
+    ADD_SUBDIRECTORY(python)
+ENDIF(PKMN_ENABLE_PYTHON)
+
+#
+# Ruby tests
+#
+IF(PKMN_ENABLE_RUBY)
+    ADD_SUBDIRECTORY(ruby)
+ENDIF(PKMN_ENABLE_RUBY)

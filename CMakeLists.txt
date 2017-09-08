@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,12 +8,12 @@
 ########################################################################
 # CMake configuration
 ########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 PROJECT(PKMN C CXX)
 
 SET(PKMN_VERSION_MAJOR 0)
-SET(PKMN_VERSION_MINOR 0)
-SET(PKMN_VERSION_PATCH 1)
+SET(PKMN_VERSION_MINOR 2)
+SET(PKMN_VERSION_PATCH 0)
 SET(PKMN_VERSION "${PKMN_VERSION_MAJOR}.${PKMN_VERSION_MINOR}.${PKMN_VERSION_PATCH}")
 
 SET(PKMN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -34,16 +34,32 @@ SET(CMAKE_MODULE_PATH "${PKMN_SOURCE_DIR}/cmake/Modules;${CMAKE_MODULE_PATH}")
 INCLUDE(PKMNComponent)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
+    INCLUDE(CPack)
     FIND_PACKAGE(Doxygen)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
+
+####################################################################
+# Set install subdirectories
+####################################################################
+IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    SET(LIB_SUFFIX 64)
+ENDIF()
+SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+SET(PKMN_RUNTIME_DIR bin)
+SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
+SET(PKMN_INCLUDE_DIR include)
+SET(PKMN_PKG_DATA_DIR share/pkmn)
+SET(PKMN_DOCS_DIR share/doc/pkmn)
 
 ########################################################################
 # Find C++ dependencies
 ########################################################################
 SET(BOOST_REQUIRED_COMPONENTS
+    date_time
     filesystem
+    random
+    system
     thread
-    unit_test_framework
 )
 IF(MSVC)
     SET(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "Enable Boost dynamic linking")
@@ -57,16 +73,38 @@ FIND_PACKAGE(Boost 1.55 REQUIRED COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
+INCLUDE(PKMNQt)
+
 # We need Boost.Predef for a check here
 INCLUDE(PKMNPlatform)
 
 ########################################################################
 # Find other dependencies
 ########################################################################
+FIND_PACKAGE(ObjC)
 FIND_PACKAGE(SWIG)
+FIND_PACKAGE(CSharp)
+FIND_PACKAGE(Lua 5.1)
 FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
-FIND_PACKAGE(ObjC)
+FIND_PACKAGE(Ruby)
+
+# Needed for Lua wrapper
+# See https://github.com/swig/swig/issues/92
+IF("${SWIG_VERSION}" STRGREATER "2.0.11")
+    SET(SWIG_VERSION_CHECK_LUA TRUE)
+ENDIF("${SWIG_VERSION}" STRGREATER "2.0.11")
+IF("${PYTHONLIBS_VERSION_STRING}" STRLESS "3.0.0" AND "${SWIG_VERSION}" STRLESS "3.0.8")
+    SET(SWIG_VERSION_CHECK_PYTHON FALSE)
+ELSE()
+    SET(SWIG_VERSION_CHECK_PYTHON TRUE)
+ENDIF("${PYTHONLIBS_VERSION_STRING}" STRLESS "3.0.0" AND "${SWIG_VERSION}" STRLESS "3.0.8")
+
+# Needed for Ruby wrapper
+# See https://github.com/swig/swig/issues/245
+IF("${SWIG_VERSION}" STRGREATER "3.0.2")
+    SET(SWIG_VERSION_CHECK_RUBY TRUE)
+ENDIF("${SWIG_VERSION}" STRGREATER "3.0.2")
 
 INCLUDE(PKMNPython)
 PYTHON_CHECK_MODULE("PLY" "ply" "True" PYTHON_PLY_FOUND)
@@ -76,8 +114,10 @@ IF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
 ENDIF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
 
 ########################################################################
-# Build PKSav
+# Build submodule libraries
 ########################################################################
+ADD_SUBDIRECTORY(PkmGCTools/LibPkmGC)
+
 INCLUDE(PKSavConfig)
 ADD_SUBDIRECTORY(pksav)
 
@@ -96,27 +136,23 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 
 ####################################################################
-# Set install subdirectories
-####################################################################
-IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
-    SET(LIB_SUFFIX 64)
-ENDIF()
-SET(PKMN_LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
-SET(PKMN_RUNTIME_DIR bin)
-SET(PKMN_LIBRARY_DIR lib${LIB_SUFFIX})
-SET(PKMN_INCLUDE_DIR include)
-SET(PKMN_PKG_DATA_DIR share/pkmn)
-SET(PKMN_DOCS_DIR share/doc/pkmn)
-
-####################################################################
 # Components
 ####################################################################
-PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON "" OFF)
+PKMN_REGISTER_COMPONENT("Core C++ Library" PKMN_ENABLE_CORELIB ON
+    "Boost_FOUND;PYTHONINTERP_FOUND" OFF)
+PKMN_REGISTER_COMPONENT(" * Qt Widgets"    PKMN_ENABLE_QT ON
+    "PKMN_ENABLE_CORELIB;QT_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("C API"            PKMN_ENABLE_C ON "PKMN_ENABLE_CORELIB" OFF)
 PKMN_REGISTER_COMPONENT("Objective-C API"  PKMN_ENABLE_OBJC ON
     "PKMN_CLANG;PKMN_64BIT;OBJC_FOUND" OFF)
+PKMN_REGISTER_COMPONENT("C# API"           PKMN_ENABLE_CSHARP  ON
+    "PKMN_ENABLE_CORELIB;SWIG_FOUND;CSHARP_FOUND;PYTHONINTERP_FOUND;PYTHON_MODULES_FOUND" OFF)
+PKMN_REGISTER_COMPONENT("Lua API"          PKMN_ENABLE_LUA  ON
+    "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_LUA;LUA_FOUND;PYTHON_MODULES_FOUND" OFF)
 PKMN_REGISTER_COMPONENT("Python API"       PKMN_ENABLE_PYTHON  ON
-    "SWIG_FOUND;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
+    "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_PYTHON;PYTHONINTERP_FOUND;PYTHONLIBS_FOUND;PYTHON_MODULES_FOUND" OFF)
+PKMN_REGISTER_COMPONENT("Ruby API"         PKMN_ENABLE_RUBY  ON
+    "PKMN_ENABLE_CORELIB;SWIG_FOUND;SWIG_VERSION_CHECK_RUBY;RUBY_FOUND;PYTHON_MODULES_FOUND" OFF)
 
 IF(NOT PKMN_USED_AS_SUBPROJECT)
     PKMN_REGISTER_COMPONENT("Doxygen Documentation" PKMN_ENABLE_DOCS  ON "DOXYGEN_FOUND" OFF)
@@ -127,6 +163,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 # Actual building
 ####################################################################
 ADD_SUBDIRECTORY(libpkmn-database)
+ADD_SUBDIRECTORY(images)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 
@@ -147,7 +184,7 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
     MESSAGE(STATUS "")
     MESSAGE(STATUS "Building LibPKMN.")
     MESSAGE(STATUS " - Build type: ${CMAKE_BUILD_TYPE}")
-    MESSAGE(STATUS " - Compiler: ${CMAKE_C_COMPILER_ID}")
+    MESSAGE(STATUS " - Compiler: ${PKMN_COMPILER_NAME}")
     MESSAGE(STATUS " - Install prefix: ${CMAKE_INSTALL_PREFIX}")
     MESSAGE(STATUS "")
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,10 @@
 
 #include <pkmn-c/error.h>
 
+#include <pkmn/exception.hpp>
+
+#include <boost/format.hpp>
+
 #include <stdexcept>
 #include <string>
 
@@ -17,12 +21,61 @@ void pkmn_set_error(
     const std::string &error
 );
 
+#define PKMN_CHECK_BUFFER_LEN(buffer_len, needed_len) \
+{ \
+    if(buffer_len == 0 or buffer_len < needed_len) { \
+        std::string error_msg = (boost::format("Buffer length of %d passed in, %d needed") % buffer_len % needed_len).str(); \
+        pkmn_set_error(error_msg); \
+        return PKMN_ERROR_BUFFER_TOO_SMALL; \
+    } \
+} 
+
+#define PKMN_CHECK_BUFFER_LEN_WITH_HANDLE(buffer_len, needed_len, handle) \
+{ \
+    if(buffer_len < needed_len) { \
+        std::string error_msg = (boost::format("Buffer length of %d passed in, %d needed") % buffer_len % needed_len).str(); \
+        pkmn_set_error(error_msg); \
+        handle->last_error = error_msg; \
+        return PKMN_ERROR_BUFFER_TOO_SMALL; \
+    } \
+} 
+
+#define PKMN_CHECK_NULL_PARAM(param) \
+{ \
+    if(!param) { \
+        pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
+        return PKMN_ERROR_NULL_POINTER; \
+    } \
+}
+
+#define PKMN_CHECK_NULL_PARAM_WITH_HANDLE(param, handle) \
+{ \
+    if(!param) { \
+        boost::mutex::scoped_lock lock(handle->error_mutex); \
+        pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
+        handle->last_error = "Null pointer passed into parameter \"" #param "\""; \
+        return PKMN_ERROR_NULL_POINTER; \
+    } \
+}
+
 #define PKMN_CPP_TO_C(...) \
 { \
     try { \
         __VA_ARGS__ ; \
         pkmn_set_error("None"); \
         return PKMN_ERROR_NONE; \
+    } catch(const pkmn::pksav_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_PKSAV_ERROR; \
+    } catch(const pkmn::unimplemented_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
+    } catch(const pkmn::feature_not_in_game_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
+    } catch(const pkmn::feature_not_in_build_error &e) { \
+        pkmn_set_error(e.what()); \
+        return PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         return PKMN_ERROR_INVALID_ARGUMENT; \
@@ -61,11 +114,28 @@ void pkmn_set_error(
 
 #define PKMN_CPP_TO_C_WITH_HANDLE(h,...) \
 { \
+    boost::mutex::scoped_lock lock(h->error_mutex); \
     try { \
         __VA_ARGS__ ; \
         pkmn_set_error("None"); \
         h->last_error = "None"; \
         return PKMN_ERROR_NONE; \
+    } catch(const pkmn::pksav_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_PKSAV_ERROR; \
+    } catch(const pkmn::unimplemented_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_UNIMPLEMENTED_ERROR; \
+    } catch(const pkmn::feature_not_in_game_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR; \
+    } catch(const pkmn::feature_not_in_build_error &e) { \
+        pkmn_set_error(e.what()); \
+        h->last_error = e.what(); \
+        return PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR; \
     } catch(const std::invalid_argument &e) { \
         pkmn_set_error(e.what()); \
         h->last_error = e.what(); \

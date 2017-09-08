@@ -51,7 +51,7 @@
 
 - (BOOL)hasGenderDifferences;
 
-- (NSNumber*)getBaseHappiness;
+- (NSNumber*)getBaseFriendship;
 
 - (PKStringPair*)getTypes;
 

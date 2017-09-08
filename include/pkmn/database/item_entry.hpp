@@ -19,6 +19,8 @@ namespace pkmn { namespace database {
      * This class abstracts the database calls needed to various tables in order
      * to get relevant information about in-game items. It takes into account
      * changes in the item between games.
+     *
+     * \todo some differences between version groups need to be done manually
      */
     class PKMN_API item_entry {
         public:
@@ -89,8 +91,7 @@ namespace pkmn { namespace database {
             std::string get_category() const;
 
             /*!
-             * @brief Returns which pocket this item would correspond to in
-             *        the given game.
+             * @brief Returns which pocket would store this item in the given game.
              */
             std::string get_pocket() const;
 

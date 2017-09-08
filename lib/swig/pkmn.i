@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,10 @@
 %{
     #include <pkmn/config.hpp>
 %}
+
+%ignore PKMN_ENABLE_QT;
+%ignore PKMN_QT4;
+%ignore PKMN_QT5;
 
 %include <pkmn/config.hpp>
 
@@ -35,5 +39,9 @@
 %ignore get_native;
 %ignore make;
 
+#if !defined(SWIGLUA) && !defined(SWIGPYTHON)
 %ignore operator ==;
 %ignore operator !=;
+%ignore operator +;
+%ignore operator +=;
+#endif

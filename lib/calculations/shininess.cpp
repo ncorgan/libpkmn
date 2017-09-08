@@ -7,6 +7,7 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <boost/config.hpp>
@@ -22,17 +23,17 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        if(not pkmn_IV_in_bounds(IV_attack, false)) {
-            throw std::out_of_range("IV_attack: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_attack, false)) {
+            pkmn::throw_out_of_range("IV_attack", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_defense, false)) {
-            throw std::out_of_range("IV_defense: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_defense, false)) {
+            pkmn::throw_out_of_range("IV_defense", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_speed, false)) {
-            throw std::out_of_range("IV_speed: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_speed, false)) {
+            pkmn::throw_out_of_range("IV_speed", 0, 15);
         }
-        if(not pkmn_IV_in_bounds(IV_special, false)) {
-            throw std::out_of_range("IV_special: valid range 0-15");
+        if(not pkmn::IV_in_bounds(IV_special, false)) {
+            pkmn::throw_out_of_range("IV_special", 0, 15);
         }
 
         BOOST_STATIC_CONSTEXPR int valid_IV_attack[] = {2,3,6,7,10,11,14,15};
@@ -53,13 +54,13 @@ namespace pkmn { namespace calculations {
         const uint16_t* p = reinterpret_cast<const uint16_t*>(&personality);
         const uint16_t* t = reinterpret_cast<const uint16_t*>(&trainer_id);
 
-        for(size_t i = 3; i < 16; i++) {
+        for(size_t i = 3; i < 16; ++i) {
             size_t num_ones = 0;
-            if(p[0] & (1 << i)) num_ones++;
-            if(p[1] & (1 << i)) num_ones++;
-            if(t[0] & (1 << i)) num_ones++;
-            if(t[1] & (1 << i)) num_ones++;
-            if((num_ones == 1) or (num_ones == 3)) {
+            if(p[0] & (1 << i)) ++num_ones;
+            if(p[1] & (1 << i)) ++num_ones;
+            if(t[0] & (1 << i)) ++num_ones;
+            if(t[1] & (1 << i)) ++num_ones;
+            if(num_ones % 2) {
                 return false;
             }
         }

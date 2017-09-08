@@ -53,7 +53,7 @@ namespace pkmn { namespace database {
         PKMN_CONSTEXPR_OR_INLINE levelup_move(
             pkmn::database::move_entry&& lmove,
             int move_level
-        ): move(lmove),
+        ): move(std::move(lmove)),
            level(move_level) {}
 #endif
 

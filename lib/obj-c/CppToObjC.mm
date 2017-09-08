@@ -240,7 +240,7 @@ struct __cxa_exception
 + (PKItemSlot*)createItemSlotFromCpp: (const pkmn::item_slot&)cppInstance {
     PKMN_CPP_TO_OBJC(
         PKItemSlot* ret = [[PKItemSlot alloc] init];
-        ret->item = [CppToObjC createItemDatabaseEntryFromCpp:cppInstance.item];
+        ret->item = [NSString stringWithUTF8String:cppInstance.item.c_str()];
         ret->amount = @(cppInstance.amount);
 
         return ret;
