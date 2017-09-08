@@ -37,6 +37,8 @@
 
 #include "CXXException.h"
 
+// andSecond:[NSString stringWithUTF8String:cppInstance.second.c_str()]];
+
 #define PKMN_CPP_TO_OBJC(...) \
 { \
     @try { \
@@ -45,8 +47,10 @@
     @catch(CXXException* cppException) { \
         printf("Caught CXXException\n"); \
         std::string errorMessage = [CppToObjC getMessageFromCXXException:cppException]; \
-        printf("errorMessage = %s\n", errorMessage.c_str()); \
-        @throw; \
+        @throw [NSException exceptionWithName:@"NSException" \
+                            reason:[NSString stringWithUTF8String:errorMessage.c_str()] \
+                            userInfo:nil \
+               ]; \
     } \
     @catch(id anyObject) { \
         (void)anyObject; \

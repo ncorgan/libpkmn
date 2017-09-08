@@ -47,6 +47,7 @@ static void AbilityListTest() {
         }
     }
     @catch (NSException* e) {
+        NSLog(@"%s", [[e reason] UTF8String]);
         TEST_ASSERT(false);
     }
 }
