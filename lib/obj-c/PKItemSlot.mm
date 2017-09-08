@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,16 +12,14 @@
 @implementation PKItemSlot
 
 - (PKItemSlot*)init {
-    item = [PKItemDatabaseEntry alloc];
+    item = [NSString alloc];
     amount = [NSNumber alloc];
     return self;
 }
 
-// TODO: PKItemSlot copy constructor
-- (PKItemSlot*)initWithItem:(PKItemDatabaseEntry*)slotItem
+- (PKItemSlot*)initWithItem:(NSString*)slotItem
                   andAmount:(NSNumber*)slotAmount {
-    item = [[PKItemDatabaseEntry alloc] initWithName:[slotItem getName]
-                                             andGame:[slotItem getGame]];
+    item = [slotItem copy];
     amount = [slotAmount copy];
     return self;
 }
@@ -42,10 +40,8 @@
 }
 
 - (BOOL)isEqualToItemSlot:(PKItemSlot*)other {
-    PKMN_CPP_TO_OBJC(
-        return ([self->item isEqual:other->item] &&
-                [self->amount isEqual:other->amount]);
-    )
+    return ([self->item isEqual:other->item] &&
+            [self->amount isEqual:other->amount]);
 }
 
 @end

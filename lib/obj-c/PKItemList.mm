@@ -95,6 +95,14 @@
     )
 }
 
+- (PKStringArray*)getValidItems
+{
+    PKMN_CPP_TO_OBJC(
+        std::vector<std::string> valid_items = CAST_TO_CPP(self)->get_valid_items();
+        return [CppToObjC createStringArrayFromCpp:std::move(valid_items)];
+    )
+}
+
 - (PKItemSlotArray*)asArray {
     PKMN_CPP_TO_OBJC(
         pkmn::item_slots_t cpp = CAST_TO_CPP(self)->as_vector();

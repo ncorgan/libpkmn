@@ -154,7 +154,7 @@
 
 + (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance;
 
-+ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance;
++ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&&)cppInstance;
 
 + (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&)cppInstance;
 

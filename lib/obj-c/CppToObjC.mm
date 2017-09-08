@@ -293,7 +293,7 @@ struct __cxa_exception
     )
 }
 
-+ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&)cppInstance {
++ (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKStringArray*)[[PKStringArrayFromCpp alloc] initFromCpp:cppInstance];
     )

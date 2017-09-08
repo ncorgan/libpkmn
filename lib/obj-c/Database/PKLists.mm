@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,7 +19,7 @@
                                                  [generation intValue]
                                              );
 
-        return [CppToObjC createStringArrayFromCpp:abilities];
+        return [CppToObjC createStringArrayFromCpp:std::move(abilities)];
     )
 }
 
@@ -29,7 +29,7 @@
                                              [generation intValue], includePrevious
                                          );
 
-        return [CppToObjC createStringArrayFromCpp:games];
+        return [CppToObjC createStringArrayFromCpp:std::move(games)];
     )
 }
 
@@ -39,7 +39,7 @@
                                              [game UTF8String]
                                          );
 
-        return [CppToObjC createStringArrayFromCpp:items];
+        return [CppToObjC createStringArrayFromCpp:std::move(items)];
     )
 }
 
@@ -49,7 +49,7 @@
                                                  [game UTF8String], wholeGeneration
                                              );
 
-        return [CppToObjC createStringArrayFromCpp:locations];
+        return [CppToObjC createStringArrayFromCpp:std::move(locations)];
     )
 }
 
@@ -59,7 +59,7 @@
                                              [game UTF8String]
                                          );
 
-        return [CppToObjC createStringArrayFromCpp:moves];
+        return [CppToObjC createStringArrayFromCpp:std::move(moves)];
     )
 }
 
@@ -67,7 +67,7 @@
     PKMN_CPP_TO_OBJC(
         std::vector<std::string> natures = pkmn::database::get_nature_list();
 
-        return [CppToObjC createStringArrayFromCpp:natures];
+        return [CppToObjC createStringArrayFromCpp:std::move(natures)];
     )
 }
 
@@ -77,7 +77,7 @@
                                                [generation intValue], includePrevious
                                            );
 
-        return [CppToObjC createStringArrayFromCpp:pokemon];
+        return [CppToObjC createStringArrayFromCpp:std::move(pokemon)];
     )
 }
 
@@ -85,7 +85,7 @@
     PKMN_CPP_TO_OBJC(
         std::vector<std::string> regions = pkmn::database::get_region_list();
 
-        return [CppToObjC createStringArrayFromCpp:regions];
+        return [CppToObjC createStringArrayFromCpp:std::move(regions)];
     )
 }
 
@@ -95,7 +95,7 @@
                                                [generation intValue]
                                            );
 
-        return [CppToObjC createStringArrayFromCpp:ribbons];
+        return [CppToObjC createStringArrayFromCpp:std::move(ribbons)];
     )
 }
 
@@ -103,7 +103,7 @@
     PKMN_CPP_TO_OBJC(
         std::vector<std::string> super_training_medals = pkmn::database::get_super_training_medal_list();
 
-        return [CppToObjC createStringArrayFromCpp:super_training_medals];
+        return [CppToObjC createStringArrayFromCpp:std::move(super_training_medals)];
     )
 }
 
@@ -113,7 +113,7 @@
                                              [game UTF8String]
                                          );
 
-        return [CppToObjC createStringArrayFromCpp:types];
+        return [CppToObjC createStringArrayFromCpp:std::move(types)];
     )
 }
 

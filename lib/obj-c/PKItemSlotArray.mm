@@ -18,7 +18,7 @@ static PKMN_INLINE pkmn::item_slot item_slot_from_objc(
     PKItemSlot* objC
 ) {
     return pkmn::item_slot(
-               [[objC->item getName] UTF8String],
+               [objC->item UTF8String],
                [objC->amount intValue]
            );
 }

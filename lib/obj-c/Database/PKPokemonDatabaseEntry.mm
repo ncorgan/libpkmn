@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -206,7 +206,7 @@
 - (PKStringArray*)getForms {
     PKMN_CPP_TO_OBJC(
         std::vector<std::string> cpp = CAST_TO_CPP(self)->get_forms();
-        return [CppToObjC createStringArrayFromCpp:cpp];
+        return [CppToObjC createStringArrayFromCpp:std::move(cpp)];
     )
 }
 

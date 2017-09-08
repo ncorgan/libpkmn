@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,19 +7,17 @@
 #ifndef INCLUDED_PKMN_OBJC_PKITEMSLOT_H
 #define INCLUDED_PKMN_OBJC_PKITEMSLOT_H
 
-#import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
-
 #import <Foundation/Foundation.h>
 
 @interface PKItemSlot: NSObject {
     @public
-    PKItemDatabaseEntry* item;
+    NSString* item;
     NSNumber* amount;
 }
 
 - (PKItemSlot*)init;
 
-- (PKItemSlot*)initWithItem:(PKItemDatabaseEntry*)slotItem
+- (PKItemSlot*)initWithItem:(NSString*)slotItem
                   andAmount:(NSNumber*)moveLevel;
 
 - (void)dealloc;

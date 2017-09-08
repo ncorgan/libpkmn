@@ -11,6 +11,7 @@
 
 #import <PKMN-ObjC/PKItemSlot.h>
 #import <PKMN-ObjC/PKItemSlotArray.h>
+#import <PKMN-ObjC/Types/PKStringArray.h>
 
 @interface PKItemList : NSObject {
     @protected
@@ -38,6 +39,8 @@
 
 - (void)move:(NSNumber*)oldPosition
           to:(NSNumber*)newPosition;
+
+- (PKStringArray*)getValidItems;
 
 - (PKItemSlotArray*)asArray;
 
