@@ -10,7 +10,7 @@ REPO_TOPLEVEL=$PWD
 
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
-sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
+sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev gnustep \
                         swig swig3.0 doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
