@@ -66,12 +66,10 @@ struct __cxa_exception
 
 @implementation PKItemSlotArrayFromCpp: PKItemSlotArray
 
-- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&)cppInstance {
+- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::item_slots_t(
-                                (pkmn::item_slots_t&&)cppInstance
-                            )
+                        new pkmn::item_slots_t(std::move(cppInstance))
                     );
     )
 }
@@ -84,12 +82,10 @@ struct __cxa_exception
 
 @implementation PKLevelupMoveArrayFromCpp: PKLevelupMoveArray
 
-- (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&)cppInstance {
+- (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::levelup_moves_t(
-                                (pkmn::database::levelup_moves_t&&)cppInstance
-                            )
+                        new pkmn::database::levelup_moves_t(std::move(cppInstance))
                     );
         return self;
     )
@@ -120,12 +116,10 @@ struct __cxa_exception
 
 @implementation PKMoveDatabaseEntryArrayFromCpp
 
-- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&)cppInstance {
+- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::move_list_t(
-                                (pkmn::database::move_list_t&&)cppInstance
-                            )
+                        new pkmn::database::move_list_t(std::move(cppInstance))
                     );
         return self;
     )
@@ -156,12 +150,10 @@ struct __cxa_exception
 
 @implementation PKPokemonDatabaseEntryArrayFromCpp
 
-- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance {
+- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new pkmn::database::pokemon_entries_t(
-                                (pkmn::database::pokemon_entries_t&&)cppInstance
-                            )
+                        new pkmn::database::pokemon_entries_t(std::move(cppInstance))
                     );
         return self;
     )
@@ -175,12 +167,10 @@ struct __cxa_exception
 
 @implementation PKStringArrayFromCpp
 
-- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance {
+- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new std::vector<std::string>(
-                                (std::vector<std::string>&&)cppInstance
-                            )
+                        new std::vector<std::string>(std::move(cppInstance))
                     );
         return self;
     )
@@ -194,12 +184,10 @@ struct __cxa_exception
 
 @implementation PKStringNumberDictionaryFromCpp
 
-- (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&)cppInstance {
+- (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&&)cppInstance {
     PKMN_CPP_TO_OBJC(
         _internal = reinterpret_cast<void*>(
-                        new std::map<std::string, int>(
-                                (std::map<std::string, int>&&)cppInstance
-                            )
+                        new std::map<std::string, int>(std::move(cppInstance))
                     );
         return self;
     )
@@ -215,8 +203,6 @@ struct __cxa_exception
 
 + (std::string)getMessageFromCXXException: (CXXException*)cxxException
 {
-    // return (uint8_t*)(__bridge void*)object + ivar_getOffset(ivar);
-
     id object = (id)cxxException;
     Ivar ivar = class_getInstanceVariable(object_getClass(object), "ex");
     void* ivar_ptr = (uint8_t*)(__bridge void*)object + ivar_getOffset(ivar);
@@ -247,9 +233,9 @@ struct __cxa_exception
     )
 }
 
-+ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&)cppInstance {
++ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKItemSlotArray*)[[PKItemSlotArrayFromCpp alloc] initFromCpp:cppInstance];
+        return (PKItemSlotArray*)[[PKItemSlotArrayFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 
@@ -263,9 +249,9 @@ struct __cxa_exception
     )
 }
 
-+ (PKLevelupMoveArray*)createLevelupMoveArrayFromCpp: (pkmn::database::levelup_moves_t&)cppInstance {
++ (PKLevelupMoveArray*)createLevelupMoveArrayFromCpp: (pkmn::database::levelup_moves_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKLevelupMoveArray*)[[PKLevelupMoveArrayFromCpp alloc] initFromCpp:cppInstance];
+        return (PKLevelupMoveArray*)[[PKLevelupMoveArrayFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 
@@ -275,9 +261,9 @@ struct __cxa_exception
     )
 }
 
-+ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance {
++ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKMoveDatabaseEntryArray*)[[PKMoveDatabaseEntryArrayFromCpp alloc] initFromCpp:cppInstance];
+        return (PKMoveDatabaseEntryArray*)[[PKMoveDatabaseEntryArrayFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 
@@ -287,21 +273,21 @@ struct __cxa_exception
     )
 }
 
-+ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance {
++ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKPokemonDatabaseEntryArray*)[[PKPokemonDatabaseEntryArrayFromCpp alloc] initFromCpp:cppInstance];
+        return (PKPokemonDatabaseEntryArray*)[[PKPokemonDatabaseEntryArrayFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKStringArray*)[[PKStringArrayFromCpp alloc] initFromCpp:cppInstance];
+        return (PKStringArray*)[[PKStringArrayFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 
-+ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&)cppInstance {
++ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&&)cppInstance {
     PKMN_CPP_TO_OBJC(
-        return (PKStringNumberDictionary*)[[PKStringNumberDictionaryFromCpp alloc] initFromCpp:cppInstance];
+        return (PKStringNumberDictionary*)[[PKStringNumberDictionaryFromCpp alloc] initFromCpp:std::move(cppInstance)];
     )
 }
 

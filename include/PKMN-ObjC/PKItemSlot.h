@@ -18,7 +18,7 @@
 - (PKItemSlot*)init;
 
 - (PKItemSlot*)initWithItem:(NSString*)slotItem
-                  andAmount:(NSNumber*)moveLevel;
+                  andAmount:(NSNumber*)slotAmount;
 
 - (void)dealloc;
 

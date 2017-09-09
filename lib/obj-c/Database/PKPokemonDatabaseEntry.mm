@@ -115,14 +115,14 @@
 - (PKStringPair*)getTypes {
     PKMN_CPP_TO_OBJC(
         std::pair<std::string, std::string> cpp = CAST_TO_CPP(self)->get_types();
-        return [CppToObjC createStringPairFromCpp:cpp];
+        return [CppToObjC createStringPairFromCpp:std::move(cpp)];
     )
 }
 
 - (PKStringPair*)getAbilities {
     PKMN_CPP_TO_OBJC(
         std::pair<std::string, std::string> cpp = CAST_TO_CPP(self)->get_abilities();
-        return [CppToObjC createStringPairFromCpp:cpp];
+        return [CppToObjC createStringPairFromCpp:std::move(cpp)];
     )
 }
 
@@ -135,21 +135,21 @@
 - (PKStringPair*)getEggGroups {
     PKMN_CPP_TO_OBJC(
         std::pair<std::string, std::string> cpp = CAST_TO_CPP(self)->get_egg_groups();
-        return [CppToObjC createStringPairFromCpp:cpp];
+        return [CppToObjC createStringPairFromCpp:std::move(cpp)];
     )
 }
 
 - (PKStringNumberDictionary*)getBaseStats {
     PKMN_CPP_TO_OBJC(
         std::map<std::string, int> cpp = CAST_TO_CPP(self)->get_base_stats();
-        return [CppToObjC createStringNumberDictionaryFromCpp:cpp];
+        return [CppToObjC createStringNumberDictionaryFromCpp:std::move(cpp)];
     )
 }
 
 - (PKStringNumberDictionary*)getEVYields {
     PKMN_CPP_TO_OBJC(
         std::map<std::string, int> cpp = CAST_TO_CPP(self)->get_EV_yields();
-        return [CppToObjC createStringNumberDictionaryFromCpp:cpp];
+        return [CppToObjC createStringNumberDictionaryFromCpp:std::move(cpp)];
     )
 }
 
@@ -178,28 +178,28 @@
 - (PKLevelupMoveArray*)getLevelupMoves {
     PKMN_CPP_TO_OBJC(
         pkmn::database::levelup_moves_t cpp = CAST_TO_CPP(self)->get_levelup_moves();
-        return [CppToObjC createLevelupMoveArrayFromCpp:cpp];
+        return [CppToObjC createLevelupMoveArrayFromCpp:std::move(cpp)];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getTMHMMoves {
     PKMN_CPP_TO_OBJC(
         pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_tm_hm_moves();
-        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
+        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:std::move(cpp)];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getEggMoves {
     PKMN_CPP_TO_OBJC(
         pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_egg_moves();
-        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
+        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:std::move(cpp)];
     )
 }
 
 - (PKMoveDatabaseEntryArray*)getTutorMoves {
     PKMN_CPP_TO_OBJC(
         pkmn::database::move_list_t cpp = CAST_TO_CPP(self)->get_tutor_moves();
-        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:cpp];
+        return [CppToObjC createMoveDatabaseEntryArrayFromCpp:std::move(cpp)];
     )
 }
 
@@ -213,7 +213,7 @@
 - (PKPokemonDatabaseEntryArray*)getEvolutions {
     PKMN_CPP_TO_OBJC(
         pkmn::database::pokemon_entries_t cpp = CAST_TO_CPP(self)->get_evolutions();
-        return [CppToObjC createPokemonDatabaseEntryArrayFromCpp:cpp];
+        return [CppToObjC createPokemonDatabaseEntryArrayFromCpp:std::move(cpp)];
     )
 }
 

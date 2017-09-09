@@ -37,8 +37,6 @@
 
 #include "CXXException.h"
 
-// andSecond:[NSString stringWithUTF8String:cppInstance.second.c_str()]];
-
 #define PKMN_CPP_TO_OBJC(...) \
 { \
     @try { \
@@ -70,7 +68,7 @@
 
 @interface PKItemSlotArrayFromCpp: PKItemSlotArray
 
-- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&)cppInstance;
+- (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&&)cppInstance;
 
 - (void)dealloc;
 
@@ -78,7 +76,7 @@
 
 @interface PKLevelupMoveArrayFromCpp: PKLevelupMoveArray
 
-- (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&)cppInstance;
+- (PKLevelupMoveArrayFromCpp*)initFromCpp: (pkmn::database::levelup_moves_t&&)cppInstance;
 
 - (void)dealloc;
 
@@ -94,7 +92,7 @@
 
 @interface PKMoveDatabaseEntryArrayFromCpp: PKMoveDatabaseEntryArray
 
-- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&)cppInstance;
+- (PKMoveDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::move_list_t&&)cppInstance;
 
 - (void)dealloc;
 
@@ -110,7 +108,7 @@
 
 @interface PKPokemonDatabaseEntryArrayFromCpp: PKPokemonDatabaseEntryArray
 
-- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance;
+- (PKPokemonDatabaseEntryArrayFromCpp*)initFromCpp: (pkmn::database::pokemon_entries_t&&)cppInstance;
 
 - (void)dealloc;
 
@@ -118,7 +116,7 @@
 
 @interface PKStringArrayFromCpp: PKStringArray
 
-- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&)cppInstance;
+- (PKStringArrayFromCpp*)initFromCpp: (std::vector<std::string>&&)cppInstance;
 
 - (void)dealloc;
 
@@ -126,7 +124,7 @@
 
 @interface PKStringNumberDictionaryFromCpp: PKStringNumberDictionary
 
-- (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&)cppInstance;
+- (PKStringNumberDictionaryFromCpp*)initFromCpp: (std::map<std::string, int>&&)cppInstance;
 
 - (void)dealloc;
 
@@ -140,23 +138,23 @@
 
 + (PKItemSlot*)createItemSlotFromCpp: (const pkmn::item_slot&)cppInstance;
 
-+ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&)cppInstance;
++ (PKItemSlotArray*)createItemSlotArrayFromCpp: (pkmn::item_slots_t&&)cppInstance;
 
 + (PKLevelupMove*)createLevelupMoveFromCpp: (const pkmn::database::levelup_move&)cppInstance;
 
-+ (PKLevelupMoveArray*)createLevelupMoveArrayFromCpp: (pkmn::database::levelup_moves_t&)cppInstance;
++ (PKLevelupMoveArray*)createLevelupMoveArrayFromCpp: (pkmn::database::levelup_moves_t&&)cppInstance;
 
 + (PKMoveDatabaseEntry*)createMoveDatabaseEntryFromCpp: (const pkmn::database::move_entry&)cppInstance;
 
-+ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&)cppInstance;
++ (PKMoveDatabaseEntryArray*)createMoveDatabaseEntryArrayFromCpp: (pkmn::database::move_list_t&&)cppInstance;
 
 + (PKPokemonDatabaseEntry*)createPokemonDatabaseEntryFromCpp: (const pkmn::database::pokemon_entry&)cppInstance;
 
-+ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&)cppInstance;
++ (PKPokemonDatabaseEntryArray*)createPokemonDatabaseEntryArrayFromCpp: (pkmn::database::pokemon_entries_t&&)cppInstance;
 
 + (PKStringArray*)createStringArrayFromCpp: (std::vector<std::string>&&)cppInstance;
 
-+ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&)cppInstance;
++ (PKStringNumberDictionary*)createStringNumberDictionaryFromCpp: (std::map<std::string, int>&&)cppInstance;
 
 + (PKStringPair*)createStringPairFromCpp: (const std::pair<std::string, std::string>&)cppInstance;
 
