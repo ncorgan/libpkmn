@@ -8,6 +8,9 @@
 INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Unity
+    ${PKMN_SOURCE_DIR}/include/PKMN-ObjC
+    ${PKMN_SOURCE_DIR}/lib/obj-c
+    ${ObjC_INCLUDE_DIRS}
 )
 
 SET(objc_tests
@@ -17,3 +20,8 @@ SET(objc_tests
 FOREACH(test ${objc_tests})
     PKMN_ADD_OBJC_TEST(${test} ${test}.m)
 ENDFOREACH(test ${objc_tests})
+
+PKMN_ADD_CPP_TEST(CppToObjCTest CppToObjCTest.mm)
+TARGET_LINK_LIBRARIES(CppToObjCTest
+    pkmn-objc
+)

@@ -66,6 +66,12 @@
     )
 }
 
+- (NSString*)getTarget {
+    PKMN_CPP_TO_OBJC(
+        return @(CAST_TO_CPP(self)->get_target().c_str());
+    )
+}
+
 - (NSString*)getDamageClass {
     PKMN_CPP_TO_OBJC(
         return @(CAST_TO_CPP(self)->get_damage_class().c_str());
