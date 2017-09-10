@@ -28,6 +28,12 @@ void test_item_list_invalid_items(
     size_t num_items
 );
 
+void test_item_bag_invalid_items(
+    pkmn_item_bag2_t* bag,
+    const char** item_names,
+    size_t num_items
+);
+
 void test_item_list_set_item(
     pkmn_item_list2_t* list,
     const char** item_names,
@@ -48,5 +54,17 @@ void test_item_list_add_remove(
 GEN1_TEST_FCNS(Red);
 GEN1_TEST_FCNS(Blue);
 GEN1_TEST_FCNS(Yellow);
+
+#define GEN2_TEST_FCNS(game) \
+    void test_gen2_item_pocket_ ## game (); \
+    void test_gen2_key_item_pocket_ ## game (); \
+    void test_gen2_ball_pocket_ ## game (); \
+    void test_gen2_tmhm_pocket_ ## game (); \
+    void test_gen2_item_pc_ ## game (); \
+    void test_gen2_item_bag_ ## game ();
+
+GEN2_TEST_FCNS(Gold);
+GEN2_TEST_FCNS(Silver);
+GEN2_TEST_FCNS(Crystal);
 
 #endif /* C_ITEMS_TEST_H */

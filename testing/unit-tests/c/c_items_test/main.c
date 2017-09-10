@@ -12,14 +12,29 @@
 #include <pkmn.h>
 
 #define GEN1_UNITY_TESTS(game) \
+{ \
     PKMN_C_TEST(test_gen1_item_pocket_ ## game ) \
     PKMN_C_TEST(test_gen1_item_pc_ ## game ) \
-    PKMN_C_TEST(test_gen1_item_bag_ ## game )
+    PKMN_C_TEST(test_gen1_item_bag_ ## game ) \
+}
+
+#define GEN2_UNITY_TESTS(game) \
+{ \
+    PKMN_C_TEST(test_gen2_item_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen2_key_item_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen2_ball_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen2_tmhm_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen2_item_pc_ ## game ) \
+    PKMN_C_TEST(test_gen2_item_bag_ ## game ) \
+}
 
 PKMN_C_TEST_MAIN(
     GEN1_UNITY_TESTS(Red)
     GEN1_UNITY_TESTS(Blue)
     GEN1_UNITY_TESTS(Yellow)
+    GEN2_UNITY_TESTS(Gold)
+    GEN2_UNITY_TESTS(Silver)
+    GEN2_UNITY_TESTS(Crystal)
 )
 
 // Red

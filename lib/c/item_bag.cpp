@@ -76,6 +76,7 @@ pkmn_error_t pkmn_item_bag2_init(
         INTERNAL_RCAST(item_bag_out->_internal)->cpp = cpp;
 
         init_item_bag(item_bag_out);
+        update_item_bag(item_bag_out);
     )
 }
 

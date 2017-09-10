@@ -114,18 +114,31 @@ void test_item_list_invalid_items(
                     num_items
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-
-        error = pkmn_item_list2_set_item(
-                    list,
-                    0,
-                    item_names[i],
-                    5
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
 
     // This should not have changed.
     TEST_ASSERT_EQUAL(old_num_items, list->num_items);
+}
+
+void test_item_bag_invalid_items(
+    pkmn_item_bag2_t* bag,
+    const char** item_names,
+    size_t num_items
+)
+{
+    TEST_ASSERT_NOT_NULL(bag);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    for(size_t i = 0; i < num_items; ++i)
+    {
+        error = pkmn_item_bag2_add(
+                    bag,
+                    item_names[i],
+                    num_items
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+    }
 }
 
 void test_item_list_set_item(
