@@ -67,4 +67,19 @@ GEN2_TEST_FCNS(Gold);
 GEN2_TEST_FCNS(Silver);
 GEN2_TEST_FCNS(Crystal);
 
+#define GBA_TEST_FCNS(game) \
+    void test_gba_item_pocket_ ## game (); \
+    void test_gba_key_item_pocket_ ## game (); \
+    void test_gba_ball_pocket_ ## game (); \
+    void test_gba_tmhm_pocket_ ## game (); \
+    void test_gba_berry_pocket_ ## game (); \
+    void test_gba_item_pc_ ## game (); \
+    void test_gba_item_bag_ ## game ();
+
+GBA_TEST_FCNS(Ruby);
+GBA_TEST_FCNS(Sapphire);
+GBA_TEST_FCNS(Emerald);
+GBA_TEST_FCNS(FireRed);
+GBA_TEST_FCNS(LeafGreen);
+
 #endif /* C_ITEMS_TEST_H */

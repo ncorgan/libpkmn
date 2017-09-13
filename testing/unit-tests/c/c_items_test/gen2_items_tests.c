@@ -399,6 +399,8 @@ static void gen2_item_pc_test(
     const char* game
 )
 {
+    TEST_ASSERT_NOT_NULL(game);
+
     pkmn_item_list2_t item_pc =
     {
         .name = NULL,
@@ -425,6 +427,7 @@ static void gen2_item_pc_test(
     TEST_ASSERT_NOT_NULL(item_pc.item_slots.item_slots);
 
     TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pc.game);
     TEST_ASSERT_EQUAL(0, item_pc.num_items);
     TEST_ASSERT_EQUAL(50, item_pc.capacity);
     TEST_ASSERT_EQUAL(50, item_pc.item_slots.length);
