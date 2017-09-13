@@ -82,4 +82,19 @@ GBA_TEST_FCNS(Emerald);
 GBA_TEST_FCNS(FireRed);
 GBA_TEST_FCNS(LeafGreen);
 
+#define GCN_TEST_FCNS(game) \
+    void test_gcn_item_pocket_ ## game (); \
+    void test_gcn_key_item_pocket_ ## game (); \
+    void test_gcn_ball_pocket_ ## game (); \
+    void test_gcn_tm_pocket_ ## game (); \
+    void test_gcn_berry_pocket_ ## game (); \
+    void test_gcn_cologne_pocket_ ## game (); \
+    void test_gcn_item_pc_ ## game (); \
+    void test_gcn_item_bag_ ## game ();
+
+GCN_TEST_FCNS(Colosseum);
+GCN_TEST_FCNS(XD);
+
+void test_gcn_battle_cd_pocket_XD();
+
 #endif /* C_ITEMS_TEST_H */

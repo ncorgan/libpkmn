@@ -13,8 +13,6 @@
 
 #include <string.h>
 
-#define STRBUFFER_LEN 1024
-
 static const char* ALL_POCKET_ITEM_NAMES[] =
 {
     "Potion", "Bicycle", "Great Ball", "TM28",

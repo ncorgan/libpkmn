@@ -9,14 +9,9 @@
 
 #include <pkmn-c/database/lists.h>
 
-// For pksav_gba_game_t
-#include <pksav/gba.h>
-
 #include <unity.h>
 
 #include <string.h>
-
-#define STRBUFFER_LEN 1024
 
 static const char* ALL_POCKET_ITEM_NAMES[] =
 {

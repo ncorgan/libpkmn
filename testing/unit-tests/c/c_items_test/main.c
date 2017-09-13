@@ -34,8 +34,21 @@
     PKMN_C_TEST(test_gba_key_item_pocket_ ## game ) \
     PKMN_C_TEST(test_gba_ball_pocket_ ## game ) \
     PKMN_C_TEST(test_gba_tmhm_pocket_ ## game ) \
+    PKMN_C_TEST(test_gba_berry_pocket_ ## game ) \
     PKMN_C_TEST(test_gba_item_pc_ ## game ) \
     PKMN_C_TEST(test_gba_item_bag_ ## game ) \
+}
+
+#define GCN_UNITY_TESTS(game) \
+{ \
+    PKMN_C_TEST(test_gcn_item_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_key_item_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_ball_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_tm_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_berry_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_cologne_pocket_ ## game ) \
+    PKMN_C_TEST(test_gcn_item_pc_ ## game ) \
+    PKMN_C_TEST(test_gcn_item_bag_ ## game ) \
 }
 
 PKMN_C_TEST_MAIN(
@@ -50,6 +63,9 @@ PKMN_C_TEST_MAIN(
     GBA_UNITY_TESTS(Emerald)
     GBA_UNITY_TESTS(FireRed)
     GBA_UNITY_TESTS(LeafGreen)
+    GCN_UNITY_TESTS(Colosseum)
+    GCN_UNITY_TESTS(XD)
+    PKMN_C_TEST(test_gcn_battle_cd_pocket_XD)
 )
 
 // Red
