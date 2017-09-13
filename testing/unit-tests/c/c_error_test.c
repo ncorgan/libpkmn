@@ -214,8 +214,8 @@ static void game_save_error_test() {
 
     pkmn_game_save_handle_t null_game_save = NULL;
 
-    pkmn_item_bag_handle_t item_bag = NULL;
-    pkmn_item_list_handle_t item_pc = NULL;
+    pkmn_item_bag2_t item_bag;
+    pkmn_item_list2_t item_pc;
     pkmn_pokemon_party_handle_t pokemon_party = NULL;
     pkmn_pokemon_pc_handle_t pokemon_pc = NULL;
 

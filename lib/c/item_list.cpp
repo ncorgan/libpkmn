@@ -40,6 +40,8 @@ void init_item_list(
                                cpp->get_capacity()*sizeof(pkmn_item_slot_t)
                            );
     item_list->item_slots.length = item_list->capacity;
+
+    update_item_list(item_list);
 }
 
 // The caller is expected to be exception-safe.
@@ -81,7 +83,6 @@ pkmn_error_t pkmn_item_list2_init(
         INTERNAL_RCAST(item_list_out->_internal)->last_error = "None";
 
         init_item_list(item_list_out);
-        update_item_list(item_list_out);
     )
 }
 

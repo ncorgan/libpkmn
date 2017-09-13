@@ -49,6 +49,8 @@ void init_item_bag(
         pocket_names,
         &item_bag->pockets.pocket_names
     );
+
+    update_item_bag(item_bag);
 }
 
 // The caller is expected to be exception-safe.
@@ -76,7 +78,6 @@ pkmn_error_t pkmn_item_bag2_init(
         INTERNAL_RCAST(item_bag_out->_internal)->cpp = cpp;
 
         init_item_bag(item_bag_out);
-        update_item_bag(item_bag_out);
     )
 }
 

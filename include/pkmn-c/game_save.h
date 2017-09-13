@@ -325,26 +325,26 @@ PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_pc(
  * @brief Returns a handle to the trainer's item bag.
  *
  * \param handle The handle to the game save to use
- * \param item_bag_handle_out A pointer to where to return the item_bag handle
+ * \param item_bag_out A pointer to where to return the item bag
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or item_bag_handle_out is NULL
  */
 PKMN_API pkmn_error_t pkmn_game_save_get_item_bag(
     pkmn_game_save_handle_t handle,
-    pkmn_item_bag_handle_t* item_bag_handle_out
+    pkmn_item_bag2_t* item_bag_out
 );
 
 /*!
  * @brief Returns a handle to the trainer's item pc.
  *
  * \param handle The handle to the game save to use
- * \param item_list_handle_out A pointer to where to return the item_list handle
+ * \param item_pc_out A pointer to where to return the item PC
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or item_list_handle_out is NULL
  */
 PKMN_API pkmn_error_t pkmn_game_save_get_item_pc(
     pkmn_game_save_handle_t handle,
-    pkmn_item_list_handle_t* item_list_handle_out
+    pkmn_item_list2_t* item_pc_out
 );
 
 #ifdef __cplusplus
