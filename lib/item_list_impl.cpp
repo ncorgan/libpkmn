@@ -351,7 +351,8 @@ namespace pkmn {
 
     void item_list_impl::set_item(
         int position,
-        const pkmn::item_slot& slot
+        const std::string& item_name,
+        int amount
     )
     {
         // Input validation.
@@ -360,31 +361,31 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("position", 0, end_boundary);
         }
-        if(slot.item == "None")
+        if(item_name == "None")
         {
-            if(slot.amount != 0)
+            if(amount != 0)
             {
                 throw std::invalid_argument("\"None\" entries must have an amount of 0.");
             }
-            else if(slot.amount < 0 or slot.amount > 99)
+            else if(amount < 0 or amount > 99)
             {
                 pkmn::throw_out_of_range("amount", 0, 99);
             }
         }
         else
         {
-            pkmn::database::item_entry entry(slot.item, get_game());
-            if(get_name() != "PC" and slot.item != "None" and entry.get_pocket() != get_name())
+            pkmn::database::item_entry entry(item_name, get_game());
+            if(get_name() != "PC" and item_name != "None" and entry.get_pocket() != get_name())
             {
                 throw std::invalid_argument("This item does not belong in this pocket.");
             }
-            if(slot.amount < 1 or slot.amount > 99)
+            if(amount < 1 or amount > 99)
             {
                 pkmn::throw_out_of_range("amount", 1, 99);
             }
             for(int i = 0; i < _num_items; ++i)
             {
-                if((_item_slots[i].item == slot.item) && (i != position))
+                if((_item_slots[i].item == item_name) && (i != position))
                 {
                     std::string err_msg = "This item is already present in slot ";
                     err_msg.append(std::to_string(i));
@@ -395,8 +396,9 @@ namespace pkmn {
             }
         }
 
-        _item_slots[position] = slot;
-        if(slot.item == "None" and position < end_boundary)
+        _item_slots[position].item = item_name;
+        _item_slots[position].amount = amount;
+        if(item_name == "None" and position < end_boundary)
         {
             _item_slots.erase(_item_slots.begin()+position);
             _item_slots.emplace_back(std::move(pkmn::item_slot("None", 0)));

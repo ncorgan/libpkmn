@@ -28,14 +28,6 @@
         return self->get()->as_vector().at(index);
     }
 
-    void __setitem__(
-        int index,
-        const pkmn::item_slot& slot
-    )
-    {
-        self->get()->set_item(index, slot);
-    }
-
     %pythoncode %{
         def __eq__(self, rhs):
             if not isinstance(rhs, (item_list_sptr)):

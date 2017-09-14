@@ -25,16 +25,6 @@
         return self->get()->as_vector().at(index-1);
     }
 
-    void __setitem__(
-        int index,
-        const pkmn::item_slot& slot
-    )
-    {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_item(index-1, slot);
-    }
-
     bool __eq__(
         const pkmn::item_list::sptr &rhs
     )

@@ -212,7 +212,8 @@ pkmn_error_t pkmn_item_list_set_item(
 
         cpp->set_item(
             position,
-            {item, amount} 
+            item,
+            amount
         );
 
         update_item_list(item_list);

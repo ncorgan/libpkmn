@@ -159,7 +159,8 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::set_item(
         int position,
-        const pkmn::item_slot& slot
+        const std::string& item_name,
+        int amount
     )
     {
         // Input validation.
@@ -168,22 +169,22 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("position", 0, end_boundary);
         }
-        pkmn::database::item_entry entry(slot.item, get_game());
-        if(slot.item != "None" and entry.get_pocket() != get_name())
+        pkmn::database::item_entry entry(item_name, get_game());
+        if(item_name != "None" and entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item does not belong in this pocket.");
         }
-        if(slot.amount < 0 or slot.amount > 99)
+        if(amount < 0 or amount > 99)
         {
             pkmn::throw_out_of_range("amount", 0, 99);
         }
-        if(slot.item != _item_slots[position].item)
+        if(item_name != _item_slots[position].item)
         {
             pkmn::throw_invalid_argument<std::string>("item", {_item_slots[position].item});
         }
 
         // No need to copy everything
-        _item_slots[position].amount = slot.amount;
+        _item_slots[position].amount = amount;
     }
 
     void item_list_gen2_tmhmimpl::_from_native(

@@ -60,9 +60,6 @@ using Database;"
         get {
             return this.At(index);
         }
-        set {
-            this.SetItem(index, value);
-        }
     }
 
     /// <summary>Compares two ItemList instances to determine value equality.</summary>

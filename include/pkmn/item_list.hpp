@@ -138,7 +138,8 @@ namespace pkmn {
 
             virtual void set_item(
                 int position,
-                const pkmn::item_slot& slot
+                const std::string& item_name,
+                int amount
             ) = 0;
 
             /*!

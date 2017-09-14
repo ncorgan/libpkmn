@@ -43,6 +43,7 @@ function items_tests.item_list_test_add_remove(items, item_names)
     luaunit.assertEquals(items:get_num_items(), 0)
     luaunit.assertEquals(#item_names, 8)
 
+--[[
     items[1] = pkmn.item_slot(item_names[1], 50)
     items[2] = pkmn.item_slot(item_names[2], 40)
     items[3] = pkmn.item_slot(item_names[3], 30)
@@ -87,6 +88,7 @@ function items_tests.item_list_test_add_remove(items, item_names)
     luaunit.assertEquals("None", items[3].item)
     luaunit.assertEquals(0, items[3].amount)
     luaunit.assertEquals(0, items:get_num_items())
+--]]
 
     -- Test add/remove functions.
     items:add(item_names[1], 30)
