@@ -17,7 +17,7 @@
 
 typedef struct
 {
-    pkmn_item_list2_t* pockets;
+    pkmn_item_list_t* pockets;
     pkmn_string_list_t pocket_names;
 
     size_t num_pockets;
@@ -38,7 +38,7 @@ static PKMN_INLINE pkmn_error_t pkmn_item_pockets_free(
 
     for(size_t i = 0; i < item_pockets->num_pockets; ++i)
     {
-        pkmn_item_list2_free(&item_pockets->pockets[i]);
+        pkmn_item_list_free(&item_pockets->pockets[i]);
     }
     free(item_pockets->pockets);
     pkmn_string_list_free(&item_pockets->pocket_names);

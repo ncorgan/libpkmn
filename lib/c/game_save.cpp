@@ -353,7 +353,7 @@ pkmn_error_t pkmn_game_save_get_pokemon_pc(
 
 pkmn_error_t pkmn_game_save_get_item_bag(
     pkmn_game_save_handle_t handle,
-    pkmn_item_bag2_t* item_bag_out
+    pkmn_item_bag_t* item_bag_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_bag_out, handle);
@@ -367,7 +367,7 @@ pkmn_error_t pkmn_game_save_get_item_bag(
 
 pkmn_error_t pkmn_game_save_get_item_pc(
     pkmn_game_save_handle_t handle,
-    pkmn_item_list2_t* item_pc_out
+    pkmn_item_list_t* item_pc_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_pc_out, handle);
