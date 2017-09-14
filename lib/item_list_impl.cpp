@@ -401,7 +401,7 @@ namespace pkmn {
         if(item_name == "None" and position < end_boundary)
         {
             _item_slots.erase(_item_slots.begin()+position);
-            _item_slots.emplace_back(std::move(pkmn::item_slot("None", 0)));
+            _item_slots.emplace_back(pkmn::item_slot("None", 0));
             --_num_items;
         }
         else
