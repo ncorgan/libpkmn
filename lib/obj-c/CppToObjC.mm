@@ -64,6 +64,23 @@ struct __cxa_exception
 
 @end
 
+@implementation PKItemListFromCpp
+
+- (PKItemListFromCpp*)initFromCpp: (const pkmn::item_list::sptr&)cppInstance {
+    PKMN_CPP_TO_OBJC(
+        _internal = reinterpret_cast<void*>(
+                        new pkmn::item_list::sptr(cppInstance)
+                    );
+        return self;
+    )
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+@end
+
 @implementation PKItemSlotArrayFromCpp: PKItemSlotArray
 
 - (PKItemSlotArrayFromCpp*)initFromCpp: (pkmn::item_slots_t&&)cppInstance {
@@ -220,6 +237,13 @@ struct __cxa_exception
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance {
     PKMN_CPP_TO_OBJC(
         return (PKItemDatabaseEntry*)[[PKItemDatabaseEntryFromCpp alloc] initFromCpp:cppInstance];
+    )
+}
+
++ (PKItemList*)createItemListFromCpp: (const pkmn::item_list::sptr&)cppInstance
+{
+    PKMN_CPP_TO_OBJC(
+        return (PKItemList*)[[PKItemListFromCpp alloc] initFromCpp:cppInstance];
     )
 }
 

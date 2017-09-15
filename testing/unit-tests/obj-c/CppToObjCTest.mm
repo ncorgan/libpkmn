@@ -36,6 +36,45 @@ TEST(CppToObjCTest, PKItemDatabaseEntryTest)
     }
 }
 
+TEST(CppToObjCTest, PKItemListTest)
+{
+    @autoreleasepool
+    {
+        pkmn::item_list::sptr item_list_cpp = pkmn::item_list::make("Items", "Emerald");
+        PKItemList* itemListFromCpp = [CppToObjC createItemListFromCpp:item_list_cpp];
+
+        EXPECT_STREQ(item_list_cpp->get_name().c_str(), [[itemListFromCpp getName] UTF8String]);
+        EXPECT_STREQ(item_list_cpp->get_game().c_str(), [[itemListFromCpp getGame] UTF8String]);
+
+        // Add an item through the C++ instance, and make sure it's reflected in the Objective-C instance.
+        item_list_cpp->add("Potion", 39);
+        EXPECT_EQ(1, [[itemListFromCpp getNumItems] intValue]);
+
+        // TODO: figure out subscripting
+        const pkmn::item_slot& item_slot_cpp = item_list_cpp->at(0);
+        PKItemSlot* itemSlotObjC = (PKItemSlot*)[itemListFromCpp objectAtIndexedSubscript:0];
+        EXPECT_STREQ(item_slot_cpp.item.c_str(), [itemSlotObjC->item UTF8String]);
+        EXPECT_EQ(item_slot_cpp.amount, [itemSlotObjC->amount intValue]);
+
+        // Remove item through the Objective-C instance, and make sure it's reflected in the C++ instance.
+        [itemListFromCpp remove:@"Potion" numItems:@39];
+        EXPECT_EQ(0, item_list_cpp->get_num_items());
+        itemSlotObjC = (PKItemSlot*)[itemListFromCpp objectAtIndexedSubscript:0];
+        EXPECT_STREQ(item_slot_cpp.item.c_str(), [itemSlotObjC->item UTF8String]);
+        EXPECT_EQ(item_slot_cpp.amount, [itemSlotObjC->amount intValue]);
+
+        // Make sure when creating an item list from the Objective-C API itself, it behaves as expected.
+        PKItemList* itemListObjC = [[PKItemList alloc] initWithName:@"Berries" andGame:@"Emerald"];
+        EXPECT_STREQ("Berries", [[itemListObjC getName] UTF8String]);
+        EXPECT_STREQ("Emerald", [[itemListObjC getGame] UTF8String]);
+        [itemListObjC add:@"Cheri Berry" numItems:@39];
+        EXPECT_EQ(1, [[itemListObjC getNumItems] intValue]);
+        itemSlotObjC = (PKItemSlot*)[itemListObjC objectAtIndexedSubscript:0];
+        EXPECT_STREQ("Cheri Berry", [itemSlotObjC->item UTF8String]);
+        EXPECT_EQ(39, [itemSlotObjC->amount intValue]);
+    }
+}
+
 TEST(CppToObjCTest, PKItemSlotTest)
 {
     @autoreleasepool
@@ -105,5 +144,55 @@ TEST(CppToObjCTest, PKMoveDatabaseEntryTest)
         PKMoveDatabaseEntry* moveEntryObjC = [[PKMoveDatabaseEntry alloc] initWithName:@"Scratch" andGame:@"Emerald"];
         EXPECT_TRUE([moveEntryObjC isEqual:moveEntryFromCpp]);
         EXPECT_TRUE([moveEntryObjC isEqualToEntry:moveEntryFromCpp]);
+    }
+}
+
+TEST(CppToObjCTest, PKMoveDatabaseEntryArrayTest)
+{
+    @autoreleasepool
+    {
+        pkmn::database::move_list_t move_list_cpp =
+        {
+            pkmn::database::move_entry("Scratch", "FireRed"),
+            pkmn::database::move_entry("Swallow", "LeafGreen"),
+            pkmn::database::move_entry("Toxic", "Emerald")
+        };
+        PKMoveDatabaseEntryArray* moveEntryArrayFromCpp = [CppToObjC createMoveDatabaseEntryArrayFromCpp:
+                                                               pkmn::database::move_list_t(move_list_cpp)
+                                                          ];
+        EXPECT_EQ(move_list_cpp.size(), [[moveEntryArrayFromCpp count] unsignedLongLongValue]);
+        for(size_t i = 0; i < move_list_cpp.size(); ++i)
+        {
+            EXPECT_STREQ(
+                move_list_cpp[i].get_name().c_str(),
+                [[[moveEntryArrayFromCpp objectAtIndexedSubscript:i] getName] UTF8String]
+            );
+            EXPECT_STREQ(
+                move_list_cpp[i].get_game().c_str(),
+                [[[moveEntryArrayFromCpp objectAtIndexedSubscript:i] getGame] UTF8String]
+            );
+        }
+
+        // Add an entry through the Objective-C API, and make sure we can get it again.
+        PKMoveDatabaseEntry* moveDatabaseEntry = [[PKMoveDatabaseEntry alloc] initWithName:@"Frenzy Plant"
+                                                                              andGame:@"Ruby"];
+        [moveEntryArrayFromCpp addEntry:moveDatabaseEntry];
+        EXPECT_STREQ("Frenzy Plant", [[moveDatabaseEntry getName] UTF8String]);
+        EXPECT_STREQ("Ruby", [[moveDatabaseEntry getGame] UTF8String]);
+
+        // Recreate this array purely through Objective-C, and check for equality.
+        PKMoveDatabaseEntryArray* moveEntryArrayObjC = [PKMoveDatabaseEntryArray alloc];
+
+        PKMoveDatabaseEntry* entry1 = [[PKMoveDatabaseEntry alloc] initWithName:@"Scratch" andGame:@"FireRed"];
+        //PKMoveDatabaseEntry* entry2 = [[PKMoveDatabaseEntry alloc] initWithName:@"Swallow" andGame:@"LeafGreen"];
+        //PKMoveDatabaseEntry* entry3 = [[PKMoveDatabaseEntry alloc] initWithName:@"Toxic" andGame:@"Emerald"];
+        //PKMoveDatabaseEntry* entry4 = [[PKMoveDatabaseEntry alloc] initWithName:@"Frenzy Plant" andGame:@"Ruby"];
+
+        [moveEntryArrayObjC addEntry:entry1];
+        /*[moveEntryArrayObjC addEntry:entry2];
+        [moveEntryArrayObjC addEntry:entry3];
+        [moveEntryArrayObjC addEntry:entry4];
+
+        EXPECT_TRUE([moveEntryArrayObjC isEqualToArray:moveEntryArrayFromCpp]);*/
     }
 }

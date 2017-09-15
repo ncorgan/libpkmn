@@ -11,7 +11,7 @@
 
 #include <pkmn/item_list.hpp>
 
-#define CAST_TO_CPP(list) (*reinterpret_cast<pkmn::item_list::sptr*>(list))
+#define CAST_TO_CPP(list) (*reinterpret_cast<pkmn::item_list::sptr*>(list->_internal))
 
 @implementation PKItemList
 
@@ -26,12 +26,23 @@
                                 )
                             )
                     );
+        return self;
     )
 }
 
 - (void)dealloc {
-    delete &CAST_TO_CPP(self);
+    PKMN_CPP_TO_OBJC(
+        delete &CAST_TO_CPP(self);
+    )
     [super dealloc];
+}
+
+// Allow getting with []
+- (id)objectAtIndexedSubscript:(NSUInteger)idx
+{
+    PKMN_CPP_TO_OBJC(
+        return (id)[self at:[[NSNumber alloc] initWithInteger:idx]];
+    )
 }
 
 - (NSString*)getName {
@@ -119,7 +130,7 @@
     }
 }
 
-- (BOOL)isEqualToItemList:(PKItemSlot*)other {
+- (BOOL)isEqualToItemList:(PKItemList*)other {
     PKMN_CPP_TO_OBJC(
         return (CAST_TO_CPP(self) == CAST_TO_CPP(other));
     )

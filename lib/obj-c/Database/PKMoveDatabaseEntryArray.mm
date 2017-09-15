@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,9 +22,13 @@
 static PKMN_INLINE pkmn::database::move_entry* getInternalMoveEntry(
     PKMoveDatabaseEntry* objC
 ) {
-    void* cpp;
-    object_getInstanceVariable(objC, "_internal", &cpp);
-    return reinterpret_cast<pkmn::database::move_entry*>(cpp);
+    void* cpp_ptr = nullptr;
+    id object = (id)objC;
+    object_getInstanceVariable(object_getClass(object), "_internal", &cpp_ptr);
+
+    pkmn::database::move_entry* ret_ptr = *((pkmn::database::move_entry**)cpp_ptr);
+    printf("%s %s\n", ret_ptr->get_name().c_str(), ret_ptr->get_game().c_str());
+    return ret_ptr;
 }
 
 @implementation PKMoveDatabaseEntryArray
@@ -56,17 +60,17 @@ static PKMN_INLINE pkmn::database::move_entry* getInternalMoveEntry(
     )
 }
 
-- (id)objectAtIndexedSubscript:(NSNumber*)idx {
+- (id)objectAtIndexedSubscript:(NSUInteger)idx {
     PKMN_CPP_TO_OBJC(
-        const pkmn::database::move_entry& cpp = (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]];
+        const pkmn::database::move_entry& cpp = (*CAST_TO_CPP(self))[idx];
         return [CppToObjC createMoveDatabaseEntryFromCpp:cpp];
     )
 }
 
-- (void)setObject:(id)obj atIndexedSubscript:(NSNumber*)idx {
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx {
     PKMN_CPP_TO_OBJC(
         pkmn::database::move_entry* cppPtr = getInternalMoveEntry((PKMoveDatabaseEntry*)obj);
-        (*CAST_TO_CPP(self))[[idx unsignedLongLongValue]] = *cppPtr;
+        (*CAST_TO_CPP(self))[idx] = *cppPtr;
     )
 }
 

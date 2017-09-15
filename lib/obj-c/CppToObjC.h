@@ -8,6 +8,7 @@
 #ifndef PKMN_OBJC_CPPTOOBJC_H
 #define PKMN_OBJC_CPPTOOBJC_H
 
+#import <PKMN-ObjC/PKItemList.h>
 #import <PKMN-ObjC/PKItemSlot.h>
 #import <PKMN-ObjC/Database/PKItemDatabaseEntry.h>
 #import <PKMN-ObjC/PKItemSlotArray.h>
@@ -21,6 +22,7 @@
 #import <PKMN-ObjC/Types/PKStringNumberDictionary.h>
 #import <PKMN-ObjC/Types/PKStringPair.h>
 
+#include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
@@ -43,7 +45,6 @@
         __VA_ARGS__; \
     } \
     @catch(CXXException* cppException) { \
-        printf("Caught CXXException\n"); \
         std::string errorMessage = [CppToObjC getMessageFromCXXException:cppException]; \
         @throw [NSException exceptionWithName:@"NSException" \
                             reason:[NSString stringWithUTF8String:errorMessage.c_str()] \
@@ -61,6 +62,14 @@
 @interface PKItemDatabaseEntryFromCpp: PKItemDatabaseEntry
 
 - (PKItemDatabaseEntryFromCpp*)initFromCpp: (const pkmn::database::item_entry&)cppInstance;
+
+- (void)dealloc;
+
+@end
+
+@interface PKItemListFromCpp: PKItemList
+
+- (PKItemListFromCpp*)initFromCpp: (const pkmn::item_list::sptr&)cppInstance;
 
 - (void)dealloc;
 
@@ -133,6 +142,8 @@
 @interface CppToObjC: NSObject
 
 + (std::string)getMessageFromCXXException: (CXXException*)cxxException;
+
++ (PKItemList*)createItemListFromCpp: (const pkmn::item_list::sptr&)cppInstance;
 
 + (PKItemDatabaseEntry*)createItemDatabaseEntryFromCpp: (const pkmn::database::item_entry&)cppInstance;
 

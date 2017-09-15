@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -23,6 +23,11 @@
 
 - (void)dealloc;
 
+// Allow getting with []
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+
+// Allow setting with [] (TODO: after set_item is merged)
+
 - (NSString*)getName;
 
 - (NSString*)getGame;
@@ -41,8 +46,6 @@
           to:(NSNumber*)newPosition;
 
 - (PKStringArray*)getValidItems;
-
-- (PKItemSlotArray*)asArray;
 
 - (BOOL)isEqual:(id)object;
 
