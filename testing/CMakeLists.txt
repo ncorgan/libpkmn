@@ -5,12 +5,12 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-IF(PKMN_ENABLE_C)
+IF(PKMN_ENABLE_C OR PKMN_ENABLE_OBJC)
     # Use PKSav's copy if it's already built
     IF(NOT PKSAV_ENABLE_TESTS)
         ADD_SUBDIRECTORY(Unity)
     ENDIF(NOT PKSAV_ENABLE_TESTS)
-ENDIF(PKMN_ENABLE_C)
+ENDIF(PKMN_ENABLE_C OR PKMN_ENABLE_OBJC)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 ADD_SUBDIRECTORY(googletest/googletest)
