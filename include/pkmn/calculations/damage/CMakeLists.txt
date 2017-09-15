@@ -11,6 +11,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         damage.hpp
         modifiers.hpp
         moves.hpp
+        natural_gift.hpp
     )
 
     INSTALL(

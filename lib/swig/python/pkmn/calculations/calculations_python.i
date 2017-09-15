@@ -26,6 +26,7 @@ PKMN_PYTHON_INIT
     #include <pkmn/calculations/damage/damage.hpp>
     #include <pkmn/calculations/damage/modifiers.hpp>
     #include <pkmn/calculations/damage/moves.hpp>
+    #include <pkmn/calculations/damage/natural_gift.hpp>
 %}
 
 // Convert Doxygen docs to Python docstrings
@@ -45,3 +46,4 @@ PKMN_PYTHON_INIT
 %include <pkmn/calculations/damage/damage.hpp>
 %include <pkmn/calculations/damage/modifiers.hpp>
 %include <pkmn/calculations/damage/moves.hpp>
+%include <pkmn/calculations/damage/natural_gift.hpp>

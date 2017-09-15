@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+#ifndef PKMN_CALCULATIONS_DAMAGE_NATURAL_GIFT_HPP
+#define PKMN_CALCULATIONS_DAMAGE_NATURAL_GIFT_HPP
+
+#include <pkmn/config.hpp>
+
+#include <string>
+
+namespace pkmn { namespace calculations {
+
+    struct natural_gift
+    {
+        natural_gift():
+            type(""),
+            power(0)
+        {}
+
+        natural_gift(
+            const std::string& move_type,
+            int move_power
+        ): type(move_type), power(move_power)
+        {}
+
+        natural_gift(const natural_gift&) = default;
+
+#ifndef SWIG
+        natural_gift(
+            std::string&& move_type,
+            int move_power
+        ): type(std::move(move_type)), power(move_power)
+        {}
+
+        natural_gift(natural_gift&&) = default;
+        natural_gift& operator=(const natural_gift&) = default;
+        natural_gift& operator=(natural_gift&&) = default;
+#endif
+
+        std::string type;
+        int power;
+    };
+
+    PKMN_API natural_gift natural_gift_stats(
+        const std::string& item_name,
+        const std::string& game
+    );
+
+}}
+#endif /* PKMN_CALCULATIONS_DAMAGE_NATURAL_GIFT_HPP */

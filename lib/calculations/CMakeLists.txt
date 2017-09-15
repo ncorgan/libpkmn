@@ -19,4 +19,5 @@ SET(pkmn_calculations_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/damage/damage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/damage/modifiers.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/damage/moves.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/damage/natural_gift.cpp
 PARENT_SCOPE)
