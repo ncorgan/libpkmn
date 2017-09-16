@@ -48,7 +48,7 @@ namespace pkmn { namespace calculations {
         if(stmt.executeStep())
         {
             ret.type = pkmn::database::type_id_to_name(stmt.getColumn(0));
-            ret.power = stmt.getColumn(1);
+            ret.base_power = stmt.getColumn(1);
         }
         else
         {

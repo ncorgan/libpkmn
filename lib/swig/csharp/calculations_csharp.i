@@ -28,6 +28,7 @@ PKMN_CSHARP_INIT
     #include <pkmn/calculations/damage/damage.hpp>
     #include <pkmn/calculations/damage/modifiers.hpp>
     #include <pkmn/calculations/damage/moves.hpp>
+    #include <pkmn/calculations/damage/natural_gift.hpp>
 %}
 
 // Convert Doxygen docs to C# docstrings
@@ -38,6 +39,7 @@ PKMN_CSHARP_INIT
 %include <pkmn/calculations/damage/damage.hpp>
 %include <pkmn/calculations/damage/modifiers.hpp>
 %include <pkmn/calculations/damage/moves.hpp>
+%include <pkmn/calculations/damage/natural_gift.hpp>
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>

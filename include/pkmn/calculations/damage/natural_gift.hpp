@@ -17,22 +17,22 @@ namespace pkmn { namespace calculations {
     {
         natural_gift():
             type(""),
-            power(0)
+            base_power(0)
         {}
 
         natural_gift(
             const std::string& move_type,
             int move_power
-        ): type(move_type), power(move_power)
+        ): type(move_type), base_power(move_power)
         {}
 
-        natural_gift(const natural_gift&) = default;
+        natural_gift(const natural_gift& other) = default;
 
 #ifndef SWIG
         natural_gift(
             std::string&& move_type,
             int move_power
-        ): type(std::move(move_type)), power(move_power)
+        ): type(std::move(move_type)), base_power(move_power)
         {}
 
         natural_gift(natural_gift&&) = default;
@@ -41,7 +41,7 @@ namespace pkmn { namespace calculations {
 #endif
 
         std::string type;
-        int power;
+        int base_power;
     };
 
     PKMN_API natural_gift natural_gift_stats(
