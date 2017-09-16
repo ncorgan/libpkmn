@@ -29,6 +29,10 @@
 #include <pkmn-c/calculations/spinda_spots.h>
 #include <pkmn-c/calculations/stats.h>
 
+#include <pkmn-c/calculations/damage/critical_hit.h>
+#include <pkmn-c/calculations/damage/damage.h>
+#include <pkmn-c/calculations/damage/modifiers.h>
+
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/lists.h>
 #include <pkmn-c/database/move_entry.h>

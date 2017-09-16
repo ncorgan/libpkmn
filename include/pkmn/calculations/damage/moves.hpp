@@ -75,8 +75,6 @@ namespace pkmn { namespace calculations {
         float target_weight
     );
 
-    // TODO: Natural Gift
-
     PKMN_API int power_trip_power(
         int attack_stat_stage,
         int defense_stat_stage,
