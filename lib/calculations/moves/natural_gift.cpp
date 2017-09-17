@@ -6,7 +6,7 @@
  */
 
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/damage/natural_gift.hpp>
+#include <pkmn/calculations/moves/natural_gift.hpp>
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"

@@ -24,22 +24,22 @@ PKMN_CSHARP_INIT
     #include <pkmn/calculations/spinda_spots.hpp>
     #include <pkmn/calculations/stats.hpp>
 
-    #include <pkmn/calculations/damage/critical_hit.hpp>
-    #include <pkmn/calculations/damage/damage.hpp>
-    #include <pkmn/calculations/damage/modifiers.hpp>
-    #include <pkmn/calculations/damage/moves.hpp>
-    #include <pkmn/calculations/damage/natural_gift.hpp>
+    #include <pkmn/calculations/moves/critical_hit.hpp>
+    #include <pkmn/calculations/moves/damage.hpp>
+    #include <pkmn/calculations/moves/modifiers.hpp>
+    #include <pkmn/calculations/moves/natural_gift.hpp>
+    #include <pkmn/calculations/moves/power.hpp>
 %}
 
 // Convert Doxygen docs to C# docstrings
 %include <pkmn_csharp_docs.i>
 
 %rename(STABModifier) STAB_MODIFIER;
-%include <pkmn/calculations/damage/critical_hit.hpp>
-%include <pkmn/calculations/damage/damage.hpp>
-%include <pkmn/calculations/damage/modifiers.hpp>
-%include <pkmn/calculations/damage/moves.hpp>
-%include <pkmn/calculations/damage/natural_gift.hpp>
+%include <pkmn/calculations/moves/critical_hit.hpp>
+%include <pkmn/calculations/moves/damage.hpp>
+%include <pkmn/calculations/moves/modifiers.hpp>
+%include <pkmn/calculations/moves/natural_gift.hpp>
+%include <pkmn/calculations/moves/power.hpp>
 
 %include <pkmn/calculations/form.hpp>
 %include <pkmn/calculations/gender.hpp>

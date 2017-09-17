@@ -7,7 +7,7 @@
 
 #include <pkmn/exception.hpp>
 
-#include <pkmn/calculations/damage/critical_hit.hpp>
+#include <pkmn/calculations/moves/critical_hit.hpp>
 
 namespace pkmn { namespace calculations {
 

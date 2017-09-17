@@ -556,6 +556,23 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     EXPECT_EQ(0, move_slots_c.length);
 }
 
+TEST(cpp_to_c_test, natural_gift_cpp_to_c_test) {
+    pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
+
+    pkmn_natural_gift_t natural_gift_c;
+
+    pkmn::pkmn_natural_gift_cpp_to_c(
+        natural_gift_cpp,
+        &natural_gift_c
+    );
+
+    EXPECT_STREQ("Normal", natural_gift_c.type);
+    EXPECT_EQ(90, natural_gift_c.base_power);
+
+    pkmn_natural_gift_free(&natural_gift_c);
+    EXPECT_EQ(NULL, natural_gift_c.type);
+}
+
 TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test) {
     pkmn::database::pokemon_entries_t pokemon_entries_cpp{
         pkmn::database::pokemon_entry("Charmander", "Red", ""),

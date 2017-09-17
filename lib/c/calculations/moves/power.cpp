@@ -8,9 +8,9 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-#include <pkmn-c/calculations/damage/moves.h>
+#include <pkmn-c/calculations/moves/power.h>
 
-#include <pkmn/calculations/damage/moves.hpp>
+#include <pkmn/calculations/moves/power.hpp>
 
 pkmn_error_t pkmn_calculations_crush_grip_power(
     int target_current_hp,

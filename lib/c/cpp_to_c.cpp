@@ -172,6 +172,17 @@ namespace pkmn {
         string_list_out->length = move_list.size();
     }
 
+    void pkmn_natural_gift_cpp_to_c(
+        const pkmn::calculations::natural_gift &ng_cpp,
+        pkmn_natural_gift_t* ng_c
+    ) {
+        ng_c->type = (char*)std::malloc(ng_cpp.type.size() + 1);
+        std::strcpy(ng_c->type, ng_cpp.type.c_str());
+        ng_c->type[ng_cpp.type.size()] = '\0';
+
+        ng_c->base_power = ng_cpp.base_power;
+    }
+
     void pkmn_pokemon_entry_cpp_to_c(
         const pkmn::database::pokemon_entry &pokemon_entry_cpp,
         pkmn_database_pokemon_entry_t* pokemon_entry_c

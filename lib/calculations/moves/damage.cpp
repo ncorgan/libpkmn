@@ -6,7 +6,7 @@
  */
 
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/damage/damage.hpp>
+#include <pkmn/calculations/moves/damage.hpp>
 
 namespace pkmn { namespace calculations {
 

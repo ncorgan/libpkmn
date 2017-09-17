@@ -15,8 +15,9 @@ SET(pkmn_c_calculations_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/size.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/spinda_spots.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/stats.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/damage/critical_hit.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/damage/damage.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/damage/modifiers.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/damage/moves.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/moves/critical_hit.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/moves/damage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/moves/modifiers.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/moves/natural_gift.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/moves/power.cpp
 PARENT_SCOPE)

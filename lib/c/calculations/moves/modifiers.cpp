@@ -8,9 +8,9 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-#include <pkmn-c/calculations/damage/modifiers.h>
+#include <pkmn-c/calculations/moves/modifiers.h>
 
-#include <pkmn/calculations/damage/modifiers.hpp>
+#include <pkmn/calculations/moves/modifiers.hpp>
 
 pkmn_error_t pkmn_calculations_type_damage_modifier(
     int generation,

@@ -29,9 +29,11 @@
 #include <pkmn-c/calculations/spinda_spots.h>
 #include <pkmn-c/calculations/stats.h>
 
-#include <pkmn-c/calculations/damage/critical_hit.h>
-#include <pkmn-c/calculations/damage/damage.h>
-#include <pkmn-c/calculations/damage/modifiers.h>
+#include <pkmn-c/calculations/moves/critical_hit.h>
+#include <pkmn-c/calculations/moves/damage.h>
+#include <pkmn-c/calculations/moves/modifiers.h>
+#include <pkmn-c/calculations/moves/natural_gift.h>
+#include <pkmn-c/calculations/moves/power.h>
 
 #include <pkmn-c/database/item_entry.h>
 #include <pkmn-c/database/lists.h>

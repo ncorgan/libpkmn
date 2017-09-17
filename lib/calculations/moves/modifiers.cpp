@@ -6,7 +6,7 @@
  */
 
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/damage/modifiers.hpp>
+#include <pkmn/calculations/moves/modifiers.hpp>
 
 #include "../database/database_common.hpp"
 

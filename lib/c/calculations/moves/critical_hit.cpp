@@ -8,9 +8,9 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-#include <pkmn-c/calculations/damage/critical_hit.h>
+#include <pkmn-c/calculations/moves/critical_hit.h>
 
-#include <pkmn/calculations/damage/critical_hit.hpp>
+#include <pkmn/calculations/moves/critical_hit.hpp>
 
 pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
     int speed,

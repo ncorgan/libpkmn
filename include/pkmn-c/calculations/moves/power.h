@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_CALCULATIONS_MODIFIERS_MOVES_H
-#define PKMN_C_CALCULATIONS_MODIFIERS_MOVES_H
+#ifndef PKMN_C_CALCULATIONS_MODIFIERS_POWER_H
+#define PKMN_C_CALCULATIONS_MODIFIERS_POWER_H
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
@@ -145,4 +145,4 @@ PKMN_API pkmn_error_t pkmn_calculations_wring_out_power(
 }
 #endif
 
-#endif /* PKMN_C_CALCULATIONS_MODIFIERS_MOVES_H */
+#endif /* PKMN_C_CALCULATIONS_MODIFIERS_POWER_H */

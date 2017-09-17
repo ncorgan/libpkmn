@@ -8,9 +8,9 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-#include <pkmn-c/calculations/damage/damage.h>
+#include <pkmn-c/calculations/moves/damage.h>
 
-#include <pkmn/calculations/damage/damage.hpp>
+#include <pkmn/calculations/moves/damage.hpp>
 
 pkmn_error_t pkmn_calculations_damage(
     int attacker_level,

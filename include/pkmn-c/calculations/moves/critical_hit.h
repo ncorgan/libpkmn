@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_CALCULATIONS_DAMAGE_CRITICAL_HIT_H
-#define PKMN_C_CALCULATIONS_DAMAGE_CRITICAL_HIT_H
+#ifndef PKMN_C_CALCULATIONS_MOVES_CRITICAL_HIT_H
+#define PKMN_C_CALCULATIONS_MOVES_CRITICAL_HIT_H
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
@@ -44,4 +44,4 @@ PKMN_API pkmn_error_t pkmn_calculations_critical_hit_modifier(
 }
 #endif
 
-#endif /* PKMN_C_CALCULATIONS_DAMAGE_CRITICAL_HIT_H */
+#endif /* PKMN_C_CALCULATIONS_MOVES_CRITICAL_HIT_H */

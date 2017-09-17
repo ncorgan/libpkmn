@@ -6,16 +6,17 @@
 #
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
-    SET(pkmn_c_calculations_damage_headers
-        critical_hit.h
-        damage.h
-        modifiers.h
-        moves.h
+    SET(pkmn_calculations_moves_headers
+        critical_hit.hpp
+        moves.hpp
+        modifiers.hpp
+        moves.hpp
+        natural_gift.hpp
     )
 
     INSTALL(
-        FILES ${pkmn_c_calculations_damage_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c/calculations/damage
+        FILES ${pkmn_calculations_moves_headers}
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/calculations/moves
         COMPONENT Headers
     )
 ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)

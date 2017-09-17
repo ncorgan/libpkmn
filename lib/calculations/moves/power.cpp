@@ -6,7 +6,7 @@
  */
 
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/damage/moves.hpp>
+#include <pkmn/calculations/moves/power.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 

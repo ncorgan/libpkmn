@@ -19,6 +19,7 @@
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
+#include <pkmn/calculations/moves/natural_gift.hpp>
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>
@@ -32,6 +33,7 @@
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
+#include <pkmn-c/types/natural_gift.h>
 #include <pkmn-c/types/string_types.h>
 
 #include <boost/thread/mutex.hpp>
@@ -148,6 +150,11 @@ namespace pkmn {
     void pkmn_move_list_to_string_list(
         const pkmn::database::move_list_t &move_list,
         pkmn_string_list_t* string_list_out
+    );
+
+    void pkmn_natural_gift_cpp_to_c(
+        const pkmn::calculations::natural_gift &ng_cpp,
+        pkmn_natural_gift_t* ng_c
     );
 
     void pkmn_pokemon_entry_cpp_to_c(
