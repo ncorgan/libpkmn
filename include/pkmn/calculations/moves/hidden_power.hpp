@@ -19,48 +19,44 @@ namespace pkmn { namespace calculations {
      * A Pokémon's IVs determine the type and base power of Hidden
      * Power when it uses it.
      */
-    struct hidden_power {
-        //! Default constructor.
-        PKMN_INLINE hidden_power():
+    struct hidden_power
+    {
+        hidden_power():
             type(""),
-            base_power(0) {}
+            base_power(0)
+        {}
 
-        //! Constructor with the type and base power.
-        PKMN_INLINE hidden_power(
-            const std::string &hidden_power_type,
-            int hidden_power_base_power
-        ): type(hidden_power_type),
-           base_power(hidden_power_base_power) {}
+        hidden_power(
+            const std::string& move_type,
+            int move_power
+        ): type(move_type), base_power(move_power)
+        {}
+
+        hidden_power(const hidden_power& other) = default;
 
 #ifndef SWIG
-        //! Move constructor with the type and base power.
-        PKMN_INLINE hidden_power(
-            std::string&& hidden_power_type,
-            int hidden_power_base_power
-        ): type(std::move(hidden_power_type)),
-           base_power(hidden_power_base_power) {}
+        hidden_power(
+            std::string&& move_type,
+            int move_power
+        ): type(std::move(move_type)), base_power(move_power)
+        {}
+
+        hidden_power(hidden_power&&) = default;
+        hidden_power& operator=(const hidden_power&) = default;
+        hidden_power& operator=(hidden_power&&) = default;
 #endif
 
-        //! Equality check with another Hidden Power struct.
-        PKMN_INLINE bool operator==(
-            const hidden_power &rhs
-        ) const {
-            return (this->type == rhs.type) and
-                   (this->base_power == rhs.base_power);
+        bool operator==(const hidden_power& rhs) const
+        {
+            return (type == rhs.type) && (base_power == rhs.base_power);
         }
 
-        //! Inequality check with another Hidden Power struct.
-        PKMN_INLINE bool operator!=(
-            const hidden_power &rhs
-        ) const {
-            return (this->type != rhs.type) or
-                   (this->base_power != rhs.base_power);
+        bool operator!=(const hidden_power& rhs) const
+        {
+            return !operator==(rhs);
         }
 
-        //! What type Hidden Power has when this Pokémon uses it.
         std::string type;
-
-        //! Base Power
         int base_power;
     };
 

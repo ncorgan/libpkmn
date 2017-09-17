@@ -40,6 +40,16 @@ namespace pkmn { namespace calculations {
         natural_gift& operator=(natural_gift&&) = default;
 #endif
 
+        bool operator==(const natural_gift& rhs) const
+        {
+            return (type == rhs.type) && (base_power == rhs.base_power);
+        }
+
+        bool operator!=(const natural_gift& rhs) const
+        {
+            return !operator==(rhs);
+        }
+
         std::string type;
         int base_power;
     };
