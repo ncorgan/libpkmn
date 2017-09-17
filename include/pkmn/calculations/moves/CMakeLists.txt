@@ -8,10 +8,10 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_calculations_moves_headers
         critical_hit.hpp
-        moves.hpp
+        hidden_power.hpp
         modifiers.hpp
-        moves.hpp
         natural_gift.hpp
+        power.hpp
     )
 
     INSTALL(

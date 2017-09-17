@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_CALCULATIONS_HIDDEN_POWER_H
-#define PKMN_C_CALCULATIONS_HIDDEN_POWER_H
+#ifndef PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H
+#define PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
@@ -62,4 +62,4 @@ PKMN_API pkmn_error_t pkmn_calculations_modern_hidden_power(
 }
 #endif
 
-#endif /* PKMN_C_CALCULATIONS_HIDDEN_POWER_H */
+#endif /* PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H */

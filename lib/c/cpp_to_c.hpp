@@ -18,8 +18,10 @@
 #include <pkmn/pokemon_box.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
-#include <pkmn/calculations/hidden_power.hpp>
+
+#include <pkmn/calculations/moves/hidden_power.hpp>
 #include <pkmn/calculations/moves/natural_gift.hpp>
+
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/levelup_move.hpp>
 #include <pkmn/database/move_entry.hpp>

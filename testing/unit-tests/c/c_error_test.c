@@ -2568,7 +2568,7 @@ static void calculations_gender_error_test() {
 }
 
 /*
- * <pkmn-c/calculations/hidden_power.h>
+ * <pkmn-c/calculations/moves/hidden_power.h>
  */
 static void calculations_hidden_power_error_test() {
     /*

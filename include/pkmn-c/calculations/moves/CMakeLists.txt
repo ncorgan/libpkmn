@@ -9,6 +9,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_calculations_moves_headers
         critical_hit.h
         damage.h
+        hidden_power.h
         modifiers.h
         natural_gift.h
         power.h

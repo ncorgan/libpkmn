@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_CALCULATIONS_HIDDEN_POWER_HPP
-#define PKMN_CALCULATIONS_HIDDEN_POWER_HPP
+#ifndef PKMN_CALCULATIONS_MOVES_HIDDEN_POWER_HPP
+#define PKMN_CALCULATIONS_MOVES_HIDDEN_POWER_HPP
 
 #include <pkmn/config.hpp>
 
@@ -103,4 +103,4 @@ namespace pkmn { namespace calculations {
     );
 
 }}
-#endif /* PKMN_CALCULATIONS_HIDDEN_POWER_HPP */
+#endif /* PKMN_CALCULATIONS_MOVES_HIDDEN_POWER_HPP */

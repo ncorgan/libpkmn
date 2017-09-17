@@ -8,9 +8,9 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-#include <pkmn-c/calculations/hidden_power.h>
+#include <pkmn-c/calculations/moves/hidden_power.h>
 
-#include <pkmn/calculations/hidden_power.hpp>
+#include <pkmn/calculations/moves/hidden_power.hpp>
 
 pkmn_error_t pkmn_calculations_gen2_hidden_power(
     int IV_attack,
