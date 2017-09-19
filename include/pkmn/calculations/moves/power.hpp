@@ -10,8 +10,14 @@
 #include <pkmn/config.hpp>
 
 #include <algorithm>
+#include <vector>
 
 namespace pkmn { namespace calculations {
+
+    PKMN_API int brine_power(
+        int target_current_hp,
+        int target_max_hp
+    );
 
     PKMN_API int crush_grip_power(
         int target_current_hp,
@@ -23,6 +29,11 @@ namespace pkmn { namespace calculations {
         int attacker_speed,
         int target_speed
     );
+
+    PKMN_INLINE std::vector<int> echoed_voice_powers()
+    {
+        return {40, 80, 120, 160, 200};
+    }
 
     PKMN_INLINE int eruption_power(
         int attacker_hp,
@@ -48,6 +59,10 @@ namespace pkmn { namespace calculations {
         int friendship
     );
 
+    PKMN_API std::vector<int> fury_cutter_powers(
+        const std::string& game
+    );
+
     PKMN_API int grass_knot_power(
         float target_weight
     );
@@ -69,6 +84,11 @@ namespace pkmn { namespace calculations {
         float attacker_weight,
         float target_weight
     );
+
+    PKMN_INLINE std::vector<int> ice_ball_powers()
+    {
+        return {30, 60, 120, 240, 480};
+    }
 
     PKMN_API int low_kick_power(
         int generation,
@@ -104,6 +124,11 @@ namespace pkmn { namespace calculations {
         int attacker_max_hp
     );
 
+    PKMN_INLINE std::vector<int> rollout_powers()
+    {
+        return {40, 80, 120, 160, 200};
+    }
+
     PKMN_API int spit_up_power(
         int stockpile_amount
     );
@@ -117,6 +142,11 @@ namespace pkmn { namespace calculations {
         int evasion_stat_stage,
         int accuracy_stat_stage
     );
+
+    PKMN_INLINE std::vector<int> triple_kick_powers()
+    {
+        return {10, 20, 30};
+    }
 
     PKMN_API int trump_card_power(
         int pp_remaining_after_use

@@ -28,4 +28,5 @@ PKMN_RUBY_MAP(std::string, int, StringIntHash);
 PKMN_RUBY_PAIR(std::string, std::string, StringPair);
 
 // std::vector
+PKMN_RUBY_VECTOR(int, IntList);
 PKMN_RUBY_VECTOR(std::string, StringList);

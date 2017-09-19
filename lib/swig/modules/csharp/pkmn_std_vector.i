@@ -425,20 +425,3 @@ namespace std {
     SWIG_STD_VECTOR_EXTRA_OP_EQUALS_EQUALS(bool)
   };
 }
-
-// template specializations for std::vector
-// these provide extra collections methods as operator== is defined
-SWIG_STD_VECTOR_ENHANCED(char)
-SWIG_STD_VECTOR_ENHANCED(signed char)
-SWIG_STD_VECTOR_ENHANCED(unsigned char)
-SWIG_STD_VECTOR_ENHANCED(short)
-SWIG_STD_VECTOR_ENHANCED(unsigned short)
-SWIG_STD_VECTOR_ENHANCED(int)
-SWIG_STD_VECTOR_ENHANCED(unsigned int)
-SWIG_STD_VECTOR_ENHANCED(long)
-SWIG_STD_VECTOR_ENHANCED(unsigned long)
-SWIG_STD_VECTOR_ENHANCED(long long)
-SWIG_STD_VECTOR_ENHANCED(unsigned long long)
-SWIG_STD_VECTOR_ENHANCED(float)
-SWIG_STD_VECTOR_ENHANCED(double)
-

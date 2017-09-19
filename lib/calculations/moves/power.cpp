@@ -16,7 +16,26 @@ namespace pkmn { namespace calculations {
 
     static pkmn::database::sptr _db;
 
+    // Used when a database entry is needed
     static const std::string LATE_GEN_GAME = "Omega Ruby";
+
+    int brine_power(
+        int target_current_hp,
+        int target_max_hp
+    )
+    {
+        if(target_current_hp > target_max_hp)
+        {
+            pkmn::throw_out_of_range(
+                "target_current_hp",
+                0,
+                target_max_hp
+            );
+        }
+
+        float hp_percentage = float(target_current_hp) / float(target_max_hp);
+        return (hp_percentage < 0.5f) ? 65 : 130;
+    }
 
     int crush_grip_power(
         int target_current_hp,
@@ -139,6 +158,30 @@ namespace pkmn { namespace calculations {
                    1,
                    int((255.0f - float(friendship)) / 2.5f)
                );
+    }
+
+    std::vector<int> fury_cutter_powers(
+        const std::string& game
+    )
+    {
+        int generation = pkmn::database::game_name_to_generation(game);
+
+        switch(generation)
+        {
+            case 1:
+                throw std::invalid_argument("Fury Cutter did not exist in Generation I.");
+
+            case 2:
+            case 3:
+            case 4:
+                return {10, 20, 40, 80, 160};
+
+            case 5:
+                return {20, 40, 80, 160};
+
+            default:
+                return {40, 80, 160};
+        }
     }
 
     int grass_knot_power(
