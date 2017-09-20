@@ -36,7 +36,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
 );
 
 PKMN_API pkmn_error_t pkmn_calculations_critical_hit_modifier(
-    bool before_gen6,
+    int generation,
     float* critical_hit_modifier_out
 );
 

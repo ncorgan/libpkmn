@@ -15,17 +15,18 @@
 pkmn_error_t pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
-    bool is_generation4,
+    const char* game,
     int* crush_grip_power_out
 )
 {
     PKMN_CHECK_NULL_PARAM(crush_grip_power_out);
+    PKMN_CHECK_NULL_PARAM(game);
 
     PKMN_CPP_TO_C(
         *crush_grip_power_out = pkmn::calculations::crush_grip_power(
                                     target_current_hp,
                                     target_max_hp,
-                                    is_generation4
+                                    game
                                 );
     )
 }
@@ -324,17 +325,18 @@ pkmn_error_t pkmn_calculations_water_spout_power(
 pkmn_error_t pkmn_calculations_wring_out_power(
     int target_current_hp,
     int target_max_hp,
-    bool is_generation4,
+    const char* game,
     int* wring_out_power_out
 )
 {
     PKMN_CHECK_NULL_PARAM(wring_out_power_out);
+    PKMN_CHECK_NULL_PARAM(game);
 
     PKMN_CPP_TO_C(
         *wring_out_power_out = pkmn::calculations::wring_out_power(
                                    target_current_hp,
                                    target_max_hp,
-                                   is_generation4
+                                   game
                                );
     )
 }

@@ -30,9 +30,9 @@ namespace pkmn { namespace calculations {
     );
 
     PKMN_CONSTEXPR_OR_INLINE float critical_hit_modifier(
-        bool before_gen6
+        int generation
     ) {
-        return before_gen6 ? 2.0f : 1.5f;
+        return (generation < 6) ? 2.0f : 1.5f;
     }
 
 }}

@@ -19,7 +19,7 @@ extern "C" {
 PKMN_API pkmn_error_t pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
-    bool is_generation4,
+    const char* game,
     int* crush_grip_power_out
 );
 
@@ -137,7 +137,7 @@ PKMN_API pkmn_error_t pkmn_calculations_water_spout_power(
 PKMN_API pkmn_error_t pkmn_calculations_wring_out_power(
     int target_current_hp,
     int target_max_hp,
-    bool is_generation4,
+    const char* game,
     int* wring_out_power_out
 );
 

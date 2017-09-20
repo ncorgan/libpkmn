@@ -40,7 +40,7 @@ namespace pkmn { namespace calculations {
     int crush_grip_power(
         int target_current_hp,
         int target_max_hp,
-        bool is_generation4
+        const std::string& game
     )
     {
         if(target_current_hp > target_max_hp)
@@ -52,16 +52,22 @@ namespace pkmn { namespace calculations {
             );
         }
 
+        int generation = pkmn::database::game_name_to_generation(game);
+
         float hp_percentage = float(target_current_hp) / float(target_max_hp);
         int ret = int(120.0f * hp_percentage);
 
-        if(is_generation4)
+        if(generation == 4)
         {
             ++ret;
         }
-        else
+        else if(generation > 4)
         {
             ret = std::max<int>(1, ret);
+        }
+        else
+        {
+            throw std::invalid_argument("Crush Grip was introduced in Generation IV.");
         }
 
         return ret;
@@ -256,15 +262,13 @@ namespace pkmn { namespace calculations {
     }
 
     int low_kick_power(
-        int generation,
+        const std::string& game,
         float target_weight
     )
     {
-        if(generation < 1 or generation > 6)
-        {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
-        else if(generation >= 3)
+        int generation = pkmn::database::game_name_to_generation(game);
+
+        if(generation >= 3)
         {
             if(target_weight >= 200.0f)
             {
@@ -466,13 +470,13 @@ namespace pkmn { namespace calculations {
     int wring_out_power(
         int target_current_hp,
         int target_max_hp,
-        bool is_generation4
+        const std::string& game
     )
     {
         return crush_grip_power(
                    target_current_hp,
                    target_max_hp,
-                   is_generation4
+                   game
                );
     }
 
