@@ -7,6 +7,7 @@
 
 #include "env.hpp"
 
+#include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_box.hpp"
@@ -18,6 +19,86 @@
 #include <gtest/gtest.h>
 
 namespace fs = boost::filesystem;
+
+TEST(cpp_swig_wrapper_test, test_item_slot_wrapper)
+{
+    pkmn::item_list::sptr item_pocket = pkmn::item_list::make(
+                                            "Items",
+                                            "Red"
+                                        );
+    pkmn::swig::item_slot_wrapper first_slot(item_pocket, 0);
+
+    // Set the item name through the native class.
+    item_pocket->set_item(
+        0,
+        "Potion",
+        50
+    );
+    EXPECT_EQ("Potion", first_slot.get_item());
+
+    // Set the item through the wrapper class.
+    first_slot.set_item("Master Ball");
+    EXPECT_EQ("Master Ball", item_pocket->at(0).item);
+
+    // Set the item amount through the native class.
+    item_pocket->set_item(
+        0,
+        "Potion",
+        20
+    );
+    EXPECT_EQ(20, first_slot.get_amount());
+
+    // Set the amount. through the wrapper class.
+    first_slot.set_amount(99);
+    EXPECT_EQ(99, item_pocket->at(0).amount);
+
+    // Add a second item so we can test both methods of deletion.
+    item_pocket->set_item(
+        1,
+        "Repel",
+        10
+    );
+    pkmn::swig::item_slot_wrapper second_slot(item_pocket, 1);
+    ASSERT_EQ("Repel", second_slot.get_item());
+    ASSERT_EQ(10, second_slot.get_amount());
+
+    // Delete an item by setting the item to "None".
+    first_slot.set_item("None");
+    EXPECT_EQ("Repel", first_slot.get_item());
+    EXPECT_EQ(10, first_slot.get_amount());
+    EXPECT_EQ("None", second_slot.get_item());
+    EXPECT_EQ(0, second_slot.get_amount());
+
+    // Delete an item by setting the amount to 0;
+    first_slot.set_amount(0);
+    EXPECT_EQ("None", first_slot.get_item());
+    EXPECT_EQ(0, first_slot.get_amount());
+    EXPECT_EQ("None", second_slot.get_item());
+    EXPECT_EQ(0, second_slot.get_amount());
+}
+
+TEST(cpp_swig_wrapper_test, test_item_list)
+{
+    pkmn::swig::item_list swig_item_list("Items", "Red");
+
+    EXPECT_EQ("Items", swig_item_list.get_name());
+    EXPECT_EQ("Red", swig_item_list.get_game());
+    EXPECT_EQ(20, swig_item_list.get_capacity());
+    EXPECT_EQ(0, swig_item_list.get_num_items());
+
+    swig_item_list.add("Potion", 1);
+    EXPECT_EQ("Potion", swig_item_list.at(0).get_item());
+    EXPECT_EQ(1, swig_item_list.at(0).get_amount());
+    EXPECT_EQ(1, swig_item_list.get_num_items());
+
+    swig_item_list.at(0).set_amount(0);
+    EXPECT_EQ("None", swig_item_list.at(0).get_item());
+    EXPECT_EQ(0, swig_item_list.at(0).get_amount());
+    EXPECT_EQ(0, swig_item_list.get_num_items());
+
+    const std::vector<std::string>& valid_items = swig_item_list.get_valid_items();
+    EXPECT_GT(valid_items.size(), 0);
+}
 
 TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
 {
