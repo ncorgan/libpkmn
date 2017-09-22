@@ -23,7 +23,7 @@
 #include <string>
 #include <unordered_map>
 
-#define PKMN_COMPAT_NUM 11
+#define PKMN_COMPAT_NUM 12
 
 namespace pkmn { namespace database {
 
