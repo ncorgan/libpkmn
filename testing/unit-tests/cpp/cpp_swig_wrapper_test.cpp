@@ -8,6 +8,7 @@
 #include "env.hpp"
 
 #include "swig/modules/cpp_wrappers/item_list.hpp"
+#include "swig/modules/cpp_wrappers/item_bag.hpp"
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_box.hpp"
@@ -98,6 +99,43 @@ TEST(cpp_swig_wrapper_test, test_item_list)
 
     const std::vector<std::string>& valid_items = swig_item_list.get_valid_items();
     EXPECT_GT(valid_items.size(), 0);
+}
+
+TEST(cpp_swig_wrapper_test, test_item_bag)
+{
+    pkmn::swig::item_bag swig_item_bag("Colosseum");
+
+    EXPECT_EQ("Colosseum", swig_item_bag.get_game());
+
+    const std::vector<std::string>& pocket_names = swig_item_bag.get_pocket_names();
+    EXPECT_GT(pocket_names.size(), 0);
+
+    std::vector<std::string>::const_iterator pocket_names_end = pocket_names.end();
+    for(std::vector<std::string>::const_iterator pocket_name_iter = pocket_names.begin();
+        pocket_name_iter != pocket_names_end;
+        ++pocket_name_iter)
+    {
+        pkmn::swig::item_list pocket = swig_item_bag.get_pocket(*pocket_name_iter);
+        EXPECT_EQ(*pocket_name_iter, pocket.get_name());
+        EXPECT_EQ("Colosseum", pocket.get_game());
+
+        const std::string& valid_item = pocket.get_valid_items().at(0);
+
+        swig_item_bag.add(valid_item, 5);
+        EXPECT_EQ(1, pocket.get_num_items());
+        EXPECT_EQ(valid_item, pocket.at(0).get_item());
+        EXPECT_EQ(5, pocket.at(0).get_amount());
+
+        // Set through the pocket and check through another copy from the bag.
+        pocket.at(0).set_amount(50);
+        EXPECT_EQ(valid_item, swig_item_bag.get_pocket(*pocket_name_iter).at(0).get_item());
+        EXPECT_EQ(50, swig_item_bag.get_pocket(*pocket_name_iter).at(0).get_amount());
+
+        //Set through another copy from the bag and check through the existing pocket.
+        swig_item_bag.get_pocket(*pocket_name_iter).at(0).set_amount(0);
+        EXPECT_EQ("None", pocket.at(0).get_item());
+        EXPECT_EQ(0, pocket.at(0).get_amount());
+    }
 }
 
 TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
@@ -435,10 +473,13 @@ TEST(cpp_swig_wrapper_test, test_game_save)
      * PKMN.GameSave gameSave = new PKMN.GameSave(filepath);
      * gameSave.PokemonParty[1].EVs["Attack"] = 20;
      * gameSave.PokemonPC[5][20].IVs["Attack"] = 5;
+     * gameSave.ItemBag["Items"][0].Item = "Repel";
      */
     swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().set_EV("Attack", 20);
     swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().set_IV("HP", 5);
+    swig_game_save.get_item_bag().get_pocket("Items").at(0).set_item("Repel");
 
     EXPECT_EQ(20, swig_game_save.get_pokemon_party().get_pokemon(1).get_EVs().get_EV("Attack"));
     EXPECT_EQ(5, swig_game_save.get_pokemon_pc().get_box(5).get_pokemon(20).get_IVs().get_IV("HP"));
+    EXPECT_EQ("Repel", swig_game_save.get_item_bag().get_pocket("Items").at(0).get_item());
 }
