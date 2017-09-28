@@ -8,54 +8,61 @@
 %include <ruby/stl_macros.i>
 
 %{
-    #include <pkmn/item_bag.hpp>
+    #include "cpp_wrappers/item_bag.hpp"
 %}
 
 %include <std_string.i>
 
+%rename("ItemBag") item_bag;
+
 %rename("game") get_game;
-%rename("pockets") get_pockets;
 %rename("pocket_names") get_pocket_names;
 
-%rename(ItemBagInternal) pkmn::item_bag;
-%include <pkmn/item_bag.hpp>
+%include "cpp_wrappers/item_bag.hpp"
 
-%extend pkmn::shared_ptr<pkmn::item_bag> {
-
-    pkmn::shared_ptr<pkmn::item_bag>(
-        const std::string& game
-    ) {
-        return new pkmn::shared_ptr<pkmn::item_bag>(pkmn::item_bag::make(game));
+// Needed to avoid compile error
+%{
+    namespace swig
+    {
+        template <> struct traits<pkmn::swig::item_list>
+        {
+            typedef pointer_category category;
+            static const char* type_name()
+            {
+                return "pkmn::swig::item_list";
+            }
+        };
     }
+%}
 
+%extend pkmn::swig::item_bag
+{
     int __len__() {
-        return self->get()->get_pockets().size();
+        return self->get_pocket_names().size();
     }
 
-    pkmn::shared_ptr<pkmn::item_list> __getitem__(const std::string& index) {
-        return self->get()->get_pocket(index);
+    pkmn::swig::item_list __getitem__(const std::string& index) {
+        return self->get_pocket(index);
     }
 
     bool __eq__(const pkmn::shared_ptr<pkmn::item_bag>& rhs) {
         return ((*self) == rhs);
     }
 
-    pkmn::item_bag::sptr* each()
+    pkmn::swig::item_bag* each()
     {
         if ( !rb_block_given_p() )
             rb_raise( rb_eArgError, "no block given");
 
-        const pkmn::item_pockets_t& item_pockets = self->get()->get_pockets();
+        const std::vector<std::string>& pocket_names = self->get_pocket_names();
 
         VALUE r;
-        for(auto iter = item_pockets.begin(); iter != item_pockets.end(); ++iter)
+        for(auto iter = pocket_names.begin(); iter != pocket_names.end(); ++iter)
         {
-            r = swig::from<pkmn::item_list::sptr>(iter->second);
+            r = swig::from<pkmn::swig::item_list>(self->get_pocket(*iter));
             rb_yield(r);
         }
 
         return self;
     }
 }
-
-%template(ItemBag) pkmn::shared_ptr<pkmn::item_bag>;

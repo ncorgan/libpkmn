@@ -15,6 +15,9 @@
 
 #include <unordered_map>
 
+#define ITEM_BAG_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_bag_internal_t*>(ptr)
+#define ITEM_LIST_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
+
 static const std::unordered_map<std::string, int> GAME_GENERATIONS = boost::assign::map_list_of
     ("Red", 1)("Blue", 1)("Yellow", 1)
     ("Gold", 2)("Silver", 2)("Crystal", 2)
@@ -350,31 +353,28 @@ pkmn_error_t pkmn_game_save_get_pokemon_pc(
 
 pkmn_error_t pkmn_game_save_get_item_bag(
     pkmn_game_save_handle_t handle,
-    pkmn_item_bag_handle_t* item_bag_handle_out
+    pkmn_item_bag_t* item_bag_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_bag_handle_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_bag_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        (*item_bag_handle_out) = new pkmn_item_bag_t;
-        (*item_bag_handle_out)->cpp = handle->cpp->get_item_bag();
-        (*item_bag_handle_out)->last_error = "None";
+        item_bag_out->_internal = reinterpret_cast<void*>(new pkmn_item_bag_internal_t);
+        ITEM_BAG_INTERNAL_RCAST(item_bag_out->_internal)->cpp = handle->cpp->get_item_bag();
+        init_item_bag(item_bag_out);
     )
 }
 
 pkmn_error_t pkmn_game_save_get_item_pc(
     pkmn_game_save_handle_t handle,
-    pkmn_item_list_handle_t* item_pc_handle_out
+    pkmn_item_list_t* item_pc_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_pc_handle_out, handle);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_pc_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        // This call may fail, so do it before allocating memory.
-        pkmn::item_list::sptr item_pc = handle->cpp->get_item_pc();
-
-        (*item_pc_handle_out) = new pkmn_item_list_t;
-        (*item_pc_handle_out)->cpp = handle->cpp->get_item_pc();
-        (*item_pc_handle_out)->last_error = "None";
+        item_pc_out->_internal = reinterpret_cast<void*>(new pkmn_item_list_internal_t);
+        ITEM_LIST_INTERNAL_RCAST(item_pc_out->_internal)->cpp = handle->cpp->get_item_pc();
+        init_item_list(item_pc_out);
     )
 }

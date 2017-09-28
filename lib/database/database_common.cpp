@@ -23,7 +23,7 @@
 #include <string>
 #include <unordered_map>
 
-#define PKMN_COMPAT_NUM 12
+#define PKMN_COMPAT_NUM 14
 
 namespace pkmn { namespace database {
 
@@ -291,6 +291,44 @@ namespace pkmn { namespace database {
                 list_id,
                 (game_id == 19)
             );
+        }
+
+        static const int ITEM_POCKET_IDS[] =
+        {
+            5,  // Gold/Silver
+            10, // Crystal
+            15, // Ruby/Sapphire
+            21, // Emerald
+            27, // FireRed/LeafGreen
+            33, // Diamond/Pearl
+            41, // Platinum
+            49, // HeartGold/SoulSilver
+            57, // Black/White
+            62, // Colosseum
+            69, // XD
+            76, // Black 2/White 2
+            81, // X/Y
+            86  // Omega Ruby/Alpha Sapphire
+        };
+
+        if(not all_pockets)
+        {
+            if(std::find(ITEM_POCKET_IDS, ITEM_POCKET_IDS+14, list_id) != ITEM_POCKET_IDS+14)
+            {
+                // Veekun's database places all Berries in the Items pocket, which isn't the case.
+                // Fix that here.
+                ret.erase(
+                    std::remove_if(
+                        ret.begin(),
+                        ret.end(),
+                        [](const std::string& item)
+                        {
+                            return item.find("Berry") != std::string::npos;
+                        }
+                    ),
+                    ret.end()
+                );
+            }
         }
 
         // Sort alphabetically

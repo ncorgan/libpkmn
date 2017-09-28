@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -39,16 +39,18 @@ namespace pkmn {
         void* ptr
     ): item_list_impl(item_list_id, game_id)
     {
-        char name_buffer[16] = {0};
-        for(int i = 0; i < 50; ++i)
+        static const char* TM_FORMAT = "TM%02d";
+        static const char* HM_FORMAT = "HM%02d";
+        char name[5] = {0};
+        for(int i = 1; i <= 50; ++i)
         {
-            std::snprintf(name_buffer, sizeof(name_buffer), "TM%02d", i+1);
-            _item_slots[i].item = name_buffer;
+            std::snprintf(name, sizeof(name), TM_FORMAT, i);
+            _item_slots[i-1].item = name;
         }
-        for(int i = 0; i < 7; ++i)
+        for(int i = 1; i <= 7; ++i)
         {
-            std::snprintf(name_buffer, sizeof(name_buffer), "HM%02d", i+1);
-            _item_slots[50+i].item = name_buffer;
+            std::snprintf(name, sizeof(name), HM_FORMAT, i);
+            _item_slots[50+i-1].item = name;
         }
 
         if(ptr)
@@ -153,6 +155,36 @@ namespace pkmn {
         PKMN_UNUSED(int position2)
     ) {
         throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
+    }
+
+    void item_list_gen2_tmhmimpl::set_item(
+        int position,
+        const std::string& item_name,
+        int amount
+    )
+    {
+        // Input validation.
+        int end_boundary = std::min<int>(_num_items, _capacity-1);
+        if(position < 0 or position >= end_boundary)
+        {
+            pkmn::throw_out_of_range("position", 0, end_boundary);
+        }
+        pkmn::database::item_entry entry(item_name, get_game());
+        if(item_name != "None" and entry.get_pocket() != get_name())
+        {
+            throw std::invalid_argument("This item does not belong in this pocket.");
+        }
+        if(amount < 0 or amount > 99)
+        {
+            pkmn::throw_out_of_range("amount", 0, 99);
+        }
+        if(item_name != _item_slots[position].item)
+        {
+            pkmn::throw_invalid_argument<std::string>("item", {_item_slots[position].item});
+        }
+
+        // No need to copy everything
+        _item_slots[position].amount = amount;
     }
 
     void item_list_gen2_tmhmimpl::_from_native(

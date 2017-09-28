@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -53,6 +53,12 @@ namespace pkmn {
             virtual void move(
                 int old_position,
                 int new_position
+            );
+
+            virtual void set_item(
+                int position,
+                const std::string& item_name,
+                int amount
             );
 
             const pkmn::item_slots_t& as_vector();
