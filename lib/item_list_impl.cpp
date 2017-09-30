@@ -275,7 +275,7 @@ namespace pkmn {
                       );
             }
 
-            _item_slots[_num_items].item = entry.get_name();
+            _item_slots[_num_items].item = item_name;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
@@ -346,6 +346,69 @@ namespace pkmn {
         pkmn::item_slot temp = _item_slots[old_position];
         _item_slots.erase(_item_slots.begin()+old_position);
         _item_slots.insert(_item_slots.begin()+new_position, temp);
+        _to_native();
+    }
+
+    void item_list_impl::set_item(
+        int position,
+        const std::string& item_name,
+        int amount
+    )
+    {
+        // Input validation.
+        int end_boundary = std::min<int>(_num_items, _capacity-1);
+        if(position < 0 or position > end_boundary)
+        {
+            pkmn::throw_out_of_range("position", 0, end_boundary);
+        }
+        if(item_name == "None")
+        {
+            if(amount != 0)
+            {
+                throw std::invalid_argument("\"None\" entries must have an amount of 0.");
+            }
+            else if(amount < 0 or amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 0, 99);
+            }
+        }
+        else
+        {
+            pkmn::database::item_entry entry(item_name, get_game());
+            if(get_name() != "PC" and item_name != "None" and entry.get_pocket() != get_name())
+            {
+                throw std::invalid_argument("This item does not belong in this pocket.");
+            }
+            if(amount < 1 or amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 1, 99);
+            }
+            for(int i = 0; i < _num_items; ++i)
+            {
+                if((_item_slots[i].item == item_name) && (i != position))
+                {
+                    std::string err_msg = "This item is already present in slot ";
+                    err_msg.append(std::to_string(i));
+                    err_msg.append(".");
+
+                    throw std::invalid_argument(err_msg.c_str());
+                }
+            }
+        }
+
+        _item_slots[position].item = item_name;
+        _item_slots[position].amount = amount;
+        if(item_name == "None" and position < end_boundary)
+        {
+            _item_slots.erase(_item_slots.begin()+position);
+            _item_slots.emplace_back(pkmn::item_slot("None", 0));
+            --_num_items;
+        }
+        else
+        {
+            ++_num_items;
+        }
+
         _to_native();
     }
 

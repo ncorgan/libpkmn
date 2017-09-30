@@ -79,6 +79,55 @@ void test_item_list_add_remove(
     ASSERT_EQ(8, item_names.size());
     const pkmn::item_slots_t& item_slots = list->as_vector();
 
+    // Test setting by index.
+    list->set_item(0, item_names[0], 50);
+    list->set_item(1, item_names[1], 40);
+    list->set_item(2, item_names[2], 30);
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
+    EXPECT_EQ(50, item_slots.at(0).amount);
+    EXPECT_EQ(item_names[1], item_slots.at(1).item);
+    EXPECT_EQ(40, item_slots.at(1).amount);
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
+    EXPECT_EQ(30, item_slots.at(2).amount);
+    EXPECT_EQ(3, list->get_num_items());
+
+    EXPECT_THROW(
+        list->set_item(10, "Ultra Ball", 5)
+    , std::out_of_range);
+    EXPECT_THROW(
+        list->set_item(0, "None", 5)
+    , std::invalid_argument);
+    EXPECT_THROW(
+        list->set_item(1, item_names[0], 1)
+    , std::invalid_argument);
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
+    EXPECT_EQ(50, item_slots.at(0).amount);
+    EXPECT_EQ(item_names[1], item_slots.at(1).item);
+    EXPECT_EQ(40, item_slots.at(1).amount);
+    EXPECT_EQ(item_names[2], item_slots.at(2).item);
+    EXPECT_EQ(30, item_slots.at(2).amount);
+    EXPECT_EQ(3, list->get_num_items());
+
+    list->set_item(1, "None", 0);
+    EXPECT_EQ(item_names[0], item_slots.at(0).item);
+    EXPECT_EQ(50, item_slots.at(0).amount);
+    EXPECT_EQ(item_names[2], item_slots.at(1).item);
+    EXPECT_EQ(30, item_slots.at(1).amount);
+    EXPECT_EQ("None", item_slots.at(2).item);
+    EXPECT_EQ(0, item_slots.at(2).amount);
+    EXPECT_EQ(2, list->get_num_items());
+
+    list->set_item(0, "None", 0);
+    list->set_item(0, "None", 0);
+    EXPECT_EQ("None", item_slots.at(0).item);
+    EXPECT_EQ(0, item_slots.at(0).amount);
+    EXPECT_EQ("None", item_slots.at(1).item);
+    EXPECT_EQ(0, item_slots.at(1).amount);
+    EXPECT_EQ("None", item_slots.at(2).item);
+    EXPECT_EQ(0, item_slots.at(2).amount);
+    EXPECT_EQ(0, list->get_num_items());
+
+    // Test add/remove functions.
     list->add(item_names[0], 30);
     list->add(item_names[1], 99);
     list->add(item_names[2], 1);

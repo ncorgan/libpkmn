@@ -43,6 +43,54 @@ function items_tests.item_list_test_add_remove(items, item_names)
     luaunit.assertEquals(items:get_num_items(), 0)
     luaunit.assertEquals(#item_names, 8)
 
+--[[
+    items[1] = pkmn.item_slot(item_names[1], 50)
+    items[2] = pkmn.item_slot(item_names[2], 40)
+    items[3] = pkmn.item_slot(item_names[3], 30)
+
+    luaunit.assertEquals(item_names[1], items[1].item)
+    luaunit.assertEquals(50, items[1].amount)
+    luaunit.assertEquals(item_names[2], items[2].item)
+    luaunit.assertEquals(40, items[2].amount)
+    luaunit.assertEquals(item_names[3], items[3].item)
+    luaunit.assertEquals(30, items[3].amount)
+    luaunit.assertEquals(3, items:get_num_items())
+
+    luaunit.assertError(pkmn.item_list_sptr.set_item, 10, pkmn.item_slot("Ultra Ball", 5))
+    luaunit.assertError(pkmn.item_list_sptr.set_item, 1, pkmn.item_slot("None", 5))
+    luaunit.assertError(pkmn.item_list_sptr.set_item, 2, pkmn.item_slot(item_names[1], 1))
+
+    luaunit.assertEquals(item_names[1], items[1].item)
+    luaunit.assertEquals(50, items[1].amount)
+    luaunit.assertEquals(item_names[2], items[2].item)
+    luaunit.assertEquals(40, items[2].amount)
+    luaunit.assertEquals(item_names[3], items[3].item)
+    luaunit.assertEquals(30, items[3].amount)
+    luaunit.assertEquals(3, items:get_num_items())
+
+    items[2] = pkmn.item_slot("None", 0)
+
+    luaunit.assertEquals(item_names[1], items[1].item)
+    luaunit.assertEquals(50, items[1].amount)
+    luaunit.assertEquals(item_names[3], items[2].item)
+    luaunit.assertEquals(30, items[2].amount)
+    luaunit.assertEquals("None", items[3].item)
+    luaunit.assertEquals(0, items[3].amount)
+    luaunit.assertEquals(2, items:get_num_items())
+
+    items[1] = pkmn.item_slot("None", 0)
+    items[1] = pkmn.item_slot("None", 0)
+
+    luaunit.assertEquals("None", items[1].item)
+    luaunit.assertEquals(0, items[1].amount)
+    luaunit.assertEquals("None", items[2].item)
+    luaunit.assertEquals(0, items[2].amount)
+    luaunit.assertEquals("None", items[3].item)
+    luaunit.assertEquals(0, items[3].amount)
+    luaunit.assertEquals(0, items:get_num_items())
+--]]
+
+    -- Test add/remove functions.
     items:add(item_names[1], 30)
     items:add(item_names[2], 99)
     items:add(item_names[3], 1)

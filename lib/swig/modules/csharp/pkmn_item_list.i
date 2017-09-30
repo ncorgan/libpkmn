@@ -9,6 +9,16 @@
     #include <pkmn/item_list.hpp>
 %}
 
+%typemap(csimports) pkmn::item_list "
+using System;
+using System.Runtime.InteropServices;
+using Database;"
+
+%typemap(csimports) pkmn::shared_ptr<pkmn::item_list> "
+using System;
+using System.Runtime.InteropServices;
+using Database;"
+
 %rename(item_list_base) pkmn::item_list;
 %rename(AsList) as_vector;
 
@@ -17,6 +27,7 @@
 %csmethodmodifiers pkmn::item_list::get_capacity() "private";
 %csmethodmodifiers pkmn::item_list::get_num_items() "private";
 %csmethodmodifiers pkmn::item_list::at(int) "private";
+%csmethodmodifiers pkmn::item_list::set_item(int, pkmn::database::item_entry const&) "private";
 %csmethodmodifiers pkmn::item_list::get_valid_items() "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::item_list>::__cptr "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::item_list>::__sptr_eq "private";

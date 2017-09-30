@@ -13,85 +13,37 @@
 
 #include <string.h>
 
-#define STRBUFFER_LEN 1024
-
-static const char* all_pocket_item_names[] = {
-    "Potion",
-    "Bicycle",
-    "Great Ball",
-    "TM28",
-    "Berry",
-    "SquirtBottle",
-    "Friend Ball",
-    "HM01"
-};
-static const char* crystal_items[] = {
-    "Clear Bell",
-    "GS Ball",
-    "Blue Card",
-    "Egg Ticket"
-};
-static const char* wrong_generation_all_pocket_items[] = {
-    "Black Sludge",
-    "Poffin Items",
-    "TM51",
-    "Occa Berry"
+static const char* ALL_POCKET_ITEM_NAMES[] =
+{
+    "Potion", "Bicycle", "Great Ball", "TM28",
+    "Berry", "SquirtBottle", "Friend Ball", "HM01"
 };
 
-void gen2_item_pocket_test(
-    pkmn_item_list_handle_t item_pocket,
+static const char* CRYSTAL_ITEM_NAMES[] =
+{
+    "Clear Bell", "GS Ball", "Blue Card", "Egg Ticket"
+};
+
+static const char* WRONG_GENERATION_ALL_POCKET_ITEM_NAMES[] =
+{
+    "Black Sludge", "Poffin Items", "TM51", "Occa Berry"
+};
+
+static void gen2_item_pocket_test(
+    pkmn_item_list_t* item_pocket,
     const char* game
-) {
-    char strbuffer[STRBUFFER_LEN];
+)
+{
+    TEST_ASSERT_NOT_NULL(item_pocket);
+    TEST_ASSERT_NOT_NULL(item_pocket->item_slots.item_slots);
 
-    int capacity = 0;
-    int num_items = 0;
-    pkmn_string_list_t valid_items = {
-        .strings = NULL,
-        .length = 0
-    };
+    TEST_ASSERT_EQUAL_STRING("Items", item_pocket->name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pocket->game);
+    TEST_ASSERT_EQUAL(0, item_pocket->num_items);
+    TEST_ASSERT_EQUAL(20, item_pocket->capacity);
+    TEST_ASSERT_EQUAL(20, item_pocket->item_slots.length);
 
-    // Check unchanging and initial values.
-    const char* expected_name = "Items";
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_name(
-            item_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(expected_name, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_game(
-            item_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_capacity(
-            item_pocket,
-            &capacity
-        )
-    );
-    TEST_ASSERT_EQUAL(20, capacity);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            item_pocket,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
-
-    // Make sure item slots start as correctly empty.
+    // Make sure item slots start as completely empty.
     test_item_list_empty_slots(item_pocket);
 
     // Confirm errors are returned when expected.
@@ -101,114 +53,72 @@ void gen2_item_pocket_test(
     );
 
     // Make sure we can't add items from other pockets.
-    const char* wrong_pocket_items[] = {
-        "Bicycle",
-        "Master Ball",
-        "HM01"
-    };
-    test_item_list_invalid_items(
-        item_pocket,
-        wrong_pocket_items,
-        3
-    );
+    const char* wrong_pocket_item_names[] = {"Bicycle", "Master Ball", "HM01"};
+    test_item_list_invalid_items(item_pocket, wrong_pocket_item_names, 3);
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_items[] = {
-        "Black Flute",
-        "Black Sludge",
-        "Binding Sand",
-        "Beedrillite"
+    const char* wrong_generation_item_names[] =
+    {
+        "Black Flute", "Black Sludge", "Binding Band", "Beedrillite"
     };
-    test_item_list_invalid_items(
-        item_pocket,
-        wrong_generation_items,
-        4
-    );
+    test_item_list_invalid_items(item_pocket, wrong_generation_item_names, 4);
 
-    // Start adding and removing stuff, and make sure the numbers are accurate.
-    static const char* item_names[] = {
-        "Potion",
-        "HP Up",
-        "Wht Apricorn",
-        "Lucky Egg",
-        "Flower Mail",
-        "Burn Heal",
-        "PSNCureBerry",
-        "Stick"
+    const char* item_names[] =
+    {
+        "Potion", "HP Up", "Wht Apricorn", "Lucky Egg",
+        "Flower Mail", "Burn Heal", "PSNCureBerry", "Stick"
     };
+
+    // Test setting items by index.
+    test_item_list_set_item(
+        item_pocket,
+        item_names,
+        3
+    );
+    TEST_ASSERT_EQUAL(0, item_pocket->num_items);
+
+    // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         item_pocket,
         item_names,
         8
     );
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_valid_items(
-            item_pocket,
-            &valid_items
-        )
-    );
-    TEST_ASSERT(valid_items.length > 0);
-    pkmn_string_list_free(&valid_items);
+    pkmn_string_list_t valid_items =
+    {
+        .strings = NULL,
+        .length = 0
+    };
+    pkmn_error_t error = pkmn_item_list_get_valid_items(
+                             item_pocket,
+                             &valid_items
+                         );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(valid_items.strings);
+    TEST_ASSERT_TRUE(valid_items.length > 0);
+
+    error = pkmn_string_list_free(&valid_items);
     TEST_ASSERT_NULL(valid_items.strings);
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-void gen2_key_item_pocket_test(
-    pkmn_item_list_handle_t key_item_pocket,
+static void gen2_key_item_pocket_test(
+    pkmn_item_list_t* key_item_pocket,
     const char* game
-) {
-    char strbuffer[STRBUFFER_LEN];
+)
+{
+    TEST_ASSERT_NOT_NULL(key_item_pocket);
+    TEST_ASSERT_NOT_NULL(key_item_pocket->item_slots.item_slots);
 
-    int capacity = 0;
-    int num_items = 0;
-    pkmn_string_list_t valid_items = {
-        .strings = NULL,
-        .length = 0
-    };
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
-    // Check unchanging and initial values.
-    const char* expected_name = "KeyItems";
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_name(
-            key_item_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(expected_name, strbuffer);
+    TEST_ASSERT_EQUAL_STRING("KeyItems", key_item_pocket->name);
+    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket->game);
+    TEST_ASSERT_EQUAL(0, key_item_pocket->num_items);
+    TEST_ASSERT_EQUAL(26, key_item_pocket->capacity);
+    TEST_ASSERT_EQUAL(26, key_item_pocket->item_slots.length);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_game(
-            key_item_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_capacity(
-            key_item_pocket,
-            &capacity
-        )
-    );
-    TEST_ASSERT_EQUAL(26, capacity);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            key_item_pocket,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
-
-    // Make sure item slots start as correctly empty.
+    // Make sure item slots start as completely empty.
     test_item_list_empty_slots(key_item_pocket);
 
     // Confirm errors are returned when expected.
@@ -218,142 +128,97 @@ void gen2_key_item_pocket_test(
     );
 
     // Make sure we can't add items from other pockets.
-    const char* wrong_pocket_items[] = {
-        "Potion",
-        "Master Ball",
-        "HM01"
-    };
-    test_item_list_invalid_items(
-        key_item_pocket,
-        wrong_pocket_items,
-        3
-    );
+    const char* wrong_pocket_item_names[] = {"Potion", "Master Ball", "HM01"};
+    test_item_list_invalid_items(key_item_pocket, wrong_pocket_item_names, 3);
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_items[] = {
-        "Mach Bike",
-        "Jade Orb",
-        "Light Stone",
-        "Aqua Suit"
+    const char* wrong_generation_item_names[] =
+    {
+        "Mach Bike", "Jade Orb", "Light Stone", "Aqua Suit"
     };
-    test_item_list_invalid_items(
-        key_item_pocket,
-        wrong_generation_items,
-        4
-    );
+    test_item_list_invalid_items(key_item_pocket, wrong_generation_item_names, 4);
 
     // Crystal-specific items.
-    if(strcmp(game, "Crystal") == 0) {
-        for(int i = 0; i < 4; ++i) {
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_add(
+    bool is_crystal = (bool)(!strcmp(key_item_pocket->game, "Crystal"));
+    for(size_t i = 0; i < sizeof(CRYSTAL_ITEM_NAMES)/sizeof(CRYSTAL_ITEM_NAMES[0]); ++i)
+    {
+        error = pkmn_item_list_add(
                     key_item_pocket,
-                    crystal_items[i],
+                    CRYSTAL_ITEM_NAMES[i],
                     1
-                )
-            );
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_remove(
-                    key_item_pocket,
-                    crystal_items[i],
-                    1
-                )
-            );
-        }
-    } else {
-        test_item_list_invalid_items(
-            key_item_pocket,
-            crystal_items,
-            3
+                );
+        TEST_ASSERT_EQUAL(
+            is_crystal ? PKMN_ERROR_NONE : PKMN_ERROR_INVALID_ARGUMENT,
+            error
         );
+
+        error = pkmn_item_list_remove(
+                    key_item_pocket,
+                    CRYSTAL_ITEM_NAMES[i],
+                    1
+                );
+        TEST_ASSERT_EQUAL(
+            is_crystal ? PKMN_ERROR_NONE : PKMN_ERROR_INVALID_ARGUMENT,
+            error
+        );
+
+        TEST_ASSERT_EQUAL(0, key_item_pocket->num_items);
     }
 
-    // Start adding and removing stuff, and make sure the numbers are accurate.
-    const char* item_names[] = {
-        "Bicycle",
-        "Basement Key",
-        "SecretPotion",
-        "Mystery Egg",
-        "Silver Wing",
-        "Lost Item",
-        "SquirtBottle",
-        "Rainbow Wing"
+    const char* item_names[] =
+    {
+        "Bicycle", "Basement Key", "SecretPotion", "Mystery Egg",
+        "Silver Wing", "Lost Item", "SquirtBottle", "Rainbow Wing"
     };
+
+    // Test setting items by index.
+    test_item_list_set_item(
+        key_item_pocket,
+        item_names,
+        3
+    );
+    TEST_ASSERT_EQUAL(0, key_item_pocket->num_items);
+
+    // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         key_item_pocket,
         item_names,
         8
     );
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_valid_items(
-            key_item_pocket,
-            &valid_items
-        )
-    );
-    TEST_ASSERT(valid_items.length > 0);
-    pkmn_string_list_free(&valid_items);
+    pkmn_string_list_t valid_items =
+    {
+        .strings = NULL,
+        .length = 0
+    };
+    error = pkmn_item_list_get_valid_items(
+                             key_item_pocket,
+                             &valid_items
+                         );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(valid_items.strings);
+    TEST_ASSERT_TRUE(valid_items.length > 0);
+
+    error = pkmn_string_list_free(&valid_items);
     TEST_ASSERT_NULL(valid_items.strings);
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-void gen2_ball_pocket_test(
-    pkmn_item_list_handle_t ball_pocket,
+static void gen2_ball_pocket_test(
+    pkmn_item_list_t* ball_pocket,
     const char* game
-) {
-    char strbuffer[STRBUFFER_LEN];
+)
+{
+    TEST_ASSERT_NOT_NULL(ball_pocket);
+    TEST_ASSERT_NOT_NULL(ball_pocket->item_slots.item_slots);
 
-    int capacity = 0;
-    int num_items = 0;
-    pkmn_string_list_t valid_items = {
-        .strings = NULL,
-        .length = 0
-    };
+    TEST_ASSERT_EQUAL_STRING("Balls", ball_pocket->name);
+    TEST_ASSERT_EQUAL_STRING(game, ball_pocket->game);
+    TEST_ASSERT_EQUAL(0, ball_pocket->num_items);
+    TEST_ASSERT_EQUAL(12, ball_pocket->capacity);
+    TEST_ASSERT_EQUAL(12, ball_pocket->item_slots.length);
 
-    // Check unchanging and initial values.
-    const char* expected_name = "Balls";
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_name(
-            ball_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(expected_name, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_game(
-            ball_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_capacity(
-            ball_pocket,
-            &capacity
-        )
-    );
-    TEST_ASSERT_EQUAL(12, capacity);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            ball_pocket,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
-
-    // Make sure item slots start as correctly empty.
+    // Make sure item slots start as completely empty.
     test_item_list_empty_slots(ball_pocket);
 
     // Confirm errors are returned when expected.
@@ -363,860 +228,722 @@ void gen2_ball_pocket_test(
     );
 
     // Make sure we can't add items from other pockets.
-    const char* wrong_pocket_items[] = {
-        "Potion",
-        "Bicycle",
-        "HM01"
-    };
-    test_item_list_invalid_items(
-        ball_pocket,
-        wrong_pocket_items,
-        3
-    );
+    const char* wrong_pocket_item_names[] = {"Potion", "Bicycle", "HM01"};
+    test_item_list_invalid_items(ball_pocket, wrong_pocket_item_names, 3);
 
     // Make sure we can't add items from later generations.
-    const char* wrong_generation_items[] = {
-        "Premier Ball",
-        "Heal Ball",
-        "Dream Ball"
+    const char* wrong_generation_item_names[] = {"Premier Ball", "Heal Ball", "Dream Ball"};
+    test_item_list_invalid_items(ball_pocket, wrong_generation_item_names, 3);
+
+    const char* item_names[] =
+    {
+        "Great Ball", "Poké Ball", "Park Ball", "Fast Ball",
+        "Master Ball", "Friend Ball", "Love Ball", "Level Ball"
     };
-    test_item_list_invalid_items(
+
+    // Test setting items by index.
+    test_item_list_set_item(
         ball_pocket,
-        wrong_generation_items,
+        item_names,
         3
     );
+    TEST_ASSERT_EQUAL(0, ball_pocket->num_items);
 
-    // Start adding and removing stuff, and make sure the numbers are accurate.
-    const char* item_names[] = {
-        "Great Ball",
-        "Poké Ball",
-        "Park Ball",
-        "Fast Ball",
-        "Master Ball",
-        "Friend Ball",
-        "Love Ball",
-        "Level Ball"
-    };
+    // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
         ball_pocket,
         item_names,
         8
     );
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_valid_items(
-            ball_pocket,
-            &valid_items
-        )
-    );
-    TEST_ASSERT(valid_items.length > 0);
-    pkmn_string_list_free(&valid_items);
+    pkmn_string_list_t valid_items =
+    {
+        .strings = NULL,
+        .length = 0
+    };
+    pkmn_error_t error = pkmn_item_list_get_valid_items(
+                             ball_pocket,
+                             &valid_items
+                         );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(valid_items.strings);
+    TEST_ASSERT_TRUE(valid_items.length > 0);
+
+    error = pkmn_string_list_free(&valid_items);
     TEST_ASSERT_NULL(valid_items.strings);
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-void gen2_tmhm_pocket_test(
-    pkmn_item_list_handle_t tmhm_pocket,
+static void gen2_tmhm_pocket_test(
+    pkmn_item_list_t* tmhm_pocket,
     const char* game
-) {
-    char strbuffer[STRBUFFER_LEN];
+)
+{
+    TEST_ASSERT_NOT_NULL(tmhm_pocket);
+    TEST_ASSERT_NOT_NULL(tmhm_pocket->item_slots.item_slots);
 
-    int capacity = 0;
-    int num_items = 0;
-    pkmn_item_slots_t item_slots = {
-        .item_slots = NULL,
-        .length = 0
-    };
-    pkmn_string_list_t valid_items = {
-        .strings = NULL,
-        .length = 0
-    };
+    TEST_ASSERT_EQUAL_STRING("TM/HM", tmhm_pocket->name);
+    TEST_ASSERT_EQUAL_STRING(game, tmhm_pocket->game);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket->num_items);
+    TEST_ASSERT_EQUAL(57, tmhm_pocket->capacity);
+    TEST_ASSERT_EQUAL(57, tmhm_pocket->item_slots.length);
 
-    // Check unchanging and initial values.
-    const char* expected_name = "TM/HM";
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_name(
-            tmhm_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(expected_name, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_game(
-            tmhm_pocket,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_capacity(
-            tmhm_pocket,
-            &capacity
-        )
-    );
-    TEST_ASSERT_EQUAL(57, capacity);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            tmhm_pocket,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as correctly empty.
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_as_array(
-            tmhm_pocket,
-            &item_slots
-        )
-    );
-    TEST_ASSERT_EQUAL(57, item_slots.length);
-    for(int i = 1; i <= 50; ++i) {
+    for(int i = 1; i <= 50; ++i)
+    {
         char name[5] = {0};
         snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[i-1].item);
-        TEST_ASSERT_EQUAL(0, item_slots.item_slots[i-1].amount);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1].item);
+        TEST_ASSERT_EQUAL(0, tmhm_pocket->item_slots.item_slots[i-1].amount);
     }
-    for(int i = 1; i <= 7; ++i) {
+    for(int i = 1; i <= 7; ++i)
+    {
         char name[5] = {0};
         snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[50+i-1].item);
-        TEST_ASSERT_EQUAL(0, item_slots.item_slots[50+i-1].amount);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1+50].item);
+        TEST_ASSERT_EQUAL(0, tmhm_pocket->item_slots.item_slots[i-1+50].amount);
     }
-    pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_NULL(item_slots.item_slots);
-    TEST_ASSERT_EQUAL(0, item_slots.length);
-
-    // Make sure we can't add items from other pockets.
-    const char* wrong_pocket_items[] = {
-        "Potion",
-        "Master Ball",
-        "Bicycle"
-    };
-    test_item_list_invalid_items(
-        tmhm_pocket,
-        wrong_pocket_items,
-        3
-    );
-
-    // Make sure we can't add items from later generations.
-    const char* wrong_generation_items[] = {
-        "TM51"
-    };
-    test_item_list_invalid_items(
-        tmhm_pocket,
-        wrong_generation_items,
-        1
-    );
-
-    /*
-     * Start adding and removing stuff, and make sure the numbers are accurate.
-     *
-     * While this is supposed to match the equivalent test methods in other languages,
-     * there are so many allocations done with string lists that we'll just do it after
-     * each set of commands.
-     */
-
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_add(
-                tmhm_pocket,
-                name,
-                50
-            )
-        );
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_get_num_items(
-                tmhm_pocket,
-                &num_items
-            )
-        );
-        TEST_ASSERT_EQUAL(i, num_items);
-    }
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_as_array(
-            tmhm_pocket,
-            &item_slots
-        )
-    );
-    TEST_ASSERT_EQUAL(57, item_slots.length);
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[i-1].item);
-        TEST_ASSERT_EQUAL(50, item_slots.item_slots[i-1].amount);
-    }
-    pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_NULL(item_slots.item_slots);
-    TEST_ASSERT_EQUAL(0, item_slots.length);
-
-    for(int i = 50; i >= 1; --i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_remove(
-                tmhm_pocket,
-                name,
-                50
-            )
-        );
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_get_num_items(
-                tmhm_pocket,
-                &num_items
-            )
-        );
-        TEST_ASSERT_EQUAL(i-1, num_items);
-    }
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_as_array(
-            tmhm_pocket,
-            &item_slots
-        )
-    );
-    TEST_ASSERT_EQUAL(57, item_slots.length);
-    for(int i = 1; i <= 50; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "TM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[i-1].item);
-        TEST_ASSERT_EQUAL(0, item_slots.item_slots[i-1].amount);
-    }
-    pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_NULL(item_slots.item_slots);
-    TEST_ASSERT_EQUAL(0, item_slots.length);
-
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_add(
-                tmhm_pocket,
-                name,
-                50
-            )
-        );
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_get_num_items(
-                tmhm_pocket,
-                &num_items
-            )
-        );
-        TEST_ASSERT_EQUAL(i, num_items);
-    }
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_as_array(
-            tmhm_pocket,
-            &item_slots
-        )
-    );
-    TEST_ASSERT_EQUAL(57, item_slots.length);
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[50+i-1].item);
-        TEST_ASSERT_EQUAL(50, item_slots.item_slots[50+i-1].amount);
-    }
-    pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_NULL(item_slots.item_slots);
-    TEST_ASSERT_EQUAL(0, item_slots.length);
-
-    for(int i = 7; i >= 1; --i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_remove(
-                tmhm_pocket,
-                name,
-                50
-            )
-        );
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_get_num_items(
-                tmhm_pocket,
-                &num_items
-            )
-        );
-        TEST_ASSERT_EQUAL(i-1, num_items);
-    }
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_as_array(
-            tmhm_pocket,
-            &item_slots
-        )
-    );
-    TEST_ASSERT_EQUAL(57, item_slots.length);
-    for(int i = 1; i <= 7; ++i) {
-        char name[5] = {0};
-        snprintf(name, sizeof(name), "HM%02d", i);
-
-        TEST_ASSERT_EQUAL_STRING(name, item_slots.item_slots[50+i-1].item);
-        TEST_ASSERT_EQUAL(0, item_slots.item_slots[50+i-1].amount);
-    }
-    pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_NULL(item_slots.item_slots);
-    TEST_ASSERT_EQUAL(0, item_slots.length);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_valid_items(
-            tmhm_pocket,
-            &valid_items
-        )
-    );
-    TEST_ASSERT_EQUAL(57, valid_items.length);
-    pkmn_string_list_free(&valid_items);
-    TEST_ASSERT_NULL(valid_items.strings);
-    TEST_ASSERT_EQUAL(0, valid_items.length);
-}
-
-void gen2_pc_test(
-    pkmn_item_list_handle_t pc,
-    const char* game
-) {
-    char strbuffer[STRBUFFER_LEN];
-
-    int capacity = 0;
-    int num_items = 0;
-    pkmn_string_list_t full_item_list = {
-        .strings = NULL,
-        .length = 0
-    };
-    pkmn_string_list_t valid_items = {
-        .strings = NULL,
-        .length = 0
-    };
-
-    // Check unchanging and initial values.
-    const char* expected_name = "PC";
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_name(
-            pc,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(expected_name, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_game(
-            pc,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_capacity(
-            pc,
-            &capacity
-        )
-    );
-    TEST_ASSERT_EQUAL(50, capacity);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            pc,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
-
-    // Make sure item slots start as correctly empty.
-    test_item_list_empty_slots(pc);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        pc,
-        "Potion"
+        tmhm_pocket,
+        "TM01"
     );
 
-    // Crystal-specific items.
-    if(strcmp(game, "Crystal") == 0) {
-        for(int i = 0; i < 4; ++i) {
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_add(
-                    pc,
-                    crystal_items[i],
-                    1
-                )
-            );
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_remove(
-                    pc,
-                    crystal_items[i],
-                    1
-                )
-            );
-        }
-
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_list_get_num_items(
-                pc,
-                &num_items
-            )
-        );
-        TEST_ASSERT_EQUAL(0, num_items);
-    } else {
-        test_item_list_invalid_items(
-            pc,
-            crystal_items,
-            3
-        );
-    }
+    // Make sure we can't add items from other pockets.
+    const char* wrong_pocket_item_names[] = {"Potion", "Bicycle", "Master Ball"};
+    test_item_list_invalid_items(tmhm_pocket, wrong_pocket_item_names, 3);
 
     // Make sure we can't add items from later generations.
-    test_item_list_invalid_items(
-        pc,
-        wrong_generation_all_pocket_items,
-        4
-    );
+    const char* wrong_generation_item_names[] = {"TM51", "HM08"};
+    test_item_list_invalid_items(tmhm_pocket, wrong_generation_item_names, 2);
 
-    // Start adding and removing stuff, and make sure the numbers are accurate.
-    test_item_list_add_remove(
-        pc,
-        all_pocket_item_names,
-        8
-    );
+    // Start adding and removing items, and make sure the numbers are accurate.
+    for(int i = 1; i <= 50; ++i) {
+        char name[5] = "";
+        snprintf(name, sizeof(name), "TM%02d", i);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_valid_items(
-            pc,
-            &valid_items
-        )
-    );
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_database_item_list(
-            game,
-            &full_item_list
-        )
-    );
-    TEST_ASSERT_EQUAL(valid_items.length, full_item_list.length);
+        error = pkmn_item_list_add(
+                    tmhm_pocket,
+                    name,
+                    50
+                );
+        TEST_ASSERT_EQUAL(i, tmhm_pocket->num_items);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1].item);
+        TEST_ASSERT_EQUAL(50, tmhm_pocket->item_slots.item_slots[i-1].amount);
+    }
+    for(int i = 50; i >= 1; --i) {
+        char name[5] = "";
+        snprintf(name, sizeof(name), "TM%02d", i);
 
-    pkmn_string_list_free(&full_item_list);
-    TEST_ASSERT_NULL(full_item_list.strings);
-    TEST_ASSERT_EQUAL(0, full_item_list.length);
+        error = pkmn_item_list_remove(
+                    tmhm_pocket,
+                    name,
+                    50
+                );
+        TEST_ASSERT_EQUAL(i-1, tmhm_pocket->num_items);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1].item);
+        TEST_ASSERT_EQUAL(0, tmhm_pocket->item_slots.item_slots[i-1].amount);
+    }
 
-    pkmn_string_list_free(&valid_items);
+    for(int i = 1; i <= 7; ++i) {
+        char name[5] = "";
+        snprintf(name, sizeof(name), "HM%02d", i);
+
+        error = pkmn_item_list_add(
+                    tmhm_pocket,
+                    name,
+                    50
+                );
+        TEST_ASSERT_EQUAL(i, tmhm_pocket->num_items);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1+50].item);
+        TEST_ASSERT_EQUAL(50, tmhm_pocket->item_slots.item_slots[i-1+50].amount);
+    }
+    for(int i = 7; i >= 1; --i) {
+        char name[5] = "";
+        snprintf(name, sizeof(name), "HM%02d", i);
+
+        error = pkmn_item_list_remove(
+                    tmhm_pocket,
+                    name,
+                    50
+                );
+        TEST_ASSERT_EQUAL(i-1, tmhm_pocket->num_items);
+        TEST_ASSERT_EQUAL_STRING(name, tmhm_pocket->item_slots.item_slots[i-1+50].item);
+        TEST_ASSERT_EQUAL(0, tmhm_pocket->item_slots.item_slots[i-1+50].amount);
+    }
+
+    pkmn_string_list_t valid_items =
+    {
+        .strings = NULL,
+        .length = 0
+    };
+    error = pkmn_item_list_get_valid_items(
+                tmhm_pocket,
+                &valid_items
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(valid_items.strings);
+    TEST_ASSERT_EQUAL(57, valid_items.length);
+
+    error = pkmn_string_list_free(&valid_items);
     TEST_ASSERT_NULL(valid_items.strings);
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-void gen2_item_bag_test(
-    pkmn_item_bag_handle_t bag,
+static void gen2_item_pc_test(
     const char* game
-) {
-    pkmn_string_list_t pocket_names = {
+)
+{
+    TEST_ASSERT_NOT_NULL(game);
+
+    pkmn_item_list_t item_pc =
+    {
+        .name = NULL,
+        .game = NULL,
+        .num_items = 0,
+        .capacity = 0,
+        .item_slots =
+        {
+            .item_slots = NULL,
+            .length = 0
+        },
+        ._internal = NULL
+    };
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    error = pkmn_item_list_init(
+                "PC",
+                game,
+                &item_pc
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    TEST_ASSERT_NOT_NULL(item_pc.item_slots.item_slots);
+
+    TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pc.game);
+    TEST_ASSERT_EQUAL(0, item_pc.num_items);
+    TEST_ASSERT_EQUAL(50, item_pc.capacity);
+    TEST_ASSERT_EQUAL(50, item_pc.item_slots.length);
+
+    // Make sure item slots start as completely empty.
+    test_item_list_empty_slots(&item_pc);
+
+    // Confirm errors are returned when expected.
+    test_item_list_out_of_range_error(
+        &item_pc,
+        "Potion"
+    );
+
+    // Make sure we can't add items from later generations.
+    test_item_list_invalid_items(
+        &item_pc,
+        WRONG_GENERATION_ALL_POCKET_ITEM_NAMES,
+        4
+    );
+
+    // Test setting items by index.
+    test_item_list_set_item(
+        &item_pc,
+        ALL_POCKET_ITEM_NAMES,
+        3
+    );
+    TEST_ASSERT_EQUAL(0, item_pc.num_items);
+
+    // Start adding and removing items, and make sure the numbers are accurate.
+    test_item_list_add_remove(
+        &item_pc,
+        ALL_POCKET_ITEM_NAMES,
+        8
+    );
+
+    pkmn_string_list_t valid_items =
+    {
         .strings = NULL,
         .length = 0
     };
+    error = pkmn_item_list_get_valid_items(
+                &item_pc,
+                &valid_items
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(valid_items.strings);
+    TEST_ASSERT_TRUE(valid_items.length > 0);
 
-    char strbuffer[STRBUFFER_LEN] = "";
+    pkmn_string_list_t full_item_list =
+    {
+        .strings = NULL,
+        .length = 0
+    };
+    error = pkmn_database_item_list(
+                item_pc.game,
+                &full_item_list
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(full_item_list.strings);
+    TEST_ASSERT_TRUE(full_item_list.length > 0);
 
-    // Check unchanging and initial values.
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_game(
-            bag,
-            strbuffer,
-            sizeof(strbuffer)
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
+    TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_pocket_names(
-            bag,
-            &pocket_names
-        )
-    );
-    TEST_ASSERT_EQUAL(4, pocket_names.length);
+    error = pkmn_string_list_free(&valid_items);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_string_list_free(&full_item_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    pkmn_string_list_free(&pocket_names);
-    TEST_ASSERT_NULL(pocket_names.strings);
-    TEST_ASSERT_EQUAL(0, pocket_names.length);
+    error = pkmn_item_list_free(&item_pc);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NULL(item_pc._internal);
+}
 
-    // Test pockets.
-    pkmn_item_list_handle_t item_list_handle = NULL;
-    pkmn_item_list_handle_t keyitem_list_handle = NULL;
-    pkmn_item_list_handle_t ball_list_handle = NULL;
-    pkmn_item_list_handle_t tmhm_list_handle = NULL;
-    int num_items = 0;
+static void get_bag_pockets(
+    pkmn_item_bag_t* item_bag_ptr,
+    pkmn_item_list_t** item_pocket_ptr_out,
+    pkmn_item_list_t** key_item_pocket_ptr_out,
+    pkmn_item_list_t** ball_pocket_ptr_out,
+    pkmn_item_list_t** tmhm_pocket_ptr_out
+)
+{
+    TEST_ASSERT_NOT_NULL(item_bag_ptr);
+    TEST_ASSERT_NOT_NULL(item_pocket_ptr_out);
+    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr_out);
+    TEST_ASSERT_NOT_NULL(ball_pocket_ptr_out);
+    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr_out);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_pocket(
-            bag,
-            "Items",
-            &item_list_handle
-        )
-    );
-    gen2_item_pocket_test(
-        item_list_handle,
-        game
-    );
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            item_list_handle,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_pocket(
-            bag,
-            "KeyItems",
-            &keyitem_list_handle
-        )
-    );
-    gen2_key_item_pocket_test(
-        keyitem_list_handle,
-        game
-    );
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            keyitem_list_handle,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
+    error = pkmn_item_bag_get_pocket(
+                item_bag_ptr,
+                "Items",
+                item_pocket_ptr_out
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_pocket(
-            bag,
-            "Balls",
-            &ball_list_handle
-        )
-    );
-    gen2_ball_pocket_test(
-        ball_list_handle,
-        game
-    );
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            ball_list_handle,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
+    error = pkmn_item_bag_get_pocket(
+                item_bag_ptr,
+                "KeyItems",
+                key_item_pocket_ptr_out
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_bag_get_pocket(
-            bag,
-            "TM/HM",
-            &tmhm_list_handle
-        )
-    );
-    gen2_tmhm_pocket_test(
-        tmhm_list_handle,
-        game
-    );
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_get_num_items(
-            tmhm_list_handle,
-            &num_items
-        )
-    );
-    TEST_ASSERT_EQUAL(0, num_items);
+    error = pkmn_item_bag_get_pocket(
+                item_bag_ptr,
+                "Balls",
+                ball_pocket_ptr_out
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    /*
-     * Make sure adding items through the bag adds to the proper pockets.
-     * To avoid unnecessary allocations, the C tests will just check the
-     * first item slot.
-     */
-    pkmn_item_slot_t item_slot = {
-        .item = NULL,
-        .amount = 0
+    error = pkmn_item_bag_get_pocket(
+                item_bag_ptr,
+                "TM/HM",
+                tmhm_pocket_ptr_out
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+static void gen2_item_bag_test(
+    const char* game
+)
+{
+    TEST_ASSERT_NOT_NULL(game);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    pkmn_item_bag_t item_bag =
+    {
+        .game = NULL,
+        .pockets =
+        {
+            .pockets = NULL,
+            .pocket_names =
+            {
+                .strings = NULL,
+                .length = 0
+            },
+            .num_pockets = 0
+        },
+        ._internal = NULL
     };
 
-    for(int i = 0; i < 8; ++i) {
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_bag_add(
-                bag,
-                all_pocket_item_names[i],
-                5
-            )
+    error = pkmn_item_bag_init(
+                game,
+                &item_bag
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(item_bag._internal);
+
+    TEST_ASSERT_EQUAL(4, item_bag.pockets.num_pockets);
+    TEST_ASSERT_EQUAL(4, item_bag.pockets.pocket_names.length);
+
+    // Make sure pockets are stored and accessible as expected.
+    for(size_t i = 0; i < 4; ++i)
+    {
+        TEST_ASSERT_EQUAL_STRING(
+            item_bag.pockets.pockets[i].name,
+            item_bag.pockets.pocket_names.strings[i]
+        );
+        TEST_ASSERT_EQUAL_STRING(
+            item_bag.pockets.pockets[i].game,
+            item_bag.game
         );
     }
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            item_list_handle,
-            0,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("Potion", item_slot.item);
-    TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            keyitem_list_handle,
-            0,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("Bicycle", item_slot.item);
-    TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            ball_list_handle,
-            0,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("Great Ball", item_slot.item);
-    TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
-
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            tmhm_list_handle,
-            27,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("TM28", item_slot.item);
-    TEST_ASSERT_EQUAL(5, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
-
-    /*
-     * Make sure removing items through the bag removes from the proper pockets.
-     * To avoid unnecessary allocations, the C tests will just check the
-     * first item slot.
-     */
-    for(int i = 0; i < 8; ++i) {
-        TEST_ASSERT_EQUAL(
-            PKMN_ERROR_NONE,
-            pkmn_item_bag_remove(
-                bag,
-                all_pocket_item_names[i],
-                5
-            )
+    const char* POCKET_NAMES[] = {"Items", "KeyItems", "Balls", "TM/HM"};
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn_item_list_t* item_list_ptr = NULL;
+        error = pkmn_item_bag_get_pocket(
+                    &item_bag,
+                    POCKET_NAMES[i],
+                    &item_list_ptr
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_NOT_NULL(item_list_ptr);
+        TEST_ASSERT_EQUAL_STRING(
+            item_list_ptr->name,
+            POCKET_NAMES[i]
         );
     }
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            item_list_handle,
-            0,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
-    TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
+    pkmn_item_list_t* item_pocket_ptr = NULL;
+    pkmn_item_list_t* key_item_pocket_ptr = NULL;
+    pkmn_item_list_t* ball_pocket_ptr = NULL;
+    pkmn_item_list_t* tmhm_pocket_ptr = NULL;
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            keyitem_list_handle,
-            0,
-            &item_slot
-        )
+    get_bag_pockets(
+        &item_bag,
+        &item_pocket_ptr,
+        &key_item_pocket_ptr,
+        &ball_pocket_ptr,
+        &tmhm_pocket_ptr
     );
-    TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
-    TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
+    TEST_ASSERT_NOT_NULL(item_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(ball_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            ball_list_handle,
-            0,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
-    TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
+    gen2_item_pocket_test(item_pocket_ptr, game);
+    gen2_key_item_pocket_test(key_item_pocket_ptr, game);
+    gen2_ball_pocket_test(ball_pocket_ptr, game);
+    gen2_tmhm_pocket_test(tmhm_pocket_ptr, game);
 
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_at(
-            tmhm_list_handle,
-            27,
-            &item_slot
-        )
-    );
-    TEST_ASSERT_EQUAL_STRING("TM28", item_slot.item);
-    TEST_ASSERT_EQUAL(0, item_slot.amount);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_slot_free(&item_slot)
-    );
-    TEST_ASSERT_NULL(item_slot.item);
+    error = pkmn_item_bag_free(&item_bag);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NULL(item_bag._internal);
 
-    // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
-    if(strcmp(game, "Crystal") == 0) {
-        for(int i = 0; i < 4; ++i) {
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_bag_add(
-                    bag,
-                    crystal_items[i],
-                    1
-                )
+    error = pkmn_item_bag_init(
+                game,
+                &item_bag
             );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_NOT_NULL(item_bag._internal);
 
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_at(
-                    keyitem_list_handle,
-                    0,
-                    &item_slot
-                )
-            );
-            TEST_ASSERT_EQUAL_STRING(crystal_items[i], item_slot.item);
-            TEST_ASSERT_EQUAL(1, item_slot.amount);
-            TEST_ASSERT_EQUAL(
-                pkmn_item_slot_free(&item_slot),
-                PKMN_ERROR_NONE
-            );
-            TEST_ASSERT_NULL(item_slot.item);
+    get_bag_pockets(
+        &item_bag,
+        &item_pocket_ptr,
+        &key_item_pocket_ptr,
+        &ball_pocket_ptr,
+        &tmhm_pocket_ptr
+    );
+    TEST_ASSERT_NOT_NULL(item_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(ball_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr);
 
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_bag_remove(
-                    bag,
-                    crystal_items[i],
-                    1
-                )
-            );
+    // Make sure adding items through the bag adds to the proper pockets.
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->num_items);
+    for(size_t i = 0; i < 8; ++i)
+    {
+        pkmn_item_bag_add(
+            &item_bag,
+            ALL_POCKET_ITEM_NAMES[i],
+            5
+        );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
 
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_list_at(
-                    keyitem_list_handle,
-                    0,
-                    &item_slot
-                )
-            );
-            TEST_ASSERT_EQUAL_STRING("None", item_slot.item);
-            TEST_ASSERT_EQUAL(0, item_slot.amount);
-            TEST_ASSERT_EQUAL(
-                PKMN_ERROR_NONE,
-                pkmn_item_slot_free(&item_slot)
-            );
-            TEST_ASSERT_NULL(item_slot.item);
+    TEST_ASSERT_EQUAL_STRING("Potion", item_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(5, item_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("Berry", item_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(5, item_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", item_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("Bicycle", key_item_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(5, key_item_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("SquirtBottle", key_item_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(5, key_item_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", key_item_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("Great Ball", ball_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(5, ball_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("Friend Ball", ball_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(5, ball_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", ball_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("TM01", tmhm_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("TM02", tmhm_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("TM28", tmhm_pocket_ptr->item_slots.item_slots[27].item);
+    TEST_ASSERT_EQUAL(5, tmhm_pocket_ptr->item_slots.item_slots[27].amount);
+    TEST_ASSERT_EQUAL_STRING("HM01", tmhm_pocket_ptr->item_slots.item_slots[50].item);
+    TEST_ASSERT_EQUAL(5, tmhm_pocket_ptr->item_slots.item_slots[50].amount);
+
+    // Make sure removing items through the bag removes from the proper pockets.
+    for(size_t i = 0; i < 8; ++i)
+    {
+        pkmn_item_bag_remove(
+            &item_bag,
+            ALL_POCKET_ITEM_NAMES[i],
+            5
+        );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->num_items);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->num_items);
+
+    TEST_ASSERT_EQUAL_STRING("None", item_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("None", item_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", item_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, item_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("None", key_item_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("None", key_item_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", key_item_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("None", ball_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("None", ball_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("None", ball_pocket_ptr->item_slots.item_slots[2].item);
+    TEST_ASSERT_EQUAL(0, ball_pocket_ptr->item_slots.item_slots[2].amount);
+
+    TEST_ASSERT_EQUAL_STRING("TM01", tmhm_pocket_ptr->item_slots.item_slots[0].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[0].amount);
+    TEST_ASSERT_EQUAL_STRING("TM02", tmhm_pocket_ptr->item_slots.item_slots[1].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[1].amount);
+    TEST_ASSERT_EQUAL_STRING("TM28", tmhm_pocket_ptr->item_slots.item_slots[27].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[27].amount);
+    TEST_ASSERT_EQUAL_STRING("HM01", tmhm_pocket_ptr->item_slots.item_slots[50].item);
+    TEST_ASSERT_EQUAL(0, tmhm_pocket_ptr->item_slots.item_slots[50].amount);
+
+    if(!strcmp(game, "Crystal"))
+    {
+        for(size_t i = 0; i < 4; ++i)
+        {
+            error = pkmn_item_bag_add(
+                        &item_bag,
+                        CRYSTAL_ITEM_NAMES[i],
+                        1
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
-    } else {
+        for(size_t i = 0; i < 4; ++i)
+        {
+            TEST_ASSERT_EQUAL_STRING(
+                CRYSTAL_ITEM_NAMES[i],
+                key_item_pocket_ptr->item_slots.item_slots[i].item
+            );
+            TEST_ASSERT_EQUAL(1, key_item_pocket_ptr->item_slots.item_slots[i].amount);
+        }
+        for(size_t i = 0; i < 4; ++i)
+        {
+            error = pkmn_item_bag_remove(
+                        &item_bag,
+                        CRYSTAL_ITEM_NAMES[i],
+                        1
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        }
+        for(size_t i = 0; i < 4; ++i)
+        {
+            TEST_ASSERT_EQUAL_STRING("None", key_item_pocket_ptr->item_slots.item_slots[i].item);
+            TEST_ASSERT_EQUAL(0, key_item_pocket_ptr->item_slots.item_slots[i].amount);
+        }
+    }
+    else
+    {
         test_item_bag_invalid_items(
-            bag,
-            crystal_items,
-            3
+            &item_bag,
+            CRYSTAL_ITEM_NAMES,
+            4
         );
     }
 
     // Make sure we can't add items from later generations.
     test_item_bag_invalid_items(
-        bag,
-        wrong_generation_all_pocket_items,
+        &item_bag,
+        WRONG_GENERATION_ALL_POCKET_ITEM_NAMES,
         4
     );
-
-    // Cleanup
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_free(&item_list_handle)
-    );
-    TEST_ASSERT_NULL(item_list_handle);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_free(&keyitem_list_handle)
-    );
-    TEST_ASSERT_NULL(keyitem_list_handle);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_free(&ball_list_handle)
-    );
-    TEST_ASSERT_NULL(ball_list_handle);
-    TEST_ASSERT_EQUAL(
-        PKMN_ERROR_NONE,
-        pkmn_item_list_free(&tmhm_list_handle)
-    );
-    TEST_ASSERT_NULL(tmhm_list_handle);
 }
+
+#define GEN2_ITEM_TESTS(test_game) \
+void test_gen2_item_pocket_ ## test_game () \
+{ \
+    pkmn_error_t error = PKMN_ERROR_NONE; \
+ \
+    pkmn_item_list_t item_pocket = \
+    { \
+        .name = NULL, \
+        .game = NULL, \
+        .num_items = 0, \
+        .capacity = 0, \
+        .item_slots = \
+        { \
+            .item_slots = NULL, \
+            .length = 0 \
+        }, \
+        ._internal = NULL \
+    }; \
+ \
+    error = pkmn_item_list_init( \
+                "Items", \
+                #test_game, \
+                &item_pocket \
+            ); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NOT_NULL(item_pocket._internal); \
+ \
+    gen2_item_pocket_test( \
+        &item_pocket, \
+        #test_game \
+    ); \
+ \
+    error = pkmn_item_list_free(&item_pocket); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NULL(item_pocket._internal); \
+} \
+void test_gen2_key_item_pocket_ ## test_game () \
+{ \
+    pkmn_error_t error = PKMN_ERROR_NONE; \
+ \
+    pkmn_item_list_t key_item_pocket = \
+    { \
+        .name = NULL, \
+        .game = NULL, \
+        .num_items = 0, \
+        .capacity = 0, \
+        .item_slots = \
+        { \
+            .item_slots = NULL, \
+            .length = 0 \
+        }, \
+        ._internal = NULL \
+    }; \
+ \
+    error = pkmn_item_list_init( \
+                "KeyItems", \
+                #test_game, \
+                &key_item_pocket \
+            ); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NOT_NULL(key_item_pocket._internal); \
+ \
+    gen2_key_item_pocket_test( \
+        &key_item_pocket, \
+        #test_game \
+    ); \
+ \
+    error = pkmn_item_list_free(&key_item_pocket); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NULL(key_item_pocket._internal); \
+} \
+void test_gen2_ball_pocket_ ## test_game () \
+{ \
+    pkmn_error_t error = PKMN_ERROR_NONE; \
+ \
+    pkmn_item_list_t ball_pocket = \
+    { \
+        .name = NULL, \
+        .game = NULL, \
+        .num_items = 0, \
+        .capacity = 0, \
+        .item_slots = \
+        { \
+            .item_slots = NULL, \
+            .length = 0 \
+        }, \
+        ._internal = NULL \
+    }; \
+ \
+    error = pkmn_item_list_init( \
+                "Balls", \
+                #test_game, \
+                &ball_pocket \
+            ); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NOT_NULL(ball_pocket._internal); \
+ \
+    gen2_ball_pocket_test( \
+        &ball_pocket, \
+        #test_game \
+    ); \
+ \
+    error = pkmn_item_list_free(&ball_pocket); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NULL(ball_pocket._internal); \
+} \
+void test_gen2_tmhm_pocket_ ## test_game () \
+{ \
+    pkmn_error_t error = PKMN_ERROR_NONE; \
+ \
+    pkmn_item_list_t tmhm_pocket = \
+    { \
+        .name = NULL, \
+        .game = NULL, \
+        .num_items = 0, \
+        .capacity = 0, \
+        .item_slots = \
+        { \
+            .item_slots = NULL, \
+            .length = 0 \
+        }, \
+        ._internal = NULL \
+    }; \
+ \
+    error = pkmn_item_list_init( \
+                "TM/HM", \
+                #test_game, \
+                &tmhm_pocket \
+            ); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NOT_NULL(tmhm_pocket._internal); \
+ \
+    gen2_tmhm_pocket_test( \
+        &tmhm_pocket, \
+        #test_game \
+    ); \
+ \
+    error = pkmn_item_list_free(&tmhm_pocket); \
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    TEST_ASSERT_NULL(tmhm_pocket._internal); \
+} \
+void test_gen2_item_pc_ ## test_game () \
+{ \
+    gen2_item_pc_test(#test_game); \
+} \
+void test_gen2_item_bag_ ## test_game () \
+{ \
+    gen2_item_bag_test(#test_game); \
+}
+
+GEN2_ITEM_TESTS(Gold)
+GEN2_ITEM_TESTS(Silver)
+GEN2_ITEM_TESTS(Crystal)
