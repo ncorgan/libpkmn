@@ -70,9 +70,13 @@ repository is automatically tested under the following configurations:
    * Python: 2.7.6, 3.4.3
    * Ruby: 2.3.0
  * Windows Server 2012 R2 (x64)
-   * C/C++: MSVC 2015 (Win32, x64)
-     * Boost: 1.59.0, 1.62.0, 1.63.0
-     * Qt: 5.7.1
+   * C/C++:
+     * MSVC 2015 (Win32, x64)
+       * Boost: 1.59.0, 1.62.0, 1.63.0
+       * Qt: 5.6.2, 5.7.1, 5.8.0
+     * MSVC 2017 (Win32, x64)
+       * Boost: 1.64.0
+       * Qt: 5.9.1
    * SWIG: 3.0.6
    * C#: .NET 3.5
    * Lua: 5.1.5, 5.2.4, 5.3.2
@@ -91,10 +95,10 @@ All source files are analyzed with [CppCheck](http://cppcheck.sourceforge.net/).
 Acknowledgments
 -------------------------------------
 
-This project is largely possible thanks to Alex "Eevee" Munroe ([@eevee](https://github.com/eevee)) whose extensive SQLite database on all things Pokémon underlies the majority of this code's functionality.
+This project is largely possible thanks to Lexy "Eevee" Munroe ([@eevee](https://github.com/eevee)) whose extensive SQLite database on all things Pokémon underlies the majority of this code's functionality.
 
 A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey85)) for consulting on game mechanics.
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/09/06
+README last updated: 2017/09/30
