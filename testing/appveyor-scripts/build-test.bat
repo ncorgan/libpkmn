@@ -6,9 +6,9 @@ set BOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION%_0
 dir C:\Libraries\boost_%BOOST_VERSION%_0
 set CMAKE_PREFIX_PATH=%QT_DIR%
 if "x%CMAKE_GENERATOR_NAME:2017=%"=="x%CMAKE_GENERATOR_NAME%" (
-    set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.1"
-) else (
     set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.0"
+) else (
+    set BOOST_LIBRARY_DIR="%BOOST_ROOT%\lib%BITNESS%-msvc-14.1"
 )
 if "%BITNESS%"=="32" (
     set PYTHON_ROOT=C:\Python%PYTHON_VERSION%
