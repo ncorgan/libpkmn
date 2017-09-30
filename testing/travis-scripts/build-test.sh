@@ -11,11 +11,18 @@ mkdir -p test-env/pkmn-build
 cd test-env/pkmn-build
 [ $? -ne 0 ] && exit 1
 
-# Check source
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-[ $? -ne 0 ] && exit 1
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-[ $? -ne 0 ] && exit 1
+# Clang builds include static analysis.
+if echo "$CC" | grep clang > /dev/null
+then
+  find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --enable=performance,portability,warning --std=c++11 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
+  [ $? -ne 0 ] && exit 1
+  find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
+  [ $? -ne 0 ] && exit 1
+
+  export USE_CLANG_TIDY=1
+else
+  export USE_CLANG_TIDY=0
+fi
 
 if [ $PYTHON_VERSION -eq 2 ]
 then
@@ -36,6 +43,7 @@ cmake -DCMAKE_BUILD_TYPE=Release \
   -DPYTHON_EXECUTABLE=/usr/bin/python${PYTHON_VERSION} \
   -DPYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR \
   -DPYTHON_LIBRARY=$PYTHON_LIBRARY \
+  -DPKMN_USE_CLANGTIDY=$USE_CLANGTIDY \
   $REPO_TOPLEVEL
 [ $? -ne 0 ] && exit 1
 make
