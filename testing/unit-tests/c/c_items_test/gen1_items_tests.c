@@ -223,7 +223,7 @@ static void gen1_item_bag_test(
         error = pkmn_item_bag_add(
                     &bag,
                     ITEM_NAMES[i],
-                    i+1
+                    (int)(i+1)
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
@@ -243,7 +243,7 @@ static void gen1_item_bag_test(
         error = pkmn_item_bag_remove(
                     &bag,
                     ITEM_NAMES[i],
-                    i+1
+                    (int)(i+1)
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
