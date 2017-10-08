@@ -202,3 +202,88 @@ TEST(CppToObjCTest, PKMoveDatabaseEntryArrayTest)
         EXPECT_TRUE([moveEntryArrayObjC isEqualToArray:moveEntryArrayFromCpp]);
     }
 }
+
+TEST(CppToObjCTest, PKPokemonDatabaseEntryTest)
+{
+    @autoreleasepool
+    {
+        pkmn::database::pokemon_entry pokemon_entry_cpp("Pikachu", "Omega Ruby", "");
+        PKPokemonDatabaseEntry* pokemonEntryFromCpp = [CppToObjC createPokemonDatabaseEntryFromCpp:pokemon_entry_cpp];
+
+        EXPECT_STREQ(pokemon_entry_cpp.get_name().c_str(), [[pokemonEntryFromCpp getName] UTF8String]);
+        EXPECT_STREQ(pokemon_entry_cpp.get_game().c_str(), [[pokemonEntryFromCpp getGame] UTF8String]);
+        EXPECT_STREQ(pokemon_entry_cpp.get_species().c_str(), [[pokemonEntryFromCpp getSpecies] UTF8String]);
+        EXPECT_STREQ(pokemon_entry_cpp.get_pokedex_entry().c_str(), [[pokemonEntryFromCpp getPokedexEntry] UTF8String]);
+        EXPECT_STREQ(pokemon_entry_cpp.get_form().c_str(), [[pokemonEntryFromCpp getForm] UTF8String]);
+        EXPECT_DOUBLE_EQ(pokemon_entry_cpp.get_height(), [[pokemonEntryFromCpp getHeight] floatValue]);
+        EXPECT_DOUBLE_EQ(pokemon_entry_cpp.get_weight(), [[pokemonEntryFromCpp getWeight] floatValue]);
+        EXPECT_EQ(pokemon_entry_cpp.has_gender_differences(), [pokemonEntryFromCpp hasGenderDifferences]);
+        EXPECT_EQ(pokemon_entry_cpp.get_base_friendship(), [[pokemonEntryFromCpp getBaseFriendship] intValue]);
+
+        std::pair<std::string, std::string> cpp_types = pokemon_entry_cpp.get_types();
+        PKStringPair* objcTypes = [pokemonEntryFromCpp getTypes];
+        EXPECT_STREQ(cpp_types.first.c_str(), [objcTypes->first UTF8String]);
+        EXPECT_STREQ(cpp_types.second.c_str(), [objcTypes->second UTF8String]);
+
+        std::pair<std::string, std::string> cpp_abilities = pokemon_entry_cpp.get_abilities();
+        PKStringPair* objcAbilities = [pokemonEntryFromCpp getAbilities];
+        EXPECT_STREQ(cpp_abilities.first.c_str(), [objcAbilities->first UTF8String]);
+        EXPECT_STREQ(cpp_abilities.second.c_str(), [objcAbilities->second UTF8String]);
+
+        EXPECT_STREQ(pokemon_entry_cpp.get_hidden_ability().c_str(), [[pokemonEntryFromCpp getHiddenAbility] UTF8String]);
+
+        std::pair<std::string, std::string> cpp_egg_groups = pokemon_entry_cpp.get_egg_groups();
+        PKStringPair* objcEggGroups = [pokemonEntryFromCpp getEggGroups];
+        EXPECT_STREQ(cpp_egg_groups.first.c_str(), [objcEggGroups->first UTF8String]);
+        EXPECT_STREQ(cpp_egg_groups.second.c_str(), [objcEggGroups->second UTF8String]);
+
+        std::map<std::string, int> cpp_base_stats = pokemon_entry_cpp.get_base_stats();
+        PKStringNumberDictionary* objCBaseStats = [pokemonEntryFromCpp getBaseStats];
+        for(auto iter = cpp_base_stats.begin(); iter != cpp_base_stats.end(); ++iter)
+        {
+            EXPECT_EQ(iter->second, [(NSNumber*)[objCBaseStats objectForKeyedSubscript:@(iter->first.c_str())] intValue]);
+        }
+
+        std::map<std::string, int> cpp_EV_yields = pokemon_entry_cpp.get_EV_yields();
+        PKStringNumberDictionary* objCEVYields = [pokemonEntryFromCpp getEVYields];
+        for(auto iter = cpp_EV_yields.begin(); iter != cpp_EV_yields.end(); ++iter)
+        {
+            EXPECT_EQ(iter->second, [(NSNumber*)[objCEVYields objectForKeyedSubscript:@(iter->first.c_str())] intValue]);
+        }
+
+        EXPECT_EQ(pokemon_entry_cpp.get_experience_yield(), [[pokemonEntryFromCpp getExperienceYield] intValue]);
+        EXPECT_EQ(pokemon_entry_cpp.get_experience_at_level(50), [[pokemonEntryFromCpp getExperienceAtLevel:@50] intValue]);
+        EXPECT_EQ(pokemon_entry_cpp.get_level_at_experience(50000), [[pokemonEntryFromCpp getLevelAtExperience:@50000] intValue]);
+
+        pkmn::database::levelup_moves_t cpp_levelup_moves = pokemon_entry_cpp.get_levelup_moves();
+        PKLevelupMoveArray* objCLevelupMoves = [pokemonEntryFromCpp getLevelupMoves];
+        EXPECT_EQ(cpp_levelup_moves.size(), [[objCLevelupMoves count] unsignedLongLongValue]);
+
+        pkmn::database::move_list_t cpp_tmhm_moves = pokemon_entry_cpp.get_tm_hm_moves();
+        PKMoveDatabaseEntryArray* objCTMHMMoves = [pokemonEntryFromCpp getTMHMMoves];
+        EXPECT_EQ(cpp_tmhm_moves.size(), [[objCTMHMMoves count] unsignedLongLongValue]);
+
+        pkmn::database::move_list_t cpp_egg_moves = pokemon_entry_cpp.get_egg_moves();
+        PKMoveDatabaseEntryArray* objCEggMoves = [pokemonEntryFromCpp getEggMoves];
+        EXPECT_EQ(cpp_egg_moves.size(), [[objCEggMoves count] unsignedLongLongValue]);
+
+        pkmn::database::move_list_t cpp_tutor_moves = pokemon_entry_cpp.get_tutor_moves();
+        PKMoveDatabaseEntryArray* objCTutorMoves = [pokemonEntryFromCpp getTutorMoves];
+        EXPECT_EQ(cpp_tutor_moves.size(), [[objCTutorMoves count] unsignedLongLongValue]);
+
+        std::vector<std::string> cpp_forms = pokemon_entry_cpp.get_forms();
+        PKStringArray* objCForms = [pokemonEntryFromCpp getForms];
+        EXPECT_EQ(cpp_forms.size(), [[objCForms count] unsignedLongLongValue]);
+
+        pkmn::database::pokemon_entries_t cpp_evolutions = pokemon_entry_cpp.get_evolutions();
+        PKPokemonDatabaseEntryArray* objCEvolutions = [pokemonEntryFromCpp getEvolutions];
+        EXPECT_EQ(cpp_evolutions.size(), [[objCEvolutions count] unsignedLongLongValue]);
+
+        // Make sure when creating an entry from the Objective-C API itself, the equality check works.
+        PKPokemonDatabaseEntry* pokemonEntryObjC = [[PKPokemonDatabaseEntry alloc] initWithName:@"Pikachu"
+                                                                                   andGame:@"Omega Ruby"
+                                                                                   andForm:@""];
+        EXPECT_TRUE([pokemonEntryObjC isEqual:pokemonEntryFromCpp]);
+        EXPECT_TRUE([pokemonEntryObjC isEqualToEntry:pokemonEntryFromCpp]);
+    }
+}

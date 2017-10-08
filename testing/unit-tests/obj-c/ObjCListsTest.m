@@ -19,8 +19,8 @@ static void AbilityListTest() {
     @try {
         PKStringArray* abilities = [PKLists getAbilityList:@6];
 
-        NSUInteger size = [abilities count];
-        if(size != 191) {
+        NSNumber* size = [abilities count];
+        if([size unsignedLongLongValue] != 191) {
             @throw [NSException
                         exceptionWithName:@"NSRangeException"
                                    reason:@"size != 191"
@@ -37,7 +37,7 @@ static void AbilityListTest() {
                    ];
         }
 
-        NSString* last = [abilities objectAtIndexedSubscript:(size-1)];
+        NSString* last = [abilities objectAtIndexedSubscript:([size unsignedLongLongValue]-1)];
         if(![last isEqual:@"Zen Mode"]) {
             @throw [NSException
                         exceptionWithName:@"NSRangeException"
