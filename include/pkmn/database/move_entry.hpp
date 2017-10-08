@@ -58,14 +58,6 @@ namespace pkmn { namespace database {
                 const std::string &game_name
             );
 
-            move_entry(const move_entry&) = default;
-            move_entry(move_entry&&) = default;
-
-#ifndef SWIG
-            move_entry& operator=(const move_entry&) = default;
-            move_entry& operator=(move_entry&&) = default;
-#endif
-
             /*!
              * @brief Returns the move's name.
              *
