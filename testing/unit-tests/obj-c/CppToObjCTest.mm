@@ -177,22 +177,28 @@ TEST(CppToObjCTest, PKMoveDatabaseEntryArrayTest)
         PKMoveDatabaseEntry* moveDatabaseEntry = [[PKMoveDatabaseEntry alloc] initWithName:@"Frenzy Plant"
                                                                               andGame:@"Ruby"];
         [moveEntryArrayFromCpp addEntry:moveDatabaseEntry];
-        EXPECT_STREQ("Frenzy Plant", [[moveDatabaseEntry getName] UTF8String]);
-        EXPECT_STREQ("Ruby", [[moveDatabaseEntry getGame] UTF8String]);
+        EXPECT_STREQ(
+            [[moveDatabaseEntry getName] UTF8String],
+            [[[moveEntryArrayFromCpp objectAtIndexedSubscript:3] getName] UTF8String]
+        );
+        EXPECT_STREQ(
+            [[moveDatabaseEntry getGame] UTF8String],
+            [[[moveEntryArrayFromCpp objectAtIndexedSubscript:3] getGame] UTF8String]
+        );
 
         // Recreate this array purely through Objective-C, and check for equality.
-        PKMoveDatabaseEntryArray* moveEntryArrayObjC = [PKMoveDatabaseEntryArray alloc];
+        PKMoveDatabaseEntryArray* moveEntryArrayObjC = [[PKMoveDatabaseEntryArray alloc] init];
 
         PKMoveDatabaseEntry* entry1 = [[PKMoveDatabaseEntry alloc] initWithName:@"Scratch" andGame:@"FireRed"];
-        //PKMoveDatabaseEntry* entry2 = [[PKMoveDatabaseEntry alloc] initWithName:@"Swallow" andGame:@"LeafGreen"];
-        //PKMoveDatabaseEntry* entry3 = [[PKMoveDatabaseEntry alloc] initWithName:@"Toxic" andGame:@"Emerald"];
-        //PKMoveDatabaseEntry* entry4 = [[PKMoveDatabaseEntry alloc] initWithName:@"Frenzy Plant" andGame:@"Ruby"];
+        PKMoveDatabaseEntry* entry2 = [[PKMoveDatabaseEntry alloc] initWithName:@"Swallow" andGame:@"LeafGreen"];
+        PKMoveDatabaseEntry* entry3 = [[PKMoveDatabaseEntry alloc] initWithName:@"Toxic" andGame:@"Emerald"];
+        PKMoveDatabaseEntry* entry4 = [[PKMoveDatabaseEntry alloc] initWithName:@"Frenzy Plant" andGame:@"Ruby"];
 
         [moveEntryArrayObjC addEntry:entry1];
-        /*[moveEntryArrayObjC addEntry:entry2];
+        [moveEntryArrayObjC addEntry:entry2];
         [moveEntryArrayObjC addEntry:entry3];
         [moveEntryArrayObjC addEntry:entry4];
 
-        EXPECT_TRUE([moveEntryArrayObjC isEqualToArray:moveEntryArrayFromCpp]);*/
+        EXPECT_TRUE([moveEntryArrayObjC isEqualToArray:moveEntryArrayFromCpp]);
     }
 }

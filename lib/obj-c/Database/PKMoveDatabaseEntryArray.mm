@@ -19,15 +19,14 @@
  * wrapper. Objective-C has no friend classes, so we must use the Objective-C runtime
  * to access the protected variable.
  */
-static PKMN_INLINE pkmn::database::move_entry* getInternalMoveEntry(
+static pkmn::database::move_entry* getInternalMoveEntry(
     PKMoveDatabaseEntry* objC
 ) {
-    void* cpp_ptr = nullptr;
     id object = (id)objC;
-    object_getInstanceVariable(object_getClass(object), "_internal", &cpp_ptr);
+    Ivar ivar = class_getInstanceVariable(object_getClass(object), "_internal");
+    void* ivar_ptr = (uint8_t*)(__bridge void*)object + ivar_getOffset(ivar);
 
-    pkmn::database::move_entry* ret_ptr = *((pkmn::database::move_entry**)cpp_ptr);
-    printf("%s %s\n", ret_ptr->get_name().c_str(), ret_ptr->get_game().c_str());
+    pkmn::database::move_entry* ret_ptr = *((pkmn::database::move_entry**)ivar_ptr);
     return ret_ptr;
 }
 
