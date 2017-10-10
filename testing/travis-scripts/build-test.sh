@@ -14,9 +14,9 @@ cd test-env/pkmn-build
 # Clang builds include static analysis.
 if echo "$CC" | grep clang > /dev/null
 then
-  find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --enable=performance,portability,warning --std=c++11 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
+  find $REPO_TOPLEVEL/lib -name '*.[ch]pp' | xargs cppcheck --enable=performance,portability,warning --std=c++11 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
   #[ $? -ne 0 ] && exit 1
-  find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
+  find $REPO_TOPLEVEL/lib -name '*.[ch]' | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet
   #[ $? -ne 0 ] && exit 1
 fi
 
