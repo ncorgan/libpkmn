@@ -23,7 +23,7 @@ namespace pkmn {
     class pokemon_pc_gen2impl: public pokemon_pc_impl {
         public:
             pokemon_pc_gen2impl() {}
-            pokemon_pc_gen2impl(
+            explicit pokemon_pc_gen2impl(
                 int game_id
             );
             pokemon_pc_gen2impl(

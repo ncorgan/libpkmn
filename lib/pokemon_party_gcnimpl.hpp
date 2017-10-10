@@ -20,7 +20,7 @@ namespace pkmn {
     class pokemon_party_gcnimpl: public pokemon_party_impl {
         public:
             pokemon_party_gcnimpl() {}
-            pokemon_party_gcnimpl(
+            explicit pokemon_party_gcnimpl(
                 int game_id
             );
             pokemon_party_gcnimpl(

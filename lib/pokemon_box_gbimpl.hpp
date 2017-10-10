@@ -18,7 +18,7 @@ namespace pkmn {
     class pokemon_box_gbimpl: public pokemon_box_impl {
         public:
             pokemon_box_gbimpl() {}
-            pokemon_box_gbimpl(
+            explicit pokemon_box_gbimpl(
                 int game_id
             );
             pokemon_box_gbimpl(
@@ -44,8 +44,6 @@ namespace pkmn {
             );
 
         private:
-
-            std::string _box_name;
 
             void _from_native();
     };

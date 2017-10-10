@@ -16,7 +16,7 @@ namespace pkmn {
     class pokemon_party_gbaimpl: public pokemon_party_impl {
         public:
             pokemon_party_gbaimpl() {}
-            pokemon_party_gbaimpl(
+            explicit pokemon_party_gbaimpl(
                 int game_id
             );
             pokemon_party_gbaimpl(

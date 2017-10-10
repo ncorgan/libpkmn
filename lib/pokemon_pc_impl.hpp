@@ -18,7 +18,7 @@ namespace pkmn {
     class pokemon_pc_impl: public pokemon_pc, public boost::noncopyable {
         public:
             pokemon_pc_impl() {}
-            pokemon_pc_impl(
+            explicit pokemon_pc_impl(
                 int game_id
             );
 

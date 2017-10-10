@@ -33,7 +33,7 @@ namespace pkmn {
     class pokemon_party_impl: public pokemon_party, public boost::noncopyable {
         public:
             pokemon_party_impl() {}
-            pokemon_party_impl(
+            explicit pokemon_party_impl(
                 int game_id
             );
 

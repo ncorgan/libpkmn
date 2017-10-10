@@ -18,7 +18,7 @@ namespace pkmn {
     class pokemon_pc_gbaimpl: public pokemon_pc_impl {
         public:
             pokemon_pc_gbaimpl() {}
-            pokemon_pc_gbaimpl(
+            explicit pokemon_pc_gbaimpl(
                 int game_id
             );
             pokemon_pc_gbaimpl(

@@ -55,10 +55,25 @@ namespace pkmn {
                 throw std::runtime_error("Invalid game.");
         }
     }
+/*
+            pkmn::pokemon_list_t _pokemon_list;
+            std::string _box_name;
 
+            void* _native;
+            bool _our_mem;
+
+            boost::mutex _mem_mutex;
+
+            int _game_id, _generation;
+ */
     pokemon_box_impl::pokemon_box_impl(
         int game_id
-    ): _game_id(game_id),
+    ): _pokemon_list(),
+        _box_name(""),
+        _native(nullptr),
+        _our_mem(false),
+        _mem_mutex(),
+       _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 

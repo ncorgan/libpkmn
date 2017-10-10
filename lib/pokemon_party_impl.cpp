@@ -57,7 +57,9 @@ namespace pkmn {
 
     pokemon_party_impl::pokemon_party_impl(
         int game_id
-    ): _game_id(game_id),
+    ): _native(nullptr),
+       _our_mem(false),
+       _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 

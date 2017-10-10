@@ -31,7 +31,7 @@ namespace pkmn {
     class pokemon_box_impl: public pokemon_box, public boost::noncopyable {
         public:
             pokemon_box_impl() {}
-            pokemon_box_impl(
+            explicit pokemon_box_impl(
                 int game_id
             );
 

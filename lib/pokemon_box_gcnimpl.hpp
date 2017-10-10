@@ -16,7 +16,7 @@ namespace pkmn {
     class pokemon_box_gcnimpl: public pokemon_box_impl {
         public:
             pokemon_box_gcnimpl() {}
-            pokemon_box_gcnimpl(
+            explicit pokemon_box_gcnimpl(
                 int game_id
             );
             pokemon_box_gcnimpl(

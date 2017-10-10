@@ -59,7 +59,7 @@ namespace pkmn {
                 int pokemon_index,
                 int game_id
             );
-            pokemon_impl(
+            explicit pokemon_impl(
                 pkmn::database::pokemon_entry&& database_entry
             );
 

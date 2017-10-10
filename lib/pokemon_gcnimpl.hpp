@@ -24,10 +24,10 @@ namespace pkmn {
                 LibPkmGC::GC::Pokemon* native,
                 int game_id
             );
-            pokemon_gcnimpl(
+            explicit pokemon_gcnimpl(
                 const LibPkmGC::Colosseum::Pokemon &native
             );
-            pokemon_gcnimpl(
+            explicit pokemon_gcnimpl(
                 const LibPkmGC::XD::Pokemon &native
             );
 
