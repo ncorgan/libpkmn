@@ -69,7 +69,7 @@ repository is automatically tested under the following configurations:
    * Lua: 5.1.5
    * Python: 2.7.6, 3.4.3
    * Ruby: 2.3.0
- * Windows Server 2012 R2 (x64)
+ * Windows Server 2012 R2, 2016 (x64)
    * C/C++:
      * MSVC 2015 (Win32, x64)
        * Boost: 1.59.0, 1.62.0, 1.63.0
@@ -101,4 +101,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/09/30
+README last updated: 2017/10/10
