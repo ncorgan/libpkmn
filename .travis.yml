@@ -104,6 +104,26 @@ matrix:
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
+    # Static analysis build
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - clang-5.0
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - STATIC_ANALYSIS=1
+        - CC=clang-5.0
+        - CXX=clang++-5.0
+        - CLANG_TIDY_EXE=clang-tidy-5.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
 
 sudo: required
 dist: trusty
@@ -113,4 +133,4 @@ before_install:
   - bash testing/travis-scripts/install-deps.sh
 
 script:
-  - bash testing/travis-scripts/build-test.sh
+  - if [ "$STATIC_ANALYSIS" -eq "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi
