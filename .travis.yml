@@ -120,7 +120,7 @@ matrix:
         - STATIC_ANALYSIS=1
         - CC=clang-5.0
         - CXX=clang++-5.0
-        - CLANG_TIDY_EXE=clang-tidy-5.0
+        - CLANG_TIDY_EXE=/usr/bin/clang-tidy-5.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
