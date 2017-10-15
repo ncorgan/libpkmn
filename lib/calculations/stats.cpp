@@ -50,11 +50,15 @@ namespace pkmn { namespace calculations {
             pkmn::throw_out_of_range("IV", 0, 15);
         }
 
+        int ret = 0;
+
         if(stat == "HP") {
-            return (gb_stat_common(level, base_stat, EV, IV) + level + 10);
+            ret = gb_stat_common(level, base_stat, EV, IV) + level + 10;
         } else {
-            return (gb_stat_common(level, base_stat, EV, IV) + 5);
+            ret = gb_stat_common(level, base_stat, EV, IV) + 5;
         }
+
+        return ret;
     }
 
     PKMN_INLINE int modern_stat_common(
@@ -99,11 +103,15 @@ namespace pkmn { namespace calculations {
             pkmn::throw_out_of_range("IV", 0, 31);
         }
 
+        int ret = 0;
+
         if(stat == "HP") {
-            return (modern_stat_common(level, base_stat, EV, IV) + level + 10);
+            ret = modern_stat_common(level, base_stat, EV, IV) + level + 10;
         } else {
-            return int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
+            ret = int((modern_stat_common(level, base_stat, EV, IV) + 5) * nature_modifier);
         }
+
+        return ret;
     }
 
 }}

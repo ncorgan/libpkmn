@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -121,15 +121,19 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_name() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return str(boost::format("Invalid (0x%x)") % _move_id);
+            ret = str(boost::format("Invalid (0x%x)") % _move_id);
+        } else {
+            ret = pkmn::database::move_id_to_name(
+                       _move_id, _generation
+                   );
         }
 
-        return pkmn::database::move_id_to_name(
-                   _move_id, _generation
-               );
+        return ret;
     }
 
     std::string move_entry::get_game() const {
@@ -139,285 +143,316 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_type() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Invalid";
-        }
-
-        /*
-         * In Generation I, before the Dark type was introduced,
-         * four moves were Normal type.
-         *
-         * There aren't enough edge cases to warrant adding them
-         * to the database.
-         */
-        if(_generation == 1) {
-            BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
-            for(int i = 0; i < 4; ++i) {
-                if(_move_id == NORMAL_IDS[i]) {
-                    return "Normal";
+            ret = "Invalid";
+        } else {
+            /*
+             * In Generation I, before the Dark type was introduced,
+             * four moves were Normal type.
+             *
+             * There aren't enough edge cases to warrant adding them
+             * to the database.
+             */
+            if(_generation == 1) {
+                BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {2,16,28,44};
+                for(int normal_id: NORMAL_IDS) {
+                    if(_move_id == normal_id) {
+                        ret = "Normal";
+                    }
                 }
             }
-        }
 
-        /*
-         * In Generation VI, before the Fairy type was introduced,
-         * three moves were Normal type.
-         *
-         * There aren't enough edge cases to warrant adding them
-         * to the database.
-         */
-        if(_generation < 6) {
-            BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {186,204,236};
-            for(int i = 0; i < 3; ++i) {
-                if(_move_id == NORMAL_IDS[i]) {
-                    return "Normal";
+            /*
+             * In Generation VI, before the Fairy type was introduced,
+             * three moves were Normal type.
+             *
+             * There aren't enough edge cases to warrant adding them
+             * to the database.
+             */
+            if(_generation < 6) {
+                BOOST_STATIC_CONSTEXPR int NORMAL_IDS[] = {186,204,236};
+                for(int normal_id: NORMAL_IDS) {
+                    if(_move_id == normal_id) {
+                        ret = "Normal";
+                    }
                 }
             }
+
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM type_names WHERE local_language_id=9 "
+                "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
+
+            ret = pkmn::database::query_db_bind1<std::string, int>(
+                      _db, query, _move_id
+                  );
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM type_names WHERE local_language_id=9 "
-            "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
-
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db, query, _move_id
-               );
+        return ret;
     }
 
     std::string move_entry::get_description() const {
+        std::string ret;
+
         if(_none or _invalid) {
-            return get_name();
+            ret = get_name();
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT flavor_text FROM move_flavor_text WHERE move_id=? "
+                "AND language_id=9";
+
+            std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                      _db, query, _move_id
+                                  );
+            ret = fix_veekun_whitespace(from_db);
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT flavor_text FROM move_flavor_text WHERE move_id=? "
-            "AND language_id=9";
-
-        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
-                                  _db, query, _move_id
-                              );
-        return fix_veekun_whitespace(from_db);
+        return ret;
     }
 
     std::string move_entry::get_target() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
+            ret = "Unknown";
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM move_target_prose WHERE local_language_id=9 "
+                "AND move_target_id=(SELECT id FROM move_targets WHERE id="
+                "(SELECT target_id FROM moves WHERE id=?))";
+
+            ret = pkmn::database::query_db_bind1<std::string, int>(
+                       _db, query, _move_id
+                   );
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM move_target_prose WHERE local_language_id=9 "
-            "AND move_target_id=(SELECT id FROM move_targets WHERE id="
-            "(SELECT target_id FROM moves WHERE id=?))";
-
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db, query, _move_id
-               );
+        return ret;
     }
 
     std::string move_entry::get_damage_class() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
+            ret = "Unknown";
+        } else {
+            /*
+             * In Generations I-III (minus the Gamecube games), a move's damage
+             * class was associated with its type instead of the move itself,
+             * unless it's a status move.
+             */
+            static BOOST_CONSTEXPR const char* old_games_query = \
+                "SELECT damage_class_id FROM types WHERE id="
+                "(SELECT type_id FROM moves where id=?)";
+
+            static BOOST_CONSTEXPR const char* main_query = \
+                "SELECT damage_class_id FROM moves WHERE id=?";
+
+            bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
+            int damage_class_id = pkmn::database::query_db_bind1<int, int>(
+                                      _db, main_query, _move_id
+                                  );
+
+            static BOOST_CONSTEXPR const char* damage_classes[] = {
+                "", "Status", "Physical", "Special"
+            };
+
+            if(old_game and damage_class_id > 1) {
+                damage_class_id = pkmn::database::query_db_bind1<int, int>(
+                                      _db, old_games_query, _move_id
+                                  );
+            }
+
+            ret = damage_classes[damage_class_id];
         }
 
-        /*
-         * In Generations I-III (minus the Gamecube games), a move's damage
-         * class was associated with its type instead of the move itself,
-         * unless it's a status move.
-         */
-        static BOOST_CONSTEXPR const char* old_games_query = \
-            "SELECT damage_class_id FROM types WHERE id="
-            "(SELECT type_id FROM moves where id=?)";
-
-        static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT damage_class_id FROM moves WHERE id=?";
-
-        bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
-        int damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                  _db, main_query, _move_id
-                              );
-
-        static BOOST_CONSTEXPR const char* damage_classes[] = {
-            "", "Status", "Physical", "Special"
-        };
-
-        if(old_game and damage_class_id > 1) {
-            damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                  _db, old_games_query, _move_id
-                              );
-        }
-
-        return damage_classes[damage_class_id];
+        return ret;
     }
 
     int move_entry::get_base_power() const {
+        int ret = 0;
+
         if(_none or _invalid) {
-            return -1;
+            ret = -1;
         }
+        else if(_move_id == 10001 and _game_id == 19) {
+            // Edge case not worth putting in a database
+            ret = 90;
+        } else {
+            static BOOST_CONSTEXPR const char* main_query = \
+                "SELECT power FROM moves WHERE id=?";
 
-        // Edge case not worth putting in a database
-        if(_move_id == 10001 and _game_id == 19) {
-            return 90;
-        }
+            static BOOST_CONSTEXPR const char* old_queries[] = {
+                "",
+                "SELECT gen1_power FROM old_move_powers WHERE move_id=?",
+                "SELECT gen2_power FROM old_move_powers WHERE move_id=?",
+                "SELECT gen3_power FROM old_move_powers WHERE move_id=?",
+                "SELECT gen4_power FROM old_move_powers WHERE move_id=?",
+                "SELECT gen5_power FROM old_move_powers WHERE move_id=?",
+            };
 
-        static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT power FROM moves WHERE id=?";
-
-        static BOOST_CONSTEXPR const char* old_queries[] = {
-            "",
-            "SELECT gen1_power FROM old_move_powers WHERE move_id=?",
-            "SELECT gen2_power FROM old_move_powers WHERE move_id=?",
-            "SELECT gen3_power FROM old_move_powers WHERE move_id=?",
-            "SELECT gen4_power FROM old_move_powers WHERE move_id=?",
-            "SELECT gen5_power FROM old_move_powers WHERE move_id=?",
-        };
-
-        /*
-         * If this entry is for an older game, check if it had an older
-         * power. If not, fall back to the default query.
-         */
-        if(_generation < 6) {
-            int old_ret = 0;
-            if(pkmn::database::maybe_query_db_bind1<int, int>(
-                   _db, old_queries[_generation], old_ret,
-                   _move_id
-                ))
-            {
-                return old_ret;
+            /*
+             * If this entry is for an older game, check if it had an older
+             * power. If not, fall back to the default query.
+             */
+            if(_generation < 6) {
+                int old_ret = 0;
+                if(pkmn::database::maybe_query_db_bind1<int, int>(
+                       _db, old_queries[_generation], old_ret,
+                       _move_id
+                    ))
+                {
+                    ret = old_ret;
+                }
+            } else {
+                ret = pkmn::database::query_db_bind1<int, int>(
+                          _db, main_query, _move_id
+                      );
             }
         }
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, main_query, _move_id
-               );
+        return ret;
     }
 
     int move_entry::get_pp(
         int num_pp_ups
     ) const {
+        int ret  = 0;
+
         if(_none or _invalid) {
-            return -1;
+            ret = -1;
         } else if(num_pp_ups < 0 or num_pp_ups > 3) {
             pkmn::throw_out_of_range("num_pp_ups", 0, 3);
-        }
-
-        static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT pp FROM moves WHERE id=?";
-
-        static BOOST_CONSTEXPR const char* old_queries[] = {
-            "",
-            "SELECT gen1_pp FROM old_move_pps WHERE move_id=?",
-            "SELECT gen2_pp FROM old_move_pps WHERE move_id=?",
-            "SELECT gen3_pp FROM old_move_pps WHERE move_id=?",
-            "SELECT gen4_pp FROM old_move_pps WHERE move_id=?",
-            "SELECT gen5_pp FROM old_move_pps WHERE move_id=?",
-        };
-
-        /*
-         * If this entry is for an older game, check if it had an older
-         * base PP. If not, fall back to the default query.
-         */
-        int base_pp = -1;
-        if(_generation < 6) {
-            (void)pkmn::database::maybe_query_db_bind1<int, int>(
-                      _db, old_queries[_generation],
-                      base_pp, _move_id
-                  );
-        }
-
-        if(base_pp == -1) {
-            base_pp = pkmn::database::query_db_bind1<int, int>(
-                          _db, main_query, _move_id
-                      );
-        }
-
-        if(num_pp_ups == 0) {
-            return base_pp;
         } else {
-            int _20p = int(base_pp * 0.2);
-            return (base_pp + (num_pp_ups * _20p));
+            static BOOST_CONSTEXPR const char* main_query = \
+                "SELECT pp FROM moves WHERE id=?";
+
+            static BOOST_CONSTEXPR const char* old_queries[] = {
+                "",
+                "SELECT gen1_pp FROM old_move_pps WHERE move_id=?",
+                "SELECT gen2_pp FROM old_move_pps WHERE move_id=?",
+                "SELECT gen3_pp FROM old_move_pps WHERE move_id=?",
+                "SELECT gen4_pp FROM old_move_pps WHERE move_id=?",
+                "SELECT gen5_pp FROM old_move_pps WHERE move_id=?",
+            };
+
+            /*
+             * If this entry is for an older game, check if it had an older
+             * base PP. If not, fall back to the default query.
+             */
+            int base_pp = -1;
+            if(_generation < 6) {
+                (void)pkmn::database::maybe_query_db_bind1<int, int>(
+                          _db, old_queries[_generation],
+                          base_pp, _move_id
+                      );
+            }
+
+            if(base_pp == -1) {
+                base_pp = pkmn::database::query_db_bind1<int, int>(
+                              _db, main_query, _move_id
+                          );
+            }
+
+            if(num_pp_ups == 0) {
+                ret = base_pp;
+            } else {
+                int _20p = int(base_pp * 0.2);
+                ret = (base_pp + (num_pp_ups * _20p));
+            }
         }
+
+        return ret;
     }
 
     float move_entry::get_accuracy() const {
+        float ret = 0.0f;
+
         if(_none or _invalid) {
-            return -1.0f;
-        }
+            ret = -1.0f;
+        } else {
+            static BOOST_CONSTEXPR const char* main_query = \
+                "SELECT accuracy FROM moves WHERE id=?";
 
-        static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT accuracy FROM moves WHERE id=?";
+            static BOOST_CONSTEXPR const char* old_queries[] = {
+                "",
+                "SELECT gen1_accuracy FROM old_move_accuracies WHERE move_id=?",
+                "SELECT gen2_accuracy FROM old_move_accuracies WHERE move_id=?",
+                "SELECT gen3_accuracy FROM old_move_accuracies WHERE move_id=?",
+                "SELECT gen4_accuracy FROM old_move_accuracies WHERE move_id=?",
+                "SELECT gen5_accuracy FROM old_move_accuracies WHERE move_id=?",
+            };
 
-        static BOOST_CONSTEXPR const char* old_queries[] = {
-            "",
-            "SELECT gen1_accuracy FROM old_move_accuracies WHERE move_id=?",
-            "SELECT gen2_accuracy FROM old_move_accuracies WHERE move_id=?",
-            "SELECT gen3_accuracy FROM old_move_accuracies WHERE move_id=?",
-            "SELECT gen4_accuracy FROM old_move_accuracies WHERE move_id=?",
-            "SELECT gen5_accuracy FROM old_move_accuracies WHERE move_id=?",
-        };
-
-        /*
-         * If this entry is for an older game, check if it had an older
-         * accuracy.
-         */
-        if(_generation < 6) {
-            double old_ret;
-            if(pkmn::database::maybe_query_db_bind1<double, int>(
-                   _db, old_queries[_generation], old_ret,
-                   _move_id
-               ))
-            {
-                // Veekun's database stores this as an int 0-100.
-                return (float(old_ret) / 100.0f);
+            /*
+             * If this entry is for an older game, check if it had an older
+             * accuracy.
+             */
+            if(_generation < 6) {
+                double old_ret;
+                if(pkmn::database::maybe_query_db_bind1<double, int>(
+                       _db, old_queries[_generation], old_ret,
+                       _move_id
+                   ))
+                {
+                    // Veekun's database stores this as an int 0-100.
+                    ret = (float(old_ret) / 100.0f);
+                }
+            } else {
+                // SQLite uses doubles, so avoid implicit casting ambiguity
+                ret = (static_cast<float>(pkmn::database::query_db_bind1<double, int>(
+                                              _db, main_query, _move_id
+                                         ))) / 100.0f;
             }
         }
 
-        // SQLite uses doubles, so avoid implicit casting ambiguity
-        return ((float)pkmn::database::query_db_bind1<double, int>(
-                          _db, main_query, _move_id
-                       )) / 100.0f;
+        return ret;
     }
 
     int move_entry::get_priority() const {
+        int ret = 0;
+
         if(_none or _invalid) {
-            return -9;
-        }
+            ret = -9;
+        } else {
+            static BOOST_CONSTEXPR const char* main_query = \
+                "SELECT priority FROM moves WHERE id=?";
 
-        static BOOST_CONSTEXPR const char* main_query = \
-            "SELECT priority FROM moves WHERE id=?";
+            static BOOST_CONSTEXPR const char* old_queries[] = {
+                "",
+                "SELECT gen1_priority FROM old_move_priorities WHERE move_id=?",
+                "SELECT gen2_priority FROM old_move_priorities WHERE move_id=?",
+                "SELECT gen3_priority FROM old_move_priorities WHERE move_id=?",
+                "SELECT gen4_priority FROM old_move_priorities WHERE move_id=?",
+                "SELECT gen5_priority FROM old_move_priorities WHERE move_id=?",
+            };
 
-        static BOOST_CONSTEXPR const char* old_queries[] = {
-            "",
-            "SELECT gen1_priority FROM old_move_priorities WHERE move_id=?",
-            "SELECT gen2_priority FROM old_move_priorities WHERE move_id=?",
-            "SELECT gen3_priority FROM old_move_priorities WHERE move_id=?",
-            "SELECT gen4_priority FROM old_move_priorities WHERE move_id=?",
-            "SELECT gen5_priority FROM old_move_priorities WHERE move_id=?",
-        };
-
-        /*
-         * If this entry is for an older game, check if it had an older
-         * priority. If not, fall back to the default query.
-         */
-        if(_generation < 6) {
-            int old_ret = 0;
-            if(pkmn::database::maybe_query_db_bind1<int, int>(
-                   _db, old_queries[_generation], old_ret,
-                   _move_id
-                ))
-            {
-                return old_ret;
+            /*
+             * If this entry is for an older game, check if it had an older
+             * priority. If not, fall back to the default query.
+             */
+            if(_generation < 6) {
+                int old_ret = 0;
+                if(pkmn::database::maybe_query_db_bind1<int, int>(
+                       _db, old_queries[_generation], old_ret,
+                       _move_id
+                    ))
+                {
+                    ret = old_ret;
+                }
+            } else {
+                ret = pkmn::database::query_db_bind1<int, int>(
+                          _db, main_query, _move_id
+                      );
             }
         }
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, main_query, _move_id
-               );
+        return ret;
     }
 
     static std::string _cleanup_effect(
@@ -457,87 +492,99 @@ namespace pkmn { namespace database {
     }
 
     std::string move_entry::get_effect() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
+            ret = "Unknown";
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT short_effect FROM move_effect_prose WHERE move_effect_id="
+                "(SELECT effect_id FROM moves WHERE id=?)";
+
+            std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                      _db, query, _move_id
+                                  );
+            ret = _cleanup_effect(from_db, _move_id);
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT short_effect FROM move_effect_prose WHERE move_effect_id="
-            "(SELECT effect_id FROM moves WHERE id=?)";
-
-        std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
-                                  _db, query, _move_id
-                              );
-        return _cleanup_effect(from_db, _move_id);
+        return ret;
     }
 
     std::string move_entry::get_contest_type() const {
+        std::string ret;
+
         // Contests started in Generation III
         if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM contest_type_names WHERE contest_type_id="
-            "(SELECT contest_type_id FROM moves WHERE id=?) "
-            "AND local_language_id=9";
-
-        std::string ret;
-        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-               _db, query, ret, _move_id
-           )) {
-            return ret;
+            ret = "Unknown";
         } else {
-            return "None";
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM contest_type_names WHERE contest_type_id="
+                "(SELECT contest_type_id FROM moves WHERE id=?) "
+                "AND local_language_id=9";
+
+            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+                   _db, query, ret, _move_id
+               )) {
+                ret = ret;
+            } else {
+                ret = "None";
+            }
         }
+
+        return ret;
     }
 
     std::string move_entry::get_contest_effect() const {
+        std::string ret;
+
         // Contests started in Generation III
         if(_none or _generation < 3 or game_is_gamecube(_game_id)) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT flavor_text FROM contest_effect_prose WHERE contest_effect_id="
-            "(SELECT contest_effect_id FROM moves WHERE id=?)";
-
-        std::string ret;
-        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-               _db, query, ret, _move_id
-           )) {
-            return ret;
+            ret = "Unknown";
         } else {
-            return "None";
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT flavor_text FROM contest_effect_prose WHERE contest_effect_id="
+                "(SELECT contest_effect_id FROM moves WHERE id=?)";
+
+            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+                   _db, query, ret, _move_id
+               )) {
+                ret = ret;
+            } else {
+                ret = "None";
+            }
         }
+
+        return ret;
     }
 
     std::string move_entry::get_super_contest_effect() const {
+        std::string ret;
         // Super Contests are only in Generation IV
         if(_none or _generation != 4) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT flavor_text FROM super_contest_effect_prose WHERE super_contest_effect_id="
-            "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
-
-        std::string ret;
-        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-               _db, query, ret, _move_id
-           )) {
-            return ret;
+            ret = "Unknown";
         } else {
-            return "None";
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT flavor_text FROM super_contest_effect_prose WHERE super_contest_effect_id="
+                "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
+
+            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+                   _db, query, ret, _move_id
+               )) {
+                ret = ret;
+            } else {
+                ret = "None";
+            }
         }
+
+        return ret;
     }
 
 }}

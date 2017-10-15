@@ -43,25 +43,28 @@ static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_l
     (65535, size_xyz_t(1700,1,65510))
 ;
 
+typedef std::pair<uint16_t, size_xyz_t> xyz_pair_t;
+
 uint16_t get_s(
     uint16_t s_from_calculation
 ) {
+    uint16_t ret = 0;
+
     // The loop won't catch this.
     if(s_from_calculation == 0) {
-        return 9;
-    }
-
-    uint16_t last_value = 0;
-    for(auto xyz_iter = XYZ.begin(); xyz_iter != XYZ.end(); ++xyz_iter) {
-        if(s_from_calculation > last_value and s_from_calculation <= xyz_iter->first) {
-            return xyz_iter->first;
-        } else {
-            last_value = xyz_iter->first;
+        ret = 9;
+    } else {
+        uint16_t last_value = 0;
+        for(const xyz_pair_t& xyz_pair: XYZ) {
+            if(s_from_calculation > last_value and s_from_calculation <= xyz_pair.first) {
+                ret = xyz_pair.first;
+            } else {
+                last_value = xyz_pair.first;
+            }
         }
     }
 
-    // This should never happen, since the map encompasses the entire uint16_t range.
-    return 65535;
+    return ret;
 }
 
 PKMN_INLINE static float round_float(float value) {

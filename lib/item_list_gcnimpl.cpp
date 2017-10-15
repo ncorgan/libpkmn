@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<LibPkmGC::Item*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_native))
 
 namespace pkmn {
 

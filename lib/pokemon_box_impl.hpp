@@ -37,20 +37,20 @@ namespace pkmn {
 
             virtual ~pokemon_box_impl() {}
 
-            std::string get_game();
+            std::string get_game() override final;
 
             pkmn::pokemon::sptr get_pokemon(
                 int index
-            );
+            ) override final;
 
             virtual void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
-            );
+            ) override;
 
-            const pkmn::pokemon_list_t& as_vector();
+            const pkmn::pokemon_list_t& as_vector() override final;
 
-            void* get_native();
+            void* get_native() override final;
 
             typedef pkmn::mem::scoped_lock<pokemon_box_impl> pokemon_box_scoped_lock;
             friend pokemon_box_scoped_lock;

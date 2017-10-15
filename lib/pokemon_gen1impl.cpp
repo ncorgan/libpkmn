@@ -34,8 +34,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#define GEN1_PC_RCAST    reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc)
-#define GEN1_PARTY_RCAST reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
+#define GEN1_PC_RCAST    (reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc))
+#define GEN1_PARTY_RCAST (reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party))
 
 static const std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
     ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
@@ -358,13 +358,17 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int PIKACHU = 25;
 
     int pokemon_gen1impl::get_friendship() {
+        int ret = 0;
+
         if(_database_entry.get_game_id() == YELLOW and
            _database_entry.get_species_id() == PIKACHU)
         {
-            return _yellow_pikachu_friendship;
+            ret = _yellow_pikachu_friendship;
         } else {
             throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
         }
+
+        return ret;
     }
 
     void pokemon_gen1impl::set_friendship(

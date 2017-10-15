@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -25,7 +25,7 @@ namespace pkmn { namespace calculations {
         "SELECT name FROM type_names WHERE local_language_id=9 AND type_id=?";
 
     // Most significant bit
-    #define MSB(var) ((var >> 3) & 1)
+    #define MSB(var) (((var) >> 3) & 1)
 
     /*
      * There is no Normal-type Hidden Power, so all type indices
@@ -83,9 +83,9 @@ namespace pkmn { namespace calculations {
     }
 
     // Least significant bit
-    #define LSB(var)  (var & 1)
+    #define LSB(var)  ((var) & 1)
     // Second-least significant bit
-    #define LSB2(var) ((var & 2) >> 1)
+    #define LSB2(var) (((var) & 2) >> 1)
 
     PKMN_INLINE int modern_hidden_power_type(
         uint8_t a, uint8_t b, uint8_t c,

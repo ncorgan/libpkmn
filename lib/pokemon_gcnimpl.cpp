@@ -33,9 +33,9 @@
 #include <ctime>
 #include <stdexcept>
 
-#define GC_RCAST   reinterpret_cast<LibPkmGC::GC::Pokemon*>(_native_pc)
-#define COLO_RCAST reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(_native_pc)
-#define XD_RCAST   reinterpret_cast<LibPkmGC::XD::Pokemon*>(_native_pc)
+#define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::Pokemon*>(_native_pc))
+#define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>(_native_pc))
+#define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::Pokemon*>(_native_pc))
 
 namespace pkmn {
 
@@ -558,16 +558,20 @@ namespace pkmn {
     {
         pokemon_scoped_lock lock(this);
 
+        std::string ret;
+
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
         if(abilities.second == "None")
         {
-            return abilities.first;
+            ret = abilities.first;
         }
         else
         {
             // Don't use LibPkmGC's call, it has some mistakes.
-            return GC_RCAST->hasSecondAbility() ? abilities.second : abilities.first;
+            ret = GC_RCAST->hasSecondAbility() ? abilities.second : abilities.first;
         }
+
+        return ret;
     }
 
     void pokemon_gcnimpl::set_ability(
@@ -678,13 +682,17 @@ namespace pkmn {
     std::string pokemon_gcnimpl::get_original_game() {
         pokemon_scoped_lock lock(this);
 
+        std::string ret;
+
         if(GC_RCAST->version.game == LibPkmGC::Colosseum_XD) {
-            return "Colosseum/XD";
+            ret = "Colosseum/XD";
         } else {
-            return pkmn::database::game_index_to_name(int(
+            ret = pkmn::database::game_index_to_name(int(
                        GC_RCAST->version.game
                    ));
         }
+
+        return ret;
     }
 
     void pokemon_gcnimpl::set_original_game(

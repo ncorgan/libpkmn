@@ -5,9 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define GC_RCAST   reinterpret_cast<LibPkmGC::GC::BagData*>(_native)
-#define COLO_RCAST reinterpret_cast<LibPkmGC::Colosseum::BagData*>(_native)
-#define XD_RCAST   reinterpret_cast<LibPkmGC::XD::BagData*>(_native)
+#define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::BagData*>(_native))
+#define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::BagData*>(_native))
+#define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::BagData*>(_native))
 
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"

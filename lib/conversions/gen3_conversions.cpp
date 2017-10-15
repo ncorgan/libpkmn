@@ -158,9 +158,9 @@ namespace pkmn { namespace conversions {
 
         to->obedient = bool(from_misc->ribbons_obedience & PKSAV_GBA_OBEDIENCE_MASK);
 
-        for(auto iter = GEN3_RIBBON_BIMAP.left.begin(); iter != GEN3_RIBBON_BIMAP.left.end(); ++iter)
+        for(const auto& gen3_ribbon_left_pair: GEN3_RIBBON_BIMAP.left)
         {
-            to->specialRibbons[iter->second] = bool(from_misc->ribbons_obedience & iter->first);
+            to->specialRibbons[gen3_ribbon_left_pair.second] = bool(from_misc->ribbons_obedience & gen3_ribbon_left_pair.first);
         }
 
         for(size_t i = 0; i < 4; ++i)
@@ -177,13 +177,13 @@ namespace pkmn { namespace conversions {
         to->EVs[LIBPKMGC_STAT_SPDEF]   = from_effort->ev_spdef;
         to->EVs[LIBPKMGC_STAT_SPEED]   = from_effort->ev_spd;
 
-        for(auto iter = GEN3_STAT_BIMAP.left.begin(); iter != GEN3_STAT_BIMAP.left.end(); ++iter)
+        for(const auto& gen3_stat_left_pair: GEN3_STAT_BIMAP.left)
         {
             PKSAV_CALL(
                 pksav_get_IV(
                     &from_misc->iv_egg_ability,
-                    iter->first,
-                    &to->IVs[iter->second]
+                    gen3_stat_left_pair.first,
+                    &to->IVs[gen3_stat_left_pair.second]
                 );
             );
         }
@@ -194,11 +194,11 @@ namespace pkmn { namespace conversions {
         to->contestStats[LIBPKMGC_CONTEST_STAT_SMART]  = from_effort->contest_stats.smart;
         to->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH]  = from_effort->contest_stats.tough;
 
-        for(auto iter = GEN3_RIBBON_VALUES.begin(); iter != GEN3_RIBBON_VALUES.end(); ++iter)
+        for(const ribbon_values_t& ribbon_values: GEN3_RIBBON_VALUES)
         {
-            uint32_t contest_level = from_misc->ribbons_obedience & iter->pksav_ribbon_mask;
-            contest_level >>= iter->pksav_ribbon_offset;
-            to->contestAchievements[iter->libpkmgc_contest_stat] = LibPkmGC::ContestAchievementLevel(contest_level);
+            uint32_t contest_level = from_misc->ribbons_obedience & ribbon_values.pksav_ribbon_mask;
+            contest_level >>= ribbon_values.pksav_ribbon_offset;
+            to->contestAchievements[ribbon_values.libpkmgc_contest_stat] = LibPkmGC::ContestAchievementLevel(contest_level);
         }
 
         // Let LibPkmGC do the work.
@@ -352,17 +352,17 @@ namespace pkmn { namespace conversions {
             to_misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
         }
 
-        for(auto iter = GEN3_RIBBON_VALUES.begin(); iter != GEN3_RIBBON_VALUES.end(); ++iter)
+        for(const ribbon_values_t& ribbon_values: GEN3_RIBBON_VALUES)
         {
-            uint32_t contest_level = uint32_t(from->contestAchievements[iter->libpkmgc_contest_stat]);
-            contest_level <<= iter->pksav_ribbon_offset;
+            uint32_t contest_level = uint32_t(from->contestAchievements[ribbon_values.libpkmgc_contest_stat]);
+            contest_level <<= ribbon_values.pksav_ribbon_offset;
             to_misc->ribbons_obedience |= contest_level;
         }
-        for(auto iter = GEN3_RIBBON_BIMAP.right.begin(); iter != GEN3_RIBBON_BIMAP.right.end(); ++iter)
+        for(const auto& gen3_ribbon_left_pair: GEN3_RIBBON_BIMAP.left)
         {
-            if(from->specialRibbons[iter->first])
+            if(from->specialRibbons[gen3_ribbon_left_pair.first])
             {
-                to_misc->ribbons_obedience |= iter->second;
+                to_misc->ribbons_obedience |= gen3_ribbon_left_pair.second;
             }
         }
         if(from->obedient)

@@ -45,8 +45,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
-#define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+#define GBA_PC_RCAST    (reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc))
+#define GBA_PARTY_RCAST (reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party))
 
 namespace fs = boost::filesystem;
 
@@ -585,13 +585,17 @@ namespace pkmn {
     std::string pokemon_gbaimpl::get_ability() {
         pokemon_scoped_lock lock(this);
 
+        std::string ret;
+
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
         if(abilities.second == "None") {
-            return abilities.first;
+            ret = abilities.first;
         } else {
-            return (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
+            ret = (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
                                                                     : abilities.first;
         }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_ability(
@@ -699,14 +703,18 @@ namespace pkmn {
     std::string pokemon_gbaimpl::get_original_game() {
         pokemon_scoped_lock lock(this);
 
+        std::string ret;
+
         uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
         original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
 
         if(original_game == 15) {
-            return "Colosseum/XD";
+            ret = "Colosseum/XD";
         } else {
-            return pkmn::database::game_index_to_name(original_game);
+            ret = pkmn::database::game_index_to_name(original_game);
         }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_original_game(
@@ -948,6 +956,8 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_sprite_filepath() {
+        std::string ret;
+
 #ifdef PKMN_ENABLE_QT
         BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
 
@@ -966,13 +976,14 @@ namespace pkmn {
                 spinda_sprite_filepath.string()
             );
 
-            return spinda_sprite_filepath.string();
+            ret = spinda_sprite_filepath.string();
         } else {
 #endif
-            return pokemon_impl::get_sprite_filepath();
+            ret = pokemon_impl::get_sprite_filepath();
 #ifdef PKMN_ENABLE_QT
         }
 #endif
+        return ret;
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(

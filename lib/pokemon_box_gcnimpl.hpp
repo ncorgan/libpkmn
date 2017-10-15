@@ -26,18 +26,18 @@ namespace pkmn {
 
             ~pokemon_box_gcnimpl();
 
-            std::string get_name();
+            std::string get_name() override final;
 
             void set_name(
                 const std::string &name
-            );
+            ) override final;
 
-            int get_num_pokemon();
+            int get_num_pokemon() override final;
 
-            int get_capacity();
+            int get_capacity() override final;
 
         private:
-            void _from_native();
+            void _from_native() override final;
     };
 }
 

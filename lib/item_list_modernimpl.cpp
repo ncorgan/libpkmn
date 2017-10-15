@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<pksav_item_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_item_t*>(_native))
 
 namespace pkmn {
 

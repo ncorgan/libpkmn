@@ -10,9 +10,9 @@
 
 #include <stdexcept>
 
-#define GC_RCAST   reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native)
-#define COLO_RCAST reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(_native)
-#define XD_RCAST   reinterpret_cast<LibPkmGC::XD::PokemonBox*>(_native)
+#define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native))
+#define COLO_RCAST (reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(_native))
+#define XD_RCAST   (reinterpret_cast<LibPkmGC::XD::PokemonBox*>(_native))
 
 BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
 

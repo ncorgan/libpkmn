@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -33,10 +33,10 @@ namespace pkmn {
         private:
             void _from_native(
                 int index = -1
-            );
+            ) override final;
             void _to_native(
                 int index = -1
-            );
+            ) override final;
     };
 
     // Generation I

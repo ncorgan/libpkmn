@@ -16,7 +16,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_LIST_RCAST reinterpret_cast<list_type*>(_native)
+#define NATIVE_LIST_RCAST (reinterpret_cast<list_type*>(_native))
 
 namespace pkmn {
 

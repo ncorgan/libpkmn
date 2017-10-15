@@ -171,11 +171,15 @@ namespace pkmn {
     }
 
     std::string game_save_gen2impl::get_trainer_gender() {
+        std::string ret;
+
         if(_game_id == CRYSTAL) {
-            return (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
+            ret = (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
         } else {
-            return "Male";
+            ret = "Male";
         }
+
+        return ret;
     }
 
     void game_save_gen2impl::set_trainer_gender(

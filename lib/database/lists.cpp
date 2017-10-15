@@ -336,7 +336,7 @@ namespace pkmn { namespace database {
                     }
 
                     while(stmt.executeStep()) {
-                        ret.push_back((const char*)stmt.getColumn(0));
+                        ret.push_back(static_cast<const char*>(stmt.getColumn(0)));
                     }
                 }
             }

@@ -38,11 +38,11 @@ namespace pkmn {
 
             ~pokemon_pc_gen1impl();
 
-            int get_num_boxes();
+            int get_num_boxes() override final;
 
         private:
-            void _from_native();
-            void _update_box_names();
+            void _from_native() override final;
+            void _update_box_names() override final;
     };
 }
 

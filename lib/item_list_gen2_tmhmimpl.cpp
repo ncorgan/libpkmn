@@ -29,7 +29,7 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
     return (num >= HM01_ID and num <= HM07_ID);
 }
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native))
 
 namespace pkmn {
 

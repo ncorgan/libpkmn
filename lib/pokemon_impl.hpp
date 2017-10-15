@@ -19,9 +19,9 @@
 #include <boost/thread/mutex.hpp>
 
 #include <stdexcept>
-#include <map>
+#include <unordered_map>
 
-static const std::map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
+static const std::unordered_map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
     ("HP",              PKSAV_STAT_HP)
     ("Attack",          PKSAV_STAT_ATTACK)
     ("Defense",         PKSAV_STAT_DEFENSE)
@@ -65,35 +65,35 @@ namespace pkmn {
 
             virtual ~pokemon_impl() {}
 
-            std::string get_species();
+            std::string get_species() override final;
 
-            std::string get_form();
+            std::string get_form() override final;
 
-            std::string get_game();
+            std::string get_game() override final;
 
-            const pkmn::database::pokemon_entry& get_database_entry();
+            const pkmn::database::pokemon_entry& get_database_entry() override final;
 
-            const std::map<std::string, bool>& get_markings();
+            const std::map<std::string, bool>& get_markings() override final;
 
-            const std::map<std::string, bool>& get_ribbons();
+            const std::map<std::string, bool>& get_ribbons() override final;
 
-            const std::map<std::string, int>& get_contest_stats();
+            const std::map<std::string, int>& get_contest_stats() override final;
 
-            const pkmn::move_slots_t& get_moves();
+            const pkmn::move_slots_t& get_moves() override final;
 
-            const std::map<std::string, int>& get_EVs();
+            const std::map<std::string, int>& get_EVs() override final;
 
-            const std::map<std::string, int>& get_IVs();
+            const std::map<std::string, int>& get_IVs() override final;
 
-            const std::map<std::string, int>& get_stats();
+            const std::map<std::string, int>& get_stats() override final;
 
-            virtual std::string get_icon_filepath();
+            virtual std::string get_icon_filepath() override;
 
-            virtual std::string get_sprite_filepath();
+            virtual std::string get_sprite_filepath() override;
 
-            void* get_native_pc_data();
+            void* get_native_pc_data() override final;
 
-            void* get_native_party_data();
+            void* get_native_party_data() override final;
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
             friend pokemon_scoped_lock;
@@ -206,6 +206,8 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
+            virtual void _update_held_item() {}
+            virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}
             virtual void _update_EV_map() = 0;
             virtual void _update_stat_map() = 0;

@@ -197,7 +197,6 @@ namespace pkmn {
             void _init_gcn_contest_stats_map();
             void _init_markings_map();
 
-            void _update_held_item();
             void _update_ribbons_map();
             void _update_EV_map();
             void _update_stat_map();

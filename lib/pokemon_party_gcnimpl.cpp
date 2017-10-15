@@ -16,11 +16,11 @@
 #include <iostream>
 #include <stdexcept>
 
-#define NATIVE_RCAST reinterpret_cast<pkmn::gcn_pokemon_party_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pkmn::gcn_pokemon_party_t*>(_native))
 
-#define GC_POKEMON(i) NATIVE_RCAST->pokemon[i]
-#define COLO_POKEMON(i) dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(NATIVE_RCAST->pokemon[i])
-#define XD_POKEMON(i) dynamic_cast<LibPkmGC::XD::Pokemon*>(NATIVE_RCAST->pokemon[i])
+#define GC_POKEMON(i) (NATIVE_RCAST->pokemon[i])
+#define COLO_POKEMON(i) (dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(NATIVE_RCAST->pokemon[i]))
+#define XD_POKEMON(i) (dynamic_cast<LibPkmGC::XD::Pokemon*>(NATIVE_RCAST->pokemon[i]))
 
 BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
 

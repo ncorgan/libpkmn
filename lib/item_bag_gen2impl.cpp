@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen2_item_bag_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen2_item_bag_t*>(_native))
 
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"

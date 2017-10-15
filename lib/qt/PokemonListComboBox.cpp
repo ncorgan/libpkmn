@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,12 +17,12 @@ namespace pkmn { namespace qt {
         QWidget* parent
     ): QComboBox(parent)
     {
-        std::vector<std::string> pokemon = pkmn::database::get_pokemon_list(
-                                               generation,
-                                               includePrevious
-                                           );
-        for(auto iter = pokemon.begin(); iter != pokemon.end(); ++iter) {
-            addItem(QString::fromStdString(*iter));
+        std::vector<std::string> pokemon_list = pkmn::database::get_pokemon_list(
+                                                    generation,
+                                                    includePrevious
+                                                );
+        for(const std::string& pokemon: pokemon_list) {
+            addItem(QString::fromStdString(pokemon));
         }
 
         setEditable(false);

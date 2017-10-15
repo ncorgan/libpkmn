@@ -39,15 +39,15 @@ namespace pkmn {
 
             virtual ~pokemon_party_impl() {}
 
-            std::string get_game();
+            std::string get_game() override final;
 
             pkmn::pokemon::sptr get_pokemon(
                 int index
-            );
+            ) override final;
 
-            const pkmn::pokemon_list_t& as_vector();
+            const pkmn::pokemon_list_t& as_vector() override final;
 
-            void* get_native();
+            void* get_native() override final;
 
             typedef pkmn::mem::scoped_lock<pokemon_party_impl> pokemon_party_scoped_lock;
             friend pokemon_party_scoped_lock;

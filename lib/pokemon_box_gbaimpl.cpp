@@ -14,7 +14,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gba_pokemon_box_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gba_pokemon_box_t*>(_native))
 
 namespace pkmn {
 

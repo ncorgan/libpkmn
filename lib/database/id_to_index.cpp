@@ -67,6 +67,8 @@ namespace pkmn { namespace database {
 
         int generation = pkmn::database::game_id_to_generation(game_id);
 
+        bool is_successful = false;
+
         /*
          * In any case, check the main item indices table. If this
          * fails for a Gamecube game, check that table. If it fails
@@ -91,9 +93,7 @@ namespace pkmn { namespace database {
                 version_group_id = RS;
             }
 
-            if(item_index_valid(ret, version_group_id)) {
-                return ret;
-            } else if(game_is_gamecube(game_id)) {
+            if(not item_index_valid(ret, version_group_id) and game_is_gamecube(game_id)) {
                 // This may share a name but be in the Gamecube indices.
                 bool colosseum = (game_id == 19);
 
@@ -101,9 +101,9 @@ namespace pkmn { namespace database {
                     "SELECT game_index FROM gamecube_item_game_indices "
                     "WHERE item_id=? AND colosseum=?";
 
-                return pkmn::database::query_db_bind2<int, int, int>(
-                           _db, gcn_query, item_id, (colosseum ? 1 : 0)
-                       );
+                ret = pkmn::database::query_db_bind2<int, int, int>(
+                          _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                      );
             } else {
                 throw std::invalid_argument(
                          str(boost::format("The item with ID %d did not exist in this game.") % item_id)
@@ -117,17 +117,22 @@ namespace pkmn { namespace database {
                     "SELECT game_index FROM gamecube_item_game_indices "
                     "WHERE item_id=? AND colosseum=?";
 
-                return pkmn::database::query_db_bind2<int, int, int>(
-                           _db, gcn_query, item_id, (colosseum ? 1 : 0)
-                       );
+                ret = pkmn::database::query_db_bind2<int, int, int>(
+                          _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                      );
             }
         }
 
-        std::ostringstream stream;
-        stream << "Invalid SQLite query: \"" << main_query << "\"" << std::endl
-               << " * Value 1 = " << item_id << std::endl
-               << " * Value 2 = " << generation;
-        throw std::invalid_argument(stream.str());
+        if(not is_successful)
+        {
+            std::ostringstream stream;
+            stream << "Invalid SQLite query: \"" << main_query << "\"" << std::endl
+                   << " * Value 1 = " << item_id << std::endl
+                   << " * Value 2 = " << generation;
+            throw std::invalid_argument(stream.str());
+        }
+
+        return ret;
     }
 
     int item_index_to_id(
@@ -165,24 +170,24 @@ namespace pkmn { namespace database {
             "AND generation_id=?";
 
         int ret = 0;
-        if(pkmn::database::maybe_query_db_bind2<int, int, int>(
+        if(not pkmn::database::maybe_query_db_bind2<int, int, int>(
                _db, main_query, ret, item_index, generation
-           )
+           ) and game_is_gamecube(game_id)
         ) {
-            return ret;
-        } else if(game_is_gamecube(game_id)) {
             bool colosseum = (game_id == 19);
 
             static BOOST_CONSTEXPR const char* gcn_query = \
                 "SELECT item_id FROM gamecube_item_game_indices "
                 "WHERE game_index=? AND colosseum=?";
 
-            return pkmn::database::query_db_bind2<int, int, int>(
-                       _db, gcn_query, item_index, (colosseum ? 1 : 0)
-                   );
+            ret = pkmn::database::query_db_bind2<int, int, int>(
+                      _db, gcn_query, item_index, (colosseum ? 1 : 0)
+                  );
         } else {
             throw std::invalid_argument("Invalid item index.");
         }
+
+        return ret;
     }
 
     int location_id_to_index(

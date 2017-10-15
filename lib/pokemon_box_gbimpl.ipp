@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define NATIVE_LIST_RCAST reinterpret_cast<list_type*>(_native)
+#define NATIVE_LIST_RCAST (reinterpret_cast<list_type*>(_native))
 #define NUM_LIST_SPECIES ((sizeof(NATIVE_LIST_RCAST->species)/sizeof(NATIVE_LIST_RCAST->species[0]))-1)
 
 namespace pkmn {

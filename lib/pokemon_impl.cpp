@@ -89,10 +89,12 @@ namespace pkmn {
     pokemon::sptr pokemon::from_file(
         const std::string &filepath
     ) {
+        pokemon::sptr ret;
+
         // If an extension is given, assume a type. If not, try each.
         std::string extension = fs::extension(filepath);
         if(extension == ".3gpkm") {
-            return pkmn::io::load_3gpkm(filepath);
+            ret =  pkmn::io::load_3gpkm(filepath);
         } else if(extension == ".pkm" or extension == ".pk6") {
             throw pkmn::unimplemented_error();
         } else {
@@ -100,11 +102,13 @@ namespace pkmn {
             PKMN_UNUSED(int game_id) = 0;
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
-                return pkmn::io::load_3gpkm(buffer);
+                ret = pkmn::io::load_3gpkm(buffer);
             } else {
                 throw std::runtime_error("Invalid file.");
             }
         }
+
+        return ret;
     }
 
     pokemon_impl::pokemon_impl(
@@ -476,9 +480,9 @@ namespace pkmn {
 
     #define SET_CONTEST_STAT(str,field) \
     { \
-        if(stat == str) { \
+        if(stat == (str)) { \
             native_ptr->field = uint8_t(value); \
-            _contest_stats[str] = value; \
+            _contest_stats[(str)] = value; \
             return; \
         } \
     }
@@ -508,11 +512,11 @@ namespace pkmn {
 
     #define SET_MARKING(str,mask) \
     { \
-        if(marking == str) { \
+        if(marking == (str)) { \
             if(value) { \
-                *native_ptr |= mask; \
+                *native_ptr |= (mask); \
             } else { \
-                *native_ptr &= ~mask; \
+                *native_ptr &= ~(mask); \
             } \
             _markings[marking] = value; \
         } \

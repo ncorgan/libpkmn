@@ -69,7 +69,7 @@ namespace pkmn {
         std::vector<uint8_t> raw(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read((char*)raw.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
         pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;

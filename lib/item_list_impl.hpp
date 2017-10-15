@@ -28,44 +28,44 @@ namespace pkmn {
 
             virtual ~item_list_impl() {};
 
-            std::string get_name();
+            std::string get_name() override final;
 
-            std::string get_game();
+            std::string get_game() override final;
 
-            int get_capacity();
+            int get_capacity() override final;
 
-            int get_num_items();
+            int get_num_items() override;
 
             virtual const pkmn::item_slot& at(
                 int position
-            );
+            ) override;
 
             virtual void add(
                 const std::string &item_name,
                 int amount
-            );
+            ) override;
 
             virtual void remove(
                 const std::string &item_name,
                 int amount
-            );
+            ) override;
 
             virtual void move(
                 int old_position,
                 int new_position
-            );
+            ) override;
 
             virtual void set_item(
                 int position,
                 const std::string& item_name,
                 int amount
-            );
+            ) override;
 
-            const pkmn::item_slots_t& as_vector();
+            const pkmn::item_slots_t& as_vector() override final;
 
-            const std::vector<std::string>& get_valid_items();
+            const std::vector<std::string>& get_valid_items() override final;
 
-            void* get_native();
+            void* get_native() override final;
 
             friend item_list_scoped_lock;
 

@@ -15,7 +15,7 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gba_pokemon_pc_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gba_pokemon_pc_t*>(_native))
 
 BOOST_STATIC_CONSTEXPR uint8_t GBA_TEXT_TERMINATOR = 0xFF;
 

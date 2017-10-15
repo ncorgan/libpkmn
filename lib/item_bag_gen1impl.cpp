@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen1_item_bag_t*>(_native))
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"

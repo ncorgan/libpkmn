@@ -41,7 +41,7 @@ namespace pkmn {
         _data.resize(filesize);
 
         std::ifstream ifile(filepath, std::ios::binary);
-        ifile.read((char*)_data.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(_data.data()), filesize);
         ifile.close();
 
         _has_gci_data = false;
@@ -92,10 +92,10 @@ namespace pkmn {
     void game_save_gcnimpl::save_as(
         const std::string &filepath
     ) {
-        _libpkmgc_save->saveEncrypted((LibPkmGC::u8*)_data.data(), _has_gci_data);
+        _libpkmgc_save->saveEncrypted(_data.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);
-        ofile.write((const char*)_data.data(), _data.size());
+        ofile.write(reinterpret_cast<const char*>(_data.data()), _data.size());
         ofile.close();
 
         _filepath = fs::absolute(filepath).string();

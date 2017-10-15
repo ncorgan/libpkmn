@@ -37,8 +37,8 @@
 #include <ctime>
 #include <stdexcept>
 
-#define GEN2_PC_RCAST    reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc)
-#define GEN2_PARTY_RCAST reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
+#define GEN2_PC_RCAST    (reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc))
+#define GEN2_PARTY_RCAST (reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party))
 
 namespace pkmn {
 

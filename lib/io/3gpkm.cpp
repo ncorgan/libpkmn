@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -98,7 +98,7 @@ namespace pkmn { namespace io {
         std::vector<uint8_t> buffer(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read((char*)buffer.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
         ifile.close();
 
         return load_3gpkm(buffer);
@@ -117,7 +117,7 @@ namespace pkmn { namespace io {
         }
 
         std::ofstream ofile(filepath.c_str(), std::ios::binary);
-        ofile.write((char*)libpkmn_pokemon->get_native_pc_data(), sizeof(pksav_gba_pc_pokemon_t));
+        ofile.write(static_cast<char*>(libpkmn_pokemon->get_native_pc_data()), sizeof(pksav_gba_pc_pokemon_t));
         ofile.close();
     }
 
