@@ -114,6 +114,7 @@ matrix:
             - sourceline: 'ppa:samuel-bachmann/boost'
           packages:
             - clang-5.0
+            - clang-tidy-5.0
             - cmake
             - libboost1.60-all-dev
       env:
