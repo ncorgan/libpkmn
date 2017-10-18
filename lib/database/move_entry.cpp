@@ -306,9 +306,15 @@ namespace pkmn { namespace database {
                 if(pkmn::database::maybe_query_db_bind1<int, int>(
                        _db, old_queries[_generation], old_ret,
                        _move_id
-                    ))
+                   ))
                 {
                     ret = old_ret;
+                }
+                else
+                {
+                    ret = pkmn::database::query_db_bind1<int, int>(
+                              _db, main_query, _move_id
+                          );
                 }
             } else {
                 ret = pkmn::database::query_db_bind1<int, int>(
@@ -403,6 +409,13 @@ namespace pkmn { namespace database {
                     // Veekun's database stores this as an int 0-100.
                     ret = (float(old_ret) / 100.0f);
                 }
+                else
+                {
+                    // SQLite uses doubles, so avoid implicit casting ambiguity
+                    ret = (static_cast<float>(pkmn::database::query_db_bind1<double, int>(
+                                                  _db, main_query, _move_id
+                                             ))) / 100.0f;
+                }
             } else {
                 // SQLite uses doubles, so avoid implicit casting ambiguity
                 ret = (static_cast<float>(pkmn::database::query_db_bind1<double, int>(
@@ -444,6 +457,12 @@ namespace pkmn { namespace database {
                     ))
                 {
                     ret = old_ret;
+                }
+                else
+                {
+                    ret = pkmn::database::query_db_bind1<int, int>(
+                              _db, main_query, _move_id
+                          );
                 }
             } else {
                 ret = pkmn::database::query_db_bind1<int, int>(

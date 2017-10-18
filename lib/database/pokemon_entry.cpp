@@ -614,7 +614,6 @@ namespace pkmn { namespace database {
                 "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
                 "is_hidden=1)";
 
-            std::string ret;
             if(pkmn::database::maybe_query_db_bind1<std::string, int>(
                    _db, query, ret, _pokemon_id 
               ))
@@ -844,8 +843,6 @@ namespace pkmn { namespace database {
         pkmn::database::levelup_moves_t ret;
 
         if(not (_none or _invalid)) {
-            ret = pkmn::database::levelup_moves_t();
-        } else {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
                 "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";

@@ -460,7 +460,7 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_fling_effect() const {
-        std::string ret = 0;
+        std::string ret;
 
         // Fling was introduced in Generation IV
         if(_none or _generation < 4) {
@@ -474,13 +474,10 @@ namespace pkmn { namespace database {
                 "(SELECT fling_effect_id FROM items WHERE id=?)";
 
             // Allow for no fling effect
-            std::string ret;
-            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
                    _db, query, ret, _item_id
                ))
             {
-                ret = ret;
-            } else {
                 ret = "None";
             }
         }

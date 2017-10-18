@@ -358,11 +358,11 @@ namespace pkmn { namespace conversions {
             contest_level <<= ribbon_values.pksav_ribbon_offset;
             to_misc->ribbons_obedience |= contest_level;
         }
-        for(const auto& gen3_ribbon_left_pair: GEN3_RIBBON_BIMAP.left)
+        for(const auto& gen3_ribbon_right_pair: GEN3_RIBBON_BIMAP.right)
         {
-            if(from->specialRibbons[gen3_ribbon_left_pair.first])
+            if(from->specialRibbons[gen3_ribbon_right_pair.first])
             {
-                to_misc->ribbons_obedience |= gen3_ribbon_left_pair.second;
+                to_misc->ribbons_obedience |= gen3_ribbon_right_pair.second;
             }
         }
         if(from->obedient)
