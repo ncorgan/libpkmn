@@ -106,30 +106,49 @@ namespace pkmn {
         pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
         pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
+        // Make sure no one else is using the Pokémon variables.
+        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
+        boost::mutex::scoped_lock old_box_pokemon_lock(old_box_pokemon_impl_ptr->_mem_mutex);
+
+        // Copy the underlying memory to the party. At the end of this process,
+        // all existing variables will correspond to the same Pokémon, even if
+        // their underlying memory has changed.
+
+        void* old_box_pokemon_native_ptr = old_box_pokemon_impl_ptr->_native_pc;
+        void* new_pokemon_native_ptr = new_pokemon_impl_ptr->_native_pc;
+
+        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
+        // that owns its own memory.
         LibPkmGC::GC::Pokemon* box_pokemon_copy_ptr = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
                                                             old_box_pokemon_impl_ptr->_native_pc
                                                         )->clone();
+
         if(_game_id == COLOSSEUM)
         {
             rcast_equal<LibPkmGC::Colosseum::Pokemon>(
-                old_box_pokemon_impl_ptr->_native_pc,
+                old_box_pokemon_native_ptr,
                 dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(box_pokemon_copy_ptr)
+            );
+            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
+                new_pokemon_native_ptr,
+                old_box_pokemon_native_ptr
             );
         }
         else
         {
             rcast_equal<LibPkmGC::XD::Pokemon>(
-                old_box_pokemon_impl_ptr->_native_pc,
+                old_box_pokemon_native_ptr,
                 dynamic_cast<LibPkmGC::XD::Pokemon*>(box_pokemon_copy_ptr)
+            );
+            rcast_equal<LibPkmGC::XD::Pokemon>(
+                new_pokemon_native_ptr,
+                old_box_pokemon_native_ptr
             );
         }
 
         old_box_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(box_pokemon_copy_ptr);
         old_box_pokemon_impl_ptr->_our_pc_mem = true;
 
-        GC_RCAST->pkm[index] = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
-                                   new_pokemon_impl_ptr->_native_pc
-                               )->clone();
         _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
                                    dynamic_cast<LibPkmGC::GC::Pokemon*>(GC_RCAST->pkm[index]),
                                    _game_id
