@@ -28,7 +28,6 @@
         pksav_party_pokemon_type, \
         libpkmn_pokemon_type>
 
-
 namespace pkmn {
 
     POKEMON_PARTY_GBIMPL_TEMPLATE

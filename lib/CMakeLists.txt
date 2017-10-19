@@ -35,7 +35,6 @@ ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
-ADD_SUBDIRECTORY(mem)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
@@ -60,7 +59,6 @@ SET(pkmn_sources
     ${pkmn_conversions_sources}
     ${pkmn_database_sources}
     ${pkmn_io_sources}
-    ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}

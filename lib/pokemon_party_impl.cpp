@@ -13,8 +13,6 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "mem/pokemon_setter.hpp"
-
 #include "misc_common.hpp"
 
 #include <pkmn/exception.hpp>

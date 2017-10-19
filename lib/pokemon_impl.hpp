@@ -37,14 +37,6 @@ namespace pkmn {
     class pokemon_impl;
     class pokemon_box_impl;
     class pokemon_party_impl;
-    
-    namespace mem {
-        void set_pokemon_in_box(
-                 pokemon_impl* new_pokemon,
-                 pokemon_box_impl* box,
-                 int index
-             );
-    }
 
     class pokemon_impl: public pokemon, public boost::noncopyable {
         public:
@@ -89,6 +81,18 @@ namespace pkmn {
 
             void* get_native_party_data() override final;
 
+            // Make the box implementations friend classes so they can access the internals.
+            friend class pokemon_box_impl;
+            friend class pokemon_box_gbaimpl;
+            friend class pokemon_box_gcnimpl;
+
+            template
+            <typename list_type,
+             typename pksav_pc_pokemon_type,
+             typename pksav_pokemon_party_data_type,
+             typename libpkmn_pokemon_type>
+            friend class pokemon_box_gbimpl;
+
             // Make the party implementations friend classes so they can access the internals.
             friend class pokemon_party_impl;
             friend class pokemon_party_gbaimpl;
@@ -104,11 +108,6 @@ namespace pkmn {
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
             friend pokemon_scoped_lock;
-            friend void pkmn::mem::set_pokemon_in_box(
-                            pokemon_impl* new_pokemon,
-                            pokemon_box_impl* box,
-                            int index
-                        );
 
         protected:
             pkmn::move_slots_t _moves;

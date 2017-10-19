@@ -40,6 +40,11 @@ namespace pkmn {
 
             int get_capacity() override final;
 
+            void set_pokemon(
+                int index,
+                pkmn::pokemon::sptr new_pokemon
+            ) override final;
+
         private:
             void _from_native() override final;
     };

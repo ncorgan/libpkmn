@@ -14,8 +14,6 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "mem/pokemon_setter.hpp"
-
 #include "misc_common.hpp"
 
 #include <pkmn/exception.hpp>
@@ -92,25 +90,6 @@ namespace pkmn {
         }
 
         return _pokemon_list.at(index);
-    }
-
-    void pokemon_box_impl::set_pokemon(
-        int index,
-        pkmn::pokemon::sptr new_pokemon
-    ) {
-        int capacity = get_capacity();
-        if(index < 0 or index > (capacity-1)) {
-            pkmn::throw_out_of_range("index", 0, (capacity-1));
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-
-        // Copy the underlying memory to the box.
-        pkmn::mem::set_pokemon_in_box(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {
