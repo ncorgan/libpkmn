@@ -12,9 +12,26 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
+#define POKEMON_PARTY_GBIMPL_TEMPLATE \
+    template \
+    <typename list_type, \
+     typename pksav_pc_pokemon_type, \
+     typename pksav_pokemon_party_data_type, \
+     typename pksav_party_pokemon_type, \
+     typename libpkmn_pokemon_type>
+
+#define POKEMON_PARTY_GBIMPL_CLASS \
+    pokemon_party_gbimpl< \
+        list_type, \
+        pksav_pc_pokemon_type, \
+        pksav_pokemon_party_data_type, \
+        pksav_party_pokemon_type, \
+        libpkmn_pokemon_type>
+
+
 namespace pkmn {
 
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
+    POKEMON_PARTY_GBIMPL_TEMPLATE
     class pokemon_party_gbimpl: public pokemon_party_impl {
         public:
             pokemon_party_gbimpl() {}
@@ -41,10 +58,20 @@ namespace pkmn {
     };
 
     // Generation I
-    typedef pokemon_party_gbimpl<pksav_gen1_pokemon_party_t, pksav_gen1_party_pokemon_t, pokemon_gen1impl> pokemon_party_gen1impl;
+    typedef pokemon_party_gbimpl<
+                pksav_gen1_pokemon_party_t,
+                pksav_gen1_pc_pokemon_t,
+                pksav_gen1_pokemon_party_data_t,
+                pksav_gen1_party_pokemon_t,
+                pokemon_gen1impl> pokemon_party_gen1impl;
 
     // Generation II
-    typedef pokemon_party_gbimpl<pksav_gen2_pokemon_party_t, pksav_gen2_party_pokemon_t, pokemon_gen2impl> pokemon_party_gen2impl;
+    typedef pokemon_party_gbimpl<
+                pksav_gen2_pokemon_party_t,
+                pksav_gen2_pc_pokemon_t,
+                pksav_gen2_pokemon_party_data_t,
+                pksav_gen2_party_pokemon_t,
+                pokemon_gen2impl> pokemon_party_gen2impl;
 }
 
 #include "pokemon_party_gbimpl.ipp"

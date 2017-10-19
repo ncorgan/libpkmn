@@ -37,22 +37,11 @@ namespace pkmn {
     class pokemon_impl;
     class pokemon_box_impl;
     class pokemon_party_impl;
-
-    // Forward declarations
-    class pokemon_box_gbaimpl;
-    class pokemon_party_gbaimpl;
     
     namespace mem {
         void set_pokemon_in_box(
                  pokemon_impl* new_pokemon,
                  pokemon_box_impl* box,
-                 int index
-             );
-    }
-    namespace mem {
-        void set_pokemon_in_party(
-                 pokemon_impl* new_pokemon,
-                 pokemon_party_impl* party,
                  int index
              );
     }
@@ -100,19 +89,24 @@ namespace pkmn {
 
             void* get_native_party_data() override final;
 
-            friend pokemon_party_impl;
-            friend pokemon_party_gbaimpl;
+            // Make the party implementations friend classes so they can access the internals.
+            friend class pokemon_party_impl;
+            friend class pokemon_party_gbaimpl;
+            friend class pokemon_party_gcnimpl;
+
+            template
+            <typename list_type,
+             typename pksav_pc_pokemon_type,
+             typename pksav_pokemon_party_data_type,
+             typename pksav_party_pokemon_type,
+             typename libpkmn_pokemon_type>
+            friend class pokemon_party_gbimpl;
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
             friend pokemon_scoped_lock;
             friend void pkmn::mem::set_pokemon_in_box(
                             pokemon_impl* new_pokemon,
                             pokemon_box_impl* box,
-                            int index
-                        );
-            friend void pkmn::mem::set_pokemon_in_party(
-                            pokemon_impl* new_pokemon,
-                            pokemon_party_impl* party,
                             int index
                         );
 

@@ -90,20 +90,56 @@ namespace pkmn {
         int num_pokemon = get_num_pokemon();
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
-        if(index < 0 or index > max_index) {
+        if(index < 0 or index > max_index)
+        {
             pkmn::throw_out_of_range("index", 0, max_index);
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
+        }
+        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
+        }
+        else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
+        else if(_game_id != new_pokemon->get_database_entry().get_game_id())
+        {
+            throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
+        }
 
-        // Copy the underlying memory to the party.
-        pkmn::mem::set_pokemon_in_party(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );
+        boost::mutex::scoped_lock(_mem_mutex);
+
+        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
+        pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
+
+        LibPkmGC::GC::Pokemon* party_pokemon_copy_ptr = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
+                                                            old_party_pokemon_impl_ptr->_native_pc
+                                                        )->clone();
+        if(_game_id == COLOSSEUM)
+        {
+            rcast_equal<LibPkmGC::Colosseum::Pokemon>(
+                old_party_pokemon_impl_ptr->_native_pc,
+                dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(party_pokemon_copy_ptr)
+            );
+        }
+        else
+        {
+            rcast_equal<LibPkmGC::XD::Pokemon>(
+                old_party_pokemon_impl_ptr->_native_pc,
+                dynamic_cast<LibPkmGC::XD::Pokemon*>(party_pokemon_copy_ptr)
+            );
+        }
+
+        old_party_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(party_pokemon_copy_ptr);
+        old_party_pokemon_impl_ptr->_our_pc_mem = true;
+
+        NATIVE_RCAST->pokemon[index] = reinterpret_cast<LibPkmGC::GC::Pokemon*>(
+                                            new_pokemon_impl_ptr->_native_pc
+                                       )->clone();
+        _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+                                   NATIVE_RCAST->pokemon[index],
+                                   _game_id
+                               );
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();

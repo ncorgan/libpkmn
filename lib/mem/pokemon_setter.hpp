@@ -22,12 +22,6 @@ namespace pkmn { namespace mem {
         int index
     );
 
-    void set_pokemon_in_party(
-        pokemon_impl* new_pokemon,
-        pokemon_party_impl* party,
-        int index
-    );
-
 }}
 
 #endif /* INCLUDED_PKMN_MEM_POKEMON_SETTER_HPP */
