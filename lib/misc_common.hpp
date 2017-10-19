@@ -80,6 +80,25 @@ namespace pkmn {
     {
         return (game_id == COLOSSEUM or game_id == XD);
     }
+
+    template <typename ptr_type>
+    static void inline rcast_equal(
+        void* src_ptr,
+        void* dst_ptr
+    )
+    {
+        *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
+    }
+
+    template <typename ptr_type>
+    static void inline rcast_equal_alloc(
+        void* src_ptr,
+        void* dst_ptr
+    )
+    {
+        dst_ptr = reinterpret_cast<void*>(new ptr_type);
+        *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
+    }
 }
 
 #endif /* INCLUDED_PKMN_MISC_COMMON_HPP */

@@ -304,19 +304,19 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 }
 
 static const std::string games[] = {
-    "Red",
+    /*"Red",
     "Blue",
     "Yellow",
     "Gold",
     "Silver",
-    "Crystal",
+    "Crystal",*/
     "Ruby",
     "Sapphire",
     "Emerald",
     "FireRed",
-    "LeafGreen",
+    "LeafGreen"/*,
     "Colosseum",
-    "XD"
+    "XD"*/
 };
 
 INSTANTIATE_TEST_CASE_P(

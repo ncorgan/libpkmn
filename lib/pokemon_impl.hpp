@@ -37,6 +37,11 @@ namespace pkmn {
     class pokemon_impl;
     class pokemon_box_impl;
     class pokemon_party_impl;
+
+    // Forward declarations
+    class pokemon_box_gbaimpl;
+    class pokemon_party_gbaimpl;
+    
     namespace mem {
         void set_pokemon_in_box(
                  pokemon_impl* new_pokemon,
@@ -94,6 +99,9 @@ namespace pkmn {
             void* get_native_pc_data() override final;
 
             void* get_native_party_data() override final;
+
+            friend pokemon_box_gbaimpl;
+            friend pokemon_party_gbaimpl;
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
             friend pokemon_scoped_lock;

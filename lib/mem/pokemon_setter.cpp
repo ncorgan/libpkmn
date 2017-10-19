@@ -26,25 +26,6 @@
 #include <iostream>
 #include <stdexcept>
 
-template <typename ptr_type>
-static void inline rcast_equal(
-    void* src_ptr,
-    void* dst_ptr
-)
-{
-    *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
-}
-
-template <typename ptr_type>
-static void inline rcast_equal_alloc(
-    void* src_ptr,
-    void* dst_ptr
-)
-{
-    dst_ptr = reinterpret_cast<void*>(new ptr_type);
-    *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
-}
-
 #define GC_RCAST(src_ptr)   (reinterpret_cast<LibPkmGC::GC::Pokemon*>((src_ptr)))
 #define COLO_RCAST(src_ptr) (reinterpret_cast<LibPkmGC::Colosseum::Pokemon*>((src_ptr)))
 #define XD_RCAST(src_ptr)   (reinterpret_cast<LibPkmGC::XD::Pokemon*>((src_ptr)))

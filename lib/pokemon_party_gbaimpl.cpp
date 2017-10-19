@@ -8,6 +8,9 @@
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
 
+#include "misc_common.hpp"
+
+#include <pksav/gba/pokemon.h>
 #include <pksav/math/endian.h>
 
 #include <pkmn/exception.hpp>
@@ -55,32 +58,76 @@ namespace pkmn {
     void pokemon_party_gbaimpl::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int num_pokemon = get_num_pokemon();
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
-        if(index < 0 or index > max_index) {
+        if(index < 0 or index > max_index)
+        {
             pkmn::throw_out_of_range("index", 0, max_index);
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
+        }
+        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
+        }
+        else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None")
+        {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
+        else if(_game_id != new_pokemon->get_database_entry().get_game_id())
+        {
+            throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
+        }
 
-        // Copy the underlying memory to the party.
-        pkmn::mem::set_pokemon_in_party(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );
+        boost::mutex::scoped_lock(_mem_mutex);
+
+        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
+        pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
+
+        // Make sure no one else is using the Pokémon variables.
+        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
+        boost::mutex::scoped_lock old_party_pokemon_lock(old_party_pokemon_impl_ptr->_mem_mutex);
+
+        // Copy the underlying memory to the party. At the end of this process,
+        // all existing variables will correspond to the same Pokémon, even if
+        // their underlying memory has changed.
+        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
+        void* new_pokemon_native_party_ptr = new_pokemon_impl_ptr->_native_party;
+
+        // Create a copy of the party Pokémon. Set the old sptr to use this so it owns the memory.
+        pksav_gba_pc_pokemon_t* party_pokemon_pc_copy_ptr = new pksav_gba_pc_pokemon_t;
+        pksav_gba_pokemon_party_data_t* party_pokemon_party_data_copy_ptr = new pksav_gba_pokemon_party_data_t;
+
+        *party_pokemon_pc_copy_ptr = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(
+                                          old_party_pokemon_impl_ptr->_native_pc
+                                      );
+        *party_pokemon_party_data_copy_ptr = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(
+                                                  old_party_pokemon_impl_ptr->_native_party
+                                               );
+        old_party_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(party_pokemon_pc_copy_ptr);
+        old_party_pokemon_impl_ptr->_native_party = reinterpret_cast<void*>(party_pokemon_party_data_copy_ptr);
+        old_party_pokemon_impl_ptr->_our_pc_mem = true;
+        old_party_pokemon_impl_ptr->_our_party_mem = true;
+
+        // Copy the new Pokémon's internals into the party's internals and create a new sptr.
+        NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
+        NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(new_pokemon_native_party_ptr);
+        _pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(
+                                   &NATIVE_LIST_RCAST->party[index],
+                                   _game_id
+                               );
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
-        if(index == num_pokemon) {
+        if(index == num_pokemon)
+        {
             if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None") {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
             }
-        } else if(index == (num_pokemon-1)) {
+        }
+        else if(index == (num_pokemon-1))
+        {
             if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species == "None") {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
             }
