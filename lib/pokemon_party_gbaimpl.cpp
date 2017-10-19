@@ -92,25 +92,15 @@ namespace pkmn {
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
         // their underlying memory has changed.
+
+        // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
+        // that owns its own memory.
+        copy_party_pokemon<pksav_gba_pc_pokemon_t, pksav_gba_pokemon_party_data_t>(index);
+
+        // Copy the new Pokémon's internals into the party's internals and create a new sptr.
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
         void* new_pokemon_native_party_ptr = new_pokemon_impl_ptr->_native_party;
 
-        // Create a copy of the party Pokémon. Set the old sptr to use this so it owns the memory.
-        pksav_gba_pc_pokemon_t* party_pokemon_pc_copy_ptr = new pksav_gba_pc_pokemon_t;
-        pksav_gba_pokemon_party_data_t* party_pokemon_party_data_copy_ptr = new pksav_gba_pokemon_party_data_t;
-
-        *party_pokemon_pc_copy_ptr = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(
-                                          old_party_pokemon_impl_ptr->_native_pc
-                                      );
-        *party_pokemon_party_data_copy_ptr = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(
-                                                  old_party_pokemon_impl_ptr->_native_party
-                                               );
-        old_party_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(party_pokemon_pc_copy_ptr);
-        old_party_pokemon_impl_ptr->_native_party = reinterpret_cast<void*>(party_pokemon_party_data_copy_ptr);
-        old_party_pokemon_impl_ptr->_our_pc_mem = true;
-        old_party_pokemon_impl_ptr->_our_party_mem = true;
-
-        // Copy the new Pokémon's internals into the party's internals and create a new sptr.
         NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
         NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(new_pokemon_native_party_ptr);
         _pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(

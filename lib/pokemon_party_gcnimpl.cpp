@@ -22,8 +22,6 @@
 #define COLO_POKEMON(i) (dynamic_cast<LibPkmGC::Colosseum::Pokemon*>(NATIVE_RCAST->pokemon[i]))
 #define XD_POKEMON(i) (dynamic_cast<LibPkmGC::XD::Pokemon*>(NATIVE_RCAST->pokemon[i]))
 
-BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
-
 namespace pkmn {
 
     pokemon_party_gcnimpl::pokemon_party_gcnimpl(

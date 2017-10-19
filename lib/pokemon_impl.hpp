@@ -100,7 +100,7 @@ namespace pkmn {
 
             void* get_native_party_data() override final;
 
-            friend pokemon_box_gbaimpl;
+            friend pokemon_party_impl;
             friend pokemon_party_gbaimpl;
 
             typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
