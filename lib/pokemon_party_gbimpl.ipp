@@ -84,13 +84,6 @@ namespace pkmn {
             throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
         }
 
-        // Copy the underlying memory to the party.
-        /*pkmn::mem::set_pokemon_in_party(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );*/
-
         boost::mutex::scoped_lock(_mem_mutex);
 
         pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
