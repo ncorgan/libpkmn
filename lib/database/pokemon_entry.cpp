@@ -614,12 +614,10 @@ namespace pkmn { namespace database {
                 "SELECT ability_id FROM pokemon_abilities WHERE pokemon_id=? AND "
                 "is_hidden=1)";
 
-            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query, ret, _pokemon_id 
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+                       _db, query, ret, _pokemon_id
               ))
             {
-                ret = ret;
-            } else {
                 ret = "None";
             }
         }

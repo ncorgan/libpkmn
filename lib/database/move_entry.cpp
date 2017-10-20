@@ -545,11 +545,10 @@ namespace pkmn { namespace database {
                 "(SELECT contest_type_id FROM moves WHERE id=?) "
                 "AND local_language_id=9";
 
-            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query, ret, _move_id
-               )) {
-                ret = ret;
-            } else {
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+                       _db, query, ret, _move_id
+               ))
+            {
                 ret = "None";
             }
         }
@@ -570,11 +569,10 @@ namespace pkmn { namespace database {
                 "SELECT flavor_text FROM contest_effect_prose WHERE contest_effect_id="
                 "(SELECT contest_effect_id FROM moves WHERE id=?)";
 
-            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query, ret, _move_id
-               )) {
-                ret = ret;
-            } else {
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+                       _db, query, ret, _move_id
+               ))
+            {
                 ret = "None";
             }
         }
@@ -594,11 +592,10 @@ namespace pkmn { namespace database {
                 "SELECT flavor_text FROM super_contest_effect_prose WHERE super_contest_effect_id="
                 "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
 
-            if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query, ret, _move_id
-               )) {
-                ret = ret;
-            } else {
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+                       _db, query, ret, _move_id
+               ))
+            {
                 ret = "None";
             }
         }
