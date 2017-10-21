@@ -10,9 +10,8 @@
 #include "id_to_index.hpp"
 
 #include <boost/config.hpp>
-#include <boost/format.hpp>
 
-#include <sstream>
+#include <stdexcept>
 
 namespace pkmn { namespace database {
 

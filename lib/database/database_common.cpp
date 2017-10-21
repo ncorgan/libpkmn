@@ -10,18 +10,13 @@
 
 #include <pkmn/utils/paths.hpp>
 
-#include <SQLiteCpp/SQLiteCpp.h>
-
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
 #include <algorithm>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <string>
-#include <unordered_map>
 
 #define PKMN_COMPAT_NUM 14
 

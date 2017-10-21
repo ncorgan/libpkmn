@@ -8,14 +8,13 @@
 #include "../misc_common.hpp"
 #include "../database/database_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 
 #include <boost/config.hpp>
-#include <boost/format.hpp>
 
 #include <cmath>
-#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 

@@ -13,7 +13,6 @@
 #include <pkmn/database/move_entry.hpp>
 
 #include <boost/config.hpp>
-#include <boost/foreach.hpp>
 #include <boost/format.hpp>
 
 #include <sstream>

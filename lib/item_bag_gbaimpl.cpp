@@ -18,6 +18,7 @@
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <cstring>
+#include <stdexcept>
 
 namespace pkmn {
 

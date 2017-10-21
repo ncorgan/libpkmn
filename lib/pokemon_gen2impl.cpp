@@ -34,7 +34,6 @@
 #include <boost/format.hpp>
 
 #include <cstring>
-#include <ctime>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    (reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc))

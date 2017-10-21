@@ -7,6 +7,7 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/stats.hpp>
 

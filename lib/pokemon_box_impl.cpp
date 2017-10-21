@@ -6,10 +6,9 @@
  */
 
 #include "pokemon_box_impl.hpp"
+#include "pokemon_box_gbimpl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 #include "pokemon_box_gcnimpl.hpp"
-
-#include "pokemon_box_gbimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -17,8 +16,6 @@
 #include "misc_common.hpp"
 
 #include <pkmn/exception.hpp>
-
-#include <boost/format.hpp>
 
 #include <stdexcept>
 
@@ -53,17 +50,7 @@ namespace pkmn {
                 throw std::runtime_error("Invalid game.");
         }
     }
-/*
-            pkmn::pokemon_list_t _pokemon_list;
-            std::string _box_name;
 
-            void* _native;
-            bool _our_mem;
-
-            boost::mutex _mem_mutex;
-
-            int _game_id, _generation;
- */
     pokemon_box_impl::pokemon_box_impl(
         int game_id
     ): _pokemon_list(),

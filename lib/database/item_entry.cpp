@@ -10,6 +10,7 @@
 #include "id_to_string.hpp"
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/database/item_entry.hpp>
 
 #include <boost/algorithm/string.hpp>

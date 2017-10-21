@@ -7,12 +7,9 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
-
-#include <boost/config.hpp>
-
-#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 

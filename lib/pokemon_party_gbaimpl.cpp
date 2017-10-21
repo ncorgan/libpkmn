@@ -16,7 +16,6 @@
 #include <pkmn/exception.hpp>
 
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 #define NATIVE_LIST_RCAST (reinterpret_cast<pksav_gba_pokemon_party_t*>(_native))

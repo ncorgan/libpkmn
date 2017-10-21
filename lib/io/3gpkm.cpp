@@ -16,7 +16,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include <cstdint>
 #include <fstream>
 #include <stdexcept>
 

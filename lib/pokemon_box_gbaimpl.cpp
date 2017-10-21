@@ -10,7 +10,6 @@
 
 #include <pkmn/exception.hpp>
 
-#include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
 
 #include <cstring>

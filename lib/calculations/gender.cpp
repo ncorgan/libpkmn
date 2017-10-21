@@ -11,12 +11,6 @@
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
-#include <boost/assign.hpp>
-#include <boost/config.hpp>
-
-#include <iostream>
-#include <stdexcept>
-
 namespace pkmn { namespace calculations {
 
     std::string gen2_pokemon_gender(

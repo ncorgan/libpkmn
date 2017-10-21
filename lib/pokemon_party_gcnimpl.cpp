@@ -8,12 +8,9 @@
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_party_gcnimpl.hpp"
 
-#include <pksav/math/endian.h>
-
 #include <pkmn/exception.hpp>
 
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 #define NATIVE_RCAST (reinterpret_cast<pkmn::gcn_pokemon_party_t*>(_native))
@@ -31,7 +28,6 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pkmn::gcn_pokemon_party_t);
 
-        // TODO: how does LibPKMN parse this?
         for(size_t i = 0; i < PARTY_SIZE; ++i) {
             if(_game_id == COLOSSEUM) {
                 NATIVE_RCAST->pokemon[i] = new LibPkmGC::Colosseum::Pokemon;

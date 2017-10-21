@@ -13,7 +13,6 @@
 #include <boost/config.hpp>
 
 #include <algorithm>
-#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 

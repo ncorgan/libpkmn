@@ -5,7 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "conversions_common.hpp"
 #include "gen3_conversions.hpp"
 #include "database/database_common.hpp"
 #include "pksav/pksav_call.hpp"
@@ -21,11 +20,6 @@
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
 #include <boost/config.hpp>
-#include <boost/format.hpp>
-
-#include <cstring>
-#include <iostream>
-#include <stdexcept>
 
 namespace pkmn { namespace conversions {
 

@@ -19,6 +19,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
+#include <stdexcept>
 #include <unordered_map>
 
 namespace fs = boost::filesystem;

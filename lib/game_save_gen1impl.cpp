@@ -13,10 +13,14 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
+#include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 

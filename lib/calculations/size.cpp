@@ -7,14 +7,16 @@
 
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-#include <pkmn/exception.hpp>
 
 #include <boost/assign.hpp>
 
 #include <cmath>
 #include <unordered_map>
+#include <utility>
 
 struct size_xyz_t {
     size_xyz_t(uint16_t _x, uint16_t _y, uint16_t _z):
@@ -45,7 +47,7 @@ static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_l
 
 typedef std::pair<uint16_t, size_xyz_t> xyz_pair_t;
 
-uint16_t get_s(
+static uint16_t get_s(
     uint16_t s_from_calculation
 ) {
     uint16_t ret = 0;
@@ -103,6 +105,7 @@ namespace pkmn { namespace calculations {
             pkmn::throw_out_of_range("IV_spdef", 0, 31);
         }
 
+        // TODO: can this be done without instantiating an entire entry?
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);
 
         uint16_t p1 = uint16_t(personality % 256);

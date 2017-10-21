@@ -11,9 +11,9 @@
 
 #include "conversions/gen3_conversions.hpp"
 #include "database/database_common.hpp"
-#include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "libpkmgc_includes.hpp"
 
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -41,8 +41,6 @@
 #include <boost/format.hpp>
 
 #include <cstring>
-#include <ctime>
-#include <iostream>
 #include <stdexcept>
 
 #define GBA_PC_RCAST    (reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc))

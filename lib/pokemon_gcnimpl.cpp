@@ -18,6 +18,7 @@
 
 #include "types/rng.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
@@ -30,7 +31,6 @@
 #include <boost/bimap.hpp>
 
 #include <cstring>
-#include <ctime>
 #include <stdexcept>
 
 #define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::Pokemon*>(_native_pc))

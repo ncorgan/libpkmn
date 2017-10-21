@@ -9,9 +9,6 @@
 
 #include <pkmn/database/item_entry.hpp>
 
-#include <pksav/math/endian.h>
-
-#include <algorithm>
 #include <cstring>
 
 #define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_native))

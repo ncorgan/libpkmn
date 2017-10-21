@@ -13,14 +13,14 @@
 
 #include "misc_common.hpp"
 
-#include "pksav/pksav_call.hpp"
-
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
 #include <fstream>
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 

@@ -18,8 +18,6 @@
 
 #include <pkmn/exception.hpp>
 
-#include <boost/format.hpp>
-
 #include <stdexcept>
 
 namespace pkmn {

@@ -12,8 +12,6 @@
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
 
-#include "database/database_common.hpp"
-
 #include "libpkmgc_includes.hpp"
 
 namespace pkmn {

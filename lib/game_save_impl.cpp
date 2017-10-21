@@ -22,7 +22,7 @@
 #include <boost/filesystem.hpp>
 
 #include <fstream>
-#include <iostream>
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 

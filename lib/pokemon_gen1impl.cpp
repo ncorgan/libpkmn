@@ -26,11 +26,8 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
-#include <boost/format.hpp>
 
 #include <cstring>
-#include <ctime>
-#include <iostream>
 #include <stdexcept>
 #include <unordered_map>
 

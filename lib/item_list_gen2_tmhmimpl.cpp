@@ -12,9 +12,9 @@
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
-#include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
 BOOST_STATIC_CONSTEXPR int TM50_ID = 354;

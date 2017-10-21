@@ -11,7 +11,11 @@
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/config.hpp>
+
 #include <boost/config.hpp>
+
+#include <stdexcept>
 
 namespace pkmn { namespace database {
 
