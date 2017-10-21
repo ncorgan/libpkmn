@@ -6,6 +6,7 @@
 #
 
 SET(PKMN_USE_CLANGTIDY "${PKMN_USE_CLANGTIDY}" CACHE BOOL "Enable Clang-tidy testing")
+SET(PKMN_USE_IWYC "${PKMN_USE_IWYC}" CACHE BOOL "Enable Include-What-You-Use testing")
 
 IF(PKMN_USE_CLANGTIDY)
     if(NOT CLANG_TIDY_EXECUTABLE)
@@ -23,4 +24,15 @@ IF(PKMN_USE_CLANGTIDY)
          misc-macro-parentheses,google-readability-casting,\
          modernize-loop-convert,readability-else-after-return"
     )
+ENDIF()
+
+IF(PKMN_USE_IWYC)
+    if(NOT IWYC_EXECUTABLE)
+        FIND_PROGRAM(IWYC_EXECUTABLE NAMES include-what-you-use)
+    ENDIF()
+    MESSAGE(STATUS "Using Include-What-You-Use: ${IWYC_EXECUTABLE}")
+
+    SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+    SET(IWYC_PROPERTY "${IWYC_EXECUTABLE}")
 ENDIF()

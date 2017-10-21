@@ -10,7 +10,7 @@ REPO_TOPLEVEL=$PWD
 
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
-sudo apt-get -y install cppcheck libqt4-dev qtbase5-dev \
+sudo apt-get -y install libqt4-dev qtbase5-dev \
                         swig swig3.0 doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
@@ -22,7 +22,7 @@ sudo apt-get -y install cppcheck libqt4-dev qtbase5-dev \
 # Static analysis needs a later CMake than the default for Ubuntu 14.04
 if [ "$STATIC_ANALYSIS" != "1" ]
 then
-    sudo apt-get -y install cmake
+    sudo apt-get -y install cmake cppcheck iwyu
 fi
 
 if [ "$CC" = "gcc" ] || [ "$CXX" = "clang" ]

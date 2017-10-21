@@ -137,7 +137,7 @@ ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
 ########################################################################
 # Check for specified test tools
 ########################################################################
-INCLUDE(ClangTidy)
+INCLUDE(StaticAnalysisTools)
 
 ####################################################################
 # Components
