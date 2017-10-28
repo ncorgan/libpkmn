@@ -127,7 +127,7 @@ namespace pkmn {
         "FROM items WHERE id=(SELECT item_id FROM old_item_names WHERE "
         "name=?))))";
 
-    static PKMN_CONSTEXPR_OR_INLINE int FRLG = 7;
+    BOOST_STATIC_CONSTEXPR int FRLG = 7;
 
     // Skips creating item entry
     static std::string get_pocket_name(

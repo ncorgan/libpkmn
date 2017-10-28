@@ -13,7 +13,7 @@
 
 namespace pkmn {
 
-    static PKMN_CONSTEXPR int GEN2_NUM_BOXES = 14;
+    BOOST_STATIC_CONSTEXPR int GEN2_NUM_BOXES = 14;
 
     typedef struct {
         pksav_gen2_pokemon_box_t* boxes[GEN2_NUM_BOXES];
