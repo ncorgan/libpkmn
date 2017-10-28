@@ -111,7 +111,7 @@ void test_item_list_invalid_items(
         error = pkmn_item_list_add(
                     list,
                     item_names[i],
-                    num_items
+                    (int)num_items
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
@@ -135,7 +135,7 @@ void test_item_bag_invalid_items(
         error = pkmn_item_bag_add(
                     bag,
                     item_names[i],
-                    num_items
+                    (int)num_items
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     }
