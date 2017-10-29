@@ -14,7 +14,7 @@
 #include <pkmn/pokemon_party.hpp>
 
 #include <boost/noncopyable.hpp>
-#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <string>
 
@@ -47,7 +47,7 @@ namespace pkmn {
             void* _native;
             bool _our_mem;
 
-            boost::recursive_mutex _mem_mutex;
+            boost::mutex _mem_mutex;
 
             int _game_id, _generation;
 

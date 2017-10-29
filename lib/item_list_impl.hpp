@@ -12,7 +12,7 @@
 #include <pkmn/item_list.hpp>
 
 #include <boost/noncopyable.hpp>
-#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace pkmn {
 
@@ -75,7 +75,7 @@ namespace pkmn {
 
             bool _our_mem;
             void* _native;
-            boost::recursive_mutex _mem_mutex;
+            boost::mutex _mem_mutex;
 
             virtual void _from_native(
                 int index = -1

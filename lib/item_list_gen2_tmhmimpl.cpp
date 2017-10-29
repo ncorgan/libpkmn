@@ -69,7 +69,7 @@ namespace pkmn {
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;
@@ -77,7 +77,7 @@ namespace pkmn {
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         int ret = 0;
         for(int i = 0; i < 50; i++) {
@@ -190,7 +190,7 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     ) {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
@@ -203,7 +203,7 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
     ) {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);

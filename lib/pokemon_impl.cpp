@@ -204,13 +204,13 @@ namespace pkmn {
     }
 
     void* pokemon_impl::get_native_pc_data() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _native_pc;
     }
 
     void* pokemon_impl::get_native_party_data() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _native_party;
     }
@@ -437,7 +437,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 15);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_set_gb_IV(
@@ -464,7 +464,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 31);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_set_IV(
@@ -499,7 +499,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("value", 0, 255);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         SET_CONTEST_STAT("Cool",   cool);
         SET_CONTEST_STAT("Beauty", beauty);
@@ -531,7 +531,7 @@ namespace pkmn {
             throw std::invalid_argument("Invalid marking.");
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);

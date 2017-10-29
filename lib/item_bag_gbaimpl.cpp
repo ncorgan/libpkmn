@@ -52,7 +52,7 @@ namespace pkmn {
     }
 
     item_bag_gbaimpl::~item_bag_gbaimpl() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;

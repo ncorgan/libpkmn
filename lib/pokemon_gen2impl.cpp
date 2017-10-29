@@ -338,7 +338,7 @@ namespace pkmn {
              * This value sets all IVs to the maximum values that result in
              * a shiny Pokémon.
              */
-            boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
             static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
             GEN2_PC_RCAST->iv_data = shiny_iv_data;
             _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
@@ -353,7 +353,7 @@ namespace pkmn {
 
     std::string pokemon_gen2impl::get_held_item()
     {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pkmn::database::item_index_to_name(
                    GEN2_PC_RCAST->held_item,
@@ -374,7 +374,7 @@ namespace pkmn {
             throw std::invalid_argument("This item is not holdable.");
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
@@ -396,7 +396,7 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen2impl::get_trainer_public_id() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
     }
@@ -406,7 +406,7 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen2impl::get_trainer_id() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
     }
@@ -414,7 +414,7 @@ namespace pkmn {
     void pokemon_gen2impl::set_trainer_public_id(
         uint16_t public_id
     ) {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
@@ -432,13 +432,13 @@ namespace pkmn {
             pkmn::throw_out_of_range("id", 0, 65535);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
     std::string pokemon_gen2impl::get_trainer_gender() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_OT_GENDER_MASK) ? "Female"
                                                                         : "Male";
@@ -447,7 +447,7 @@ namespace pkmn {
     void pokemon_gen2impl::set_trainer_gender(
         const std::string &gender
     ) {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(gender == "Male") {
             GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_OT_GENDER_MASK;
@@ -459,7 +459,7 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_friendship() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return GEN2_PC_RCAST->friendship;
     }
@@ -471,7 +471,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("friendship", 0, 255);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->friendship = uint8_t(friendship);
     }
@@ -497,7 +497,7 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_level_met() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
     }
@@ -509,7 +509,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("Level caught", 2, 63);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         uint16_t caught_data = uint16_t(level);
         caught_data <<= PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
@@ -524,7 +524,7 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
         } else {
-            boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
             return pkmn::database::location_index_to_name(
                        (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
@@ -540,7 +540,7 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
         } else {
-            boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
             uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
                                                    location,
@@ -572,7 +572,7 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_experience() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         uint32_t ret = 0;
         PKSAV_CALL(
@@ -595,7 +595,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_to_base256(
@@ -612,7 +612,7 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_level() {
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return int(GEN2_PC_RCAST->level);
     }
@@ -624,7 +624,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("level", 2, 100);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->level = uint8_t(level);
 
@@ -651,7 +651,7 @@ namespace pkmn {
         );
 
         if(_database_entry.get_species_id() == UNOWN_ID) {
-            boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
             _set_unown_form_from_IVs();
         }
     }
@@ -685,7 +685,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
@@ -720,7 +720,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
-        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(stat == "HP") {
             GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
