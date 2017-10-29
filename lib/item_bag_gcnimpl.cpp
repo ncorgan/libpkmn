@@ -41,7 +41,7 @@ namespace pkmn {
     }
 
     item_bag_gcnimpl::~item_bag_gcnimpl() {
-        item_bag_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             if(_game_id == COLOSSEUM) {

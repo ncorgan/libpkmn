@@ -108,14 +108,14 @@ namespace pkmn {
             throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
         }
 
-        boost::mutex::scoped_lock(_mem_mutex);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
-        pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
+        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
-        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
-        boost::mutex::scoped_lock old_party_pokemon_lock(old_party_pokemon_impl_ptr->_mem_mutex);
+        boost::unique_lock<boost::recursive_mutex> new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
+        old_box_pokemon_impl_ptr->_mem_mutex.lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -127,6 +127,9 @@ namespace pkmn {
 
         // Copy the new Pokémon's internals into the party's internals and create a new sptr.
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
+
+        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
+        old_box_pokemon_impl_ptr->_mem_mutex.unlock();
 
         NATIVE_RCAST->entries[index] = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
 

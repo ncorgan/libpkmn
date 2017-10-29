@@ -469,7 +469,8 @@ namespace pkmn {
     }
 
     void* item_list_impl::get_native() {
-        item_list_scoped_lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
+
         return _native;
     }
 }

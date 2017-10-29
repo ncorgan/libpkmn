@@ -50,7 +50,7 @@ namespace pkmn {
 
     template<typename list_type>
     item_list_gbimpl<list_type>::~item_list_gbimpl() {
-        item_list_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete GBLIST_RCAST;
@@ -61,7 +61,7 @@ namespace pkmn {
     void item_list_gbimpl<list_type>::_from_native(
         int index
     ) {
-        item_list_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
@@ -86,7 +86,7 @@ namespace pkmn {
     void item_list_gbimpl<list_type>::_to_native(
         int index
     ) {
-        item_list_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         bool count_set = false;
         if(index == -1) {

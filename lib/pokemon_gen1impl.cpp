@@ -302,7 +302,7 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen1impl::get_trainer_public_id() {
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         return pksav_bigendian16(GEN1_PC_RCAST->ot_id);
     }
@@ -312,7 +312,7 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen1impl::get_trainer_id() {
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         return uint32_t(pksav_bigendian16(GEN1_PC_RCAST->ot_id));
     }
@@ -336,7 +336,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("id", 0, 65535);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
@@ -448,7 +448,7 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_experience() {
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         uint32_t ret = 0;
         PKSAV_CALL(
@@ -471,7 +471,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_to_base256(
@@ -489,7 +489,7 @@ namespace pkmn {
     }
 
     int pokemon_gen1impl::get_level() {
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         return int(GEN1_PARTY_RCAST->level);
     }
@@ -501,7 +501,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("level", 2, 100);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
@@ -557,7 +557,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
@@ -581,7 +581,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         if(stat == "HP") {
             GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));

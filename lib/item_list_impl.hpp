@@ -12,11 +12,9 @@
 #include <pkmn/item_list.hpp>
 
 #include <boost/noncopyable.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
-
-    class item_list_impl;
-    typedef pkmn::mem::scoped_lock<item_list_impl> item_list_scoped_lock;
 
     class item_list_impl: public item_list, boost::noncopyable {
         public:
@@ -67,8 +65,6 @@ namespace pkmn {
 
             void* get_native() override final;
 
-            friend item_list_scoped_lock;
-
         protected:
             int _item_list_id, _game_id, _version_group_id;
             int _capacity, _num_items;
@@ -79,7 +75,7 @@ namespace pkmn {
 
             bool _our_mem;
             void* _native;
-            boost::mutex _mem_mutex;
+            boost::recursive_mutex _mem_mutex;
 
             virtual void _from_native(
                 int index = -1

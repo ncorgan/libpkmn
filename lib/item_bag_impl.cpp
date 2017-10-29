@@ -208,7 +208,7 @@ namespace pkmn {
     }
 
     void* item_bag_impl::get_native() {
-        item_bag_scoped_lock lock(this);
+        boost::unique_lock<boost::recursive_mutex> scoped_lock(_mem_mutex);
 
         return _native;
     }

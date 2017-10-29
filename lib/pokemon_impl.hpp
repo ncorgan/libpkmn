@@ -7,8 +7,6 @@
 #ifndef PKMN_POKEMON_IMPL_HPP
 #define PKMN_POKEMON_IMPL_HPP
 
-#include "mem/scoped_lock.hpp"
-
 #include <pkmn/pokemon.hpp>
 
 #include <pksav/common/contest_stats.h>
@@ -16,7 +14,7 @@
 
 #include <boost/assign.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <stdexcept>
 #include <unordered_map>
@@ -106,9 +104,6 @@ namespace pkmn {
              typename libpkmn_pokemon_type>
             friend class pokemon_party_gbimpl;
 
-            typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
-            friend pokemon_scoped_lock;
-
         protected:
             pkmn::move_slots_t _moves;
             std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;
@@ -124,7 +119,7 @@ namespace pkmn {
             void* _native_pc;
             void* _native_party;
 
-            boost::mutex _mem_mutex;
+            boost::recursive_mutex _mem_mutex;
 
             virtual void _populate_party_data() = 0;
 

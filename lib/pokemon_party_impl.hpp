@@ -11,11 +11,10 @@
 
 #include "pokemon_impl.hpp"
 
-#include "mem/scoped_lock.hpp"
-
 #include <pkmn/pokemon_party.hpp>
 
 #include <boost/noncopyable.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <string>
 
@@ -42,16 +41,13 @@ namespace pkmn {
 
             void* get_native() override final;
 
-            typedef pkmn::mem::scoped_lock<pokemon_party_impl> pokemon_party_scoped_lock;
-            friend pokemon_party_scoped_lock;
-
         protected:
             pkmn::pokemon_list_t _pokemon_list;
 
             void* _native;
             bool _our_mem;
 
-            boost::mutex _mem_mutex;
+            boost::recursive_mutex _mem_mutex;
 
             int _game_id, _generation;
 
