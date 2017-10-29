@@ -22,7 +22,7 @@ sudo apt-get -y install libqt4-dev qtbase5-dev \
 # Static analysis needs a later CMake than the default for Ubuntu 14.04
 if [ "$STATIC_ANALYSIS" -eq "1" ]
 then
-    sudo apt-get -y install cmake cppcheck iwyu
+    sudo apt-get -y install cmake cppcheck
 fi
 
 if [ "$CC" = "gcc" ] || [ "$CXX" = "clang" ]
