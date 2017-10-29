@@ -912,9 +912,9 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     /*
      * Check (in)equality operators.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS1(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS2(123,456);
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_coords COORDS3(456,123);
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_coords COORDS1(123,456);
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_coords COORDS2(123,456);
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_coords COORDS3(456,123);
 
     EXPECT_TRUE(COORDS1 == COORDS2);
     EXPECT_FALSE(COORDS1 != COORDS2);
@@ -937,19 +937,19 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     /*
      * Check (in)equality operators.
      */
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS1(
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_spots SPOTS1(
         pkmn::calculations::spinda_coords(7,5),
         pkmn::calculations::spinda_coords(10,0),
         pkmn::calculations::spinda_coords(1,4),
         pkmn::calculations::spinda_coords(2,15)
     );
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS2(
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_spots SPOTS2(
         pkmn::calculations::spinda_coords(7,5),
         pkmn::calculations::spinda_coords(10,0),
         pkmn::calculations::spinda_coords(1,4),
         pkmn::calculations::spinda_coords(2,15)
     );
-    BOOST_STATIC_CONSTEXPR pkmn::calculations::spinda_spots SPOTS3(
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_spots SPOTS3(
         pkmn::calculations::spinda_coords(7,5),
         pkmn::calculations::spinda_coords(10,0),
         pkmn::calculations::spinda_coords(2,15),
