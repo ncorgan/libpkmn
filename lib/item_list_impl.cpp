@@ -165,7 +165,9 @@ namespace pkmn {
        _game_id(game_id),
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0),
-       _pc(ITEM_LIST_ID_IS_PC(item_list_id))
+       _pc(ITEM_LIST_ID_IS_PC(item_list_id)),
+       _our_mem(false),
+       _native(nullptr)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
