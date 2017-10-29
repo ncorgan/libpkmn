@@ -206,7 +206,7 @@ namespace pkmn { namespace database {
         }
 
         while(gcn_stmt.executeStep()) {
-            ret.emplace_back((const char*)(gcn_stmt.getColumn(0)));
+            ret.emplace_back(gcn_stmt.getColumn(0));
         }
     }
 
@@ -275,10 +275,10 @@ namespace pkmn { namespace database {
                         {
                             ret.emplace_back(old_name);
                         } else {
-                            ret.emplace_back((const char*)(stmt.getColumn(1)));
+                            ret.emplace_back(stmt.getColumn(1));
                         }
                     } else {
-                        ret.emplace_back((const char*)(stmt.getColumn(1)));
+                        ret.emplace_back(stmt.getColumn(1));
                     }
                 }
             }
