@@ -134,4 +134,4 @@ before_install:
   - bash testing/travis-scripts/install-deps.sh
 
 script:
-  - if [ "$STATIC_ANALYSIS" -eq "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi
+  - if [ "$STATIC_ANALYSIS" = "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi
