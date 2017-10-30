@@ -52,7 +52,7 @@ if not !ERRORLEVEL!==0 goto fail
 
 :: So the log isn't too verbose
 echo Installing...
-msbuild /p:configuration=Release INSTALL.vcxproj 1>nul 2>nul
+cmake --build . --target install --config "Release" 1>nul 2>nul
 if not !ERRORLEVEL!==0 goto fail
 
 mkdir c:\projects\libpkmn\testing\applications\cpp\build
