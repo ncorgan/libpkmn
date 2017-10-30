@@ -13,7 +13,7 @@
 
 namespace pkmn {
 
-    static PKMN_CONSTEXPR int GBA_NUM_BOXES = 14;
+    BOOST_STATIC_CONSTEXPR int GBA_NUM_BOXES = 14;
 
     class pokemon_pc_gbaimpl: public pokemon_pc_impl {
         public:

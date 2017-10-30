@@ -218,7 +218,7 @@ static void gen1_item_bag_test(
     TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->name);
     TEST_ASSERT_EQUAL(0, item_pocket_ptr->num_items);
 
-    for(size_t i = 0; i < 8; ++i)
+    for(int i = 0; i < 8; ++i)
     {
         error = pkmn_item_bag_add(
                     &bag,
@@ -238,7 +238,7 @@ static void gen1_item_bag_test(
     TEST_ASSERT_EQUAL(0, item_pocket_ptr->item_slots.item_slots[8].amount);
 
     // Make sure removing items through the bag removes from the pocket.
-    for(size_t i = 0; i < 8; ++i)
+    for(int i = 0; i < 8; ++i)
     {
         error = pkmn_item_bag_remove(
                     &bag,
