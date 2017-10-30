@@ -62,8 +62,10 @@ environment:
 configuration: Release
 
 cache:
-  - C:\lua -> testing\appveyor-scripts\build-test.bat
-  - C:\external -> testing\appveyor-scripts\build-test.bat
+  - C:\lua -> testing\appveyor-scripts\msvc-build-test.bat
+  - C:\external -> testing\appveyor-scripts\msvc-build-test.bat
+  - C:\lua -> testing\appveyor-scripts\mingw-build-test.bat
+  - C:\external -> testing\appveyor-scripts\mingw-build-test.bat
 
 install:
   - git submodule update --init --recursive
@@ -73,6 +75,6 @@ install:
   - luarocks install luaunit
 
 build_script:
-  - testing\appveyor-scripts\build-test.bat
+  - testing\appveyor-scripts\msvc-build-test.bat
 
 test: off
