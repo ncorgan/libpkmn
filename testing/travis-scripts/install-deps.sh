@@ -25,7 +25,7 @@ then
     sudo apt-get -y install cmake cppcheck
 fi
 
-if [ "$CC" = "gcc" ] || [ "$CXX" = "clang" ]
+if [ "$CC" = "gcc" ] || [ "$CC" = "clang" ]
 then
     sudo apt-get -y install libboost1.55-all-dev
 fi
