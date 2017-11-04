@@ -1,53 +1,48 @@
 environment:
   LUAROCKS_VER: 2.3.0
   matrix:
-#     - MINGW_ARCH: i686
-#       MINGW_DIR: C:\msys64\mingw32
-#       PYTHON_VERSION: 35
-#       QT_DIR: "C:\\Qt\\5.8\\mingw53_32"
+    - BITNESS: 32
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
+      BOOST_VERSION: 1_59
+      QT_DIR: "C:\\Qt\\5.6\\msvc2015"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.1.5
 
-#    - BITNESS: 32
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
-#      BOOST_VERSION: 1_59
-#      QT_DIR: "C:\\Qt\\5.6\\msvc2015"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.1.5
-#
-#    - BITNESS: 64
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
-#      BOOST_VERSION: 1_59
-#      QT_DIR: "C:\\Qt\\5.6\\msvc2015_64"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.1.5
-#
-#    - BITNESS: 32
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
-#      BOOST_VERSION: 1_62
-#      QT_DIR: "C:\\Qt\\5.7\\msvc2015"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.2.4
-#
-#    - BITNESS: 64
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
-#      BOOST_VERSION: 1_62
-#      QT_DIR: "C:\\Qt\\5.7\\msvc2015_64"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.2.4
-#
-#    - BITNESS: 32
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
-#      BOOST_VERSION: 1_63
-#      QT_DIR: "C:\\Qt\\5.8\\msvc2015"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.3.2
-#
-#    - BITNESS: 64
-#      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
-#      BOOST_VERSION: 1_63
-#      QT_DIR: "C:\\Qt\\5.8\\msvc2015_64"
-#      PYTHON_VERSION: 35
-#      LUA_VER: 5.3.2
-#
+    - BITNESS: 64
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
+      BOOST_VERSION: 1_59
+      QT_DIR: "C:\\Qt\\5.6\\msvc2015_64"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.1.5
+
+    - BITNESS: 32
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
+      BOOST_VERSION: 1_62
+      QT_DIR: "C:\\Qt\\5.7\\msvc2015"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.2.4
+
+    - BITNESS: 64
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
+      BOOST_VERSION: 1_62
+      QT_DIR: "C:\\Qt\\5.7\\msvc2015_64"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.2.4
+
+    - BITNESS: 32
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015"
+      BOOST_VERSION: 1_63
+      QT_DIR: "C:\\Qt\\5.8\\msvc2015"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.3.2
+
+    - BITNESS: 64
+      CMAKE_GENERATOR_NAME: "Visual Studio 14 2015 Win64"
+      BOOST_VERSION: 1_63
+      QT_DIR: "C:\\Qt\\5.8\\msvc2015_64"
+      PYTHON_VERSION: 35
+      LUA_VER: 5.3.2
+
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       BITNESS: 32
       CMAKE_GENERATOR_NAME: "Visual Studio 15 2017"
@@ -65,6 +60,11 @@ environment:
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
       SKIP_LUA: 1
+
+#     - MINGW_ARCH: i686
+#       MINGW_DIR: C:\msys64\mingw32
+#       PYTHON_VERSION: 35
+#       QT_DIR: "C:\\Qt\\5.8\\mingw53_32"
 
 configuration: Release
 
