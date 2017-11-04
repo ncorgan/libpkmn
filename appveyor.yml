@@ -55,6 +55,7 @@ environment:
       QT_DIR: "C:\\Qt\\5.9.1\\msvc2017"
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
+      SKIP_LUA: 1
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       BITNESS: 64
@@ -63,6 +64,7 @@ environment:
       QT_DIR: "C:\\Qt\\5.9.1\\msvc2017_64"
       PYTHON_VERSION: 35
       LUA_VER: 5.3.2
+      SKIP_LUA: 1
 
 configuration: Release
 
@@ -75,9 +77,9 @@ cache:
 install:
   - git submodule update --init --recursive
   - choco install -y doxygen.install swig
-  - if not defined MINGW_ARCH testing\appveyor-scripts\lua\set_compiler_env.bat
-  - if not defined MINGW_ARCH testing\appveyor-scripts\lua\install.bat
-  - if not defined MINGW_ARCH luarocks install luaunit
+  - if not defined MINGW_ARCH if not defined SKIP_LUA testing\appveyor-scripts\lua\set_compiler_env.bat
+  - if not defined MINGW_ARCH if not defined SKIP_LUA testing\appveyor-scripts\lua\install.bat
+  - if not defined MINGW_ARCH if not defined SKIP_LUA luarocks install luaunit
 
 build_script:
   - if not defined MINGW_ARCH testing\appveyor-scripts\msvc-build-test.bat
