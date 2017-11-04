@@ -15,8 +15,12 @@
 
 #include <pkmn/exception.hpp>
 
+#include <pksav/math/endian.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 
@@ -171,11 +175,15 @@ namespace pkmn {
     }
 
     std::string game_save_gen2impl::get_trainer_gender() {
+        std::string ret;
+
         if(_game_id == CRYSTAL) {
-            return (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
+            ret = (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
         } else {
-            return "Male";
+            ret = "Male";
         }
+
+        return ret;
     }
 
     void game_save_gen2impl::set_trainer_gender(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +18,7 @@ namespace pkmn {
     class game_save_impl: public game_save, boost::noncopyable {
         public:
             game_save_impl() {};
-            game_save_impl(
+            explicit game_save_impl(
                 const std::string &filepath
             );
 

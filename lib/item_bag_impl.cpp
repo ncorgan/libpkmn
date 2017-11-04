@@ -71,7 +71,9 @@ namespace pkmn {
     item_bag_impl::item_bag_impl(
         int game_id
     ): item_bag(),
-       _game_id(game_id)
+       _game_id(game_id),
+       _our_mem(false),
+       _native(nullptr)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -206,7 +208,7 @@ namespace pkmn {
     }
 
     void* item_bag_impl::get_native() {
-        item_bag_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _native;
     }

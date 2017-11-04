@@ -13,7 +13,7 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<pkmn::gen1_pokemon_boxes_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pkmn::gen1_pokemon_boxes_t*>(_native))
 
 namespace pkmn {
 

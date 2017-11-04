@@ -22,7 +22,7 @@
 #include <boost/filesystem.hpp>
 
 #include <fstream>
-#include <iostream>
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 
@@ -69,7 +69,7 @@ namespace pkmn {
         std::vector<uint8_t> raw(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read((char*)raw.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
         pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
@@ -206,7 +206,8 @@ namespace pkmn {
 
     game_save_impl::game_save_impl(
         const std::string &filepath
-    ): game_save()
+    ): game_save(),
+       _game_id(0)
     {
         if(not fs::exists(filepath)) {
             throw std::invalid_argument("The given filepath does not exist.");

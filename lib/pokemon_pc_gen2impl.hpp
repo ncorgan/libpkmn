@@ -23,7 +23,7 @@ namespace pkmn {
     class pokemon_pc_gen2impl: public pokemon_pc_impl {
         public:
             pokemon_pc_gen2impl() {}
-            pokemon_pc_gen2impl(
+            explicit pokemon_pc_gen2impl(
                 int game_id
             );
             pokemon_pc_gen2impl(
@@ -35,11 +35,11 @@ namespace pkmn {
 
             ~pokemon_pc_gen2impl();
 
-            int get_num_boxes();
+            int get_num_boxes() override final;
 
         private:
-            void _from_native();
-            void _update_box_names();
+            void _from_native() override final;
+            void _update_box_names() override final;
     };
 }
 

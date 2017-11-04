@@ -19,36 +19,36 @@ namespace pkmn {
             );
             ~item_list_gen2_tmhmimpl();
 
-            int get_num_items();
+            int get_num_items() override;
 
             void add(
                 const std::string &name,
                 int amount
-            );
+            ) override final;
 
             void remove(
                 const std::string &name,
                 int amount
-            );
+            ) override final;
 
             void move(
                 int old_position,
                 int new_position
-            );
+            ) override final;
 
             void set_item(
                 int position,
                 const std::string& item_name,
                 int amount
-            );
+            ) override final;
 
         private:
             void _from_native(
                 int index = -1
-            );
+            ) override final;
             void _to_native(
                 int index = -1
-            );
+            ) override final;
     };
 }
 

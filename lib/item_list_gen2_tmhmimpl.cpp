@@ -12,9 +12,9 @@
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
-#include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
 BOOST_STATIC_CONSTEXPR int TM50_ID = 354;
@@ -29,7 +29,7 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
     return (num >= HM01_ID and num <= HM07_ID);
 }
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native))
 
 namespace pkmn {
 
@@ -69,7 +69,7 @@ namespace pkmn {
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;
@@ -77,7 +77,7 @@ namespace pkmn {
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         int ret = 0;
         for(int i = 0; i < 50; i++) {
@@ -190,7 +190,7 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
@@ -203,7 +203,7 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);
