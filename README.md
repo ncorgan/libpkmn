@@ -61,7 +61,7 @@ repository is automatically tested under the following configurations:
  * Ubuntu 14.04 (x64)
    * C/C++
      * GCC: 4.8.4, 5.4.1, 6.2.0, 7.2.0
-     * Clang: 4.0.1, 5.0.0
+     * Clang: 3.9.0, 4.0.1, 5.0.0
      * Boost: 1.55.0, 1.60.0
      * Qt: 4.8.6, 5.2.1
    * SWIG: 2.0.11, 3.0.2
@@ -83,7 +83,7 @@ repository is automatically tested under the following configurations:
    * Python: 3.5.2
 
 Tests are run with the following frameworks:
- * C++: [Google Test](https://github.com/google/googletest)
+ * C++: [Google Test](https://github.com/google/googletest), [QtTest](http://doc.qt.io/qt-5/qttest-index.html)
  * C: [Unity](https://github.com/ThrowTheSwitch/Unity)
  * C#: [NUnit](https://www.nunit.org/)
  * Lua: [Luaunit](https://github.com/bluebird75/luaunit)
@@ -101,4 +101,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/10/10
+README last updated: 2017/11/04
