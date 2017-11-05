@@ -128,6 +128,13 @@ namespace pkmn {
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_form_from_IVs();
         }
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -150,6 +157,13 @@ namespace pkmn {
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_form_from_IVs();
         }
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -175,6 +189,13 @@ namespace pkmn {
         {
             _set_unown_form_from_IVs();
         }
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen2impl::pokemon_gen2impl(
@@ -200,6 +221,13 @@ namespace pkmn {
         {
             _set_unown_form_from_IVs();
         }
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen2impl::~pokemon_gen2impl() {

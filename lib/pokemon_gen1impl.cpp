@@ -122,6 +122,13 @@ namespace pkmn {
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -141,6 +148,13 @@ namespace pkmn {
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -162,6 +176,13 @@ namespace pkmn {
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -183,6 +204,13 @@ namespace pkmn {
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
         _update_stat_map();
         _update_moves(-1);
+
+        // Nickname and trainer name aren't stored with the binary,
+        // so use LibPKMN's defaults.
+        _nickname = boost::algorithm::to_upper_copy(
+                        _database_entry.get_name()
+                    );
+        _trainer_name = DEFAULT_TRAINER_NAME;
     }
 
     pokemon_gen1impl::~pokemon_gen1impl() {

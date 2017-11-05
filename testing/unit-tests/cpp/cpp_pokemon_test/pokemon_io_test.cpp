@@ -114,16 +114,22 @@ static void compare_pokemon(
     pkmn::pokemon::sptr pokemon2
 ) {
     std::string game = pokemon1->get_game();
-    ASSERT_EQ(game, pokemon2->get_game());
     int generation = game_generations.at(game);
+
+    // There is no way to determine what game an imported Generation I-II
+    // Pokémon comes from, so LibPKMN defaults to a default valid game.
+    if(generation >= 3)
+    {
+        ASSERT_EQ(game, pokemon2->get_game());
+    }
 
     EXPECT_EQ(pokemon1->get_species(), pokemon2->get_species());
     EXPECT_EQ(pokemon1->get_form(), pokemon2->get_form());
-    EXPECT_EQ(pokemon1->get_nickname(), pokemon2->get_nickname());
-    EXPECT_EQ(pokemon1->get_trainer_name(), pokemon2->get_trainer_name());
     EXPECT_EQ(pokemon1->get_trainer_id(), pokemon2->get_trainer_id());
     EXPECT_EQ(pokemon1->get_experience(), pokemon2->get_experience());
     EXPECT_EQ(pokemon1->get_level(), pokemon2->get_level());
+    EXPECT_EQ(pokemon1->get_nickname(), pokemon2->get_nickname());
+    EXPECT_EQ(pokemon1->get_trainer_name(), pokemon2->get_trainer_name());
 
     const std::map<std::string, int>& EVs1 = pokemon1->get_EVs();
     const std::map<std::string, int>& EVs2 = pokemon2->get_EVs();
@@ -146,8 +152,11 @@ static void compare_pokemon(
         EXPECT_EQ(iter->second, stats2.at(iter->first));
     }
 
-    EXPECT_EQ(pokemon1->get_icon_filepath(), pokemon2->get_icon_filepath());
-    EXPECT_EQ(pokemon1->get_sprite_filepath(), pokemon2->get_sprite_filepath());
+    if(pokemon2->get_game() == game)
+    {
+        EXPECT_EQ(pokemon1->get_icon_filepath(), pokemon2->get_icon_filepath());
+        EXPECT_EQ(pokemon1->get_sprite_filepath(), pokemon2->get_sprite_filepath());
+    }
 
     if(generation >= 2)
     {
@@ -192,6 +201,60 @@ static void compare_pokemon(
         EXPECT_EQ(pokemon1->get_location_met(true), pokemon2->get_location_met(true));
     }
 }
+
+// Actual tests
+
+class pk1_test: public ::testing::TestWithParam<std::string> {};
+
+TEST_P(pk1_test, test_saving_and_loading_pk1)
+{
+    std::string game = GetParam();
+
+    fs::path pk1_path = TMP_DIR / str(boost::format("%s_%u.pk1") % game % pkmn::rng<uint32_t>().rand());
+
+    pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
+    random_pokemon->export_to_file(pk1_path.string());
+
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(pk1_path.string());
+
+    compare_pokemon(random_pokemon, imported_pokemon);
+
+    std::remove(pk1_path.string().c_str());
+}
+
+static const std::vector<std::string> GEN1_GAMES = {"Red", "Blue", "Yellow"};
+
+INSTANTIATE_TEST_CASE_P(
+    pk1_test,
+    pk1_test,
+    ::testing::ValuesIn(GEN1_GAMES)
+);
+
+class pk2_test: public ::testing::TestWithParam<std::string> {};
+
+TEST_P(pk2_test, test_saving_and_loading_pk2)
+{
+    std::string game = GetParam();
+
+    fs::path pk2_path = TMP_DIR / str(boost::format("%s_%u.pk2") % game % pkmn::rng<uint32_t>().rand());
+
+    pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
+    random_pokemon->export_to_file(pk2_path.string());
+
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(pk2_path.string());
+
+    compare_pokemon(random_pokemon, imported_pokemon);
+
+    std::remove(pk2_path.string().c_str());
+}
+
+static const std::vector<std::string> GEN2_GAMES = {"Gold", "Silver", "Crystal"};
+
+INSTANTIATE_TEST_CASE_P(
+    pk2_test,
+    pk2_test,
+    ::testing::ValuesIn(GEN2_GAMES)
+);
 
 class _3gpkm_test: public ::testing::TestWithParam<std::string> {};
 
