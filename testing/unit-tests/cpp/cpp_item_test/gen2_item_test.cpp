@@ -8,6 +8,7 @@
 #include "item_test_common.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/database/lists.hpp>
 #include "pksav/pksav_call.hpp"
 
@@ -90,7 +91,13 @@ void gen2_item_pocket_test(
     const pksav_gen2_item_pocket_t* native = reinterpret_cast<const pksav_gen2_item_pocket_t*>(item_pocket->get_native());
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                item_pocket->get_game()
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
     EXPECT_EQ(0, native->items[num_items].index);
@@ -170,7 +177,13 @@ void gen2_key_item_pocket_test(
     const pksav_gen2_key_item_pocket_t* native = reinterpret_cast<const pksav_gen2_key_item_pocket_t*>(key_item_pocket->get_native());
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                key_item_pocket->get_game()
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
     EXPECT_EQ(0, native->items[num_items].index);
@@ -235,7 +248,13 @@ void gen2_ball_pocket_test(
     const pksav_gen2_ball_pocket_t* native = reinterpret_cast<const pksav_gen2_ball_pocket_t*>(ball_pocket->get_native());
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                ball_pocket->get_game()
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
     EXPECT_EQ(0, native->items[num_items].index);
@@ -256,13 +275,13 @@ void gen2_tmhm_pocket_test(
     for(int i = 1; i <= 50; ++i) {
         char name[5] = "";
         std::snprintf(name, sizeof(name), "TM%02d", i);
-        EXPECT_EQ(name, item_slots[i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[i-1].item);
         EXPECT_EQ(0, item_slots[i-1].amount);
     }
     for(int i = 1; i <= 7; ++i) {
         char name[5] = "";
         std::snprintf(name, sizeof(name), "HM%02d", i);
-        EXPECT_EQ(name, item_slots[50+i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[50+i-1].item);
         EXPECT_EQ(0, item_slots[50+i-1].amount);
     }
 
@@ -296,7 +315,7 @@ void gen2_tmhm_pocket_test(
         std::snprintf(name, sizeof(name), "TM%02d", i);
         tmhm_pocket->add(name, 50);
         EXPECT_EQ(i, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[i-1].item);
         EXPECT_EQ(50, item_slots[i-1].amount);
     }
     for(int i = 50; i >= 1; --i) {
@@ -304,7 +323,7 @@ void gen2_tmhm_pocket_test(
         std::snprintf(name, sizeof(name), "TM%02d", i);
         tmhm_pocket->remove(name, 50);
         EXPECT_EQ(i-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[i-1].item);
         EXPECT_EQ(0, item_slots[i-1].amount);
     }
 
@@ -325,7 +344,7 @@ void gen2_tmhm_pocket_test(
         std::snprintf(name, sizeof(name), "HM%02d", i);
         tmhm_pocket->add(name, 1);
         EXPECT_EQ(i, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[50+i-1].item);
         EXPECT_EQ(1, item_slots[50+i-1].amount);
     }
     for(int i = 7; i >= 1; --i) {
@@ -333,7 +352,7 @@ void gen2_tmhm_pocket_test(
         std::snprintf(name, sizeof(name), "HM%02d", i);
         tmhm_pocket->remove(name, 1);
         EXPECT_EQ(i-1, tmhm_pocket->get_num_items());
-        EXPECT_EQ(name, item_slots[50+i-1].item.get_name());
+        EXPECT_EQ(name, item_slots[50+i-1].item);
         EXPECT_EQ(0, item_slots[50+i-1].amount);
     }
 
@@ -398,7 +417,13 @@ void gen2_item_pc_test(
     const pksav_gen2_item_pc_t* native = reinterpret_cast<const pksav_gen2_item_pc_t*>(item_pc->get_native());
     EXPECT_EQ(num_items, int(native->count));
     for(int i = 0; i < num_items; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                item_pc->get_game()
+            ).get_item_index(),
+            int(native->items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
     EXPECT_EQ(0, native->items[num_items].index);
@@ -488,34 +513,34 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     const pkmn::item_slots_t& ball_slots = bag->get_pocket("Balls")->as_vector();
     const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket("TM/HM")->as_vector();
 
-    EXPECT_EQ("Potion", item_slots.at(0).item.get_name());
+    EXPECT_EQ("Potion", item_slots.at(0).item);
     EXPECT_EQ(5, item_slots.at(0).amount);
-    EXPECT_EQ("Berry", item_slots.at(1).item.get_name());
+    EXPECT_EQ("Berry", item_slots.at(1).item);
     EXPECT_EQ(5, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    EXPECT_EQ("Bicycle", key_item_slots.at(0).item.get_name());
+    EXPECT_EQ("Bicycle", key_item_slots.at(0).item);
     EXPECT_EQ(5, key_item_slots.at(0).amount);
-    EXPECT_EQ("SquirtBottle", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("SquirtBottle", key_item_slots.at(1).item);
     EXPECT_EQ(5, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("Great Ball", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("Great Ball", ball_slots.at(0).item);
     EXPECT_EQ(5, ball_slots.at(0).amount);
-    EXPECT_EQ("Friend Ball", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("Friend Ball", ball_slots.at(1).item);
     EXPECT_EQ(5, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item.get_name());
+    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_hm_slots.at(1).item.get_name());
+    EXPECT_EQ("TM02", tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("TM28", tm_hm_slots.at(27).item.get_name());
+    EXPECT_EQ("TM28", tm_hm_slots.at(27).item);
     EXPECT_EQ(5, tm_hm_slots.at(27).amount);
-    EXPECT_EQ("HM01", tm_hm_slots.at(50).item.get_name());
+    EXPECT_EQ("HM01", tm_hm_slots.at(50).item);
     EXPECT_EQ(5, tm_hm_slots.at(50).amount);
 
     /*
@@ -525,19 +550,37 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     const pksav_gen2_item_bag_t* native = reinterpret_cast<const pksav_gen2_item_bag_t*>(bag->get_native());
     EXPECT_EQ(2, native->item_pocket.count);
     for(int i = 0; i < 3; ++i) {
-        EXPECT_EQ(item_slots.at(i).item.get_item_index(), int(native->item_pocket.items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                item_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
+            int(native->item_pocket.items[i].index)
+        );
         EXPECT_EQ(item_slots.at(i).amount, int(native->item_pocket.items[i].count));
     }
     EXPECT_EQ(0xFF, native->item_pocket.terminator);
     EXPECT_EQ(2, native->key_item_pocket.count);
     for(int i = 0; i < 3; ++i) {
-        EXPECT_EQ(key_item_slots.at(i).item.get_item_index(), int(native->key_item_pocket.items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                key_item_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
+            int(native->key_item_pocket.items[i].index)
+        );
         EXPECT_EQ(key_item_slots.at(i).amount, int(native->key_item_pocket.items[i].count));
     }
     EXPECT_EQ(0xFF, native->key_item_pocket.terminator);
     EXPECT_EQ(2, native->ball_pocket.count);
     for(int i = 0; i < 3; ++i) {
-        EXPECT_EQ(ball_slots.at(i).item.get_item_index(), int(native->ball_pocket.items[i].index));
+        EXPECT_EQ(
+            pkmn::database::item_entry(
+                ball_slots.at(i).item,
+                bag->get_game()
+            ).get_item_index(),
+            int(native->ball_pocket.items[i].index)
+        );
         EXPECT_EQ(ball_slots.at(i).amount, int(native->ball_pocket.items[i].count));
     }
     EXPECT_EQ(0xFF, native->ball_pocket.terminator);
@@ -554,34 +597,34 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
         );
     }
 
-    EXPECT_EQ("None", item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", item_slots.at(0).item);
     EXPECT_EQ(0, item_slots.at(0).amount);
-    EXPECT_EQ("None", item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", item_slots.at(1).item);
     EXPECT_EQ(0, item_slots.at(1).amount);
-    EXPECT_EQ("None", item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
-    EXPECT_EQ("None", key_item_slots.at(0).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(0).item);
     EXPECT_EQ(0, key_item_slots.at(0).amount);
-    EXPECT_EQ("None", key_item_slots.at(1).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(1).item);
     EXPECT_EQ(0, key_item_slots.at(1).amount);
-    EXPECT_EQ("None", key_item_slots.at(2).item.get_name());
+    EXPECT_EQ("None", key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
-    EXPECT_EQ("None", ball_slots.at(0).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(0).item);
     EXPECT_EQ(0, ball_slots.at(0).amount);
-    EXPECT_EQ("None", ball_slots.at(1).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(1).item);
     EXPECT_EQ(0, ball_slots.at(1).amount);
-    EXPECT_EQ("None", ball_slots.at(2).item.get_name());
+    EXPECT_EQ("None", ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
-    EXPECT_EQ("TM01", tm_hm_slots.at(0).item.get_name());
+    EXPECT_EQ("TM01", tm_hm_slots.at(0).item);
     EXPECT_EQ(0, tm_hm_slots.at(0).amount);
-    EXPECT_EQ("TM02", tm_hm_slots.at(1).item.get_name());
+    EXPECT_EQ("TM02", tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
-    EXPECT_EQ("TM28", tm_hm_slots.at(27).item.get_name());
+    EXPECT_EQ("TM28", tm_hm_slots.at(27).item);
     EXPECT_EQ(0, tm_hm_slots.at(27).amount);
-    EXPECT_EQ("HM01", tm_hm_slots.at(50).item.get_name());
+    EXPECT_EQ("HM01", tm_hm_slots.at(50).item);
     EXPECT_EQ(0, tm_hm_slots.at(50).amount);
 
     // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
@@ -590,7 +633,7 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
             bag->add(crystal_items[i], 1);
         }
         for(int i = 0; i < 4; ++i) {
-            EXPECT_EQ(crystal_items[i], key_item_slots.at(i).item.get_name());
+            EXPECT_EQ(crystal_items[i], key_item_slots.at(i).item);
             EXPECT_EQ(1, key_item_slots.at(i).amount);
         }
 
@@ -598,7 +641,7 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
             bag->remove(crystal_items[i], 1);
         }
         for(int i = 0; i < 4; ++i) {
-            EXPECT_EQ("None", key_item_slots.at(i).item.get_name());
+            EXPECT_EQ("None", key_item_slots.at(i).item);
             EXPECT_EQ(0, key_item_slots.at(i).amount);
         }
     } else {

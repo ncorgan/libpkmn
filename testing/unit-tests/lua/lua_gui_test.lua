@@ -68,7 +68,7 @@ function utils.compare_two_files(filepath1, filepath2)
 end
 
 function test_spinda()
-    if pkmn.buildinfo.get_qt_version() ~= "N/A"
+    if pkmn.buildinfo.QT_VERSION ~= "N/A"
     then
         local SPINDA_FORMAT = "spinda_%d_%d_%u.png"
 
@@ -83,7 +83,7 @@ function test_spinda()
                                                    LIBPKMN_TEST_FILES,
                                                    string.format(
                                                        "spinda-qt%s",
-                                                       string.sub(pkmn.buildinfo.get_qt_version(), 0, 1)
+                                                       string.sub(pkmn.buildinfo.QT_VERSION, 0, 1)
                                                    ),
                                                    spinda_filename
                                                )
@@ -105,7 +105,7 @@ function test_spinda()
                                                    LIBPKMN_TEST_FILES,
                                                    string.format(
                                                        "spinda-qt%s",
-                                                       string.sub(pkmn.buildinfo.get_qt_version(), 0, 1)
+                                                       string.sub(pkmn.buildinfo.QT_VERSION, 0, 1)
                                                    ),
                                                    spinda_filename
                                                )

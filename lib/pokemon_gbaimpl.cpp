@@ -11,9 +11,9 @@
 
 #include "conversions/gen3_conversions.hpp"
 #include "database/database_common.hpp"
-#include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "libpkmgc_includes.hpp"
 
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
@@ -45,8 +45,8 @@
 #include <fstream>
 #include <stdexcept>
 
-#define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
-#define GBA_PARTY_RCAST reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+#define GBA_PC_RCAST    (reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc))
+#define GBA_PARTY_RCAST (reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party))
 
 namespace fs = boost::filesystem;
 
@@ -374,7 +374,7 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_nickname() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         char nickname[11] = {0};
         PKSAV_CALL(
@@ -397,7 +397,7 @@ namespace pkmn {
                   );
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -409,7 +409,7 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_gender() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pkmn::calculations::modern_pokemon_gender(
                    _database_entry.get_name(),
@@ -420,7 +420,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_gender(
         const std::string &gender
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _set_modern_gender(
             &GBA_PC_RCAST->personality,
@@ -431,7 +431,7 @@ namespace pkmn {
     }
 
     bool pokemon_gbaimpl::is_shiny() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pkmn::calculations::modern_shiny(
                    pksav_littleendian32(GBA_PC_RCAST->personality),
@@ -442,7 +442,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_shininess(
         bool value
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _set_modern_shininess(
             &GBA_PC_RCAST->personality,
@@ -457,7 +457,7 @@ namespace pkmn {
 
     std::string pokemon_gbaimpl::get_held_item()
     {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pkmn::database::item_index_to_name(
                    pksav_littleendian16(_growth->held_item),
@@ -478,13 +478,13 @@ namespace pkmn {
             throw std::invalid_argument("This item is not holdable.");
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
     std::string pokemon_gbaimpl::get_trainer_name() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         char otname[8] = {0};
         PKSAV_CALL(
@@ -507,7 +507,7 @@ namespace pkmn {
                   );
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -519,19 +519,19 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gbaimpl::get_trainer_public_id() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pksav_littleendian16(GBA_PC_RCAST->ot_id.pid);
     }
 
     uint16_t pokemon_gbaimpl::get_trainer_secret_id() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pksav_littleendian16(GBA_PC_RCAST->ot_id.sid);
     }
 
     uint32_t pokemon_gbaimpl::get_trainer_id() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pksav_littleendian32(GBA_PC_RCAST->ot_id.id);
     }
@@ -539,7 +539,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_trainer_public_id(
         uint16_t public_id
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GBA_PC_RCAST->ot_id.pid = pksav_littleendian16(public_id);
     }
@@ -547,7 +547,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_trainer_secret_id(
         uint16_t secret_id
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GBA_PC_RCAST->ot_id.sid = pksav_littleendian16(secret_id);
     }
@@ -555,13 +555,13 @@ namespace pkmn {
     void pokemon_gbaimpl::set_trainer_id(
         uint32_t id
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(id);
     }
 
     std::string pokemon_gbaimpl::get_trainer_gender() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return (_misc->origin_info & PKSAV_GBA_OTGENDER_MASK) ? "Female"
                                                               : "Male";
@@ -570,7 +570,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_trainer_gender(
         const std::string &gender
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(gender == "Male") {
             _misc->origin_info &= ~PKSAV_GBA_OTGENDER_MASK;
@@ -582,7 +582,7 @@ namespace pkmn {
     }
 
     int pokemon_gbaimpl::get_friendship() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _growth->friendship;
     }
@@ -594,27 +594,31 @@ namespace pkmn {
             pkmn::throw_out_of_range("friendship", 0 , 255);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _growth->friendship = uint8_t(friendship);
     }
 
     std::string pokemon_gbaimpl::get_ability() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        std::string ret;
 
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
         if(abilities.second == "None") {
-            return abilities.first;
+            ret = abilities.first;
         } else {
-            return (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
+            ret = (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
                                                                     : abilities.first;
         }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_ability(
         const std::string &ability
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
         if(ability == "None") {
@@ -639,7 +643,7 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_ball() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         uint16_t ball = _misc->origin_info & PKSAV_GBA_BALL_MASK;
         ball >>= PKSAV_GBA_BALL_OFFSET;
@@ -653,7 +657,7 @@ namespace pkmn {
         // Try and instantiate an item_entry to validate the ball.
         (void)pkmn::database::item_entry(ball, get_game());
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _misc->origin_info &= ~PKSAV_GBA_BALL_MASK;
         uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
@@ -664,7 +668,7 @@ namespace pkmn {
 
 
     int pokemon_gbaimpl::get_level_met() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return (_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK);
     }
@@ -676,7 +680,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("Level caught", 0, 100);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _misc->origin_info &= ~PKSAV_GBA_LEVEL_MET_MASK;
         _misc->origin_info |= uint16_t(level);
@@ -688,7 +692,7 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
         } else {
-            pokemon_scoped_lock lock(this);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
             return pkmn::database::location_index_to_name(
                        _misc->met_location,
@@ -704,7 +708,7 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
         } else {
-            pokemon_scoped_lock lock(this);
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
             _misc->met_location = uint8_t(pkmn::database::location_name_to_index(
                                               location,
@@ -714,22 +718,26 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_original_game() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        std::string ret;
 
         uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
         original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
 
         if(original_game == 15) {
-            return "Colosseum/XD";
+            ret = "Colosseum/XD";
         } else {
-            return pkmn::database::game_index_to_name(original_game);
+            ret = pkmn::database::game_index_to_name(original_game);
         }
+
+        return ret;
     }
 
     void pokemon_gbaimpl::set_original_game(
         const std::string &game
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         std::string game_to_test;
         if(game == "Colosseum/XD") {
@@ -751,7 +759,7 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gbaimpl::get_personality() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return pksav_littleendian32(GBA_PC_RCAST->personality);
     }
@@ -759,7 +767,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_personality(
         uint32_t personality
     ) {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         // TODO: personality determines ability
         GBA_PC_RCAST->personality = pksav_littleendian32(personality);
@@ -770,7 +778,7 @@ namespace pkmn {
     }
 
     int pokemon_gbaimpl::get_experience() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return int(pksav_littleendian32(_growth->exp));
     }
@@ -784,7 +792,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         _growth->exp = pksav_littleendian32(uint32_t(experience));
         GBA_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
@@ -794,7 +802,7 @@ namespace pkmn {
     }
 
     int pokemon_gbaimpl::get_level() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return int(GBA_PARTY_RCAST->level);
     }
@@ -806,7 +814,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("level", 1, 100);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GBA_PARTY_RCAST->level = uint8_t(level);
         _growth->exp = pksav_littleendian32(uint32_t(_database_entry.get_experience_at_level(level)));
@@ -884,7 +892,7 @@ namespace pkmn {
             throw std::invalid_argument("Invalid ribbon.");
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(gba_ribbons.find(ribbon) != gba_ribbons.end()) {
             _set_ribbon<uint32_t, pksav_gen3_ribbon_mask_t>(
@@ -920,7 +928,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
@@ -944,7 +952,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 255);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(stat == "HP") {
             _effort->ev_hp = uint8_t(value);
@@ -965,6 +973,8 @@ namespace pkmn {
     }
 
     std::string pokemon_gbaimpl::get_sprite_filepath() {
+        std::string ret;
+
 #ifdef PKMN_ENABLE_QT
         BOOST_STATIC_CONSTEXPR int SPINDA_ID = 327;
 
@@ -983,13 +993,14 @@ namespace pkmn {
                 spinda_sprite_filepath.string()
             );
 
-            return spinda_sprite_filepath.string();
+            ret = spinda_sprite_filepath.string();
         } else {
 #endif
-            return pokemon_impl::get_sprite_filepath();
+            ret = pokemon_impl::get_sprite_filepath();
 #ifdef PKMN_ENABLE_QT
         }
 #endif
+        return ret;
     }
 
     void pokemon_gbaimpl::_set_contest_ribbon(

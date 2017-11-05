@@ -165,7 +165,9 @@ namespace pkmn {
        _game_id(game_id),
        _version_group_id(pkmn::database::game_id_to_version_group(game_id)),
        _num_items(0),
-       _pc(ITEM_LIST_ID_IS_PC(item_list_id))
+       _pc(ITEM_LIST_ID_IS_PC(item_list_id)),
+       _our_mem(false),
+       _native(nullptr)
     {
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -179,10 +181,9 @@ namespace pkmn {
                         _version_group_id
                     );
 
-        pkmn::database::item_entry none_item(0, _game_id);
         _item_slots.resize(_capacity);
         for(int i = 0; i < _capacity; ++i) {
-            _item_slots[i].item = none_item;
+            _item_slots[i].item = "None";
             _item_slots[i].amount = 0;
         }
     }
@@ -224,9 +225,11 @@ namespace pkmn {
     void item_list_impl::add(
         const std::string &item_name,
         int amount
-    ) {
+    )
+    {
         // Input validation
-        if(amount < 1 or amount > 99) {
+        if(amount < 1 or amount > 99)
+        {
             pkmn::throw_out_of_range("amount", 1, 99);
         }
 
@@ -235,20 +238,23 @@ namespace pkmn {
          * that amount. If not, see if there's room to add another
          * item.
          */
-        int item_id = pkmn::database::item_name_to_id(
-                          item_name
-                      );
-        for(int i = 0; i < _num_items; ++i) {
-            if(_item_slots[i].item.get_item_id() == item_id) {
-                if(_item_slots[i].amount == 99) {
+        for(int i = 0; i < _num_items; ++i)
+        {
+            if(_item_slots[i].item == item_name)
+            {
+                if(_item_slots[i].amount == 99)
+                {
                     throw std::runtime_error("Cannot add any more of this item.");
-                } else if((_item_slots[i].amount + amount) > 99) {
+                } else if((_item_slots[i].amount + amount) > 99)
+                {
                     int new_amount = _item_slots[i].amount + amount;
                     throw std::runtime_error(
                               str(boost::format("Can only add %d more items.") %
                                   (new_amount - amount))
                           );
-                } else {
+                }
+                else
+                {
                     _item_slots[i].amount += amount;
                     _to_native(i);
                     return;
@@ -271,7 +277,7 @@ namespace pkmn {
                       );
             }
 
-            _item_slots[_num_items].item = entry;
+            _item_slots[_num_items].item = item_name;
             _item_slots[_num_items].amount = amount;
             _to_native(_num_items++);
         }
@@ -280,9 +286,11 @@ namespace pkmn {
     void item_list_impl::remove(
         const std::string &item_name,
         int amount
-    ) {
+    )
+    {
         // Input validation
-        if(amount < 1 or amount > 99) {
+        if(amount < 1 or amount > 99)
+        {
             pkmn::throw_out_of_range("amount", 1, 99);
         }
 
@@ -291,22 +299,24 @@ namespace pkmn {
          * and if there are no more, remove the item from the list and
          * shift everything over.
          */
-        int item_id = pkmn::database::item_name_to_id(
-                          item_name
-                      );
-        for(int i = 0; i < _num_items; ++i) {
-            if(_item_slots[i].item.get_item_id() == item_id) {
-                if(_item_slots[i].amount < amount) {
+        for(int i = 0; i < _num_items; ++i)
+        {
+            if(_item_slots[i].item == item_name)
+            {
+                if(_item_slots[i].amount < amount)
+                {
                     throw std::runtime_error(
                               str(boost::format("Can only remove %d items.") %
                                   _item_slots[i].amount)
                           );
-                } else {
+                }
+                else
+                {
                     _item_slots[i].amount -= amount;
-                    if(_item_slots[i].amount == 0) {
+                    if(_item_slots[i].amount == 0)
+                    {
                         _item_slots.erase(_item_slots.begin()+i);
                         _item_slots.resize(_capacity);
-                        _item_slots.back().item = pkmn::database::item_entry(0, _game_id);
                         _num_items--;
                         _to_native();
                     }
@@ -338,6 +348,69 @@ namespace pkmn {
         pkmn::item_slot temp = _item_slots[old_position];
         _item_slots.erase(_item_slots.begin()+old_position);
         _item_slots.insert(_item_slots.begin()+new_position, temp);
+        _to_native();
+    }
+
+    void item_list_impl::set_item(
+        int position,
+        const std::string& item_name,
+        int amount
+    )
+    {
+        // Input validation.
+        int end_boundary = std::min<int>(_num_items, _capacity-1);
+        if(position < 0 or position > end_boundary)
+        {
+            pkmn::throw_out_of_range("position", 0, end_boundary);
+        }
+        if(item_name == "None")
+        {
+            if(amount != 0)
+            {
+                throw std::invalid_argument("\"None\" entries must have an amount of 0.");
+            }
+            else if(amount < 0 or amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 0, 99);
+            }
+        }
+        else
+        {
+            pkmn::database::item_entry entry(item_name, get_game());
+            if(get_name() != "PC" and item_name != "None" and entry.get_pocket() != get_name())
+            {
+                throw std::invalid_argument("This item does not belong in this pocket.");
+            }
+            if(amount < 1 or amount > 99)
+            {
+                pkmn::throw_out_of_range("amount", 1, 99);
+            }
+            for(int i = 0; i < _num_items; ++i)
+            {
+                if((_item_slots[i].item == item_name) && (i != position))
+                {
+                    std::string err_msg = "This item is already present in slot ";
+                    err_msg.append(std::to_string(i));
+                    err_msg.append(".");
+
+                    throw std::invalid_argument(err_msg.c_str());
+                }
+            }
+        }
+
+        _item_slots[position].item = item_name;
+        _item_slots[position].amount = amount;
+        if(item_name == "None" and position < end_boundary)
+        {
+            _item_slots.erase(_item_slots.begin()+position);
+            _item_slots.emplace_back(pkmn::item_slot("None", 0));
+            --_num_items;
+        }
+        else
+        {
+            ++_num_items;
+        }
+
         _to_native();
     }
 
@@ -398,7 +471,8 @@ namespace pkmn {
     }
 
     void* item_list_impl::get_native() {
-        item_list_scoped_lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
         return _native;
     }
 }

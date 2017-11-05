@@ -6,21 +6,16 @@
  */
 
 #include "pokemon_box_impl.hpp"
+#include "pokemon_box_gbimpl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 #include "pokemon_box_gcnimpl.hpp"
-
-#include "pokemon_box_gbimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "mem/pokemon_setter.hpp"
-
 #include "misc_common.hpp"
 
 #include <pkmn/exception.hpp>
-
-#include <boost/format.hpp>
 
 #include <stdexcept>
 
@@ -58,7 +53,12 @@ namespace pkmn {
 
     pokemon_box_impl::pokemon_box_impl(
         int game_id
-    ): _game_id(game_id),
+    ): _pokemon_list(),
+        _box_name(""),
+        _native(nullptr),
+        _our_mem(false),
+        _mem_mutex(),
+       _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
@@ -77,25 +77,6 @@ namespace pkmn {
         }
 
         return _pokemon_list.at(index);
-    }
-
-    void pokemon_box_impl::set_pokemon(
-        int index,
-        pkmn::pokemon::sptr new_pokemon
-    ) {
-        int capacity = get_capacity();
-        if(index < 0 or index > (capacity-1)) {
-            pkmn::throw_out_of_range("index", 0, (capacity-1));
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
-            throw std::invalid_argument("Cannot set a Pokémon to itself.");
-        }
-
-        // Copy the underlying memory to the box.
-        pkmn::mem::set_pokemon_in_box(
-            dynamic_cast<pokemon_impl*>(new_pokemon.get()),
-            this,
-            index
-        );
     }
 
     const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {

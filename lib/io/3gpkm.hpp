@@ -9,6 +9,7 @@
 
 #include <pkmn/pokemon.hpp>
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

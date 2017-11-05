@@ -10,20 +10,15 @@
 
 #include <pkmn/utils/paths.hpp>
 
-#include <SQLiteCpp/SQLiteCpp.h>
-
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
 #include <algorithm>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <string>
-#include <unordered_map>
 
-#define PKMN_COMPAT_NUM 11
+#define PKMN_COMPAT_NUM 14
 
 namespace pkmn { namespace database {
 
@@ -140,31 +135,35 @@ namespace pkmn { namespace database {
     ) {
         *different_found = true;
 
+        std::string ret;
+
         if(location_id == 210) {
             *different_applies = GAME_IS_DP(game_id);
-            return "Cafe";
+            ret = "Cafe";
         } else if(location_id == 378) {
             *different_applies = GAME_IS_B2W2(game_id);
-            return "PWT";
+            ret = "PWT";
         } else if(location_id == 486) {
             *different_applies = (game_id == 8);
-            return "Aqua Hideout";
+            ret = "Aqua Hideout";
         } else if(location_id == 586) {
             *different_applies = GAME_IS_E(game_id);
-            return "Battle Frontier";
+            ret = "Battle Frontier";
         } else if(location_id == 10030) {
             *different_applies = (GAME_IS_GS(game_id) and not whole_generation);
-            return "";
+            ret = "";
         } else if(location_id == 10343) {
             *different_applies = (GAME_IS_RS(game_id) or GAME_IS_E(game_id));
-            return "Ferry";
+            ret = "Ferry";
         } else if(location_id == 10345) {
             *different_applies = GAME_IS_E(game_id);
-            return "Aqua Hideout";
+            ret = "Aqua Hideout";
         } else {
             *different_found = false;
-            return original_string;
+            ret = original_string;
         }
+
+        return ret;
     }
 
     static void _get_gamecube_items(
@@ -207,7 +206,7 @@ namespace pkmn { namespace database {
         }
 
         while(gcn_stmt.executeStep()) {
-            ret.emplace_back((const char*)gcn_stmt.getColumn(0));
+            ret.emplace_back(gcn_stmt.getColumn(0));
         }
     }
 
@@ -276,10 +275,10 @@ namespace pkmn { namespace database {
                         {
                             ret.emplace_back(old_name);
                         } else {
-                            ret.emplace_back((const char*)stmt.getColumn(1));
+                            ret.emplace_back(stmt.getColumn(1));
                         }
                     } else {
-                        ret.emplace_back((const char*)stmt.getColumn(1));
+                        ret.emplace_back(stmt.getColumn(1));
                     }
                 }
             }
@@ -291,6 +290,44 @@ namespace pkmn { namespace database {
                 list_id,
                 (game_id == 19)
             );
+        }
+
+        static const int ITEM_POCKET_IDS[] =
+        {
+            5,  // Gold/Silver
+            10, // Crystal
+            15, // Ruby/Sapphire
+            21, // Emerald
+            27, // FireRed/LeafGreen
+            33, // Diamond/Pearl
+            41, // Platinum
+            49, // HeartGold/SoulSilver
+            57, // Black/White
+            62, // Colosseum
+            69, // XD
+            76, // Black 2/White 2
+            81, // X/Y
+            86  // Omega Ruby/Alpha Sapphire
+        };
+
+        if(not all_pockets)
+        {
+            if(std::find(ITEM_POCKET_IDS, ITEM_POCKET_IDS+14, list_id) != ITEM_POCKET_IDS+14)
+            {
+                // Veekun's database places all Berries in the Items pocket, which isn't the case.
+                // Fix that here.
+                ret.erase(
+                    std::remove_if(
+                        ret.begin(),
+                        ret.end(),
+                        [](const std::string& item)
+                        {
+                            return item.find("Berry") != std::string::npos;
+                        }
+                    ),
+                    ret.end()
+                );
+            }
         }
 
         // Sort alphabetically

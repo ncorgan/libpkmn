@@ -35,7 +35,6 @@ ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
-ADD_SUBDIRECTORY(mem)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(utils)
 
@@ -60,7 +59,6 @@ SET(pkmn_sources
     ${pkmn_conversions_sources}
     ${pkmn_database_sources}
     ${pkmn_io_sources}
-    ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}
@@ -135,6 +133,22 @@ ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
 TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+
+#
+# Static Analysis
+#
+IF(PKMN_USE_CLANGTIDY)
+    SET_TARGET_PROPERTIES(
+        pkmn PROPERTIES
+        CXX_CLANG_TIDY "${CLANG_TIDY_PROPERTY}"
+    )
+ENDIF()
+IF(PKMN_USE_IWYC)
+    SET_TARGET_PROPERTIES(
+        pkmn PROPERTIES
+        CXX_INCLUDE_WHAT_YOU_USE "${IWYC_PROPERTY}"
+    )
+ENDIF()
 
 #
 # Qt post-build stuff

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,8 +19,8 @@ namespace pkmn { namespace qt {
         std::vector<std::string> ribbons = pkmn::database::get_ribbon_list(
                                                generation
                                            );
-        for(auto iter = ribbons.begin(); iter != ribbons.end(); ++iter) {
-            addItem(QString::fromStdString(*iter));
+        for(const std::string& ribbon: ribbons) {
+            addItem(QString::fromStdString(ribbon));
         }
 
         setEditable(false);

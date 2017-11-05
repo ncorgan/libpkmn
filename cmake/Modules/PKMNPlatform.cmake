@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -67,9 +67,11 @@ CHECK_CXX_SOURCE_COMPILES("
 
 IF(COMPILER_HAS_CONSTEXPR)
     SET(PKMN_CONSTEXPR           "constexpr")
+    SET(PKMN_CONSTEXPR_OR_CONST  "constexpr")
     SET(PKMN_CONSTEXPR_OR_INLINE "constexpr")
 ELSE()
     SET(PKMN_CONSTEXPR           "")
+    SET(PKMN_CONSTEXPR_OR_CONST  "const")
     SET(PKMN_CONSTEXPR_OR_INLINE "PKMN_INLINE")
 ENDIF(COMPILER_HAS_CONSTEXPR)
 

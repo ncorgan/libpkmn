@@ -1,51 +1,127 @@
-language: cpp
-
-os:
- - linux
+language: generic
+os: linux
+dist: trusty
 
 matrix:
   include:
-    # Default/older GCC, dependencies
     - compiler: gcc
       env:
+        - CC=gcc
+        - CXX=g++
         - DESIRED_QT_VERSION=4
         - PYTHON_VERSION=2
         - SWIG_VERSION=2
-    # Newer GCC, dependencies
     - compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - g++-5
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=gcc-5
+        - CXX=g++-5
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
             - sourceline: 'ppa:samuel-bachmann/boost'
           packages:
             - g++-6
             - libboost1.60-all-dev
+            - swig3.0
       env:
-        - NEWCC=gcc-6
-        - NEWCXX=g++-6
+        - CC=gcc-6
+        - CXX=g++-6
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - g++-7
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=gcc-7
+        - CXX=g++-7
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
     # Default/older Clang, dependencies
-    #- compiler: clang
-    #  env:
-    #    - DESIRED_QT_VERSION=4
-    #    - PYTHON_VERSION=2
-    #    - SWIG_VERSION=2
-    # Newer Clang, dependencies
+    - compiler: clang
+      env:
+        - CC=clang
+        - CXX=clang++
+        - DESIRED_QT_VERSION=4
+        - PYTHON_VERSION=2
+        - SWIG_VERSION=2
     - compiler: clang
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-4.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
             - sourceline: 'ppa:samuel-bachmann/boost'
           packages:
             - clang-4.0
             - libboost1.60-all-dev
+            - swig3.0
       env:
-        - NEWCC=clang-4.0
-        - NEWCXX=clang++-4.0
+        - CC=clang-4.0
+        - CXX=clang++-4.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - sourceline: 'ppa:rosmo/swig3.0.7'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - clang-5.0
+            - libboost1.60-all-dev
+            - swig3.0
+      env:
+        - CC=clang-5.0
+        - CXX=clang++-5.0
+        - DESIRED_QT_VERSION=5
+        - PYTHON_VERSION=3
+        - SWIG_VERSION=3
+    # Static analysis build
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - sourceline: 'ppa:adrozdoff/cmake'
+            - sourceline: 'ppa:samuel-bachmann/boost'
+          packages:
+            - clang-5.0
+            - clang-tidy-5.0
+            - cmake
+            - libboost1.60-all-dev
+      env:
+        - STATIC_ANALYSIS=1
+        - CC=clang-5.0
+        - CXX=clang++-5.0
+        - CLANG_TIDY_EXE=/usr/bin/clang-tidy-5.0
         - DESIRED_QT_VERSION=5
         - PYTHON_VERSION=3
         - SWIG_VERSION=3
@@ -58,4 +134,4 @@ before_install:
   - bash testing/travis-scripts/install-deps.sh
 
 script:
-  - bash testing/travis-scripts/build-test.sh
+  - if [ "$STATIC_ANALYSIS" = "1" ]; then bash testing/travis-scripts/static-analysis.sh; else bash testing/travis-scripts/build-test.sh; fi

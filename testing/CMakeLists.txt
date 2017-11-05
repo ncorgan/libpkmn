@@ -12,6 +12,7 @@ IF(PKMN_ENABLE_C)
     ENDIF(NOT PKSAV_ENABLE_TESTS)
 ENDIF(PKMN_ENABLE_C)
 
+set(INSTALL_GTEST OFF)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 ADD_SUBDIRECTORY(googletest/googletest)
 

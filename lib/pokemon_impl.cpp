@@ -89,10 +89,12 @@ namespace pkmn {
     pokemon::sptr pokemon::from_file(
         const std::string &filepath
     ) {
+        pokemon::sptr ret;
+
         // If an extension is given, assume a type. If not, try each.
         std::string extension = fs::extension(filepath);
         if(extension == ".3gpkm") {
-            return pkmn::io::load_3gpkm(filepath);
+            ret =  pkmn::io::load_3gpkm(filepath);
         } else if(extension == ".pkm" or extension == ".pk6") {
             throw pkmn::unimplemented_error();
         } else {
@@ -100,11 +102,13 @@ namespace pkmn {
             PKMN_UNUSED(int game_id) = 0;
 
             if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
-                return pkmn::io::load_3gpkm(buffer);
+                ret = pkmn::io::load_3gpkm(buffer);
             } else {
                 throw std::runtime_error("Invalid file.");
             }
         }
+
+        return ret;
     }
 
     pokemon_impl::pokemon_impl(
@@ -112,14 +116,22 @@ namespace pkmn {
         int game_id
     ): pokemon(),
        _database_entry(pkmn::database::pokemon_entry(pokemon_index, game_id)),
-       _generation(pkmn::database::game_id_to_generation(game_id))
+       _generation(pkmn::database::game_id_to_generation(game_id)),
+       _our_pc_mem(false),
+       _our_party_mem(false),
+       _native_pc(nullptr),
+       _native_party(nullptr)
     {}
 
     pokemon_impl::pokemon_impl(
         pkmn::database::pokemon_entry&& database_entry
     ): pokemon(),
        _database_entry(std::move(database_entry)),
-       _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id()))
+       _generation(pkmn::database::game_id_to_generation(_database_entry.get_game_id())),
+       _our_pc_mem(false),
+       _our_party_mem(false),
+       _native_pc(nullptr),
+       _native_party(nullptr)
     {}
 
     std::string pokemon_impl::get_species() {
@@ -192,13 +204,13 @@ namespace pkmn {
     }
 
     void* pokemon_impl::get_native_pc_data() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _native_pc;
     }
 
     void* pokemon_impl::get_native_party_data() {
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         return _native_party;
     }
@@ -425,7 +437,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 15);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_set_gb_IV(
@@ -452,7 +464,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 31);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         PKSAV_CALL(
             pksav_set_IV(
@@ -468,9 +480,9 @@ namespace pkmn {
 
     #define SET_CONTEST_STAT(str,field) \
     { \
-        if(stat == str) { \
+        if(stat == (str)) { \
             native_ptr->field = uint8_t(value); \
-            _contest_stats[str] = value; \
+            _contest_stats[(str)] = value; \
             return; \
         } \
     }
@@ -487,7 +499,7 @@ namespace pkmn {
             pkmn::throw_out_of_range("value", 0, 255);
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         SET_CONTEST_STAT("Cool",   cool);
         SET_CONTEST_STAT("Beauty", beauty);
@@ -500,11 +512,11 @@ namespace pkmn {
 
     #define SET_MARKING(str,mask) \
     { \
-        if(marking == str) { \
+        if(marking == (str)) { \
             if(value) { \
-                *native_ptr |= mask; \
+                *native_ptr |= (mask); \
             } else { \
-                *native_ptr &= ~mask; \
+                *native_ptr &= ~(mask); \
             } \
             _markings[marking] = value; \
         } \
@@ -519,7 +531,7 @@ namespace pkmn {
             throw std::invalid_argument("Invalid marking.");
         }
 
-        pokemon_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);

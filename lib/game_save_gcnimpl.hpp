@@ -18,7 +18,7 @@ namespace pkmn {
     class game_save_gcnimpl: public game_save_impl {
         public:
             game_save_gcnimpl() {};
-            game_save_gcnimpl(
+            explicit game_save_gcnimpl(
                 const std::string &filepath
             );
 

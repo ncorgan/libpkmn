@@ -688,97 +688,30 @@ static void randomize_pokemon(
 }
 
 void compare_item_lists(
-    pkmn_item_list_handle_t item_list1,
-    pkmn_item_list_handle_t item_list2
+    pkmn_item_list_t* item_list1,
+    pkmn_item_list_t* item_list
 ) {
     TEST_ASSERT_NOT_NULL(item_list1);
-    TEST_ASSERT_NOT_NULL(item_list2);
+    TEST_ASSERT_NOT_NULL(item_list);
 
-    char item_list1_strbuffer[STRBUFFER_LEN] = {0};
-    char item_list2_strbuffer[STRBUFFER_LEN] = {0};
+    TEST_ASSERT_EQUAL_STRING(item_list1->name, item_list->name);
+    TEST_ASSERT_EQUAL_STRING(item_list1->game, item_list->game);
 
-    error = pkmn_item_list_get_name(
-                item_list1,
-                item_list1_strbuffer,
-                sizeof(item_list1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_list_get_name(
-                item_list2,
-                item_list2_strbuffer,
-                sizeof(item_list1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(item_list1_strbuffer, item_list2_strbuffer);
+    TEST_ASSERT_EQUAL(item_list1->item_slots.length, item_list->item_slots.length);
+    TEST_ASSERT_EQUAL(item_list1->capacity, item_list->capacity);
+    TEST_ASSERT_EQUAL(item_list1->num_items, item_list->num_items);
 
-    error = pkmn_item_list_get_game(
-                item_list1,
-                item_list1_strbuffer,
-                sizeof(item_list1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_list_get_game(
-                item_list2,
-                item_list2_strbuffer,
-                sizeof(item_list1_strbuffer)
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(item_list1_strbuffer, item_list2_strbuffer);
-
-    int capacity1 = 0;
-    int capacity2 = 0;
-    error = pkmn_item_list_get_capacity(
-                item_list1,
-                &capacity1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_list_get_capacity(
-                item_list2,
-                &capacity2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(capacity1, capacity2);
-
-    int num_items1 = 0;
-    int num_items2 = 0;
-    error = pkmn_item_list_get_num_items(
-                item_list1,
-                &num_items1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_list_get_num_items(
-                item_list2,
-                &num_items2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(num_items1, num_items2);
-
-    pkmn_item_slots_t item_slots1;
-    pkmn_item_slots_t item_slots2;
-    error = pkmn_item_list_as_array(
-                item_list1,
-                &item_slots1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_list_as_array(
-                item_list2,
-                &item_slots2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(item_slots1.length, item_slots2.length);
-    TEST_ASSERT_NOT_NULL(item_slots1.item_slots);
-    TEST_ASSERT_NOT_NULL(item_slots2.item_slots);
-
-    for(size_t i = 0; i < item_slots1.length; ++i) {
-
-        TEST_ASSERT_EQUAL_STRING(item_slots1.item_slots[i].item, item_slots2.item_slots[i].item);
-        TEST_ASSERT_EQUAL(item_slots1.item_slots[i].amount, item_slots2.item_slots[i].amount);
+    for(size_t i = 0; i < item_list1->item_slots.length; ++i)
+    {
+        TEST_ASSERT_EQUAL_STRING(
+            item_list1->item_slots.item_slots[i].item,
+            item_list->item_slots.item_slots[i].item
+        );
+        TEST_ASSERT_EQUAL(
+            item_list1->item_slots.item_slots[i].amount,
+            item_list->item_slots.item_slots[i].amount
+        );
     }
-
-    error = pkmn_item_slots_free(&item_slots1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_item_slots_free(&item_slots2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 
 static void compare_pokemon(
@@ -954,107 +887,77 @@ static void compare_game_saves(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(money1, money2);
 
-    pkmn_item_bag_handle_t item_bag1 = NULL;
-    pkmn_item_bag_handle_t item_bag2 = NULL;
+    pkmn_item_bag_t item_bag1;
+    pkmn_item_bag_t item_bag;
 
     error = pkmn_game_save_get_item_bag(
                 save1,
                 &item_bag1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(item_bag1);
     error = pkmn_game_save_get_item_bag(
                 save1,
-                &item_bag2
+                &item_bag
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(item_bag2);
 
-    pkmn_string_list_t pocket_names1;
-    pkmn_string_list_t pocket_names2;
-
-    error = pkmn_item_bag_get_pocket_names(
-                item_bag1,
-                &pocket_names1
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_TRUE(pocket_names1.length > 0);
-    error = pkmn_item_bag_get_pocket_names(
-                item_bag2,
-                &pocket_names2
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_TRUE(pocket_names2.length > 0);
-    TEST_ASSERT_EQUAL(pocket_names1.length, pocket_names2.length);
-
-    for(size_t i = 0; i < pocket_names1.length; ++i) {
-        TEST_ASSERT_NOT_NULL(pocket_names1.strings[i]);
-        pkmn_item_list_handle_t item_list1 = NULL;
-        pkmn_item_list_handle_t item_list2 = NULL;
+    TEST_ASSERT_EQUAL(
+        item_bag1.pockets.pocket_names.length,
+        item_bag.pockets.pocket_names.length
+    );
+    for(size_t i = 0; i < item_bag1.pockets.pocket_names.length; ++i)
+    {
+        pkmn_item_list_t* item_list1_ptr;
+        pkmn_item_list_t* item_list_ptr;
 
         error = pkmn_item_bag_get_pocket(
-                    item_bag1,
-                    pocket_names1.strings[i],
-                    &item_list1
+                    &item_bag1,
+                    item_bag1.pockets.pocket_names.strings[i],
+                    &item_list1_ptr
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(item_list1);
         error = pkmn_item_bag_get_pocket(
-                    item_bag2,
-                    pocket_names1.strings[i],
-                    &item_list2
+                    &item_bag,
+                    item_bag1.pockets.pocket_names.strings[i],
+                    &item_list_ptr
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(item_list2);
 
-        error = pkmn_item_list_free(&item_list2);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(item_list2);
-        error = pkmn_item_list_free(&item_list1);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(item_list1);
+        compare_item_lists(
+            item_list1_ptr,
+            item_list_ptr
+        );
     }
 
-    error = pkmn_string_list_free(&pocket_names1);
+    error = pkmn_item_bag_free(&item_bag);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_string_list_free(&pocket_names2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    error = pkmn_item_bag_free(&item_bag2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(item_bag2);
     error = pkmn_item_bag_free(&item_bag1);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(item_bag1);
 
     if(generation <= 3) {
-        pkmn_item_list_handle_t item_pc1 = NULL;
-        pkmn_item_list_handle_t item_pc2 = NULL;
+        pkmn_item_list_t item_pc1;
+        pkmn_item_list_t item_pc2;
 
         error = pkmn_game_save_get_item_pc(
                     save1,
                     &item_pc1
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(item_pc1);
         error = pkmn_game_save_get_item_pc(
                     save2,
                     &item_pc2
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(item_pc2);
 
         compare_item_lists(
-            item_pc1,
-            item_pc2
+            &item_pc1,
+            &item_pc2
         );
 
         error = pkmn_item_list_free(&item_pc2);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(item_pc2);
         error = pkmn_item_list_free(&item_pc1);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(item_pc1);
     }
 
     pkmn_pokemon_party_handle_t party1 = NULL;

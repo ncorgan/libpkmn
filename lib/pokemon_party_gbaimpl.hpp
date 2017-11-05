@@ -16,7 +16,7 @@ namespace pkmn {
     class pokemon_party_gbaimpl: public pokemon_party_impl {
         public:
             pokemon_party_gbaimpl() {}
-            pokemon_party_gbaimpl(
+            explicit pokemon_party_gbaimpl(
                 int game_id
             );
             pokemon_party_gbaimpl(
@@ -26,16 +26,16 @@ namespace pkmn {
 
             ~pokemon_party_gbaimpl();
 
-            int get_num_pokemon();
+            int get_num_pokemon() override final;
 
             void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
-            );
+            ) override final;
 
         private:
 
-            void _from_native();
+            void _from_native() override final;
     };
 }
 

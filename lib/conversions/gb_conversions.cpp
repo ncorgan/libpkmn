@@ -18,7 +18,6 @@
 #include <boost/format.hpp>
 
 #include <cstring>
-#include <stdexcept>
 
 namespace pkmn { namespace conversions {
 

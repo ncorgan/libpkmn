@@ -550,9 +550,6 @@ class calculations_test(unittest.TestCase):
         self.assertEquals(89, added_spots.right_face.y)
 
     def assertIntsAlmostEqual(self, a, b):
-        a_minus_one = a-1
-        a_plus_one = 1+1
-
         self.assertTrue(a == b or a-1 == b or a+1 == b)
 
     def test_gb_stats(self):

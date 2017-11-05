@@ -89,19 +89,21 @@ namespace pkmn {
     }
 
     std::string get_images_dir() {
+        std::string ret;
+
         fs::path fs_path = env_var_to_fs_path(
                               "PKMN_IMAGES_DIR",
                               false
                            );
         if(!fs_path.empty()) {
-            return fs_path.string();
-        }
-
-        if(fs::exists(pkmn_images_dir)) {
-            return pkmn_images_dir.string();
+            ret = fs_path.string();
+        } else if(fs::exists(pkmn_images_dir)) {
+            ret = pkmn_images_dir.string();
         } else {
             throw std::runtime_error("No LibPKMN images directory found.");
         }
+
+        return ret;
     }
 
     std::string get_tmp_dir() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,7 @@
 #include "id_to_string.hpp"
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/database/item_entry.hpp>
 
 #include <boost/algorithm/string.hpp>
@@ -247,15 +248,19 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_name() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return str(boost::format("Invalid (0x%x)") % _item_index);
+            ret = str(boost::format("Invalid (0x%x)") % _item_index);
+        } else {
+            ret = pkmn::database::item_id_to_name(
+                      _item_id, _version_group_id
+                  );
         }
 
-        return pkmn::database::item_id_to_name(
-                   _item_id, _version_group_id
-               );
+        return ret;
     }
 
     std::string item_entry::get_game() const {
@@ -265,114 +270,126 @@ namespace pkmn { namespace database {
     }
 
     std::string item_entry::get_category() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
+            ret = "Unknown";
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT name FROM item_category_prose WHERE item_category_id="
+                "(SELECT category_id FROM items WHERE id=?) AND local_language_id=9";
+
+            ret = pkmn::database::query_db_bind1<std::string, int>(
+                      _db, query, _item_id
+                  );
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT name FROM item_category_prose WHERE item_category_id="
-            "(SELECT category_id FROM items WHERE id=?) AND local_language_id=9";
-
-        return pkmn::database::query_db_bind1<std::string, int>(
-                   _db, query, _item_id
-               );
+        return ret;
     }
 
     std::string item_entry::get_pocket() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
+            ret = "Unknown";
+        } else {
+            ret = pkmn::database::item_list_id_to_name(
+                      _item_list_id
+                  );
         }
 
-        return pkmn::database::item_list_id_to_name(
-                   _item_list_id
-               );
+        return ret;
     }
 
     std::string item_entry::get_description() const {
+        std::string ret;
+
         if(_none) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return get_name();
-        }
-
-        /*
-         * If the item is a TM/HM, ignore what the database shows
-         * as the description and show what move it teaches.
-         *
-         * For Gamecube games, use Ruby/Sapphire to check since
-         * the indices are the same, and the database doesn't
-         * know those items are in the Gamecube games.
-         *
-         * For Generation VI, the database has some TMs associated with
-         * XY but not ORAS, so just use XY for any queries.
-         */
-        if(item_id_is_tmhm(_item_id)) {
-            BOOST_STATIC_CONSTEXPR int RS   = 5;
-            BOOST_STATIC_CONSTEXPR int XY   = 15;
-            BOOST_STATIC_CONSTEXPR int ORAS = 16;
-
-            int version_group_id = _version_group_id;
-            if(game_is_gamecube(_game_id)) {
-                version_group_id = RS;
-            } else if(version_group_id == ORAS) {
-                version_group_id = XY;
-            }
-
-            static BOOST_CONSTEXPR const char* tmhm_move_query =
-                "SELECT name FROM move_names WHERE local_language_id=9 AND move_id="
-                "(SELECT move_id FROM machines WHERE version_group_id=? "
-                "AND item_id=?)";
-
-            /*
-             * TM94 is different between XY and ORAS. Since is the only time that happens,
-             * just deal with it here.
-             */
-            BOOST_STATIC_CONSTEXPR int TM94 = 660;
-            std::string move_name;
-            if(_item_id == TM94 and _generation == 6) {
-                move_name = (_version_group_id == ORAS) ? "Secret Power"
-                                                        : "Rock Smash";
-            } else {
-                move_name = pkmn::database::query_db_bind2<std::string, int, int>(
-                                _db, tmhm_move_query, version_group_id, _item_id
-                            );
-            }
-
-            boost::format tmhm_desc("Teaches the move %s.");
-            return str(tmhm_desc % move_name.c_str());
-
+            ret = get_name();
         } else {
             /*
-             * Veekun's database has no item flavor text for Generations I-II,
-             * so if this entry corresponds to one of those games, the query
-             * will likely fail. In that case, fall back on the flavor text
-             * from X/Y.
+             * If the item is a TM/HM, ignore what the database shows
+             * as the description and show what move it teaches.
+             *
+             * For Gamecube games, use Ruby/Sapphire to check since
+             * the indices are the same, and the database doesn't
+             * know those items are in the Gamecube games.
+             *
+             * For Generation VI, the database has some TMs associated with
+             * XY but not ORAS, so just use XY for any queries.
              */
+            if(item_id_is_tmhm(_item_id)) {
+                BOOST_STATIC_CONSTEXPR int RS   = 5;
+                BOOST_STATIC_CONSTEXPR int XY   = 15;
+                BOOST_STATIC_CONSTEXPR int ORAS = 16;
 
-            static BOOST_CONSTEXPR const char* main_query = \
-                "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
-                "AND version_group_id=? AND language_id=9";
+                int version_group_id = _version_group_id;
+                if(game_is_gamecube(_game_id)) {
+                    version_group_id = RS;
+                } else if(version_group_id == ORAS) {
+                    version_group_id = XY;
+                }
 
-            std::string from_db = "";
-            if(not pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                   _db, main_query, from_db, _item_id, _version_group_id
-              ))
-            {
-                static BOOST_CONSTEXPR const char* fallback_query = \
+                static BOOST_CONSTEXPR const char* tmhm_move_query =
+                    "SELECT name FROM move_names WHERE local_language_id=9 AND move_id="
+                    "(SELECT move_id FROM machines WHERE version_group_id=? "
+                    "AND item_id=?)";
+
+                /*
+                 * TM94 is different between XY and ORAS. Since is the only time that happens,
+                 * just deal with it here.
+                 */
+                BOOST_STATIC_CONSTEXPR int TM94 = 660;
+                std::string move_name;
+                if(_item_id == TM94 and _generation == 6) {
+                    move_name = (_version_group_id == ORAS) ? "Secret Power"
+                                                            : "Rock Smash";
+                } else {
+                    move_name = pkmn::database::query_db_bind2<std::string, int, int>(
+                                    _db, tmhm_move_query, version_group_id, _item_id
+                                );
+                }
+
+                boost::format tmhm_desc("Teaches the move %s.");
+                ret = str(tmhm_desc % move_name.c_str());
+
+            } else {
+                /*
+                 * Veekun's database has no item flavor text for Generations I-II,
+                 * so if this entry corresponds to one of those games, the query
+                 * will likely fail. In that case, fall back on the flavor text
+                 * from X/Y.
+                 */
+
+                static BOOST_CONSTEXPR const char* main_query = \
                     "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
-                    "AND version_group_id=15 AND language_id=9";
+                    "AND version_group_id=? AND language_id=9";
 
-                from_db = pkmn::database::query_db_bind1<std::string, int>(
-                              _db, fallback_query, _item_id
-                          );
+                std::string from_db = "";
+                if(not pkmn::database::maybe_query_db_bind2<std::string, int, int>(
+                       _db, main_query, from_db, _item_id, _version_group_id
+                  ))
+                {
+                    static BOOST_CONSTEXPR const char* fallback_query = \
+                        "SELECT flavor_text FROM item_flavor_text WHERE item_id=? "
+                        "AND version_group_id=15 AND language_id=9";
+
+                    from_db = pkmn::database::query_db_bind1<std::string, int>(
+                                  _db, fallback_query, _item_id
+                              );
+                }
+
+                ret = fix_veekun_whitespace(from_db);
             }
-
-            return fix_veekun_whitespace(from_db);
         }
+
+        return ret;
     }
 
     int item_entry::get_cost() const {
@@ -389,75 +406,84 @@ namespace pkmn { namespace database {
     }
 
     bool item_entry::holdable() const {
+        bool ret = true;
+
         // Items could not be held in Generation I
         if(_none or _invalid or _generation == 1) {
-            return false;
+            ret = false;
+        } else {
+            /*
+             * Veekun's database is horribly inconsistent in its item flags,
+             * probably due to contributors not caring. Rather than go through
+             * and fix all of it, it's easier just to fake it here and pretend
+             * we queried the database.
+             */
+            std::string name = this->get_name();
+            if(name.find("Ball") != std::string::npos and _item_id != 1013) { // GS Ball
+                ret = true;
+            } else if(name.find("Berry") != std::string::npos) {
+                ret = true;
+            } else if(boost::algorithm::ends_with(name, "ite") and
+                      (name.find("Meteor") == std::string::npos))
+            {
+                ret = true;
+            } else {
+                static BOOST_CONSTEXPR const char* query = \
+                    "SELECT item_flag_id FROM item_flag_map WHERE "
+                    "item_id=? AND item_flag_id IN (5,6,7)";
+
+                PKMN_UNUSED(int result);
+                ret = pkmn::database::maybe_query_db_bind1<int, int>(
+                          _db, query, result, _item_id
+                      );
+            }
         }
 
-        /*
-         * Veekun's database is horribly inconsistent in its item flags,
-         * probably due to contributors not caring. Rather than go through
-         * and fix all of it, it's easier just to fake it here and pretend
-         * we queried the database.
-         */
-        std::string name = this->get_name();
-        if(name.find("Ball") != std::string::npos and _item_id != 1013) { // GS Ball
-            return true;
-        } else if(name.find("Berry") != std::string::npos) {
-            return true;
-        } else if(boost::algorithm::ends_with(name, "ite") and
-                  (name.find("Meteor") == std::string::npos))
-        {
-            return true;
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT item_flag_id FROM item_flag_map WHERE "
-            "item_id=? AND item_flag_id IN (5,6,7)";
-
-        PKMN_UNUSED(int result);
-        return pkmn::database::maybe_query_db_bind1<int, int>(
-                   _db, query, result, _item_id
-               );
+        return ret;
     }
 
     int item_entry::get_fling_power() const {
+        int ret = 0;
+
         // Fling was introduced in Generation IV
         if(_none or _invalid or _generation < 4) {
-            return -1;
+            ret = -1;
+        } else {
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT fling_power FROM items WHERE id=?";
+
+            ret = pkmn::database::query_db_bind1<int, int>(
+                      _db, query, _item_id
+                  );
         }
 
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT fling_power FROM items WHERE id=?";
-
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, _item_id
-               );
+        return ret;
     }
 
     std::string item_entry::get_fling_effect() const {
+        std::string ret;
+
         // Fling was introduced in Generation IV
         if(_none or _generation < 4) {
-            return "None";
+            ret = "None";
         } else if(_invalid) {
-            return "Unknown";
-        }
-
-        static BOOST_CONSTEXPR const char* query = \
-            "SELECT effect FROM item_fling_effect_prose WHERE "
-            "local_language_id=9 AND item_fling_effect_id="
-            "(SELECT fling_effect_id FROM items WHERE id=?)";
-
-        // Allow for no fling effect
-        std::string ret;
-        if(pkmn::database::maybe_query_db_bind1<std::string, int>(
-               _db, query, ret, _item_id
-           ))
-        {
-            return ret;
+            ret = "Unknown";
         } else {
-            return "None";
+            static BOOST_CONSTEXPR const char* query = \
+                "SELECT effect FROM item_fling_effect_prose WHERE "
+                "local_language_id=9 AND item_fling_effect_id="
+                "(SELECT fling_effect_id FROM items WHERE id=?)";
+
+            // Allow for no fling effect
+            if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
+                   _db, query, ret, _item_id
+               ))
+            {
+                ret = "None";
+            }
         }
+
+        return ret;
     }
 
 }}

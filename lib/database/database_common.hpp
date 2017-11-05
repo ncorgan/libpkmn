@@ -10,12 +10,10 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
-#include <pkmn/exception.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/config.hpp>
 
-#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,8 +16,8 @@ namespace pkmn { namespace qt {
     ): QComboBox(parent)
     {
         std::vector<std::string> super_training_medals = pkmn::database::get_super_training_medal_list();
-        for(auto iter = super_training_medals.begin(); iter != super_training_medals.end(); ++iter) {
-            addItem(QString::fromStdString(*iter));
+        for(const std::string& super_training_medal: super_training_medals) {
+            addItem(QString::fromStdString(super_training_medal));
         }
 
         setEditable(false);
