@@ -42,7 +42,7 @@
 
 #include <cstring>
 #include <ctime>
-#include <iostream>
+#include <fstream>
 #include <stdexcept>
 
 #define GBA_PC_RCAST    reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc)
@@ -340,10 +340,27 @@ namespace pkmn {
                 throw pkmn::unimplemented_error();
 
             default:
-                throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
+                throw std::invalid_argument("Generation III Pokémon can only be converted to Generation III-VI.");
         }
 
         return ret;
+    }
+
+    void pokemon_gbaimpl::export_to_file(
+        const std::string& filepath
+    )
+    {
+        std::string extension = fs::extension(filepath);
+        if(extension == ".3gpkm")
+        {
+            std::ofstream ofile(filepath, std::ios::binary);
+            ofile.write((const char*)get_native_pc_data(), sizeof(pksav_gba_pc_pokemon_t));
+            ofile.close();
+        }
+        else
+        {
+            throw std::invalid_argument("GBA Pokémon can only be saved to .3gpkm files.");
+        }
     }
 
     void pokemon_gbaimpl::set_form(

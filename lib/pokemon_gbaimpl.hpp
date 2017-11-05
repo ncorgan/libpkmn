@@ -43,6 +43,10 @@ namespace pkmn {
                 const std::string& game
             );
 
+            void export_to_file(
+                const std::string& filepath
+            );
+
             void set_form(
                 const std::string &form
             );
