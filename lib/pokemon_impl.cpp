@@ -16,7 +16,10 @@
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
 
+#include "io/pk1.hpp"
+#include "io/pk2.hpp"
 #include "io/3gpkm.hpp"
+
 #include "types/rng.hpp"
 
 #include "pksav/pksav_call.hpp"
@@ -88,22 +91,47 @@ namespace pkmn {
 
     pokemon::sptr pokemon::from_file(
         const std::string &filepath
-    ) {
+    )
+    {
         pokemon::sptr ret;
 
         // If an extension is given, assume a type. If not, try each.
         std::string extension = fs::extension(filepath);
-        if(extension == ".3gpkm") {
+        if(extension == ".pk1")
+        {
+            ret =  pkmn::io::load_pk1(filepath);
+        }
+        else if(extension == ".pk2")
+        {
+            ret =  pkmn::io::load_pk2(filepath);
+        }
+        else if(extension == ".3gpkm")
+        {
             ret =  pkmn::io::load_3gpkm(filepath);
-        } else if(extension == ".pkm" or extension == ".pk6") {
+        }
+        else if(extension == ".pkm" or extension == ".pk6")
+        {
             throw pkmn::unimplemented_error();
-        } else {
+        }
+        else
+        {
             std::vector<uint8_t> buffer(size_t(fs::file_size(filepath)));
             PKMN_UNUSED(int game_id) = 0;
 
-            if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id)) {
+            if(pkmn::io::vector_is_valid_pk1(buffer))
+            {
+                ret = pkmn::io::load_pk1(buffer);
+            }
+            else if(pkmn::io::vector_is_valid_pk2(buffer))
+            {
+                ret = pkmn::io::load_pk2(buffer);
+            }
+            else if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id))
+            {
                 ret = pkmn::io::load_3gpkm(buffer);
-            } else {
+            }
+            else
+            {
                 throw std::runtime_error("Invalid file.");
             }
         }
