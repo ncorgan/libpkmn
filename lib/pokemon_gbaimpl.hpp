@@ -45,7 +45,7 @@ namespace pkmn {
 
             void export_to_file(
                 const std::string& filepath
-            );
+            ) override final;
 
             void set_form(
                 const std::string &form
