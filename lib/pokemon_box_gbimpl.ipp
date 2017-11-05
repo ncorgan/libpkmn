@@ -112,14 +112,21 @@ namespace pkmn {
         {
             throw std::invalid_argument("Generation I-II boxes store Pokémon contiguously.");
         }
-        else if(_game_id != new_pokemon->get_database_entry().get_game_id())
-        {
-            throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
-        }
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
+        // If the given Pokémon isn't from this box's game, convert it if we can.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(_game_id == new_pokemon->get_database_entry().get_game_id())
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = new_pokemon->to_game(get_game());
+        }
+
+        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
         pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
@@ -148,8 +155,8 @@ namespace pkmn {
                                );
 
         // Don't set empty names.
-        std::string new_pokemon_nickname = new_pokemon->get_nickname();
-        std::string new_pokemon_trainer_name = new_pokemon->get_trainer_name();
+        std::string new_pokemon_nickname = actual_new_pokemon->get_nickname();
+        std::string new_pokemon_trainer_name = actual_new_pokemon->get_trainer_name();
         if(new_pokemon_nickname.size() == 0)
         {
             new_pokemon_nickname = "None";
@@ -163,7 +170,7 @@ namespace pkmn {
         _pokemon_list[index]->set_trainer_name(new_pokemon_trainer_name);
 
         // Update the number of Pokémon in the box if needed.
-        std::string new_species = new_pokemon->get_species();
+        std::string new_species = actual_new_pokemon->get_species();
         if(index == num_pokemon and new_species != "None") {
             ++(NATIVE_LIST_RCAST->count);
         } else if(index == (num_pokemon-1) and new_species == "None") {
@@ -171,19 +178,19 @@ namespace pkmn {
         }
 
         // Set the entry in the species list.
-        NATIVE_LIST_RCAST->species[index] = uint8_t(new_pokemon->get_database_entry().get_pokemon_index());
+        NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
 
         if(_generation == 1) {
             PKSAV_CALL(
                 pksav_text_to_gen1(
-                    new_pokemon->get_nickname().c_str(),
+                    actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
                 pksav_text_to_gen1(
-                    new_pokemon->get_trainer_name().c_str(),
+                    actual_new_pokemon->get_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
                 );
@@ -191,14 +198,14 @@ namespace pkmn {
         } else {
             PKSAV_CALL(
                 pksav_text_to_gen2(
-                    new_pokemon->get_nickname().c_str(),
+                    actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
                 pksav_text_to_gen2(
-                    new_pokemon->get_trainer_name().c_str(),
+                    actual_new_pokemon->get_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
                 );

@@ -110,7 +110,18 @@ namespace pkmn {
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(new_pokemon.get());
+        // If the given Pokémon isn't from this box's game, convert it if we can.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(_game_id == new_pokemon->get_database_entry().get_game_id())
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = new_pokemon->to_game(get_game());
+        }
+
+        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
         pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
