@@ -330,6 +330,13 @@ namespace pkmn {
         return ret;
     }
 
+    void pokemon_gcnimpl::export_to_file(
+        PKMN_UNUSED(const std::string& filepath)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Exporting to file");
+    }
+
     void pokemon_gcnimpl::set_form(
         const std::string &form
     ) {

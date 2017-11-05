@@ -26,13 +26,17 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 
 #include <cstring>
+#include <fstream>
 #include <stdexcept>
 #include <unordered_map>
 
 #define GEN1_PC_RCAST    (reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc))
 #define GEN1_PARTY_RCAST (reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party))
+
+namespace fs = boost::filesystem;
 
 static const std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
     ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
@@ -230,6 +234,23 @@ namespace pkmn {
         ret->set_trainer_name(get_trainer_name());
 
         return ret;
+    }
+
+    void pokemon_gen1impl::export_to_file(
+        const std::string& filepath
+    )
+    {
+        std::string extension = fs::extension(filepath);
+        if(extension == ".pk1")
+        {
+            std::ofstream ofile(filepath, std::ios::binary);
+            ofile.write((const char*)get_native_pc_data(), sizeof(pksav_gen1_pc_pokemon_t));
+            ofile.close();
+        }
+        else
+        {
+            throw std::invalid_argument("Generation I Pokémon can only be saved to .pk1 files.");
+        }
     }
 
     void pokemon_gen1impl::set_form(

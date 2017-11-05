@@ -37,6 +37,10 @@ namespace pkmn {
                 const std::string& game
             ) override final;
 
+            void export_to_file(
+                const std::string& filepath
+            ) override final;
+
             void set_form(
                 const std::string &form
             ) override final;

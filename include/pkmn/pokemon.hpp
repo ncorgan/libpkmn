@@ -48,10 +48,9 @@ namespace pkmn {
                 const std::string& game
             ) = 0;
 
-            // TODO: pure virtual
             virtual void export_to_file(
                 const std::string& filepath
-            ) {(void)filepath;}
+            ) = 0;
 
             virtual std::string get_species() = 0;
 

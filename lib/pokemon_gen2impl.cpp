@@ -31,13 +31,17 @@
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
+#include <fstream>
 #include <stdexcept>
 
 #define GEN2_PC_RCAST    (reinterpret_cast<pksav_gen2_pc_pokemon_t*>(_native_pc))
 #define GEN2_PARTY_RCAST (reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party))
+
+namespace fs = boost::filesystem;
 
 namespace pkmn {
 
@@ -248,6 +252,23 @@ namespace pkmn {
         ret->set_trainer_name(get_trainer_name());
 
         return ret;
+    }
+
+    void pokemon_gen2impl::export_to_file(
+        const std::string& filepath
+    )
+    {
+        std::string extension = fs::extension(filepath);
+        if(extension == ".pk2")
+        {
+            std::ofstream ofile(filepath, std::ios::binary);
+            ofile.write((const char*)get_native_pc_data(), sizeof(pksav_gen2_pc_pokemon_t));
+            ofile.close();
+        }
+        else
+        {
+            throw std::invalid_argument("Generation II Pokémon can only be saved to .pk2 files.");
+        }
     }
 
     void pokemon_gen2impl::set_form(
