@@ -103,10 +103,6 @@ namespace pkmn {
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
-        else if(_game_id != new_pokemon->get_database_entry().get_game_id())
-        {
-            throw std::invalid_argument("The given Pokémon must be from the same game as the party.");
-        }
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 

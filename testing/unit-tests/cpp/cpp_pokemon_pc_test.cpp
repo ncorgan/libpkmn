@@ -23,66 +23,76 @@
 
 #include <gtest/gtest.h>
 
-class pokemon_box_test: public ::testing::TestWithParam<std::string> {
+struct test_params_t
+{
+    std::string box_game;
+    std::vector<std::string> valid_other_games;
+    std::string invalid_other_game;
+};
+
+class pokemon_box_test: public ::testing::TestWithParam<test_params_t> {
     public:
         PKMNTEST_INLINE pkmn::pokemon_box::sptr get_pokemon_box() {
             return _pokemon_box;
         }
 
         PKMNTEST_INLINE const std::string& get_game() {
-            return _game;
+            return test_params.box_game;
         }
 
         PKMNTEST_INLINE void reset() {
-            _pokemon_box = pkmn::pokemon_box::make(_game);
+            _pokemon_box = pkmn::pokemon_box::make(test_params.box_game);
 
             ASSERT_NE(nullptr, _pokemon_box.get());
-            ASSERT_EQ(_game, _pokemon_box->get_game());
+            ASSERT_EQ(test_params.box_game, _pokemon_box->get_game());
         }
+
+        test_params_t test_params;
 
     protected:
         void SetUp() {
-            _game = GetParam();
+            test_params = GetParam();
             reset();
         }
 
     private:
 
-        std::string _game;
         pkmn::pokemon_box::sptr _pokemon_box;
 };
 
-class pokemon_pc_test: public ::testing::TestWithParam<std::string> {
+class pokemon_pc_test: public ::testing::TestWithParam<test_params_t> {
     public:
         PKMNTEST_INLINE pkmn::pokemon_pc::sptr get_pokemon_pc() {
             return _pokemon_pc;
         }
 
         PKMNTEST_INLINE const std::string& get_game() {
-            return _game;
+            return test_params.box_game;
         }
 
         PKMNTEST_INLINE void reset() {
-            _pokemon_pc = pkmn::pokemon_pc::make(_game);
+            _pokemon_pc = pkmn::pokemon_pc::make(test_params.box_game);
 
             ASSERT_NE(nullptr, _pokemon_pc.get());
-            ASSERT_EQ(_game, _pokemon_pc->get_game());
+            ASSERT_EQ(test_params.box_game, _pokemon_pc->get_game());
         }
+
+        test_params_t test_params;
 
     protected:
         void SetUp() {
-            _game = GetParam();
+            test_params = GetParam();
             reset();
         }
 
     private:
 
-        std::string _game;
         pkmn::pokemon_pc::sptr _pokemon_pc;
 };
 
 void pokemon_box_test_common(
-    pkmn::pokemon_box::sptr box
+    pkmn::pokemon_box::sptr box,
+    const test_params_t& test_params
 ) {
     std::string game = box->get_game();
     int generation = game_generations.at(game);
@@ -217,10 +227,30 @@ void pokemon_box_test_common(
         case 1: {
             const pksav_gen1_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen1_pokemon_box_t*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-            for(size_t i = 0; i < pokemon_list.size(); ++i) {
+            for(size_t i = 0; i < 3; ++i) {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->entries[i].species));
                 EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
+
+                char nickname[11] = {0};
+                PKSAV_CALL(
+                    pksav_text_from_gen2(
+                        native_box->nicknames[i],
+                        nickname,
+                        10
+                    );
+                )
+                EXPECT_EQ(std::string(nickname), pokemon_list.at(i)->get_nickname());
+
+                char otname[8] = {0};
+                PKSAV_CALL(
+                    pksav_text_from_gen2(
+                        native_box->otnames[i],
+                        otname,
+                        7
+                    );
+                )
+                EXPECT_EQ(std::string(otname), pokemon_list.at(i)->get_trainer_name());
             }
             EXPECT_EQ(3, native_box->count);
             break;
@@ -229,7 +259,7 @@ void pokemon_box_test_common(
         case 2: {
             const pksav_gen2_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen2_pokemon_box_t*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-            for(size_t i = 0; i < pokemon_list.size(); ++i) {
+            for(size_t i = 0; i < 3; ++i) {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->entries[i].species));
                 EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
@@ -280,6 +310,33 @@ void pokemon_box_test_common(
         default:
             break;
     }
+
+    // Make sure converting Pokémon before putting into the party works (or doesn't work) as expected.
+    for(const std::string& valid_game: test_params.valid_other_games)
+    {
+        pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
+                                          "Pikachu",
+                                          valid_game,
+                                          "",
+                                          50
+                                      );
+        box->set_pokemon(3, pikachu);
+
+        pkmn::pokemon::sptr box_pokemon = box->get_pokemon(3);
+        EXPECT_EQ("Pikachu", box_pokemon->get_species());
+        EXPECT_EQ(test_params.box_game, box_pokemon->get_game());
+        EXPECT_EQ(50, box_pokemon->get_level());
+    }
+
+    pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
+                                              "Pikachu",
+                                              test_params.invalid_other_game,
+                                              "",
+                                              50
+                                          );
+    EXPECT_THROW(
+        box->set_pokemon(3, invalid_pikachu);
+    , std::invalid_argument);
 }
 
 // See pokemon_pc_gen2impl.hpp
@@ -290,7 +347,8 @@ typedef struct {
 } gen2_pokemon_full_pc_t;
 
 void pokemon_pc_test_common(
-    pkmn::pokemon_pc::sptr pc
+    pkmn::pokemon_pc::sptr pc,
+    const test_params_t& test_params
 ) {
     std::string game = pc->get_game();
     int generation = game_generations.at(pc->get_game());
@@ -299,7 +357,7 @@ void pokemon_pc_test_common(
     ASSERT_EQ(box_list.size(), size_t(pc->get_num_boxes()));
     for(auto box_iter = box_list.begin(); box_iter != box_list.end(); ++box_iter) {
         ASSERT_EQ(game, (*box_iter)->get_game());
-        pokemon_box_test_common(*box_iter);
+        pokemon_box_test_common(*box_iter, test_params);
     }
 
     if(generation >= 2) {
@@ -415,42 +473,43 @@ void pokemon_pc_test_common(
     }
 }
 
-static const std::string games[] = {
-    "Red",
-    "Blue",
-    "Yellow",
-    "Gold",
-    "Silver",
-    "Crystal",
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD"
+static const test_params_t PARAMS[] =
+{
+    {"Red", {"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby"},
+    {"Blue", {"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire"},
+    {"Yellow", {"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald"},
+    {"Gold", {"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed"},
+    {"Silver", {"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen"},
+    {"Crystal", {"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum"},
+    {"Ruby", {"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red"},
+    {"Sapphire", {"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue"},
+    {"Emerald", {"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow"},
+    {"FireRed", {"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold"},
+    {"LeafGreen", {"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver"},
+    {"Colosseum", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal"},
+    {"XD", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red"},
 };
 
 namespace pkmntest {
 
 TEST_P(pokemon_box_test, pokemon_box_test) {
-    pokemon_box_test_common(get_pokemon_box());
+    pokemon_box_test_common(get_pokemon_box(), test_params);
 }
 
 INSTANTIATE_TEST_CASE_P(
     cpp_pokemon_box_test,
     pokemon_box_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(PARAMS)
 );
 
 TEST_P(pokemon_pc_test, pokemon_pc_test) {
-    pokemon_pc_test_common(get_pokemon_pc());
+    pokemon_pc_test_common(get_pokemon_pc(), test_params);
 }
 
 INSTANTIATE_TEST_CASE_P(
     cpp_pokemon_pc_test,
     pokemon_pc_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(PARAMS)
 );
 
 }
