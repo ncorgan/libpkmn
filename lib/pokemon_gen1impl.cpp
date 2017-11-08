@@ -12,6 +12,7 @@
 #include "conversions/gb_conversions.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
+#include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
