@@ -39,24 +39,6 @@
 
 namespace fs = boost::filesystem;
 
-static const std::unordered_map<std::string, pksav_gen1_type_t> GEN1_TYPES = boost::assign::map_list_of
-    ("Normal",   PKSAV_GEN1_TYPE_NORMAL)
-    ("Fighting", PKSAV_GEN1_TYPE_FIGHTING)
-    ("Flying",   PKSAV_GEN1_TYPE_FLYING)
-    ("Poison",   PKSAV_GEN1_TYPE_POISON)
-    ("Ground",   PKSAV_GEN1_TYPE_GROUND)
-    ("Rock",     PKSAV_GEN1_TYPE_ROCK)
-    ("Bug",      PKSAV_GEN1_TYPE_BUG)
-    ("Ghost",    PKSAV_GEN1_TYPE_GHOST)
-    ("Fire",     PKSAV_GEN1_TYPE_FIRE)
-    ("Water",    PKSAV_GEN1_TYPE_WATER)
-    ("Grass",    PKSAV_GEN1_TYPE_GRASS)
-    ("Electric", PKSAV_GEN1_TYPE_ELECTRIC)
-    ("Psychic",  PKSAV_GEN1_TYPE_PSYCHIC)
-    ("Ice",      PKSAV_GEN1_TYPE_ICE)
-    ("Dragon",   PKSAV_GEN1_TYPE_DRAGON)
-;
-
 namespace pkmn {
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -82,9 +64,9 @@ namespace pkmn {
         GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
         std::pair<std::string, std::string> types = _database_entry.get_types();
-        GEN1_PC_RCAST->types[0] = uint8_t(GEN1_TYPES.at(types.first));
+        GEN1_PC_RCAST->types[0] = uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.first));
         GEN1_PC_RCAST->types[1] = (types.second == "None") ? GEN1_PC_RCAST->types[0]
-                                                           : uint8_t(GEN1_TYPES.at(types.second));
+                                                           : uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.second));
 
         // TODO: catch rate
 
