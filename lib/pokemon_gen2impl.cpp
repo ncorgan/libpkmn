@@ -20,6 +20,7 @@
 
 #include <pkmn/database/item_entry.hpp>
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -307,6 +308,19 @@ namespace pkmn {
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_IVs_from_form(form);
         }
+    }
+
+    std::string pokemon_gen2impl::get_condition()
+    {
+        std::string ret = "None";
+        pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN2_PARTY_RCAST->condition);
+
+        if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition))
+        {
+            ret = pksav::GB_CONDITION_BIMAP.right.at(gb_condition);
+        }
+
+        return ret;
     }
 
     std::string pokemon_gen2impl::get_nickname() {

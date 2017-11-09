@@ -270,6 +270,19 @@ namespace pkmn {
         _database_entry.set_form(form);
     }
 
+    std::string pokemon_gen1impl::get_condition()
+    {
+        std::string ret = "None";
+        pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN1_PC_RCAST->condition);
+
+        if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition))
+        {
+            ret = pksav::GB_CONDITION_BIMAP.right.at(gb_condition);
+        }
+
+        return ret;
+    }
+
     std::string pokemon_gen1impl::get_nickname() {
         return _nickname;
     }

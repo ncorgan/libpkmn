@@ -15,6 +15,7 @@
 #include "database/index_to_string.hpp"
 #include "libpkmgc_includes.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -371,6 +372,24 @@ namespace pkmn {
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_personality_from_form();
         }
+    }
+
+    std::string pokemon_gbaimpl::get_condition()
+    {
+        std::string ret = "None";
+
+        // Check the mask. We won't distinguish between sleep states for different
+        // numbers of turns.
+        for(const auto& mask_iter: pksav::CONDITION_MASK_BIMAP.right)
+        {
+            if(GBA_PARTY_RCAST->condition & mask_iter.first)
+            {
+                ret = mask_iter.second;
+                break;
+            }
+        }
+
+        return ret;
     }
 
     std::string pokemon_gbaimpl::get_nickname() {

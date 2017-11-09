@@ -8,6 +8,7 @@
 #ifndef INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
+#include <pksav/gen1/pokemon.h>
 #include <pksav/common/condition.h>
 
 #include <boost/assign.hpp>
@@ -19,9 +20,9 @@ namespace pksav {
 
 // Status conditions
 
-typedef boost::bimap<std::string, pksav_gb_condition_t> gen1_condition_bimap_t;
-static const gen1_condition_bimap_t GEN1_CONDITION_BIMAP =
-boost::assign::list_of<gen1_condition_bimap_t::relation>
+typedef boost::bimap<std::string, pksav_gb_condition_t> gb_condition_bimap_t;
+static const gb_condition_bimap_t GB_CONDITION_BIMAP =
+boost::assign::list_of<gb_condition_bimap_t::relation>
     ("None",      PKSAV_GB_CONDITION_NONE)
     ("Asleep",    PKSAV_GB_CONDITION_ASLEEP)
     ("Poison",    PKSAV_GB_CONDITION_POISON)
@@ -39,7 +40,7 @@ boost::assign::list_of<condition_mask_bimap_t::relation>
     ("Burn",       PKSAV_CONDITION_BURN)
     ("Frozen",     PKSAV_CONDITION_FROZEN)
     ("Paralysis",  PKSAV_CONDITION_PARALYZ)
-    ("Bad Posion", PKSAV_CONDITION_BAD_POISON)
+    ("Bad Poison", PKSAV_CONDITION_BAD_POISON)
 ;
 
 // Misc

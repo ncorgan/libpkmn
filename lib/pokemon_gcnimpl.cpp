@@ -367,6 +367,31 @@ namespace pkmn {
         }
     }
 
+    typedef boost::bimap<std::string, LibPkmGC::PokemonStatus> pokemon_status_bimap_t;
+    static const pokemon_status_bimap_t POKEMON_STATUS_BIMAP =
+    boost::assign::list_of<pokemon_status_bimap_t::relation>
+        ("None",       LibPkmGC::NoStatus)
+        ("Asleep",     LibPkmGC::Asleep)
+        ("Poison",     LibPkmGC::Poisoned)
+        ("Burn",       LibPkmGC::Burnt)
+        ("Frozen",     LibPkmGC::Frozen)
+        ("Paralysis",  LibPkmGC::Paralyzed)
+        ("Bad Poison", LibPkmGC::BadlyPoisoned)
+    ;
+
+    std::string pokemon_gcnimpl::get_condition()
+    {
+        std::string ret = "None";
+        LibPkmGC::PokemonStatus status = GC_RCAST->partyData.status;
+
+        if(POKEMON_STATUS_BIMAP.right.count(status))
+        {
+            ret = POKEMON_STATUS_BIMAP.right.at(status);
+        }
+
+        return ret;
+    }
+
     std::string pokemon_gcnimpl::get_nickname() {
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 

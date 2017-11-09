@@ -64,6 +64,8 @@ namespace pkmn {
 
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
 
+            virtual std::string get_condition() = 0;
+
             virtual std::string get_nickname() = 0;
 
             virtual void set_nickname(
