@@ -405,13 +405,17 @@ namespace pkmn { namespace database {
                );
     }
 
-    bool item_entry::holdable() const {
+    bool item_entry::holdable() const
+    {
         bool ret = true;
 
         // Items could not be held in Generation I
-        if(_none or _invalid or _generation == 1) {
+        if(_none or _invalid or _generation == 1)
+        {
             ret = false;
-        } else {
+        }
+        else
+        {
             /*
              * Veekun's database is horribly inconsistent in its item flags,
              * probably due to contributors not caring. Rather than go through
@@ -419,15 +423,22 @@ namespace pkmn { namespace database {
              * we queried the database.
              */
             std::string name = this->get_name();
-            if(name.find("Ball") != std::string::npos and _item_id != 1013) { // GS Ball
+            if(name.find("Ball") != std::string::npos and _item_id != 1013)
+            {
+                // GS Ball
                 ret = true;
-            } else if(name.find("Berry") != std::string::npos) {
-                ret = true;
-            } else if(boost::algorithm::ends_with(name, "ite") and
-                      (name.find("Meteor") == std::string::npos))
+            }
+            else if((name.find("Berry") != std::string::npos) && (name != "Berry Pouch"))
             {
                 ret = true;
-            } else {
+            }
+            else if(boost::algorithm::ends_with(name, "ite") and
+                    (name.find("Meteor") == std::string::npos))
+            {
+                ret = true;
+            }
+            else
+            {
                 static BOOST_CONSTEXPR const char* query = \
                     "SELECT item_flag_id FROM item_flag_map WHERE "
                     "item_id=? AND item_flag_id IN (5,6,7)";
