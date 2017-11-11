@@ -376,6 +376,8 @@ namespace pkmn {
 
     std::string pokemon_gbaimpl::get_condition()
     {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
         std::string ret = "None";
 
         // Check the mask. We won't distinguish between sleep states for different
@@ -390,6 +392,34 @@ namespace pkmn {
         }
 
         return ret;
+    }
+
+    void pokemon_gbaimpl::set_condition(
+        const std::string& condition
+    )
+    {
+        auto condition_iter = pksav::CONDITION_MASK_BIMAP.left.find(condition);
+
+        if(condition_iter != pksav::CONDITION_MASK_BIMAP.left.end())
+        {
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+            GBA_PARTY_RCAST->condition = 0;
+
+            if(condition == "Asleep")
+            {
+                // Sleep is stored as the number of turns asleep, so set a random value.
+                GBA_PARTY_RCAST->condition = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
+            }
+            else
+            {
+                GBA_PARTY_RCAST->condition = pksav_littleendian32(condition_iter->second);
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid condition.");
+        }
     }
 
     std::string pokemon_gbaimpl::get_nickname() {

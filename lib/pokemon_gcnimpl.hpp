@@ -47,6 +47,10 @@ namespace pkmn {
 
             std::string get_condition() override final;
 
+            void set_condition(
+                const std::string& condition
+            ) override final;
+
             std::string get_nickname() override final;
 
             void set_nickname(

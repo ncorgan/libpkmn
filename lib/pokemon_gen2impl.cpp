@@ -312,15 +312,35 @@ namespace pkmn {
 
     std::string pokemon_gen2impl::get_condition()
     {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
         std::string ret = "None";
         pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN2_PARTY_RCAST->condition);
 
-        if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition))
+        if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition) > 0)
         {
             ret = pksav::GB_CONDITION_BIMAP.right.at(gb_condition);
         }
 
         return ret;
+    }
+
+    void pokemon_gen2impl::set_condition(
+        const std::string& condition
+    )
+    {
+        auto condition_iter = pksav::GB_CONDITION_BIMAP.left.find(condition);
+
+        if(condition_iter != pksav::GB_CONDITION_BIMAP.left.end())
+        {
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+            GEN2_PARTY_RCAST->condition = static_cast<uint8_t>(condition_iter->second);
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid condition.");
+        }
     }
 
     std::string pokemon_gen2impl::get_nickname() {

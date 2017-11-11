@@ -381,15 +381,41 @@ namespace pkmn {
 
     std::string pokemon_gcnimpl::get_condition()
     {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
         std::string ret = "None";
         LibPkmGC::PokemonStatus status = GC_RCAST->partyData.status;
 
-        if(POKEMON_STATUS_BIMAP.right.count(status))
+        if(POKEMON_STATUS_BIMAP.right.count(status) > 0)
         {
             ret = POKEMON_STATUS_BIMAP.right.at(status);
         }
 
         return ret;
+    }
+
+    void pokemon_gcnimpl::set_condition(
+        const std::string& condition
+    )
+    {
+        auto condition_iter = POKEMON_STATUS_BIMAP.left.find(condition);
+
+        if(condition_iter != POKEMON_STATUS_BIMAP.left.end())
+        {
+            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+            GC_RCAST->partyData.status = condition_iter->second;
+
+            if(condition == "Asleep")
+            {
+                // Sleep is stored as the number of turns asleep, so set a random value.
+                GC_RCAST->partyData.turnsOfSleepRemaining = pkmn::rng<LibPkmGC::s8>().rand(1, 7);
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid condition.");
+        }
     }
 
     std::string pokemon_gcnimpl::get_nickname() {

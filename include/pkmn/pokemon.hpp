@@ -66,6 +66,10 @@ namespace pkmn {
 
             virtual std::string get_condition() = 0;
 
+            virtual void set_condition(
+                const std::string& condition
+            ) = 0;
+
             virtual std::string get_nickname() = 0;
 
             virtual void set_nickname(
