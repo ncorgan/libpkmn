@@ -10,7 +10,7 @@ REPO_TOPLEVEL=$PWD
 
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
-sudo apt-get -y install libqt4-dev qtbase5-dev \
+sudo apt-get -y install libqt4-dev qtbase5-dev libsqlite3-dev \
                         swig swig3.0 doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \

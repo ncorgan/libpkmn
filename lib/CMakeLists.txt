@@ -7,10 +7,10 @@
 
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
+    ${SQLITE3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/qt
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
-    ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_BINARY_DIR}/pksav/include
