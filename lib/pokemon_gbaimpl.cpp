@@ -1021,6 +1021,29 @@ namespace pkmn {
         _populate_party_data();
     }
 
+    int pokemon_gbaimpl::get_current_hp()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return pksav_littleendian16(GBA_PARTY_RCAST->current_hp);
+    }
+
+    void pokemon_gbaimpl::set_current_hp(
+        int hp
+    )
+    {
+        int current_hp = pksav_littleendian16(GBA_PARTY_RCAST->current_hp);
+
+        if((hp < 0) or (hp > current_hp))
+        {
+            pkmn::throw_out_of_range("hp", 0, current_hp);
+        }
+
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        GBA_PARTY_RCAST->current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));
+    }
+
     std::string pokemon_gbaimpl::get_sprite_filepath() {
         std::string ret;
 

@@ -664,6 +664,29 @@ namespace pkmn {
         _populate_party_data();
     }
 
+    int pokemon_gen1impl::get_current_hp()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return pksav_bigendian16(GEN1_PC_RCAST->current_hp);
+    }
+
+    void pokemon_gen1impl::set_current_hp(
+        int hp
+    )
+    {
+        int current_hp = pksav_bigendian16(GEN1_PC_RCAST->current_hp);
+
+        if((hp < 0) or (hp > current_hp))
+        {
+            pkmn::throw_out_of_range("hp", 0, current_hp);
+        }
+
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        GEN1_PC_RCAST->current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
+    }
+
     std::string pokemon_gen1impl::get_icon_filepath() {
         return _database_entry.get_icon_filepath(false);
     }

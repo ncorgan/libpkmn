@@ -223,6 +223,12 @@ namespace pkmn {
                 int value
             ) = 0;
 
+            virtual int get_current_hp() = 0;
+
+            virtual void set_current_hp(
+                int hp
+            ) = 0;
+
             virtual const std::map<std::string, int>& get_stats() = 0;
 
             virtual std::string get_icon_filepath() = 0;

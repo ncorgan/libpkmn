@@ -198,6 +198,12 @@ namespace pkmn {
                 int value
             ) override final;
 
+            int get_current_hp() override final;
+
+            void set_current_hp(
+                int hp
+            ) override final;
+
             std::string get_sprite_filepath() override final;
 
         private:

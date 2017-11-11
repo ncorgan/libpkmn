@@ -198,6 +198,12 @@ namespace pkmn {
                 int value
             ) override final;
 
+            int get_current_hp() override final;
+
+            void set_current_hp(
+                int hp
+            ) override final;
+
         private:
             void _populate_party_data() override final;
 

@@ -782,16 +782,6 @@ namespace pkmn {
         GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
-    void pokemon_gen2impl::_populate_party_data() {
-        pksav::gen2_pc_pokemon_to_party_data(
-            _database_entry,
-            reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
-        );
-
-        _update_stat_map();
-    }
-
     void pokemon_gen2impl::set_EV(
         const std::string &stat,
         int value
@@ -819,6 +809,39 @@ namespace pkmn {
 
         _update_EV_map();
         _populate_party_data();
+    }
+
+    int pokemon_gen2impl::get_current_hp()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return pksav_bigendian16(GEN2_PARTY_RCAST->current_hp);
+    }
+
+    void pokemon_gen2impl::set_current_hp(
+        int hp
+    )
+    {
+        int current_hp = pksav_bigendian16(GEN2_PARTY_RCAST->current_hp);
+
+        if((hp < 0) or (hp > current_hp))
+        {
+            pkmn::throw_out_of_range("hp", 0, current_hp);
+        }
+
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        GEN2_PARTY_RCAST->current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
+    }
+
+    void pokemon_gen2impl::_populate_party_data() {
+        pksav::gen2_pc_pokemon_to_party_data(
+            _database_entry,
+            reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(_native_pc),
+            reinterpret_cast<pksav_gen2_pokemon_party_data_t*>(_native_party)
+        );
+
+        _update_stat_map();
     }
 
     void pokemon_gen2impl::_update_moves(

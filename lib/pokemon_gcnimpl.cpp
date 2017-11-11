@@ -1022,6 +1022,29 @@ namespace pkmn {
         _populate_party_data();
     }
 
+    int pokemon_gcnimpl::get_current_hp()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return GC_RCAST->partyData.currentHP;
+    }
+
+    void pokemon_gcnimpl::set_current_hp(
+        int hp
+    )
+    {
+        int current_hp = GC_RCAST->partyData.currentHP;
+
+        if((hp < 0) or (hp > current_hp))
+        {
+            pkmn::throw_out_of_range("hp", 0, current_hp);
+        }
+
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        GC_RCAST->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
+    }
+
     void pokemon_gcnimpl::_populate_party_data() {
         GC_RCAST->resetPartyData();
         _update_stat_map();
