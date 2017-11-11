@@ -291,7 +291,7 @@ namespace pkmn {
         if(extension == ".pk2")
         {
             std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write((const char*)get_native_pc_data(), sizeof(pksav_gen2_pc_pokemon_t));
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gen2_pc_pokemon_t));
             ofile.close();
         }
         else

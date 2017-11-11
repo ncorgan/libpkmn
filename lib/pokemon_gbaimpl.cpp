@@ -355,7 +355,7 @@ namespace pkmn {
         if(extension == ".3gpkm")
         {
             std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write((const char*)get_native_pc_data(), sizeof(pksav_gba_pc_pokemon_t));
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gba_pc_pokemon_t));
             ofile.close();
         }
         else
