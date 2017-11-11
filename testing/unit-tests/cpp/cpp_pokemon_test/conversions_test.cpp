@@ -115,7 +115,7 @@ TEST_P(conversions_test, conversions_test)
     if(min_generation >= 2)
     {
         /*
-         * Make sure the item is holdable. For Generation III, no GCN_exclusive items appear
+         * Make sure the item is holdable. For Generation III, no GCN-exclusive items appear
          * to be holdable.
          */
         std::string held_item = "";

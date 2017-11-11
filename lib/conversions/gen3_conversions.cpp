@@ -199,6 +199,14 @@ namespace pkmn { namespace conversions {
         to->setSecondAbilityFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK));
         to->setEggFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK));
         to->updateLevelFromExp();
+
+        // The database lists level 1 as having 0 experience, but 0 experience
+        // corresponds to level 0 in Gamecube. Address that here.
+        if(!to->isEgg() && (to->partyData.level == 0))
+        {
+            to->partyData.level = 1;
+        }
+
         to->updateStats();
 
         // Update level met for new trainer.
