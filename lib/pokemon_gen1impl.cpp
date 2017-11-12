@@ -16,7 +16,6 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
-#include "mem/scoped_lock.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>
@@ -212,8 +211,6 @@ namespace pkmn {
         const std::string& game
     )
     {
-        //boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         pkmn::pokemon::sptr ret;
 
         pksav_gen1_party_pokemon_t pksav_pokemon;
@@ -259,8 +256,6 @@ namespace pkmn {
         std::string extension = fs::extension(filepath);
         if(extension == ".pk1")
         {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             std::ofstream ofile(filepath, std::ios::binary);
             ofile.write(static_cast<const char*>(_native_pc), sizeof(pksav_gen1_pc_pokemon_t));
             ofile.close();
@@ -292,8 +287,6 @@ namespace pkmn {
 
     std::string pokemon_gen1impl::get_condition()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string ret = "None";
         pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN1_PC_RCAST->condition);
 
@@ -313,8 +306,6 @@ namespace pkmn {
 
         if(condition_iter != pksav::GB_CONDITION_BIMAP.left.end())
         {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             GEN1_PC_RCAST->condition = static_cast<uint8_t>(condition_iter->second);
         }
         else
@@ -399,8 +390,6 @@ namespace pkmn {
 
     uint16_t pokemon_gen1impl::get_trainer_public_id()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pksav_bigendian16(GEN1_PC_RCAST->ot_id);
     }
 
@@ -411,8 +400,6 @@ namespace pkmn {
 
     uint32_t pokemon_gen1impl::get_trainer_id()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return uint32_t(pksav_bigendian16(GEN1_PC_RCAST->ot_id));
     }
 
@@ -420,8 +407,6 @@ namespace pkmn {
         uint16_t public_id
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
@@ -440,8 +425,6 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("id", 0, 65535);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
@@ -577,8 +560,6 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_experience()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -602,8 +583,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         PKSAV_CALL(
             pksav_to_base256(
                 experience,
@@ -621,8 +600,6 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_level()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return int(GEN1_PARTY_RCAST->level);
     }
 
@@ -633,8 +610,6 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             pkmn::throw_out_of_range("level", 2, 100);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
@@ -696,8 +671,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
             move,
@@ -723,8 +696,6 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("stat", 0, 65535);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(stat == "HP")
         {
@@ -753,8 +724,6 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_current_hp()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pksav_bigendian16(GEN1_PC_RCAST->current_hp);
     }
 
@@ -762,8 +731,6 @@ namespace pkmn {
         int hp
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         int current_hp = pksav_bigendian16(GEN1_PC_RCAST->current_hp);
 
         if((hp < 0) or (hp > current_hp))

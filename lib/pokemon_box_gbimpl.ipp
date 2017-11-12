@@ -14,6 +14,8 @@
 #include <pksav/gen2/text.h>
 #include <pksav/math/endian.h>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 #include <stdexcept>
 #include <type_traits>
@@ -130,8 +132,8 @@ namespace pkmn {
         pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
-        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
-        old_box_pokemon_impl_ptr->_mem_mutex.lock();
+        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
+        old_box_pokemon_impl_ptr->lock();
 
         // Copy the underlying memory to the box. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -145,7 +147,7 @@ namespace pkmn {
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
 
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->_mem_mutex.unlock();
+        old_box_pokemon_impl_ptr->unlock();
 
         // Set the entry in the species list.
         NATIVE_LIST_RCAST->entries[index] = *reinterpret_cast<pksav_pc_pokemon_type*>(new_pokemon_native_pc_ptr);

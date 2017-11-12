@@ -14,7 +14,9 @@
 
 #include <boost/assign.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
+
+#include <boost/thread/lockable_adapter.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <stdexcept>
 #include <unordered_map>
@@ -36,7 +38,10 @@ namespace pkmn {
     class pokemon_box_impl;
     class pokemon_party_impl;
 
-    class pokemon_impl: public pokemon, public boost::noncopyable {
+    class pokemon_impl: public pokemon,
+                        public boost::noncopyable,
+                        public boost::basic_lockable_adapter<boost::recursive_mutex>
+    {
         public:
             pokemon_impl() {}
             pokemon_impl(
@@ -119,7 +124,7 @@ namespace pkmn {
             void* _native_pc;
             void* _native_party;
 
-            boost::mutex _mem_mutex;
+            boost::recursive_mutex _mem_mutex;
 
             virtual void _populate_party_data() = 0;
 

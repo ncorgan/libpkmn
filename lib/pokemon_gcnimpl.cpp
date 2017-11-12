@@ -341,8 +341,6 @@ namespace pkmn {
         const std::string &form
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         bool was_shadow = (_database_entry.get_form() == "Shadow");
         _database_entry.set_form(form);
 
@@ -372,8 +370,6 @@ namespace pkmn {
 
     bool pokemon_gcnimpl::is_egg()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->isEgg();
     }
 
@@ -381,8 +377,6 @@ namespace pkmn {
         bool is_egg
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->setEggFlag(is_egg);
     }
 
@@ -400,8 +394,6 @@ namespace pkmn {
 
     std::string pokemon_gcnimpl::get_condition()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string ret = "None";
         LibPkmGC::PokemonStatus status = GC_RCAST->partyData.status;
 
@@ -421,8 +413,6 @@ namespace pkmn {
 
         if(condition_iter != POKEMON_STATUS_BIMAP.left.end())
         {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             GC_RCAST->partyData.status = condition_iter->second;
 
             if(condition == "Asleep")
@@ -438,8 +428,6 @@ namespace pkmn {
     }
 
     std::string pokemon_gcnimpl::get_nickname() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->name->toUTF8();
     }
 
@@ -452,14 +440,10 @@ namespace pkmn {
                   );
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->name->fromUTF8(nickname.c_str());
     }
 
     std::string pokemon_gcnimpl::get_gender() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pkmn::calculations::modern_pokemon_gender(
                    _database_entry.get_name(),
                    GC_RCAST->PID
@@ -469,8 +453,6 @@ namespace pkmn {
     void pokemon_gcnimpl::set_gender(
         const std::string &gender
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         _set_modern_gender(
             &GC_RCAST->PID,
             gender
@@ -480,16 +462,12 @@ namespace pkmn {
     }
 
     bool pokemon_gcnimpl::is_shiny() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->isShiny();
     }
 
     void pokemon_gcnimpl::set_shininess(
         bool value
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         // LibPkmGC stores trainer IDs in halves.
         uint32_t trainer_id = GC_RCAST->TID | (uint32_t(GC_RCAST->SID) << 16);
 
@@ -506,8 +484,6 @@ namespace pkmn {
 
     std::string pokemon_gcnimpl::get_held_item()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pkmn::database::item_entry(
                    GC_RCAST->heldItem,
                    _database_entry.get_game_id()
@@ -527,14 +503,10 @@ namespace pkmn {
             throw std::invalid_argument("This item is not holdable.");
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
     std::string pokemon_gcnimpl::get_trainer_name() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->OTName->toUTF8();
     }
 
@@ -547,65 +519,47 @@ namespace pkmn {
                   );
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->OTName->fromUTF8(trainer_name.c_str());
     }
 
     uint16_t pokemon_gcnimpl::get_trainer_public_id() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->TID;
     }
 
     uint16_t pokemon_gcnimpl::get_trainer_secret_id() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->SID;
     }
 
     uint32_t pokemon_gcnimpl::get_trainer_id() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return uint32_t(GC_RCAST->TID) | (uint32_t(GC_RCAST->SID) << 16);
     }
 
     void pokemon_gcnimpl::set_trainer_public_id(
         uint16_t public_id
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->TID = public_id;
     }
 
     void pokemon_gcnimpl::set_trainer_secret_id(
         uint16_t secret_id
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->SID = secret_id;
     }
 
     void pokemon_gcnimpl::set_trainer_id(
         uint32_t id
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->TID = uint16_t(id & 0xFFFF);
         GC_RCAST->SID = uint16_t(id >> 16);
     }
 
     std::string pokemon_gcnimpl::get_trainer_gender() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GENDER_BIMAP.left.at(GC_RCAST->OTGender);
     }
 
     void pokemon_gcnimpl::set_trainer_gender(
         const std::string &gender
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         if(gender == "Male" or gender == "Female") {
             GC_RCAST->OTGender = GENDER_BIMAP.right.at(gender);
         } else {
@@ -614,8 +568,6 @@ namespace pkmn {
     }
 
     int pokemon_gcnimpl::get_friendship() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->friendship;
     }
 
@@ -626,15 +578,11 @@ namespace pkmn {
             pkmn::throw_out_of_range("friendship", 0 , 255);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->friendship = LibPkmGC::u8(friendship);
     }
 
     std::string pokemon_gcnimpl::get_ability()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string ret;
 
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
@@ -655,8 +603,6 @@ namespace pkmn {
         const std::string &ability
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
         if(ability == "None")
         {
@@ -690,8 +636,6 @@ namespace pkmn {
     }
 
     std::string pokemon_gcnimpl::get_ball() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pkmn::database::ball_id_to_name(int(GC_RCAST->ballCaughtWith));
     }
 
@@ -701,15 +645,11 @@ namespace pkmn {
         // Try and instantiate an item_entry to validate the ball.
         pkmn::database::item_entry item(ball, get_game());
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->ballCaughtWith = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
 
     int pokemon_gcnimpl::get_level_met() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->levelMet;
     }
 
@@ -720,8 +660,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("Level caught", 0, 100);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->levelMet = LibPkmGC::u8(level);
     }
 
@@ -731,8 +669,6 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
         } else {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             return pkmn::database::location_index_to_name(
                        GC_RCAST->locationCaught,
                        _database_entry.get_game_id()
@@ -747,8 +683,6 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation III.");
         } else {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             GC_RCAST->locationCaught = LibPkmGC::u16(pkmn::database::location_name_to_index(
                                            location,
                                            _database_entry.get_game_id()
@@ -757,8 +691,6 @@ namespace pkmn {
     }
 
     std::string pokemon_gcnimpl::get_original_game() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string ret;
 
         if(GC_RCAST->version.game == LibPkmGC::Colosseum_XD) {
@@ -775,8 +707,6 @@ namespace pkmn {
     void pokemon_gcnimpl::set_original_game(
         const std::string &game
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string game_to_test;
         if(game == "Colosseum/XD") {
             game_to_test = "Colosseum";
@@ -798,8 +728,6 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gcnimpl::get_personality() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->PID;
     }
 
@@ -807,8 +735,6 @@ namespace pkmn {
         uint32_t personality
     )
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         // TODO: personality determines ability
         GC_RCAST->PID = personality;
 
@@ -819,8 +745,6 @@ namespace pkmn {
     }
 
     int pokemon_gcnimpl::get_experience() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return int(GC_RCAST->experience);
     }
 
@@ -833,8 +757,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GC_RCAST->experience = LibPkmGC::u32(experience);
         GC_RCAST->updateLevelFromExp();
 
@@ -843,8 +765,6 @@ namespace pkmn {
     }
 
     int pokemon_gcnimpl::get_level() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return int(GC_RCAST->partyData.level);
     }
 
@@ -854,8 +774,6 @@ namespace pkmn {
         if(level < 1 or level > 100) {
             pkmn::throw_out_of_range("level", 1, 100);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GC_RCAST->partyData.level = LibPkmGC::u8(level);
         GC_RCAST->experience = GC_RCAST->getExpTable()[level];
@@ -872,8 +790,6 @@ namespace pkmn {
         } else if(not pkmn::IV_in_bounds(value, true)) {
             pkmn::throw_out_of_range(stat, 0, 31);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(stat == "HP") {
             GC_RCAST->IVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
@@ -920,8 +836,6 @@ namespace pkmn {
         if(_ribbons.find(ribbon) == _ribbons.end()) {
             throw std::invalid_argument("Invalid ribbon.");
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         // Non-contest ribbon
         if(RIBBON_BIMAP.right.count(ribbon) > 0) {
@@ -989,8 +903,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         pkmn::database::move_entry entry(move, get_game());
 
         /*
@@ -1020,8 +932,6 @@ namespace pkmn {
             pkmn::throw_out_of_range(stat, 0, 255);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         if(stat == "HP") {
             GC_RCAST->EVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
         } else if(stat == "Attack") {
@@ -1043,8 +953,6 @@ namespace pkmn {
 
     int pokemon_gcnimpl::get_current_hp()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GC_RCAST->partyData.currentHP;
     }
 
@@ -1058,8 +966,6 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("hp", 0, current_hp);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GC_RCAST->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
     }

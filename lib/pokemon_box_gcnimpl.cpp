@@ -10,6 +10,8 @@
 
 #include <pkmn/exception.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <stdexcept>
 
 #define GC_RCAST   (reinterpret_cast<LibPkmGC::GC::PokemonBox*>(_native))
@@ -114,8 +116,8 @@ namespace pkmn {
         pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
-        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
-        old_box_pokemon_impl_ptr->_mem_mutex.lock();
+        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
+        old_box_pokemon_impl_ptr->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -157,7 +159,7 @@ namespace pkmn {
         old_box_pokemon_impl_ptr->_our_pc_mem = true;
 
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_box_pokemon_impl_ptr->_mem_mutex.unlock();
+        old_box_pokemon_impl_ptr->unlock();
 
         _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
                                    dynamic_cast<LibPkmGC::GC::Pokemon*>(GC_RCAST->pkm[index]),

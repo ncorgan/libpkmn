@@ -329,8 +329,6 @@ namespace pkmn {
 
     std::string pokemon_gen2impl::get_condition()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         std::string ret = "None";
         pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN2_PARTY_RCAST->condition);
 
@@ -350,8 +348,6 @@ namespace pkmn {
 
         if(condition_iter != pksav::GB_CONDITION_BIMAP.left.end())
         {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             GEN2_PARTY_RCAST->condition = static_cast<uint8_t>(condition_iter->second);
         }
         else
@@ -438,7 +434,6 @@ namespace pkmn {
              * This value sets all IVs to the maximum values that result in
              * a shiny Pokémon.
              */
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
             static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
             GEN2_PC_RCAST->iv_data = shiny_iv_data;
             _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
@@ -453,8 +448,6 @@ namespace pkmn {
 
     std::string pokemon_gen2impl::get_held_item()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pkmn::database::item_index_to_name(
                    GEN2_PC_RCAST->held_item,
                    _database_entry.get_game_id()
@@ -473,8 +466,6 @@ namespace pkmn {
         if(not item.holdable()) {
             throw std::invalid_argument("This item is not holdable.");
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
@@ -496,8 +487,6 @@ namespace pkmn {
     }
 
     uint16_t pokemon_gen2impl::get_trainer_public_id() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
     }
 
@@ -506,16 +495,12 @@ namespace pkmn {
     }
 
     uint32_t pokemon_gen2impl::get_trainer_id() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
     }
 
     void pokemon_gen2impl::set_trainer_public_id(
         uint16_t public_id
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
@@ -532,14 +517,10 @@ namespace pkmn {
             pkmn::throw_out_of_range("id", 0, 65535);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
     std::string pokemon_gen2impl::get_trainer_gender() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_OT_GENDER_MASK) ? "Female"
                                                                         : "Male";
     }
@@ -547,8 +528,6 @@ namespace pkmn {
     void pokemon_gen2impl::set_trainer_gender(
         const std::string &gender
     ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         if(gender == "Male") {
             GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_OT_GENDER_MASK;
         } else if(gender == "Female") {
@@ -559,8 +538,6 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_friendship() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return GEN2_PC_RCAST->friendship;
     }
 
@@ -570,8 +547,6 @@ namespace pkmn {
         if(friendship < 0 or friendship > 255) {
             pkmn::throw_out_of_range("friendship", 0, 255);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->friendship = uint8_t(friendship);
     }
@@ -597,8 +572,6 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_level_met() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
     }
 
@@ -608,8 +581,6 @@ namespace pkmn {
         if(level < 2 or level > 63) {
             pkmn::throw_out_of_range("Level caught", 2, 63);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         uint16_t caught_data = uint16_t(level);
         caught_data <<= PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
@@ -624,8 +595,6 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
         } else {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             return pkmn::database::location_index_to_name(
                        (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
                        _database_entry.get_game_id()
@@ -640,8 +609,6 @@ namespace pkmn {
         if(as_egg) {
             throw pkmn::feature_not_in_game_error("In-egg met location is not recorded in Generation II.");
         } else {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
             uint16_t location_index = uint16_t(pkmn::database::location_name_to_index(
                                                    location,
                                                    _database_entry.get_game_id()
@@ -672,8 +639,6 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_experience() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -695,8 +660,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("experience", 0, max_experience);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         PKSAV_CALL(
             pksav_to_base256(
                 experience,
@@ -712,8 +675,6 @@ namespace pkmn {
     }
 
     int pokemon_gen2impl::get_level() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return int(GEN2_PC_RCAST->level);
     }
 
@@ -723,8 +684,6 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             pkmn::throw_out_of_range("level", 2, 100);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PC_RCAST->level = uint8_t(level);
 
@@ -751,7 +710,6 @@ namespace pkmn {
         );
 
         if(_database_entry.get_species_id() == UNOWN_ID) {
-            boost::mutex::scoped_lock scoped_lock(_mem_mutex);
             _set_unown_form_from_IVs();
         }
     }
@@ -785,8 +743,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
             move,
@@ -810,8 +766,6 @@ namespace pkmn {
             pkmn::throw_out_of_range("stat", 0, 65535);
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         if(stat == "HP") {
             GEN2_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
         } else if(stat == "Attack") {
@@ -830,8 +784,6 @@ namespace pkmn {
 
     int pokemon_gen2impl::get_current_hp()
     {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
-
         return pksav_bigendian16(GEN2_PARTY_RCAST->current_hp);
     }
 
@@ -845,8 +797,6 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("hp", 0, current_hp);
         }
-
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         GEN2_PARTY_RCAST->current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
     }

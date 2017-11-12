@@ -10,6 +10,8 @@
 
 #include <pkmn/exception.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 #include <stdexcept>
 
@@ -116,8 +118,8 @@ namespace pkmn {
         pokemon_impl* old_party_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(_pokemon_list[index].get());
 
         // Make sure no one else is using the Pokémon variables.
-        boost::mutex::scoped_lock new_pokemon_lock(new_pokemon_impl_ptr->_mem_mutex);
-        old_party_pokemon_impl_ptr->_mem_mutex.lock();
+        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
+        old_party_pokemon_impl_ptr->lock();
 
         // Copy the underlying memory to the party. At the end of this process,
         // all existing variables will correspond to the same Pokémon, even if
@@ -159,7 +161,7 @@ namespace pkmn {
         old_party_pokemon_impl_ptr->_our_pc_mem = true;
 
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
-        old_party_pokemon_impl_ptr->_mem_mutex.unlock();
+        old_party_pokemon_impl_ptr->unlock();
 
         _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
                                    NATIVE_RCAST->pokemon[index],
