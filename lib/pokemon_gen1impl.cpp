@@ -28,6 +28,8 @@
 #include <boost/assign.hpp>
 #include <boost/filesystem.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 #include <fstream>
 #include <stdexcept>
@@ -38,8 +40,8 @@
 
 namespace fs = boost::filesystem;
 
-namespace pkmn {
-
+namespace pkmn
+{
     pokemon_gen1impl::pokemon_gen1impl(
         pkmn::database::pokemon_entry&& database_entry,
         int level
@@ -211,6 +213,8 @@ namespace pkmn {
         const std::string& game
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         pkmn::pokemon::sptr ret;
 
         pksav_gen1_party_pokemon_t pksav_pokemon;
@@ -256,8 +260,10 @@ namespace pkmn {
         std::string extension = fs::extension(filepath);
         if(extension == ".pk1")
         {
+            boost::lock_guard<pokemon_gen1impl> lock(*this);
+
             std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(_native_pc), sizeof(pksav_gen1_pc_pokemon_t));
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gen1_pc_pokemon_t));
             ofile.close();
         }
         else
@@ -270,6 +276,8 @@ namespace pkmn {
         const std::string &form
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         _database_entry.set_form(form);
     }
 
@@ -287,6 +295,8 @@ namespace pkmn {
 
     std::string pokemon_gen1impl::get_condition()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         std::string ret = "None";
         pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN1_PC_RCAST->condition);
 
@@ -302,6 +312,8 @@ namespace pkmn {
         const std::string& condition
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         auto condition_iter = pksav::GB_CONDITION_BIMAP.left.find(condition);
 
         if(condition_iter != pksav::GB_CONDITION_BIMAP.left.end())
@@ -316,6 +328,8 @@ namespace pkmn {
 
     std::string pokemon_gen1impl::get_nickname()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return _nickname;
     }
 
@@ -323,6 +337,8 @@ namespace pkmn {
         const std::string &nickname
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         if(nickname.size() < 1 or nickname.size() > 10)
         {
             throw std::invalid_argument(
@@ -371,6 +387,8 @@ namespace pkmn {
 
     std::string pokemon_gen1impl::get_trainer_name()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return _trainer_name;
     }
 
@@ -378,6 +396,8 @@ namespace pkmn {
         const std::string &trainer_name
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         if(trainer_name.size() < 1 or trainer_name.size() > 7)
         {
             throw std::invalid_argument(
@@ -390,6 +410,8 @@ namespace pkmn {
 
     uint16_t pokemon_gen1impl::get_trainer_public_id()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return pksav_bigendian16(GEN1_PC_RCAST->ot_id);
     }
 
@@ -400,6 +422,8 @@ namespace pkmn {
 
     uint32_t pokemon_gen1impl::get_trainer_id()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return uint32_t(pksav_bigendian16(GEN1_PC_RCAST->ot_id));
     }
 
@@ -407,6 +431,8 @@ namespace pkmn {
         uint16_t public_id
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
@@ -426,11 +452,15 @@ namespace pkmn {
             pkmn::throw_out_of_range("id", 0, 65535);
         }
 
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
     std::string pokemon_gen1impl::get_trainer_gender()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return "Male";
     }
 
@@ -451,6 +481,8 @@ namespace pkmn {
         if(_database_entry.get_game_id() == YELLOW and
            _database_entry.get_species_id() == PIKACHU)
         {
+            boost::lock_guard<pokemon_gen1impl> lock(*this);
+
             ret = _yellow_pikachu_friendship;
         }
         else
@@ -474,6 +506,8 @@ namespace pkmn {
             }
             else
             {
+                boost::lock_guard<pokemon_gen1impl> lock(*this);
+
                 _yellow_pikachu_friendship = uint8_t(friendship);
             }
         }
@@ -560,6 +594,8 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_experience()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -576,6 +612,8 @@ namespace pkmn {
         int experience
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         int max_experience = _database_entry.get_experience_at_level(100);
 
         if(experience < 0 or experience > max_experience)
@@ -600,6 +638,8 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_level()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return int(GEN1_PARTY_RCAST->level);
     }
 
@@ -610,6 +650,8 @@ namespace pkmn {
         if(level < 2 or level > 100) {
             pkmn::throw_out_of_range("level", 2, 100);
         }
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
 
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
@@ -630,6 +672,8 @@ namespace pkmn {
         int value
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         _set_gb_IV(
             stat,
             value,
@@ -671,6 +715,8 @@ namespace pkmn {
             pkmn::throw_out_of_range("index", 0, 3);
         }
 
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         // This will throw an error if the move is invalid.
         pkmn::database::move_entry entry(
             move,
@@ -696,6 +742,8 @@ namespace pkmn {
         {
             pkmn::throw_out_of_range("stat", 0, 65535);
         }
+
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
 
         if(stat == "HP")
         {
@@ -724,6 +772,8 @@ namespace pkmn {
 
     int pokemon_gen1impl::get_current_hp()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return pksav_bigendian16(GEN1_PC_RCAST->current_hp);
     }
 
@@ -731,6 +781,8 @@ namespace pkmn {
         int hp
     )
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         int current_hp = pksav_bigendian16(GEN1_PC_RCAST->current_hp);
 
         if((hp < 0) or (hp > current_hp))
@@ -743,11 +795,15 @@ namespace pkmn {
 
     std::string pokemon_gen1impl::get_icon_filepath()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return _database_entry.get_icon_filepath(false);
     }
 
     std::string pokemon_gen1impl::get_sprite_filepath()
     {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
         return _database_entry.get_sprite_filepath(false, false);
     }
 

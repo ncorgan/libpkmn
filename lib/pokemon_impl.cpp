@@ -29,12 +29,14 @@
 #include <pksav/common/markings.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
 
-namespace pkmn {
+namespace pkmn
+{
 
     const uint32_t pkmn::pokemon::DEFAULT_TRAINER_ID = 2105214279;
     const std::string pkmn::pokemon::DEFAULT_TRAINER_NAME = "LibPKMN";
@@ -44,7 +46,8 @@ namespace pkmn {
         const std::string &game,
         const std::string &form,
         int level
-    ) {
+    )
+    {
         int game_id = pkmn::database::game_name_to_id(game);
 
         pkmn::database::pokemon_entry database_entry(
@@ -53,7 +56,8 @@ namespace pkmn {
                                           form
                                       );
 
-        switch(pkmn::database::game_id_to_generation(game_id)) {
+        switch(pkmn::database::game_id_to_generation(game_id))
+        {
             case 1:
                 return pkmn::make_shared<pokemon_gen1impl>(
                            std::move(database_entry),
@@ -67,12 +71,15 @@ namespace pkmn {
                        );
 
             case 3:
-                if(game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id))
+                {
                     return pkmn::make_shared<pokemon_gcnimpl>(
                                std::move(database_entry),
                                level
                            );
-                } else {
+                }
+                else
+                {
                     return pkmn::make_shared<pokemon_gbaimpl>(
                                std::move(database_entry),
                                level
@@ -162,80 +169,128 @@ namespace pkmn {
        _native_party(nullptr)
     {}
 
-    std::string pokemon_impl::get_species() {
+    std::string pokemon_impl::get_species()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry.get_name();
     }
 
-    std::string pokemon_impl::get_form() {
+    std::string pokemon_impl::get_form()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry.get_form();
     }
 
-    std::string pokemon_impl::get_game() {
+    std::string pokemon_impl::get_game()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry.get_game();
     }
 
-    const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry() {
+    const pkmn::database::pokemon_entry& pokemon_impl::get_database_entry()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry;
     }
 
-    const std::map<std::string, bool>& pokemon_impl::get_markings() {
-        if(_generation < 3) {
+    const std::map<std::string, bool>& pokemon_impl::get_markings()
+    {
+        if(_generation < 3)
+        {
             throw pkmn::feature_not_in_game_error("Markings", "Generation I-II");
         }
+
+        boost::lock_guard<pokemon_impl> lock(*this);
 
         return _markings;
     }
 
-    const std::map<std::string, bool>& pokemon_impl::get_ribbons() {
-        if(_generation < 3) {
+    const std::map<std::string, bool>& pokemon_impl::get_ribbons()
+    {
+        if(_generation < 3)
+        {
             throw pkmn::feature_not_in_game_error("Ribbons", "Generation I-II");
         }
+
+        boost::lock_guard<pokemon_impl> lock(*this);
 
         return _ribbons;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_contest_stats() {
-        if(_generation < 3) {
+    const std::map<std::string, int>& pokemon_impl::get_contest_stats()
+    {
+        if(_generation < 3)
+        {
             throw pkmn::feature_not_in_game_error("Contests", "Generation I-II");
         }
+
+        boost::lock_guard<pokemon_impl> lock(*this);
 
         return _contest_stats;
     }
 
-    const pkmn::move_slots_t& pokemon_impl::get_moves() {
+    const pkmn::move_slots_t& pokemon_impl::get_moves()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _moves;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_EVs() {
+    const std::map<std::string, int>& pokemon_impl::get_EVs()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _EVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_IVs() {
+    const std::map<std::string, int>& pokemon_impl::get_IVs()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _IVs;
     }
 
-    const std::map<std::string, int>& pokemon_impl::get_stats() {
+    const std::map<std::string, int>& pokemon_impl::get_stats()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _stats;
     }
 
-    std::string pokemon_impl::get_icon_filepath() {
+    std::string pokemon_impl::get_icon_filepath()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry.get_icon_filepath(
                     (get_gender() == "Female")
                );
     }
 
-    std::string pokemon_impl::get_sprite_filepath() {
+    std::string pokemon_impl::get_sprite_filepath()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _database_entry.get_sprite_filepath(
                     (get_gender() == "Female"),
                     is_shiny()
                );
     }
 
-    void* pokemon_impl::get_native_pc_data() {
+    void* pokemon_impl::get_native_pc_data()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _native_pc;
     }
 
-    void* pokemon_impl::get_native_party_data() {
+    void* pokemon_impl::get_native_party_data()
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
         return _native_party;
     }
 
@@ -243,7 +298,8 @@ namespace pkmn {
 
     void pokemon_impl::_init_gb_IV_map(
         const uint16_t* iv_data_ptr
-    ) {
+    )
+    {
         uint8_t IV = 0;
 
         PKSAV_CALL(
@@ -294,7 +350,8 @@ namespace pkmn {
 
     void pokemon_impl::_init_modern_IV_map(
         const uint32_t* iv_data_ptr
-    ) {
+    )
+    {
         uint8_t IV = 0;
 
         PKSAV_CALL(
@@ -354,7 +411,8 @@ namespace pkmn {
 
     void pokemon_impl::_init_contest_stat_map(
         const pksav_contest_stats_t* native_ptr
-    ) {
+    )
+    {
         _contest_stats["Cool"]   = int(native_ptr->cool);
         _contest_stats["Beauty"] = int(native_ptr->beauty);
         _contest_stats["Cute"]   = int(native_ptr->cute);
@@ -367,12 +425,14 @@ namespace pkmn {
 
     void pokemon_impl::_init_markings_map(
         const uint8_t* native_ptr
-    ) {
+    )
+    {
         _markings["Circle"]   = bool((*native_ptr) & PKSAV_MARKING_CIRCLE);
         _markings["Triangle"] = bool((*native_ptr) & PKSAV_MARKING_TRIANGLE);
         _markings["Square"]   = bool((*native_ptr) & PKSAV_MARKING_SQUARE);
         _markings["Heart"]    = bool((*native_ptr) & PKSAV_MARKING_HEART);
-        if(_generation > 3) {
+        if(_generation > 3)
+        {
             _markings["Star"]    = bool((*native_ptr) & PKSAV_MARKING_STAR);
             _markings["Diamond"] = bool((*native_ptr) & PKSAV_MARKING_DIAMOND);
         }
@@ -383,39 +443,60 @@ namespace pkmn {
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
         const std::string &gender
-    ) {
+    )
+    {
         float chance_male = _database_entry.get_chance_male();
         float chance_female = _database_entry.get_chance_female();
 
         // Check for invalid genders.
-        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f)) {
-            if(gender != "Genderless") {
+        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f))
+        {
+            if(gender != "Genderless")
+            {
                 throw std::invalid_argument("This Pokémon is genderless.");
-            } else {
+            }
+            else
+            {
                 // Nothing to do.
                 return;
             }
-        } else if(pkmn::floats_close(chance_male, 1.0f) and gender != "Male") {
+        }
+        else if(pkmn::floats_close(chance_male, 1.0f) and gender != "Male")
+        {
             throw std::invalid_argument("This Pokémon is male-only.");
-        } else if(pkmn::floats_close(chance_female, 1.0f) and gender != "Female") {
+        }
+        else if(pkmn::floats_close(chance_female, 1.0f) and gender != "Female")
+        {
             throw std::invalid_argument("This Pokémon is female-only.");
-        } else if(gender == "Genderless") {
+        }
+        else if(gender == "Genderless")
+        {
             throw std::invalid_argument("gender: valid options \"Male\", \"Female\"");
         }
 
-        if(gender == "Male") {
+        if(gender == "Male")
+        {
             *personality_ptr |= 0xFF;
-        } else {
+        }
+        else
+        {
             *personality_ptr &= ~0xFF;
 
             pkmn::rng<uint32_t> rng;
-            if(pkmn::floats_close(chance_male, 0.875f)) {
+            if(pkmn::floats_close(chance_male, 0.875f))
+            {
                 *personality_ptr |= rng.rand(0, 30);
-            } else if(pkmn::floats_close(chance_male, 0.75f)) {
+            }
+            else if(pkmn::floats_close(chance_male, 0.75f))
+            {
                 *personality_ptr |= rng.rand(0, 63);
-            } else if(pkmn::floats_close(chance_male, 0.5f)) {
+            }
+            else if(pkmn::floats_close(chance_male, 0.5f))
+            {
                 *personality_ptr |= rng.rand(0, 126);
-            } else {
+            }
+            else
+            {
                 *personality_ptr |= rng.rand(0, 190);
             }
         }
@@ -425,23 +506,29 @@ namespace pkmn {
         uint32_t* personality_ptr,
         const uint32_t* trainer_id_ptr,
         bool value
-    ) {
+    )
+    {
         uint16_t* p = reinterpret_cast<uint16_t*>(personality_ptr);
         const uint16_t* t = reinterpret_cast<const uint16_t*>(trainer_id_ptr);
 
-        if(value) {
-            for(size_t i = 3; i < 16; ++i) {
+        if(value)
+        {
+            for(size_t i = 3; i < 16; ++i)
+            {
                 size_t num_ones = 0;
                 if(p[0] & (1 << i)) ++num_ones;
                 if(p[1] & (1 << i)) ++num_ones;
                 if(t[0] & (1 << i)) ++num_ones;
                 if(t[1] & (1 << i)) ++num_ones;
 
-                if(num_ones % 2) {
+                if(num_ones % 2)
+                {
                     p[0] ^= (1 << i);
                 }
             }
-        } else {
+        }
+        else
+        {
             // Only one column has to satisfy the condition, so don't bother iterating
             uint16_t sum = (p[0] & 1) + (p[1] & 1) + (t[0] & 1) + (t[1] & 1);
             if((sum % 2) == 0) {
@@ -454,10 +541,14 @@ namespace pkmn {
         const std::string &stat,
         int value,
         uint16_t* iv_data_ptr
-    ) {
-        if(not pkmn::string_is_gen1_stat(stat)) {
+    )
+    {
+        if(not pkmn::string_is_gen1_stat(stat))
+        {
             pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        } else if(not pkmn::IV_in_bounds(value, false)) {
+        }
+        else if(not pkmn::IV_in_bounds(value, false))
+        {
             pkmn::throw_out_of_range("stat", 0, 15);
         }
 
@@ -479,10 +570,14 @@ namespace pkmn {
         const std::string &stat,
         int value,
         uint32_t* iv_data_ptr
-    ) {
-        if(not pkmn::string_is_modern_stat(stat)) {
+    )
+    {
+        if(not pkmn::string_is_modern_stat(stat))
+        {
             pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        } else if(not pkmn::IV_in_bounds(value, true)) {
+        }
+        else if(not pkmn::IV_in_bounds(value, true))
+        {
             pkmn::throw_out_of_range("stat", 0, 31);
         }
 
@@ -511,11 +606,14 @@ namespace pkmn {
         const std::string &stat,
         int value,
         pksav_contest_stats_t* native_ptr
-    ) {
-        if(_contest_stats.find(stat) == _contest_stats.end()) {
+    )
+    {
+        if(_contest_stats.find(stat) == _contest_stats.end())
+        {
             throw std::invalid_argument("Invalid contest stat.");
         }
-        if(value < 0 or value > 255) {
+        if(value < 0 or value > 255)
+        {
             pkmn::throw_out_of_range("value", 0, 255);
         }
 
@@ -544,8 +642,10 @@ namespace pkmn {
         const std::string &marking,
         bool value,
         uint8_t* native_ptr
-    ) {
-        if(_markings.find(marking) == _markings.end()) {
+    )
+    {
+        if(_markings.find(marking) == _markings.end())
+        {
             throw std::invalid_argument("Invalid marking.");
         }
 
@@ -553,10 +653,10 @@ namespace pkmn {
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);
         SET_MARKING("Square", PKSAV_MARKING_SQUARE);
         SET_MARKING("Heart", PKSAV_MARKING_HEART);
-        if(_generation > 3) {
+        if(_generation > 3)
+        {
             SET_MARKING("Star", PKSAV_MARKING_STAR);
             SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
         }
     }
-
 }
