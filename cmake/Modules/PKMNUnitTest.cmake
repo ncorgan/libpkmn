@@ -69,6 +69,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         IF(MINGW)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
                 "${QTx_RUNTIME_DIR}"
                 "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
                 "${PKMN_BINARY_DIR}/pksav/lib"
@@ -108,6 +109,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
         ELSEIF(WIN32)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
                 "${QTx_RUNTIME_DIR}"
                 "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/pksav/lib/${CMAKE_BUILD_TYPE}"
@@ -150,6 +152,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
                 "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
                 "${PKMN_BINARY_DIR}/pksav/lib"
                 "${PKMN_BINARY_DIR}/lib"
