@@ -374,6 +374,29 @@ namespace pkmn {
         }
     }
 
+    bool pokemon_gbaimpl::is_egg()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return bool(_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK);
+    }
+
+    void pokemon_gbaimpl::set_is_egg(
+        bool is_egg
+    )
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        if(is_egg)
+        {
+            _misc->iv_egg_ability |= PKSAV_GBA_EGG_MASK;
+        }
+        else
+        {
+            _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
+        }
+    }
+
     std::string pokemon_gbaimpl::get_condition()
     {
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);

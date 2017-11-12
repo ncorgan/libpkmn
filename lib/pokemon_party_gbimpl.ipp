@@ -138,7 +138,16 @@ namespace pkmn {
         _pokemon_list[index]->set_nickname(new_pokemon_nickname);
         _pokemon_list[index]->set_trainer_name(new_pokemon_trainer_name);
 
-        NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+        // In Generation II, whether or not a Pokémon is in an egg is
+        // stored in the list that stores it, not the Pokémon struct itself.
+        if(std::is_same<list_type, pksav_gen2_pokemon_party_t>::value and actual_new_pokemon->is_egg())
+        {
+            NATIVE_LIST_RCAST->species[index] = GEN2_EGG_ID;
+        }
+        else
+        {
+            NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+        }
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = actual_new_pokemon->get_species();
@@ -207,6 +216,15 @@ namespace pkmn {
                                    &NATIVE_LIST_RCAST->party[i],
                                    _game_id
                                );
+
+            // In Generation II, whether or not a Pokémon is in an egg is
+            // stored in the list that stores it, not the Pokémon struct itself.
+            if(std::is_same<list_type, pksav_gen2_pokemon_party_t>::value)
+            {
+                _pokemon_list[i]->set_is_egg(
+                    (NATIVE_LIST_RCAST->species[i] == GEN2_EGG_ID)
+                );
+            }
 
             if(_generation == 1) {
                 PKSAV_CALL(

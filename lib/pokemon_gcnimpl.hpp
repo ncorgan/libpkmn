@@ -45,6 +45,12 @@ namespace pkmn {
                 const std::string &form
             ) override final;
 
+            bool is_egg() override final;
+
+            void set_is_egg(
+                bool is_egg
+            ) override final;
+
             std::string get_condition() override final;
 
             void set_condition(

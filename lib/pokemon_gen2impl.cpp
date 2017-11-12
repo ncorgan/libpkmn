@@ -51,7 +51,8 @@ namespace pkmn {
     pokemon_gen2impl::pokemon_gen2impl(
         pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(std::move(database_entry))
+    ): pokemon_impl(std::move(database_entry)),
+       _is_egg(false)
     {
         _native_pc  = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
         std::memset(_native_pc, 0, sizeof(pksav_gen2_pc_pokemon_t));
@@ -111,7 +112,8 @@ namespace pkmn {
     pokemon_gen2impl::pokemon_gen2impl(
         pksav_gen2_pc_pokemon_t* pc,
         int game_id
-    ): pokemon_impl(pc->species, game_id)
+    ): pokemon_impl(pc->species, game_id),
+       _is_egg(false)
     {
         _native_pc = reinterpret_cast<void*>(pc);
         _our_pc_mem = false;
@@ -141,7 +143,8 @@ namespace pkmn {
     pokemon_gen2impl::pokemon_gen2impl(
         pksav_gen2_party_pokemon_t* party,
         int game_id
-    ): pokemon_impl(party->pc.species, game_id)
+    ): pokemon_impl(party->pc.species, game_id),
+       _is_egg(false)
     {
         _native_pc = reinterpret_cast<void*>(&party->pc);
         _our_pc_mem = false;
@@ -170,7 +173,8 @@ namespace pkmn {
     pokemon_gen2impl::pokemon_gen2impl(
         const pksav_gen2_pc_pokemon_t& pc,
         int game_id
-    ): pokemon_impl(pc.species, game_id)
+    ): pokemon_impl(pc.species, game_id),
+       _is_egg(false)
     {
         _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
         *GEN2_PC_RCAST = pc;
@@ -202,7 +206,8 @@ namespace pkmn {
     pokemon_gen2impl::pokemon_gen2impl(
         const pksav_gen2_party_pokemon_t& party,
         int game_id
-    ): pokemon_impl(party.pc.species, game_id)
+    ): pokemon_impl(party.pc.species, game_id),
+       _is_egg(false)
     {
         _native_pc = reinterpret_cast<void*>(new pksav_gen2_pc_pokemon_t);
         *GEN2_PC_RCAST = party.pc;
@@ -308,6 +313,18 @@ namespace pkmn {
         if(_database_entry.get_species_id() == UNOWN_ID) {
             _set_unown_IVs_from_form(form);
         }
+    }
+
+    bool pokemon_gen2impl::is_egg()
+    {
+        return _is_egg;
+    }
+
+    void pokemon_gen2impl::set_is_egg(
+        bool is_egg
+    )
+    {
+        _is_egg = is_egg;
     }
 
     std::string pokemon_gen2impl::get_condition()

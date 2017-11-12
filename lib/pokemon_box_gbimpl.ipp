@@ -177,8 +177,16 @@ namespace pkmn {
             --(NATIVE_LIST_RCAST->count);
         }
 
-        // Set the entry in the species list.
-        NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+        // In Generation II, whether or not a Pokémon is in an egg is
+        // stored in the list that stores it, not the Pokémon struct itself.
+        if(std::is_same<list_type, pksav_gen2_pokemon_box_t>::value and actual_new_pokemon->is_egg())
+        {
+            NATIVE_LIST_RCAST->species[index] = GEN2_EGG_ID;
+        }
+        else
+        {
+            NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
+        }
 
         if(_generation == 1) {
             PKSAV_CALL(
@@ -254,6 +262,15 @@ namespace pkmn {
                                    &NATIVE_LIST_RCAST->entries[i],
                                    _game_id
                                );
+
+            // In Generation II, whether or not a Pokémon is in an egg is
+            // stored in the list that stores it, not the Pokémon struct itself.
+            if(std::is_same<list_type, pksav_gen2_pokemon_box_t>::value)
+            {
+                _pokemon_list[i]->set_is_egg(
+                    (NATIVE_LIST_RCAST->species[i] == GEN2_EGG_ID)
+                );
+            }
 
             PKSAV_CALL(
                 pksav_text_from_gen1(

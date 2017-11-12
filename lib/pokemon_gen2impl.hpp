@@ -11,7 +11,11 @@
 
 #include <pksav/gen2/pokemon.h>
 
+#include <boost/config/suffix.hpp>
+
 namespace pkmn {
+
+    BOOST_STATIC_CONSTEXPR uint8_t GEN2_EGG_ID = 0xFD;
 
     class pokemon_gen2impl: public pokemon_impl {
         public:
@@ -49,6 +53,12 @@ namespace pkmn {
 
             void set_form(
                 const std::string &form
+            ) override final;
+
+            bool is_egg() override final;
+
+            void set_is_egg(
+                bool is_egg
             ) override final;
 
             std::string get_condition() override final;
@@ -220,6 +230,8 @@ namespace pkmn {
             );
 
             std::string _nickname, _trainer_name;
+
+            bool _is_egg;
     };
 
 }

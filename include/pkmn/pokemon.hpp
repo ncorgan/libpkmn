@@ -62,6 +62,12 @@ namespace pkmn {
                 const std::string &form
             ) = 0;
 
+            virtual bool is_egg() = 0;
+
+            virtual void set_is_egg(
+                bool is_egg
+            ) = 0;
+
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
 
             virtual std::string get_condition() = 0;

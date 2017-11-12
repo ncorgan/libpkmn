@@ -270,6 +270,18 @@ namespace pkmn {
         _database_entry.set_form(form);
     }
 
+    bool pokemon_gen1impl::is_egg()
+    {
+        return false;
+    }
+
+    void pokemon_gen1impl::set_is_egg(
+        PKMN_UNUSED(bool is_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Eggs", "Generation I games");
+    }
+
     std::string pokemon_gen1impl::get_condition()
     {
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);

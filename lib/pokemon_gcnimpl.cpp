@@ -339,7 +339,10 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_form(
         const std::string &form
-    ) {
+    )
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
         bool was_shadow = (_database_entry.get_form() == "Shadow");
         _database_entry.set_form(form);
 
@@ -365,6 +368,22 @@ namespace pkmn {
                                         )
                                     );
         }
+    }
+
+    bool pokemon_gcnimpl::is_egg()
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        return GC_RCAST->isEgg();
+    }
+
+    void pokemon_gcnimpl::set_is_egg(
+        bool is_egg
+    )
+    {
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+
+        GC_RCAST->setEggFlag(is_egg);
     }
 
     typedef boost::bimap<std::string, LibPkmGC::PokemonStatus> pokemon_status_bimap_t;
