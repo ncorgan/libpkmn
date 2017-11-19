@@ -1173,11 +1173,9 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        int current_hp = pksav_littleendian16(GBA_PARTY_RCAST->current_hp);
-
-        if((hp < 0) or (hp > current_hp))
+        if((hp < 0) or (hp > _stats["HP"]))
         {
-            pkmn::throw_out_of_range("hp", 0, current_hp);
+            pkmn::throw_out_of_range("hp", 0, _stats["HP"]);
         }
 
         GBA_PARTY_RCAST->current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));

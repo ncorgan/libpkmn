@@ -340,7 +340,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: Pokérus
 
     const std::map<std::string, int>& stats = pokemon->get_stats();
-    EXPECT_EQ(stats.at("HP"), int(pksav_littleendian16(native_party_data->current_hp)));
+    EXPECT_EQ(pokemon->get_current_hp(), int(pksav_littleendian16(native_party_data->current_hp)));
     EXPECT_EQ(stats.at("HP"), int(pksav_littleendian16(native_party_data->max_hp)));
     EXPECT_EQ(stats.at("Attack"), int(pksav_littleendian16(native_party_data->atk)));
     EXPECT_EQ(stats.at("Defense"), int(pksav_littleendian16(native_party_data->def)));
@@ -512,6 +512,8 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         EXPECT_EQ(IVs.at(iter->first), int(native->IVs[iter->second]));
         EXPECT_EQ(stats.at(iter->first), int(native->partyData.stats[iter->second]));
     }
+
+    EXPECT_EQ(pokemon->get_current_hp(), int(native->partyData.currentHP));
 
     const std::map<std::string, bool>& ribbons = pokemon->get_ribbons();
     for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {

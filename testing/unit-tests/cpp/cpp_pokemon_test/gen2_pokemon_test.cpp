@@ -198,6 +198,7 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
      * Party data
      */
     EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
+    EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_party_data->current_hp)));
     EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
     EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
     EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));

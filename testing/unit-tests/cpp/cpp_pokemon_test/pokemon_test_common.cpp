@@ -88,10 +88,10 @@ static void check_initial_values(
         EXPECT_EQ(0, iter->pp);
     }
 
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+
+    EXPECT_EQ(pokemon->get_current_hp(), pokemon->get_stats().at("HP"));
 }
 
 static void check_initial_maps(
@@ -665,6 +665,32 @@ static void test_setting_stats(
             }
         }
     }
+
+    // Check bounds for setting current HP.
+    const std::map<std::string, int>& stats = pokemon->get_stats();
+
+    EXPECT_THROW(
+        pokemon->set_current_hp(-1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pokemon->set_current_hp(stats.at("HP")+1);
+    , std::out_of_range);
+
+    pokemon->set_current_hp(0);
+    EXPECT_EQ(0, pokemon->get_current_hp());
+
+    pokemon->set_current_hp(stats.at("HP"));
+    EXPECT_EQ(stats.at("HP"), pokemon->get_current_hp());
+
+    pokemon->set_current_hp(stats.at("HP")-1);
+    EXPECT_EQ(stats.at("HP")-1, pokemon->get_current_hp());
+
+    // Set the HP stat to lower than the current HP, and make sure it's
+    // updated.
+    int current_hp = pokemon->get_current_hp();
+    pokemon->set_EV("HP", 0);
+    pokemon->set_IV("HP", 0);
+    EXPECT_LE(pokemon->get_current_hp(), current_hp);
 }
 
 static void test_setting_trainer_info(

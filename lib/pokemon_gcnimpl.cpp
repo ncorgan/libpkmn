@@ -1196,11 +1196,9 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        int current_hp = GC_RCAST->partyData.currentHP;
-
-        if((hp < 0) or (hp > current_hp))
+        if((hp < 0) or (hp > _stats["HP"]))
         {
-            pkmn::throw_out_of_range("hp", 0, current_hp);
+            pkmn::throw_out_of_range("hp", 0, _stats["HP"]);
         }
 
         GC_RCAST->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
