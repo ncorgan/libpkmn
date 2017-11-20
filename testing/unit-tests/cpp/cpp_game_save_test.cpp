@@ -6,6 +6,7 @@
  */
 
 #include "env.hpp"
+#include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
 
 #include <pkmntest/config.hpp>
@@ -330,6 +331,23 @@ namespace pkmntest {
             }
         }
 
+        // Set condition
+        std::vector<std::string> conditions;
+        if(generation <= 2)
+        {
+            for(const auto& condition: pksav::GB_CONDITION_BIMAP.left)
+            {
+                conditions.emplace_back(condition.first);
+            }
+        }
+        else
+        {
+            for(const auto& condition: pksav::CONDITION_MASK_BIMAP.left)
+            {
+                conditions.emplace_back(condition.first);
+            }
+        }
+
         return ret;
     }
 
@@ -354,7 +372,7 @@ namespace pkmntest {
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         for(int i = 0; i < 6; ++i) {
             party->set_pokemon(
-                i, 
+                i,
                 get_random_pokemon(
                     save->get_game(),
                     pokemon_list,
@@ -369,7 +387,7 @@ namespace pkmntest {
         for(size_t i = 0; i < boxes.size(); ++i) {
             for(int j = 0; j < capacity; ++j) {
                 boxes[i]->set_pokemon(
-                    j, 
+                    j,
                     get_random_pokemon(
                         save->get_game(),
                         pokemon_list,
