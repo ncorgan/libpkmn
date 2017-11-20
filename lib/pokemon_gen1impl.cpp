@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "misc_common.hpp"
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
@@ -331,10 +332,9 @@ namespace pkmn {
 
     void pokemon_gen1impl::set_trainer_id(
         uint32_t id
-    ) {
-        if(id > 65535) {
-            pkmn::throw_out_of_range("id", 0, 65535);
-        }
+    )
+    {
+        pkmn::enforce_gb_trainer_id_bounds(id);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -370,16 +370,17 @@ namespace pkmn {
 
     void pokemon_gen1impl::set_friendship(
         int friendship
-    ) {
+    )
+    {
         if(_database_entry.get_game_id() == YELLOW and
            _database_entry.get_species_id() == PIKACHU)
         {
-            if(friendship < 0 or friendship > 255) {
-                pkmn::throw_out_of_range("friendship", 0, 255);
-            } else {
-                _yellow_pikachu_friendship = uint8_t(friendship);
-            }
-        } else {
+            pkmn::enforce_bounds("Friendship", friendship, 0, 255);
+
+            _yellow_pikachu_friendship = uint8_t(friendship);
+        }
+        else
+        {
             throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
         }
     }
@@ -466,10 +467,7 @@ namespace pkmn {
         int experience
     ) {
         int max_experience = _database_entry.get_experience_at_level(100);
-
-        if(experience < 0 or experience > max_experience) {
-            pkmn::throw_out_of_range("experience", 0, max_experience);
-        }
+        pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -496,10 +494,9 @@ namespace pkmn {
 
     void pokemon_gen1impl::set_level(
         int level
-    ) {
-        if(level < 2 or level > 100) {
-            pkmn::throw_out_of_range("level", 2, 100);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Level", level, 2, 100);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -553,9 +550,7 @@ namespace pkmn {
         const std::string &move,
         int index
     ) {
-        if(index < 0 or index > 3) {
-            pkmn::throw_out_of_range("index", 0, 3);
-        }
+        pkmn::enforce_bounds("Move index", index, 0, 3);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -574,24 +569,34 @@ namespace pkmn {
     void pokemon_gen1impl::set_EV(
         const std::string &stat,
         int value
-    ) {
+    )
+    {
         if(not pkmn::string_is_gen1_stat(stat)) {
             pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        } else if(not pkmn::EV_in_bounds(value, false)) {
-            pkmn::throw_out_of_range("stat", 0, 65535);
         }
+
+        pkmn::enforce_EV_bounds(stat, value, false);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        if(stat == "HP") {
+        if(stat == "HP")
+        {
             GEN1_PC_RCAST->ev_hp = pksav_bigendian16(uint16_t(value));
-        } else if(stat == "Attack") {
+        }
+        else if(stat == "Attack")
+        {
             GEN1_PC_RCAST->ev_atk = pksav_bigendian16(uint16_t(value));
-        } else if(stat == "Defense") {
+        }
+        else if(stat == "Defense")
+        {
             GEN1_PC_RCAST->ev_def = pksav_bigendian16(uint16_t(value));
-        } else if(stat == "Speed") {
+        }
+        else if(stat == "Speed")
+        {
             GEN1_PC_RCAST->ev_spd = pksav_bigendian16(uint16_t(value));
-        } else {
+        }
+        else
+        {
             GEN1_PC_RCAST->ev_spcl = pksav_bigendian16(uint16_t(value));
         }
 

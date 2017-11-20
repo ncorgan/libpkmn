@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 #include "pokemon_gbaimpl.hpp"
 
@@ -94,12 +95,9 @@ namespace pkmn {
     )
     {
         int max_index = get_capacity();
+        pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        if(index < 0 or index > max_index)
-        {
-            pkmn::throw_out_of_range("index", 0, max_index);
-        }
-        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }

@@ -8,6 +8,8 @@
 #ifndef CPP_WRAPPERS_POKEMON_PC_HPP
 #define CPP_WRAPPERS_POKEMON_PC_HPP
 
+#include "exception_internal.hpp"
+
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_pc.hpp>
@@ -65,10 +67,7 @@ namespace pkmn { namespace swig {
             )
             {
                 int num_boxes = _pokemon_pc->get_num_boxes();
-                if(index < 0 or index > num_boxes)
-                {
-                    pkmn::throw_out_of_range("index", 0, (num_boxes-1));
-                }
+                pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
                 return pkmn::swig::pokemon_box(_pokemon_pc->get_box(index));
             }

@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "misc_common.hpp"
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_gbaimpl.hpp"
@@ -544,10 +545,9 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_friendship(
         int friendship
-    ) {
-        if(friendship < 0 or friendship > 255) {
-            pkmn::throw_out_of_range("friendship", 0 , 255);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -638,10 +638,9 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_level_met(
         int level
-    ) {
-        if(level < 0 or level > 100) {
-            pkmn::throw_out_of_range("Level caught", 0, 100);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Level met", level, 0, 100);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -749,12 +748,10 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_experience(
         int experience
-    ) {
+    )
+    {
         int max_experience = _database_entry.get_experience_at_level(100);
-
-        if(experience < 0 or experience > max_experience) {
-            pkmn::throw_out_of_range("experience", 0, max_experience);
-        }
+        pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -773,10 +770,9 @@ namespace pkmn {
 
     void pokemon_gcnimpl::set_level(
         int level
-    ) {
-        if(level < 1 or level > 100) {
-            pkmn::throw_out_of_range("level", 1, 100);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Level", level, 1, 100);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -792,23 +788,34 @@ namespace pkmn {
     ) {
         if(not pkmn::string_is_modern_stat(stat)) {
             pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        } else if(not pkmn::IV_in_bounds(value, true)) {
-            pkmn::throw_out_of_range(stat, 0, 31);
         }
+
+        pkmn::enforce_IV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        if(stat == "HP") {
+        if(stat == "HP")
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
-        } else if(stat == "Attack") {
+        }
+        else if(stat == "Attack")
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
-        } else if(stat == "Defense") {
+        }
+        else if(stat == "Defense")
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
-        } else if(stat == "Speed") {
+        }
+        else if(stat == "Speed")
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
-        } else if(stat == "Special Attack") {
+        }
+        else if(stat == "Special Attack")
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
-        } else {
+        }
+        else
+        {
             GC_RCAST->IVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
         }
 
@@ -880,24 +887,36 @@ namespace pkmn {
     void pokemon_gcnimpl::set_contest_stat(
         const std::string &stat,
         int value
-    ) {
-        if(value < 0 or value > 255) {
-            pkmn::throw_out_of_range("value", 0, 255);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
-        if(stat == "Cool") {
+        if(stat == "Cool")
+        {
             GC_RCAST->contestStats[LIBPKMGC_CONTEST_STAT_COOL] = LibPkmGC::u8(value);
-        } else if(stat == "Beauty") {
+        }
+        else if(stat == "Beauty")
+        {
             GC_RCAST->contestStats[LIBPKMGC_CONTEST_STAT_BEAUTY] = LibPkmGC::u8(value);
-        } else if(stat == "Cute") {
+        }
+        else if(stat == "Cute")
+        {
             GC_RCAST->contestStats[LIBPKMGC_CONTEST_STAT_CUTE] = LibPkmGC::u8(value);
-        } else if(stat == "Smart") {
+        }
+        else if(stat == "Smart")
+        {
             GC_RCAST->contestStats[LIBPKMGC_CONTEST_STAT_SMART] = LibPkmGC::u8(value);
-        } else if(stat == "Tough") {
+        }
+        else if(stat == "Tough")
+        {
             GC_RCAST->contestStats[LIBPKMGC_CONTEST_STAT_TOUGH] = LibPkmGC::u8(value);
-        } else if(stat == "Feel") {
+        }
+        else if(stat == "Feel")
+        {
             GC_RCAST->contestLuster = LibPkmGC::u8(value);
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("Invalid contest stat.");
         }
 
@@ -908,9 +927,7 @@ namespace pkmn {
         const std::string &move,
         int index
     ) {
-        if(index < 0 or index > 3) {
-            pkmn::throw_out_of_range("index", 0, 3);
-        }
+        pkmn::enforce_bounds("Move index", index, 0, 3);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -939,23 +956,34 @@ namespace pkmn {
     ) {
         if(not pkmn::string_is_modern_stat(stat)) {
             pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        } else if(not pkmn::EV_in_bounds(value, true)) {
-            pkmn::throw_out_of_range(stat, 0, 255);
         }
+
+        pkmn::enforce_EV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        if(stat == "HP") {
+        if(stat == "HP")
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_HP] = LibPkmGC::u8(value);
-        } else if(stat == "Attack") {
+        }
+        else if(stat == "Attack")
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_ATTACK] = LibPkmGC::u8(value);
-        } else if(stat == "Defense") {
+        }
+        else if(stat == "Defense")
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_DEFENSE] = LibPkmGC::u8(value);
-        } else if(stat == "Speed") {
+        }
+        else if(stat == "Speed")
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_SPEED] = LibPkmGC::u8(value);
-        } else if(stat == "Special Attack") {
+        }
+        else if(stat == "Special Attack")
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_SPATK] = LibPkmGC::u8(value);
-        } else {
+        }
+        else
+        {
             GC_RCAST->EVs[LIBPKMGC_STAT_SPDEF] = LibPkmGC::u8(value);
         }
 

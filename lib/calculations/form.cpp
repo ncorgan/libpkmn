@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 
 #include <pkmn/config.hpp>
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 
 namespace pkmn { namespace calculations {
@@ -31,22 +31,10 @@ namespace pkmn { namespace calculations {
         int IV_special
     )
     {
-        if(not pkmn::IV_in_bounds(IV_attack, false))
-        {
-            pkmn::throw_out_of_range("IV_attack", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_defense, false))
-        {
-            pkmn::throw_out_of_range("IV_defense", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_speed, false))
-        {
-            pkmn::throw_out_of_range("IV_speed", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_special, false))
-        {
-            pkmn::throw_out_of_range("IV_special", 0, 15);
-        }
+        pkmn::enforce_IV_bounds("Attack",  IV_attack,  false);
+        pkmn::enforce_IV_bounds("Defense", IV_defense, false);
+        pkmn::enforce_IV_bounds("Speed",   IV_speed,   false);
+        pkmn::enforce_IV_bounds("Special", IV_special, false);
 
         std::string ret = "?";
         ret[0] = gen2_unown_letter(

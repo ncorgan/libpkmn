@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "game_save_gcnimpl.hpp"
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
@@ -172,10 +173,9 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }

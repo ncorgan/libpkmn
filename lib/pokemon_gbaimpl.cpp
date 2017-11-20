@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
@@ -570,10 +571,9 @@ namespace pkmn {
 
     void pokemon_gbaimpl::set_friendship(
         int friendship
-    ) {
-        if(friendship < 0 or friendship > 255) {
-            pkmn::throw_out_of_range("friendship", 0 , 255);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -657,9 +657,7 @@ namespace pkmn {
     void pokemon_gbaimpl::set_level_met(
         int level
     ) {
-        if(level < 0 or level > 100) {
-            pkmn::throw_out_of_range("Level caught", 0, 100);
-        }
+        pkmn::enforce_bounds("Level met", level, 0, 100);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -768,10 +766,7 @@ namespace pkmn {
         int experience
     ) {
         int max_experience = _database_entry.get_experience_at_level(100);
-
-        if(experience < 0 or experience > max_experience) {
-            pkmn::throw_out_of_range("experience", 0, max_experience);
-        }
+        pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -790,10 +785,9 @@ namespace pkmn {
 
     void pokemon_gbaimpl::set_level(
         int level
-    ) {
-        if(level < 1 or level > 100) {
-            pkmn::throw_out_of_range("level", 1, 100);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Level", level, 1, 100);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -904,10 +898,9 @@ namespace pkmn {
     void pokemon_gbaimpl::set_move(
         const std::string &move,
         int index
-    ) {
-        if(index < 0 or index > 3) {
-            pkmn::throw_out_of_range("index", 0, 3);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
@@ -926,26 +919,39 @@ namespace pkmn {
     void pokemon_gbaimpl::set_EV(
         const std::string &stat,
         int value
-    ) {
-        if(not pkmn::string_is_modern_stat(stat)) {
+    )
+    {
+        if(not pkmn::string_is_modern_stat(stat))
+        {
             pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        } else if(not pkmn::EV_in_bounds(value, true)) {
-            pkmn::throw_out_of_range("stat", 0, 255);
         }
+
+        pkmn::enforce_EV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
-        if(stat == "HP") {
+        if(stat == "HP")
+        {
             _effort->ev_hp = uint8_t(value);
-        } else if(stat == "Attack") {
+        }
+        else if(stat == "Attack")
+        {
             _effort->ev_atk = uint8_t(value);
-        } else if(stat == "Defense") {
+        }
+        else if(stat == "Defense")
+        {
             _effort->ev_def = uint8_t(value);
-        } else if(stat == "Speed") {
+        }
+        else if(stat == "Speed")
+        {
             _effort->ev_spd = uint8_t(value);
-        } else if(stat == "Special Attack") {
+        }
+        else if(stat == "Special Attack")
+        {
             _effort->ev_spatk = uint8_t(value);
-        } else {
+        }
+        else
+        {
             _effort->ev_spdef = uint8_t(value);
         }
 

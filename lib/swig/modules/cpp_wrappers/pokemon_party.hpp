@@ -8,6 +8,8 @@
 #ifndef CPP_WRAPPERS_POKEMON_PARTY_HPP
 #define CPP_WRAPPERS_POKEMON_PARTY_HPP
 
+#include "exception_internal.hpp"
+
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_party.hpp>
@@ -64,10 +66,7 @@ namespace pkmn { namespace swig {
                 int index
             )
             {
-                if(index < 0 or index > 5)
-                {
-                    pkmn::throw_out_of_range("index", 0, 5);
-                }
+                pkmn::enforce_bounds("Party index", index, 0, 5);
 
                 return pkmn::swig::pokemon(_pokemon_party->get_pokemon(index));
             }

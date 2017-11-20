@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
@@ -264,10 +265,9 @@ namespace pkmn {
 
     void game_save_gbaimpl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         *_pksav_save.money = pksav_littleendian32(uint32_t(money));
     }

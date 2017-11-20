@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
 
 #include <pksav/gen2/items.h>
@@ -97,23 +98,28 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::add(
         const std::string &name,
         int amount
-    ) {
-        if(amount < 1 or amount > 99) {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name()) {
+        if(item.get_pocket() != get_name())
+        {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
         int position = -1;
-        if(ITEM_ID_IS_TM(item_id)) {
+        if(ITEM_ID_IS_TM(item_id))
+        {
             position = item_id - TM01_ID;
-        } else if(ITEM_ID_IS_HM(item_id)) {
+        }
+        else if(ITEM_ID_IS_HM(item_id))
+        {
             position = item_id - 347;
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("Invalid item.");
         }
 
@@ -125,23 +131,28 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::remove(
         const std::string &name,
         int amount
-    ) {
-        if(amount < 1 or amount > 99) {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name()) {
+        if(item.get_pocket() != get_name())
+        {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
         int position = -1;
-        if(ITEM_ID_IS_TM(item_id)) {
+        if(ITEM_ID_IS_TM(item_id))
+        {
             position = item_id - TM01_ID;
-        } else if(ITEM_ID_IS_HM(item_id)) {
+        }
+        else if(ITEM_ID_IS_HM(item_id))
+        {
             position = item_id - 347;
-        } else {
+        }
+        else
+        {
             throw std::runtime_error("Invalid item.");
         }
 
@@ -165,19 +176,15 @@ namespace pkmn {
     {
         // Input validation.
         int end_boundary = std::min<int>(_num_items, _capacity-1);
-        if(position < 0 or position >= end_boundary)
-        {
-            pkmn::throw_out_of_range("position", 0, end_boundary);
-        }
+        pkmn::enforce_bounds("Position", position, 0, end_boundary);
+
         pkmn::database::item_entry entry(item_name, get_game());
         if(item_name != "None" and entry.get_pocket() != get_name())
         {
             throw std::invalid_argument("This item does not belong in this pocket.");
         }
-        if(amount < 0 or amount > 99)
-        {
-            pkmn::throw_out_of_range("amount", 0, 99);
-        }
+
+        pkmn::enforce_bounds("Amount", amount, 0, 99);
         if(item_name != _item_slots[position].item)
         {
             pkmn::throw_invalid_argument<std::string>("item", {_item_slots[position].item});

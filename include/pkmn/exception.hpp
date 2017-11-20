@@ -9,6 +9,7 @@
 
 #include <pkmn/config.hpp>
 
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -106,32 +107,61 @@ namespace pkmn {
         throw std::invalid_argument(err_msg.str().c_str());
     }
 
-    //! Throw a std::out_of_range, specifying the min and max bounds.
+    //! Throw a std::out_of_range if the given value is outside the provided range.
     /*!
      * \param field the variable whose value is invalid
+     * \param value value to check
      * \param min the minimum value
      * \param max the maximum value
      */
     template <typename T>
-    PKMN_INLINE void throw_out_of_range(
+    void enforce_bounds(
         const std::string& field,
+        T value,
         T min,
         T max
-    ) {
-        std::ostringstream err_msg;
-        if(std::is_floating_point<T>::value) {
-            err_msg.precision(2);
-            err_msg << std::fixed;
+    )
+    {
+        bool is_less_than_range = false;
+        bool is_greater_than_range = false;
+
+        if(std::is_floating_point<T>::value)
+        {
+            is_less_than_range = std::isless(value, min);
+            is_greater_than_range = std::isgreater(value, max);
+        }
+        else
+        {
+            is_less_than_range = (value < min);
+            is_greater_than_range = (value > max);
         }
 
-        err_msg << field;
-        err_msg << ": valid values ";
-        err_msg << min;
-        err_msg << "-";
-        err_msg << max;
-        err_msg << ".";
+        if(is_less_than_range or is_greater_than_range)
+        {
+            std::ostringstream err_msg;
+            std::streamsize old_precision = 0;
 
-        throw std::out_of_range(err_msg.str().c_str());
+            if(std::is_floating_point<T>::value)
+            {
+                old_precision = err_msg.precision();
+                err_msg.precision(2);
+                err_msg << std::fixed;
+            }
+
+            err_msg << field;
+            err_msg << ": valid values ";
+            err_msg << min;
+            err_msg << "-";
+            err_msg << max;
+            err_msg << ".";
+
+            if(std::is_floating_point<T>::value)
+            {
+                err_msg.precision(old_precision);
+            }
+
+            throw std::out_of_range(err_msg.str().c_str());
+        }
     }
 
 }

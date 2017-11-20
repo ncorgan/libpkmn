@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 
 #include <pkmn/config.hpp>
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/stats.hpp>
 
 #include <cmath>
@@ -44,12 +44,8 @@ namespace pkmn { namespace calculations {
         if(not pkmn::string_is_gen2_stat(stat)) {
             pkmn::throw_invalid_argument("stat", pkmn::GEN2_STATS);
         }
-        if(not pkmn::EV_in_bounds(EV, false)) {
-            pkmn::throw_out_of_range("EV", 0, 65535);
-        }
-        if(not pkmn::IV_in_bounds(IV, false)) {
-            pkmn::throw_out_of_range("IV", 0, 15);
-        }
+        pkmn::enforce_EV_bounds(stat, EV, false);
+        pkmn::enforce_IV_bounds(stat, IV, false);
 
         int ret = 0;
 
@@ -97,12 +93,8 @@ namespace pkmn { namespace calculations {
         {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }
-        if(not pkmn::EV_in_bounds(EV, true)) {
-            pkmn::throw_out_of_range("EV", 0, 255);
-        }
-        if(not pkmn::IV_in_bounds(IV, true)) {
-            pkmn::throw_out_of_range("IV", 0, 31);
-        }
+        pkmn::enforce_EV_bounds(stat, EV, true);
+        pkmn::enforce_IV_bounds(stat, IV, true);
 
         int ret = 0;
 

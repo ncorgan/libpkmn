@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 
 #include <pkmn/config.hpp>
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
@@ -86,24 +86,12 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        if(not pkmn::IV_in_bounds(IV_HP, true)) {
-            pkmn::throw_out_of_range("IV_HP", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_attack, true)) {
-            pkmn::throw_out_of_range("IV_attack", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_defense, true)) {
-            pkmn::throw_out_of_range("IV_defense", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_speed, true)) {
-            pkmn::throw_out_of_range("IV_speed", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
-            pkmn::throw_out_of_range("IV_spatk", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
-            pkmn::throw_out_of_range("IV_spdef", 0, 31);
-        }
+        pkmn::enforce_IV_bounds("HP",              IV_HP,      true);
+        pkmn::enforce_IV_bounds("Attack",          IV_attack,  true);
+        pkmn::enforce_IV_bounds("Defense",         IV_defense, true);
+        pkmn::enforce_IV_bounds("Speed",           IV_speed,   true);
+        pkmn::enforce_IV_bounds("Special Attack",  IV_spatk,   true);
+        pkmn::enforce_IV_bounds("Special Defense", IV_spdef,   true);
 
         // TODO: can this be done without instantiating an entire entry?
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);

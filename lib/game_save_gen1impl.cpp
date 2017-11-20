@@ -143,10 +143,9 @@ namespace pkmn {
 
     void game_save_gen1impl::set_trainer_id(
         uint32_t trainer_id
-    ) {
-        if(trainer_id >= 65535) {
-            pkmn::throw_out_of_range("trainer_id", 0, 65535);
-        }
+    )
+    {
+        pkmn::enforce_gb_trainer_id_bounds(trainer_id);
 
         *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
     }
@@ -225,10 +224,9 @@ namespace pkmn {
 
     void game_save_gen1impl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         PKSAV_CALL(
             pksav_to_base256(

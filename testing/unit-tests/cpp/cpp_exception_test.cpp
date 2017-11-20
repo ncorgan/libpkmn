@@ -143,7 +143,7 @@ TEST(cpp_exception_test, test_out_of_range)
     const std::string int_expected_msg = "int_param: valid values -100-2000.";
 
     try {
-        pkmn::throw_out_of_range("int_param", int_min, int_max);
+        pkmn::enforce_bounds("int_param", int_min-1, int_min, int_max);
         FAIL() << "Did not throw";
     } catch(const std::out_of_range& e) {
         EXPECT_EQ(int_expected_msg, std::string(e.what()));
@@ -156,7 +156,12 @@ TEST(cpp_exception_test, test_out_of_range)
     const std::string ushort_expected_msg = "ushort_param: valid values 3-1234.";
 
     try {
-        pkmn::throw_out_of_range("ushort_param", ushort_min, ushort_max);
+        pkmn::enforce_bounds(
+            "ushort_param",
+            static_cast<unsigned short>(ushort_max+1),
+            ushort_min,
+            ushort_max
+        );
         FAIL() << "Did not throw";
     } catch(const std::out_of_range& e) {
         EXPECT_EQ(ushort_expected_msg, std::string(e.what()));
@@ -170,7 +175,7 @@ TEST(cpp_exception_test, test_out_of_range)
     const std::string float_expected_msg = "float_param: valid values 12.23-45.67.";
 
     try {
-        pkmn::throw_out_of_range("float_param", float_min, float_max);
+        pkmn::enforce_bounds("float_param", float_min-0.5f, float_min, float_max);
         FAIL() << "Did not throw";
     } catch(const std::out_of_range& e) {
         EXPECT_EQ(float_expected_msg, std::string(e.what()));
@@ -184,7 +189,7 @@ TEST(cpp_exception_test, test_out_of_range)
     const std::string double_expected_msg = "double_param: valid values 12.23-45.67.";
 
     try {
-        pkmn::throw_out_of_range("double_param", double_min, double_max);
+        pkmn::enforce_bounds("double_param", double_max+0.5, double_min, double_max);
         FAIL() << "Did not throw";
     } catch(const std::out_of_range& e) {
         EXPECT_EQ(double_expected_msg, std::string(e.what()));

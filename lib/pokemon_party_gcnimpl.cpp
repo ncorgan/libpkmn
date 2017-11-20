@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_party_gcnimpl.hpp"
 
@@ -82,15 +83,14 @@ namespace pkmn {
     void pokemon_party_gcnimpl::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int num_pokemon = get_num_pokemon();
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
-        if(index < 0 or index > max_index)
-        {
-            pkmn::throw_out_of_range("index", 0, max_index);
-        }
-        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        pkmn::enforce_bounds("Party index", index, 0, max_index);
+
+        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }

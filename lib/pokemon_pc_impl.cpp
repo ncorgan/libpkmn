@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_pc_impl.hpp"
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
@@ -66,11 +67,10 @@ namespace pkmn {
 
     pkmn::pokemon_box::sptr pokemon_pc_impl::get_box(
         int index
-    ) {
+    )
+    {
         int num_boxes = get_num_boxes();
-        if(index < 0 or index > (num_boxes-1)) {
-            pkmn::throw_out_of_range("index", 0, (num_boxes-1));
-        }
+        pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
         return _box_list.at(index);
     }

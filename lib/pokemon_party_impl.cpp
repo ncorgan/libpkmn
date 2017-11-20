@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_party_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
@@ -69,10 +70,9 @@ namespace pkmn {
 
     pkmn::pokemon::sptr pokemon_party_impl::get_pokemon(
         int index
-    ) {
-        if(index < 0 or index > (PARTY_SIZE-1)) {
-            pkmn::throw_out_of_range("index", 0, (PARTY_SIZE-1));
-        }
+    )
+    {
+        pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
         return _pokemon_list.at(index);
     }
