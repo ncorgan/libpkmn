@@ -20,6 +20,7 @@
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/database/item_entry.hpp>
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -298,6 +299,40 @@ namespace pkmn {
         }
     }
 
+    pokemon::sptr pokemon_ndsimpl::to_game(
+        const std::string& game
+    )
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        pkmn::pokemon::sptr ret;
+
+        pksav_nds_party_pokemon_t pksav_pokemon;
+        pksav_pokemon.pc = *NDS_PC_RCAST;
+        pksav_pokemon.party_data = *NDS_PARTY_RCAST;
+
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_id_to_generation(game_id);
+        switch(generation)
+        {
+            case 4:
+            {
+                ret = pkmn::make_shared<pokemon_ndsimpl>(pksav_pokemon, game_id);
+                ret->set_level_met(get_level());
+                ret->set_original_game(get_game());
+            }
+
+            case 5: // TODO
+            case 6:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Generation IV Pokémon can only be converted to Generation IV-VI.");
+        }
+
+        return ret;
+    }
+
     void pokemon_ndsimpl::export_to_file(
         const std::string& filepath
     )
@@ -344,6 +379,54 @@ namespace pkmn {
         else
         {
             _blockB->iv_isegg_isnicknamed &= ~PKSAV_NDS_ISEGG_MASK;
+        }
+    }
+
+    std::string pokemon_ndsimpl::get_condition()
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        std::string ret = "None";
+
+        // Check the mask. We won't distinguish between sleep states for different
+        // numbers of turns.
+        for(const auto& mask_iter: pksav::CONDITION_MASK_BIMAP.right)
+        {
+            if(NDS_PARTY_RCAST->status & mask_iter.first)
+            {
+                ret = mask_iter.second;
+                break;
+            }
+        }
+
+        return ret;
+    }
+
+    void pokemon_ndsimpl::set_condition(
+        const std::string& condition
+    )
+    {
+        auto condition_iter = pksav::CONDITION_MASK_BIMAP.left.find(condition);
+
+        if(condition_iter != pksav::CONDITION_MASK_BIMAP.left.end())
+        {
+            boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+            NDS_PARTY_RCAST->status = 0;
+
+            if(condition == "Asleep")
+            {
+                // Sleep is stored as the number of turns asleep, so set a random value.
+                NDS_PARTY_RCAST->status = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
+            }
+            else
+            {
+                NDS_PARTY_RCAST->status = pksav_littleendian32(condition_iter->second);
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid condition.");
         }
     }
 
@@ -463,6 +546,16 @@ namespace pkmn {
             &NDS_PC_RCAST->personality,
             value
         );
+    }
+
+    std::string pokemon_ndsimpl::get_held_item()
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        return pkmn::database::item_index_to_name(
+                   pksav_littleendian16(_blockA->held_item),
+                   _database_entry.get_game_id()
+               );
     }
 
     void pokemon_ndsimpl::set_held_item(

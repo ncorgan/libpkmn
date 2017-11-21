@@ -39,38 +39,13 @@ namespace pkmn {
 
             ~pokemon_ndsimpl();
 
-            void export_to_file(
+            pkmn::pokemon::sptr to_game(
                 const std::string& game
             ) override final;
 
-            // TODO: implement, move to correct position
-
-            pkmn::pokemon::sptr to_game(
+            void export_to_file(
                 const std::string& game
-            ) override final
-            {
-                (void)game;
-                return pkmn::pokemon::sptr();
-            }
-
-            std::string get_condition() override final
-            {
-                return "";
-            }
-
-            void set_condition(
-                const std::string& condition
-            ) override final
-            {
-                (void)condition;
-            }
-
-            std::string get_held_item() override final
-            {
-                return "";
-            }
-
-            // End todo
+            ) override final;
 
             void set_form(
                 const std::string &form
@@ -80,6 +55,12 @@ namespace pkmn {
 
             void set_is_egg(
                 bool is_egg
+            ) override final;
+
+            std::string get_condition() override final;
+
+            void set_condition(
+                const std::string& condition
             ) override final;
 
             std::string get_nickname() override final;
@@ -99,6 +80,8 @@ namespace pkmn {
             void set_shininess(
                 bool value
             );
+
+            std::string get_held_item() override final;
 
             void set_held_item(
                 const std::string &held_item
