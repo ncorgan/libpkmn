@@ -115,21 +115,4 @@ namespace pkmn { namespace io {
         return load_pkm(buffer);
     }
 
-    void save_pkm(
-        pkmn::pokemon::sptr libpkmn_pokemon,
-        const std::string &filepath
-    ) {
-        int generation = pkmn::database::game_id_to_generation(
-                             libpkmn_pokemon->get_database_entry().get_game_id()
-                         );
-
-        if(generation != 4 and generation != 5) {
-            throw std::invalid_argument("Only Generation IV-V Pokémon can be saved to .pkm files.");
-        }
-
-        std::ofstream ofile(filepath.c_str(), std::ios::binary);
-        ofile.write((char*)libpkmn_pokemon->get_native_pc_data(), sizeof(pksav_nds_pc_pokemon_t));
-        ofile.close();
-    }
-
 }}

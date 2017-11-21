@@ -27,11 +27,6 @@ namespace pkmn { namespace io {
         const std::string &filepath
     );
 
-    void save_pkm(
-        pkmn::pokemon::sptr libpkmn_pokemon,
-        const std::string &filepath
-    );
-
 }}
 
 #endif /* PKMN_IO_PKM_HPP */

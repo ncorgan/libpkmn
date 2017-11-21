@@ -32,6 +32,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <boost/thread/lock_guard.hpp>
@@ -44,6 +45,8 @@
 
 #define NDS_PC_RCAST    (reinterpret_cast<pksav_nds_pc_pokemon_t*>(_native_pc))
 #define NDS_PARTY_RCAST (reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party))
+
+namespace fs = boost::filesystem;
 
 namespace pkmn {
 
@@ -295,11 +298,53 @@ namespace pkmn {
         }
     }
 
+    void pokemon_ndsimpl::export_to_file(
+        const std::string& filepath
+    )
+    {
+        std::string extension = fs::extension(filepath);
+        if(extension == ".pkm")
+        {
+            boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+            std::ofstream ofile(filepath, std::ios::binary);
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_nds_pc_pokemon_t));
+            ofile.close();
+        }
+        else
+        {
+            throw std::invalid_argument("Generation IV Pokémon can only be saved to .pkm files.");
+        }
+    }
+
     void pokemon_ndsimpl::set_form(
         const std::string &form
     )
     {
         (void)form;
+    }
+
+    bool pokemon_ndsimpl::is_egg()
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        return bool(_blockB->iv_isegg_isnicknamed & PKSAV_NDS_ISEGG_MASK);
+    }
+
+    void pokemon_ndsimpl::set_is_egg(
+        bool is_egg
+    )
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        if(is_egg)
+        {
+            _blockB->iv_isegg_isnicknamed |= PKSAV_NDS_ISEGG_MASK;
+        }
+        else
+        {
+            _blockB->iv_isegg_isnicknamed &= ~PKSAV_NDS_ISEGG_MASK;
+        }
     }
 
     std::string pokemon_ndsimpl::get_nickname()
@@ -1234,6 +1279,29 @@ namespace pkmn {
 
         _update_EV_map();
         _populate_party_data();
+    }
+
+    int pokemon_ndsimpl::get_current_hp()
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        return int(pksav_littleendian16(NDS_PARTY_RCAST->current_hp));
+    }
+
+    void pokemon_ndsimpl::set_current_hp(
+        int hp
+    )
+    {
+        pkmn::enforce_bounds(
+            "Current HP",
+            hp,
+            0,
+            _stats["HP"]
+        );
+
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        NDS_PARTY_RCAST->current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));
     }
 
     void pokemon_ndsimpl::_set_default_nickname()
