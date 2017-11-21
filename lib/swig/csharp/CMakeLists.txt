@@ -11,7 +11,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py
     DEPENDS ${header_files}
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
-    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=csharp --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/csharp_CamelCase.i
     COMMENT "Generating csharp_CamelCase.i"
 )
 ADD_CUSTOM_TARGET(
@@ -57,6 +57,7 @@ SWIG_CSHARP_INIT()
 
 SWIG_BUILD_CSHARP_MODULE(calculations_csharp Calculations TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE PKMN.Database)
+SWIG_BUILD_CSHARP_MODULE(gui_csharp GUI TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(lists_csharp Lists TRUE PKMN.Database)
 SWIG_BUILD_CSHARP_MODULE(paths_csharp Paths TRUE PKMN)
 SWIG_BUILD_CSHARP_MODULE(pkmn_csharp PKMN TRUE PKMN)
@@ -65,6 +66,7 @@ SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE PKMN)
 SET(swig_modules
     calculations_csharp
     database_csharp
+    gui_csharp
     lists_csharp
     paths_csharp
     pkmn_csharp

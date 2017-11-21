@@ -7,9 +7,10 @@
 
 INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
+    ${SQLITE3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt
     ${CMAKE_CURRENT_SOURCE_DIR}/SQLiteCpp
-    ${PKMN_SOURCE_DIR}/libpkmn-database/sqlite3
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_SOURCE_DIR}/PkmGCTools/LibPkmGC/include
     ${PKMN_BINARY_DIR}/pksav/include
@@ -31,9 +32,9 @@ SET(pkmn_libs
 
 ADD_SUBDIRECTORY(SQLiteCpp)
 ADD_SUBDIRECTORY(calculations)
+ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
-ADD_SUBDIRECTORY(mem)
 ADD_SUBDIRECTORY(pksav)
 ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)
@@ -43,7 +44,9 @@ ADD_SUBDIRECTORY(utils)
 #
 IF(PKMN_ENABLE_QT)
     CMAKE_POLICY(SET CMP0020 NEW)
-    CMAKE_POLICY(SET CMP0043 NEW)
+    IF(POLICY CMP0043)
+        CMAKE_POLICY(SET CMP0043 NEW)
+    ENDIF()
 
     INCLUDE_DIRECTORIES(
         ${QTx_INCLUDE_DIRS}
@@ -51,15 +54,14 @@ IF(PKMN_ENABLE_QT)
     LIST(APPEND pkmn_libs
         ${QTx_LIBRARIES}
     )
-
-    ADD_SUBDIRECTORY(qt)
 ENDIF(PKMN_ENABLE_QT)
+ADD_SUBDIRECTORY(qt)
 
 SET(pkmn_sources
     ${pkmn_calculations_sources}
+    ${pkmn_conversions_sources}
     ${pkmn_database_sources}
     ${pkmn_io_sources}
-    ${pkmn_mem_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources} # Will be empty without Qt support
     ${pkmn_types_sources}
@@ -141,6 +143,22 @@ ADD_LIBRARY(pkmn SHARED ${pkmn_sources} ${pkmn_rc})
 TARGET_LINK_LIBRARIES(pkmn ${pkmn_libs})
 SET_TARGET_PROPERTIES(pkmn PROPERTIES DEFINE_SYMBOL "PKMN_DLL_EXPORTS")
 ADD_DEFINITIONS(-Dpkmn_EXPORTS)
+
+#
+# Static Analysis
+#
+IF(PKMN_USE_CLANGTIDY)
+    SET_TARGET_PROPERTIES(
+        pkmn PROPERTIES
+        CXX_CLANG_TIDY "${CLANG_TIDY_PROPERTY}"
+    )
+ENDIF()
+IF(PKMN_USE_IWYC)
+    SET_TARGET_PROPERTIES(
+        pkmn PROPERTIES
+        CXX_INCLUDE_WHAT_YOU_USE "${IWYC_PROPERTY}"
+    )
+ENDIF()
 
 #
 # Qt post-build stuff

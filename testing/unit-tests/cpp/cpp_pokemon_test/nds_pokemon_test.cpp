@@ -9,6 +9,8 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/database/item_entry.hpp>
+#include <pkmn/database/move_entry.hpp>
 
 #include "pksav/pksav_call.hpp"
 
@@ -51,7 +53,10 @@ static void test_nds_pokemon_common(
         int(pksav_littleendian16(blockA->species))
     );
     EXPECT_EQ(
-        pokemon->get_held_item().get_item_index(),
+        pkmn::database::item_entry(
+            pokemon->get_held_item(),
+            pokemon->get_game()
+        ).get_item_index(),
         int(pksav_littleendian16(blockA->held_item))
     );
     EXPECT_EQ(
@@ -160,7 +165,10 @@ static void test_nds_pokemon_common(
     ASSERT_EQ(4, move_slots.size());
     for(size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(
-            move_slots.at(i).move.get_move_id(),
+            pkmn::database::move_entry(
+                move_slots.at(i).move,
+                pokemon->get_game()
+            ).get_move_id(),
             int(pksav_littleendian16(blockB->moves[i]))
         );
         EXPECT_EQ(

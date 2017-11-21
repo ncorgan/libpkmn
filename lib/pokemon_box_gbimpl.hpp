@@ -12,13 +12,27 @@
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
+#define POKEMON_BOX_GBIMPL_TEMPLATE \
+    template \
+    <typename list_type, \
+     typename pksav_pc_pokemon_type, \
+     typename pksav_pokemon_party_data_type, \
+     typename libpkmn_pokemon_type>
+
+#define POKEMON_BOX_GBIMPL_CLASS \
+    pokemon_box_gbimpl< \
+        list_type, \
+        pksav_pc_pokemon_type, \
+        pksav_pokemon_party_data_type, \
+        libpkmn_pokemon_type>
+
 namespace pkmn {
 
-    template <typename list_type, typename pksav_pokemon_type, typename libpkmn_pokemon_type>
+    POKEMON_BOX_GBIMPL_TEMPLATE
     class pokemon_box_gbimpl: public pokemon_box_impl {
         public:
             pokemon_box_gbimpl() {}
-            pokemon_box_gbimpl(
+            explicit pokemon_box_gbimpl(
                 int game_id
             );
             pokemon_box_gbimpl(
@@ -28,33 +42,39 @@ namespace pkmn {
 
             ~pokemon_box_gbimpl();
 
-            std::string get_name();
+            std::string get_name() override final;
 
             void set_name(
                 const std::string &name
-            );
+            ) override final;
 
-            int get_num_pokemon();
+            int get_num_pokemon() override final;
 
-            int get_capacity();
+            int get_capacity() override final;
 
             void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
-            );
+            ) override final;
 
         private:
 
-            std::string _box_name;
-
-            void _from_native();
+            void _from_native() override final;
     };
 
     // Generation I
-    typedef pokemon_box_gbimpl<pksav_gen1_pokemon_box_t, pksav_gen1_pc_pokemon_t, pokemon_gen1impl> pokemon_box_gen1impl;
+    typedef pokemon_box_gbimpl<
+                pksav_gen1_pokemon_box_t,
+                pksav_gen1_pc_pokemon_t,
+                pksav_gen1_pokemon_party_data_t,
+                pokemon_gen1impl> pokemon_box_gen1impl;
 
     // Generation II
-    typedef pokemon_box_gbimpl<pksav_gen2_pokemon_box_t, pksav_gen2_pc_pokemon_t, pokemon_gen2impl> pokemon_box_gen2impl;
+    typedef pokemon_box_gbimpl<
+                pksav_gen2_pokemon_box_t,
+                pksav_gen2_pc_pokemon_t,
+                pksav_gen2_pokemon_party_data_t,
+                pokemon_gen2impl> pokemon_box_gen2impl;
 }
 
 #include "pokemon_box_gbimpl.ipp"

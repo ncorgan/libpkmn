@@ -135,7 +135,7 @@ public partial class ItemSlot {
     /// <summary>Generates a unique hash code for the given ItemSlot.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<Database.ItemEntry>(this.Item)
+        return HashCodeBuilder.Create().AddValue<string>(this.Item)
                                        .AddValue<int>(this.Amount)
                                        .ToHashCode();
     }
@@ -178,7 +178,7 @@ public partial class MoveSlot {
     /// <summary>Generates a unique hash code for the given MoveSlot.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<Database.MoveEntry>(this.Move)
+        return HashCodeBuilder.Create().AddValue<string>(this.Move)
                                        .AddValue<int>(this.PP)
                                        .ToHashCode();
     }

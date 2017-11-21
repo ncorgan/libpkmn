@@ -11,6 +11,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         gender.h
         hidden_power.h
         int_pair.h
+        item_pockets.h
         item_slot.h
         levelup_move.h
         move_slot.h
@@ -18,6 +19,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         pokemon_box_list.h
         stats.h
         string_types.h
+        trainer_info.h
     )
 
     INSTALL(

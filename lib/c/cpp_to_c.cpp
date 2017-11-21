@@ -86,10 +86,12 @@ namespace pkmn {
         const pkmn::item_slot &islot_cpp,
         pkmn_item_slot_t* islot_c
     ) {
-        std::string item_name = islot_cpp.item.get_name();
-        islot_c->item = (char*)std::malloc(item_name.size() + 1);
-        std::strcpy(islot_c->item, item_name.c_str());
-        islot_c->item[item_name.size()] = '\0';
+        std::strncpy(
+            islot_c->item,
+            islot_cpp.item.c_str(),
+            sizeof(islot_c->item)
+        );
+        islot_c->item[islot_cpp.item.size()] = '\0';
 
         islot_c->amount = islot_cpp.amount;
     }
@@ -315,10 +317,9 @@ namespace pkmn {
         const pkmn::move_slot &mslot_cpp,
         pkmn_move_slot_t* mslot_c
     ) {
-        std::string move_name = mslot_cpp.move.get_name();
-        mslot_c->move = (char*)std::malloc(move_name.size() + 1);
-        std::strcpy(mslot_c->move, move_name.c_str());
-        mslot_c->move[move_name.size()] = '\0';
+        mslot_c->move = (char*)std::malloc(mslot_cpp.move.size() + 1);
+        std::strcpy(mslot_c->move, mslot_cpp.move.c_str());
+        mslot_c->move[mslot_cpp.move.size()] = '\0';
 
         mslot_c->pp = mslot_cpp.pp;
     }

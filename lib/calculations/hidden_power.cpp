@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 #include "../database/database_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/hidden_power.hpp>
 
 #include <boost/config.hpp>
-#include <boost/format.hpp>
 
 #include <cmath>
-#include <stdexcept>
 
 namespace pkmn { namespace calculations {
 
@@ -25,7 +25,7 @@ namespace pkmn { namespace calculations {
         "SELECT name FROM type_names WHERE local_language_id=9 AND type_id=?";
 
     // Most significant bit
-    #define MSB(var) ((var >> 3) & 1)
+    #define MSB(var) (((var) >> 3) & 1)
 
     /*
      * There is no Normal-type Hidden Power, so all type indices
@@ -54,18 +54,10 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn::IV_in_bounds(IV_attack, false)) {
-            pkmn::throw_out_of_range("IV_attack", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_defense, false)) {
-            pkmn::throw_out_of_range("IV_defense", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_speed, false)) {
-            pkmn::throw_out_of_range("IV_speed", 0, 15);
-        }
-        if(not pkmn::IV_in_bounds(IV_special, false)) {
-            pkmn::throw_out_of_range("IV_special", 0, 15);
-        }
+        pkmn::enforce_IV_bounds("Attack",  IV_attack,  false);
+        pkmn::enforce_IV_bounds("Defense", IV_defense, false);
+        pkmn::enforce_IV_bounds("Speed",   IV_speed,   false);
+        pkmn::enforce_IV_bounds("Special", IV_special, false);
 
         uint8_t v = MSB(IV_special);
         uint8_t w = MSB(IV_speed);
@@ -83,9 +75,9 @@ namespace pkmn { namespace calculations {
     }
 
     // Least significant bit
-    #define LSB(var)  (var & 1)
+    #define LSB(var)  ((var) & 1)
     // Second-least significant bit
-    #define LSB2(var) ((var & 2) >> 1)
+    #define LSB2(var) (((var) & 2) >> 1)
 
     PKMN_INLINE int modern_hidden_power_type(
         uint8_t a, uint8_t b, uint8_t c,
@@ -113,24 +105,12 @@ namespace pkmn { namespace calculations {
         pkmn::database::get_connection(_db);
 
         // Input validation
-        if(not pkmn::IV_in_bounds(IV_HP, true)) {
-            pkmn::throw_out_of_range("IV_HP", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_attack, true)) {
-            pkmn::throw_out_of_range("IV_attack", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_defense, true)) {
-            pkmn::throw_out_of_range("IV_defense", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_speed, true)) {
-            pkmn::throw_out_of_range("IV_speed", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
-            pkmn::throw_out_of_range("IV_spatk", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
-            pkmn::throw_out_of_range("IV_spdef", 0, 31);
-        }
+        pkmn::enforce_IV_bounds("HP",              IV_HP,      true);
+        pkmn::enforce_IV_bounds("Attack",          IV_attack,  true);
+        pkmn::enforce_IV_bounds("Defense",         IV_defense, true);
+        pkmn::enforce_IV_bounds("Speed",           IV_speed,   true);
+        pkmn::enforce_IV_bounds("Special Attack",  IV_spatk,   true);
+        pkmn::enforce_IV_bounds("Special Defense", IV_spdef,   true);
 
         uint8_t a = LSB(IV_HP);
         uint8_t b = LSB(IV_attack);

@@ -86,14 +86,14 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.GetHeldItem();
+                pokemon.HeldItem = "Potion";
             }
         );
 
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.LIBPKMN_OT_NAME);
+        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
         Assert.AreEqual(pokemon.TrainerGender, "Male");
-        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.LIBPKMN_OT_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
 
         Assert.Throws<ApplicationException>(
             delegate {
@@ -164,7 +164,7 @@ public class Gen1PokemonTests {
         );
 
         foreach(PKMN.MoveSlot moveSlot in pokemon.Moves) {
-            Assert.AreEqual(moveSlot.Move.Name, "None");
+            Assert.AreEqual(moveSlot.Move, "None");
             Assert.AreEqual(moveSlot.PP, 0);
         }
 
@@ -210,7 +210,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.SetHeldItem("Potion");
+                pokemon.HeldItem = "Potion";
             }
         );
 
@@ -311,15 +311,18 @@ public class Gen1PokemonTests {
                 pokemon.SetMove("Synthesis", 0);
             }
         );
-        Assert.AreEqual(pokemon.Moves[0].Move.Name, "None");
+        Assert.AreEqual(pokemon.Moves[0].Move, "None");
 
         string[] moves = {"Ember", "Flamethrower", "Slash", "Fire Blast"};
         for(int i = 0; i < 4; ++i) {
             pokemon.SetMove(moves[i], i);
         }
         for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon.Moves[i].Move.Name, moves[i]);
-            Assert.AreEqual(pokemon.Moves[i].PP, pokemon.Moves[i].Move.GetPP(0));
+            Assert.AreEqual(pokemon.Moves[i].Move, moves[i]);
+            Assert.AreEqual(
+                pokemon.Moves[i].PP,
+                new PKMN.Database.MoveEntry(pokemon.Moves[i].Move, game).GetPP(0)
+            );
         }
 
         Assert.Throws<ArgumentOutOfRangeException>(

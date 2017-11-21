@@ -77,14 +77,14 @@ class gen2_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_form(), "Standard")
         self.assertStringEqual(pokemon.get_game(), game)
         self.assertStringEqual(pokemon.get_nickname(), species.upper())
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "None")
-        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.LIBPKMN_OT_NAME)
-        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_held_item(), "None")
+        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
 
         with self.assertRaises(RuntimeError):
             pokemon.get_trainer_secret_id()
 
-        self.assertEqual(pokemon.get_trainer_id(), (pkmn.LIBPKMN_OT_ID & 0xFFFF))
+        self.assertEqual(pokemon.get_trainer_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
         self.assertStringEqual(pokemon.get_trainer_gender(), "Male")
         self.assertEqual(pokemon.get_friendship(), pokemon.get_database_entry().get_base_friendship())
 
@@ -119,7 +119,7 @@ class gen2_pokemon_test(pokemon_tests):
             pokemon.get_contest_stats()
 
         for move_slot in pokemon.get_moves():
-            self.assertStringEqual(move_slot.move.get_name(), "None")
+            self.assertStringEqual(move_slot.move, "None")
             self.assertEqual(move_slot.pp, 0)
 
         self.check_stat_map(pokemon.get_EVs(), False)
@@ -175,15 +175,15 @@ class gen2_pokemon_test(pokemon_tests):
 
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Not an item")
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "None")
+        self.assertStringEqual(pokemon.get_held_item(), "None")
 
         # Valid item, not holdable
         with self.assertRaises(ValueError):
             pokemon.set_held_item("Bicycle")
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "None")
+        self.assertStringEqual(pokemon.get_held_item(), "None")
 
         pokemon.set_held_item("Berry")
-        self.assertStringEqual(pokemon.get_held_item().get_name(), "Berry")
+        self.assertStringEqual(pokemon.get_held_item(), "Berry")
 
         with self.assertRaises(ValueError):
             pokemon.set_trainer_name("")
@@ -266,7 +266,7 @@ class gen2_pokemon_test(pokemon_tests):
         with self.assertRaises(ValueError):
             pokemon.set_move("Bounce", 0)
 
-        self.assertStringEqual(pokemon.get_moves()[0].move.get_name(), "None")
+        self.assertStringEqual(pokemon.get_moves()[0].move, "None")
 
         move_names = ["Ember", "Flamethrower", "Slash", "Fire Blast"]
         for i, name in enumerate(move_names):
@@ -274,8 +274,11 @@ class gen2_pokemon_test(pokemon_tests):
 
         moves = pokemon.get_moves()
         for i, name in enumerate(move_names):
-            self.assertStringEqual(moves[i].move.get_name(), name)
-            self.assertEqual(moves[i].pp, moves[i].move.get_pp(0))
+            self.assertStringEqual(moves[i].move, name)
+            self.assertEqual(
+                moves[i].pp,
+                pkmn.database.move_entry(moves[i].move, game).get_pp(0)
+            )
 
         with self.assertRaises(ValueError):
             pokemon.set_EV("Not a stat", 1)

@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_party_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
@@ -13,8 +14,6 @@
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
-
-#include "mem/pokemon_setter.hpp"
 
 #include "misc_common.hpp"
 
@@ -60,7 +59,9 @@ namespace pkmn {
 
     pokemon_party_impl::pokemon_party_impl(
         int game_id
-    ): _game_id(game_id),
+    ): _native(nullptr),
+       _our_mem(false),
+       _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
@@ -72,10 +73,9 @@ namespace pkmn {
 
     pkmn::pokemon::sptr pokemon_party_impl::get_pokemon(
         int index
-    ) {
-        if(index < 0 or index > (PARTY_SIZE-1)) {
-            pkmn::throw_out_of_range("index", 0, (PARTY_SIZE-1));
-        }
+    )
+    {
+        pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
         return _pokemon_list.at(index);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,21 +16,86 @@
 extern "C" {
 #endif
 
+/*!
+ * @brief Returns this filesystem's AppData directory.
+ *
+ * This function first checks the PKMN_APPDATA_DIR environment variable.
+ * If this variable is set, this value is returned. If not, the default
+ * behavior is OS-dependent.
+ *
+ * In Windows systems, the function returns the value of the APPDATA
+ * environment variable, followed by the ".pkmn" directory.
+ *
+ * In UNIX-like systems, the function returns the value of the HOME
+ * environment variable, followed by the ".pkmn" directory.
+ *
+ * \param appdata_dir_out The buffer in which to return the AppData directory
+ * \param buffer_len The size of the buffer passed into appdata_dir_out
+ * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if appdata_dir_out is NULL
+ * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into appdata_dir_out is too short
+ */
 PKMN_API pkmn_error_t pkmn_get_appdata_dir(
     char* appdata_dir_out,
     size_t buffer_len
 );
 
+/*!
+ * @brief Returns the path to LibPKMN's underlying SQLite database.
+ *
+ * This function first checks the PKMN_DATABASE_PATH environment variable.
+ * If this variable is not set or if the path does not exist, it defaults
+ * to the default installation path determined at compile-time.
+ *
+ * In either case, it confirms that the file exists and is a valid
+ * SQLite database. If so, this path is returned.
+ *
+ * \param database_path_out The buffer in which to return the database path
+ * \param buffer_len The size of the buffer passed into database_path_out
+ * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_RUNTIME_ERROR if no valid database is found
+ * \returns ::PKMN_ERROR_NULL_POINTER if database_path_out is NULL
+ * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into database_path_out is too short
+ */
 PKMN_API pkmn_error_t pkmn_get_database_path(
     char* database_path_out,
     size_t buffer_len
 );
 
+/*!
+ * @brief Returns the path to LibPKMN's images directory.
+ *
+ * This function first checks the PKMN_IMAGES_DIR environment variable. If
+ * this variable is set and the path exists, this value is returned.
+ *
+ * If not, the function checks the default installation path, determined
+ * at compile-time. If this path exists, it is returned.
+ *
+ * \param images_dir_out The buffer in which to return the images directory
+ * \param buffer_len The size of the buffer passed into images_dir_out
+ * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_RUNTIME_ERROR If neither path exists
+ * \returns ::PKMN_ERROR_NULL_POINTER if images_dir_out is NULL
+ * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into images_dir_out is too short
+ */
 PKMN_API pkmn_error_t pkmn_get_images_dir(
     char* images_dir_out,
     size_t buffer_len
 );
 
+/*!
+ * @brief Returns this system's temp directory.
+ *
+ * The function checks the following environment variables: TMP, TMPDIR,
+ * TEMP. If none of these variables are set, the function returns the value
+ * "/tmp".
+ *
+ * \param tmp_dir_out The buffer in which to return the filesystem's temp directory
+ * \param buffer_len The size of the buffer passed into tmp_dir_out
+ * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if tmp_dir_out is NULL
+ * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into tmp_dir_out is too short
+ */
 PKMN_API pkmn_error_t pkmn_get_tmp_dir(
     char* tmp_dir_out,
     size_t buffer_len

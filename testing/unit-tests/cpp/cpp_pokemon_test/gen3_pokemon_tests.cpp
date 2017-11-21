@@ -10,6 +10,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/shininess.hpp>
+#include <pkmn/database/item_entry.hpp>
 
 #include "pksav/pksav_call.hpp"
 
@@ -214,14 +215,20 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_HEART);
 
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(pksav_littleendian16(growth->species)));
-    EXPECT_EQ(pokemon->get_held_item().get_item_index(), int(pksav_littleendian16(growth->held_item)));
+    EXPECT_EQ(
+        pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
+        int(pksav_littleendian16(growth->held_item))
+    );
     EXPECT_EQ(pokemon->get_experience(), int(pksav_littleendian32(growth->exp)));
     // TODO: PP Up
     EXPECT_EQ(pokemon->get_friendship(), int(growth->friendship));
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(move_slots.at(i).move.get_move_id(), int(attacks->moves[i]));
+        EXPECT_EQ(
+            pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id(),
+            int(attacks->moves[i])
+        );
         EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
     }
 
@@ -322,7 +329,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: Pokérus
 
     const std::map<std::string, int>& stats = pokemon->get_stats();
-    EXPECT_EQ(stats.at("HP"), int(pksav_littleendian16(native_party_data->current_hp)));
+    EXPECT_EQ(pokemon->get_current_hp(), int(pksav_littleendian16(native_party_data->current_hp)));
     EXPECT_EQ(stats.at("HP"), int(pksav_littleendian16(native_party_data->max_hp)));
     EXPECT_EQ(stats.at("Attack"), int(pksav_littleendian16(native_party_data->atk)));
     EXPECT_EQ(stats.at("Defense"), int(pksav_littleendian16(native_party_data->def)));
@@ -330,43 +337,6 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(stats.at("Special Attack"), int(pksav_littleendian16(native_party_data->spatk)));
     EXPECT_EQ(stats.at("Special Defense"), int(pksav_littleendian16(native_party_data->spdef)));
 }
-
-/*
- * LibPkmGC stores some values in arrays, with little indication as to what each
- * index actually corresponds to, so these enums make things easier.
- */
-
-typedef enum {
-    LIBPKMGC_STAT_HP = 0,
-    LIBPKMGC_STAT_ATTACK,
-    LIBPKMGC_STAT_DEFENSE,
-    LIBPKMGC_STAT_SPATK,
-    LIBPKMGC_STAT_SPDEF,
-    LIBPKMGC_STAT_SPEED
-} libpkmgc_stat_t;
-
-typedef enum {
-    LIBPKMGC_CONTEST_STAT_COOL = 0,
-    LIBPKMGC_CONTEST_STAT_BEAUTY,
-    LIBPKMGC_CONTEST_STAT_CUTE,
-    LIBPKMGC_CONTEST_STAT_SMART,
-    LIBPKMGC_CONTEST_STAT_TOUGH
-} libpkmgc_contest_stat_t;
-
-typedef enum {
-    LIBPKMGC_RIBBON_CHAMPION = 0,
-    LIBPKMGC_RIBBON_WINNING,
-    LIBPKMGC_RIBBON_VICTORY,
-    LIBPKMGC_RIBBON_ARTIST,
-    LIBPKMGC_RIBBON_EFFORT,
-    LIBPKMGC_RIBBON_MARINE,
-    LIBPKMGC_RIBBON_LAND,
-    LIBPKMGC_RIBBON_SKY,
-    LIBPKMGC_RIBBON_COUNTRY,
-    LIBPKMGC_RIBBON_NATIONAL,
-    LIBPKMGC_RIBBON_EARTH,
-    LIBPKMGC_RIBBON_WORLD
-} libpkmgc_ribbon_t;
 
 typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
 static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
@@ -469,7 +439,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     ASSERT_EQ(nullptr, pokemon->get_native_party_data());
 
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native->species));
-    EXPECT_EQ(pokemon->get_held_item().get_item_index(), int(native->heldItem));
+    EXPECT_EQ(
+        pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
+        int(native->heldItem)
+    );
     EXPECT_EQ(pokemon->get_friendship(), int(native->friendship));
     EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
@@ -493,7 +466,10 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(moves.at(i).move.get_move_id(), int(native->moves[i].move));
+        EXPECT_EQ(
+            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
+            int(native->moves[i].move)
+        );
         EXPECT_EQ(moves.at(i).pp, int(native->moves[i].currentPPs));
     }
 
@@ -505,6 +481,8 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         EXPECT_EQ(IVs.at(iter->first), int(native->IVs[iter->second]));
         EXPECT_EQ(stats.at(iter->first), int(native->partyData.stats[iter->second]));
     }
+
+    EXPECT_EQ(pokemon->get_current_hp(), int(native->partyData.currentHP));
 
     const std::map<std::string, bool>& ribbons = pokemon->get_ribbons();
     for(auto iter = RIBBON_BIMAP.right.begin(); iter != RIBBON_BIMAP.right.end(); ++iter) {

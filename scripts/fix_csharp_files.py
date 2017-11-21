@@ -15,6 +15,8 @@ import datetime
 from optparse import OptionParser
 import os
 
+GUI_FILES = ["GUI.cs"]
+
 SPTR_FILES = ["GameSave.cs",
               "ItemBag.cs",
               "ItemList.cs",
@@ -81,6 +83,26 @@ public PokemonPC(string game): this(PKMNPINVOKE.make_pokemon_pc(game), true) {
 """
              )
 
+def make_gui_a_partial_class(filename):
+    f = open(filename, "r")
+    flines = f.readlines()
+    f.close()
+
+    # Already done
+    if "make_gui_a_partial_class" in flines[0]:
+        return
+
+    # Find and fix the appropriate line
+    for i in range(len(flines)):
+        if "class GUI" in flines[i]:
+            flines[i] = flines[i].replace("class GUI", "partial class GUI")
+
+    f = open(filename, "w")
+    f.write("// make_gui_a_partial_class\n")
+    for line in flines:
+        f.write(line)
+    f.close()
+
 def hide_sptr_ctors(filename):
     f = open(filename, "r")
     flines = f.readlines()
@@ -115,5 +137,7 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(os.getcwd()):
         for filename in files:
             if filename.endswith(".cs"):
+                if filename in GUI_FILES:
+                    make_gui_a_partial_class(filename)
                 if filename in SPTR_FILES:
                     hide_sptr_ctors(filename)

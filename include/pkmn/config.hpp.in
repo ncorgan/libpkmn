@@ -35,6 +35,7 @@
 #endif
 
 #define PKMN_CONSTEXPR           @PKMN_CONSTEXPR@
+#define PKMN_CONSTEXPR_OR_CONST  @PKMN_CONSTEXPR_OR_CONST@
 #define PKMN_CONSTEXPR_OR_INLINE @PKMN_CONSTEXPR_OR_INLINE@
 
 #ifdef PKMN_DLL_EXPORTS
@@ -56,7 +57,8 @@
 /***************************************************************************
  * C++ components
  ***************************************************************************/
-#cmakedefine PKMN_QT4 1
-#cmakedefine PKMN_QT5 1
+#cmakedefine PKMN_ENABLE_QT 1
+#cmakedefine PKMN_QT4       1
+#cmakedefine PKMN_QT5       1
 
 #endif /* PKMN_CONFIG_HPP */

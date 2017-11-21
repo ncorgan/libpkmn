@@ -6,6 +6,7 @@
  */
 
 #include "env.hpp"
+#include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
 
 #include <pkmntest/config.hpp>
@@ -31,14 +32,10 @@
 #include <map>
 
 static BOOST_CONSTEXPR const char* TOO_LONG_OT_NAME = "LibPKMNLibPKMN";
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_PID = 1351;
-BOOST_STATIC_CONSTEXPR uint16_t LIBPKMN_OT_SID = 32123;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_PID = 1351;
+BOOST_STATIC_CONSTEXPR uint16_t DEFAULT_TRAINER_SID = 32123;
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
-
-BOOST_STATIC_CONSTEXPR int RUBY      = 7;
-BOOST_STATIC_CONSTEXPR int SAPPHIRE  = 8;
-BOOST_STATIC_CONSTEXPR int EMERALD   = 9;
 
 static const std::string GB_GAMES[] = {
     "Red", "Blue", "Yellow",
@@ -141,22 +138,22 @@ namespace pkmntest {
             save->set_trainer_name(TOO_LONG_OT_NAME);
         , std::invalid_argument);
 
-        save->set_trainer_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-        EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_trainer_name());
+        save->set_trainer_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+        EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_trainer_name());
     }
 
     static void test_trainer_id(
         pkmn::game_save::sptr save,
         bool is_gb_game
     ) {
-        EXPECT_EQ((is_gb_game ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID), save->get_trainer_id());
-        EXPECT_EQ(LIBPKMN_OT_PID, save->get_trainer_public_id());
+        EXPECT_EQ((is_gb_game ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID), save->get_trainer_id());
+        EXPECT_EQ(DEFAULT_TRAINER_PID, save->get_trainer_public_id());
         if(is_gb_game) {
             EXPECT_THROW(
                 save->get_trainer_secret_id();
             , pkmn::feature_not_in_game_error);
         } else {
-            EXPECT_EQ(LIBPKMN_OT_SID, save->get_trainer_secret_id());
+            EXPECT_EQ(DEFAULT_TRAINER_SID, save->get_trainer_secret_id());
         }
     }
 
@@ -166,7 +163,7 @@ namespace pkmntest {
     ) {
         if(is_rival_name_set) {
             EXPECT_THROW(
-                save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
+                save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
             , pkmn::feature_not_in_game_error);
         } else {
             EXPECT_THROW(
@@ -176,8 +173,8 @@ namespace pkmntest {
                 save->set_rival_name(TOO_LONG_OT_NAME);
             , std::invalid_argument);
 
-            save->set_rival_name(pkmn::pokemon::LIBPKMN_OT_NAME);
-            EXPECT_EQ(std::string(pkmn::pokemon::LIBPKMN_OT_NAME), save->get_rival_name());
+            save->set_rival_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+            EXPECT_EQ(std::string(pkmn::pokemon::DEFAULT_TRAINER_NAME), save->get_rival_name());
         }
     }
 
@@ -190,17 +187,17 @@ namespace pkmntest {
         test_trainer_name(save);
 
         save->set_trainer_id(
-            is_gb_game(game) ? LIBPKMN_OT_PID : pkmn::pokemon::LIBPKMN_OT_ID
+            is_gb_game(game) ? DEFAULT_TRAINER_PID : pkmn::pokemon::DEFAULT_TRAINER_ID
         );
         test_trainer_id(save, is_gb_game(game));
-        save->set_trainer_public_id(LIBPKMN_OT_PID);
+        save->set_trainer_public_id(DEFAULT_TRAINER_PID);
         test_trainer_id(save, is_gb_game(game));
         if(is_gb_game(game)) {
             EXPECT_THROW(
-                save->set_trainer_secret_id(LIBPKMN_OT_SID);
+                save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             , pkmn::feature_not_in_game_error);
         } else {
-            save->set_trainer_secret_id(LIBPKMN_OT_SID);
+            save->set_trainer_secret_id(DEFAULT_TRAINER_SID);
             test_trainer_id(save, is_gb_game(game));
         }
 
@@ -325,12 +322,29 @@ namespace pkmntest {
 
         if(generation >= 2) {
             // Keep going until one is holdable
-            while(ret->get_held_item().get_item_id() == 0) {
+            while(ret->get_held_item() == "None") {
                 try {
                     ret->set_held_item(
                         item_list[rng.rand() % item_list.size()]
                     );
                 } catch(std::invalid_argument&) {}
+            }
+        }
+
+        // Set condition
+        std::vector<std::string> conditions;
+        if(generation <= 2)
+        {
+            for(const auto& condition: pksav::GB_CONDITION_BIMAP.left)
+            {
+                conditions.emplace_back(condition.first);
+            }
+        }
+        else
+        {
+            for(const auto& condition: pksav::CONDITION_MASK_BIMAP.left)
+            {
+                conditions.emplace_back(condition.first);
             }
         }
 
@@ -358,7 +372,7 @@ namespace pkmntest {
         pkmn::pokemon_party::sptr party = save->get_pokemon_party();
         for(int i = 0; i < 6; ++i) {
             party->set_pokemon(
-                i, 
+                i,
                 get_random_pokemon(
                     save->get_game(),
                     pokemon_list,
@@ -373,7 +387,7 @@ namespace pkmntest {
         for(size_t i = 0; i < boxes.size(); ++i) {
             for(int j = 0; j < capacity; ++j) {
                 boxes[i]->set_pokemon(
-                    j, 
+                    j,
                     get_random_pokemon(
                         save->get_game(),
                         pokemon_list,
@@ -419,7 +433,7 @@ namespace pkmntest {
         const pkmn::item_slots_t& item_slots2 = list2->as_vector();
         ASSERT_EQ(item_slots1.size(), item_slots2.size());
         for(size_t i = 0; i < item_slots1.size(); ++i) {
-            EXPECT_EQ(item_slots1[i].item.get_item_id(), item_slots2[i].item.get_item_id());
+            EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
             EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
         }
     }
@@ -456,7 +470,7 @@ namespace pkmntest {
             for(size_t i = 0; i < 4; ++i)
             {
                 // These may be different if Shadow moves were mistakenly allowed to be set.
-                EXPECT_EQ(moves1.at(i).move.get_move_id(), moves2.at(i).move.get_move_id());
+                EXPECT_EQ(moves1.at(i).move, moves2.at(i).move);
                 EXPECT_EQ(native1->moves[i].move, native2->moves[i].move);
                 EXPECT_EQ(native1->moves[i].currentPPs, native2->moves[i].currentPPs);
             }
@@ -540,19 +554,17 @@ namespace pkmntest {
                 break;
 
             case 3:
-                switch(save1->get_item_pc()->as_vector().at(0).item.get_item_id()) {
-                    case RUBY:
-                    case SAPPHIRE:
-                        item_bag_size = sizeof(pksav_rs_item_storage_t);
-                        break;
-
-                    case EMERALD:
-                        item_bag_size = sizeof(pksav_emerald_item_storage_t);
-                        break;
-
-                    default:
-                        item_bag_size = sizeof(pksav_frlg_item_storage_t);
-                        break;
+                if(save1->get_game() == "Ruby" or game == "Sapphire")
+                {
+                    item_bag_size = sizeof(pksav_rs_item_storage_t);
+                }
+                else if(save1->get_game() == "Emerald")
+                {
+                    item_bag_size = sizeof(pksav_emerald_item_storage_t);
+                }
+                else
+                {
+                    item_bag_size = sizeof(pksav_frlg_item_storage_t);
                 }
                 break;
 

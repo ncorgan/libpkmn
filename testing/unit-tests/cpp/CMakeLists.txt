@@ -30,6 +30,7 @@ SET(cpp_tests
     cpp_paths_test
     cpp_pokemon_party_test
     cpp_pokemon_pc_test
+    cpp_swig_wrapper_test
 )
 
 FOREACH(test ${cpp_tests})
@@ -53,6 +54,7 @@ SET(item_test_srcs
 PKMN_ADD_CPP_TEST(cpp_item_test "${item_test_srcs}")
 
 SET(pokemon_test_srcs
+    cpp_pokemon_test/conversions_test.cpp
     cpp_pokemon_test/form_test.cpp
     cpp_pokemon_test/gen1_pokemon_test.cpp
     cpp_pokemon_test/gen2_pokemon_test.cpp
@@ -74,6 +76,6 @@ IF(PKMN_ENABLE_QT)
         ${QTx_LIBRARIES}
     )
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-    PKMN_ADD_CPP_TEST(cpp_QtWidgetsTest_GUI cpp_QtWidgetsTest/cpp_QtWidgetsTest.cpp)
-    SET_TARGET_PROPERTIES(cpp_QtWidgetsTest_GUI PROPERTIES AUTOMOC ON)
+    PKMN_ADD_CPP_TEST(cpp_QtTest_GUI cpp_QtTest/cpp_QtTest.cpp)
+    SET_TARGET_PROPERTIES(cpp_QtTest_GUI PROPERTIES AUTOMOC ON)
 ENDIF(PKMN_ENABLE_QT)

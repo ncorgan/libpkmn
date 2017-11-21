@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
@@ -17,6 +18,8 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 
@@ -155,10 +158,14 @@ namespace pkmn {
 
     void game_save_gbaimpl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: valid length 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -216,6 +223,8 @@ namespace pkmn {
     }
 
     std::string game_save_gbaimpl::get_rival_name() {
+        std::string ret;
+
         if(_pksav_save.gba_game == PKSAV_GBA_FRLG) {
             char rival_name[8] = {0};
             PKSAV_CALL(
@@ -226,19 +235,26 @@ namespace pkmn {
                 );
             )
 
-            return std::string(rival_name);
+            ret = std::string(rival_name);
         } else {
-            return (_pksav_save.trainer_info->gender == 0) ? "MAY" : "BRENDAN";
+            ret = (_pksav_save.trainer_info->gender == 0) ? "MAY" : "BRENDAN";
         }
+
+        return ret;
     }
 
     void game_save_gbaimpl::set_rival_name(
         const std::string &rival_name
-    ) {
-        if(_pksav_save.gba_game == PKSAV_GBA_FRLG) {
-            if(rival_name.size() == 0 or rival_name.size() > 7) {
-                throw std::invalid_argument("rival_name: valid length 1-7");
-            }
+    )
+    {
+        if(_pksav_save.gba_game == PKSAV_GBA_FRLG)
+        {
+            pkmn::enforce_string_length(
+                "Rival name",
+                rival_name,
+                1,
+                7
+            );
 
             PKSAV_CALL(
                 pksav_text_to_gba(
@@ -247,7 +263,9 @@ namespace pkmn {
                     7
                 );
             )
-        } else {
+        }
+        else
+        {
             throw pkmn::feature_not_in_game_error("Rivals cannot be renamed in Ruby/Sapphire/Emerald.");
         }
     }
@@ -258,10 +276,9 @@ namespace pkmn {
 
     void game_save_gbaimpl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         *_pksav_save.money = pksav_littleendian32(uint32_t(money));
     }

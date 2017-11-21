@@ -10,8 +10,8 @@
 %}
 
 // SWIG doesn't deal well with read-only static variables
-%ignore pkmn::pokemon::LIBPKMN_OT_ID;
-%ignore pkmn::pokemon::LIBPKMN_OT_NAME;
+%ignore pkmn::pokemon::DEFAULT_TRAINER_ID;
+%ignore pkmn::pokemon::DEFAULT_TRAINER_NAME;
 
 %include <pkmn/pokemon.hpp>
 PKMN_PYTHON_SPTR(pokemon)

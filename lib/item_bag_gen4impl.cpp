@@ -39,10 +39,10 @@ namespace pkmn {
         _set_ptrs();
     }
 
-    item_bag_gen4impl::~item_bag_gen4impl() {
-        item_bag_scoped_lock lock(this);
-
-        if(_our_mem) {
+    item_bag_gen4impl::~item_bag_gen4impl()
+    {
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }

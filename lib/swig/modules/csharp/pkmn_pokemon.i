@@ -32,6 +32,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::is_shiny "private";
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
+%csmethodmodifiers pkmn::pokemon::get_held_item "private";
+%csmethodmodifiers pkmn::pokemon::set_held_item "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::set_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::get_trainer_public_id "private";
@@ -127,7 +129,14 @@ using Database;"
         }
     }
 
-    // How to do held item?
+    public string HeldItem {
+        get {
+            return GetHeldItem();
+        }
+        set {
+            SetHeldItem(value);
+        }
+    }
 
     public string TrainerName {
         get {
@@ -349,12 +358,12 @@ using Database;"
                               .ToHashCode();
     }
 
-    public static readonly uint LIBPKMN_OT_ID = 2105214279;
-    public static readonly string LIBPKMN_OT_NAME = "LibPKMN";
+    public static readonly uint DEFAULT_TRAINER_ID = 2105214279;
+    public static readonly string DEFAULT_TRAINER_NAME = "LibPKMN";
 %}
 
-%ignore LIBPKMN_OT_ID;
-%ignore LIBPKMN_OT_NAME;
+%ignore DEFAULT_TRAINER_ID;
+%ignore DEFAULT_TRAINER_NAME;
 %ignore from_file;
 %ignore get_native_pc_data;
 %ignore get_native_party_data;

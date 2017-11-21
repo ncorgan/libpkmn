@@ -17,7 +17,8 @@
 
 namespace pkmn {
 
-    pkmn::datetime current_datetime() {
+    pkmn::datetime current_datetime()
+    {
         time_t now = std::time(NULL);
         struct tm* now_tm = std::localtime(&now);
 
@@ -40,17 +41,25 @@ namespace pkmn {
     void libpkmn_datetime_to_pksav_date(
         const pkmn::datetime &libpkmn_date,
         pksav_date_t* pksav_date_out
-    ) {
+    )
+    {
         // Validate inputs, since this can come from a user.
-        if(libpkmn_date.year < 2000) {
+        if(libpkmn_date.year < 2000)
+        {
             throw std::out_of_range("year: minimum value 2000");
         }
-        if(libpkmn_date.month < 1 or libpkmn_date.month > 12) {
-            pkmn::throw_out_of_range("month", 1, 12);
-        }
-        if(libpkmn_date.day < 1 or libpkmn_date.day > MONTH_DAYS[libpkmn_date.month-1]) {
-            pkmn::throw_out_of_range("day", 1, MONTH_DAYS[libpkmn_date.month-1]);
-        }
+        pkmn::enforce_bounds(
+            "Month",
+            libpkmn_date.month,
+            1,
+            12
+        );
+        pkmn::enforce_bounds(
+            "Day",
+            libpkmn_date.day,
+            1,
+            MONTH_DAYS[libpkmn_date.month-1]
+        );
 
         // Games store number of years since 2000.
         pksav_date_out->year = uint8_t(libpkmn_date.year - 2000);

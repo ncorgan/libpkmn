@@ -11,7 +11,8 @@
 
 namespace pkmn {
 
-    class pokemon_box_gen4impl: public pokemon_box_impl {
+    class pokemon_box_gen4impl: public pokemon_box_impl
+    {
         public:
             pokemon_box_gen4impl() {}
             pokemon_box_gen4impl(
@@ -24,15 +25,25 @@ namespace pkmn {
 
             ~pokemon_box_gen4impl();
 
-            std::string get_name();
+            std::string get_name() override final;
 
             void set_name(
                 const std::string &name
-            );
+            ) override final;
 
-            int get_num_pokemon();
+            int get_num_pokemon() override final;
 
-            int get_capacity();
+            int get_capacity() override final;
+
+            // TODO
+            void set_pokemon(
+                int index,
+                pkmn::pokemon::sptr new_pokemon
+            ) override final
+            {
+                (void)index;
+                (void)new_pokemon;
+            }
 
         private:
             void _from_native();

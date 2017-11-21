@@ -16,30 +16,23 @@
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_get_boost_version(
-    char* boost_version_out,
-    size_t buffer_len
-);
+//! Returns the version of Boost used in this build of LibPKMN.
+PKMN_API const char* pkmn_boost_version();
 
-PKMN_API pkmn_error_t pkmn_get_libpkmgc_version(
-    char* libpkmgc_version_out,
-    size_t buffer_len
-);
+//! Returns the version of LibPkmGC used in this build of LibPKMN.
+PKMN_API const char* pkmn_libpkmgc_version();
 
-PKMN_API pkmn_error_t pkmn_get_pksav_version(
-    char* pksav_version_out,
-    size_t buffer_len
-);
+//! Returns the version of PKSav used in this build of LibPKMN.
+PKMN_API const char* pkmn_pksav_version();
 
-PKMN_API pkmn_error_t pkmn_get_sqlite3_version(
-    char* sqlite3_version_out,
-    size_t buffer_len
-);
+//! Returns the version of Qt used in this build of LibPKMN.
+PKMN_API const char* pkmn_qt_version();
 
-PKMN_API pkmn_error_t pkmn_get_sqlitecpp_version(
-    char* sqlitecpp_version_out,
-    size_t buffer_len
-);
+//! Returns the version of SQLite3 used in this build of LibPKMN.
+PKMN_API const char* pkmn_sqlite3_version();
+
+//! Returns the version of SQLiteCpp used in this build of LibPKMN.
+PKMN_API const char* pkmn_sqlitecpp_version();
 
 #ifdef __cplusplus
 }

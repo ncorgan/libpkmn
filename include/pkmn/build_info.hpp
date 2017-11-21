@@ -29,7 +29,7 @@ namespace pkmn { namespace build_info {
     PKMN_API std::string get_pksav_version();
 
     /*!
-     * @brief Returns the version of Qt used in this build of LibPKMN.
+     * @brief Returns the version of Qt used in this build of LibPKMN, if any.
      *
      * If this build has no Qt support, this function will return "N/A".
      */

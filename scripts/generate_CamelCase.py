@@ -20,8 +20,12 @@ header_text = """/*
  * This file was generated: %s
  */""" % datetime.datetime.now()
 
-ignored_classes = ["item_bag",
+ignored_classes = ["game_save",
+                   "item_bag",
                    "item_list",
+                   "pokemon",
+                   "pokemon_box",
+                   "pokemon_pc",
                    "PKMN_API"]
 
 ignored_files = ["config.hpp",
@@ -40,7 +44,8 @@ replacements = dict(Ev = "EV",
                     Libpkmgc = "LibPkmGC",
                     Sqlite3 = "SQLite3",
                     Sqlitecpp = "SQLiteCpp",
-                    Datetime = "DateTime"
+                    Datetime = "DateTime",
+                    Generatespindaspriteatfilepath = "GenerateSpindaSpriteAtFilepath"
                    )
 
 def generate_new_name(old_name, pascal):
@@ -67,26 +72,30 @@ def generate_new_name(old_name, pascal):
 def generate_rename_line(old_name, pascal):
     return "" if (len(old_name) == 0 or "anon" in old_name.lower()) else "%%rename(%s) %s;" % (generate_new_name(old_name, pascal), old_name)
 
-def convert_header(header,java):
+def convert_header(header,language):
     output = ""
 
-    for fcn in header.functions:
-        if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower():
-            output += generate_rename_line(str(fcn["name"]), (False if java else True)) + "\n"
+    java = (language == "java")
+
+    if language != "ruby":
+        for fcn in header.functions:
+            if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower():
+                output += generate_rename_line(str(fcn["name"]), (False if java else True)) + "\n"
 
     for cls in header.classes:
         if cls not in ignored_classes:
             output += generate_rename_line(str(cls), True) + "\n"
 
-        for fcn in header.classes[cls]["methods"]["public"]:
-            if "operator" not in fcn["name"].lower() and not fcn["constructor"] and not fcn["destructor"]:
-                output += generate_rename_line(fcn["name"], (False if java else True)) + "\n"
+        if language != "ruby":
+            for fcn in header.classes[cls]["methods"]["public"]:
+                if "operator" not in fcn["name"].lower() and not fcn["constructor"] and not fcn["destructor"]:
+                    output += generate_rename_line(fcn["name"], (False if java else True)) + "\n"
 
-        for var in header.classes[cls]["properties"]["public"]:
-            output += generate_rename_line(str(var["name"]), (False if java else True)) + "\n"
+            for var in header.classes[cls]["properties"]["public"]:
+                output += generate_rename_line(str(var["name"]), (False if java else True)) + "\n"
 
-        for enum in header.classes[cls]._public_enums:
-            output += generate_rename_line(str(header.classes[cls]._public_enums[enum]["name"]), True) + "\n"
+            for enum in header.classes[cls]._public_enums:
+                output += generate_rename_line(str(header.classes[cls]._public_enums[enum]["name"]), True) + "\n"
 
     return output
 
@@ -95,7 +104,7 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("--include-dir", type="string", help="LibPKMN include directory")
     parser.add_option("--output-file", type="string", help="Output file")
-    parser.add_option("--java", action="store_true", help="Building Java?")
+    parser.add_option("--language", type="string", help="Output language")
     (options,args) = parser.parse_args()
 
     output = header_text + "\n\n"
@@ -104,7 +113,7 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(os.getcwd()):
         for file in files:
             if file.endswith(".hpp") and file not in ignored_files:
-                output += convert_header(CppHeaderParser.CppHeader(os.path.join(root, file)), options.java)
+                output += convert_header(CppHeaderParser.CppHeader(os.path.join(root, file)), options.language)
 
     f = open(options.output_file, 'w')
     f.write(output)

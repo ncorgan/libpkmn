@@ -1,29 +1,26 @@
 /*
- * Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
 
 #include <pksav/gen2/items.h>
 
+#include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
-#include <algorithm>
+#include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 BOOST_STATIC_CONSTEXPR int TM01_ID = 305;
 BOOST_STATIC_CONSTEXPR int TM50_ID = 354;
 BOOST_STATIC_CONSTEXPR int HM01_ID = 397;
 BOOST_STATIC_CONSTEXPR int HM07_ID = 403;
-
-// Item indices aren't contiguous
-BOOST_STATIC_CONSTEXPR int TM01_INDEX = 191;
-BOOST_STATIC_CONSTEXPR int TM05_INDEX = 196;
-BOOST_STATIC_CONSTEXPR int TM29_INDEX = 221;
-BOOST_STATIC_CONSTEXPR int HM01_INDEX = 243;
 
 static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_TM(int num) {
     return (num >= TM01_ID and num <= TM50_ID);
@@ -33,7 +30,7 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
     return (num >= HM01_ID and num <= HM07_ID);
 }
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native))
 
 namespace pkmn {
 
@@ -43,50 +40,37 @@ namespace pkmn {
         void* ptr
     ): item_list_impl(item_list_id, game_id)
     {
-        if(ptr) {
+        static const char* TM_FORMAT = "TM%02d";
+        static const char* HM_FORMAT = "HM%02d";
+        char name[5] = {0};
+        for(int i = 1; i <= 50; ++i)
+        {
+            std::snprintf(name, sizeof(name), TM_FORMAT, i);
+            _item_slots[i-1].item = name;
+        }
+        for(int i = 1; i <= 7; ++i)
+        {
+            std::snprintf(name, sizeof(name), HM_FORMAT, i);
+            _item_slots[50+i-1].item = name;
+        }
+
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
 
-            for(int i = 0; i < 4; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-            }
-
             _from_native();
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new pksav_gen2_tmhm_pocket_t);
             std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
             _our_mem = true;
-
-            for(int i = 0; i < 5; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i+TM01_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 4; i < 28; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-4+TM05_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 28; i < 50; ++i) {
-                _item_slots[i].item = pkmn::database::item_entry(i-28+TM29_INDEX, game_id);
-                _item_slots[i].amount = 0;
-            }
-            for(int i = 0; i < 7; ++i) {
-                _item_slots[50+i].item = pkmn::database::item_entry(i+HM01_INDEX, game_id);
-                _item_slots[50+i].amount = 0;
-            }
         }
     }
 
     item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;
@@ -94,7 +78,7 @@ namespace pkmn {
     }
 
     int item_list_gen2_tmhmimpl::get_num_items() {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         int ret = 0;
         for(int i = 0; i < 50; i++) {
@@ -114,23 +98,28 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::add(
         const std::string &name,
         int amount
-    ) {
-        if(amount < 1 or amount > 99) {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name()) {
+        if(item.get_pocket() != get_name())
+        {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
         int position = -1;
-        if(ITEM_ID_IS_TM(item_id)) {
+        if(ITEM_ID_IS_TM(item_id))
+        {
             position = item_id - TM01_ID;
-        } else if(ITEM_ID_IS_HM(item_id)) {
+        }
+        else if(ITEM_ID_IS_HM(item_id))
+        {
             position = item_id - 347;
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("Invalid item.");
         }
 
@@ -142,23 +131,28 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::remove(
         const std::string &name,
         int amount
-    ) {
-        if(amount < 1 or amount > 99) {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         pkmn::database::item_entry item(name, get_game());
-        if(item.get_pocket() != get_name()) {
+        if(item.get_pocket() != get_name())
+        {
             throw std::invalid_argument("This item is not valid for this list.");
         }
 
         int item_id = item.get_item_id();
         int position = -1;
-        if(ITEM_ID_IS_TM(item_id)) {
+        if(ITEM_ID_IS_TM(item_id))
+        {
             position = item_id - TM01_ID;
-        } else if(ITEM_ID_IS_HM(item_id)) {
+        }
+        else if(ITEM_ID_IS_HM(item_id))
+        {
             position = item_id - 347;
-        } else {
+        }
+        else
+        {
             throw std::runtime_error("Invalid item.");
         }
 
@@ -174,10 +168,37 @@ namespace pkmn {
         throw pkmn::feature_not_in_game_error("Cannot move items in this pocket.");
     }
 
+    void item_list_gen2_tmhmimpl::set_item(
+        int position,
+        const std::string& item_name,
+        int amount
+    )
+    {
+        // Input validation.
+        int end_boundary = std::min<int>(_num_items, _capacity-1);
+        pkmn::enforce_bounds("Position", position, 0, end_boundary);
+
+        pkmn::database::item_entry entry(item_name, get_game());
+        if(item_name != "None" and entry.get_pocket() != get_name())
+        {
+            throw std::invalid_argument("This item does not belong in this pocket.");
+        }
+
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
+        pkmn::enforce_value_in_vector(
+            "Item name",
+            item_name,
+            {_item_slots[position].item}
+        );
+
+        // No need to copy everything
+        _item_slots[position].amount = amount;
+    }
+
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
@@ -190,7 +211,7 @@ namespace pkmn {
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         for(size_t i = 0; i < 50; ++i) {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);

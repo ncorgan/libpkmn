@@ -26,12 +26,12 @@ namespace pkmn {
 
             ~pokemon_party_gen4impl();
 
-            int get_num_pokemon();
+            int get_num_pokemon() override final;
 
             void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
-            );
+            ) override final;
 
         private:
 

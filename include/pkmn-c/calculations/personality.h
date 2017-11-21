@@ -18,6 +18,23 @@
 extern "C" {
 #endif
 
+//! Generate a personality based on the given species and values.
+/*!
+ * This function is RNG-based and takes an average of 30 milliseconds
+ * to generate a valid value.
+ *
+ * \param species The Pokémon species
+ * \param trainer_id The trainer ID to use in the shininess calculation
+ * \param shiny Whether or not the Pokémon should be shiny
+ * \param ability Which ability the Pokémon should have
+ * \param gender What gender the Pokémon should be
+ * \param nature What nature the Pokémon should have
+ * \param personality_out Where to return the generated personality
+ * \returns ::PKMN_ERROR_NONE upon success
+ * \returns ::PKMN_ERROR_NULL_POINTER if ability, nature, or personality_out is NULL
+ * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given ability or gender is invalid for the species
+ * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given nature is invalid
+ */
 PKMN_API pkmn_error_t pkmn_calculations_generate_personality(
     const char* species,
     uint32_t trainer_id,

@@ -103,6 +103,10 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_STREQ("None", pkmn_strerror());
 
+    error = throw_exception<pkmn::feature_not_in_build_error>("Qt support");
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
+
     error = throw_feature_not_in_game_error("Contests", "Generation I");
     EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     EXPECT_STREQ("Contests not in Generation I", pkmn_strerror());
@@ -234,6 +238,13 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_nothing_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_NONE, error);
     EXPECT_EQ("None", test_handle.last_error);
+
+    error = throw_exception_with_handle<pkmn::feature_not_in_build_error>(
+        "Qt support", &test_handle
+    );
+    EXPECT_EQ(PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR, error);
+    EXPECT_EQ("This feature is not part of this build of LibPKMN: Qt support", test_handle.last_error);
+    EXPECT_STREQ("This feature is not part of this build of LibPKMN: Qt support", pkmn_strerror());
 
     error = throw_feature_not_in_game_error_with_handle(
         "Contests", "Generation I", &test_handle
@@ -382,12 +393,8 @@ TEST(cpp_to_c_test, hidden_power_test) {
     EXPECT_EQ(NULL, hidden_power_c.type);
 }
 
-TEST(cpp_to_c_test, item_slot_test) {
-    pkmn::item_slot item_slot_cpp(
-        pkmn::database::item_entry("Potion", "Red"),
-        50
-    );
-
+TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
+    pkmn::item_slot item_slot_cpp("Potion", 50);
     pkmn_item_slot_t item_slot_c;
 
     pkmn::pkmn_item_slot_cpp_to_c(
@@ -397,26 +404,13 @@ TEST(cpp_to_c_test, item_slot_test) {
 
     EXPECT_STREQ("Potion", item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
-
-    pkmn_item_slot_free(&item_slot_c);
-    EXPECT_EQ(NULL, item_slot_c.item);
-    EXPECT_EQ(0, item_slot_c.amount);
 }
 
 TEST(cpp_to_c_test, item_slots_test) {
     pkmn::item_slots_t item_slots_cpp{
-        pkmn::item_slot(
-            pkmn::database::item_entry("Potion", "Red"),
-            50
-        ),
-        pkmn::item_slot(
-            pkmn::database::item_entry("Berry", "Silver"),
-            28
-        ),
-        pkmn::item_slot(
-            pkmn::database::item_entry("Berry Pouch", "LeafGreen"),
-            1
-        )
+        pkmn::item_slot("Potion", 50),
+        pkmn::item_slot("Berry", 28),
+        pkmn::item_slot("Berry Pouch", 1)
     };
 
     pkmn_item_slots_t item_slots_c = { NULL, 0 };
@@ -525,7 +519,7 @@ TEST(cpp_to_c_test, move_list_test) {
 
 TEST(cpp_to_c_test, move_slot_test) {
     pkmn::move_slot move_slot_cpp(
-        pkmn::database::move_entry("Tackle", "Red"),
+        "Tackle",
         50
     );
 
@@ -547,15 +541,15 @@ TEST(cpp_to_c_test, move_slot_test) {
 TEST(cpp_to_c_test, move_slots_test) {
     pkmn::move_slots_t move_slots_cpp{
         pkmn::move_slot(
-            pkmn::database::move_entry("Tackle", "Red"),
+            "Tackle",
             50
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Pound", "Silver"),
+            "Pound",
             28
         ),
         pkmn::move_slot(
-            pkmn::database::move_entry("Metronome", "LeafGreen"),
+            "Metronome",
             1
         )
     };

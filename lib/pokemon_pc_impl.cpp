@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_pc_impl.hpp"
 #include "pokemon_pc_gen1impl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
@@ -18,8 +19,6 @@
 #include "database/id_to_string.hpp"
 
 #include <pkmn/exception.hpp>
-
-#include <boost/format.hpp>
 
 #include <stdexcept>
 
@@ -59,7 +58,9 @@ namespace pkmn {
 
     pokemon_pc_impl::pokemon_pc_impl(
         int game_id
-    ): _game_id(game_id),
+    ): _native(nullptr),
+       _our_mem(false),
+       _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
@@ -69,11 +70,10 @@ namespace pkmn {
 
     pkmn::pokemon_box::sptr pokemon_pc_impl::get_box(
         int index
-    ) {
+    )
+    {
         int num_boxes = get_num_boxes();
-        if(index < 0 or index > (num_boxes-1)) {
-            pkmn::throw_out_of_range("index", 0, (num_boxes-1));
-        }
+        pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
         return _box_list.at(index);
     }

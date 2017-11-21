@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,9 +8,14 @@
 #include "../misc_common.hpp"
 
 #include "database_common.hpp"
+#include "id_to_index.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/config.hpp>
+
 #include <boost/config.hpp>
+
+#include <stdexcept>
 
 namespace pkmn { namespace database {
 
@@ -47,6 +52,33 @@ namespace pkmn { namespace database {
                );
     }
 
+    /*
+     * Calling the id_to_string and id_to_index functions is not ideal, but the logic in
+     * those functions is complicated enough to warrant not duplicating code.
+     */
+
+    std::string item_index_to_name(
+        int item_index,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_name(
+                   pkmn::database::item_index_to_id(item_index, game_id),
+                   pkmn::database::game_id_to_version_group(game_id)
+               );
+    }
+
+    int item_name_to_index(
+        const std::string& item_name,
+        int game_id
+    )
+    {
+        return pkmn::database::item_id_to_index(
+                   pkmn::database::item_name_to_id(item_name),
+                   game_id
+               );
+    }
+
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_SAPPHIRE(int game_id) {return (game_id == 8);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_RSE     (int game_id) {return (game_id >= 7 and game_id <= 9);}
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_E       (int game_id) {return (game_id == 9);}
@@ -62,15 +94,17 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
+        std::string ret;
+
         if(game_is_gamecube(game_id)) {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT name FROM location_names WHERE local_language_id=9 AND location_id=(SELECT "
                 "location_id FROM gamecube_location_index_ranges WHERE range_start<=? AND "
                 "colosseum=? ORDER BY range_start DESC)";
 
-            return pkmn::database::query_db_bind2<std::string, int, int>(
-                       _db, query, location_index, ((game_id == COLOSSEUM) ? 1 : 0)
-                   );
+            ret = pkmn::database::query_db_bind2<std::string, int, int>(
+                      _db, query, location_index, ((game_id == COLOSSEUM) ? 1 : 0)
+                  );
         } else {
             /*
              * Veekun's database stores location indices by generation, but some version
@@ -78,14 +112,14 @@ namespace pkmn { namespace database {
              * it's needed to work around how the database works.
              */
             if(GAME_IS_DP(game_id) and location_index == 108) {
-                return "Cafe";
+                ret = "Cafe";
             } else if(GAME_IS_B2W2(game_id) and location_index == 36) {
-                return "PWT";
+                ret = "PWT";
             } else if((GAME_IS_SAPPHIRE(game_id) and location_index == 486) or
                       (GAME_IS_E(game_id) and location_index == 197)) {
-                return "Aqua Hideout";
+                ret = "Aqua Hideout";
             } else if(GAME_IS_RSE(game_id) and location_index == 87) {
-                return "Ferry";
+                ret = "Ferry";
             } else {
                 int generation = pkmn::database::game_id_to_generation(game_id);
 
@@ -94,11 +128,13 @@ namespace pkmn { namespace database {
                     "(SELECT location_id FROM location_game_indices WHERE game_index=? AND "
                     "generation_id=?)";
 
-                return pkmn::database::query_db_bind2<std::string, int, int>(
-                           _db, query, location_index, generation
-                       );
+                ret = pkmn::database::query_db_bind2<std::string, int, int>(
+                          _db, query, location_index, generation
+                      );
             }
         }
+
+        return ret;
     }
 
     int location_name_to_index(
@@ -108,14 +144,16 @@ namespace pkmn { namespace database {
         // Connect to database
         pkmn::database::get_connection(_db);
 
+        int ret = 0;
+
         if(game_is_gamecube(game_id)) {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT max(range_start) FROM gamecube_location_index_ranges WHERE colosseum=? AND "
                 "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
-            int ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
-                          _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
-                      );
+            ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
+                      _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
+                  );
 
             /*
              * Even if the value is not in the gamecube_location_index_ranges table, it will
@@ -123,8 +161,6 @@ namespace pkmn { namespace database {
              */
             if(ret == 0) {
                 throw std::invalid_argument("This location exists but not in a Gamecube game.");
-            } else {
-                return ret;
             }
         } else {
             /*
@@ -133,15 +169,15 @@ namespace pkmn { namespace database {
              * it's needed to work around how the database works.
              */
             if(GAME_IS_DP(game_id) and location_name == "Cafe") {
-                return 108;
+                ret = 108;
             } else if(GAME_IS_B2W2(game_id) and location_name == "PWT") {
-                return 36;
+                ret = 36;
             } else if(GAME_IS_SAPPHIRE(game_id) and location_name == "Aqua Hideout") {
-                return 486;
+                ret = 486;
             } else if(GAME_IS_E(game_id) and location_name == "Aqua Hideout") {
-                return 197;
+                ret = 197;
             } else if(GAME_IS_RSE(game_id) and location_name == "Ferry") {
-                return 87;
+                ret = 87;
             } else {
                 int generation = pkmn::database::game_id_to_generation(game_id);
 
@@ -149,11 +185,13 @@ namespace pkmn { namespace database {
                     "SELECT game_index FROM location_game_indices WHERE generation_id=? AND "
                     "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
-                return pkmn::database::query_db_bind2<int, int, const std::string&>(
-                           _db, query, generation, location_name
-                       );
+                ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
+                          _db, query, generation, location_name
+                      );
             }
         }
+
+        return ret;
     }
 
     std::string nature_index_to_name(

@@ -63,9 +63,53 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             "${PKMN_SOURCE_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
             "${PKMN_BINARY_DIR}/testing/unit-tests/pkmntest/lua/?.lua"
         )
-        IF(WIN32)
+        SET(RUBYLIB
+            "${PKMN_BINARY_DIR}/lib/swig/ruby"
+        )
+        IF(MINGW)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
+                "${QTx_RUNTIME_DIR}"
+                "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
+                "${PKMN_BINARY_DIR}/pksav/lib"
+                "${PKMN_BINARY_DIR}/lib"
+                "${PKMN_BINARY_DIR}/lib/c"
+                "${PKMN_BINARY_DIR}/lib/swig/csharp"
+                "${PKMN_BINARY_DIR}/lib/swig/java"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/calculations"
+                "${PKMN_BINARY_DIR}/lib/swig/python/pkmn/database"
+                "${TESTS_BINARY_DIR}/pkmntest/cpp"
+                "${TESTS_BINARY_DIR}/pkmntest/c"
+            )
+            SET(TEST_CMD ${test_cmd})
+            SET(LIBRARY_DIR ${PKMN_BINARY_DIR}/lib)
+            SET(LUA_CPATH
+                "${PKMN_BINARY_DIR}/lib/swig/lua/?.dll"
+                "${TESTS_BINARY_DIR}/lua/bit32/?.dll"
+            )
+
+            STRING(REPLACE "/" "\\" TEST_CMD "${TEST_CMD}")
+            STRING(REPLACE "/" "\\" LIBRARY_PATHS "${LIBRARY_PATHS}")
+            STRING(REPLACE "/" "\\" PYTHONPATH "${PYTHONPATH}")
+            STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
+            STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
+            STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
+            STRING(REPLACE "/" "\\" RUBYLIB "${RUBYLIB}")
+            STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
+            STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
+            STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
+            STRING(REPLACE "/" "\\" PKSAV_TEST_SAVES "${PKSAV_TEST_SAVES}")
+            CONFIGURE_FILE(
+                ${TESTS_SOURCE_DIR}/unit_test_template.bat.in
+                ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat
+            @ONLY)
+            ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.bat)
+        ELSEIF(WIN32)
+            SET(LIBRARY_PATHS
+                "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
                 "${QTx_RUNTIME_DIR}"
                 "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC/${CMAKE_BUILD_TYPE}"
                 "${PKMN_BINARY_DIR}/pksav/lib/${CMAKE_BUILD_TYPE}"
@@ -92,6 +136,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             STRING(REPLACE "/" "\\" CLASSPATH "${CLASSPATH}")
             STRING(REPLACE "/" "\\" LUA_PATH "${LUA_PATH}")
             STRING(REPLACE "/" "\\" LUA_CPATH "${LUA_CPATH}")
+            STRING(REPLACE "/" "\\" RUBYLIB "${RUBYLIB}")
             STRING(REPLACE "/" "\\" DATABASE_PATH "${DATABASE_PATH}")
             STRING(REPLACE "/" "\\" IMAGES_DIR "${IMAGES_DIR}")
             STRING(REPLACE "/" "\\" LIBPKMN_TEST_FILES "${LIBPKMN_TEST_FILES}")
@@ -107,6 +152,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
             ENDIF(APPLE)
             SET(LIBRARY_PATHS
                 "${Boost_LIBRARY_DIRS}"
+                "${SQLITE3_LIBRARY_DIR}"
                 "${PKMN_BINARY_DIR}/PkmGCTools/LibPkmGC"
                 "${PKMN_BINARY_DIR}/pksav/lib"
                 "${PKMN_BINARY_DIR}/lib"
@@ -132,7 +178,7 @@ MACRO(PKMN_ADD_TEST test_name test_cmd)
                 ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh
             @ONLY)
             ADD_TEST(${test_name} ${CMAKE_CURRENT_BINARY_DIR}/${test_name}.sh)
-        ENDIF(WIN32)
+        ENDIF()
     ENDIF(CMAKE_CROSSCOMPILING)
 ENDMACRO(PKMN_ADD_TEST)
 
@@ -143,12 +189,15 @@ MACRO(PKMN_ADD_CPP_TEST test_name test_srcs)
     )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_cpp_test_libs})
 
-    IF(WIN32)
+    IF(MINGW)
+        SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" cpp_test_cmd ${cpp_test_cmd})
+    ELSEIF(WIN32)
         SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" cpp_test_cmd ${cpp_test_cmd})
     ELSE()
         SET(cpp_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
-    ENDIF(WIN32)
+    ENDIF()
     PKMN_ADD_TEST(${test_name} ${cpp_test_cmd})
 ENDMACRO(PKMN_ADD_CPP_TEST)
 
@@ -159,12 +208,15 @@ MACRO(PKMN_ADD_C_TEST test_name test_srcs)
     )
     TARGET_LINK_LIBRARIES(${test_name} ${pkmn_c_test_libs})
 
-    IF(WIN32)
+    IF(MINGW)
+        SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}.exe")
+        STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
+    ELSEIF(WIN32)
         SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${test_name}.exe")
         STRING(REPLACE "/" "\\\\" c_test_cmd ${c_test_cmd})
     ELSE()
         SET(c_test_cmd "${CMAKE_CURRENT_BINARY_DIR}/${test_name}")
-    ENDIF(WIN32)
+    ENDIF()
     PKMN_ADD_TEST(${test_name} ${c_test_cmd})
 ENDMACRO(PKMN_ADD_C_TEST)
 
@@ -196,6 +248,11 @@ MACRO(PKMN_ADD_PYTHON_TEST test_name)
     SET(CMD "\"${PYTHON_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.py\"")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_PYTHON_TEST)
+
+MACRO(PKMN_ADD_RUBY_TEST test_name)
+    SET(CMD "\"${RUBY_EXECUTABLE}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.rb\"")
+    PKMN_ADD_TEST(${test_name} ${CMD})
+ENDMACRO(PKMN_ADD_RUBY_TEST)
 
 #
 # Set locations of test saves.

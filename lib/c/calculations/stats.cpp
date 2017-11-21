@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#include "exception_internal.hpp"
 
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
@@ -22,12 +24,16 @@ static BOOST_CONSTEXPR const char* stat_names[] = {
     "Special", "Special Attack", "Special Defense"
 };
 
-static void enforce_enum(
+static void enforce_enum_bounds(
     pkmn_stat_t stat
-) {
-    if(stat < PKMN_STAT_HP or stat > PKMN_STAT_SPDEF) {
-        pkmn::throw_out_of_range("stat", PKMN_STAT_HP, PKMN_STAT_SPDEF);
-    }
+)
+{
+    pkmn::enforce_bounds(
+        "stat",
+        (int)stat,
+        (int)PKMN_STAT_HP,
+        (int)PKMN_STAT_SPDEF
+    );
 }
 
 pkmn_error_t pkmn_calculations_gb_stat(
@@ -41,7 +47,7 @@ pkmn_error_t pkmn_calculations_gb_stat(
     PKMN_CHECK_NULL_PARAM(stat_out);
 
     PKMN_CPP_TO_C(
-        enforce_enum(stat);
+        enforce_enum_bounds(stat);
 
         *stat_out = pkmn::calculations::get_gb_stat(
                         stat_names[stat], level,
@@ -59,7 +65,7 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
     PKMN_CHECK_NULL_PARAM(stat_range_out);
 
     PKMN_CPP_TO_C(
-        enforce_enum(stat);
+        enforce_enum_bounds(stat);
 
         pkmn::std_pair_int_to_int_pair(
             pkmn::calculations::get_gb_stat_range(
@@ -82,7 +88,7 @@ pkmn_error_t pkmn_calculations_modern_stat(
     PKMN_CHECK_NULL_PARAM(stat_out);
 
     PKMN_CPP_TO_C(
-        enforce_enum(stat);
+        enforce_enum_bounds(stat);
 
         *stat_out = pkmn::calculations::get_modern_stat(
                         stat_names[stat], level,
@@ -101,7 +107,7 @@ pkmn_error_t pkmn_calculations_modern_stat_range(
     PKMN_CHECK_NULL_PARAM(stat_range_out);
 
     PKMN_CPP_TO_C(
-        enforce_enum(stat);
+        enforce_enum_bounds(stat);
 
         pkmn::std_pair_int_to_int_pair(
             pkmn::calculations::get_modern_stat_range(

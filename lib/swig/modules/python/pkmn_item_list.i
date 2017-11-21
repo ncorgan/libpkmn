@@ -16,13 +16,15 @@
 
 %extend pkmn::shared_ptr<pkmn::item_list> {
 
-    int __len__() {
+    int __len__()
+    {
         return self->get()->get_capacity();
     }
 
     const pkmn::item_slot& __getitem__(
         int index
-    ) {
+    )
+    {
         return self->get()->as_vector().at(index);
     }
 

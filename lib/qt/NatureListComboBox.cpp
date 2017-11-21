@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,8 +16,8 @@ namespace pkmn { namespace qt {
     ): QComboBox(parent)
     {
         std::vector<std::string> natures = pkmn::database::get_nature_list();
-        for(auto iter = natures.begin(); iter != natures.end(); ++iter) {
-            addItem(QString::fromStdString(*iter));
+        for(const std::string& nature: natures) {
+            addItem(QString::fromStdString(nature));
         }
 
         setEditable(false);

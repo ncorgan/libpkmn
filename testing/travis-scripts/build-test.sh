@@ -11,11 +11,6 @@ mkdir -p test-env/pkmn-build
 cd test-env/pkmn-build
 [ $? -ne 0 ] && exit 1
 
-# Check source
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]pp' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-find $REPO_TOPLEVEL/lib $REPO_TOPLEVEL/include $REPO_TOPLEVEL/testing/unit-tests -name '*.[ch]' | xargs cppcheck --error-exitcode=1 --force 1>/dev/null
-[ $? -ne 0 ] && exit 1
-
 if [ $PYTHON_VERSION -eq 2 ]
 then
     export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:$PYTHONPATH
@@ -27,12 +22,6 @@ else
     export PYTHONPATH=/usr/local/lib/python3/dist-packages:/usr/local/lib/python3/site-packages:$PYTHONPATH
     PYTHON_INCLUDE_DIR=/usr/include/python3.4m
     PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.4m.so
-fi
-
-if [ "$NEWCC" != "" ]
-then
-    export CC=$NEWCC
-    export CXX=$NEWCXX
 fi
 
 cmake -DCMAKE_BUILD_TYPE=Release \

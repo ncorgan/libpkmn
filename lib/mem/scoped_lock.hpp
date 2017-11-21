@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +17,9 @@ namespace pkmn { namespace mem {
     template <typename T>
     class scoped_lock {
         public:
-            PKMN_INLINE scoped_lock(
+            scoped_lock() = delete;
+
+            explicit PKMN_INLINE scoped_lock(
                 T* impl
             ): _impl(impl)
             {

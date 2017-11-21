@@ -12,8 +12,11 @@
 
 #include <stdlib.h>
 
-typedef struct {
-    char* item;
+#define PKMN_ITEM_SLOT_BUFFER_SIZE 64
+
+typedef struct
+{
+    char item[PKMN_ITEM_SLOT_BUFFER_SIZE];
     int amount;
 } pkmn_item_slot_t;
 
@@ -26,23 +29,9 @@ typedef struct {
 extern "C" {
 #endif
 
-static PKMN_INLINE pkmn_error_t pkmn_item_slot_free(
-    pkmn_item_slot_t* item_slot
-) {
-    free(item_slot->item);
-    item_slot->item = NULL;
-    item_slot->amount = 0;
-
-    return PKMN_ERROR_NONE;
-}
-
 static PKMN_INLINE pkmn_error_t pkmn_item_slots_free(
     pkmn_item_slots_t* item_slots
 ) {
-    for(size_t i = 0; i < item_slots->length; ++i) {
-        free(item_slots->item_slots[i].item);
-    }
-
     free(item_slots->item_slots);
     item_slots->item_slots = NULL;
     item_slots->length = 0;

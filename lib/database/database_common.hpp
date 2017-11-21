@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,12 +10,10 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
-#include <pkmn/exception.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/config.hpp>
 
-#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -317,8 +315,8 @@ namespace pkmn { namespace database {
         {{1,467},{0,0},{0,0},{0,0}}, // Platinum
         {{1,427},{429,536},{0,0},{0,0}}, // HG/SS
         {{1,626},{0,0},{0,0},{0,0}}, // B/W
-        {{0,0},{0,0},{0,0},{0,0}}, // Colosseum
-        {{0,0},{0,0},{0,0},{0,0}}, // XD
+        {{1,120},{133,174},{179,258},{289,338}}, // Colosseum
+        {{1,120},{133,174},{179,258},{289,338}}, // XD
         {{1,638},{0,0},{0,0},{0,0}}, // B2/W2
         {{1,717},{0,0},{0,0},{0,0}}, // X/Y
         {{1,775},{0,0},{0,0},{0,0}} // OR/AS

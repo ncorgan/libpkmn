@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <algorithm>
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -20,6 +22,16 @@
 #endif
 
 namespace pkmn {
+
+    //! An exception thrown when a user tries to use an optional feature not built into in this installation.
+    class PKMN_API feature_not_in_build_error: public std::runtime_error
+    {
+        public:
+            //! Throw the exception for the given feature.
+            feature_not_in_build_error(
+                const std::string &feature
+            );
+    };
 
     //! An exception thrown when a given functionality does not exist in the given game.
     /*!
@@ -66,64 +78,192 @@ namespace pkmn {
             {}
     };
 
-    //! Throw a std::invalid_argument, specifying all valid arguments in the error message.
+    //! Throw a std::invalid_argument if the given value is not a key in the given map.
     /*!
      * \param field the variable whose value is invalid
-     * \param valid_values a list of valid values for the field
+     * \param value value to check
+     * \param map the map to check
      */
-    template <typename T>
-    PKMN_INLINE void throw_invalid_argument(
+    template <typename map_type, typename key_type>
+    void enforce_value_in_map_keys(
         const std::string& field,
-        const std::vector<T>& valid_values
-    ) {
-        std::ostringstream err_msg;
-        if(std::is_floating_point<T>::value) {
-            err_msg.precision(2);
-            err_msg << std::fixed;
-        }
+        const key_type& value,
+        const map_type& map
+    )
+    {
+        auto key_count = map.count(value);
+        if(key_count == 0)
+        {
+            std::ostringstream err_msg;
+            std::streamsize old_precision = 0;
 
-        err_msg << field;
-        err_msg << ": valid values ";
-        for(auto iter = valid_values.begin(); iter != valid_values.end(); ++iter) {
-            if(iter != valid_values.begin()) {
-                err_msg << ", ";
+            if(std::is_floating_point<key_type>::value)
+            {
+                old_precision = err_msg.precision();
+                err_msg.precision(2);
+                err_msg << std::fixed;
             }
 
-            err_msg << (*iter);
-        }
-        err_msg << ".";
+            err_msg << field;
+            err_msg << ": valid values ";
+            for(auto iter = map.begin();
+                iter != map.end();
+                ++iter
+            )
+            {
+                if(iter != map.begin())
+                {
+                    err_msg << ", ";
+                }
 
-        throw std::invalid_argument(err_msg.str().c_str());
+                err_msg << (iter->first);
+            }
+            err_msg << ".";
+
+            if(std::is_floating_point<key_type>::value)
+            {
+                err_msg.precision(old_precision);
+            }
+
+            throw std::invalid_argument(err_msg.str().c_str());
+        }
     }
 
-    //! Throw a std::out_of_range, specifying the min and max bounds.
+    //! Throw a std::invalid_argument if the given value is not in the given list.
     /*!
      * \param field the variable whose value is invalid
+     * \param value value to check
+     * \param valid_values valid values
+     */
+    template <typename T>
+    void enforce_value_in_vector(
+        const std::string& field,
+        const T& value,
+        const std::vector<T>& valid_values
+    )
+    {
+        auto found_iter = std::find(
+                              valid_values.begin(),
+                              valid_values.end(),
+                              value
+                          );
+
+        if(found_iter == valid_values.end())
+        {
+            std::ostringstream err_msg;
+            std::streamsize old_precision = 0;
+
+            if(std::is_floating_point<T>::value)
+            {
+                old_precision = err_msg.precision();
+                err_msg.precision(2);
+                err_msg << std::fixed;
+            }
+
+            err_msg << field;
+            err_msg << ": valid values ";
+            for(auto iter = valid_values.begin();
+                iter != valid_values.end();
+                ++iter
+            )
+            {
+                if(iter != valid_values.begin())
+                {
+                    err_msg << ", ";
+                }
+
+                err_msg << (*iter);
+            }
+            err_msg << ".";
+
+            if(std::is_floating_point<T>::value)
+            {
+                err_msg.precision(old_precision);
+            }
+
+            throw std::invalid_argument(err_msg.str().c_str());
+        }
+    }
+
+    //! Throw a std::out_of_range if the given value is outside the provided range.
+    /*!
+     * \param field the variable whose value is invalid
+     * \param value value to check
      * \param min the minimum value
      * \param max the maximum value
      */
     template <typename T>
-    PKMN_INLINE void throw_out_of_range(
+    void enforce_bounds(
         const std::string& field,
+        T value,
         T min,
         T max
-    ) {
-        std::ostringstream err_msg;
-        if(std::is_floating_point<T>::value) {
-            err_msg.precision(2);
-            err_msg << std::fixed;
+    )
+    {
+        bool is_less_than_range = false;
+        bool is_greater_than_range = false;
+
+        if(std::is_floating_point<T>::value)
+        {
+            is_less_than_range = std::isless(value, min);
+            is_greater_than_range = std::isgreater(value, max);
+        }
+        else
+        {
+            is_less_than_range = (value < min);
+            is_greater_than_range = (value > max);
         }
 
-        err_msg << field;
-        err_msg << ": valid values ";
-        err_msg << min;
-        err_msg << "-";
-        err_msg << max;
-        err_msg << ".";
+        if(is_less_than_range or is_greater_than_range)
+        {
+            std::ostringstream err_msg;
+            std::streamsize old_precision = 0;
 
-        throw std::out_of_range(err_msg.str().c_str());
+            if(std::is_floating_point<T>::value)
+            {
+                old_precision = err_msg.precision();
+                err_msg.precision(2);
+                err_msg << std::fixed;
+            }
+
+            err_msg << field;
+            err_msg << ": valid values ";
+            err_msg << min;
+            err_msg << "-";
+            err_msg << max;
+            err_msg << ".";
+
+            if(std::is_floating_point<T>::value)
+            {
+                err_msg.precision(old_precision);
+            }
+
+            throw std::out_of_range(err_msg.str().c_str());
+        }
     }
 
+    inline void enforce_string_length(
+        const std::string& field,
+        const std::string& value,
+        size_t min_length,
+        size_t max_length
+    )
+    {
+        size_t len = value.size();
+        if((len < min_length) || (len > max_length))
+        {
+            std::ostringstream err_msg;
+
+            err_msg << field;
+            err_msg << ": valid length ";
+            err_msg << min_length;
+            err_msg << "-";
+            err_msg << max_length;
+            err_msg << ".";
+
+            throw std::invalid_argument(err_msg.str().c_str());
+        }
+    }
 }
 
 #ifdef PKMN_PLATFORM_WIN32

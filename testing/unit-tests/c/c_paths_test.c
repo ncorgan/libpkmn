@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,8 +22,10 @@ static pkmn_error_t error_code = PKMN_ERROR_NONE;
  */
 
 static void appdata_dir_test() {
-#ifdef PKMN_PLATFORM_WIN32
+#if defined(PKMN_PLATFORM_WIN32)
     _putenv_s("PKMN_APPDATA_DIR", "C:\\libpkmn\\appdata\\dir");
+#elif defined(PKMN_PLATFORM_MINGW)
+    putenv("PKMN_APPDATA_DIR=C:\\libpkmn\\appdata\\dir");
 #else
     setenv("PKMN_APPDATA_DIR", "/libpkmn/appdata/dir", 0);
 #endif
@@ -56,8 +58,16 @@ static void database_path_test() {
      * database. This is admittedly fragile, but this test is never meant to be
      * outside the build system.
      */
-#ifdef PKMN_PLATFORM_WIN32
+#if defined(PKMN_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", __FILE__);
+#elif defined(PKMN_PLATFORM_MINGW)
+    snprintf(
+        strbuffer,
+        sizeof(strbuffer),
+        "PKMN_DATABASE_PATH=%s",
+        __FILE__
+    );
+    putenv(strbuffer);
 #else
     setenv("PKMN_DATABASE_PATH", __FILE__, 1);
 #endif
@@ -69,8 +79,10 @@ static void database_path_test() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 
     // Now just make sure it fails with a non-existent file.
-#ifdef PKMN_PLATFORM_WIN32
+#if defined(PKMN_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", "C:\\libpkmn\\database\\path");
+#elif defined(PKMN_PLATFORM_MINGW)
+    putenv("PKMN_DATABASE_PATH=C:\\libpkmn\\database\\path");
 #else
     setenv("PKMN_DATABASE_PATH", "/libpkmn/database/path", 1);
 #endif
@@ -83,8 +95,10 @@ static void database_path_test() {
 }
 
 static void images_dir_test() {
-#ifdef PKMN_PLATFORM_WIN32
+#if defined(PKMN_PLATFORM_WIN32)
     _putenv_s("PKMN_IMAGES_DIR", "C:\\libpkmn\\images\\dir");
+#elif defined(PKMN_PLATFORM_MINGW)
+    putenv("PKMN_IMAGES_DIR=C:\\libpkmn\\images\\dir");
 #else
     setenv("PKMN_IMAGES_DIR", "/libpkmn/images/dir", 1);
 #endif

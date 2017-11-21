@@ -9,6 +9,7 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
+#include <pkmn/database/item_entry.hpp>
 
 #include "pksav/pksav_call.hpp"
 
@@ -127,10 +128,16 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
                                                                );
 
     EXPECT_EQ(native_pc->species, uint8_t(pokemon->get_database_entry().get_pokemon_index()));
-    EXPECT_EQ(native_pc->held_item, uint8_t(pokemon->get_held_item().get_item_index()));
+    EXPECT_EQ(
+        native_pc->held_item,
+        uint8_t(pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index())
+    );
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
-        EXPECT_EQ(uint8_t(move_slots.at(i).move.get_move_id()), native_pc->moves[i]);
+        EXPECT_EQ(
+            uint8_t(pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id()),
+            native_pc->moves[i]
+        );
         EXPECT_EQ(uint8_t(move_slots.at(i).pp), (native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK));
     }
     EXPECT_EQ(uint16_t(pokemon->get_trainer_id()), pksav_bigendian16(native_pc->ot_id));
@@ -191,6 +198,7 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
      * Party data
      */
     EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_party_data->max_hp)));
+    EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_party_data->current_hp)));
     EXPECT_EQ(pokemon->get_stats().at("Attack"), int(pksav_bigendian16(native_party_data->atk)));
     EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
     EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));

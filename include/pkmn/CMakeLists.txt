@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,17 @@
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
+)
+
+#
+# Create version header based on CMake variables
+#
+MATH(EXPR PKMN_VERSION_NUMBER "(${PKMN_VERSION_MAJOR} * 1000000) +
+                               (${PKMN_VERSION_MINOR} * 1000) +
+                                ${PKMN_VERSION_PATCH}")
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
 )
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
@@ -24,6 +35,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         pokemon_box.hpp
         pokemon_party.hpp
         pokemon_pc.hpp
+        ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
     )
 
     INSTALL(
@@ -35,5 +47,6 @@ ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
 
 ADD_SUBDIRECTORY(calculations)
 ADD_SUBDIRECTORY(database)
+ADD_SUBDIRECTORY(qt)
 ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)

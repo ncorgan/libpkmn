@@ -166,7 +166,7 @@ namespace pkmn { namespace database {
         int version_group_id
     ) {
         if(item_id == 0 or version_group_id == 0) {
-            return 0;
+            return "None";
         }
 
         // Connect to database

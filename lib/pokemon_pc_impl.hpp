@@ -18,23 +18,23 @@ namespace pkmn {
     class pokemon_pc_impl: public pokemon_pc, public boost::noncopyable {
         public:
             pokemon_pc_impl() {}
-            pokemon_pc_impl(
+            explicit pokemon_pc_impl(
                 int game_id
             );
 
             virtual ~pokemon_pc_impl() {}
 
-            std::string get_game();
+            std::string get_game() override final;
 
             pkmn::pokemon_box::sptr get_box(
                 int index
-            );
+            ) override final;
 
-            const pkmn::pokemon_box_list_t& as_vector();
+            const pkmn::pokemon_box_list_t& as_vector() override final;
 
-            const std::vector<std::string>& get_box_names();
+            const std::vector<std::string>& get_box_names() override final;
             
-            void* get_native();
+            void* get_native() override final;
 
         protected:
             pkmn::pokemon_box_list_t _box_list;

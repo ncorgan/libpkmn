@@ -13,163 +13,88 @@
 
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void test_item_list_empty_slots(
-    pkmn_item_list_handle_t list
+    pkmn_item_list_t* list
 );
 
 void test_item_list_out_of_range_error(
-    pkmn_item_list_handle_t list,
+    pkmn_item_list_t* list,
     const char* item_name
 );
 
-void test_item_bag_invalid_items(
-    pkmn_item_bag_handle_t bag,
+void test_item_list_invalid_items(
+    pkmn_item_list_t* list,
     const char** item_names,
-    size_t item_names_list_length
+    size_t num_items
 );
 
-void test_item_list_invalid_items(
-    pkmn_item_list_handle_t list,
+void test_item_bag_invalid_items(
+    pkmn_item_bag_t* bag,
     const char** item_names,
-    size_t item_names_list_length
+    size_t num_items
+);
+
+void test_item_list_set_item(
+    pkmn_item_list_t* list,
+    const char** item_names,
+    size_t num_items
 );
 
 void test_item_list_add_remove(
-    pkmn_item_list_handle_t list,
+    pkmn_item_list_t* list,
     const char** item_names,
-    size_t item_names_list_length
+    size_t num_items
 );
 
-void gen1_item_list_test(
-    pkmn_item_list_handle_t items,
-    const char* game
-);
+#define GEN1_TEST_FCNS(game) \
+    void test_gen1_item_pocket_ ## game (); \
+    void test_gen1_item_pc_ ## game (); \
+    void test_gen1_item_bag_ ## game ();
 
-void gen1_pc_test(
-    pkmn_item_list_handle_t pc,
-    const char* game
-);
+GEN1_TEST_FCNS(Red);
+GEN1_TEST_FCNS(Blue);
+GEN1_TEST_FCNS(Yellow);
 
-void gen1_item_bag_test(
-    pkmn_item_bag_handle_t bag,
-    const char* game
-);
+#define GEN2_TEST_FCNS(game) \
+    void test_gen2_item_pocket_ ## game (); \
+    void test_gen2_key_item_pocket_ ## game (); \
+    void test_gen2_ball_pocket_ ## game (); \
+    void test_gen2_tmhm_pocket_ ## game (); \
+    void test_gen2_item_pc_ ## game (); \
+    void test_gen2_item_bag_ ## game ();
 
-void gen2_item_pocket_test(
-    pkmn_item_list_handle_t item_pocket,
-    const char* game
-);
+GEN2_TEST_FCNS(Gold);
+GEN2_TEST_FCNS(Silver);
+GEN2_TEST_FCNS(Crystal);
 
-void gen2_key_item_pocket_test(
-    pkmn_item_list_handle_t key_item_pocket,
-    const char* game
-);
+#define GBA_TEST_FCNS(game) \
+    void test_gba_item_pocket_ ## game (); \
+    void test_gba_key_item_pocket_ ## game (); \
+    void test_gba_ball_pocket_ ## game (); \
+    void test_gba_tmhm_pocket_ ## game (); \
+    void test_gba_berry_pocket_ ## game (); \
+    void test_gba_item_pc_ ## game (); \
+    void test_gba_item_bag_ ## game ();
 
-void gen2_ball_pocket_test(
-    pkmn_item_list_handle_t ball_pocket,
-    const char* game
-);
+GBA_TEST_FCNS(Ruby);
+GBA_TEST_FCNS(Sapphire);
+GBA_TEST_FCNS(Emerald);
+GBA_TEST_FCNS(FireRed);
+GBA_TEST_FCNS(LeafGreen);
 
-void gen2_tmhm_pocket_test(
-    pkmn_item_list_handle_t tmhm_pocket,
-    const char* game
-);
+#define GCN_TEST_FCNS(game) \
+    void test_gcn_item_pocket_ ## game (); \
+    void test_gcn_key_item_pocket_ ## game (); \
+    void test_gcn_ball_pocket_ ## game (); \
+    void test_gcn_tm_pocket_ ## game (); \
+    void test_gcn_berry_pocket_ ## game (); \
+    void test_gcn_cologne_pocket_ ## game (); \
+    void test_gcn_item_pc_ ## game (); \
+    void test_gcn_item_bag_ ## game ();
 
-void gen2_pc_test(
-    pkmn_item_list_handle_t pc,
-    const char* game
-);
+GCN_TEST_FCNS(Colosseum);
+GCN_TEST_FCNS(XD);
 
-void gen2_item_bag_test(
-    pkmn_item_bag_handle_t bag,
-    const char* game
-);
-
-void gba_item_pocket_test(
-    pkmn_item_list_handle_t item_pocket,
-    const char* game
-);
-
-void gba_key_item_pocket_test(
-    pkmn_item_list_handle_t key_item_pocket,
-    const char* game
-);
-
-void gba_ball_pocket_test(
-    pkmn_item_list_handle_t ball_pocket,
-    const char* game
-);
-
-void gba_tmhm_pocket_test(
-    pkmn_item_list_handle_t tmhm_pocket,
-    const char* game
-);
-
-void gba_berry_pocket_test(
-    pkmn_item_list_handle_t berry_pocket,
-    const char* game
-);
-
-void gba_pc_test(
-    pkmn_item_list_handle_t pc,
-    const char* game
-);
-
-void gba_item_bag_test(
-    pkmn_item_bag_handle_t bag,
-    const char* game
-);
-
-void gcn_item_pocket_test(
-    pkmn_item_list_handle_t item_pocket,
-    const char* game
-);
-
-void gcn_key_item_pocket_test(
-    pkmn_item_list_handle_t key_item_pocket,
-    const char* game
-);
-
-void gcn_ball_pocket_test(
-    pkmn_item_list_handle_t ball_pocket,
-    const char* game
-);
-
-void gcn_tm_pocket_test(
-    pkmn_item_list_handle_t tm_pocket,
-    const char* game
-);
-
-void gcn_berry_pocket_test(
-    pkmn_item_list_handle_t berry_pocket,
-    const char* game
-);
-
-void gcn_cologne_pocket_test(
-    pkmn_item_list_handle_t cologne_pocket,
-    const char* game
-);
-
-void xd_battle_cd_pocket_test(
-    pkmn_item_list_handle_t battle_cd_pocket
-);
-
-void gcn_item_pc_test(
-    pkmn_item_list_handle_t pc,
-    const char* game
-);
-
-void gcn_item_bag_test(
-    pkmn_item_bag_handle_t bag,
-    const char* game
-);
-
-#ifdef __cplusplus
-}
-#endif
+void test_gcn_battle_cd_pocket_XD();
 
 #endif /* C_ITEMS_TEST_H */

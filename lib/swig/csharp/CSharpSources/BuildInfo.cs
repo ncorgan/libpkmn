@@ -9,6 +9,12 @@ namespace PKMN {
     /// <summary>Information about this build of LibPKMN.</summary>
     public class BuildInfo {
 
+        public static string PKMNVersion {
+            get {
+                return "@PKMN_VERSION@";
+            }
+        }
+
         /// <summary>The version of Boost used to build the LibPKMN core library.</summary>
         public static string BoostVersion {
             get {
@@ -27,6 +33,13 @@ namespace PKMN {
         public static string PKSavVersion {
             get {
                 return PKMN.GetPKSavVersion();
+            }
+        }
+
+        /// <summary>The version of Qt used to build the LibPKMN core library.</summary>
+        public static string QtVersion {
+            get {
+                return PKMN.GetQtVersion();
             }
         }
 

@@ -45,7 +45,8 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_party_gen4impl::~pokemon_party_gen4impl() {
+    pokemon_party_gen4impl::~pokemon_party_gen4impl()
+    {
         if(_our_mem) {
             delete NATIVE_LIST_RCAST;
         }
@@ -55,27 +56,34 @@ namespace pkmn {
         return int(pksav_littleendian32(NATIVE_LIST_RCAST->count));
     }
 
+    // TODO: refactor based on new changes
     void pokemon_party_gen4impl::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int num_pokemon = get_num_pokemon();
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
-        if(index < 0 or index > max_index) {
-            pkmn::throw_out_of_range("index", 0, max_index);
-        } else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
+        pkmn::enforce_bounds(
+            "Party index",
+            index,
+            0,
+            max_index
+        );
+
+        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data()) {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         } else if(index < (num_pokemon-1) and new_pokemon->get_species() == "None") {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
         // Copy the underlying memory to the party.
-        pkmn::mem::set_pokemon_in_party(
+        /*pkmn::mem::set_pokemon_in_party(
             dynamic_cast<pokemon_impl*>(new_pokemon.get()),
             this,
             index
-        );
+        );*/
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
