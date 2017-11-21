@@ -108,10 +108,14 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: valid length 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         _current_slot->player->trainer->trainerName->fromUTF8(trainer_name.c_str());
     }

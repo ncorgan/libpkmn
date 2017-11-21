@@ -242,6 +242,28 @@ namespace pkmn {
         }
     }
 
+    inline void enforce_string_length(
+        const std::string& field,
+        const std::string& value,
+        size_t min_length,
+        size_t max_length
+    )
+    {
+        size_t len = value.size();
+        if((len < min_length) || (len > max_length))
+        {
+            std::ostringstream err_msg;
+
+            err_msg << field;
+            err_msg << ": valid length ";
+            err_msg << min_length;
+            err_msg << "-";
+            err_msg << max_length;
+            err_msg << ".";
+
+            throw std::invalid_argument(err_msg.str().c_str());
+        }
+    }
 }
 
 #ifdef PKMN_PLATFORM_WIN32

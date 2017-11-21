@@ -523,9 +523,11 @@ namespace pkmn {
         bool value,
         uint8_t* native_ptr
     ) {
-        if(_markings.find(marking) == _markings.end()) {
-            throw std::invalid_argument("Invalid marking.");
-        }
+        pkmn::enforce_value_in_map_keys(
+            "Marking",
+            marking,
+            _markings
+        );
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 

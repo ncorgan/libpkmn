@@ -12,6 +12,8 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/exception.hpp>
+
 #include <pksav/gen1/text.h>
 #include <pksav/gen2/text.h>
 #include <pksav/math/endian.h>
@@ -71,13 +73,20 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::set_name(
         const std::string &name
-    ) {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value) {
+    )
+    {
+        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)
+        {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
-        } else {
-            if(name.size() > 8) {
-                throw std::invalid_argument("Generation II box names have a maximum length of 8.");
-            }
+        }
+        else
+        {
+            pkmn::enforce_string_length(
+                "Box name",
+                name,
+                0,
+                8
+            );
 
             _box_name = name;
         }

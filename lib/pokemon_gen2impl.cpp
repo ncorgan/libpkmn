@@ -267,12 +267,14 @@ namespace pkmn {
 
     void pokemon_gen2impl::set_nickname(
         const std::string &nickname
-    ) {
-        if(nickname.size() < 1 or nickname.size() > 10) {
-            throw std::invalid_argument(
-                      "The nickname length must be 1-10."
-                  );
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Nickname",
+            nickname,
+            1,
+            10
+        );
 
         _nickname = nickname;
     }
@@ -386,12 +388,14 @@ namespace pkmn {
 
     void pokemon_gen2impl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() < 1 or trainer_name.size() > 7) {
-            throw std::invalid_argument(
-                      "The trainer name length must be 1-7."
-                  );
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         _trainer_name = trainer_name;
     }

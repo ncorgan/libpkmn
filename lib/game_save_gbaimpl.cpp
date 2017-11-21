@@ -158,10 +158,14 @@ namespace pkmn {
 
     void game_save_gbaimpl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: valid length 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         PKSAV_CALL(
             pksav_text_to_gba(
@@ -241,11 +245,16 @@ namespace pkmn {
 
     void game_save_gbaimpl::set_rival_name(
         const std::string &rival_name
-    ) {
-        if(_pksav_save.gba_game == PKSAV_GBA_FRLG) {
-            if(rival_name.size() == 0 or rival_name.size() > 7) {
-                throw std::invalid_argument("rival_name: valid length 1-7");
-            }
+    )
+    {
+        if(_pksav_save.gba_game == PKSAV_GBA_FRLG)
+        {
+            pkmn::enforce_string_length(
+                "Rival name",
+                rival_name,
+                1,
+                7
+            );
 
             PKSAV_CALL(
                 pksav_text_to_gba(
@@ -254,7 +263,9 @@ namespace pkmn {
                     7
                 );
             )
-        } else {
+        }
+        else
+        {
             throw pkmn::feature_not_in_game_error("Rivals cannot be renamed in Ruby/Sapphire/Emerald.");
         }
     }

@@ -60,10 +60,14 @@ namespace pkmn {
 
     void pokemon_box_gcnimpl::set_name(
         const std::string &name
-    ) {
-        if(name.size() > 8) {
-            throw std::invalid_argument("Generation III box names have a maximum length of 8.");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Box name",
+            name,
+            0,
+            8
+        );
 
         GC_RCAST->name->fromUTF8(name.c_str());
     }

@@ -79,6 +79,36 @@ TEST(cpp_exception_test, test_unimplemented_error)
     }
 }
 
+TEST(cpp_exception_test, test_string_length)
+{
+    const std::string test_string = "I want to be the very best.";
+
+    pkmn::enforce_string_length(
+        "Test string",
+        test_string,
+        0,
+        100
+    );
+
+    EXPECT_THROW(
+        pkmn::enforce_string_length(
+            "Test string",
+            test_string,
+            0,
+            10
+        );
+    , std::invalid_argument);
+
+    EXPECT_THROW(
+        pkmn::enforce_string_length(
+            "Test string",
+            test_string,
+            100,
+            200
+        );
+    , std::invalid_argument);
+}
+
 // Don't check error message, as map key orders cannot be guaranteed.
 TEST(cpp_exception_test, test_value_in_map_keys)
 {

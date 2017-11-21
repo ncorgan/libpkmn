@@ -15,6 +15,7 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
+
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
@@ -123,10 +124,14 @@ namespace pkmn {
 
     void game_save_gen1impl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: length must be 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         PKSAV_CALL(
             pksav_text_to_gen1(
@@ -195,10 +200,14 @@ namespace pkmn {
 
     void game_save_gen1impl::set_rival_name(
         const std::string &rival_name
-    ) {
-        if(rival_name.size() == 0 or rival_name.size() > 7) {
-            throw std::invalid_argument("rival_name: length must be 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Rival name",
+            rival_name,
+            1,
+            7
+        );
 
         PKSAV_CALL(
             pksav_text_to_gen1(
