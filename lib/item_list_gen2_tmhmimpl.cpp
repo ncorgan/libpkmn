@@ -184,7 +184,7 @@ namespace pkmn {
             throw std::invalid_argument("This item does not belong in this pocket.");
         }
 
-        pkmn::enforce_bounds("Amount", amount, 0, 99);
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
         if(item_name != _item_slots[position].item)
         {
             pkmn::throw_invalid_argument<std::string>("item", {_item_slots[position].item});
