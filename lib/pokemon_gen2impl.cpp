@@ -707,11 +707,12 @@ namespace pkmn {
         int value
     )
     {
-        // Generation II uses Generation I stats for EV's
-        if(not pkmn::string_is_gen1_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        }
-
+        // Generation II uses Generation I stats for EV's.
+        pkmn::enforce_value_in_vector(
+            "Stat",
+            stat,
+            pkmn::GEN1_STATS
+        );
         pkmn::enforce_EV_bounds(stat, value, false);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);

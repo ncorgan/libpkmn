@@ -10,8 +10,12 @@
 #include <pksav/error.h>
 
 #include <boost/assign.hpp>
+#include <boost/bimap.hpp>
 
 #include <gtest/gtest.h>
+
+#include <map>
+#include <unordered_map>
 
 TEST(cpp_exception_test, test_feature_not_in_build_error)
 {
@@ -75,15 +79,99 @@ TEST(cpp_exception_test, test_unimplemented_error)
     }
 }
 
-TEST(cpp_exception_test, test_invalid_argument)
+// Don't check error message, as map key orders cannot be guaranteed.
+TEST(cpp_exception_test, test_value_in_map_keys)
+{
+    // std::map
+
+    static const std::map<std::string, int> test_map =
+    boost::assign::map_list_of
+        ("Key1", 1351)
+        ("Key2", 254)
+        ("Key3", 846)
+    ;
+
+    pkmn::enforce_value_in_map_keys(
+        "std::map param",
+        "Key1",
+        test_map
+    );
+
+    EXPECT_THROW(
+        pkmn::enforce_value_in_map_keys(
+            "std::map param",
+            "Key4",
+            test_map
+        );
+    , std::invalid_argument);
+
+    // std::unordered_map
+
+    static const std::unordered_map<std::string, int> test_unordered_map =
+    boost::assign::map_list_of
+        ("Key4", 1351)
+        ("Key5", 254)
+        ("Key6", 846)
+    ;
+
+    pkmn::enforce_value_in_map_keys(
+        "std::unordered_map param",
+        "Key4",
+        test_unordered_map
+    );
+
+    EXPECT_THROW(
+        pkmn::enforce_value_in_map_keys(
+            "std::unordered_map param",
+            "Key7",
+            test_unordered_map
+        );
+    , std::invalid_argument);
+
+    // boost::bimap
+
+    typedef boost::bimap<std::string, int> string_int_bimap_t;
+    static const string_int_bimap_t test_bimap =
+    boost::assign::list_of<string_int_bimap_t::relation>
+        ("Key7", 1351)
+        ("Key8", 254)
+        ("Key9", 846)
+    ;
+
+    pkmn::enforce_value_in_map_keys(
+        "boost::bimap param",
+        "Key7",
+        test_bimap.left
+    );
+
+    EXPECT_THROW(
+        pkmn::enforce_value_in_map_keys(
+            "boost::bimap param",
+            "Key10",
+            test_bimap.left
+        );
+    , std::invalid_argument);
+}
+
+TEST(cpp_exception_test, test_value_in_vector)
 {
     static const std::vector<int> int_values = boost::assign::list_of
         (0)(5)(10)(15)
     ;
     const std::string int_expected_msg = "int_param: valid values 0, 5, 10, 15.";
 
+    pkmn::enforce_value_in_vector(
+        "int_param",
+        0,
+        int_values
+    );
+
     try {
-        pkmn::throw_invalid_argument("int_param", int_values);
+        pkmn::enforce_value_in_vector(
+            "int_param",
+            -5,
+            int_values
+        );
         FAIL() << "Did not throw.";
     } catch(const std::invalid_argument& e) {
         EXPECT_EQ(int_expected_msg, std::string(e.what()));
@@ -96,41 +184,21 @@ TEST(cpp_exception_test, test_invalid_argument)
     ;
     const std::string string_expected_msg = "string_param: valid values A, B, C, D.";
 
+    pkmn::enforce_value_in_vector<std::string>(
+        "string_param",
+        "A",
+        string_values
+    );
+
     try {
-        pkmn::throw_invalid_argument("string_param", string_values);
+        pkmn::enforce_value_in_vector<std::string>(
+            "string_param",
+            "E",
+            string_values
+        );
         FAIL() << "Did not throw.";
     } catch(const std::invalid_argument& e) {
         EXPECT_EQ(string_expected_msg, std::string(e.what()));
-    } catch(...) {
-        FAIL() << "Did not throw std::invalid_argument";
-    }
-
-    // This can happen when converting a number passed in from a SWIG wrapper.
-    static const std::vector<float> float_values = boost::assign::list_of
-        (0.1900000001f)(1.370000002f)(50.000003f)(12.34000004f)
-    ;
-    const std::string float_expected_msg = "float_param: valid values 0.19, 1.37, 50.00, 12.34.";
-
-    try {
-        pkmn::throw_invalid_argument("float_param", float_values);
-        FAIL() << "Did not throw.";
-    } catch(const std::invalid_argument& e) {
-        EXPECT_EQ(float_expected_msg, std::string(e.what()));
-    } catch(...) {
-        FAIL() << "Did not throw std::invalid_argument";
-    }
-
-    // This can happen when converting a number passed in from a SWIG wrapper.
-    static const std::vector<double> double_values = boost::assign::list_of
-        (0.1900000001)(1.370000002)(50.000003)(12.34000004)
-    ;
-    const std::string double_expected_msg = "double_param: valid values 0.19, 1.37, 50.00, 12.34.";
-
-    try {
-        pkmn::throw_invalid_argument("double_param", double_values);
-        FAIL() << "Did not throw.";
-    } catch(const std::invalid_argument& e) {
-        EXPECT_EQ(double_expected_msg, std::string(e.what()));
     } catch(...) {
         FAIL() << "Did not throw std::invalid_argument";
     }

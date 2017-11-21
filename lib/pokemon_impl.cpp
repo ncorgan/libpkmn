@@ -433,11 +433,7 @@ namespace pkmn {
         uint16_t* iv_data_ptr
     )
     {
-        if(not pkmn::string_is_gen1_stat(stat))
-        {
-            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        }
-
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::GEN1_STATS);
         pkmn::enforce_IV_bounds(stat, value, false);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
@@ -461,10 +457,7 @@ namespace pkmn {
         int value,
         uint32_t* iv_data_ptr
     ) {
-        if(not pkmn::string_is_modern_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
-
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::MODERN_STATS);
         pkmn::enforce_IV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
@@ -495,10 +488,11 @@ namespace pkmn {
         int value,
         pksav_contest_stats_t* native_ptr
     ) {
-        if(_contest_stats.find(stat) == _contest_stats.end()) {
-            throw std::invalid_argument("Invalid contest stat.");
-        }
-
+        pkmn::enforce_value_in_map_keys(
+            "Contest stat",
+            stat,
+            _contest_stats
+        );
         pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);

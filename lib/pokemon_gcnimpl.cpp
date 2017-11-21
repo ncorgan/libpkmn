@@ -785,11 +785,13 @@ namespace pkmn {
     void pokemon_gcnimpl::set_IV(
         const std::string &stat,
         int value
-    ) {
-        if(not pkmn::string_is_modern_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
-
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Stat",
+            stat,
+            pkmn::MODERN_STATS
+        );
         pkmn::enforce_IV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);
@@ -953,11 +955,13 @@ namespace pkmn {
     void pokemon_gcnimpl::set_EV(
         const std::string &stat,
         int value
-    ) {
-        if(not pkmn::string_is_modern_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
-
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Stat",
+            stat,
+            pkmn::MODERN_STATS
+        );
         pkmn::enforce_EV_bounds(stat, value, true);
 
         boost::mutex::scoped_lock scoped_lock(_mem_mutex);

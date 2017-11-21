@@ -41,9 +41,7 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         // Input validation
-        if(not pkmn::string_is_gen2_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::GEN2_STATS);
-        }
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::GEN2_STATS);
         pkmn::enforce_EV_bounds(stat, EV, false);
         pkmn::enforce_IV_bounds(stat, IV, false);
 
@@ -84,15 +82,14 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         // Input validation
-        if(not pkmn::string_is_modern_stat(stat)) {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
         if(not pkmn::floats_close(nature_modifier, 0.9f) and
            not pkmn::floats_close(nature_modifier, 1.0f) and
            not pkmn::floats_close(nature_modifier, 1.1f))
         {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }
+
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::MODERN_STATS);
         pkmn::enforce_EV_bounds(stat, EV, true);
         pkmn::enforce_IV_bounds(stat, IV, true);
 

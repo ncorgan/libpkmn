@@ -185,10 +185,11 @@ namespace pkmn {
         }
 
         pkmn::enforce_bounds("Amount", amount, 1, 99);
-        if(item_name != _item_slots[position].item)
-        {
-            pkmn::throw_invalid_argument<std::string>("item", {_item_slots[position].item});
-        }
+        pkmn::enforce_value_in_vector(
+            "Item name",
+            item_name,
+            {_item_slots[position].item}
+        );
 
         // No need to copy everything
         _item_slots[position].amount = amount;
