@@ -8,7 +8,11 @@
 #ifndef PKMN_POKEMON_BOX_GBIMPL_IPP
 #define PKMN_POKEMON_BOX_GBIMPL_IPP
 
+#include "exception_internal.hpp"
+
 #include "pksav/pksav_call.hpp"
+
+#include <pkmn/exception.hpp>
 
 #include <pksav/gen1/text.h>
 #include <pksav/gen2/text.h>
@@ -71,13 +75,20 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::set_name(
         const std::string &name
-    ) {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value) {
+    )
+    {
+        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)
+        {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
-        } else {
-            if(name.size() > 8) {
-                throw std::invalid_argument("Generation II box names have a maximum length of 8.");
-            }
+        }
+        else
+        {
+            pkmn::enforce_string_length(
+                "Box name",
+                name,
+                0,
+                8
+            );
 
             _box_name = name;
         }
@@ -102,11 +113,9 @@ namespace pkmn {
         int capacity = get_capacity();
         int max_index = std::min<int>(capacity-1, num_pokemon);
 
-        if(index < 0 or index > max_index)
-        {
-            pkmn::throw_out_of_range("index", 0, max_index);
-        }
-        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        pkmn::enforce_bounds("Box index", index, 0, max_index);
+
+        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }

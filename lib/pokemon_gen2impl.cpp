@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "misc_common.hpp"
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
@@ -388,11 +389,12 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(nickname.size() < 1 or nickname.size() > 10) {
-            throw std::invalid_argument(
-                      "The nickname length must be 1-10."
-                  );
-        }
+        pkmn::enforce_string_length(
+            "Nickname",
+            nickname,
+            1,
+            10
+        );
 
         _nickname = nickname;
     }
@@ -552,11 +554,12 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        if(trainer_name.size() < 1 or trainer_name.size() > 7) {
-            throw std::invalid_argument(
-                      "The trainer name length must be 1-7."
-                  );
-        }
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         _trainer_name = trainer_name;
     }
@@ -602,10 +605,7 @@ namespace pkmn
         uint32_t id
     )
     {
-        if(id > 65535)
-        {
-            pkmn::throw_out_of_range("id", 0, 65535);
-        }
+        pkmn::enforce_gb_trainer_id_bounds(id);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -651,10 +651,7 @@ namespace pkmn
         int friendship
     )
     {
-        if(friendship < 0 or friendship > 255)
-        {
-            pkmn::throw_out_of_range("friendship", 0, 255);
-        }
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -696,9 +693,7 @@ namespace pkmn
         int level
     )
     {
-        if(level < 2 or level > 63) {
-            pkmn::throw_out_of_range("Level caught", 2, 63);
-        }
+        pkmn::enforce_bounds("Level met", level, 2, 63);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -797,11 +792,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         int max_experience = _database_entry.get_experience_at_level(100);
-
-        if(experience < 0 or experience > max_experience)
-        {
-            pkmn::throw_out_of_range("experience", 0, max_experience);
-        }
+        pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         PKSAV_CALL(
             pksav_to_base256(
@@ -828,9 +819,7 @@ namespace pkmn
         int level
     )
     {
-        if(level < 2 or level > 100) {
-            pkmn::throw_out_of_range("level", 2, 100);
-        }
+        pkmn::enforce_bounds("Level", level, 2, 100);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -896,10 +885,7 @@ namespace pkmn
         int index
     )
     {
-        if(index < 0 or index > 3)
-        {
-            pkmn::throw_out_of_range("index", 0, 3);
-        }
+        pkmn::enforce_bounds("Move index", index, 0, 3);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -920,15 +906,13 @@ namespace pkmn
         int value
     )
     {
-        // Generation II uses Generation I stats for EV's
-        if(not pkmn::string_is_gen1_stat(stat))
-        {
-            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        }
-        else if(not pkmn::EV_in_bounds(value, false))
-        {
-            pkmn::throw_out_of_range("stat", 0, 65535);
-        }
+        // Generation II uses Generation I stats for EV's.
+        pkmn::enforce_value_in_vector(
+            "Stat",
+            stat,
+            pkmn::GEN1_STATS
+        );
+        pkmn::enforce_EV_bounds(stat, value, false);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -968,12 +952,14 @@ namespace pkmn
         int hp
     )
     {
-        boost::lock_guard<pokemon_gen2impl> lock(*this);
+        pkmn::enforce_bounds(
+            "Current HP",
+            hp,
+            0,
+            _stats["HP"]
+        );
 
-        if((hp < 0) or (hp > _stats["HP"]))
-        {
-            pkmn::throw_out_of_range("hp", 0, _stats["HP"]);
-        }
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         GEN2_PARTY_RCAST->current_hp = pksav_bigendian16(static_cast<uint16_t>(hp));
     }

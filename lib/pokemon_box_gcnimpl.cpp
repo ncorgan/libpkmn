@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_box_gcnimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
@@ -61,10 +62,14 @@ namespace pkmn {
 
     void pokemon_box_gcnimpl::set_name(
         const std::string &name
-    ) {
-        if(name.size() > 8) {
-            throw std::invalid_argument("Generation III box names have a maximum length of 8.");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Box name",
+            name,
+            0,
+            8
+        );
 
         GC_RCAST->name->fromUTF8(name.c_str());
     }
@@ -89,12 +94,9 @@ namespace pkmn {
         pkmn::pokemon::sptr new_pokemon
     ) {
         int max_index = get_capacity();
+        pkmn::enforce_bounds("Box index", index, 0, max_index);
 
-        if(index < 0 or index > max_index)
-        {
-            pkmn::throw_out_of_range("index", 0, max_index);
-        }
-        else if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
+        if(_pokemon_list.at(index)->get_native_pc_data() == new_pokemon->get_native_pc_data())
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }

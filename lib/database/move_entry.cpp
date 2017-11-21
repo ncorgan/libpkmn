@@ -327,14 +327,18 @@ namespace pkmn { namespace database {
 
     int move_entry::get_pp(
         int num_pp_ups
-    ) const {
+    ) const
+    {
         int ret  = 0;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = -1;
-        } else if(num_pp_ups < 0 or num_pp_ups > 3) {
-            pkmn::throw_out_of_range("num_pp_ups", 0, 3);
-        } else {
+        }
+        else
+        {
+            pkmn::enforce_bounds("# PP Ups", num_pp_ups, 0, 3);
+
             static BOOST_CONSTEXPR const char* main_query = \
                 "SELECT pp FROM moves WHERE id=?";
 
@@ -352,22 +356,27 @@ namespace pkmn { namespace database {
              * base PP. If not, fall back to the default query.
              */
             int base_pp = -1;
-            if(_generation < 6) {
+            if(_generation < 6)
+            {
                 (void)pkmn::database::maybe_query_db_bind1<int, int>(
                           _db, old_queries[_generation],
                           base_pp, _move_id
                       );
             }
 
-            if(base_pp == -1) {
+            if(base_pp == -1)
+            {
                 base_pp = pkmn::database::query_db_bind1<int, int>(
                               _db, main_query, _move_id
                           );
             }
 
-            if(num_pp_ups == 0) {
+            if(num_pp_ups == 0)
+            {
                 ret = base_pp;
-            } else {
+            }
+            else
+            {
                 int _20p = int(base_pp * 0.2);
                 ret = (base_pp + (num_pp_ups * _20p));
             }

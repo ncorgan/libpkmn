@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
@@ -21,6 +22,7 @@
 
 #include "types/rng.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/calculations/shininess.hpp>
@@ -486,12 +488,12 @@ namespace pkmn
         const std::string &nickname
     )
     {
-        if(nickname.size() < 1 or nickname.size() > 10)
-        {
-            throw std::invalid_argument(
-                      "The nickname length must be 1-10."
-                  );
-        }
+        pkmn::enforce_string_length(
+            "Nickname",
+            nickname,
+            1,
+            10
+        );
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -606,12 +608,12 @@ namespace pkmn
         const std::string &trainer_name
     )
     {
-        if(trainer_name.size() < 1 or trainer_name.size() > 7)
-        {
-            throw std::invalid_argument(
-                      "The trainer name length must be 1-7."
-                  );
-        }
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -704,10 +706,7 @@ namespace pkmn
         int friendship
     )
     {
-        if(friendship < 0 or friendship > 255)
-        {
-            pkmn::throw_out_of_range("friendship", 0 , 255);
-        }
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -807,10 +806,7 @@ namespace pkmn
         int level
     )
     {
-        if(level < 0 or level > 100)
-        {
-            pkmn::throw_out_of_range("Level caught", 0, 100);
-        }
+        pkmn::enforce_bounds("Level met", level, 0, 100);
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -943,11 +939,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         int max_experience = _database_entry.get_experience_at_level(100);
-
-        if(experience < 0 or experience > max_experience)
-        {
-            pkmn::throw_out_of_range("experience", 0, max_experience);
-        }
+        pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         _growth->exp = pksav_littleendian32(uint32_t(experience));
         GBA_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
@@ -967,10 +959,7 @@ namespace pkmn
         int level
     )
     {
-        if(level < 1 or level > 100)
-        {
-            pkmn::throw_out_of_range("level", 1, 100);
-        }
+        pkmn::enforce_bounds("Level", level, 1, 100);
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -1097,9 +1086,7 @@ namespace pkmn
         int index
     )
     {
-        if(index < 0 or index > 3) {
-            pkmn::throw_out_of_range("index", 0, 3);
-        }
+        pkmn::enforce_bounds("Move index", index, 0, 3);
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -1120,14 +1107,12 @@ namespace pkmn
         int value
     )
     {
-        if(not pkmn::string_is_modern_stat(stat))
-        {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
-        else if(not pkmn::EV_in_bounds(value, true))
-        {
-            pkmn::throw_out_of_range("stat", 0, 255);
-        }
+        pkmn::enforce_value_in_vector(
+            "Stat",
+            stat,
+            pkmn::MODERN_STATS
+        );
+        pkmn::enforce_EV_bounds(stat, value, true);
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -1171,12 +1156,14 @@ namespace pkmn
         int hp
     )
     {
-        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+        pkmn::enforce_bounds(
+            "Current HP",
+            hp,
+            0,
+            _stats["HP"]
+        );
 
-        if((hp < 0) or (hp > _stats["HP"]))
-        {
-            pkmn::throw_out_of_range("hp", 0, _stats["HP"]);
-        }
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         GBA_PARTY_RCAST->current_hp = pksav_littleendian16(static_cast<uint16_t>(hp));
     }

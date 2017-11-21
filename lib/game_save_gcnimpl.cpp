@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "game_save_gcnimpl.hpp"
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
@@ -107,10 +108,14 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: valid length 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         _current_slot->player->trainer->trainerName->fromUTF8(trainer_name.c_str());
     }
@@ -172,10 +177,9 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }

@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
@@ -214,10 +215,15 @@ namespace pkmn {
 
     const pkmn::item_slot& item_list_impl::at(
         int position
-    ) {
-        if(position < 0 or position >= _capacity) {
-            pkmn::throw_out_of_range("position", 0, (_capacity-1));
-        }
+    )
+    {
+        // Input validation
+        pkmn::enforce_bounds(
+            "Position",
+            position,
+            0,
+            (_capacity-1)
+        );
 
         return _item_slots.at(position);
     }
@@ -228,10 +234,7 @@ namespace pkmn {
     )
     {
         // Input validation
-        if(amount < 1 or amount > 99)
-        {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         /*
          * Check if this item is already in the list. If so, add to
@@ -289,10 +292,7 @@ namespace pkmn {
     )
     {
         // Input validation
-        if(amount < 1 or amount > 99)
-        {
-            pkmn::throw_out_of_range("amount", 1, 99);
-        }
+        pkmn::enforce_bounds("Amount", amount, 1, 99);
 
         /*
          * Check if this item is in the list. If so, remove that amount,
@@ -359,19 +359,17 @@ namespace pkmn {
     {
         // Input validation.
         int end_boundary = std::min<int>(_num_items, _capacity-1);
-        if(position < 0 or position > end_boundary)
-        {
-            pkmn::throw_out_of_range("position", 0, end_boundary);
-        }
+        pkmn::enforce_bounds("Position", position, 0, end_boundary);
+
         if(item_name == "None")
         {
             if(amount != 0)
             {
                 throw std::invalid_argument("\"None\" entries must have an amount of 0.");
             }
-            else if(amount < 0 or amount > 99)
+            else
             {
-                pkmn::throw_out_of_range("amount", 0, 99);
+                pkmn::enforce_bounds("Amount", amount, 0, 99);
             }
         }
         else
@@ -381,10 +379,8 @@ namespace pkmn {
             {
                 throw std::invalid_argument("This item does not belong in this pocket.");
             }
-            if(amount < 1 or amount > 99)
-            {
-                pkmn::throw_out_of_range("amount", 1, 99);
-            }
+
+            pkmn::enforce_bounds("Amount", amount, 1, 99);
             for(int i = 0; i < _num_items; ++i)
             {
                 if((_item_slots[i].item == item_name) && (i != position))

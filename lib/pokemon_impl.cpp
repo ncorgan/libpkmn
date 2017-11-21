@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "pokemon_impl.hpp"
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
@@ -543,14 +544,8 @@ namespace pkmn
         uint16_t* iv_data_ptr
     )
     {
-        if(not pkmn::string_is_gen1_stat(stat))
-        {
-            pkmn::throw_invalid_argument("stat", pkmn::GEN1_STATS);
-        }
-        else if(not pkmn::IV_in_bounds(value, false))
-        {
-            pkmn::throw_out_of_range("stat", 0, 15);
-        }
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::GEN1_STATS);
+        pkmn::enforce_IV_bounds(stat, value, false);
 
         PKSAV_CALL(
             pksav_set_gb_IV(
@@ -572,14 +567,8 @@ namespace pkmn
         uint32_t* iv_data_ptr
     )
     {
-        if(not pkmn::string_is_modern_stat(stat))
-        {
-            pkmn::throw_invalid_argument("stat", pkmn::MODERN_STATS);
-        }
-        else if(not pkmn::IV_in_bounds(value, true))
-        {
-            pkmn::throw_out_of_range("stat", 0, 31);
-        }
+        pkmn::enforce_value_in_vector("Stat", stat, pkmn::MODERN_STATS);
+        pkmn::enforce_IV_bounds(stat, value, true);
 
         PKSAV_CALL(
             pksav_set_IV(
@@ -608,14 +597,12 @@ namespace pkmn
         pksav_contest_stats_t* native_ptr
     )
     {
-        if(_contest_stats.find(stat) == _contest_stats.end())
-        {
-            throw std::invalid_argument("Invalid contest stat.");
-        }
-        if(value < 0 or value > 255)
-        {
-            pkmn::throw_out_of_range("value", 0, 255);
-        }
+        pkmn::enforce_value_in_map_keys(
+            "Contest stat",
+            stat,
+            _contest_stats
+        );
+        pkmn::enforce_bounds("Contest stat", value, 0, 255);
 
         SET_CONTEST_STAT("Cool",   cool);
         SET_CONTEST_STAT("Beauty", beauty);
@@ -644,10 +631,11 @@ namespace pkmn
         uint8_t* native_ptr
     )
     {
-        if(_markings.find(marking) == _markings.end())
-        {
-            throw std::invalid_argument("Invalid marking.");
-        }
+        pkmn::enforce_value_in_map_keys(
+            "Marking",
+            marking,
+            _markings
+        );
 
         SET_MARKING("Circle", PKSAV_MARKING_CIRCLE);
         SET_MARKING("Triangle", PKSAV_MARKING_TRIANGLE);

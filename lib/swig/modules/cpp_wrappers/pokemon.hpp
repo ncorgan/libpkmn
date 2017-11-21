@@ -8,6 +8,8 @@
 #ifndef CPP_WRAPPERS_POKEMON_HPP
 #define CPP_WRAPPERS_POKEMON_HPP
 
+#include "exception_internal.hpp"
+
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
@@ -387,10 +389,7 @@ namespace pkmn { namespace swig {
                 }
 
                 // TODO: Lua check
-                if(index < 0 or index > 3)
-                {
-                    pkmn::throw_out_of_range("index", 0, 3);
-                }
+                pkmn::enforce_bounds("Move index", index, 0, 3);
 
                 return _moves.at(index);
             }

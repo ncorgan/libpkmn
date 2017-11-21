@@ -5,9 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
@@ -18,11 +18,11 @@ namespace pkmn { namespace calculations {
         int IV_attack
     )
     {
-        // Input validation
-        if(IV_attack < 0 or IV_attack > 15)
-        {
-            pkmn::throw_out_of_range("IV_attack", 0, 15);
-        }
+        pkmn::enforce_IV_bounds(
+            "Attack",
+            IV_attack,
+            false
+        );
 
         pkmn::database::pokemon_entry entry(species, "Crystal", "");
         float chance_male = entry.get_chance_male();

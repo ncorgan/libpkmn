@@ -164,11 +164,9 @@ namespace pkmn { namespace qt {
         QImage* imageOut
     )
     {
-        if(generation < 3 or generation > 5)
-        {
-            pkmn::throw_out_of_range("generation", 3, 5);
-        }
-        else if(game_is_gamecube(generation))
+        pkmn::enforce_bounds("generation", generation, 3, 5);
+
+        if(game_is_gamecube(generation))
         {
             throw std::invalid_argument("No Gamecube support.");
         }

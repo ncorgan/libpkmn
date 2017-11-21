@@ -24,9 +24,7 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_ability_list(
         int generation
     ) {
-        if(generation < 3 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 3, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 3, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -48,9 +46,7 @@ namespace pkmn { namespace database {
         int generation,
         bool include_previous
     ) {
-        if(generation < 1 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 1, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -425,9 +421,7 @@ namespace pkmn { namespace database {
         int generation,
         bool include_previous
     ) {
-        if(generation < 1 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 1, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);
