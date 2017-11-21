@@ -32,6 +32,10 @@ namespace pkmn {
                 const pksav_nds_pc_pokemon_t &pc,
                 int game_id
             );
+            pokemon_ndsimpl(
+                const pksav_nds_party_pokemon_t &party,
+                int game_id
+            );
 
             ~pokemon_ndsimpl();
 

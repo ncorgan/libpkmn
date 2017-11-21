@@ -9,6 +9,7 @@
 #include "misc_common.hpp"
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_gbaimpl.hpp"
+#include "pokemon_ndsimpl.hpp"
 
 #include "conversions/gen3_conversions.hpp"
 
@@ -242,7 +243,7 @@ namespace pkmn
         const LibPkmGC::XD::Pokemon &native
     ): pokemon_impl(
            int(native.species),
-           XD 
+           XD
        )
     {
         // Connect to database
@@ -342,6 +343,19 @@ namespace pkmn
                 break;
 
             case 4:
+            {
+                pksav_nds_party_pokemon_t pksav_pokemon;
+                pkmn::conversions::gcn_pokemon_to_gen4_party(
+                    GC_RCAST,
+                    &pksav_pokemon,
+                    game_id
+                );
+
+                ret = pkmn::make_shared<pokemon_ndsimpl>(pksav_pokemon, game_id);
+                ret->set_original_game(get_original_game());
+                break;
+            }
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();

@@ -34,6 +34,20 @@ namespace pkmn { namespace conversions {
 
     static pkmn::database::sptr _db;
 
+    static const int FIRERED = 10;
+    static const int LEAFGREEN = 11;
+
+    static const int COLOSSEUM = 19;
+    static const int XD = 20;
+
+    static const int PLATINUM = 14;
+    static const int HEARTGOLD = 15;
+    static const int SOULSILVER = 16;
+
+    static const uint16_t GEN4_KANTO = pksav_littleendian16(0x07D3);
+    static const uint16_t GEN4_HOENN = pksav_littleendian16(0x07D5);
+    static const uint16_t GEN4_FARAWAY = pksav_littleendian16(0x0BBA);
+
     // TODO: move to conversions_common
     static int convert_item_game_index(
         int item_index,
@@ -50,7 +64,7 @@ namespace pkmn { namespace conversions {
                );
     }
 
-    BOOST_STATIC_CONSTEXPR LibPkmGC::ItemIndex MAX_GBA_ITEM_INDEX = LibPkmGC::TM50;
+    static const LibPkmGC::ItemIndex MAX_GBA_ITEM_INDEX = LibPkmGC::TM50;
 
     // TODO: PKSav enum
     typedef boost::bimap<uint16_t, LibPkmGC::LanguageIndex> gen3_language_bimap_t;
@@ -70,6 +84,7 @@ namespace pkmn { namespace conversions {
         uint32_t pksav_ribbon_offset;
         libpkmgc_contest_stat_t libpkmgc_contest_stat;
     } ribbon_values_t;
+
     static const std::vector<ribbon_values_t> GEN3_RIBBON_VALUES =
     {
         {PKSAV_GBA_COOL_MASK,   0,                       LIBPKMGC_CONTEST_STAT_COOL},
@@ -255,6 +270,218 @@ namespace pkmn { namespace conversions {
         to->partyData.currentHP = pksav_littleendian16(from->party_data.current_hp);
     }
 
+    void gba_pc_pokemon_to_gen4(
+        const pksav_gba_pc_pokemon_t* from,
+        pksav_nds_pc_pokemon_t* to,
+        int from_game_id,
+        int to_game_id
+    ) {
+        // Connect to database
+        pkmn::database::get_connection(_db);
+
+        pkmn::database::pokemon_entry gba_entry(
+            pksav_littleendian16(uint16_t(from->personality)),
+            from_game_id
+        );
+        pkmn::datetime now = pkmn::current_datetime();
+
+        std::memset(to, 0, sizeof(*to));
+
+        const pksav_gba_pokemon_growth_t* gba_growth = &from->blocks.growth;
+        const pksav_gba_pokemon_attacks_t* gba_attacks = &from->blocks.attacks;
+        const pksav_gba_pokemon_effort_t* gba_effort = &from->blocks.effort;
+        const pksav_gba_pokemon_misc_t* gba_misc = &from->blocks.misc;
+
+        pksav_nds_pokemon_blockA_t* nds_blockA = &to->blocks.blockA;
+        pksav_nds_pokemon_blockB_t* nds_blockB = &to->blocks.blockB;
+        pksav_nds_pokemon_blockC_t* nds_blockC = &to->blocks.blockC;
+        pksav_nds_pokemon_blockD_t* nds_blockD = &to->blocks.blockD;
+
+        uint16_t gba_origin_game = (gba_misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK) >> PKSAV_GBA_ORIGIN_GAME_OFFSET;
+        uint16_t gba_ball = (gba_misc->origin_info & PKSAV_GBA_BALL_MASK) >> PKSAV_GBA_BALL_OFFSET;
+        uint16_t gba_level_met = gba_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK;
+
+        to->personality = from->personality;
+        to->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
+        if(gba_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK) {
+            to->isdecrypted_isegg |= PKSAV_NDS_IS_EGG_MASK;
+        }
+
+        nds_blockA->species = pksav_littleendian16(uint16_t(convert_pokemon_game_index(
+                                  pksav_littleendian16(gba_growth->species),
+                                  pkmn::database::game_index_to_id(gba_origin_game),
+                                  to_game_id
+                              )));
+        nds_blockA->held_item = pksav_littleendian16(uint16_t(convert_item_game_index(
+                                    pksav_littleendian16(gba_growth->held_item),
+                                    3, 4
+                                )));
+        nds_blockA->exp = gba_growth->exp;
+        nds_blockA->ot_id = from->ot_id;
+        nds_blockA->friendship = gba_growth->friendship;
+
+        std::pair<std::string, std::string> abilities = gba_entry.get_abilities();
+        if(abilities.second == "None") {
+            nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.first));
+        } else {
+            if(pksav_littleendian16(to->personality) % 2) {
+                nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.second));
+            } else {
+                nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.first));
+            }
+        }
+
+        nds_blockA->markings = from->markings;
+
+        // Korea was stored differently between generations.
+        if(pksav_littleendian16(from->language) == 0x0206) {
+            nds_blockA->country = 0x8;
+        } else {
+            nds_blockA->country = uint8_t(pksav_littleendian16(from->language) - 0x0200);
+        }
+
+        // EVs and contest stats are stored with the same layout, so just copy them all at once.
+        std::memcpy(&nds_blockA->ev_hp, gba_effort, sizeof(*gba_effort));
+
+        // Moves and move PPs are stored with the same layout, so just copy them all at once.
+        std::memcpy(&nds_blockB->moves, gba_attacks, sizeof(*gba_attacks));
+
+        // PP Up usage is stored in a bitfield in GBA but in an array in NDS games.
+        for(size_t i = 0; i < 4; ++i) {
+            nds_blockB->move_pp_ups[i] = (gba_growth->pp_up & (0x2 << (2*i))) >> (0x2 >> (2*i));
+        }
+
+        /*
+         * Bring over IVs, remove the GBA masks, and apply what NDS masks we can. We'll revisit this
+         * for the nickname field.
+         */
+        nds_blockB->iv_isegg_isnicknamed = gba_misc->iv_egg_ability;
+        nds_blockB->iv_isegg_isnicknamed &= ~PKSAV_GBA_ABILITY_MASK;
+        if(nds_blockB->iv_isegg_isnicknamed & PKSAV_GBA_EGG_MASK) {
+            nds_blockB->iv_isegg_isnicknamed &= ~PKSAV_GBA_EGG_MASK;
+            nds_blockB->iv_isegg_isnicknamed |= PKSAV_NDS_ISEGG_MASK;
+        }
+
+        nds_blockB->hoenn_ribbons = gba_misc->ribbons_obedience;
+
+        std::string gender = pkmn::calculations::modern_pokemon_gender(
+                                 gba_entry.get_species(),
+                                 pksav_littleendian32(to->personality)
+                             );
+        if(gender == "Female") {
+            nds_blockB->form_encounterinfo |= PKSAV_NDS_FEMALE_MASK;
+        } else if(gender == "Genderless") {
+            nds_blockB->form_encounterinfo |= PKSAV_NDS_GENDERLESS_MASK;
+        }
+
+        if(to_game_id == PLATINUM)
+        {
+            if(from_game_id == FIRERED or from_game_id == LEAFGREEN)
+            {
+                nds_blockB->eggmet_plat = GEN4_KANTO;
+                nds_blockB->met_plat = GEN4_KANTO;
+            }
+            else if(from_game_id == COLOSSEUM or from_game_id == XD)
+            {
+                nds_blockB->eggmet_plat = GEN4_FARAWAY;
+                nds_blockB->met_plat = GEN4_FARAWAY;
+            }
+            else
+            {
+                nds_blockB->eggmet_plat = GEN4_HOENN;
+                nds_blockB->met_plat = GEN4_HOENN;
+            }
+        }
+
+        char nickname[10] = {0};
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                from->nickname,
+                nickname,
+                10
+            )
+        );
+        PKSAV_CALL(
+            pksav_text_to_gen4(
+                nickname,
+                nds_blockC->nickname,
+                10
+            )
+        );
+
+        nds_blockC->hometown = uint8_t(gba_origin_game);
+
+        char otname[7] = {0};
+        PKSAV_CALL(
+            pksav_text_from_gba(
+                from->otname,
+                otname,
+                7
+            )
+        );
+        PKSAV_CALL(
+            pksav_text_to_gen4(
+                otname,
+                nds_blockD->otname,
+                7
+            )
+        );
+
+        libpkmn_datetime_to_pksav_date(
+            now,
+            &nds_blockD->met_date
+        );
+        libpkmn_datetime_to_pksav_date(
+            now,
+            &nds_blockD->eggmet_date
+        );
+
+        if(to_game_id != PLATINUM)
+        {
+            if(from_game_id == FIRERED or from_game_id == LEAFGREEN)
+            {
+                nds_blockD->eggmet_dp = GEN4_KANTO;
+                nds_blockD->met_dp = GEN4_KANTO;
+            }
+            else if(from_game_id == COLOSSEUM or from_game_id == XD)
+            {
+                nds_blockD->eggmet_dp = GEN4_FARAWAY;
+                nds_blockD->met_dp = GEN4_FARAWAY;
+            }
+            else
+            {
+                nds_blockD->eggmet_dp = GEN4_HOENN;
+                nds_blockD->met_dp = GEN4_HOENN;
+            }
+        }
+
+        if(to_game_id == HEARTGOLD or to_game_id == SOULSILVER) {
+            nds_blockD->ball_hgss = uint8_t(gba_ball);
+        } else {
+            nds_blockD->ball = uint8_t(gba_ball);
+        }
+
+        nds_blockD->metlevel_otgender = uint8_t(gba_level_met);
+    }
+
+    void gba_party_pokemon_to_gen4(
+        const pksav_gba_party_pokemon_t* from,
+        pksav_nds_party_pokemon_t* to,
+        int from_game_id,
+        int to_game_id
+    ) {
+        gba_pc_pokemon_to_gen4(
+            &from->pc,
+            &to->pc,
+            from_game_id,
+            to_game_id
+        );
+
+        to->party_data.level = from->party_data.level;
+        std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 6*sizeof(uint16_t));
+        to->party_data.current_hp = to->party_data.max_hp;
+    }
+
     void gcn_pokemon_to_gba_pc(
         const LibPkmGC::GC::Pokemon* from,
         pksav_gba_pc_pokemon_t* to
@@ -422,208 +649,64 @@ namespace pkmn { namespace conversions {
         to->party_data.spdef        = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPDEF]);
     }
 
-    BOOST_STATIC_CONSTEXPR int FIRERED = 10;
-    BOOST_STATIC_CONSTEXPR int LEAFGREEN = 11;
-
-    BOOST_STATIC_CONSTEXPR int PLATINUM = 14;
-    BOOST_STATIC_CONSTEXPR int HEARTGOLD = 15;
-    BOOST_STATIC_CONSTEXPR int SOULSILVER = 16;
-
-    static const uint16_t GEN4_KANTO = pksav_littleendian16(0x07D3);
-    static const uint16_t GEN4_HOENN = pksav_littleendian16(0x07D5);
-
-    void gba_pc_pokemon_to_gen4(
-        const pksav_gba_pc_pokemon_t* from,
+    void gcn_pokemon_to_gen4_pc(
+        const LibPkmGC::GC::Pokemon* from,
         pksav_nds_pc_pokemon_t* to,
-        int from_game_id,
         int to_game_id
-    ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        pkmn::database::pokemon_entry gba_entry(
-            pksav_littleendian16(uint16_t(from->personality)),
-            from_game_id
-        );
-        pkmn::datetime now = pkmn::current_datetime();
-
-        std::memset(to, 0, sizeof(*to));
-
-        const pksav_gba_pokemon_growth_t* gba_growth = &from->blocks.growth;
-        const pksav_gba_pokemon_attacks_t* gba_attacks = &from->blocks.attacks;
-        const pksav_gba_pokemon_effort_t* gba_effort = &from->blocks.effort;
-        const pksav_gba_pokemon_misc_t* gba_misc = &from->blocks.misc;
-
-        pksav_nds_pokemon_blockA_t* nds_blockA = &to->blocks.blockA;
-        pksav_nds_pokemon_blockB_t* nds_blockB = &to->blocks.blockB;
-        pksav_nds_pokemon_blockC_t* nds_blockC = &to->blocks.blockC;
-        pksav_nds_pokemon_blockD_t* nds_blockD = &to->blocks.blockD;
-
-        uint16_t gba_origin_game = (gba_misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK) >> PKSAV_GBA_ORIGIN_GAME_OFFSET;
-        uint16_t gba_ball = (gba_misc->origin_info & PKSAV_GBA_BALL_MASK) >> PKSAV_GBA_BALL_OFFSET;
-        uint16_t gba_level_met = gba_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK;
-
-        to->personality = from->personality;
-        to->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
-        if(gba_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK) {
-            to->isdecrypted_isegg |= PKSAV_NDS_IS_EGG_MASK;
-        }
-
-        nds_blockA->species = pksav_littleendian16(uint16_t(convert_pokemon_game_index(
-                                  pksav_littleendian16(gba_growth->species),
-                                  pkmn::database::game_index_to_id(gba_origin_game),
-                                  to_game_id
-                              )));
-        nds_blockA->held_item = pksav_littleendian16(uint16_t(convert_item_game_index(
-                                    pksav_littleendian16(gba_growth->held_item),
-                                    3, 4
-                                )));
-        nds_blockA->exp = gba_growth->exp;
-        nds_blockA->ot_id = from->ot_id;
-        nds_blockA->friendship = gba_growth->friendship;
-
-        std::pair<std::string, std::string> abilities = gba_entry.get_abilities();
-        if(abilities.second == "None") {
-            nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.first));
-        } else {
-            if(pksav_littleendian16(to->personality) % 2) {
-                nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.second));
-            } else {
-                nds_blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.first));
-            }
-        }
-
-        nds_blockA->markings = from->markings;
-
-        // Korea was stored differently between generations.
-        if(pksav_littleendian16(from->language) == 0x0206) {
-            nds_blockA->country = 0x8;
-        } else {
-            nds_blockA->country = uint8_t(pksav_littleendian16(from->language) - 0x0200);
-        }
-
-        // EVs and contest stats are stored with the same layout, so just copy them all at once.
-        std::memcpy(&nds_blockA->ev_hp, gba_effort, sizeof(*gba_effort));
-
-        // Moves and move PPs are stored with the same layout, so just copy them all at once.
-        std::memcpy(&nds_blockB->moves, gba_attacks, sizeof(*gba_attacks));
-
-        // PP Up usage is stored in a bitfield in GBA but in an array in NDS games.
-        for(size_t i = 0; i < 4; ++i) {
-            nds_blockB->move_pp_ups[i] = (gba_growth->pp_up & (0x2 << (2*i))) >> (0x2 >> (2*i));
-        }
-
-        /*
-         * Bring over IVs, remove the GBA masks, and apply what NDS masks we can. We'll revisit this
-         * for the nickname field.
-         */
-        nds_blockB->iv_isegg_isnicknamed = gba_misc->iv_egg_ability;
-        nds_blockB->iv_isegg_isnicknamed &= ~PKSAV_GBA_ABILITY_MASK;
-        if(nds_blockB->iv_isegg_isnicknamed & PKSAV_GBA_EGG_MASK) {
-            nds_blockB->iv_isegg_isnicknamed &= ~PKSAV_GBA_EGG_MASK;
-            nds_blockB->iv_isegg_isnicknamed |= PKSAV_NDS_ISEGG_MASK;
-        }
-
-        nds_blockB->hoenn_ribbons = gba_misc->ribbons_obedience;
-
-        std::string gender = pkmn::calculations::modern_pokemon_gender(
-                                 gba_entry.get_species(),
-                                 pksav_littleendian32(to->personality)
-                             );
-        if(gender == "Female") {
-            nds_blockB->form_encounterinfo |= PKSAV_NDS_FEMALE_MASK;
-        } else if(gender == "Genderless") {
-            nds_blockB->form_encounterinfo |= PKSAV_NDS_GENDERLESS_MASK;
-        }
-
-        if(to_game_id == PLATINUM) {
-            if(from_game_id == FIRERED or from_game_id == LEAFGREEN) {
-                nds_blockB->eggmet_plat = GEN4_KANTO;
-                nds_blockB->met_plat = GEN4_KANTO;
-            } else {
-                nds_blockB->eggmet_plat = GEN4_HOENN;
-                nds_blockB->met_plat = GEN4_HOENN;
-            }
-        }
-
-        char nickname[10] = {0};
-        PKSAV_CALL(
-            pksav_text_from_gba(
-                from->nickname,
-                nickname,
-                10
-            )
-        );
-        PKSAV_CALL(
-            pksav_text_to_gen4(
-                nickname,
-                nds_blockC->nickname,
-                10
-            )
+    )
+    {
+        pksav_gba_pc_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_pc(
+            from,
+            &gba_pokemon
         );
 
-        nds_blockC->hometown = uint8_t(gba_origin_game);
-
-        char otname[7] = {0};
-        PKSAV_CALL(
-            pksav_text_from_gba(
-                from->otname,
-                otname,
-                7
-            )
-        );
-        PKSAV_CALL(
-            pksav_text_to_gen4(
-                otname,
-                nds_blockD->otname,
-                7
-            )
-        );
-
-        libpkmn_datetime_to_pksav_date(
-            now,
-            &nds_blockD->met_date
-        );
-        libpkmn_datetime_to_pksav_date(
-            now,
-            &nds_blockD->eggmet_date
-        );
-
-        if(to_game_id != PLATINUM) {
-            if(from_game_id == FIRERED or from_game_id == LEAFGREEN) {
-                nds_blockD->eggmet_dp = GEN4_KANTO;
-                nds_blockD->met_dp = GEN4_KANTO;
-            } else {
-                nds_blockD->eggmet_dp = GEN4_HOENN;
-                nds_blockD->met_dp = GEN4_HOENN;
-            }
+        int gcn_game_id = 0;
+        if(dynamic_cast<const LibPkmGC::Colosseum::Pokemon*>(from))
+        {
+            gcn_game_id = COLOSSEUM;
+        }
+        else
+        {
+            gcn_game_id = XD;
         }
 
-        if(to_game_id == HEARTGOLD or to_game_id == SOULSILVER) {
-            nds_blockD->ball_hgss = uint8_t(gba_ball);
-        } else {
-            nds_blockD->ball = uint8_t(gba_ball);
-        }
-
-        nds_blockD->metlevel_otgender = uint8_t(gba_level_met);
-    }
-
-    void gba_party_pokemon_to_gen4(
-        const pksav_gba_party_pokemon_t* from,
-        pksav_nds_party_pokemon_t* to,
-        int from_game_id,
-        int to_game_id
-    ) {
         gba_pc_pokemon_to_gen4(
-            &from->pc,
-            &to->pc,
-            from_game_id,
+            &gba_pokemon,
+            to,
+            gcn_game_id,
             to_game_id
         );
+    }
 
-        to->party_data.level = from->party_data.level;
-        std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 6*sizeof(uint16_t));
-        to->party_data.current_hp = to->party_data.max_hp;
+    void gcn_pokemon_to_gen4_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_party_pokemon_t* to,
+        int to_game_id
+    )
+    {
+        pksav_gba_party_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_party(
+            from,
+            &gba_pokemon
+        );
+
+        int gcn_game_id = 0;
+        if(dynamic_cast<const LibPkmGC::Colosseum::Pokemon*>(from))
+        {
+            gcn_game_id = COLOSSEUM;
+        }
+        else
+        {
+            gcn_game_id = XD;
+        }
+
+        gba_party_pokemon_to_gen4(
+            &gba_pokemon,
+            to,
+            gcn_game_id,
+            to_game_id
+        );
     }
 
 }}

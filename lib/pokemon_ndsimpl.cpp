@@ -42,8 +42,8 @@
 #include <random>
 #include <stdexcept>
 
-#define NDS_PC_RCAST    reinterpret_cast<pksav_nds_pc_pokemon_t*>(_native_pc)
-#define NDS_PARTY_RCAST reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party)
+#define NDS_PC_RCAST    (reinterpret_cast<pksav_nds_pc_pokemon_t*>(_native_pc))
+#define NDS_PARTY_RCAST (reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party))
 
 namespace pkmn {
 
@@ -225,6 +225,44 @@ namespace pkmn {
             reinterpret_cast<pksav_nds_pokemon_party_data_t*>(_native_party)
         );
         _our_party_mem = true;
+
+        // Set _block pointers
+        _blockA = &NDS_PC_RCAST->blocks.blockA;
+        _blockB = &NDS_PC_RCAST->blocks.blockB;
+        _blockC = &NDS_PC_RCAST->blocks.blockC;
+        _blockD = &NDS_PC_RCAST->blocks.blockD;
+
+        _set_default_nickname();
+
+        // Populate abstractions
+        _update_held_item();
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA->contest_stats);
+        _init_markings_map(&_blockA->markings);
+        _update_stat_map();
+        _update_moves(-1);
+    }
+
+    pokemon_ndsimpl::pokemon_ndsimpl(
+        const pksav_nds_party_pokemon_t& party,
+        int game_id
+    ): pokemon_impl(
+           pksav_littleendian16(party.pc.blocks.blockA.species),
+           game_id
+       ),
+       _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
+       _plat(game_id == PLATINUM),
+       _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
+    {
+        _native_pc = reinterpret_cast<void*>(new pksav_nds_pc_pokemon_t);
+        *NDS_PC_RCAST = party.pc;
+        _our_pc_mem = false;
+
+        _native_party = reinterpret_cast<void*>(new pksav_nds_pokemon_party_data_t);
+        *NDS_PARTY_RCAST = party.party_data;
+        _our_party_mem = false;
 
         // Set _block pointers
         _blockA = &NDS_PC_RCAST->blocks.blockA;

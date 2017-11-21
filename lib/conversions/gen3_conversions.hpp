@@ -15,6 +15,8 @@
 
 namespace pkmn { namespace conversions {
 
+    // From GBA
+
     void gba_pc_pokemon_to_gcn(
         const pksav_gba_pc_pokemon_t* from,
         LibPkmGC::GC::Pokemon* to
@@ -23,16 +25,6 @@ namespace pkmn { namespace conversions {
     void gba_party_pokemon_to_gcn(
         const pksav_gba_party_pokemon_t* from,
         LibPkmGC::GC::Pokemon* to
-    );
-
-    void gcn_pokemon_to_gba_pc(
-        const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_pc_pokemon_t* to
-    );
-
-    void gcn_pokemon_to_gba_party(
-        const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_party_pokemon_t* to
     );
 
     void gba_pc_pokemon_to_gen4(
@@ -46,6 +38,30 @@ namespace pkmn { namespace conversions {
         const pksav_gba_party_pokemon_t* from,
         pksav_nds_party_pokemon_t* to,
         int from_game_id,
+        int to_game_id
+    );
+
+    // From GCN
+
+    void gcn_pokemon_to_gba_pc(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_gba_pc_pokemon_t* to
+    );
+
+    void gcn_pokemon_to_gba_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_gba_party_pokemon_t* to
+    );
+
+    void gcn_pokemon_to_gen4_pc(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_pc_pokemon_t* to,
+        int to_game_id
+    );
+
+    void gcn_pokemon_to_gen4_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_party_pokemon_t* to,
         int to_game_id
     );
 
