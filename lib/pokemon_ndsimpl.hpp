@@ -79,7 +79,7 @@ namespace pkmn {
 
             void set_shininess(
                 bool value
-            );
+            ) override final;
 
             std::string get_held_item() override final;
 
@@ -234,15 +234,15 @@ namespace pkmn {
 
             void _set_default_nickname();
 
-            void _populate_party_data();
+            void _populate_party_data() override final;
 
             void _update_moves(
                 int index
-            );
+            ) override final;
 
-            void _update_ribbons_map();
-            void _update_EV_map();
-            void _update_stat_map();
+            void _update_ribbons_map() override final;
+            void _update_EV_map() override final;
+            void _update_stat_map() override final;
 
             bool _gen4, _plat, _hgss;
 
