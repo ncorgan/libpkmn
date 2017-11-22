@@ -325,8 +325,6 @@ namespace pkmn
                         }
                         ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
-
-                    ret->set_level_met(get_level());
                 }
                 else
                 {
@@ -338,8 +336,6 @@ namespace pkmn
 
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                 }
-
-                ret->set_original_game(get_original_game());
                 break;
 
             case 4:
@@ -352,7 +348,6 @@ namespace pkmn
                 );
 
                 ret = pkmn::make_shared<pokemon_ndsimpl>(pksav_pokemon, game_id);
-                ret->set_original_game(get_original_game());
                 break;
             }
 
@@ -364,6 +359,7 @@ namespace pkmn
                 throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
         }
 
+        ret->set_original_game(get_original_game());
         return ret;
     }
 

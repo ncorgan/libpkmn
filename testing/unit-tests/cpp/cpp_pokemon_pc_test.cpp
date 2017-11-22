@@ -18,6 +18,7 @@
 #include <pksav/gen1.h>
 #include <pksav/gen2.h>
 #include <pksav/gba.h>
+#include <pksav/gen4.h>
 
 #include <pkmn/exception.hpp>
 
@@ -97,9 +98,19 @@ void pokemon_box_test_common(
     std::string game = box->get_game();
     int generation = game_generations.at(game);
 
+    std::string too_long_name;
+    if(generation >= 4)
+    {
+        too_long_name = "ABCDEFGHIJK";
+    }
+    else
+    {
+        too_long_name = "ABCDEFGHI";
+    }
+
     if(generation >= 2) {
         EXPECT_THROW(
-            box->set_name("ABCDEFGHI");
+            box->set_name(too_long_name);
         , std::invalid_argument);
 
         box->set_name("ABCDEFGH");
@@ -223,11 +234,14 @@ void pokemon_box_test_common(
     EXPECT_NE(original_second->get_native_pc_data(), box->get_pokemon(1)->get_native_pc_data());
 
     // On the C++ level, check the underlying representation.
-    switch(generation) {
-        case 1: {
+    switch(generation)
+    {
+        case 1:
+            {
             const pksav_gen1_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen1_pokemon_box_t*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-            for(size_t i = 0; i < 3; ++i) {
+            for(size_t i = 0; i < 3; ++i)
+            {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->entries[i].species));
                 EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
@@ -256,10 +270,12 @@ void pokemon_box_test_common(
             break;
         }
 
-        case 2: {
+        case 2:
+        {
             const pksav_gen2_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen2_pokemon_box_t*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-            for(size_t i = 0; i < 3; ++i) {
+            for(size_t i = 0; i < 3; ++i)
+            {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->entries[i].species));
                 EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
@@ -288,19 +304,48 @@ void pokemon_box_test_common(
             break;
         }
 
-        case 3: {
-            if(game == "Colosseum" or game == "XD") {
+        case 3:
+        {
+            if(game == "Colosseum" or game == "XD")
+            {
                 const LibPkmGC::GC::PokemonBox* native_box = reinterpret_cast<const LibPkmGC::GC::PokemonBox*>(box->get_native());
                 const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-                for(size_t i = 0; i < pokemon_list.size(); ++i) {
+                for(size_t i = 0; i < pokemon_list.size(); ++i)
+                {
                     EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), native_box->pkm[i]);
                 }
 
                 EXPECT_EQ(box->get_name(), std::string(native_box->name->toUTF8()));
-            } else {
+            }
+            else
+            {
                 const pksav_gba_pokemon_box_t* native_box = reinterpret_cast<const pksav_gba_pokemon_box_t*>(box->get_native());
                 const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
-                for(size_t i = 0; i < pokemon_list.size(); ++i) {
+                for(size_t i = 0; i < pokemon_list.size(); ++i)
+                {
+                    EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
+                }
+            }
+            break;
+        }
+
+        case 4:
+        {
+            if(game == "HeartGold" or game == "SoulSilver")
+            {
+                const pksav_hgss_pokemon_box_t* native_box = reinterpret_cast<const pksav_hgss_pokemon_box_t*>(box->get_native());
+                const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
+                for(size_t i = 0; i < pokemon_list.size(); ++i)
+                {
+                    EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
+                }
+            }
+            else
+            {
+                const pksav_dppt_pokemon_box_t* native_box = reinterpret_cast<const pksav_dppt_pokemon_box_t*>(box->get_native());
+                const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
+                for(size_t i = 0; i < pokemon_list.size(); ++i)
+                {
                     EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
                 }
             }
@@ -326,6 +371,24 @@ void pokemon_box_test_common(
         EXPECT_EQ("Pikachu", box_pokemon->get_species());
         EXPECT_EQ(test_params.box_game, box_pokemon->get_game());
         EXPECT_EQ(50, box_pokemon->get_level());
+
+        if(generation >= 2)
+        {
+            box_pokemon->set_level(60);
+            EXPECT_EQ(60, box_pokemon->get_level());
+            EXPECT_EQ(50, box_pokemon->get_level_met());
+        }
+        if(generation >= 3)
+        {
+            if((valid_game == "Colosseum") or (valid_game == "XD"))
+            {
+                EXPECT_EQ("Colosseum/XD", box_pokemon->get_original_game());
+            }
+            else
+            {
+                EXPECT_EQ(valid_game, box_pokemon->get_original_game());
+            }
+        }
     }
 
     pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
@@ -437,7 +500,6 @@ void pokemon_pc_test_common(
                     const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
                     EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[0]->species));
                     EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[1]->species));
-                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[0]->species));
                     EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_boxes[i]->pkm[2]->species));
                     EXPECT_EQ(pokemon_box_list.at(i)->get_native(), native_boxes[i]);
                     EXPECT_EQ(std::string(native_boxes[i]->name->toUTF8()), box_names.at(i));
@@ -450,7 +512,6 @@ void pokemon_pc_test_common(
                     const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
                     EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i].entries[0].blocks.growth.species));
                     EXPECT_EQ(pokemon_list.at(1)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i].entries[1].blocks.growth.species));
-                    EXPECT_EQ(pokemon_list.at(0)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i].entries[0].blocks.growth.species));
                     EXPECT_EQ(pokemon_list.at(2)->get_database_entry().get_pokemon_index(), int(native_pc->boxes[i].entries[2].blocks.growth.species));
                     EXPECT_EQ(pokemon_box_list.at(i)->get_native(), &native_pc->boxes[i]);
 
@@ -460,6 +521,76 @@ void pokemon_pc_test_common(
                             native_pc->box_names[i],
                             box_name,
                             9
+                        );
+                    )
+                    EXPECT_EQ(std::string(box_name), box_names.at(i));
+                }
+            }
+            break;
+        }
+
+        case 4:
+        {
+            pksav_gen4_pokemon_pc_t* native_pc = reinterpret_cast<pksav_gen4_pokemon_pc_t*>(pc->get_native());
+            const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
+            const std::vector<std::string>& box_names = pc->get_box_names();
+            for(size_t i = 0; i < pokemon_box_list.size(); ++i)
+            {
+                const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
+                if(game == "HeartGold" or game == "SoulSilver")
+                {
+                    EXPECT_EQ(
+                        pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->hgss.boxes[i].entries[0].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->hgss.boxes[i].entries[1].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->hgss.boxes[i].entries[2].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_box_list.at(i)->get_native(),
+                        &native_pc->hgss.boxes[i]
+                    );
+
+                    char box_name[12] = {0};
+                    PKSAV_CALL(
+                        pksav_text_from_gen4(
+                            native_pc->hgss.box_names[i].name,
+                            box_name,
+                            11
+                        );
+                    )
+                    EXPECT_EQ(std::string(box_name), box_names.at(i));
+                }
+                else
+                {
+                    EXPECT_EQ(
+                        pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->dppt.boxes[i].entries[0].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->dppt.boxes[i].entries[1].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
+                        int(native_pc->dppt.boxes[i].entries[2].blocks.blockA.species)
+                    );
+                    EXPECT_EQ(
+                        pokemon_box_list.at(i)->get_native(),
+                        &native_pc->dppt.boxes[i]
+                    );
+
+                    char box_name[12] = {0};
+                    PKSAV_CALL(
+                        pksav_text_from_gen4(
+                            native_pc->dppt.box_names[i].name,
+                            box_name,
+                            11
                         );
                     )
                     EXPECT_EQ(std::string(box_name), box_names.at(i));
@@ -488,6 +619,21 @@ static const test_params_t PARAMS[] =
     {"LeafGreen", {"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver"},
     {"Colosseum", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal"},
     {"XD", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red"},
+    {"Diamond", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+                 "Colosseum", "XD", "Pearl", "Platinum", "HeartGold",
+                 "SoulSilver"}, "Red"},
+    {"Pearl", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+               "Colosseum", "XD", "Diamond", "Platinum", "HeartGold",
+               "SoulSilver"}, "Blue"},
+    {"Platinum", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+                  "Colosseum", "XD", "Diamond", "Pearl", "HeartGold",
+                  "SoulSilver"}, "Yellow"},
+    {"HeartGold", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+                   "Colosseum", "XD", "Diamond", "Pearl", "Platinum",
+                   "SoulSilver"}, "Black"},
+    {"SoulSilver", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen",
+                    "Colosseum", "XD", "Diamond", "Pearl", "Platinum",
+                    "HeartGold"}, "White"}
 };
 
 namespace pkmntest {

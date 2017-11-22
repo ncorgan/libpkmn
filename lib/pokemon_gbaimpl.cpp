@@ -9,6 +9,7 @@
 #include "misc_common.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
+#include "pokemon_ndsimpl.hpp"
 
 #include "conversions/gen3_conversions.hpp"
 #include "database/database_common.hpp"
@@ -35,6 +36,7 @@
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
+#include <pksav/common/nds_pokemon.h>
 #include <pksav/common/stats.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
@@ -349,11 +351,36 @@ namespace pkmn
                 {
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                     ret->set_level_met(get_level());
-                    ret->set_original_game(get_game());
+
+                    // The original game field stores both Gamecube games with
+                    // the same index.
+                    std::string original_game = get_original_game();
+                    if(original_game == "Colosseum/XD")
+                    {
+                        // Which we use doesn't matter.
+                        ret->set_original_game("Colosseum");
+                    }
+                    else
+                    {
+                        ret->set_original_game(get_original_game());
+                    }
                 }
                 break;
 
             case 4:
+            {
+                pksav_nds_party_pokemon_t gen4_pokemon;
+                pkmn::conversions::gba_party_pokemon_to_gen4(
+                    &pksav_pokemon,
+                    &gen4_pokemon,
+                    _database_entry.get_game_id(),
+                    game_id
+                );
+
+                ret = pkmn::make_shared<pokemon_ndsimpl>(gen4_pokemon, game_id);
+                break;
+            }
+
             case 5:
             case 6:
                 throw pkmn::unimplemented_error();

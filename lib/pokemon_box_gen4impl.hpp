@@ -31,19 +31,14 @@ namespace pkmn {
                 const std::string &name
             ) override final;
 
-            int get_num_pokemon() override final;
-
             int get_capacity() override final;
 
-            // TODO
+            int get_num_pokemon() override final;
+
             void set_pokemon(
                 int index,
                 pkmn::pokemon::sptr new_pokemon
-            ) override final
-            {
-                (void)index;
-                (void)new_pokemon;
-            }
+            ) override final;
 
         private:
             void _from_native();

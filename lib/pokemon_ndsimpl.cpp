@@ -319,7 +319,8 @@ namespace pkmn {
             {
                 ret = pkmn::make_shared<pokemon_ndsimpl>(pksav_pokemon, game_id);
                 ret->set_level_met(get_level());
-                ret->set_original_game(get_game());
+                ret->set_original_game(get_original_game());
+                break;
             }
 
             case 5: // TODO
@@ -935,21 +936,44 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
-        return pkmn::database::game_index_to_name(_blockC->hometown);
+        std::string ret;
+
+        // Colosseum and XD are stored with the same index.
+        if(_blockC->hometown == 15)
+        {
+            ret = "Colosseum/XD";
+        }
+        else
+        {
+            ret = pkmn::database::game_index_to_name(_blockC->hometown);
+        }
+
+        return ret;
     }
 
     void pokemon_ndsimpl::set_original_game(
         const std::string &game
     )
     {
-        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+        std::string internal_game;
+        if(game == "Colosseum/XD")
+        {
+            internal_game = "Colosseum";
+        }
+        else
+        {
+            internal_game = game;
+        }
 
-        int generation = pkmn::database::game_name_to_generation(game);
-        if(generation < 3 or generation > _generation) {
+        int generation = pkmn::database::game_name_to_generation(internal_game);
+        if((generation < 3) or (generation > _generation))
+        {
             throw std::invalid_argument("Invalid game.");
         }
 
-        _blockC->hometown = uint8_t(pkmn::database::game_name_to_index(game));
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        _blockC->hometown = uint8_t(pkmn::database::game_name_to_index(internal_game));
     }
 
     uint32_t pokemon_ndsimpl::get_personality()

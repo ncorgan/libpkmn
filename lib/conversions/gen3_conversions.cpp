@@ -53,11 +53,17 @@ namespace pkmn { namespace conversions {
         int item_index,
         int from_generation,
         int to_generation
-    ) {
+    )
+    {
+        if(item_index == 0)
+        {
+            return 0;
+        }
+
         static BOOST_CONSTEXPR const char* query = \
             "SELECT game_index FROM item_game_indices WHERE generation_id=? AND "
             "item_id=(SELECT item_id FROM item_game_indices WHERE game_index=? "
-            "AND generation_id=?";
+            "AND generation_id=?)";
 
         return pkmn::database::query_db_bind3<int, int, int, int>(
                    _db, query, to_generation, item_index, from_generation
@@ -279,10 +285,6 @@ namespace pkmn { namespace conversions {
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        pkmn::database::pokemon_entry gba_entry(
-            pksav_littleendian16(uint16_t(from->personality)),
-            from_game_id
-        );
         pkmn::datetime now = pkmn::current_datetime();
 
         std::memset(to, 0, sizeof(*to));
@@ -300,6 +302,11 @@ namespace pkmn { namespace conversions {
         uint16_t gba_origin_game = (gba_misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK) >> PKSAV_GBA_ORIGIN_GAME_OFFSET;
         uint16_t gba_ball = (gba_misc->origin_info & PKSAV_GBA_BALL_MASK) >> PKSAV_GBA_BALL_OFFSET;
         uint16_t gba_level_met = gba_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK;
+
+        pkmn::database::pokemon_entry gba_entry(
+            pksav_littleendian16(gba_growth->species),
+            from_game_id
+        );
 
         to->personality = from->personality;
         to->isdecrypted_isegg |= PKSAV_NDS_PC_DATA_DECRYPTED_MASK;
@@ -365,7 +372,7 @@ namespace pkmn { namespace conversions {
         nds_blockB->hoenn_ribbons = gba_misc->ribbons_obedience;
 
         std::string gender = pkmn::calculations::modern_pokemon_gender(
-                                 gba_entry.get_species(),
+                                 gba_entry.get_name(),
                                  pksav_littleendian32(to->personality)
                              );
         if(gender == "Female") {
