@@ -359,6 +359,7 @@ namespace pkmn
                 throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
         }
 
+        ret->set_level_met(get_level());
         ret->set_original_game(get_original_game());
         return ret;
     }

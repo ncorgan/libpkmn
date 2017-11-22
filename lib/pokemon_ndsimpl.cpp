@@ -318,8 +318,6 @@ namespace pkmn {
             case 4:
             {
                 ret = pkmn::make_shared<pokemon_ndsimpl>(pksav_pokemon, game_id);
-                ret->set_level_met(get_level());
-                ret->set_original_game(get_original_game());
                 break;
             }
 
@@ -331,6 +329,8 @@ namespace pkmn {
                 throw std::invalid_argument("Generation IV Pokémon can only be converted to Generation IV-VI.");
         }
 
+        ret->set_level_met(get_level());
+        ret->set_original_game(get_original_game());
         return ret;
     }
 

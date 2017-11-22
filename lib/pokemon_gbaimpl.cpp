@@ -350,20 +350,6 @@ namespace pkmn
                 else
                 {
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
-                    ret->set_level_met(get_level());
-
-                    // The original game field stores both Gamecube games with
-                    // the same index.
-                    std::string original_game = get_original_game();
-                    if(original_game == "Colosseum/XD")
-                    {
-                        // Which we use doesn't matter.
-                        ret->set_original_game("Colosseum");
-                    }
-                    else
-                    {
-                        ret->set_original_game(get_original_game());
-                    }
                 }
                 break;
 
@@ -389,6 +375,8 @@ namespace pkmn
                 throw std::invalid_argument("Generation III Pokémon can only be converted to Generation III-VI.");
         }
 
+        ret->set_level_met(get_level());
+        ret->set_original_game(get_original_game());
         return ret;
     }
 
