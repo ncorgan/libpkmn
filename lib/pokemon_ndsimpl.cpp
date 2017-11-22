@@ -97,6 +97,20 @@ namespace pkmn {
                                  pkmn::pokemon::DEFAULT_TRAINER_ID
                             );
         _blockA->friendship = uint8_t(_database_entry.get_base_friendship());
+
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        if((pksav_littleendian32(NDS_PC_RCAST->personality) % 2) &&
+            abilities.second != "None"
+           )
+        {
+            _blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.second));
+        }
+        else
+        {
+            _blockA->ability = uint8_t(pkmn::database::ability_name_to_id(abilities.first));
+        }
+
+
         // TODO: country
         _blockA->ev_hp = rng8.rand();
         _blockA->ev_atk = rng8.rand();

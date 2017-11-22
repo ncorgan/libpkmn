@@ -104,7 +104,16 @@ static const std::string games[] = {
     "FireRed",
     "LeafGreen",
     "Colosseum",
-    "XD"
+    "XD",
+    "Diamond",
+    "Pearl",
+    "Platinum",
+    "HeartGold",
+    "SoulSilver",
+    "Black",
+    "White",
+    "Black 2",
+    "White 2"
 };
 
 INSTANTIATE_TEST_CASE_P(
