@@ -18,19 +18,25 @@
 
 namespace fs = boost::filesystem;
 
-static const std::string gen1_test_games[] = {
+static const std::string gen1_test_games[] =
+{
     "Red", "Blue", "Yellow",
     "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD",
+    "Diamond", "Pearl", "Platinum", "HeartGold", "SoulSilver"
 };
 
-static const std::string gen2_test_games[] = {
+static const std::string gen2_test_games[] =
+{
     "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD",
+    "Diamond", "Pearl", "Platinum", "HeartGold", "SoulSilver"
 };
 
-static const std::string gen3_test_games[] = {
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
+static const std::string gen3_test_games[] =
+{
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD",
+    "Diamond", "Pearl", "Platinum", "HeartGold", "SoulSilver"
 };
 
 class gen1_form_test: public ::testing::TestWithParam<std::string> {};
@@ -73,12 +79,13 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms) {
              ++iter)
     {
         if(generation >= 6) {
-            (void)pkmn::pokemon::make(
-                      *iter,
-                      game,
-                      "Mega",
-                      100
-                  );
+            pkmn::pokemon::sptr mega_pokemon = pkmn::pokemon::make(
+                                                   *iter,
+                                                   game,
+                                                   "Mega",
+                                                   100
+                                               );
+            EXPECT_EQ("Mega", mega_pokemon->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -95,12 +102,13 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms) {
              ++iter)
     {
         if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-            (void)pkmn::pokemon::make(
-                      *iter,
-                      game,
-                      "Mega",
-                      100
-                  );
+            pkmn::pokemon::sptr mega_pokemon = pkmn::pokemon::make(
+                                                   *iter,
+                                                   game,
+                                                   "Mega",
+                                                   100
+                                               );
+            EXPECT_EQ("Mega", mega_pokemon->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -125,12 +133,13 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms) {
              ++iter)
     {
         if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-            (void)pkmn::pokemon::make(
-                      "Pikachu",
-                      game,
-                      *iter,
-                      5
-                  );
+            pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
+                                              "Pikachu",
+                                              game,
+                                              *iter,
+                                              5
+                                          );
+            EXPECT_EQ(*iter, pikachu->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -145,30 +154,35 @@ TEST_P(gen1_form_test, test_gen1_pokemon_forms) {
 
     // Hardcode Mega X/Y cases
     if(generation >= 6) {
-        (void)pkmn::pokemon::make(
-                  "Charizard",
-                  game,
-                  "Mega X",
-                  50
-              );
-        (void)pkmn::pokemon::make(
-                  "Charizard",
-                  game,
-                  "Mega Y",
-                  50
-              );
-        (void)pkmn::pokemon::make(
-                  "Mewtwo",
-                  game,
-                  "Mega X",
-                  50
-              );
-        (void)pkmn::pokemon::make(
-                  "Mewtwo",
-                  game,
-                  "Mega Y",
-                  50
-              );
+        pkmn::pokemon::sptr charizard_x = pkmn::pokemon::make(
+                                              "Charizard",
+                                              game,
+                                              "Mega X",
+                                              50
+                                          );
+        EXPECT_EQ("Mega X", charizard_x->get_form());
+        pkmn::pokemon::sptr charizard_y = pkmn::pokemon::make(
+                                              "Charizard",
+                                              game,
+                                              "Mega Y",
+                                              50
+                                          );
+        EXPECT_EQ("Mega Y", charizard_y->get_form());
+
+        pkmn::pokemon::sptr mewtwo_x = pkmn::pokemon::make(
+                                           "Mewtwo",
+                                           game,
+                                           "Mega X",
+                                           50
+                                       );
+        EXPECT_EQ("Mega X", mewtwo_x->get_form());
+        pkmn::pokemon::sptr mewtwo_y = pkmn::pokemon::make(
+                                           "Mewtwo",
+                                           game,
+                                           "Mega Y",
+                                           50
+                                       );
+        EXPECT_EQ("Mega Y", mewtwo_y->get_form());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
@@ -215,12 +229,13 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
              ++iter)
     {
         if(generation >= 6) {
-            (void)pkmn::pokemon::make(
-                      *iter,
-                      game,
-                      "Mega",
-                      100
-                  );
+            pkmn::pokemon::sptr mega_pokemon = pkmn::pokemon::make(
+                                                   *iter,
+                                                   game,
+                                                   "Mega",
+                                                   100
+                                               );
+            EXPECT_EQ("Mega", mega_pokemon->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -234,12 +249,13 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
     }
 
     if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-        (void)pkmn::pokemon::make(
-                  "Steelix",
-                  game,
-                  "Mega",
-                  100
-              );
+        pkmn::pokemon::sptr steelix = pkmn::pokemon::make(
+                                          "Steelix",
+                                          game,
+                                          "Mega",
+                                          100
+                                      );
+        EXPECT_EQ("Mega", steelix->get_form());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
@@ -253,12 +269,13 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
 
     // Spiky-eared Pichu should only work in HG/SS
     if(game == "HeartGold" or game == "SoulSilver") {
-        (void)pkmn::pokemon::make(
-                  "Pichu",
-                  game,
-                  "Spiky-eared",
-                  100
-              );
+        pkmn::pokemon::sptr pichu = pkmn::pokemon::make(
+                                        "Pichu",
+                                        game,
+                                        "Spiky-eared",
+                                        100
+                                    );
+        EXPECT_EQ("Spiky-eared", pichu->get_form());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
@@ -280,10 +297,9 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         unown_forms.at(i),
                                         10
                                     );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_EQ(unown_forms.at(i), unown->get_form());
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
     if(generation == 2) {
         EXPECT_THROW(
@@ -309,10 +325,9 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         "!",
                                         10
                                     );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_EQ("!", unown->get_form());
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
 
         unown = pkmn::pokemon::make(
                     "Unown",
@@ -320,10 +335,9 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                     "?",
                     10
                 );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_EQ("?", unown->get_form());
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
 }
 
@@ -337,12 +351,13 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
              ++iter)
     {
         if(generation >= 6) {
-            (void)pkmn::pokemon::make(
-                      *iter,
-                      game,
-                      "Mega",
-                      100
-                  );
+            pkmn::pokemon::sptr mega_pokemon = pkmn::pokemon::make(
+                                                   *iter,
+                                                   game,
+                                                   "Mega",
+                                                   100
+                                               );
+            EXPECT_EQ("Mega", mega_pokemon->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -359,12 +374,13 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
              ++iter)
     {
         if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-            (void)pkmn::pokemon::make(
-                      *iter,
-                      game,
-                      "Mega",
-                      100
-                  );
+            pkmn::pokemon::sptr mega_pokemon = pkmn::pokemon::make(
+                                                   *iter,
+                                                   game,
+                                                   "Mega",
+                                                   100
+                                               );
+            EXPECT_EQ("Mega", mega_pokemon->get_form());
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -390,10 +406,9 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                            *iter,
                                            30
                                        );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
-        }
+        EXPECT_EQ(*iter, castform->get_form());
+        EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
     }
 
     // Primal Reversion forms should only work in OR/AS.
@@ -403,10 +418,8 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                       "",
                                       70
                                   );
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
 
     pkmn::pokemon::sptr kyogre = pkmn::pokemon::make(
                                      "Kyogre",
@@ -414,24 +427,24 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                      "",
                                      70
                                  );
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
 
     if(game == "Omega Ruby" or game == "Alpha Sapphire") {
-        (void)pkmn::pokemon::make(
-                  "Groudon",
-                  game,
-                  "Primal Reversion",
-                  70
-              );
-        (void)pkmn::pokemon::make(
-                  "Kyogre",
-                  game,
-                  "Primal Reversion",
-                  70
-              );
+        groudon = pkmn::pokemon::make(
+                      "Groudon",
+                      game,
+                      "Primal Reversion",
+                      70
+                  );
+        EXPECT_EQ("Primal Reversion", groudon->get_form());
+
+        kyogre = pkmn::pokemon::make(
+                     "Kyogre",
+                     game,
+                     "Primal Reversion",
+                     70
+                 );
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
@@ -461,10 +474,9 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          "Normal",
                          70
                      );
-            if(game != "Colosseum" and game != "XD") {
-                EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
-                EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
-            }
+            EXPECT_EQ("Normal", deoxys->get_form());
+            EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(
@@ -483,6 +495,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          "Attack",
                          70
                      );
+            EXPECT_EQ("Attack", deoxys->get_form());
             EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
             EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         } else {
@@ -503,6 +516,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          "Defense",
                          70
                      );
+            EXPECT_EQ("Defense", deoxys->get_form());
             EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
             EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         } else {
@@ -523,6 +537,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          "Speed",
                          70
                      );
+            EXPECT_EQ("Speed", deoxys->get_form());
             EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
             EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         } else {
@@ -549,6 +564,7 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          *iter,
                          30
                      );
+            EXPECT_EQ(*iter, deoxys->get_form());
             EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
             EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         }
