@@ -109,7 +109,7 @@ namespace pkmn { namespace io {
         std::vector<uint8_t> buffer(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read((char*)buffer.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
         ifile.close();
 
         return load_pkm(buffer);

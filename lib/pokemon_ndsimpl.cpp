@@ -135,7 +135,6 @@ namespace pkmn {
         set_date_met(now, true);
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
@@ -176,7 +175,6 @@ namespace pkmn {
         _set_default_nickname();
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
@@ -212,7 +210,6 @@ namespace pkmn {
         _set_default_nickname();
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
@@ -254,7 +251,6 @@ namespace pkmn {
         _set_default_nickname();
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
@@ -292,7 +288,6 @@ namespace pkmn {
         _set_default_nickname();
 
         // Populate abstractions
-        _update_held_item();
         _update_ribbons_map();
         _update_EV_map();
         _init_modern_IV_map(&_blockB->iv_isegg_isnicknamed);
@@ -592,8 +587,6 @@ namespace pkmn {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
         _blockA->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
-
-        _update_held_item();
     }
 
     std::string pokemon_ndsimpl::get_trainer_name()
@@ -787,16 +780,20 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
+        std::string ret;
+
         if(_gen4)
         {
-            return pkmn::calculations::nature(
-                       pksav_littleendian32(NDS_PC_RCAST->personality)
-                   );
+            ret = pkmn::calculations::nature(
+                      pksav_littleendian32(NDS_PC_RCAST->personality)
+                  );
         }
         else
         {
-            return pkmn::database::nature_index_to_name(_blockB->nature);
+            ret = pkmn::database::nature_index_to_name(_blockB->nature);
         }
+
+        return ret;
     }
 
     void pokemon_ndsimpl::set_nature(
@@ -1479,26 +1476,26 @@ namespace pkmn {
 
     void pokemon_ndsimpl::_update_ribbons_map()
     {
-        for(auto iter = hoenn_ribbons.begin(); iter != hoenn_ribbons.end(); ++iter)
+        for(const auto& iter: hoenn_ribbons)
         {
-            _ribbons[iter->first] = (_blockB->hoenn_ribbons & iter->second);
+            _ribbons[iter.first] = (_blockB->hoenn_ribbons & iter.second);
         }
-        for(auto iter = sinnoh_ribbons1.begin(); iter != sinnoh_ribbons1.end(); ++iter)
+        for(const auto& iter: sinnoh_ribbons1)
         {
-            _ribbons[iter->first] = (_blockA->sinnoh_ribbons1 & iter->second);
+            _ribbons[iter.first] = (_blockA->sinnoh_ribbons1 & iter.second);
         }
         if(_gen4)
         {
-            for(auto iter = sinnoh_ribbons2.begin(); iter != sinnoh_ribbons2.end(); ++iter)
+            for(const auto& iter: sinnoh_ribbons2)
             {
-                _ribbons[iter->first] = (_blockA->sinnoh_ribbons2 & iter->second);
+                _ribbons[iter.first] = (_blockA->sinnoh_ribbons2 & iter.second);
             }
         }
         else
         {
-            for(auto iter = unova_ribbons.begin(); iter != unova_ribbons.end(); ++iter)
+            for(const auto& iter: unova_ribbons)
             {
-                _ribbons[iter->first] = (_blockA->unova_ribbons & iter->second);
+                _ribbons[iter.first] = (_blockA->unova_ribbons & iter.second);
             }
         }
 

@@ -213,7 +213,6 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
-            virtual void _update_held_item() {}
             virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}
             virtual void _update_EV_map() = 0;

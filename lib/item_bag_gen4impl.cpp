@@ -5,9 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen4_item_bag_t*>(_native)
-#define DPPT_BAG NATIVE_RCAST->dppt
-#define HGSS_BAG NATIVE_RCAST->hgss
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen4_item_bag_t*>(_native))
+#define DPPT_BAG (NATIVE_RCAST->dppt)
+#define HGSS_BAG (NATIVE_RCAST->hgss)
 
 #include "item_bag_gen4impl.hpp"
 #include "item_list_modernimpl.hpp"

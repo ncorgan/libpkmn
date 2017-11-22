@@ -15,9 +15,9 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen4_pokemon_pc_t*>(_native)
-#define DPPT_RCAST   reinterpret_cast<pksav_dppt_pokemon_pc_t*>(_native)
-#define HGSS_RCAST   reinterpret_cast<pksav_hgss_pokemon_pc_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen4_pokemon_pc_t*>(_native))
+#define DPPT_RCAST   (reinterpret_cast<pksav_dppt_pokemon_pc_t*>(_native))
+#define HGSS_RCAST   (reinterpret_cast<pksav_hgss_pokemon_pc_t*>(_native))
 
 #define NATIVE_BOX_NAMES (_hgss ? HGSS_RCAST->box_names : DPPT_RCAST->box_names)
 #define NATIVE_SIZE      (_hgss ? sizeof(*DPPT_RCAST) : sizeof(*HGSS_RCAST))

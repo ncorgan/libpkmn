@@ -18,8 +18,8 @@
 #include <cstring>
 #include <stdexcept>
 
-#define DPPT_RCAST reinterpret_cast<pksav_dppt_pokemon_box_t*>(_native)
-#define HGSS_RCAST reinterpret_cast<pksav_hgss_pokemon_box_t*>(_native)
+#define DPPT_RCAST (reinterpret_cast<pksav_dppt_pokemon_box_t*>(_native))
+#define HGSS_RCAST (reinterpret_cast<pksav_hgss_pokemon_box_t*>(_native))
 
 #define DPPT_SIZE (sizeof(DPPT_RCAST->entries)/sizeof(pksav_nds_pc_pokemon_t))
 #define HGSS_SIZE (sizeof(HGSS_RCAST->entries)/sizeof(pksav_nds_pc_pokemon_t))

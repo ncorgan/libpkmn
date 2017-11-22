@@ -23,7 +23,7 @@ namespace pkmn {
             ~item_bag_gen4impl();
 
         private:
-            void _set_ptrs();
+            void _set_ptrs() override final;
     };
 
 }
