@@ -41,7 +41,7 @@ namespace pkmn {
             ) override final;
 
         private:
-            void _from_native();
+            void _from_native() override final;
 
             bool _hgss;
     };

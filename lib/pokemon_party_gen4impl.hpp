@@ -35,7 +35,7 @@ namespace pkmn {
 
         private:
 
-            void _from_native();
+            void _from_native() override final;
     };
 }
 
