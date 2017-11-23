@@ -14,9 +14,13 @@ PKMN_RUBY_INIT
 %import <STL.i>
 
 %{
+    #include <pkmn/types/datetime.hpp>
+
     #include <pkmn/item_slot.hpp>
     #include <pkmn/move_slot.hpp>
 %}
+
+%include <pkmn/types/datetime.hpp>
 
 %include <pkmn/item_slot.hpp>
 PKMN_RUBY_VECTOR(pkmn::item_slot, ItemSlotList);

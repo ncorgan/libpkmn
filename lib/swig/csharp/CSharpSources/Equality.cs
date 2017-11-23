@@ -6,6 +6,56 @@
  */
 namespace PKMN {
 
+public partial class DateTime {
+    /// <summary>Compares two DateTime instances to determine value equality.</summary>
+    /// <param name="rhs">DateTime with which to compare self</param>
+    /// <returns>Whether or not DateTime instances are equal</returns>
+    public bool Equals(DateTime rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return (this.Year.Equals(rhs.Year) &&
+                    this.Month.Equals(rhs.Month) &&
+                    this.Day.Equals(rhs.Day) &&
+                    this.Hour.Equals(rhs.Hour) &&
+                    this.Minute.Equals(rhs.Minute) &&
+                    this.Second.Equals(rhs.Second) &&
+                    this.Frames.Equals(rhs.Frames));
+        }
+    }
+
+    /// <summary>Compares a DateTime to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not DateTime and Object are equal</returns>
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        DateTime rhsDateTime = rhs as DateTime;
+        if(rhsDateTime == null) {
+            return false;
+        } else {
+            return this.Equals(rhsDateTime);
+        }
+    }
+
+    /// <summary>Generates a unique hash code for the given DateTime.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        return HashCodeBuilder.Create().AddValue<int>(this.Year)
+                                       .AddValue<int>(this.Month)
+                                       .AddValue<int>(this.Day)
+                                       .AddValue<int>(this.Hour)
+                                       .AddValue<int>(this.Minute)
+                                       .AddValue<int>(this.Second)
+                                       .AddValue<int>(this.Frames)
+                                       .ToHashCode();
+    }
+}
+
 public partial class HiddenPower {
     /// <summary>Compares two HiddenPower instances to determine value equality.</summary>
     /// <remarks>

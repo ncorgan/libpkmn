@@ -36,6 +36,7 @@ ADD_SUBDIRECTORY(conversions)
 ADD_SUBDIRECTORY(database)
 ADD_SUBDIRECTORY(io)
 ADD_SUBDIRECTORY(pksav)
+ADD_SUBDIRECTORY(types)
 ADD_SUBDIRECTORY(utils)
 
 #
@@ -63,6 +64,7 @@ SET(pkmn_sources
     ${pkmn_io_sources}
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources}
+    ${pkmn_types_sources}
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp

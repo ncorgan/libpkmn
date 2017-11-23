@@ -46,6 +46,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_trainer_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_friendship "private";
 %csmethodmodifiers pkmn::pokemon::set_friendship(int) "private";
+//%csmethodmodifiers pkmn::pokemon::get_nature "private";
+//%csmethodmodifiers pkmn::pokemon::set_nature(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_ability "private";
 %csmethodmodifiers pkmn::pokemon::set_ability(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_ball "private";
@@ -189,6 +191,15 @@ using Database;"
             SetFriendship(value);
         }
     }
+
+    /*public string Nature {
+        get {
+            return GetNature();
+        }
+        set {
+            SetNature(value);
+        }
+    }*/
 
     public string Ability {
         get {

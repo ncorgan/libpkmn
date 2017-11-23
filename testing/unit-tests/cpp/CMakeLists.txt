@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 
 SET(cpp_tests
     cpp_calculations_test
+    cpp_datetime_test
     cpp_exception_test
     cpp_game_save_test
     cpp_lists_test

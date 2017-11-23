@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@ CONFIGURE_FILE(
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_types_headers
+        datetime.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/shared_ptr.hpp
     )
 

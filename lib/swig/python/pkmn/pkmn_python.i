@@ -20,6 +20,8 @@ PKMN_PYTHON_INIT
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
 
+    #include <pkmn/types/datetime.hpp>
+
     #include <pkmn/utils/paths.hpp>
 %}
 
@@ -28,6 +30,9 @@ PKMN_PYTHON_INIT
 
 %include <pkmn/build_info.hpp>
 %include <pkmn/utils/paths.hpp>
+
+// Datetime
+%include <pkmn/types/datetime.hpp>
 
 // Item Slot
 %include <python/pkmn_item_slot.i>
