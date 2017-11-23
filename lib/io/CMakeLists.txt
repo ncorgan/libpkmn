@@ -9,4 +9,5 @@ SET(pkmn_io_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/pk1.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pk2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/3gpkm.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pk6.cpp
 PARENT_SCOPE)

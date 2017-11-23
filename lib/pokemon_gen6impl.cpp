@@ -239,7 +239,19 @@ namespace pkmn
         const std::string& filepath
     )
     {
-        (void)filepath;
+        std::string extension = fs::extension(filepath);
+        if(extension == ".pk6")
+        {
+            boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+            std::ofstream ofile(filepath, std::ios::binary);
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gen6_pc_pokemon_t));
+            ofile.close();
+        }
+        else
+        {
+            throw std::invalid_argument("Generation VI Pokémon can only be saved to .pk6 files.");
+        }
     }
 
     void pokemon_gen6impl::set_form(

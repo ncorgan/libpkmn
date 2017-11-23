@@ -11,6 +11,7 @@
 #include "pokemon_gen2impl.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
+#include "pokemon_gen6impl.hpp"
 
 #include "misc_common.hpp"
 #include "database/database_common.hpp"
@@ -20,6 +21,7 @@
 #include "io/pk1.hpp"
 #include "io/pk2.hpp"
 #include "io/3gpkm.hpp"
+#include "io/pk6.hpp"
 
 #include "types/rng.hpp"
 
@@ -89,8 +91,13 @@ namespace pkmn
 
             case 4:
             case 5:
-            case 6:
                 throw pkmn::unimplemented_error();
+
+            case 6:
+                return pkmn::make_shared<pokemon_gen6impl>(
+                           std::move(database_entry),
+                           level
+                       );
 
             default:
                 throw std::runtime_error("Invalid game.");
@@ -117,7 +124,11 @@ namespace pkmn
         {
             ret =  pkmn::io::load_3gpkm(filepath);
         }
-        else if(extension == ".pkm" or extension == ".pk6")
+        else if(extension == ".pk6")
+        {
+            ret =  pkmn::io::load_pk6(filepath);
+        }
+        else if(extension == ".pkm")
         {
             throw pkmn::unimplemented_error();
         }
@@ -137,6 +148,10 @@ namespace pkmn
             else if(pkmn::io::vector_is_valid_3gpkm(buffer, &game_id))
             {
                 ret = pkmn::io::load_3gpkm(buffer);
+            }
+            else if(pkmn::io::vector_is_valid_pk6(buffer, &game_id))
+            {
+                ret = pkmn::io::load_pk6(buffer);
             }
             else
             {
