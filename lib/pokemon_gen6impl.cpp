@@ -31,11 +31,13 @@
 
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
+#include <pksav/gen6/ribbons.h>
 #include <pksav/gen6/text.h>
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
+#include <boost/bimap.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
@@ -68,10 +70,21 @@ namespace pkmn
 
         (void)level;
 
+        // Set block pointers.
         _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
         _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
         _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
         _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
+
+        // Populate abstractions.
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB_ptr->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA_ptr->contest_stats);
+        _init_markings_map(&_blockA_ptr->markings);
+        _populate_party_data();
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -88,12 +101,21 @@ namespace pkmn
         _native_party = reinterpret_cast<void*>(new pksav_gen6_pokemon_party_data_t);
         _our_party_mem = true;
 
+        // Set block pointers.
         _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
         _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
         _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
         _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
 
+        // Populate abstractions.
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB_ptr->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA_ptr->contest_stats);
+        _init_markings_map(&_blockA_ptr->markings);
         _populate_party_data();
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -110,10 +132,20 @@ namespace pkmn
         _native_party = reinterpret_cast<void*>(&party->party_data);
         _our_party_mem = false;
 
+        // Set block pointers.
         _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
         _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
         _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
         _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
+
+        // Populate abstractions.
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB_ptr->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA_ptr->contest_stats);
+        _init_markings_map(&_blockA_ptr->markings);
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -131,12 +163,21 @@ namespace pkmn
         _native_party = reinterpret_cast<void*>(new pksav_gen6_pokemon_party_data_t);
         _our_party_mem = true;
 
+        // Set block pointers.
         _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
         _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
         _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
         _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
 
+        // Populate abstractions.
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB_ptr->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA_ptr->contest_stats);
+        _init_markings_map(&_blockA_ptr->markings);
         _populate_party_data();
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -155,12 +196,20 @@ namespace pkmn
         *GEN6_PARTY_RCAST = party.party_data;
         _our_party_mem = true;
 
+        // Set block pointers.
         _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
         _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
         _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
         _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
 
-        _populate_party_data();
+        // Populate abstractions.
+        _update_ribbons_map();
+        _update_EV_map();
+        _init_modern_IV_map(&_blockB_ptr->iv_isegg_isnicknamed);
+        _init_contest_stat_map(&_blockA_ptr->contest_stats);
+        _init_markings_map(&_blockA_ptr->markings);
+        _update_stat_map();
+        _update_moves(-1);
     }
 
     pokemon_gen6impl::~pokemon_gen6impl()
@@ -747,7 +796,60 @@ namespace pkmn
             throw std::invalid_argument("Invalid ribbon.");
         }
 
-        (void)value;
+        if(pksav::GEN6_RIBBONS1.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[0],
+                pksav::GEN6_RIBBONS1.left
+            );
+        }
+        else if(pksav::GEN6_RIBBONS2.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[1],
+                pksav::GEN6_RIBBONS2.left
+            );
+        }
+        else if(pksav::GEN6_RIBBONS3.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[2],
+                pksav::GEN6_RIBBONS3.left
+            );
+        }
+        else if(pksav::GEN6_RIBBONS4.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[3],
+                pksav::GEN6_RIBBONS4.left
+            );
+        }
+        else if(pksav::GEN6_RIBBONS5.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[4],
+                pksav::GEN6_RIBBONS5.left
+            );
+        }
+        else if(pksav::GEN6_RIBBONS6.left.count(ribbon) > 0)
+        {
+            _set_ribbon(
+                ribbon,
+                value,
+                &_blockA_ptr->ribbons[5],
+                pksav::GEN6_RIBBONS6.left
+            );
+        }
     }
 
     void pokemon_gen6impl::set_contest_stat(
@@ -852,19 +954,6 @@ namespace pkmn
         GEN6_PARTY_RCAST->current_hp = pksav_littleendian16(uint16_t(hp));
     }
 
-    void pokemon_gen6impl::_set_contest_ribbon(
-        const std::string& ribbon,
-        bool value
-    )
-    {
-        std::vector<std::string> ribbon_parts;
-        boost::split(ribbon_parts, ribbon, boost::is_any_of(" "));
-
-        (void)value;
-
-        _update_ribbons_map();
-    }
-
     void pokemon_gen6impl::_populate_party_data()
     {
         pksav::gen6_pc_pokemon_to_party_data(
@@ -914,6 +1003,30 @@ namespace pkmn
 
     void pokemon_gen6impl::_update_ribbons_map()
     {
+        for(const auto& ribbon1_iter: pksav::GEN6_RIBBONS1.left)
+        {
+            _ribbons[ribbon1_iter.first] = bool(_blockA_ptr->ribbons[0] & ribbon1_iter.second);
+        }
+        for(const auto& ribbon2_iter: pksav::GEN6_RIBBONS2.left)
+        {
+            _ribbons[ribbon2_iter.first] = bool(_blockA_ptr->ribbons[1] & ribbon2_iter.second);
+        }
+        for(const auto& ribbon3_iter: pksav::GEN6_RIBBONS3.left)
+        {
+            _ribbons[ribbon3_iter.first] = bool(_blockA_ptr->ribbons[2] & ribbon3_iter.second);
+        }
+        for(const auto& ribbon4_iter: pksav::GEN6_RIBBONS4.left)
+        {
+            _ribbons[ribbon4_iter.first] = bool(_blockA_ptr->ribbons[3] & ribbon4_iter.second);
+        }
+        for(const auto& ribbon5_iter: pksav::GEN6_RIBBONS5.left)
+        {
+            _ribbons[ribbon5_iter.first] = bool(_blockA_ptr->ribbons[4] & ribbon5_iter.second);
+        }
+        for(const auto& ribbon6_iter: pksav::GEN6_RIBBONS6.left)
+        {
+            _ribbons[ribbon6_iter.first] = bool(_blockA_ptr->ribbons[5] & ribbon6_iter.second);
+        }
     }
 
     void pokemon_gen6impl::_update_EV_map()

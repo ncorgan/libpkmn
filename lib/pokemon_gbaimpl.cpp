@@ -998,7 +998,7 @@ namespace pkmn
         );
     }
 
-    static const std::map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
+    static const std::unordered_map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
         ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
         ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
         ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
@@ -1013,7 +1013,7 @@ namespace pkmn
         ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
+    static const std::unordered_map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
         ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
         ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
         ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
@@ -1021,7 +1021,7 @@ namespace pkmn
         ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
+    static const std::unordered_map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
@@ -1029,7 +1029,7 @@ namespace pkmn
         ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
+    static const std::unordered_map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
@@ -1051,7 +1051,7 @@ namespace pkmn
 
         if(gba_ribbons.find(ribbon) != gba_ribbons.end())
         {
-            _set_ribbon<uint32_t, pksav_gen3_ribbon_mask_t>(
+            _set_ribbon(
                 ribbon,
                 value,
                 &_misc->ribbons_obedience,

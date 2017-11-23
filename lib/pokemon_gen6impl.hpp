@@ -212,11 +212,6 @@ namespace pkmn {
 
         private:
 
-            void _set_contest_ribbon(
-                const std::string &ribbon,
-                bool value
-            );
-
             void _populate_party_data() override final;
 
             void _update_moves(
