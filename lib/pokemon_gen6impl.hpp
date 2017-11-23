@@ -228,10 +228,10 @@ namespace pkmn {
             void _update_EV_map() override final;
             void _update_stat_map() override final;
 
-            pksav_gen6_pokemon_blockA_t* _blockA;
-            pksav_gen6_pokemon_blockB_t* _blockB;
-            pksav_gen6_pokemon_blockC_t* _blockC;
-            pksav_gen6_pokemon_blockD_t* _blockD;
+            pksav_gen6_pokemon_blockA_t* _blockA_ptr;
+            pksav_gen6_pokemon_blockB_t* _blockB_ptr;
+            pksav_gen6_pokemon_blockC_t* _blockC_ptr;
+            pksav_gen6_pokemon_blockD_t* _blockD_ptr;
     };
 
 }

@@ -68,18 +68,17 @@ namespace pkmn
 
         (void)level;
 
-        (void)_blockA;
-        (void)_blockB;
-        (void)_blockC;
-        (void)_blockD;
+        _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
+        _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
+        _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
+        _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
         pksav_gen6_pc_pokemon_t* pc,
         int game_id
     ): pokemon_impl(
-           //pksav_littleendian16(pc->blocks.growth.species),
-           0,
+           pksav_littleendian16(pc->blocks.blockA.species),
            game_id
        )
     {
@@ -87,16 +86,21 @@ namespace pkmn
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(new pksav_gen6_pokemon_party_data_t);
-        _populate_party_data();
         _our_party_mem = true;
+
+        _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
+        _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
+        _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
+        _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
+
+        _populate_party_data();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
         pksav_gen6_party_pokemon_t* party,
         int game_id
     ): pokemon_impl(
-           //pksav_littleendian16(party->pc.blocks.growth.species),
-           0,
+           pksav_littleendian16(party->pc.blocks.blockA.species),
            game_id
        )
     {
@@ -105,14 +109,18 @@ namespace pkmn
 
         _native_party = reinterpret_cast<void*>(&party->party_data);
         _our_party_mem = false;
+
+        _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
+        _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
+        _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
+        _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
-        const pksav_gen6_pc_pokemon_t &pc,
+        const pksav_gen6_pc_pokemon_t& pc,
         int game_id
     ): pokemon_impl(
-           //pksav_littleendian16(pc.blocks.growth.species),
-           0,
+           pksav_littleendian16(pc.blocks.blockA.species),
            game_id
        )
     {
@@ -121,16 +129,21 @@ namespace pkmn
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new pksav_gen6_pokemon_party_data_t);
-        _populate_party_data();
         _our_party_mem = true;
+
+        _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
+        _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
+        _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
+        _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
+
+        _populate_party_data();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
-        const pksav_gen6_party_pokemon_t &party,
+        const pksav_gen6_party_pokemon_t& party,
         int game_id
     ): pokemon_impl(
-           //pksav_littleendian16(party.pc.blocks.growth.species),
-           0,
+           pksav_littleendian16(party.pc.blocks.blockA.species),
            game_id
        )
     {
@@ -141,6 +154,13 @@ namespace pkmn
         _native_party = reinterpret_cast<void*>(new pksav_gen6_pokemon_party_data_t);
         *GEN6_PARTY_RCAST = party.party_data;
         _our_party_mem = true;
+
+        _blockA_ptr = &GEN6_PC_RCAST->blocks.blockA;
+        _blockB_ptr = &GEN6_PC_RCAST->blocks.blockB;
+        _blockC_ptr = &GEN6_PC_RCAST->blocks.blockC;
+        _blockD_ptr = &GEN6_PC_RCAST->blocks.blockD;
+
+        _populate_party_data();
     }
 
     pokemon_gen6impl::~pokemon_gen6impl()
@@ -161,11 +181,9 @@ namespace pkmn
     {
         (void)game;
 
-        boost::lock_guard<pokemon_gen6impl> lock(*this);
+        throw pkmn::unimplemented_error();
 
-        pkmn::pokemon::sptr ret;
-
-        return ret;
+        return pkmn::pokemon::sptr();
     }
 
     void pokemon_gen6impl::export_to_file(
@@ -176,7 +194,7 @@ namespace pkmn
     }
 
     void pokemon_gen6impl::set_form(
-        const std::string &form
+        const std::string& form
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
@@ -220,44 +238,71 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        char nickname[13] = {0};
+
+        PKSAV_CALL(
+            pksav_text_from_gen6(
+                _blockB_ptr->nickname,
+                nickname,
+                sizeof(nickname)-1
+            );
+        )
+
+        return std::string(nickname);
     }
 
     void pokemon_gen6impl::set_nickname(
-        const std::string &nickname
+        const std::string& nickname
     )
     {
         pkmn::enforce_string_length(
             "Nickname",
             nickname,
             1,
-            10
+            12
         );
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        PKSAV_CALL(
+            pksav_text_to_gen6(
+                nickname.c_str(),
+                _blockB_ptr->nickname,
+                nickname.size()
+            );
+        )
     }
 
     std::string pokemon_gen6impl::get_gender()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        return pkmn::calculations::modern_pokemon_gender(
+                   _database_entry.get_name(),
+                   pksav_littleendian32(_blockA_ptr->personality)
+               );
     }
 
     void pokemon_gen6impl::set_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)gender;
+        _set_modern_gender(
+            &_blockA_ptr->personality,
+            gender
+        );
     }
 
     bool pokemon_gen6impl::is_shiny()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return false;
+        return pkmn::calculations::modern_shiny(
+                   pksav_littleendian32(_blockA_ptr->personality),
+                   pksav_littleendian32(_blockA_ptr->ot_id.id)
+               );
     }
 
     void pokemon_gen6impl::set_shininess(
@@ -266,69 +311,101 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)value;
+        _set_modern_shininess(
+            &_blockA_ptr->personality,
+            &_blockA_ptr->ot_id.id,
+            value
+        );
     }
 
     std::string pokemon_gen6impl::get_held_item()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        return pkmn::database::item_index_to_name(
+                   pksav_littleendian16(_blockA_ptr->held_item),
+                   _database_entry.get_game_id()
+               );
     }
 
     void pokemon_gen6impl::set_held_item(
-        const std::string &held_item
+        const std::string& held_item
     )
     {
-        boost::lock_guard<pokemon_gen6impl> lock(*this);
-
         // Make sure item is valid and holdable
         pkmn::database::item_entry item(
             held_item,
             get_game()
         );
+
+        if(not item.holdable())
+        {
+            throw std::invalid_argument("This item is not holdable.");
+        }
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
     std::string pokemon_gen6impl::get_trainer_name()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        char trainer_name[13] = {0};
+
+        PKSAV_CALL(
+            pksav_text_from_gen6(
+                _blockD_ptr->otname,
+                trainer_name,
+                sizeof(trainer_name)-1
+            );
+        )
+
+        return std::string(trainer_name);
     }
 
     void pokemon_gen6impl::set_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
             "Trainer name",
             trainer_name,
             1,
-            7
+            12
         );
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        PKSAV_CALL(
+            pksav_text_to_gen6(
+                trainer_name.c_str(),
+                _blockD_ptr->otname,
+                trainer_name.size()
+            );
+        )
     }
 
     uint16_t pokemon_gen6impl::get_trainer_public_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return pksav_littleendian16(_blockA_ptr->ot_id.pid);
     }
 
     uint16_t pokemon_gen6impl::get_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return pksav_littleendian16(_blockA_ptr->ot_id.sid);
     }
 
     uint32_t pokemon_gen6impl::get_trainer_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return pksav_littleendian32(_blockA_ptr->ot_id.id);
     }
 
     void pokemon_gen6impl::set_trainer_public_id(
@@ -337,7 +414,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)public_id;
+        _blockA_ptr->ot_id.pid = pksav_littleendian16(public_id);
     }
 
     void pokemon_gen6impl::set_trainer_secret_id(
@@ -346,14 +423,16 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)secret_id;
+        _blockA_ptr->ot_id.sid = pksav_littleendian16(secret_id);
     }
 
     void pokemon_gen6impl::set_trainer_id(
         uint32_t id
     )
     {
-        (void)id;
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->ot_id.id = pksav_littleendian32(id);
     }
 
     std::string pokemon_gen6impl::get_trainer_gender()
@@ -364,7 +443,7 @@ namespace pkmn
     }
 
     void pokemon_gen6impl::set_trainer_gender(
-        const std::string &gender
+        const std::string& gender
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
@@ -392,35 +471,66 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        std::string ret;
-
-        return ret;
+        return pkmn::database::ability_id_to_name(
+                   _blockA_ptr->ability
+               );
     }
 
     void pokemon_gen6impl::set_ability(
-        const std::string &ability
+        const std::string& ability
     )
     {
+        if(ability == "None")
+        {
+            throw std::invalid_argument("Invalid ability.");
+        }
+
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)ability;
+        std::pair<std::string, std::string> abilities = _database_entry.get_abilities();
+        std::string hidden_ability = _database_entry.get_hidden_ability();
+
+        if(ability == abilities.first)
+        {
+            _blockA_ptr->ability = uint8_t(pkmn::database::ability_name_to_id(ability));
+            _blockA_ptr->ability_num = 0;
+        }
+        else if(ability == abilities.second)
+        {
+            _blockA_ptr->ability = uint8_t(pkmn::database::ability_name_to_id(ability));
+            _blockA_ptr->ability_num = 1;
+        }
+        else if(ability == hidden_ability)
+        {
+            _blockA_ptr->ability = uint8_t(pkmn::database::ability_name_to_id(ability));
+            _blockA_ptr->ability_num = 0;
+        }
+        else
+        {
+            // TODO: smarter error message
+            throw std::invalid_argument("Invalid ability.");
+        }
     }
 
     std::string pokemon_gen6impl::get_ball()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        return pkmn::database::ball_id_to_name(
+                   _blockD_ptr->ball
+               );
     }
 
     void pokemon_gen6impl::set_ball(
-        const std::string &ball
+        const std::string& ball
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         // Try and instantiate an item_entry to validate the ball.
         (void)pkmn::database::item_entry(ball, get_game());
+
+        _blockD_ptr->ball = uint8_t(pkmn::database::ball_name_to_id(ball));
     }
 
 
@@ -442,17 +552,52 @@ namespace pkmn
         bool as_egg
     )
     {
-        (void)as_egg;
-        return "";
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        std::string ret;
+        int game_id = _database_entry.get_game_id();
+
+        if(as_egg)
+        {
+            ret = pkmn::database::location_index_to_name(
+                      pksav_littleendian16(_blockD_ptr->eggmet_location),
+                      game_id
+                  );
+        }
+        else
+        {
+            ret = pkmn::database::location_index_to_name(
+                      pksav_littleendian16(_blockD_ptr->met_location),
+                      game_id
+                  );
+        }
+
+        return ret;
     }
 
     void pokemon_gen6impl::set_location_met(
-        const std::string &location,
+        const std::string& location,
         bool as_egg
     )
     {
-        (void)location;
-        (void)as_egg;
+        // Validate location.
+        uint16_t location_index = pksav_littleendian16(
+                                      uint16_t(pkmn::database::location_name_to_index(
+                                                   location,
+                                                   _database_entry.get_game_id()
+                                               ))
+                                  );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        if(as_egg)
+        {
+            _blockD_ptr->eggmet_location = location_index;
+        }
+        else
+        {
+            _blockD_ptr->met_location = location_index;
+        }
     }
 
     std::string pokemon_gen6impl::get_original_game()
@@ -461,21 +606,49 @@ namespace pkmn
 
         std::string ret;
 
+        // Colosseum and XD are stored with the same index.
+        if(_blockD_ptr->ot_game == 15)
+        {
+            ret = "Colosseum/XD";
+        }
+        else
+        {
+            ret = pkmn::database::game_index_to_name(_blockD_ptr->ot_game);
+        }
+
         return ret;
     }
 
     void pokemon_gen6impl::set_original_game(
-        const std::string &game
+        const std::string& game
     )
     {
-        (void)game;
+        std::string internal_game;
+        if(game == "Colosseum/XD")
+        {
+            internal_game = "Colosseum";
+        }
+        else
+        {
+            internal_game = game;
+        }
+
+        int generation = pkmn::database::game_name_to_generation(internal_game);
+        if((generation < 3) or (generation > _generation))
+        {
+            throw std::invalid_argument("Invalid game.");
+        }
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockD_ptr->ot_game = uint8_t(pkmn::database::game_name_to_index(internal_game));
     }
 
     uint32_t pokemon_gen6impl::get_personality()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return pksav_littleendian32(_blockA_ptr->personality);
     }
 
     void pokemon_gen6impl::set_personality(
@@ -484,14 +657,14 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)personality;
+        _blockA_ptr->personality = pksav_littleendian32(personality);
     }
 
     int pokemon_gen6impl::get_experience()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return int(pksav_littleendian32(_blockA_ptr->exp));
     }
 
     void pokemon_gen6impl::set_experience(
@@ -503,6 +676,9 @@ namespace pkmn
         int max_experience = _database_entry.get_experience_at_level(100);
         pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
+        _blockA_ptr->exp = pksav_littleendian32(uint32_t(experience));
+        GEN6_PARTY_RCAST->level = uint8_t(_database_entry.get_level_at_experience(experience));
+
         _populate_party_data();
         _update_stat_map();
     }
@@ -511,7 +687,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return GEN6_PARTY_RCAST->level;
     }
 
     void pokemon_gen6impl::set_level(
@@ -522,34 +698,45 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
+        GEN6_PARTY_RCAST->level = uint8_t(level);
+        _blockA_ptr->exp = pksav_littleendian32(uint32_t(
+                               _database_entry.get_experience_at_level(level)
+                           ));
+
         _populate_party_data();
         _update_stat_map();
     }
 
     void pokemon_gen6impl::set_IV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)stat;
-        (void)value;
+        _set_modern_IV(
+            stat,
+            value,
+            &_blockB_ptr->iv_isegg_isnicknamed
+        );
     }
 
     void pokemon_gen6impl::set_marking(
-        const std::string &marking,
+        const std::string& marking,
         bool value
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)marking;
-        (void)value;
+        _set_marking(
+            marking,
+            value,
+            &_blockA_ptr->markings
+        );
     }
 
     void pokemon_gen6impl::set_ribbon(
-        const std::string &ribbon,
+        const std::string& ribbon,
         bool value
     )
     {
@@ -564,18 +751,21 @@ namespace pkmn
     }
 
     void pokemon_gen6impl::set_contest_stat(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)stat;
-        (void)value;
+        _set_contest_stat(
+            stat,
+            value,
+            &_blockA_ptr->contest_stats
+        );
     }
 
     void pokemon_gen6impl::set_move(
-        const std::string &move,
+        const std::string& move,
         int index
     )
     {
@@ -588,11 +778,16 @@ namespace pkmn
             move,
             get_game()
         );
-        (void)entry;
+
+        _moves[index].move = entry.get_name();
+        _moves[index].pp   = entry.get_pp(0);
+
+        _blockB_ptr->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
+        _blockB_ptr->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
     void pokemon_gen6impl::set_EV(
-        const std::string &stat,
+        const std::string& stat,
         int value
     )
     {
@@ -607,21 +802,27 @@ namespace pkmn
 
         if(stat == "HP")
         {
+            _blockA_ptr->ev_hp = uint8_t(value);
         }
         else if(stat == "Attack")
         {
+            _blockA_ptr->ev_atk = uint8_t(value);
         }
         else if(stat == "Defense")
         {
+            _blockA_ptr->ev_def = uint8_t(value);
         }
         else if(stat == "Speed")
         {
+            _blockA_ptr->ev_spd = uint8_t(value);
         }
         else if(stat == "Special Attack")
         {
+            _blockA_ptr->ev_spatk = uint8_t(value);
         }
         else
         {
+            _blockA_ptr->ev_spdef = uint8_t(value);
         }
 
         _update_EV_map();
@@ -632,7 +833,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return int(pksav_littleendian16(GEN6_PARTY_RCAST->current_hp));
     }
 
     void pokemon_gen6impl::set_current_hp(
@@ -647,10 +848,12 @@ namespace pkmn
         );
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        GEN6_PARTY_RCAST->current_hp = pksav_littleendian16(uint16_t(hp));
     }
 
     void pokemon_gen6impl::_set_contest_ribbon(
-        const std::string &ribbon,
+        const std::string& ribbon,
         bool value
     )
     {
@@ -677,6 +880,13 @@ namespace pkmn
             case 1:
             case 2:
             case 3:
+                _moves[index] = pkmn::move_slot(
+                    pkmn::database::move_entry(
+                        pksav_littleendian16(_blockB_ptr->moves[index]),
+                        _database_entry.get_game_id()
+                    ).get_name(),
+                    pksav_littleendian16(_blockB_ptr->move_pps[index])
+                );
                 break;
 
             default:
@@ -688,10 +898,12 @@ namespace pkmn
 
     void pokemon_gen6impl::_update_markings_map()
     {
-        /*_markings["Circle"]   = bool(GEN6_PC_RCAST->markings & PKSAV_MARKING_CIRCLE);
-        _markings["Triangle"] = bool(GEN6_PC_RCAST->markings & PKSAV_MARKING_TRIANGLE);
-        _markings["Square"]   = bool(GEN6_PC_RCAST->markings & PKSAV_MARKING_SQUARE);
-        _markings["Heart"]    = bool(GEN6_PC_RCAST->markings & PKSAV_MARKING_HEART);*/
+        _markings["Circle"]   = bool(_blockA_ptr->markings & PKSAV_MARKING_CIRCLE);
+        _markings["Triangle"] = bool(_blockA_ptr->markings & PKSAV_MARKING_TRIANGLE);
+        _markings["Square"]   = bool(_blockA_ptr->markings & PKSAV_MARKING_SQUARE);
+        _markings["Heart"]    = bool(_blockA_ptr->markings & PKSAV_MARKING_HEART);
+        _markings["Star"]     = bool(_blockA_ptr->markings & PKSAV_MARKING_STAR);
+        _markings["Diamond"]  = bool(_blockA_ptr->markings & PKSAV_MARKING_DIAMOND);
     }
 
     void pokemon_gen6impl::_update_ribbons_map()
@@ -700,21 +912,21 @@ namespace pkmn
 
     void pokemon_gen6impl::_update_EV_map()
     {
-        /*_EVs["HP"]              = int(_effort->ev_hp);
-        _EVs["Attack"]          = int(_effort->ev_atk);
-        _EVs["Defense"]         = int(_effort->ev_def);
-        _EVs["Speed"]           = int(_effort->ev_spd);
-        _EVs["Special Attack"]  = int(_effort->ev_spatk);
-        _EVs["Special Defense"] = int(_effort->ev_spdef);*/
+        _EVs["HP"]              = int(_blockA_ptr->ev_hp);
+        _EVs["Attack"]          = int(_blockA_ptr->ev_atk);
+        _EVs["Defense"]         = int(_blockA_ptr->ev_def);
+        _EVs["Speed"]           = int(_blockA_ptr->ev_spd);
+        _EVs["Special Attack"]  = int(_blockA_ptr->ev_spatk);
+        _EVs["Special Defense"] = int(_blockA_ptr->ev_spdef);
     }
 
     void pokemon_gen6impl::_update_stat_map()
     {
-        /*_stats["HP"]              = int(pksav_littleendian16(GEN6_PARTY_RCAST->max_hp));
+        _stats["HP"]              = int(pksav_littleendian16(GEN6_PARTY_RCAST->max_hp));
         _stats["Attack"]          = int(pksav_littleendian16(GEN6_PARTY_RCAST->atk));
         _stats["Defense"]         = int(pksav_littleendian16(GEN6_PARTY_RCAST->def));
         _stats["Speed"]           = int(pksav_littleendian16(GEN6_PARTY_RCAST->spd));
         _stats["Special Attack"]  = int(pksav_littleendian16(GEN6_PARTY_RCAST->spatk));
-        _stats["Special Defense"] = int(pksav_littleendian16(GEN6_PARTY_RCAST->spdef));*/
+        _stats["Special Defense"] = int(pksav_littleendian16(GEN6_PARTY_RCAST->spdef));
     }
 }
