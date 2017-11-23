@@ -504,4 +504,136 @@ namespace pksav {
                                     )
                                 ));
     }
+
+    // TODO: nature modifiers
+    void gen6_pc_pokemon_to_party_data(
+        const pkmn::database::pokemon_entry &entry,
+        const pksav_gen6_pc_pokemon_t* pc,
+        pksav_gen6_pokemon_party_data_t* party_data_out
+    )
+    {
+        std::memset(party_data_out, 0, sizeof(*party_data_out));
+
+        std::map<std::string, int> base_stats = entry.get_base_stats();
+
+        const pksav_gen6_pokemon_blockA_t* blockA_ptr = &pc->blocks.blockA;
+        const pksav_gen6_pokemon_blockB_t* blockB_ptr = &pc->blocks.blockB;
+
+        party_data_out->level = uint8_t(entry.get_level_at_experience(int(blockA_ptr->exp)));
+
+        uint8_t IV_hp = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_HP,
+                &IV_hp
+            );
+        )
+        party_data_out->max_hp = pksav_littleendian16(uint16_t(
+                                     pkmn::calculations::get_modern_stat(
+                                         "HP",
+                                         int(party_data_out->level),
+                                         1.0f,
+                                         base_stats.at("HP"),
+                                         blockA_ptr->ev_hp,
+                                         IV_hp
+                                     )
+                                 ));
+        party_data_out->current_hp = party_data_out->max_hp;
+
+        uint8_t IV_attack = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_ATTACK,
+                &IV_attack
+            );
+        )
+        party_data_out->atk = pksav_littleendian16(uint16_t(
+                                  pkmn::calculations::get_modern_stat(
+                                      "Attack",
+                                      int(party_data_out->level),
+                                      1.0f,
+                                      base_stats.at("Attack"),
+                                      blockA_ptr->ev_atk,
+                                      IV_attack
+                                  )
+                              ));
+
+        uint8_t IV_defense = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_DEFENSE,
+                &IV_defense
+            );
+        )
+        party_data_out->def = pksav_littleendian16(uint16_t(
+                                  pkmn::calculations::get_modern_stat(
+                                      "Defense",
+                                      int(party_data_out->level),
+                                      1.0f,
+                                      base_stats.at("Defense"),
+                                      blockA_ptr->ev_def,
+                                      IV_defense
+                                  )
+                              ));
+
+        uint8_t IV_speed = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPEED,
+                &IV_speed
+            );
+        )
+        party_data_out->spd = pksav_littleendian16(uint16_t(
+                                  pkmn::calculations::get_modern_stat(
+                                      "Speed",
+                                      int(party_data_out->level),
+                                      1.0f,
+                                      base_stats.at("Speed"),
+                                      blockA_ptr->ev_spd,
+                                      IV_speed
+                                  )
+                              ));
+
+        uint8_t IV_spatk = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPATK,
+                &IV_spatk
+            );
+        )
+        party_data_out->spatk = pksav_littleendian16(uint16_t(
+                                    pkmn::calculations::get_modern_stat(
+                                        "Special Attack",
+                                        int(party_data_out->level),
+                                        1.0f,
+                                        base_stats.at("Special Attack"),
+                                        blockA_ptr->ev_spatk,
+                                        IV_spatk
+                                    )
+                                ));
+
+        uint8_t IV_spdef = 0;
+        PKSAV_CALL(
+            pksav_get_IV(
+                &blockB_ptr->iv_isegg_isnicknamed,
+                PKSAV_STAT_SPDEF,
+                &IV_spdef
+            );
+        )
+        party_data_out->spdef = pksav_littleendian16(uint16_t(
+                                    pkmn::calculations::get_modern_stat(
+                                        "Special Defense",
+                                        int(party_data_out->level),
+                                        1.0f,
+                                        base_stats.at("Special Defense"),
+                                        blockA_ptr->ev_spdef,
+                                        IV_spdef
+                                    )
+                                ));
+    }
 }

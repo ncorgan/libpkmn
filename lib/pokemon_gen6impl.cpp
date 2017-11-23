@@ -867,6 +867,12 @@ namespace pkmn
 
     void pokemon_gen6impl::_populate_party_data()
     {
+        pksav::gen6_pc_pokemon_to_party_data(
+            _database_entry,
+            GEN6_PC_RCAST,
+            GEN6_PARTY_RCAST
+        );
+
         _update_stat_map();
     }
 
