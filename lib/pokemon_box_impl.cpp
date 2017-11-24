@@ -10,6 +10,7 @@
 #include "pokemon_box_gbimpl.hpp"
 #include "pokemon_box_gbaimpl.hpp"
 #include "pokemon_box_gcnimpl.hpp"
+#include "pokemon_box_gen6impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -44,8 +45,10 @@ namespace pkmn {
 
             case 4:
             case 5:
-            case 6:
                 throw pkmn::unimplemented_error();
+
+            case 6:
+                return pkmn::make_shared<pokemon_box_gen6impl>(game_id);
 
             default:
                 throw std::runtime_error("Invalid game.");

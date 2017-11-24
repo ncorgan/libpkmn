@@ -88,6 +88,7 @@ namespace pkmn {
             friend class pokemon_box_impl;
             friend class pokemon_box_gbaimpl;
             friend class pokemon_box_gcnimpl;
+            friend class pokemon_box_gen6impl;
 
             template
             <typename list_type,
@@ -100,6 +101,7 @@ namespace pkmn {
             friend class pokemon_party_impl;
             friend class pokemon_party_gbaimpl;
             friend class pokemon_party_gcnimpl;
+            friend class pokemon_party_gen6impl;
 
             template
             <typename list_type,
