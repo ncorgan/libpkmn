@@ -28,8 +28,10 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
+#include <pkmn/calculations/personality.hpp>
 
 #include <pksav/common/markings.h>
+#include <pksav/math/endian.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/thread/lock_guard.hpp>
@@ -456,6 +458,25 @@ namespace pkmn
 
     // Shared setters
 
+    void pokemon_impl::_set_nature(
+        uint32_t* personality_ptr,
+        const std::string &nature
+    ) {
+        // Save time if possible.
+        if(get_nature() == nature) {
+            return;
+        }
+
+        *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
+                               get_species(),
+                               get_trainer_id(),
+                               is_shiny(),
+                               get_ability(),
+                               get_gender(),
+                               nature
+                           ));
+    }
+
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,
         const std::string &gender
@@ -520,12 +541,13 @@ namespace pkmn
 
     void pokemon_impl::_set_modern_shininess(
         uint32_t* personality_ptr,
-        const uint32_t* trainer_id_ptr,
         bool value
     )
     {
+        uint32_t trainer_id = get_trainer_id();
+
         uint16_t* p = reinterpret_cast<uint16_t*>(personality_ptr);
-        const uint16_t* t = reinterpret_cast<const uint16_t*>(trainer_id_ptr);
+        const uint16_t* t = reinterpret_cast<const uint16_t*>(&trainer_id);
 
         if(value)
         {

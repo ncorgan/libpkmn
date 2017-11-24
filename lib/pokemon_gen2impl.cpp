@@ -640,6 +640,21 @@ namespace pkmn
         }
     }
 
+    pkmn::datetime pokemon_gen2impl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation II.");
+    }
+
+    void pokemon_gen2impl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation II.");
+    }
+
     int pokemon_gen2impl::get_friendship()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
@@ -656,6 +671,18 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         GEN2_PC_RCAST->friendship = uint8_t(friendship);
+    }
+
+    std::string pokemon_gen2impl::get_nature()
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
+    }
+
+    void pokemon_gen2impl::set_nature(
+        PKMN_UNUSED(const std::string &nature)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
     }
 
     std::string pokemon_gen2impl::get_ability()

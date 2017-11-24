@@ -469,6 +469,19 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
     }
 
+    pkmn::datetime pokemon_gen1impl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation I.");
+    }
+
+    void pokemon_gen1impl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    ) {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation I.");
+    }
+
     BOOST_STATIC_CONSTEXPR int YELLOW = 3;
     BOOST_STATIC_CONSTEXPR int PIKACHU = 25;
 
@@ -508,6 +521,18 @@ namespace pkmn
         {
             throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
         }
+    }
+
+    std::string pokemon_gen1impl::get_nature()
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation I");
+    }
+
+    void pokemon_gen1impl::set_nature(
+        PKMN_UNUSED(const std::string &nature)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation I");
     }
 
     std::string pokemon_gen1impl::get_ability()

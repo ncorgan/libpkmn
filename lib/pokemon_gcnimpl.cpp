@@ -22,6 +22,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
+#include <pkmn/calculations/nature.hpp>
 #include <pkmn/calculations/shininess.hpp>
 
 #include <pkmn/database/item_entry.hpp>
@@ -241,7 +242,7 @@ namespace pkmn
         const LibPkmGC::XD::Pokemon &native
     ): pokemon_impl(
            int(native.species),
-           XD 
+           XD
        )
     {
         // Connect to database
@@ -323,8 +324,6 @@ namespace pkmn
                         }
                         ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
-
-                    ret->set_level_met(get_level());
                 }
                 else
                 {
@@ -336,8 +335,6 @@ namespace pkmn
 
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                 }
-
-                ret->set_original_game(get_original_game());
                 break;
 
             case 4:
@@ -349,6 +346,8 @@ namespace pkmn
                 throw std::invalid_argument("Generation II Pokémon can only be converted to Generation III-VI.");
         }
 
+        ret->set_level_met(get_level());
+        ret->set_original_game(get_original_game());
         return ret;
     }
 
@@ -519,12 +518,8 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
-        // LibPkmGC stores trainer IDs in halves.
-        uint32_t trainer_id = GC_RCAST->TID | (uint32_t(GC_RCAST->SID) << 16);
-
         _set_modern_shininess(
             &GC_RCAST->PID,
-            &trainer_id,
             value
         );
 
@@ -658,6 +653,21 @@ namespace pkmn
         }
     }
 
+    pkmn::datetime pokemon_gcnimpl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
+    void pokemon_gcnimpl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
     int pokemon_gcnimpl::get_friendship()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
@@ -674,6 +684,24 @@ namespace pkmn
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         GC_RCAST->friendship = LibPkmGC::u8(friendship);
+    }
+
+    std::string pokemon_gcnimpl::get_nature()
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return pkmn::calculations::nature(GC_RCAST->PID);
+    }
+
+    void pokemon_gcnimpl::set_nature(
+        const std::string &nature
+    ) {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        _set_nature(
+            &GC_RCAST->PID,
+            nature
+        );
     }
 
     std::string pokemon_gcnimpl::get_ability()

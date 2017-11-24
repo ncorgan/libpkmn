@@ -121,10 +121,25 @@ namespace pkmn {
                 const std::string &gender
             ) override final;
 
+            pkmn::datetime get_date_met(
+                bool as_egg
+            ) override;
+
+            void set_date_met(
+                const pkmn::datetime &date,
+                bool as_egg
+            ) override;
+
             int get_friendship() override final;
 
             void set_friendship(
                 int friendship
+            ) override final;
+
+            std::string get_nature() override final;
+
+            void set_nature(
+                const std::string &nature
             ) override final;
 
             std::string get_ability() override final;

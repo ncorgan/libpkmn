@@ -18,6 +18,7 @@
 #include "pksav/party_data.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include "types/datetime_internal.hpp"
 #include "types/rng.hpp"
 
 #include <pkmn/exception.hpp>
@@ -374,7 +375,6 @@ namespace pkmn
 
         _set_modern_shininess(
             &_blockA_ptr->personality,
-            &_blockA_ptr->ot_id.id,
             value
         );
     }
@@ -512,6 +512,49 @@ namespace pkmn
         (void)gender;
     }
 
+    pkmn::datetime pokemon_gen6impl::get_date_met(
+        bool as_egg
+    )
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        pkmn::datetime ret;
+
+        if(as_egg)
+        {
+            ret = pkmn::pksav_date_to_libpkmn_datetime(&_blockD_ptr->eggmet_date);
+        }
+        else
+        {
+            ret = pkmn::pksav_date_to_libpkmn_datetime(&_blockD_ptr->met_date);
+        }
+
+        return ret;
+    }
+
+    void pokemon_gen6impl::set_date_met(
+        const pkmn::datetime &date,
+        bool as_egg
+    )
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        if(as_egg)
+        {
+            pkmn::libpkmn_datetime_to_pksav_date(
+                date,
+                &_blockD_ptr->eggmet_date
+            );
+        }
+        else
+        {
+            pkmn::libpkmn_datetime_to_pksav_date(
+                date,
+                &_blockD_ptr->met_date
+            );
+        }
+    }
+
     int pokemon_gen6impl::get_friendship()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
@@ -526,6 +569,50 @@ namespace pkmn
         pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+    }
+
+    static const std::vector<std::string> NATURES =
+    {
+        "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
+        "Bold", "Docile", "Relaxed", "Impish", "Lax",
+        "Timid", "Hasty", "Serious", "Jolly", "Naive",
+        "Modest", "Mild", "Quiet", "Bashful", "Rash",
+        "Calm", "Gentle", "Sassy", "Careful", "Quirky"
+    };
+
+    std::string pokemon_gen6impl::get_nature()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return NATURES.at(_blockA_ptr->nature);
+    }
+
+    void pokemon_gen6impl::set_nature(
+        const std::string &nature
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Nature",
+            nature,
+            NATURES
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->nature = uint8_t(std::distance(
+                                          NATURES.begin(),
+                                          std::find(
+                                              NATURES.begin(),
+                                              NATURES.end(),
+                                              nature
+                                          )
+                                     ));
+
+        // Update the personality to match.
+        _set_nature(
+            &_blockA_ptr->personality,
+            nature
+        );
     }
 
     std::string pokemon_gen6impl::get_ability()

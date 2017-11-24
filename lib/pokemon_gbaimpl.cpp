@@ -25,6 +25,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
+#include <pkmn/calculations/nature.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/utils/paths.hpp>
 
@@ -34,6 +35,7 @@
 
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
+#include <pksav/common/nds_pokemon.h>
 #include <pksav/common/stats.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
@@ -347,8 +349,6 @@ namespace pkmn
                 else
                 {
                     ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
-                    ret->set_level_met(get_level());
-                    ret->set_original_game(get_game());
                 }
                 break;
 
@@ -361,6 +361,8 @@ namespace pkmn
                 throw std::invalid_argument("Generation III Pokémon can only be converted to Generation III-VI.");
         }
 
+        ret->set_level_met(get_level());
+        ret->set_original_game(get_original_game());
         return ret;
     }
 
@@ -548,7 +550,6 @@ namespace pkmn
 
         _set_modern_shininess(
             &GBA_PC_RCAST->personality,
-            &GBA_PC_RCAST->ot_id.id,
             value
         );
 
@@ -695,6 +696,21 @@ namespace pkmn
         }
     }
 
+    pkmn::datetime pokemon_gbaimpl::get_date_met(
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
+    void pokemon_gbaimpl::set_date_met(
+        PKMN_UNUSED(const pkmn::datetime &date),
+        PKMN_UNUSED(bool as_egg)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
+    }
+
     int pokemon_gbaimpl::get_friendship()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -711,6 +727,27 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _growth->friendship = uint8_t(friendship);
+    }
+
+    std::string pokemon_gbaimpl::get_nature()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        return pkmn::calculations::nature(
+                   pksav_littleendian32(GBA_PC_RCAST->personality)
+               );
+    }
+
+    void pokemon_gbaimpl::set_nature(
+        const std::string &nature
+    )
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        _set_nature(
+            &GBA_PC_RCAST->personality,
+            nature
+        );
     }
 
     std::string pokemon_gbaimpl::get_ability()
@@ -998,7 +1035,7 @@ namespace pkmn
         );
     }
 
-    static const std::unordered_map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
+    static const std::map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
         ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
         ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
         ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
@@ -1013,7 +1050,7 @@ namespace pkmn
         ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
     ;
 
-    static const std::unordered_map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
+    static const std::map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
         ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
         ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
         ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
@@ -1021,7 +1058,7 @@ namespace pkmn
         ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
     ;
 
-    static const std::unordered_map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
+    static const std::map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
@@ -1029,7 +1066,7 @@ namespace pkmn
         ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
     ;
 
-    static const std::unordered_map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
+    static const std::map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)

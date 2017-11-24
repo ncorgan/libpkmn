@@ -11,6 +11,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/types/datetime.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <cstdint>
@@ -130,10 +131,25 @@ namespace pkmn {
                 const std::string &trainer_gender
             ) = 0;
 
+            virtual pkmn::datetime get_date_met(
+                bool as_egg
+            ) = 0;
+
+            virtual void set_date_met(
+                const pkmn::datetime &date,
+                bool as_egg
+            ) = 0;
+
             virtual int get_friendship() = 0;
 
             virtual void set_friendship(
                 int friendship
+            ) = 0;
+
+            virtual std::string get_nature() = 0;
+
+            virtual void set_nature(
+                const std::string &nature
             ) = 0;
 
             virtual std::string get_ability() = 0;
