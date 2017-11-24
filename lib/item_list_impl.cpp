@@ -111,6 +111,7 @@ namespace pkmn {
                 }
 
             case 3:
+            case 6:
                 if(game_is_gamecube(game_id)) {
                     return pkmn::make_shared<item_list_gcnimpl>(
                                item_list_id, game_id, nullptr, capacity, false
@@ -126,7 +127,6 @@ namespace pkmn {
             // are done.
             case 4:
             case 5:
-            case 6:
                 throw pkmn::unimplemented_error();
 
             default:
