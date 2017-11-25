@@ -286,6 +286,17 @@ namespace pkmn
 
         std::string ret = "None";
 
+        // Check the mask. We won't distinguish between sleep states for different
+        // numbers of turns.
+        for(const auto& mask_iter: pksav::CONDITION_MASK_BIMAP.right)
+        {
+            if(GEN6_PARTY_RCAST->status & mask_iter.first)
+            {
+                ret = mask_iter.second;
+                break;
+            }
+        }
+
         return ret;
     }
 
@@ -293,7 +304,28 @@ namespace pkmn
         const std::string& condition
     )
     {
-        (void)condition;
+        auto condition_iter = pksav::CONDITION_MASK_BIMAP.left.find(condition);
+
+        if(condition_iter != pksav::CONDITION_MASK_BIMAP.left.end())
+        {
+            boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+            GEN6_PARTY_RCAST->status = 0;
+
+            if(condition == "Asleep")
+            {
+                // Sleep is stored as the number of turns asleep, so set a random value.
+                GEN6_PARTY_RCAST->status = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
+            }
+            else
+            {
+                GEN6_PARTY_RCAST->status = pksav_littleendian32(condition_iter->second);
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("Invalid condition.");
+        }
     }
 
     std::string pokemon_gen6impl::get_nickname()
