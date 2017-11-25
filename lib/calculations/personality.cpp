@@ -40,15 +40,19 @@ namespace pkmn { namespace calculations {
     static uint32_t get_gender_threshold(
         float chance_male
     ) {
+        uint32_t ret = 0;
+
         if(pkmn::floats_close(chance_male, 0.875f)) {
-            return 31;
+            ret = 31;
         } else if(pkmn::floats_close(chance_male, 0.75f)) {
-            return 64;
+            ret = 64;
         } else if(pkmn::floats_close(chance_male, 0.5f)) {
-            return 127;
+            ret = 127;
         } else {
-            return 191;
+            ret = 191;
         }
+
+        return ret;
     }
 
     uint32_t generate_personality(

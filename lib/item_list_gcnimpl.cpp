@@ -9,12 +9,9 @@
 
 #include <pkmn/database/item_entry.hpp>
 
-#include <pksav/math/endian.h>
-
-#include <algorithm>
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<LibPkmGC::Item*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<LibPkmGC::Item*>(_native))
 
 namespace pkmn {
 
@@ -45,7 +42,7 @@ namespace pkmn {
     }
 
     item_list_gcnimpl::~item_list_gcnimpl() {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete[] NATIVE_RCAST;
@@ -55,7 +52,7 @@ namespace pkmn {
     void item_list_gcnimpl::_from_native(
         int index
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
@@ -77,7 +74,7 @@ namespace pkmn {
     void item_list_gcnimpl::_to_native(
         int index
     ) {
-        item_list_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {

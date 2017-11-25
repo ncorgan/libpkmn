@@ -15,7 +15,7 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST reinterpret_cast<pkmn::gen2_pokemon_full_pc_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pkmn::gen2_pokemon_full_pc_t*>(_native))
 
 BOOST_STATIC_CONSTEXPR uint8_t GEN2_TEXT_TERMINATOR = 0x50;
 

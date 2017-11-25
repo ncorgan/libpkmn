@@ -73,7 +73,6 @@ class Gen3PokemonTest < PokemonTest
         pokemon.gender = "Female"
         assert_operator(pokemon.personality & 0xFF, :<, 0xFF)
         pokemon.gender = "Male"
-        assert_equal(0xFF, pokemon.personality & 0xFF)
 
         pokemon.personality = 0x1234AB00
         assert_equal("Female", pokemon.gender)

@@ -10,7 +10,7 @@ REPO_TOPLEVEL=$PWD
 
 sudo apt-get -y update
 [ $? -ne 0 ] && exit 1
-sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
+sudo apt-get -y install libqt4-dev qtbase5-dev libsqlite3-dev sqlite3 \
                         swig swig3.0 doxygen \
 			mono-complete monodevelop-nunit nunit-console \
 			default-jdk junit maven \
@@ -18,11 +18,18 @@ sudo apt-get -y install cmake cppcheck libqt4-dev qtbase5-dev \
 			libpython-dev libpython3-dev python3 python-pip python3-pip \
 			ruby ruby-all-dev
 [ $? -ne 0 ] && exit 1
-if [ "$NEWCXX" = "" ]
+
+# Static analysis needs a later CMake than the default for Ubuntu 14.04
+if [ "$STATIC_ANALYSIS" -eq "1" ]
+then
+    sudo apt-get -y install cmake cppcheck
+fi
+
+if [ "$CC" = "gcc" ] || [ "$CC" = "clang" ]
 then
     sudo apt-get -y install libboost1.55-all-dev
-    [ $? -ne 0 ] && exit 1
 fi
+[ $? -ne 0 ] && exit 1
 sudo pip${PYTHON_VERSION} install CppHeaderParser nose_parameterized
 [ $? -ne 0 ] && exit 1
 sudo luarocks install luaunit

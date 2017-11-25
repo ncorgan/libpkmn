@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +16,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include <cstdint>
 #include <fstream>
 #include <stdexcept>
 
@@ -98,27 +97,9 @@ namespace pkmn { namespace io {
         std::vector<uint8_t> buffer(filesize);
 
         std::ifstream ifile(filepath.c_str(), std::ios::binary);
-        ifile.read((char*)buffer.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(buffer.data()), filesize);
         ifile.close();
 
         return load_3gpkm(buffer);
     }
-
-    void save_3gpkm(
-        pkmn::pokemon::sptr libpkmn_pokemon,
-        const std::string &filepath
-    ) {
-        int generation = pkmn::database::game_id_to_generation(
-                             libpkmn_pokemon->get_database_entry().get_game_id()
-                         );
-
-        if(generation != 3) {
-            throw std::invalid_argument("Only GBA Pokémon can be saved to .3gpkm files.");
-        }
-
-        std::ofstream ofile(filepath.c_str(), std::ios::binary);
-        ofile.write((char*)libpkmn_pokemon->get_native_pc_data(), sizeof(pksav_gba_pc_pokemon_t));
-        ofile.close();
-    }
-
 }}

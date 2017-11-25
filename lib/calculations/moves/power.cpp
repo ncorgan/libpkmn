@@ -24,14 +24,12 @@ namespace pkmn { namespace calculations {
         int target_max_hp
     )
     {
-        if(target_current_hp > target_max_hp)
-        {
-            pkmn::throw_out_of_range(
-                "target_current_hp",
-                0,
-                target_max_hp
-            );
-        }
+        pkmn::enforce_bounds(
+            "Target current HP",
+            target_current_hp,
+            0,
+            target_max_hp
+        );
 
         float hp_percentage = float(target_current_hp) / float(target_max_hp);
         return (hp_percentage < 0.5f) ? 65 : 130;
@@ -43,14 +41,12 @@ namespace pkmn { namespace calculations {
         const std::string& game
     )
     {
-        if(target_current_hp > target_max_hp)
-        {
-            pkmn::throw_out_of_range(
-                "target_current_hp",
-                0,
-                target_max_hp
-            );
-        }
+        pkmn::enforce_bounds(
+            "Target current HP",
+            target_current_hp,
+            0,
+            target_max_hp
+        );
 
         int generation = pkmn::database::game_name_to_generation(game);
 
@@ -107,14 +103,12 @@ namespace pkmn { namespace calculations {
         int attacker_max_hp
     )
     {
-        if(attacker_current_hp > attacker_max_hp)
-        {
-            pkmn::throw_out_of_range(
-                "attacker_current_hp",
-                0,
-                attacker_max_hp
-            );
-        }
+        pkmn::enforce_bounds(
+            "Attacker current HP",
+            attacker_current_hp,
+            0,
+            attacker_max_hp
+        );
 
         float hp_percentage = float(attacker_current_hp) / float(attacker_max_hp);
 
@@ -155,10 +149,12 @@ namespace pkmn { namespace calculations {
         int friendship
     )
     {
-        if(friendship < 0 or friendship > 255)
-        {
-            pkmn::throw_out_of_range("friendship", 0, 255);
-        }
+        pkmn::enforce_bounds(
+            "Friendship",
+            friendship,
+            0,
+            255
+        );
 
         return std::max<int>(
                    1,
@@ -317,13 +313,13 @@ namespace pkmn { namespace calculations {
         int accuracy_stat_stage
     )
     {
-        enforce_value_range("attack_stat_stage", 0, 6, attack_stat_stage);
-        enforce_value_range("defense_stat_stage", 0, 6, defense_stat_stage);
-        enforce_value_range("special_attack_stat_stage", 0, 6, special_attack_stat_stage);
-        enforce_value_range("special_defense_stat_stage", 0, 6, special_defense_stat_stage);
-        enforce_value_range("speed_stat_stage", 0, 6, speed_stat_stage);
-        enforce_value_range("evasion_stat_stage", 0, 6, evasion_stat_stage);
-        enforce_value_range("accuracy_stat_stage", 0, 6, accuracy_stat_stage);
+        pkmn::enforce_bounds("Attack stat stage", attack_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Defense stat stage", defense_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Special Attack stat stage", special_attack_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Special Defense stat stage", special_defense_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Speed stat_stage", speed_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Evasion stat stage", evasion_stat_stage, 0, 6);
+        pkmn::enforce_bounds("Accuracy stat stage", accuracy_stat_stage, 0, 6);
 
         int multiplier = attack_stat_stage
                        + defense_stat_stage
@@ -389,10 +385,7 @@ namespace pkmn { namespace calculations {
         int friendship
     )
     {
-        if(friendship < 0 or friendship > 255)
-        {
-            pkmn::throw_out_of_range("friendship", 0, 255);
-        }
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         return std::max<int>(
                    1,
@@ -413,7 +406,7 @@ namespace pkmn { namespace calculations {
         int num_stockpile_used
     )
     {
-        enforce_value_range("num_stockpile_used", 0, 3, num_stockpile_used);
+        pkmn::enforce_bounds("Number Stockpile used", num_stockpile_used, 0, 3);
 
         return (100 * num_stockpile_used);
     }
@@ -444,9 +437,9 @@ namespace pkmn { namespace calculations {
         int pp_remaining_after_use
     )
     {
-        enforce_value_range("pp_remaining_after_use", 0, 4, pp_remaining_after_use);
+        pkmn::enforce_bounds("PP remaining after use", pp_remaining_after_use, 0, 4);
 
-        static PKMN_CONSTEXPR int TRUMP_CARD_POWERS[] = {200, 80, 60, 50, 40};
+        static const int TRUMP_CARD_POWERS[] = {200, 80, 60, 50, 40};
 
         return TRUMP_CARD_POWERS[pp_remaining_after_use];
     }
@@ -456,11 +449,11 @@ namespace pkmn { namespace calculations {
         int attacker_max_hp
     )
     {
-        enforce_value_range(
-            "attacker_current_hp",
+        pkmn::enforce_bounds(
+            "Attacker current HP",
+            attacker_current_hp,
             0,
-            attacker_max_hp,
-            attacker_current_hp
+            attacker_max_hp
         );
 
         return int(150.0f * (float(attacker_current_hp) / float(attacker_max_hp)));

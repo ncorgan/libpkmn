@@ -48,6 +48,10 @@ namespace pkmn {
                 const std::string& game
             ) = 0;
 
+            virtual void export_to_file(
+                const std::string& filepath
+            ) = 0;
+
             virtual std::string get_species() = 0;
 
             virtual std::string get_game() = 0;
@@ -58,7 +62,19 @@ namespace pkmn {
                 const std::string &form
             ) = 0;
 
+            virtual bool is_egg() = 0;
+
+            virtual void set_is_egg(
+                bool is_egg
+            ) = 0;
+
             virtual const pkmn::database::pokemon_entry& get_database_entry() = 0;
+
+            virtual std::string get_condition() = 0;
+
+            virtual void set_condition(
+                const std::string& condition
+            ) = 0;
 
             virtual std::string get_nickname() = 0;
 
@@ -211,6 +227,12 @@ namespace pkmn {
             virtual void set_IV(
                 const std::string &stat,
                 int value
+            ) = 0;
+
+            virtual int get_current_hp() = 0;
+
+            virtual void set_current_hp(
+                int hp
             ) = 0;
 
             virtual const std::map<std::string, int>& get_stats() = 0;

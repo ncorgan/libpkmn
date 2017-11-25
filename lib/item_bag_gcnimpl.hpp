@@ -21,7 +21,7 @@ namespace pkmn {
             ~item_bag_gcnimpl();
 
         private:
-            void _set_ptrs();
+            void _set_ptrs() override final;
     };
 
 }

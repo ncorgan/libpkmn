@@ -5,16 +5,18 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "../exception_internal.hpp"
 #include "../misc_common.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/calculations/size.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-#include <pkmn/exception.hpp>
 
 #include <boost/assign.hpp>
 
 #include <cmath>
 #include <unordered_map>
+#include <utility>
 
 struct size_xyz_t {
     size_xyz_t(uint16_t _x, uint16_t _y, uint16_t _z):
@@ -43,25 +45,28 @@ static const std::unordered_map<uint16_t, size_xyz_t> XYZ = boost::assign::map_l
     (65535, size_xyz_t(1700,1,65510))
 ;
 
-uint16_t get_s(
+typedef std::pair<uint16_t, size_xyz_t> xyz_pair_t;
+
+static uint16_t get_s(
     uint16_t s_from_calculation
 ) {
+    uint16_t ret = 0;
+
     // The loop won't catch this.
     if(s_from_calculation == 0) {
-        return 9;
-    }
-
-    uint16_t last_value = 0;
-    for(auto xyz_iter = XYZ.begin(); xyz_iter != XYZ.end(); ++xyz_iter) {
-        if(s_from_calculation > last_value and s_from_calculation <= xyz_iter->first) {
-            return xyz_iter->first;
-        } else {
-            last_value = xyz_iter->first;
+        ret = 9;
+    } else {
+        uint16_t last_value = 0;
+        for(const xyz_pair_t& xyz_pair: XYZ) {
+            if(s_from_calculation > last_value and s_from_calculation <= xyz_pair.first) {
+                ret = xyz_pair.first;
+            } else {
+                last_value = xyz_pair.first;
+            }
         }
     }
 
-    // This should never happen, since the map encompasses the entire uint16_t range.
-    return 65535;
+    return ret;
 }
 
 PKMN_INLINE static float round_float(float value) {
@@ -81,25 +86,14 @@ namespace pkmn { namespace calculations {
         int IV_spdef
     ) {
         // Input validation
-        if(not pkmn::IV_in_bounds(IV_HP, true)) {
-            pkmn::throw_out_of_range("IV_HP", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_attack, true)) {
-            pkmn::throw_out_of_range("IV_attack", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_defense, true)) {
-            pkmn::throw_out_of_range("IV_defense", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_speed, true)) {
-            pkmn::throw_out_of_range("IV_speed", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spatk, true)) {
-            pkmn::throw_out_of_range("IV_spatk", 0, 31);
-        }
-        if(not pkmn::IV_in_bounds(IV_spdef, true)) {
-            pkmn::throw_out_of_range("IV_spdef", 0, 31);
-        }
+        pkmn::enforce_IV_bounds("HP",              IV_HP,      true);
+        pkmn::enforce_IV_bounds("Attack",          IV_attack,  true);
+        pkmn::enforce_IV_bounds("Defense",         IV_defense, true);
+        pkmn::enforce_IV_bounds("Speed",           IV_speed,   true);
+        pkmn::enforce_IV_bounds("Special Attack",  IV_spatk,   true);
+        pkmn::enforce_IV_bounds("Special Defense", IV_spdef,   true);
 
+        // TODO: can this be done without instantiating an entire entry?
         uint16_t h = uint16_t(pkmn::database::pokemon_entry(species, "HeartGold", "").get_height() * 10);
 
         uint16_t p1 = uint16_t(personality % 256);

@@ -7,8 +7,6 @@
 #ifndef PKMN_POKEMON_IMPL_HPP
 #define PKMN_POKEMON_IMPL_HPP
 
-#include "mem/scoped_lock.hpp"
-
 #include <pkmn/pokemon.hpp>
 
 #include <pksav/common/contest_stats.h>
@@ -16,12 +14,14 @@
 
 #include <boost/assign.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
+
+#include <boost/thread/lockable_adapter.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <stdexcept>
-#include <map>
+#include <unordered_map>
 
-static const std::map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
+static const std::unordered_map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
     ("HP",              PKSAV_STAT_HP)
     ("Attack",          PKSAV_STAT_ATTACK)
     ("Defense",         PKSAV_STAT_DEFENSE)
@@ -37,76 +37,77 @@ namespace pkmn {
     class pokemon_impl;
     class pokemon_box_impl;
     class pokemon_party_impl;
-    namespace mem {
-        void set_pokemon_in_box(
-                 pokemon_impl* new_pokemon,
-                 pokemon_box_impl* box,
-                 int index
-             );
-    }
-    namespace mem {
-        void set_pokemon_in_party(
-                 pokemon_impl* new_pokemon,
-                 pokemon_party_impl* party,
-                 int index
-             );
-    }
 
-    class pokemon_impl: public pokemon, public boost::noncopyable {
+    class pokemon_impl: public pokemon,
+                        public boost::noncopyable,
+                        public boost::basic_lockable_adapter<boost::recursive_mutex>
+    {
         public:
             pokemon_impl() {}
             pokemon_impl(
                 int pokemon_index,
                 int game_id
             );
-            pokemon_impl(
+            explicit pokemon_impl(
                 pkmn::database::pokemon_entry&& database_entry
             );
 
             virtual ~pokemon_impl() {}
 
-            std::string get_species();
+            std::string get_species() override final;
 
-            std::string get_form();
+            std::string get_form() override final;
 
-            std::string get_game();
+            std::string get_game() override final;
 
-            const pkmn::database::pokemon_entry& get_database_entry();
+            const pkmn::database::pokemon_entry& get_database_entry() override final;
 
-            const std::map<std::string, bool>& get_markings();
+            const std::map<std::string, bool>& get_markings() override final;
 
-            const std::map<std::string, bool>& get_ribbons();
+            const std::map<std::string, bool>& get_ribbons() override final;
 
-            const std::map<std::string, int>& get_contest_stats();
+            const std::map<std::string, int>& get_contest_stats() override final;
 
-            const pkmn::move_slots_t& get_moves();
+            const pkmn::move_slots_t& get_moves() override final;
 
-            const std::map<std::string, int>& get_EVs();
+            const std::map<std::string, int>& get_EVs() override final;
 
-            const std::map<std::string, int>& get_IVs();
+            const std::map<std::string, int>& get_IVs() override final;
 
-            const std::map<std::string, int>& get_stats();
+            const std::map<std::string, int>& get_stats() override final;
 
-            virtual std::string get_icon_filepath();
+            virtual std::string get_icon_filepath() override;
 
-            virtual std::string get_sprite_filepath();
+            virtual std::string get_sprite_filepath() override;
 
-            void* get_native_pc_data();
+            void* get_native_pc_data() override final;
 
-            void* get_native_party_data();
+            void* get_native_party_data() override final;
 
-            typedef pkmn::mem::scoped_lock<pokemon_impl> pokemon_scoped_lock;
-            friend pokemon_scoped_lock;
-            friend void pkmn::mem::set_pokemon_in_box(
-                            pokemon_impl* new_pokemon,
-                            pokemon_box_impl* box,
-                            int index
-                        );
-            friend void pkmn::mem::set_pokemon_in_party(
-                            pokemon_impl* new_pokemon,
-                            pokemon_party_impl* party,
-                            int index
-                        );
+            // Make the box implementations friend classes so they can access the internals.
+            friend class pokemon_box_impl;
+            friend class pokemon_box_gbaimpl;
+            friend class pokemon_box_gcnimpl;
+
+            template
+            <typename list_type,
+             typename pksav_pc_pokemon_type,
+             typename pksav_pokemon_party_data_type,
+             typename libpkmn_pokemon_type>
+            friend class pokemon_box_gbimpl;
+
+            // Make the party implementations friend classes so they can access the internals.
+            friend class pokemon_party_impl;
+            friend class pokemon_party_gbaimpl;
+            friend class pokemon_party_gcnimpl;
+
+            template
+            <typename list_type,
+             typename pksav_pc_pokemon_type,
+             typename pksav_pokemon_party_data_type,
+             typename pksav_party_pokemon_type,
+             typename libpkmn_pokemon_type>
+            friend class pokemon_party_gbimpl;
 
         protected:
             pkmn::move_slots_t _moves;
@@ -123,7 +124,7 @@ namespace pkmn {
             void* _native_pc;
             void* _native_party;
 
-            boost::mutex _mem_mutex;
+            boost::recursive_mutex _mem_mutex;
 
             virtual void _populate_party_data() = 0;
 
@@ -206,6 +207,8 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
+            virtual void _update_held_item() {}
+            virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}
             virtual void _update_EV_map() = 0;
             virtual void _update_stat_map() = 0;

@@ -117,7 +117,6 @@ ENDIF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
 ########################################################################
 ADD_SUBDIRECTORY(PkmGCTools/LibPkmGC)
 
-INCLUDE(PKSavConfig)
 ADD_SUBDIRECTORY(pksav)
 
 ########################################################################
@@ -133,6 +132,11 @@ IF(NOT PKMN_USED_AS_SUBPROJECT)
         ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
     )
 ENDIF(NOT PKMN_USED_AS_SUBPROJECT)
+
+########################################################################
+# Check for specified test tools
+########################################################################
+INCLUDE(StaticAnalysisTools)
 
 ####################################################################
 # Components

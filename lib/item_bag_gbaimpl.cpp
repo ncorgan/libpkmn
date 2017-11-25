@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST    reinterpret_cast<pksav_gba_item_storage_t*>(_native)
-#define RS_STORAGE      NATIVE_RCAST->rs
-#define EMERALD_STORAGE NATIVE_RCAST->emerald
-#define FRLG_STORAGE    NATIVE_RCAST->frlg
+#define NATIVE_RCAST    (reinterpret_cast<pksav_gba_item_storage_t*>(_native))
+#define RS_STORAGE      (NATIVE_RCAST->rs)
+#define EMERALD_STORAGE (NATIVE_RCAST->emerald)
+#define FRLG_STORAGE    (NATIVE_RCAST->frlg)
 
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
@@ -18,6 +18,7 @@
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <cstring>
+#include <stdexcept>
 
 namespace pkmn {
 
@@ -51,7 +52,7 @@ namespace pkmn {
     }
 
     item_bag_gbaimpl::~item_bag_gbaimpl() {
-        item_bag_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;

@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "exception_internal.hpp"
 #include "game_save_gcnimpl.hpp"
 #include "item_bag_gcnimpl.hpp"
 #include "item_list_gcnimpl.hpp"
@@ -13,14 +14,14 @@
 
 #include "misc_common.hpp"
 
-#include "pksav/pksav_call.hpp"
-
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
 #include <fstream>
+#include <stdexcept>
 
 namespace fs = boost::filesystem;
 
@@ -41,7 +42,7 @@ namespace pkmn {
         _data.resize(filesize);
 
         std::ifstream ifile(filepath, std::ios::binary);
-        ifile.read((char*)_data.data(), filesize);
+        ifile.read(reinterpret_cast<char*>(_data.data()), filesize);
         ifile.close();
 
         _has_gci_data = false;
@@ -92,10 +93,10 @@ namespace pkmn {
     void game_save_gcnimpl::save_as(
         const std::string &filepath
     ) {
-        _libpkmgc_save->saveEncrypted((LibPkmGC::u8*)_data.data(), _has_gci_data);
+        _libpkmgc_save->saveEncrypted(_data.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);
-        ofile.write((const char*)_data.data(), _data.size());
+        ofile.write(reinterpret_cast<const char*>(_data.data()), _data.size());
         ofile.close();
 
         _filepath = fs::absolute(filepath).string();
@@ -107,10 +108,14 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_trainer_name(
         const std::string &trainer_name
-    ) {
-        if(trainer_name.size() == 0 or trainer_name.size() > 7) {
-            throw std::invalid_argument("trainer_name: valid length 1-7");
-        }
+    )
+    {
+        pkmn::enforce_string_length(
+            "Trainer name",
+            trainer_name,
+            1,
+            7
+        );
 
         _current_slot->player->trainer->trainerName->fromUTF8(trainer_name.c_str());
     }
@@ -172,10 +177,9 @@ namespace pkmn {
 
     void game_save_gcnimpl::set_money(
         int money
-    ) {
-        if(money < 0 or money > MONEY_MAX_VALUE) {
-            pkmn::throw_out_of_range("money", 0, MONEY_MAX_VALUE);
-        }
+    )
+    {
+        pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }

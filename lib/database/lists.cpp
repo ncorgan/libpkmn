@@ -9,14 +9,13 @@
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
+#include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/database/lists.hpp>
 
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
-
-#include <stdexcept>
 
 namespace pkmn { namespace database {
 
@@ -25,9 +24,7 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_ability_list(
         int generation
     ) {
-        if(generation < 3 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 3, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 3, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -49,9 +46,7 @@ namespace pkmn { namespace database {
         int generation,
         bool include_previous
     ) {
-        if(generation < 1 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 1, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);
@@ -336,7 +331,7 @@ namespace pkmn { namespace database {
                     }
 
                     while(stmt.executeStep()) {
-                        ret.push_back((const char*)stmt.getColumn(0));
+                        ret.push_back(static_cast<const char*>(stmt.getColumn(0)));
                     }
                 }
             }
@@ -426,9 +421,7 @@ namespace pkmn { namespace database {
         int generation,
         bool include_previous
     ) {
-        if(generation < 1 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
+        pkmn::enforce_bounds("generation", generation, 1, 6);
 
         // Connect to database
         pkmn::database::get_connection(_db);

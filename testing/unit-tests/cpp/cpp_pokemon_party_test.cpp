@@ -29,34 +29,42 @@ typedef struct {
     LibPkmGC::GC::Pokemon* pokemon[6];
 } gcn_pokemon_party_t;
 
-class pokemon_party_test: public ::testing::TestWithParam<std::string> {
+struct test_params_t
+{
+    std::string party_game;
+    std::vector<std::string> valid_other_games;
+    std::string invalid_other_game;
+};
+
+class pokemon_party_test: public ::testing::TestWithParam<test_params_t> {
     public:
         PKMNTEST_INLINE pkmn::pokemon_party::sptr get_party() {
             return _party;
         }
 
         PKMNTEST_INLINE const std::string& get_game() {
-            return _game;
+            return test_params.party_game;
         }
 
         PKMNTEST_INLINE void reset_party() {
-            _party = pkmn::pokemon_party::make(_game);
+            _party = pkmn::pokemon_party::make(test_params.party_game);
 
             ASSERT_NE(nullptr, _party.get());
-            ASSERT_EQ(_game, _party->get_game());
+            ASSERT_EQ(test_params.party_game, _party->get_game());
             ASSERT_EQ(0, _party->get_num_pokemon());
             ASSERT_EQ(6, _party->as_vector().size());
         }
 
+        test_params_t test_params;
+
     protected:
         void SetUp() {
-            _game = GetParam();
+            test_params = GetParam();
             reset_party();
         }
 
     private:
 
-        std::string _game;
         pkmn::pokemon_party::sptr _party;
 };
 
@@ -301,26 +309,55 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
         default:
             break;
     }
+
+    // Make sure converting Pokémon before putting into the party works (or doesn't work) as expected.
+
+    for(const std::string& valid_game: test_params.valid_other_games)
+    {
+        pkmn::pokemon::sptr pikachu = pkmn::pokemon::make(
+                                          "Pikachu",
+                                          valid_game,
+                                          "",
+                                          50
+                                      );
+        party->set_pokemon(3, pikachu);
+
+        pkmn::pokemon::sptr party_pokemon = party->get_pokemon(3);
+        EXPECT_EQ("Pikachu", party_pokemon->get_species());
+        EXPECT_EQ(test_params.party_game, party_pokemon->get_game());
+        EXPECT_EQ(50, party_pokemon->get_level());
+    }
+
+    pkmn::pokemon::sptr invalid_pikachu = pkmn::pokemon::make(
+                                              "Pikachu",
+                                              test_params.invalid_other_game,
+                                              "",
+                                              50
+                                          );
+    EXPECT_THROW(
+        party->set_pokemon(3, invalid_pikachu);
+    , std::invalid_argument);
 }
 
-static const std::string games[] = {
-    "Red",
-    "Blue",
-    "Yellow",
-    "Gold",
-    "Silver",
-    "Crystal",
-    "Ruby",
-    "Sapphire",
-    "Emerald",
-    "FireRed",
-    "LeafGreen",
-    "Colosseum",
-    "XD"
+static const test_params_t PARAMS[] =
+{
+    {"Red", {"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby"},
+    {"Blue", {"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire"},
+    {"Yellow", {"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald"},
+    {"Gold", {"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed"},
+    {"Silver", {"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen"},
+    {"Crystal", {"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum"},
+    {"Ruby", {"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red"},
+    {"Sapphire", {"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue"},
+    {"Emerald", {"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow"},
+    {"FireRed", {"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold"},
+    {"LeafGreen", {"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver"},
+    {"Colosseum", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal"},
+    {"XD", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red"},
 };
 
 INSTANTIATE_TEST_CASE_P(
     cpp_pokemon_party_test,
     pokemon_party_test,
-    ::testing::ValuesIn(games)
+    ::testing::ValuesIn(PARAMS)
 );

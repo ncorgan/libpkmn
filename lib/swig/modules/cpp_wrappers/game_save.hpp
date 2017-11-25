@@ -11,6 +11,8 @@
 #include <pkmn/config.hpp>
 #include <pkmn/game_save.hpp>
 
+#include "swig/modules/cpp_wrappers/item_list.hpp"
+#include "swig/modules/cpp_wrappers/item_bag.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
 
@@ -27,21 +29,18 @@ namespace pkmn { namespace swig {
                 const pkmn::game_save::sptr& cpp_game_save
             ): _game_save(cpp_game_save)
             {
-                _init();
             }
 
             game_save(
                 const std::string& filepath 
             ): _game_save(pkmn::game_save::from_file(filepath))
             {
-                _init();
             }
 
             game_save(
                 const game_save& other
             ): _game_save(other._game_save)
             {
-                _init();
             }
 
             static std::string detect_type(
@@ -164,37 +163,28 @@ namespace pkmn { namespace swig {
                 _game_save->set_money(money);
             }
 
-            PKMN_INLINE pkmn::swig::pokemon_party& get_pokemon_party()
+            PKMN_INLINE pkmn::swig::pokemon_party get_pokemon_party()
             {
-                return _pokemon_party;
+                return pkmn::swig::pokemon_party(_game_save->get_pokemon_party());
             }
 
-            PKMN_INLINE pkmn::swig::pokemon_pc& get_pokemon_pc()
+            PKMN_INLINE pkmn::swig::pokemon_pc get_pokemon_pc()
             {
-                return _pokemon_pc;
+                return pkmn::swig::pokemon_pc(_game_save->get_pokemon_pc());
             }
 
-            PKMN_INLINE pkmn::item_bag::sptr get_item_bag()
+            PKMN_INLINE pkmn::swig::item_bag get_item_bag()
             {
-                return _game_save->get_item_bag();
+                return pkmn::swig::item_bag(_game_save->get_item_bag());
             }
 
-            PKMN_INLINE pkmn::item_list::sptr get_item_pc()
+            PKMN_INLINE pkmn::swig::item_list get_item_pc()
             {
-                return _game_save->get_item_pc();
+                return pkmn::swig::item_list(_game_save->get_item_pc());
             }
 
         private:
             pkmn::game_save::sptr _game_save;
-
-            pkmn::swig::pokemon_party _pokemon_party;
-            pkmn::swig::pokemon_pc _pokemon_pc;
-
-            void _init()
-            {
-                _pokemon_party = pkmn::swig::pokemon_party(_game_save->get_pokemon_party());
-                _pokemon_pc = pkmn::swig::pokemon_pc(_game_save->get_pokemon_pc());
-            }
     };
 
 }}

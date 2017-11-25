@@ -8,6 +8,8 @@
 #ifndef CPP_WRAPPERS_POKEMON_BOX_HPP
 #define CPP_WRAPPERS_POKEMON_BOX_HPP
 
+#include "exception_internal.hpp"
+
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_box.hpp>
@@ -82,10 +84,7 @@ namespace pkmn { namespace swig {
             )
             {
                 int capacity = _pokemon_box->get_capacity();
-                if(index < 0 or index > capacity)
-                {
-                    pkmn::throw_out_of_range("index", 0, capacity);
-                }
+                pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
                 return pkmn::swig::pokemon(_pokemon_box->get_pokemon(index));
             }

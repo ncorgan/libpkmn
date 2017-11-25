@@ -17,8 +17,8 @@ namespace pkmn { namespace qt {
     ): QComboBox(parent)
     {
         std::vector<std::string> shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(colosseum);
-        for(auto iter = shadow_pokemon.begin(); iter != shadow_pokemon.end(); ++iter) {
-            addItem(QString::fromStdString(*iter));
+        for(const std::string& gamecube_shadow_pokemon: shadow_pokemon) {
+            addItem(QString::fromStdString(gamecube_shadow_pokemon));
         }
 
         setEditable(false);

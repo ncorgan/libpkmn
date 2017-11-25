@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,44 +12,40 @@
 #include <pkmn/item_bag.hpp>
 
 #include <boost/noncopyable.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace pkmn {
-
-    class item_bag_impl;
-    typedef pkmn::mem::scoped_lock<item_bag_impl> item_bag_scoped_lock;
 
     class item_bag_impl: public item_bag, boost::noncopyable {
         public:
             item_bag_impl() {};
-            item_bag_impl(
+            explicit item_bag_impl(
                 int game_id
             );
 
             virtual ~item_bag_impl() {};
 
-            std::string get_game();
+            std::string get_game() override final;
 
             pkmn::item_list::sptr get_pocket(
                 const std::string &name
-            );
+            ) override final;
 
-            const pkmn::item_pockets_t& get_pockets();
+            const pkmn::item_pockets_t& get_pockets() override final;
 
-            const std::vector<std::string>& get_pocket_names();
+            const std::vector<std::string>& get_pocket_names() override final;
 
             virtual void add(
                 const std::string &item_name,
                 int amount
-            );
+            ) override final;
 
             virtual void remove(
                 const std::string &item_name,
                 int amount
-            );
+            ) override final;
 
-            void* get_native();
-
-            friend item_bag_scoped_lock;
+            void* get_native() override final;
 
         protected:
             int _game_id;

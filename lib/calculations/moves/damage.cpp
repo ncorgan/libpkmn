@@ -27,10 +27,12 @@ namespace pkmn { namespace calculations {
         int defense_stat,
         float modifier
     ) {
-        // Validate input parameters (allow 255 for glitch Pokémon).
-        if(attacker_level < 1 or attacker_level > 255) {
-            pkmn::throw_out_of_range("attacker_level", 1, 100);
-        }
+        pkmn::enforce_bounds(
+            "Attacker level",
+            attacker_level,
+            1,
+            255
+        );
         if(move_base_power < 0) {
             throw std::out_of_range("move_base_power must be > 0.");
         }

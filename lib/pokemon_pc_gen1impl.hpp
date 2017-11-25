@@ -13,7 +13,7 @@
 
 namespace pkmn {
 
-    static PKMN_CONSTEXPR int GEN1_NUM_BOXES = 12;
+    BOOST_STATIC_CONSTEXPR int GEN1_NUM_BOXES = 12;
 
     typedef struct {
         pksav_gen1_pokemon_box_t* boxes[GEN1_NUM_BOXES];
@@ -22,7 +22,7 @@ namespace pkmn {
     class pokemon_pc_gen1impl: public pokemon_pc_impl {
         public:
             pokemon_pc_gen1impl() {}
-            pokemon_pc_gen1impl(
+            explicit pokemon_pc_gen1impl(
                 int game_id
             );
             pokemon_pc_gen1impl(
@@ -38,11 +38,11 @@ namespace pkmn {
 
             ~pokemon_pc_gen1impl();
 
-            int get_num_boxes();
+            int get_num_boxes() override final;
 
         private:
-            void _from_native();
-            void _update_box_names();
+            void _from_native() override final;
+            void _update_box_names() override final;
     };
 }
 

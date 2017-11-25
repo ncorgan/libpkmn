@@ -7,6 +7,8 @@
 
 #include "pokemon_test_common.hpp"
 
+#include "pksav/enum_maps.hpp"
+
 #include <pkmntest/util.hpp>
 
 #include <pkmn/exception.hpp>
@@ -34,6 +36,8 @@ static void check_initial_values(
 
     int generation = game_generations.at(game);
     EXPECT_EQ("Standard", pokemon->get_form());
+
+    EXPECT_EQ("None", pokemon->get_condition());
 
     if(generation >= 5) {
         EXPECT_EQ(pokemon->get_species(), pokemon->get_nickname());
@@ -88,10 +92,10 @@ static void check_initial_values(
         EXPECT_EQ(0, iter->pp);
     }
 
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(pokemon->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(pokemon->get_sprite_filepath()));
+
+    EXPECT_EQ(pokemon->get_current_hp(), pokemon->get_stats().at("HP"));
 }
 
 static void check_initial_maps(
@@ -286,6 +290,33 @@ static void test_setting_ball(
             pokemon->set_ball("Great Ball");
         , pkmn::feature_not_in_game_error);
     }
+}
+
+static void test_setting_condition(
+    pkmn::pokemon::sptr pokemon
+)
+{
+    int generation = game_generations.at(pokemon->get_game());
+
+    if(generation <= 2)
+    {
+        for(const auto& condition: pksav::GB_CONDITION_BIMAP.left)
+        {
+            pokemon->set_condition(condition.first);
+            EXPECT_EQ(condition.first, pokemon->get_condition());
+        }
+    }
+    else
+    {
+        for(const auto& condition: pksav::CONDITION_MASK_BIMAP.left)
+        {
+            pokemon->set_condition(condition.first);
+            EXPECT_EQ(condition.first, pokemon->get_condition());
+        }
+    }
+
+    pokemon->set_condition("None");
+    ASSERT_EQ("None", pokemon->get_condition());
 }
 
 static void test_setting_friendship(
@@ -665,6 +696,32 @@ static void test_setting_stats(
             }
         }
     }
+
+    // Check bounds for setting current HP.
+    const std::map<std::string, int>& stats = pokemon->get_stats();
+
+    EXPECT_THROW(
+        pokemon->set_current_hp(-1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pokemon->set_current_hp(stats.at("HP")+1);
+    , std::out_of_range);
+
+    pokemon->set_current_hp(0);
+    EXPECT_EQ(0, pokemon->get_current_hp());
+
+    pokemon->set_current_hp(stats.at("HP"));
+    EXPECT_EQ(stats.at("HP"), pokemon->get_current_hp());
+
+    pokemon->set_current_hp(stats.at("HP")-1);
+    EXPECT_EQ(stats.at("HP")-1, pokemon->get_current_hp());
+
+    // Set the HP stat to lower than the current HP, and make sure it's
+    // updated.
+    int current_hp = pokemon->get_current_hp();
+    pokemon->set_EV("HP", 0);
+    pokemon->set_IV("HP", 0);
+    EXPECT_LE(pokemon->get_current_hp(), current_hp);
 }
 
 static void test_setting_trainer_info(
@@ -751,9 +808,8 @@ void pokemon_test_common(
         test_values.valid_ball,
         test_values.invalid_balls
     );
-    if(game != "Colosseum" and game != "XD") {
-        test_image_filepaths(pokemon);
-    }
+    test_setting_condition(pokemon);
+    test_image_filepaths(pokemon);
     test_setting_friendship(pokemon);
     test_setting_item(
         pokemon,

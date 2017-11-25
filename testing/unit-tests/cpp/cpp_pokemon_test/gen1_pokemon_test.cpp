@@ -58,7 +58,7 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
      * PC data
      */
     EXPECT_EQ(pokemon->get_database_entry().get_pokemon_index(), int(native_pc->species));
-    EXPECT_EQ(pokemon->get_stats().at("HP"), int(pksav_bigendian16(native_pc->current_hp)));
+    EXPECT_EQ(pokemon->get_current_hp(), int(pksav_bigendian16(native_pc->current_hp)));
     EXPECT_EQ(pokemon->get_level(), int(native_pc->level));
     // TODO: change condition and check
     EXPECT_EQ(0, native_pc->condition);

@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST reinterpret_cast<pksav_gen1_item_bag_t*>(_native)
+#define NATIVE_RCAST (reinterpret_cast<pksav_gen1_item_bag_t*>(_native))
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
@@ -47,7 +47,7 @@ namespace pkmn {
     }
 
     item_bag_gen1impl::~item_bag_gen1impl() {
-        item_bag_scoped_lock lock(this);
+        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
 
         if(_our_mem) {
             delete NATIVE_RCAST;

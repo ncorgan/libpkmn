@@ -177,7 +177,7 @@ class GameSaveTest < MiniTest::Test
         end
 
         save.pokemon_pc.each do |box|
-            (0..(box.capacity-1)).each do |i|
+            (0..(box.length-1)).each do |i|
                 # Boxes are only contiguous in Game Boy games.
                 if @@GB_GAMES.include?(save.game)
                     if i < box.num_pokemon

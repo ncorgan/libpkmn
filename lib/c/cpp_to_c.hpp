@@ -60,18 +60,6 @@ typedef struct {
 } pkmn_game_save_t;
 
 typedef struct {
-    pkmn::item_bag::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_item_bag_t;
-
-typedef struct {
-    pkmn::item_list::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_item_list_t;
-
-typedef struct {
     pkmn::pokemon::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
@@ -111,6 +99,36 @@ typedef struct {
 #include <pkmn-c/types/pokemon_list.h>
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/string_types.h>
+
+#include <pkmn-c/item_bag.h>
+#include <pkmn-c/item_list.h>
+
+// Internal representations
+typedef struct {
+    pkmn::item_bag::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_item_bag_internal_t;
+
+typedef struct {
+    pkmn::item_list::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_item_list_internal_t;
+
+// Calls to initialize or update internal representations.
+void init_item_bag(
+    pkmn_item_bag_t* item_bag
+);
+void update_item_bag(
+    pkmn_item_bag_t* item_bag
+);
+void init_item_list(
+    pkmn_item_list_t* item_list
+);
+void update_item_list(
+    pkmn_item_list_t* item_list
+);
 
 namespace pkmn {
 

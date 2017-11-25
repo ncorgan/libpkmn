@@ -20,10 +20,12 @@ namespace pkmn { namespace calculations {
         const std::string &defending_type1,
         const std::string &defending_type2
     ) {
-        // Validate generation.
-        if(generation < 1 or generation > 6) {
-            pkmn::throw_out_of_range("generation", 1, 6);
-        }
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            1,
+            6
+        );
 
         // Validate types.
         if(generation < 2) {

@@ -86,11 +86,12 @@ namespace pkmn { namespace calculations {
         int attacker_level
     )
     {
-        // Validate input parameters (allow 255 for glitch Pokémon).
-        if(attacker_level < 1 or attacker_level > 255)
-        {
-            pkmn::throw_out_of_range("attacker_level", 1, 100);
-        }
+        pkmn::enforce_bounds(
+            "Attacker level",
+            attacker_level,
+            1,
+            255
+        );
 
         return _gen1_critical_hit_modifier(float(attacker_level));
     }
