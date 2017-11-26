@@ -46,6 +46,15 @@ namespace pkmn { namespace calculations {
                 throw std::invalid_argument("The Shadow type is only in Generation III.");
             }
         }
+        if(generation != 4)
+        {
+            if((attacking_type == "???") or
+               (defending_type == "???")
+            )
+            {
+                throw std::invalid_argument("The ??? type is only in Generation IV.");
+            }
+        }
         if(generation < 6)
         {
             if((attacking_type == "Fairy") or

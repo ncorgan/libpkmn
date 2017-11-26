@@ -136,6 +136,51 @@ TEST(cpp_calculations_test, type_damage_modifier_test)
                   );
         , std::invalid_argument);
     }
+
+    // Check that changes between generations are properly
+    // implemented.
+
+    struct modifier_changes_t
+    {
+        std::string attacking_type;
+        std::string defending_type;
+
+        int old_generation;
+        float old_modifier;
+
+        int new_generation;
+        float new_modifier;
+    };
+
+    static const std::vector<modifier_changes_t> modifier_changes_between_generations =
+    {
+        {"Bug",    "Poison",  1, 2.0f, 2, 0.5f},
+        {"Poison", "Bug",     1, 2.0f, 2, 1.0f},
+        {"Ghost",  "Psychic", 1, 0.0f, 2, 2.0f},
+        {"Ice",    "Fire",    1, 1.0f, 2, 0.5f},
+        {"Ghost",  "Steel",   5, 0.5f, 6, 1.0f},
+        {"Dark",   "Steel",   5, 0.5f, 6, 1.0f},
+    };
+
+    for(const auto& modifier_changes: modifier_changes_between_generations)
+    {
+        EXPECT_DOUBLE_EQ(
+            modifier_changes.old_modifier,
+            pkmn::calculations::type_damage_modifier(
+                modifier_changes.old_generation,
+                modifier_changes.attacking_type,
+                modifier_changes.defending_type
+            )
+        );
+        EXPECT_DOUBLE_EQ(
+            modifier_changes.new_modifier,
+            pkmn::calculations::type_damage_modifier(
+                modifier_changes.new_generation,
+                modifier_changes.attacking_type,
+                modifier_changes.defending_type
+            )
+        );
+    }
 }
 
 TEST(cpp_calculations_test, gen2_unown_form_test) {
