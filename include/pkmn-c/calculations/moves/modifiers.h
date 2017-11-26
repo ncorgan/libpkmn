@@ -21,8 +21,7 @@ extern "C" {
 PKMN_API pkmn_error_t pkmn_calculations_type_damage_modifier(
     int generation,
     const char* attacking_type,
-    const char* defending_type1,
-    const char* defending_type2,
+    const char* defending_type,
     float* type_damage_modifier_out
 );
 

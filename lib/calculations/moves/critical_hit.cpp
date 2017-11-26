@@ -11,9 +11,7 @@
 
 namespace pkmn { namespace calculations {
 
-    // Constexpr functions that assume bounds have been checked
-
-    static PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_chance(
+    static inline float _gen1_critical_hit_chance(
         float speed,
         bool rate_increased,
         bool high_rate_move
@@ -24,7 +22,7 @@ namespace pkmn { namespace calculations {
                (high_rate_move ? 8.0f : 1.0f);
     }
 
-    static PKMN_CONSTEXPR_OR_INLINE float _stadium_critical_hit_chance(
+    static inline float _stadium_critical_hit_chance(
         float speed,
         bool rate_increased,
         bool high_rate_move
@@ -35,7 +33,7 @@ namespace pkmn { namespace calculations {
                         / (high_rate_move ? 8.0f : 1.0f));
     }
 
-    static PKMN_CONSTEXPR_OR_INLINE float _gen1_critical_hit_modifier(
+    static inline float _gen1_critical_hit_modifier(
         float attacker_level
     )
     {
