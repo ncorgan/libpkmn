@@ -35,6 +35,39 @@
 #include <ctime>
 #include <limits>
 
+TEST(cpp_calculations_test, brine_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::brine_power(0, 2);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::brine_power(0, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::brine_power(-2,-1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::brine_power(2,1);
+    , std::out_of_range);
+
+    const int max_hp = 10;
+    const int half_hp = max_hp / 2;
+
+    EXPECT_EQ(
+        130,
+        pkmn::calculations::brine_power(half_hp - 1, max_hp)
+    );
+    EXPECT_EQ(
+        130,
+        pkmn::calculations::brine_power(half_hp, max_hp)
+    );
+    EXPECT_EQ(
+        65,
+        pkmn::calculations::brine_power(half_hp + 1, max_hp)
+    );
+}
+
 // TODO: verify
 TEST(cpp_calculations_test, critical_hit_chance_test)
 {
@@ -626,6 +659,64 @@ TEST(cpp_calculations_test, modern_hidden_power_test) {
                    );
     EXPECT_EQ("Grass", hidden_power.type);
     EXPECT_EQ(70, hidden_power.base_power);
+}
+
+TEST(cpp_calculations_test, natural_gift_test)
+{
+    // Test invalid generations.
+    EXPECT_THROW(
+        pkmn::calculations::natural_gift_stats("Cheri Berry", 3);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::natural_gift_stats("Cheri Berry", 7);
+    , std::out_of_range);
+
+    // Test invalid items.
+    EXPECT_THROW(
+        pkmn::calculations::natural_gift_stats("Potion", 4);
+    , std::invalid_argument);
+
+    // Make sure differences between generations are reflected.
+    struct test_params_t
+    {
+        std::string item;
+
+        std::string type;
+        int gen4_power;
+        int gen5_power;
+        int gen6_power;
+    };
+    static const std::vector<test_params_t> test_params =
+    {
+        {"Cheri Berry", "Fire",     60, 60, 80},
+        {"Nanab Berry", "Water",    70, 70, 90},
+        {"Belue Berry", "Electric", 80, 80, 100}
+    };
+
+    pkmn::calculations::natural_gift stats;
+    for(const auto& param: test_params)
+    {
+        stats = pkmn::calculations::natural_gift_stats(
+                    param.item,
+                    4
+                );
+        EXPECT_EQ(param.type, stats.type);
+        EXPECT_EQ(param.gen4_power, stats.base_power);
+
+        stats = pkmn::calculations::natural_gift_stats(
+                    param.item,
+                    5
+                );
+        EXPECT_EQ(param.type, stats.type);
+        EXPECT_EQ(param.gen5_power, stats.base_power);
+
+        stats = pkmn::calculations::natural_gift_stats(
+                    param.item,
+                    6
+                );
+        EXPECT_EQ(param.type, stats.type);
+        EXPECT_EQ(param.gen6_power, stats.base_power);
+    }
 }
 
 static const std::vector<std::string> natures = boost::assign::list_of

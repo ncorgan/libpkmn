@@ -32,7 +32,7 @@ namespace pkmn { namespace calculations {
         );
 
         float hp_percentage = float(target_current_hp) / float(target_max_hp);
-        return (hp_percentage < 0.5f) ? 65 : 130;
+        return (hp_percentage <= 0.5f) ? 130 : 65;
     }
 
     int crush_grip_power(
