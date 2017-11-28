@@ -20,7 +20,7 @@ extern "C" {
 
 PKMN_API pkmn_error_t pkmn_calculations_natural_gift_stats(
     const char* item_name,
-    const char* game,
+    int generation,
     pkmn_natural_gift_t* natural_gift_stats_out
 );
 

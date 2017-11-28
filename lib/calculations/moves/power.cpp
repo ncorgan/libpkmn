@@ -38,7 +38,7 @@ namespace pkmn { namespace calculations {
     int crush_grip_power(
         int target_current_hp,
         int target_max_hp,
-        const std::string& game
+        int generation
     )
     {
         pkmn::enforce_bounds(
@@ -47,8 +47,6 @@ namespace pkmn { namespace calculations {
             0,
             target_max_hp
         );
-
-        int generation = pkmn::database::game_name_to_generation(game);
 
         float hp_percentage = float(target_current_hp) / float(target_max_hp);
         int ret = int(120.0f * hp_percentage);
@@ -163,16 +161,18 @@ namespace pkmn { namespace calculations {
     }
 
     std::vector<int> fury_cutter_powers(
-        const std::string& game
+        int generation
     )
     {
-        int generation = pkmn::database::game_name_to_generation(game);
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            2,
+            6
+        );
 
         switch(generation)
         {
-            case 1:
-                throw std::invalid_argument("Fury Cutter did not exist in Generation I.");
-
             case 2:
             case 3:
             case 4:
@@ -258,11 +258,17 @@ namespace pkmn { namespace calculations {
     }
 
     int low_kick_power(
-        const std::string& game,
-        float target_weight
+        float target_weight,
+        int generation
     )
     {
-        int generation = pkmn::database::game_name_to_generation(game);
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            2,
+            6
+        );
+
 
         if(generation >= 3)
         {
@@ -463,13 +469,13 @@ namespace pkmn { namespace calculations {
     int wring_out_power(
         int target_current_hp,
         int target_max_hp,
-        const std::string& game
+        int generation
     )
     {
         return crush_grip_power(
                    target_current_hp,
                    target_max_hp,
-                   game
+                   generation
                );
     }
 

@@ -17,18 +17,17 @@ namespace pkmn { namespace calculations {
 
     natural_gift natural_gift_stats(
         const std::string& item_name,
-        const std::string& game
+        int generation
     )
     {
-        pkmn::database::get_connection(_db);
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            4,
+            6
+        );
 
-        int generation = pkmn::database::game_name_to_generation(game);
-        if(generation < 4)
-        {
-            throw std::invalid_argument(
-                      "This function only works for games in Generation IV or later."
-                  );
-        }
+        pkmn::database::get_connection(_db);
 
         natural_gift ret;
 

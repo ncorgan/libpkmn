@@ -56,7 +56,7 @@ namespace pkmn { namespace calculations {
 
     PKMN_API natural_gift natural_gift_stats(
         const std::string& item_name,
-        const std::string& game
+        int generation
     );
 
 }}

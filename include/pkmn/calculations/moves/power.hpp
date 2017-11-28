@@ -22,7 +22,7 @@ namespace pkmn { namespace calculations {
     PKMN_API int crush_grip_power(
         int target_current_hp,
         int target_max_hp,
-        const std::string& game
+        int generation
     );
 
     PKMN_API int electro_ball_power(
@@ -60,7 +60,7 @@ namespace pkmn { namespace calculations {
     );
 
     PKMN_API std::vector<int> fury_cutter_powers(
-        const std::string& game
+        int generation
     );
 
     PKMN_API int grass_knot_power(
@@ -91,8 +91,8 @@ namespace pkmn { namespace calculations {
     }
 
     PKMN_API int low_kick_power(
-        const std::string& game,
-        float target_weight
+        float target_weight,
+        int generation
     );
 
     PKMN_API int power_trip_power(
@@ -160,7 +160,7 @@ namespace pkmn { namespace calculations {
     PKMN_API int wring_out_power(
         int target_current_hp,
         int target_max_hp,
-        const std::string& game
+        int generation
     );
 
 }}
