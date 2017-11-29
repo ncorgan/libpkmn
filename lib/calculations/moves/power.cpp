@@ -24,6 +24,18 @@ namespace pkmn { namespace calculations {
         int target_max_hp
     )
     {
+        pkmn::enforce_comparator(
+            "Target current HP",
+            target_current_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Target max HP",
+            target_max_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
         pkmn::enforce_bounds(
             "Target current HP",
             target_current_hp,
