@@ -234,7 +234,7 @@ TEST(cpp_exception_test, test_value_in_vector)
     }
 }
 
-TEST(cpp_exception_test, test_out_of_range)
+TEST(cpp_exception_test, test_enforce_bounds)
 {
     const int int_min = -100;
     const int int_max = 2000;
@@ -294,4 +294,214 @@ TEST(cpp_exception_test, test_out_of_range)
     } catch(...) {
         FAIL() << "Did not throw std::out_of_range";
     }
+}
+
+template <typename T>
+struct comparator_test_params_t
+{
+    T lower_value;
+    T higher_value;
+};
+
+template <typename T>
+static void enforce_comparator_test_common(
+    const std::vector<comparator_test_params_t<T>>& test_params
+)
+{
+    for(const auto& param: test_params)
+    {
+        // Test valid comparisons.
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.lower_value,
+            param.higher_value,
+            pkmn::value_comparator::LT
+        );
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.lower_value,
+            param.higher_value,
+            pkmn::value_comparator::LE
+        );
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.lower_value,
+            param.lower_value,
+            pkmn::value_comparator::EQ
+        );
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.lower_value,
+            param.higher_value,
+            pkmn::value_comparator::NE
+        );
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.higher_value,
+            param.lower_value,
+            pkmn::value_comparator::GE
+        );
+
+        pkmn::enforce_comparator(
+            "Test field",
+            param.higher_value,
+            param.lower_value,
+            pkmn::value_comparator::GT
+        );
+
+        // Test invalid comparisons.
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.lower_value,
+                param.higher_value,
+                pkmn::value_comparator::GT
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), ">")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.lower_value,
+                param.higher_value,
+                pkmn::value_comparator::GE
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), ">=")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.lower_value,
+                param.higher_value,
+                pkmn::value_comparator::EQ
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), "==")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.higher_value,
+                param.higher_value,
+                pkmn::value_comparator::NE
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), "!=")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.lower_value,
+                param.higher_value,
+                pkmn::value_comparator::GE
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), ">=")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+
+        try
+        {
+            pkmn::enforce_comparator(
+                "Test field",
+                param.lower_value,
+                param.higher_value,
+                pkmn::value_comparator::GT
+            );
+        }
+        catch(const std::out_of_range& e)
+        {
+            EXPECT_NE(
+                nullptr,
+                std::strstr(e.what(), ">")
+            );
+        }
+        catch(...)
+        {
+            FAIL() << "Did not catch std::out_of_range";
+        }
+    }
+}
+
+TEST(cpp_exception_test, test_enforce_comparator)
+{
+    // Test for general case and specializations.
+
+    static const std::vector<comparator_test_params_t<int>> test_ints =
+    {
+        {-1, 1}
+    };
+    static const std::vector<comparator_test_params_t<float>> test_floats =
+    {
+        {-1.0f, 1.0f}, {0.25f, 0.5},
+    };
+    static const std::vector<comparator_test_params_t<double>> test_doubles =
+    {
+        {-1.0, 1.0}, {0.25, 0.5},
+    };
+
+    enforce_comparator_test_common(test_ints);
+    enforce_comparator_test_common(test_floats);
+    enforce_comparator_test_common(test_doubles);
 }
