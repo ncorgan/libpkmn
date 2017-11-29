@@ -13,6 +13,7 @@ public class CSharpCalculationsTest {
 
     private static Random rng = new Random();
 
+    /*
     [Test]
     public void DamageTest()
     {
@@ -50,7 +51,7 @@ public class CSharpCalculationsTest {
                          modifier
                      );
         Assert.AreEqual(200, damage);
-    }
+    }*/
 
     [Test]
     public void Gen2UnownFormTest() {
