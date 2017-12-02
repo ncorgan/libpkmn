@@ -66,6 +66,13 @@ namespace pkmn {
 
             const std::map<std::string, bool>& get_ribbons() override final;
 
+            virtual void set_super_training_medal(
+                const std::string& super_training_medal,
+                bool value
+            ) override;
+
+            const std::map<std::string, bool>& get_super_training_medals() override final;
+
             const std::map<std::string, int>& get_contest_stats() override final;
 
             const pkmn::move_slots_t& get_moves() override final;
@@ -114,7 +121,7 @@ namespace pkmn {
         protected:
             pkmn::move_slots_t _moves;
             std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;
-            std::map<std::string, bool> _markings, _ribbons;
+            std::map<std::string, bool> _markings, _ribbons, _super_training_medals;
 
             pkmn::database::pokemon_entry _database_entry;
 

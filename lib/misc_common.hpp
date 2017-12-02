@@ -26,6 +26,14 @@ namespace pkmn {
         return (std::fabs(f1-f2) < 0.00001);
     }
 
+    static const std::vector<std::string> GENERATION_NAMES =
+    {
+        "",
+        "Generation I", "Generation II", "Generation III",
+        "Generation IV", "Generation V", "Generation VI",
+        "Generation VII"
+    };
+
     static const std::vector<std::string> GEN1_STATS = boost::assign::list_of
         ("HP")("Attack")("Defense")("Speed")("Special")
     ;

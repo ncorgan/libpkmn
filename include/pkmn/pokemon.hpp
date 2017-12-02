@@ -217,6 +217,15 @@ namespace pkmn {
                 bool value
             ) = 0;
 
+            // TODO
+
+            virtual const std::map<std::string, bool>& get_super_training_medals() = 0;
+
+            virtual void set_super_training_medal(
+                const std::string &super_training_medal,
+                bool value
+            ) = 0;
+
             virtual const std::map<std::string, int>& get_contest_stats() = 0;
 
             virtual void set_contest_stat(

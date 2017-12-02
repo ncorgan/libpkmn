@@ -219,7 +219,7 @@ namespace pkmn
     {
         if(_generation < 3)
         {
-            throw pkmn::feature_not_in_game_error("Markings", "Generation I-II");
+            throw pkmn::feature_not_in_game_error("Markings", GENERATION_NAMES[_generation]);
         }
 
         boost::lock_guard<pokemon_impl> lock(*this);
@@ -231,12 +231,35 @@ namespace pkmn
     {
         if(_generation < 3)
         {
-            throw pkmn::feature_not_in_game_error("Ribbons", "Generation I-II");
+            throw pkmn::feature_not_in_game_error("Ribbons", GENERATION_NAMES[_generation]);
         }
 
         boost::lock_guard<pokemon_impl> lock(*this);
 
         return _ribbons;
+    }
+
+    const std::map<std::string, bool>& pokemon_impl::get_super_training_medals()
+    {
+        if(_generation < 6)
+        {
+            throw pkmn::feature_not_in_game_error("Super Training Medals", GENERATION_NAMES[_generation]);
+        }
+
+        boost::lock_guard<pokemon_impl> lock(*this);
+
+        return _super_training_medals;
+    }
+
+    void pokemon_impl::set_super_training_medal(
+        const std::string& super_training_medal,
+        bool value
+    )
+    {
+        (void)super_training_medal;
+        (void)value;
+
+        throw pkmn::feature_not_in_game_error("Super Training Medals", GENERATION_NAMES[_generation]);
     }
 
     const std::map<std::string, int>& pokemon_impl::get_contest_stats()

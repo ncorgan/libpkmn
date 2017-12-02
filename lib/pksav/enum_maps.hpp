@@ -11,6 +11,7 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen6/ribbons.h>
 #include <pksav/common/condition.h>
+#include <pksav/common/super_training_medals.h>
 
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
@@ -134,6 +135,40 @@ boost::assign::list_of<gen1_type_bimap_t::relation>
     ("Psychic",  PKSAV_GEN1_TYPE_PSYCHIC)
     ("Ice",      PKSAV_GEN1_TYPE_ICE)
     ("Dragon",   PKSAV_GEN1_TYPE_DRAGON)
+;
+
+typedef boost::bimap<std::string, pksav_super_training_medal_mask_t> super_training_medal_bimap_t;
+static const super_training_medal_bimap_t SUPER_TRAINING_MEDAL_BIMAP = boost::assign::list_of<super_training_medal_bimap_t::relation>
+    ("Sp. Atk Level 1",                           PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_1)
+    ("HP Level 1",                                PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_1)
+    ("Atk Level 1",                               PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_1)
+    ("Sp. Def Level 1",                           PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_1)
+    ("Speed Level 1",                             PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_1)
+    ("Def Level 1",                               PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_1)
+    ("Sp. Atk Level 2",                           PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_2)
+    ("HP Level 2",                                PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_2)
+    ("Atk Level 2",                               PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_2)
+    ("Sp. Def Level 2",                           PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_2)
+    ("Speed Level 2",                             PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_2)
+    ("Def Level 2",                               PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_2)
+    ("Sp. Atk Level 3",                           PKSAV_SUPER_TRAINING_MEDAL_SPATK_LEVEL_3)
+    ("HP Level 3",                                PKSAV_SUPER_TRAINING_MEDAL_HP_LEVEL_3)
+    ("Atk Level 3",                               PKSAV_SUPER_TRAINING_MEDAL_ATK_LEVEL_3)
+    ("Sp. Def Level 3",                           PKSAV_SUPER_TRAINING_MEDAL_SPDEF_LEVEL_3)
+    ("Speed Level 3",                             PKSAV_SUPER_TRAINING_MEDAL_SPEED_LEVEL_3)
+    ("Def Level 3",                               PKSAV_SUPER_TRAINING_MEDAL_DEF_LEVEL_3)
+    ("The Troubles Keep On Coming?!",             PKSAV_SUPER_TRAINING_MEDAL_THE_TROUBLES_KEEP_ON_COMING)
+    ("The Leaf Stone Cup Begins!",                PKSAV_SUPER_TRAINING_MEDAL_THE_LEAF_STONE_CUP_BEGINS)
+    ("The Fire Stone Cup Begins!",                PKSAV_SUPER_TRAINING_MEDAL_THE_FIRE_STONE_CUP_BEGINS)
+    ("The Water Stone Cup Begins!",               PKSAV_SUPER_TRAINING_MEDAL_THE_WATER_STONE_CUP_BEGINGS)
+    ("Follow Those Fleeing Goals!",               PKSAV_SUPER_TRAINING_MEDAL_FOLLOW_THOSE_FLEEING_GOALS)
+    ("Watch Out! That's One Tricky Second Half!", PKSAV_SUPER_TRAINING_MEDAL_WATCH_OUT_THATS_ONE_TRICKY_SECOND_HALF)
+    ("An Opening of Lightning-Quick Attacks!",    PKSAV_SUPER_TRAINING_MEDAL_AN_OPENING_OF_LIGHTNING_QUICK_ATTACKS)
+    ("Those Long Shots Are No Long Shots!",       PKSAV_SUPER_TRAINING_MEDAL_THOSE_LONG_SHOTS_ARE_NO_LONG_SHOTS)
+    ("Scatterbug Lugs Back!",                     PKSAV_SUPER_TRAINING_MEDAL_SCATTERBUG_LUGS_BACK)
+    ("A Barrage of Bitbots!",                     PKSAV_SUPER_TRAINING_MEDAL_A_BARRAGE_OF_BITBOTS)
+    ("Drag Down Hydreigon!",                      PKSAV_SUPER_TRAINING_MEDAL_DRAG_DOWN_HYDREIGON)
+    ("The Battle for the Best",                   PKSAV_SUPER_TRAINING_MEDAL_THE_BATTLE_FOR_THE_BEST)
 ;
 
 }
