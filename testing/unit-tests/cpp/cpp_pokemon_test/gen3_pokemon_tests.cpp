@@ -194,9 +194,9 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     const pksav_gba_pokemon_misc_t* misc = &native_pc_data->blocks.misc;
 
     EXPECT_EQ(pokemon->get_personality(), pksav_littleendian32(native_pc_data->personality));
-    EXPECT_EQ(pokemon->get_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
-    EXPECT_EQ(pokemon->get_trainer_public_id(), pksav_littleendian16(native_pc_data->ot_id.pid));
-    EXPECT_EQ(pokemon->get_trainer_secret_id(), pksav_littleendian16(native_pc_data->ot_id.sid));
+    EXPECT_EQ(pokemon->get_original_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
+    EXPECT_EQ(pokemon->get_original_trainer_public_id(), pksav_littleendian16(native_pc_data->ot_id.pid));
+    EXPECT_EQ(pokemon->get_original_trainer_secret_id(), pksav_littleendian16(native_pc_data->ot_id.sid));
 
     char nickname[11] = {0};
     PKSAV_CALL(
@@ -218,7 +218,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
             7
         );
     );
-    EXPECT_EQ(pokemon->get_trainer_name(), std::string(otname));
+    EXPECT_EQ(pokemon->get_original_trainer_name(), std::string(otname));
 
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_CIRCLE);
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_TRIANGLE);
@@ -478,7 +478,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
     // TODO: OTGender, probably bring in bimaps
-    EXPECT_STREQ(pokemon->get_trainer_name().c_str(), native->OTName->toUTF8());
+    EXPECT_STREQ(pokemon->get_original_trainer_name().c_str(), native->OTName->toUTF8());
     EXPECT_STREQ(pokemon->get_nickname().c_str(), native->name->toUTF8());
     EXPECT_EQ(pokemon->get_contest_stats().at("Feel"), int(native->contestLuster));
 
@@ -489,8 +489,8 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(markings.at("Heart"), native->markings.heart);
 
     EXPECT_EQ(pokemon->get_experience(), int(native->experience));
-    EXPECT_EQ(pokemon->get_trainer_secret_id(), native->SID);
-    EXPECT_EQ(pokemon->get_trainer_public_id(), native->TID);
+    EXPECT_EQ(pokemon->get_original_trainer_secret_id(), native->SID);
+    EXPECT_EQ(pokemon->get_original_trainer_public_id(), native->TID);
     EXPECT_EQ(pokemon->get_personality(), native->PID);
 
     // TODO: original game
@@ -550,7 +550,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(pokemon->get_level(), int(native->partyData.level));
 
     EXPECT_EQ(
-        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_trainer_id()),
+        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_original_trainer_id()),
         native->isShiny()
     );
     EXPECT_NE(

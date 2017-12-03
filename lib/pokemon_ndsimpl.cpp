@@ -290,7 +290,7 @@ namespace pkmn {
         _update_held_item();
     }
 
-    std::string pokemon_ndsimpl::get_trainer_name() {
+    std::string pokemon_ndsimpl::get_original_trainer_name() {
         char otname[8] = {0};
         if(_gen4) {
             PKSAV_CALL(
@@ -313,7 +313,7 @@ namespace pkmn {
         return std::string(otname);
     }
 
-    void pokemon_ndsimpl::set_trainer_name(
+    void pokemon_ndsimpl::set_original_trainer_name(
         const std::string &trainer_name
     ) {
         if(trainer_name.size() < 1 or trainer_name.size() > 7) {
@@ -341,42 +341,42 @@ namespace pkmn {
         }
     }
 
-    uint16_t pokemon_ndsimpl::get_trainer_public_id() {
+    uint16_t pokemon_ndsimpl::get_original_trainer_public_id() {
         return pksav_littleendian16(_blockA->ot_id.pid);
     }
 
-    uint16_t pokemon_ndsimpl::get_trainer_secret_id() {
+    uint16_t pokemon_ndsimpl::get_original_trainer_secret_id() {
         return pksav_littleendian16(_blockA->ot_id.sid);
     }
 
-    uint32_t pokemon_ndsimpl::get_trainer_id() {
+    uint32_t pokemon_ndsimpl::get_original_trainer_id() {
         return pksav_littleendian32(_blockA->ot_id.id);
     }
 
-    void pokemon_ndsimpl::set_trainer_public_id(
+    void pokemon_ndsimpl::set_original_trainer_public_id(
         uint16_t public_id
     ) {
         _blockA->ot_id.pid = pksav_littleendian16(public_id);
     }
 
-    void pokemon_ndsimpl::set_trainer_secret_id(
+    void pokemon_ndsimpl::set_original_trainer_secret_id(
         uint16_t secret_id
     ) {
         _blockA->ot_id.sid = pksav_littleendian16(secret_id);
     }
 
-    void pokemon_ndsimpl::set_trainer_id(
+    void pokemon_ndsimpl::set_original_trainer_id(
         uint32_t id
     ) {
         _blockA->ot_id.id = pksav_littleendian32(id);
     }
 
-    std::string pokemon_ndsimpl::get_trainer_gender() {
+    std::string pokemon_ndsimpl::get_original_trainer_gender() {
         return (_blockD->metlevel_otgender & PKSAV_NDS_OTGENDER_MASK) ? "Female"
                                                                       : "Male";
     }
 
-    void pokemon_ndsimpl::set_trainer_gender(
+    void pokemon_ndsimpl::set_original_trainer_gender(
         const std::string &gender
     ) {
         if(gender == "Male") {

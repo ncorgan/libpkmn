@@ -588,7 +588,7 @@ namespace pkmn
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
-    std::string pokemon_gbaimpl::get_trainer_name()
+    std::string pokemon_gbaimpl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -604,7 +604,7 @@ namespace pkmn
         return std::string(otname);
     }
 
-    void pokemon_gbaimpl::set_trainer_name(
+    void pokemon_gbaimpl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -626,28 +626,28 @@ namespace pkmn
         )
     }
 
-    uint16_t pokemon_gbaimpl::get_trainer_public_id()
+    uint16_t pokemon_gbaimpl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pksav_littleendian16(GBA_PC_RCAST->ot_id.pid);
     }
 
-    uint16_t pokemon_gbaimpl::get_trainer_secret_id()
+    uint16_t pokemon_gbaimpl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pksav_littleendian16(GBA_PC_RCAST->ot_id.sid);
     }
 
-    uint32_t pokemon_gbaimpl::get_trainer_id()
+    uint32_t pokemon_gbaimpl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return pksav_littleendian32(GBA_PC_RCAST->ot_id.id);
     }
 
-    void pokemon_gbaimpl::set_trainer_public_id(
+    void pokemon_gbaimpl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -656,7 +656,7 @@ namespace pkmn
         GBA_PC_RCAST->ot_id.pid = pksav_littleendian16(public_id);
     }
 
-    void pokemon_gbaimpl::set_trainer_secret_id(
+    void pokemon_gbaimpl::set_original_trainer_secret_id(
         uint16_t secret_id
     )
     {
@@ -665,14 +665,14 @@ namespace pkmn
         GBA_PC_RCAST->ot_id.sid = pksav_littleendian16(secret_id);
     }
 
-    void pokemon_gbaimpl::set_trainer_id(
+    void pokemon_gbaimpl::set_original_trainer_id(
         uint32_t id
     )
     {
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(id);
     }
 
-    std::string pokemon_gbaimpl::get_trainer_gender()
+    std::string pokemon_gbaimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
@@ -680,7 +680,7 @@ namespace pkmn
                                                               : "Male";
     }
 
-    void pokemon_gbaimpl::set_trainer_gender(
+    void pokemon_gbaimpl::set_original_trainer_gender(
         const std::string &gender
     )
     {

@@ -73,7 +73,7 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
         EXPECT_EQ(moves.at(i).pp, int(native_pc->move_pps[i]));
     }
 
-    EXPECT_EQ(pokemon->get_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
+    EXPECT_EQ(pokemon->get_original_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
     EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));

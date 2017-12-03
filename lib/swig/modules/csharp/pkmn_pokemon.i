@@ -34,16 +34,16 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
 %csmethodmodifiers pkmn::pokemon::get_held_item "private";
 %csmethodmodifiers pkmn::pokemon::set_held_item "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_public_id "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_secret_id "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_id "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_public_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_secret_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_id(uint32_t) "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_gender "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_gender(const std::string&) "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_name "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_name "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_public_id "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_secret_id "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_id "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_public_id(uint16_t) "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_secret_id(uint16_t) "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_id(uint32_t) "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_gender "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_friendship "private";
 %csmethodmodifiers pkmn::pokemon::set_friendship(int) "private";
 %csmethodmodifiers pkmn::pokemon::get_ability "private";
@@ -136,48 +136,48 @@ using Database;"
         }
     }
 
-    public string TrainerName {
+    public string OriginalTrainerName {
         get {
-            return GetTrainerName();
+            return GetOriginalTrainerName();
         }
         set {
-            SetTrainerName(value);
+            SetOriginalTrainerName(value);
         }
     }
 
-    public uint TrainerID {
+    public uint OriginalTrainerID {
         get {
-            return GetTrainerID();
+            return GetOriginalTrainerID();
         }
         set {
-            SetTrainerID(value);
+            SetOriginalTrainerID(value);
         }
     }
 
-    public ushort TrainerPublicID {
+    public ushort OriginalTrainerPublicID {
         get {
-            return GetTrainerPublicID();
+            return GetOriginalTrainerPublicID();
         }
         set {
-            SetTrainerPublicID(value);
+            SetOriginalTrainerPublicID(value);
         }
     }
 
-    public ushort TrainerSecretID {
+    public ushort OriginalTrainerSecretID {
         get {
-            return GetTrainerSecretID();
+            return GetOriginalTrainerSecretID();
         }
         set {
-            SetTrainerSecretID(value);
+            SetOriginalTrainerSecretID(value);
         }
     }
 
-    public string TrainerGender {
+    public string OriginalTrainerGender {
         get {
-            return GetTrainerGender();
+            return GetOriginalTrainerGender();
         }
         set {
-            SetTrainerGender(value);
+            SetOriginalTrainerGender(value);
         }
     }
 

@@ -293,20 +293,20 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_held_item("Oran Berry");
     EXPECT_EQ("Oran Berry", swig_pokemon.get_held_item());
 
-    swig_pokemon.set_trainer_name("abcdef");
-    EXPECT_EQ("abcdef", swig_pokemon.get_trainer_name());
+    swig_pokemon.set_original_trainer_name("abcdef");
+    EXPECT_EQ("abcdef", swig_pokemon.get_original_trainer_name());
 
-    swig_pokemon.set_trainer_public_id(0x1351);
-    EXPECT_EQ(0x1351, swig_pokemon.get_trainer_public_id());
+    swig_pokemon.set_original_trainer_public_id(0x1351);
+    EXPECT_EQ(0x1351, swig_pokemon.get_original_trainer_public_id());
 
-    swig_pokemon.set_trainer_secret_id(0x2135);
-    EXPECT_EQ(0x2135, swig_pokemon.get_trainer_secret_id());
+    swig_pokemon.set_original_trainer_secret_id(0x2135);
+    EXPECT_EQ(0x2135, swig_pokemon.get_original_trainer_secret_id());
 
-    swig_pokemon.set_trainer_id(0xABCDEF12);
-    EXPECT_EQ(0xABCDEF12, swig_pokemon.get_trainer_id());
+    swig_pokemon.set_original_trainer_id(0xABCDEF12);
+    EXPECT_EQ(0xABCDEF12, swig_pokemon.get_original_trainer_id());
 
-    swig_pokemon.set_trainer_gender("Female");
-    EXPECT_EQ("Female", swig_pokemon.get_trainer_gender());
+    swig_pokemon.set_original_trainer_gender("Female");
+    EXPECT_EQ("Female", swig_pokemon.get_original_trainer_gender());
 
     swig_pokemon.set_friendship(100);
     EXPECT_EQ(100, swig_pokemon.get_friendship());

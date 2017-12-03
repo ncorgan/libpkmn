@@ -89,7 +89,7 @@ public class PokemonConversionsTest {
 
         if(originGeneration >= 3)
         {
-            firstPokemon.TrainerSecretID = (ushort)rng.Next(0, 0xFFFF);
+            firstPokemon.OriginalTrainerSecretID = (ushort)rng.Next(0, 0xFFFF);
 
             if(!firstPokemon.DatabaseEntry.Abilities.Second.Equals("None"))
             {
@@ -97,7 +97,7 @@ public class PokemonConversionsTest {
                                                     : firstPokemon.DatabaseEntry.Abilities.Second;
             }
         }
-        firstPokemon.TrainerPublicID = (ushort)rng.Next(0, 0xFFFF);
+        firstPokemon.OriginalTrainerPublicID = (ushort)rng.Next(0, 0xFFFF);
 
         if(minGeneration >= 2)
         {
@@ -118,7 +118,7 @@ public class PokemonConversionsTest {
 
             if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
             {
-                firstPokemon.TrainerGender = RandomBool() ? "Male" : "Female";
+                firstPokemon.OriginalTrainerGender = RandomBool() ? "Male" : "Female";
             }
 
             // The max level met value in Generation II is 63.
@@ -142,7 +142,7 @@ public class PokemonConversionsTest {
         }
 
         firstPokemon.Nickname = RandomString(10);
-        firstPokemon.TrainerName = RandomString(7);
+        firstPokemon.OriginalTrainerName = RandomString(7);
 
         // The max level met value in Generation II is 63, which restricts this as well.
         firstPokemon.Level = rng.Next(2, (destGeneration == 2) ? 63 : 100);
@@ -154,9 +154,9 @@ public class PokemonConversionsTest {
         Assert.AreEqual(destGame, secondPokemon.Game);
         Assert.AreEqual(firstPokemon.Form, secondPokemon.Form);
         Assert.AreEqual(firstPokemon.Nickname, secondPokemon.Nickname);
-        Assert.AreEqual(firstPokemon.TrainerName, secondPokemon.TrainerName);
-        Assert.AreEqual(firstPokemon.TrainerID, secondPokemon.TrainerID);
-        Assert.AreEqual(firstPokemon.TrainerPublicID, secondPokemon.TrainerPublicID);
+        Assert.AreEqual(firstPokemon.OriginalTrainerName, secondPokemon.OriginalTrainerName);
+        Assert.AreEqual(firstPokemon.OriginalTrainerID, secondPokemon.OriginalTrainerID);
+        Assert.AreEqual(firstPokemon.OriginalTrainerPublicID, secondPokemon.OriginalTrainerPublicID);
         Assert.AreEqual(firstPokemon.Experience, secondPokemon.Experience);
         Assert.AreEqual(firstPokemon.Level, secondPokemon.Level);
 
@@ -168,7 +168,7 @@ public class PokemonConversionsTest {
 
         if(minGeneration >= 3)
         {
-            Assert.AreEqual(firstPokemon.TrainerSecretID, secondPokemon.TrainerSecretID);
+            Assert.AreEqual(firstPokemon.OriginalTrainerSecretID, secondPokemon.OriginalTrainerSecretID);
             Assert.AreEqual(firstPokemon.Ability, secondPokemon.Ability);
             Assert.AreEqual(firstPokemon.Ball, secondPokemon.Ball);
             Assert.AreEqual(firstPokemon.OriginalGame, secondPokemon.OriginalGame);
@@ -183,7 +183,7 @@ public class PokemonConversionsTest {
         }
         if(minGeneration >= 2)
         {
-            Assert.AreEqual(firstPokemon.TrainerGender, secondPokemon.TrainerGender);
+            Assert.AreEqual(firstPokemon.OriginalTrainerGender, secondPokemon.OriginalTrainerGender);
             Assert.AreEqual(firstPokemon.Gender, secondPokemon.Gender);
             Assert.AreEqual(firstPokemon.IsShiny, secondPokemon.IsShiny);
             Assert.AreEqual(firstPokemon.HeldItem, secondPokemon.HeldItem);

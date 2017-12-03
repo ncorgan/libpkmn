@@ -269,7 +269,7 @@ static void game_save_error_test() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
-     * pkmn_game_save_get_trainer_info
+     * pkmn_game_save_get_original_trainer_info
      */
 
     error = pkmn_game_save_get_trainer_info(
@@ -285,7 +285,7 @@ static void game_save_error_test() {
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "trainer_info_out");
 
     /*
-     * pkmn_game_save_set_trainer_info
+     * pkmn_game_save_set_original_trainer_info
      */
 
     error = pkmn_game_save_set_trainer_info(
@@ -942,32 +942,32 @@ static void pokemon_error_test() {
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname");
 
     /*
-     * pkmn_pokemon_get_trainer_info
+     * pkmn_pokemon_get_original_trainer_info
      */
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 NULL, // handle
                 &trainer_info
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon,
                 NULL // trainer_info_out
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "trainer_info_out");
 
     /*
-     * pkmn_pokemon_set_trainer_info
+     * pkmn_pokemon_set_original_trainer_info
      */
 
-    error = pkmn_pokemon_set_trainer_info(
+    error = pkmn_pokemon_set_original_trainer_info(
                 NULL, // handle
                 &trainer_info
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_pokemon_set_trainer_info(
+    error = pkmn_pokemon_set_original_trainer_info(
                 pokemon,
                 NULL // trainer_info
             );

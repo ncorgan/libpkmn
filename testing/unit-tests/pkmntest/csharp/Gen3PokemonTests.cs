@@ -218,11 +218,11 @@ public class Gen3PokemonTests {
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
         Assert.AreEqual(pokemon.HeldItem, "None");
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerSecretID, ((PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16));
-        Assert.AreEqual(pokemon.TrainerID, PKMN.Pokemon.DEFAULT_TRAINER_ID);
-        Assert.AreEqual(pokemon.TrainerGender, "Male");
+        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.OriginalTrainerSecretID, ((PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16));
+        Assert.AreEqual(pokemon.OriginalTrainerID, PKMN.Pokemon.DEFAULT_TRAINER_ID);
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
         Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.BaseFriendship);
         Assert.AreEqual(pokemon.Ability, "Blaze");
         Assert.AreEqual(pokemon.Ball, "Premier Ball");
@@ -346,40 +346,40 @@ public class Gen3PokemonTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "";
+                pokemon.OriginalTrainerName = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "Too long trainer name";
+                pokemon.OriginalTrainerName = "Too long trainer name";
             }
         );
 
-        pokemon.TrainerName = "foobar";
-        Assert.AreEqual(pokemon.TrainerName, "foobar");
+        pokemon.OriginalTrainerName = "foobar";
+        Assert.AreEqual(pokemon.OriginalTrainerName, "foobar");
 
-        pokemon.TrainerID = 0x1234ABCD;
-        Assert.AreEqual(pokemon.TrainerID, 0x1234ABCD);
-        Assert.AreEqual(pokemon.TrainerPublicID, 0xABCD);
-        Assert.AreEqual(pokemon.TrainerSecretID, 0x1234);
+        pokemon.OriginalTrainerID = 0x1234ABCD;
+        Assert.AreEqual(pokemon.OriginalTrainerID, 0x1234ABCD);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0xABCD);
+        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
 
-        pokemon.TrainerPublicID = 0x1A2B;
-        Assert.AreEqual(pokemon.TrainerID, 0x12341A2B);
-        Assert.AreEqual(pokemon.TrainerPublicID, 0x1A2B);
-        Assert.AreEqual(pokemon.TrainerSecretID, 0x1234);
+        pokemon.OriginalTrainerPublicID = 0x1A2B;
+        Assert.AreEqual(pokemon.OriginalTrainerID, 0x12341A2B);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
+        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
 
-        pokemon.TrainerSecretID = 0x3C4D;
-        Assert.AreEqual(pokemon.TrainerID, 0x3C4D1A2B);
-        Assert.AreEqual(pokemon.TrainerPublicID, 0x1A2B);
-        Assert.AreEqual(pokemon.TrainerSecretID, 0x3C4D);
+        pokemon.OriginalTrainerSecretID = 0x3C4D;
+        Assert.AreEqual(pokemon.OriginalTrainerID, 0x3C4D1A2B);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
+        Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x3C4D);
 
-        pokemon.TrainerGender = "Male";
-        Assert.AreEqual(pokemon.TrainerGender, "Male");
-        pokemon.TrainerGender = "Female";
-        Assert.AreEqual(pokemon.TrainerGender, "Female");
+        pokemon.OriginalTrainerGender = "Male";
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
+        pokemon.OriginalTrainerGender = "Female";
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Female");
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerGender = "Genderless";
+                pokemon.OriginalTrainerGender = "Genderless";
             }
         );
 

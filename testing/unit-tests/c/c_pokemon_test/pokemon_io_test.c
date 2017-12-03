@@ -89,7 +89,7 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 mightyena,
                 &trainer_info
             );

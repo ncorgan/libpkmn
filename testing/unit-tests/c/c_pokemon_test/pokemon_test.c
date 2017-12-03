@@ -86,7 +86,7 @@ static void check_initial_values(
         strbuffer
     );
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon,
                 &trainer_info
             );
@@ -1512,7 +1512,7 @@ static void test_setting_trainer_info(
         "Too long trainer name",
         sizeof(setting_trainer_info.trainer_name)
     );
-    error = pkmn_pokemon_set_trainer_info(
+    error = pkmn_pokemon_set_original_trainer_info(
                 pokemon,
                 &setting_trainer_info
             );
@@ -1523,13 +1523,13 @@ static void test_setting_trainer_info(
         "foobar",
         sizeof(setting_trainer_info.trainer_name)
     );
-    error = pkmn_pokemon_set_trainer_info(
+    error = pkmn_pokemon_set_original_trainer_info(
                 pokemon,
                 &setting_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon,
                 &getting_trainer_info
             );

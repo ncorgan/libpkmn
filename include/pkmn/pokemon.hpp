@@ -100,33 +100,33 @@ namespace pkmn {
                 const std::string &held_item
             ) = 0;
 
-            virtual std::string get_trainer_name() = 0;
+            virtual std::string get_original_trainer_name() = 0;
 
-            virtual void set_trainer_name(
+            virtual void set_original_trainer_name(
                 const std::string &trainer_name
             ) = 0;
 
-            virtual uint16_t get_trainer_public_id() = 0;
+            virtual uint16_t get_original_trainer_public_id() = 0;
 
-            virtual uint16_t get_trainer_secret_id() = 0;
+            virtual uint16_t get_original_trainer_secret_id() = 0;
 
-            virtual uint32_t get_trainer_id() = 0;
+            virtual uint32_t get_original_trainer_id() = 0;
 
-            virtual void set_trainer_public_id(
+            virtual void set_original_trainer_public_id(
                 uint16_t public_id
             ) = 0;
 
-            virtual void set_trainer_secret_id(
+            virtual void set_original_trainer_secret_id(
                 uint16_t secret_id
             ) = 0;
 
-            virtual void set_trainer_id(
+            virtual void set_original_trainer_id(
                 uint32_t id
             ) = 0;
 
-            virtual std::string get_trainer_gender() = 0;
+            virtual std::string get_original_trainer_gender() = 0;
 
-            virtual void set_trainer_gender(
+            virtual void set_original_trainer_gender(
                 const std::string &trainer_gender
             ) = 0;
 

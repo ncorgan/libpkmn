@@ -75,7 +75,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
 
     if origin_generation >= 3
     then
-        first_pokemon:set_trainer_secret_id(math.random(0, 0xFFFF))
+        first_pokemon:set_original_trainer_secret_id(math.random(0, 0xFFFF))
 
         abilities = first_pokemon:get_database_entry():get_abilities()
         if abilities.second ~= "None"
@@ -88,7 +88,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
             end
         end
     end
-    first_pokemon:set_trainer_public_id(math.random(0, 0xFFFF))
+    first_pokemon:set_original_trainer_public_id(math.random(0, 0xFFFF))
 
     if min_generation >= 2
     then
@@ -115,9 +115,9 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
         then
             if utils.random_bool()
             then
-                first_pokemon:set_trainer_gender("Male")
+                first_pokemon:set_original_trainer_gender("Male")
             else
-                first_pokemon:set_trainer_gender("Female")
+                first_pokemon:set_original_trainer_gender("Female")
             end
         end
 
@@ -152,7 +152,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
     end
 
     first_pokemon:set_nickname(utils.random_string(10))
-    first_pokemon:set_trainer_name(utils.random_string(7))
+    first_pokemon:set_original_trainer_name(utils.random_string(7))
 
     -- The max level met in Generation II is 63, which restricts this as well.
     if origin_generation >= 3
@@ -169,9 +169,9 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
     luaunit.assertEquals(dest_game, second_pokemon:get_game())
     luaunit.assertEquals(first_pokemon:get_form(), second_pokemon:get_form())
     luaunit.assertEquals(first_pokemon:get_nickname(), second_pokemon:get_nickname())
-    luaunit.assertEquals(first_pokemon:get_trainer_name(), second_pokemon:get_trainer_name())
-    luaunit.assertEquals(first_pokemon:get_trainer_id(), second_pokemon:get_trainer_id())
-    luaunit.assertEquals(first_pokemon:get_trainer_public_id(), second_pokemon:get_trainer_public_id())
+    luaunit.assertEquals(first_pokemon:get_original_trainer_name(), second_pokemon:get_original_trainer_name())
+    luaunit.assertEquals(first_pokemon:get_original_trainer_id(), second_pokemon:get_original_trainer_id())
+    luaunit.assertEquals(first_pokemon:get_original_trainer_public_id(), second_pokemon:get_original_trainer_public_id())
     luaunit.assertEquals(first_pokemon:get_experience(), second_pokemon:get_experience())
     luaunit.assertEquals(first_pokemon:get_level(), second_pokemon:get_level())
 
@@ -183,7 +183,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
 
     if min_generation >= 3
     then
-        luaunit.assertEquals(first_pokemon:get_trainer_secret_id(), second_pokemon:get_trainer_secret_id())
+        luaunit.assertEquals(first_pokemon:get_original_trainer_secret_id(), second_pokemon:get_original_trainer_secret_id())
         luaunit.assertEquals(first_pokemon:get_ability(), second_pokemon:get_ability())
         luaunit.assertEquals(first_pokemon:get_ball(), second_pokemon:get_ball())
         luaunit.assertEquals(first_pokemon:get_original_game(), second_pokemon:get_original_game())
@@ -201,7 +201,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
 
     if min_generation >= 2
     then
-        luaunit.assertEquals(first_pokemon:get_trainer_gender(), second_pokemon:get_trainer_gender())
+        luaunit.assertEquals(first_pokemon:get_original_trainer_gender(), second_pokemon:get_original_trainer_gender())
         luaunit.assertEquals(first_pokemon:get_gender(), second_pokemon:get_gender())
         luaunit.assertEquals(first_pokemon:is_shiny(), second_pokemon:is_shiny())
         luaunit.assertEquals(first_pokemon:get_held_item(), second_pokemon:get_held_item())

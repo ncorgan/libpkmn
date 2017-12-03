@@ -563,14 +563,14 @@ namespace pkmn
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
-    std::string pokemon_gcnimpl::get_trainer_name()
+    std::string pokemon_gcnimpl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->OTName->toUTF8();
     }
 
-    void pokemon_gcnimpl::set_trainer_name(
+    void pokemon_gcnimpl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -586,28 +586,28 @@ namespace pkmn
         GC_RCAST->OTName->fromUTF8(trainer_name.c_str());
     }
 
-    uint16_t pokemon_gcnimpl::get_trainer_public_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->TID;
     }
 
-    uint16_t pokemon_gcnimpl::get_trainer_secret_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->SID;
     }
 
-    uint32_t pokemon_gcnimpl::get_trainer_id()
+    uint32_t pokemon_gcnimpl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return uint32_t(GC_RCAST->TID) | (uint32_t(GC_RCAST->SID) << 16);
     }
 
-    void pokemon_gcnimpl::set_trainer_public_id(
+    void pokemon_gcnimpl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -616,7 +616,7 @@ namespace pkmn
         GC_RCAST->TID = public_id;
     }
 
-    void pokemon_gcnimpl::set_trainer_secret_id(
+    void pokemon_gcnimpl::set_original_trainer_secret_id(
         uint16_t secret_id
     )
     {
@@ -625,7 +625,7 @@ namespace pkmn
         GC_RCAST->SID = secret_id;
     }
 
-    void pokemon_gcnimpl::set_trainer_id(
+    void pokemon_gcnimpl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -635,14 +635,14 @@ namespace pkmn
         GC_RCAST->SID = uint16_t(id >> 16);
     }
 
-    std::string pokemon_gcnimpl::get_trainer_gender()
+    std::string pokemon_gcnimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GENDER_BIMAP.left.at(GC_RCAST->OTGender);
     }
 
-    void pokemon_gcnimpl::set_trainer_gender(
+    void pokemon_gcnimpl::set_original_trainer_gender(
         const std::string &gender
     )
     {

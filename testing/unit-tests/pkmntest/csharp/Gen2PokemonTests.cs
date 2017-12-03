@@ -89,17 +89,17 @@ public class Gen2PokemonTests {
         Assert.AreEqual(pokemon.Game, game);
         Assert.AreEqual(pokemon.Nickname, species.ToUpper());
         Assert.AreEqual(pokemon.HeldItem, "None");
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
-        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.OriginalTrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
 
         Assert.Throws<ApplicationException>(
             delegate {
-                ushort trainerSecretID = pokemon.TrainerSecretID;
+                ushort trainerSecretID = pokemon.OriginalTrainerSecretID;
             }
         );
 
-        Assert.AreEqual(pokemon.TrainerGender, "Male");
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
         Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.GetBaseFriendship());
 
         Assert.Throws<ApplicationException>(
@@ -236,28 +236,28 @@ public class Gen2PokemonTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "";
+                pokemon.OriginalTrainerName = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "Too long trainer name";
+                pokemon.OriginalTrainerName = "Too long trainer name";
             }
         );
 
-        pokemon.TrainerName = "foobar";
-        Assert.AreEqual(pokemon.TrainerName, "foobar");
+        pokemon.OriginalTrainerName = "foobar";
+        Assert.AreEqual(pokemon.OriginalTrainerName, "foobar");
 
-        pokemon.TrainerID = 10001;
-        Assert.AreEqual(pokemon.TrainerID, 10001);
-        Assert.AreEqual(pokemon.TrainerPublicID, 10001);
+        pokemon.OriginalTrainerID = 10001;
+        Assert.AreEqual(pokemon.OriginalTrainerID, 10001);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 10001);
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.TrainerSecretID = 54321;
+                pokemon.OriginalTrainerSecretID = 54321;
             }
         );
-        Assert.AreEqual(pokemon.TrainerID, 10001);
+        Assert.AreEqual(pokemon.OriginalTrainerID, 10001);
 
         Assert.Throws<ApplicationException>(
             delegate {
@@ -278,11 +278,11 @@ public class Gen2PokemonTests {
         pokemon.SetLocationMet("Pallet Town", false);
         Assert.AreEqual(pokemon.GetLocationMet(false), "Pallet Town");
 
-        pokemon.TrainerGender = "Female";
-        Assert.AreEqual(pokemon.TrainerGender, "Female");
+        pokemon.OriginalTrainerGender = "Female";
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Female");
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerGender = "Genderless";
+                pokemon.OriginalTrainerGender = "Genderless";
             }
         );
 

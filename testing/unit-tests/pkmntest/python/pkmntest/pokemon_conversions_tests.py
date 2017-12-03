@@ -110,13 +110,13 @@ class pokemon_conversions_test(unittest.TestCase):
             first_pokemon.set_move(move_name, i)
 
         if origin_generation >= 3:
-            first_pokemon.set_trainer_secret_id(random.randint(0, 0xFFFF))
+            first_pokemon.set_original_trainer_secret_id(random.randint(0, 0xFFFF))
 
             abilities = first_pokemon.get_database_entry().get_abilities()
             if abilities[1] != "None":
                 first_pokemon.set_ability(abilities[0] if random_bool() else abilities[1])
 
-        first_pokemon.set_trainer_public_id(random.randint(0, 0xFFFF))
+        first_pokemon.set_original_trainer_public_id(random.randint(0, 0xFFFF))
 
         if min_generation >= 2:
             item_name = "Scent"
@@ -131,7 +131,7 @@ class pokemon_conversions_test(unittest.TestCase):
             first_pokemon.set_friendship(random.randint(0, 255))
 
             if origin_game != "Gold" and origin_game != "Silver":
-                first_pokemon.set_trainer_gender("Male" if random_bool() else "Female")
+                first_pokemon.set_original_trainer_gender("Male" if random_bool() else "Female")
 
             # The max level met in Generation II is 63.
             first_pokemon.set_level_met(random.randint(0, 100) if origin_generation >= 3 else random.randint(2, 63))
@@ -147,7 +147,7 @@ class pokemon_conversions_test(unittest.TestCase):
                 first_pokemon.set_contest_stat(contest_stat, random.randint(0, 255))
 
         first_pokemon.set_nickname(random_string(10))
-        first_pokemon.set_trainer_name(random_string(7))
+        first_pokemon.set_original_trainer_name(random_string(7))
 
         # The max level met in Generation II is 63, which restricts this as well.
         first_pokemon.set_level(random.randint(1, 100) if origin_generation >= 3 else random.randint(2, 63))
@@ -159,9 +159,9 @@ class pokemon_conversions_test(unittest.TestCase):
         self.assertEquals(dest_game, second_pokemon.get_game())
         self.assertEquals(first_pokemon.get_form(), second_pokemon.get_form())
         self.assertEquals(first_pokemon.get_nickname(), second_pokemon.get_nickname())
-        self.assertEquals(first_pokemon.get_trainer_name(), second_pokemon.get_trainer_name())
-        self.assertEquals(first_pokemon.get_trainer_id(), second_pokemon.get_trainer_id())
-        self.assertEquals(first_pokemon.get_trainer_public_id(), second_pokemon.get_trainer_public_id())
+        self.assertEquals(first_pokemon.get_original_trainer_name(), second_pokemon.get_original_trainer_name())
+        self.assertEquals(first_pokemon.get_original_trainer_id(), second_pokemon.get_original_trainer_id())
+        self.assertEquals(first_pokemon.get_original_trainer_public_id(), second_pokemon.get_original_trainer_public_id())
         self.assertEquals(first_pokemon.get_experience(), second_pokemon.get_experience())
         self.assertEquals(first_pokemon.get_level(), second_pokemon.get_level())
 
@@ -170,7 +170,7 @@ class pokemon_conversions_test(unittest.TestCase):
             self.assertEquals(first_pokemon.get_moves()[i].pp, second_pokemon.get_moves()[i].pp)
 
         if min_generation >= 3:
-            self.assertEquals(first_pokemon.get_trainer_secret_id(), second_pokemon.get_trainer_secret_id())
+            self.assertEquals(first_pokemon.get_original_trainer_secret_id(), second_pokemon.get_original_trainer_secret_id())
             self.assertEquals(first_pokemon.get_ability(), second_pokemon.get_ability())
             self.assertEquals(first_pokemon.get_ball(), second_pokemon.get_ball())
             self.assertEquals(first_pokemon.get_original_game(), second_pokemon.get_original_game())
@@ -184,7 +184,7 @@ class pokemon_conversions_test(unittest.TestCase):
                 self.assertEquals(first_pokemon.get_IVs(), second_pokemon.get_IVs())
 
         if min_generation >= 2:
-            self.assertEquals(first_pokemon.get_trainer_gender(), second_pokemon.get_trainer_gender())
+            self.assertEquals(first_pokemon.get_original_trainer_gender(), second_pokemon.get_original_trainer_gender())
             self.assertEquals(first_pokemon.get_gender(), second_pokemon.get_gender())
             self.assertEquals(first_pokemon.is_shiny(), second_pokemon.is_shiny())
             self.assertEquals(first_pokemon.get_held_item(), second_pokemon.get_held_item())

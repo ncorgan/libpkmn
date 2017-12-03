@@ -95,7 +95,7 @@ TEST_P(conversions_test, conversions_test)
 
     if(origin_generation >= 3)
     {
-        first_pokemon->set_trainer_id(uint32_rng.rand());
+        first_pokemon->set_original_trainer_id(uint32_rng.rand());
 
         std::pair<std::string, std::string> abilities = first_pokemon->get_database_entry().get_abilities();
         if(abilities.second != "None")
@@ -109,7 +109,7 @@ TEST_P(conversions_test, conversions_test)
     }
     else
     {
-        first_pokemon->set_trainer_id(uint16_rng.rand());
+        first_pokemon->set_original_trainer_id(uint16_rng.rand());
     }
 
     if(min_generation >= 2)
@@ -135,7 +135,7 @@ TEST_P(conversions_test, conversions_test)
 
         if(params.origin_game != "Gold" and params.origin_game != "Silver")
         {
-            first_pokemon->set_trainer_gender(random_bool() ? "Male" : "Female");
+            first_pokemon->set_original_trainer_gender(random_bool() ? "Male" : "Female");
         }
 
         // The max level met value in Generation II is 63.
@@ -162,7 +162,7 @@ TEST_P(conversions_test, conversions_test)
     }
 
     first_pokemon->set_nickname(random_string(10));
-    first_pokemon->set_trainer_name(random_string(7));
+    first_pokemon->set_original_trainer_name(random_string(7));
 
     // The max level met value in Generation II is 63, which restricts this as well.
     first_pokemon->set_level(int_rng.rand(2, (dest_generation == 2) ? 63 : 100));
@@ -174,9 +174,9 @@ TEST_P(conversions_test, conversions_test)
     EXPECT_EQ(params.dest_game, second_pokemon->get_game());
     EXPECT_EQ(first_pokemon->get_form(), second_pokemon->get_form());
     EXPECT_EQ(first_pokemon->get_nickname(), second_pokemon->get_nickname());
-    EXPECT_EQ(first_pokemon->get_trainer_name(), second_pokemon->get_trainer_name());
-    EXPECT_EQ(first_pokemon->get_trainer_id(), second_pokemon->get_trainer_id());
-    EXPECT_EQ(first_pokemon->get_trainer_public_id(), second_pokemon->get_trainer_public_id());
+    EXPECT_EQ(first_pokemon->get_original_trainer_name(), second_pokemon->get_original_trainer_name());
+    EXPECT_EQ(first_pokemon->get_original_trainer_id(), second_pokemon->get_original_trainer_id());
+    EXPECT_EQ(first_pokemon->get_original_trainer_public_id(), second_pokemon->get_original_trainer_public_id());
     EXPECT_EQ(first_pokemon->get_experience(), second_pokemon->get_experience());
     EXPECT_EQ(first_pokemon->get_level(), second_pokemon->get_level());
 
@@ -190,7 +190,7 @@ TEST_P(conversions_test, conversions_test)
 
     if(min_generation >= 3)
     {
-        EXPECT_EQ(first_pokemon->get_trainer_secret_id(), second_pokemon->get_trainer_secret_id());
+        EXPECT_EQ(first_pokemon->get_original_trainer_secret_id(), second_pokemon->get_original_trainer_secret_id());
         EXPECT_EQ(first_pokemon->get_ability(), second_pokemon->get_ability());
         EXPECT_EQ(first_pokemon->get_ball(), second_pokemon->get_ball());
         EXPECT_EQ(first_pokemon->get_original_game(), second_pokemon->get_original_game());
@@ -206,7 +206,7 @@ TEST_P(conversions_test, conversions_test)
     }
     if(min_generation >= 2)
     {
-        EXPECT_EQ(first_pokemon->get_trainer_gender(), second_pokemon->get_trainer_gender());
+        EXPECT_EQ(first_pokemon->get_original_trainer_gender(), second_pokemon->get_original_trainer_gender());
         EXPECT_EQ(first_pokemon->get_gender(), second_pokemon->get_gender());
         EXPECT_EQ(first_pokemon->is_shiny(), second_pokemon->is_shiny());
         EXPECT_EQ(first_pokemon->get_held_item(), second_pokemon->get_held_item());

@@ -73,7 +73,7 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
 
     // On the C++ level, make sure functions that affect the same PKSav field don't impact each other.
     std::string location_met_before_change = pokemon->get_location_met(false);
-    std::string trainer_gender_before_change = pokemon->get_trainer_gender();
+    std::string trainer_gender_before_change = pokemon->get_original_trainer_gender();
     int level_met_before_change = pokemon->get_level_met();
 
     const pksav_gen2_pc_pokemon_t* native_pc = reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(
@@ -88,7 +88,7 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     , pkmn::feature_not_in_game_error);
     pokemon->set_location_met("Pallet Town", false);
     EXPECT_EQ("Pallet Town", pokemon->get_location_met(false));
-    EXPECT_EQ(trainer_gender_before_change, pokemon->get_trainer_gender());
+    EXPECT_EQ(trainer_gender_before_change, pokemon->get_original_trainer_gender());
     EXPECT_EQ(level_met_before_change, pokemon->get_level_met());
 
     uint16_t time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
@@ -98,8 +98,8 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     pokemon->set_location_met(location_met_before_change, false);
 
     // Setting trainer gender shouldn't affect level caught, location caught, or time of day caught.
-    pokemon->set_trainer_gender("Female");
-    EXPECT_EQ("Female", pokemon->get_trainer_gender());
+    pokemon->set_original_trainer_gender("Female");
+    EXPECT_EQ("Female", pokemon->get_original_trainer_gender());
     EXPECT_EQ(location_met_before_change, pokemon->get_location_met(false));
     EXPECT_EQ(level_met_before_change, pokemon->get_level_met());
 
@@ -107,13 +107,13 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     time_caught >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
     EXPECT_EQ(time_caught_before_change, time_caught);
 
-    pokemon->set_trainer_gender(trainer_gender_before_change);
+    pokemon->set_original_trainer_gender(trainer_gender_before_change);
 
     // Setting level caught shouldn't affect location caught, trainer gender, or time of day caught.
     pokemon->set_level_met(3);
     EXPECT_EQ(3, pokemon->get_level_met());
     EXPECT_EQ(location_met_before_change, pokemon->get_location_met(false));
-    EXPECT_EQ(trainer_gender_before_change, pokemon->get_trainer_gender());
+    EXPECT_EQ(trainer_gender_before_change, pokemon->get_original_trainer_gender());
 
     time_caught = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
     time_caught >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
@@ -140,8 +140,8 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         );
         EXPECT_EQ(uint8_t(move_slots.at(i).pp), (native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK));
     }
-    EXPECT_EQ(uint16_t(pokemon->get_trainer_id()), pksav_bigendian16(native_pc->ot_id));
-    EXPECT_EQ(pokemon->get_trainer_public_id(), pksav_bigendian16(native_pc->ot_id));
+    EXPECT_EQ(uint16_t(pokemon->get_original_trainer_id()), pksav_bigendian16(native_pc->ot_id));
+    EXPECT_EQ(pokemon->get_original_trainer_public_id(), pksav_bigendian16(native_pc->ot_id));
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
     EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));

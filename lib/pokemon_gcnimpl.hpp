@@ -81,33 +81,33 @@ namespace pkmn {
                 const std::string &held_item
             ) override final;
 
-            std::string get_trainer_name() override final;
+            std::string get_original_trainer_name() override final;
 
-            void set_trainer_name(
+            void set_original_trainer_name(
                 const std::string &trainer_name
             ) override final;
 
-            uint16_t get_trainer_public_id() override final;
+            uint16_t get_original_trainer_public_id() override final;
 
-            uint16_t get_trainer_secret_id() override final;
+            uint16_t get_original_trainer_secret_id() override final;
 
-            uint32_t get_trainer_id() override final;
+            uint32_t get_original_trainer_id() override final;
 
-            void set_trainer_public_id(
+            void set_original_trainer_public_id(
                 uint16_t public_id
             ) override final;
 
-            void set_trainer_secret_id(
+            void set_original_trainer_secret_id(
                 uint16_t secret_id
             ) override final;
 
-            void set_trainer_id(
+            void set_original_trainer_id(
                 uint32_t id
             ) override final;
 
-            std::string get_trainer_gender() override final;
+            std::string get_original_trainer_gender() override final;
 
-            void set_trainer_gender(
+            void set_original_trainer_gender(
                 const std::string &gender
             ) override final;
 

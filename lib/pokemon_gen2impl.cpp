@@ -293,7 +293,7 @@ namespace pkmn
         }
 
         ret->set_nickname(get_nickname());
-        ret->set_trainer_name(get_trainer_name());
+        ret->set_original_trainer_name(get_original_trainer_name());
 
         return ret;
     }
@@ -541,14 +541,14 @@ namespace pkmn
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
 
-    std::string pokemon_gen2impl::get_trainer_name()
+    std::string pokemon_gen2impl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return _trainer_name;
     }
 
-    void pokemon_gen2impl::set_trainer_name(
+    void pokemon_gen2impl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -564,28 +564,28 @@ namespace pkmn
         _trainer_name = trainer_name;
     }
 
-    uint16_t pokemon_gen2impl::get_trainer_public_id()
+    uint16_t pokemon_gen2impl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
     }
 
-    uint16_t pokemon_gen2impl::get_trainer_secret_id()
+    uint16_t pokemon_gen2impl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
-    uint32_t pokemon_gen2impl::get_trainer_id()
+    uint32_t pokemon_gen2impl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
     }
 
-    void pokemon_gen2impl::set_trainer_public_id(
+    void pokemon_gen2impl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -594,14 +594,14 @@ namespace pkmn
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
-    void pokemon_gen2impl::set_trainer_secret_id(
+    void pokemon_gen2impl::set_original_trainer_secret_id(
         PKMN_UNUSED(uint16_t secret_id)
     )
     {
         throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
-    void pokemon_gen2impl::set_trainer_id(
+    void pokemon_gen2impl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -612,7 +612,7 @@ namespace pkmn
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
-    std::string pokemon_gen2impl::get_trainer_gender()
+    std::string pokemon_gen2impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -620,7 +620,7 @@ namespace pkmn
                                                                         : "Male";
     }
 
-    void pokemon_gen2impl::set_trainer_gender(
+    void pokemon_gen2impl::set_original_trainer_gender(
         const std::string &gender
     )
     {
