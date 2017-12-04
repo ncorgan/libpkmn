@@ -610,16 +610,16 @@ namespace pkmn { namespace swig {
                 _pokemon->set_original_trainer_gender(trainer_gender);
             }
 
-            PKMN_INLINE int get_friendship()
+            PKMN_INLINE int get_current_trainer_friendship()
             {
-                return _pokemon->get_friendship();
+                return _pokemon->get_current_trainer_friendship();
             }
 
-            PKMN_INLINE void set_friendship(
+            PKMN_INLINE void set_current_trainer_friendship(
                 int friendship
             )
             {
-                _pokemon->set_friendship(friendship);
+                _pokemon->set_current_trainer_friendship(friendship);
             }
 
             PKMN_INLINE std::string get_ability()

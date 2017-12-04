@@ -117,9 +117,9 @@ namespace pkmn {
                 const std::string &gender
             ) override final;
 
-            int get_friendship() override final;
+            int get_current_trainer_friendship() override final;
 
-            void set_friendship(
+            void set_current_trainer_friendship(
                 int friendship
             ) override final;
 

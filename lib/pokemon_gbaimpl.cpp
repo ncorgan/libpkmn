@@ -695,14 +695,14 @@ namespace pkmn
         }
     }
 
-    int pokemon_gbaimpl::get_friendship()
+    int pokemon_gbaimpl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         return _growth->friendship;
     }
 
-    void pokemon_gbaimpl::set_friendship(
+    void pokemon_gbaimpl::set_current_trainer_friendship(
         int friendship
     )
     {

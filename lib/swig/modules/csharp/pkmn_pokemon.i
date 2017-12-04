@@ -44,8 +44,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_original_trainer_id(uint32_t) "private";
 %csmethodmodifiers pkmn::pokemon::get_original_trainer_gender "private";
 %csmethodmodifiers pkmn::pokemon::set_original_trainer_gender(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_friendship "private";
-%csmethodmodifiers pkmn::pokemon::set_friendship(int) "private";
+%csmethodmodifiers pkmn::pokemon::get_current_trainer_friendship "private";
+%csmethodmodifiers pkmn::pokemon::set_current_trainer_friendship(int) "private";
 %csmethodmodifiers pkmn::pokemon::get_ability "private";
 %csmethodmodifiers pkmn::pokemon::set_ability(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_ball "private";
@@ -181,12 +181,12 @@ using Database;"
         }
     }
 
-    public int Friendship {
+    public int CurrentTrainerFriendship {
         get {
-            return GetFriendship();
+            return GetCurrentTrainerFriendship();
         }
         set {
-            SetFriendship(value);
+            SetCurrentTrainerFriendship(value);
         }
     }
 

@@ -109,7 +109,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
         end
 
         first_pokemon:set_shininess(utils.random_bool())
-        first_pokemon:set_friendship(math.random(0, 255))
+        first_pokemon:set_current_trainer_friendship(math.random(0, 255))
 
         if origin_game ~= "Gold" and origin_game ~= "Silver"
         then
@@ -205,7 +205,7 @@ function pokemon_conversions_tests.conversions_test(species, form, origin_game, 
         luaunit.assertEquals(first_pokemon:get_gender(), second_pokemon:get_gender())
         luaunit.assertEquals(first_pokemon:is_shiny(), second_pokemon:is_shiny())
         luaunit.assertEquals(first_pokemon:get_held_item(), second_pokemon:get_held_item())
-        luaunit.assertEquals(first_pokemon:get_friendship(), second_pokemon:get_friendship())
+        luaunit.assertEquals(first_pokemon:get_current_trainer_friendship(), second_pokemon:get_current_trainer_friendship())
         luaunit.assertEquals(first_pokemon:get_level(), second_pokemon:get_level_met())
     end
 end

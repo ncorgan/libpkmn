@@ -91,7 +91,7 @@ function gen2_pokemon_tests.pokemon_test(game)
 
     luaunit.assertEquals(pokemon:get_original_trainer_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
     luaunit.assertEquals(pokemon:get_original_trainer_gender(), "Male")
-    luaunit.assertEquals(pokemon:get_friendship(), pokemon:get_database_entry():get_base_friendship())
+    luaunit.assertEquals(pokemon:get_current_trainer_friendship(), pokemon:get_database_entry():get_base_friendship())
 
     luaunit.assertEquals(pokemon:get_level_met(), pokemon:get_level())
     luaunit.assertEquals(pokemon:get_level(), 30)
@@ -212,11 +212,11 @@ function gen2_pokemon_tests.pokemon_test(game)
     pokemon:set_level_met(3)
     luaunit.assertEquals(pokemon:get_level_met(), 3)
 
-    luaunit.assertError(pokemon.set_friendship, pokemon, -1)
-    luaunit.assertError(pokemon.set_friendship, pokemon, 256)
+    luaunit.assertError(pokemon.set_current_trainer_friendship, pokemon, -1)
+    luaunit.assertError(pokemon.set_current_trainer_friendship, pokemon, 256)
 
-    pokemon:set_friendship(123)
-    luaunit.assertEquals(pokemon:get_friendship(), 123)
+    pokemon:set_current_trainer_friendship(123)
+    luaunit.assertEquals(pokemon:get_current_trainer_friendship(), 123)
 
     luaunit.assertError(pokemon.set_original_game, pokemon, "Gold")
     luaunit.assertError(pokemon.set_marking, pokemon, "Circle", true)

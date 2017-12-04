@@ -34,7 +34,7 @@ public class PokemonIOTests {
         Assert.AreEqual(mightyena.OriginalTrainerSecretID, 3417);
         Assert.AreEqual(mightyena.OriginalTrainerID, 223997927);
         Assert.AreEqual(mightyena.OriginalTrainerGender, "Female");
-        Assert.AreEqual(mightyena.Friendship, 254);
+        Assert.AreEqual(mightyena.CurrentTrainerFriendship, 254);
         Assert.AreEqual(mightyena.Ability, "Intimidate");
         Assert.AreEqual(mightyena.Ball, "Great Ball");
         Assert.AreEqual(mightyena.LevelMet, 25);

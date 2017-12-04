@@ -19,20 +19,20 @@ class gen1_pokemon_test(pokemon_tests):
         pikachu = pkmn.pokemon("Pikachu", game, "", 5)
 
         if game == "Yellow":
-            pikachu.set_friendship(123)
-            self.assertEqual(pikachu.get_friendship(), 123)
+            pikachu.set_current_trainer_friendship(123)
+            self.assertEqual(pikachu.get_current_trainer_friendship(), 123)
 
             # Also check a non-Pikachu.
             mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
             with self.assertRaises(RuntimeError):
-                mewtwo.set_friendship(123)
+                mewtwo.set_current_trainer_friendship(123)
             with self.assertRaises(RuntimeError):
-                mewtwo.get_friendship()
+                mewtwo.get_current_trainer_friendship()
         else:
             with self.assertRaises(RuntimeError):
-                pikachu.set_friendship(123)
+                pikachu.set_current_trainer_friendship(123)
             with self.assertRaises(RuntimeError):
-                pikachu.get_friendship()
+                pikachu.get_current_trainer_friendship()
 
     def gen1_check_stat_map(self, stat_map):
         self.assertTrue(stat_map.has_key("HP"))
@@ -70,7 +70,7 @@ class gen1_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_original_trainer_gender(), "Male")
 
         with self.assertRaises(RuntimeError):
-            pokemon.get_friendship()
+            pokemon.get_current_trainer_friendship()
         with self.assertRaises(RuntimeError):
             pokemon.get_ability()
         with self.assertRaises(RuntimeError):
@@ -173,7 +173,7 @@ class gen1_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.set_original_trainer_gender("Male")
         with self.assertRaises(RuntimeError):
-            pokemon.set_friendship(123)
+            pokemon.set_current_trainer_friendship(123)
         with self.assertRaises(RuntimeError):
             pokemon.set_ability("")
         with self.assertRaises(RuntimeError):

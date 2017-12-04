@@ -114,7 +114,7 @@ public class PokemonConversionsTest {
         {
             firstPokemon.Gender = RandomBool() ? "Male" : "Female";
             firstPokemon.IsShiny = RandomBool();
-            firstPokemon.Friendship = rng.Next(0, 255);
+            firstPokemon.CurrentTrainerFriendship = rng.Next(0, 255);
 
             if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
             {
@@ -187,7 +187,7 @@ public class PokemonConversionsTest {
             Assert.AreEqual(firstPokemon.Gender, secondPokemon.Gender);
             Assert.AreEqual(firstPokemon.IsShiny, secondPokemon.IsShiny);
             Assert.AreEqual(firstPokemon.HeldItem, secondPokemon.HeldItem);
-            Assert.AreEqual(firstPokemon.Friendship, secondPokemon.Friendship);
+            Assert.AreEqual(firstPokemon.CurrentTrainerFriendship, secondPokemon.CurrentTrainerFriendship);
             Assert.AreEqual(firstPokemon.Level, secondPokemon.LevelMet);
         }
     }

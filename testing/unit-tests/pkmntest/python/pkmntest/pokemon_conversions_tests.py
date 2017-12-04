@@ -128,7 +128,7 @@ class pokemon_conversions_test(unittest.TestCase):
         if origin_generation >= 2:
             first_pokemon.set_gender("Male" if random_bool() else "Female")
             first_pokemon.set_shininess(random_bool())
-            first_pokemon.set_friendship(random.randint(0, 255))
+            first_pokemon.set_current_trainer_friendship(random.randint(0, 255))
 
             if origin_game != "Gold" and origin_game != "Silver":
                 first_pokemon.set_original_trainer_gender("Male" if random_bool() else "Female")
@@ -188,5 +188,5 @@ class pokemon_conversions_test(unittest.TestCase):
             self.assertEquals(first_pokemon.get_gender(), second_pokemon.get_gender())
             self.assertEquals(first_pokemon.is_shiny(), second_pokemon.is_shiny())
             self.assertEquals(first_pokemon.get_held_item(), second_pokemon.get_held_item())
-            self.assertEquals(first_pokemon.get_friendship(), second_pokemon.get_friendship())
+            self.assertEquals(first_pokemon.get_current_trainer_friendship(), second_pokemon.get_current_trainer_friendship())
             self.assertEquals(first_pokemon.get_level(), second_pokemon.get_level_met())

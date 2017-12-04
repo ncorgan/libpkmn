@@ -375,7 +375,7 @@ pkmn_error_t pkmn_pokemon_set_held_item(
     )
 }
 
-pkmn_error_t pkmn_pokemon_get_friendship(
+pkmn_error_t pkmn_pokemon_get_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int* friendship_out
 ) {
@@ -383,18 +383,18 @@ pkmn_error_t pkmn_pokemon_get_friendship(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(friendship_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *friendship_out = handle->cpp->get_friendship();
+        *friendship_out = handle->cpp->get_current_trainer_friendship();
     )
 }
 
-pkmn_error_t pkmn_pokemon_set_friendship(
+pkmn_error_t pkmn_pokemon_set_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int friendship
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        handle->cpp->set_friendship(friendship);
+        handle->cpp->set_current_trainer_friendship(friendship);
     )
 }
 

@@ -100,7 +100,7 @@ public class Gen2PokemonTests {
         );
 
         Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
-        Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.GetBaseFriendship());
+        Assert.AreEqual(pokemon.CurrentTrainerFriendship, pokemon.DatabaseEntry.GetBaseFriendship());
 
         Assert.Throws<ApplicationException>(
             delegate {
@@ -291,17 +291,17 @@ public class Gen2PokemonTests {
 
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                pokemon.Friendship = -1;
+                pokemon.CurrentTrainerFriendship = -1;
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                pokemon.Friendship = 256;
+                pokemon.CurrentTrainerFriendship = 256;
             }
         );
 
-        pokemon.Friendship = 123;
-        Assert.AreEqual(pokemon.Friendship, 123);
+        pokemon.CurrentTrainerFriendship = 123;
+        Assert.AreEqual(pokemon.CurrentTrainerFriendship, 123);
 
         Assert.Throws<ApplicationException>(
             delegate {

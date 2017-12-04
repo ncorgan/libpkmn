@@ -83,9 +83,9 @@ namespace pkmn {
                 const std::string &gender
             );
 
-            int get_friendship();
+            int get_current_trainer_friendship();
 
-            void set_friendship(
+            void set_current_trainer_friendship(
                 int friendship
             );
 

@@ -232,7 +232,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     );
     EXPECT_EQ(pokemon->get_experience(), int(pksav_littleendian32(growth->exp)));
     // TODO: PP Up
-    EXPECT_EQ(pokemon->get_friendship(), int(growth->friendship));
+    EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(growth->friendship));
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
     for(int i = 0; i < 4; ++i) {
@@ -474,7 +474,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
         int(native->heldItem)
     );
-    EXPECT_EQ(pokemon->get_friendship(), int(native->friendship));
+    EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(native->friendship));
     EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
     // TODO: OTGender, probably bring in bimaps

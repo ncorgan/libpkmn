@@ -161,7 +161,7 @@ static void compare_pokemon(
     if(generation >= 2)
     {
         EXPECT_EQ(pokemon1->get_original_trainer_gender(), pokemon2->get_original_trainer_gender());
-        EXPECT_EQ(pokemon1->get_friendship(), pokemon2->get_friendship());
+        EXPECT_EQ(pokemon1->get_current_trainer_friendship(), pokemon2->get_current_trainer_friendship());
         EXPECT_EQ(pokemon1->get_gender(), pokemon2->get_gender());
         EXPECT_EQ(pokemon1->is_shiny(), pokemon2->is_shiny());
         EXPECT_EQ(pokemon1->get_held_item(), pokemon2->get_held_item());
@@ -300,7 +300,7 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ(3417, mightyena->get_original_trainer_secret_id());
     EXPECT_EQ(223997927, mightyena->get_original_trainer_id());
     EXPECT_EQ("Female", mightyena->get_original_trainer_gender());
-    EXPECT_EQ(254, mightyena->get_friendship());
+    EXPECT_EQ(254, mightyena->get_current_trainer_friendship());
     EXPECT_EQ("Intimidate" , mightyena->get_ability());
     EXPECT_EQ("Great Ball", mightyena->get_ball());
     EXPECT_EQ(25, mightyena->get_level_met());

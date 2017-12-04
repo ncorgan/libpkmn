@@ -308,8 +308,8 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     swig_pokemon.set_original_trainer_gender("Female");
     EXPECT_EQ("Female", swig_pokemon.get_original_trainer_gender());
 
-    swig_pokemon.set_friendship(100);
-    EXPECT_EQ(100, swig_pokemon.get_friendship());
+    swig_pokemon.set_current_trainer_friendship(100);
+    EXPECT_EQ(100, swig_pokemon.get_current_trainer_friendship());
 
     swig_pokemon.set_ability("Overgrow");
     EXPECT_EQ("Overgrow", swig_pokemon.get_ability());

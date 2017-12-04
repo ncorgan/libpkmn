@@ -388,13 +388,13 @@ namespace pkmn {
         }
     }
 
-    int pokemon_ndsimpl::get_friendship() {
+    int pokemon_ndsimpl::get_current_trainer_friendship() {
         pokemon_scoped_lock lock(this);
 
         return _blockA->friendship;
     }
 
-    void pokemon_ndsimpl::set_friendship(
+    void pokemon_ndsimpl::set_current_trainer_friendship(
         int friendship
     ) {
         if(friendship < 0 or friendship > 255) {

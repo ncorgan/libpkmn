@@ -18,30 +18,30 @@ public class Gen1PokemonTests {
         PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", game, "", 5);
 
         if(game.Equals("Yellow")) {
-            pikachu.Friendship = 123;
-            Assert.AreEqual(pikachu.Friendship, 123);
+            pikachu.CurrentTrainerFriendship = 123;
+            Assert.AreEqual(pikachu.CurrentTrainerFriendship, 123);
 
             // Also check a non-Pikachu.
             PKMN.Pokemon mewtwo = new PKMN.Pokemon("Mewtwo", game, "", 70);
             Assert.Throws<ApplicationException>(
                 delegate {
-                    mewtwo.Friendship = 123;
+                    mewtwo.CurrentTrainerFriendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                    int friendship = mewtwo.Friendship;
+                    int friendship = mewtwo.CurrentTrainerFriendship;
                 }
             );
         } else {
             Assert.Throws<ApplicationException>(
                 delegate {
-                    pikachu.Friendship = 123;
+                    pikachu.CurrentTrainerFriendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                   int friendship = pikachu.Friendship;
+                   int friendship = pikachu.CurrentTrainerFriendship;
                 }
             );
         }
@@ -102,7 +102,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                int friendship = pokemon.Friendship;
+                int friendship = pokemon.CurrentTrainerFriendship;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -251,7 +251,7 @@ public class Gen1PokemonTests {
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.Friendship = 123;
+                pokemon.CurrentTrainerFriendship = 123;
             }
         );
         Assert.Throws<ApplicationException>(

@@ -61,7 +61,7 @@ static void check_initial_values(
     }
 
     if(generation >= 2) {
-        EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_friendship());
+        EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_current_trainer_friendship());
     }
 
     if(generation >= 3) {
@@ -325,20 +325,20 @@ static void test_setting_friendship(
     int generation = game_generations.at(pokemon->get_game());
 
     if(generation >= 2) {
-        pokemon->set_friendship(123);
-        EXPECT_EQ(123, pokemon->get_friendship());
+        pokemon->set_current_trainer_friendship(123);
+        EXPECT_EQ(123, pokemon->get_current_trainer_friendship());
         EXPECT_THROW(
-            pokemon->set_friendship(-1);
+            pokemon->set_current_trainer_friendship(-1);
         , std::out_of_range);
         EXPECT_THROW(
-            pokemon->set_friendship(256);
+            pokemon->set_current_trainer_friendship(256);
         , std::out_of_range);
     } else {
         EXPECT_THROW(
-            pokemon->get_friendship();
+            pokemon->get_current_trainer_friendship();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_friendship(123);
+            pokemon->set_current_trainer_friendship(123);
         , pkmn::feature_not_in_game_error);
     }
 }

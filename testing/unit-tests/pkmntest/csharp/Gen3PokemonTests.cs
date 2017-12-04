@@ -223,7 +223,7 @@ public class Gen3PokemonTests {
         Assert.AreEqual(pokemon.OriginalTrainerSecretID, ((PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16));
         Assert.AreEqual(pokemon.OriginalTrainerID, PKMN.Pokemon.DEFAULT_TRAINER_ID);
         Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
-        Assert.AreEqual(pokemon.Friendship, pokemon.DatabaseEntry.BaseFriendship);
+        Assert.AreEqual(pokemon.CurrentTrainerFriendship, pokemon.DatabaseEntry.BaseFriendship);
         Assert.AreEqual(pokemon.Ability, "Blaze");
         Assert.AreEqual(pokemon.Ball, "Premier Ball");
         Assert.AreEqual(pokemon.LevelMet, pokemon.Level);
@@ -383,17 +383,17 @@ public class Gen3PokemonTests {
             }
         );
 
-        pokemon.Friendship = 123;
-        Assert.AreEqual(pokemon.Friendship, 123);
+        pokemon.CurrentTrainerFriendship = 123;
+        Assert.AreEqual(pokemon.CurrentTrainerFriendship, 123);
 
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                pokemon.Friendship = -1;
+                pokemon.CurrentTrainerFriendship = -1;
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate {
-                pokemon.Friendship = 256;
+                pokemon.CurrentTrainerFriendship = 256;
             }
         );
 

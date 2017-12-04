@@ -139,7 +139,7 @@ static void check_initial_values(
 
     if(generation >= 2) {
         int friendship = 0;
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
@@ -636,24 +636,24 @@ static void test_setting_friendship(
 
     int friendship = 0;
     if(generation >= 2) {
-        error = pkmn_pokemon_set_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon,
                     123
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL(123, friendship);
     } else {
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon_set_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon,
                     123
                 );

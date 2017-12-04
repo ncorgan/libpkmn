@@ -161,7 +161,7 @@ class gen3_pokemon_test(pokemon_tests):
         self.assertStringEqual(pokemon.get_original_trainer_gender(), "Male")
 
         self.assertEqual(
-            pokemon.get_friendship(),
+            pokemon.get_current_trainer_friendship(),
             pokemon.get_database_entry().get_base_friendship()
         )
 
@@ -335,13 +335,13 @@ class gen3_pokemon_test(pokemon_tests):
         with self.assertRaises(ValueError):
             pokemon.set_original_trainer_gender("Genderless")
 
-        pokemon.set_friendship(123)
-        self.assertEqual(pokemon.get_friendship(), 123)
+        pokemon.set_current_trainer_friendship(123)
+        self.assertEqual(pokemon.get_current_trainer_friendship(), 123)
 
         with self.assertRaises(IndexError):
-            pokemon.set_friendship(-1)
+            pokemon.set_current_trainer_friendship(-1)
         with self.assertRaises(IndexError):
-            pokemon.set_friendship(256)
+            pokemon.set_current_trainer_friendship(256)
 
         pokemon.set_ability(abilities[0])
         self.assertStringEqual(pokemon.get_ability(), abilities[0])

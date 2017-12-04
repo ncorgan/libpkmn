@@ -131,7 +131,7 @@ TEST_P(conversions_test, conversions_test)
     {
         first_pokemon->set_gender(random_bool() ? "Male" : "Female");
         first_pokemon->set_shininess(random_bool());
-        first_pokemon->set_friendship(uint8_rng.rand());
+        first_pokemon->set_current_trainer_friendship(uint8_rng.rand());
 
         if(params.origin_game != "Gold" and params.origin_game != "Silver")
         {
@@ -210,7 +210,7 @@ TEST_P(conversions_test, conversions_test)
         EXPECT_EQ(first_pokemon->get_gender(), second_pokemon->get_gender());
         EXPECT_EQ(first_pokemon->is_shiny(), second_pokemon->is_shiny());
         EXPECT_EQ(first_pokemon->get_held_item(), second_pokemon->get_held_item());
-        EXPECT_EQ(first_pokemon->get_friendship(), second_pokemon->get_friendship());
+        EXPECT_EQ(first_pokemon->get_current_trainer_friendship(), second_pokemon->get_current_trainer_friendship());
         EXPECT_EQ(first_pokemon->get_level(), second_pokemon->get_level_met());
     }
 }

@@ -31,7 +31,7 @@ class pokemon_io_test(unittest.TestCase):
         self.assertEqual(mightyena.get_original_trainer_secret_id(), 3417)
         self.assertEqual(mightyena.get_original_trainer_id(), 223997927)
         self.assertEqual(mightyena.get_original_trainer_gender(), "Female")
-        self.assertEqual(mightyena.get_friendship(), 254)
+        self.assertEqual(mightyena.get_current_trainer_friendship(), 254)
         self.assertEqual(mightyena.get_ability(), "Intimidate")
         self.assertEqual(mightyena.get_ball(), "Great Ball")
         self.assertEqual(mightyena.get_level_met(), 25)

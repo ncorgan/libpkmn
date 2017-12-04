@@ -130,9 +130,9 @@ namespace pkmn {
                 const std::string &trainer_gender
             ) = 0;
 
-            virtual int get_friendship() = 0;
+            virtual int get_current_trainer_friendship() = 0;
 
-            virtual void set_friendship(
+            virtual void set_current_trainer_friendship(
                 int friendship
             ) = 0;
 

@@ -472,7 +472,7 @@ namespace pkmn
     BOOST_STATIC_CONSTEXPR int YELLOW = 3;
     BOOST_STATIC_CONSTEXPR int PIKACHU = 25;
 
-    int pokemon_gen1impl::get_friendship()
+    int pokemon_gen1impl::get_current_trainer_friendship()
     {
         int ret = 0;
 
@@ -491,7 +491,7 @@ namespace pkmn
         return ret;
     }
 
-    void pokemon_gen1impl::set_friendship(
+    void pokemon_gen1impl::set_current_trainer_friendship(
         int friendship
     )
     {

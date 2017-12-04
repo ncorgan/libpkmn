@@ -74,8 +74,8 @@
 %rename("trainer_id=") set_original_trainer_id;
 %rename("trainer_gender") get_original_trainer_gender;
 %rename("trainer_gender=") set_original_trainer_gender;
-%rename("friendship") get_friendship;
-%rename("friendship=") set_friendship;
+%rename("friendship") get_current_trainer_friendship;
+%rename("friendship=") set_current_trainer_friendship;
 %rename("ability") get_ability;
 %rename("ability=") set_ability;
 %rename("ball") get_ball;

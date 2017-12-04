@@ -1057,26 +1057,26 @@ static void pokemon_error_test() {
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "held_item");
 
     /*
-     * pkmn_pokemon_get_friendship
+     * pkmn_pokemon_get_current_trainer_friendship
      */
 
-    error = pkmn_pokemon_get_friendship(
+    error = pkmn_pokemon_get_current_trainer_friendship(
                 NULL, // handle
                 &dummy_int
             );
     TEST_NULL_POINTER_RETURN("handle");
 
-    error = pkmn_pokemon_get_friendship(
+    error = pkmn_pokemon_get_current_trainer_friendship(
                 pokemon,
                 NULL // friendship_out
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "friendship_out");
 
     /*
-     * pkmn_pokemon_set_friendship
+     * pkmn_pokemon_set_current_trainer_friendship
      */
 
-    error = pkmn_pokemon_set_friendship(
+    error = pkmn_pokemon_set_current_trainer_friendship(
                 NULL, // handle
                 0
             );
