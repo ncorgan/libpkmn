@@ -544,11 +544,18 @@ static void test_setting_moves(
     pkmn::pokemon::sptr pokemon,
     const std::vector<std::string> &move_names,
     const std::vector<std::string> &invalid_move_names
-) {
+)
+{
     ASSERT_EQ(4, move_names.size());
 
-    for(int i = 0; i < 4; ++i) {
+    std::vector<pkmn::database::move_entry> move_entries;
+
+    for(int i = 0; i < 4; ++i)
+    {
         pokemon->set_move(move_names[i], i);
+        move_entries.emplace_back(
+            pkmn::database::move_entry(move_names[i], pokemon->get_game())
+        );
     }
 
     EXPECT_THROW(
@@ -559,15 +566,24 @@ static void test_setting_moves(
     , std::out_of_range);
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    for(int i = 0; i < 4; ++i) {
+    for(int i = 0; i < 4; ++i)
+    {
         EXPECT_EQ(move_names[i], move_slots.at(i).move);
         EXPECT_EQ(
-            pkmn::database::move_entry(move_slots.at(i).move, pokemon->get_game()).get_pp(0),
+            move_entries[i].get_pp(0),
             move_slots.at(i).pp
         );
+
+        pokemon->set_move_pp(i, 0);
+        EXPECT_EQ(0, move_slots.at(i).pp);
+
+        int max_pp = move_entries[i].get_pp(3);
+        pokemon->set_move_pp(i, max_pp);
+        EXPECT_EQ(max_pp, move_slots.at(i).pp);
     }
 
-    for(int i = 0; i < int(invalid_move_names.size()); ++i) {
+    for(int i = 0; i < int(invalid_move_names.size()); ++i)
+    {
         EXPECT_THROW(
             pokemon->set_move(invalid_move_names[i], 0);
         , std::invalid_argument);

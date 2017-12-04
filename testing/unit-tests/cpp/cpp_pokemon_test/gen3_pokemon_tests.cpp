@@ -234,13 +234,16 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: PP Up
     EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(growth->friendship));
 
-    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    for(int i = 0; i < 4; ++i) {
+    const pkmn::move_slots_t& moves = pokemon->get_moves();
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(attacks->moves[i]));
+        EXPECT_EQ(moves.at(i).pp, int(attacks->move_pps[i]));
         EXPECT_EQ(
-            pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id(),
-            int(attacks->moves[i])
+            3,
+            int((growth->pp_up >> uint8_t(i>>2)) & 0x3)
         );
-        EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
     }
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
@@ -496,12 +499,12 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     // TODO: original game
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
-    for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(
-            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
-            int(native->moves[i].move)
-        );
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(native->moves[i].move));
         EXPECT_EQ(moves.at(i).pp, int(native->moves[i].currentPPs));
+        EXPECT_EQ(3, int(native->moves[i].nbPPUpsUsed));
     }
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();

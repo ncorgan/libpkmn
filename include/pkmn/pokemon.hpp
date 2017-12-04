@@ -215,6 +215,11 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            virtual void set_move_pp(
+                int index,
+                int pp
+            ) = 0;
+
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
             virtual void set_EV(

@@ -65,12 +65,18 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     // TODO: programmatic check for types, catch rate
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
-    for(size_t i = 0; i < 4; ++i) {
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(native_pc->moves[i]));
         EXPECT_EQ(
-            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
-            int(native_pc->moves[i])
+            moves.at(i).pp,
+            int(native_pc->move_pps[i] & PKSAV_GEN1_MOVE_PP_MASK)
         );
-        EXPECT_EQ(moves.at(i).pp, int(native_pc->move_pps[i]));
+        EXPECT_EQ(
+            3,
+            ((native_pc->move_pps[i] & PKSAV_GEN1_MOVE_PP_UP_MASK) >> 6)
+        );
     }
 
     EXPECT_EQ(pokemon->get_original_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));

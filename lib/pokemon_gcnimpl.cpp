@@ -1116,6 +1116,39 @@ namespace pkmn
         _update_moves(index);
     }
 
+    void pokemon_gcnimpl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(size_t i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        GC_RCAST->moves[index].currentPPs = LibPkmGC::u8(pp);
+
+        // Set the PP Up value to the minimum value that will accommodate the given PP.
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                GC_RCAST->moves[index].nbPPUpsUsed = i;
+                break;
+            }
+        }
+    }
+
     void pokemon_gcnimpl::set_EV(
         const std::string &stat,
         int value

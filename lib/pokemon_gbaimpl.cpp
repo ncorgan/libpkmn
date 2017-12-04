@@ -1102,6 +1102,40 @@ namespace pkmn
         _attacks->move_pps[index] = uint8_t(_moves[index].pp);
     }
 
+    void pokemon_gbaimpl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(size_t i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        _attacks->move_pps[index] = uint8_t(pp);
+
+        // Set the PP Up mask to the minimum value that will accommodate the given PP.
+        _growth->pp_up &= ~uint8_t(3 << (index*2));
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                _growth->pp_up |= uint8_t(i << (index*2));
+                break;
+            }
+        }
+    }
+
     void pokemon_gbaimpl::set_EV(
         const std::string &stat,
         int value

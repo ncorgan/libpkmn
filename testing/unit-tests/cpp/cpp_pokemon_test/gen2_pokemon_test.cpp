@@ -132,16 +132,21 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         native_pc->held_item,
         uint8_t(pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index())
     );
-    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    for(int i = 0; i < 4; ++i) {
+
+    const pkmn::move_slots_t& moves = pokemon->get_moves();
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(native_pc->moves[i]));
         EXPECT_EQ(
-            uint8_t(pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id()),
-            native_pc->moves[i]
+            moves.at(i).pp,
+            int(native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK)
         );
-        EXPECT_EQ(uint8_t(move_slots.at(i).pp), (native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK));
+        EXPECT_EQ(
+            3,
+            ((native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_UP_MASK) >> 6)
+        );
     }
-    EXPECT_EQ(uint16_t(pokemon->get_original_trainer_id()), pksav_bigendian16(native_pc->ot_id));
-    EXPECT_EQ(pokemon->get_original_trainer_public_id(), pksav_bigendian16(native_pc->ot_id));
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
     EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));

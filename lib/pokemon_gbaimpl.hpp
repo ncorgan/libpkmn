@@ -199,6 +199,11 @@ namespace pkmn {
                 int index
             ) override final;
 
+            void set_move_pp(
+                int index,
+                int pp
+            ) override final;
+
             void set_EV(
                 const std::string &stat,
                 int value
