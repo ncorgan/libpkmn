@@ -15,6 +15,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/markings.h>
+#include <pksav/common/pokerus.h>
 #include <pksav/common/stats.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
@@ -233,6 +234,15 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_EQ(pokemon->get_experience(), int(pksav_littleendian32(growth->exp)));
     // TODO: PP Up
     EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(growth->friendship));
+
+    uint8_t duration_from_pokerus = 0;
+    PKSAV_CALL(
+        pksav_pokerus_get_duration(
+            &misc->pokerus,
+            &duration_from_pokerus
+        )
+    )
+    EXPECT_EQ(pokemon->get_pokerus_duration(), int(duration_from_pokerus));
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i)
@@ -497,6 +507,15 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(pokemon->get_personality(), native->PID);
 
     // TODO: original game
+
+    uint8_t duration_from_pokerus = 0;
+    PKSAV_CALL(
+        pksav_pokerus_get_duration(
+            &native->pokerusStatus,
+            &duration_from_pokerus
+        )
+    )
+    EXPECT_EQ(pokemon->get_pokerus_duration(), int(duration_from_pokerus));
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i)

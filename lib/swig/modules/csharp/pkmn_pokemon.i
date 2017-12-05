@@ -34,6 +34,8 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
 %csmethodmodifiers pkmn::pokemon::get_held_item "private";
 %csmethodmodifiers pkmn::pokemon::set_held_item "private";
+%csmethodmodifiers pkmn::pokemon::get_pokerus_duration "private";
+%csmethodmodifiers pkmn::pokemon::set_pokerus_duration "private";
 %csmethodmodifiers pkmn::pokemon::get_original_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::set_original_trainer_name "private";
 %csmethodmodifiers pkmn::pokemon::get_original_trainer_public_id "private";
@@ -133,6 +135,15 @@ using Database;"
         }
         set {
             SetHeldItem(value);
+        }
+    }
+
+    public int PokerusDuration {
+        get {
+            return GetPokerusDuration();
+        }
+        set {
+            SetPokerusDuration(value);
         }
     }
 

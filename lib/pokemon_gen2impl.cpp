@@ -541,6 +541,27 @@ namespace pkmn
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
 
+    int pokemon_gen2impl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
+
+        return _get_pokerus_duration(&GEN2_PC_RCAST->pokerus);
+    }
+
+    void pokemon_gen2impl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
+
+        _set_pokerus_duration(
+            &GEN2_PC_RCAST->pokerus,
+            duration
+        );
+    }
+
     std::string pokemon_gen2impl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);

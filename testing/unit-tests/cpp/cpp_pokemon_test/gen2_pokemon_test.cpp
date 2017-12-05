@@ -13,6 +13,7 @@
 
 #include "pksav/pksav_call.hpp"
 
+#include <pksav/common/pokerus.h>
 #include <pksav/common/stats.h>
 #include <pksav/gen2/pokemon.h>
 #include <pksav/gen2/time.h>
@@ -132,6 +133,15 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         native_pc->held_item,
         uint8_t(pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index())
     );
+
+    uint8_t duration_from_pokerus = 0;
+    PKSAV_CALL(
+        pksav_pokerus_get_duration(
+            &native_pc->pokerus,
+            &duration_from_pokerus
+        )
+    )
+    EXPECT_EQ(pokemon->get_pokerus_duration(), int(duration_from_pokerus));
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
     for(size_t i = 0; i < 4; ++i)

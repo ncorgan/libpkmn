@@ -81,6 +81,12 @@ namespace pkmn {
                 const std::string &held_item
             ) override final;
 
+            int get_pokerus_duration() override final;
+
+            void set_pokerus_duration(
+                int duration
+            ) override final;
+
             std::string get_original_trainer_name() override final;
 
             void set_original_trainer_name(

@@ -8,6 +8,7 @@
 #include "pokemon_test_common.hpp"
 
 #include "pksav/enum_maps.hpp"
+#include "types/rng.hpp"
 
 #include <pkmntest/util.hpp>
 
@@ -640,6 +641,36 @@ static void test_setting_personality(
     }
 }
 
+static void test_setting_pokerus(
+    pkmn::pokemon::sptr pokemon
+)
+{
+    int generation = game_generations.at(pokemon->get_game());
+
+    if(generation >= 2)
+    {
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(-1);
+        , std::out_of_range);
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(16);
+        , std::out_of_range);
+
+        int duration = pkmn::rng<int>().rand(1, 15);
+        pokemon->set_pokerus_duration(duration);
+        EXPECT_EQ(duration, pokemon->get_pokerus_duration());
+    }
+    else
+    {
+        EXPECT_THROW(
+            pokemon->get_pokerus_duration();
+        , pkmn::feature_not_in_game_error);
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(1);
+        , pkmn::feature_not_in_game_error);
+    }
+}
+
 static void test_setting_stats(
     pkmn::pokemon::sptr pokemon
 ) {
@@ -851,6 +882,7 @@ void pokemon_test_common(
         test_values.invalid_original_games
     );
     test_setting_personality(pokemon);
+    test_setting_pokerus(pokemon);
     test_setting_stats(pokemon);
     test_setting_trainer_info(pokemon);
 }

@@ -588,6 +588,27 @@ namespace pkmn
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
+    int pokemon_gbaimpl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        return _get_pokerus_duration(&_misc->pokerus);
+    }
+
+    void pokemon_gbaimpl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        _set_pokerus_duration(
+            &_misc->pokerus,
+            duration
+        );
+    }
+
     std::string pokemon_gbaimpl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);

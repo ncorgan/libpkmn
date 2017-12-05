@@ -100,6 +100,12 @@ namespace pkmn {
                 const std::string &held_item
             ) = 0;
 
+            virtual int get_pokerus_duration() = 0;
+
+            virtual void set_pokerus_duration(
+                int diruation
+            ) = 0;
+
             virtual std::string get_original_trainer_name() = 0;
 
             virtual void set_original_trainer_name(

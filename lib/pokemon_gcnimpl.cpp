@@ -563,6 +563,29 @@ namespace pkmn
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
+    int pokemon_gcnimpl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return _get_pokerus_duration(&GC_RCAST->pokerusStatus);
+    }
+
+    void pokemon_gcnimpl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        _set_pokerus_duration(
+            &GC_RCAST->pokerusStatus,
+            duration
+        );
+
+        GC_RCAST->partyData.pokerusDaysRemaining = LibPkmGC::s8(duration);
+    }
+
     std::string pokemon_gcnimpl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);

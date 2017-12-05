@@ -386,6 +386,18 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
+    int pokemon_gen1impl::get_pokerus_duration()
+    {
+        throw pkmn::feature_not_in_game_error("Pokérus", "Generation I");
+    }
+
+    void pokemon_gen1impl::set_pokerus_duration(
+        PKMN_UNUSED(int duration)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Pokérus", "Generation I");
+    }
+
     std::string pokemon_gen1impl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
