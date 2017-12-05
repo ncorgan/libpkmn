@@ -31,6 +31,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_list.hpp
         item_slot.hpp
         move_slot.hpp
+        pokedex.hpp
         pokemon.hpp
         pokemon_box.hpp
         pokemon_party.hpp
