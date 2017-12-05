@@ -70,6 +70,8 @@ namespace pkmn {
                 int money
             );
 
+            pkmn::pokedex::sptr get_pokedex() override final;
+
         private:
             pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;

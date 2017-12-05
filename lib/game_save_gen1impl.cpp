@@ -8,6 +8,7 @@
 #include "game_save_gen1impl.hpp"
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "pokedex_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen1impl.hpp"
 
@@ -71,6 +72,12 @@ namespace pkmn {
                 _game_id = RED;
             }
         }
+
+        _pokedex = pkmn::make_shared<pokedex_impl>(
+                       _game_id,
+                       _pksav_save.pokedex_seen,
+                       _pksav_save.pokedex_owned
+                   );
 
         _pokemon_party = pkmn::make_shared<pokemon_party_gen1impl>(
                              _game_id,

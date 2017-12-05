@@ -9,6 +9,7 @@
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
+#include "pokedex_impl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
 
@@ -19,6 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include <cstring>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -112,6 +114,12 @@ namespace pkmn {
                 break;
         }
 
+        _pokedex = pkmn::make_shared<pokedex_impl>(
+                       _game_id,
+                       _pksav_save.pokedex_seenA,
+                       _pksav_save.pokedex_owned
+                   );
+
         _pokemon_party = pkmn::make_shared<pokemon_party_gbaimpl>(
                              _game_id,
                              _pksav_save.pokemon_party
@@ -132,7 +140,25 @@ namespace pkmn {
 
     void game_save_gbaimpl::save_as(
         const std::string &filepath
-    ) {
+    )
+    {
+        // For some reason, the Pokédex seen bitfield is stored
+        // three separate times. This class passes the first field
+        // into the Pokédex class, so copy it to the other two before
+        // calculating the checksum and saving.
+        const size_t num_bytes = std::ceil(386 / 8);
+
+        std::memcpy(
+            _pksav_save.pokedex_seenB,
+            _pksav_save.pokedex_seenA,
+            num_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex_seenC,
+            _pksav_save.pokedex_seenA,
+            num_bytes
+        );
+
         PKSAV_CALL(
             pksav_gba_save_save(
                 filepath.c_str(),

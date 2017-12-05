@@ -265,4 +265,9 @@ namespace pkmn {
             );
         )
     }
+
+    pkmn::pokedex::sptr game_save_gen2impl::get_pokedex()
+    {
+        throw pkmn::unimplemented_error();
+    }
 }

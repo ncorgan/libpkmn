@@ -30,6 +30,8 @@ namespace pkmn {
 
             std::string get_game();
 
+            virtual pkmn::pokedex::sptr get_pokedex() override;
+
             pkmn::pokemon_party::sptr get_pokemon_party();
 
             pkmn::pokemon_pc::sptr get_pokemon_pc();
@@ -41,6 +43,7 @@ namespace pkmn {
         protected:
             std::string _filepath;
 
+            pkmn::pokedex::sptr _pokedex;
             pkmn::pokemon_party::sptr _pokemon_party;
             pkmn::pokemon_pc::sptr _pokemon_pc;
             pkmn::item_bag::sptr _item_bag;
