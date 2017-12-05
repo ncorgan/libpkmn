@@ -8,15 +8,9 @@
 #define PKMN_POKEDEX_HPP
 
 #include <pkmn/config.hpp>
-#include <pkmn/item_bag.hpp>
-#include <pkmn/item_list.hpp>
-#include <pkmn/pokemon_party.hpp>
-#include <pkmn/pokemon_pc.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
-#include <cstdint>
 #include <string>
-#include <vector>
 
 namespace pkmn
 {
@@ -40,6 +34,24 @@ namespace pkmn
             pokedex() {};
             virtual ~pokedex() {};
             #endif
+
+            virtual bool has_seen(
+                const std::string& species
+            ) = 0;
+
+            virtual void set_has_seen(
+                const std::string& species,
+                bool has_seen_value
+            ) = 0;
+
+            virtual bool has_caught(
+                const std::string& species
+            ) = 0;
+
+            virtual void set_has_caught(
+                const std::string& species,
+                bool has_caught_value
+            ) = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native_has_seen() = 0;

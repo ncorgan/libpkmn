@@ -31,6 +31,24 @@ namespace pkmn
             pokedex_impl(pokedex_impl&&) = default;
             pokedex_impl& operator=(pokedex_impl&&) = default;
 
+            bool has_seen(
+                const std::string& species
+            ) override final;
+
+            void set_has_seen(
+                const std::string& species,
+                bool has_seen_value
+            ) override final;
+
+            bool has_caught(
+                const std::string& species
+            ) override final;
+
+            void set_has_caught(
+                const std::string& species,
+                bool has_caught_value
+            ) override final;
+
             void* get_native_has_seen() override final;
 
             void* get_native_has_caught() override final;
