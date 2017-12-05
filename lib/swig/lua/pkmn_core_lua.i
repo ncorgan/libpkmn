@@ -38,6 +38,9 @@ PKMN_LUA_VECTOR(pkmn::item_slot, item_slot_list)
 %include <pkmn/move_slot.hpp>
 PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
 
+// Pokédex
+%include <lua/pkmn_pokedex.i>
+
 // Pokémon
 %include <lua/pkmn_pokemon.i>
 

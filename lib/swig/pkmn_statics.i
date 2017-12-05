@@ -17,6 +17,7 @@
     #include <pkmn/game_save.hpp>
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
+    #include <pkmn/pokedex.hpp>
     #include <pkmn/pokemon.hpp>
     #include <pkmn/pokemon_box.hpp>
     #include <pkmn/pokemon_party.hpp>
@@ -28,6 +29,12 @@
         const std::string &game
     ) {
         return pkmn::item_bag::make(game);
+    }
+
+    PKMN_INLINE pkmn::shared_ptr<pkmn::pokedex> make_pokedex(
+        const std::string &game
+    ) {
+        return pkmn::pokedex::make(game);
     }
 
     PKMN_INLINE pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
@@ -167,6 +174,7 @@ pkmn::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& filepath);
 #endif
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
+pkmn::shared_ptr<pkmn::pokedex> make_pokedex(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);

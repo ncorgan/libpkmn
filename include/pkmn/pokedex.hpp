@@ -20,12 +20,6 @@ namespace pkmn
         public:
             typedef pkmn::shared_ptr<pokedex> sptr;
 
-            /*!
-             * @brief Imports the save from the game save at the given file.
-             *
-             * \param filepath The filepath from which to import the save
-             * \throws std::invalid_argument if the given filepath is invalid
-             */
             static sptr make(
                 const std::string& game
             );

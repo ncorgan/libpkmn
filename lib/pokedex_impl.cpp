@@ -47,15 +47,15 @@ namespace pkmn
 
         if(native_has_seen)
         {
-            size_t num_bytes = std::ceil(float(generation_pokedex_sizes[_generation]) / 8.0f);
-            _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
-            _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
-        }
-        else
-        {
             _native_has_seen = native_has_seen;
             _native_has_caught = native_has_caught;
             _our_mem = false;
+        }
+        else
+        {
+            size_t num_bytes = std::ceil(float(generation_pokedex_sizes[_generation]) / 8.0f);
+            _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
+            _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
         }
     }
 

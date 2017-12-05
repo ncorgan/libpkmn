@@ -71,6 +71,9 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 // Move Slot
 %include <csharp/pkmn_move_slot.i>
 
+// Pokédex
+%include <csharp/pkmn_pokedex.i>
+
 // Pokémon 
 %include <csharp/pkmn_pokemon.i>
 

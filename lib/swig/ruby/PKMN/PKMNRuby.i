@@ -26,6 +26,7 @@ PKMN_RUBY_VECTOR(pkmn::move_slot, MoveSlotList);
 
 %include <ruby/pkmn_item_list.i>
 %include <ruby/pkmn_item_bag.i>
+%include <ruby/pkmn_pokedex.i>
 %include <ruby/pkmn_pokemon.i>
 %include <ruby/pkmn_pokemon_box.i>
 %include <ruby/pkmn_pokemon_party.i>
