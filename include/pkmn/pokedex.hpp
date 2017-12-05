@@ -35,6 +35,8 @@ namespace pkmn
             virtual ~pokedex() {};
             #endif
 
+            virtual std::string get_game() = 0;
+
             virtual bool has_seen(
                 const std::string& species
             ) = 0;

@@ -68,6 +68,11 @@ namespace pkmn
         }
     }
 
+    std::string pokedex_impl::get_game()
+    {
+        return pkmn::database::game_id_to_name(_game_id);
+    }
+
     bool pokedex_impl::has_seen(
         const std::string& species
     )

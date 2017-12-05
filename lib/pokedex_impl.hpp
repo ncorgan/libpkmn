@@ -31,6 +31,8 @@ namespace pkmn
             pokedex_impl(pokedex_impl&&) = default;
             pokedex_impl& operator=(pokedex_impl&&) = default;
 
+            std::string get_game() override final;
+
             bool has_seen(
                 const std::string& species
             ) override final;
