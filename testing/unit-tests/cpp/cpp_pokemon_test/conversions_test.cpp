@@ -16,6 +16,19 @@
 
 #include <gtest/gtest.h>
 
+// Common to all generations
+static const std::vector<std::string> CONDITIONS =
+{
+    "None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"
+};
+
+template <typename T>
+static T random_value(const std::vector<T>& vec)
+{
+    static pkmn::rng<size_t> size_rng;
+    return vec.at(size_rng.rand(0, vec.size()-1));
+}
+
 static std::string random_string(
     size_t len
 )
@@ -33,7 +46,8 @@ static std::string random_string(
 
 bool random_bool()
 {
-    return (pkmn::rng<int>().rand(0, 99) >= 50);
+    static pkmn::rng<int> int_rng;
+    return (int_rng.rand(0, 99) >= 50);
 }
 
 typedef struct
@@ -159,7 +173,11 @@ TEST_P(conversions_test, conversions_test)
         {
             first_pokemon->set_contest_stat(iter->first, int_rng.rand(0, 255));
         }
+
+        first_pokemon->set_pokerus_duration(int_rng.rand(0, 15));
     }
+
+    first_pokemon->set_condition(random_value(CONDITIONS));
 
     first_pokemon->set_nickname(random_string(10));
     first_pokemon->set_original_trainer_name(random_string(7));
@@ -172,6 +190,7 @@ TEST_P(conversions_test, conversions_test)
 
     EXPECT_EQ(first_pokemon->get_species(), second_pokemon->get_species());
     EXPECT_EQ(params.dest_game, second_pokemon->get_game());
+    EXPECT_EQ(first_pokemon->get_condition(), second_pokemon->get_condition());
     EXPECT_EQ(first_pokemon->get_form(), second_pokemon->get_form());
     EXPECT_EQ(first_pokemon->get_nickname(), second_pokemon->get_nickname());
     EXPECT_EQ(first_pokemon->get_original_trainer_name(), second_pokemon->get_original_trainer_name());
@@ -195,6 +214,7 @@ TEST_P(conversions_test, conversions_test)
         EXPECT_EQ(first_pokemon->get_ball(), second_pokemon->get_ball());
         EXPECT_EQ(first_pokemon->get_original_game(), second_pokemon->get_original_game());
         EXPECT_EQ(first_pokemon->get_personality(), second_pokemon->get_personality());
+        EXPECT_EQ(first_pokemon->get_pokerus_duration(), second_pokemon->get_pokerus_duration());
 
         if(origin_generation == dest_generation)
         {
