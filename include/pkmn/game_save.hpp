@@ -260,7 +260,7 @@ namespace pkmn {
                 int money
             ) = 0;
 
-            virtual pokedex::sptr get_pokedex() = 0;
+            virtual pkmn::pokedex::sptr get_pokedex() = 0;
 
             /*!
              * @brief Returns the trainer's Pokémon party.
