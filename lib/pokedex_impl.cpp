@@ -63,6 +63,9 @@ namespace pkmn
             size_t num_bytes = std::ceil(float(_num_pokemon) / 8.0f);
             _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
             _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
+
+            std::memset(_native_has_seen, 0, num_bytes);
+            std::memset(_native_has_caught, 0, num_bytes);
         }
     }
 
@@ -215,8 +218,10 @@ namespace pkmn
     {
         pkmn::database::get_connection(_db);
 
+        member_vector.clear();
+
         std::string query_numbers;
-        for(uint16_t i = 0; i < _num_pokemon; ++i)
+        for(uint16_t i = 1; i <= _num_pokemon; ++i)
         {
             bool is_bit_present = false;
             PKSAV_CALL(
