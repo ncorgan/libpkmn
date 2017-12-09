@@ -12,6 +12,10 @@
 %rename(pokedex_base) pkmn::pokedex;
 
 %csmethodmodifiers pkmn::pokedex::get_game "private";
+%csmethodmodifiers pkmn::pokedex::get_all_seen "private";
+%csmethodmodifiers pkmn::pokedex::get_num_seen "private";
+%csmethodmodifiers pkmn::pokedex::get_all_caught "private";
+%csmethodmodifiers pkmn::pokedex::get_num_caught "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokedex>::__cptr "private";
 %csmethodmodifiers pkmn::shared_ptr<pkmn::pokedex>::__sptr_eq "private";
 
@@ -21,6 +25,38 @@
         get
         {
             return GetGame();
+        }
+    }
+    
+    public StringList AllSeen
+    {
+        get
+        {
+            return GetAllSeen();
+        }
+    }
+
+    public int NumSeen
+    {
+        get
+        {
+            return GetNumSeen();
+        }
+    }
+    
+    public StringList AllCaught
+    {
+        get
+        {
+            return GetAllCaught();
+        }
+    }
+
+    public int NumCaught
+    {
+        get
+        {
+            return GetNumCaught();
         }
     }
 

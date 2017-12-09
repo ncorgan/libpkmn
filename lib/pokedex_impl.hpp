@@ -44,6 +44,8 @@ namespace pkmn
 
             const std::vector<std::string>& get_all_seen() override final;
 
+            int get_num_seen() override final;
+
             bool has_caught(
                 const std::string& species
             ) override final;
@@ -54,6 +56,8 @@ namespace pkmn
             ) override final;
 
             const std::vector<std::string>& get_all_caught() override final;
+
+            int get_num_caught() override final;
 
             void* get_native_has_seen() override final;
 

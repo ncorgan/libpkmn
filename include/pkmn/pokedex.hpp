@@ -43,6 +43,8 @@ namespace pkmn
 
             virtual const std::vector<std::string>& get_all_seen() = 0;
 
+            virtual int get_num_seen() = 0;
+
             virtual bool has_caught(
                 const std::string& species
             ) = 0;
@@ -53,6 +55,8 @@ namespace pkmn
             ) = 0;
 
             virtual const std::vector<std::string>& get_all_caught() = 0;
+
+            virtual int get_num_caught() = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native_has_seen() = 0;

@@ -140,6 +140,22 @@ namespace pkmn
         return _all_seen;
     }
 
+    int pokedex_impl::get_num_seen()
+    {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
+        if(_dirty_seen)
+        {
+            _update_member_vector(
+                reinterpret_cast<const uint8_t*>(_native_has_seen),
+                _all_seen
+            );
+            _dirty_seen = false;
+        }
+
+        return int(_all_seen.size());
+    }
+
     bool pokedex_impl::has_caught(
         const std::string& species
     )
@@ -195,6 +211,22 @@ namespace pkmn
         }
 
         return _all_caught;
+    }
+
+    int pokedex_impl::get_num_caught()
+    {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
+        if(_dirty_caught)
+        {
+            _update_member_vector(
+                reinterpret_cast<const uint8_t*>(_native_has_caught),
+                _all_caught
+            );
+            _dirty_caught = false;
+        }
+
+        return int(_all_caught.size());
     }
 
     void* pokedex_impl::get_native_has_seen()
