@@ -284,6 +284,40 @@ namespace pkmntest {
                 }
             }
         }
+
+        if((generation != 2) and (game != "Colosseum") and (game != "XD"))
+        {
+            // Test Pokédex. Any Pokémon in the party and PC must be in the
+            // Pokédex.
+            pkmn::pokedex::sptr pokedex = save->get_pokedex();
+            EXPECT_GE(pokedex->get_num_seen(), pokedex->get_num_caught());
+
+            const pkmn::pokemon_list_t& party_vector = save->get_pokemon_party()->as_vector();
+            for(const auto& pokemon: party_vector)
+            {
+                std::string species = pokemon->get_species();
+                if(species != "None")
+                {
+                    EXPECT_TRUE(pokedex->has_seen(species));
+                    EXPECT_TRUE(pokedex->has_caught(species));
+                }
+            }
+
+            const pkmn::pokemon_box_list_t& pc_vector = save->get_pokemon_pc()->as_vector();
+            for(const auto& box: pc_vector)
+            {
+                const pkmn::pokemon_list_t& box_vector = box->as_vector();
+                for(const auto& pokemon: box_vector)
+                {
+                    std::string species = pokemon->get_species();
+                    if(species != "None")
+                    {
+                        EXPECT_TRUE(pokedex->has_seen(species));
+                        EXPECT_TRUE(pokedex->has_caught(species));
+                    }
+                }
+            }
+        }
     }
 
     static pkmn::pokemon::sptr get_random_pokemon(
@@ -436,6 +470,15 @@ namespace pkmntest {
             EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
             EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
         }
+    }
+
+    static void compare_pokedexes(
+        pkmn::pokedex::sptr pokedex1,
+        pkmn::pokedex::sptr pokedex2
+    )
+    {
+        EXPECT_EQ(pokedex1->get_all_seen(), pokedex2->get_all_seen());
+        EXPECT_EQ(pokedex1->get_all_caught(), pokedex2->get_all_caught());
     }
 
     static void compare_pokemon(
@@ -703,6 +746,14 @@ namespace pkmntest {
                     box2->get_pokemon(i)
                 );
             }
+        }
+
+        if((generation != 2) and (game != "Colosseum") and (game != "XD"))
+        {
+            compare_pokedexes(
+                save1->get_pokedex(),
+                save2->get_pokedex()
+            );
         }
     }
 
