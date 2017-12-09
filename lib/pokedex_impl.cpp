@@ -15,12 +15,20 @@
 
 #include <pksav/common/pokedex.h>
 
+#include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 #include <cassert>
 
 namespace pkmn
 {
+    static pkmn::database::sptr _db;
+
+    static const std::vector<size_t> generation_pokedex_sizes =
+    {
+        0, 151, 251, 386, 493, 649, 721, 807
+    };
+
     pokedex::sptr pokedex::make(
         const std::string& game
     )
@@ -35,15 +43,14 @@ namespace pkmn
         void* native_has_seen,
         void* native_has_caught
     ): _game_id(game_id),
-       _generation(pkmn::database::game_id_to_generation(game_id))
+       _generation(pkmn::database::game_id_to_generation(game_id)),
+       _num_pokemon(generation_pokedex_sizes.at(_generation)),
+       _dirty_seen(true),
+       _dirty_caught(true)
     {
         // TODO: Boost assert
         assert(!native_has_seen == !native_has_caught);
 
-        static const std::vector<size_t> generation_pokedex_sizes =
-        {
-            0, 151, 251, 386, 493, 649, 721, 807
-        };
 
         if(native_has_seen)
         {
@@ -53,7 +60,7 @@ namespace pkmn
         }
         else
         {
-            size_t num_bytes = std::ceil(float(generation_pokedex_sizes[_generation]) / 8.0f);
+            size_t num_bytes = std::ceil(float(_num_pokemon) / 8.0f);
             _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
             _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
         }
@@ -109,6 +116,25 @@ namespace pkmn
                 has_seen_value
             );
         )
+
+        // Next time get_all_seen() is called, the vector will update.
+        _dirty_seen = true;
+    }
+
+    const std::vector<std::string>& pokedex_impl::get_all_seen()
+    {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
+        if(_dirty_seen)
+        {
+            _update_member_vector(
+                reinterpret_cast<const uint8_t*>(_native_has_seen),
+                _all_seen
+            );
+            _dirty_seen = false;
+        }
+
+        return _all_seen;
     }
 
     bool pokedex_impl::has_caught(
@@ -147,6 +173,25 @@ namespace pkmn
                 has_caught_value
             );
         )
+
+        // Next time get_all_caught() is called, the vector will update.
+        _dirty_caught = true;
+    }
+
+    const std::vector<std::string>& pokedex_impl::get_all_caught()
+    {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
+        if(_dirty_caught)
+        {
+            _update_member_vector(
+                reinterpret_cast<const uint8_t*>(_native_has_caught),
+                _all_caught
+            );
+            _dirty_caught = false;
+        }
+
+        return _all_caught;
     }
 
     void* pokedex_impl::get_native_has_seen()
@@ -161,5 +206,44 @@ namespace pkmn
         boost::lock_guard<pokedex_impl> lock(*this);
 
         return _native_has_caught;
+    }
+
+    void pokedex_impl::_update_member_vector(
+        const uint8_t* native_list,
+        std::vector<std::string>& member_vector
+    )
+    {
+        pkmn::database::get_connection(_db);
+
+        std::string query_numbers;
+        for(uint16_t i = 0; i < _num_pokemon; ++i)
+        {
+            bool is_bit_present = false;
+            PKSAV_CALL(
+                pksav_get_pokedex_bit(
+                    native_list,
+                    i,
+                    &is_bit_present
+                );
+            )
+
+            if(is_bit_present)
+            {
+                if(not query_numbers.empty())
+                {
+                    query_numbers.append(",");
+                }
+
+                query_numbers.append(std::to_string(i));
+            }
+        }
+
+        static boost::format query_format("SELECT name FROM pokemon_species_names WHERE local_language_id=9 "
+                                          "AND pokemon_species_id IN (%s) ORDER BY pokemon_species_id");
+        pkmn::database::query_db_list(
+            _db,
+            str(query_format % query_numbers).c_str(),
+            member_vector
+        );
     }
 }

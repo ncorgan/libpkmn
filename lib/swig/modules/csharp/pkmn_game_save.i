@@ -27,6 +27,7 @@
 %csmethodmodifiers pkmn::game_save::set_rival_name(const std::string&) "private";
 %csmethodmodifiers pkmn::game_save::get_money() "private";
 %csmethodmodifiers pkmn::game_save::set_money(int) "private";
+%csmethodmodifiers pkmn::game_save::get_pokedex() "private";
 %csmethodmodifiers pkmn::game_save::get_pokemon_party() "private";
 %csmethodmodifiers pkmn::game_save::get_pokemon_pc() "private";
 %csmethodmodifiers pkmn::game_save::get_item_bag() "private";
@@ -116,6 +117,12 @@
         }
         set {
             this.SetMoney(value);
+        }
+    }
+
+    public Pokedex Pokedex {
+        get {
+            return this.GetPokedex();
         }
     }
 

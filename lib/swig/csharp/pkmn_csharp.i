@@ -49,6 +49,7 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_game_save "internal";
 %csmethodmodifiers make_item_bag "internal";
 %csmethodmodifiers make_item_list "internal";
+%csmethodmodifiers make_pokedex "internal";
 %csmethodmodifiers make_pokemon "internal";
 %csmethodmodifiers make_pokemon_box "internal";
 %csmethodmodifiers make_pokemon_party "internal";

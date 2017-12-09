@@ -11,6 +11,7 @@
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <string>
+#include <vector>
 
 namespace pkmn
 {
@@ -40,6 +41,8 @@ namespace pkmn
                 bool has_seen_value
             ) = 0;
 
+            virtual const std::vector<std::string>& get_all_seen() = 0;
+
             virtual bool has_caught(
                 const std::string& species
             ) = 0;
@@ -48,6 +51,8 @@ namespace pkmn
                 const std::string& species,
                 bool has_caught_value
             ) = 0;
+
+            virtual const std::vector<std::string>& get_all_caught() = 0;
 
             #ifndef __DOXYGEN__
             virtual void* get_native_has_seen() = 0;
