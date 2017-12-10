@@ -558,14 +558,37 @@ namespace pkmn
         GC_RCAST->heldItem = LibPkmGC::ItemIndex(item.get_item_index());
     }
 
-    std::string pokemon_gcnimpl::get_trainer_name()
+    int pokemon_gcnimpl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return _get_pokerus_duration(&GC_RCAST->pokerusStatus);
+    }
+
+    void pokemon_gcnimpl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        _set_pokerus_duration(
+            &GC_RCAST->pokerusStatus,
+            duration
+        );
+
+        GC_RCAST->partyData.pokerusDaysRemaining = LibPkmGC::s8(duration);
+    }
+
+    std::string pokemon_gcnimpl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->OTName->toUTF8();
     }
 
-    void pokemon_gcnimpl::set_trainer_name(
+    void pokemon_gcnimpl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -581,28 +604,28 @@ namespace pkmn
         GC_RCAST->OTName->fromUTF8(trainer_name.c_str());
     }
 
-    uint16_t pokemon_gcnimpl::get_trainer_public_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->TID;
     }
 
-    uint16_t pokemon_gcnimpl::get_trainer_secret_id()
+    uint16_t pokemon_gcnimpl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->SID;
     }
 
-    uint32_t pokemon_gcnimpl::get_trainer_id()
+    uint32_t pokemon_gcnimpl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return uint32_t(GC_RCAST->TID) | (uint32_t(GC_RCAST->SID) << 16);
     }
 
-    void pokemon_gcnimpl::set_trainer_public_id(
+    void pokemon_gcnimpl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -611,7 +634,7 @@ namespace pkmn
         GC_RCAST->TID = public_id;
     }
 
-    void pokemon_gcnimpl::set_trainer_secret_id(
+    void pokemon_gcnimpl::set_original_trainer_secret_id(
         uint16_t secret_id
     )
     {
@@ -620,7 +643,7 @@ namespace pkmn
         GC_RCAST->SID = secret_id;
     }
 
-    void pokemon_gcnimpl::set_trainer_id(
+    void pokemon_gcnimpl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -630,14 +653,14 @@ namespace pkmn
         GC_RCAST->SID = uint16_t(id >> 16);
     }
 
-    std::string pokemon_gcnimpl::get_trainer_gender()
+    std::string pokemon_gcnimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GENDER_BIMAP.left.at(GC_RCAST->OTGender);
     }
 
-    void pokemon_gcnimpl::set_trainer_gender(
+    void pokemon_gcnimpl::set_original_trainer_gender(
         const std::string &gender
     )
     {
@@ -668,14 +691,14 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("A Pokémon's date met is not recorded in Generation III.");
     }
 
-    int pokemon_gcnimpl::get_friendship()
+    int pokemon_gcnimpl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gcnimpl> lock(*this);
 
         return GC_RCAST->friendship;
     }
 
-    void pokemon_gcnimpl::set_friendship(
+    void pokemon_gcnimpl::set_current_trainer_friendship(
         int friendship
     )
     {
@@ -1142,6 +1165,39 @@ namespace pkmn
         GC_RCAST->moves[index].nbPPUpsUsed = 0;
 
         _update_moves(index);
+    }
+
+    void pokemon_gcnimpl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(int i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        GC_RCAST->moves[index].currentPPs = LibPkmGC::u8(pp);
+
+        // Set the PP Up value to the minimum value that will accommodate the given PP.
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                GC_RCAST->moves[index].nbPPUpsUsed = i;
+                break;
+            }
+        }
     }
 
     void pokemon_gcnimpl::set_EV(

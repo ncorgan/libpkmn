@@ -11,6 +11,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/types/class_with_attributes.hpp>
 #include <pkmn/types/datetime.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
@@ -19,14 +20,19 @@
 #include <string>
 #include <vector>
 
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
+#endif
+
 namespace pkmn {
 
-    class PKMN_API pokemon {
+    class PKMN_API pokemon: public class_with_attributes
+    {
         public:
             typedef pkmn::shared_ptr<pokemon> sptr;
 
             #ifndef __DOXYGEN__
-            pokemon() {}
+            pokemon(): class_with_attributes() {}
             virtual ~pokemon () {}
             #endif
 
@@ -101,33 +107,39 @@ namespace pkmn {
                 const std::string &held_item
             ) = 0;
 
-            virtual std::string get_trainer_name() = 0;
+            virtual int get_pokerus_duration() = 0;
 
-            virtual void set_trainer_name(
+            virtual void set_pokerus_duration(
+                int diruation
+            ) = 0;
+
+            virtual std::string get_original_trainer_name() = 0;
+
+            virtual void set_original_trainer_name(
                 const std::string &trainer_name
             ) = 0;
 
-            virtual uint16_t get_trainer_public_id() = 0;
+            virtual uint16_t get_original_trainer_public_id() = 0;
 
-            virtual uint16_t get_trainer_secret_id() = 0;
+            virtual uint16_t get_original_trainer_secret_id() = 0;
 
-            virtual uint32_t get_trainer_id() = 0;
+            virtual uint32_t get_original_trainer_id() = 0;
 
-            virtual void set_trainer_public_id(
+            virtual void set_original_trainer_public_id(
                 uint16_t public_id
             ) = 0;
 
-            virtual void set_trainer_secret_id(
+            virtual void set_original_trainer_secret_id(
                 uint16_t secret_id
             ) = 0;
 
-            virtual void set_trainer_id(
+            virtual void set_original_trainer_id(
                 uint32_t id
             ) = 0;
 
-            virtual std::string get_trainer_gender() = 0;
+            virtual std::string get_original_trainer_gender() = 0;
 
-            virtual void set_trainer_gender(
+            virtual void set_original_trainer_gender(
                 const std::string &trainer_gender
             ) = 0;
 
@@ -140,9 +152,9 @@ namespace pkmn {
                 bool as_egg
             ) = 0;
 
-            virtual int get_friendship() = 0;
+            virtual int get_current_trainer_friendship() = 0;
 
-            virtual void set_friendship(
+            virtual void set_current_trainer_friendship(
                 int friendship
             ) = 0;
 
@@ -240,6 +252,11 @@ namespace pkmn {
                 int index
             ) = 0;
 
+            virtual void set_move_pp(
+                int index,
+                int pp
+            ) = 0;
+
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
             virtual void set_EV(
@@ -274,5 +291,9 @@ namespace pkmn {
 
     typedef std::vector<pokemon::sptr> pokemon_list_t;
 }
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(default: 4275)
+#endif
 
 #endif /* PKMN_POKEMON_HPP */

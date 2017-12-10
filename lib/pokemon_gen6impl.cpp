@@ -441,7 +441,26 @@ namespace pkmn
         _blockA_ptr->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
-    std::string pokemon_gen6impl::get_trainer_name()
+    int pokemon_gen6impl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _get_pokerus_duration(&_blockA_ptr->pokerus);
+    }
+
+    void pokemon_gen6impl::set_pokerus_duration(
+        int duration
+    )
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _set_pokerus_duration(
+            &_blockA_ptr->pokerus,
+            duration
+        );
+    }
+
+    std::string pokemon_gen6impl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
@@ -458,7 +477,7 @@ namespace pkmn
         return std::string(trainer_name);
     }
 
-    void pokemon_gen6impl::set_trainer_name(
+    void pokemon_gen6impl::set_original_trainer_name(
         const std::string& trainer_name
     )
     {
@@ -480,28 +499,28 @@ namespace pkmn
         )
     }
 
-    uint16_t pokemon_gen6impl::get_trainer_public_id()
+    uint16_t pokemon_gen6impl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         return pksav_littleendian16(_blockA_ptr->ot_id.pid);
     }
 
-    uint16_t pokemon_gen6impl::get_trainer_secret_id()
+    uint16_t pokemon_gen6impl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         return pksav_littleendian16(_blockA_ptr->ot_id.sid);
     }
 
-    uint32_t pokemon_gen6impl::get_trainer_id()
+    uint32_t pokemon_gen6impl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         return pksav_littleendian32(_blockA_ptr->ot_id.id);
     }
 
-    void pokemon_gen6impl::set_trainer_public_id(
+    void pokemon_gen6impl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -510,7 +529,7 @@ namespace pkmn
         _blockA_ptr->ot_id.pid = pksav_littleendian16(public_id);
     }
 
-    void pokemon_gen6impl::set_trainer_secret_id(
+    void pokemon_gen6impl::set_original_trainer_secret_id(
         uint16_t secret_id
     )
     {
@@ -519,7 +538,7 @@ namespace pkmn
         _blockA_ptr->ot_id.sid = pksav_littleendian16(secret_id);
     }
 
-    void pokemon_gen6impl::set_trainer_id(
+    void pokemon_gen6impl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -528,14 +547,14 @@ namespace pkmn
         _blockA_ptr->ot_id.id = pksav_littleendian32(id);
     }
 
-    std::string pokemon_gen6impl::get_trainer_gender()
+    std::string pokemon_gen6impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         return "";
     }
 
-    void pokemon_gen6impl::set_trainer_gender(
+    void pokemon_gen6impl::set_original_trainer_gender(
         const std::string& gender
     )
     {
@@ -587,14 +606,14 @@ namespace pkmn
         }
     }
 
-    int pokemon_gen6impl::get_friendship()
+    int pokemon_gen6impl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
         return 0;
     }
 
-    void pokemon_gen6impl::set_friendship(
+    void pokemon_gen6impl::set_current_trainer_friendship(
         int friendship
     )
     {
@@ -1017,6 +1036,39 @@ namespace pkmn
 
         _blockB_ptr->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
         _blockB_ptr->move_pps[index] = uint8_t(_moves[index].pp);
+    }
+
+    void pokemon_gen6impl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(int i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        _blockB_ptr->move_pps[index] = uint8_t(pp);
+
+        // Set the PP Up value to the minimum value that will accommodate the given PP.
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                _blockB_ptr->move_pp_ups[index] = i;
+                break;
+            }
+        }
     }
 
     void pokemon_gen6impl::set_EV(

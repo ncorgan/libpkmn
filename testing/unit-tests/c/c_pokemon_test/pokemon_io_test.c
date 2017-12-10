@@ -89,7 +89,7 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 mightyena,
                 &trainer_info
             );
@@ -117,7 +117,7 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL_STRING("Heart Scale", strbuffer);
 
     int friendship = 0;
-    error = pkmn_pokemon_get_friendship(
+    error = pkmn_pokemon_get_current_trainer_friendship(
                 mightyena,
                 &friendship
             );

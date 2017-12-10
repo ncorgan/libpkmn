@@ -22,8 +22,8 @@ TEST_P(gen1_friendship_test, gen1_friendship_test) {
                                       5
                                   );
     if(game == "Yellow") {
-        pikachu->set_friendship(123);
-        EXPECT_EQ(123, pikachu->get_friendship());
+        pikachu->set_current_trainer_friendship(123);
+        EXPECT_EQ(123, pikachu->get_current_trainer_friendship());
 
         // Also check a non-Pikachu
         pkmn::pokemon::sptr mewtwo = pkmn::pokemon::make(
@@ -33,17 +33,17 @@ TEST_P(gen1_friendship_test, gen1_friendship_test) {
                                          70
                                      );
         EXPECT_THROW(
-            mewtwo->set_friendship(123);
+            mewtwo->set_current_trainer_friendship(123);
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            (void)mewtwo->get_friendship();
+            (void)mewtwo->get_current_trainer_friendship();
         , pkmn::feature_not_in_game_error);
     } else {
         EXPECT_THROW(
-            pikachu->set_friendship(123);
+            pikachu->set_current_trainer_friendship(123);
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            (void)pikachu->get_friendship();
+            (void)pikachu->get_current_trainer_friendship();
         , pkmn::feature_not_in_game_error);
     }
 }

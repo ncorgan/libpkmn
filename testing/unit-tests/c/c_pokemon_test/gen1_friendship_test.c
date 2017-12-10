@@ -30,13 +30,13 @@ static void gen1_friendship_test(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon_set_friendship(
+    error = pkmn_pokemon_set_current_trainer_friendship(
                 pokemon,
                 123
             );
     if(!strcmp(game, "Yellow")) {
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
@@ -44,7 +44,7 @@ static void gen1_friendship_test(
         TEST_ASSERT_EQUAL(123, friendship);
     } else {
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
@@ -66,13 +66,13 @@ static void gen1_friendship_test(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon_set_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon,
                     123
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon_get_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon,
                     &friendship
                 );
