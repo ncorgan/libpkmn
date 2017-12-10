@@ -47,6 +47,7 @@
 #include <cstring>
 #include <ctime>
 #include <fstream>
+#include <functional>
 #include <stdexcept>
 
 #define GEN6_PC_RCAST    (reinterpret_cast<pksav_gen6_pc_pokemon_t*>(_native_pc))
@@ -86,6 +87,8 @@ namespace pkmn
         _populate_party_data();
         _update_stat_map();
         _update_moves(-1);
+
+        _register_attributes();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -117,6 +120,8 @@ namespace pkmn
         _populate_party_data();
         _update_stat_map();
         _update_moves(-1);
+
+        _register_attributes();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -147,6 +152,8 @@ namespace pkmn
         _init_markings_map(&_blockA_ptr->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        _register_attributes();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -179,6 +186,8 @@ namespace pkmn
         _populate_party_data();
         _update_stat_map();
         _update_moves(-1);
+
+        _register_attributes();
     }
 
     pokemon_gen6impl::pokemon_gen6impl(
@@ -211,6 +220,8 @@ namespace pkmn
         _init_markings_map(&_blockA_ptr->markings);
         _update_stat_map();
         _update_moves(-1);
+
+        _register_attributes();
     }
 
     pokemon_gen6impl::~pokemon_gen6impl()
@@ -1137,6 +1148,144 @@ namespace pkmn
         GEN6_PARTY_RCAST->current_hp = pksav_littleendian16(uint16_t(hp));
     }
 
+    int pokemon_gen6impl::get_training_bag_hits_remaining()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return pksav_littleendian16(_blockA_ptr->training_bag_hits_remaining);
+    }
+
+    void pokemon_gen6impl::set_training_bag_hits_remaining(
+        int hits_remaining
+    )
+    {
+        pkmn::enforce_bounds(
+            "Training Bag hits remaining",
+            hits_remaining,
+            0,
+            255
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->training_bag_hits_remaining = pksav_littleendian16(uint16_t(
+                                                       hits_remaining
+                                                   ));
+    }
+
+    int pokemon_gen6impl::get_contest_memory_ribbon_count()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _blockA_ptr->contest_memory_ribbon_count;
+    }
+
+    void pokemon_gen6impl::set_contest_memory_ribbon_count(
+        int contest_memory_ribbon_count
+    )
+    {
+        pkmn::enforce_bounds(
+            "Contest Memory Ribbon count",
+            contest_memory_ribbon_count,
+            0,
+            40 // 20 Gen III Hoenn, 20 Sinnoh
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->contest_memory_ribbon_count = uint8_t(contest_memory_ribbon_count);
+    }
+
+    int pokemon_gen6impl::get_battle_memory_ribbon_count()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _blockA_ptr->battle_memory_ribbon_count;
+    }
+
+    void pokemon_gen6impl::set_battle_memory_ribbon_count(
+        int battle_memory_ribbon_count
+    )
+    {
+        pkmn::enforce_bounds(
+            "Battle Memory Ribbon count",
+            battle_memory_ribbon_count,
+            0,
+            8 // 2 Gen III, 6 Gen IV
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockA_ptr->battle_memory_ribbon_count = uint8_t(battle_memory_ribbon_count);
+    }
+
+    std::string pokemon_gen6impl::get_relearn_move(size_t index)
+    {
+        return pkmn::database::move_id_to_name(
+                   pksav_littleendian16(_blockB_ptr->relearn_moves[index]),
+                   _database_entry.get_game_id()
+               );
+    }
+
+    void pokemon_gen6impl::set_relearn_move(
+        size_t index,
+        const std::string& move_name
+    )
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        // Make sure the move exists in this generation.
+        pkmn::database::move_entry entry(move_name, get_game());
+
+        _blockB_ptr->relearn_moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
+    }
+
+    int pokemon_gen6impl::get_fullness()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _blockC_ptr->fullness;
+    }
+
+    void pokemon_gen6impl::set_fullness(
+        int fullness
+    )
+    {
+        pkmn::enforce_bounds(
+            "Fullness",
+            fullness,
+            0,
+            255
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockC_ptr->fullness = uint8_t(fullness);
+    }
+
+    int pokemon_gen6impl::get_enjoyment()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _blockC_ptr->enjoyment;
+    }
+
+    void pokemon_gen6impl::set_enjoyment(
+        int enjoyment
+    )
+    {
+        pkmn::enforce_bounds(
+            "Enjoyment",
+            enjoyment,
+            0,
+            255
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockC_ptr->enjoyment = uint8_t(enjoyment);
+    }
+
     void pokemon_gen6impl::_populate_party_data()
     {
         pksav::gen6_pc_pokemon_to_party_data(
@@ -1230,5 +1379,57 @@ namespace pkmn
         _stats["Speed"]           = int(pksav_littleendian16(GEN6_PARTY_RCAST->spd));
         _stats["Special Attack"]  = int(pksav_littleendian16(GEN6_PARTY_RCAST->spatk));
         _stats["Special Defense"] = int(pksav_littleendian16(GEN6_PARTY_RCAST->spdef));
+    }
+
+    void pokemon_gen6impl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Training Bag hits remaining",
+            std::bind(&pokemon_gen6impl::get_training_bag_hits_remaining, this),
+            std::bind(&pokemon_gen6impl::set_training_bag_hits_remaining, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Contest Memory Ribbon count",
+            std::bind(&pokemon_gen6impl::get_contest_memory_ribbon_count, this),
+            std::bind(&pokemon_gen6impl::set_contest_memory_ribbon_count, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Battle Memory Ribbon count",
+            std::bind(&pokemon_gen6impl::get_battle_memory_ribbon_count, this),
+            std::bind(&pokemon_gen6impl::set_battle_memory_ribbon_count, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Fullness",
+            std::bind(&pokemon_gen6impl::get_fullness, this),
+            std::bind(&pokemon_gen6impl::set_fullness, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Enjoyment",
+            std::bind(&pokemon_gen6impl::get_enjoyment, this),
+            std::bind(&pokemon_gen6impl::set_enjoyment, this, _1)
+        );
+
+        _string_attribute_engine.register_attribute_fcns(
+            "Relearn Move 1",
+            std::bind(&pokemon_gen6impl::get_relearn_move, this, 0),
+            std::bind(&pokemon_gen6impl::set_relearn_move, this, 0, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Relearn Move 2",
+            std::bind(&pokemon_gen6impl::get_relearn_move, this, 1),
+            std::bind(&pokemon_gen6impl::set_relearn_move, this, 1, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Relearn Move 3",
+            std::bind(&pokemon_gen6impl::get_relearn_move, this, 2),
+            std::bind(&pokemon_gen6impl::set_relearn_move, this, 2, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Relearn Move 4",
+            std::bind(&pokemon_gen6impl::get_relearn_move, this, 3),
+            std::bind(&pokemon_gen6impl::set_relearn_move, this, 3, _1)
+        );
     }
 }

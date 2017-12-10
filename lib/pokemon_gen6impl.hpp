@@ -236,6 +236,45 @@ namespace pkmn {
                 int hp
             ) override final;
 
+            // Functions for attributes
+
+            int get_training_bag_hits_remaining();
+
+            void set_training_bag_hits_remaining(
+                int hits_remaining
+            );
+
+            int get_contest_memory_ribbon_count();
+
+            void set_contest_memory_ribbon_count(
+                int contest_memory_ribbon_count
+            );
+
+            int get_battle_memory_ribbon_count();
+
+            void set_battle_memory_ribbon_count(
+                int battle_memory_ribbon_count
+            );
+
+            std::string get_relearn_move(size_t index);
+
+            void set_relearn_move(
+                size_t index,
+                const std::string& move_name
+            );
+
+            int get_fullness();
+
+            void set_fullness(
+                int fullness
+            );
+
+            int get_enjoyment();
+
+            void set_enjoyment(
+                int enjoyment
+            );
+
         private:
 
             void _populate_party_data() override final;
@@ -248,6 +287,8 @@ namespace pkmn {
             void _update_ribbons_map() override final;
             void _update_EV_map() override final;
             void _update_stat_map() override final;
+
+            void _register_attributes();
 
             pksav_gen6_pokemon_blockA_t* _blockA_ptr;
             pksav_gen6_pokemon_blockB_t* _blockB_ptr;
