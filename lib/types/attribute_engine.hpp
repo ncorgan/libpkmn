@@ -14,6 +14,7 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace pkmn
 {
@@ -37,13 +38,32 @@ namespace pkmn
     {
         public:
             attribute_engine() {}
-            ~attribute_engine();
+            ~attribute_engine() {};
 
             attribute_engine(const attribute_engine&) = default;
             attribute_engine(attribute_engine&&) = default;
 
             attribute_engine& operator=(const attribute_engine&) = default;
             attribute_engine& operator=(attribute_engine&&) = default;
+
+            void register_numeric_attribute_fcns(
+                const std::string& attribute_name,
+                const getter_fcn<int>& getter,
+                const setter_fcn<int>& setter
+            )
+            {
+                _register_attribute_fcns(
+                    attribute_name,
+                    getter,
+                    setter,
+                    _numeric_attribute_map
+                );
+            }
+
+            std::vector<std::string> get_numeric_attribute_names()
+            {
+                return _get_attribute_names(_numeric_attribute_map);
+            }
 
             int get_numeric_attribute(
                 const std::string& attribute_name
@@ -55,7 +75,7 @@ namespace pkmn
                        );
             }
 
-            void get_numeric_attribute(
+            void set_numeric_attribute(
                 const std::string& attribute_name,
                 int value
             )
@@ -65,6 +85,25 @@ namespace pkmn
                     value,
                     _numeric_attribute_map
                 );
+            }
+
+            void register_string_attribute_fcns(
+                const std::string& attribute_name,
+                const getter_fcn<std::string>& getter,
+                const setter_fcn<std::string>& setter
+            )
+            {
+                _register_attribute_fcns(
+                    attribute_name,
+                    getter,
+                    setter,
+                    _string_attribute_map
+                );
+            }
+
+            std::vector<std::string> get_string_attribute_names()
+            {
+                return _get_attribute_names(_string_attribute_map);
             }
 
             std::string get_string_attribute(
@@ -77,7 +116,7 @@ namespace pkmn
                        );
             }
 
-            void get_string_attribute(
+            void set_string_attribute(
                 const std::string& attribute_name,
                 const std::string& value
             )
@@ -92,6 +131,36 @@ namespace pkmn
         private:
             attribute_fcn_map_t<int> _numeric_attribute_map;
             attribute_fcn_map_t<std::string> _string_attribute_map;
+
+            template <typename T>
+            void _register_attribute_fcns(
+                const std::string& attribute_name,
+                const getter_fcn<T>& getter,
+                const setter_fcn<T>& setter,
+                attribute_fcn_map_t<T>& attribute_fcn_map
+            )
+            {
+                attribute_fcn_pair_t<T> attribute_fcn_pair = {getter, setter};
+
+                attribute_fcn_map.emplace(
+                    attribute_name,
+                    attribute_fcn_pair
+                );
+            }
+
+            template <typename T>
+            std::vector<std::string> _get_attribute_names(
+                const attribute_fcn_map_t<T>& attribute_fcn_map
+            )
+            {
+                std::vector<std::string> ret;
+                for(const auto& attribute_iter: attribute_fcn_map)
+                {
+                    ret.emplace_back(attribute_iter.first);
+                }
+
+                return ret;
+            }
 
             template <typename T>
             T _get_attribute(
@@ -120,7 +189,7 @@ namespace pkmn
             }
 
             template <typename T>
-            T _set_attribute(
+            void _set_attribute(
                 const std::string& attribute_name,
                 const T& value,
                 const attribute_fcn_map_t<T>& attribute_fcn_map
