@@ -17,13 +17,14 @@ Supported games:
 
 Features in development:
  * Damage calculations
- * Generation IV save support
+ * Pokédex structure
+ * Generation IV-VI save support
+ * Generation VI save support
  * Java API
+ * Objective-C API
 
 Future planned features:
- * Generation V-VI save support
- * Pokémon Showdown import/export
- * QR code import/export
+ * Generation VII save support
 
 Build Dependencies
 -------------------------------------
@@ -97,4 +98,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/11/05
+README last updated: 2017/12/09
