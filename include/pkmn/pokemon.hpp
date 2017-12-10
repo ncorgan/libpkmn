@@ -11,6 +11,7 @@
 #include <pkmn/move_slot.hpp>
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
+#include <pkmn/types/class_with_attributes.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <cstdint>
@@ -20,12 +21,13 @@
 
 namespace pkmn {
 
-    class PKMN_API pokemon {
+    class PKMN_API pokemon: public class_with_attributes
+    {
         public:
             typedef pkmn::shared_ptr<pokemon> sptr;
 
             #ifndef __DOXYGEN__
-            pokemon() {}
+            pokemon(): class_with_attributes() {}
             virtual ~pokemon () {}
             #endif
 
