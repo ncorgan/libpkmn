@@ -141,6 +141,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
     EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
     EXPECT_EQ(pokemon->get_stats().at("Special"), int(pksav_bigendian16(native_party_data->spcl)));
+
+    /*
+     * Test attributes.
+     */
+    EXPECT_EQ(pokemon->get_numeric_attribute("Catch rate"), int(native_pc->catch_rate));
 }
 
 static const std::vector<std::pair<std::string, std::string>> params = {

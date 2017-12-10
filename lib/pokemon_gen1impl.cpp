@@ -33,11 +33,31 @@
 
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <stdexcept>
 #include <unordered_map>
 
 #define GEN1_PC_RCAST    (reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc))
 #define GEN1_PARTY_RCAST (reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party))
+
+/*
+ * Catch rates
+ * http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_catch_rate
+ */
+static const uint8_t gen1_catch_rates[] = {
+    0,45,45,45,45,45,45,45,45,45,255,120,45,255,120,45,255,120,45,255,127,
+    255,90,255,90,190,75,255,90,235,120,45,235,120,45,150,25,190,75,170,
+    50,255,90,255,120,45,190,75,190,255,50,255,90,190,75,190,75,190,75,
+    255,120,45,200,100,50,180,90,45,255,120,45,190,60,255,120,45,190,60,
+    190,75,190,60,45,190,45,190,75,190,75,190,60,190,90,45,45,190,75,225,
+    60,190,60,90,45,190,75,45,45,45,190,60,120,60,30,45,45,225,75,225,60,
+    45,45,45,45,45,45,45,255,45,45,35,45,45,45,45,45,45,45,45,45,45,25,3,3,
+    3,45,45,45,3,45,45,45,45,45,45,45,45,45,255,90,255,90,255,90,255,90,90,
+    190,75,190,150,170,190,75,190,75,235,120,45,45,190,75,65,45,255,120,45,
+    45,235,120,75,255,90,45,45,30,70,45,225,45,60,190,75,190,60,25,190,
+    75,45,25,190,45,60,120,60,190,75,225,75,60,190,75,45,25,25,120,45,45,
+    120,60,45,45,45,75,45,45,45,45,45,30,3,3,3,45,45,45,3,3,45
+};
 
 namespace fs = boost::filesystem;
 
@@ -70,7 +90,7 @@ namespace pkmn
         GEN1_PC_RCAST->types[1] = (types.second == "None") ? GEN1_PC_RCAST->types[0]
                                                            : uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.second));
 
-        // TODO: catch rate
+        GEN1_PC_RCAST->catch_rate = gen1_catch_rates[_database_entry.get_species_id()];
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
@@ -87,6 +107,8 @@ namespace pkmn
         _init_gb_IV_map(&GEN1_PC_RCAST->iv_data);
         _update_moves(-1);
         set_level(level);
+
+        _register_attributes();
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -114,6 +136,8 @@ namespace pkmn
                         _database_entry.get_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
+
+        _register_attributes();
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -140,6 +164,8 @@ namespace pkmn
                         _database_entry.get_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
+
+        _register_attributes();
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -168,6 +194,8 @@ namespace pkmn
                         _database_entry.get_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
+
+        _register_attributes();
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
@@ -196,6 +224,8 @@ namespace pkmn
                         _database_entry.get_name()
                     );
         _trainer_name = DEFAULT_TRAINER_NAME;
+
+        _register_attributes();
     }
 
     pokemon_gen1impl::~pokemon_gen1impl()
@@ -834,6 +864,13 @@ namespace pkmn
         return _database_entry.get_sprite_filepath(false, false);
     }
 
+    int pokemon_gen1impl::get_catch_rate()
+    {
+        boost::lock_guard<pokemon_gen1impl> lock(*this);
+
+        return GEN1_PC_RCAST->catch_rate;
+    }
+
     void pokemon_gen1impl::_populate_party_data()
     {
         pksav::gen1_pc_pokemon_to_party_data(
@@ -888,5 +925,16 @@ namespace pkmn
         _stats["Defense"] = int(pksav_bigendian16(GEN1_PARTY_RCAST->def));
         _stats["Speed"]   = int(pksav_bigendian16(GEN1_PARTY_RCAST->spd));
         _stats["Special"] = int(pksav_bigendian16(GEN1_PARTY_RCAST->spcl));
+    }
+
+    void pokemon_gen1impl::_register_attributes()
+    {
+        using namespace std::placeholders;
+
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Catch rate",
+            std::bind(&pokemon_gen1impl::get_catch_rate, this),
+            nullptr
+        );
     }
 }

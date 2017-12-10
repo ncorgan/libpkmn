@@ -225,6 +225,10 @@ namespace pkmn {
 
             std::string get_sprite_filepath() override final;
 
+            // Functions for attributes
+
+            int get_catch_rate();
+
         private:
             void _populate_party_data() override final;
 
@@ -234,6 +238,8 @@ namespace pkmn {
 
             void _update_EV_map() override final;
             void _update_stat_map() override final;
+
+            void _register_attributes();
 
             std::string _nickname, _trainer_name;
 
