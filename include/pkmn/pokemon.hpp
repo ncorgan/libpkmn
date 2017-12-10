@@ -19,6 +19,10 @@
 #include <string>
 #include <vector>
 
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
+#endif
+
 namespace pkmn {
 
     class PKMN_API pokemon: public class_with_attributes
@@ -262,5 +266,9 @@ namespace pkmn {
 
     typedef std::vector<pokemon::sptr> pokemon_list_t;
 }
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(default: 4275)
+#endif
 
 #endif /* PKMN_POKEMON_HPP */
