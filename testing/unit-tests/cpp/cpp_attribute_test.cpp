@@ -17,7 +17,7 @@ class attribute_test_class
         attribute_test_class():
             _int1(1), _int2(2), _int3(3),
             _string1("One"), _string2("Two"), _string3("Three"),
-            _attribute_engine()
+            _int_attribute_engine(), _string_attribute_engine()
         {
             _register_attributes();
         }
@@ -27,7 +27,7 @@ class attribute_test_class
             const std::string& attribute_name
         )
         {
-            return _attribute_engine.get_numeric_attribute(attribute_name);
+            return _int_attribute_engine.get_attribute(attribute_name);
         }
 
         void set_numeric_attribute(
@@ -35,14 +35,19 @@ class attribute_test_class
             int value
         )
         {
-            _attribute_engine.set_numeric_attribute(attribute_name, value);
+            _int_attribute_engine.set_attribute(attribute_name, value);
+        }
+
+        std::vector<std::string> get_numeric_attribute_names()
+        {
+            return _int_attribute_engine.get_attribute_names();
         }
 
         std::string get_string_attribute(
             const std::string& attribute_name
         )
         {
-            return _attribute_engine.get_string_attribute(attribute_name);
+            return _string_attribute_engine.get_attribute(attribute_name);
         }
 
         void set_string_attribute(
@@ -50,7 +55,12 @@ class attribute_test_class
             const std::string& value
         )
         {
-            _attribute_engine.set_string_attribute(attribute_name, value);
+            _string_attribute_engine.set_attribute(attribute_name, value);
+        }
+
+        std::vector<std::string> get_string_attribute_names()
+        {
+            return _string_attribute_engine.get_attribute_names();
         }
 
     private:
@@ -62,7 +72,8 @@ class attribute_test_class
         std::string _string2; // Read-only
         std::string _string3; // Write-only
 
-        pkmn::attribute_engine _attribute_engine;
+        pkmn::attribute_engine<int> _int_attribute_engine;
+        pkmn::attribute_engine<std::string> _string_attribute_engine;
 
         int _get_int1()
         {
@@ -108,33 +119,33 @@ class attribute_test_class
         {
             using namespace std::placeholders;
 
-            _attribute_engine.register_numeric_attribute_fcns(
+            _int_attribute_engine.register_attribute_fcns(
                 "int1",
                 std::bind(&attribute_test_class::_get_int1, this),
                 std::bind(&attribute_test_class::_set_int1, this, _1)
             );
-            _attribute_engine.register_numeric_attribute_fcns(
+            _int_attribute_engine.register_attribute_fcns(
                 "int2",
                 std::bind(&attribute_test_class::_get_int2, this),
                 nullptr
             );
-            _attribute_engine.register_numeric_attribute_fcns(
+            _int_attribute_engine.register_attribute_fcns(
                 "int3",
                 nullptr,
                 std::bind(&attribute_test_class::_set_int3, this, _1)
             );
 
-            _attribute_engine.register_string_attribute_fcns(
+            _string_attribute_engine.register_attribute_fcns(
                 "string1",
                 std::bind(&attribute_test_class::_get_string1, this),
                 std::bind(&attribute_test_class::_set_string1, this, _1)
             );
-            _attribute_engine.register_string_attribute_fcns(
+            _string_attribute_engine.register_attribute_fcns(
                 "string2",
                 std::bind(&attribute_test_class::_get_string2, this),
                 nullptr
             );
-            _attribute_engine.register_string_attribute_fcns(
+            _string_attribute_engine.register_attribute_fcns(
                 "string3",
                 nullptr,
                 std::bind(&attribute_test_class::_set_string3, this, _1)
@@ -187,4 +198,11 @@ TEST(cpp_attribute_test, test_attribute_engine)
     EXPECT_THROW(
         test_class.set_string_attribute("Not an attribute", "0");
     , std::invalid_argument);
+
+    // Read attribute names.
+    const std::vector<std::string> expected_numeric_attribute_names = {"int1", "int2", "int3"};
+    const std::vector<std::string> expected_string_attribute_names = {"string1", "string2", "string3"};
+
+    EXPECT_EQ(expected_numeric_attribute_names, test_class.get_numeric_attribute_names());
+    EXPECT_EQ(expected_string_attribute_names, test_class.get_string_attribute_names());
 }
