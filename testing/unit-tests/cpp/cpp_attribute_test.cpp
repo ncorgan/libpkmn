@@ -5,63 +5,23 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "types/attribute_engine.hpp"
+#include <pkmn/types/class_with_attributes.hpp>
 
 #include <gtest/gtest.h>
 
 #include <functional>
 
-class attribute_test_class
+class attribute_test_class: public pkmn::class_with_attributes
 {
     public:
         attribute_test_class():
+            pkmn::class_with_attributes(),
             _int1(1), _int2(2), _int3(3),
-            _string1("One"), _string2("Two"), _string3("Three"),
-            _int_attribute_engine(), _string_attribute_engine()
+            _string1("One"), _string2("Two"), _string3("Three")
         {
             _register_attributes();
         }
         ~attribute_test_class() {}
-
-        int get_numeric_attribute(
-            const std::string& attribute_name
-        )
-        {
-            return _int_attribute_engine.get_attribute(attribute_name);
-        }
-
-        void set_numeric_attribute(
-            const std::string& attribute_name,
-            int value
-        )
-        {
-            _int_attribute_engine.set_attribute(attribute_name, value);
-        }
-
-        std::vector<std::string> get_numeric_attribute_names()
-        {
-            return _int_attribute_engine.get_attribute_names();
-        }
-
-        std::string get_string_attribute(
-            const std::string& attribute_name
-        )
-        {
-            return _string_attribute_engine.get_attribute(attribute_name);
-        }
-
-        void set_string_attribute(
-            const std::string& attribute_name,
-            const std::string& value
-        )
-        {
-            _string_attribute_engine.set_attribute(attribute_name, value);
-        }
-
-        std::vector<std::string> get_string_attribute_names()
-        {
-            return _string_attribute_engine.get_attribute_names();
-        }
 
     private:
         int _int1; // Read/write
@@ -71,9 +31,6 @@ class attribute_test_class
         std::string _string1; // Read/write
         std::string _string2; // Read-only
         std::string _string3; // Write-only
-
-        pkmn::attribute_engine<int> _int_attribute_engine;
-        pkmn::attribute_engine<std::string> _string_attribute_engine;
 
         int _get_int1()
         {
@@ -119,17 +76,17 @@ class attribute_test_class
         {
             using namespace std::placeholders;
 
-            _int_attribute_engine.register_attribute_fcns(
+            _numeric_attribute_engine.register_attribute_fcns(
                 "int1",
                 std::bind(&attribute_test_class::_get_int1, this),
                 std::bind(&attribute_test_class::_set_int1, this, _1)
             );
-            _int_attribute_engine.register_attribute_fcns(
+            _numeric_attribute_engine.register_attribute_fcns(
                 "int2",
                 std::bind(&attribute_test_class::_get_int2, this),
                 nullptr
             );
-            _int_attribute_engine.register_attribute_fcns(
+            _numeric_attribute_engine.register_attribute_fcns(
                 "int3",
                 nullptr,
                 std::bind(&attribute_test_class::_set_int3, this, _1)
