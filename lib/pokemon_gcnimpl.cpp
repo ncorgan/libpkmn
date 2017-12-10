@@ -1151,7 +1151,7 @@ namespace pkmn
         // TODO: refactor to get vector of PPs
         std::vector<int> PPs;
         pkmn::database::move_entry entry(_moves[index].move, get_game());
-        for(size_t i = 0; i < 4; ++i)
+        for(int i = 0; i < 4; ++i)
         {
             PPs.emplace_back(entry.get_pp(i));
         }
