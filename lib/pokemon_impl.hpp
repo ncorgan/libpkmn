@@ -152,6 +152,15 @@ namespace pkmn {
 
             // Shared setters
 
+            int _get_pokerus_duration(
+                uint8_t* pokerus_ptr
+            );
+
+            void _set_pokerus_duration(
+                uint8_t* pokerus_ptr,
+                int duration
+            );
+
             void _set_modern_gender(
                 uint32_t* personality_ptr,
                 const std::string &gender

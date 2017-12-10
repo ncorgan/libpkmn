@@ -19,20 +19,20 @@ class gen1_pokemon_test(pokemon_tests):
         pikachu = pkmn.pokemon("Pikachu", game, "", 5)
 
         if game == "Yellow":
-            pikachu.set_friendship(123)
-            self.assertEqual(pikachu.get_friendship(), 123)
+            pikachu.set_current_trainer_friendship(123)
+            self.assertEqual(pikachu.get_current_trainer_friendship(), 123)
 
             # Also check a non-Pikachu.
             mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
             with self.assertRaises(RuntimeError):
-                mewtwo.set_friendship(123)
+                mewtwo.set_current_trainer_friendship(123)
             with self.assertRaises(RuntimeError):
-                mewtwo.get_friendship()
+                mewtwo.get_current_trainer_friendship()
         else:
             with self.assertRaises(RuntimeError):
-                pikachu.set_friendship(123)
+                pikachu.set_current_trainer_friendship(123)
             with self.assertRaises(RuntimeError):
-                pikachu.get_friendship()
+                pikachu.get_current_trainer_friendship()
 
     def gen1_check_stat_map(self, stat_map):
         self.assertTrue(stat_map.has_key("HP"))
@@ -60,17 +60,17 @@ class gen1_pokemon_test(pokemon_tests):
         with self.assertRaises(RuntimeError):
             pokemon.get_held_item()
 
-        self.assertStringEqual(pokemon.get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
-        self.assertEqual(pokemon.get_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_original_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+        self.assertEqual(pokemon.get_original_trainer_public_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
 
         with self.assertRaises(RuntimeError):
-            pokemon.get_trainer_secret_id()
+            pokemon.get_original_trainer_secret_id()
 
-        self.assertEqual(pokemon.get_trainer_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
-        self.assertStringEqual(pokemon.get_trainer_gender(), "Male")
+        self.assertEqual(pokemon.get_original_trainer_id(), (pkmn.DEFAULT_TRAINER_ID & 0xFFFF))
+        self.assertStringEqual(pokemon.get_original_trainer_gender(), "Male")
 
         with self.assertRaises(RuntimeError):
-            pokemon.get_friendship()
+            pokemon.get_current_trainer_friendship()
         with self.assertRaises(RuntimeError):
             pokemon.get_ability()
         with self.assertRaises(RuntimeError):
@@ -132,48 +132,48 @@ class gen1_pokemon_test(pokemon_tests):
             pokemon.set_held_item("Potion")
 
         with self.assertRaises(ValueError):
-            pokemon.set_trainer_name("")
+            pokemon.set_original_trainer_name("")
         with self.assertRaises(ValueError):
-            pokemon.set_trainer_name("Too long trainer name")
+            pokemon.set_original_trainer_name("Too long trainer name")
 
-        pokemon.set_trainer_name("foobar")
-        self.assertEqual(pokemon.get_trainer_name(), "foobar")
+        pokemon.set_original_trainer_name("foobar")
+        self.assertEqual(pokemon.get_original_trainer_name(), "foobar")
 
-        pokemon.set_trainer_id(10001)
-        self.assertEqual(pokemon.get_trainer_id(), 10001)
-        self.assertEqual(pokemon.get_trainer_public_id(), 10001)
+        pokemon.set_original_trainer_id(10001)
+        self.assertEqual(pokemon.get_original_trainer_id(), 10001)
+        self.assertEqual(pokemon.get_original_trainer_public_id(), 10001)
         with self.assertRaises(RuntimeError):
-            pokemon.get_trainer_secret_id()
+            pokemon.get_original_trainer_secret_id()
 
         with self.assertRaises(RuntimeError):
-            pokemon.set_trainer_secret_id(54321)
-        self.assertEqual(pokemon.get_trainer_id(), 10001)
+            pokemon.set_original_trainer_secret_id(54321)
+        self.assertEqual(pokemon.get_original_trainer_id(), 10001)
 
         # Make sure the SWIG wrapper keeps it within the proper bounds. Which error
         # applies depends on the SWIG version.
         try:
             with self.assertRaises(OverflowError):
-                pokemon.set_trainer_id(-1)
+                pokemon.set_original_trainer_id(-1)
         except:
             with self.assertRaises(TypeError):
-                pokemon.set_trainer_id(-1)
+                pokemon.set_original_trainer_id(-1)
         try:
             with self.assertRaises(OverflowError):
-                pokemon.set_trainer_public_id(-1)
+                pokemon.set_original_trainer_public_id(-1)
         except:
             with self.assertRaises(TypeError):
-                pokemon.set_trainer_public_id(-1)
+                pokemon.set_original_trainer_public_id(-1)
         try:
             with self.assertRaises(OverflowError):
-                pokemon.set_trainer_public_id(0xFFFF+1)
+                pokemon.set_original_trainer_public_id(0xFFFF+1)
         except:
             with self.assertRaises(TypeError):
-                pokemon.set_trainer_public_id(0xFFFF+1)
+                pokemon.set_original_trainer_public_id(0xFFFF+1)
 
         with self.assertRaises(RuntimeError):
-            pokemon.set_trainer_gender("Male")
+            pokemon.set_original_trainer_gender("Male")
         with self.assertRaises(RuntimeError):
-            pokemon.set_friendship(123)
+            pokemon.set_current_trainer_friendship(123)
         with self.assertRaises(RuntimeError):
             pokemon.set_ability("")
         with self.assertRaises(RuntimeError):

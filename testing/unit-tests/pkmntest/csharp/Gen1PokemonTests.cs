@@ -18,30 +18,30 @@ public class Gen1PokemonTests {
         PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", game, "", 5);
 
         if(game.Equals("Yellow")) {
-            pikachu.Friendship = 123;
-            Assert.AreEqual(pikachu.Friendship, 123);
+            pikachu.CurrentTrainerFriendship = 123;
+            Assert.AreEqual(pikachu.CurrentTrainerFriendship, 123);
 
             // Also check a non-Pikachu.
             PKMN.Pokemon mewtwo = new PKMN.Pokemon("Mewtwo", game, "", 70);
             Assert.Throws<ApplicationException>(
                 delegate {
-                    mewtwo.Friendship = 123;
+                    mewtwo.CurrentTrainerFriendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                    int friendship = mewtwo.Friendship;
+                    int friendship = mewtwo.CurrentTrainerFriendship;
                 }
             );
         } else {
             Assert.Throws<ApplicationException>(
                 delegate {
-                    pikachu.Friendship = 123;
+                    pikachu.CurrentTrainerFriendship = 123;
                 }
             );
             Assert.Throws<ApplicationException>(
                 delegate {
-                   int friendship = pikachu.Friendship;
+                   int friendship = pikachu.CurrentTrainerFriendship;
                 }
             );
         }
@@ -90,19 +90,19 @@ public class Gen1PokemonTests {
             }
         );
 
-        Assert.AreEqual(pokemon.TrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
-        Assert.AreEqual(pokemon.TrainerGender, "Male");
-        Assert.AreEqual(pokemon.TrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
-        Assert.AreEqual(pokemon.TrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
+        Assert.AreEqual(pokemon.OriginalTrainerID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF));
 
         Assert.Throws<ApplicationException>(
             delegate {
-                ushort trainerSecretID = pokemon.TrainerSecretID;
+                ushort trainerSecretID = pokemon.OriginalTrainerSecretID;
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                int friendship = pokemon.Friendship;
+                int friendship = pokemon.CurrentTrainerFriendship;
             }
         );
         Assert.Throws<ApplicationException>(
@@ -216,42 +216,42 @@ public class Gen1PokemonTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "";
+                pokemon.OriginalTrainerName = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
-                pokemon.TrainerName = "Too long trainer name";
+                pokemon.OriginalTrainerName = "Too long trainer name";
             }
         );
 
-        pokemon.TrainerName = "foobar";
-        Assert.AreEqual(pokemon.TrainerName, "foobar");
+        pokemon.OriginalTrainerName = "foobar";
+        Assert.AreEqual(pokemon.OriginalTrainerName, "foobar");
 
-        pokemon.TrainerID = 10001;
-        Assert.AreEqual(pokemon.TrainerID, 10001);
-        Assert.AreEqual(pokemon.TrainerPublicID, 10001);
+        pokemon.OriginalTrainerID = 10001;
+        Assert.AreEqual(pokemon.OriginalTrainerID, 10001);
+        Assert.AreEqual(pokemon.OriginalTrainerPublicID, 10001);
         Assert.Throws<ApplicationException>(
             delegate {
-                ushort trainerSecretID = pokemon.TrainerSecretID;
+                ushort trainerSecretID = pokemon.OriginalTrainerSecretID;
             }
         );
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.TrainerSecretID = 54321;
+                pokemon.OriginalTrainerSecretID = 54321;
             }
         );
-        Assert.AreEqual(pokemon.TrainerID, 10001);
+        Assert.AreEqual(pokemon.OriginalTrainerID, 10001);
 
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.TrainerGender = "Male";
+                pokemon.OriginalTrainerGender = "Male";
             }
         );
         Assert.Throws<ApplicationException>(
             delegate {
-                pokemon.Friendship = 123;
+                pokemon.CurrentTrainerFriendship = 123;
             }
         );
         Assert.Throws<ApplicationException>(

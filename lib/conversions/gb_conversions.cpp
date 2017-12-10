@@ -7,21 +7,100 @@
 
 #include "conversions_common.hpp"
 #include "gb_conversions.hpp"
-#include "../database/database_common.hpp"
+#include "database/database_common.hpp"
+
+#include "pksav/enum_maps.hpp"
+#include "pksav/pksav_call.hpp"
 
 #include <pkmn/calculations/stats.hpp>
+#include <pkmn/database/pokemon_entry.hpp>
 
 #include <pksav/common/stats.h>
+#include <pksav/gen2/time.h>
 #include <pksav/math/endian.h>
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 
 #include <cstring>
+#include <ctime>
 
 namespace pkmn { namespace conversions {
 
     static pkmn::database::sptr _db;
+
+    /*
+     * Between Generations I-II, the Special stat was separated into
+     * Special Attack and Special Defense. This vector tracks if the
+     * Special stat matches the Special Attack stat.
+     */
+    static const std::vector<int> gen1_to_gen2_with_spcl_as_spatk =
+    {
+        1,2,3, // Bulbasaur-Venusaur
+        7,8,9, // Squirtle-Blastoise
+        10,11,12, // Caterpie-Butterfree
+        13,14, // Weedle-Kakuna
+        16,17,18, // Pidgey-Pidgeot
+        19,20, // Rattata-Raticate
+        21,22, // Spearow-Fearow
+        23,24, // Ekans-Arbok
+        25,26, // Pikachu-Raichu
+        29,30,31, // Nidoran♀-Nidoqueen
+        32,33, // Nidoran♂-Nidorino
+        35,36, // Clefairy-Clefable
+        43,44,45, // Oddish-Vileplume
+        48,49, // Venonat-Venomoth
+        52,53, // Meowth-Persian
+        56,57, // Mankey-Primeape
+        60,61,62, // Poliwag-Poliwrath
+        63,64,65, // Abra-Alakazam
+        66,67,68, // Machop-Machamp
+        69,70,71, // Bellsprout-Victreebel
+        74,75,76, // Geodude-Golem
+        77,78, // Ponyta-Rapidash
+        81,82, // Magnemite-Magneton
+        83, // Farfetch'd
+        84,85, // Doduo-Dodrio
+        88,89, // Grimer-Muk
+        90,91, // Shellder-Cloyster
+        92,93,94, // Gastly-Gengar
+        95, // Onix
+        98,99, // Krabby-Kingler
+        100,101, // Voltorb-Electrode
+        102,103, // Exeggcute-Exeggutor
+        104,105, // Cubone-Marowak
+        106, // Hitmonlee
+        107, // Hitmonchan
+        108, // Lickitung
+        109,110, // Koffing-Weezing
+        111,112, // Rhyhorn-Rhydon
+        114, // Tangela
+        115, // Kangaskhan
+        116,117, // Horsea-Seadra
+        120,121, // Staryu-Starmie
+        122, // Mr. Mime
+        123, // Scyther
+        127, // Pinsir
+        132, // Ditto
+        134,135, // Vaporeon,Jolteon
+        138,139, // Omanyte,Omastar
+        142, // Aerodactyl
+        143, // Snorlax
+        145, // Zapdos
+        146, // Moltres
+        147,148,149, // Dratini-Dragonite
+        150, // Mewtwo
+        151 // Mew
+    };
+
+    static inline bool does_spcl_match_spatk(int species_id)
+    {
+        return (std::find(
+                    gen1_to_gen2_with_spcl_as_spatk.begin(),
+                    gen1_to_gen2_with_spcl_as_spatk.end(),
+                    species_id
+               ) == gen1_to_gen2_with_spcl_as_spatk.end());
+    }
 
     void gen1_pc_pokemon_to_gen2(
         const pksav_gen1_pc_pokemon_t* from,
@@ -49,11 +128,17 @@ namespace pkmn { namespace conversions {
         /*
          * Leave location caught at 0, Crystal's Poké Seer can't tell where
          * traded Pokémon were caught.
-         *
-         * TODO: time of day, fix PKSav mask names
          */
         to->caught_data = (to->caught_data & ~PKSAV_GEN2_LEVEL_CAUGHT_MASK)
                         | (uint16_t(from->level) << PKSAV_GEN2_LEVEL_CAUGHT_OFFSET);
+
+        time_t now = std::time(0);
+        PKSAV_CALL(
+            pksav_gen2_set_caught_data_time_field(
+                &now,
+                &to->caught_data
+            )
+        )
 
         to->level = from->level;
     }
@@ -72,11 +157,23 @@ namespace pkmn { namespace conversions {
         // Party data
         std::memset(&to->party_data, 0, sizeof(to->party_data));
         to->party_data.condition = from->pc.condition;
+
         // Leave unused field at 0
+
         to->party_data.current_hp = from->pc.current_hp;
+
         // The next four fields are identical
-        memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
-        // TODO: how does Special translate to Sp.Atk, Sp.Def?
+        std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
+
+        // In Generation II, the game index matches the species ID.
+        if(does_spcl_match_spatk(to->pc.species))
+        {
+            to->party_data.spatk = from->party_data.spcl;
+        }
+        else
+        {
+            to->party_data.spdef = from->party_data.spcl;
+        }
     }
 
     void gen2_pc_pokemon_to_gen1(
@@ -86,6 +183,8 @@ namespace pkmn { namespace conversions {
     {
         // Connect to database
         pkmn::database::get_connection(_db);
+
+        const int RED = 1;
 
         std::memset(to, 0, sizeof(*to));
         to->species = uint8_t(convert_pokemon_game_index(
@@ -106,7 +205,7 @@ namespace pkmn { namespace conversions {
 
         uint8_t IV = 0;
         pksav_get_gb_IV(
-           const_cast<uint16_t*>(&from->iv_data), // PKSav TODO: make this param a const ptr
+           &from->iv_data,
            PKSAV_STAT_HP,
            &IV
         );
@@ -119,7 +218,18 @@ namespace pkmn { namespace conversions {
 
         // Keep status field at 0
 
-        // TODO: make sure we use Generation I types
+        std::pair<std::string, std::string> types = pkmn::database::pokemon_entry(
+                                                        to->species, RED
+                                                    ).get_types();
+        to->types[0] = uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.first));
+        if(types.second == "None")
+        {
+            to->types[1] = to->types[0];
+        }
+        else
+        {
+            to->types[1] = uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.second));
+        }
 
         static BOOST_CONSTEXPR const char* type1_query = \
             "SELECT game_index FROM type_game_indices WHERE "
@@ -174,11 +284,23 @@ namespace pkmn { namespace conversions {
         std::memset(&to->party_data, 0, sizeof(to->party_data));
         to->party_data.level = from->pc.level;
         to->pc.condition = from->party_data.condition;
+
         // Leave unused field at 0
+
         to->pc.current_hp = from->party_data.current_hp;
+
         // The next four fields are identical
-        memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
-        // TODO: how does Sp.Atk,Sp.Def translate to Special?
+        std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
+
+        // In Generation II, the game index matches the species ID.
+        if(does_spcl_match_spatk(from->pc.species))
+        {
+            to->party_data.spcl = from->party_data.spatk;
+        }
+        else
+        {
+            to->party_data.spcl = from->party_data.spdef;
+        }
     }
 
 }}
