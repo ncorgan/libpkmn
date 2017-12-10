@@ -776,6 +776,46 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_sprite_filepath();
             }
 
+            PKMN_INLINE int get_numeric_attribute(
+                const std::string& attribute_name
+            )
+            {
+                return _pokemon->get_numeric_attribute(attribute_name);
+            }
+
+            PKMN_INLINE void set_numeric_attribute(
+                const std::string& attribute_name,
+                int value
+            )
+            {
+                _pokemon->set_numeric_attribute(attribute_name, value);
+            }
+
+            PKMN_INLINE std::vector<std::string> get_numeric_attribute_names()
+            {
+                return _pokemon->get_numeric_attribute_names();
+            }
+
+            PKMN_INLINE std::string get_string_attribute(
+                const std::string& attribute_name
+            )
+            {
+                return _pokemon->get_string_attribute(attribute_name);
+            }
+
+            PKMN_INLINE void set_string_attribute(
+                const std::string& attribute_name,
+                const std::string& value
+            )
+            {
+                _pokemon->set_string_attribute(attribute_name, value);
+            }
+
+            PKMN_INLINE std::vector<std::string> get_string_attribute_names()
+            {
+                return _pokemon->get_string_attribute_names();
+            }
+
         private:
             pkmn::pokemon::sptr _pokemon;
             pokemon_EV_map _EV_map;
