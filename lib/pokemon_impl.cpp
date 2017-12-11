@@ -25,6 +25,7 @@
 
 #include "types/rng.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -762,5 +763,30 @@ namespace pkmn
             SET_MARKING("Star", PKSAV_MARKING_STAR);
             SET_MARKING("Diamond", PKSAV_MARKING_DIAMOND);
         }
+    }
+
+    std::string pokemon_impl::get_gen4_encounter_type(
+        uint8_t* native_ptr
+    )
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
+        return pksav::GEN4_ENCOUNTER_TYPE_BIMAP.right.at(pksav_gen4_encounter_type_t(*native_ptr));
+    }
+
+    void pokemon_impl::set_gen4_encounter_type(
+        uint8_t* native_ptr,
+        const std::string& gen4_encounter_type
+    )
+    {
+        pkmn::enforce_value_in_map_keys(
+            "Generation IV encounter type",
+            gen4_encounter_type,
+            pksav::GEN4_ENCOUNTER_TYPE_BIMAP.left
+        );
+
+        boost::lock_guard<pokemon_impl> lock(*this);
+
+        *native_ptr = uint8_t(pksav::GEN4_ENCOUNTER_TYPE_BIMAP.left.at(gen4_encounter_type));
     }
 }

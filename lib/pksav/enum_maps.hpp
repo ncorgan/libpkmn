@@ -11,6 +11,7 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen6/ribbons.h>
 #include <pksav/common/condition.h>
+#include <pksav/common/gen4_encounter_type.h>
 #include <pksav/common/super_training_medals.h>
 
 #include <boost/assign.hpp>
@@ -169,6 +170,18 @@ static const super_training_medal_bimap_t SUPER_TRAINING_MEDAL_BIMAP = boost::as
     ("A Barrage of Bitbots!",                     PKSAV_SUPER_TRAINING_MEDAL_A_BARRAGE_OF_BITBOTS)
     ("Drag Down Hydreigon!",                      PKSAV_SUPER_TRAINING_MEDAL_DRAG_DOWN_HYDREIGON)
     ("The Battle for the Best",                   PKSAV_SUPER_TRAINING_MEDAL_THE_BATTLE_FOR_THE_BEST)
+;
+
+typedef boost::bimap<std::string, pksav_gen4_encounter_type_t> gen4_encounter_type_bimap_t;
+static const gen4_encounter_type_bimap_t GEN4_ENCOUNTER_TYPE_BIMAP = boost::assign::list_of<gen4_encounter_type_bimap_t::relation>
+    ("Event",         PKSAV_GEN4_ENCOUNTER_EVENT)
+    ("Tall Grass",    PKSAV_GEN4_ENCOUNTER_TALL_GRASS)
+    ("Dialga/Palkia", PKSAV_GEN4_ENCOUNTER_DIALGA_PALKIA)
+    ("Cave",          PKSAV_GEN4_ENCOUNTER_CAVE)
+    ("Surfing",       PKSAV_GEN4_ENCOUNTER_SURFING)
+    ("Building",      PKSAV_GEN4_ENCOUNTER_BUILDING)
+    ("Great Marsh",   PKSAV_GEN4_ENCOUNTER_GREAT_MARSH)
+    ("Starter",       PKSAV_GEN4_ENCOUNTER_STARTER)
 ;
 
 }

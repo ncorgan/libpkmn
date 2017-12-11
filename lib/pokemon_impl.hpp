@@ -241,6 +241,17 @@ namespace pkmn {
                 _update_ribbons_map();
             }
 
+            // Functions for attributes
+
+            std::string get_gen4_encounter_type(
+                uint8_t* native_ptr
+            );
+
+            void set_gen4_encounter_type(
+                uint8_t* native_ptr,
+                const std::string& gen4_encounter_type
+            );
+
             virtual void _update_held_item() {}
             virtual void _update_markings_map() {}
             virtual void _update_ribbons_map() {}
