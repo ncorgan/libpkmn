@@ -62,6 +62,18 @@ namespace pkmn {
 
             const pkmn::database::pokemon_entry& get_database_entry() override final;
 
+            std::string get_current_trainer_name() override;
+
+            void set_current_trainer_name(
+                const std::string& trainer_name
+            ) override;
+
+            int get_original_trainer_friendship() override;
+
+            void set_original_trainer_friendship(
+                int friendship
+            ) override;
+
             const std::map<std::string, bool>& get_markings() override final;
 
             const std::map<std::string, bool>& get_ribbons() override final;

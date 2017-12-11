@@ -119,6 +119,12 @@ namespace pkmn {
                 const std::string &trainer_name
             ) = 0;
 
+            virtual std::string get_current_trainer_name() = 0;
+
+            virtual void set_current_trainer_name(
+                const std::string &trainer_name
+            ) = 0;
+
             virtual uint16_t get_original_trainer_public_id() = 0;
 
             virtual uint16_t get_original_trainer_secret_id() = 0;
@@ -150,6 +156,12 @@ namespace pkmn {
             virtual void set_date_met(
                 const pkmn::datetime &date,
                 bool as_egg
+            ) = 0;
+
+            virtual int get_original_trainer_friendship() = 0;
+
+            virtual void set_original_trainer_friendship(
+                int friendship
             ) = 0;
 
             virtual int get_current_trainer_friendship() = 0;

@@ -228,6 +228,30 @@ namespace pkmn
         return _markings;
     }
 
+    std::string pokemon_impl::get_current_trainer_name()
+    {
+        throw pkmn::feature_not_in_game_error("Current trainer name", GENERATION_NAMES[_generation]);
+    }
+
+    void pokemon_impl::set_current_trainer_name(
+        PKMN_UNUSED(const std::string& trainer_name)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Current trainer name", GENERATION_NAMES[_generation]);
+    }
+
+    int pokemon_impl::get_original_trainer_friendship()
+    {
+        throw pkmn::feature_not_in_game_error("Original trainer friendship", GENERATION_NAMES[_generation]);
+    }
+
+    void pokemon_impl::set_original_trainer_friendship(
+        PKMN_UNUSED(int friendship)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Original trainer friendship", GENERATION_NAMES[_generation]);
+    }
+
     const std::map<std::string, bool>& pokemon_impl::get_ribbons()
     {
         if(_generation < 3)

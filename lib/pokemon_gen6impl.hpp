@@ -99,6 +99,12 @@ namespace pkmn {
                 const std::string &trainer_name
             ) override final;
 
+            std::string get_current_trainer_name() override final;
+
+            void set_current_trainer_name(
+                const std::string& trainer_name
+            ) override final;
+
             uint16_t get_original_trainer_public_id() override final;
 
             uint16_t get_original_trainer_secret_id() override final;
@@ -130,6 +136,12 @@ namespace pkmn {
             void set_date_met(
                 const pkmn::datetime &date,
                 bool as_egg
+            ) override final;
+
+            int get_original_trainer_friendship() override final;
+
+            void set_original_trainer_friendship(
+                int friendship
             ) override final;
 
             int get_current_trainer_friendship() override final;

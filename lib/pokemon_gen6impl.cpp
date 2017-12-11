@@ -493,7 +493,7 @@ namespace pkmn
     )
     {
         pkmn::enforce_string_length(
-            "Trainer name",
+            "Original trainer name",
             trainer_name,
             1,
             12
@@ -505,6 +505,45 @@ namespace pkmn
             pksav_text_to_gen6(
                 trainer_name.c_str(),
                 _blockD_ptr->otname,
+                trainer_name.size()
+            );
+        )
+    }
+
+    std::string pokemon_gen6impl::get_current_trainer_name()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        char trainer_name[13] = {0};
+
+        PKSAV_CALL(
+            pksav_text_from_gen6(
+                _blockC_ptr->latest_not_ot_name,
+                trainer_name,
+                sizeof(trainer_name)-1
+            );
+        )
+
+        return std::string(trainer_name);
+    }
+
+    void pokemon_gen6impl::set_current_trainer_name(
+        const std::string& trainer_name
+    )
+    {
+        pkmn::enforce_string_length(
+            "Current trainer name",
+            trainer_name,
+            1,
+            12
+        );
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        PKSAV_CALL(
+            pksav_text_to_gen6(
+                trainer_name.c_str(),
+                _blockC_ptr->latest_not_ot_name,
                 trainer_name.size()
             );
         )
@@ -617,11 +656,29 @@ namespace pkmn
         }
     }
 
+    int pokemon_gen6impl::get_original_trainer_friendship()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        return _blockD_ptr->ot_friendship;
+    }
+
+    void pokemon_gen6impl::set_original_trainer_friendship(
+        int friendship
+    )
+    {
+        pkmn::enforce_bounds("Friendship", friendship, 0, 255);
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockD_ptr->ot_friendship = uint8_t(friendship);
+    }
+
     int pokemon_gen6impl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return _blockC_ptr->not_ot_friendship;
     }
 
     void pokemon_gen6impl::set_current_trainer_friendship(
@@ -631,6 +688,8 @@ namespace pkmn
         pkmn::enforce_bounds("Friendship", friendship, 0, 255);
 
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockC_ptr->not_ot_friendship = uint8_t(friendship);
     }
 
     static const std::vector<std::string> NATURES =
