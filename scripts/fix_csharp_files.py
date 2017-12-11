@@ -128,7 +128,7 @@ def remove_class_with_attributes_inheritance(filename):
             flines[i] = flines[i] + " swigCMemOwn = cMemoryOwn;"
 
     f = open(filename, "w")
-    f.write("// remove_class_with_attributes_inheritance")
+    f.write("// remove_class_with_attributes_inheritance\n")
     for line in flines:
         if "base.Dispose();" not in line:
             f.write(line)
