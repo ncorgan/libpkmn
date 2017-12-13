@@ -68,6 +68,12 @@ namespace pkmn {
                 const std::string& trainer_name
             ) override;
 
+            std::string get_current_trainer_gender() override;
+
+            void set_current_trainer_gender(
+                const std::string& trainer_gender
+            ) override;
+
             int get_original_trainer_friendship() override;
 
             void set_original_trainer_friendship(
@@ -250,6 +256,15 @@ namespace pkmn {
             void set_gen4_encounter_type(
                 uint8_t* native_ptr,
                 const std::string& gen4_encounter_type
+            );
+
+            std::string get_region(
+                uint8_t* native_ptr
+            );
+
+            void set_region(
+                uint8_t* native_ptr,
+                const std::string& region
             );
 
             virtual void _update_held_item() {}

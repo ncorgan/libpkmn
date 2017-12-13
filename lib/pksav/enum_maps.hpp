@@ -12,6 +12,7 @@
 #include <pksav/gen6/ribbons.h>
 #include <pksav/common/condition.h>
 #include <pksav/common/gen4_encounter_type.h>
+#include <pksav/common/region.h>
 #include <pksav/common/super_training_medals.h>
 
 #include <boost/assign.hpp>
@@ -182,6 +183,16 @@ static const gen4_encounter_type_bimap_t GEN4_ENCOUNTER_TYPE_BIMAP = boost::assi
     ("Building",      PKSAV_GEN4_ENCOUNTER_BUILDING)
     ("Great Marsh",   PKSAV_GEN4_ENCOUNTER_GREAT_MARSH)
     ("Starter",       PKSAV_GEN4_ENCOUNTER_STARTER)
+;
+
+typedef boost::bimap<std::string, pksav_region_t> region_bimap_t;
+static const region_bimap_t REGION_BIMAP = boost::assign::list_of<region_bimap_t::relation>
+    ("Japan",    PKSAV_REGION_JAPAN)
+    ("Americas", PKSAV_REGION_AMERICAS)
+    ("Europe",   PKSAV_REGION_EUROPE)
+    ("China",    PKSAV_REGION_CHINA)
+    ("Korea",    PKSAV_REGION_KOREA)
+    ("Taiwan",   PKSAV_REGION_TAIWAN)
 ;
 
 }

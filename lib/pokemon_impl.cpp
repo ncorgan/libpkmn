@@ -241,6 +241,18 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Current trainer name", GENERATION_NAMES[_generation]);
     }
 
+    std::string pokemon_impl::get_current_trainer_gender()
+    {
+        throw pkmn::feature_not_in_game_error("Current trainer gender", GENERATION_NAMES[_generation]);
+    }
+
+    void pokemon_impl::set_current_trainer_gender(
+        PKMN_UNUSED(const std::string& trainer_gender)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Current trainer gender", GENERATION_NAMES[_generation]);
+    }
+
     int pokemon_impl::get_original_trainer_friendship()
     {
         throw pkmn::feature_not_in_game_error("Original trainer friendship", GENERATION_NAMES[_generation]);
@@ -788,5 +800,30 @@ namespace pkmn
         boost::lock_guard<pokemon_impl> lock(*this);
 
         *native_ptr = uint8_t(pksav::GEN4_ENCOUNTER_TYPE_BIMAP.left.at(gen4_encounter_type));
+    }
+
+    std::string pokemon_impl::get_region(
+        uint8_t* native_ptr
+    )
+    {
+        boost::lock_guard<pokemon_impl> lock(*this);
+
+        return pksav::REGION_BIMAP.right.at(pksav_region_t(*native_ptr));
+    }
+
+    void pokemon_impl::set_region(
+        uint8_t* native_ptr,
+        const std::string& region
+    )
+    {
+        pkmn::enforce_value_in_map_keys(
+            "Region",
+            region,
+            pksav::REGION_BIMAP.left
+        );
+
+        boost::lock_guard<pokemon_impl> lock(*this);
+
+        *native_ptr = uint8_t(pksav::REGION_BIMAP.left.at(region));
     }
 }

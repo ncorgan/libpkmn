@@ -149,6 +149,12 @@ namespace pkmn {
                 const std::string &trainer_gender
             ) = 0;
 
+            virtual std::string get_current_trainer_gender() = 0;
+
+            virtual void set_current_trainer_gender(
+                const std::string &trainer_gender
+            ) = 0;
+
             virtual pkmn::datetime get_date_met(
                 bool as_egg
             ) = 0;

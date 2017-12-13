@@ -279,16 +279,23 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return false;
+        return bool(_blockB_ptr->iv_isegg_isnicknamed & PKSAV_GEN6_POKEMON_ISEGG_MASK);
     }
 
     void pokemon_gen6impl::set_is_egg(
         bool is_egg
     )
     {
-        (void)is_egg; 
-
         boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        if(is_egg)
+        {
+            _blockB_ptr->iv_isegg_isnicknamed |= PKSAV_GEN6_POKEMON_ISEGG_MASK;
+        }
+        else
+        {
+            _blockB_ptr->iv_isegg_isnicknamed &= ~PKSAV_GEN6_POKEMON_ISEGG_MASK;
+        }
     }
 
     std::string pokemon_gen6impl::get_condition()
@@ -601,7 +608,8 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return "";
+        return (_blockD_ptr->metlevel_otgender & PKSAV_GEN6_POKEMON_OTGENDER_MASK) ? "Female"
+                                                                                   : "Male";
     }
 
     void pokemon_gen6impl::set_original_trainer_gender(
@@ -610,7 +618,47 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        (void)gender;
+        if(gender == "Male")
+        {
+            _blockD_ptr->metlevel_otgender &= ~PKSAV_GEN6_POKEMON_OTGENDER_MASK;
+        }
+        else if(gender == "Female")
+        {
+            _blockD_ptr->metlevel_otgender |= PKSAV_GEN6_POKEMON_OTGENDER_MASK;
+        }
+        else
+        {
+            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
+        }
+    }
+
+    std::string pokemon_gen6impl::get_current_trainer_gender()
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        // TODO: PKSav enum
+        return (_blockC_ptr->not_ot_gender == 0) ? "Male" :"Female";
+    }
+
+    void pokemon_gen6impl::set_current_trainer_gender(
+        const std::string& gender
+    )
+    {
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        // TODO: PKSav enum
+        if(gender == "Male")
+        {
+            _blockC_ptr->not_ot_gender = 0;
+        }
+        else if(gender == "Female")
+        {
+            _blockC_ptr->not_ot_gender = 1;
+        }
+        else
+        {
+            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
+        }
     }
 
     pkmn::datetime pokemon_gen6impl::get_date_met(
@@ -807,7 +855,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen6impl> lock(*this);
 
-        return 0;
+        return _blockD_ptr->metlevel_otgender & PKSAV_GEN6_POKEMON_LEVELMET_MASK;
     }
 
     void pokemon_gen6impl::set_level_met(
@@ -815,6 +863,11 @@ namespace pkmn
     )
     {
         pkmn::enforce_bounds("Level met", level, 0, 100);
+
+        boost::lock_guard<pokemon_gen6impl> lock(*this);
+
+        _blockD_ptr->metlevel_otgender &= ~PKSAV_GEN6_POKEMON_LEVELMET_MASK;
+        _blockD_ptr->metlevel_otgender |= uint32_t(level);
     }
 
     std::string pokemon_gen6impl::get_location_met(
@@ -1489,6 +1542,21 @@ namespace pkmn
             "Relearn Move 4",
             std::bind(&pokemon_gen6impl::get_relearn_move, this, 3),
             std::bind(&pokemon_gen6impl::set_relearn_move, this, 3, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Generation IV encounter type",
+            std::bind(&pokemon_gen6impl::get_gen4_encounter_type, this, &_blockD_ptr->gen4_encounter_info),
+            std::bind(&pokemon_gen6impl::set_gen4_encounter_type, this, &_blockD_ptr->gen4_encounter_info, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Region",
+            std::bind(&pokemon_gen6impl::get_region, this, &_blockD_ptr->region),
+            std::bind(&pokemon_gen6impl::set_region, this, &_blockD_ptr->region, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Console region",
+            std::bind(&pokemon_gen6impl::get_region, this, &_blockD_ptr->region_3ds),
+            std::bind(&pokemon_gen6impl::set_region, this, &_blockD_ptr->region_3ds, _1)
         );
     }
 }

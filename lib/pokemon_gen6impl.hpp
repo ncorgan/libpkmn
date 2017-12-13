@@ -129,6 +129,12 @@ namespace pkmn {
                 const std::string &gender
             ) override final;
 
+            std::string get_current_trainer_gender() override final;
+
+            void set_current_trainer_gender(
+                const std::string &gender
+            ) override final;
+
             pkmn::datetime get_date_met(
                 bool as_egg
             ) override final;
