@@ -6,6 +6,7 @@
  */
 
 #include "gen3_conversions.hpp"
+#include "gen4_conversions.hpp"
 #include "database/database_common.hpp"
 #include "pksav/pksav_call.hpp"
 
@@ -23,6 +24,8 @@
 #include <boost/config.hpp>
 
 namespace pkmn { namespace conversions {
+
+    // GBA
 
     BOOST_STATIC_CONSTEXPR LibPkmGC::ItemIndex MAX_GBA_ITEM_INDEX = LibPkmGC::TM50;
 
@@ -253,6 +256,104 @@ namespace pkmn { namespace conversions {
         to->partyData.currentHP = pksav_littleendian16(from->party_data.current_hp);
     }
 
+    void gba_pc_pokemon_to_gen4(
+        const pksav_gba_pc_pokemon_t* from,
+        pksav_nds_pc_pokemon_t* to
+    )
+    {
+        (void)from;
+        (void)to;
+    }
+
+    void gba_party_pokemon_to_gen4(
+        const pksav_gba_party_pokemon_t* from,
+        pksav_nds_party_pokemon_t* to
+    )
+    {
+        gba_pc_pokemon_to_gen4(
+            &from->pc,
+            &to->pc
+        );
+    }
+
+    void gba_pc_pokemon_to_gen5(
+        const pksav_gba_pc_pokemon_t* from,
+        pksav_nds_pc_pokemon_t* to
+    )
+    {
+        (void)from;
+        (void)to;
+
+        pksav_nds_pc_pokemon_t gen4_pokemon;
+        gba_pc_pokemon_to_gen4(
+            from,
+            &gen4_pokemon
+        );
+        gen4_pc_pokemon_to_gen5(
+            &gen4_pokemon,
+            to
+        );
+    }
+
+    void gba_party_pokemon_to_gen5(
+        const pksav_gba_party_pokemon_t* from,
+        pksav_nds_party_pokemon_t* to
+    )
+    {
+        (void)from;
+        (void)to;
+
+        pksav_nds_party_pokemon_t gen4_pokemon;
+        gba_party_pokemon_to_gen4(
+            from,
+            &gen4_pokemon
+        );
+        gen4_party_pokemon_to_gen5(
+            &gen4_pokemon,
+            to
+        );
+    }
+
+    void gba_pc_pokemon_to_gen6(
+        const pksav_gba_pc_pokemon_t* from,
+        pksav_gen6_pc_pokemon_t* to
+    )
+    {
+        (void)from;
+        (void)to;
+
+        pksav_nds_pc_pokemon_t gen4_pokemon;
+        gba_pc_pokemon_to_gen4(
+            from,
+            &gen4_pokemon
+        );
+        gen4_pc_pokemon_to_gen6(
+            &gen4_pokemon,
+            to
+        );
+    }
+
+    void gba_party_pokemon_to_gen6(
+        const pksav_gba_party_pokemon_t* from,
+        pksav_gen6_party_pokemon_t* to
+    )
+    {
+        (void)from;
+        (void)to;
+
+        pksav_nds_party_pokemon_t gen4_pokemon;
+        gba_party_pokemon_to_gen4(
+            from,
+            &gen4_pokemon
+        );
+        gen4_party_pokemon_to_gen6(
+            &gen4_pokemon,
+            to
+        );
+    }
+
+    // GCN
+
     void gcn_pokemon_to_gba_pc(
         const LibPkmGC::GC::Pokemon* from,
         pksav_gba_pc_pokemon_t* to
@@ -432,6 +533,102 @@ namespace pkmn { namespace conversions {
         to->party_data.spd          = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPEED]);
         to->party_data.spatk        = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPATK]);
         to->party_data.spdef        = pksav_littleendian16(from->partyData.stats[LIBPKMGC_STAT_SPDEF]);
+    }
+
+    void gcn_pokemon_to_gen4_pc(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_pc_pokemon_t* to
+    )
+    {
+        pksav_gba_pc_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_pc(
+            from,
+            &gba_pokemon
+        );
+        gba_pc_pokemon_to_gen4(
+            &gba_pokemon,
+            to
+        );
+    }
+
+    void gcn_pokemon_to_gen4_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_party_pokemon_t* to
+    )
+    {
+        pksav_gba_party_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_party(
+            from,
+            &gba_pokemon
+        );
+        gba_party_pokemon_to_gen4(
+            &gba_pokemon,
+            to
+        );
+    }
+
+    void gcn_pokemon_to_gen5_pc(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_pc_pokemon_t* to
+    )
+    {
+        pksav_gba_pc_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_pc(
+            from,
+            &gba_pokemon
+        );
+        gba_pc_pokemon_to_gen5(
+            &gba_pokemon,
+            to
+        );
+    }
+
+    void gcn_pokemon_to_gen5_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_nds_party_pokemon_t* to
+    )
+    {
+        pksav_gba_party_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_party(
+            from,
+            &gba_pokemon
+        );
+        gba_party_pokemon_to_gen5(
+            &gba_pokemon,
+            to
+        );
+    }
+
+    void gcn_pokemon_to_gen6_pc(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_gen6_pc_pokemon_t* to
+    )
+    {
+        pksav_gba_pc_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_pc(
+            from,
+            &gba_pokemon
+        );
+        gba_pc_pokemon_to_gen6(
+            &gba_pokemon,
+            to
+        );
+    }
+
+    void gcn_pokemon_to_gen6_party(
+        const LibPkmGC::GC::Pokemon* from,
+        pksav_gen6_party_pokemon_t* to
+    )
+    {
+        pksav_gba_party_pokemon_t gba_pokemon;
+        gcn_pokemon_to_gba_party(
+            from,
+            &gba_pokemon
+        );
+        gba_party_pokemon_to_gen6(
+            &gba_pokemon,
+            to
+        );
     }
 
 }}
