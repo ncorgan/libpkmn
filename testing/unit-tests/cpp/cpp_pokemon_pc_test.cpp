@@ -264,7 +264,7 @@ void pokemon_box_test_common(
                         7
                     );
                 )
-                EXPECT_EQ(std::string(otname), pokemon_list.at(i)->get_trainer_name());
+                EXPECT_EQ(std::string(otname), pokemon_list.at(i)->get_original_trainer_name());
             }
             EXPECT_EQ(3, native_box->count);
             break;
@@ -298,7 +298,7 @@ void pokemon_box_test_common(
                         7
                     );
                 )
-                EXPECT_EQ(std::string(otname), pokemon_list.at(i)->get_trainer_name());
+                EXPECT_EQ(std::string(otname), pokemon_list.at(i)->get_original_trainer_name());
             }
             EXPECT_EQ(3, native_box->count);
             break;

@@ -25,6 +25,8 @@ PKMN_PYTHON_INIT
     #include <pkmn/utils/paths.hpp>
 %}
 
+%warnfilter(401);
+
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_python_docstrings.i>
 

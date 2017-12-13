@@ -15,6 +15,7 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/common/markings.h>
+#include <pksav/common/pokerus.h>
 #include <pksav/common/stats.h>
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
@@ -183,9 +184,9 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     const pksav_gba_pokemon_misc_t* misc = &native_pc_data->blocks.misc;
 
     EXPECT_EQ(pokemon->get_personality(), pksav_littleendian32(native_pc_data->personality));
-    EXPECT_EQ(pokemon->get_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
-    EXPECT_EQ(pokemon->get_trainer_public_id(), pksav_littleendian16(native_pc_data->ot_id.pid));
-    EXPECT_EQ(pokemon->get_trainer_secret_id(), pksav_littleendian16(native_pc_data->ot_id.sid));
+    EXPECT_EQ(pokemon->get_original_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
+    EXPECT_EQ(pokemon->get_original_trainer_public_id(), pksav_littleendian16(native_pc_data->ot_id.pid));
+    EXPECT_EQ(pokemon->get_original_trainer_secret_id(), pksav_littleendian16(native_pc_data->ot_id.sid));
 
     char nickname[11] = {0};
     PKSAV_CALL(
@@ -207,7 +208,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
             7
         );
     );
-    EXPECT_EQ(pokemon->get_trainer_name(), std::string(otname));
+    EXPECT_EQ(pokemon->get_original_trainer_name(), std::string(otname));
 
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_CIRCLE);
     EXPECT_TRUE(native_pc_data->markings & PKSAV_MARKING_TRIANGLE);
@@ -221,15 +222,27 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     );
     EXPECT_EQ(pokemon->get_experience(), int(pksav_littleendian32(growth->exp)));
     // TODO: PP Up
-    EXPECT_EQ(pokemon->get_friendship(), int(growth->friendship));
+    EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(growth->friendship));
 
-    const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    for(int i = 0; i < 4; ++i) {
+    uint8_t duration_from_pokerus = 0;
+    PKSAV_CALL(
+        pksav_pokerus_get_duration(
+            &misc->pokerus,
+            &duration_from_pokerus
+        )
+    )
+    EXPECT_EQ(pokemon->get_pokerus_duration(), int(duration_from_pokerus));
+
+    const pkmn::move_slots_t& moves = pokemon->get_moves();
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(attacks->moves[i]));
+        EXPECT_EQ(moves.at(i).pp, int(attacks->move_pps[i]));
         EXPECT_EQ(
-            pkmn::database::move_entry(move_slots.at(i).move, get_game()).get_move_id(),
-            int(attacks->moves[i])
+            3,
+            int((growth->pp_up >> uint8_t(i>>2)) & 0x3)
         );
-        EXPECT_EQ(move_slots.at(i).pp, int(attacks->move_pps[i]));
     }
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
@@ -443,11 +456,11 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
         pkmn::database::item_entry(pokemon->get_held_item(), get_game()).get_item_index(),
         int(native->heldItem)
     );
-    EXPECT_EQ(pokemon->get_friendship(), int(native->friendship));
+    EXPECT_EQ(pokemon->get_current_trainer_friendship(), int(native->friendship));
     EXPECT_EQ(pkmn::database::item_entry(pokemon->get_ball(), get_game()).get_item_index(), int(native->ballCaughtWith));
     EXPECT_EQ(pokemon->get_level_met(), int(native->levelMet));
     // TODO: OTGender, probably bring in bimaps
-    EXPECT_STREQ(pokemon->get_trainer_name().c_str(), native->OTName->toUTF8());
+    EXPECT_STREQ(pokemon->get_original_trainer_name().c_str(), native->OTName->toUTF8());
     EXPECT_STREQ(pokemon->get_nickname().c_str(), native->name->toUTF8());
     EXPECT_EQ(pokemon->get_contest_stats().at("Feel"), int(native->contestLuster));
 
@@ -458,19 +471,28 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(markings.at("Heart"), native->markings.heart);
 
     EXPECT_EQ(pokemon->get_experience(), int(native->experience));
-    EXPECT_EQ(pokemon->get_trainer_secret_id(), native->SID);
-    EXPECT_EQ(pokemon->get_trainer_public_id(), native->TID);
+    EXPECT_EQ(pokemon->get_original_trainer_secret_id(), native->SID);
+    EXPECT_EQ(pokemon->get_original_trainer_public_id(), native->TID);
     EXPECT_EQ(pokemon->get_personality(), native->PID);
 
     // TODO: original game
 
+    uint8_t duration_from_pokerus = 0;
+    PKSAV_CALL(
+        pksav_pokerus_get_duration(
+            &native->pokerusStatus,
+            &duration_from_pokerus
+        )
+    )
+    EXPECT_EQ(pokemon->get_pokerus_duration(), int(duration_from_pokerus));
+
     const pkmn::move_slots_t& moves = pokemon->get_moves();
-    for(size_t i = 0; i < 4; ++i) {
-        EXPECT_EQ(
-            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
-            int(native->moves[i].move)
-        );
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(native->moves[i].move));
         EXPECT_EQ(moves.at(i).pp, int(native->moves[i].currentPPs));
+        EXPECT_EQ(3, int(native->moves[i].nbPPUpsUsed));
     }
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
@@ -519,7 +541,7 @@ TEST_P(gcn_pokemon_test, gcn_pokemon_test) {
     EXPECT_EQ(pokemon->get_level(), int(native->partyData.level));
 
     EXPECT_EQ(
-        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_trainer_id()),
+        pkmn::calculations::modern_shiny(pokemon->get_personality(), pokemon->get_original_trainer_id()),
         native->isShiny()
     );
     EXPECT_NE(

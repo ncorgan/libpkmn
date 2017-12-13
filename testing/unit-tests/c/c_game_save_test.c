@@ -724,7 +724,7 @@ static void compare_pokemon(
     char pokemon1_strbuffer[STRBUFFER_LEN] = {0};
     char pokemon2_strbuffer[STRBUFFER_LEN] = {0};
 
-    pkmn_trainer_info_t pokemon1_trainer_info =
+    pkmn_trainer_info_t pokemon1_original_trainer_info =
     {
         .trainer_name = {0},
         .trainer_id =
@@ -734,7 +734,7 @@ static void compare_pokemon(
         },
         .trainer_gender = PKMN_MALE
     };
-    pkmn_trainer_info_t pokemon2_trainer_info =
+    pkmn_trainer_info_t pokemon2_original_trainer_info =
     {
         .trainer_name = {0},
         .trainer_id =
@@ -787,19 +787,19 @@ static void compare_pokemon(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
 
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon1,
-                &pokemon1_trainer_info
+                &pokemon1_original_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_trainer_info(
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon2,
-                &pokemon2_trainer_info
+                &pokemon2_original_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(
-        pokemon1_trainer_info.trainer_name,
-        pokemon2_trainer_info.trainer_name
+        pokemon1_original_trainer_info.trainer_name,
+        pokemon2_original_trainer_info.trainer_name
     );
 }
 

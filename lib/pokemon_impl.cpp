@@ -31,6 +31,7 @@
 #include <pkmn/calculations/personality.hpp>
 
 #include <pksav/common/markings.h>
+#include <pksav/common/pokerus.h>
 #include <pksav/math/endian.h>
 
 #include <boost/filesystem.hpp>
@@ -458,7 +459,6 @@ namespace pkmn
 
     // Shared setters
 
-
     void pokemon_impl::_set_nature(
         uint32_t* personality_ptr,
         const std::string &nature
@@ -470,12 +470,43 @@ namespace pkmn
 
         *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
                                get_species(),
-                               get_trainer_id(),
+                               get_original_trainer_id(),
                                is_shiny(),
                                get_ability(),
                                get_gender(),
                                nature
                            ));
+    }
+
+    int pokemon_impl::_get_pokerus_duration(
+        uint8_t* pokerus_ptr
+    )
+    {
+        uint8_t duration_from_pokerus = 0;
+
+        PKSAV_CALL(
+            pksav_pokerus_get_duration(
+                pokerus_ptr,
+                &duration_from_pokerus
+            );
+        )
+
+        return int(duration_from_pokerus);
+    }
+
+    void pokemon_impl::_set_pokerus_duration(
+        uint8_t* pokerus_ptr,
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        PKSAV_CALL(
+            pksav_pokerus_set_duration(
+                pokerus_ptr,
+                uint8_t(duration)
+            );
+        )
     }
 
     void pokemon_impl::_set_modern_gender(
@@ -490,7 +521,7 @@ namespace pkmn
 
         *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
                                get_species(),
-                               get_trainer_id(),
+                               get_original_trainer_id(),
                                is_shiny(),
                                get_ability(),
                                gender,
@@ -511,7 +542,7 @@ namespace pkmn
 
         *personality_ptr = pksav_littleendian32(pkmn::calculations::generate_personality(
                                get_species(),
-                               get_trainer_id(),
+                               get_original_trainer_id(),
                                value,
                                get_ability(),
                                get_gender(),

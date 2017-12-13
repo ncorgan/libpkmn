@@ -8,6 +8,7 @@
 #include "pokemon_test_common.hpp"
 
 #include "pksav/enum_maps.hpp"
+#include "types/rng.hpp"
 
 #include <pkmntest/util.hpp>
 
@@ -44,24 +45,24 @@ static void check_initial_values(
     } else {
         EXPECT_EQ(boost::algorithm::to_upper_copy(pokemon->get_species()), pokemon->get_nickname());
     }
-    EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_trainer_name());
+    EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_NAME, pokemon->get_original_trainer_name());
 
     if(generation >= 2) {
         EXPECT_EQ("None", pokemon->get_held_item());
     }
 
-    EXPECT_EQ("Male", pokemon->get_trainer_gender());
-    EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_public_id());
+    EXPECT_EQ("Male", pokemon->get_original_trainer_gender());
+    EXPECT_EQ(uint16_t(pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_original_trainer_public_id());
 
     if(generation >= 3) {
-        EXPECT_EQ(uint16_t((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), pokemon->get_trainer_secret_id());
-        EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_ID, pokemon->get_trainer_id());
+        EXPECT_EQ(uint16_t((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF0000) >> 16), pokemon->get_original_trainer_secret_id());
+        EXPECT_EQ(pkmn::pokemon::DEFAULT_TRAINER_ID, pokemon->get_original_trainer_id());
     } else {
-        EXPECT_EQ((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_trainer_id());
+        EXPECT_EQ((pkmn::pokemon::DEFAULT_TRAINER_ID & 0xFFFF), pokemon->get_original_trainer_id());
     }
 
     if(generation >= 2) {
-        EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_friendship());
+        EXPECT_EQ(pokemon->get_database_entry().get_base_friendship(), pokemon->get_current_trainer_friendship());
     }
 
     if(generation >= 3) {
@@ -325,20 +326,20 @@ static void test_setting_friendship(
     int generation = game_generations.at(pokemon->get_game());
 
     if(generation >= 2) {
-        pokemon->set_friendship(123);
-        EXPECT_EQ(123, pokemon->get_friendship());
+        pokemon->set_current_trainer_friendship(123);
+        EXPECT_EQ(123, pokemon->get_current_trainer_friendship());
         EXPECT_THROW(
-            pokemon->set_friendship(-1);
+            pokemon->set_current_trainer_friendship(-1);
         , std::out_of_range);
         EXPECT_THROW(
-            pokemon->set_friendship(256);
+            pokemon->set_current_trainer_friendship(256);
         , std::out_of_range);
     } else {
         EXPECT_THROW(
-            pokemon->get_friendship();
+            pokemon->get_current_trainer_friendship();
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
-            pokemon->set_friendship(123);
+            pokemon->set_current_trainer_friendship(123);
         , pkmn::feature_not_in_game_error);
     }
 }
@@ -544,11 +545,18 @@ static void test_setting_moves(
     pkmn::pokemon::sptr pokemon,
     const std::vector<std::string> &move_names,
     const std::vector<std::string> &invalid_move_names
-) {
+)
+{
     ASSERT_EQ(4, move_names.size());
 
-    for(int i = 0; i < 4; ++i) {
+    std::vector<pkmn::database::move_entry> move_entries;
+
+    for(int i = 0; i < 4; ++i)
+    {
         pokemon->set_move(move_names[i], i);
+        move_entries.emplace_back(
+            pkmn::database::move_entry(move_names[i], pokemon->get_game())
+        );
     }
 
     EXPECT_THROW(
@@ -559,15 +567,24 @@ static void test_setting_moves(
     , std::out_of_range);
 
     const pkmn::move_slots_t& move_slots = pokemon->get_moves();
-    for(int i = 0; i < 4; ++i) {
+    for(int i = 0; i < 4; ++i)
+    {
         EXPECT_EQ(move_names[i], move_slots.at(i).move);
         EXPECT_EQ(
-            pkmn::database::move_entry(move_slots.at(i).move, pokemon->get_game()).get_pp(0),
+            move_entries[i].get_pp(0),
             move_slots.at(i).pp
         );
+
+        pokemon->set_move_pp(i, 0);
+        EXPECT_EQ(0, move_slots.at(i).pp);
+
+        int max_pp = move_entries[i].get_pp(3);
+        pokemon->set_move_pp(i, max_pp);
+        EXPECT_EQ(max_pp, move_slots.at(i).pp);
     }
 
-    for(int i = 0; i < int(invalid_move_names.size()); ++i) {
+    for(int i = 0; i < int(invalid_move_names.size()); ++i)
+    {
         EXPECT_THROW(
             pokemon->set_move(invalid_move_names[i], 0);
         , std::invalid_argument);
@@ -620,6 +637,36 @@ static void test_setting_personality(
         , pkmn::feature_not_in_game_error);
         EXPECT_THROW(
             pokemon->set_personality(0);
+        , pkmn::feature_not_in_game_error);
+    }
+}
+
+static void test_setting_pokerus(
+    pkmn::pokemon::sptr pokemon
+)
+{
+    int generation = game_generations.at(pokemon->get_game());
+
+    if(generation >= 2)
+    {
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(-1);
+        , std::out_of_range);
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(16);
+        , std::out_of_range);
+
+        int duration = pkmn::rng<int>().rand(1, 15);
+        pokemon->set_pokerus_duration(duration);
+        EXPECT_EQ(duration, pokemon->get_pokerus_duration());
+    }
+    else
+    {
+        EXPECT_THROW(
+            pokemon->get_pokerus_duration();
+        , pkmn::feature_not_in_game_error);
+        EXPECT_THROW(
+            pokemon->set_pokerus_duration(1);
         , pkmn::feature_not_in_game_error);
     }
 }
@@ -739,58 +786,58 @@ static void test_setting_trainer_info(
     EXPECT_EQ("foobarbaz", pokemon->get_nickname());
 
     EXPECT_THROW(
-        pokemon->set_trainer_name(""),
+        pokemon->set_original_trainer_name(""),
     std::invalid_argument);
     EXPECT_THROW(
-        pokemon->set_trainer_name("Too long trainer name"),
+        pokemon->set_original_trainer_name("Too long trainer name"),
     std::invalid_argument);
-    pokemon->set_trainer_name("foobar");
-    EXPECT_EQ("foobar", pokemon->get_trainer_name());
+    pokemon->set_original_trainer_name("foobar");
+    EXPECT_EQ("foobar", pokemon->get_original_trainer_name());
 
     if(generation >= 2) {
-        pokemon->set_trainer_gender("Male");
-        EXPECT_EQ("Male", pokemon->get_trainer_gender());
-        pokemon->set_trainer_gender("Female");
-        EXPECT_EQ("Female", pokemon->get_trainer_gender());
+        pokemon->set_original_trainer_gender("Male");
+        EXPECT_EQ("Male", pokemon->get_original_trainer_gender());
+        pokemon->set_original_trainer_gender("Female");
+        EXPECT_EQ("Female", pokemon->get_original_trainer_gender());
         EXPECT_THROW(
-            pokemon->set_trainer_gender("Genderless");
+            pokemon->set_original_trainer_gender("Genderless");
         , std::invalid_argument);
     } else {
         EXPECT_THROW(
-            pokemon->set_trainer_gender("Male");
+            pokemon->set_original_trainer_gender("Male");
         , pkmn::feature_not_in_game_error);
     }
 
     if(generation >= 3) {
-        pokemon->set_trainer_id(0x1234ABCD);
-        EXPECT_EQ(0x1234ABCD, pokemon->get_trainer_id());
-        EXPECT_EQ(0xABCD, pokemon->get_trainer_public_id());
-        EXPECT_EQ(0x1234, pokemon->get_trainer_secret_id());
+        pokemon->set_original_trainer_id(0x1234ABCD);
+        EXPECT_EQ(0x1234ABCD, pokemon->get_original_trainer_id());
+        EXPECT_EQ(0xABCD, pokemon->get_original_trainer_public_id());
+        EXPECT_EQ(0x1234, pokemon->get_original_trainer_secret_id());
 
-        pokemon->set_trainer_public_id(0x1A2B);
-        EXPECT_EQ(0x12341A2B, pokemon->get_trainer_id());
-        EXPECT_EQ(0x1A2B, pokemon->get_trainer_public_id());
-        EXPECT_EQ(0x1234, pokemon->get_trainer_secret_id());
+        pokemon->set_original_trainer_public_id(0x1A2B);
+        EXPECT_EQ(0x12341A2B, pokemon->get_original_trainer_id());
+        EXPECT_EQ(0x1A2B, pokemon->get_original_trainer_public_id());
+        EXPECT_EQ(0x1234, pokemon->get_original_trainer_secret_id());
 
-        pokemon->set_trainer_secret_id(0x3C4D);
-        EXPECT_EQ(0x3C4D1A2B, pokemon->get_trainer_id());
-        EXPECT_EQ(0x1A2B, pokemon->get_trainer_public_id());
-        EXPECT_EQ(0x3C4D, pokemon->get_trainer_secret_id());
+        pokemon->set_original_trainer_secret_id(0x3C4D);
+        EXPECT_EQ(0x3C4D1A2B, pokemon->get_original_trainer_id());
+        EXPECT_EQ(0x1A2B, pokemon->get_original_trainer_public_id());
+        EXPECT_EQ(0x3C4D, pokemon->get_original_trainer_secret_id());
     } else {
         EXPECT_THROW(
-            pokemon->set_trainer_id(0xFFFF+1)
+            pokemon->set_original_trainer_id(0xFFFF+1)
         , std::out_of_range);
         EXPECT_THROW(
-            pokemon->set_trainer_secret_id(0xFFFF)
+            pokemon->set_original_trainer_secret_id(0xFFFF)
         , pkmn::feature_not_in_game_error);
 
-        pokemon->set_trainer_id(0xABCD);
-        EXPECT_EQ(0xABCD, pokemon->get_trainer_id());
-        EXPECT_EQ(0xABCD, pokemon->get_trainer_public_id());
+        pokemon->set_original_trainer_id(0xABCD);
+        EXPECT_EQ(0xABCD, pokemon->get_original_trainer_id());
+        EXPECT_EQ(0xABCD, pokemon->get_original_trainer_public_id());
 
-        pokemon->set_trainer_public_id(0x9876);
-        EXPECT_EQ(0x9876, pokemon->get_trainer_id());
-        EXPECT_EQ(0x9876, pokemon->get_trainer_public_id());
+        pokemon->set_original_trainer_public_id(0x9876);
+        EXPECT_EQ(0x9876, pokemon->get_original_trainer_id());
+        EXPECT_EQ(0x9876, pokemon->get_original_trainer_public_id());
     }
 }
 
@@ -851,6 +898,7 @@ void pokemon_test_common(
         test_values.invalid_original_games
     );
     test_setting_personality(pokemon);
+    test_setting_pokerus(pokemon);
     test_setting_stats(pokemon);
     test_setting_trainer_info(pokemon);
     test_setting_nature(pokemon);

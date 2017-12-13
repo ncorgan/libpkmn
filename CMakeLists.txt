@@ -117,7 +117,6 @@ ENDIF(PYTHON_PLY_FOUND AND PYTHON_CPPHEADERPARSER_FOUND)
 ########################################################################
 ADD_SUBDIRECTORY(PkmGCTools/LibPkmGC)
 
-INCLUDE(PKSavConfig)
 ADD_SUBDIRECTORY(pksav)
 
 ########################################################################

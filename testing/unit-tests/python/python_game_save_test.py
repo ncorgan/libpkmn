@@ -270,7 +270,7 @@ class game_save_test(unittest.TestCase):
         self.assertEquals(pokemon1.get_species(), pokemon2.get_species())
         self.assertEquals(pokemon1.get_form(), pokemon2.get_form())
         self.assertEquals(pokemon1.get_nickname(), pokemon2.get_nickname())
-        self.assertEquals(pokemon1.get_trainer_name(), pokemon2.get_trainer_name())
+        self.assertEquals(pokemon1.get_original_trainer_name(), pokemon2.get_original_trainer_name())
 
         moves1 = pokemon1.get_moves()
         moves2 = pokemon2.get_moves()

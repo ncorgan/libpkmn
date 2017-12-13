@@ -60,15 +60,15 @@ static void test_nds_pokemon_common(
         int(pksav_littleendian16(blockA->held_item))
     );
     EXPECT_EQ(
-        pokemon->get_trainer_id(),
+        pokemon->get_original_trainer_id(),
         int(pksav_littleendian32(blockA->ot_id.id))
     );
     EXPECT_EQ(
-        pokemon->get_trainer_public_id(),
+        pokemon->get_original_trainer_public_id(),
         int(pksav_littleendian32(blockA->ot_id.pid))
     );
     EXPECT_EQ(
-        pokemon->get_trainer_secret_id(),
+        pokemon->get_original_trainer_secret_id(),
         int(pksav_littleendian32(blockA->ot_id.sid))
     );
     EXPECT_EQ(
@@ -76,7 +76,7 @@ static void test_nds_pokemon_common(
         int(pksav_littleendian32(blockA->exp))
     );
     EXPECT_EQ(
-        pokemon->get_friendship(),
+        pokemon->get_current_trainer_friendship(),
         int(blockA->friendship)
     );
     // TODO: check ability
@@ -279,7 +279,7 @@ static void test_nds_pokemon_common(
         );
     }
     EXPECT_EQ(
-        pokemon->get_trainer_name(),
+        pokemon->get_original_trainer_name(),
         std::string(otname)
     );
 

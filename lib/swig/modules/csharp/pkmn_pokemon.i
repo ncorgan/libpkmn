@@ -34,20 +34,24 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::set_shininess "private";
 %csmethodmodifiers pkmn::pokemon::get_held_item "private";
 %csmethodmodifiers pkmn::pokemon::set_held_item "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_public_id "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_secret_id "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_id "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_public_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_secret_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_id(uint32_t) "private";
-%csmethodmodifiers pkmn::pokemon::get_trainer_gender "private";
-%csmethodmodifiers pkmn::pokemon::set_trainer_gender(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_friendship "private";
 %csmethodmodifiers pkmn::pokemon::set_friendship(int) "private";
 %csmethodmodifiers pkmn::pokemon::get_nature "private";
 %csmethodmodifiers pkmn::pokemon::set_nature(const std::string&) "private";
+%csmethodmodifiers pkmn::pokemon::get_pokerus_duration "private";
+%csmethodmodifiers pkmn::pokemon::set_pokerus_duration "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_name "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_name "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_public_id "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_secret_id "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_id "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_public_id(uint16_t) "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_secret_id(uint16_t) "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_id(uint32_t) "private";
+%csmethodmodifiers pkmn::pokemon::get_original_trainer_gender "private";
+%csmethodmodifiers pkmn::pokemon::set_original_trainer_gender(const std::string&) "private";
+%csmethodmodifiers pkmn::pokemon::get_current_trainer_friendship "private";
+%csmethodmodifiers pkmn::pokemon::set_current_trainer_friendship(int) "private";
 %csmethodmodifiers pkmn::pokemon::get_ability "private";
 %csmethodmodifiers pkmn::pokemon::set_ability(const std::string&) "private";
 %csmethodmodifiers pkmn::pokemon::get_ball "private";
@@ -138,57 +142,66 @@ using Database;"
         }
     }
 
-    public string TrainerName {
+    public int PokerusDuration {
         get {
-            return GetTrainerName();
+            return GetPokerusDuration();
         }
         set {
-            SetTrainerName(value);
+            SetPokerusDuration(value);
         }
     }
 
-    public uint TrainerID {
+    public string OriginalTrainerName {
         get {
-            return GetTrainerID();
+            return GetOriginalTrainerName();
         }
         set {
-            SetTrainerID(value);
+            SetOriginalTrainerName(value);
         }
     }
 
-    public ushort TrainerPublicID {
+    public uint OriginalTrainerID {
         get {
-            return GetTrainerPublicID();
+            return GetOriginalTrainerID();
         }
         set {
-            SetTrainerPublicID(value);
+            SetOriginalTrainerID(value);
         }
     }
 
-    public ushort TrainerSecretID {
+    public ushort OriginalTrainerPublicID {
         get {
-            return GetTrainerSecretID();
+            return GetOriginalTrainerPublicID();
         }
         set {
-            SetTrainerSecretID(value);
+            SetOriginalTrainerPublicID(value);
         }
     }
 
-    public string TrainerGender {
+    public ushort OriginalTrainerSecretID {
         get {
-            return GetTrainerGender();
+            return GetOriginalTrainerSecretID();
         }
         set {
-            SetTrainerGender(value);
+            SetOriginalTrainerSecretID(value);
         }
     }
 
-    public int Friendship {
+    public string OriginalTrainerGender {
         get {
-            return GetFriendship();
+            return GetOriginalTrainerGender();
         }
         set {
-            SetFriendship(value);
+            SetOriginalTrainerGender(value);
+        }
+    }
+
+    public int CurrentTrainerFriendship {
+        get {
+            return GetCurrentTrainerFriendship();
+        }
+        set {
+            SetCurrentTrainerFriendship(value);
         }
     }
 

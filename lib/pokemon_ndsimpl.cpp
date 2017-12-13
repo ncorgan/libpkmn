@@ -125,7 +125,7 @@ namespace pkmn {
 
         set_nickname(_default_nickname);
         set_original_game(_database_entry.get_game());
-        set_trainer_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
+        set_original_trainer_name(pkmn::pokemon::DEFAULT_TRAINER_NAME);
         // TODO: Pokerus
         set_ball("Premier Ball");
         set_level_met(level);
@@ -589,11 +589,32 @@ namespace pkmn {
         _blockA->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
     }
 
-    std::string pokemon_ndsimpl::get_trainer_name()
+    int pokemon_ndsimpl::get_pokerus_duration()
     {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
+        return _get_pokerus_duration(&_blockD->pokerus);
+    }
+
+    void pokemon_ndsimpl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        _set_pokerus_duration(
+            &_blockD->pokerus,
+            duration
+        );
+    }
+
+    std::string pokemon_ndsimpl::get_original_trainer_name()
+    {
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
         char otname[8] = {0};
+
         if(_gen4)
         {
             PKSAV_CALL(
@@ -618,7 +639,7 @@ namespace pkmn {
         return std::string(otname);
     }
 
-    void pokemon_ndsimpl::set_trainer_name(
+    void pokemon_ndsimpl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -653,28 +674,19 @@ namespace pkmn {
         }
     }
 
-    uint16_t pokemon_ndsimpl::get_trainer_public_id()
-    {
-        boost::lock_guard<pokemon_ndsimpl> lock(*this);
-
+    uint16_t pokemon_ndsimpl::get_original_trainer_public_id() {
         return pksav_littleendian16(_blockA->ot_id.pid);
     }
 
-    uint16_t pokemon_ndsimpl::get_trainer_secret_id()
-    {
-        boost::lock_guard<pokemon_ndsimpl> lock(*this);
-
+    uint16_t pokemon_ndsimpl::get_original_trainer_secret_id() {
         return pksav_littleendian16(_blockA->ot_id.sid);
     }
 
-    uint32_t pokemon_ndsimpl::get_trainer_id()
-    {
-        boost::lock_guard<pokemon_ndsimpl> lock(*this);
-
+    uint32_t pokemon_ndsimpl::get_original_trainer_id() {
         return pksav_littleendian32(_blockA->ot_id.id);
     }
 
-    void pokemon_ndsimpl::set_trainer_public_id(
+    void pokemon_ndsimpl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -683,7 +695,7 @@ namespace pkmn {
         _blockA->ot_id.pid = pksav_littleendian16(public_id);
     }
 
-    void pokemon_ndsimpl::set_trainer_secret_id(
+    void pokemon_ndsimpl::set_original_trainer_secret_id(
         uint16_t secret_id
     )
     {
@@ -692,7 +704,7 @@ namespace pkmn {
         _blockA->ot_id.sid = pksav_littleendian16(secret_id);
     }
 
-    void pokemon_ndsimpl::set_trainer_id(
+    void pokemon_ndsimpl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -701,7 +713,7 @@ namespace pkmn {
         _blockA->ot_id.id = pksav_littleendian32(id);
     }
 
-    std::string pokemon_ndsimpl::get_trainer_gender()
+    std::string pokemon_ndsimpl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
@@ -709,7 +721,7 @@ namespace pkmn {
                                                                       : "Male";
     }
 
-    void pokemon_ndsimpl::set_trainer_gender(
+    void pokemon_ndsimpl::set_original_trainer_gender(
         const std::string &gender
     )
     {
@@ -753,14 +765,14 @@ namespace pkmn {
         );
     }
 
-    int pokemon_ndsimpl::get_friendship()
+    int pokemon_ndsimpl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_ndsimpl> lock(*this);
 
         return _blockA->friendship;
     }
 
-    void pokemon_ndsimpl::set_friendship(
+    void pokemon_ndsimpl::set_current_trainer_friendship(
         int friendship
     )
     {
@@ -1354,6 +1366,39 @@ namespace pkmn {
 
         _blockB->moves[index] = pksav_littleendian16(uint16_t(entry.get_move_id()));
         _blockB->move_pps[index] = uint8_t(_moves[index].pp);
+    }
+
+    void pokemon_ndsimpl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_ndsimpl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(int i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        _blockB->move_pps[index] = uint8_t(pp);
+
+        // Set the PP Up value to the minimum value that will accommodate the given PP.
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                _blockB->move_pp_ups[index] = i;
+                break;
+            }
+        }
     }
 
     void pokemon_ndsimpl::_populate_party_data()

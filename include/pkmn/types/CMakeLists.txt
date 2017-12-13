@@ -12,6 +12,8 @@ CONFIGURE_FILE(
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_types_headers
+        attribute_engine.hpp
+        class_with_attributes.hpp
         datetime.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/shared_ptr.hpp
     )
