@@ -94,12 +94,12 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_nickname(
     const char* nickname
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_get_trainer_info(
+PKMN_API pkmn_error_t pkmn_pokemon_get_original_trainer_info(
     pkmn_pokemon_handle_t handle,
     pkmn_trainer_info_t* trainer_info_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_set_trainer_info(
+PKMN_API pkmn_error_t pkmn_pokemon_set_original_trainer_info(
     pkmn_pokemon_handle_t handle,
     const pkmn_trainer_info_t* trainer_info
 );
@@ -135,12 +135,12 @@ PKMN_API pkmn_error_t pkmn_pokemon_set_held_item(
     const char* held_item
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_get_friendship(
+PKMN_API pkmn_error_t pkmn_pokemon_get_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int* friendship_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_set_friendship(
+PKMN_API pkmn_error_t pkmn_pokemon_set_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int friendship
 );

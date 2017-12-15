@@ -293,7 +293,7 @@ namespace pkmn
         }
 
         ret->set_nickname(get_nickname());
-        ret->set_trainer_name(get_trainer_name());
+        ret->set_original_trainer_name(get_original_trainer_name());
 
         return ret;
     }
@@ -541,14 +541,35 @@ namespace pkmn
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
 
-    std::string pokemon_gen2impl::get_trainer_name()
+    int pokemon_gen2impl::get_pokerus_duration()
+    {
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
+
+        return _get_pokerus_duration(&GEN2_PC_RCAST->pokerus);
+    }
+
+    void pokemon_gen2impl::set_pokerus_duration(
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
+
+        _set_pokerus_duration(
+            &GEN2_PC_RCAST->pokerus,
+            duration
+        );
+    }
+
+    std::string pokemon_gen2impl::get_original_trainer_name()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return _trainer_name;
     }
 
-    void pokemon_gen2impl::set_trainer_name(
+    void pokemon_gen2impl::set_original_trainer_name(
         const std::string &trainer_name
     )
     {
@@ -564,28 +585,28 @@ namespace pkmn
         _trainer_name = trainer_name;
     }
 
-    uint16_t pokemon_gen2impl::get_trainer_public_id()
+    uint16_t pokemon_gen2impl::get_original_trainer_public_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return pksav_bigendian16(GEN2_PC_RCAST->ot_id);
     }
 
-    uint16_t pokemon_gen2impl::get_trainer_secret_id()
+    uint16_t pokemon_gen2impl::get_original_trainer_secret_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
-    uint32_t pokemon_gen2impl::get_trainer_id()
+    uint32_t pokemon_gen2impl::get_original_trainer_id()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return uint32_t(pksav_bigendian16(GEN2_PC_RCAST->ot_id));
     }
 
-    void pokemon_gen2impl::set_trainer_public_id(
+    void pokemon_gen2impl::set_original_trainer_public_id(
         uint16_t public_id
     )
     {
@@ -594,14 +615,14 @@ namespace pkmn
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(public_id);
     }
 
-    void pokemon_gen2impl::set_trainer_secret_id(
+    void pokemon_gen2impl::set_original_trainer_secret_id(
         PKMN_UNUSED(uint16_t secret_id)
     )
     {
         throw pkmn::feature_not_in_game_error("Secret trainer ID", "Generation II");
     }
 
-    void pokemon_gen2impl::set_trainer_id(
+    void pokemon_gen2impl::set_original_trainer_id(
         uint32_t id
     )
     {
@@ -612,7 +633,7 @@ namespace pkmn
         GEN2_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(id));
     }
 
-    std::string pokemon_gen2impl::get_trainer_gender()
+    std::string pokemon_gen2impl::get_original_trainer_gender()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -620,7 +641,7 @@ namespace pkmn
                                                                         : "Male";
     }
 
-    void pokemon_gen2impl::set_trainer_gender(
+    void pokemon_gen2impl::set_original_trainer_gender(
         const std::string &gender
     )
     {
@@ -640,14 +661,14 @@ namespace pkmn
         }
     }
 
-    int pokemon_gen2impl::get_friendship()
+    int pokemon_gen2impl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         return GEN2_PC_RCAST->friendship;
     }
 
-    void pokemon_gen2impl::set_friendship(
+    void pokemon_gen2impl::set_current_trainer_friendship(
         int friendship
     )
     {
@@ -899,6 +920,39 @@ namespace pkmn
 
         GEN2_PC_RCAST->moves[index] = uint8_t(entry.get_move_id());
         GEN2_PC_RCAST->move_pps[index] = uint8_t(_moves[index].pp);
+    }
+
+    void pokemon_gen2impl::set_move_pp(
+        int index,
+        int pp
+    )
+    {
+        pkmn::enforce_bounds("Move index", index, 0, 3);
+
+        boost::lock_guard<pokemon_gen2impl> lock(*this);
+
+        // TODO: refactor to get vector of PPs
+        std::vector<int> PPs;
+        pkmn::database::move_entry entry(_moves[index].move, get_game());
+        for(int i = 0; i < 4; ++i)
+        {
+            PPs.emplace_back(entry.get_pp(i));
+        }
+
+        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+
+        _moves[index].pp = pp;
+        GEN2_PC_RCAST->move_pps[index] = uint8_t(pp);
+
+        // Set the PP Up mask to the minimum value that will accommodate the given PP.
+        for(uint8_t i = 0; i < 4; ++i)
+        {
+            if(pp <= PPs[i])
+            {
+                GEN2_PC_RCAST->move_pps[index] |= (i << 6);
+                break;
+            }
+        }
     }
 
     void pokemon_gen2impl::set_EV(

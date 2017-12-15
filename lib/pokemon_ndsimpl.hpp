@@ -53,39 +53,39 @@ namespace pkmn {
                 const std::string &held_item
             );
 
-            std::string get_trainer_name();
+            std::string get_original_trainer_name();
 
-            void set_trainer_name(
+            void set_original_trainer_name(
                 const std::string &trainer_name
             );
 
-            uint16_t get_trainer_public_id();
+            uint16_t get_original_trainer_public_id();
 
-            uint16_t get_trainer_secret_id();
+            uint16_t get_original_trainer_secret_id();
 
-            uint32_t get_trainer_id();
+            uint32_t get_original_trainer_id();
 
-            void set_trainer_public_id(
+            void set_original_trainer_public_id(
                 uint16_t public_id
             );
 
-            void set_trainer_secret_id(
+            void set_original_trainer_secret_id(
                 uint16_t secret_id
             );
 
-            void set_trainer_id(
+            void set_original_trainer_id(
                 uint32_t id
             );
 
-            std::string get_trainer_gender();
+            std::string get_original_trainer_gender();
 
-            void set_trainer_gender(
+            void set_original_trainer_gender(
                 const std::string &gender
             );
 
-            int get_friendship();
+            int get_current_trainer_friendship();
 
-            void set_friendship(
+            void set_current_trainer_friendship(
                 int friendship
             );
 

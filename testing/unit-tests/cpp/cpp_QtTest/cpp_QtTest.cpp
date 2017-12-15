@@ -268,4 +268,3 @@ void QtTest::testTypeListComboBox() {
 }
 
 QTEST_MAIN(QtTest)
-#include "../moc_cpp_QtTest.cpp"

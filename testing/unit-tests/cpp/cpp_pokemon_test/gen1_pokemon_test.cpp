@@ -65,15 +65,21 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     // TODO: programmatic check for types, catch rate
 
     const pkmn::move_slots_t& moves = pokemon->get_moves();
-    for(size_t i = 0; i < 4; ++i) {
+    for(size_t i = 0; i < 4; ++i)
+    {
+        pkmn::database::move_entry entry(moves.at(i).move, get_game());
+        EXPECT_EQ(entry.get_move_id(), int(native_pc->moves[i]));
         EXPECT_EQ(
-            pkmn::database::move_entry(moves.at(i).move, get_game()).get_move_id(),
-            int(native_pc->moves[i])
+            moves.at(i).pp,
+            int(native_pc->move_pps[i] & PKSAV_GEN1_MOVE_PP_MASK)
         );
-        EXPECT_EQ(moves.at(i).pp, int(native_pc->move_pps[i]));
+        EXPECT_EQ(
+            3,
+            ((native_pc->move_pps[i] & PKSAV_GEN1_MOVE_PP_UP_MASK) >> 6)
+        );
     }
 
-    EXPECT_EQ(pokemon->get_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
+    EXPECT_EQ(pokemon->get_original_trainer_id(), int(pksav_bigendian16(native_pc->ot_id)));
 
     const std::map<std::string, int>& EVs = pokemon->get_EVs();
     EXPECT_EQ(EVs.at("HP"), int(pksav_bigendian16(native_pc->ev_hp)));
@@ -135,6 +141,11 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(pokemon->get_stats().at("Defense"), int(pksav_bigendian16(native_party_data->def)));
     EXPECT_EQ(pokemon->get_stats().at("Speed"), int(pksav_bigendian16(native_party_data->spd)));
     EXPECT_EQ(pokemon->get_stats().at("Special"), int(pksav_bigendian16(native_party_data->spcl)));
+
+    /*
+     * Test attributes.
+     */
+    EXPECT_EQ(pokemon->get_numeric_attribute("Catch rate"), int(native_pc->catch_rate));
 }
 
 static const std::vector<std::pair<std::string, std::string>> params = {

@@ -17,16 +17,16 @@ function gen1_pokemon_tests.friendship_test(game)
 
     if game == "Yellow"
     then
-        pikachu:set_friendship(123)
-        luaunit.assertEquals(pikachu:get_friendship(), 123)
+        pikachu:set_current_trainer_friendship(123)
+        luaunit.assertEquals(pikachu:get_current_trainer_friendship(), 123)
 
         -- Also check a non-Pikachu.
         local mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
-        luaunit.assertError(mewtwo.set_friendship, mewtwo, 123)
-        luaunit.assertError(mewtwo.get_friendship, mewtwo)
+        luaunit.assertError(mewtwo.set_current_trainer_friendship, mewtwo, 123)
+        luaunit.assertError(mewtwo.get_current_trainer_friendship, mewtwo)
     else
-        luaunit.assertError(pikachu.set_friendship, pikachu, 123)
-        luaunit.assertError(pikachu.get_friendship, pikachu)
+        luaunit.assertError(pikachu.set_current_trainer_friendship, pikachu, 123)
+        luaunit.assertError(pikachu.get_current_trainer_friendship, pikachu)
     end
 end
 
@@ -57,15 +57,15 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.is_shiny, pokemon)
     luaunit.assertError(pokemon.get_held_item, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_original_trainer_name(), pkmn.DEFAULT_TRAINER_NAME)
+    luaunit.assertEquals(pokemon:get_original_trainer_public_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
 
-    luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
+    luaunit.assertError(pokemon.get_original_trainer_secret_id, pokemon)
 
-    luaunit.assertEquals(pokemon:get_trainer_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
-    luaunit.assertEquals(pokemon:get_trainer_gender(), "Male")
+    luaunit.assertEquals(pokemon:get_original_trainer_id(), bit32.band(pkmn.DEFAULT_TRAINER_ID, 0xFFFF))
+    luaunit.assertEquals(pokemon:get_original_trainer_gender(), "Male")
 
-    luaunit.assertError(pokemon.get_friendship, pokemon)
+    luaunit.assertError(pokemon.get_current_trainer_friendship, pokemon)
     luaunit.assertError(pokemon.get_ability, pokemon)
     luaunit.assertError(pokemon.get_ball, pokemon)
     luaunit.assertError(pokemon.get_level_met, pokemon)
@@ -112,28 +112,28 @@ function gen1_pokemon_tests.pokemon_test(game)
     luaunit.assertError(pokemon.set_shininess, pokemon, false)
     luaunit.assertError(pokemon.set_held_item, pokemon, "Potion")
 
-    luaunit.assertError(pokemon.set_trainer_name, pokemon, "")
-    luaunit.assertError(pokemon.set_trainer_name, pokemon, "Too long trainer name")
+    luaunit.assertError(pokemon.set_original_trainer_name, pokemon, "")
+    luaunit.assertError(pokemon.set_original_trainer_name, pokemon, "Too long trainer name")
 
-    pokemon:set_trainer_name("foobar")
-    luaunit.assertEquals(pokemon:get_trainer_name(), "foobar")
+    pokemon:set_original_trainer_name("foobar")
+    luaunit.assertEquals(pokemon:get_original_trainer_name(), "foobar")
 
-    pokemon:set_trainer_id(10001)
-    luaunit.assertEquals(pokemon:get_trainer_id(), 10001)
-    luaunit.assertEquals(pokemon:get_trainer_public_id(), 10001)
-    luaunit.assertError(pokemon.get_trainer_secret_id, pokemon)
+    pokemon:set_original_trainer_id(10001)
+    luaunit.assertEquals(pokemon:get_original_trainer_id(), 10001)
+    luaunit.assertEquals(pokemon:get_original_trainer_public_id(), 10001)
+    luaunit.assertError(pokemon.get_original_trainer_secret_id, pokemon)
 
-    luaunit.assertError(pokemon.set_trainer_secret_id, 54321)
-    luaunit.assertEquals(pokemon:get_trainer_id(), 10001)
+    luaunit.assertError(pokemon.set_original_trainer_secret_id, 54321)
+    luaunit.assertEquals(pokemon:get_original_trainer_id(), 10001)
 
     -- Make sure Lua+SWIG catches invalid values.
-    luaunit.assertError(pokemon.set_trainer_id, pokemon, -1)
-    luaunit.assertError(pokemon.set_trainer_id, pokemon, 0xFFFF+1)
-    luaunit.assertError(pokemon.set_trainer_public_id, pokemon, -1)
-    luaunit.assertError(pokemon.set_trainer_public_id, pokemon, 0xFFFF+1)
+    luaunit.assertError(pokemon.set_original_trainer_id, pokemon, -1)
+    luaunit.assertError(pokemon.set_original_trainer_id, pokemon, 0xFFFF+1)
+    luaunit.assertError(pokemon.set_original_trainer_public_id, pokemon, -1)
+    luaunit.assertError(pokemon.set_original_trainer_public_id, pokemon, 0xFFFF+1)
 
-    luaunit.assertError(pokemon.set_trainer_gender, pokemon, "Male")
-    luaunit.assertError(pokemon.set_friendship, pokemon, 123)
+    luaunit.assertError(pokemon.set_original_trainer_gender, pokemon, "Male")
+    luaunit.assertError(pokemon.set_current_trainer_friendship, pokemon, 123)
     luaunit.assertError(pokemon.set_ability, pokemon, "")
     luaunit.assertError(pokemon.set_ball, pokemon, "Great Ball")
     luaunit.assertError(pokemon.set_location_met, pokemon, "Victory Road", true)

@@ -9,7 +9,7 @@
     %include <swig_exceptions.i>
     SWIG_CATCH_DEFAULT
 
-    %include <pkmn.i>
     %include <ruby_CamelCase.i>
+    %include <pkmn.i>
     %include <ruby/stl_macros.i>
 %enddef
