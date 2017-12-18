@@ -15,7 +15,7 @@ LUA_CHECK_MODULE("LuaUnit" "luaunit" LUAUNIT_FOUND)
 # Build Bit32 if we need it.
 IF(NOT BIT32_FOUND)
     ADD_SUBDIRECTORY(bit32)
-ENDIF(NOT BIT32_FOUND)
+ENDIF()
 
 # Get stock Lua path and C path becuase environment variables override
 # instead of append for whatever reason.
@@ -49,4 +49,4 @@ IF(LUAUNIT_FOUND)
     FOREACH(test ${lua_tests})
         PKMN_ADD_LUA_TEST(${test})
     ENDFOREACH(test ${lua_tests})
-ENDIF(LUAUNIT_FOUND)
+ENDIF()

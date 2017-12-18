@@ -41,4 +41,4 @@ IF(NUNIT_FOUND)
             "${csharp_pkmn_dlls}"
         )
     ENDFOREACH(test ${csharp_tests})
-ENDIF(NUNIT_FOUND)
+ENDIF()

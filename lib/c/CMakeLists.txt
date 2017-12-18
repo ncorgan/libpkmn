@@ -57,7 +57,7 @@ IF(PKG_CONFIG_FOUND)
         FILES ${CMAKE_CURRENT_BINARY_DIR}/pkmn-c.pc
         DESTINATION ${PKMN_LIBRARY_DIR}/pkgconfig
     )
-ENDIF(PKG_CONFIG_FOUND)
+ENDIF()
 
 #
 # Add DLL resource file to Windows builds
@@ -65,13 +65,13 @@ ENDIF(PKG_CONFIG_FOUND)
 IF(WIN32)
     IF(MINGW)
         SET(LIB_PREFIX "lib")
-    ENDIF(MINGW)
+    ENDIF()
     CONFIGURE_FILE(
         ${CMAKE_CURRENT_SOURCE_DIR}/pkmn-c.rc.in
         ${CMAKE_CURRENT_BINARY_DIR}/pkmn-c.rc
     @ONLY)
     SET(pkmn_rc ${CMAKE_CURRENT_BINARY_DIR}/pkmn-c.rc)
-ENDIF(WIN32)
+ENDIF()
 
 SET_SOURCE_FILES_PROPERTIES(${pkmn_c_sources}
     PROPERTIES COMPILE_FLAGS "${PKMN_CXX_FLAGS}"
