@@ -93,17 +93,17 @@ namespace pkmn {
                 int duration
             ) override final;
 
-            std::string get_original_trainer_name();
+            std::string get_original_trainer_name() override final;
 
             void set_original_trainer_name(
                 const std::string &trainer_name
             ) override final;
 
-            uint16_t get_original_trainer_public_id();
+            uint16_t get_original_trainer_public_id() override final;
 
-            uint16_t get_original_trainer_secret_id();
+            uint16_t get_original_trainer_secret_id() override final;
 
-            uint32_t get_original_trainer_id();
+            uint32_t get_original_trainer_id() override final;
 
             void set_original_trainer_public_id(
                 uint16_t public_id
@@ -117,7 +117,7 @@ namespace pkmn {
                 uint32_t id
             ) override final;
 
-            std::string get_original_trainer_gender();
+            std::string get_original_trainer_gender() override final;
 
             void set_original_trainer_gender(
                 const std::string &gender
@@ -132,7 +132,7 @@ namespace pkmn {
                 bool as_egg
             ) override final;
 
-            int get_current_trainer_friendship();
+            int get_current_trainer_friendship() override final;
 
             void set_current_trainer_friendship(
                 int friendship
