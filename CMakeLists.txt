@@ -88,20 +88,33 @@ FIND_PACKAGE(PythonInterp 2)
 FIND_PACKAGE(PythonLibs 2)
 FIND_PACKAGE(Ruby)
 
-# Needed for Lua wrapper
+########################################################################
+# Check SWIG version for each wrapper
+########################################################################
+
+INCLUDE(VersionMacros)
+
+# Lua: fix some errors
 # See https://github.com/swig/swig/issues/92
-IF("${SWIG_VERSION}" STRGREATER "2.0.11")
+COMPARE_VERSION_STR(swig_check ${SWIG_VERSION} "2.0.12")
+IF(swig_check GREATER -1)
     SET(SWIG_VERSION_CHECK_LUA TRUE)
 ENDIF()
-IF("${PYTHONLIBS_VERSION_STRING}" STRLESS "3.0.0" AND "${SWIG_VERSION}" STRLESS "3.0.8")
-    SET(SWIG_VERSION_CHECK_PYTHON FALSE)
+
+# Python: Python 2 requires support for a specific macro
+IF("${PYTHONLIBS_VERSION_STRING}" STRLESS "3.0.0")
+    COMPARE_VERSION_STR(swig_check ${SWIG_VERSION} "3.0.8")
+    IF(swig_check GREATER -1)
+        SET(SWIG_VERSION_CHECK_PYTHON TRUE)
+    ENDIF()
 ELSE()
     SET(SWIG_VERSION_CHECK_PYTHON TRUE)
 ENDIF()
 
-# Needed for Ruby wrapper
+# Ruby: need fix for templated constructors
 # See https://github.com/swig/swig/issues/245
-IF("${SWIG_VERSION}" STRGREATER "3.0.2")
+COMPARE_VERSION_STR(swig_check ${SWIG_VERSION} "3.0.3")
+IF(swig_check GREATER -1)
     SET(SWIG_VERSION_CHECK_RUBY TRUE)
 ENDIF()
 
