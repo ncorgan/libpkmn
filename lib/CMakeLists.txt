@@ -73,6 +73,7 @@ SET(pkmn_sources
     game_save_gen2impl.cpp
     game_save_gbaimpl.cpp
     game_save_gcnimpl.cpp
+    game_save_gen6impl.cpp
     item_bag_impl.cpp
     item_bag_gen1impl.cpp
     item_bag_gen2impl.cpp
