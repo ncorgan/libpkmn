@@ -448,7 +448,7 @@ namespace pkmntest {
         // Names are stored separately in Generations I-II.
         if(generation < 3) {
             EXPECT_EQ(pokemon1->get_nickname(), pokemon2->get_nickname());
-            EXPECT_EQ(pokemon1->get_trainer_name(), pokemon2->get_trainer_name());
+            EXPECT_EQ(pokemon1->get_original_trainer_name(), pokemon2->get_original_trainer_name());
         }
 
         // On the C++ level, check the underlying representation.

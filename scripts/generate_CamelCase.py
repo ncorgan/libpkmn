@@ -30,7 +30,8 @@ ignored_classes = ["game_save",
 
 ignored_files = ["config.hpp",
                  "exception.hpp",
-                 "shared_ptr.hpp"]
+                 "shared_ptr.hpp",
+                 "attribute_engine.hpp"]
 
 CppHeaderParser.ignoreSymbols += ["PKMN_API", "PKMN_INLINE", "PKMN_CONSTEXPR_OR_INLINE"]
 

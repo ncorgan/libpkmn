@@ -228,7 +228,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 )
                 EXPECT_TRUE(std::strlen(otname) > 0);
                 EXPECT_EQ(
-                    party->get_pokemon(i)->get_trainer_name(),
+                    party->get_pokemon(i)->get_original_trainer_name(),
                     otname 
                 );
             }
@@ -273,7 +273,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 )
                 EXPECT_TRUE(std::strlen(otname) > 0);
                 EXPECT_EQ(
-                    party->get_pokemon(i)->get_trainer_name(),
+                    party->get_pokemon(i)->get_original_trainer_name(),
                     otname 
                 );
             }

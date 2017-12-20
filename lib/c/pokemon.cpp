@@ -214,7 +214,7 @@ pkmn_error_t pkmn_pokemon_set_nickname(
     )
 }
 
-pkmn_error_t pkmn_pokemon_get_trainer_info(
+pkmn_error_t pkmn_pokemon_get_original_trainer_info(
     pkmn_pokemon_handle_t handle,
     pkmn_trainer_info_t* trainer_info_out
 )
@@ -225,15 +225,15 @@ pkmn_error_t pkmn_pokemon_get_trainer_info(
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         std::strncpy(
             trainer_info_out->trainer_name,
-            handle->cpp->get_trainer_name().c_str(),
+            handle->cpp->get_original_trainer_name().c_str(),
             sizeof(trainer_info_out->trainer_name)
         );
-        trainer_info_out->trainer_id.id = handle->cpp->get_trainer_id();
-        trainer_info_out->trainer_gender = GENDER_BIMAP.left.at(handle->cpp->get_trainer_gender());
+        trainer_info_out->trainer_id.id = handle->cpp->get_original_trainer_id();
+        trainer_info_out->trainer_gender = GENDER_BIMAP.left.at(handle->cpp->get_original_trainer_gender());
     )
 }
 
-pkmn_error_t pkmn_pokemon_set_trainer_info(
+pkmn_error_t pkmn_pokemon_set_original_trainer_info(
     pkmn_pokemon_handle_t handle,
     const pkmn_trainer_info_t* trainer_info
 )
@@ -246,37 +246,37 @@ pkmn_error_t pkmn_pokemon_set_trainer_info(
          * Preserve what's here in case we need to restore it if not every call
          * succeeds.
          */
-        std::string current_trainer_name = handle->cpp->get_trainer_name();
-        uint32_t current_trainer_id = handle->cpp->get_trainer_id();
-        std::string current_trainer_gender = handle->cpp->get_trainer_gender();
+        std::string current_trainer_name = handle->cpp->get_original_trainer_name();
+        uint32_t current_trainer_id = handle->cpp->get_original_trainer_id();
+        std::string current_trainer_gender = handle->cpp->get_original_trainer_gender();
 
         try
         {
-            handle->cpp->set_trainer_name(trainer_info->trainer_name);
-            handle->cpp->set_trainer_id(trainer_info->trainer_id.id);
+            handle->cpp->set_original_trainer_name(trainer_info->trainer_name);
+            handle->cpp->set_original_trainer_id(trainer_info->trainer_id.id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
             {
-                handle->cpp->set_trainer_gender(GENDER_BIMAP.right.at(trainer_info->trainer_gender));
+                handle->cpp->set_original_trainer_gender(GENDER_BIMAP.right.at(trainer_info->trainer_gender));
             }
         }
         catch(const std::exception&)
         {
-            handle->cpp->set_trainer_name(current_trainer_name);
-            handle->cpp->set_trainer_id(current_trainer_id);
+            handle->cpp->set_original_trainer_name(current_trainer_name);
+            handle->cpp->set_original_trainer_id(current_trainer_id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
             {
-                handle->cpp->set_trainer_gender(current_trainer_gender);
+                handle->cpp->set_original_trainer_gender(current_trainer_gender);
             }
 
             throw;
         }
         catch(...)
         {
-            handle->cpp->set_trainer_name(current_trainer_name);
-            handle->cpp->set_trainer_id(current_trainer_id);
+            handle->cpp->set_original_trainer_name(current_trainer_name);
+            handle->cpp->set_original_trainer_id(current_trainer_id);
             if(GAME_GENERATIONS.at(handle->cpp->get_game()) >= 2)
             {
-                handle->cpp->set_trainer_gender(current_trainer_gender);
+                handle->cpp->set_original_trainer_gender(current_trainer_gender);
             }
 
             return PKMN_ERROR_UNKNOWN_ERROR;
@@ -375,7 +375,7 @@ pkmn_error_t pkmn_pokemon_set_held_item(
     )
 }
 
-pkmn_error_t pkmn_pokemon_get_friendship(
+pkmn_error_t pkmn_pokemon_get_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int* friendship_out
 ) {
@@ -383,18 +383,18 @@ pkmn_error_t pkmn_pokemon_get_friendship(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(friendship_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        *friendship_out = handle->cpp->get_friendship();
+        *friendship_out = handle->cpp->get_current_trainer_friendship();
     )
 }
 
-pkmn_error_t pkmn_pokemon_set_friendship(
+pkmn_error_t pkmn_pokemon_set_current_trainer_friendship(
     pkmn_pokemon_handle_t handle,
     int friendship
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        handle->cpp->set_friendship(friendship);
+        handle->cpp->set_current_trainer_friendship(friendship);
     )
 }
 

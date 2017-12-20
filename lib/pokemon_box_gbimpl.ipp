@@ -167,7 +167,7 @@ namespace pkmn {
 
         // Don't set empty names.
         std::string new_pokemon_nickname = actual_new_pokemon->get_nickname();
-        std::string new_pokemon_trainer_name = actual_new_pokemon->get_trainer_name();
+        std::string new_pokemon_trainer_name = actual_new_pokemon->get_original_trainer_name();
         if(new_pokemon_nickname.size() == 0)
         {
             new_pokemon_nickname = "None";
@@ -178,7 +178,7 @@ namespace pkmn {
         }
 
         _pokemon_list[index]->set_nickname(new_pokemon_nickname);
-        _pokemon_list[index]->set_trainer_name(new_pokemon_trainer_name);
+        _pokemon_list[index]->set_original_trainer_name(new_pokemon_trainer_name);
 
         // Update the number of Pokémon in the box if needed.
         std::string new_species = actual_new_pokemon->get_species();
@@ -209,7 +209,7 @@ namespace pkmn {
             )
             PKSAV_CALL(
                 pksav_text_to_gen1(
-                    actual_new_pokemon->get_trainer_name().c_str(),
+                    actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
                 );
@@ -224,7 +224,7 @@ namespace pkmn {
             )
             PKSAV_CALL(
                 pksav_text_to_gen2(
-                    actual_new_pokemon->get_trainer_name().c_str(),
+                    actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
                 );
@@ -302,7 +302,7 @@ namespace pkmn {
                 );
             )
             if(std::strlen(otname) > 0) {
-                _pokemon_list[i]->set_trainer_name(otname);
+                _pokemon_list[i]->set_original_trainer_name(otname);
             }
         }
     }

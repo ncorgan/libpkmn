@@ -7,7 +7,7 @@
 
 IF(PKMN_ENABLE_QT)
     CMAKE_POLICY(SET CMP0020 NEW)
-ENDIF(PKMN_ENABLE_QT)
+ENDIF()
 
 
 #
@@ -22,6 +22,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(cpp_tests
+    cpp_attribute_test
     cpp_calculations_test
     cpp_exception_test
     cpp_game_save_test
@@ -76,4 +77,4 @@ IF(PKMN_ENABLE_QT)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
     PKMN_ADD_CPP_TEST(cpp_QtTest_GUI cpp_QtTest/cpp_QtTest.cpp)
     SET_TARGET_PROPERTIES(cpp_QtTest_GUI PROPERTIES AUTOMOC ON)
-ENDIF(PKMN_ENABLE_QT)
+ENDIF()

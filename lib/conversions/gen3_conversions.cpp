@@ -11,6 +11,7 @@
 
 #include <pkmn/calculations/stats.hpp>
 
+#include <pksav/common/condition.h>
 #include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
@@ -35,6 +36,18 @@ namespace pkmn { namespace conversions {
         (0x0204, LibPkmGC::Italian)
         (0x0205, LibPkmGC::German)
         (0x0207, LibPkmGC::Spanish)
+    ;
+
+    typedef boost::bimap<pksav_condition_mask_t, LibPkmGC::PokemonStatus> gen3_condition_conversion_bimap_t;
+    static const gen3_condition_conversion_bimap_t GEN3_CONDITION_CONVERSION_BIMAP =
+    boost::assign::list_of<gen3_condition_conversion_bimap_t::relation>
+        (PKSAV_CONDITION_NONE,       LibPkmGC::NoStatus)
+        (PKSAV_CONDITION_SLEEP_MASK, LibPkmGC::Asleep)
+        (PKSAV_CONDITION_POISON,     LibPkmGC::Poisoned)
+        (PKSAV_CONDITION_BURN,       LibPkmGC::Burnt)
+        (PKSAV_CONDITION_FROZEN,     LibPkmGC::Frozen)
+        (PKSAV_CONDITION_PARALYZ,    LibPkmGC::Paralyzed)
+        (PKSAV_CONDITION_BAD_POISON, LibPkmGC::BadlyPoisoned)
     ;
 
     typedef struct
@@ -223,7 +236,19 @@ namespace pkmn { namespace conversions {
             to
         );
 
-        // TODO: condition
+        for(const auto& condition_pair: GEN3_CONDITION_CONVERSION_BIMAP.left)
+        {
+            if(from->party_data.condition & condition_pair.first)
+            {
+                to->partyData.status = condition_pair.second;
+                if(condition_pair.first == PKSAV_CONDITION_SLEEP_MASK)
+                {
+                    // This stores the number of turns asleep.
+                    to->partyData.turnsOfSleepRemaining = LibPkmGC::u8(from->party_data.condition);
+                }
+            }
+        }
+
         to->partyData.pokerusDaysRemaining = LibPkmGC::s8(from->party_data.pokerus_time);
         to->partyData.currentHP = pksav_littleendian16(from->party_data.current_hp);
     }
@@ -383,7 +408,21 @@ namespace pkmn { namespace conversions {
             &to->pc
         );
 
-        // TODO: condition
+        for(const auto& condition_pair: GEN3_CONDITION_CONVERSION_BIMAP.right)
+        {
+            if(from->partyData.status == condition_pair.first)
+            {
+                if(condition_pair.first == LibPkmGC::Asleep)
+                {
+                    to->party_data.condition = pksav_littleendian32(uint32_t(from->partyData.turnsOfSleepRemaining));
+                }
+                else
+                {
+                    to->party_data.condition = uint32_t(condition_pair.second);
+                }
+            }
+        }
+
         to->party_data.level        = from->partyData.level;
         to->party_data.pokerus_time = uint8_t(from->partyData.pokerusDaysRemaining);
         to->party_data.current_hp   = pksav_littleendian16(from->partyData.currentHP);

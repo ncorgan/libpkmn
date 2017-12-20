@@ -103,7 +103,38 @@ def make_gui_a_partial_class(filename):
         f.write(line)
     f.close()
 
-def hide_sptr_ctors(filename):
+def remove_class_with_attributes_inheritance(filename):
+    f = open(filename, "r")
+    flines = f.readlines()
+    f.close()
+    class_name = filename[:-3]
+
+    # Already done
+    if "remove_class_with_attributes_inheritance" in flines[0]:
+        return
+
+    base_class_ctor = " : base(PKMNPINVOKE.{0}_SWIGUpcast(cPtr), cMemoryOwn)".format(class_name)
+
+    for i in range(len(flines)):
+        if "class_with_attributes" in flines[i]:
+            flines[i] = flines[i].replace(" : class_with_attributes", "")
+        if base_class_ctor in flines[i]:
+            flines[i] = flines[i].replace(base_class_ctor, "")
+        if "Dispose() {" in flines[i]:
+            flines[i] = flines[i].replace("override void", "void")
+        if "HandleRef swigCPtr" in flines[i]:
+            flines[i+1] = "  protected bool swigCMemOwn;"
+        if "bool cMemoryOwn" in flines[i]:
+            flines[i] = flines[i] + " swigCMemOwn = cMemoryOwn;"
+
+    f = open(filename, "w")
+    f.write("// remove_class_with_attributes_inheritance\n")
+    for line in flines:
+        if "base.Dispose();" not in line:
+            f.write(line)
+    f.close()
+
+def fix_sptr_file(filename):
     f = open(filename, "r")
     flines = f.readlines()
     f.close()
@@ -111,7 +142,7 @@ def hide_sptr_ctors(filename):
     ctor = "public {0}(".format(class_name)
 
     # Already done
-    if "hide_sptr_ctors" in flines[0]:
+    if "fix_sptr_file" in flines[0]:
         return
 
     # Find first relevant ctor
@@ -121,8 +152,18 @@ def hide_sptr_ctors(filename):
             flines[i+7] = "// \\endcond\n{0}\n".format(SPTR_CTORS[class_name])
             break
 
+    # For some reason, the CamelCase changes don't propagate to sptr files.
+    for i in range(len(flines)):
+        flines[i] = flines[i].replace(" get_numeric_attribute_names", " GetNumericAttributeNames")
+        flines[i] = flines[i].replace(" get_numeric_attribute", " GetNumericAttribute")
+        flines[i] = flines[i].replace(" set_numeric_attribute", " SetNumericAttribute")
+        flines[i] = flines[i].replace(" get_string_attribute_names", " GetStringAttributeNames")
+        flines[i] = flines[i].replace(" get_string_attribute", " GetStringAttribute")
+        flines[i] = flines[i].replace(" set_string_attribute", " SetStringAttribute")
+        flines[i] = flines[i].replace(" attribute_name", " attributeName")
+
     f = open(filename, "w")
-    f.write("// hide_sptr_ctors\n")
+    f.write("// fix_sptr_file\n")
     for line in flines:
         f.write(line)
     f.close()
@@ -137,7 +178,9 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(os.getcwd()):
         for filename in files:
             if filename.endswith(".cs"):
+                if "_base" in filename:
+                    remove_class_with_attributes_inheritance(filename)
                 if filename in GUI_FILES:
                     make_gui_a_partial_class(filename)
                 if filename in SPTR_FILES:
-                    hide_sptr_ctors(filename)
+                    fix_sptr_file(filename)

@@ -52,8 +52,8 @@ IF(PKMN_ENABLE_QT)
             DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/qt
             COMPONENT Headers
         )
-    ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
-ENDIF(PKMN_ENABLE_QT)
+    ENDIF()
+ENDIF()
 
 #
 # As the Spinda sprite functionality isn't a Qt class, it doesn't

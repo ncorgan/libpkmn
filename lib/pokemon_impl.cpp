@@ -28,6 +28,7 @@
 #include <pkmn/exception.hpp>
 
 #include <pksav/common/markings.h>
+#include <pksav/common/pokerus.h>
 
 #include <boost/filesystem.hpp>
 #include <boost/thread/lock_guard.hpp>
@@ -440,6 +441,37 @@ namespace pkmn
     }
 
     // Shared setters
+
+    int pokemon_impl::_get_pokerus_duration(
+        uint8_t* pokerus_ptr
+    )
+    {
+        uint8_t duration_from_pokerus = 0;
+
+        PKSAV_CALL(
+            pksav_pokerus_get_duration(
+                pokerus_ptr,
+                &duration_from_pokerus
+            );
+        )
+
+        return int(duration_from_pokerus);
+    }
+
+    void pokemon_impl::_set_pokerus_duration(
+        uint8_t* pokerus_ptr,
+        int duration
+    )
+    {
+        pkmn::enforce_bounds("Duration", duration, 0, 15);
+
+        PKSAV_CALL(
+            pksav_pokerus_set_duration(
+                pokerus_ptr,
+                uint8_t(duration)
+            );
+        )
+    }
 
     void pokemon_impl::_set_modern_gender(
         uint32_t* personality_ptr,

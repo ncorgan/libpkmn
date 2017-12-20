@@ -550,76 +550,76 @@ namespace pkmn { namespace swig {
                 _pokemon->set_held_item(held_item);
             }
 
-            PKMN_INLINE std::string get_trainer_name()
+            PKMN_INLINE std::string get_original_trainer_name()
             {
-                return _pokemon->get_trainer_name();
+                return _pokemon->get_original_trainer_name();
             }
 
-            PKMN_INLINE void set_trainer_name(
+            PKMN_INLINE void set_original_trainer_name(
                 const std::string& trainer_name
             )
             {
-                _pokemon->set_trainer_name(trainer_name);
+                _pokemon->set_original_trainer_name(trainer_name);
             }
 
-            PKMN_INLINE uint16_t get_trainer_public_id()
+            PKMN_INLINE uint16_t get_original_trainer_public_id()
             {
-                return _pokemon->get_trainer_public_id();
+                return _pokemon->get_original_trainer_public_id();
             }
 
-            PKMN_INLINE uint16_t get_trainer_secret_id()
+            PKMN_INLINE uint16_t get_original_trainer_secret_id()
             {
-                return _pokemon->get_trainer_secret_id();
+                return _pokemon->get_original_trainer_secret_id();
             }
 
-            PKMN_INLINE uint32_t get_trainer_id()
+            PKMN_INLINE uint32_t get_original_trainer_id()
             {
-                return _pokemon->get_trainer_id();
+                return _pokemon->get_original_trainer_id();
             }
 
-            PKMN_INLINE void set_trainer_public_id(
+            PKMN_INLINE void set_original_trainer_public_id(
                 uint16_t public_id
             )
             {
-                _pokemon->set_trainer_public_id(public_id);
+                _pokemon->set_original_trainer_public_id(public_id);
             }
 
-            PKMN_INLINE void set_trainer_secret_id(
+            PKMN_INLINE void set_original_trainer_secret_id(
                 uint16_t secret_id
             )
             {
-                _pokemon->set_trainer_secret_id(secret_id);
+                _pokemon->set_original_trainer_secret_id(secret_id);
             }
 
-            PKMN_INLINE void set_trainer_id(
+            PKMN_INLINE void set_original_trainer_id(
                 uint32_t public_id
             )
             {
-                _pokemon->set_trainer_id(public_id);
+                _pokemon->set_original_trainer_id(public_id);
             }
 
-            PKMN_INLINE std::string get_trainer_gender()
+            PKMN_INLINE std::string get_original_trainer_gender()
             {
-                return _pokemon->get_trainer_gender();
+                return _pokemon->get_original_trainer_gender();
             }
 
-            PKMN_INLINE void set_trainer_gender(
+            PKMN_INLINE void set_original_trainer_gender(
                 const std::string& trainer_gender
             )
             {
-                _pokemon->set_trainer_gender(trainer_gender);
+                _pokemon->set_original_trainer_gender(trainer_gender);
             }
 
-            PKMN_INLINE int get_friendship()
+            PKMN_INLINE int get_current_trainer_friendship()
             {
-                return _pokemon->get_friendship();
+                return _pokemon->get_current_trainer_friendship();
             }
 
-            PKMN_INLINE void set_friendship(
+            PKMN_INLINE void set_current_trainer_friendship(
                 int friendship
             )
             {
-                _pokemon->set_friendship(friendship);
+                _pokemon->set_current_trainer_friendship(friendship);
             }
 
             PKMN_INLINE std::string get_ability()
@@ -774,6 +774,46 @@ namespace pkmn { namespace swig {
             PKMN_INLINE std::string get_sprite_filepath()
             {
                 return _pokemon->get_sprite_filepath();
+            }
+
+            PKMN_INLINE int get_numeric_attribute(
+                const std::string& attribute_name
+            )
+            {
+                return _pokemon->get_numeric_attribute(attribute_name);
+            }
+
+            PKMN_INLINE void set_numeric_attribute(
+                const std::string& attribute_name,
+                int value
+            )
+            {
+                _pokemon->set_numeric_attribute(attribute_name, value);
+            }
+
+            PKMN_INLINE std::vector<std::string> get_numeric_attribute_names()
+            {
+                return _pokemon->get_numeric_attribute_names();
+            }
+
+            PKMN_INLINE std::string get_string_attribute(
+                const std::string& attribute_name
+            )
+            {
+                return _pokemon->get_string_attribute(attribute_name);
+            }
+
+            PKMN_INLINE void set_string_attribute(
+                const std::string& attribute_name,
+                const std::string& value
+            )
+            {
+                _pokemon->set_string_attribute(attribute_name, value);
+            }
+
+            PKMN_INLINE std::vector<std::string> get_string_attribute_names()
+            {
+                return _pokemon->get_string_attribute_names();
             }
 
         private:

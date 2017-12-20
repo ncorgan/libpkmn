@@ -12,6 +12,8 @@ CONFIGURE_FILE(
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_types_headers
+        attribute_engine.hpp
+        class_with_attributes.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/shared_ptr.hpp
     )
 
@@ -20,4 +22,4 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         DESTINATION ${PKMN_INCLUDE_DIR}/pkmn/types
         COMPONENT Headers
     )
-ENDIF(NOT PKMN_DONT_INSTALL_HEADERS)
+ENDIF()

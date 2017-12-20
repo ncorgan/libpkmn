@@ -330,7 +330,7 @@ public class GameSaveTest {
         Assert.AreEqual(pokemon1.Species, pokemon2.Species);
         Assert.AreEqual(pokemon1.Form, pokemon2.Form);
         Assert.AreEqual(pokemon1.Nickname, pokemon2.Nickname);
-        Assert.AreEqual(pokemon1.TrainerName, pokemon2.TrainerName);
+        Assert.AreEqual(pokemon1.OriginalTrainerName, pokemon2.OriginalTrainerName);
 
         for(int i = 0; i < 4; ++i) {
             Assert.AreEqual(pokemon1.Moves[i].Move, pokemon2.Moves[i].Move);
