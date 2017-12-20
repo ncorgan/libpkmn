@@ -10,6 +10,7 @@
 #include "game_save_gen2impl.hpp"
 #include "game_save_gbaimpl.hpp"
 #include "game_save_gcnimpl.hpp"
+#include "game_save_gen6impl.hpp"
 #include "database/id_to_string.hpp"
 
 #include "libpkmgc_includes.hpp"
@@ -37,6 +38,8 @@ namespace pkmn {
         PKMN_SAVE_TYPE_EMERALD,
         PKMN_SAVE_TYPE_FIRERED_LEAFGREEN,
         PKMN_SAVE_TYPE_COLOSSEUM_XD,
+        PKMN_SAVE_TYPE_XY,
+        PKMN_SAVE_TYPE_ORAS,
     } pkmn_save_type_t;
 
     static BOOST_CONSTEXPR const char* SAVE_TYPE_NAMES[] = {
@@ -59,9 +62,11 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_GCI_SIZE = 0x56040;
 
     static pkmn_save_type_t _detect_type(
-        const std::string &filepath
-    ) {
-        if(not fs::exists(filepath)) {
+        const std::string& filepath
+    )
+    {
+        if(not fs::exists(filepath))
+        {
             throw std::invalid_argument("The given filepath does not exist.");
         }
 
@@ -72,99 +77,150 @@ namespace pkmn {
         ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
+        // Check for a Gamecube save.
+
         pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
-        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
+
+        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE)
+        {
             gcn_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(raw.data(), (filesize == GCN_COLOSSEUM_GCI_SIZE)));
-        } if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
+        }
+        if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE)
+        {
             gcn_save.reset(new LibPkmGC::XD::SaveEditing::Save(raw.data(), (filesize == GCN_XD_GCI_SIZE)));
         }
-        if(gcn_save) {
+        if(gcn_save)
+        {
             size_t index = 0;
-            if(gcn_save->getMostRecentValidSlot(0, &index)) {
+            if(gcn_save->getMostRecentValidSlot(0, &index))
+            {
                 return PKMN_SAVE_TYPE_COLOSSEUM_XD;
             }
         }
 
         bool type_found = false;
 
-        if(filesize >= GBA_SAVE_SIZE) {
-            // Check for a Ruby/Sapphire save.
+        if(filesize == PKSAV_GEN6_XY_SAVE_SIZE)
+        {
+            // Check for an X/Y save.
             PKSAV_CALL(
-                pksav_buffer_is_gba_save(
+                pksav_buffer_is_gen6_save(
                     raw.data(),
                     filesize,
-                    PKSAV_GBA_RS,
+                    PKSAV_GEN6_XY,
                     &type_found
                 );
             );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_RUBY_SAPPHIRE;
-            }
-
-            // Check for an Emerald save.
-            PKSAV_CALL(
-                pksav_buffer_is_gba_save(
-                    raw.data(),
-                    filesize,
-                    PKSAV_GBA_EMERALD,
-                    &type_found
-                );
-            );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_EMERALD;
-            }
-
-            // Check for a FireRed/LeafGreen save.
-            PKSAV_CALL(
-                pksav_buffer_is_gba_save(
-                    raw.data(),
-                    filesize,
-                    PKSAV_GBA_FRLG,
-                    &type_found
-                );
-            );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_FIRERED_LEAFGREEN;
+            if(type_found)
+            {
+                return PKMN_SAVE_TYPE_XY;
             }
         }
-
-        if(filesize >= GB_SAVE_SIZE) {
-            // Check for a Generation I save.
+        else if(filesize == PKSAV_GEN6_ORAS_SAVE_SIZE)
+        {
+            // Check for an Omega Ruby/Alpha Sapphire save.
             PKSAV_CALL(
-                pksav_buffer_is_gen1_save(
+                pksav_buffer_is_gen6_save(
                     raw.data(),
                     filesize,
+                    PKSAV_GEN6_ORAS,
                     &type_found
                 );
             );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_RED_BLUE_YELLOW;
+            if(type_found)
+            {
+                return PKMN_SAVE_TYPE_ORAS;
+            }
+        }
+        else
+        {
+            if(filesize >= GBA_SAVE_SIZE)
+            {
+                // Check for a Ruby/Sapphire save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gba_save(
+                        raw.data(),
+                        filesize,
+                        PKSAV_GBA_RS,
+                        &type_found
+                    );
+                );
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_RUBY_SAPPHIRE;
+                }
+
+                // Check for an Emerald save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gba_save(
+                        raw.data(),
+                        filesize,
+                        PKSAV_GBA_EMERALD,
+                        &type_found
+                    );
+                );
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_EMERALD;
+                }
+
+                // Check for a FireRed/LeafGreen save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gba_save(
+                        raw.data(),
+                        filesize,
+                        PKSAV_GBA_FRLG,
+                        &type_found
+                    );
+                );
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_FIRERED_LEAFGREEN;
+                }
             }
 
-            // Check for a Gold/Silver save.
-            PKSAV_CALL(
-                pksav_buffer_is_gen2_save(
-                    raw.data(),
-                    filesize,
-                    false,
-                    &type_found
+            if(filesize >= GB_SAVE_SIZE)
+            {
+                // Check for a Generation I save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gen1_save(
+                        raw.data(),
+                        filesize,
+                        &type_found
+                    );
                 );
-            );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_GOLD_SILVER;
-            }
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_RED_BLUE_YELLOW;
+                }
 
-            // Check for a Crystal save.
-            PKSAV_CALL(
-                pksav_buffer_is_gen2_save(
-                    raw.data(),
-                    filesize,
-                    true,
-                    &type_found
+                // Check for a Gold/Silver save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gen2_save(
+                        raw.data(),
+                        filesize,
+                        false,
+                        &type_found
+                    );
                 );
-            );
-            if(type_found) {
-                return PKMN_SAVE_TYPE_CRYSTAL;
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_GOLD_SILVER;
+                }
+
+                // Check for a Crystal save.
+                PKSAV_CALL(
+                    pksav_buffer_is_gen2_save(
+                        raw.data(),
+                        filesize,
+                        true,
+                        &type_found
+                    );
+                );
+                if(type_found)
+                {
+                    return PKMN_SAVE_TYPE_CRYSTAL;
+                }
             }
         }
 
@@ -179,10 +235,12 @@ namespace pkmn {
 
     game_save::sptr game_save::from_file(
         const std::string &filepath
-    ) {
+    )
+    {
         pkmn_save_type_t save_type = _detect_type(filepath);
 
-        switch(save_type) {
+        switch(save_type)
+        {
             case PKMN_SAVE_TYPE_RED_BLUE_YELLOW:
                 return pkmn::make_shared<game_save_gen1impl>(filepath);
 
@@ -197,6 +255,10 @@ namespace pkmn {
 
             case PKMN_SAVE_TYPE_COLOSSEUM_XD:
                 return pkmn::make_shared<game_save_gcnimpl>(filepath);
+
+            case PKMN_SAVE_TYPE_XY:
+            case PKMN_SAVE_TYPE_ORAS:
+                return pkmn::make_shared<game_save_gen6impl>(filepath);
 
             case PKMN_SAVE_TYPE_NONE:
             default:
