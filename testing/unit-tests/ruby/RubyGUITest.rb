@@ -17,7 +17,7 @@ class RubyGUITest < Test::Unit::TestCase
     @@PKMN_TMP_DIR = PKMN::Paths::get_tmp_dir()
 
     def test_spinda
-        if PKMN::BuildInfo::QT_VERSION[0] != "N/A"
+        if PKMN::BuildInfo::QT_VERSION != "N/A"
             spinda_format = "spinda_%d_%d_%u.png"
 
             personality = 0x88888888
