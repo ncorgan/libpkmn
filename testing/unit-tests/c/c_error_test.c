@@ -2316,19 +2316,10 @@ static void calculations_form_error_test() {
                 0,
                 0,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("form_out");
-
-    error = pkmn_calculations_gen2_unown_form(
-                0,
-                0,
-                0,
-                0,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_calculations_gen3_unown_form
@@ -2337,16 +2328,10 @@ static void calculations_form_error_test() {
     error = pkmn_calculations_gen3_unown_form(
                 0,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("form_out");
-
-    error = pkmn_calculations_gen3_unown_form(
-                0,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_calculations_wurmple_becomes_silcoon
@@ -2446,7 +2431,8 @@ static void calculations_nature_error_test() {
     error = pkmn_calculations_nature(
                 0,
                 NULL, // nature_out
-                0
+                0,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("nature_out");
 }

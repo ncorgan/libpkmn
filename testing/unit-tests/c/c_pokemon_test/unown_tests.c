@@ -21,7 +21,8 @@ static char strbuffer[STRBUFFER_LEN] = {0};
 
 static void gen2_unown_test(
     const char* game
-) {
+)
+{
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_handle_t unown = NULL;
 
@@ -36,7 +37,8 @@ static void gen2_unown_test(
 
     TEST_ASSERT_EQUAL(26, unown_entry.forms.length);
 
-    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+    for(size_t i = 0; i < unown_entry.forms.length; ++i)
+    {
         error = pkmn_pokemon_make(
                     &unown,
                     "Unown",
@@ -94,7 +96,8 @@ static void gen2_unown_test(
                     IV_speed,
                     IV_special,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -167,7 +170,8 @@ static void gen2_unown_test(
     TEST_ASSERT_EQUAL_STRING("G", strbuffer);
 
     // Make sure setting the form properly changes the IVs.
-    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+    for(size_t i = 0; i < unown_entry.forms.length; ++i)
+    {
         error = pkmn_pokemon_set_form(
                     unown,
                     unown_entry.forms.strings[i]
@@ -222,7 +226,8 @@ static void gen2_unown_test(
                     IV_speed,
                     IV_special,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -238,7 +243,8 @@ static void gen2_unown_test(
 
 static void gen3_unown_test(
     const char* game
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
@@ -256,7 +262,8 @@ static void gen3_unown_test(
 
     TEST_ASSERT_EQUAL(unown_entry.forms.length, 28);
 
-    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+    for(size_t i = 0; i < unown_entry.forms.length; ++i)
+    {
         error = pkmn_pokemon_make(
                     &unown,
                     "Unown",
@@ -284,7 +291,8 @@ static void gen3_unown_test(
         error = pkmn_calculations_gen3_unown_form(
                     personality,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -336,7 +344,8 @@ static void gen3_unown_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING("B", strbuffer);
 
-    for(size_t i = 0; i < unown_entry.forms.length; ++i) {
+    for(size_t i = 0; i < unown_entry.forms.length; ++i)
+    {
         error = pkmn_pokemon_set_form(
                     unown,
                     unown_entry.forms.strings[i]
@@ -352,7 +361,8 @@ static void gen3_unown_test(
         error = pkmn_calculations_gen3_unown_form(
                     personality,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -366,42 +376,52 @@ static void gen3_unown_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 }
 
-void gold_unown_test() {
+void gold_unown_test()
+{
     gen2_unown_test("Gold");
 }
 
-void silver_unown_test() {
+void silver_unown_test()
+{
     gen2_unown_test("Silver");
 }
 
-void crystal_unown_test() {
+void crystal_unown_test()
+{
     gen2_unown_test("Crystal");
 }
 
-void ruby_unown_test() {
+void ruby_unown_test()
+{
     gen3_unown_test("Ruby");
 }
 
-void sapphire_unown_test() {
+void sapphire_unown_test()
+{
     gen3_unown_test("Sapphire");
 }
 
-void emerald_unown_test() {
+void emerald_unown_test()
+{
     gen3_unown_test("Emerald");
 }
 
-void firered_unown_test() {
+void firered_unown_test()
+{
     gen3_unown_test("FireRed");
 }
 
-void leafgreen_unown_test() {
+void leafgreen_unown_test()
+{
     gen3_unown_test("LeafGreen");
 }
 
-void colosseum_unown_test() {
+void colosseum_unown_test()
+{
     gen3_unown_test("Colosseum");
 }
 
-void xd_unown_test() {
+void xd_unown_test()
+{
     gen3_unown_test("XD");
 }
