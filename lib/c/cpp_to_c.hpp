@@ -251,6 +251,20 @@ namespace pkmn {
 
 namespace c {
 
+    template <typename pointer_type>
+    inline void delete_pointer_and_set_to_null(pointer_type** pointer_ptr)
+    {
+        delete (*pointer_ptr);
+        *pointer_ptr = nullptr;
+    }
+
+    template <typename pointer_type>
+    inline void free_pointer_and_set_to_null(pointer_type** pointer_ptr)
+    {
+        std::free(*pointer_ptr);
+        *pointer_ptr = nullptr;
+    }
+
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
         pkmn_int_pair_t* int_pair_ptr

@@ -20,7 +20,8 @@ pkmn_error_t pkmn_database_get_pokemon_entry(
     const char* game,
     const char* form,
     pkmn_database_pokemon_entry_t* pokemon_entry_out
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(species);
     PKMN_CHECK_NULL_PARAM(game);
     PKMN_CHECK_NULL_PARAM(form);
@@ -43,7 +44,8 @@ pkmn_error_t pkmn_database_get_pokemon_entry(
 pkmn_error_t pkmn_database_pokemon_entry_set_form(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     const char* form
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(form);
 
@@ -67,7 +69,8 @@ pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     int level,
     int* experience_out
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(experience_out);
 
@@ -84,7 +87,8 @@ pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     int experience,
     int* level_out
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(level_out);
 
@@ -102,7 +106,8 @@ pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
     bool shiny,
     char* icon_filepath_out,
     size_t buffer_len
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(icon_filepath_out);
 
@@ -125,7 +130,8 @@ pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     bool shiny,
     char* sprite_filepath_out,
     size_t buffer_len
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(sprite_filepath_out);
 
@@ -144,23 +150,16 @@ pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
 
 pkmn_error_t pkmn_database_pokemon_entry_free(
     pkmn_database_pokemon_entry_t* pokemon_entry
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
 
-    std::free(pokemon_entry->name);
-    pokemon_entry->name = NULL;
-
-    std::free(pokemon_entry->game);
-    pokemon_entry->game = NULL;
-
-    std::free(pokemon_entry->species);
-    pokemon_entry->species = NULL;
-
-    std::free(pokemon_entry->form);
-    pokemon_entry->form = NULL;
-
-    std::free(pokemon_entry->pokedex_entry);
-    pokemon_entry->pokedex_entry = NULL;
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->name);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->game);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->species);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->form);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->pokedex_entry);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_entry->hidden_ability);
 
     pokemon_entry->height = 0.0f;
     pokemon_entry->weight = 0.0f;
@@ -168,29 +167,25 @@ pkmn_error_t pkmn_database_pokemon_entry_free(
     pokemon_entry->chance_female = 0.0f;
     pokemon_entry->has_gender_differences = false;
     pokemon_entry->base_friendship = 0;
+    pokemon_entry->experience_yield = 0;
+
+    for(int index = 0; index < 7; ++index)
+    {
+        pokemon_entry->base_stats[index] = 0;
+        pokemon_entry->EV_yields[index] = 0;
+    }
 
     pkmn_string_pair_free(&pokemon_entry->types);
     pkmn_string_pair_free(&pokemon_entry->abilities);
-
-    std::free(pokemon_entry->hidden_ability);
-    pokemon_entry->hidden_ability = NULL;
-
     pkmn_string_pair_free(&pokemon_entry->egg_groups);
-
-    for(int i = 0; i < 7; ++i) {
-        pokemon_entry->base_stats[i] = 0;
-        pokemon_entry->EV_yields[i] = 0;
-    }
-
-    pokemon_entry->experience_yield = 0;
-
-    pkmn_levelup_moves_free(&pokemon_entry->levelup_moves);
 
     pkmn_string_list_free(&pokemon_entry->tm_hm_moves);
     pkmn_string_list_free(&pokemon_entry->egg_moves);
     pkmn_string_list_free(&pokemon_entry->tutor_moves);
     pkmn_string_list_free(&pokemon_entry->forms);
     pkmn_string_list_free(&pokemon_entry->evolutions);
+
+    pkmn_levelup_moves_free(&pokemon_entry->levelup_moves);
 
     return PKMN_ERROR_NONE;
 }

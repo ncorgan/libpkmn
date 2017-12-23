@@ -14,8 +14,8 @@
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_bag_internal_t*>(ptr)
-#define LIST_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
+#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_bag_internal_t*>(ptr))
+#define LIST_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
 
 // The caller is expected to be exception-safe.
 void init_item_bag(
@@ -92,8 +92,9 @@ pkmn_error_t pkmn_item_bag_free(
     pkmn_item_pockets_free(&item_bag->pockets);
 
     PKMN_CPP_TO_C(
-        delete INTERNAL_RCAST(item_bag->_internal);
-        item_bag->_internal = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(
+            reinterpret_cast<pkmn_item_bag_internal_t**>(&item_bag->_internal)
+        );
     )
 }
 

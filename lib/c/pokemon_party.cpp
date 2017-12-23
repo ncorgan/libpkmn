@@ -30,13 +30,13 @@ pkmn_error_t pkmn_pokemon_party_make(
 
 pkmn_error_t pkmn_pokemon_party_free(
     pkmn_pokemon_party_handle_t* handle_ptr
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(handle_ptr);
     PKMN_CHECK_NULL_PARAM((*handle_ptr));
 
     PKMN_CPP_TO_C(
-        delete (*handle_ptr);
-        *handle_ptr = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(handle_ptr);
     )
 }
 
