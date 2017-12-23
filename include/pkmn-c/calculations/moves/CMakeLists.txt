@@ -17,7 +17,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
 
     INSTALL(
         FILES ${pkmn_c_calculations_moves_headers}
-        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c/calculations/damage
+        DESTINATION ${PKMN_INCLUDE_DIR}/pkmn-c/calculations/damage/moves
         COMPONENT Headers
     )
 ENDIF()
