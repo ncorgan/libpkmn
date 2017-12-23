@@ -35,16 +35,10 @@ namespace pkmn { namespace calculations {
         return {40, 80, 120, 160, 200};
     }
 
-    PKMN_INLINE int eruption_power(
-        int attacker_hp,
-        int target_hp
-    )
-    {
-        return std::max<int>(
-                   1,
-                   int(150.0f * (float(attacker_hp) / float(target_hp)))
-               );
-    }
+    PKMN_API int eruption_power(
+        int attacker_current_hp,
+        int attacker_max_hp
+    );
 
     PKMN_API int flail_power(
         int attacker_current_hp,
@@ -67,13 +61,10 @@ namespace pkmn { namespace calculations {
         float target_weight
     );
 
-    PKMN_CONSTEXPR_OR_INLINE int gyro_ball_power(
+    PKMN_API int gyro_ball_power(
         int attacker_speed,
         int target_speed
-    )
-    {
-        return int(25.0f * (float(target_speed) / float(attacker_speed)));
-    }
+    );
 
     PKMN_API int heat_crash_power(
         float attacker_weight,

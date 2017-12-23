@@ -7,17 +7,12 @@
 
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/moves/power.hpp>
-#include <pkmn/database/item_entry.hpp>
-#include <pkmn/database/pokemon_entry.hpp>
 
 #include "../database/database_common.hpp"
 
 namespace pkmn { namespace calculations {
 
     static pkmn::database::sptr _db;
-
-    // Used when a database entry is needed
-    static const std::string LATE_GEN_GAME = "Omega Ruby";
 
     int brine_power(
         int target_current_hp,
@@ -108,11 +103,53 @@ namespace pkmn { namespace calculations {
         }
     }
 
+    int eruption_power(
+        int attacker_current_hp,
+        int attacker_max_hp
+    )
+    {
+        pkmn::enforce_comparator(
+            "Attacker current HP",
+            attacker_current_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Attacker max HP",
+            attacker_max_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_bounds(
+            "Attacker current HP",
+            attacker_current_hp,
+            0,
+            attacker_max_hp
+        );
+
+        return std::max<int>(
+                   1,
+                   int(150.0f * (float(attacker_current_hp) / float(attacker_max_hp)))
+               );
+    }
+
     int flail_power(
         int attacker_current_hp,
         int attacker_max_hp
     )
     {
+        pkmn::enforce_comparator(
+            "Attacker current HP",
+            attacker_current_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Attacker max HP",
+            attacker_max_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
         pkmn::enforce_bounds(
             "Attacker current HP",
             attacker_current_hp,
@@ -122,7 +159,7 @@ namespace pkmn { namespace calculations {
 
         float hp_percentage = float(attacker_current_hp) / float(attacker_max_hp);
 
-        if(hp_percentage < 0.417)
+        if(hp_percentage < 0.0417)
         {
             return 200;
         }
@@ -148,11 +185,19 @@ namespace pkmn { namespace calculations {
         }
     }
 
+    // TODO: fail if item doesn't appear in games with Fling
     int fling_power(
         const std::string& item
     )
     {
-        return pkmn::database::item_entry(item, LATE_GEN_GAME).get_fling_power();
+        pkmn::database::get_connection(_db);
+
+        static const char* query = "SELECT fling_power FROM items WHERE id="
+                                   "(SELECT item_id FROM item_names WHERE name=?)";
+
+        return pkmn::database::query_db_bind1<int, const std::string&>(
+                   _db, query, item
+               );
     }
 
     int frustration_power(
@@ -202,23 +247,30 @@ namespace pkmn { namespace calculations {
         float target_weight
     )
     {
-        if(target_weight < 10.0f)
+        pkmn::enforce_comparator(
+            "Target weight",
+            target_weight,
+            0.0f,
+            pkmn::value_comparator::GT
+        );
+
+        if(pkmn::fp_compare_less(target_weight, 10.0f))
         {
             return 20;
         }
-        else if(target_weight < 25.0f)
+        else if(pkmn::fp_compare_less(target_weight, 25.0f))
         {
             return 40;
         }
-        else if(target_weight < 50.0f)
+        else if(pkmn::fp_compare_less(target_weight, 50.0f))
         {
             return 60;
         }
-        else if(target_weight < 100.0f)
+        else if(pkmn::fp_compare_less(target_weight, 100.0f))
         {
             return 80;
         }
-        else if(target_weight < 200.0f)
+        else if(pkmn::fp_compare_less(target_weight, 200.0f))
         {
             return 100;
         }
@@ -226,6 +278,31 @@ namespace pkmn { namespace calculations {
         {
             return 120;
         }
+    }
+
+    int gyro_ball_power(
+        int attacker_speed,
+        int target_speed
+    )
+    {
+        pkmn::enforce_comparator(
+            "Attacker speed",
+            attacker_speed,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Target speed",
+            target_speed,
+            0,
+            pkmn::value_comparator::GT
+        );
+
+        int ret = int(25.0f * (float(target_speed) / float(attacker_speed)));
+        ret = std::max<int>(ret, 1);
+        ret = std::min<int>(ret, 150);
+
+        return ret;
     }
 
     int heat_crash_power(
@@ -372,7 +449,7 @@ namespace pkmn { namespace calculations {
 
         return (20 + (20 * multiplier));
     }
-    
+
     int punishment_power(
         int attack_stat_stage,
         int defense_stat_stage,

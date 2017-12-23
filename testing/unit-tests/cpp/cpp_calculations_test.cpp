@@ -68,11 +68,226 @@ TEST(cpp_calculations_test, brine_power_test)
     );
 }
 
+TEST(cpp_calculations_test, eruption_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(0, 1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(1, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(2, 1);
+    , std::out_of_range);
+
+    EXPECT_EQ(
+        1,
+        pkmn::calculations::eruption_power(1, 500)
+    );
+    EXPECT_EQ(
+        75,
+        pkmn::calculations::eruption_power(250, 500)
+    );
+    EXPECT_EQ(
+        150,
+        pkmn::calculations::eruption_power(500, 500)
+    );
+}
+
+TEST(cpp_calculations_test, flail_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::flail_power(0, 1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::flail_power(1, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::flail_power(2, 1);
+    , std::out_of_range);
+
+    struct flail_power_test_params
+    {
+        int attacker_current_hp;
+        int attacker_max_hp;
+        int expected_power;
+    };
+
+    static const std::vector<flail_power_test_params> test_params =
+    {
+        {1, 500, 200},
+        {20, 500, 200},
+
+        {21, 500, 150},
+        {52, 500, 150},
+
+        {53, 500, 100},
+        {104, 500, 100},
+
+        {105, 500, 80},
+        {177, 500, 80},
+
+        {178, 500, 40},
+        {343, 500, 40},
+
+        {344, 500, 20},
+        {500, 500, 20}
+    };
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::flail_power(
+                test_param.attacker_current_hp,
+                test_param.attacker_max_hp
+            )
+        );
+    }
+}
+
+TEST(cpp_calculations_test, fling_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::fling_power("Not an item")
+    , std::invalid_argument);
+
+    struct fling_power_test_params
+    {
+        std::string held_item;
+        int expected_power;
+    };
+
+    static const std::vector<fling_power_test_params> test_params =
+    {
+        {"Oran Berry", 10},
+        {"Health Wing", 20},
+        {"Potion", 30},
+        {"Icy Rock", 40},
+        {"Dubious Disc", 50},
+        {"Damp Rock", 60},
+        {"Dragon Fang", 70},
+        {"Dusk Stone", 80},
+        {"Thick Club", 90},
+        {"Rare Bone", 100},
+        {"Iron Ball", 130}
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::fling_power(test_param.held_item)
+        );
+    }
+}
+
+TEST(cpp_calculations_test, frustration_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::frustration_power(-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::frustration_power(256)
+    , std::out_of_range);
+
+    // Source: Bulbapedia
+    EXPECT_EQ(102, pkmn::calculations::frustration_power(0));
+    EXPECT_EQ(1, pkmn::calculations::frustration_power(255));
+}
+
+TEST(cpp_calculations_test, fury_cutter_powers_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::fury_cutter_powers(1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::fury_cutter_powers(10)
+    , std::out_of_range);
+
+    static const std::vector<int> gen_2_4_powers = {10, 20, 40, 80, 160};
+    static const std::vector<int> gen5_powers = {20, 40, 80, 160};
+    static const std::vector<int> gen6_powers = {40, 80, 160};
+
+    EXPECT_EQ(
+        gen_2_4_powers,
+        pkmn::calculations::fury_cutter_powers(2)
+    );
+    EXPECT_EQ(
+        gen_2_4_powers,
+        pkmn::calculations::fury_cutter_powers(3)
+    );
+    EXPECT_EQ(
+        gen_2_4_powers,
+        pkmn::calculations::fury_cutter_powers(4)
+    );
+    EXPECT_EQ(
+        gen5_powers,
+        pkmn::calculations::fury_cutter_powers(5)
+    );
+    EXPECT_EQ(
+        gen6_powers,
+        pkmn::calculations::fury_cutter_powers(6)
+    );
+}
+
+TEST(cpp_calculations_test, grass_knot_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::grass_knot_power(-1.0f)
+    , std::out_of_range);
+
+    struct grass_knot_power_test_params
+    {
+        float target_weight;
+        int expected_power;
+    };
+
+    static const std::vector<grass_knot_power_test_params> test_params =
+    {
+        {5.0f, 20},
+        {15.0f, 40},
+        {35.0f, 60},
+        {75.0f, 80},
+        {150.0f, 100},
+        {250.0f, 120}
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::grass_knot_power(test_param.target_weight)
+        );
+    }
+}
+
+TEST(cpp_calculations_test, gyro_ball_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::gyro_ball_power(0, 50)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::gyro_ball_power(50, 0)
+    , std::out_of_range);
+
+    EXPECT_EQ(150, pkmn::calculations::gyro_ball_power(1, 500));
+    EXPECT_EQ(50, pkmn::calculations::gyro_ball_power(100, 200));
+    EXPECT_EQ(1, pkmn::calculations::gyro_ball_power(500, 1));
+}
+
 // TODO: verify
 TEST(cpp_calculations_test, critical_hit_chance_test)
 {
 }
 
+// TODO: invalid generations, negative numbers
 TEST(cpp_calculations_test, critical_hit_modifier_test)
 {
     // The critical hit modifier is level-dependent in Generation I.
