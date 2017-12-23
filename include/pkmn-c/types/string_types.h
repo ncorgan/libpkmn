@@ -48,14 +48,20 @@ static inline pkmn_error_t pkmn_string_list_free(
     return PKMN_ERROR_NONE;
 }
 
-static PKMN_INLINE pkmn_error_t pkmn_string_pair_free(
-    pkmn_string_pair_t* string_pair
-) {
-    free(string_pair->first);
-    free(string_pair->second);
+static inline pkmn_error_t pkmn_string_pair_free(
+    pkmn_string_pair_t* string_pair_ptr
+)
+{
+    if(!string_pair_ptr)
+    {
+        return PKMN_ERROR_NULL_POINTER;
+    }
 
-    string_pair->first  = NULL;
-    string_pair->second = NULL;
+    free(string_pair_ptr->first);
+    free(string_pair_ptr->second);
+
+    string_pair_ptr->first  = NULL;
+    string_pair_ptr->second = NULL;
 
     return PKMN_ERROR_NONE;
 }

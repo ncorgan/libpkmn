@@ -199,14 +199,6 @@ namespace pkmn {
         pkmn_pokemon_box_list_t* pokemon_box_list_c
     );
 
-    PKMN_INLINE void std_pair_int_to_int_pair(
-        const std::pair<int, int> &pair_cpp,
-        pkmn_int_pair_t* pair_c
-    ) {
-        pair_c->first = pair_cpp.first;
-        pair_c->second = pair_cpp.second;
-    }
-
     PKMN_INLINE pkmn_error_t std_string_to_c_str(
         const std::string &str,
         char* c_str_out,
@@ -236,11 +228,6 @@ namespace pkmn {
         return PKMN_ERROR_NONE;
     }
 
-    void std_pair_std_string_to_string_pair(
-        const std::pair<std::string, std::string> &cpp_pair,
-        pkmn_string_pair_t* c_pair_out
-    );
-
     template <typename value_type>
     PKMN_INLINE void std_map_keys_to_string_list(
         const std::map<std::string, value_type> &string_map,
@@ -261,6 +248,17 @@ namespace pkmn {
     }
 
     // Refactor below
+
+    inline void int_pair_cpp_to_c(
+        const std::pair<int, int>& int_pair_cpp,
+        pkmn_int_pair_t* int_pair_ptr
+    )
+    {
+        BOOST_ASSERT(int_pair_ptr);
+
+        int_pair_ptr->first = int_pair_cpp.first;
+        int_pair_ptr->second = int_pair_cpp.second;
+    }
 
     void string_cpp_to_c(
         const std::string& string_cpp,
@@ -288,6 +286,17 @@ namespace pkmn {
         const std::vector<std::string>& string_list_cpp,
         pkmn_string_list_t* string_list_c_ptr
     );
+
+    inline void string_pair_cpp_to_c(
+        const std::pair<std::string, std::string>& string_pair_cpp,
+        pkmn_string_pair_t* c_pair_ptr
+    )
+    {
+        BOOST_ASSERT(c_pair_ptr);
+
+        string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
+        string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
+    }
 }
 
 #endif /* PKMN_C_CPP_TO_C_HPP */

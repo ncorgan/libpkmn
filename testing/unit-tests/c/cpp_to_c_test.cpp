@@ -680,11 +680,12 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
     EXPECT_EQ(0, pokemon_box_list_c.length);
 }
 
-TEST(cpp_to_c_test, int_pair_cpp_to_c_test) {
+TEST(cpp_to_c_test, int_pair_cpp_to_c_test)
+{
     std::pair<int, int> int_pair_cpp(6322, 10011);
-    pkmn_int_pair_t int_pair_c;
+    pkmn_int_pair_t int_pair_c = {0, 0};
 
-    pkmn::std_pair_int_to_int_pair(
+    pkmn::int_pair_cpp_to_c(
         int_pair_cpp,
         &int_pair_c
     );
@@ -731,11 +732,12 @@ TEST(cpp_to_c_test, string_cpp_to_c_test)
     EXPECT_EQ(string_cpp.size(), string_length);
 }
 
-TEST(cpp_to_c_test, string_pair_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
+{
     std::pair<std::string, std::string> string_pair_cpp("LibPKMN", "PKSav");
-    pkmn_string_pair_t string_pair_c;
+    pkmn_string_pair_t string_pair_c = {NULL, NULL};
 
-    pkmn::std_pair_std_string_to_string_pair(
+    pkmn::string_pair_cpp_to_c(
         string_pair_cpp,
         &string_pair_c
     );

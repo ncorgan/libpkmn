@@ -208,11 +208,11 @@ namespace pkmn {
         pokemon_entry_c->has_gender_differences = pokemon_entry_cpp.has_gender_differences();
         pokemon_entry_c->base_friendship = pokemon_entry_cpp.get_base_friendship();
 
-        pkmn::std_pair_std_string_to_string_pair(
+        pkmn::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_types(),
             &pokemon_entry_c->types
         );
-        pkmn::std_pair_std_string_to_string_pair(
+        pkmn::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_abilities(),
             &pokemon_entry_c->abilities
         );
@@ -222,7 +222,7 @@ namespace pkmn {
             &pokemon_entry_c->hidden_ability
         );
 
-        pkmn::std_pair_std_string_to_string_pair(
+        pkmn::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_egg_groups(),
             &pokemon_entry_c->egg_groups
         );
@@ -354,19 +354,6 @@ namespace pkmn {
         }
 
         pokemon_box_list_c->length = pokemon_box_list_cpp.size();
-    }
-
-    void std_pair_std_string_to_string_pair(
-        const std::pair<std::string, std::string> &cpp_pair,
-        pkmn_string_pair_t* c_pair_out
-    ) {
-        c_pair_out->first = (char*)std::malloc(cpp_pair.first.size() + 1);
-        std::strcpy(c_pair_out->first, cpp_pair.first.c_str());
-        c_pair_out->first[cpp_pair.first.size()] = '\0';
-
-        c_pair_out->second = (char*)std::malloc(cpp_pair.second.size() + 1);
-        std::strcpy(c_pair_out->second, cpp_pair.second.c_str());
-        c_pair_out->second[cpp_pair.second.size()] = '\0';
     }
 
     // Refactor below
