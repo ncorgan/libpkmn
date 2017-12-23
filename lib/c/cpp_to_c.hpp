@@ -261,6 +261,14 @@ namespace pkmn {
     }
 
     // Refactor below
+
+    void string_cpp_to_c(
+        const std::string& string_cpp,
+        char* c_str_ptr,
+        size_t buffer_len,
+        size_t* string_length_out
+    );
+
     inline void string_cpp_to_c_alloc(
         const std::string& string_cpp,
         char** c_str_ptr

@@ -371,6 +371,35 @@ namespace pkmn {
 
     // Refactor below
 
+    void string_cpp_to_c(
+        const std::string& string_cpp,
+        char* c_str_ptr,
+        size_t buffer_len,
+        size_t* string_length_out
+    )
+    {
+        BOOST_ASSERT(c_str_ptr);
+
+        if(!string_cpp.empty())
+        {
+            std::memset(
+                c_str_ptr,
+                0,
+                buffer_len
+            );
+            std::strncpy(
+                c_str_ptr,
+                string_cpp.c_str(),
+                buffer_len
+            );
+
+            if(string_length_out)
+            {
+                *string_length_out = string_cpp.size();
+            }
+        }
+    }
+
     void string_list_cpp_to_c(
         const std::vector<std::string>& string_list_cpp,
         pkmn_string_list_t* string_list_c_ptr

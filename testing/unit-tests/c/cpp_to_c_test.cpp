@@ -693,25 +693,42 @@ TEST(cpp_to_c_test, int_pair_cpp_to_c_test) {
     EXPECT_EQ(10011, int_pair_c.second);
 }
 
-TEST(cpp_to_c_test, std_string_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_cpp_to_c_test)
+{
     std::string string_cpp = "LibPKMN";
-    char string_c[8] = "";
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    char string_c[50] = {0};
+    char too_short_string_buffer[3] = {0};
+    size_t string_length = 0;
 
-    error = pkmn::std_string_to_c_str(
-                string_cpp,
-                string_c,
-                0
-            );
-    EXPECT_EQ(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+    // Test not getting buffer length
+    pkmn::string_cpp_to_c(
+        string_cpp,
+        string_c,
+        sizeof(string_c)-1,
+        nullptr
+    );
+    EXPECT_EQ(string_cpp, string_c);
 
-    // Full buffer
-    error = pkmn::std_string_to_c_str(
-                string_cpp,
-                string_c,
-                sizeof(string_c)
-            );
-    EXPECT_STREQ("LibPKMN", string_c);
+    // Make sure accurate string length is returned.
+    pkmn::string_cpp_to_c(
+        string_cpp,
+        string_c,
+        sizeof(string_c)-1,
+        &string_length 
+    );
+    EXPECT_EQ(string_cpp, string_c);
+    EXPECT_EQ(string_cpp.size(), string_length);
+
+    // Make sure if a too-small buffer is given, the partial string
+    // is returned.
+    pkmn::string_cpp_to_c(
+        string_cpp,
+        too_short_string_buffer,
+        sizeof(too_short_string_buffer)-1,
+        &string_length
+    );
+    EXPECT_STREQ("Li", too_short_string_buffer);
+    EXPECT_EQ(string_cpp.size(), string_length);
 }
 
 TEST(cpp_to_c_test, string_pair_cpp_to_c_test) {
