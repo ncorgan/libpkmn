@@ -26,23 +26,23 @@ namespace pkmn {
         const pkmn::database::item_entry &item_entry_cpp,
         pkmn_database_item_entry_t* item_entry_c
     ) {
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_name(),
             &item_entry_c->name
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_game(),
             &item_entry_c->game
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_category(),
             &item_entry_c->category
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_pocket(),
             &item_entry_c->pocket
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_description(),
             &item_entry_c->description
         );
@@ -51,7 +51,7 @@ namespace pkmn {
         item_entry_c->holdable = item_entry_cpp.holdable();
         item_entry_c->fling_power = item_entry_cpp.get_fling_power();
 
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             item_entry_cpp.get_fling_effect(),
             &item_entry_c->fling_effect
         );
@@ -116,23 +116,23 @@ namespace pkmn {
         const pkmn::database::move_entry &move_entry_cpp,
         pkmn_database_move_entry_t* move_entry_c
     ) {
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_name(),
             &move_entry_c->name
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_game(),
             &move_entry_c->game
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_description(),
             &move_entry_c->description
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_target(),
             &move_entry_c->target
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_damage_class(),
             &move_entry_c->damage_class
         );
@@ -143,19 +143,19 @@ namespace pkmn {
         }
         move_entry_c->accuracy = move_entry_cpp.get_accuracy();
 
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_effect(),
             &move_entry_c->effect
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_contest_type(),
             &move_entry_c->contest_type
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_contest_effect(),
             &move_entry_c->contest_effect
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             move_entry_cpp.get_super_contest_effect(),
             &move_entry_c->super_contest_effect
         );
@@ -180,23 +180,23 @@ namespace pkmn {
         const pkmn::database::pokemon_entry &pokemon_entry_cpp,
         pkmn_database_pokemon_entry_t* pokemon_entry_c
     ) {
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_name(),
             &pokemon_entry_c->name
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_game(),
             &pokemon_entry_c->game
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_form(),
             &pokemon_entry_c->form
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_species(),
             &pokemon_entry_c->species
         );
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_pokedex_entry(),
             &pokemon_entry_c->pokedex_entry
         );
@@ -208,21 +208,21 @@ namespace pkmn {
         pokemon_entry_c->has_gender_differences = pokemon_entry_cpp.has_gender_differences();
         pokemon_entry_c->base_friendship = pokemon_entry_cpp.get_base_friendship();
 
-        pkmn::string_pair_cpp_to_c(
+        pkmn::c::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_types(),
             &pokemon_entry_c->types
         );
-        pkmn::string_pair_cpp_to_c(
+        pkmn::c::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_abilities(),
             &pokemon_entry_c->abilities
         );
 
-        pkmn::string_cpp_to_c_alloc(
+        pkmn::c::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_hidden_ability(),
             &pokemon_entry_c->hidden_ability
         );
 
-        pkmn::string_pair_cpp_to_c(
+        pkmn::c::string_pair_cpp_to_c(
             pokemon_entry_cpp.get_egg_groups(),
             &pokemon_entry_c->egg_groups
         );
@@ -277,7 +277,7 @@ namespace pkmn {
             &pokemon_entry_c->tutor_moves
         );
 
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pokemon_entry_cpp.get_forms(),
             &pokemon_entry_c->forms
         );
@@ -358,6 +358,8 @@ namespace pkmn {
 
     // Refactor below
 
+namespace c {
+
     void string_cpp_to_c(
         const std::string& string_cpp,
         char* c_str_ptr,
@@ -411,4 +413,5 @@ namespace pkmn {
 
         string_list_c_ptr->length = string_list_cpp.size();
     }
+}
 }

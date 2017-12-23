@@ -67,7 +67,7 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
     PKMN_CPP_TO_C(
         enforce_enum_bounds(stat);
 
-        pkmn::int_pair_cpp_to_c(
+        pkmn::c::int_pair_cpp_to_c(
             pkmn::calculations::get_gb_stat_range(
                 stat_names[stat], level, base_stat
             ),
@@ -109,7 +109,7 @@ pkmn_error_t pkmn_calculations_modern_stat_range(
     PKMN_CPP_TO_C(
         enforce_enum_bounds(stat);
 
-        pkmn::int_pair_cpp_to_c(
+        pkmn::c::int_pair_cpp_to_c(
             pkmn::calculations::get_modern_stat_range(
                 stat_names[stat], level, base_stat
             ),

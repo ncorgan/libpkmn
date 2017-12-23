@@ -249,6 +249,8 @@ namespace pkmn {
 
     // Refactor below
 
+namespace c {
+
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
         pkmn_int_pair_t* int_pair_ptr
@@ -297,6 +299,7 @@ namespace pkmn {
         string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
         string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
     }
+}
 }
 
 #endif /* PKMN_C_CPP_TO_C_HPP */

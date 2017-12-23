@@ -20,7 +20,7 @@ pkmn_error_t pkmn_database_ability_list(
     PKMN_CHECK_NULL_PARAM(ability_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_ability_list(
                 generation
             ),
@@ -38,7 +38,7 @@ pkmn_error_t pkmn_database_game_list(
     PKMN_CHECK_NULL_PARAM(game_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_game_list(
                 generation, include_previous
             ),
@@ -55,7 +55,7 @@ pkmn_error_t pkmn_database_gamecube_shadow_pokemon_list(
     PKMN_CHECK_NULL_PARAM(gamecube_shadow_pokemon_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_gamecube_shadow_pokemon_list(colosseum),
             gamecube_shadow_pokemon_list_out
         );
@@ -71,7 +71,7 @@ pkmn_error_t pkmn_database_item_list(
     PKMN_CHECK_NULL_PARAM(item_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_item_list(
                 game
             ),
@@ -90,7 +90,7 @@ pkmn_error_t pkmn_database_location_list(
     PKMN_CHECK_NULL_PARAM(location_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_location_list(
                 game, whole_generation
             ),
@@ -108,7 +108,7 @@ pkmn_error_t pkmn_database_move_list(
     PKMN_CHECK_NULL_PARAM(move_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_move_list(
                 game
             ),
@@ -124,7 +124,7 @@ pkmn_error_t pkmn_database_nature_list(
     PKMN_CHECK_NULL_PARAM(nature_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_nature_list(),
             nature_list_out
         )
@@ -140,7 +140,7 @@ pkmn_error_t pkmn_database_pokemon_list(
     PKMN_CHECK_NULL_PARAM(pokemon_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_pokemon_list(
                 generation, include_previous
             ),
@@ -156,7 +156,7 @@ pkmn_error_t pkmn_database_region_list(
     PKMN_CHECK_NULL_PARAM(region_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_region_list(),
             region_list_out
         )
@@ -171,7 +171,7 @@ pkmn_error_t pkmn_database_ribbon_list(
     PKMN_CHECK_NULL_PARAM(ribbon_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_ribbon_list(
                 generation
             ),
@@ -187,7 +187,7 @@ pkmn_error_t pkmn_database_super_training_medal_list(
     PKMN_CHECK_NULL_PARAM(super_training_medal_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_super_training_medal_list(),
             super_training_medal_list_out
         )
@@ -203,7 +203,7 @@ pkmn_error_t pkmn_database_type_list(
     PKMN_CHECK_NULL_PARAM(type_list_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             pkmn::database::get_type_list(
                 game
             ),

@@ -685,7 +685,7 @@ TEST(cpp_to_c_test, int_pair_cpp_to_c_test)
     std::pair<int, int> int_pair_cpp(6322, 10011);
     pkmn_int_pair_t int_pair_c = {0, 0};
 
-    pkmn::int_pair_cpp_to_c(
+    pkmn::c::int_pair_cpp_to_c(
         int_pair_cpp,
         &int_pair_c
     );
@@ -702,7 +702,7 @@ TEST(cpp_to_c_test, string_cpp_to_c_test)
     size_t string_length = 0;
 
     // Test not getting buffer length
-    pkmn::string_cpp_to_c(
+    pkmn::c::string_cpp_to_c(
         string_cpp,
         string_c,
         sizeof(string_c)-1,
@@ -711,7 +711,7 @@ TEST(cpp_to_c_test, string_cpp_to_c_test)
     EXPECT_EQ(string_cpp, string_c);
 
     // Make sure accurate string length is returned.
-    pkmn::string_cpp_to_c(
+    pkmn::c::string_cpp_to_c(
         string_cpp,
         string_c,
         sizeof(string_c)-1,
@@ -722,7 +722,7 @@ TEST(cpp_to_c_test, string_cpp_to_c_test)
 
     // Make sure if a too-small buffer is given, the partial string
     // is returned.
-    pkmn::string_cpp_to_c(
+    pkmn::c::string_cpp_to_c(
         string_cpp,
         too_short_string_buffer,
         sizeof(too_short_string_buffer)-1,
@@ -737,7 +737,7 @@ TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
     std::pair<std::string, std::string> string_pair_cpp("LibPKMN", "PKSav");
     pkmn_string_pair_t string_pair_c = {NULL, NULL};
 
-    pkmn::string_pair_cpp_to_c(
+    pkmn::c::string_pair_cpp_to_c(
         string_pair_cpp,
         &string_pair_c
     );
@@ -804,7 +804,7 @@ TEST(cpp_to_c_test, string_list_cpp_to_c_test)
     std::vector<std::string> string_vector_cpp{"LibPKMN", "PKSav", "TKO"};
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::string_list_cpp_to_c(
+    pkmn::c::string_list_cpp_to_c(
         string_vector_cpp,
         &string_list_c
     );

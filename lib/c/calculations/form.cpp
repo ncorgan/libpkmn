@@ -25,7 +25,7 @@ pkmn_error_t pkmn_calculations_gen2_unown_form(
     PKMN_CHECK_NULL_PARAM(form_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_cpp_to_c(
+        pkmn::c::string_cpp_to_c(
             pkmn::calculations::gen2_unown_form(
                 IV_attack, IV_defense,
                 IV_speed, IV_special
@@ -47,7 +47,7 @@ pkmn_error_t pkmn_calculations_gen3_unown_form(
     PKMN_CHECK_NULL_PARAM(form_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_cpp_to_c(
+        pkmn::c::string_cpp_to_c(
             pkmn::calculations::gen3_unown_form(personality),
             form_out,
             buffer_len,

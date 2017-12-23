@@ -22,7 +22,7 @@ pkmn_error_t pkmn_calculations_nature(
     PKMN_CHECK_NULL_PARAM(nature_out);
 
     PKMN_CPP_TO_C(
-        pkmn::string_cpp_to_c(
+        pkmn::c::string_cpp_to_c(
             pkmn::calculations::nature(personality),
             nature_out,
             buffer_len,

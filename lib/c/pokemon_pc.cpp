@@ -122,7 +122,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(box_names_out, handle);
 
     PKMN_CPP_TO_C(
-        pkmn::string_list_cpp_to_c(
+        pkmn::c::string_list_cpp_to_c(
             handle->cpp->get_box_names(),
             box_names_out
         );
