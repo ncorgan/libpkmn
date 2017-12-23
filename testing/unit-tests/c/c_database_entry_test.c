@@ -448,7 +448,8 @@ static void pokemon_entry_test() {
             &pokemon_entry,
             false,
             icon_filepath,
-            STRBUFFER_LEN
+            STRBUFFER_LEN,
+            NULL
         ),
         PKMN_ERROR_NONE
     );
@@ -462,7 +463,8 @@ static void pokemon_entry_test() {
             false,
             false,
             sprite_filepath,
-            STRBUFFER_LEN
+            STRBUFFER_LEN,
+            NULL
         ),
         PKMN_ERROR_NONE
     );

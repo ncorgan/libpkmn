@@ -51,7 +51,8 @@ static void gen2_unown_test(
         error = pkmn_pokemon_get_form(
                     unown,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -105,7 +106,8 @@ static void gen2_unown_test(
         error = pkmn_pokemon_get_icon_filepath(
                     unown,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -113,7 +115,8 @@ static void gen2_unown_test(
         error = pkmn_pokemon_get_sprite_filepath(
                     unown,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -164,7 +167,8 @@ static void gen2_unown_test(
     error = pkmn_pokemon_get_form(
                 unown,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("G", strbuffer);
@@ -181,7 +185,8 @@ static void gen2_unown_test(
         error = pkmn_pokemon_get_form(
                     unown,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -276,7 +281,8 @@ static void gen3_unown_test(
         error = pkmn_pokemon_get_form(
                     unown,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_EQUAL_STRING(unown_entry.forms.strings[i], strbuffer);
@@ -301,7 +307,8 @@ static void gen3_unown_test(
             error = pkmn_pokemon_get_icon_filepath(
                         unown,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -309,7 +316,8 @@ static void gen3_unown_test(
             error = pkmn_pokemon_get_sprite_filepath(
                         unown,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -339,7 +347,8 @@ static void gen3_unown_test(
     error = pkmn_pokemon_get_form(
                 unown,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_EQUAL_STRING("B", strbuffer);

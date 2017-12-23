@@ -105,22 +105,24 @@ pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     bool shiny,
     char* icon_filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* icon_filepath_length_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(icon_filepath_out);
 
     PKMN_CPP_TO_C(
-        return pkmn::std_string_to_c_str(
-                   pkmn::database::pokemon_entry(
-                       pokemon_entry->name,
-                       pokemon_entry->game,
-                       pokemon_entry->form
-                   ).get_icon_filepath(shiny),
-                   icon_filepath_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            pkmn::database::pokemon_entry(
+                pokemon_entry->name,
+                pokemon_entry->game,
+                pokemon_entry->form
+            ).get_icon_filepath(shiny),
+            icon_filepath_out,
+            buffer_len,
+            icon_filepath_length_out
+        );
     )
 }
 
@@ -129,22 +131,24 @@ pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     bool female,
     bool shiny,
     char* sprite_filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* sprite_filepath_length_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_entry);
     PKMN_CHECK_NULL_PARAM(sprite_filepath_out);
 
     PKMN_CPP_TO_C(
-        return pkmn::std_string_to_c_str(
-                   pkmn::database::pokemon_entry(
-                       pokemon_entry->name,
-                       pokemon_entry->game,
-                       pokemon_entry->form
-                   ).get_sprite_filepath(female, shiny),
-                   sprite_filepath_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            pkmn::database::pokemon_entry(
+                pokemon_entry->name,
+                pokemon_entry->game,
+                pokemon_entry->form
+            ).get_sprite_filepath(female, shiny),
+            sprite_filepath_out,
+            buffer_len,
+            sprite_filepath_length_out
+        );
     )
 }
 

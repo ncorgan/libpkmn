@@ -26,8 +26,6 @@ typedef enum {
 
     //! A null parameter is passed into a function.
     PKMN_ERROR_NULL_POINTER = 20,
-    //! The given buffer is too small for the return string.
-    PKMN_ERROR_BUFFER_TOO_SMALL = 21,
 
     //! The core library threw a std::invalid_argument.
     PKMN_ERROR_INVALID_ARGUMENT = 30,

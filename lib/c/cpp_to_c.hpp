@@ -199,35 +199,6 @@ namespace pkmn {
         pkmn_pokemon_box_list_t* pokemon_box_list_c
     );
 
-    PKMN_INLINE pkmn_error_t std_string_to_c_str(
-        const std::string &str,
-        char* c_str_out,
-        size_t buffer_len
-    ) {
-        PKMN_CHECK_BUFFER_LEN(buffer_len, (str.size()+1));
-        std::strncpy(c_str_out, str.c_str(), buffer_len);
-        c_str_out[buffer_len-1] = '\0';
-
-        pkmn_set_error("None");
-        return PKMN_ERROR_NONE;
-    }
-
-    template <typename handle_type>
-    PKMN_INLINE pkmn_error_t std_string_to_c_str_with_handle(
-        handle_type handle,
-        const std::string &str,
-        char* c_str_out,
-        size_t buffer_len
-    ) {
-        PKMN_CHECK_BUFFER_LEN_WITH_HANDLE(buffer_len, (str.size()+1), handle);
-        std::strncpy(c_str_out, str.c_str(), buffer_len);
-        c_str_out[buffer_len-1] = '\0';
-
-        pkmn_set_error("None");
-        handle->last_error = "None";
-        return PKMN_ERROR_NONE;
-    }
-
     template <typename value_type>
     PKMN_INLINE void std_map_keys_to_string_list(
         const std::map<std::string, value_type> &string_map,

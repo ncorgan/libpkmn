@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,7 +16,7 @@
 #if !defined(PKMN_POKEMON_BOX_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_pokemon_box_t;
 typedef struct pkmn_pokemon_box_t pkmn_pokemon_box_t;
-#define PKMN_POKEmon_box_BOX_DECLARED
+#define PKMN_POKEMON_BOX_DECLARED
 #endif
 
 typedef pkmn_pokemon_box_t* pkmn_pokemon_box_handle_t;
@@ -41,7 +41,8 @@ PKMN_API const char* pkmn_pokemon_box_strerror(
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_name(
     pkmn_pokemon_box_handle_t handle,
     char* name_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* name_length_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_set_name(
@@ -52,7 +53,8 @@ PKMN_API pkmn_error_t pkmn_pokemon_box_set_name(
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_game(
     pkmn_pokemon_box_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_box_get_num_pokemon(

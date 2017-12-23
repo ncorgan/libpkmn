@@ -605,7 +605,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
         error = pkmn_pokemon_get_species(
                     pokemon_list_c.pokemon_list[i],
                     species_c,
-                    sizeof(species_c)
+                    sizeof(species_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_list_cpp[i]->get_species().c_str(), species_c);
@@ -613,7 +614,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
         error = pkmn_pokemon_get_game(
                     pokemon_list_c.pokemon_list[i],
                     game_c,
-                    sizeof(game_c)
+                    sizeof(game_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_list_cpp[i]->get_game().c_str(), game_c);
@@ -659,7 +661,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
         error = pkmn_pokemon_box_get_game(
                     pokemon_box_list_c.pokemon_boxes[i],
                     game_c,
-                    sizeof(game_c)
+                    sizeof(game_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_box_list_cpp[i]->get_game().c_str(), game_c);
@@ -667,7 +670,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
         error = pkmn_pokemon_box_get_name(
                     pokemon_box_list_c.pokemon_boxes[i],
                     name_c,
-                    sizeof(name_c)
+                    sizeof(name_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_box_list_cpp[i]->get_name().c_str(), name_c);

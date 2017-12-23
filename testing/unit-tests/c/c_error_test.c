@@ -200,23 +200,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_filepath(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_filepath(
                 game_save,
                 NULL, // filepath_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "filepath_out");
-
-    error = pkmn_game_save_get_filepath(
-                game_save,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_save
@@ -250,23 +245,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_game(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_game(
                 game_save,
                 NULL, // game_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "game_out");
-
-    error = pkmn_game_save_get_game(
-        game_save,
-        strbuffer,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_get_original_trainer_info
@@ -307,23 +297,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_rival_name(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_rival_name(
                 game_save,
                 NULL, // rival_name_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "rival_name_out");
-
-    error = pkmn_game_save_get_rival_name(
-        game_save,
-        strbuffer,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_set_rival_name
@@ -796,23 +781,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_species(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_species(
                 pokemon,
                 NULL, // species_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "species_out");
-
-    error = pkmn_pokemon_get_species(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_game
@@ -821,14 +801,16 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_game(
                 pokemon,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "game_out");
 
@@ -839,23 +821,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_form(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_form(
                 pokemon,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form_out");
-
-    error = pkmn_pokemon_get_form(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_form
@@ -872,17 +849,6 @@ static void pokemon_error_test() {
                 NULL // form
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form");
-
-    /*
-     * pkmn_pokemon_get_game
-     */
-
-    error = pkmn_pokemon_get_game(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_database_entry
@@ -907,23 +873,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_nickname(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_nickname(
                 pokemon,
                 NULL, // nickname_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname_out");
-
-    error = pkmn_pokemon_get_nickname(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_nickname
@@ -1022,23 +983,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_held_item(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_held_item(
                 pokemon,
                 NULL, // held_item_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "held_item_out");
-
-    error = pkmn_pokemon_get_held_item(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_held_item
@@ -1089,23 +1045,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_ability(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_ability(
                 pokemon,
                 NULL, // ability_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ability_out");
-
-    error = pkmn_pokemon_get_ability(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_ability
@@ -1130,23 +1081,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_ball(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_ball(
                 pokemon,
                 NULL, // ball_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ball_out");
-
-    error = pkmn_pokemon_get_ball(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_ball
@@ -1198,7 +1144,8 @@ static void pokemon_error_test() {
                 NULL, // handle
                 true,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
@@ -1206,17 +1153,10 @@ static void pokemon_error_test() {
                 pokemon,
                 true,
                 NULL, // location_met_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "location_met_out");
-
-    error = pkmn_pokemon_get_location_met(
-                pokemon,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_location_met
@@ -1243,23 +1183,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_original_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_original_game(
                 pokemon,
                 NULL, // original_game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "original_game_out");
-
-    error = pkmn_pokemon_get_original_game(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_original_game
@@ -1732,23 +1667,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_icon_filepath(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_icon_filepath(
                 pokemon,
                 NULL, // icon_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "icon_filepath_out");
-
-    error = pkmn_pokemon_get_icon_filepath(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_sprite_filepath
@@ -1757,23 +1687,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_sprite_filepath(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_sprite_filepath(
                 pokemon,
                 NULL, // sprite_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "sprite_filepath_out");
-
-    error = pkmn_pokemon_get_sprite_filepath(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -1844,23 +1769,18 @@ static void pokemon_box_error_test() {
     error = pkmn_pokemon_box_get_name(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_box_get_name(
                 pokemon_box,
                 NULL, // name_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name_out");
-
-    error = pkmn_pokemon_box_get_name(
-                pokemon_box,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_box_set_name
@@ -1885,23 +1805,18 @@ static void pokemon_box_error_test() {
     error = pkmn_pokemon_box_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_box_get_game(
                 pokemon_box,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "game_out");
-
-    error = pkmn_pokemon_box_get_game(
-                pokemon_box,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_box_get_num_pokemon
@@ -2056,23 +1971,18 @@ static void pokemon_party_error_test() {
     error = pkmn_pokemon_party_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_party_get_game(
                 pokemon_party,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "game_out");
-
-    error = pkmn_pokemon_party_get_game(
-                pokemon_party,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_party_get_num_pokemon
@@ -2213,23 +2123,18 @@ static void pokemon_pc_error_test() {
     error = pkmn_pokemon_pc_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_pc_get_game(
                 pokemon_pc,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "game_out");
-
-    error = pkmn_pokemon_pc_get_game(
-                pokemon_pc,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_pc_get_num_boxes
@@ -3046,7 +2951,8 @@ static void database_pokemon_entry_error_test() {
                 NULL, // pokemon_entry
                 false,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
@@ -3054,17 +2960,10 @@ static void database_pokemon_entry_error_test() {
                 &entry,
                 false,
                 NULL, // icon_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("icon_filepath_out");
-
-    error = pkmn_database_pokemon_entry_icon_filepath(
-                &entry,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_database_pokemon_entry_sprite_filepath
@@ -3075,7 +2974,8 @@ static void database_pokemon_entry_error_test() {
                 false,
                 false,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
@@ -3084,18 +2984,10 @@ static void database_pokemon_entry_error_test() {
                 false,
                 false,
                 NULL, // sprite_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("sprite_filepath_out");
-
-    error = pkmn_database_pokemon_entry_sprite_filepath(
-                &entry,
-                false,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_database_pokemon_entry_free
@@ -3151,15 +3043,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_appdata_dir(
                 NULL, // appdata_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("appdata_dir_out");
-
-    error = pkmn_get_appdata_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_database_path
@@ -3167,15 +3054,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_database_path(
                 NULL, // database_path_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("database_path_out");
-
-    error = pkmn_get_database_path(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_images_dir
@@ -3183,15 +3065,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_images_dir(
                 NULL, // images_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("images_dir_out");
-
-    error = pkmn_get_images_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_tmp_dir
@@ -3199,15 +3076,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_tmp_dir(
                 NULL, // tmp_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("tmp_dir_out");
-
-    error = pkmn_get_tmp_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 }
 
 PKMN_C_TEST_MAIN(

@@ -56,17 +56,20 @@ const char* pkmn_pokemon_pc_strerror(
 pkmn_error_t pkmn_pokemon_pc_get_game(
     pkmn_pokemon_pc_handle_t handle,
     char* game_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* game_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
 
     PKMN_CPP_TO_C(
-        return pkmn::std_string_to_c_str(
-                   handle->cpp->get_game(),
-                   game_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_game(),
+            game_out,
+            buffer_len,
+            game_length_out
+        );
     )
 }
 
