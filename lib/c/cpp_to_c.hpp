@@ -34,6 +34,7 @@
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/string_types.h>
 
+#include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <cstdlib>
@@ -235,14 +236,6 @@ namespace pkmn {
         return PKMN_ERROR_NONE;
     }
 
-    PKMN_INLINE void std_string_to_c_str_alloc(
-        const std::string &str,
-        char** c_str_out
-    ) {
-        *c_str_out = (char*)std::calloc(str.size()+1, sizeof(char));
-        std::strncpy(*c_str_out, str.c_str(), str.size());
-    }
-
     void std_pair_std_string_to_string_pair(
         const std::pair<std::string, std::string> &cpp_pair,
         pkmn_string_pair_t* c_pair_out
@@ -267,11 +260,26 @@ namespace pkmn {
         string_list_out->length = string_map.size();
     }
 
-    void std_vector_std_string_to_string_list(
-        const std::vector<std::string> &vec,
-        pkmn_string_list_t* string_list_out
-    );
+    // Refactor below
+    inline void string_cpp_to_c_alloc(
+        const std::string& string_cpp,
+        char** c_str_ptr
+    )
+    {
+        BOOST_ASSERT(c_str_ptr);
 
+        *c_str_ptr = (char*)std::calloc(string_cpp.size()+1, sizeof(char));
+        std::strncpy(
+            *c_str_ptr,
+            string_cpp.c_str(),
+            string_cpp.size()
+        );
+    }
+
+    void string_list_cpp_to_c(
+        const std::vector<std::string>& string_list_cpp,
+        pkmn_string_list_t* string_list_c_ptr
+    );
 }
 
 #endif /* PKMN_C_CPP_TO_C_HPP */

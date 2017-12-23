@@ -3144,6 +3144,18 @@ static void gui_spinda_test()
 }
 
 /*
+ * <pkmn-c/types/string_types.h>
+ */
+static void types_string_types_test()
+{
+    /*
+     * pkmn_string_list_free
+     */
+    error = pkmn_string_list_free(NULL);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
  * <pkmn-c/utils/paths.h>
  */
 static void utils_paths_error_test() {
@@ -3236,5 +3248,6 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
     PKMN_C_TEST(gui_spinda_test)
+    PKMN_C_TEST(types_string_types_test)
     PKMN_C_TEST(utils_paths_error_test)
 )

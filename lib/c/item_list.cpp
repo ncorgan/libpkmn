@@ -23,11 +23,11 @@ void init_item_list(
 {
     pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
 
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::string_cpp_to_c_alloc(
         cpp->get_name(),
         &item_list->name
     );
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::string_cpp_to_c_alloc(
         cpp->get_game(),
         &item_list->game
     );
@@ -232,7 +232,7 @@ pkmn_error_t pkmn_item_list_get_valid_items(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
 
-        pkmn::std_vector_std_string_to_string_list(
+        pkmn::string_list_cpp_to_c(
             cpp->get_valid_items(),
             valid_items_out
         );

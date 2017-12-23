@@ -780,11 +780,12 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test) {
     EXPECT_EQ(0, string_list_c.length);
 }
 
-TEST(cpp_to_c_test, string_vector_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_list_cpp_to_c_test)
+{
     std::vector<std::string> string_vector_cpp{"LibPKMN", "PKSav", "TKO"};
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::std_vector_std_string_to_string_list(
+    pkmn::string_list_cpp_to_c(
         string_vector_cpp,
         &string_list_c
     );

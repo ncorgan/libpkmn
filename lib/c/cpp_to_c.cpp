@@ -7,6 +7,8 @@
 
 #include "cpp_to_c.hpp"
 
+#include <boost/assert.hpp>
+
 namespace pkmn {
 
     void pkmn_hidden_power_cpp_to_c(
@@ -24,23 +26,23 @@ namespace pkmn {
         const pkmn::database::item_entry &item_entry_cpp,
         pkmn_database_item_entry_t* item_entry_c
     ) {
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_name(),
             &item_entry_c->name
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_game(),
             &item_entry_c->game
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_category(),
             &item_entry_c->category
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_pocket(),
             &item_entry_c->pocket
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_description(),
             &item_entry_c->description
         );
@@ -49,7 +51,7 @@ namespace pkmn {
         item_entry_c->holdable = item_entry_cpp.holdable();
         item_entry_c->fling_power = item_entry_cpp.get_fling_power();
 
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             item_entry_cpp.get_fling_effect(),
             &item_entry_c->fling_effect
         );
@@ -114,23 +116,23 @@ namespace pkmn {
         const pkmn::database::move_entry &move_entry_cpp,
         pkmn_database_move_entry_t* move_entry_c
     ) {
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_name(),
             &move_entry_c->name
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_game(),
             &move_entry_c->game
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_description(),
             &move_entry_c->description
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_target(),
             &move_entry_c->target
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_damage_class(),
             &move_entry_c->damage_class
         );
@@ -141,19 +143,19 @@ namespace pkmn {
         }
         move_entry_c->accuracy = move_entry_cpp.get_accuracy();
 
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_effect(),
             &move_entry_c->effect
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_contest_type(),
             &move_entry_c->contest_type
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_contest_effect(),
             &move_entry_c->contest_effect
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             move_entry_cpp.get_super_contest_effect(),
             &move_entry_c->super_contest_effect
         );
@@ -178,23 +180,23 @@ namespace pkmn {
         const pkmn::database::pokemon_entry &pokemon_entry_cpp,
         pkmn_database_pokemon_entry_t* pokemon_entry_c
     ) {
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_name(),
             &pokemon_entry_c->name
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_game(),
             &pokemon_entry_c->game
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_form(),
             &pokemon_entry_c->form
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_species(),
             &pokemon_entry_c->species
         );
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_pokedex_entry(),
             &pokemon_entry_c->pokedex_entry
         );
@@ -215,7 +217,7 @@ namespace pkmn {
             &pokemon_entry_c->abilities
         );
 
-        pkmn::std_string_to_c_str_alloc(
+        pkmn::string_cpp_to_c_alloc(
             pokemon_entry_cpp.get_hidden_ability(),
             &pokemon_entry_c->hidden_ability
         );
@@ -275,7 +277,7 @@ namespace pkmn {
             &pokemon_entry_c->tutor_moves
         );
 
-        pkmn::std_vector_std_string_to_string_list(
+        pkmn::string_list_cpp_to_c(
             pokemon_entry_cpp.get_forms(),
             &pokemon_entry_c->forms
         );
@@ -367,18 +369,30 @@ namespace pkmn {
         c_pair_out->second[cpp_pair.second.size()] = '\0';
     }
 
-    void std_vector_std_string_to_string_list(
-        const std::vector<std::string> &vec,
-        pkmn_string_list_t* string_list_out
-    ) {
-        string_list_out->strings = (char**)std::malloc(sizeof(char*) * vec.size());
-        for(size_t i = 0; i < vec.size(); ++i) {
-            string_list_out->strings[i] = (char*)std::malloc(vec[i].size() + 1);
-            std::strcpy(string_list_out->strings[i], vec[i].c_str());
-            string_list_out->strings[i][vec[i].size()] = '\0';
+    // Refactor below
+
+    void string_list_cpp_to_c(
+        const std::vector<std::string>& string_list_cpp,
+        pkmn_string_list_t* string_list_c_ptr
+    )
+    {
+        BOOST_ASSERT(string_list_c_ptr);
+
+        if(!string_list_cpp.empty())
+        {
+            string_list_c_ptr->strings = (char**)std::calloc(
+                                                     string_list_cpp.size(),
+                                                     sizeof(char*)
+                                                 );
+            for(size_t index = 0; index < string_list_cpp.size(); ++index)
+            {
+                string_cpp_to_c_alloc(
+                    string_list_cpp[index],
+                    &string_list_c_ptr->strings[index]
+                );
+            }
         }
 
-        string_list_out->length = vec.size();
+        string_list_c_ptr->length = string_list_cpp.size();
     }
-
 }

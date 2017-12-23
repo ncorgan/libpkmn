@@ -24,7 +24,7 @@ void init_item_bag(
 {
     pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
 
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::string_cpp_to_c_alloc(
         cpp->get_game(),
         &item_bag->game
     );
@@ -45,7 +45,7 @@ void init_item_bag(
         init_item_list(&item_bag->pockets.pockets[i]);
     }
 
-    pkmn::std_vector_std_string_to_string_list(
+    pkmn::string_list_cpp_to_c(
         pocket_names,
         &item_bag->pockets.pocket_names
     );

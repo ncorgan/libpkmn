@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,8 @@
 
 #include <stdlib.h>
 
-typedef struct {
+typedef struct
+{
     char** strings;
     size_t length;
 } pkmn_string_list_t;
@@ -26,16 +27,23 @@ typedef struct {
 extern "C" {
 #endif
 
-static PKMN_INLINE pkmn_error_t pkmn_string_list_free(
-    pkmn_string_list_t* string_list
-) {
-    for(size_t i = 0; i < string_list->length; ++i) {
-        free(string_list->strings[i]);
+static inline pkmn_error_t pkmn_string_list_free(
+    pkmn_string_list_t* string_list_ptr
+)
+{
+    if(!string_list_ptr)
+    {
+        return PKMN_ERROR_NULL_POINTER;
     }
 
-    free(string_list->strings);
-    string_list->strings = NULL;
-    string_list->length = 0;
+    for(size_t i = 0; i < string_list_ptr->length; ++i)
+    {
+        free(string_list_ptr->strings[i]);
+    }
+
+    free(string_list_ptr->strings);
+    string_list_ptr->strings = NULL;
+    string_list_ptr->length = 0;
 
     return PKMN_ERROR_NONE;
 }
