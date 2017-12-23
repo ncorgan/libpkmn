@@ -68,6 +68,44 @@ TEST(cpp_calculations_test, brine_power_test)
     );
 }
 
+TEST(cpp_calculations_test, crush_grip_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::crush_grip_power(0, 1, 5)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::crush_grip_power(2, 1, 5)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::crush_grip_power(1, 2, 3)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::crush_grip_power(1, 2, 7)
+    , std::out_of_range);
+
+    EXPECT_EQ(
+        1,
+        pkmn::calculations::crush_grip_power(1, 200, 4)
+    );
+    EXPECT_EQ(
+        121,
+        pkmn::calculations::crush_grip_power(200, 200, 4)
+    );
+
+    for(size_t generation = 5; generation <= 6; ++generation)
+    {
+        EXPECT_EQ(
+            1,
+            pkmn::calculations::crush_grip_power(1, 200, generation)
+        );
+        EXPECT_EQ(
+            120,
+            pkmn::calculations::crush_grip_power(200, 200, generation)
+        );
+    }
+}
+
 TEST(cpp_calculations_test, eruption_power_test)
 {
     // Test invalid inputs.
@@ -280,6 +318,499 @@ TEST(cpp_calculations_test, gyro_ball_power_test)
     EXPECT_EQ(150, pkmn::calculations::gyro_ball_power(1, 500));
     EXPECT_EQ(50, pkmn::calculations::gyro_ball_power(100, 200));
     EXPECT_EQ(1, pkmn::calculations::gyro_ball_power(500, 1));
+}
+
+TEST(cpp_calculations_test, heat_crash_power_test)
+{
+    // Test invalid inputs
+    EXPECT_THROW(
+        pkmn::calculations::heat_crash_power(0.0f, 1.0f)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::heat_crash_power(1.0f, 0.0f)
+    , std::out_of_range);
+
+    struct heat_crash_power_test_params
+    {
+        float attacker_weight;
+        float target_weight;
+        int expected_power;
+    };
+
+    static const std::vector<heat_crash_power_test_params> test_params =
+    {
+        {200.0f, 200.0f, 40},
+        {200.0f, 100.1f, 40},
+        {200.0f, 100.0f, 60},
+        {200.0f, 66.7f, 60},
+        {200.0f, 66.6f, 80},
+        {200.0f, 50.1f, 80},
+        {200.0f, 50.0f, 100},
+        {200.0f, 40.1f, 100},
+        {200.0f, 40.0f, 120}
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::heat_crash_power(
+                test_param.attacker_weight,
+                test_param.target_weight
+            )
+        );
+    }
+}
+
+TEST(cpp_calculations_test, heavy_slam_power_test)
+{
+    // Test invalid inputs
+    EXPECT_THROW(
+        pkmn::calculations::heavy_slam_power(0.0f, 1.0f)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::heavy_slam_power(1.0f, 0.0f)
+    , std::out_of_range);
+
+    struct heavy_slam_power_test_params
+    {
+        float attacker_weight;
+        float target_weight;
+        int expected_power;
+    };
+
+    static const std::vector<heavy_slam_power_test_params> test_params =
+    {
+        {200.0f, 200.0f, 40},
+        {200.0f, 100.1f, 40},
+        {200.0f, 100.0f, 60},
+        {200.0f, 66.7f, 60},
+        {200.0f, 66.6f, 80},
+        {200.0f, 50.1f, 80},
+        {200.0f, 50.0f, 100},
+        {200.0f, 40.1f, 100},
+        {200.0f, 40.0f, 120}
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::heavy_slam_power(
+                test_param.attacker_weight,
+                test_param.target_weight
+            )
+        );
+    }
+}
+
+TEST(cpp_calculations_test, ice_ball_powers_test)
+{
+    const std::vector<int> expected_values = {30, 60, 120, 240, 480};
+    EXPECT_EQ(expected_values, pkmn::calculations::ice_ball_powers());
+}
+
+TEST(cpp_calculations_test, low_kick_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::low_kick_power(-1.0f, 1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::low_kick_power(1.0f, 0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::low_kick_power(1.0f, 10)
+    , std::out_of_range);
+
+    struct low_kick_power_test_params
+    {
+        float target_weight;
+        int expected_power;
+    };
+    static const std::vector<low_kick_power_test_params> test_params =
+    {
+        {0.1f, 20},
+        {9.9f, 20},
+        {10.0f, 40},
+        {24.9f, 40},
+        {25.0f, 60},
+        {49.9f, 60},
+        {50.0f, 80},
+        {99.9f, 80},
+        {100.0f, 100},
+        {199.9f, 100},
+        {200.0f, 120},
+        {1000.0f, 120}
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        for(int generation = 1; generation <= 6; ++generation)
+        {
+            if(generation <= 2)
+            {
+                // Generation I-II only have one set power,
+                // regardless of target weight.
+                EXPECT_EQ(
+                    50,
+                    pkmn::calculations::low_kick_power(
+                        test_param.target_weight,
+                        generation
+                    )
+                );
+            }
+            else
+            {
+                EXPECT_EQ(
+                    test_param.expected_power,
+                    pkmn::calculations::low_kick_power(
+                        test_param.target_weight,
+                        generation
+                    )
+                );
+            }
+        }
+    }
+}
+
+TEST(cpp_calculations_test, power_trip_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(-1,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(7,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,-1,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,7,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,-1,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,7,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,-1,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,7,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,-1,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,7,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,0,-1,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,0,7,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,0,0,-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::power_trip_power(0,0,0,0,0,0,7)
+    , std::out_of_range);
+
+    EXPECT_EQ(20, pkmn::calculations::power_trip_power(0,0,0,0,0,0,0));
+    EXPECT_EQ(440, pkmn::calculations::power_trip_power(0,1,2,3,4,5,6));
+    EXPECT_EQ(860, pkmn::calculations::power_trip_power(6,6,6,6,6,6,6));
+}
+
+TEST(cpp_calculations_test, punishment_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(-1,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(7,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,-1,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,7,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,-1,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,7,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,-1,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,7,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,-1,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,7,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,0,-1,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,0,7,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,0,0,-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::punishment_power(0,0,0,0,0,0,7)
+    , std::out_of_range);
+
+    EXPECT_EQ(60, pkmn::calculations::punishment_power(0,0,0,0,0,0,0));
+    EXPECT_EQ(200, pkmn::calculations::punishment_power(0,1,2,3,4,5,6));
+    EXPECT_EQ(200, pkmn::calculations::punishment_power(6,6,6,6,6,6,6));
+}
+
+TEST(cpp_calculations_test, return_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::return_power(-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::return_power(256)
+    , std::out_of_range);
+
+    // Source: Bulbapedia
+    EXPECT_EQ(1, pkmn::calculations::return_power(0));
+    EXPECT_EQ(102, pkmn::calculations::return_power(255));
+}
+
+TEST(cpp_calculations_test, reversal_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::reversal_power(0, 1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::reversal_power(1, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::reversal_power(2, 1);
+    , std::out_of_range);
+
+    struct reversal_power_test_params
+    {
+        int attacker_current_hp;
+        int attacker_max_hp;
+        int expected_power;
+    };
+
+    static const std::vector<reversal_power_test_params> test_params =
+    {
+        {1, 500, 200},
+        {20, 500, 200},
+
+        {21, 500, 150},
+        {52, 500, 150},
+
+        {53, 500, 100},
+        {104, 500, 100},
+
+        {105, 500, 80},
+        {177, 500, 80},
+
+        {178, 500, 40},
+        {343, 500, 40},
+
+        {344, 500, 20},
+        {500, 500, 20}
+    };
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_EQ(
+            test_param.expected_power,
+            pkmn::calculations::reversal_power(
+                test_param.attacker_current_hp,
+                test_param.attacker_max_hp
+            )
+        );
+    }
+}
+
+TEST(cpp_calculations_test, rollout_powers_test)
+{
+    const std::vector<int> expected_values = {30, 60, 120, 240, 480};
+    EXPECT_EQ(expected_values, pkmn::calculations::rollout_powers());
+}
+
+TEST(cpp_calculations_test, spit_up_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::spit_up_power(-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::spit_up_power(4)
+    , std::out_of_range);
+
+    EXPECT_EQ(0, pkmn::calculations::spit_up_power(0));
+    EXPECT_EQ(100, pkmn::calculations::spit_up_power(1));
+    EXPECT_EQ(200, pkmn::calculations::spit_up_power(2));
+    EXPECT_EQ(300, pkmn::calculations::spit_up_power(3));
+}
+
+TEST(cpp_calculations_test, stored_power_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(-1,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(7,0,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,-1,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,7,0,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,-1,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,7,0,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,-1,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,7,0,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,-1,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,7,0,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,0,-1,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,0,7,0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,0,0,-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::stored_power_power(0,0,0,0,0,0,7)
+    , std::out_of_range);
+
+    EXPECT_EQ(20, pkmn::calculations::stored_power_power(0,0,0,0,0,0,0));
+    EXPECT_EQ(440, pkmn::calculations::stored_power_power(0,1,2,3,4,5,6));
+    EXPECT_EQ(860, pkmn::calculations::stored_power_power(6,6,6,6,6,6,6));
+}
+
+TEST(cpp_calculations_test, triple_kick_powers_test)
+{
+    static const std::vector<int> expected_values = {10, 20, 30};
+    EXPECT_EQ(expected_values, pkmn::calculations::triple_kick_powers());
+}
+
+TEST(cpp_calculations_test, trump_card_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::trump_card_power(-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::trump_card_power(9)
+    , std::out_of_range);
+
+    static const std::vector<int> expected_results =
+    {
+        200, 80, 60, 50, 40, 40, 40, 40, 40
+    };
+    for(size_t remaining_pp = 0;
+        remaining_pp < expected_results.size();
+        ++remaining_pp
+    )
+    {
+        EXPECT_EQ(
+            expected_results[remaining_pp],
+            pkmn::calculations::trump_card_power(remaining_pp)
+        );
+    }
+}
+
+TEST(cpp_calculations_test, water_spout_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::water_spout_power(0, 1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::water_spout_power(1, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::water_spout_power(2, 1);
+    , std::out_of_range);
+
+    EXPECT_EQ(
+        1,
+        pkmn::calculations::water_spout_power(1, 500)
+    );
+    EXPECT_EQ(
+        75,
+        pkmn::calculations::water_spout_power(250, 500)
+    );
+    EXPECT_EQ(
+        150,
+        pkmn::calculations::water_spout_power(500, 500)
+    );
+}
+
+TEST(cpp_calculations_test, wring_out_power_test)
+{
+    // Test invalid inputs.
+    EXPECT_THROW(
+        pkmn::calculations::wring_out_power(0, 1, 5)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::wring_out_power(2, 1, 5)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::wring_out_power(1, 2, 3)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::wring_out_power(1, 2, 7)
+    , std::out_of_range);
+
+    EXPECT_EQ(
+        1,
+        pkmn::calculations::wring_out_power(1, 200, 4)
+    );
+    EXPECT_EQ(
+        121,
+        pkmn::calculations::wring_out_power(200, 200, 4)
+    );
+
+    for(size_t generation = 5; generation <= 6; ++generation)
+    {
+        EXPECT_EQ(
+            1,
+            pkmn::calculations::wring_out_power(1, 200, generation)
+        );
+        EXPECT_EQ(
+            120,
+            pkmn::calculations::wring_out_power(200, 200, generation)
+        );
+    }
 }
 
 // TODO: verify

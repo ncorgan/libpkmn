@@ -48,11 +48,23 @@ namespace pkmn { namespace calculations {
         int generation
     )
     {
+        pkmn::enforce_comparator(
+            "Target max HP",
+            target_max_hp,
+            1,
+            pkmn::value_comparator::GT
+        );
         pkmn::enforce_bounds(
             "Target current HP",
             target_current_hp,
-            0,
+            1,
             target_max_hp
+        );
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            4,
+            6
         );
 
         float hp_percentage = float(target_current_hp) / float(target_max_hp);
@@ -62,13 +74,9 @@ namespace pkmn { namespace calculations {
         {
             ++ret;
         }
-        else if(generation > 4)
-        {
-            ret = std::max<int>(1, ret);
-        }
         else
         {
-            throw std::invalid_argument("Crush Grip was introduced in Generation IV.");
+            ret = std::max<int>(1, ret);
         }
 
         return ret;
@@ -159,23 +167,23 @@ namespace pkmn { namespace calculations {
 
         float hp_percentage = float(attacker_current_hp) / float(attacker_max_hp);
 
-        if(hp_percentage < 0.0417)
+        if(pkmn::fp_compare_less(hp_percentage, 0.0417f))
         {
             return 200;
         }
-        else if(hp_percentage < 0.1042)
+        else if(pkmn::fp_compare_less(hp_percentage, 0.1042f))
         {
             return 150;
         }
-        else if(hp_percentage < 0.2083)
+        else if(pkmn::fp_compare_less(hp_percentage, 0.2083f))
         {
             return 100;
         }
-        else if(hp_percentage < 0.3542)
+        else if(pkmn::fp_compare_less(hp_percentage, 0.3542f))
         {
             return 80;
         }
-        else if(hp_percentage < 0.6875)
+        else if(pkmn::fp_compare_less(hp_percentage, 0.6875f))
         {
             return 40;
         }
@@ -310,21 +318,34 @@ namespace pkmn { namespace calculations {
         float target_weight
     )
     {
-        float weight_ratio = attacker_weight / target_weight;
+        pkmn::enforce_comparator(
+            "Attacker weight",
+            attacker_weight,
+            0.0f,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Target weight",
+            target_weight,
+            0.0f,
+            pkmn::value_comparator::GT
+        );
 
-        if(weight_ratio > 0.5f)
+        float weight_ratio = target_weight / attacker_weight;
+
+        if(pkmn::fp_compare_greater(weight_ratio, 0.5f))
         {
             return 40;
         }
-        else if(weight_ratio > 0.3333f)
+        else if(pkmn::fp_compare_greater(weight_ratio, 0.3333f))
         {
             return 60;
         }
-        else if(weight_ratio > 0.25f)
+        else if(pkmn::fp_compare_greater(weight_ratio, 0.25f))
         {
             return 80;
         }
-        else if(weight_ratio > 20.0f)
+        else if(pkmn::fp_compare_greater(weight_ratio, 0.2f))
         {
             return 100;
         }
@@ -351,10 +372,16 @@ namespace pkmn { namespace calculations {
         int generation
     )
     {
+        pkmn::enforce_comparator(
+            "Target weight",
+            target_weight,
+            0.0f,
+            pkmn::value_comparator::GT
+        );
         pkmn::enforce_bounds(
             "Generation",
             generation,
-            2,
+            1,
             6
         );
 
@@ -426,7 +453,7 @@ namespace pkmn { namespace calculations {
 
         return multiplier;
     }
-    
+
     int power_trip_power(
         int attack_stat_stage,
         int defense_stat_stage,
@@ -532,11 +559,11 @@ namespace pkmn { namespace calculations {
         int pp_remaining_after_use
     )
     {
-        pkmn::enforce_bounds("PP remaining after use", pp_remaining_after_use, 0, 4);
+        pkmn::enforce_bounds("PP remaining after use", pp_remaining_after_use, 0, 8);
 
         static const int TRUMP_CARD_POWERS[] = {200, 80, 60, 50, 40};
 
-        return TRUMP_CARD_POWERS[pp_remaining_after_use];
+        return TRUMP_CARD_POWERS[std::min<int>(4, pp_remaining_after_use)];
     }
 
     int water_spout_power(
@@ -544,14 +571,23 @@ namespace pkmn { namespace calculations {
         int attacker_max_hp
     )
     {
+        pkmn::enforce_comparator(
+            "Attacker max HP",
+            attacker_max_hp,
+            0,
+            pkmn::value_comparator::GT
+        );
         pkmn::enforce_bounds(
             "Attacker current HP",
             attacker_current_hp,
-            0,
+            1,
             attacker_max_hp
         );
 
-        return int(150.0f * (float(attacker_current_hp) / float(attacker_max_hp)));
+        return std::max<int>(
+                   1,
+                   int(150.0f * (float(attacker_current_hp) / float(attacker_max_hp)))
+               );
     }
 
     // Wring Out is a variation of Crush Grip.

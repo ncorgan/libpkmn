@@ -117,7 +117,7 @@ namespace pkmn { namespace calculations {
 
     PKMN_INLINE std::vector<int> rollout_powers()
     {
-        return {40, 80, 120, 160, 200};
+        return {30, 60, 120, 240, 480};
     }
 
     PKMN_API int spit_up_power(
