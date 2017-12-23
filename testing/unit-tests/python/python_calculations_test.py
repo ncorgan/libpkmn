@@ -14,42 +14,6 @@ import unittest
 
 class calculations_test(unittest.TestCase):
 
-    def test_damage(self):
-        # Source: https:#bulbapedia.bulbagarden.net/wiki/Damage#Example
-
-        # Only taking types into account
-        #
-        # "Imagine a level 75 Glaceon...with an effective Attack stat of 123
-        # uses Ice Fang (an Ice-type physical move with a power of 65) against
-        # a Garchomp with an effective Defense stat of 163 in Generation VI,
-        # and does not land a critical hit."
-        #
-        # The article itself results in the wrong value, but the value I'm
-        # testing for below was based on its equations.
-        ice_fang = pkmn.database.move_entry("Ice Fang", "X")
-        glaceon = pkmn.database.pokemon_entry("Glaceon", "X", "")
-        garchomp = pkmn.database.pokemon_entry("Garchomp", "X", "")
-
-        modifier = 1.0
-        modifier *= pkmn.calculations.type_damage_modifier(
-                        6,
-                        glaceon.get_types()[0],
-                        garchomp.get_types()[0],
-                        garchomp.get_types()[1]
-                    )
-        modifier *= pkmn.calculations.STAB_MODIFIER
-        self.assertEquals(6.0, modifier)
-
-        self.assertEquals(65, ice_fang.get_base_power())
-        damage = pkmn.calculations.damage(
-                     75,
-                     ice_fang.get_base_power(),
-                     123,
-                     163,
-                     modifier
-                 )
-        self.assertEquals(200, damage)
-
     def test_gen2_unown_form(self):
         # Make sure expected errors are raised.
         with self.assertRaises(IndexError):
