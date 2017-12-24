@@ -127,66 +127,7 @@ void update_item_list(
     pkmn_item_list_t* item_list
 );
 
-namespace pkmn {
-
-    void pkmn_item_entry_cpp_to_c(
-        const pkmn::database::item_entry &item_entry_cpp,
-        pkmn_database_item_entry_t* item_entry_c
-    );
-
-    void pkmn_levelup_move_cpp_to_c(
-        const pkmn::database::levelup_move &lmove_cpp,
-        pkmn_levelup_move_t* lmove_c
-    );
-
-    void pkmn_levelup_moves_cpp_to_c(
-        const pkmn::database::levelup_moves_t &lmoves_cpp,
-        pkmn_levelup_moves_t* lmoves_c
-    );
-
-    void pkmn_move_entry_cpp_to_c(
-        const pkmn::database::move_entry &move_entry_cpp,
-        pkmn_database_move_entry_t* move_entry_c
-    );
-
-    void pkmn_move_list_to_string_list(
-        const pkmn::database::move_list_t &move_list,
-        pkmn_string_list_t* string_list_out
-    );
-
-    void pkmn_pokemon_entry_cpp_to_c(
-        const pkmn::database::pokemon_entry &pokemon_entry_cpp,
-        pkmn_database_pokemon_entry_t* pokemon_entry_c
-    );
-
-    void pkmn_move_slot_cpp_to_c(
-        const pkmn::move_slot &mslot_cpp,
-        pkmn_move_slot_t* mslot_c
-    );
-
-    void pkmn_move_slots_cpp_to_c(
-        const pkmn::move_slots_t &mslots_cpp,
-        pkmn_move_slots_t* mslots_c
-    );
-
-    void pkmn_pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t &pokemon_entries,
-        pkmn_string_list_t* string_list_out
-    );
-
-    void pkmn_pokemon_list_cpp_to_c(
-        const pkmn::pokemon_list_t &pokemon_list_cpp,
-        pkmn_pokemon_list_t* pokemon_list_c
-    );
-
-    void pkmn_pokemon_box_list_cpp_to_c(
-        const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
-        pkmn_pokemon_box_list_t* pokemon_box_list_c
-    );
-
-    // Refactor below
-
-namespace c {
+namespace pkmn { namespace c {
 
     template <typename pointer_type>
     inline void delete_pointer_and_set_to_null(pointer_type** pointer_ptr)
@@ -313,6 +254,79 @@ namespace c {
     void item_slots_cpp_to_c(
         const pkmn::item_slots_t& item_slots_cpp,
         pkmn_item_slots_t* item_slots_c_ptr
+    );
+
+    inline void levelup_move_cpp_to_c(
+        const pkmn::database::levelup_move& levelup_move_cpp,
+        pkmn_levelup_move_t* levelup_move_c_ptr
+    )
+    {
+        BOOST_ASSERT(levelup_move_c_ptr);
+
+        string_cpp_to_c_alloc(
+            levelup_move_cpp.move.get_name(),
+            &levelup_move_c_ptr->move
+        );
+        levelup_move_c_ptr->level = levelup_move_cpp.level;
+    }
+
+    void levelup_moves_cpp_to_c(
+        const pkmn::database::levelup_moves_t& levelup_moves_cpp,
+        pkmn_levelup_moves_t* levelup_moves_c_ptr
+    );
+
+    void move_list_to_string_list(
+        const pkmn::database::move_list_t& move_list,
+        pkmn_string_list_t* string_list_ptr
+    );
+
+    inline void move_slot_cpp_to_c(
+        const pkmn::move_slot& move_slot_cpp,
+        pkmn_move_slot_t* move_slot_c_ptr
+    )
+    {
+        BOOST_ASSERT(move_slot_c_ptr);
+
+        string_cpp_to_c_alloc(
+            move_slot_cpp.move,
+            &move_slot_c_ptr->move
+        );
+        move_slot_c_ptr->pp = move_slot_cpp.pp;
+    }
+
+    void move_slots_cpp_to_c(
+        const pkmn::move_slots_t& move_slots_cpp,
+        pkmn_move_slots_t* move_slots_c_ptr
+    );
+
+    void pokemon_entries_to_string_list(
+        const pkmn::database::pokemon_entries_t& pokemon_entries,
+        pkmn_string_list_t* string_list_ptr
+    );
+
+    void item_entry_cpp_to_c(
+        const pkmn::database::item_entry& item_entry_cpp,
+        pkmn_database_item_entry_t* item_entry_c_ptr
+    );
+
+    void move_entry_cpp_to_c(
+        const pkmn::database::move_entry& move_entry_cpp,
+        pkmn_database_move_entry_t* move_entry_c_ptr
+    );
+
+    void pokemon_entry_cpp_to_c(
+        const pkmn::database::pokemon_entry& pokemon_entry_cpp,
+        pkmn_database_pokemon_entry_t* pokemon_entry_c_ptr
+    );
+
+    void pokemon_list_cpp_to_c(
+        const pkmn::pokemon_list_t& pokemon_list_cpp,
+        pkmn_pokemon_list_t* pokemon_list_c_ptr
+    );
+
+    void pokemon_box_list_cpp_to_c(
+        const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
+        pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
     );
 }
 }

@@ -53,12 +53,15 @@ static inline pkmn_error_t pkmn_item_slots_free(
         return PKMN_ERROR_NULL_POINTER;
     }
 
-    for(size_t index = 0; index < item_slots_ptr->length; ++index)
+    if(item_slots_ptr->length > 0)
     {
-        pkmn_item_slot_free(&item_slots_ptr->item_slots[index]);
+        for(size_t index = 0; index < item_slots_ptr->length; ++index)
+        {
+            pkmn_item_slot_free(&item_slots_ptr->item_slots[index]);
+        }
+        free(item_slots_ptr->item_slots);
     }
 
-    free(item_slots_ptr->item_slots);
     item_slots_ptr->item_slots = NULL;
     item_slots_ptr->length = 0;
 

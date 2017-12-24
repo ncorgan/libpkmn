@@ -30,7 +30,7 @@ pkmn_error_t pkmn_database_get_item_entry(
                                        item_name,
                                        item_game
                                    );
-        pkmn::pkmn_item_entry_cpp_to_c(
+        pkmn::c::item_entry_cpp_to_c(
             item_entry_cpp,
             item_entry_out
         );

@@ -36,12 +36,15 @@ static inline pkmn_error_t pkmn_string_list_free(
         return PKMN_ERROR_NULL_POINTER;
     }
 
-    for(size_t i = 0; i < string_list_ptr->length; ++i)
+    if(string_list_ptr->length > 0)
     {
-        free(string_list_ptr->strings[i]);
+        for(size_t i = 0; i < string_list_ptr->length; ++i)
+        {
+            free(string_list_ptr->strings[i]);
+        }
+        free(string_list_ptr->strings);
     }
 
-    free(string_list_ptr->strings);
     string_list_ptr->strings = NULL;
     string_list_ptr->length = 0;
 

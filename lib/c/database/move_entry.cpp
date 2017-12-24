@@ -31,7 +31,7 @@ pkmn_error_t pkmn_database_get_move_entry(
                                        move_game
                                    );
 
-        pkmn::pkmn_move_entry_cpp_to_c(
+        pkmn::c::move_entry_cpp_to_c(
             move_entry_cpp,
             move_entry_out
         );

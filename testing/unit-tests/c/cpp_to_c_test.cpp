@@ -419,15 +419,16 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
     EXPECT_EQ(0, item_slots_c.length);
 }
 
-TEST(cpp_to_c_test, levelup_move_cpp_to_c_test) {
+TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
+{
     pkmn::database::levelup_move levelup_move_cpp(
         pkmn::database::move_entry("Scratch", "Red"),
         50
     );
 
-    pkmn_levelup_move_t levelup_move_c;
+    pkmn_levelup_move_t levelup_move_c = { NULL, 0 };
 
-    pkmn::pkmn_levelup_move_cpp_to_c(
+    pkmn::c::levelup_move_cpp_to_c(
         levelup_move_cpp,
         &levelup_move_c
     );
@@ -440,8 +441,10 @@ TEST(cpp_to_c_test, levelup_move_cpp_to_c_test) {
     EXPECT_EQ(0, levelup_move_c.level);
 }
 
-TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
-    pkmn::database::levelup_moves_t levelup_moves_cpp{
+TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
+{
+    pkmn::database::levelup_moves_t levelup_moves_cpp =
+    {
         pkmn::database::levelup_move(
             pkmn::database::move_entry("Scratch", "Red"),
             50
@@ -457,7 +460,7 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
     };
 
     pkmn_levelup_moves_t levelup_moves_c = { NULL, 0 };
-    pkmn::pkmn_levelup_moves_cpp_to_c(
+    pkmn::c::levelup_moves_cpp_to_c(
         levelup_moves_cpp,
         &levelup_moves_c
     );
@@ -477,15 +480,17 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
     EXPECT_EQ(0, levelup_moves_c.length);
 }
 
-TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
-    pkmn::database::move_list_t move_list_cpp{
+TEST(cpp_to_c_test, move_list_cpp_to_c_test)
+{
+    pkmn::database::move_list_t move_list_cpp =
+    {
         pkmn::database::move_entry("Scratch", "Red"),
         pkmn::database::move_entry("Synthesis", "Silver"),
         pkmn::database::move_entry("Frenzy Plant", "Emerald")
     };
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::pkmn_move_list_to_string_list(
+    pkmn::c::move_list_to_string_list(
         move_list_cpp,
         &string_list_c
     );
@@ -502,7 +507,8 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
     EXPECT_EQ(0, string_list_c.length);
 }
 
-TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
+TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
+{
     pkmn::move_slot move_slot_cpp(
         "Tackle",
         50
@@ -510,7 +516,7 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
 
     pkmn_move_slot_t move_slot_c;
 
-    pkmn::pkmn_move_slot_cpp_to_c(
+    pkmn::c::move_slot_cpp_to_c(
         move_slot_cpp,
         &move_slot_c
     );
@@ -523,8 +529,10 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
     EXPECT_EQ(0, move_slot_c.pp);
 }
 
-TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
-    pkmn::move_slots_t move_slots_cpp{
+TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
+{
+    pkmn::move_slots_t move_slots_cpp =
+    {
         pkmn::move_slot(
             "Tackle",
             50
@@ -540,7 +548,7 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     };
 
     pkmn_move_slots_t move_slots_c = { NULL, 0 };
-    pkmn::pkmn_move_slots_cpp_to_c(
+    pkmn::c::move_slots_cpp_to_c(
         move_slots_cpp,
         &move_slots_c
     );
@@ -560,15 +568,17 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     EXPECT_EQ(0, move_slots_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test) {
-    pkmn::database::pokemon_entries_t pokemon_entries_cpp{
+TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
+{
+    pkmn::database::pokemon_entries_t pokemon_entries_cpp =
+    {
         pkmn::database::pokemon_entry("Charmander", "Red", ""),
         pkmn::database::pokemon_entry("Totodile", "Gold", ""),
         pkmn::database::pokemon_entry("Treecko", "Ruby", "")
     };
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_entries_to_string_list(
+    pkmn::c::pokemon_entries_to_string_list(
         pokemon_entries_cpp,
         &string_list_c
     );
@@ -585,8 +595,10 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test) {
     EXPECT_EQ(0, string_list_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
-    pkmn::pokemon_list_t pokemon_list_cpp{
+TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
+{
+    pkmn::pokemon_list_t pokemon_list_cpp =
+    {
         pkmn::pokemon::make(
             "Charmander", "Red", "", 5
         ),
@@ -600,13 +612,14 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
 
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_list_cpp_to_c(
+    pkmn::c::pokemon_list_cpp_to_c(
         pokemon_list_cpp,
         &pokemon_list_c
     );
     EXPECT_EQ(3, pokemon_list_c.length);
 
-    for(size_t i = 0; i < 3; ++i) {
+    for(size_t i = 0; i < 3; ++i)
+    {
         char species_c[STRBUFFER_LEN] = {0};
         char game_c[STRBUFFER_LEN] = {0};
         int level_c = 0;
@@ -644,8 +657,10 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
     EXPECT_EQ(0, pokemon_list_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
-    pkmn::pokemon_box_list_t pokemon_box_list_cpp{
+TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
+{
+    pkmn::pokemon_box_list_t pokemon_box_list_cpp =
+    {
         pkmn::pokemon_box::make("Gold"),
         pkmn::pokemon_box::make("Ruby"),
         pkmn::pokemon_box::make("FireRed")
@@ -657,13 +672,14 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
 
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_box_list_cpp_to_c(
+    pkmn::c::pokemon_box_list_cpp_to_c(
         pokemon_box_list_cpp,
         &pokemon_box_list_c
     );
     EXPECT_EQ(3, pokemon_box_list_c.length);
 
-    for(size_t i = 0; i < 3; ++i) {
+    for(size_t i = 0; i < 3; ++i)
+    {
         char game_c[STRBUFFER_LEN] = {0};
         char name_c[STRBUFFER_LEN] = {0};
 

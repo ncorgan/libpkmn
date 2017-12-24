@@ -34,7 +34,7 @@ pkmn_error_t pkmn_database_get_pokemon_entry(
                                           form
                                       );
 
-        pkmn::pkmn_pokemon_entry_cpp_to_c(
+        pkmn::c::pokemon_entry_cpp_to_c(
             pokemon_entry_cpp,
             pokemon_entry_out
         );
@@ -58,7 +58,7 @@ pkmn_error_t pkmn_database_pokemon_entry_set_form(
                                       );
 
         pkmn_database_pokemon_entry_free(pokemon_entry);
-        pkmn::pkmn_pokemon_entry_cpp_to_c(
+        pkmn::c::pokemon_entry_cpp_to_c(
             new_entry,
             pokemon_entry
         );

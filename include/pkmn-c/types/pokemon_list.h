@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,7 +13,8 @@
 
 #include <stdlib.h>
 
-typedef struct {
+typedef struct
+{
     pkmn_pokemon_handle_t* pokemon_list;
     size_t length;
 } pkmn_pokemon_list_t;
@@ -22,10 +23,17 @@ typedef struct {
 extern "C" {
 #endif
 
-static PKMN_INLINE pkmn_error_t pkmn_pokemon_list_free(
+static inline pkmn_error_t pkmn_pokemon_list_free(
     pkmn_pokemon_list_t* pokemon_list
-) {
-    for(size_t i = 0; i < pokemon_list->length; ++i) {
+)
+{
+    if(!pokemon_list)
+    {
+        return PKMN_ERROR_NULL_POINTER;
+    }
+
+    for(size_t i = 0; i < pokemon_list->length; ++i)
+    {
         pkmn_pokemon_free(&pokemon_list->pokemon_list[i]);
     }
 

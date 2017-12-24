@@ -181,7 +181,7 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_pokemon_entry_cpp_to_c(
+        pkmn::c::pokemon_entry_cpp_to_c(
             handle->cpp->get_database_entry(),
             database_entry_out
         )
@@ -730,7 +730,7 @@ pkmn_error_t pkmn_pokemon_get_moves(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move_slots_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_move_slots_cpp_to_c(
+        pkmn::c::move_slots_cpp_to_c(
             handle->cpp->get_moves(),
             move_slots_out
         );

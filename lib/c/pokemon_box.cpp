@@ -170,7 +170,7 @@ pkmn_error_t pkmn_pokemon_box_as_array(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_list_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_pokemon_list_cpp_to_c(
+        pkmn::c::pokemon_list_cpp_to_c(
             handle->cpp->as_vector(),
             pokemon_list_out
         );
