@@ -7,6 +7,7 @@
 
 #include "env.hpp"
 
+#include "swig/modules/cpp_wrappers/item_slot.hpp"
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
@@ -21,13 +22,13 @@
 
 namespace fs = boost::filesystem;
 
-TEST(cpp_swig_wrapper_test, test_item_slot_wrapper)
+TEST(cpp_swig_test, test_item_slot)
 {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make(
                                             "Items",
                                             "Red"
                                         );
-    pkmn::swig::item_slot_wrapper first_slot(item_pocket, 0);
+    pkmn::swig::item_slot2 first_slot(item_pocket, 0);
 
     // Set the item name through the native class.
     item_pocket->set_item(
@@ -59,7 +60,7 @@ TEST(cpp_swig_wrapper_test, test_item_slot_wrapper)
         "Repel",
         10
     );
-    pkmn::swig::item_slot_wrapper second_slot(item_pocket, 1);
+    pkmn::swig::item_slot2 second_slot(item_pocket, 1);
     ASSERT_EQ("Repel", second_slot.get_item());
     ASSERT_EQ(10, second_slot.get_amount());
 
@@ -78,9 +79,9 @@ TEST(cpp_swig_wrapper_test, test_item_slot_wrapper)
     EXPECT_EQ(0, second_slot.get_amount());
 }
 
-TEST(cpp_swig_wrapper_test, test_item_list)
+TEST(cpp_swig_test, test_item_list)
 {
-    pkmn::swig::item_list swig_item_list("Items", "Red");
+    pkmn::swig::item_list2 swig_item_list("Items", "Red");
 
     EXPECT_EQ("Items", swig_item_list.get_name());
     EXPECT_EQ("Red", swig_item_list.get_game());
@@ -101,9 +102,9 @@ TEST(cpp_swig_wrapper_test, test_item_list)
     EXPECT_GT(valid_items.size(), 0);
 }
 
-TEST(cpp_swig_wrapper_test, test_item_bag)
+TEST(cpp_swig_test, test_item_bag)
 {
-    pkmn::swig::item_bag swig_item_bag("Colosseum");
+    pkmn::swig::item_bag2 swig_item_bag("Colosseum");
 
     EXPECT_EQ("Colosseum", swig_item_bag.get_game());
 
@@ -115,7 +116,7 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
         pocket_name_iter != pocket_names_end;
         ++pocket_name_iter)
     {
-        pkmn::swig::item_list pocket = swig_item_bag.get_pocket(*pocket_name_iter);
+        pkmn::swig::item_list2 pocket = swig_item_bag.get_pocket(*pocket_name_iter);
         EXPECT_EQ(*pocket_name_iter, pocket.get_name());
         EXPECT_EQ("Colosseum", pocket.get_game());
 
@@ -138,7 +139,7 @@ TEST(cpp_swig_wrapper_test, test_item_bag)
     }
 }
 
-TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
+TEST(cpp_swig_test, test_invalid_pokemon_maps)
 {
     pkmn::swig::pokemon_EV_map EV_map;
     pkmn::swig::pokemon_IV_map IV_map;
@@ -182,7 +183,7 @@ TEST(cpp_swig_wrapper_test, test_invalid_pokemon_maps)
     , std::runtime_error);
 }
 
-TEST(cpp_swig_wrapper_test, test_pokemon_maps)
+TEST(cpp_swig_test, test_pokemon_maps)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
                                       "Bulbasaur",
@@ -267,7 +268,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_maps)
     EXPECT_FALSE(contest_stat_map.has_key("Not a key"));
 }
 
-TEST(cpp_swig_wrapper_test, test_pokemon)
+TEST(cpp_swig_test, test_pokemon)
 {
     pkmn::swig::pokemon swig_pokemon(
                             "Bulbasaur",
@@ -361,7 +362,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon)
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
 }
 
-TEST(cpp_swig_wrapper_test, test_pokemon_party)
+TEST(cpp_swig_test, test_pokemon_party)
 {
     pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
 
@@ -386,7 +387,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_party)
     EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_wrapper_test, test_pokemon_box)
+TEST(cpp_swig_test, test_pokemon_box)
 {
     pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
 
@@ -413,7 +414,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_box)
     EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_wrapper_test, test_pokemon_pc)
+TEST(cpp_swig_test, test_pokemon_pc)
 {
     pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
 
@@ -434,7 +435,7 @@ TEST(cpp_swig_wrapper_test, test_pokemon_pc)
     EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 
-TEST(cpp_swig_wrapper_test, test_game_save)
+TEST(cpp_swig_test, test_game_save)
 {
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 

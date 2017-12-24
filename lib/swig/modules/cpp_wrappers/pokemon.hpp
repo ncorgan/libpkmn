@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef CPP_WRAPPERS_POKEMON_HPP
-#define CPP_WRAPPERS_POKEMON_HPP
+#ifndef CPPS_POKEMON_HPP
+#define CPPS_POKEMON_HPP
 
 #include "exception_internal.hpp"
 
@@ -311,15 +311,15 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr _pokemon;
     };
 
-    class pokemon_move_slot_wrapper
+    class pokemon_move_slot
     {
         public:
-            pokemon_move_slot_wrapper():
+            pokemon_move_slot():
                 _pokemon(nullptr),
                 _index(0)
             {}
 
-            pokemon_move_slot_wrapper(
+            pokemon_move_slot(
                 const pkmn::pokemon::sptr& cpp_pokemon,
                 int index
             ): _pokemon(cpp_pokemon),
@@ -365,21 +365,21 @@ namespace pkmn { namespace swig {
             int _index;
     };
 
-    class pokemon_move_slots_wrapper
+    class pokemon_move_slots
     {
         public:
-            pokemon_move_slots_wrapper():
+            pokemon_move_slots():
                 _pokemon(nullptr)
             {}
 
-            pokemon_move_slots_wrapper(
+            pokemon_move_slots(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
             {
                 _init();
             }
 
-            pokemon_move_slot_wrapper get_move_slot(
+            pokemon_move_slot get_move_slot(
                 int index
             )
             {
@@ -402,14 +402,14 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokemon::sptr _pokemon;
 
-            std::vector<pokemon_move_slot_wrapper> _moves;
+            std::vector<pokemon_move_slot> _moves;
 
             void _init()
             {
                 for(int i = 0; i < 4; ++i)
                 {
                     _moves.emplace_back(
-                        pokemon_move_slot_wrapper(
+                        pokemon_move_slot(
                             _pokemon,
                             i
                         )
@@ -755,9 +755,9 @@ namespace pkmn { namespace swig {
                 return _contest_stat_map;
             }
 
-            PKMN_INLINE pokemon_move_slots_wrapper& get_moves()
+            PKMN_INLINE pokemon_move_slots& get_moves()
             {
-                return _move_slots_wrapper;
+                return _move_slots;
             }
 
             // Stats are read-only, so no need to wrap.
@@ -816,6 +816,20 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_string_attribute_names();
             }
 
+            // TODO: ifdef for specific wrappers
+
+            // For wrappers whose language doesn't support the == operator
+            bool equals(const pokemon& rhs)
+            {
+                return operator==(rhs);
+            }
+
+            // For hash code functions
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon.get());
+            }
+
         private:
             pkmn::pokemon::sptr _pokemon;
             pokemon_EV_map _EV_map;
@@ -823,7 +837,7 @@ namespace pkmn { namespace swig {
             pokemon_marking_map _marking_map;
             pokemon_ribbon_map _ribbon_map;
             pokemon_contest_stat_map _contest_stat_map;
-            pokemon_move_slots_wrapper _move_slots_wrapper;
+            pokemon_move_slots _move_slots;
 
             void _init()
             {
@@ -832,10 +846,10 @@ namespace pkmn { namespace swig {
                 _marking_map = pokemon_marking_map(_pokemon);
                 _ribbon_map = pokemon_ribbon_map(_pokemon);
                 _contest_stat_map = pokemon_contest_stat_map(_pokemon);
-                _move_slots_wrapper = pokemon_move_slots_wrapper(_pokemon);
+                _move_slots = pokemon_move_slots(_pokemon);
             }
     };
 
 }}
 
-#endif /* CPP_WRAPPERS_POKEMON_HPP */
+#endif /* CPPS_POKEMON_HPP */

@@ -12,82 +12,9 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/item_list.hpp>
 
+#include "item_slot.hpp"
+
 namespace pkmn { namespace swig {
-
-    class item_slot_wrapper
-    {
-        public:
-            item_slot_wrapper():
-                _item_list(nullptr),
-                _index(0)
-            {}
-
-            item_slot_wrapper(
-                const pkmn::item_list::sptr& item_list,
-                int index
-            ): _item_list(item_list),
-               _index(index)
-            {
-            }
-
-            const std::string& get_item()
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _item_list->as_vector().at(_index).item;
-            }
-
-            void set_item(
-                const std::string& item
-            )
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _item_list->set_item(
-                    _index,
-                    item,
-                    (item == "None") ? 0
-                                     : (get_amount() == 0) ? 1
-                                                           : get_amount()
-                );
-            }
-
-            int get_amount()
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _item_list->as_vector().at(_index).amount;
-            }
-
-            void set_amount(
-                int amount
-            )
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _item_list->set_item(
-                    _index,
-                    (amount == 0) ? "None" : get_item(),
-                    amount
-                );
-            }
-
-        private:
-            pkmn::item_list::sptr _item_list;
-            int _index;
-    };
 
     /*
      * This class is a thin wrapper around pkmn::item_list::sptr and
@@ -96,20 +23,20 @@ namespace pkmn { namespace swig {
      *
      * itemPocket[0].item = "Potion"
      */
-    class item_list
+    class item_list2
     {
         public:
-            item_list():
+            item_list2():
                 _item_list(nullptr)
             {}
 
-            item_list(
+            item_list2(
                 const pkmn::item_list::sptr& cpp_item_list
             ): _item_list(cpp_item_list)
             {
             }
 
-            item_list(
+            item_list2(
                 const std::string& name,
                 const std::string& game
             ): _item_list(pkmn::item_list::make(name, game))
@@ -117,7 +44,7 @@ namespace pkmn { namespace swig {
             }
 
             bool operator==(
-                const item_list& rhs
+                const item_list2& rhs
             ) const
             {
                 return (_item_list == rhs._item_list);
@@ -143,11 +70,11 @@ namespace pkmn { namespace swig {
                 return _item_list->get_num_items();
             }
 
-            item_slot_wrapper at(
+            item_slot2 at(
                 int index
             )
             {
-                return item_slot_wrapper(_item_list, index);
+                return item_slot2(_item_list, index);
             }
 
             void add(
@@ -177,6 +104,14 @@ namespace pkmn { namespace swig {
             const std::vector<std::string>& get_valid_items()
             {
                 return _item_list->get_valid_items();
+            }
+
+            // TODO: ifdef for specific wrappers
+
+            // For hash code functions
+            uintmax_t cptr()
+            {
+                return uintmax_t(_item_list.get());
             }
 
         private:

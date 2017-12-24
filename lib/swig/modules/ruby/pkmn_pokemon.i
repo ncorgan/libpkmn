@@ -12,7 +12,7 @@
 
     #include <pkmn/pokemon.hpp>
 
-    #include "cpp_wrappers/pokemon.hpp"
+    #include "cpps/pokemon.hpp"
 %}
 
 %include <std_string.i>
@@ -41,11 +41,11 @@
 %rename("__setitem__") set_contest_stat;
 
 // Move slots
-%rename("PokemonMoveSlotWrapper") pokemon_move_slot_wrapper;
+%rename("PokemonMoveSlot") pokemon_move_slot;
 %rename("move") get_move;
 %rename("move=") set_move;
 %rename("pp") get_pp;
-%rename("PokemonMoveSlotsWrapper") pokemon_move_slots_wrapper;
+%rename("PokemonMoveSlots") pokemon_move_slots;
 %rename("__getitem__") get_move_slot;
 %rename("length") size;
 
@@ -100,7 +100,7 @@
 %rename("icon_filepath") get_icon_filepath;
 %rename("sprite_filepath") get_sprite_filepath;
 
-%include "cpp_wrappers/pokemon.hpp"
+%include "cpps/pokemon.hpp"
 
 // Needed to avoid compile error
 %{
@@ -115,12 +115,12 @@
             }
         };
 
-        template <> struct traits<pkmn::swig::pokemon_move_slot_wrapper>
+        template <> struct traits<pkmn::swig::pokemon_move_slot>
         {
             typedef pointer_category category;
             static const char* type_name()
             {
-                return "pkmn::swig::pokemon_move_slot_wrapper";
+                return "pkmn::swig::pokemon_move_slot";
             }
         };
     }
@@ -191,9 +191,9 @@ EXTEND_POKEMON_MAP(marking, bool);
 EXTEND_POKEMON_MAP(ribbon, bool);
 EXTEND_POKEMON_MAP(contest_stat, int);
 
-%extend pkmn::swig::pokemon_move_slots_wrapper
+%extend pkmn::swig::pokemon_move_slots
 {
-    pkmn::swig::pokemon_move_slots_wrapper* each()
+    pkmn::swig::pokemon_move_slots* each()
     {
         if(!rb_block_given_p())
             rb_raise(rb_eArgError, "no block given");
@@ -201,7 +201,7 @@ EXTEND_POKEMON_MAP(contest_stat, int);
         VALUE r;
         for(int i = 0; i < 4; ++i)
         {
-            r = swig::from<pkmn::swig::pokemon_move_slot_wrapper>(self->get_move_slot(i));
+            r = swig::from<pkmn::swig::pokemon_move_slot>(self->get_move_slot(i));
             rb_yield(r);
         }
 

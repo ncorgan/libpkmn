@@ -23,27 +23,27 @@ namespace pkmn { namespace swig {
      *
      * itemBag["Items"][0].item = "Potion"
      */
-    class item_bag
+    class item_bag2
     {
         public:
-            item_bag():
+            item_bag2():
                 _item_bag(nullptr)
             {}
 
-            item_bag(
+            item_bag2(
                 const pkmn::item_bag::sptr& cpp_item_bag
             ): _item_bag(cpp_item_bag)
             {
             }
 
-            item_bag(
+            item_bag2(
                 const std::string& game
             ): _item_bag(pkmn::item_bag::make(game))
             {
             }
 
             bool operator==(
-                const item_bag& rhs
+                const item_bag2& rhs
             ) const
             {
                 return (_item_bag == rhs._item_bag);
@@ -54,11 +54,11 @@ namespace pkmn { namespace swig {
                 return _item_bag->get_game();
             }
 
-            pkmn::swig::item_list get_pocket(
+            pkmn::swig::item_list2 get_pocket(
                 const std::string& name
             )
             {
-                return pkmn::swig::item_list(_item_bag->get_pocket(name));
+                return pkmn::swig::item_list2(_item_bag->get_pocket(name));
             }
 
             const std::vector<std::string>& get_pocket_names()
@@ -80,6 +80,14 @@ namespace pkmn { namespace swig {
             )
             {
                 _item_bag->remove(item, amount);
+            }
+
+            // TODO: ifdef for specific wrappers
+
+            // For hash code functions
+            uintmax_t cptr()
+            {
+                return uintmax_t(_item_bag.get());
             }
 
         private:

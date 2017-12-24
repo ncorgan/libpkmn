@@ -60,13 +60,17 @@ std::string GetSWIGVersion();
 
 // Item Slot
 %include <csharp/pkmn_item_slot.i>
+%include <csharp/pkmn_item_slot2.i>
 
 // Item List
 %include <csharp/pkmn_item_list.i>
 PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPockets);
 
+%include <csharp/pkmn_item_list2.i>
+
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
+%include <csharp/pkmn_item_bag2.i>
 
 // Move Slot
 %include <csharp/pkmn_move_slot.i>

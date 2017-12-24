@@ -173,14 +173,14 @@ namespace pkmn { namespace swig {
                 return pkmn::swig::pokemon_pc(_game_save->get_pokemon_pc());
             }
 
-            PKMN_INLINE pkmn::swig::item_bag get_item_bag()
+            PKMN_INLINE pkmn::swig::item_bag2 get_item_bag()
             {
-                return pkmn::swig::item_bag(_game_save->get_item_bag());
+                return pkmn::swig::item_bag2(_game_save->get_item_bag());
             }
 
-            PKMN_INLINE pkmn::swig::item_list get_item_pc()
+            PKMN_INLINE pkmn::swig::item_list2 get_item_pc()
             {
-                return pkmn::swig::item_list(_game_save->get_item_pc());
+                return pkmn::swig::item_list2(_game_save->get_item_pc());
             }
 
         private:

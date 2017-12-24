@@ -8,12 +8,12 @@
 %include <ruby/stl_macros.i>
 
 %{
-    #include "cpp_wrappers/item_list.hpp"
+    #include "cpps/item_list.hpp"
 %}
 
 %include <std_string.i>
 
-%rename("ItemSlotWrapper") item_slot_wrapper;
+%rename("ItemSlot") item_slot;
 %rename("item") get_item;
 %rename("item=") set_item;
 %rename("amount") get_amount;
@@ -26,18 +26,18 @@
 %rename("num_items") get_num_items;
 %rename("valid_items") get_valid_items;
 
-%include "cpp_wrappers/item_list.hpp"
+%include "cpps/item_list.hpp"
 
 // Needed to avoid compile error
 %{
     namespace swig
     {
-        template <> struct traits<pkmn::swig::item_slot_wrapper>
+        template <> struct traits<pkmn::swig::item_slot>
         {
             typedef pointer_category category;
             static const char* type_name()
             {
-                return "pkmn::swig::item_slot_wrapper";
+                return "pkmn::swig::item_slot";
             }
         };
     }
@@ -49,7 +49,7 @@
         return self->get_capacity();
     }
 
-    pkmn::swig::item_slot_wrapper __getitem__(int index) {
+    pkmn::swig::item_slot __getitem__(int index) {
         return self->at(index);
     }
 
@@ -65,7 +65,7 @@
         VALUE r;
         for(int i = 0; i < self->get_capacity(); ++i)
         {
-            r = swig::from<pkmn::swig::item_slot_wrapper>(self->at(i));
+            r = swig::from<pkmn::swig::item_slot>(self->at(i));
             rb_yield(r);
         }
 
