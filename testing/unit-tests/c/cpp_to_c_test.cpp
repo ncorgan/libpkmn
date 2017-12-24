@@ -804,31 +804,39 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
         &string_list_c
     );
 
-    ASSERT_EQ(4, string_list_c.length);
-    EXPECT_STREQ("key1", string_list_c.strings[0]);
-    EXPECT_STREQ("key2", string_list_c.strings[1]);
-    EXPECT_STREQ("key3", string_list_c.strings[2]);
-    EXPECT_STREQ("key4", string_list_c.strings[3]);
+    // To suppress Clang-tidy warning, instead of assering length
+    EXPECT_EQ(4ULL, string_list_c.length);
+    if(string_list_c.strings)
+    {
+        EXPECT_STREQ("key1", string_list_c.strings[0]);
+        EXPECT_STREQ("key2", string_list_c.strings[1]);
+        EXPECT_STREQ("key3", string_list_c.strings[2]);
+        EXPECT_STREQ("key4", string_list_c.strings[3]);
 
-    pkmn_string_list_free(&string_list_c);
-    EXPECT_EQ(NULL, string_list_c.strings);
-    EXPECT_EQ(0, string_list_c.length);
+        pkmn_string_list_free(&string_list_c);
+        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(0, string_list_c.length);
+    }
 
     pkmn::c::string_map_keys_to_string_list<int>(
         string_int_map,
         &string_list_c
     );
 
-    ASSERT_EQ(5, string_list_c.length);
-    EXPECT_STREQ("key5", string_list_c.strings[0]);
-    EXPECT_STREQ("key6", string_list_c.strings[1]);
-    EXPECT_STREQ("key7", string_list_c.strings[2]);
-    EXPECT_STREQ("key8", string_list_c.strings[3]);
-    EXPECT_STREQ("key9", string_list_c.strings[4]);
+    // To suppress Clang-tidy warning, instead of asserting length
+    EXPECT_EQ(5ULL, string_list_c.length);
+    if(string_list_c.strings)
+    {
+        EXPECT_STREQ("key5", string_list_c.strings[0]);
+        EXPECT_STREQ("key6", string_list_c.strings[1]);
+        EXPECT_STREQ("key7", string_list_c.strings[2]);
+        EXPECT_STREQ("key8", string_list_c.strings[3]);
+        EXPECT_STREQ("key9", string_list_c.strings[4]);
 
-    pkmn_string_list_free(&string_list_c);
-    EXPECT_EQ(NULL, string_list_c.strings);
-    EXPECT_EQ(0, string_list_c.length);
+        pkmn_string_list_free(&string_list_c);
+        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(0, string_list_c.length);
+    }
 }
 
 TEST(cpp_to_c_test, string_list_cpp_to_c_test)
