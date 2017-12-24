@@ -7,6 +7,7 @@
 
 #include "env.hpp"
 
+#include "swig/modules/cpp_wrappers/attribute_maps.hpp"
 #include "swig/modules/cpp_wrappers/item_slot.hpp"
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
@@ -22,6 +23,20 @@
 #include <gtest/gtest.h>
 
 namespace fs = boost::filesystem;
+
+TEST(cpp_swig_test, test_attribute_maps)
+{
+    // TODO: test with class with more attributes
+
+    pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
+                                      "Pikachu",
+                                      "Red",
+                                      "",
+                                      5
+                                  );
+    pkmn::swig::numeric_attribute_map<pkmn::pokemon> attribute_map(pokemon);
+    EXPECT_EQ(190, attribute_map.get_attribute("Catch rate"));
+}
 
 TEST(cpp_swig_test, test_item_slot)
 {
@@ -140,7 +155,7 @@ TEST(cpp_swig_test, test_item_bag)
     }
 }
 
-TEST(cpp_swig_test, test_invalid_pokemon_maps)
+TEST(cpp_swig_test, test_invalid_pokemon_helpers)
 {
     pkmn::swig::EV_map EV_map;
     pkmn::swig::IV_map IV_map;
@@ -184,7 +199,7 @@ TEST(cpp_swig_test, test_invalid_pokemon_maps)
     , std::runtime_error);
 }
 
-TEST(cpp_swig_test, test_pokemon_maps)
+TEST(cpp_swig_test, test_pokemon_helpers)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
                                       "Bulbasaur",

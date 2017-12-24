@@ -55,6 +55,9 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_pokemon_pc "internal";
 %include <pkmn_statics.i>
 
+// Attribute Maps
+%include <csharp/pkmn_attribute_maps.i>
+
 // Game Save
 %include <csharp/pkmn_game_save.i>
 

@@ -26,6 +26,8 @@ ignored_classes = ["game_save",
                    "pokemon",
                    "pokemon_box",
                    "pokemon_pc",
+                   "numeric_attribute_map",
+                   "string_attribute_map",
                    "PKMN_API"]
 
 ignored_functions = ["size"]
