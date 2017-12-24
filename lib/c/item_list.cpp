@@ -51,8 +51,18 @@ void update_item_list(
 {
     BOOST_ASSERT(item_list);
 
-    pkmn_item_list_free(item_list);
-    init_item_list(item_list);
+    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+
+    for(size_t index = 0; index < item_list->capacity; ++index)
+    {
+        std::free(item_list->item_slots.item_slots[index].item);
+        pkmn::c::item_slot_cpp_to_c(
+            cpp->at(int(index)),
+            &item_list->item_slots.item_slots[index]
+        );
+    }
+
+    item_list->num_items = cpp->get_num_items();
 }
 
 pkmn_error_t pkmn_item_list_init(
