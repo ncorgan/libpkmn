@@ -198,7 +198,7 @@ namespace pkmn { namespace c {
                                                  );
             size_t index = 0;
             for(auto map_iter = map_cpp.begin();
-                map_iter != map_cpp.end(), index < num_keys;
+                (map_iter != map_cpp.end()) && (index < num_keys);
                 ++map_iter, ++index
                )
             {
