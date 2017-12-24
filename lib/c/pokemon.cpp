@@ -636,7 +636,7 @@ pkmn_error_t pkmn_pokemon_get_marking_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(marking_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<bool>(
+        pkmn::c::string_map_keys_to_string_list<bool>(
             handle->cpp->get_markings(),
             marking_names_out
         );
@@ -683,7 +683,7 @@ pkmn_error_t pkmn_pokemon_get_ribbon_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ribbon_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<bool>(
+        pkmn::c::string_map_keys_to_string_list<bool>(
             handle->cpp->get_ribbons(),
             ribbon_names_out
         );
@@ -761,7 +761,7 @@ pkmn_error_t pkmn_pokemon_get_contest_stat_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stat_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_contest_stats(),
             contest_stat_names_out
         );
@@ -808,7 +808,7 @@ pkmn_error_t pkmn_pokemon_get_EV_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EV_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_EVs(),
             EV_names_out
         );
@@ -855,7 +855,7 @@ pkmn_error_t pkmn_pokemon_get_IV_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IV_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_IVs(),
             IV_names_out
         );
@@ -902,7 +902,7 @@ pkmn_error_t pkmn_pokemon_get_stat_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stat_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_stats(),
             stat_names_out
         );

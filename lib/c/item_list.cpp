@@ -8,6 +8,7 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
+#include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <pkmn-c/item_list.h>
@@ -21,6 +22,8 @@ void init_item_list(
     pkmn_item_list_t* item_list
 )
 {
+    BOOST_ASSERT(item_list);
+
     pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
 
     pkmn::c::string_cpp_to_c_alloc(
@@ -35,13 +38,10 @@ void init_item_list(
     item_list->num_items = cpp->get_num_items();
     item_list->capacity = cpp->get_capacity();
 
-    item_list->item_slots.item_slots =
-        (pkmn_item_slot_t*)std::malloc(
-                               cpp->get_capacity()*sizeof(pkmn_item_slot_t)
-                           );
-    item_list->item_slots.length = item_list->capacity;
-
-    update_item_list(item_list);
+    pkmn::c::item_slots_cpp_to_c(
+        cpp->as_vector(),
+        &item_list->item_slots
+    );
 }
 
 // The caller is expected to be exception-safe.
@@ -49,21 +49,10 @@ void update_item_list(
     pkmn_item_list_t* item_list
 )
 {
-    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+    BOOST_ASSERT(item_list);
 
-    for(size_t i = 0; i < item_list->capacity; ++i)
-    {
-        const pkmn::item_slot& slot_cpp = cpp->at(int(i));
-
-        std::strncpy(
-            item_list->item_slots.item_slots[i].item,
-            slot_cpp.item.c_str(),
-            sizeof(item_list->item_slots.item_slots[i].item)
-        );
-        item_list->item_slots.item_slots[i].amount = slot_cpp.amount;
-    }
-
-    item_list->num_items = cpp->get_num_items();
+    pkmn_item_list_free(item_list);
+    init_item_list(item_list);
 }
 
 pkmn_error_t pkmn_item_list_init(

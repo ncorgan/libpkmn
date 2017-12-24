@@ -11,17 +11,6 @@
 
 namespace pkmn {
 
-    void pkmn_hidden_power_cpp_to_c(
-        const pkmn::calculations::hidden_power &hp_cpp,
-        pkmn_hidden_power_t* hp_c
-    ) {
-        hp_c->type = (char*)std::malloc(hp_cpp.type.size() + 1);
-        std::strcpy(hp_c->type, hp_cpp.type.c_str());
-        hp_c->type[hp_cpp.type.size()] = '\0';
-
-        hp_c->base_power = hp_cpp.base_power;
-    }
-
     void pkmn_item_entry_cpp_to_c(
         const pkmn::database::item_entry &item_entry_cpp,
         pkmn_database_item_entry_t* item_entry_c
@@ -55,34 +44,6 @@ namespace pkmn {
             item_entry_cpp.get_fling_effect(),
             &item_entry_c->fling_effect
         );
-    }
-
-    void pkmn_item_slot_cpp_to_c(
-        const pkmn::item_slot &islot_cpp,
-        pkmn_item_slot_t* islot_c
-    ) {
-        std::strncpy(
-            islot_c->item,
-            islot_cpp.item.c_str(),
-            sizeof(islot_c->item)
-        );
-        islot_c->item[islot_cpp.item.size()] = '\0';
-
-        islot_c->amount = islot_cpp.amount;
-    }
-
-    void pkmn_item_slots_cpp_to_c(
-        const pkmn::item_slots_t &islots_cpp,
-        pkmn_item_slots_t* islots_c
-    ) {
-        islots_c->item_slots = (pkmn_item_slot_t*)std::malloc(sizeof(pkmn_item_slot_t) * islots_cpp.size());
-        for(size_t i = 0; i < islots_cpp.size(); ++i) {
-            pkmn_item_slot_cpp_to_c(
-                islots_cpp[i],
-                &(islots_c->item_slots[i])
-            );
-        }
-        islots_c->length = islots_cpp.size();
     }
 
     void pkmn_levelup_move_cpp_to_c(
@@ -412,6 +373,34 @@ namespace c {
         }
 
         string_list_c_ptr->length = string_list_cpp.size();
+    }
+
+    void item_slots_cpp_to_c(
+        const pkmn::item_slots_t& item_slots_cpp,
+        pkmn_item_slots_t* item_slots_c_ptr
+    )
+    {
+        BOOST_ASSERT(item_slots_c_ptr);
+
+        size_t num_slots = item_slots_cpp.size();
+
+        if(num_slots > 0)
+        {
+            item_slots_c_ptr->item_slots = (pkmn_item_slot_t*)std::calloc(
+                                                                  sizeof(pkmn_item_slot_t),
+                                                                  num_slots
+                                                              );
+            for(size_t index = 0; index < num_slots; ++index)
+            {
+                string_cpp_to_c_alloc(
+                    item_slots_cpp[index].item,
+                    &item_slots_c_ptr->item_slots[index].item
+                );
+                item_slots_c_ptr->item_slots[index].amount = item_slots_cpp[index].amount;
+            }
+        }
+
+        item_slots_c_ptr->length = num_slots;
     }
 }
 }

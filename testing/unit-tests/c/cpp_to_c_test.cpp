@@ -352,12 +352,13 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
  * Converting C++ types to C types
  */
 
-TEST(cpp_to_c_test, hidden_power_cpp_to_c_test) {
+TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
+{
     pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
 
     pkmn_hidden_power_t hidden_power_c;
 
-    pkmn::pkmn_hidden_power_cpp_to_c(
+    pkmn::c::hidden_power_cpp_to_c(
         hidden_power_cpp,
         &hidden_power_c
     );
@@ -367,30 +368,38 @@ TEST(cpp_to_c_test, hidden_power_cpp_to_c_test) {
 
     pkmn_hidden_power_free(&hidden_power_c);
     EXPECT_EQ(NULL, hidden_power_c.type);
+    EXPECT_EQ(0, hidden_power_c.base_power);
 }
 
-TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
+TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
+{
     pkmn::item_slot item_slot_cpp("Potion", 50);
     pkmn_item_slot_t item_slot_c;
 
-    pkmn::pkmn_item_slot_cpp_to_c(
+    pkmn::c::item_slot_cpp_to_c(
         item_slot_cpp,
         &item_slot_c
     );
 
     EXPECT_STREQ("Potion", item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
+
+    pkmn_item_slot_free(&item_slot_c);
+    EXPECT_EQ(NULL, item_slot_c.item);
+    EXPECT_EQ(0, item_slot_c.amount);
 }
 
-TEST(cpp_to_c_test, item_slots_cpp_to_c_test) {
-    pkmn::item_slots_t item_slots_cpp{
+TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
+{
+    pkmn::item_slots_t item_slots_cpp =
+    {
         pkmn::item_slot("Potion", 50),
         pkmn::item_slot("Berry", 28),
         pkmn::item_slot("Berry Pouch", 1)
     };
 
     pkmn_item_slots_t item_slots_c = { NULL, 0 };
-    pkmn::pkmn_item_slots_cpp_to_c(
+    pkmn::c::item_slots_cpp_to_c(
         item_slots_cpp,
         &item_slots_c
     );
@@ -754,24 +763,27 @@ TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
     EXPECT_EQ(NULL, string_pair_c.second);
 }
 
-TEST(cpp_to_c_test, std_map_keys_to_string_list_test) {
-    static const std::map<std::string, bool> string_bool_map = boost::assign::map_list_of
-        ("key1", true)
-        ("key2", false)
-        ("key3", false)
-        ("key4", true)
-    ;
-    static const std::map<std::string, int> string_int_map = boost::assign::map_list_of
-        ("key5", 1)
-        ("key6", 2)
-        ("key7", 3)
-        ("key8", 4)
-        ("key9", 5)
-    ;
+TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
+{
+    static const std::map<std::string, bool> string_bool_map =
+    {
+        {"key1", true},
+        {"key2", false},
+        {"key3", false},
+        {"key4", true},
+    };
+    static const std::map<std::string, int> string_int_map =
+    {
+        {"key5", 1},
+        {"key6", 2},
+        {"key7", 3},
+        {"key8", 4},
+        {"key9", 5},
+    };
 
     pkmn_string_list_t string_list_c = {NULL, 0};
 
-    pkmn::std_map_keys_to_string_list<bool>(
+    pkmn::c::string_map_keys_to_string_list<bool>(
         string_bool_map,
         &string_list_c
     );
@@ -786,7 +798,7 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test) {
     EXPECT_EQ(NULL, string_list_c.strings);
     EXPECT_EQ(0, string_list_c.length);
 
-    pkmn::std_map_keys_to_string_list<int>(
+    pkmn::c::string_map_keys_to_string_list<int>(
         string_int_map,
         &string_list_c
     );

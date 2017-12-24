@@ -129,24 +129,9 @@ void update_item_list(
 
 namespace pkmn {
 
-    void pkmn_hidden_power_cpp_to_c(
-        const pkmn::calculations::hidden_power &hp_cpp,
-        pkmn_hidden_power_t* hp_c
-    );
-
     void pkmn_item_entry_cpp_to_c(
         const pkmn::database::item_entry &item_entry_cpp,
         pkmn_database_item_entry_t* item_entry_c
-    );
-
-    void pkmn_item_slot_cpp_to_c(
-        const pkmn::item_slot &islot_cpp,
-        pkmn_item_slot_t* islot_c
-    );
-
-    void pkmn_item_slots_cpp_to_c(
-        const pkmn::item_slots_t &islots_cpp,
-        pkmn_item_slots_t* islots_c
     );
 
     void pkmn_levelup_move_cpp_to_c(
@@ -198,25 +183,6 @@ namespace pkmn {
         const pkmn::pokemon_box_list_t &pokemon_box_list_cpp,
         pkmn_pokemon_box_list_t* pokemon_box_list_c
     );
-
-    template <typename value_type>
-    PKMN_INLINE void std_map_keys_to_string_list(
-        const std::map<std::string, value_type> &string_map,
-        pkmn_string_list_t* string_list_out
-    ) {
-        string_list_out->strings = (char**)std::malloc(sizeof(char*) * string_map.size());
-        size_t i = 0;
-        for(auto iter = string_map.begin();
-            iter != string_map.end();
-            ++iter, ++i)
-        {
-            string_list_out->strings[i] = (char*)std::malloc(iter->first.size() + 1);
-            std::strcpy(string_list_out->strings[i], iter->first.c_str());
-            string_list_out->strings[i][iter->first.size()] = '\0';
-        }
-
-        string_list_out->length = string_map.size();
-    }
 
     // Refactor below
 
@@ -274,6 +240,37 @@ namespace c {
         pkmn_string_list_t* string_list_c_ptr
     );
 
+    template <typename value_type>
+    void string_map_keys_to_string_list(
+        const std::map<std::string, value_type>& map_cpp,
+        pkmn_string_list_t* string_list_c_ptr
+    )
+    {
+        BOOST_ASSERT(string_list_c_ptr);
+
+        size_t num_keys = map_cpp.size();
+        if(num_keys > 0)
+        {
+            string_list_c_ptr->strings = (char**)std::calloc(
+                                                     num_keys,
+                                                     sizeof(char*)
+                                                 );
+            size_t index = 0;
+            for(auto map_iter = map_cpp.begin();
+                map_iter != map_cpp.end(), index < num_keys;
+                ++map_iter, ++index
+               )
+            {
+                string_cpp_to_c_alloc(
+                    map_iter->first,
+                    &string_list_c_ptr->strings[index]
+                );
+            }
+        }
+
+        string_list_c_ptr->length = num_keys;
+    }
+
     inline void string_pair_cpp_to_c(
         const std::pair<std::string, std::string>& string_pair_cpp,
         pkmn_string_pair_t* c_pair_ptr
@@ -284,6 +281,39 @@ namespace c {
         string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
         string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
     }
+
+    inline void hidden_power_cpp_to_c(
+        const pkmn::calculations::hidden_power& hidden_power_cpp,
+        pkmn_hidden_power_t* hidden_power_c_ptr
+    )
+    {
+        BOOST_ASSERT(hidden_power_c_ptr);
+
+        string_cpp_to_c_alloc(
+            hidden_power_cpp.type,
+            &hidden_power_c_ptr->type
+        );
+        hidden_power_c_ptr->base_power = hidden_power_cpp.base_power;
+    }
+
+    inline void item_slot_cpp_to_c(
+        const pkmn::item_slot& item_slot_cpp,
+        pkmn_item_slot_t* item_slot_c_ptr
+    )
+    {
+        BOOST_ASSERT(item_slot_c_ptr);
+
+        string_cpp_to_c_alloc(
+            item_slot_cpp.item,
+            &item_slot_c_ptr->item
+        );
+        item_slot_c_ptr->amount = item_slot_cpp.amount;
+    }
+
+    void item_slots_cpp_to_c(
+        const pkmn::item_slots_t& item_slots_cpp,
+        pkmn_item_slots_t* item_slots_c_ptr
+    );
 }
 }
 
