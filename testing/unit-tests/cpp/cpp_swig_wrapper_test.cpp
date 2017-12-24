@@ -11,6 +11,7 @@
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
+#include "swig/modules/cpp_wrappers/pokemon_helpers.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_box.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
@@ -141,11 +142,11 @@ TEST(cpp_swig_test, test_item_bag)
 
 TEST(cpp_swig_test, test_invalid_pokemon_maps)
 {
-    pkmn::swig::pokemon_EV_map EV_map;
-    pkmn::swig::pokemon_IV_map IV_map;
-    pkmn::swig::pokemon_marking_map marking_map;
-    pkmn::swig::pokemon_ribbon_map ribbon_map;
-    pkmn::swig::pokemon_contest_stat_map contest_stat_map;
+    pkmn::swig::EV_map EV_map;
+    pkmn::swig::IV_map IV_map;
+    pkmn::swig::marking_map marking_map;
+    pkmn::swig::ribbon_map ribbon_map;
+    pkmn::swig::contest_stat_map contest_stat_map;
 
     EXPECT_THROW(
         EV_map.get_EV("HP");
@@ -191,11 +192,11 @@ TEST(cpp_swig_test, test_pokemon_maps)
                                       "",
                                       5
                                   );
-    pkmn::swig::pokemon_EV_map EV_map(pokemon);
-    pkmn::swig::pokemon_IV_map IV_map(pokemon);
-    pkmn::swig::pokemon_marking_map marking_map(pokemon);
-    pkmn::swig::pokemon_ribbon_map ribbon_map(pokemon);
-    pkmn::swig::pokemon_contest_stat_map contest_stat_map(pokemon);
+    pkmn::swig::EV_map EV_map(pokemon);
+    pkmn::swig::IV_map IV_map(pokemon);
+    pkmn::swig::marking_map marking_map(pokemon);
+    pkmn::swig::ribbon_map ribbon_map(pokemon);
+    pkmn::swig::contest_stat_map contest_stat_map(pokemon);
 
     // Set EV through the Pokémon.
     pokemon->set_EV("Attack", 25);
@@ -339,6 +340,9 @@ TEST(cpp_swig_test, test_pokemon)
     swig_pokemon.get_moves().get_move_slot(0).set_move("Fissure");
     EXPECT_EQ("Fissure", swig_pokemon.get_moves().get_move_slot(0).get_move());
     EXPECT_EQ(5, swig_pokemon.get_moves().get_move_slot(0).get_pp());
+
+    swig_pokemon.get_moves().get_move_slot(0).set_pp(2);
+    EXPECT_EQ(2, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
     swig_pokemon.get_EVs().set_EV("Attack", 5);
     EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV("Attack"));

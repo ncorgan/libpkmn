@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+// TODO: equality, hash code
+
 %{
     #include "cpp_wrappers/item_slot.hpp"
 %}
