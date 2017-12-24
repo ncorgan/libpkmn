@@ -9,12 +9,14 @@
 
 #include <stdio.h>
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     (void)argc;
     (void)argv;
 
     char strbuffer[256] = {0};
-    if(pkmn_get_database_path(strbuffer, sizeof(strbuffer))) {
+    if(pkmn_get_database_path(strbuffer, sizeof(strbuffer), NULL))
+    {
         fputs("Failed to find database.", stderr);
     }
 
