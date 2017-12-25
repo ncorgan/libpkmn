@@ -17,62 +17,62 @@
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_database_ability_list(
+PKMN_C_API pkmn_error_t pkmn_database_ability_list(
     int generation,
     pkmn_string_list_t* ability_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_game_list(
+PKMN_C_API pkmn_error_t pkmn_database_game_list(
     int generation,
     bool include_previous,
     pkmn_string_list_t* game_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_gamecube_shadow_pokemon_list(
+PKMN_C_API pkmn_error_t pkmn_database_gamecube_shadow_pokemon_list(
     bool colosseum,
     pkmn_string_list_t* gamecube_shadow_pokemon_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_item_list(
+PKMN_C_API pkmn_error_t pkmn_database_item_list(
     const char* game,
     pkmn_string_list_t* item_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_location_list(
+PKMN_C_API pkmn_error_t pkmn_database_location_list(
     const char* game,
     bool whole_generation,
     pkmn_string_list_t* location_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_move_list(
+PKMN_C_API pkmn_error_t pkmn_database_move_list(
     const char* game,
     pkmn_string_list_t* move_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_nature_list(
+PKMN_C_API pkmn_error_t pkmn_database_nature_list(
     pkmn_string_list_t* nature_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_list(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_list(
     int generation,
     bool include_previous,
     pkmn_string_list_t* pokemon_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_region_list(
+PKMN_C_API pkmn_error_t pkmn_database_region_list(
     pkmn_string_list_t* region_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_ribbon_list(
+PKMN_C_API pkmn_error_t pkmn_database_ribbon_list(
     int generation,
     pkmn_string_list_t* ribbon_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_super_training_medal_list(
+PKMN_C_API pkmn_error_t pkmn_database_super_training_medal_list(
     pkmn_string_list_t* super_training_medal_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_type_list(
+PKMN_C_API pkmn_error_t pkmn_database_type_list(
     const char* game,
     pkmn_string_list_t* type_list_out
 );

@@ -9,13 +9,13 @@
 
 #include <pkmn.h>
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>
 #else
 #    include <unistd.h>
 #endif
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
 #else
 #    define FS_SEPARATOR "/"

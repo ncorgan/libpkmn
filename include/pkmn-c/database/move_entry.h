@@ -31,13 +31,13 @@ typedef struct {
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_database_get_move_entry(
+PKMN_C_API pkmn_error_t pkmn_database_get_move_entry(
     const char* move_name,
     const char* move_game,
     pkmn_database_move_entry_t* move_entry_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_move_entry_free(
+PKMN_C_API pkmn_error_t pkmn_database_move_entry_free(
     pkmn_database_move_entry_t* move_entry
 );
 

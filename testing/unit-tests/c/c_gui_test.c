@@ -9,7 +9,7 @@
 
 #include <pkmn.h>
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>
 #    define FS_SEPARATOR "\\"
 #else
@@ -108,7 +108,7 @@ static inline void delete_file(
     const char* filepath
 )
 {
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_NOT_EQUAL(0, DeleteFile(filepath));
 #else
     TEST_ASSERT_EQUAL(0, remove(filepath));

@@ -25,7 +25,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if nature_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_nature(
+PKMN_C_API pkmn_error_t pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,
     size_t buffer_len,

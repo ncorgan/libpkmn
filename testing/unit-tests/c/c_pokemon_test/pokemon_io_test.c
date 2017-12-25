@@ -14,7 +14,7 @@
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN];
 
-#if defined(PKMN_PLATFORM_MINGW) || defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_MINGW) || defined(PKMN_C_PLATFORM_WIN32)
 #    define FS_SEPARATOR "\\"
 #else
 #    define FS_SEPARATOR "/"

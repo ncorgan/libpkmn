@@ -23,9 +23,9 @@ static pkmn_error_t error_code = PKMN_ERROR_NONE;
 
 static void appdata_dir_test()
 {
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_APPDATA_DIR", "C:\\libpkmn\\appdata\\dir");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_APPDATA_DIR=C:\\libpkmn\\appdata\\dir");
 #else
     setenv("PKMN_APPDATA_DIR", "/libpkmn/appdata/dir", 0);
@@ -37,7 +37,7 @@ static void appdata_dir_test()
                      NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\appdata\\dir", strbuffer);
 #else
     TEST_ASSERT_EQUAL_STRING("/libpkmn/appdata/dir", strbuffer);
@@ -62,9 +62,9 @@ static void database_path_test()
      * database. This is admittedly fragile, but this test is never meant to be
      * outside the build system.
      */
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", __FILE__);
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     snprintf(
         strbuffer,
         sizeof(strbuffer),
@@ -84,9 +84,9 @@ static void database_path_test()
     TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 
     // Now just make sure it fails with a non-existent file.
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", "C:\\libpkmn\\database\\path");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_DATABASE_PATH=C:\\libpkmn\\database\\path");
 #else
     setenv("PKMN_DATABASE_PATH", "/libpkmn/database/path", 1);
@@ -102,9 +102,9 @@ static void database_path_test()
 
 static void images_dir_test()
 {
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_IMAGES_DIR", "C:\\libpkmn\\images\\dir");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_IMAGES_DIR=C:\\libpkmn\\images\\dir");
 #else
     setenv("PKMN_IMAGES_DIR", "/libpkmn/images/dir", 1);
@@ -116,7 +116,7 @@ static void images_dir_test()
                      NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\images\\dir", strbuffer);
 #else
     TEST_ASSERT_EQUAL_STRING("/libpkmn/images/dir", strbuffer);

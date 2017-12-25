@@ -33,7 +33,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any IV is outside the range [0,15]
  * \returns ::PKMN_ERROR_NULL_POINTER if form_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_gen2_unown_form(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen2_unown_form(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -56,7 +56,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gen2_unown_form(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any IV is outside the range [0,15]
  * \returns ::PKMN_ERROR_NULL_POINTER if form_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_gen3_unown_form(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen3_unown_form(
     uint32_t personality,
     char* form_out,
     size_t buffer_len,
@@ -73,7 +73,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gen3_unown_form(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if evolves_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_wurmple_becomes_silcoon(
+PKMN_C_API pkmn_error_t pkmn_calculations_wurmple_becomes_silcoon(
     uint32_t personality,
     bool before_gen5,
     bool* evolves_out
