@@ -298,6 +298,12 @@ TEST(cpp_swig_test, test_pokemon)
     EXPECT_EQ("Standard", swig_pokemon.get_form());
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_database_entry().get_name());
 
+    swig_pokemon.set_is_egg(true);
+    EXPECT_TRUE(swig_pokemon.is_egg());
+
+    swig_pokemon.set_condition("Frozen");
+    EXPECT_EQ("Frozen", swig_pokemon.get_condition());
+
     swig_pokemon.set_nickname("12345");
     EXPECT_EQ("12345", swig_pokemon.get_nickname());
 
@@ -309,6 +315,9 @@ TEST(cpp_swig_test, test_pokemon)
 
     swig_pokemon.set_held_item("Oran Berry");
     EXPECT_EQ("Oran Berry", swig_pokemon.get_held_item());
+
+    swig_pokemon.set_pokerus_duration(9);
+    EXPECT_EQ(9, swig_pokemon.get_pokerus_duration());
 
     swig_pokemon.set_original_trainer_name("abcdef");
     EXPECT_EQ("abcdef", swig_pokemon.get_original_trainer_name());
@@ -336,6 +345,9 @@ TEST(cpp_swig_test, test_pokemon)
 
     swig_pokemon.set_level_met(2);
     EXPECT_EQ(2, swig_pokemon.get_level_met());
+
+    swig_pokemon.set_location_met("Rock Tunnel", false);
+    EXPECT_EQ("Rock Tunnel", swig_pokemon.get_location_met(false));
 
     swig_pokemon.set_original_game("Sapphire");
     EXPECT_EQ("Sapphire", swig_pokemon.get_original_game());
