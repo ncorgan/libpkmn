@@ -22,21 +22,23 @@ namespace pkmn { namespace c {
 
         if(!string_cpp.empty())
         {
-            // cppcheck-suppress redundantCopy
-            std::memset(
-                c_str_ptr,
-                0,
-                buffer_len
-            );
+            size_t string_length = string_cpp.size();
+
             std::strncpy(
                 c_str_ptr,
                 string_cpp.c_str(),
                 buffer_len
             );
 
+            // Null-terminate if we can
+            if(string_length < buffer_len)
+            {
+                c_str_ptr[string_length] = '\0';
+            }
+
             if(string_length_out)
             {
-                *string_length_out = string_cpp.size();
+                *string_length_out = string_length;
             }
         }
     }
