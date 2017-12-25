@@ -46,31 +46,31 @@ typedef struct {
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_database_get_pokemon_entry(
+PKMN_C_API pkmn_error_t pkmn_database_get_pokemon_entry(
     const char* species,
     const char* game,
     const char* form,
     pkmn_database_pokemon_entry_t* pokemon_entry_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_set_form(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_set_form(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     const char* form
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     int level,
     int* experience_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     int experience,
     int* level_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     bool shiny,
     char* icon_filepath_out,
@@ -78,7 +78,7 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
     size_t* icon_filepath_length_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     pkmn_database_pokemon_entry_t* pokemon_entry,
     bool female,
     bool shiny,
@@ -87,7 +87,7 @@ PKMN_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     size_t* sprite_filepath_length_out
 );
 
-PKMN_API pkmn_error_t pkmn_database_pokemon_entry_free(
+PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_free(
     pkmn_database_pokemon_entry_t* pokemon_entry
 );
 

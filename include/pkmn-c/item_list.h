@@ -29,46 +29,46 @@ typedef struct
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_item_list_init(
+PKMN_C_API pkmn_error_t pkmn_item_list_init(
     const char* name,
     const char* game,
     pkmn_item_list_t* item_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_free(
+PKMN_C_API pkmn_error_t pkmn_item_list_free(
     pkmn_item_list_t* item_list
 );
 
-PKMN_API const char* pkmn_item_list_strerror(
+PKMN_C_API const char* pkmn_item_list_strerror(
     pkmn_item_list_t* item_list
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_add(
+PKMN_C_API pkmn_error_t pkmn_item_list_add(
     pkmn_item_list_t* item_list,
     const char* item,
     int amount
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_remove(
+PKMN_C_API pkmn_error_t pkmn_item_list_remove(
     pkmn_item_list_t* item_list,
     const char* item,
     int amount
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_move(
+PKMN_C_API pkmn_error_t pkmn_item_list_move(
     pkmn_item_list_t* item_list,
     int old_position,
     int new_position
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_set_item(
+PKMN_C_API pkmn_error_t pkmn_item_list_set_item(
     pkmn_item_list_t* item_list,
     int position,
     const char* item,
     int amount
 );
 
-PKMN_API pkmn_error_t pkmn_item_list_get_valid_items(
+PKMN_C_API pkmn_error_t pkmn_item_list_get_valid_items(
     pkmn_item_list_t* item_list,
     pkmn_string_list_t* valid_items_out
 );

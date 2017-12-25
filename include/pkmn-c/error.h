@@ -64,7 +64,7 @@ extern "C" {
  * The string returned from this function is guaranteed to be non-NULL and will
  * contain the string "None." if the previous call succeeded.
  */
-PKMN_API const char* pkmn_strerror();
+PKMN_C_API const char* pkmn_strerror();
 
 #ifdef __cplusplus
 }

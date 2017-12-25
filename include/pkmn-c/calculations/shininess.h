@@ -31,7 +31,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if shiny_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is not in the range [0-15]
  */
-PKMN_API pkmn_error_t pkmn_calculations_gen2_shiny(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen2_shiny(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -49,7 +49,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gen2_shiny(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if shiny_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_modern_shiny(
+PKMN_C_API pkmn_error_t pkmn_calculations_modern_shiny(
     uint32_t personality,
     uint32_t trainer_id,
     bool* shiny_out

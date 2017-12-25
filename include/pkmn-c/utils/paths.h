@@ -35,7 +35,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if appdata_dir_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_get_appdata_dir(
+PKMN_C_API pkmn_error_t pkmn_get_appdata_dir(
     char* appdata_dir_out,
     size_t buffer_len,
     size_t* appdata_dir_length_out
@@ -58,7 +58,7 @@ PKMN_API pkmn_error_t pkmn_get_appdata_dir(
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if no valid database is found
  * \returns ::PKMN_ERROR_NULL_POINTER if database_path_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_get_database_path(
+PKMN_C_API pkmn_error_t pkmn_get_database_path(
     char* database_path_out,
     size_t buffer_len,
     size_t* database_path_length_out
@@ -80,7 +80,7 @@ PKMN_API pkmn_error_t pkmn_get_database_path(
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If neither path exists
  * \returns ::PKMN_ERROR_NULL_POINTER if images_dir_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_get_images_dir(
+PKMN_C_API pkmn_error_t pkmn_get_images_dir(
     char* images_dir_out,
     size_t buffer_len,
     size_t* images_dir_length_out
@@ -99,7 +99,7 @@ PKMN_API pkmn_error_t pkmn_get_images_dir(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if tmp_dir_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_get_tmp_dir(
+PKMN_C_API pkmn_error_t pkmn_get_tmp_dir(
     char* tmp_dir_out,
     size_t buffer_len,
     size_t* tmp_dir_length_out
