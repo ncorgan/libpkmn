@@ -19,21 +19,18 @@ namespace pkmn { namespace calculations {
         bool high_rate_move
     );
 
-    PKMN_API float stadium_critical_hit_chance(
-        int speed,
-        bool rate_increased,
-        bool high_rate_move
+    PKMN_API float critical_hit_chance(
+        int generation,
+        int critical_hit_stage
     );
 
     PKMN_API float gen1_critical_hit_modifier(
         int attacker_level
     );
 
-    PKMN_CONSTEXPR_OR_INLINE float critical_hit_modifier(
+    PKMN_API float critical_hit_modifier(
         int generation
-    ) {
-        return (generation >= 6) ? 1.5f : 2.0f;
-    }
+    );
 
 }}
 #endif /* PKMN_CALCULATIONS_MOVES_CRITICAL_HIT_HPP */

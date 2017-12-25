@@ -9,38 +9,11 @@
 
 #include <pkmn/calculations/moves/critical_hit.hpp>
 
+#include <cstdint>
+
 namespace pkmn { namespace calculations {
 
-    static inline float _gen1_critical_hit_chance(
-        float speed,
-        bool rate_increased,
-        bool high_rate_move
-    )
-    {
-        return (speed / 512.0f) /
-               (rate_increased ? 4.0f : 1.0f) *
-               (high_rate_move ? 8.0f : 1.0f);
-    }
-
-    static inline float _stadium_critical_hit_chance(
-        float speed,
-        bool rate_increased,
-        bool high_rate_move
-    )
-    {
-        return (speed + (rate_increased ? 236.0f : 76.0f)) /
-               (1024.0f / (rate_increased ? 2.0f : 1.0f)
-                        / (high_rate_move ? 8.0f : 1.0f));
-    }
-
-    static inline float _gen1_critical_hit_modifier(
-        float attacker_level
-    )
-    {
-        return ((2.0f * attacker_level) + 5.0f) / (attacker_level + 5.0f);
-    }
-
-    // Exported functions
+    // Source: https://bulbapedia.bulbagarden.net/wiki/Critical_hit
 
     float gen1_critical_hit_chance(
         int speed,
@@ -48,36 +21,75 @@ namespace pkmn { namespace calculations {
         bool high_rate_move
     )
     {
-        // Validate input parameters.
-        if(speed < 0)
+        pkmn::enforce_bounds(
+            "Speed",
+            speed,
+            1,
+            255
+        );
+
+        uint8_t threshold = uint8_t(speed / 2);
+
+        // Focus Energy and Dire Hit should increase the chance of a critical
+        // hit, but due to a bug, they actually decrease it.
+        if(rate_increased)
         {
-            throw std::out_of_range("speed must be > 0.");
+            threshold /= 4;
         }
 
-        return _gen1_critical_hit_chance(
-                   float(speed),
-                   rate_increased,
-                   high_rate_move
-               );
+        if(high_rate_move)
+        {
+            threshold *= 8;
+        }
+
+        return (float(threshold) / 256.0f);
     }
 
-    float stadium_critical_hit_chance(
-        int speed,
-        bool rate_increased,
-        bool high_rate_move
+    float critical_hit_chance(
+        int generation,
+        int critical_hit_stage
     )
     {
-        // Validate input parameters.
-        if(speed < 0)
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            2,
+            6
+        );
+        pkmn::enforce_comparator(
+            "Critical hit stage",
+            critical_hit_stage,
+            0,
+            pkmn::value_comparator::GE
+        );
+
+        bool is_early_game = (generation < 6);
+        float ret = 0.0f;
+
+        switch(critical_hit_stage)
         {
-            throw std::out_of_range("speed must be > 0.");
+            case 0:
+                ret = 0.0625f;
+                break;
+
+            case 1:
+                ret = 0.125f;
+                break;
+
+            case 2:
+                ret = is_early_game ? 0.25f : 0.5f;
+                break;
+
+            case 3:
+                ret = is_early_game ? 0.333f : 1.0f;
+                break;
+
+            default:
+                ret = is_early_game ? 0.5f : 1.0f;
+                break;
         }
 
-        return _stadium_critical_hit_chance(
-                   float(speed),
-                   rate_increased,
-                   high_rate_move
-               );
+        return ret;
     }
 
     float gen1_critical_hit_modifier(
@@ -88,10 +100,25 @@ namespace pkmn { namespace calculations {
             "Attacker level",
             attacker_level,
             1,
-            255
+            255 // Account for "glitch Pokémon"
         );
 
-        return _gen1_critical_hit_modifier(float(attacker_level));
+        return ((2.0f * float(attacker_level)) + 5.0f) /
+               (float(attacker_level) + 5.0f);
+    }
+
+    float critical_hit_modifier(
+        int generation
+    )
+    {
+        pkmn::enforce_bounds(
+            "Generation",
+            generation,
+            1,
+            6
+        );
+
+        return (generation >= 6) ? 1.5f : 2.0f;
     }
 
 }}

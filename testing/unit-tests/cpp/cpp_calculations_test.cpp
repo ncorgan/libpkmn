@@ -24,6 +24,8 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 
+#include <pkmn/utils/floating_point_comparison.hpp>
+
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
 
@@ -813,25 +815,121 @@ TEST(cpp_calculations_test, wring_out_power_test)
     }
 }
 
-// TODO: verify
-TEST(cpp_calculations_test, critical_hit_chance_test)
+TEST(cpp_calculations_test, gen1_critical_hit_chance_test)
 {
+    // Test invalid parameters.
+    EXPECT_THROW(
+        pkmn::calculations::gen1_critical_hit_chance(0, false, false)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::gen1_critical_hit_chance(256, false, false)
+    , std::out_of_range);
+
+    // In Generation I, make sure there is never a guaranteed chance for
+    // a critical hit.
+    EXPECT_TRUE(pkmn::fp_compare_less(
+        pkmn::calculations::gen1_critical_hit_chance(255, true, true),
+        (255.0f / 256.0f)
+    ));
 }
 
-// TODO: invalid generations, negative numbers
+TEST(cpp_calculations_test, critical_hit_chance_test)
+{
+    // Test invalid parameters.
+    EXPECT_THROW(
+        pkmn::calculations::critical_hit_chance(1, 0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::critical_hit_chance(10, 0)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::critical_hit_chance(2, -1)
+    , std::out_of_range);
+
+    struct critical_hit_chance_test_params
+    {
+        int generation;
+        int stage;
+        float expected_result;
+    };
+    static const std::vector<critical_hit_chance_test_params> test_params =
+    {
+        {2, 0, 0.0625f}, {2, 1, 0.125f}, {2, 2, 0.25f}, {2, 3, 0.333f}, {2, 4, 0.5f},
+        {3, 0, 0.0625f}, {3, 1, 0.125f}, {3, 2, 0.25f}, {3, 3, 0.333f}, {3, 4, 0.5f},
+        {4, 0, 0.0625f}, {4, 1, 0.125f}, {4, 2, 0.25f}, {4, 3, 0.333f}, {4, 4, 0.5f},
+        {5, 0, 0.0625f}, {5, 1, 0.125f}, {5, 2, 0.25f}, {5, 3, 0.333f}, {5, 4, 0.5f},
+        {6, 0, 0.0625f}, {6, 1, 0.125f}, {6, 2, 0.5f},  {6, 3, 1.0f},   {6, 4, 1.0f},
+    };
+
+    for(const auto& test_param: test_params)
+    {
+        EXPECT_DOUBLE_EQ(
+            test_param.expected_result,
+            pkmn::calculations::critical_hit_chance(
+                test_param.generation,
+                test_param.stage
+            )
+        );
+    }
+}
+
+TEST(cpp_calculations_test, gen1_critical_hit_modifier_test)
+{
+    // Test invalid parameters.
+    EXPECT_THROW(
+        pkmn::calculations::gen1_critical_hit_modifier(-1)
+    , std::out_of_range);
+
+    EXPECT_THROW(
+        pkmn::calculations::gen1_critical_hit_modifier(256)
+    , std::out_of_range);
+
+    // The critical hit modifier is level-dependent in Generation I.
+    EXPECT_DOUBLE_EQ(
+        1.5f,
+        pkmn::calculations::gen1_critical_hit_modifier(5)
+    );
+    EXPECT_DOUBLE_EQ(
+        1.8f,
+        pkmn::calculations::gen1_critical_hit_modifier(20)
+    );
+    EXPECT_DOUBLE_EQ(
+        1.95f,
+        pkmn::calculations::gen1_critical_hit_modifier(95)
+    );
+}
+
 TEST(cpp_calculations_test, critical_hit_modifier_test)
 {
-    // The critical hit modifier is level-dependent in Generation I.
-    EXPECT_DOUBLE_EQ(1.5f, pkmn::calculations::gen1_critical_hit_modifier(5));
-    EXPECT_DOUBLE_EQ(1.8f, pkmn::calculations::gen1_critical_hit_modifier(20));
-    EXPECT_DOUBLE_EQ(1.95f, pkmn::calculations::gen1_critical_hit_modifier(95));
+    // Test invalid parameters.
+    EXPECT_THROW(
+        pkmn::calculations::critical_hit_modifier(-1)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::critical_hit_modifier(10)
+    , std::out_of_range);
 
     // Past Generation I, the modifier is constant, depending on the generation.
-    EXPECT_DOUBLE_EQ(2.0f, pkmn::calculations::critical_hit_modifier(2));
-    EXPECT_DOUBLE_EQ(2.0f, pkmn::calculations::critical_hit_modifier(3));
-    EXPECT_DOUBLE_EQ(2.0f, pkmn::calculations::critical_hit_modifier(4));
-    EXPECT_DOUBLE_EQ(2.0f, pkmn::calculations::critical_hit_modifier(5));
-    EXPECT_DOUBLE_EQ(1.5f, pkmn::calculations::critical_hit_modifier(6));
+    EXPECT_DOUBLE_EQ(
+        2.0f,
+        pkmn::calculations::critical_hit_modifier(2)
+    );
+    EXPECT_DOUBLE_EQ(
+        2.0f,
+        pkmn::calculations::critical_hit_modifier(3)
+    );
+    EXPECT_DOUBLE_EQ(
+        2.0f,
+        pkmn::calculations::critical_hit_modifier(4)
+    );
+    EXPECT_DOUBLE_EQ(
+        2.0f,
+        pkmn::calculations::critical_hit_modifier(5)
+    );
+    EXPECT_DOUBLE_EQ(
+        1.5f,
+        pkmn::calculations::critical_hit_modifier(6)
+    );
 }
 
 TEST(cpp_calculations_test, damage_test)
