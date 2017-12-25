@@ -37,7 +37,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_add_spinda_coords(
+PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords(
     const pkmn_spinda_coords_t* coords1,
     const pkmn_spinda_coords_t* coords2,
     pkmn_spinda_coords_t* result_out
@@ -48,7 +48,7 @@ PKMN_API pkmn_error_t pkmn_calculations_add_spinda_coords(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_add_spinda_spots(
+PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_spots(
     const pkmn_spinda_spots_t* spots1,
     const pkmn_spinda_spots_t* spots2,
     pkmn_spinda_spots_t* result_out
@@ -59,7 +59,7 @@ PKMN_API pkmn_error_t pkmn_calculations_add_spinda_spots(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
+PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
     const pkmn_spinda_spots_t* spots,
     const pkmn_spinda_coords_t* coords,
     pkmn_spinda_spots_t* result_out
@@ -70,7 +70,7 @@ PKMN_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any spot_Offset_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_spinda_spot_offset(
+PKMN_C_API pkmn_error_t pkmn_calculations_spinda_spot_offset(
     uint32_t personality,
     pkmn_spinda_spots_t* spot_offset_out
 );

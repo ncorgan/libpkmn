@@ -16,19 +16,19 @@
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
     int speed,
     bool rate_increased,
     bool high_rate_move,
     float* critical_hit_chance_out
 );
 
-PKMN_API pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
     int attacker_level,
     float* critical_hit_modifier_out
 );
 
-PKMN_API pkmn_error_t pkmn_calculations_critical_hit_modifier(
+PKMN_C_API pkmn_error_t pkmn_calculations_critical_hit_modifier(
     int generation,
     float* critical_hit_modifier_out
 );

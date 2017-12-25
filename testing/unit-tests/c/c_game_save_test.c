@@ -16,13 +16,13 @@
 #include <string.h>
 #include <time.h>
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>
 #else
 #    include <unistd.h>
 #endif
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
 #else
 #    define FS_SEPARATOR "/"
@@ -1269,7 +1269,7 @@ static void test_game_save(
         game_save2
     );
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_NOT_EQUAL(DeleteFile(tmp_save_filepath), 0);
 #else
     TEST_ASSERT_EQUAL(remove(tmp_save_filepath), 0);

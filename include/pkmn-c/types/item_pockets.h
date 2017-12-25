@@ -27,7 +27,7 @@ typedef struct
 extern "C" {
 #endif
 
-static PKMN_INLINE pkmn_error_t pkmn_item_pockets_free(
+static inline pkmn_error_t pkmn_item_pockets_free(
     pkmn_item_pockets_t* item_pockets
 )
 {

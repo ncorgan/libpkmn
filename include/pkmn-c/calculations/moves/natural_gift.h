@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_calculations_natural_gift_stats(
+PKMN_C_API pkmn_error_t pkmn_calculations_natural_gift_stats(
     const char* item_name,
     int generation,
     pkmn_natural_gift_t* natural_gift_stats_out
