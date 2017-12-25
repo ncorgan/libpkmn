@@ -22,6 +22,8 @@ namespace pkmn { namespace c {
 
         if(!string_cpp.empty())
         {
+            (void)c_str_ptr;
+
             std::memset(
                 c_str_ptr,
                 0,
