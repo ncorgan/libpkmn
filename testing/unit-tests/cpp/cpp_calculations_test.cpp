@@ -95,7 +95,7 @@ TEST(cpp_calculations_test, crush_grip_power_test)
         pkmn::calculations::crush_grip_power(200, 200, 4)
     );
 
-    for(size_t generation = 5; generation <= 6; ++generation)
+    for(int generation = 5; generation <= 6; ++generation)
     {
         EXPECT_EQ(
             1,
@@ -738,8 +738,8 @@ TEST(cpp_calculations_test, trump_card_power_test)
     {
         200, 80, 60, 50, 40, 40, 40, 40, 40
     };
-    for(size_t remaining_pp = 0;
-        remaining_pp < expected_results.size();
+    for(int remaining_pp = 0;
+        remaining_pp < int(expected_results.size());
         ++remaining_pp
     )
     {
@@ -802,7 +802,7 @@ TEST(cpp_calculations_test, wring_out_power_test)
         pkmn::calculations::wring_out_power(200, 200, 4)
     );
 
-    for(size_t generation = 5; generation <= 6; ++generation)
+    for(int generation = 5; generation <= 6; ++generation)
     {
         EXPECT_EQ(
             1,

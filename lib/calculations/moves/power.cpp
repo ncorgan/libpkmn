@@ -88,27 +88,30 @@ namespace pkmn { namespace calculations {
     )
     {
         float speed_percentage = float(attacker_speed) / float(target_speed);
+        int ret = 0;
 
         if(speed_percentage <= 0.25f)
         {
-            return 150;
+            ret = 150;
         }
         else if(speed_percentage <= 0.3333f)
         {
-            return 120;
+            ret = 120;
         }
         else if(speed_percentage <= 0.5f)
         {
-            return 80;
+            ret = 80;
         }
         else if(speed_percentage <= 1.0f)
         {
-            return 60;
+            ret = 60;
         }
         else
         {
-            return 40;
+            ret = 40;
         }
+
+        return ret;
     }
 
     int eruption_power(
