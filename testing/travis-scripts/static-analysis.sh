@@ -13,10 +13,10 @@ cd test-env/pkmn-analysis-build
 
 echo Running CppCheck on C++ files.
 find $REPO_TOPLEVEL/lib -name '*.[ch]pp' | xargs cppcheck --enable=performance,portability,warning --std=c++11 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet --template='[{file}:{line}]: ({severity}: {id}) {message}' --inline-suppr
-#[ $? -ne 0 ] && exit 1
+[ $? -ne 0 ] && exit 1
 echo Running CppCheck on C files.
 find $REPO_TOPLEVEL/lib -name '*.[ch]' | xargs cppcheck --enable=performance,portability,warning --std=c99 -I $REPO_TOPLEVEL/include --error-exitcode=1 --force --quiet --template='[{file}:{line}]: ({severity}: {id}) {message}' --inline-suppr
-#[ $? -ne 0 ] && exit 1
+[ $? -ne 0 ] && exit 1
 
 if [ $PYTHON_VERSION -eq 2 ]
 then
