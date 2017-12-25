@@ -87,6 +87,9 @@ using Database;"
 
 %typemap(cscode) pkmn::swig::pokemon2
 %{
+    public static readonly uint DEFAULT_TRAINER_ID = 2105214279;
+    public static readonly string DEFAULT_TRAINER_NAME = "LibPKMN";
+
     public string Species
     {
         get { return GetSpecies(); }

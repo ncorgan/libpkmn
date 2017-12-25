@@ -18,35 +18,29 @@
 
 namespace pkmn { namespace swig {
 
-    class pokemon_party
+    class pokemon_party2
     {
         public:
-            pokemon_party():
+            pokemon_party2():
                 _pokemon_party(nullptr)
             {}
 
-            pokemon_party(
+            pokemon_party2(
                 const pkmn::pokemon_party::sptr& cpp_pokemon_party
             ): _pokemon_party(cpp_pokemon_party)
             {
                 _populate_list();
             }
 
-            pokemon_party(
+            pokemon_party2(
                 const std::string& game
             ): _pokemon_party(pkmn::pokemon_party::make(game))
             {
                 _populate_list();
             }
 
-            pokemon_party(
-                const pokemon_party& other
-            ): _pokemon_party(other._pokemon_party),
-               _pokemon_list(other._pokemon_list)
-            {}
-
             bool operator==(
-                const pokemon_party& rhs
+                const pokemon_party2& rhs
             ) const
             {
                 return (_pokemon_party == rhs._pokemon_party);
@@ -86,6 +80,11 @@ namespace pkmn { namespace swig {
             inline const std::vector<pkmn::swig::pokemon2>& as_vector()
             {
                 return _pokemon_list;
+            }
+
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon_party.get());
             }
 
         private:

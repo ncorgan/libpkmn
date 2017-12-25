@@ -60,6 +60,7 @@ std::string GetSWIGVersion();
 
 // Game Save
 %include <csharp/pkmn_game_save.i>
+%include <csharp/pkmn_game_save2.i>
 
 // Item Slot
 %include <csharp/pkmn_item_slot.i>
@@ -86,9 +87,12 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 
 // Pokémon Box
 %include <csharp/pkmn_pokemon_box.i>
+%include <csharp/pkmn_pokemon_box2.i>
 
 // Pokémon Party
 %include <csharp/pkmn_pokemon_party.i>
+%include <csharp/pkmn_pokemon_party2.i>
 
 // Pokémon PC
 %include <csharp/pkmn_pokemon_pc.i>
+%include <csharp/pkmn_pokemon_pc2.i>

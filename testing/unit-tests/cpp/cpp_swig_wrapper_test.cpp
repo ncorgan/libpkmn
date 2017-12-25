@@ -383,7 +383,7 @@ TEST(cpp_swig_test, test_pokemon)
 
 TEST(cpp_swig_test, test_pokemon_party)
 {
-    pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
+    pkmn::swig::pokemon_party2 swig_pokemon_party("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_party.get_game());
     EXPECT_EQ(0, swig_pokemon_party.get_num_pokemon());
@@ -408,7 +408,7 @@ TEST(cpp_swig_test, test_pokemon_party)
 
 TEST(cpp_swig_test, test_pokemon_box)
 {
-    pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
+    pkmn::swig::pokemon_box2 swig_pokemon_box("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_box.get_game());
     EXPECT_EQ(0, swig_pokemon_box.get_num_pokemon());
@@ -435,11 +435,11 @@ TEST(cpp_swig_test, test_pokemon_box)
 
 TEST(cpp_swig_test, test_pokemon_pc)
 {
-    pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
+    pkmn::swig::pokemon_pc2 swig_pokemon_pc("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_pc.get_game());
 
-    std::vector<pkmn::swig::pokemon_box> pc_vec = swig_pokemon_pc.as_vector();
+    std::vector<pkmn::swig::pokemon_box2> pc_vec = swig_pokemon_pc.as_vector();
     EXPECT_EQ(size_t(swig_pokemon_pc.get_num_boxes()), pc_vec.size());
 
     for(size_t i = 0; i < pc_vec.size(); ++i)
@@ -460,7 +460,7 @@ TEST(cpp_swig_test, test_game_save)
 
     fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
 
-    pkmn::swig::game_save swig_game_save(save_filepath.string());
+    pkmn::swig::game_save2 swig_game_save(save_filepath.string());
 
     EXPECT_EQ(save_filepath.string(), swig_game_save.get_filepath());
     EXPECT_EQ("FireRed", swig_game_save.get_game());

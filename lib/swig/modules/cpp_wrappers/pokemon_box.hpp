@@ -18,35 +18,29 @@
 
 namespace pkmn { namespace swig {
 
-    class pokemon_box
+    class pokemon_box2
     {
         public:
-            pokemon_box():
+            pokemon_box2():
                 _pokemon_box(nullptr)
             {}
 
-            pokemon_box(
+            pokemon_box2(
                 const pkmn::pokemon_box::sptr& cpp_pokemon_box
             ): _pokemon_box(cpp_pokemon_box)
             {
                 _populate_list();
             }
 
-            pokemon_box(
+            pokemon_box2(
                 const std::string& game
             ): _pokemon_box(pkmn::pokemon_box::make(game))
             {
                 _populate_list();
             }
 
-            pokemon_box(
-                const pokemon_box& other
-            ): _pokemon_box(other._pokemon_box),
-               _pokemon_list(other._pokemon_list)
-            {}
-
             bool operator==(
-                const pokemon_box& rhs
+                const pokemon_box2& rhs
             ) const
             {
                 return (_pokemon_box == rhs._pokemon_box);
@@ -104,6 +98,11 @@ namespace pkmn { namespace swig {
             inline const std::vector<pkmn::swig::pokemon2>& as_vector()
             {
                 return _pokemon_list;
+            }
+
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon_box.get());
             }
 
         private:
