@@ -22,8 +22,7 @@ namespace pkmn { namespace c {
 
         if(!string_cpp.empty())
         {
-            (void)c_str_ptr;
-
+            // cppcheck-suppress redundantCopy
             std::memset(
                 c_str_ptr,
                 0,
