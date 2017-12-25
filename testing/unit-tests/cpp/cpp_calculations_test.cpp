@@ -1592,8 +1592,7 @@ static const std::string abilities[4][3] = {
     {"Flash Fire", "None", "Drought"}
 };
 
-// TODO: reenable
-TEST(cpp_calculations_test, DISABLED_personality_test) {
+TEST(cpp_calculations_test, personality_test) {
     uint32_t personality = 0;
 
     // Test invalid ability.
