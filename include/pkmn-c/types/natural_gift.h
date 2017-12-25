@@ -8,10 +8,12 @@
 #define PKMN_C_TYPES_NATURAL_GIFT_H
 
 #include <pkmn-c/config.h>
+#include <pkmn-c/error.h>
 
 #include <stdlib.h>
 
-typedef struct {
+typedef struct
+{
     char* type;
     int base_power;
 } pkmn_natural_gift_t;
@@ -20,11 +22,20 @@ typedef struct {
 extern "C" {
 #endif
 
-static PKMN_INLINE void pkmn_natural_gift_free(
-    pkmn_natural_gift_t* natural_gift
-) {
-    free(natural_gift->type);
-    natural_gift->type = NULL;
+static inline pkmn_error_t pkmn_natural_gift_free(
+    pkmn_natural_gift_t* natural_gift_ptr
+)
+{
+    if(!natural_gift_ptr)
+    {
+        return PKMN_ERROR_NULL_POINTER;
+    }
+
+    free(natural_gift_ptr->type);
+    natural_gift_ptr->type = NULL;
+    natural_gift_ptr->base_power = 0;
+
+    return PKMN_ERROR_NONE;
 }
 
 #ifdef __cplusplus

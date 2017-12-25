@@ -56,10 +56,13 @@ static const char* MALE_ONLY_GAMES[] = {
 
 static bool is_rival_name_set(
     const char* game
-) {
+)
+{
     size_t length = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
-    for(size_t i = 0; i < length; ++i) {
-        if(!strcmp(game, RIVAL_NAME_SET_GAMES[i])) {
+    for(size_t i = 0; i < length; ++i)
+    {
+        if(!strcmp(game, RIVAL_NAME_SET_GAMES[i]))
+        {
             return true;
         }
     }
@@ -69,10 +72,13 @@ static bool is_rival_name_set(
 
 static bool is_male_only(
     const char* game
-) {
+)
+{
     size_t length = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
-    for(size_t i = 0; i < length; ++i) {
-        if(!strcmp(game, MALE_ONLY_GAMES[i])) {
+    for(size_t i = 0; i < length; ++i)
+    {
+        if(!strcmp(game, MALE_ONLY_GAMES[i]))
+        {
             return true;
         }
     }
@@ -83,7 +89,8 @@ static bool is_male_only(
 static void populate_path_vars() {
     pkmn_get_tmp_dir(
         PKMN_TMP_DIR,
-        sizeof(PKMN_TMP_DIR)
+        sizeof(PKMN_TMP_DIR),
+        NULL
     );
 
     char* value = getenv("PKSAV_TEST_SAVES");
@@ -289,7 +296,8 @@ static void game_save_test_rival_name(
         error = pkmn_game_save_get_rival_name(
                     game_save,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(PKMN_DEFAULT_TRAINER_NAME, strbuffer);
@@ -370,18 +378,23 @@ static void game_save_test_common_fields(
     TEST_ASSERT_EQUAL(6, pokemon_list.length);
     TEST_ASSERT_NOT_NULL(pokemon_list.pokemon_list);
 
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < 6; ++i)
+    {
         TEST_ASSERT_NOT_NULL(pokemon_list.pokemon_list[i]);
         error = pkmn_pokemon_get_species(
                     pokemon_list.pokemon_list[i],
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        if(i < num_party_pokemon) {
+        if(i < num_party_pokemon)
+        {
             TEST_ASSERT_NOT_EQUAL(0, strcmp("None", strbuffer));
-        } else {
+        }
+        else
+        {
             TEST_ASSERT_EQUAL_STRING("None", strbuffer);
         }
     }
@@ -462,21 +475,27 @@ static void game_save_test_common_fields(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL(box_capacity, (int)pokemon_list.length);
 
-        for(size_t j = 0; j < pokemon_list.length; ++j) {
+        for(size_t j = 0; j < pokemon_list.length; ++j)
+        {
             TEST_ASSERT_NOT_NULL(pokemon_list.pokemon_list[i]);
 
             // Boxes are only contiguous in Game Boy games.
-            if(is_gb_game) {
+            if(is_gb_game)
+            {
                 error = pkmn_pokemon_get_species(
                             pokemon_list.pokemon_list[j],
                             strbuffer,
-                            sizeof(strbuffer)
+                            sizeof(strbuffer),
+                            NULL
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-                if((int)j < num_box_pokemon) {
+                if((int)j < num_box_pokemon)
+                {
                     TEST_ASSERT_NOT_EQUAL(0, strcmp("None", strbuffer));
-                } else {
+                }
+                else
+                {
                     TEST_ASSERT_EQUAL_STRING("None", strbuffer);
                 }
             }
@@ -717,7 +736,8 @@ void compare_item_lists(
 static void compare_pokemon(
     pkmn_pokemon_handle_t pokemon1,
     pkmn_pokemon_handle_t pokemon2
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(pokemon1);
     TEST_ASSERT_NOT_NULL(pokemon2);
 
@@ -748,13 +768,15 @@ static void compare_pokemon(
     error = pkmn_pokemon_get_species(
                 pokemon1,
                 pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                sizeof(pokemon1_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_get_species(
                 pokemon2,
                 pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                sizeof(pokemon2_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
@@ -762,13 +784,15 @@ static void compare_pokemon(
     error = pkmn_pokemon_get_game(
                 pokemon1,
                 pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                sizeof(pokemon1_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_get_game(
                 pokemon2,
                 pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                sizeof(pokemon2_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
@@ -776,13 +800,15 @@ static void compare_pokemon(
     error = pkmn_pokemon_get_nickname(
                 pokemon1,
                 pokemon1_strbuffer,
-                sizeof(pokemon1_strbuffer)
+                sizeof(pokemon1_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_get_nickname(
                 pokemon2,
                 pokemon2_strbuffer,
-                sizeof(pokemon2_strbuffer)
+                sizeof(pokemon2_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(pokemon1_strbuffer, pokemon2_strbuffer);
@@ -806,7 +832,8 @@ static void compare_pokemon(
 static void compare_game_saves(
     pkmn_game_save_handle_t save1,
     pkmn_game_save_handle_t save2
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(save1);
     TEST_ASSERT_NOT_NULL(save2);
 
@@ -821,13 +848,15 @@ static void compare_game_saves(
     error = pkmn_game_save_get_game(
                 save1,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_game_save_get_game(
                 save2,
                 save2_strbuffer,
-                sizeof(save2_strbuffer)
+                sizeof(save2_strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(game, save2_strbuffer);
@@ -857,17 +886,20 @@ static void compare_game_saves(
         trainer_info2.trainer_gender
     );
 
-    if(!is_rival_name_set(game)) {
+    if(!is_rival_name_set(game))
+    {
         error = pkmn_game_save_get_rival_name(
                     save1,
                     save1_strbuffer,
-                    sizeof(save1_strbuffer)
+                    sizeof(save1_strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         error = pkmn_game_save_get_rival_name(
                     save2,
                     save2_strbuffer,
-                    sizeof(save2_strbuffer)
+                    sizeof(save2_strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(save1_strbuffer, save2_strbuffer);
@@ -1079,13 +1111,15 @@ static void compare_game_saves(
             error = pkmn_pokemon_box_get_name(
                         pokemon_boxes1.pokemon_boxes[i],
                         save1_strbuffer,
-                        sizeof(save1_strbuffer)
+                        sizeof(save1_strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             error = pkmn_pokemon_box_get_name(
                         pokemon_boxes2.pokemon_boxes[i],
                         save2_strbuffer,
-                        sizeof(save2_strbuffer)
+                        sizeof(save2_strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1178,7 +1212,8 @@ static void test_game_save(
     error = pkmn_game_save_get_game(
                 game_save,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(game, strbuffer);

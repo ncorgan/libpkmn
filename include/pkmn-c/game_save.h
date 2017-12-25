@@ -120,14 +120,15 @@ PKMN_API const char* pkmn_game_save_strerror(
  * \param handle The handle to the game save to check
  * \param filepath_out The buffer in which to return the filepath
  * \param buffer_len The size of the buffer passed into filepath_out
+ * \param filepath_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or filepath_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if filepath_out is too small for the return string
  */
 PKMN_API pkmn_error_t pkmn_game_save_get_filepath(
     pkmn_game_save_handle_t handle,
     char* filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* filepath_length_out
 );
 
 /*!
@@ -176,14 +177,15 @@ PKMN_API pkmn_error_t pkmn_game_save_save_as(
  * \param handle The handle to the game save to check
  * \param game_out The buffer in which to return the game
  * \param buffer_len The size of the buffer passed into game_out
+ * \param game_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or game_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if game_out is too small for the return string
  */
 PKMN_API pkmn_error_t pkmn_game_save_get_game(
     pkmn_game_save_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
 /*!
@@ -227,15 +229,16 @@ PKMN_API pkmn_error_t pkmn_game_save_set_trainer_info(
  * \param handle The handle to the game save to use
  * \param rival_name_out The buffer in which to return the rival name
  * \param buffer_len The size of the buffer passed into rival_name_out
+ * \param rival_name_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or rival_name_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if rival_name_out is too small for the return string
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the save is for a Gamecube game
  */
 PKMN_API pkmn_error_t pkmn_game_save_get_rival_name(
     pkmn_game_save_handle_t handle,
     char* rival_name_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* rival_name_length_out
 );
 
 /*!

@@ -36,12 +36,19 @@ static PKMN_INLINE pkmn_error_t pkmn_item_pockets_free(
         return PKMN_ERROR_NULL_POINTER;
     }
 
-    for(size_t i = 0; i < item_pockets->num_pockets; ++i)
+    if(item_pockets->num_pockets > 0)
     {
-        pkmn_item_list_free(&item_pockets->pockets[i]);
+        for(size_t i = 0; i < item_pockets->num_pockets; ++i)
+        {
+            pkmn_item_list_free(&item_pockets->pockets[i]);
+        }
+        free(item_pockets->pockets);
+
+        pkmn_string_list_free(&item_pockets->pocket_names);
     }
-    free(item_pockets->pockets);
-    pkmn_string_list_free(&item_pockets->pocket_names);
+
+    item_pockets->pockets = NULL;
+    item_pockets->num_pockets = 0;
 
     return PKMN_ERROR_NONE;
 }

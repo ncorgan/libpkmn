@@ -31,13 +31,14 @@ extern "C" {
  *
  * \param appdata_dir_out The buffer in which to return the AppData directory
  * \param buffer_len The size of the buffer passed into appdata_dir_out
+ * \param appdata_dir_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if appdata_dir_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into appdata_dir_out is too short
  */
 PKMN_API pkmn_error_t pkmn_get_appdata_dir(
     char* appdata_dir_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* appdata_dir_length_out
 );
 
 /*!
@@ -52,14 +53,15 @@ PKMN_API pkmn_error_t pkmn_get_appdata_dir(
  *
  * \param database_path_out The buffer in which to return the database path
  * \param buffer_len The size of the buffer passed into database_path_out
+ * \param database_path_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if no valid database is found
  * \returns ::PKMN_ERROR_NULL_POINTER if database_path_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into database_path_out is too short
  */
 PKMN_API pkmn_error_t pkmn_get_database_path(
     char* database_path_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* database_path_length_out
 );
 
 /*!
@@ -73,14 +75,15 @@ PKMN_API pkmn_error_t pkmn_get_database_path(
  *
  * \param images_dir_out The buffer in which to return the images directory
  * \param buffer_len The size of the buffer passed into images_dir_out
+ * \param images_dir_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If neither path exists
  * \returns ::PKMN_ERROR_NULL_POINTER if images_dir_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into images_dir_out is too short
  */
 PKMN_API pkmn_error_t pkmn_get_images_dir(
     char* images_dir_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* images_dir_length_out
 );
 
 /*!
@@ -92,13 +95,14 @@ PKMN_API pkmn_error_t pkmn_get_images_dir(
  *
  * \param tmp_dir_out The buffer in which to return the filesystem's temp directory
  * \param buffer_len The size of the buffer passed into tmp_dir_out
+ * \param tmp_dir_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if tmp_dir_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if the buffer passed into tmp_dir_out is too short
  */
 PKMN_API pkmn_error_t pkmn_get_tmp_dir(
     char* tmp_dir_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* tmp_dir_length_out
 );
 
 #ifdef __cplusplus

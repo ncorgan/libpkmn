@@ -16,11 +16,13 @@ static pkmn_error_t error = PKMN_ERROR_NONE;
 static void test_empty_pokemon_party(
     pkmn_pokemon_party_handle_t party,
     const char* game
-) {
+)
+{
     error = pkmn_pokemon_party_get_game(
                 party,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(game, strbuffer);
@@ -63,7 +65,8 @@ static void test_empty_pokemon_party(
         error = pkmn_pokemon_get_species(
                     pokemon_list.pokemon_list[i],
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING("None", strbuffer);
@@ -71,7 +74,8 @@ static void test_empty_pokemon_party(
         error = pkmn_pokemon_get_game(
                     pokemon_list.pokemon_list[i],
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(game, strbuffer);
@@ -102,7 +106,8 @@ static void test_empty_pokemon_party(
 
 static void test_setting_pokemon_in_party(
     pkmn_pokemon_party_handle_t party
-) {
+)
+{
     pkmn_error_t error = PKMN_ERROR_NONE;
     char game[STRBUFFER_LEN] = {0};
     int num_pokemon = 0;
@@ -110,7 +115,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_party_get_game(
                 party,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -209,7 +215,7 @@ static void test_setting_pokemon_in_party(
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
-    
+
     // Replace one of the new ones.
     error = pkmn_pokemon_party_set_pokemon(
                 party,
@@ -316,7 +322,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 second_in_party,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
@@ -348,7 +355,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 fifth_in_party,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("None", strbuffer);
@@ -374,7 +382,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 current_first,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Squirtle", strbuffer);
@@ -388,7 +397,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 current_second,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
@@ -402,7 +412,8 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 current_third,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
@@ -410,14 +421,16 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 original_first,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("None", strbuffer);
     error = pkmn_pokemon_get_species(
                 original_second,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("None", strbuffer);
@@ -425,21 +438,24 @@ static void test_setting_pokemon_in_party(
     error = pkmn_pokemon_get_species(
                 bulbasaur,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Bulbasaur", strbuffer);
     error = pkmn_pokemon_get_species(
                 charmander,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
     error = pkmn_pokemon_get_species(
                 squirtle,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Squirtle", strbuffer);
@@ -481,7 +497,8 @@ static void test_setting_pokemon_in_party(
 
 static void pokemon_party_test_common(
     const char* game
-) {
+)
+{
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_party_handle_t party = NULL;
 

@@ -14,8 +14,8 @@
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_bag_internal_t*>(ptr)
-#define LIST_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
+#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_bag_internal_t*>(ptr))
+#define LIST_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
 
 // The caller is expected to be exception-safe.
 void init_item_bag(
@@ -24,7 +24,7 @@ void init_item_bag(
 {
     pkmn::item_bag::sptr cpp = INTERNAL_RCAST(item_bag->_internal)->cpp;
 
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::c::string_cpp_to_c_alloc(
         cpp->get_game(),
         &item_bag->game
     );
@@ -45,7 +45,7 @@ void init_item_bag(
         init_item_list(&item_bag->pockets.pockets[i]);
     }
 
-    pkmn::std_vector_std_string_to_string_list(
+    pkmn::c::string_list_cpp_to_c(
         pocket_names,
         &item_bag->pockets.pocket_names
     );
@@ -92,8 +92,9 @@ pkmn_error_t pkmn_item_bag_free(
     pkmn_item_pockets_free(&item_bag->pockets);
 
     PKMN_CPP_TO_C(
-        delete INTERNAL_RCAST(item_bag->_internal);
-        item_bag->_internal = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(
+            reinterpret_cast<pkmn_item_bag_internal_t**>(&item_bag->_internal)
+        );
     )
 }
 

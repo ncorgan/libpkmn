@@ -8,26 +8,29 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
+#include <boost/assert.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <pkmn-c/item_list.h>
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
+#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
 
 // The caller is expected to be exception-safe.
 void init_item_list(
     pkmn_item_list_t* item_list
 )
 {
+    BOOST_ASSERT(item_list);
+
     pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
 
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::c::string_cpp_to_c_alloc(
         cpp->get_name(),
         &item_list->name
     );
-    pkmn::std_string_to_c_str_alloc(
+    pkmn::c::string_cpp_to_c_alloc(
         cpp->get_game(),
         &item_list->game
     );
@@ -35,13 +38,10 @@ void init_item_list(
     item_list->num_items = cpp->get_num_items();
     item_list->capacity = cpp->get_capacity();
 
-    item_list->item_slots.item_slots =
-        (pkmn_item_slot_t*)std::malloc(
-                               cpp->get_capacity()*sizeof(pkmn_item_slot_t)
-                           );
-    item_list->item_slots.length = item_list->capacity;
-
-    update_item_list(item_list);
+    pkmn::c::item_slots_cpp_to_c(
+        cpp->as_vector(),
+        &item_list->item_slots
+    );
 }
 
 // The caller is expected to be exception-safe.
@@ -49,18 +49,17 @@ void update_item_list(
     pkmn_item_list_t* item_list
 )
 {
+    BOOST_ASSERT(item_list);
+
     pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
 
-    for(size_t i = 0; i < item_list->capacity; ++i)
+    for(size_t index = 0; index < item_list->capacity; ++index)
     {
-        const pkmn::item_slot& slot_cpp = cpp->at(int(i));
-
-        std::strncpy(
-            item_list->item_slots.item_slots[i].item,
-            slot_cpp.item.c_str(),
-            sizeof(item_list->item_slots.item_slots[i].item)
+        std::free(item_list->item_slots.item_slots[index].item);
+        pkmn::c::item_slot_cpp_to_c(
+            cpp->at(int(index)),
+            &item_list->item_slots.item_slots[index]
         );
-        item_list->item_slots.item_slots[i].amount = slot_cpp.amount;
     }
 
     item_list->num_items = cpp->get_num_items();
@@ -96,12 +95,13 @@ pkmn_error_t pkmn_item_list_free(
     item_list->game = NULL;
     item_list->num_items = 0;
     item_list->capacity = 0;
-    std::free(item_list->item_slots.item_slots);
-    item_list->item_slots.length = 0;
+
+    pkmn_item_slots_free(&item_list->item_slots);
 
     PKMN_CPP_TO_C(
-        delete INTERNAL_RCAST(item_list->_internal);
-        item_list->_internal = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(
+            reinterpret_cast<pkmn_item_list_internal_t**>(&item_list->_internal)
+        );
     )
 }
 
@@ -232,7 +232,7 @@ pkmn_error_t pkmn_item_list_get_valid_items(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
 
-        pkmn::std_vector_std_string_to_string_list(
+        pkmn::c::string_list_cpp_to_c(
             cpp->get_valid_items(),
             valid_items_out
         );

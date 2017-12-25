@@ -22,7 +22,7 @@ pkmn_error_t pkmn_calculations_natural_gift_stats(
     PKMN_CHECK_NULL_PARAM(natural_gift_stats_out);
 
     PKMN_CPP_TO_C(
-        pkmn::pkmn_natural_gift_cpp_to_c(
+        pkmn::c::natural_gift_cpp_to_c(
             pkmn::calculations::natural_gift_stats(
                 item_name,
                 generation

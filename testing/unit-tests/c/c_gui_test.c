@@ -133,7 +133,8 @@ static void spinda_test()
         char PKMN_TMP_DIR[STRBUFFER_LEN] = {0};
         error = pkmn_get_tmp_dir(
                     PKMN_TMP_DIR,
-                    sizeof(PKMN_TMP_DIR)
+                    sizeof(PKMN_TMP_DIR),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 

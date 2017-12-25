@@ -17,7 +17,7 @@
 #if !defined(PKMN_POKEMON_PC_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_pokemon_pc_t;
 typedef struct pkmn_pokemon_pc_t pkmn_pokemon_pc_t;
-#define PKMN_POKEmon_pc_PC_DECLARED
+#define PKMN_POKEMON_PC_DECLARED
 #endif
 
 typedef pkmn_pokemon_pc_t* pkmn_pokemon_pc_handle_t;
@@ -42,7 +42,8 @@ PKMN_API const char* pkmn_pokemon_pc_strerror(
 PKMN_API pkmn_error_t pkmn_pokemon_pc_get_game(
     pkmn_pokemon_pc_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_pc_get_num_boxes(

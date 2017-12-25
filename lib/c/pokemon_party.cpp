@@ -30,13 +30,13 @@ pkmn_error_t pkmn_pokemon_party_make(
 
 pkmn_error_t pkmn_pokemon_party_free(
     pkmn_pokemon_party_handle_t* handle_ptr
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(handle_ptr);
     PKMN_CHECK_NULL_PARAM((*handle_ptr));
 
     PKMN_CPP_TO_C(
-        delete (*handle_ptr);
-        *handle_ptr = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(handle_ptr);
     )
 }
 
@@ -58,18 +58,20 @@ const char* pkmn_pokemon_party_strerror(
 pkmn_error_t pkmn_pokemon_party_get_game(
     pkmn_pokemon_party_handle_t handle,
     char* game_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* game_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_party_handle_t>(
-                   handle,
-                   handle->cpp->get_game(),
-                   game_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_game(),
+            game_out,
+            buffer_len,
+            game_length_out
+        );
     )
 }
 
@@ -127,7 +129,7 @@ pkmn_error_t pkmn_pokemon_party_as_array(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_list_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_pokemon_list_cpp_to_c(
+        pkmn::c::pokemon_list_cpp_to_c(
             handle->cpp->as_vector(),
             pokemon_list_out
         );

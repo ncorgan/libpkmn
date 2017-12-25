@@ -448,7 +448,8 @@ static void pokemon_entry_test() {
             &pokemon_entry,
             false,
             icon_filepath,
-            STRBUFFER_LEN
+            STRBUFFER_LEN,
+            NULL
         ),
         PKMN_ERROR_NONE
     );
@@ -462,7 +463,8 @@ static void pokemon_entry_test() {
             false,
             false,
             sprite_filepath,
-            STRBUFFER_LEN
+            STRBUFFER_LEN,
+            NULL
         ),
         PKMN_ERROR_NONE
     );
@@ -479,7 +481,7 @@ static void pokemon_entry_test() {
     TEST_ASSERT(pokemon_entry.tutor_moves.length > 0);
     TEST_ASSERT_NOT_NULL(pokemon_entry.forms.strings);
     TEST_ASSERT(pokemon_entry.forms.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.evolutions.strings);
+    // No evolutions, so no memory allocated
     TEST_ASSERT_EQUAL(pokemon_entry.evolutions.length, 0);
 
     // Make sure freeing properly works

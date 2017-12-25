@@ -16,7 +16,7 @@
 #if !defined(PKMN_POKEMON_PARTY_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_pokemon_party_t;
 typedef struct pkmn_pokemon_party_t pkmn_pokemon_party_t;
-#define PKMN_POKEmon_party_PARTY_DECLARED
+#define PKMN_POKEMON_PARTY_DECLARED
 #endif
 
 typedef pkmn_pokemon_party_t* pkmn_pokemon_party_handle_t;
@@ -41,7 +41,8 @@ PKMN_API const char* pkmn_pokemon_party_strerror(
 PKMN_API pkmn_error_t pkmn_pokemon_party_get_game(
     pkmn_pokemon_party_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
 PKMN_API pkmn_error_t pkmn_pokemon_party_get_num_pokemon(

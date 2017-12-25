@@ -352,12 +352,13 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
  * Converting C++ types to C types
  */
 
-TEST(cpp_to_c_test, hidden_power_cpp_to_c_test) {
+TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
+{
     pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
 
     pkmn_hidden_power_t hidden_power_c;
 
-    pkmn::pkmn_hidden_power_cpp_to_c(
+    pkmn::c::hidden_power_cpp_to_c(
         hidden_power_cpp,
         &hidden_power_c
     );
@@ -367,30 +368,57 @@ TEST(cpp_to_c_test, hidden_power_cpp_to_c_test) {
 
     pkmn_hidden_power_free(&hidden_power_c);
     EXPECT_EQ(NULL, hidden_power_c.type);
+    EXPECT_EQ(0, hidden_power_c.base_power);
 }
 
-TEST(cpp_to_c_test, item_slot_cpp_to_c_test) {
+TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
+{
+    pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
+
+    pkmn_natural_gift_t natural_gift_c;
+
+    pkmn::c::natural_gift_cpp_to_c(
+        natural_gift_cpp,
+        &natural_gift_c
+    );
+
+    EXPECT_STREQ("Normal", natural_gift_c.type);
+    EXPECT_EQ(90, natural_gift_c.base_power);
+
+    pkmn_natural_gift_free(&natural_gift_c);
+    EXPECT_EQ(NULL, natural_gift_c.type);
+    EXPECT_EQ(0, natural_gift_c.base_power);
+}
+
+TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
+{
     pkmn::item_slot item_slot_cpp("Potion", 50);
     pkmn_item_slot_t item_slot_c;
 
-    pkmn::pkmn_item_slot_cpp_to_c(
+    pkmn::c::item_slot_cpp_to_c(
         item_slot_cpp,
         &item_slot_c
     );
 
     EXPECT_STREQ("Potion", item_slot_c.item);
     EXPECT_EQ(50, item_slot_c.amount);
+
+    pkmn_item_slot_free(&item_slot_c);
+    EXPECT_EQ(NULL, item_slot_c.item);
+    EXPECT_EQ(0, item_slot_c.amount);
 }
 
-TEST(cpp_to_c_test, item_slots_cpp_to_c_test) {
-    pkmn::item_slots_t item_slots_cpp{
+TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
+{
+    pkmn::item_slots_t item_slots_cpp =
+    {
         pkmn::item_slot("Potion", 50),
         pkmn::item_slot("Berry", 28),
         pkmn::item_slot("Berry Pouch", 1)
     };
 
     pkmn_item_slots_t item_slots_c = { NULL, 0 };
-    pkmn::pkmn_item_slots_cpp_to_c(
+    pkmn::c::item_slots_cpp_to_c(
         item_slots_cpp,
         &item_slots_c
     );
@@ -410,15 +438,16 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test) {
     EXPECT_EQ(0, item_slots_c.length);
 }
 
-TEST(cpp_to_c_test, levelup_move_cpp_to_c_test) {
+TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
+{
     pkmn::database::levelup_move levelup_move_cpp(
         pkmn::database::move_entry("Scratch", "Red"),
         50
     );
 
-    pkmn_levelup_move_t levelup_move_c;
+    pkmn_levelup_move_t levelup_move_c = { NULL, 0 };
 
-    pkmn::pkmn_levelup_move_cpp_to_c(
+    pkmn::c::levelup_move_cpp_to_c(
         levelup_move_cpp,
         &levelup_move_c
     );
@@ -431,8 +460,10 @@ TEST(cpp_to_c_test, levelup_move_cpp_to_c_test) {
     EXPECT_EQ(0, levelup_move_c.level);
 }
 
-TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
-    pkmn::database::levelup_moves_t levelup_moves_cpp{
+TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
+{
+    pkmn::database::levelup_moves_t levelup_moves_cpp =
+    {
         pkmn::database::levelup_move(
             pkmn::database::move_entry("Scratch", "Red"),
             50
@@ -448,7 +479,7 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
     };
 
     pkmn_levelup_moves_t levelup_moves_c = { NULL, 0 };
-    pkmn::pkmn_levelup_moves_cpp_to_c(
+    pkmn::c::levelup_moves_cpp_to_c(
         levelup_moves_cpp,
         &levelup_moves_c
     );
@@ -468,15 +499,17 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test) {
     EXPECT_EQ(0, levelup_moves_c.length);
 }
 
-TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
-    pkmn::database::move_list_t move_list_cpp{
+TEST(cpp_to_c_test, move_list_cpp_to_c_test)
+{
+    pkmn::database::move_list_t move_list_cpp =
+    {
         pkmn::database::move_entry("Scratch", "Red"),
         pkmn::database::move_entry("Synthesis", "Silver"),
         pkmn::database::move_entry("Frenzy Plant", "Emerald")
     };
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::pkmn_move_list_to_string_list(
+    pkmn::c::move_list_to_string_list(
         move_list_cpp,
         &string_list_c
     );
@@ -493,7 +526,8 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test) {
     EXPECT_EQ(0, string_list_c.length);
 }
 
-TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
+TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
+{
     pkmn::move_slot move_slot_cpp(
         "Tackle",
         50
@@ -501,7 +535,7 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
 
     pkmn_move_slot_t move_slot_c;
 
-    pkmn::pkmn_move_slot_cpp_to_c(
+    pkmn::c::move_slot_cpp_to_c(
         move_slot_cpp,
         &move_slot_c
     );
@@ -514,8 +548,10 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test) {
     EXPECT_EQ(0, move_slot_c.pp);
 }
 
-TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
-    pkmn::move_slots_t move_slots_cpp{
+TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
+{
+    pkmn::move_slots_t move_slots_cpp =
+    {
         pkmn::move_slot(
             "Tackle",
             50
@@ -531,7 +567,7 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     };
 
     pkmn_move_slots_t move_slots_c = { NULL, 0 };
-    pkmn::pkmn_move_slots_cpp_to_c(
+    pkmn::c::move_slots_cpp_to_c(
         move_slots_cpp,
         &move_slots_c
     );
@@ -551,32 +587,17 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test) {
     EXPECT_EQ(0, move_slots_c.length);
 }
 
-TEST(cpp_to_c_test, natural_gift_cpp_to_c_test) {
-    pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
-
-    pkmn_natural_gift_t natural_gift_c;
-
-    pkmn::pkmn_natural_gift_cpp_to_c(
-        natural_gift_cpp,
-        &natural_gift_c
-    );
-
-    EXPECT_STREQ("Normal", natural_gift_c.type);
-    EXPECT_EQ(90, natural_gift_c.base_power);
-
-    pkmn_natural_gift_free(&natural_gift_c);
-    EXPECT_EQ(NULL, natural_gift_c.type);
-}
-
-TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test) {
-    pkmn::database::pokemon_entries_t pokemon_entries_cpp{
+TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
+{
+    pkmn::database::pokemon_entries_t pokemon_entries_cpp =
+    {
         pkmn::database::pokemon_entry("Charmander", "Red", ""),
         pkmn::database::pokemon_entry("Totodile", "Gold", ""),
         pkmn::database::pokemon_entry("Treecko", "Ruby", "")
     };
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_entries_to_string_list(
+    pkmn::c::pokemon_entries_to_string_list(
         pokemon_entries_cpp,
         &string_list_c
     );
@@ -593,8 +614,10 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test) {
     EXPECT_EQ(0, string_list_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
-    pkmn::pokemon_list_t pokemon_list_cpp{
+TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
+{
+    pkmn::pokemon_list_t pokemon_list_cpp =
+    {
         pkmn::pokemon::make(
             "Charmander", "Red", "", 5
         ),
@@ -608,13 +631,14 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
 
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_list_cpp_to_c(
+    pkmn::c::pokemon_list_cpp_to_c(
         pokemon_list_cpp,
         &pokemon_list_c
     );
     EXPECT_EQ(3, pokemon_list_c.length);
 
-    for(size_t i = 0; i < 3; ++i) {
+    for(size_t i = 0; i < 3; ++i)
+    {
         char species_c[STRBUFFER_LEN] = {0};
         char game_c[STRBUFFER_LEN] = {0};
         int level_c = 0;
@@ -622,7 +646,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
         error = pkmn_pokemon_get_species(
                     pokemon_list_c.pokemon_list[i],
                     species_c,
-                    sizeof(species_c)
+                    sizeof(species_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_list_cpp[i]->get_species().c_str(), species_c);
@@ -630,7 +655,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
         error = pkmn_pokemon_get_game(
                     pokemon_list_c.pokemon_list[i],
                     game_c,
-                    sizeof(game_c)
+                    sizeof(game_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_list_cpp[i]->get_game().c_str(), game_c);
@@ -650,8 +676,10 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c) {
     EXPECT_EQ(0, pokemon_list_c.length);
 }
 
-TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
-    pkmn::pokemon_box_list_t pokemon_box_list_cpp{
+TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
+{
+    pkmn::pokemon_box_list_t pokemon_box_list_cpp =
+    {
         pkmn::pokemon_box::make("Gold"),
         pkmn::pokemon_box::make("Ruby"),
         pkmn::pokemon_box::make("FireRed")
@@ -663,20 +691,22 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
 
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
-    pkmn::pkmn_pokemon_box_list_cpp_to_c(
+    pkmn::c::pokemon_box_list_cpp_to_c(
         pokemon_box_list_cpp,
         &pokemon_box_list_c
     );
     EXPECT_EQ(3, pokemon_box_list_c.length);
 
-    for(size_t i = 0; i < 3; ++i) {
+    for(size_t i = 0; i < 3; ++i)
+    {
         char game_c[STRBUFFER_LEN] = {0};
         char name_c[STRBUFFER_LEN] = {0};
 
         error = pkmn_pokemon_box_get_game(
                     pokemon_box_list_c.pokemon_boxes[i],
                     game_c,
-                    sizeof(game_c)
+                    sizeof(game_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_box_list_cpp[i]->get_game().c_str(), game_c);
@@ -684,7 +714,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
         error = pkmn_pokemon_box_get_name(
                     pokemon_box_list_c.pokemon_boxes[i],
                     name_c,
-                    sizeof(name_c)
+                    sizeof(name_c),
+                    nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
         EXPECT_STREQ(pokemon_box_list_cpp[i]->get_name().c_str(), name_c);
@@ -697,11 +728,12 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test) {
     EXPECT_EQ(0, pokemon_box_list_c.length);
 }
 
-TEST(cpp_to_c_test, int_pair_cpp_to_c_test) {
+TEST(cpp_to_c_test, int_pair_cpp_to_c_test)
+{
     std::pair<int, int> int_pair_cpp(6322, 10011);
-    pkmn_int_pair_t int_pair_c;
+    pkmn_int_pair_t int_pair_c = {0, 0};
 
-    pkmn::std_pair_int_to_int_pair(
+    pkmn::c::int_pair_cpp_to_c(
         int_pair_cpp,
         &int_pair_c
     );
@@ -710,32 +742,50 @@ TEST(cpp_to_c_test, int_pair_cpp_to_c_test) {
     EXPECT_EQ(10011, int_pair_c.second);
 }
 
-TEST(cpp_to_c_test, std_string_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_cpp_to_c_test)
+{
     std::string string_cpp = "LibPKMN";
-    char string_c[8] = "";
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    char string_c[50] = {0};
+    char too_short_string_buffer[3] = {0};
+    size_t string_length = 0;
 
-    error = pkmn::std_string_to_c_str(
-                string_cpp,
-                string_c,
-                0
-            );
-    EXPECT_EQ(PKMN_ERROR_BUFFER_TOO_SMALL, error);
+    // Test not getting buffer length
+    pkmn::c::string_cpp_to_c(
+        string_cpp,
+        string_c,
+        sizeof(string_c)-1,
+        nullptr
+    );
+    EXPECT_EQ(string_cpp, string_c);
 
-    // Full buffer
-    error = pkmn::std_string_to_c_str(
-                string_cpp,
-                string_c,
-                sizeof(string_c)
-            );
-    EXPECT_STREQ("LibPKMN", string_c);
+    // Make sure accurate string length is returned.
+    pkmn::c::string_cpp_to_c(
+        string_cpp,
+        string_c,
+        sizeof(string_c)-1,
+        &string_length 
+    );
+    EXPECT_EQ(string_cpp, string_c);
+    EXPECT_EQ(string_cpp.size(), string_length);
+
+    // Make sure if a too-small buffer is given, the partial string
+    // is returned.
+    pkmn::c::string_cpp_to_c(
+        string_cpp,
+        too_short_string_buffer,
+        sizeof(too_short_string_buffer)-1,
+        &string_length
+    );
+    EXPECT_STREQ("Li", too_short_string_buffer);
+    EXPECT_EQ(string_cpp.size(), string_length);
 }
 
-TEST(cpp_to_c_test, string_pair_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
+{
     std::pair<std::string, std::string> string_pair_cpp("LibPKMN", "PKSav");
-    pkmn_string_pair_t string_pair_c;
+    pkmn_string_pair_t string_pair_c = {NULL, NULL};
 
-    pkmn::std_pair_std_string_to_string_pair(
+    pkmn::c::string_pair_cpp_to_c(
         string_pair_cpp,
         &string_pair_c
     );
@@ -748,60 +798,72 @@ TEST(cpp_to_c_test, string_pair_cpp_to_c_test) {
     EXPECT_EQ(NULL, string_pair_c.second);
 }
 
-TEST(cpp_to_c_test, std_map_keys_to_string_list_test) {
-    static const std::map<std::string, bool> string_bool_map = boost::assign::map_list_of
-        ("key1", true)
-        ("key2", false)
-        ("key3", false)
-        ("key4", true)
-    ;
-    static const std::map<std::string, int> string_int_map = boost::assign::map_list_of
-        ("key5", 1)
-        ("key6", 2)
-        ("key7", 3)
-        ("key8", 4)
-        ("key9", 5)
-    ;
+TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
+{
+    static const std::map<std::string, bool> string_bool_map =
+    {
+        {"key1", true},
+        {"key2", false},
+        {"key3", false},
+        {"key4", true},
+    };
+    static const std::map<std::string, int> string_int_map =
+    {
+        {"key5", 1},
+        {"key6", 2},
+        {"key7", 3},
+        {"key8", 4},
+        {"key9", 5},
+    };
 
     pkmn_string_list_t string_list_c = {NULL, 0};
 
-    pkmn::std_map_keys_to_string_list<bool>(
+    pkmn::c::string_map_keys_to_string_list<bool>(
         string_bool_map,
         &string_list_c
     );
 
-    ASSERT_EQ(4, string_list_c.length);
-    EXPECT_STREQ("key1", string_list_c.strings[0]);
-    EXPECT_STREQ("key2", string_list_c.strings[1]);
-    EXPECT_STREQ("key3", string_list_c.strings[2]);
-    EXPECT_STREQ("key4", string_list_c.strings[3]);
+    // To suppress Clang-tidy warning, instead of assering length
+    EXPECT_EQ(4ULL, string_list_c.length);
+    if(string_list_c.strings)
+    {
+        EXPECT_STREQ("key1", string_list_c.strings[0]);
+        EXPECT_STREQ("key2", string_list_c.strings[1]);
+        EXPECT_STREQ("key3", string_list_c.strings[2]);
+        EXPECT_STREQ("key4", string_list_c.strings[3]);
 
-    pkmn_string_list_free(&string_list_c);
-    EXPECT_EQ(NULL, string_list_c.strings);
-    EXPECT_EQ(0, string_list_c.length);
+        pkmn_string_list_free(&string_list_c);
+        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(0, string_list_c.length);
+    }
 
-    pkmn::std_map_keys_to_string_list<int>(
+    pkmn::c::string_map_keys_to_string_list<int>(
         string_int_map,
         &string_list_c
     );
 
-    ASSERT_EQ(5, string_list_c.length);
-    EXPECT_STREQ("key5", string_list_c.strings[0]);
-    EXPECT_STREQ("key6", string_list_c.strings[1]);
-    EXPECT_STREQ("key7", string_list_c.strings[2]);
-    EXPECT_STREQ("key8", string_list_c.strings[3]);
-    EXPECT_STREQ("key9", string_list_c.strings[4]);
+    // To suppress Clang-tidy warning, instead of asserting length
+    EXPECT_EQ(5ULL, string_list_c.length);
+    if(string_list_c.strings)
+    {
+        EXPECT_STREQ("key5", string_list_c.strings[0]);
+        EXPECT_STREQ("key6", string_list_c.strings[1]);
+        EXPECT_STREQ("key7", string_list_c.strings[2]);
+        EXPECT_STREQ("key8", string_list_c.strings[3]);
+        EXPECT_STREQ("key9", string_list_c.strings[4]);
 
-    pkmn_string_list_free(&string_list_c);
-    EXPECT_EQ(NULL, string_list_c.strings);
-    EXPECT_EQ(0, string_list_c.length);
+        pkmn_string_list_free(&string_list_c);
+        EXPECT_EQ(NULL, string_list_c.strings);
+        EXPECT_EQ(0, string_list_c.length);
+    }
 }
 
-TEST(cpp_to_c_test, string_vector_cpp_to_c_test) {
+TEST(cpp_to_c_test, string_list_cpp_to_c_test)
+{
     std::vector<std::string> string_vector_cpp{"LibPKMN", "PKSav", "TKO"};
 
     pkmn_string_list_t string_list_c = { NULL, 0 };
-    pkmn::std_vector_std_string_to_string_list(
+    pkmn::c::string_list_cpp_to_c(
         string_vector_cpp,
         &string_list_c
     );

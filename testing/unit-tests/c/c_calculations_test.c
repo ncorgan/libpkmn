@@ -25,59 +25,68 @@ static pkmn_hidden_power_t pkmn_hidden_power_t_result = {
                            };
 static pkmn_spinda_spots_t pkmn_spinda_spots_t_result;
 
-static void gen2_unown_form_test() {
+static void gen2_unown_form_test()
+{
     /*
      * Make sure expected errors are returned.
      */
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 0, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 16, 0, 0, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, -1, 0, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 16, 0, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, -1, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 -1, 0, 16, 0,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, -1,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_calculations_gen2_unown_form(
                 0, 0, 0, 16,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
@@ -89,7 +98,8 @@ static void gen2_unown_form_test() {
     error = pkmn_calculations_gen2_unown_form(
                 10, 9, 1, 14,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "G");
@@ -97,13 +107,15 @@ static void gen2_unown_form_test() {
     error = pkmn_calculations_gen2_unown_form(
                 5, 15, 10, 5,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "S");
 }
 
-static void gen3_unown_form_test() {
+static void gen3_unown_form_test()
+{
     /*
      * Make sure known good inputs result in expected results.
      *
@@ -112,7 +124,8 @@ static void gen3_unown_form_test() {
     error = pkmn_calculations_gen3_unown_form(
                 0x4C07DE71,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(strbuffer, "B");
@@ -491,7 +504,8 @@ static void modern_hidden_power_test() {
     TEST_ASSERT_EQUAL(70, pkmn_hidden_power_t_result.base_power);
 }
 
-static void nature_test() {
+static void nature_test()
+{
     static const char* natures[] = {
         "Hardy", "Lonely", "Brave", "Adamant", "Naughty",
         "Bold", "Docile", "Relaxed", "Impish", "Lax",
@@ -501,11 +515,13 @@ static void nature_test() {
     };
 
     srand((unsigned int)time(0));
-    for(uint32_t i = 0; i < 25; ++i) {
+    for(uint32_t i = 0; i < 25; ++i)
+    {
         error = pkmn_calculations_nature(
                     (uint32_t)(((rand() % 50000) * 1000) + i),
                     strbuffer,
-                    BUFFER_SIZE
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(natures[i], strbuffer);
