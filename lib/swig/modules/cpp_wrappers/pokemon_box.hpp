@@ -52,46 +52,46 @@ namespace pkmn { namespace swig {
                 return (_pokemon_box == rhs._pokemon_box);
             }
 
-            PKMN_INLINE std::string get_name()
+            inline std::string get_name()
             {
                 return _pokemon_box->get_name();
             }
 
-            PKMN_INLINE void set_name(
+            inline void set_name(
                 const std::string& name
             )
             {
                 _pokemon_box->set_name(name);
             }
 
-            PKMN_INLINE std::string get_game()
+            inline std::string get_game()
             {
                 return _pokemon_box->get_game();
             }
 
-            PKMN_INLINE int get_num_pokemon()
+            inline int get_num_pokemon()
             {
                 return _pokemon_box->get_num_pokemon();
             }
 
-            PKMN_INLINE int get_capacity()
+            inline int get_capacity()
             {
                 return _pokemon_box->get_capacity();
             }
 
-            PKMN_INLINE pkmn::swig::pokemon get_pokemon(
+            inline pkmn::swig::pokemon2 get_pokemon(
                 int index
             )
             {
                 int capacity = _pokemon_box->get_capacity();
                 pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
-                return pkmn::swig::pokemon(_pokemon_box->get_pokemon(index));
+                return pkmn::swig::pokemon2(_pokemon_box->get_pokemon(index));
             }
 
-            PKMN_INLINE void set_pokemon(
+            inline void set_pokemon(
                 int index,
-                const pkmn::swig::pokemon& pokemon
+                const pkmn::swig::pokemon2& pokemon
             )
             {
                 _pokemon_box->set_pokemon(
@@ -101,7 +101,7 @@ namespace pkmn { namespace swig {
                 _pokemon_list[index] = pokemon;
             }
 
-            PKMN_INLINE const std::vector<pkmn::swig::pokemon>& as_vector()
+            inline const std::vector<pkmn::swig::pokemon2>& as_vector()
             {
                 return _pokemon_list;
             }
@@ -109,7 +109,7 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokemon_box::sptr _pokemon_box;
 
-            std::vector<pkmn::swig::pokemon> _pokemon_list;
+            std::vector<pkmn::swig::pokemon2> _pokemon_list;
 
             void _populate_list()
             {
@@ -117,7 +117,7 @@ namespace pkmn { namespace swig {
                 _pokemon_list.reserve(internal_vector.size());
                 for(size_t i = 0; i < internal_vector.size(); ++i)
                 {
-                    _pokemon_list.emplace_back(pkmn::swig::pokemon(internal_vector[i]));
+                    _pokemon_list.emplace_back(pkmn::swig::pokemon2(internal_vector[i]));
                 }
             }
     };

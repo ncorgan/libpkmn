@@ -79,8 +79,10 @@ PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPocket
 %include <csharp/pkmn_move_slot.i>
 
 // Pokémon 
-%include <csharp/pkmn_pokemon_helpers.i>
 %include <csharp/pkmn_pokemon.i>
+
+%include <csharp/pkmn_pokemon_helpers.i>
+%include <csharp/pkmn_pokemon2.i>
 
 // Pokémon Box
 %include <csharp/pkmn_pokemon_box.i>

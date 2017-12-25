@@ -286,12 +286,12 @@ TEST(cpp_swig_test, test_pokemon_helpers)
 
 TEST(cpp_swig_test, test_pokemon)
 {
-    pkmn::swig::pokemon swig_pokemon(
-                            "Bulbasaur",
-                            "FireRed",
-                            "",
-                            5
-                        );
+    pkmn::swig::pokemon2 swig_pokemon(
+                             "Bulbasaur",
+                             "FireRed",
+                             "",
+                             5
+                         );
 
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_species());
     EXPECT_EQ("FireRed", swig_pokemon.get_game());
@@ -393,14 +393,14 @@ TEST(cpp_swig_test, test_pokemon_party)
         EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
     }
 
-    std::vector<pkmn::swig::pokemon> party_vec = swig_pokemon_party.as_vector();
+    std::vector<pkmn::swig::pokemon2> party_vec = swig_pokemon_party.as_vector();
     ASSERT_EQ(6, party_vec.size());
     for(size_t i = 0; i < 6; ++i)
     {
         EXPECT_EQ("None", party_vec[i].get_species());
     }
 
-    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
+    pkmn::swig::pokemon2 new_pokemon("Charmander", "FireRed", "", 10);
     swig_pokemon_party.set_pokemon(0, new_pokemon);
 
     EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
@@ -420,14 +420,14 @@ TEST(cpp_swig_test, test_pokemon_box)
         EXPECT_EQ("None", swig_pokemon_box.get_pokemon(i).get_species());
     }
 
-    std::vector<pkmn::swig::pokemon> box_vec = swig_pokemon_box.as_vector();
+    std::vector<pkmn::swig::pokemon2> box_vec = swig_pokemon_box.as_vector();
     EXPECT_EQ(size_t(swig_pokemon_box.get_capacity()), box_vec.size());
     for(int i = 0; i < capacity; ++i)
     {
         EXPECT_EQ("None", box_vec[i].get_species());
     }
 
-    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
+    pkmn::swig::pokemon2 new_pokemon("Charmander", "FireRed", "", 10);
     swig_pokemon_box.set_pokemon(0, new_pokemon);
 
     EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
@@ -450,7 +450,7 @@ TEST(cpp_swig_test, test_pokemon_pc)
     pc_vec[4].set_name("COOL BOX");
     EXPECT_EQ("COOL BOX", swig_pokemon_pc.get_box_names()[4]);
 
-    pc_vec[4].set_pokemon(4, pkmn::swig::pokemon("Charizard", "FireRed", "", 50));
+    pc_vec[4].set_pokemon(4, pkmn::swig::pokemon2("Charizard", "FireRed", "", 50));
     EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 

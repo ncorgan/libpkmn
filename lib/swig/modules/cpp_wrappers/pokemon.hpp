@@ -26,21 +26,21 @@ namespace pkmn { namespace swig {
      *
      * bulbasaur.EVs["Attack"] = 100
      */
-    class pokemon
+    class pokemon2
     {
         public:
-            pokemon():
+            pokemon2():
                 _pokemon(nullptr)
             {}
 
-            pokemon(
+            pokemon2(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
             {
                 _init();
             }
 
-            pokemon(
+            pokemon2(
                 const std::string& species,
                 const std::string& game,
                 const std::string& form,
@@ -50,30 +50,25 @@ namespace pkmn { namespace swig {
                 _init();
             }
 
-            pokemon(
+            pokemon2(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
                 _init();
             }
 
-            pokemon(
-                const pokemon& other
-            ): _pokemon(other._pokemon)
+            inline pokemon2 to_game(
+                const std::string& game
+            )
             {
-                _init();
+                return pokemon2(_pokemon->to_game(game));
             }
 
-            bool operator==(
-                const pokemon& rhs
-            ) const
+            inline void export_to_file(
+                const std::string& filepath
+            )
             {
-                return (_pokemon == rhs._pokemon);
-            }
-
-            inline pkmn::pokemon::sptr get_internal() const
-            {
-                return _pokemon;
+                _pokemon->export_to_file(filepath);
             }
 
             inline std::string get_species()
@@ -98,9 +93,31 @@ namespace pkmn { namespace swig {
                 _pokemon->set_form(form);
             }
 
+            inline bool is_egg()
+            {
+                return _pokemon->is_egg();
+            }
+
+            inline void set_is_egg(bool is_egg)
+            {
+                _pokemon->set_is_egg(is_egg);
+            }
+
             inline const pkmn::database::pokemon_entry& get_database_entry()
             {
                 return _pokemon->get_database_entry();
+            }
+
+            inline std::string get_condition()
+            {
+                return _pokemon->get_condition();
+            }
+
+            inline void set_condition(
+                const std::string& condition
+            )
+            {
+                _pokemon->set_condition(condition);
             }
 
             inline std::string get_nickname()
@@ -149,6 +166,16 @@ namespace pkmn { namespace swig {
             )
             {
                 _pokemon->set_held_item(held_item);
+            }
+
+            inline int get_pokerus_duration()
+            {
+                return _pokemon->get_pokerus_duration();
+            }
+
+            inline void set_pokerus_duration(int duration)
+            {
+                _pokemon->set_pokerus_duration(duration);
             }
 
             inline std::string get_original_trainer_name()
@@ -377,22 +404,28 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_sprite_filepath();
             }
 
-            numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
+            numeric_attribute_map<pkmn::pokemon>& get_numeric_attributes()
             {
                 return _numeric_attribute_map;
             }
 
-            string_attribute_map<pkmn::pokemon> get_string_attributes()
+            string_attribute_map<pkmn::pokemon>& get_string_attributes()
             {
                 return _string_attribute_map;
             }
 
+            inline pkmn::pokemon::sptr get_internal() const
+            {
+                return _pokemon;
+            }
+
             // TODO: ifdef for specific wrappers
 
-            // For wrappers whose language doesn't support the == operator
-            bool equals(const pokemon& rhs)
+            bool operator==(
+                const pokemon2& rhs
+            ) const
             {
-                return operator==(rhs);
+                return (_pokemon == rhs._pokemon);
             }
 
             // For hash code functions

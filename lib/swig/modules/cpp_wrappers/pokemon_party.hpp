@@ -52,28 +52,28 @@ namespace pkmn { namespace swig {
                 return (_pokemon_party == rhs._pokemon_party);
             }
 
-            PKMN_INLINE std::string get_game()
+            inline std::string get_game()
             {
                 return _pokemon_party->get_game();
             }
 
-            PKMN_INLINE int get_num_pokemon()
+            inline int get_num_pokemon()
             {
                 return _pokemon_party->get_num_pokemon();
             }
 
-            PKMN_INLINE pkmn::swig::pokemon get_pokemon(
+            inline pkmn::swig::pokemon2 get_pokemon(
                 int index
             )
             {
                 pkmn::enforce_bounds("Party index", index, 0, 5);
 
-                return pkmn::swig::pokemon(_pokemon_party->get_pokemon(index));
+                return pkmn::swig::pokemon2(_pokemon_party->get_pokemon(index));
             }
 
-            PKMN_INLINE void set_pokemon(
+            inline void set_pokemon(
                 int index,
-                const pkmn::swig::pokemon& pokemon
+                const pkmn::swig::pokemon2& pokemon
             )
             {
                 _pokemon_party->set_pokemon(
@@ -83,7 +83,7 @@ namespace pkmn { namespace swig {
                 _pokemon_list[index] = pokemon;
             }
 
-            PKMN_INLINE const std::vector<pkmn::swig::pokemon>& as_vector()
+            inline const std::vector<pkmn::swig::pokemon2>& as_vector()
             {
                 return _pokemon_list;
             }
@@ -91,7 +91,7 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokemon_party::sptr _pokemon_party;
 
-            std::vector<pkmn::swig::pokemon> _pokemon_list;
+            std::vector<pkmn::swig::pokemon2> _pokemon_list;
 
             void _populate_list()
             {
@@ -99,7 +99,7 @@ namespace pkmn { namespace swig {
                 _pokemon_list.reserve(internal_vector.size());
                 for(size_t i = 0; i < internal_vector.size(); ++i)
                 {
-                    _pokemon_list.emplace_back(pkmn::swig::pokemon(internal_vector[i]));
+                    _pokemon_list.emplace_back(pkmn::swig::pokemon2(internal_vector[i]));
                 }
             }
     };
