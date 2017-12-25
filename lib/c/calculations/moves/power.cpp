@@ -214,16 +214,16 @@ pkmn_error_t pkmn_calculations_ice_ball_powers(
 pkmn_error_t pkmn_calculations_low_kick_power(
     float target_weight,
     int generation,
-    int* power_out
+    int* low_kick_power_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(power_out);
+    PKMN_CHECK_NULL_PARAM(low_kick_power_out);
 
     PKMN_CPP_TO_C(
-        *power_out = pkmn::calculations::low_kick_power(
-                         target_weight,
-                         generation
-                     );
+        *low_kick_power_out = pkmn::calculations::low_kick_power(
+                                  target_weight,
+                                  generation
+                              );
     )
 }
 

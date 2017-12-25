@@ -14,20 +14,20 @@
 
 pkmn_error_t pkmn_calculations_type_damage_modifier(
     int generation,
-    const char* attacker_type,
-    const char* defender_type,
+    const char* attacking_type,
+    const char* defending_type,
     float* type_damage_modifier_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(attacker_type);
-    PKMN_CHECK_NULL_PARAM(defender_type);
+    PKMN_CHECK_NULL_PARAM(attacking_type);
+    PKMN_CHECK_NULL_PARAM(defending_type);
     PKMN_CHECK_NULL_PARAM(type_damage_modifier_out);
 
     PKMN_CPP_TO_C(
         *type_damage_modifier_out = pkmn::calculations::type_damage_modifier(
                                         generation,
-                                        attacker_type,
-                                        defender_type
+                                        attacking_type,
+                                        defending_type
                                     );
     )
 }

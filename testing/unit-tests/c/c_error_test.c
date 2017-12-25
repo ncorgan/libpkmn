@@ -31,10 +31,7 @@ static int dummy_int = 0;
 static uint32_t dummy_uint32_t = 0;
 static float dummy_float = 0;
 static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
-static pkmn_string_list_t dummy_pkmn_string_list_t = {
-    .strings = NULL,
-    .length = 0
-};
+static pkmn_string_list_t dummy_pkmn_string_list_t = { NULL, 0 };
 static pkmn_pokemon_handle_t dummy_pokemon = NULL;
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
@@ -2578,9 +2575,79 @@ static void calculations_stats_error_test() {
 }
 
 /*
+ * <pkmn-c/calculations/moves/critical_hit.h>
+ */
+
+static void calculations_moves_critical_hit_error_test()
+{
+    /*
+     * pkmn_calculations_gen1_critical_hit_chance
+     */
+
+    error = pkmn_calculations_gen1_critical_hit_chance(
+                1,
+                false,
+                false,
+                NULL // critical_hit_chance_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_chance_out");
+
+    /*
+     * pkmn_calculations_critical_hit_chance
+     */
+
+    error = pkmn_calculations_critical_hit_chance(
+                2,
+                1,
+                NULL // critical_hit_chance_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_chance_out");
+
+    /*
+     * pkmn_calculations_gen1_critical_hit_modifier
+     */
+
+    error = pkmn_calculations_gen1_critical_hit_modifier(
+                1,
+                NULL // critical_hit_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_modifier_out");
+
+    /*
+     * pkmn_calculations_critical_hit_modifier
+     */
+
+    error = pkmn_calculations_critical_hit_modifier(
+                2,
+                NULL // critical_hit_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_modifier_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/damage.h>
+ */
+static void calculations_moves_damage_error_test()
+{
+    /*
+     * pkmn_calculations_damage
+     */
+
+    error = pkmn_calculations_damage(
+                1,
+                1,
+                1,
+                1,
+                1.0f,
+                NULL // damage_out
+            );
+    TEST_NULL_POINTER_RETURN("damage_out");
+}
+
+/*
  * <pkmn-c/calculations/moves/hidden_power.h>
  */
-static void calculations_hidden_power_error_test() {
+static void calculations_moves_hidden_power_error_test() {
     /*
      * pkmn_calculations_gen2_hidden_power
      */
@@ -2608,6 +2675,376 @@ static void calculations_hidden_power_error_test() {
                 NULL // hidden_power_out
             );
     TEST_NULL_POINTER_RETURN("hidden_power_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/modifiers.h>
+ */
+static void calculations_moves_modifiers_error_test()
+{
+    /*
+     * pkmn_calculations_type_damage_modifier
+     */
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                NULL, // attacking_type
+                "",
+                &dummy_float
+            );
+    TEST_NULL_POINTER_RETURN("attacking_type");
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                "",
+                NULL, // defending_type
+                &dummy_float
+            );
+    TEST_NULL_POINTER_RETURN("defending_type");
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                "",
+                "",
+                NULL // type_damage_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("type_damage_modifier_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/natural_gift.h>
+ */
+static void calculations_moves_natural_gift_error_test()
+{
+    pkmn_natural_gift_t dummy_pkmn_natural_gift_t = { NULL, 0 };
+
+    /*
+     * pkmn_calculations_natural_gift_stats
+     */
+
+    error = pkmn_calculations_natural_gift_stats(
+                NULL, // item_name
+                5,
+                &dummy_pkmn_natural_gift_t
+            );
+    TEST_NULL_POINTER_RETURN("item_name");
+
+    error = pkmn_calculations_natural_gift_stats(
+                "Oran Berry",
+                5,
+                NULL // natural_gift_stats_out
+            );
+    TEST_NULL_POINTER_RETURN("natural_gift_stats_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/power.h>
+ */
+static void calculations_moves_power_error_test()
+{
+    /*
+     * pkmn_calculations_brine_power
+     */
+
+    error = pkmn_calculations_brine_power(
+                1,
+                1,
+                NULL // brine_power_out
+            );
+    TEST_NULL_POINTER_RETURN("brine_power_out");
+
+    /*
+     * pkmn_calculations_crush_grip_power
+     */
+
+    error = pkmn_calculations_crush_grip_power(
+                1,
+                1,
+                5,
+                NULL // crush_grip_power_out
+            );
+    TEST_NULL_POINTER_RETURN("crush_grip_power_out");
+
+    /*
+     * pkmn_calculations_echoed_voice_powers
+     */
+
+    error = pkmn_calculations_echoed_voice_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_electro_ball_power
+     */
+
+    error = pkmn_calculations_electro_ball_power(
+                1,
+                1,
+                NULL // electro_ball_power_out
+            );
+    TEST_NULL_POINTER_RETURN("electro_ball_power_out");
+
+    /*
+     * pkmn_calculations_eruption_power
+     */
+
+    error = pkmn_calculations_eruption_power(
+                1,
+                1,
+                NULL // eruption_power_out
+            );
+    TEST_NULL_POINTER_RETURN("eruption_power_out");
+
+    /*
+     * pkmn_calculations_flail_power
+     */
+
+    error = pkmn_calculations_flail_power(
+                1,
+                1,
+                NULL // flail_power_out
+            );
+    TEST_NULL_POINTER_RETURN("flail_power_out");
+
+    /*
+     * pkmn_calculations_fling_power
+     */
+
+    error = pkmn_calculations_fling_power(
+                NULL, // held_item
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("held_item");
+
+    error = pkmn_calculations_fling_power(
+                "",
+                NULL // fling_power_out
+            );
+    TEST_NULL_POINTER_RETURN("fling_power_out");
+
+    /*
+     * pkmn_calculations_frustration_power
+     */
+
+    error = pkmn_calculations_frustration_power(
+                1,
+                NULL // frustration_power_out
+            );
+    TEST_NULL_POINTER_RETURN("frustration_power_out");
+
+    /*
+     * pkmn_calculations_fury_cutter_powers
+     */
+
+    error = pkmn_calculations_fury_cutter_powers(
+                2,
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_grass_knot_power
+     */
+
+    error = pkmn_calculations_grass_knot_power(
+                1.0f,
+                NULL // grass_knot_power_out
+            );
+    TEST_NULL_POINTER_RETURN("grass_knot_power_out");
+
+    /*
+     * pkmn_calculations_gyro_ball_power
+     */
+
+    error = pkmn_calculations_gyro_ball_power(
+                1,
+                1,
+                NULL // gyro_ball_power_out
+            );
+    TEST_NULL_POINTER_RETURN("gyro_ball_power_out");
+
+    /*
+     * pkmn_calculations_heat_crash_power
+     */
+
+    error = pkmn_calculations_heat_crash_power(
+                1.0f,
+                1.0f,
+                NULL // heat_crash_power_out
+            );
+    TEST_NULL_POINTER_RETURN("heat_crash_power_out");
+
+    /*
+     * pkmn_calculations_heavy_slam_power
+     */
+
+    error = pkmn_calculations_heavy_slam_power(
+                1.0f,
+                1.0f,
+                NULL // heavy_slam_power_out
+            );
+    TEST_NULL_POINTER_RETURN("heavy_slam_power_out");
+
+    /*
+     * pkmn_calculations_ice_ball_powers
+     */
+
+    error = pkmn_calculations_ice_ball_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_low_kick_power
+     */
+
+    error = pkmn_calculations_low_kick_power(
+                1.0f,
+                1,
+                NULL // low_kick_power_out
+            );
+    TEST_NULL_POINTER_RETURN("low_kick_power_out");
+
+    /*
+     * pkmn_calculations_power_trip_power
+     */
+
+    error = pkmn_calculations_power_trip_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // power_trip_power_out
+            );
+    TEST_NULL_POINTER_RETURN("power_trip_power_out");
+
+    /*
+     * pkmn_calculations_punishment_power
+     */
+
+    error = pkmn_calculations_punishment_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // punishment_power_out
+            );
+    TEST_NULL_POINTER_RETURN("punishment_power_out");
+
+    /*
+     * pkmn_calculations_return_power
+     */
+
+    error = pkmn_calculations_return_power(
+                1,
+                NULL // return_power_out
+            );
+    TEST_NULL_POINTER_RETURN("return_power_out");
+
+    /*
+     * pkmn_calculations_reversal_power
+     */
+
+    error = pkmn_calculations_reversal_power(
+                1,
+                1,
+                NULL // reversal_power_out
+            );
+    TEST_NULL_POINTER_RETURN("reversal_power_out");
+
+    /*
+     * pkmn_calculations_rollout_powers
+     */
+
+    error = pkmn_calculations_rollout_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_spit_up_power
+     */
+
+    error = pkmn_calculations_spit_up_power(
+                1,
+                NULL // spit_up_power_out
+            );
+    TEST_NULL_POINTER_RETURN("spit_up_power_out");
+
+    /*
+     * pkmn_calculations_stored_power_power
+     */
+
+    error = pkmn_calculations_stored_power_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // stored_power_power_out
+            );
+    TEST_NULL_POINTER_RETURN("stored_power_power_out");
+
+    /*
+     * pkmn_calculations_triple_kick_powers
+     */
+
+    error = pkmn_calculations_triple_kick_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_trump_card_power
+     */
+
+    error = pkmn_calculations_trump_card_power(
+                1,
+                NULL // trump_card_power_out
+            );
+    TEST_NULL_POINTER_RETURN("trump_card_power_out");
+
+    /*
+     * pkmn_calculations_water_spout_power
+     */
+
+    error = pkmn_calculations_water_spout_power(
+                1,
+                1,
+                NULL // water_spout_power_out
+            );
+    TEST_NULL_POINTER_RETURN("water_spout_power_out");
+
+    /*
+     * pkmn_calculations_wring_out_power
+     */
+
+    error = pkmn_calculations_wring_out_power(
+                5,
+                5,
+                5,
+                NULL // wring_out_power_out
+            );
+    TEST_NULL_POINTER_RETURN("wring_out_power_out");
 }
 
 /*
@@ -3100,7 +3537,12 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(calculations_size_error_test)
     PKMN_C_TEST(calculations_spinda_spots_error_test)
     PKMN_C_TEST(calculations_stats_error_test)
-    PKMN_C_TEST(calculations_hidden_power_error_test)
+    PKMN_C_TEST(calculations_moves_critical_hit_error_test)
+    PKMN_C_TEST(calculations_moves_damage_error_test)
+    PKMN_C_TEST(calculations_moves_hidden_power_error_test)
+    PKMN_C_TEST(calculations_moves_modifiers_error_test)
+    PKMN_C_TEST(calculations_moves_natural_gift_error_test)
+    PKMN_C_TEST(calculations_moves_power_error_test)
     PKMN_C_TEST(database_item_entry_error_test)
     PKMN_C_TEST(database_lists_error_test)
     PKMN_C_TEST(database_move_entry_error_test)
