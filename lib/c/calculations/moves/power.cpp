@@ -12,6 +12,22 @@
 
 #include <pkmn/calculations/moves/power.hpp>
 
+pkmn_error_t pkmn_calculations_brine_power(
+    int target_current_hp,
+    int target_max_hp,
+    int* brine_power_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(brine_power_out);
+
+    PKMN_CPP_TO_C(
+        *brine_power_out = pkmn::calculations::brine_power(
+                               target_current_hp,
+                               target_max_hp
+                           );
+    )
+}
+
 pkmn_error_t pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
@@ -27,6 +43,25 @@ pkmn_error_t pkmn_calculations_crush_grip_power(
                                     target_max_hp,
                                     generation
                                 );
+    )
+}
+
+pkmn_error_t pkmn_calculations_echoed_voice_powers(
+    int* powers_buffer,
+    size_t buffer_len,
+    size_t* num_powers_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(powers_buffer);
+    // num_powers_out can be NULL
+
+    PKMN_CPP_TO_C(
+        pkmn::c::list_cpp_to_c(
+            pkmn::calculations::echoed_voice_powers(),
+            powers_buffer,
+            buffer_len,
+            num_powers_out
+        );
     )
 }
 
@@ -59,6 +94,26 @@ pkmn_error_t pkmn_calculations_eruption_power(
                                   attacker_hp,
                                   target_hp
                               );
+    )
+}
+
+pkmn_error_t pkmn_calculations_fury_cutter_powers(
+    int generation,
+    int* powers_buffer,
+    size_t buffer_len,
+    size_t* num_powers_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(powers_buffer);
+    // num_powers_out can be NULL
+
+    PKMN_CPP_TO_C(
+        pkmn::c::list_cpp_to_c(
+            pkmn::calculations::fury_cutter_powers(generation),
+            powers_buffer,
+            buffer_len,
+            num_powers_out
+        );
     )
 }
 
@@ -134,6 +189,41 @@ pkmn_error_t pkmn_calculations_gyro_ball_power(
                                    attacker_speed,
                                    target_speed
                                );
+    )
+}
+
+pkmn_error_t pkmn_calculations_ice_ball_powers(
+    int* powers_buffer,
+    size_t buffer_len,
+    size_t* num_powers_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(powers_buffer);
+    // num_powers_out can be NULL
+
+    PKMN_CPP_TO_C(
+        pkmn::c::list_cpp_to_c(
+            pkmn::calculations::ice_ball_powers(),
+            powers_buffer,
+            buffer_len,
+            num_powers_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_calculations_low_kick_power(
+    float target_weight,
+    int generation,
+    int* power_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(power_out);
+
+    PKMN_CPP_TO_C(
+        *power_out = pkmn::calculations::low_kick_power(
+                         target_weight,
+                         generation
+                     );
     )
 }
 
@@ -251,6 +341,25 @@ pkmn_error_t pkmn_calculations_reversal_power(
     )
 }
 
+pkmn_error_t pkmn_calculations_rollout_powers(
+    int* powers_buffer,
+    size_t buffer_len,
+    size_t* num_powers_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(powers_buffer);
+    // num_powers_out can be NULL
+
+    PKMN_CPP_TO_C(
+        pkmn::c::list_cpp_to_c(
+            pkmn::calculations::rollout_powers(),
+            powers_buffer,
+            buffer_len,
+            num_powers_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_calculations_spit_up_power(
     int stockpile_amount,
     int* spit_up_power_out
@@ -288,6 +397,25 @@ pkmn_error_t pkmn_calculations_stored_power_power(
                                       evasion_stat_stage,
                                       accuracy_stat_stage
                                   );
+    )
+}
+
+pkmn_error_t pkmn_calculations_triple_kick_powers(
+    int* powers_buffer,
+    size_t buffer_len,
+    size_t* num_powers_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(powers_buffer);
+    // num_powers_out can be NULL
+
+    PKMN_CPP_TO_C(
+        pkmn::c::list_cpp_to_c(
+            pkmn::calculations::triple_kick_powers(),
+            powers_buffer,
+            buffer_len,
+            num_powers_out
+        );
     )
 }
 

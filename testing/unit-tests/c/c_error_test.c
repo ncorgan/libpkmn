@@ -2294,39 +2294,6 @@ static void calculations_gender_error_test() {
 }
 
 /*
- * <pkmn-c/calculations/moves/hidden_power.h>
- */
-static void calculations_hidden_power_error_test() {
-    /*
-     * pkmn_calculations_gen2_hidden_power
-     */
-
-    error = pkmn_calculations_gen2_hidden_power(
-                0,
-                0,
-                0,
-                0,
-                NULL // hidden_power_out
-            );
-    TEST_NULL_POINTER_RETURN("hidden_power_out");
-
-    /*
-     * pkmn_calculations_modern_hidden_power
-     */
-
-    error = pkmn_calculations_modern_hidden_power(
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                NULL // hidden_power_out
-            );
-    TEST_NULL_POINTER_RETURN("hidden_power_out");
-}
-
-/*
  * <pkmn-c/calculations/nature.h>
  */
 static void calculations_nature_error_test() {
@@ -2608,6 +2575,39 @@ static void calculations_stats_error_test() {
                 NULL // stat_range_out
             );
     TEST_NULL_POINTER_RETURN("stat_range_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/hidden_power.h>
+ */
+static void calculations_hidden_power_error_test() {
+    /*
+     * pkmn_calculations_gen2_hidden_power
+     */
+
+    error = pkmn_calculations_gen2_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_NULL_POINTER_RETURN("hidden_power_out");
+
+    /*
+     * pkmn_calculations_modern_hidden_power
+     */
+
+    error = pkmn_calculations_modern_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_NULL_POINTER_RETURN("hidden_power_out");
 }
 
 /*
@@ -3094,13 +3094,13 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(pokemon_pc_error_test)
     PKMN_C_TEST(calculations_form_error_test)
     PKMN_C_TEST(calculations_gender_error_test)
-    PKMN_C_TEST(calculations_hidden_power_error_test)
     PKMN_C_TEST(calculations_nature_error_test)
     PKMN_C_TEST(calculations_personality_error_test)
     PKMN_C_TEST(calculations_shininess_error_test)
     PKMN_C_TEST(calculations_size_error_test)
     PKMN_C_TEST(calculations_spinda_spots_error_test)
     PKMN_C_TEST(calculations_stats_error_test)
+    PKMN_C_TEST(calculations_hidden_power_error_test)
     PKMN_C_TEST(database_item_entry_error_test)
     PKMN_C_TEST(database_lists_error_test)
     PKMN_C_TEST(database_move_entry_error_test)

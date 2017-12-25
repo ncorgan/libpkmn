@@ -11,16 +11,29 @@
 #include <pkmn-c/error.h>
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+PKMN_C_API pkmn_error_t pkmn_calculations_brine_power(
+    int target_current_hp,
+    int target_max_hp,
+    int* brine_power_out
+);
 
 PKMN_C_API pkmn_error_t pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
     int generation,
     int* crush_grip_power_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_calculations_echoed_voice_powers(
+    int* powers_buffer,
+    size_t buffer_length,
+    size_t* num_powers_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_calculations_electro_ball_power(
@@ -51,6 +64,13 @@ PKMN_C_API pkmn_error_t pkmn_calculations_frustration_power(
     int* frustration_power_out
 );
 
+PKMN_C_API pkmn_error_t pkmn_calculations_fury_cutter_powers(
+    int generation,
+    int* powers_buffer,
+    size_t buffer_length,
+    size_t* num_powers_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_calculations_grass_knot_power(
     float target_weight,
     int* grass_knot_power_out
@@ -72,6 +92,18 @@ PKMN_C_API pkmn_error_t pkmn_calculations_heavy_slam_power(
     float attacker_weight,
     float target_weight,
     int* heavy_slam_power_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_calculations_ice_ball_powers(
+    int* powers_buffer,
+    size_t buffer_length,
+    size_t* num_powers_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_calculations_low_kick_power(
+    float target_weight,
+    int generation,
+    int* low_kick_power_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_calculations_power_trip_power(
@@ -107,6 +139,12 @@ PKMN_C_API pkmn_error_t pkmn_calculations_reversal_power(
     int* reversal_power_out
 );
 
+PKMN_C_API pkmn_error_t pkmn_calculations_rollout_powers(
+    int* powers_buffer,
+    size_t buffer_length,
+    size_t* num_powers_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_calculations_spit_up_power(
     int stockpile_amount,
     int* spit_up_power_out
@@ -122,6 +160,13 @@ PKMN_C_API pkmn_error_t pkmn_calculations_stored_power_power(
     int accuracy_stat_stage,
     int* stored_power_power_out
 );
+
+PKMN_C_API pkmn_error_t pkmn_calculations_triple_kick_powers(
+    int* powers_buffer,
+    size_t buffer_length,
+    size_t* num_powers_out
+);
+
 
 PKMN_C_API pkmn_error_t pkmn_calculations_trump_card_power(
     int pp_remaining_after_use,
