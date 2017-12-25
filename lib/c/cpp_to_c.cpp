@@ -20,10 +20,10 @@ namespace pkmn { namespace c {
     {
         BOOST_ASSERT(c_str_ptr);
 
+        size_t string_length = string_cpp.size();
+
         if(!string_cpp.empty())
         {
-            size_t string_length = string_cpp.size();
-
             std::strncpy(
                 c_str_ptr,
                 string_cpp.c_str(),
@@ -35,11 +35,11 @@ namespace pkmn { namespace c {
             {
                 c_str_ptr[string_length] = '\0';
             }
+        }
 
-            if(string_length_out)
-            {
-                *string_length_out = string_length;
-            }
+        if(string_length_out)
+        {
+            *string_length_out = string_length;
         }
     }
 

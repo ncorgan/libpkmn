@@ -147,6 +147,38 @@ namespace pkmn { namespace c {
         *pointer_ptr = nullptr;
     }
 
+    template <typename T>
+    void list_cpp_to_c(
+        const std::vector<T>& list_cpp,
+        T* list_ptr,
+        size_t buffer_len,
+        size_t* num_values_out
+    )
+    {
+        BOOST_ASSERT(list_ptr);
+
+        if(!list_cpp.empty())
+        {
+            std::memcpy(
+                list_ptr,
+                list_cpp.data(),
+                buffer_len * sizeof(T)
+            );
+        }
+
+        if(num_values_out)
+        {
+            *num_values_out = list_cpp.size();
+        }
+    }
+
+    void int_list_cpp_to_c(
+        const std::vector<int>& int_list_cpp,
+        int* int_list_ptr,
+        size_t buffer_len,
+        size_t* num_ints_out
+    );
+
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
         pkmn_int_pair_t* int_pair_ptr
@@ -185,6 +217,17 @@ namespace pkmn { namespace c {
         pkmn_string_list_t* string_list_c_ptr
     );
 
+    inline void string_pair_cpp_to_c(
+        const std::pair<std::string, std::string>& string_pair_cpp,
+        pkmn_string_pair_t* c_pair_ptr
+    )
+    {
+        BOOST_ASSERT(c_pair_ptr);
+
+        string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
+        string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
+    }
+
     template <typename value_type>
     void string_map_keys_to_string_list(
         const std::map<std::string, value_type>& map_cpp,
@@ -214,22 +257,6 @@ namespace pkmn { namespace c {
         }
 
         string_list_c_ptr->length = num_keys;
-    }
-
-    void pkmn_pokemon_entry_cpp_to_c(
-        const pkmn::database::pokemon_entry &pokemon_entry_cpp,
-        pkmn_database_pokemon_entry_t* pokemon_entry_c
-    );
-
-    inline void string_pair_cpp_to_c(
-        const std::pair<std::string, std::string>& string_pair_cpp,
-        pkmn_string_pair_t* c_pair_ptr
-    )
-    {
-        BOOST_ASSERT(c_pair_ptr);
-
-        string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
-        string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
     }
 
     inline void hidden_power_cpp_to_c(

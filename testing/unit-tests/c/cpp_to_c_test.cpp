@@ -45,7 +45,7 @@ class pkmn_test_exception: public std::exception {
         std::string msg_;
 };
 
-#define STRBUFFER_LEN 1024
+#define BUFFER_LEN 1024
 
 /*
  * Converting C++ exceptions to C error codes
@@ -352,6 +352,95 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
  * Converting C++ types to C types
  */
 
+TEST(cpp_to_c_test, list_cpp_to_c_test)
+{
+    std::vector<int> int_vector = {1, 2, 3, 4, 5};
+    std::vector<double> double_vector = {6.0, 7.0, 8.0};
+
+    int int_list[BUFFER_LEN] = {0};
+    double double_list[BUFFER_LEN] = {0.0};
+
+    size_t output_size;
+
+    // Int test
+
+    pkmn::c::list_cpp_to_c(
+        int_vector,
+        int_list,
+        int_vector.size() - 1, // Too short
+        &output_size
+    );
+    EXPECT_EQ(int_vector.size(), output_size);
+    for(size_t index = 0; index < int_vector.size(); ++index)
+    {
+        if(index == (int_vector.size() - 1))
+        {
+            EXPECT_EQ(0, int_list[index]);
+        }
+        else
+        {
+            EXPECT_EQ(int_vector[index], int_list[index]);
+        }
+    }
+
+    std::memset(
+        int_list,
+        sizeof(int_list),
+        0
+    );
+
+    pkmn::c::list_cpp_to_c(
+        int_vector,
+        int_list,
+        int_vector.size(),
+        &output_size
+    );
+    EXPECT_EQ(int_vector.size(), output_size);
+    for(size_t index = 0; index < int_vector.size(); ++index)
+    {
+        EXPECT_EQ(int_vector[index], int_list[index]);
+    }
+
+    // Double list
+
+    pkmn::c::list_cpp_to_c(
+        double_vector,
+        double_list,
+        double_vector.size() - 1, // Too short
+        &output_size
+    );
+    EXPECT_EQ(double_vector.size(), output_size);
+    for(size_t index = 0; index < double_vector.size(); ++index)
+    {
+        if(index == (double_vector.size() - 1))
+        {
+            EXPECT_DOUBLE_EQ(0.0, double_list[index]);
+        }
+        else
+        {
+            EXPECT_DOUBLE_EQ(double_vector[index], double_list[index]);
+        }
+    }
+
+    std::memset(
+        double_list,
+        sizeof(double_list),
+        0
+    );
+
+    pkmn::c::list_cpp_to_c(
+        double_vector,
+        double_list,
+        double_vector.size(),
+        &output_size
+    );
+    EXPECT_EQ(double_vector.size(), output_size);
+    for(size_t index = 0; index < double_vector.size(); ++index)
+    {
+        EXPECT_DOUBLE_EQ(double_vector[index], double_list[index]);
+    }
+}
+
 TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
 {
     pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
@@ -639,8 +728,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 
     for(size_t i = 0; i < 3; ++i)
     {
-        char species_c[STRBUFFER_LEN] = {0};
-        char game_c[STRBUFFER_LEN] = {0};
+        char species_c[BUFFER_LEN] = {0};
+        char game_c[BUFFER_LEN] = {0};
         int level_c = 0;
 
         error = pkmn_pokemon_get_species(
@@ -699,8 +788,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 
     for(size_t i = 0; i < 3; ++i)
     {
-        char game_c[STRBUFFER_LEN] = {0};
-        char name_c[STRBUFFER_LEN] = {0};
+        char game_c[BUFFER_LEN] = {0};
+        char name_c[BUFFER_LEN] = {0};
 
         error = pkmn_pokemon_box_get_game(
                     pokemon_box_list_c.pokemon_boxes[i],
