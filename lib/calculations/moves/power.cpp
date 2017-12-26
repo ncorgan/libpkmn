@@ -87,7 +87,20 @@ namespace pkmn { namespace calculations {
         int target_speed
     )
     {
-        float speed_percentage = float(attacker_speed) / float(target_speed);
+        pkmn::enforce_comparator(
+            "Attacker speed",
+            attacker_speed,
+            0,
+            pkmn::value_comparator::GT
+        );
+        pkmn::enforce_comparator(
+            "Target speed",
+            target_speed,
+            0,
+            pkmn::value_comparator::GT
+        );
+
+        float speed_percentage = float(target_speed) / float(attacker_speed);
         int ret = 0;
 
         if(speed_percentage <= 0.25f)

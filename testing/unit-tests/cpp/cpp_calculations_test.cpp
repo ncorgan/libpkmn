@@ -108,7 +108,54 @@ TEST(cpp_calculations_test, crush_grip_power_test)
     }
 }
 
-// TODO: Echoed Voice, Electro Ball
+TEST(cpp_calculations_test, echoed_voice_power_test)
+{
+    static const std::vector<int> expected_results = {40, 80, 120, 160, 200};
+    EXPECT_EQ(expected_results, pkmn::calculations::echoed_voice_powers());
+}
+
+TEST(cpp_calculations_test, electro_ball_power_test)
+{
+    // Test invalid parameters.
+
+    EXPECT_THROW(
+        pkmn::calculations::electro_ball_power(0, 100)
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::electro_ball_power(100, 0)
+    , std::out_of_range);
+
+    // Test expected results.
+
+    struct electro_ball_power_test_params
+    {
+        int attacker_speed;
+        int target_speed;
+        int expected_power;
+    };
+    static const std::vector<electro_ball_power_test_params> test_cases =
+    {
+        {100, 101, 40},
+        {100, 100, 60},
+        {100, 51, 60},
+        {100, 50, 80},
+        {100, 34, 80},
+        {100, 33, 120},
+        {100, 32, 120},
+        {100, 25, 150}
+    };
+
+    for(const auto& test_case: test_cases)
+    {
+        EXPECT_EQ(
+            test_case.expected_power,
+            pkmn::calculations::electro_ball_power(
+                test_case.attacker_speed,
+                test_case.target_speed
+            )
+        );
+    }
+}
 
 TEST(cpp_calculations_test, eruption_power_test)
 {
