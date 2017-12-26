@@ -994,18 +994,17 @@ TEST(cpp_calculations_test, damage_test)
     //
     // The article itself results in the wrong value, but the value I'm
     // testing for below was based on its equations.
-    pkmn::database::move_entry ice_fang("Ice Fang", "X");
-    pkmn::database::pokemon_entry glaceon("Glaceon", "X", "");
-    pkmn::database::pokemon_entry garchomp("Garchomp", "X", "");
+    static const int level = 75;
+    static const int ice_fang_base_power = 65;
+    static const float modifier_against_dragon_ground = 6.0f;
+    static const int glaceon_l75_attack = 123;
+    static const int garchomp_l75_defense = 163;
 
-    const float modifier_against_dragon_ground = 6.0f;
-
-    ASSERT_EQ(65, ice_fang.get_base_power());
     int damage = pkmn::calculations::damage(
-                     75,
-                     ice_fang.get_base_power(),
-                     123,
-                     163,
+                     level,
+                     ice_fang_base_power,
+                     glaceon_l75_attack,
+                     garchomp_l75_defense,
                      modifier_against_dragon_ground
                  );
     EXPECT_EQ(200, damage);
