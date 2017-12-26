@@ -114,7 +114,7 @@ namespace pkmn { namespace calculations {
         pkmn::enforce_bounds(
             "Generation",
             generation,
-            1,
+            2,
             6
         );
 

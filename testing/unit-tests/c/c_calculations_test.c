@@ -1109,7 +1109,7 @@ static void critical_hit_modifier_test()
 {
     // Test invalid parameters.
 
-    error = pkmn_calculations_critical_hit_modifier(-1, &float_result);
+    error = pkmn_calculations_critical_hit_modifier(1, &float_result);
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     error = pkmn_calculations_critical_hit_modifier(10, &float_result);

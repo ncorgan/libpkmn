@@ -952,7 +952,7 @@ TEST(cpp_calculations_test, critical_hit_modifier_test)
 {
     // Test invalid parameters.
     EXPECT_THROW(
-        pkmn::calculations::critical_hit_modifier(-1)
+        pkmn::calculations::critical_hit_modifier(1)
     , std::out_of_range);
     EXPECT_THROW(
         pkmn::calculations::critical_hit_modifier(10)
