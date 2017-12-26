@@ -108,6 +108,8 @@ TEST(cpp_calculations_test, crush_grip_power_test)
     }
 }
 
+// TODO: Echoed Voice, Electro Ball
+
 TEST(cpp_calculations_test, eruption_power_test)
 {
     // Test invalid inputs.

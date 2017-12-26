@@ -19,11 +19,307 @@ static pkmn_error_t error;
 static int int_result = 0;
 static bool bool_result = false;
 static pkmn_gender_t pkmn_gender_t_result = PKMN_MALE;
-static pkmn_hidden_power_t pkmn_hidden_power_t_result = {
-                               .type = NULL,
-                               .base_power = 0
-                           };
+static pkmn_hidden_power_t pkmn_hidden_power_t_result = { NULL, 0 };
 static pkmn_spinda_spots_t pkmn_spinda_spots_t_result;
+
+static void brine_power_test()
+{
+    // Test invalid inputs.
+
+    error = pkmn_calculations_brine_power(0, 2, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_OUT_OF_RANGE);
+
+    error = pkmn_calculations_brine_power(-2, -1, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_OUT_OF_RANGE);
+
+    error = pkmn_calculations_brine_power(2, 1, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_OUT_OF_RANGE);
+
+    // Test expected behavior.
+
+    const int max_hp = 10;
+    const int half_hp = max_hp / 2;
+
+    error = pkmn_calculations_brine_power((half_hp - 1), max_hp, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(130, int_result);
+
+    error = pkmn_calculations_brine_power(half_hp, max_hp, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(130, int_result);
+
+    error = pkmn_calculations_brine_power((half_hp + 1), max_hp, &int_result);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
+    TEST_ASSERT_EQUAL(65, int_result);
+}
+
+static void crush_grip_power_test()
+{
+    // Test invalid inputs.
+
+    error = pkmn_calculations_crush_grip_power(0, 1, 5, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_crush_grip_power(2, 1, 5, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_crush_grip_power(1, 2, 3, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_crush_grip_power(1, 2, 7, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_crush_grip_power(1, 200, 4, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(1, int_result);
+
+    error = pkmn_calculations_crush_grip_power(200, 200, 4, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(121, int_result);
+
+    for(int generation = 5; generation <= 6; ++generation)
+    {
+        error = pkmn_calculations_crush_grip_power(
+                    1, 200, generation, &int_result
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(1, int_result);
+
+        error = pkmn_calculations_crush_grip_power(
+                    200, 200, generation, &int_result
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(120, int_result);
+    }
+}
+
+static void echoed_voice_powers_test()
+{
+    const int expected_results[5] = {40, 80, 120, 160, 200};
+
+    int int_buffer[BUFFER_SIZE] = {0};
+    size_t num_powers = 0;
+
+    error = pkmn_calculations_echoed_voice_powers(
+                int_buffer,
+                BUFFER_SIZE,
+                &num_powers
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(5ULL, num_powers);
+    TEST_ASSERT_EQUAL_INT_ARRAY(expected_results, int_buffer, num_powers);
+}
+
+static void electro_ball_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void flail_power_test()
+{
+    // Test invalid inputs.
+
+    error = pkmn_calculations_flail_power(0, 1, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_flail_power(1, 0, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_flail_power(2, 1, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    // Test expected behavior.
+
+    struct flail_power_test_params
+    {
+        int attacker_current_hp;
+        int attacker_max_hp;
+        int expected_power;
+    };
+    static const struct flail_power_test_params test_params[] =
+    {
+        {1, 500, 200},
+        {20, 500, 200},
+
+        {21, 500, 150},
+        {52, 500, 150},
+
+        {53, 500, 100},
+        {104, 500, 100},
+
+        {105, 500, 80},
+        {177, 500, 80},
+
+        {178, 500, 40},
+        {343, 500, 40},
+
+        {344, 500, 20},
+        {500, 500, 20}
+    };
+    static const size_t num_params = sizeof(test_params)/sizeof(struct flail_power_test_params);
+
+    for(size_t param_index = 0; param_index < num_params; ++param_index)
+    {
+        error = pkmn_calculations_flail_power(
+                    test_params[param_index].attacker_current_hp,
+                    test_params[param_index].attacker_max_hp,
+                    &int_result
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(test_params[param_index].expected_power, int_result);
+    }
+}
+
+static void fling_power_test()
+{
+    // Test invalid inputs.
+
+    error = pkmn_calculations_fling_power("Not an item", &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+
+    struct fling_power_test_params
+    {
+        const char* held_item;
+        int expected_power;
+    };
+
+    static const struct fling_power_test_params test_params[] =
+    {
+        {"Oran Berry", 10},
+        {"Health Wing", 20},
+        {"Potion", 30},
+        {"Icy Rock", 40},
+        {"Dubious Disc", 50},
+        {"Damp Rock", 60},
+        {"Dragon Fang", 70},
+        {"Dusk Stone", 80},
+        {"Thick Club", 90},
+        {"Rare Bone", 100},
+        {"Iron Ball", 130}
+    };
+    static const size_t num_params = sizeof(test_params)/sizeof(struct fling_power_test_params);
+
+    for(size_t param_index = 0; param_index < num_params; ++param_index)
+    {
+        error = pkmn_calculations_fling_power(
+                    test_params[param_index].held_item,
+                    &int_result
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(test_params[param_index].expected_power, int_result);
+    }
+}
+
+static void frustration_power_test()
+{
+    // Test invalid inputs.
+
+    error = pkmn_calculations_frustration_power(-1, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_frustration_power(256, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    // Test expected behavior.
+
+    error = pkmn_calculations_frustration_power(0, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(102, int_result);
+
+    error = pkmn_calculations_frustration_power(255, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(1, int_result);
+}
+
+static void fury_cutter_powers_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void grass_knot_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void gyro_ball_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void heat_crash_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void heavy_slam_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void ice_ball_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void low_kick_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void power_trip_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void punishment_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void return_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void reversal_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void rollout_powers_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void spit_up_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void stored_power_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void triple_kick_powers_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void trump_card_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void water_spout_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
+
+static void wring_out_power_test()
+{
+    TEST_FAIL_MESSAGE("TODO");
+}
 
 static void gen2_unown_form_test()
 {
@@ -899,7 +1195,7 @@ static void gb_stat_test() {
                 &int_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-                
+
     /*
      * Test with known good inputs.
      *
@@ -973,6 +1269,31 @@ static void modern_stat_test() {
 }
 
 PKMN_C_TEST_MAIN(
+    PKMN_C_TEST(brine_power_test)
+    PKMN_C_TEST(crush_grip_power_test)
+    PKMN_C_TEST(echoed_voice_powers_test)
+    PKMN_C_TEST(electro_ball_power_test)
+    PKMN_C_TEST(flail_power_test)
+    PKMN_C_TEST(fling_power_test)
+    PKMN_C_TEST(frustration_power_test)
+    PKMN_C_TEST(fury_cutter_powers_test)
+    PKMN_C_TEST(grass_knot_power_test)
+    PKMN_C_TEST(gyro_ball_power_test)
+    PKMN_C_TEST(heat_crash_power_test)
+    PKMN_C_TEST(heavy_slam_power_test)
+    PKMN_C_TEST(ice_ball_power_test)
+    PKMN_C_TEST(low_kick_power_test)
+    PKMN_C_TEST(power_trip_power_test)
+    PKMN_C_TEST(punishment_power_test)
+    PKMN_C_TEST(return_power_test)
+    PKMN_C_TEST(reversal_power_test)
+    PKMN_C_TEST(rollout_powers_test)
+    PKMN_C_TEST(spit_up_power_test)
+    PKMN_C_TEST(stored_power_power_test)
+    PKMN_C_TEST(triple_kick_powers_test)
+    PKMN_C_TEST(trump_card_power_test)
+    PKMN_C_TEST(water_spout_power_test)
+    PKMN_C_TEST(wring_out_power_test)
     PKMN_C_TEST(gen2_unown_form_test)
     PKMN_C_TEST(gen3_unown_form_test)
     PKMN_C_TEST(wurmple_becomes_silcoon_test)

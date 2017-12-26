@@ -25,15 +25,15 @@ namespace pkmn { namespace calculations {
         int generation
     );
 
-    PKMN_API int electro_ball_power(
-        int attacker_speed,
-        int target_speed
-    );
-
     PKMN_INLINE std::vector<int> echoed_voice_powers()
     {
         return {40, 80, 120, 160, 200};
     }
+
+    PKMN_API int electro_ball_power(
+        int attacker_speed,
+        int target_speed
+    );
 
     PKMN_API int eruption_power(
         int attacker_current_hp,
