@@ -385,8 +385,8 @@ TEST(cpp_to_c_test, list_cpp_to_c_test)
 
     std::memset(
         int_list,
-        sizeof(int_list),
-        0
+        0,
+        sizeof(int_list)
     );
 
     pkmn::c::list_cpp_to_c(
@@ -424,8 +424,8 @@ TEST(cpp_to_c_test, list_cpp_to_c_test)
 
     std::memset(
         double_list,
-        sizeof(double_list),
-        0
+        0,
+        sizeof(double_list)
     );
 
     pkmn::c::list_cpp_to_c(
