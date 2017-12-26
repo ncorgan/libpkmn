@@ -301,7 +301,7 @@ static void fury_cutter_powers_test()
     static const int gen5_expected_results[4] = {20, 40, 80, 160};
     static const int gen6_expected_results[3] = {40, 80, 160};
 
-    for(size_t generation = 2; generation <= 4; ++generation)
+    for(int generation = 2; generation <= 4; ++generation)
     {
         error = pkmn_calculations_fury_cutter_powers(
                     generation,
