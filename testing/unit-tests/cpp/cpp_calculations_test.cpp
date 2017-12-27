@@ -876,7 +876,7 @@ TEST(cpp_calculations_test, gen1_critical_hit_chance_test)
 
     // In Generation I, make sure there is never a guaranteed chance for
     // a critical hit.
-    EXPECT_TRUE(pkmn::fp_compare_less(
+    EXPECT_FALSE(pkmn::fp_compare_greater(
         pkmn::calculations::gen1_critical_hit_chance(255, true, true),
         (255.0f / 256.0f)
     ));

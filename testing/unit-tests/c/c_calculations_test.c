@@ -1029,7 +1029,7 @@ static void gen1_critical_hit_chance_test()
                 255, true, true, &float_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_TRUE(float_result < (255.0f / 256.0f));
+    TEST_ASSERT_TRUE(float_result <= (255.0f / 256.0f));
 }
 
 static void critical_hit_chance_test()

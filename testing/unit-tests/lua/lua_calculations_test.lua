@@ -139,20 +139,20 @@ function test_flail_power()
 
     -- Test expected results.
 
-        local attacker_current_HPs = {1, 20, 21, 52, 53, 104, 105, 177, 178, 343, 344, 500}
-        local attacker_max_HPs = {500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500}
-        local expected_powers = {200, 200, 150, 150, 100, 100, 80, 80, 40, 40, 20, 20}
+    local attacker_current_HPs = {1, 20, 21, 52, 53, 104, 105, 177, 178, 343, 344, 500}
+    local attacker_max_HPs = {500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500}
+    local expected_powers = {200, 200, 150, 150, 100, 100, 80, 80, 40, 40, 20, 20}
 
-        for test_case_index = 1, #attacker_current_HPs
-        do
-            luaunit.assertEquals(
-                pkmn.calculations.flail_power(
-                    attacker_current_HPs[test_case_index],
-                    attacker_max_HPs[test_case_index]
-                ),
-                expected_powers[test_case_index]
-            )
-        end
+    for test_case_index = 1, #attacker_current_HPs
+    do
+        luaunit.assertEquals(
+            pkmn.calculations.flail_power(
+                attacker_current_HPs[test_case_index],
+                attacker_max_HPs[test_case_index]
+            ),
+            expected_powers[test_case_index]
+        )
+    end
 end
 
 function test_fling_power()
@@ -511,7 +511,7 @@ function test_rollout_powers()
     )
 end
 
-function test_spitup_power()
+function test_spit_up_power()
     -- Test invalid parameters.
 
     luaunit.assertError(pkmn.calculations.spit_up_power, -1)
@@ -634,7 +634,7 @@ function test_gen1_critical_hit_chance()
     -- In Generation I, make sure there is never a guaranteed chance for a
     -- critical hit.
 
-    luaunit.assertTrue(pkmn.calculations.gen1_critical_hit_chance(255, true, true) < (255.0/256.0))
+    luaunit.assertTrue(pkmn.calculations.gen1_critical_hit_chance(255, true, true) <= (255.0/256.0))
 end
 
 function test_critical_hit_chance()

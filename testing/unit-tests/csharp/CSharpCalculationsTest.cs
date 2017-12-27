@@ -1132,7 +1132,7 @@ public class CSharpCalculationsTest {
 
         // In Generation I, make sure there is never a guaranteed chance for
         // a critical hit.
-        Assert.Less(
+        Assert.LessOrEqual(
             PKMN.Calculations.Gen1CriticalHitChance(255, true, true),
             (255.0f / 256.0f)
         );
