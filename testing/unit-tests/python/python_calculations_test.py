@@ -743,6 +743,98 @@ class calculations_test(unittest.TestCase):
             1.5
         )
 
+    def test_damage(self):
+        # Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+        # Only taking types into account
+        #
+        # "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+        # uses Ice Fang (an Ice-type physical move with a power of 65) against
+        # a Garchomp with an effective Defense stat of 163 in Generation VI,
+        # and does not land a critical hit."
+        #
+        # The article itself results in the wrong value, but the value I'm
+        # testing for below was based on its equations.
+
+        level = 75
+        ice_fang_base_power = 65
+        modifier_against_dragon_ground = 6.0
+        glaceon_l75_attack = 123
+        garchomp_l75_defense = 163
+
+        self.assertEqual(
+            pkmn.calculations.damage(
+                level,
+                ice_fang_base_power,
+                glaceon_l75_attack,
+                garchomp_l75_defense,
+                modifier_against_dragon_ground
+            ),
+            200
+        )
+
+    def test_type_damage_modifier(self):
+        # Test invalid inputs.
+
+        # Invalid generation
+        with self.assertRaises(IndexError):
+            pkmn.calculations.type_damage_modifier(-1, "Normal", "Normal")
+        with self.assertRaises(IndexError):
+            pkmn.calculations.type_damage_modifier(8, "Normal", "Normal")
+
+        # Invalid types for a given generation
+        generations = [1, 1, 5, 3, 5, 2, 4]
+        types = ["Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"]
+        test_cases = zip(generations, types)
+
+        for generation, type_name in test_cases:
+            # Invalid attacking type
+            with self.assertRaises(ValueError):
+                pkmn.calculations.type_damage_modifier(
+                    generation,
+                    type_name,
+                    "Normal"
+                )
+
+            # Invalid defending type
+            with self.assertRaises(ValueError):
+                pkmn.calculations.type_damage_modifier(
+                    generation,
+                    "Normal",
+                    type_name
+                )
+
+        # Check that changes between generations are properly implemented.
+
+        attacking_types = ["Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"]
+        defending_types = ["Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"]
+        old_generations = [1, 1, 1, 1, 5, 5]
+        old_modifiers = [2.0, 2.0, 0.0, 1.0, 0.5, 0.5]
+        new_generations = [2, 2, 2, 2, 6, 6]
+        new_modifiers = [0.5, 1.0, 2.0, 0.5, 1.0, 1.0]
+        test_cases = zip(attacking_types, defending_types, old_generations,
+                         old_modifiers, new_generations, new_modifiers)
+
+        for attacking_type, defending_type, old_generation, old_modifier, \
+            new_generation, new_modifier in test_cases:
+
+            self.assertAlmostEqual(
+                pkmn.calculations.type_damage_modifier(
+                    old_generation,
+                    attacking_type,
+                    defending_type
+                ),
+                old_modifier
+            )
+            self.assertAlmostEqual(
+                pkmn.calculations.type_damage_modifier(
+                    new_generation,
+                    attacking_type,
+                    defending_type
+                ),
+                new_modifier
+            )
+
     def test_gen2_unown_form(self):
         # Make sure expected errors are raised.
         with self.assertRaises(IndexError):

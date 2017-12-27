@@ -108,7 +108,7 @@ TEST(cpp_calculations_test, crush_grip_power_test)
     }
 }
 
-TEST(cpp_calculations_test, echoed_voice_power_test)
+TEST(cpp_calculations_test, echoed_voice_powers_test)
 {
     static const std::vector<int> expected_results = {40, 80, 120, 160, 200};
     EXPECT_EQ(expected_results, pkmn::calculations::echoed_voice_powers());

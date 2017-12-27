@@ -744,6 +744,105 @@ function test_critical_hit_modifier()
     )
 end
 
+function test_damage()
+    -- Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+    -- Only taking types into account
+    --
+    -- "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+    -- uses Ice Fang (an Ice-type physical move with a power of 65) against
+    -- a Garchomp with an effective Defense stat of 163 in Generation VI,
+    -- and does not land a critical hit."
+    --
+    -- The article itself results in the wrong value, but the value I'm
+    -- testing for below was based on its equations.
+
+    local level = 75
+    local ice_fang_base_power = 65
+    local modifier_against_dragon_ground = 6.0
+    local glaceon_l75_attack = 123
+    local garchomp_l75_defense = 163
+
+    luaunit.assertEquals(
+        pkmn.calculations.damage(
+            level,
+            ice_fang_base_power,
+            glaceon_l75_attack,
+            garchomp_l75_defense,
+            modifier_against_dragon_ground
+        ),
+        200
+    )
+end
+
+function test_type_damage_modifier()
+    -- Test invalid inputs.
+
+    -- Invalid generation
+    luaunit.assertError(
+        pkmn.calculations.type_damage_modifier,
+        -1, "Normal", "Normal"
+    )
+    luaunit.assertError(
+        pkmn.calculations.type_damage_modifier,
+        8, "Normal", "Normal"
+    )
+
+    -- Invalid types for a given generation
+    local generations = {1, 1, 5, 3, 5, 2, 4}
+    local types = {"Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"}
+
+    for test_case_index = 1, #generations
+    do
+        -- Invalid attacking type
+        luaunit.assertError(
+            pkmn.calculations.type_damage_modifier,
+            generations[test_case_index],
+            types[test_case_index],
+            "Normal"
+        )
+
+        -- Invalid defending type
+        luaunit.assertError(
+            pkmn.calculations.type_damage_modifier,
+            generations[test_case_index],
+            "Normal",
+            types[test_case_index]
+        )
+    end
+
+    -- Check that changes between generations are properly implemented.
+
+    local attacking_types = {"Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"}
+    local defending_types = {"Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"}
+    local old_generations = {1, 1, 1, 1, 5, 5}
+    local old_modifiers = {2.0, 2.0, 0.0, 1.0, 0.5, 0.5}
+    local new_generations = {2, 2, 2, 2, 6, 6}
+    local new_modifiers = {0.5, 1.0, 2.0, 0.5, 1.0, 1.0}
+
+    for test_case_index = 1, #attacking_types
+    do
+        luaunit.assertAlmostEquals(
+            pkmn.calculations.type_damage_modifier(
+                old_generations[test_case_index],
+                attacking_types[test_case_index],
+                defending_types[test_case_index]
+            ),
+            old_modifiers[test_case_index],
+            0.0001
+        )
+        luaunit.assertAlmostEquals(
+            pkmn.calculations.type_damage_modifier(
+                new_generations[test_case_index],
+                attacking_types[test_case_index],
+                defending_types[test_case_index]
+            ),
+            new_modifiers[test_case_index],
+            0.0001
+        )
+    end
+end
+
 function test_gen2_unown_form()
     -- Make sure expected errors are thrown.
     luaunit.assertError(pkmn.calculations.gen2_unown_form, -1, 0, 0, 0)

@@ -157,6 +157,62 @@ static void electro_ball_power_test()
     }
 }
 
+static void eruption_power_test()
+{
+    // Test invalid parameters.
+
+    error = pkmn_calculations_eruption_power(0, 1, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_eruption_power(1, 0, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    error = pkmn_calculations_eruption_power(2, 1, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+
+    // Test expected values.
+
+    error = pkmn_calculations_eruption_power(1, 500, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(1, int_result);
+
+    error = pkmn_calculations_eruption_power(250, 500, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(75, int_result);
+
+    error = pkmn_calculations_eruption_power(500, 500, &int_result);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL(150, int_result);
+}
+/*
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(0, 1);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(1, 0);
+    , std::out_of_range);
+    EXPECT_THROW(
+        pkmn::calculations::eruption_power(2, 1);
+    , std::out_of_range);
+
+    EXPECT_EQ(
+        1,
+        pkmn::calculations::eruption_power(1, 500)
+    );
+    EXPECT_EQ(
+        75,
+        pkmn::calculations::eruption_power(250, 500)
+    );
+    EXPECT_EQ(
+        150,
+        pkmn::calculations::eruption_power(500, 500)
+    );
+}
+
+TEST(cpp_calculations_test, flail_power_test)
+{
+ */
+
 static void flail_power_test()
 {
     // Test invalid inputs.
@@ -2365,6 +2421,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(crush_grip_power_test)
     PKMN_C_TEST(echoed_voice_powers_test)
     PKMN_C_TEST(electro_ball_power_test)
+    PKMN_C_TEST(eruption_power_test)
     PKMN_C_TEST(flail_power_test)
     PKMN_C_TEST(fling_power_test)
     PKMN_C_TEST(frustration_power_test)
