@@ -35,7 +35,7 @@ class calculations_test(unittest.TestCase):
         # Test expected results.
 
         max_hp = 10
-        half_hp = max_hp / 2
+        half_hp = max_hp // 2
 
         self.assertEqual(
             pkmn.calculations.brine_power(half_hp-1, max_hp),
