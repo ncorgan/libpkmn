@@ -182,31 +182,34 @@ namespace pkmn { namespace calculations {
         );
 
         float hp_percentage = float(attacker_current_hp) / float(attacker_max_hp);
+        int ret = 0;
 
         if(pkmn::fp_compare_less(hp_percentage, 0.0417f))
         {
-            return 200;
+            ret = 200;
         }
         else if(pkmn::fp_compare_less(hp_percentage, 0.1042f))
         {
-            return 150;
+            ret = 150;
         }
         else if(pkmn::fp_compare_less(hp_percentage, 0.2083f))
         {
-            return 100;
+            ret = 100;
         }
         else if(pkmn::fp_compare_less(hp_percentage, 0.3542f))
         {
-            return 80;
+            ret = 80;
         }
         else if(pkmn::fp_compare_less(hp_percentage, 0.6875f))
         {
-            return 40;
+            ret = 40;
         }
         else
         {
-            return 20;
+            ret = 20;
         }
+
+        return ret;
     }
 
     // TODO: fail if item doesn't appear in games with Fling
