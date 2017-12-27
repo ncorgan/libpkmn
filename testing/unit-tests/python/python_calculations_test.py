@@ -14,6 +14,735 @@ import unittest
 
 class calculations_test(unittest.TestCase):
 
+    def test_stab_modifier(self):
+        self.assertEqual(
+            pkmn.calculations.STAB_MODIFIER,
+            1.5
+        )
+
+    def test_brine_power(self):
+        # Test invalid inputs.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.brine_power(0, 2)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.brine_power(0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.brine_power(-2, -1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.brine_power(2, 1)
+
+        # Test expected results.
+
+        max_hp = 10
+        half_hp = max_hp / 2
+
+        self.assertEqual(
+            pkmn.calculations.brine_power(half_hp-1, max_hp),
+            130
+        )
+        self.assertEqual(
+            pkmn.calculations.brine_power(half_hp, max_hp),
+            130
+        )
+        self.assertEqual(
+            pkmn.calculations.brine_power(half_hp+1, max_hp),
+            65
+        )
+
+    def test_crush_grip_power(self):
+        # Test invalid inputs.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.crush_grip_power(0, 1, 5)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.crush_grip_power(2, 1, 5)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.crush_grip_power(1, 2, 3)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.crush_grip_power(1, 2, 7)
+
+        # Test expected results.
+
+        self.assertEqual(
+            pkmn.calculations.crush_grip_power(1, 200, 4),
+            1
+        )
+        self.assertEqual(
+            pkmn.calculations.crush_grip_power(200, 200, 4),
+            121
+        )
+
+        for generation in [5,6]:
+            self.assertEqual(
+                pkmn.calculations.crush_grip_power(1, 200, generation),
+                1
+            )
+            self.assertEqual(
+                pkmn.calculations.crush_grip_power(200, 200, generation),
+                120
+            )
+
+    def test_echoed_voice_powers(self):
+        self.assertEquals(
+            list(pkmn.calculations.echoed_voice_powers()),
+            [40, 80, 120, 160, 200]
+        )
+
+    def test_electro_ball_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.electro_ball_power(0, 100)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.electro_ball_power(100, 0)
+
+        # Test expected results.
+        attacker_speeds = [100, 100, 100, 100, 100, 100, 100, 100]
+        target_speeds = [101, 100, 51, 50, 34, 33, 32, 25]
+        expected_powers = [40, 60, 60, 80, 80, 120, 120, 150]
+        test_cases = zip(attacker_speeds, target_speeds, expected_powers)
+
+        for attacker_speed, target_speed, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.electro_ball_power(
+                    attacker_speed,
+                    target_speed
+                ),
+                expected_power
+            )
+
+    def test_eruption_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.eruption_power(0, 1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.eruption_power(1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.eruption_power(2, 1)
+
+        # Test expected results.
+
+        self.assertEqual(pkmn.calculations.eruption_power(1, 500), 1)
+        self.assertEqual(pkmn.calculations.eruption_power(250, 500), 75)
+        self.assertEqual(pkmn.calculations.eruption_power(500, 500), 150)
+
+    def test_flail_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.flail_power(0, 1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.flail_power(1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.flail_power(2, 1)
+
+        attacker_current_HPs = [1, 20, 21, 52, 53, 104, 105, 177, 178, 343, 344, 500]
+        attacker_max_HPs = [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
+        expected_powers = [200, 200, 150, 150, 100, 100, 80, 80, 40, 40, 20, 20]
+        test_cases = zip(attacker_current_HPs, attacker_max_HPs, expected_powers)
+
+        for attacker_current_hp, attacker_max_hp, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.flail_power(
+                    attacker_current_hp,
+                    attacker_max_hp
+                ),
+                expected_power
+            )
+
+    def test_fling_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(ValueError):
+            pkmn.calculations.fling_power("Not an item")
+
+        # Test expected results.
+
+        item_names = ["Oran Berry", "Health Wing", "Potion",
+                      "Icy Rock", "Dubious Disc", "Damp Rock",
+                      "Dragon Fang", "Dusk Stone", "Thick Club",
+                      "Rare Bone", "Iron Ball"]
+        expected_powers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 130]
+        test_cases = zip(item_names, expected_powers)
+
+        for item_name, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.fling_power(item_name),
+                expected_power
+            )
+
+    def test_frustration_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.frustration_power(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.frustration_power(256)
+
+        # Test expected values.
+
+        self.assertEqual(pkmn.calculations.frustration_power(0), 102)
+        self.assertEqual(pkmn.calculations.frustration_power(255), 1)
+
+    def test_fury_cutter_powers(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.fury_cutter_powers(1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.fury_cutter_powers(10)
+
+        expected_gen_2_4_powers = [10, 20, 40, 80, 160]
+        expected_gen5_powers = [20, 40, 80, 160]
+        expected_gen6_powers = [40, 80, 160]
+
+        for generation in range(2,5):
+            self.assertEqual(
+                list(pkmn.calculations.fury_cutter_powers(generation)),
+                expected_gen_2_4_powers
+            )
+
+        self.assertEqual(
+            list(pkmn.calculations.fury_cutter_powers(5)),
+            expected_gen5_powers
+        )
+        self.assertEqual(
+            list(pkmn.calculations.fury_cutter_powers(6)),
+            expected_gen6_powers
+        )
+
+    def test_grass_knot_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.grass_knot_power(-1.0)
+
+        # Test expected results.
+
+        target_weights = [5.0, 15.0, 35.0, 75.0, 150.0, 250.0]
+        expected_powers = [20, 40, 60, 80, 100, 120]
+        test_cases = zip(target_weights, expected_powers)
+
+        for target_weight, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.grass_knot_power(target_weight),
+                expected_power
+            )
+
+    def test_gyro_ball_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gyro_ball_power(0, 50)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gyro_ball_power(50, 0)
+
+        # Test expected values.
+
+        self.assertEqual(
+            pkmn.calculations.gyro_ball_power(1, 500),
+            150
+        )
+        self.assertEqual(
+            pkmn.calculations.gyro_ball_power(100, 200),
+            50
+        )
+        self.assertEqual(
+            pkmn.calculations.gyro_ball_power(500, 1),
+            1
+        )
+
+    def test_heat_crash_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.heat_crash_power(0.0, 1.0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.heat_crash_power(1.0, 0.0)
+
+        # Test expected values.
+
+        attacker_weights = [200.0, 200.0, 200.0,
+                            200.0, 200.0, 200.0,
+                            200.0, 200.0, 200.0]
+        target_weights = [200.0, 100.1, 100.0,
+                          66.7, 66.6, 50.1,
+                          50.0, 40.1, 40.0]
+        expected_powers = [40, 40, 60,
+                           60, 80, 80,
+                           100, 100, 120]
+        test_cases = zip(attacker_weights, target_weights, expected_powers)
+
+        for attacker_weight, target_weight, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.heat_crash_power(
+                    attacker_weight,
+                    target_weight
+                ),
+                expected_power
+            )
+
+    def test_heavy_slam_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.heavy_slam_power(0.0, 1.0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.heavy_slam_power(1.0, 0.0)
+
+        # Test expected values.
+
+        attacker_weights = [200.0, 200.0, 200.0,
+                            200.0, 200.0, 200.0,
+                            200.0, 200.0, 200.0]
+        target_weights = [200.0, 100.1, 100.0,
+                          66.7, 66.6, 50.1,
+                          50.0, 40.1, 40.0]
+        expected_powers = [40, 40, 60,
+                           60, 80, 80,
+                           100, 100, 120]
+        test_cases = zip(attacker_weights, target_weights, expected_powers)
+
+        for attacker_weight, target_weight, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.heavy_slam_power(
+                    attacker_weight,
+                    target_weight
+                ),
+                expected_power
+            )
+
+    def test_ice_ball_powers(self):
+        self.assertEquals(
+            list(pkmn.calculations.ice_ball_powers()),
+            [30, 60, 120, 240, 480]
+        )
+
+    def test_low_kick_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.low_kick_power(-1.0, 1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.low_kick_power(1.0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.low_kick_power(1.0, 10)
+
+        # Test expected values.
+
+        target_weights = [0.1, 9.9, 10.0, 24.9, 25.0, 49.9,
+                          50.0, 99.9, 100.0, 199.9, 200.0, 1000.0];
+        expected_powers = [20, 20, 40, 40, 60, 60,
+                           80, 80, 100, 100, 120, 120];
+        test_cases = zip(target_weights, expected_powers)
+
+        for target_weight, expected_power in test_cases:
+            for generation in range(1, 7):
+                if generation <= 2:
+                    # Generation I has only one set power, regardless of weight.
+                    self.assertEqual(
+                        pkmn.calculations.low_kick_power(
+                            target_weight,
+                            generation
+                        ),
+                        50
+                    )
+                else:
+                    self.assertEqual(
+                        pkmn.calculations.low_kick_power(
+                            target_weight,
+                            generation
+                        ),
+                        expected_power
+                    )
+
+    def test_power_trip_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(-1, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(7, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, -1, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 7, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, -1, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 7, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, -1, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 7, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, -1, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 7, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 0, -1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 0, 7, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 0, 0, -1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 0, 0, 7)
+
+        # Test expected results.
+
+        self.assertEqual(
+            pkmn.calculations.power_trip_power(0, 0, 0, 0, 0, 0, 0),
+            20
+        )
+        self.assertEqual(
+            pkmn.calculations.power_trip_power(0, 1, 2, 3, 4, 5, 6),
+            440
+        )
+        self.assertEqual(
+            pkmn.calculations.power_trip_power(6, 6, 6, 6, 6, 6, 6),
+            860
+        )
+
+    def test_punishment_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(-1, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(7, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, -1, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 7, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, -1, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 7, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, -1, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 7, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, -1, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 7, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 0, -1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 0, 7, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 0, 0, -1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 0, 0, 7)
+
+        # Test expected results.
+
+        self.assertEqual(
+            pkmn.calculations.punishment_power(0, 0, 0, 0, 0, 0, 0),
+            60
+        )
+        self.assertEqual(
+            pkmn.calculations.punishment_power(0, 1, 2, 3, 4, 5, 6),
+            200
+        )
+        self.assertEqual(
+            pkmn.calculations.punishment_power(6, 6, 6, 6, 6, 6, 6),
+            200
+        )
+
+    def test_return_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.return_power(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.return_power(256)
+
+        # Test expected results.
+
+        self.assertEqual(pkmn.calculations.return_power(0), 1)
+        self.assertEqual(pkmn.calculations.return_power(255), 102)
+
+    def test_reversal_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.reversal_power(0, 1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.reversal_power(1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.reversal_power(2, 1)
+
+        # Test expected results.
+
+        attacker_current_HPs = [1, 20, 21, 52, 53, 104,
+                                105, 177, 178, 343, 344, 500]
+        attacker_max_HPs = [500, 500, 500, 500, 500, 500,
+                            500, 500, 500, 500, 500, 500]
+        expected_powers = [200, 200, 150, 150, 100, 100,
+                           80, 80, 40, 40, 20, 20]
+        test_cases = zip(attacker_current_HPs, attacker_max_HPs, expected_powers)
+
+        for attacker_current_hp, attacker_max_hp, expected_power in test_cases:
+            self.assertEqual(
+                pkmn.calculations.reversal_power(
+                    attacker_current_hp,
+                    attacker_max_hp
+                ),
+                expected_power
+            )
+
+    def test_rollout_powers(self):
+        self.assertEquals(
+            list(pkmn.calculations.rollout_powers()),
+            [30, 60, 120, 240, 480]
+        )
+
+    def test_spit_up_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.spit_up_power(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.spit_up_power(4)
+
+        # Test expected results.
+
+        self.assertEqual(pkmn.calculations.spit_up_power(0), 0)
+        self.assertEqual(pkmn.calculations.spit_up_power(1), 100)
+        self.assertEqual(pkmn.calculations.spit_up_power(2), 200)
+        self.assertEqual(pkmn.calculations.spit_up_power(3), 300)
+
+    def test_stored_power_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(-1, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(7, 0, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, -1, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 7, 0, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, -1, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 7, 0, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, -1, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 7, 0, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, -1, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 7, 0, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 0, -1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 0, 7, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 0, 0, -1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 0, 0, 7)
+
+        # Test expected results.
+
+        self.assertEqual(
+            pkmn.calculations.stored_power_power(0, 0, 0, 0, 0, 0, 0),
+            20
+        )
+        self.assertEqual(
+            pkmn.calculations.stored_power_power(0, 1, 2, 3, 4, 5, 6),
+            440
+        )
+        self.assertEqual(
+            pkmn.calculations.stored_power_power(6, 6, 6, 6, 6, 6, 6),
+            860
+        )
+
+    def test_triple_kick_powers(self):
+        self.assertEquals(
+            list(pkmn.calculations.triple_kick_powers()),
+            [10, 20, 30]
+        )
+
+    def test_trump_card_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.trump_card_power(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.trump_card_power(9)
+
+        # Test expected results.
+
+        expected_results = [200, 80, 60, 50, 40, 40, 40, 40, 40]
+
+        for remaining_pp in range(len(expected_results)):
+            self.assertEqual(
+                pkmn.calculations.trump_card_power(remaining_pp),
+                expected_results[remaining_pp]
+            )
+
+    def test_water_spout_power(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.water_spout_power(0, 1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.water_spout_power(1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.water_spout_power(2, 1)
+
+        # Test expected results.
+
+        self.assertEqual(pkmn.calculations.water_spout_power(1, 500), 1)
+        self.assertEqual(pkmn.calculations.water_spout_power(250, 500), 75)
+        self.assertEqual(pkmn.calculations.water_spout_power(500, 500), 150)
+
+    def test_wring_out_power(self):
+        # Test invalid inputs.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.wring_out_power(0, 1, 5)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.wring_out_power(2, 1, 5)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.wring_out_power(1, 2, 3)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.wring_out_power(1, 2, 7)
+
+        # Test expected results.
+
+        self.assertEqual(
+            pkmn.calculations.wring_out_power(1, 200, 4),
+            1
+        )
+        self.assertEqual(
+            pkmn.calculations.wring_out_power(200, 200, 4),
+            121
+        )
+
+        for generation in [5,6]:
+            self.assertEqual(
+                pkmn.calculations.wring_out_power(1, 200, generation),
+                1
+            )
+            self.assertEqual(
+                pkmn.calculations.wring_out_power(200, 200, generation),
+                120
+            )
+
+    def test_gen1_critical_hit_chance(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gen1_critical_hit_chance(0, False, False)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gen1_critical_hit_chance(256, False, False)
+
+        # In Generation I, make sure there is never a guaranteed chance for
+        # a critical hit.
+
+        self.assertLessEqual(
+            pkmn.calculations.gen1_critical_hit_chance(255, True, True),
+            (255.0 / 256.0)
+        )
+
+    def test_critical_hit_chance(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.critical_hit_chance(1, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.critical_hit_chance(10, 0)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.critical_hit_chance(2, -1)
+
+        # Test expected values.
+
+        generations = [2, 2, 2, 2, 2,
+                       3, 3, 3, 3, 3,
+                       4, 4, 4, 4, 4,
+                       5, 5, 5, 5, 5,
+                       6, 6, 6, 6, 6]
+        stages = [0, 1, 2, 3, 4,
+                  0, 1, 2, 3, 4,
+                  0, 1, 2, 3, 4,
+                  0, 1, 2, 3, 4,
+                  0, 1, 2, 3, 4]
+        expected_results = [0.0625, 0.125, 0.25, 0.333, 0.5,
+                            0.0625, 0.125, 0.25, 0.333, 0.5,
+                            0.0625, 0.125, 0.25, 0.333, 0.5,
+                            0.0625, 0.125, 0.25, 0.333, 0.5,
+                            0.0625, 0.125, 0.5,  1.0,   1.0]
+        test_cases = zip(generations, stages, expected_results)
+
+        for generation, stage, expected_result in test_cases:
+            self.assertAlmostEqual(
+                pkmn.calculations.critical_hit_chance(
+                    generation,
+                    stage
+                ),
+                expected_result
+            )
+
+    def test_gen1_critical_hit_modifier(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gen1_critical_hit_modifier(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.gen1_critical_hit_modifier(256)
+
+        # Test expected results.
+
+        self.assertAlmostEqual(
+            pkmn.calculations.gen1_critical_hit_modifier(5),
+            1.5
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.gen1_critical_hit_modifier(20),
+            1.8
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.gen1_critical_hit_modifier(95),
+            1.95
+        )
+
+    def test_critical_hit_modifier(self):
+        # Test invalid parameters.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.critical_hit_modifier(-1)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.critical_hit_modifier(10)
+
+        # Test expected results.
+
+        self.assertAlmostEqual(
+            pkmn.calculations.critical_hit_modifier(2),
+            2.0
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.critical_hit_modifier(3),
+            2.0
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.critical_hit_modifier(4),
+            2.0
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.critical_hit_modifier(5),
+            2.0
+        )
+        self.assertAlmostEqual(
+            pkmn.calculations.critical_hit_modifier(6),
+            1.5
+        )
+
     def test_gen2_unown_form(self):
         # Make sure expected errors are raised.
         with self.assertRaises(IndexError):
@@ -187,6 +916,41 @@ class calculations_test(unittest.TestCase):
         self.assertTrue(hidden_power != hidden_power_different_type)
         self.assertFalse(hidden_power == hidden_power_different_base_power)
         self.assertTrue(hidden_power != hidden_power_different_base_power)
+
+    def test_natural_gift(self):
+        # Test invalid generations.
+
+        with self.assertRaises(IndexError):
+            pkmn.calculations.natural_gift_stats("Cheri Berry", 3)
+        with self.assertRaises(IndexError):
+            pkmn.calculations.natural_gift_stats("Cheri Berry", 10)
+
+        # Test invalid items.
+
+        with self.assertRaises(ValueError):
+            pkmn.calculations.natural_gift_stats("Potion", 4)
+
+        # Test expected values.
+
+        items = ["Cheri Berry", "Nanab Berry", "Belue Berry"]
+        types = ["Fire", "Water", "Electric"]
+        gen4_powers = [60, 70, 80]
+        gen5_powers = [60, 70, 80]
+        gen6_powers = [80, 90, 100]
+        test_cases = zip(items, types, gen4_powers, gen5_powers, gen6_powers)
+
+        for item, type_name, gen4_power, gen5_power, gen6_power in test_cases:
+            natural_gift = pkmn.calculations.natural_gift_stats(item, 4)
+            self.assertEqual(natural_gift.type, type_name)
+            self.assertEqual(natural_gift.base_power, gen4_power)
+
+            natural_gift = pkmn.calculations.natural_gift_stats(item, 5)
+            self.assertEqual(natural_gift.type, type_name)
+            self.assertEqual(natural_gift.base_power, gen5_power)
+
+            natural_gift = pkmn.calculations.natural_gift_stats(item, 6)
+            self.assertEqual(natural_gift.type, type_name)
+            self.assertEqual(natural_gift.base_power, gen6_power)
 
     def test_nature(self):
         natures = [
