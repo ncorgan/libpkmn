@@ -281,30 +281,34 @@ namespace pkmn { namespace calculations {
             pkmn::value_comparator::GT
         );
 
+        int ret = 0;
+
         if(pkmn::fp_compare_less(target_weight, 10.0f))
         {
-            return 20;
+            ret = 20;
         }
         else if(pkmn::fp_compare_less(target_weight, 25.0f))
         {
-            return 40;
+            ret = 40;
         }
         else if(pkmn::fp_compare_less(target_weight, 50.0f))
         {
-            return 60;
+            ret = 60;
         }
         else if(pkmn::fp_compare_less(target_weight, 100.0f))
         {
-            return 80;
+            ret = 80;
         }
         else if(pkmn::fp_compare_less(target_weight, 200.0f))
         {
-            return 100;
+            ret = 100;
         }
         else
         {
-            return 120;
+            ret = 120;
         }
+
+        return ret;
     }
 
     int gyro_ball_power(
@@ -351,27 +355,30 @@ namespace pkmn { namespace calculations {
         );
 
         float weight_ratio = target_weight / attacker_weight;
+        int ret = 0;
 
         if(pkmn::fp_compare_greater(weight_ratio, 0.5f))
         {
-            return 40;
+            ret = 40;
         }
         else if(pkmn::fp_compare_greater(weight_ratio, 0.3333f))
         {
-            return 60;
+            ret = 60;
         }
         else if(pkmn::fp_compare_greater(weight_ratio, 0.25f))
         {
-            return 80;
+            ret = 80;
         }
         else if(pkmn::fp_compare_greater(weight_ratio, 0.2f))
         {
-            return 100;
+            ret = 100;
         }
         else
         {
-            return 120;
+            ret = 120;
         }
+
+        return ret;
     }
 
     // Heavy Slam is a variation of Heat Crash.
@@ -404,43 +411,42 @@ namespace pkmn { namespace calculations {
             6
         );
 
+        int ret = 0;
 
         if(generation >= 3)
         {
             if(target_weight >= 200.0f)
             {
-                return 120;
+                ret = 120;
             }
             else if(target_weight >= 100.0f)
             {
-                return 100;
+                ret = 100;
             }
             else if(target_weight >= 50.0f)
             {
-                return 80;
+                ret = 80;
             }
             else if(target_weight >= 25.0f)
             {
-                return 60;
+                ret = 60;
             }
             else if(target_weight >= 10.0f)
             {
-                return 40;
+                ret = 40;
             }
             else
             {
-                return 20;
+                ret = 20;
             }
         }
         else
         {
             // Varying power was introduced in Generation III.
-            return 50;
+            ret = 50;
         }
 
-        // This shouldn't get here, but GCC gives us an error
-        // without this.
-        return 50;
+        return ret;
     }
 
     // Common for Power Trip and Punishment
