@@ -16,9 +16,9 @@ Supported games:
  * Colosseum/XD
 
 Features in development:
+ * MinGW, MSVC 2017 support
  * Pokédex structure
  * Generation IV-VI save support
- * Generation VI save support
  * Java API
  * Objective-C API
 
