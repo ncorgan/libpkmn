@@ -36,6 +36,11 @@ using System.Runtime.InteropServices;"
         get { return GetPocket(pocketName); }
     }
 
+    public int Count
+    {
+        get { return PocketNames.Count; }
+    }
+
     public StringList PocketNames
     {
         get { return GetPocketNames(); }

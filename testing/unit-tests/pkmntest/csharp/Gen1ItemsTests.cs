@@ -8,22 +8,26 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class Gen1ItemsTest {
-
-    private static string[] ItemNames = {
+public class Gen1ItemsTest
+{
+    private static string[] ItemNames =
+    {
         "Potion", "Great Ball", "Ether", "PP Up",
         "TM34", "Moon Stone", "Bicycle", "Full Heal"
     };
-    private static string[] WrongGenerationItemNames = {
+    private static string[] WrongGenerationItemNames =
+    {
         "Amulet Coin", "Apicot Berry", "Air Mail", "Air Balloon", "Aqua Suit"
     };
 
     public static void ItemListCommon(
-        PKMN.ItemList itemList,
+        PKMN.ItemList2 itemList,
         string game
-    ) {
+    )
+    {
         // Make sure item slots start as correctly empty.
         ItemsTestsCommon.TestItemListEmptySlots(itemList);
 
@@ -40,7 +44,11 @@ public class Gen1ItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        ItemsTestsCommon.TestItemListSettingItems(
+            itemList,
+            ItemNames
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
             itemList,
             ItemNames
         );
@@ -50,37 +58,41 @@ public class Gen1ItemsTest {
     }
 
     public static void ItemListTest(
-        PKMN.ItemList itemList,
+        PKMN.ItemList2 itemList,
         string game
-    ) {
+    )
+    {
         // Check unchanging and initial values.
         Assert.AreEqual(itemList.Name, "Items");
         Assert.AreEqual(itemList.Game, game);
-        Assert.AreEqual(itemList.Capacity, 20);
+        Assert.AreEqual(itemList.Length, 20);
         Assert.AreEqual(itemList.NumItems, 0);
 
         ItemListCommon(itemList, game);
     }
 
     public static void ItemPCTest(
-        PKMN.ItemList itemPC,
+        PKMN.ItemList2 itemPC,
         string game
-    ) {
+    )
+    {
         // Check unchanging and initial values.
         Assert.AreEqual(itemPC.Name, "PC");
         Assert.AreEqual(itemPC.Game, game);
-        Assert.AreEqual(itemPC.Capacity, 50);
+        Assert.AreEqual(itemPC.Length, 50);
         Assert.AreEqual(itemPC.NumItems, 0);
 
         ItemListCommon(itemPC, game);
     }
 
     public static void ItemBagTest(
-        PKMN.ItemBag itemBag,
+        PKMN.ItemBag2 itemBag,
         string game
-    ) {
+    )
+    {
         // Check unchanging and initial values.
         Assert.AreEqual(itemBag.Game, game);
+        Assert.AreEqual(itemBag.Count, 1);
 
         // Confirm items from later generations can't be added.
         ItemsTestsCommon.TestItemBagInvalidItems(
@@ -88,34 +100,36 @@ public class Gen1ItemsTest {
             WrongGenerationItemNames
         );
 
-        PKMN.ItemPockets pockets = itemBag.Pockets;
-        Assert.AreEqual(pockets.Count, 1);
-        ItemListTest(pockets["Items"], game);
+        ItemListTest(itemBag["Items"], game);
 
         // Make sure adding items through the bag adds to the pocket.
-        PKMN.ItemList itemPocket = pockets["Items"];
+        PKMN.ItemList2 itemPocket = itemBag["Items"];
         Assert.AreEqual(itemPocket.NumItems, 0);
 
-        for(int i = 0; i < 8; ++i) {
+        for(int i = 0; i < 8; ++i)
+        {
             itemBag.Add(
                 ItemNames[i],
                 i+1
             );
         }
-        for(int i = 0; i < 8; ++i) {
+        for(int i = 0; i < 8; ++i)
+        {
             Assert.AreEqual(itemPocket[i].Item, ItemNames[i]);
             Assert.AreEqual(itemPocket[i].Amount, i+1);
         }
         Assert.AreEqual(itemPocket[8].Item, "None");
         Assert.AreEqual(itemPocket[8].Amount, 0);
 
-        for(int i = 0; i < 8; ++i) {
+        for(int i = 0; i < 8; ++i)
+        {
             itemBag.Remove(
                 ItemNames[i],
                 i+1
             );
         }
-        for(int i = 0; i < 9; ++i) {
+        for(int i = 0; i < 9; ++i)
+        {
             Assert.AreEqual(itemPocket[i].Item, "None");
             Assert.AreEqual(itemPocket[i].Amount, 0);
         }

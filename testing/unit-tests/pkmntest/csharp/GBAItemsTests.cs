@@ -8,15 +8,18 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class GBAItemsTest {
-
-    private static string[] AllPocketItemNames = {
+public class GBAItemsTest
+{
+    private static string[] AllPocketItemNames =
+    {
         "Potion", "Mach Bike", "Great Ball", "TM01",
         "Aspear Berry", "Wailmer Pail", "Master Ball", "HM04"
     };
-    private static string[] WrongGameAllPocketItemNames = {
+    private static string[] WrongGameAllPocketItemNames =
+    {
         "Pink Bow", "Black Sludge",
         "Ein File S", "Gonzap's Key",
         "GS Ball", "Poffin Items",
@@ -25,22 +28,28 @@ public class GBAItemsTest {
     };
 
     public static void ItemPocketTest(
-        PKMN.ItemList itemPocket,
+        PKMN.ItemList2 itemPocket,
         string game
-    ) {
-        int expectedCapacity = 0;
-        if(game.Equals("Ruby") || game.Equals("Sapphire")) {
-            expectedCapacity = 20;
-        } else if(game.Equals("Emerald")) {
-            expectedCapacity = 30;
-        } else {
-            expectedCapacity = 42;
+    )
+    {
+        int expectedLength = 0;
+        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        {
+            expectedLength = 20;
+        }
+        else if(game.Equals("Emerald"))
+        {
+            expectedLength = 30;
+        }
+        else
+        {
+            expectedLength = 42;
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(itemPocket.Name, "Items");
         Assert.AreEqual(itemPocket.Game, game);
-        Assert.AreEqual(itemPocket.Capacity, expectedCapacity);
+        Assert.AreEqual(itemPocket.Length, expectedLength);
         Assert.AreEqual(itemPocket.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -71,30 +80,39 @@ public class GBAItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        string[] validItems = {"Potion", "Orange Mail", "Lava Cookie", "Stardust",
+                               "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"};
+        ItemsTestsCommon.TestItemListSettingItems(
             itemPocket,
-            new string[]{"Potion", "Orange Mail", "Lava Cookie", "Stardust",
-                         "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"}
+            validItems
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
+            itemPocket,
+            validItems
         );
 
         Assert.Greater(itemPocket.ValidItems.Count, 0);
     }
 
     public static void KeyItemPocketTest(
-        PKMN.ItemList keyItemPocket,
+        PKMN.ItemList2 keyItemPocket,
         string game
-    ) {
-        int expectedCapacity = 0;
-        if(game.Equals("Ruby") || game.Equals("Sapphire")) {
-            expectedCapacity = 20;
-        } else {
-            expectedCapacity = 30;
+    )
+    {
+        int expectedLength = 0;
+        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        {
+            expectedLength = 20;
+        }
+        else
+        {
+            expectedLength = 30;
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(keyItemPocket.Name, "Key Items");
         Assert.AreEqual(keyItemPocket.Game, game);
-        Assert.AreEqual(keyItemPocket.Capacity, expectedCapacity);
+        Assert.AreEqual(keyItemPocket.Length, expectedLength);
         Assert.AreEqual(keyItemPocket.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -123,13 +141,15 @@ public class GBAItemsTest {
             keyItemPocket,
             new string[]{"Ein File S", "Powerup Part", "Gonzap's Key", "Krane Memo 1"}
         );
-        if(game.Equals("Ruby") || game.Equals("Sapphire")) {
+        if(game.Equals("Ruby") || game.Equals("Sapphire"))
+        {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
                 new string[]{"Helix Fossil", "Tea", "Ruby"}
             );
         }
-        if(!game.Equals("Emerald")) {
+        if(!game.Equals("Emerald"))
+        {
             ItemsTestsCommon.TestItemListInvalidItems(
                 keyItemPocket,
                 new string[]{"Magma Emblem", "Old Sea Map"}
@@ -137,30 +157,39 @@ public class GBAItemsTest {
         }
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        string[] validItems = {"Wailmer Pail", "Basement Key", "Meteorite", "Old Rod",
+                               "Red Orb", "Root Fossil", "Contest Pass", "Eon Ticket"};
+        ItemsTestsCommon.TestItemListSettingItems(
             keyItemPocket,
-            new string[]{"Wailmer Pail", "Basement Key", "Meteorite", "Old Rod",
-                         "Red Orb", "Root Fossil", "Contest Pass", "Eon Ticket"}
+            validItems
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
+            keyItemPocket,
+            validItems
         );
 
         Assert.Greater(keyItemPocket.ValidItems.Count, 0);
     }
 
     public static void BallPocketTest(
-        PKMN.ItemList ballPocket,
+        PKMN.ItemList2 ballPocket,
         string game
-    ) {
-        int expectedCapacity = 0;
-        if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
-            expectedCapacity = 13;
-        } else {
-            expectedCapacity = 16;
+    )
+    {
+        int expectedLength = 0;
+        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        {
+            expectedLength = 13;
+        }
+        else
+        {
+            expectedLength = 16;
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(ballPocket.Name, "Poké Balls");
         Assert.AreEqual(ballPocket.Game, game);
-        Assert.AreEqual(ballPocket.Capacity, expectedCapacity);
+        Assert.AreEqual(ballPocket.Length, expectedLength);
         Assert.AreEqual(ballPocket.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -185,34 +214,43 @@ public class GBAItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        string[] validItems = {"Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
+                               "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"};
+        ItemsTestsCommon.TestItemListSettingItems(
             ballPocket,
-            new string[]{"Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
-                         "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"}
+            validItems
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
+            ballPocket,
+            validItems
         );
 
         Assert.Greater(ballPocket.ValidItems.Count, 0);
     }
 
     public static void TMHMPocketTest(
-        PKMN.ItemList tmhmPocket,
+        PKMN.ItemList2 tmhmPocket,
         string game
-    ) {
-        int expectedCapacity = 0;
+    )
+    {
+        int expectedLength = 0;
         string expectedName = "";
 
-        if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
-            expectedCapacity = 58;
+        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        {
+            expectedLength = 58;
             expectedName = "TM Case";
-        } else {
-            expectedCapacity = 64;
+        }
+        else
+        {
+            expectedLength = 64;
             expectedName = "TMs & HMs";
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(tmhmPocket.Name, expectedName);
         Assert.AreEqual(tmhmPocket.Game, game);
-        Assert.AreEqual(tmhmPocket.Capacity, expectedCapacity);
+        Assert.AreEqual(tmhmPocket.Length, expectedLength);
         Assert.AreEqual(tmhmPocket.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -237,34 +275,43 @@ public class GBAItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        string[] validItems = {"TM01", "HM01", "TM02", "HM02",
+                               "TM03", "HM03", "TM04", "HM04"};
+        ItemsTestsCommon.TestItemListSettingItems(
             tmhmPocket,
-            new string[]{"TM01", "HM01", "TM02", "HM02",
-                         "TM03", "HM03", "TM04", "HM04"}
+            validItems
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
+            tmhmPocket,
+            validItems
         );
 
         Assert.Greater(tmhmPocket.ValidItems.Count, 0);
     }
 
     public static void BerryPocketTest(
-        PKMN.ItemList berryPocket,
+        PKMN.ItemList2 berryPocket,
         string game
-    ) {
-        int expectedCapacity = 0;
+    )
+    {
+        int expectedLength = 0;
         string expectedName = "";
 
-        if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
-            expectedCapacity = 43;
+        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        {
+            expectedLength = 43;
             expectedName = "Berry Pouch";
-        } else {
-            expectedCapacity = 46;
+        }
+        else
+        {
+            expectedLength = 46;
             expectedName = "Berries";
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(berryPocket.Name, expectedName);
         Assert.AreEqual(berryPocket.Game, game);
-        Assert.AreEqual(berryPocket.Capacity, expectedCapacity);
+        Assert.AreEqual(berryPocket.Length, expectedLength);
         Assert.AreEqual(berryPocket.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -289,23 +336,29 @@ public class GBAItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        string[] validItems = {"Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
+                               "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"};
+        ItemsTestsCommon.TestItemListSettingItems(
             berryPocket,
-            new string[]{"Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-                         "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"}
+            validItems
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
+            berryPocket,
+            validItems
         );
 
         Assert.Greater(berryPocket.ValidItems.Count, 0);
     }
 
     public static void ItemPCTest(
-        PKMN.ItemList itemPC,
+        PKMN.ItemList2 itemPC,
         string game
-    ) {
+    )
+    {
         // Check unchanging and initial values.
         Assert.AreEqual(itemPC.Name, "PC");
         Assert.AreEqual(itemPC.Game, game);
-        Assert.AreEqual(itemPC.Capacity, 50);
+        Assert.AreEqual(itemPC.Length, 50);
         Assert.AreEqual(itemPC.NumItems, 0);
 
         // Make sure item slots start as correctly empty.
@@ -324,7 +377,11 @@ public class GBAItemsTest {
         );
 
         // Start adding and removing stuff, and make sure the numbers are accurate.
-        ItemsTestsCommon.TestItemListAddRemove(
+        ItemsTestsCommon.TestItemListSettingItems(
+            itemPC,
+            AllPocketItemNames
+        );
+        ItemsTestsCommon.TestItemListAddingAndRemovingItems(
             itemPC,
             AllPocketItemNames
         );
@@ -334,112 +391,112 @@ public class GBAItemsTest {
     }
 
     public static void ItemBagTest(
-        PKMN.ItemBag itemBag,
+        PKMN.ItemBag2 itemBag,
         string game
-    ) {
+    )
+    {
         string tmhmPocketName = "";
         string berryPocketName = "";
-        if(game.Equals("FireRed") || game.Equals("LeafGreen")) {
+        if(game.Equals("FireRed") || game.Equals("LeafGreen"))
+        {
             tmhmPocketName = "TM Case";
             berryPocketName = "Berry Pouch";
-        } else {
+        }
+        else
+        {
             tmhmPocketName = "TMs & HMs";
             berryPocketName = "Berries";
         }
 
         // Check unchanging and initial values.
         Assert.AreEqual(itemBag.Game, game);
+        Assert.AreEqual(itemBag.Count, 5);
 
-        PKMN.ItemPockets ItemBag = itemBag.Pockets;
-        Assert.AreEqual(ItemBag.Count, 5);
-
-        ItemPocketTest(ItemBag["Items"], game);
-        KeyItemPocketTest(ItemBag["Key Items"], game);
-        BallPocketTest(ItemBag["Poké Balls"], game);
-        TMHMPocketTest(ItemBag[tmhmPocketName], game);
-        BerryPocketTest(ItemBag[berryPocketName], game);
+        ItemPocketTest(itemBag["Items"], game);
+        KeyItemPocketTest(itemBag["Key Items"], game);
+        BallPocketTest(itemBag["Poké Balls"], game);
+        TMHMPocketTest(itemBag[tmhmPocketName], game);
+        BerryPocketTest(itemBag[berryPocketName], game);
 
         // Make sure adding items through the bag adds to the proper pockets.
-        Assert.AreEqual(ItemBag["Items"].NumItems, 0);
-        Assert.AreEqual(ItemBag["Key Items"].NumItems, 0);
-        Assert.AreEqual(ItemBag["Poké Balls"].NumItems, 0);
-        Assert.AreEqual(ItemBag[tmhmPocketName].NumItems, 0);
-        Assert.AreEqual(ItemBag[berryPocketName].NumItems, 0);
-        foreach(string itemName in AllPocketItemNames) {
+        Assert.AreEqual(itemBag["Items"].NumItems, 0);
+        Assert.AreEqual(itemBag["Key Items"].NumItems, 0);
+        Assert.AreEqual(itemBag["Poké Balls"].NumItems, 0);
+        Assert.AreEqual(itemBag[tmhmPocketName].NumItems, 0);
+        Assert.AreEqual(itemBag[berryPocketName].NumItems, 0);
+        foreach(string itemName in AllPocketItemNames)
+        {
             itemBag.Add(itemName, 5);
         }
 
-        Assert.AreEqual(ItemBag["Items"][0].Item, "Potion");
-        Assert.AreEqual(ItemBag["Items"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Items"][1].Item, "None");
-        Assert.AreEqual(ItemBag["Items"][1].Amount, 0);
+        Assert.AreEqual(itemBag["Items"][0].Item, "Potion");
+        Assert.AreEqual(itemBag["Items"][0].Amount, 5);
+        Assert.AreEqual(itemBag["Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Key Items"][0].Item, "Mach Bike");
-        Assert.AreEqual(ItemBag["Key Items"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Key Items"][1].Item, "Wailmer Pail");
-        Assert.AreEqual(ItemBag["Key Items"][1].Amount, 5);
-        Assert.AreEqual(ItemBag["Key Items"][2].Item, "None");
-        Assert.AreEqual(ItemBag["Key Items"][2].Amount, 0);
+        Assert.AreEqual(itemBag["Key Items"][0].Item, "Mach Bike");
+        Assert.AreEqual(itemBag["Key Items"][0].Amount, 5);
+        Assert.AreEqual(itemBag["Key Items"][1].Item, "Wailmer Pail");
+        Assert.AreEqual(itemBag["Key Items"][1].Amount, 5);
+        Assert.AreEqual(itemBag["Key Items"][2].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Item, "Great Ball");
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Amount, 5);
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Item, "Master Ball");
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Amount, 5);
-        Assert.AreEqual(ItemBag["Poké Balls"][2].Item, "None");
-        Assert.AreEqual(ItemBag["Poké Balls"][2].Amount, 0);
+        Assert.AreEqual(itemBag["Poké Balls"][0].Item, "Great Ball");
+        Assert.AreEqual(itemBag["Poké Balls"][0].Amount, 5);
+        Assert.AreEqual(itemBag["Poké Balls"][1].Item, "Master Ball");
+        Assert.AreEqual(itemBag["Poké Balls"][1].Amount, 5);
+        Assert.AreEqual(itemBag["Poké Balls"][2].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag[tmhmPocketName][0].Item, "TM01");
-        Assert.AreEqual(ItemBag[tmhmPocketName][0].Amount, 5);
-        Assert.AreEqual(ItemBag[tmhmPocketName][1].Item, "HM04");
-        Assert.AreEqual(ItemBag[tmhmPocketName][1].Amount, 5);
-        Assert.AreEqual(ItemBag[tmhmPocketName][2].Item, "None");
-        Assert.AreEqual(ItemBag[tmhmPocketName][2].Amount, 0);
+        Assert.AreEqual(itemBag[tmhmPocketName][0].Item, "TM01");
+        Assert.AreEqual(itemBag[tmhmPocketName][0].Amount, 5);
+        Assert.AreEqual(itemBag[tmhmPocketName][1].Item, "HM04");
+        Assert.AreEqual(itemBag[tmhmPocketName][1].Amount, 5);
+        Assert.AreEqual(itemBag[tmhmPocketName][2].Item, "None");
+        Assert.AreEqual(itemBag[tmhmPocketName][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag[berryPocketName][0].Item, "Aspear Berry");
-        Assert.AreEqual(ItemBag[berryPocketName][0].Amount, 5);
-        Assert.AreEqual(ItemBag[berryPocketName][1].Item, "None");
-        Assert.AreEqual(ItemBag[berryPocketName][1].Amount, 0);
+        Assert.AreEqual(itemBag[berryPocketName][0].Item, "Aspear Berry");
+        Assert.AreEqual(itemBag[berryPocketName][0].Amount, 5);
+        Assert.AreEqual(itemBag[berryPocketName][1].Item, "None");
+        Assert.AreEqual(itemBag[berryPocketName][1].Amount, 0);
 
         // Make sure removing items through the bag removes from the proper pockets.
-        foreach(string itemName in AllPocketItemNames) {
+        foreach(string itemName in AllPocketItemNames)
+        {
             itemBag.Remove(itemName, 5);
         }
 
-        Assert.AreEqual(ItemBag["Items"][0].Item, "None");
-        Assert.AreEqual(ItemBag["Items"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Items"][1].Item, "None");
-        Assert.AreEqual(ItemBag["Items"][1].Amount, 0);
+        Assert.AreEqual(itemBag["Items"][0].Item, "None");
+        Assert.AreEqual(itemBag["Items"][0].Amount, 0);
+        Assert.AreEqual(itemBag["Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Items"][1].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Key Items"][0].Item, "None");
-        Assert.AreEqual(ItemBag["Key Items"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Key Items"][1].Item, "None");
-        Assert.AreEqual(ItemBag["Key Items"][1].Amount, 0);
-        Assert.AreEqual(ItemBag["Key Items"][2].Item, "None");
-        Assert.AreEqual(ItemBag["Key Items"][2].Amount, 0);
+        Assert.AreEqual(itemBag["Key Items"][0].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][0].Amount, 0);
+        Assert.AreEqual(itemBag["Key Items"][1].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][1].Amount, 0);
+        Assert.AreEqual(itemBag["Key Items"][2].Item, "None");
+        Assert.AreEqual(itemBag["Key Items"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Item, "None");
-        Assert.AreEqual(ItemBag["Poké Balls"][0].Amount, 0);
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Item, "None");
-        Assert.AreEqual(ItemBag["Poké Balls"][1].Amount, 0);
-        Assert.AreEqual(ItemBag["Poké Balls"][2].Item, "None");
-        Assert.AreEqual(ItemBag["Poké Balls"][2].Amount, 0);
+        Assert.AreEqual(itemBag["Poké Balls"][0].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][0].Amount, 0);
+        Assert.AreEqual(itemBag["Poké Balls"][1].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][1].Amount, 0);
+        Assert.AreEqual(itemBag["Poké Balls"][2].Item, "None");
+        Assert.AreEqual(itemBag["Poké Balls"][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag[tmhmPocketName][0].Item, "None");
-        Assert.AreEqual(ItemBag[tmhmPocketName][0].Amount, 0);
-        Assert.AreEqual(ItemBag[tmhmPocketName][1].Item, "None");
-        Assert.AreEqual(ItemBag[tmhmPocketName][1].Amount, 0);
-        Assert.AreEqual(ItemBag[tmhmPocketName][2].Item, "None");
-        Assert.AreEqual(ItemBag[tmhmPocketName][2].Amount, 0);
+        Assert.AreEqual(itemBag[tmhmPocketName][0].Item, "None");
+        Assert.AreEqual(itemBag[tmhmPocketName][0].Amount, 0);
+        Assert.AreEqual(itemBag[tmhmPocketName][1].Item, "None");
+        Assert.AreEqual(itemBag[tmhmPocketName][1].Amount, 0);
+        Assert.AreEqual(itemBag[tmhmPocketName][2].Item, "None");
+        Assert.AreEqual(itemBag[tmhmPocketName][2].Amount, 0);
 
-        Assert.AreEqual(ItemBag[berryPocketName][0].Item, "None");
-        Assert.AreEqual(ItemBag[berryPocketName][0].Amount, 0);
-        Assert.AreEqual(ItemBag[berryPocketName][1].Item, "None");
-        Assert.AreEqual(ItemBag[berryPocketName][1].Amount, 0);
+        Assert.AreEqual(itemBag[berryPocketName][0].Item, "None");
+        Assert.AreEqual(itemBag[berryPocketName][0].Amount, 0);
+        Assert.AreEqual(itemBag[berryPocketName][1].Item, "None");
+        Assert.AreEqual(itemBag[berryPocketName][1].Amount, 0);
 
-        /*
-         * Make sure we can't add items from later generations or incompatible
-         * Generation III games.
-         */
         ItemsTestsCommon.TestItemBagInvalidItems(
             itemBag,
             WrongGameAllPocketItemNames
