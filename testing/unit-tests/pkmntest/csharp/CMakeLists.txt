@@ -20,6 +20,7 @@ SET(pkmntest_cs_srcs
     PokemonPartyTests.cs
     PokemonPCTests.cs
     PokemonTestsCommon.cs
+    Util.cs
 )
 
 SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
