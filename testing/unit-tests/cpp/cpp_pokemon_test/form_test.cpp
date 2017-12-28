@@ -253,12 +253,14 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
 
     // Spiky-eared Pichu should only work in HG/SS
     if(game == "HeartGold" or game == "SoulSilver") {
-        (void)pkmn::pokemon::make(
-                  "Pichu",
-                  game,
-                  "Spiky-eared",
-                  100
-              );
+        pkmn::pokemon::sptr pichu = pkmn::pokemon::make(
+                                        "Pichu",
+                                        game,
+                                        "Spiky-eared",
+                                       100
+                                    );
+        EXPECT_TRUE(pichu->is_shiny());
+        EXPECT_EQ("Female", pichu->get_gender());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
