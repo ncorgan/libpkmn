@@ -8,21 +8,23 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class PokemonIOTests {
+public class PokemonIOTests
+{
+    private static string LibPKMNTestFiles = Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
 
-    private static string LibPKMNTestFiles = "@LIBPKMN_TEST_FILES@";
-
-    public static void Test3GPKM() {
+    public static void Test3GPKM()
+    {
         /*
          * Test files in repo and compare to known values.
          */
         string _3GPKMDir = System.IO.Path.Combine(LibPKMNTestFiles, "3gpkm");
 
-        PKMN.Pokemon mightyena = new PKMN.Pokemon(
-                                         System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
-                                     );
+        PKMN.Pokemon2 mightyena = new PKMN.Pokemon2(
+                                          System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
+                                      );
         Assert.AreEqual(mightyena.Species, "Mightyena");
         Assert.AreEqual(mightyena.Game, "Emerald");
         Assert.AreEqual(mightyena.Form, "Standard");
@@ -38,19 +40,21 @@ public class PokemonIOTests {
         Assert.AreEqual(mightyena.Ability, "Intimidate");
         Assert.AreEqual(mightyena.Ball, "Great Ball");
         Assert.AreEqual(mightyena.LevelMet, 25);
-        Assert.AreEqual(mightyena.GetLocationMet(false), "Route 120");
+        Assert.AreEqual(mightyena.LocationMet, "Route 120");
         Assert.AreEqual(mightyena.OriginalGame, "Emerald");
         Assert.AreEqual(mightyena.Personality, 3557601241);
         Assert.AreEqual(mightyena.Experience, 128734);
         Assert.AreEqual(mightyena.Level, 50);
 
         Assert.AreEqual(mightyena.Markings.Count, 4);
-        foreach(string marking in mightyena.Markings.Keys) {
+        foreach(string marking in mightyena.Markings.Keys)
+        {
             Assert.IsFalse(mightyena.Markings[marking]);
         }
 
         Assert.AreEqual(mightyena.Ribbons.Count, 32);
-        foreach(string ribbon in mightyena.Ribbons.Keys) {
+        foreach(string ribbon in mightyena.Ribbons.Keys)
+        {
             if(ribbon.Equals("Champion")) {
                 Assert.IsTrue(mightyena.Ribbons[ribbon]);
             } else {
@@ -59,15 +63,18 @@ public class PokemonIOTests {
         }
 
         Assert.AreEqual(mightyena.ContestStats.Count, 6);
-        foreach(string contestStat in mightyena.ContestStats.Keys) {
+        foreach(string contestStat in mightyena.ContestStats.Keys)
+        {
             Assert.AreEqual(mightyena.ContestStats[contestStat], 0);
         }
 
-        string[] expectedMightyenaMoves = {
+        string[] expectedMightyenaMoves =
+        {
             "Crunch", "Strength", "Shadow Ball", "Double-Edge"
         };
         Assert.AreEqual(mightyena.Moves.Count, 4);
-        for(int i = 0; i < 4; ++i) {
+        for(int i = 0; i < 4; ++i)
+        {
             Assert.AreEqual(mightyena.Moves[i].Move, expectedMightyenaMoves[i]);
         }
 

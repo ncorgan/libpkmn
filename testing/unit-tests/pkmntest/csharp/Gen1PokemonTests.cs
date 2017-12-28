@@ -8,10 +8,12 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class Gen1PokemonTests {
-
+public class Gen1PokemonTests
+{
+/*
     public static void FriendshipTest(
         string game
     ) {
@@ -65,10 +67,10 @@ public class Gen1PokemonTests {
         string species = "Charmander";
         PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
-        /*
+        *
          * Check starting values, and confirm that we can't query values
          * that didn't exist in Generation I.
-         */
+         *
         Assert.AreEqual(pokemon.Species, species);
         Assert.AreEqual(pokemon.Form, "Standard");
         Assert.AreEqual(pokemon.Game, game);
@@ -175,10 +177,10 @@ public class Gen1PokemonTests {
         Assert.IsTrue(System.IO.File.Exists(pokemon.IconFilepath));
         Assert.IsTrue(System.IO.File.Exists(pokemon.SpriteFilepath));
 
-        /*
+        *
          * Make sure the getters and setters agree. Also make sure it fails when
          * expected.
-         */
+         *
         Assert.Throws<ArgumentOutOfRangeException>(
             delegate {
                 pokemon.Nickname = "";
@@ -363,6 +365,7 @@ public class Gen1PokemonTests {
         pokemon.SetIV("Attack", 12);
         Assert.AreEqual(pokemon.IVs["Attack"], 12);
     }
+*/
 }
 
 }
