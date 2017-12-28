@@ -89,6 +89,22 @@ namespace pkmn {
     {
         *reinterpret_cast<ptr_type*>(dst_ptr) = *reinterpret_cast<ptr_type*>(src_ptr);
     }
+
+    template <typename map_type, typename key_type>
+    std::vector<key_type> map_keys_to_vector(
+        const map_type& map
+    )
+    {
+        std::vector<key_type> ret;
+
+        for(const auto& map_iter: map)
+        {
+            ret.emplace_back(map_iter.first);
+        }
+
+        std::sort(ret.begin(), ret.end());
+        return ret;
+    }
 }
 
 #endif /* INCLUDED_PKMN_MISC_COMMON_HPP */
