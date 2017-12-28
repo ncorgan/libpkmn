@@ -199,6 +199,22 @@ TEST(cpp_swig_test, test_invalid_pokemon_helpers)
     , std::runtime_error);
 }
 
+static void test_EV_IV_keys(
+    const std::vector<std::string>& map_keys
+)
+{
+    static const std::vector<std::string> expected_keys =
+    {
+        "Attack",
+        "Defense",
+        "HP",
+        "Special Attack",
+        "Special Defense",
+        "Speed"
+    };
+    EXPECT_EQ(expected_keys, map_keys);
+}
+
 TEST(cpp_swig_test, test_pokemon_helpers)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
@@ -212,6 +228,14 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     pkmn::swig::marking_map marking_map(pokemon);
     pkmn::swig::ribbon_map ribbon_map(pokemon);
     pkmn::swig::contest_stat_map contest_stat_map(pokemon);
+
+    //
+    // EVs
+    //
+
+    // Test getting information on the EV map.
+    EXPECT_EQ(6ULL, EV_map.size());
+    test_EV_IV_keys(EV_map.keys());
 
     // Set EV through the Pokémon.
     pokemon->set_EV("Attack", 25);
@@ -227,6 +251,14 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     EXPECT_TRUE(EV_map.has_key("HP"));
     EXPECT_FALSE(EV_map.has_key("Not a key"));
 
+    //
+    // IVs
+    //
+
+    // Test getting information on the IV map.
+    EXPECT_EQ(6ULL, IV_map.size());
+    test_EV_IV_keys(IV_map.keys());
+
     // Set IV through the Pokémon.
     pokemon->set_IV("Attack", 11);
     EXPECT_EQ(11, pokemon->get_IVs().at("Attack"));
@@ -240,6 +272,22 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     // Test has_key.
     EXPECT_TRUE(IV_map.has_key("HP"));
     EXPECT_FALSE(IV_map.has_key("Not a key"));
+
+    //
+    // Markings
+    //
+
+    static const std::vector<std::string> expected_markings =
+    {
+        "Circle",
+        "Heart",
+        "Square",
+        "Triangle"
+    };
+
+    // Test getting information on the marking map.
+    EXPECT_EQ(4ULL, marking_map.size());
+    EXPECT_EQ(expected_markings, marking_map.keys());
 
     // Set marking through the Pokémon.
     pokemon->set_marking("Circle", true);
@@ -255,6 +303,14 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     EXPECT_TRUE(marking_map.has_key("Circle"));
     EXPECT_FALSE(marking_map.has_key("Not a key"));
 
+    //
+    // Ribbons
+    //
+
+    // Test getting information on the ribbon map.
+    // Don't bother with the 32-length vector.
+    EXPECT_EQ(32ULL, ribbon_map.size());
+
     // Set ribbon through the Pokémon.
     pokemon->set_ribbon("Cool", true);
     EXPECT_TRUE(pokemon->get_ribbons().at("Cool"));
@@ -268,6 +324,24 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     // Test has_key.
     EXPECT_TRUE(ribbon_map.has_key("Cool"));
     EXPECT_FALSE(ribbon_map.has_key("Not a key"));
+
+    //
+    // Contest stats
+    //
+
+    static const std::vector<std::string> expected_contest_stats =
+    {
+        "Beauty",
+        "Cool",
+        "Cute",
+        "Feel",
+        "Smart",
+        "Tough"
+    };
+
+    // Test getting information on the contest stat map.
+    EXPECT_EQ(6ULL, contest_stat_map.size());
+    EXPECT_EQ(expected_contest_stats, contest_stat_map.keys());
 
     // Set contest stat through the Pokémon.
     pokemon->set_contest_stat("Beauty", 10);

@@ -9,12 +9,18 @@
 #define CPP_WRAPPERS_HELPERS_HPP
 
 #include "exception_internal.hpp"
+#include "misc_common.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <vector>
+
 namespace pkmn { namespace swig {
+
+    typedef std::map<std::string, bool> string_bool_map;
+    typedef std::map<std::string, int> string_int_map;
 
     class EV_map
     {
@@ -57,6 +63,18 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_EV(stat, value);
+            }
+
+            inline size_t size()
+            {
+                return _pokemon->get_EVs().size();
+            }
+
+            inline std::vector<std::string> keys()
+            {
+                return pkmn::map_keys_to_vector<string_int_map, std::string>(
+                           _pokemon->get_EVs()
+                       );
             }
 
             inline bool has_key(
@@ -128,6 +146,18 @@ namespace pkmn { namespace swig {
                 _pokemon->set_IV(stat, value);
             }
 
+            inline size_t size()
+            {
+                return _pokemon->get_IVs().size();
+            }
+
+            inline std::vector<std::string> keys()
+            {
+                return pkmn::map_keys_to_vector<string_int_map, std::string>(
+                           _pokemon->get_IVs()
+                       );
+            }
+
             inline bool has_key(
                 const std::string& key
             )
@@ -195,6 +225,18 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_marking(stat, value);
+            }
+
+            inline size_t size()
+            {
+                return _pokemon->get_markings().size();
+            }
+
+            inline std::vector<std::string> keys()
+            {
+                return pkmn::map_keys_to_vector<string_bool_map, std::string>(
+                           _pokemon->get_markings()
+                       );
             }
 
             inline bool has_key(
@@ -273,6 +315,18 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_ribbons().count(key) > 0);
             }
 
+            inline size_t size()
+            {
+                return _pokemon->get_ribbons().size();
+            }
+
+            inline std::vector<std::string> keys()
+            {
+                return pkmn::map_keys_to_vector<string_bool_map, std::string>(
+                           _pokemon->get_ribbons()
+                       );
+            }
+
             inline pkmn::pokemon::sptr get_internal()
             {
                 return _pokemon;
@@ -333,6 +387,18 @@ namespace pkmn { namespace swig {
                 }
 
                 _pokemon->set_contest_stat(stat, value);
+            }
+
+            inline size_t size()
+            {
+                return _pokemon->get_contest_stats().size();
+            }
+
+            inline std::vector<std::string> keys()
+            {
+                return pkmn::map_keys_to_vector<string_int_map, std::string>(
+                           _pokemon->get_contest_stats()
+                       );
             }
 
             inline bool has_key(
