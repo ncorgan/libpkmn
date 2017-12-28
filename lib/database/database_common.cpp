@@ -18,7 +18,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#define PKMN_COMPAT_NUM 16
+#define PKMN_COMPAT_NUM 1000 // Development
 
 namespace pkmn { namespace database {
 
