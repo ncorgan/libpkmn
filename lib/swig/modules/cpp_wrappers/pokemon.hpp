@@ -349,6 +349,16 @@ namespace pkmn { namespace swig {
                 _pokemon->set_level(level);
             }
 
+            inline int get_current_hp()
+            {
+                return _pokemon->get_current_hp();
+            }
+
+            inline void set_current_hp(int hp)
+            {
+                _pokemon->set_current_hp(hp);
+            }
+
             inline EV_map& get_EVs()
             {
                 return _EV_map;

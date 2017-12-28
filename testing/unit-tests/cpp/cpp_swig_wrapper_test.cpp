@@ -367,6 +367,9 @@ TEST(cpp_swig_test, test_pokemon)
                              5
                          );
 
+    const std::map<std::string, int>& stats = swig_pokemon.get_stats();
+    EXPECT_EQ(6, stats.size());
+
     EXPECT_EQ("Bulbasaur", swig_pokemon.get_species());
     EXPECT_EQ("FireRed", swig_pokemon.get_game());
     EXPECT_EQ("Standard", swig_pokemon.get_form());
@@ -445,6 +448,9 @@ TEST(cpp_swig_test, test_pokemon)
     swig_pokemon.get_moves().get_move_slot(0).set_pp(2);
     EXPECT_EQ(2, swig_pokemon.get_moves().get_move_slot(0).get_pp());
 
+    swig_pokemon.set_current_hp(stats.at("HP")-1);
+    EXPECT_EQ(stats.at("HP")-1, swig_pokemon.get_current_hp());
+
     swig_pokemon.get_EVs().set_EV("Attack", 5);
     EXPECT_EQ(5, swig_pokemon.get_EVs().get_EV("Attack"));
 
@@ -459,9 +465,6 @@ TEST(cpp_swig_test, test_pokemon)
 
     swig_pokemon.get_contest_stats().set_contest_stat("Smart", 5);
     EXPECT_EQ(5, swig_pokemon.get_contest_stats().get_contest_stat("Smart"));
-
-    const std::map<std::string, int>& stats = swig_pokemon.get_stats();
-    EXPECT_EQ(6, stats.size());
 
     EXPECT_TRUE(fs::exists(swig_pokemon.get_icon_filepath()));
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
