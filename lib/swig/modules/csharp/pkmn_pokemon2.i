@@ -71,6 +71,8 @@ using Database;"
 %csmethodmodifiers pkmn::swig::pokemon2::set_experience(int) "private";
 %csmethodmodifiers pkmn::swig::pokemon2::get_level() "private";
 %csmethodmodifiers pkmn::swig::pokemon2::set_level(int) "private";
+%csmethodmodifiers pkmn::swig::pokemon2::get_current_hp() "private";
+%csmethodmodifiers pkmn::swig::pokemon2::set_current_hp(int) "private";
 %csmethodmodifiers pkmn::swig::pokemon2::get_EVs() "private";
 %csmethodmodifiers pkmn::swig::pokemon2::get_IVs() "private";
 %csmethodmodifiers pkmn::swig::pokemon2::get_markings() "private";
@@ -241,6 +243,12 @@ using Database;"
     {
         get { return GetLevel(); }
         set { SetLevel(value); }
+    }
+
+    public int CurrentHP
+    {
+        get { return GetCurrentHP(); }
+        set { SetCurrentHP(value); }
     }
 
     public EVMap EVs

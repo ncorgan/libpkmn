@@ -8,52 +8,12 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class PokemonConversionsTest {
-
+public class PokemonConversionsTest
+{
     private static System.Random rng = new System.Random();
-
-    private static int GameToGeneration(
-        string game
-    ) {
-        if(game.Equals("Red") || game.Equals("Blue") || game.Equals("Yellow")) {
-            return 1;
-        } else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal")) {
-            return 2;
-        } else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                  game.Equals("FireRed") || game.Equals("LeafGreen") ||
-                  game.Equals("Colosseum") || game.Equals("XD")
-        ) {
-            return 3;
-        } else if(game.Equals("Diamond") || game.Equals("Pearl") || game.Equals("Platinum") ||
-                  game.Equals("HeartGold") || game.Equals("SoulSilver")
-        ) {
-            return 4;
-        } else if(game.Equals("Black") || game.Equals("White") ||
-                  game.Equals("Black 2") || game.Equals("White 2")
-        ) {
-            return 5;
-        } else if(game.Equals("X") || game.Equals("Y") ||
-                  game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
-            return 6;
-        } else {
-            return 0;
-        }
-    }
-
-    private static bool RandomBool()
-    {
-        return (rng.Next() % 2) == 0;
-    }
-
-    // https://stackoverflow.com/a/1344295
-    private static string RandomString(
-        int length
-    )
-    {
-        return System.IO.Path.GetRandomFileName().Replace(".","").Substring(0,length);
-    }
 
     public static void ConversionsTest(
         string species,
@@ -62,10 +22,10 @@ public class PokemonConversionsTest {
         string destGame
     )
     {
-        PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, form, 50);
+        PKMN.Pokemon2 firstPokemon = new PKMN.Pokemon2(species, originGame, form, 50);
 
-        int originGeneration = GameToGeneration(originGame);
-        int destGeneration = GameToGeneration(destGame);
+        int originGeneration = Util.GameToGeneration(originGame);
+        int destGeneration = Util.GameToGeneration(destGame);
         int minGeneration = System.Math.Min(originGeneration, destGeneration);
         string gameForLists = (minGeneration == originGeneration) ? originGame : destGame;
 
@@ -84,7 +44,7 @@ public class PokemonConversionsTest {
                 moveName = moves[rng.Next(0, moves.Count-1)];
             } while(moveName.IndexOf("Shadow") == 0);
 
-            firstPokemon.SetMove(moveName, i);
+            firstPokemon.Moves[i].Move = moveName;
         }
 
         if(originGeneration >= 3)
@@ -93,8 +53,8 @@ public class PokemonConversionsTest {
 
             if(!firstPokemon.DatabaseEntry.Abilities.Second.Equals("None"))
             {
-                firstPokemon.Ability = RandomBool() ? firstPokemon.DatabaseEntry.Abilities.First
-                                                    : firstPokemon.DatabaseEntry.Abilities.Second;
+                firstPokemon.Ability = Util.RandomBool() ? firstPokemon.DatabaseEntry.Abilities.First
+                                                         : firstPokemon.DatabaseEntry.Abilities.Second;
             }
         }
         firstPokemon.OriginalTrainerPublicID = (ushort)rng.Next(0, 0xFFFF);
@@ -112,13 +72,13 @@ public class PokemonConversionsTest {
         }
         if(originGeneration >= 2)
         {
-            firstPokemon.Gender = RandomBool() ? "Male" : "Female";
-            firstPokemon.IsShiny = RandomBool();
+            firstPokemon.Gender = Util.RandomBool() ? "Male" : "Female";
+            firstPokemon.IsShiny = Util.RandomBool();
             firstPokemon.CurrentTrainerFriendship = rng.Next(0, 255);
 
             if(!originGame.Equals("Gold") && !originGame.Equals("Silver"))
             {
-                firstPokemon.OriginalTrainerGender = RandomBool() ? "Male" : "Female";
+                firstPokemon.OriginalTrainerGender = Util.RandomBool() ? "Male" : "Female";
             }
 
             // The max level met value in Generation II is 63.
@@ -129,26 +89,26 @@ public class PokemonConversionsTest {
             // Randomize ribbons, markings, and contest stats.
             foreach(string marking in firstPokemon.Markings.Keys)
             {
-                firstPokemon.SetMarking(marking, RandomBool());
+                firstPokemon.Markings[marking] = Util.RandomBool();
             }
             foreach(string ribbon in firstPokemon.Ribbons.Keys)
             {
-                firstPokemon.SetRibbon(ribbon, RandomBool());
+                firstPokemon.Ribbons[ribbon] = Util.RandomBool();
             }
             foreach(string contestStat in firstPokemon.ContestStats.Keys)
             {
-                firstPokemon.SetContestStat(contestStat, rng.Next(0, 255));
+                firstPokemon.ContestStats[contestStat] = rng.Next(0, 255);
             }
         }
 
-        firstPokemon.Nickname = RandomString(10);
-        firstPokemon.OriginalTrainerName = RandomString(7);
+        firstPokemon.Nickname = Util.RandomString(10);
+        firstPokemon.OriginalTrainerName = Util.RandomString(7);
 
         // The max level met value in Generation II is 63, which restricts this as well.
         firstPokemon.Level = rng.Next(2, (destGeneration == 2) ? 63 : 100);
 
         // Convert to the second game and compare.
-        PKMN.Pokemon secondPokemon = firstPokemon.ToGame(destGame);
+        PKMN.Pokemon2 secondPokemon = firstPokemon.ToGame(destGame);
 
         Assert.AreEqual(firstPokemon.Species, secondPokemon.Species);
         Assert.AreEqual(destGame, secondPokemon.Game);

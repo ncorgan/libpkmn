@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::EV_map::EV_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::EV_map::get_internal;
 %rename("KeysFunction") pkmn::swig::EV_map::keys();
+%rename("ContainsKey") pkmn::swig::EV_map::has_key(const std::string&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
@@ -63,6 +64,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::IV_map::IV_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::IV_map::get_internal;
 %rename("KeysFunction") pkmn::swig::IV_map::keys();
+%rename("ContainsKey") pkmn::swig::IV_map::has_key(const std::string&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
@@ -103,6 +105,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::marking_map::marking_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::marking_map::get_internal;
 %rename("KeysFunction") pkmn::swig::marking_map::keys();
+%rename("ContainsKey") pkmn::swig::marking_map::has_key(const std::string&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
@@ -143,6 +146,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::ribbon_map::ribbon_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::ribbon_map::get_internal;
 %rename("KeysFunction") pkmn::swig::ribbon_map::keys();
+%rename("ContainsKey") pkmn::swig::ribbon_map::has_key(const std::string&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
@@ -183,6 +187,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::contest_stat_map::contest_stat_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::contest_stat_map::get_internal;
 %rename("KeysFunction") pkmn::swig::contest_stat_map::keys();
+%rename("ContainsKey") pkmn::swig::contest_stat_map::has_key(const std::string&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
