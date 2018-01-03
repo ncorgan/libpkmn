@@ -44,7 +44,9 @@ std::string GetSWIGVersion();
 %ignore make;
 %ignore get_native;
 
-// Bring in our wrapped make functions, don't expose them
+// Bring in our wrapped static functions, don't expose them
+%csmethodmodifiers get_default_trainer_id "internal";
+%csmethodmodifiers get_default_trainer_name "internal";
 %csmethodmodifiers detect_game_save_type "internal";
 %csmethodmodifiers make_game_save "internal";
 %csmethodmodifiers make_item_bag "internal";

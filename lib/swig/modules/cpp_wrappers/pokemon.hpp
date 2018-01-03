@@ -103,7 +103,8 @@ namespace pkmn { namespace swig {
                 _pokemon->set_is_egg(is_egg);
             }
 
-            inline const pkmn::database::pokemon_entry& get_database_entry()
+            // Copying is cheap, and we can't do SWIG attributes without it.
+            inline pkmn::database::pokemon_entry get_database_entry()
             {
                 return _pokemon->get_database_entry();
             }
@@ -359,17 +360,17 @@ namespace pkmn { namespace swig {
                 _pokemon->set_current_hp(hp);
             }
 
-            inline EV_map& get_EVs()
+            inline EV_map get_EVs()
             {
                 return _EV_map;
             }
 
-            inline IV_map& get_IVs()
+            inline IV_map get_IVs()
             {
                 return _IV_map;
             }
 
-            inline marking_map& get_markings()
+            inline marking_map get_markings()
             {
                 // To throw pkmn::unimplemented_error if appropriate.
                 (void)_pokemon->get_markings();
@@ -377,7 +378,7 @@ namespace pkmn { namespace swig {
                 return _marking_map;
             }
 
-            inline ribbon_map& get_ribbons()
+            inline ribbon_map get_ribbons()
             {
                 // To throw pkmn::unimplemented_error if appropriate.
                 (void)_pokemon->get_ribbons();
@@ -385,7 +386,7 @@ namespace pkmn { namespace swig {
                 return _ribbon_map;
             }
 
-            inline contest_stat_map& get_contest_stats()
+            inline contest_stat_map get_contest_stats()
             {
                 // To throw pkmn::unimplemented_error if appropriate.
                 (void)_pokemon->get_contest_stats();
@@ -393,13 +394,13 @@ namespace pkmn { namespace swig {
                 return _contest_stat_map;
             }
 
-            inline move_slots2& get_moves()
+            inline move_slots2 get_moves()
             {
                 return _move_slots;
             }
 
             // Stats are read-only, so no need to wrap.
-            inline const std::map<std::string, int>& get_stats()
+            inline const std::map<std::string, int> get_stats()
             {
                 return _pokemon->get_stats();
             }
@@ -414,12 +415,12 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_sprite_filepath();
             }
 
-            numeric_attribute_map<pkmn::pokemon>& get_numeric_attributes()
+            numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
             {
                 return _numeric_attribute_map;
             }
 
-            string_attribute_map<pkmn::pokemon>& get_string_attributes()
+            string_attribute_map<pkmn::pokemon> get_string_attributes()
             {
                 return _string_attribute_map;
             }
