@@ -101,7 +101,9 @@ namespace pkmn { namespace swig {
                 _item_list->move(old_position, new_position);
             }
 
-            const std::vector<std::string>& get_valid_items()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            std::vector<std::string> get_valid_items()
             {
                 return _item_list->get_valid_items();
             }

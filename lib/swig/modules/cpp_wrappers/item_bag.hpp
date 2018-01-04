@@ -61,7 +61,9 @@ namespace pkmn { namespace swig {
                 return pkmn::swig::item_list2(_item_bag->get_pocket(name));
             }
 
-            const std::vector<std::string>& get_pocket_names()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            std::vector<std::string> get_pocket_names()
             {
                 return _item_bag->get_pocket_names();
             }

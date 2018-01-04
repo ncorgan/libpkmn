@@ -22,6 +22,9 @@ class numeric_attribute_map
         int get_attribute(const std::string& attribute);
         void set_attribute(const std::string& attribute, int value);
         std::vector<std::string> get_attribute_names();
+
+        // For internal use
+        uintmax_t cptr();
 };
 
 template <class sptr_type>
@@ -31,6 +34,9 @@ class string_attribute_map
         std::string get_attribute(const std::string& attribute);
         void set_attribute(const std::string& attribute, const std::string& value);
         std::vector<std::string> get_attribute_names();
+
+        // For internal use
+        uintmax_t cptr();
 };
 
 }}
@@ -44,6 +50,7 @@ using System.Runtime.InteropServices;"
 %csmethodmodifiers pkmn::swig::numeric_attribute_map::get_attribute "private";
 %csmethodmodifiers pkmn::swig::numeric_attribute_map::set_attribute "private";
 %csmethodmodifiers pkmn::swig::numeric_attribute_map::get_attribute_names "private";
+%csmethodmodifiers pkmn::swig::numeric_attribute_map::cptr "private";
 
 %typemap(cscode) pkmn::swig::numeric_attribute_map
 %{
@@ -68,6 +75,7 @@ using System.Runtime.InteropServices;"
 %csmethodmodifiers pkmn::swig::string_attribute_map::get_attribute "private";
 %csmethodmodifiers pkmn::swig::string_attribute_map::set_attribute "private";
 %csmethodmodifiers pkmn::swig::string_attribute_map::get_attribute_names "private";
+%csmethodmodifiers pkmn::swig::string_attribute_map::cptr "private";
 
 %typemap(cscode) pkmn::swig::string_attribute_map
 %{

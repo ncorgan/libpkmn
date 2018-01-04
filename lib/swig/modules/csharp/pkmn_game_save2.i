@@ -9,6 +9,8 @@
     #include "cpp_wrappers/game_save.hpp"
 %}
 
+%include <attribute.i>
+
 %typemap(csimports) pkmn::swig::game_save2 "
 using System;
 using System.Runtime.InteropServices;"
@@ -17,30 +19,24 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::game_save2::game_save2(const pkmn::game_save::sptr&);
 %ignore pkmn::swig::game_save2::as_vector;
 
-// Make C++ methods private, replace with properties for more idiomatic C#.
-
-%csmethodmodifiers pkmn::swig::game_save2::get_game() "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_filepath() "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_trainer_name() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_trainer_name(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_trainer_public_id() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_trainer_public_id(uint16_t) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_trainer_secret_id() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_trainer_secret_id(uint16_t) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_trainer_id() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_trainer_id(uint32_t) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_trainer_gender() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_trainer_gender(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_rival_name() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_rival_name(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_money() "private";
-%csmethodmodifiers pkmn::swig::game_save2::set_money(int) "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_pokemon_party() "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_pokemon_pc() "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_item_bag() "private";
-%csmethodmodifiers pkmn::swig::game_save2::get_item_pc() "private";
-
+// Needed for equality check.
 %csmethodmodifiers pkmn::swig::game_save2::cptr() "private";
+
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::game_save2, std::string, Game, get_game);
+%attributestring(pkmn::swig::game_save2, std::string, Filepath, get_filepath);
+%attributestring(pkmn::swig::game_save2, std::string, TrainerName, get_trainer_name, set_trainer_name);
+%attribute(pkmn::swig::game_save2, uint16_t, TrainerPublicID, get_trainer_public_id, set_trainer_public_id);
+%attribute(pkmn::swig::game_save2, uint16_t, TrainerSecretID, get_trainer_secret_id, set_trainer_secret_id);
+%attribute(pkmn::swig::game_save2, uint32_t, TrainerID, get_trainer_id, set_trainer_id);
+%attributestring(pkmn::swig::game_save2, std::string, TrainerGender, get_trainer_gender, set_trainer_gender);
+%attributestring(pkmn::swig::game_save2, std::string, RivalName, get_rival_name, set_rival_name);
+%attribute(pkmn::swig::game_save2, int, Money, get_money, set_money);
+%attributeval(pkmn::swig::game_save2, pkmn::swig::pokemon_party2, PokemonParty, get_pokemon_party);
+%attributeval(pkmn::swig::game_save2, pkmn::swig::pokemon_pc2, PokemonPC, get_pokemon_pc);
+%attributeval(pkmn::swig::game_save2, pkmn::swig::item_bag2, ItemBag, get_item_bag);
+%attributeval(pkmn::swig::game_save2, pkmn::swig::item_list2, ItemPC, get_item_pc);
 
 %typemap(cscode) pkmn::swig::game_save2
 %{
@@ -50,78 +46,6 @@ using System.Runtime.InteropServices;"
             throw PKMNPINVOKE.SWIGPendingException.Retrieve();
         }
         return ret;
-    }
-
-    public string Game
-    {
-        get { return GetGame(); }
-    }
-
-    public string Filepath
-    {
-        get { return GetFilepath(); }
-    }
-
-    public string TrainerName
-    {
-        get { return GetTrainerName(); }
-        set { SetTrainerName(value); }
-    }
-
-    public ushort TrainerPublicID
-    {
-        get { return GetTrainerPublicID(); }
-        set { SetTrainerPublicID(value); }
-    }
-
-    public ushort TrainerSecretID
-    {
-        get { return GetTrainerSecretID(); }
-        set { SetTrainerSecretID(value); }
-    }
-
-    public uint TrainerID
-    {
-        get { return GetTrainerID(); }
-        set { SetTrainerID(value); }
-    }
-
-    public string TrainerGender
-    {
-        get { return GetTrainerGender(); }
-        set { SetTrainerGender(value); }
-    }
-
-    public string RivalName
-    {
-        get { return GetRivalName(); }
-        set { SetRivalName(value); }
-    }
-
-    public int Money
-    {
-        get { return GetMoney(); }
-        set { SetMoney(value); }
-    }
-
-    public PokemonParty2 PokemonParty
-    {
-        get { return GetPokemonParty(); }
-    }
-
-    public PokemonPC2 PokemonPC
-    {
-        get { return GetPokemonPC(); }
-    }
-
-    public ItemBag2 ItemBag
-    {
-        get { return GetItemBag(); }
-    }
-
-    public ItemList2 ItemPC
-    {
-        get { return GetItemPC(); }
     }
 
     public bool Equals(GameSave2 rhs)
@@ -147,14 +71,14 @@ using System.Runtime.InteropServices;"
             return false;
         }
 
-        GameSave2 rhsAsGameSave2 = rhs as GameSave2;
-        if(rhsAsGameSave2 == null)
+        GameSave2 rhsAsGameSave = rhs as GameSave2;
+        if(rhsAsGameSave == null)
         {
             return false;
         }
         else
         {
-            return this.Equals(rhsAsGameSave2);
+            return this.Equals(rhsAsGameSave);
         }
     }
 

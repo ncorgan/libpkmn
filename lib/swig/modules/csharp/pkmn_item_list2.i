@@ -9,6 +9,8 @@
     #include "cpp_wrappers/item_list.hpp"
 %}
 
+%include <attribute.i>
+
 %typemap(csimports) pkmn::swig::item_list2 "
 using System;
 using System.Runtime.InteropServices;"
@@ -16,79 +18,58 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::item_list2::item_list2();
 %ignore pkmn::swig::item_list2::item_list2(const pkmn::item_list::sptr&);
 
-// Make C++ methods private, replace with properties for more idiomatic C#.
-
-%csmethodmodifiers pkmn::swig::item_list2::get_name() "private";
-%csmethodmodifiers pkmn::swig::item_list2::get_game() "private";
-%csmethodmodifiers pkmn::swig::item_list2::get_capacity() "private";
-%csmethodmodifiers pkmn::swig::item_list2::get_num_items() "private";
-%csmethodmodifiers pkmn::swig::item_list2::at(int) "private";
-%csmethodmodifiers pkmn::swig::item_list2::get_valid_items() "private";
+// Needed for equality check.
 %csmethodmodifiers pkmn::swig::item_list2::cptr() "private";
+
+// Underlying function for indexing.
+%csmethodmodifiers pkmn::swig::item_list2::at(int) "private";
+
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::item_list2, std::string, Name, get_name);
+%attributestring(pkmn::swig::item_list2, std::string, Game, get_game);
+%attribute(pkmn::swig::item_list2, int, Length, get_capacity);
+%attribute(pkmn::swig::item_list2, int, NumItems, get_num_items);
+%attributeval(pkmn::swig::item_list2, %arg(std::vector<std::string>), ValidItems, get_valid_items);
 
 %typemap(cscode) pkmn::swig::item_list2
 %{
-    public string Name
-    {
-        get { return GetName(); }
-    }
-
-    public string Game
-    {
-        get { return GetGame(); }
-    }
-
-    public int Length
-    {
-        get { return GetCapacity(); }
-    }
-
-    public int NumItems
-    {
-        get { return GetNumItems(); }
-    }
-
     public ItemSlot2 this[int index]
     {
         get { return At(index); }
     }
 
-    public StringList ValidItems
+    public bool Equals(ItemList2 other)
     {
-        get { return GetValidItems(); }
-    }
-
-    public bool Equals(ItemList2 rhs)
-    {
-        if(rhs == null)
+        if(other == null)
         {
             return false;
         }
-        else if(this == rhs)
+        else if(this == other)
         {
             return true;
         }
         else
         {
-            return (this.Cptr() == rhs.Cptr());
+            return (this.Cptr() == other.Cptr());
         }
     }
 
-    public override bool Equals(System.Object rhs)
+    public override bool Equals(System.Object other)
     {
-        if(rhs == null)
+        if(other == null)
         {
             return false;
         }
 
-        ItemList2 rhsAsItemList2 = rhs as ItemList2;
-        if(rhsAsItemList2 == null)
+        ItemList2 otherAsItemList = other as ItemList2;
+        if(otherAsItemList == null)
         {
             return false;
         }
         else
         {
-            return this.Equals(rhsAsItemList2);
+            return this.Equals(otherAsItemList);
         }
     }
 

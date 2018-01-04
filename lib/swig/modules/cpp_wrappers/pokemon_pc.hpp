@@ -71,7 +71,9 @@ namespace pkmn { namespace swig {
                 return _pokemon_box_list;
             }
 
-            inline const std::vector<std::string>& get_box_names()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            inline std::vector<std::string> get_box_names()
             {
                 return _pokemon_pc->get_box_names();
             }

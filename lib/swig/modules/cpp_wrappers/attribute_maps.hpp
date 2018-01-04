@@ -62,6 +62,11 @@ namespace pkmn { namespace swig {
                 return _internal->get_numeric_attribute_names();
             }
 
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_internal.get());
+            }
+
         private:
             pkmn::shared_ptr<sptr_type> _internal;
     };
@@ -95,6 +100,11 @@ namespace pkmn { namespace swig {
             inline std::vector<std::string> get_attribute_names()
             {
                 return _internal->get_string_attribute_names();
+            }
+
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_internal.get());
             }
 
         private:

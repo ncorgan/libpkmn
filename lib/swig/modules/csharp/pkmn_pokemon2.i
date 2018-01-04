@@ -48,6 +48,7 @@ using Database;"
 %attribute(pkmn::swig::pokemon2, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon2, std::string, Ability, get_ability, set_ability);
 %attributestring(pkmn::swig::pokemon2, std::string, Ball, get_ball, set_ball);
+%attribute(pkmn::swig::pokemon2, int, LevelMet, get_level_met, set_level_met);
 %attributestring(pkmn::swig::pokemon2, std::string, OriginalGame, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon2, uint32_t, Personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon2, int, Experience, get_experience, set_experience);
@@ -82,14 +83,6 @@ using Database;"
     public static readonly uint DEFAULT_TRAINER_ID = PKMN.get_default_trainer_id();
     public static readonly string DEFAULT_TRAINER_NAME = PKMN.get_default_trainer_name();
 #endif
-
-    public int LevelMet
-    {
-        get { return GetLevelMet(); }
-        set { SetLevelMet(value); }
-    }
-
-    // TODO: LevelMetAsEgg when implemented
 
     public string LocationMet
     {
