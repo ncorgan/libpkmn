@@ -13,6 +13,8 @@ namespace PKMNTest
 
 public class PokemonTestsCommon
 {
+    private static System.Random rng = new System.Random();
+
     private static string[] Gen1PokemonWithXYMegaForms =
     {
         "Venusaur", "Blastoise", "Alakazam", "Gengar", "Kangaskhan", "Pinsir", "Gyarados", "Aerodactyl"
@@ -508,7 +510,7 @@ public class PokemonTestsCommon
         }
     }
 
-    private static void checkInitialValues(
+    private static void CheckInitialValues(
         PKMN.Pokemon2 pokemon
     )
     {
@@ -787,13 +789,19 @@ public class PokemonTestsCommon
             Assert.Throws<ApplicationException>(
                 delegate
                 {
+                    string ability = pokemon.Ability;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
                     pokemon.Ability = "Wonder Guard";
                 }
             );
         }
     }
 
-    static void TestSettingBall(
+    static private void TestSettingBall(
         PKMN.Pokemon2 pokemon,
         string ballName,
         string[] invalidBallNames
@@ -821,10 +829,686 @@ public class PokemonTestsCommon
             Assert.Throws<ApplicationException>(
                 delegate
                 {
+                    string ball = pokemon.Ball;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
                     pokemon.Ball = "Great Ball";
                 }
             );
         }
+    }
+
+    static private void TestSettingCondition(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        System.Collections.Generic.List<string> conditions =
+        new System.Collections.Generic.List<string>(
+            new string[]{"None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"}
+        );
+
+        if(Util.GameToGeneration(pokemon.Game) >= 3)
+        {
+            conditions.Add("Bad Poison");
+        }
+
+        foreach(string condition in conditions)
+        {
+            pokemon.Condition = condition;
+            Assert.AreEqual(pokemon.Condition, condition);
+        }
+    }
+
+    static private void TestSettingFriendship(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 2)
+        {
+            int testFriendship = rng.Next(0, 256);
+
+            pokemon.CurrentTrainerFriendship = testFriendship;
+            Assert.AreEqual(pokemon.CurrentTrainerFriendship, testFriendship);
+
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate
+                {
+                    pokemon.CurrentTrainerFriendship = -1;
+                }
+            );
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate
+                {
+                    pokemon.CurrentTrainerFriendship = 256;
+                }
+            );
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    int friendship = pokemon.CurrentTrainerFriendship;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.CurrentTrainerFriendship = 0;
+                }
+            );
+        }
+    }
+
+    static private void TestSettingItem(
+        PKMN.Pokemon2 pokemon,
+        string validItemName,
+        string[] invalidItemNames
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 2)
+        {
+            pokemon.HeldItem = validItemName;
+            Assert.AreEqual(pokemon.HeldItem, validItemName);
+
+            foreach(string invalidItemName in invalidItemNames)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.HeldItem = invalidItemName;
+                    }
+                );
+            }
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    string heldItem = pokemon.HeldItem;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.HeldItem = "Potion";
+                }
+            );
+        }
+    }
+
+    static private void TestSettingLevels(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Level = -1;
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Level = 101;
+            }
+        );
+
+        int level = 50;
+        pokemon.Level = level;
+        Assert.AreEqual(pokemon.Level, level);
+        Assert.AreEqual(pokemon.DatabaseEntry.GetLevelAtExperience(pokemon.Experience), level);
+
+        int experience = 123456;
+        pokemon.Experience = experience;
+        Assert.AreEqual(pokemon.Experience, experience);
+        Assert.Less(pokemon.DatabaseEntry.GetExperienceAtLevel(pokemon.Level-1), experience);
+        Assert.LessOrEqual(pokemon.DatabaseEntry.GetExperienceAtLevel(pokemon.Level), experience);
+
+        switch(generation)
+        {
+            case 1:
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.Level = 1;
+                    }
+                );
+
+                Assert.Throws<ApplicationException>(
+                    delegate
+                    {
+                        int levelMet = pokemon.LevelMet;
+                    }
+                );
+                Assert.Throws<ApplicationException>(
+                    delegate
+                    {
+                        pokemon.LevelMet = 10;
+                    }
+                );
+                break;
+
+            case 2:
+                pokemon.LevelMet = 5;
+                Assert.AreEqual(pokemon.LevelMet, 5);
+
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.Level = 1;
+                    }
+                );
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.LevelMet = 101;
+                    }
+                );
+                break;
+
+            default:
+                pokemon.LevelMet = 5;
+                Assert.AreEqual(pokemon.LevelMet, 5);
+
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.Level = 0;
+                    }
+                );
+                Assert.Throws<IndexOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.LevelMet = 101;
+                    }
+                );
+                break;
+        }
+    }
+
+    static private void TestSettingLocationMet(
+        PKMN.Pokemon2 pokemon,
+        string expectedOriginalLocation,
+        string[] validLocations,
+        string[] invalidLocations
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        switch(generation)
+        {
+            case 1:
+                Assert.Throws<ApplicationException>(
+                    delegate
+                    {
+                        pokemon.LocationMet = validLocations[0];
+                    }
+                );
+                Assert.Throws<ApplicationException>(
+                    delegate
+                    {
+                        pokemon.LocationMetAsEgg = validLocations[0];
+                    }
+                );
+                break;
+
+            case 2:
+            case 3:
+                Assert.AreEqual(pokemon.LocationMet, expectedOriginalLocation);
+
+                foreach(string validLocation in validLocations)
+                {
+                    pokemon.LocationMet = validLocation;
+                    Assert.AreEqual(pokemon.LocationMet, validLocation);
+                }
+                foreach(string invalidLocation in invalidLocations)
+                {
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        delegate
+                        {
+                            pokemon.LocationMet = invalidLocation;
+                        }
+                    );
+                }
+
+                Assert.Throws<ApplicationException>(
+                    delegate
+                    {
+                        pokemon.LocationMetAsEgg = validLocations[0];
+                    }
+                );
+                break;
+
+            default:
+                Assert.AreEqual(pokemon.LocationMet, expectedOriginalLocation);
+                Assert.AreEqual(pokemon.LocationMetAsEgg, expectedOriginalLocation);
+
+                foreach(string validLocation in validLocations)
+                {
+                    pokemon.LocationMet = validLocation;
+                    Assert.AreEqual(pokemon.LocationMet, validLocation);
+
+                    pokemon.LocationMetAsEgg = validLocation;
+                    Assert.AreEqual(pokemon.LocationMetAsEgg, validLocation);
+                }
+                foreach(string invalidLocation in invalidLocations)
+                {
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        delegate
+                        {
+                            pokemon.LocationMet = invalidLocation;
+                        }
+                    );
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        delegate
+                        {
+                            pokemon.LocationMetAsEgg = invalidLocation;
+                        }
+                    );
+                }
+                break;
+        }
+    }
+
+    static private void TestSettingMarkings(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 3)
+        {
+            foreach(string marking in pokemon.Markings.Keys)
+            {
+                Assert.IsFalse(pokemon.Markings[marking]);
+                pokemon.Markings[marking] = true;
+                Assert.IsTrue(pokemon.Markings[marking]);
+            }
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    PKMN.MarkingMap markingMap = pokemon.Markings;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.Markings["Circle"] = true;
+                }
+            );
+        }
+    }
+
+    static private void TestSettingMoves(
+        PKMN.Pokemon2 pokemon,
+        string[] validMoveNames,
+        string[] invalidMoveNames
+    )
+    {
+        Assert.AreEqual(validMoveNames.Length, 4);
+
+        for(int moveIndex = 0; moveIndex < 4; ++moveIndex)
+        {
+            pokemon.Moves[moveIndex].Move = validMoveNames[moveIndex];
+            Assert.AreEqual(pokemon.Moves[moveIndex].Move, validMoveNames[moveIndex]);
+
+            PKMN.Database.MoveEntry validMoveEntry = new PKMN.Database.MoveEntry(
+                                                             validMoveNames[moveIndex],
+                                                             pokemon.Game
+                                                         );
+
+            pokemon.Moves[moveIndex].PP = 0;
+            Assert.AreEqual(pokemon.Moves[moveIndex].PP, 0);
+
+            int maxPP = validMoveEntry.GetPP(3);
+            pokemon.Moves[moveIndex].PP = maxPP;
+            Assert.AreEqual(pokemon.Moves[moveIndex].PP, maxPP);
+        }
+
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Moves[-1].Move = validMoveNames[0];
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Moves[4].Move = validMoveNames[0];
+            }
+        );
+
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Moves[-1].PP = 0;
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.Moves[4].PP = 0;
+            }
+        );
+    }
+
+    static private void TestSettingOriginalGame(
+        PKMN.Pokemon2 pokemon,
+        string[] validGames,
+        string[] invalidGames
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 3)
+        {
+            foreach(string validGame in validGames)
+            {
+                pokemon.OriginalGame = validGame;
+                if(validGame.Equals("Colosseum") || validGame.Equals("XD"))
+                {
+                    Assert.AreEqual(pokemon.OriginalGame, "Colosseum/XD");
+                }
+                else
+                {
+                    Assert.AreEqual(pokemon.OriginalGame, validGame);
+                }
+            }
+
+            foreach(string invalidGame in invalidGames)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(
+                    delegate
+                    {
+                        pokemon.OriginalGame = invalidGame;
+                    }
+                );
+            }
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    string originalGame = pokemon.OriginalGame;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.OriginalGame = validGames[0];
+                }
+            );
+        }
+    }
+
+    static private void TestSettingPersonality(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        uint testPersonality = (uint)rng.Next();
+
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 3)
+        {
+            pokemon.Personality = testPersonality;
+            Assert.AreEqual(pokemon.Personality, testPersonality);
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    uint personality = pokemon.Personality;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.Personality = testPersonality;
+                }
+            );
+        }
+    }
+
+    static private void TestSettingPokerus(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 2)
+        {
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate
+                {
+                    pokemon.PokerusDuration = -1;
+                }
+            );
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate
+                {
+                    pokemon.PokerusDuration = 16;
+                }
+            );
+
+            int testPokerusDuration = rng.Next(1, 15);
+            pokemon.PokerusDuration = testPokerusDuration;
+            Assert.AreEqual(pokemon.PokerusDuration, testPokerusDuration);
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    int pokerusDuration = pokemon.PokerusDuration;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.PokerusDuration = 1;
+                }
+            );
+        }
+    }
+
+    static private void TestSettingStats(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        // Check bounds for setting the current HP.
+
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.CurrentHP = -1;
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                pokemon.CurrentHP = pokemon.Stats["HP"] + 1;
+            }
+        );
+
+        pokemon.CurrentHP = 0;
+        Assert.AreEqual(pokemon.CurrentHP, 0);
+
+        pokemon.CurrentHP = pokemon.Stats["HP"];
+        Assert.AreEqual(pokemon.CurrentHP, pokemon.Stats["HP"]);
+
+        pokemon.CurrentHP = pokemon.Stats["HP"] - 1;
+        Assert.AreEqual(pokemon.CurrentHP, pokemon.Stats["HP"] - 1);
+
+        // Set the HP stat to lower than the current HP, and make sure
+        // it's updated.
+
+        int currentHP = pokemon.CurrentHP;
+        pokemon.EVs["HP"] = 0;
+        pokemon.IVs["HP"] = 0;
+        Assert.LessOrEqual(pokemon.CurrentHP, currentHP);
+    }
+
+    static private void TestSettingTrainerInfo(
+        PKMN.Pokemon2 pokemon
+    )
+    {
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                pokemon.Nickname = "";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                pokemon.Nickname = "Too long nickname";
+            }
+        );
+
+        pokemon.Nickname = "foobarbaz";
+        Assert.AreEqual(pokemon.Nickname, "foobarbaz");
+
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                pokemon.OriginalTrainerName = "";
+            }
+        );
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                pokemon.OriginalTrainerName = "Too long trainer name";
+            }
+        );
+
+        pokemon.OriginalTrainerName = "foobar";
+        Assert.AreEqual(pokemon.OriginalTrainerName, "foobar");
+
+        if(generation >= 2)
+        {
+            pokemon.OriginalTrainerGender = "Male";
+            Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
+
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate
+                {
+                    pokemon.OriginalTrainerGender = "Genderless";
+                }
+            );
+        }
+        else
+        {
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.OriginalTrainerGender = "Male";
+                }
+            );
+        }
+
+        if(generation >= 3)
+        {
+            pokemon.OriginalTrainerID = 0x1234ABCD;
+            Assert.AreEqual(pokemon.OriginalTrainerID, 0x1234ABCD);
+            Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0xABCD);
+            Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
+
+            pokemon.OriginalTrainerPublicID = 0x1A2B;
+            Assert.AreEqual(pokemon.OriginalTrainerID, 0x12341A2B);
+            Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
+            Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x1234);
+
+            pokemon.OriginalTrainerSecretID = 0x3C4D;
+            Assert.AreEqual(pokemon.OriginalTrainerID, 0x3C4D1A2B);
+            Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x1A2B);
+            Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0x3C4D);
+        }
+        else
+        {
+            Assert.Throws<IndexOutOfRangeException>(
+                delegate
+                {
+                    pokemon.OriginalTrainerID = 0xFFFF+1;
+                }
+            );
+            Assert.Throws<ApplicationException>(
+                delegate
+                {
+                    pokemon.OriginalTrainerSecretID = 0xFFFF;
+                }
+            );
+
+            pokemon.OriginalTrainerID = 0xABCD;
+            Assert.AreEqual(pokemon.OriginalTrainerID, 0xABCD);
+            Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0xABCD);
+
+            pokemon.OriginalTrainerPublicID = 0x9876;
+            Assert.AreEqual(pokemon.OriginalTrainerID, 0x9876);
+            Assert.AreEqual(pokemon.OriginalTrainerPublicID, 0x9876);
+        }
+    }
+
+    static public void TestCommon(
+        PKMN.Pokemon2 pokemon,
+        PokemonTestParams testParams
+    )
+    {
+        CheckInitialValues(pokemon);
+        TestSettingAbility(pokemon);
+        TestSettingBall(
+            pokemon,
+            testParams.ValidBall,
+            testParams.InvalidBalls
+        );
+        TestSettingCondition(pokemon);
+        TestImageFilepaths(pokemon);
+        TestSettingFriendship(pokemon);
+        TestSettingItem(
+            pokemon,
+            testParams.ValidItem,
+            testParams.InvalidItems
+        );
+        TestSettingLevels(pokemon);
+        TestSettingLocationMet(
+            pokemon,
+            testParams.ExpectedOriginalLocation,
+            testParams.ValidLocations,
+            testParams.InvalidLocations
+        );
+        TestSettingMarkings(pokemon);
+        TestSettingMoves(
+            pokemon,
+            testParams.ValidMoves,
+            testParams.InvalidMoves
+        );
+        TestSettingOriginalGame(
+            pokemon,
+            testParams.ValidOriginalGames,
+            testParams.InvalidOriginalGames
+        );
+        TestSettingPersonality(pokemon);
+        TestSettingPokerus(pokemon);
+        TestSettingStats(pokemon);
+        TestSettingTrainerInfo(pokemon);
     }
 }
 

@@ -19,7 +19,8 @@ SET(pkmntest_cs_srcs
     PokemonIOTests.cs
     PokemonPartyTests.cs
     PokemonPCTests.cs
-    PokemonTestsCommon.cs
+    PokemonTestParams.cs
+    PokemonTestCommon.cs
     Util.cs
 )
 
