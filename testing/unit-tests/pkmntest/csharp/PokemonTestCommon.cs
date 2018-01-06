@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace PKMNTest
 {
 
-public class PokemonTestsCommon
+public class PokemonTestCommon
 {
     private static System.Random rng = new System.Random();
 
@@ -386,7 +386,7 @@ public class PokemonTestsCommon
         }
     }
 
-    public static void TestForms(
+    public static void FormTest(
         string game
     )
     {
@@ -553,7 +553,7 @@ public class PokemonTestsCommon
         {
             Assert.AreEqual(
                 pokemon.OriginalTrainerID,
-                PKMN.Pokemon2.DEFAULT_TRAINER_ID
+                (PKMN.Pokemon2.DEFAULT_TRAINER_ID & 0xFFFF)
             );
         }
 

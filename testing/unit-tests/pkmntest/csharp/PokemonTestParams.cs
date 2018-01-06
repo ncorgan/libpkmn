@@ -15,6 +15,33 @@ public class PokemonTestParams
 {
     public PokemonTestParams() {}
 
+    public PokemonTestParams(
+        string validBall,
+        string[] invalidBalls,
+        string validItem,
+        string[] invalidItems,
+        string expectedOriginalLocation,
+        string[] validLocations,
+        string[] invalidLocations,
+        string[] validMoves,
+        string[] invalidMoves,
+        string[] validOriginalGames,
+        string[] invalidOriginalGames
+    )
+    {
+        ValidBall = validBall;
+        InvalidBalls = invalidBalls;
+        ValidItem = validItem;
+        InvalidItems = invalidItems;
+        ExpectedOriginalLocation = expectedOriginalLocation;
+        ValidLocations = validLocations;
+        InvalidLocations = invalidLocations;
+        ValidMoves = validMoves;
+        InvalidMoves = invalidMoves;
+        ValidOriginalGames = validOriginalGames;
+        InvalidOriginalGames = invalidOriginalGames;
+    }
+
     public string ValidBall;
     public string[] InvalidBalls;
 

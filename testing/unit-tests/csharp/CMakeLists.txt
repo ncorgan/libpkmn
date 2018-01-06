@@ -23,7 +23,7 @@ IF(NUNIT_FOUND)
         CSharpItemsTest
         CSharpListsTest
         CSharpPathsTest
-        #CSharpPokemonTest
+        CSharpPokemonTest
         #CSharpPokemonPartyTest
         #CSharpPokemonPCTest
         CSharpGUITest_GUI

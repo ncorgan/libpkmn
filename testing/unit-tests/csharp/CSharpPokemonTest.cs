@@ -9,11 +9,71 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpPokemonTest {
+public class CSharpPokemonTest
+{
+    [TestCase("Red")]
+    [TestCase("Blue")]
+    [TestCase("Yellow")]
+    [TestCase("Gold")]
+    [TestCase("Silver")]
+    [TestCase("Crystal")]
+    [TestCase("Ruby")]
+    [TestCase("Sapphire")]
+    [TestCase("Emerald")]
+    [TestCase("FireRed")]
+    [TestCase("LeafGreen")]
+    [TestCase("Colosseum")]
+    [TestCase("XD")]
+    public void FormTest(
+        string game
+    )
+    {
+        PKMNTest.PokemonTestCommon.FormTest(game);
+    }
+
+    [TestCase("Gold")]
+    [TestCase("Silver")]
+    [TestCase("Crystal")]
+    [TestCase("Ruby")]
+    [TestCase("Sapphire")]
+    [TestCase("Emerald")]
+    [TestCase("FireRed")]
+    [TestCase("LeafGreen")]
+    [TestCase("Colosseum")]
+    [TestCase("XD")]
+    public void GenderTest(
+        string game
+    )
+    {
+        PKMNTest.PokemonTestCommon.GenderTest(game);
+    }
+
+    [TestCase("Red",    "Charmander")]
+    [TestCase("Blue",   "Squirtle")]
+    [TestCase("Yellow", "Bulbasaur")]
+    public void Gen1PokemonTest(
+        string game,
+        string species
+    )
+    {
+        PKMNTest.Gen1PokemonTests.PokemonTest(game, species);
+    }
+
+    [TestCase("Gold",    "Cyndaquil")]
+    [TestCase("Silver",  "Totodile")]
+    [TestCase("Crystal", "Chikorita")]
+    public void Gen2PokemonTest(
+        string game,
+        string species
+    )
+    {
+        PKMNTest.Gen2PokemonTests.PokemonTest(game, species);
+    }
 
     /*
-     * Invalid Pokémon test
-     */
+    //
+    // Invalid Pokémon test
+    //
     [TestCase("Red")]
     [TestCase("Blue")]
     [TestCase("Yellow")]
@@ -34,9 +94,9 @@ public class CSharpPokemonTest {
         PKMNTest.PokemonTestsCommon.InvalidPokemonTest(version);
     }
 
-    /*
-     * Gender test
-     */
+    //
+    // Gender test
+    //
     [TestCase("Gold")]
     [TestCase("Silver")]
     [TestCase("Crystal")]
@@ -54,9 +114,9 @@ public class CSharpPokemonTest {
         PKMNTest.PokemonTestsCommon.GenderTest(version);
     }
 
-    /*
-     * Generation I friendship test
-     */
+    //
+    // Generation I friendship test
+    //
     [TestCase("Red")]
     [TestCase("Blue")]
     [TestCase("Yellow")]
@@ -67,9 +127,9 @@ public class CSharpPokemonTest {
         PKMNTest.Gen1PokemonTests.FriendshipTest(version);
     }
 
-    /*
-     * Generation I Pokémon test
-     */
+    //
+    // Generation I Pokémon test
+    //
     [TestCase("Red")]
     [TestCase("Blue")]
     [TestCase("Yellow")]
@@ -80,9 +140,9 @@ public class CSharpPokemonTest {
         PKMNTest.Gen1PokemonTests.PokemonTest(version);
     }
 
-    /*
-     * Generation II Unown test
-     */
+    //
+    // Generation II Unown test
+    //
     [TestCase("Gold")]
     [TestCase("Silver")]
     [TestCase("Crystal")]
@@ -93,9 +153,9 @@ public class CSharpPokemonTest {
         PKMNTest.Gen2PokemonTests.UnownFormTest(version);
     }
 
-    /*
-     * Generation II Pokémon test
-     */
+    //
+    // Generation II Pokémon test
+    //
     [TestCase("Gold")]
     [TestCase("Silver")]
     [TestCase("Crystal")]
@@ -106,9 +166,9 @@ public class CSharpPokemonTest {
         PKMNTest.Gen2PokemonTests.PokemonTest(version);
     }
 
-    /*
-     * Generation III Unown test
-     */
+    //
+    // Generation III Unown test
+    //
     [TestCase("Ruby")]
     [TestCase("Sapphire")]
     [TestCase("Emerald")]
@@ -123,9 +183,9 @@ public class CSharpPokemonTest {
         PKMNTest.Gen3PokemonTests.UnownFormTest(version);
     }
 
-    /*
-     * Generation III Pokémon test
-     */
+    //
+    // Generation III Pokémon test
+    //
     [TestCase("Ruby")]
     [TestCase("Sapphire")]
     [TestCase("Emerald")]
@@ -140,17 +200,17 @@ public class CSharpPokemonTest {
         PKMNTest.Gen3PokemonTests.PokemonTest(version);
     }
 
-    /*
-     * I/O
-     */
+    //
+    // I/O
+    //
     [Test]
     public void _3GPKMTest() {
         PKMNTest.PokemonIOTests.Test3GPKM();
     }
 
-    /*
-     * Conversions
-     */
+    //
+    // Conversions
+    //
     // Generation I -> Generation I
     [TestCase("Bulbasaur", "", "Red", "Yellow")]
 
@@ -210,4 +270,5 @@ public class CSharpPokemonTest {
             destGame
         );
     }
+    */
 }
