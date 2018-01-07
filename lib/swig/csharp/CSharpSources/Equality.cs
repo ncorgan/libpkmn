@@ -91,49 +91,6 @@ public partial class ItemSlot {
     }
 }
 
-public partial class MoveSlot {
-    /// <summary>Compares two MoveSlot instances to determine value equality.</summary>
-    /// <remarks>
-    /// Two instances are determined to be equal if they represent the same move and have
-    /// the same PP.
-    /// </remarks>
-    /// <param name="rhs">MoveSlot with which to compare self</param>
-    /// <returns>Whether or not MoveSlot instances are equal</returns>
-    public bool Equals(MoveSlot rhs) {
-        if(rhs == null) {
-            return false;
-        } else if(this == rhs) {
-            return true;
-        } else {
-            return (this.Move.Equals(rhs.Move) && (this.PP == rhs.PP));
-        }
-    }
-
-    /// <summary>Compares a MoveSlot to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not MoveSlot and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
-            return false;
-        }
-
-        MoveSlot rhsEntry = rhs as MoveSlot;
-        if(rhsEntry == null) {
-            return false;
-        } else {
-            return this.Equals(rhsEntry);
-        }
-    }
-
-    /// <summary>Generates a unique hash code for the given MoveSlot.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.Move)
-                                       .AddValue<int>(this.PP)
-                                       .ToHashCode();
-    }
-}
-
 public partial class SpindaCoords {
     /// <summary>Compares two SpindaCoords instances to determine value equality.</summary>
     /// <remarks>
@@ -239,8 +196,8 @@ public partial class ItemEntry {
         } else if(this == rhs) {
             return true;
         } else {
-            return this.GetName().Equals(rhs.GetName()) &&
-                   this.GetGame().Equals(rhs.GetGame());
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game);
         }
     }
 
@@ -263,8 +220,8 @@ public partial class ItemEntry {
     /// <summary>Generates a unique hash code for the given ItemEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
-                                       .AddValue<string>(this.GetGame())
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
                                        .ToHashCode();
     }
 }
@@ -327,8 +284,8 @@ public partial class MoveEntry {
         } else if(this == rhs) {
             return true;
         } else {
-            return this.GetName().Equals(rhs.GetName()) &&
-                   this.GetGame().Equals(rhs.GetGame());
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game);
         }
     }
 
@@ -351,8 +308,8 @@ public partial class MoveEntry {
     /// <summary>Generates a unique hash code for the given MoveEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
-                                       .AddValue<string>(this.GetGame())
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
                                        .ToHashCode();
     }
 }
@@ -371,9 +328,9 @@ public partial class PokemonEntry {
         } else if(this == rhs) {
             return true;
         } else {
-            return this.GetName().Equals(rhs.GetName()) &&
-                   this.GetGame().Equals(rhs.GetGame()) &&
-                   this.GetForm().Equals(rhs.GetForm());
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game) &&
+                   this.Form.Equals(rhs.Form);
         }
     }
 
@@ -396,9 +353,9 @@ public partial class PokemonEntry {
     /// <summary>Generates a unique hash code for the given PokemonEntry.</summary>
     /// <returns>Unique hash code</returns>
     public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.GetName())
-                                       .AddValue<string>(this.GetGame())
-                                       .AddValue<string>(this.GetForm())
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
+                                       .AddValue<string>(this.Form)
                                        .ToHashCode();
     }
 }

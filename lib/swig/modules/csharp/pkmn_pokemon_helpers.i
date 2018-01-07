@@ -259,7 +259,7 @@ using System;
 using System.Runtime.InteropServices;"
 
 %ignore pkmn::swig::move_slots::move_slots();
-%ignore pkmn::swig::move_slots::move_slots(const pkmn::pokemon::sptr&, int);
+%ignore pkmn::swig::move_slots::move_slots(const pkmn::pokemon::sptr&);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,9 +17,7 @@ PKMN_CSHARP_INIT
 %include <std_string.i>
 
 // std::map
-PKMN_CSHARP_MAP(std::string, bool,        string, bool,   StringBoolDict)
-PKMN_CSHARP_MAP(std::string, std::string, string, string, StringStringDict)
-PKMN_CSHARP_MAP(std::string, int,         string, int,    StringIntDict)
+PKMN_CSHARP_MAP(std::string, int, string, int, StringIntDict)
 
 // std::pair
 PKMN_CSHARP_PAIR(int, int, int, int, IntPair)

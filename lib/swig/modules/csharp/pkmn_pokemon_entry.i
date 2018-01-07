@@ -9,33 +9,32 @@
     #include <pkmn/database/pokemon_entry.hpp>
 %}
 
-%csmethodmodifiers pkmn::database::pokemon_entry::get_name() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_game() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_species() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_pokedex_entry() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_form() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_height() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_weight() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_chance_male() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_chance_female() const "private";
-%rename(HasGenderDifferencesFunction) pkmn::database::pokemon_entry::has_gender_differences;
-%csmethodmodifiers pkmn::database::pokemon_entry::has_gender_differences() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_base_happiness() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_types() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_abilities() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_hidden_ability() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_egg_groups() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_base_stats() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_EV_yields() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_experience_yield() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_abilities() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_levelup_moves() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_tm_hm_moves() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_egg_moves() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_tutor_moves() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_forms() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::get_evolutions() const "private";
-%csmethodmodifiers pkmn::database::pokemon_entry::set_form(const std::string&) "private";
+%include <attribute.i>
+
+%attributestring(pkmn::database::pokemon_entry, std::string, Name, get_name);
+%attributestring(pkmn::database::pokemon_entry, std::string, Game, get_game);
+%attributestring(pkmn::database::pokemon_entry, std::string, Species, get_species);
+%attributestring(pkmn::database::pokemon_entry, std::string, PokedexEntry, get_pokedex_entry);
+%attributestring(pkmn::database::pokemon_entry, std::string, Form, get_form, set_form);
+%attribute(pkmn::database::pokemon_entry, float, Height, get_height);
+%attribute(pkmn::database::pokemon_entry, float, Weight, get_weight);
+%attribute(pkmn::database::pokemon_entry, float, ChanceMale, get_chance_male);
+%attribute(pkmn::database::pokemon_entry, float, ChanceFemale, get_chance_female);
+%attribute(pkmn::database::pokemon_entry, bool, HasGenderDifferences, has_gender_differences);
+%attribute(pkmn::database::pokemon_entry, int, BaseFriendship, get_base_friendship);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Types, get_types);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), Abilities, get_abilities);
+%attributestring(pkmn::database::pokemon_entry, std::string, HiddenAbility, get_hidden_ability);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::pair<std::string, std::string>), EggGroups, get_egg_groups);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), BaseStats, get_base_stats);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::map<std::string, int>), EVYields, get_EV_yields);
+%attribute(pkmn::database::pokemon_entry, int, ExperienceYield, get_experience_yield);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::levelup_move>), LevelupMoves, get_levelup_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), TMHMMoves, get_tm_hm_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), EggMoves, get_egg_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::move_entry>), TutorMoves, get_tutor_moves);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<std::string>), Forms, get_forms);
+%attributeval(pkmn::database::pokemon_entry, %arg(std::vector<pkmn::database::pokemon_entry>), Evolutions, get_evolutions);
 
 %ignore pkmn::database::pokemon_entry::get_species_id;
 %ignore pkmn::database::pokemon_entry::get_pokemon_id;

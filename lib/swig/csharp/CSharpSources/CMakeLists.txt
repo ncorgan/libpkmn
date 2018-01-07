@@ -8,7 +8,6 @@
 SET(csharp_files
     AssemblyInfo.cs
     BuildInfo.cs
-    DatabaseProperties.cs
     Equality.cs
     HashCodeBuilder.cs
     ManualGUI.cs
