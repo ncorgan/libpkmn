@@ -24,7 +24,11 @@ public class PokemonIOTests
     {
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
+
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk1Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk1Path);
@@ -39,7 +43,11 @@ public class PokemonIOTests
     {
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(2, true);
+
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(pk2Path);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk2Path);
@@ -54,7 +62,11 @@ public class PokemonIOTests
     {
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
 
-        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
+        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(3, true);
+
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         randomPokemon.ExportToFile(_3gpkmPath);
 
         PKMN.Pokemon importedPokemon = new PKMN.Pokemon(_3gpkmPath);

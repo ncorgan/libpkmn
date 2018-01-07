@@ -64,6 +64,36 @@ using System.Runtime.InteropServices;"
     {
         get { return GetAttributeNames(); }
     }
+
+    public bool Equals($csclassname rhs)
+    {
+        return (this.Cptr() == rhs.Cptr());
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        $csclassname rhsAsClass = rhs as $csclassname;
+        if(rhsAsClass == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsAsClass);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                       .AddValue<StringList>(this.Names)
+                                       .ToHashCode();
+    }
 %}
 
 // String attributes
@@ -88,6 +118,36 @@ using System.Runtime.InteropServices;"
     public StringList Names
     {
         get { return GetAttributeNames(); }
+    }
+
+    public bool Equals($csclassname rhs)
+    {
+        return (this.Cptr() == rhs.Cptr());
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        $csclassname rhsAsClass = rhs as $csclassname;
+        if(rhsAsClass == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsAsClass);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                       .AddValue<StringList>(this.Names)
+                                       .ToHashCode();
     }
 %}
 

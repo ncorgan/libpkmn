@@ -84,19 +84,14 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_EVs().count(key) > 0);
             }
 
-            inline pkmn::pokemon::sptr get_internal()
+            uintmax_t cptr()
             {
-                return _pokemon;
+                return uintmax_t(_pokemon.get());
             }
 
             bool operator==(const EV_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
-            }
-
-            bool swig_equals(const EV_map& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -165,19 +160,14 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_IVs().count(key) > 0);
             }
 
-            inline pkmn::pokemon::sptr get_internal()
+            uintmax_t cptr()
             {
-                return _pokemon;
+                return uintmax_t(_pokemon.get());
             }
 
             bool operator==(const IV_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
-            }
-
-            bool swig_equals(const IV_map& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -246,19 +236,14 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_markings().count(key) > 0);
             }
 
-            inline pkmn::pokemon::sptr get_internal()
+            uintmax_t cptr()
             {
-                return _pokemon;
+                return uintmax_t(_pokemon.get());
             }
 
             bool operator==(const marking_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
-            }
-
-            bool swig_equals(const marking_map& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -327,19 +312,14 @@ namespace pkmn { namespace swig {
                        );
             }
 
-            inline pkmn::pokemon::sptr get_internal()
+            uintmax_t cptr()
             {
-                return _pokemon;
+                return uintmax_t(_pokemon.get());
             }
 
             bool operator==(const ribbon_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
-            }
-
-            bool swig_equals(const ribbon_map& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -408,19 +388,14 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_contest_stats().count(key) > 0);
             }
 
-            inline pkmn::pokemon::sptr get_internal()
+            uintmax_t cptr()
             {
-                return _pokemon;
+                return uintmax_t(_pokemon.get());
             }
 
             bool operator==(const contest_stat_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
-            }
-
-            bool swig_equals(const contest_stat_map& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -484,14 +459,19 @@ namespace pkmn { namespace swig {
                 _pokemon->set_move_pp(_index, pp);
             }
 
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon.get());
+            }
+
+            int index()
+            {
+                return _index;
+            }
+
             bool operator==(const move_slot& rhs) const
             {
                 return (_pokemon == rhs._pokemon) && (_index == rhs._index);
-            }
-
-            bool swig_equals(const move_slot& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:
@@ -533,14 +513,14 @@ namespace pkmn { namespace swig {
                 return _moves.size();
             }
 
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon.get());
+            }
+
             bool operator==(const move_slots& rhs) const
             {
                 return (_pokemon == rhs._pokemon) && (_moves == rhs._moves);
-            }
-
-            bool swig_equals(const move_slots& rhs) const
-            {
-                return operator==(rhs);
             }
 
         private:

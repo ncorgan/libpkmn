@@ -70,14 +70,13 @@ internal class Util
     }
 
     internal static PKMN.Pokemon GetRandomPokemon(
-        string game
+        string game,
+        PKMN.StringList itemList,
+        PKMN.StringList moveList,
+        PKMN.StringList pokemonList
     )
     {
         int generation = Util.GameToGeneration(game);
-
-        PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
-        PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(generation, true);
 
         // Don't deal with Deoxys issues here.
         string species;
