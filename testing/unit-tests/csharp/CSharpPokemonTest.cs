@@ -48,6 +48,30 @@ public class CSharpPokemonTest
         PKMNTest.PokemonTestCommon.GenderTest(game);
     }
 
+    [TestCase("Gold")]
+    [TestCase("Silver")]
+    [TestCase("Crystal")]
+    public void Gen2UnownTest(
+        string game
+    )
+    {
+        PKMNTest.UnownTests.Gen2UnownTest(game);
+    }
+
+    [TestCase("Ruby")]
+    [TestCase("Sapphire")]
+    [TestCase("Emerald")]
+    [TestCase("FireRed")]
+    [TestCase("LeafGreen")]
+    [TestCase("Colosseum")]
+    [TestCase("XD")]
+    public void Gen3UnownTest(
+        string game
+    )
+    {
+        PKMNTest.UnownTests.Gen3UnownTest(game);
+    }
+
     [TestCase("Red",    "Charmander")]
     [TestCase("Blue",   "Squirtle")]
     [TestCase("Yellow", "Bulbasaur")]
@@ -70,147 +94,31 @@ public class CSharpPokemonTest
         PKMNTest.Gen2PokemonTests.PokemonTest(game, species);
     }
 
-    /*
-    //
-    // Invalid Pokémon test
-    //
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
-    public void InvalidPokemonTest(
-        string version
-    )
-    {
-        PKMNTest.PokemonTestsCommon.InvalidPokemonTest(version);
-    }
-
-    //
-    // Gender test
-    //
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
-    public void GenderTest(
-        string version
-    )
-    {
-        PKMNTest.PokemonTestsCommon.GenderTest(version);
-    }
-
-    //
-    // Generation I friendship test
-    //
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    public void Gen1FriendshipTest(
-        string version
-    )
-    {
-        PKMNTest.Gen1PokemonTests.FriendshipTest(version);
-    }
-
-    //
-    // Generation I Pokémon test
-    //
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    public void Gen1PokemonTest(
-        string version
-    )
-    {
-        PKMNTest.Gen1PokemonTests.PokemonTest(version);
-    }
-
-    //
-    // Generation II Unown test
-    //
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    public void Gen2UnownFormTest(
-        string version
-    )
-    {
-        PKMNTest.Gen2PokemonTests.UnownFormTest(version);
-    }
-
-    //
-    // Generation II Pokémon test
-    //
-    [TestCase("Gold")]
-    [TestCase("Silver")]
-    [TestCase("Crystal")]
-    public void Gen2PokemonTest(
-        string version
-    )
-    {
-        PKMNTest.Gen2PokemonTests.PokemonTest(version);
-    }
-
-    //
-    // Generation III Unown test
-    //
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
-    public void Gen3UnownFormTest(
-        string version
-    )
-    {
-        PKMNTest.Gen3PokemonTests.UnownFormTest(version);
-    }
-
-    //
-    // Generation III Pokémon test
-    //
-    [TestCase("Ruby")]
-    [TestCase("Sapphire")]
-    [TestCase("Emerald")]
-    [TestCase("FireRed")]
-    [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
+    [TestCase("Ruby", "Torchic")]
+    [TestCase("Sapphire", "Mudkip")]
+    [TestCase("Emerald", "Treecko")]
+    [TestCase("FireRed", "Charmander")]
+    [TestCase("LeafGreen", "Bulbasaur")]
+    [TestCase("Colosseum", "Espeon")]
+    [TestCase("XD", "Umbreon")]
     public void Gen3PokemonTest(
-        string version
+        string game,
+        string species
     )
     {
-        PKMNTest.Gen3PokemonTests.PokemonTest(version);
+        PKMNTest.Gen3PokemonTests.PokemonTest(game, species);
     }
 
-    //
-    // I/O
-    //
     [Test]
-    public void _3GPKMTest() {
-        PKMNTest.PokemonIOTests.Test3GPKM();
+    public void _3GPKMTest()
+    {
+        PKMNTest.PokemonIOTests.TestOutside3GPKM();
     }
 
-    //
-    // Conversions
-    //
+    /*
+     * Conversions
+     */
+
     // Generation I -> Generation I
     [TestCase("Bulbasaur", "", "Red", "Yellow")]
 
@@ -270,5 +178,4 @@ public class CSharpPokemonTest
             destGame
         );
     }
-    */
 }

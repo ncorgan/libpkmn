@@ -15,7 +15,7 @@ public class PokemonIOTests
 {
     private static string LibPKMNTestFiles = Environment.GetEnvironmentVariable("LIBPKMN_TEST_FILES");
 
-    public static void Test3GPKM()
+    public static void TestOutside3GPKM()
     {
         /*
          * Test files in repo and compare to known values.

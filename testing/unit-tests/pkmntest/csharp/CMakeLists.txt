@@ -6,13 +6,13 @@
 #
 
 SET(pkmntest_cs_srcs
-    #Gen1ItemsTests.cs
+    Gen1ItemsTests.cs
     Gen1PokemonTests.cs
-    #Gen2ItemsTests.cs
+    Gen2ItemsTests.cs
     Gen2PokemonTests.cs
     Gen3PokemonTests.cs
-    #GBAItemsTests.cs
-    #GCNItemsTests.cs
+    GBAItemsTests.cs
+    GCNItemsTests.cs
     GameSaveTest.cs
     ItemsTestsCommon.cs
     PokemonConversionsTest.cs
@@ -21,6 +21,7 @@ SET(pkmntest_cs_srcs
     PokemonPCTests.cs
     PokemonTestParams.cs
     PokemonTestCommon.cs
+    UnownTests.cs
     Util.cs
 )
 

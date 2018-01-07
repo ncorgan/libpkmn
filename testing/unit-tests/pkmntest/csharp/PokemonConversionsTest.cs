@@ -136,9 +136,18 @@ public class PokemonConversionsTest
 
             if(originGeneration == destGeneration)
             {
-                Assert.AreEqual(firstPokemon.Markings, secondPokemon.Markings);
-                Assert.AreEqual(firstPokemon.Ribbons, secondPokemon.Ribbons);
-                Assert.AreEqual(firstPokemon.ContestStats, secondPokemon.ContestStats);
+                foreach(string marking in firstPokemon.Markings.Keys)
+                {
+                    Assert.AreEqual(firstPokemon.Markings[marking], secondPokemon.Markings[marking]);
+                }
+                foreach(string ribbon in firstPokemon.Ribbons.Keys)
+                {
+                    Assert.AreEqual(firstPokemon.Ribbons[ribbon], secondPokemon.Ribbons[ribbon]);
+                }
+                foreach(string contestStat in firstPokemon.ContestStats.Keys)
+                {
+                    Assert.AreEqual(firstPokemon.ContestStats[contestStat], secondPokemon.ContestStats[contestStat]);
+                }
             }
         }
         if(minGeneration >= 2)
