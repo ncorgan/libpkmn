@@ -109,8 +109,44 @@ public class CSharpPokemonTest
         PKMNTest.Gen3PokemonTests.PokemonTest(game, species);
     }
 
+    /*
+     * I/O
+     */
+
+    [TestCase("Red")]
+    [TestCase("Blue")]
+    [TestCase("Yellow")]
+    public void TestSavingAndLoadingPK1(
+        string game
+    )
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSavingPK1(game);
+    }
+
+    [TestCase("Gold")]
+    [TestCase("Silver")]
+    [TestCase("Crystal")]
+    public void TestSavingAndLoadingPK2(
+        string game
+    )
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSavingPK2(game);
+    }
+
+    [TestCase("Ruby")]
+    [TestCase("Sapphire")]
+    [TestCase("Emerald")]
+    [TestCase("FireRed")]
+    [TestCase("LeafGreen")]
+    public void TestSavingAndLoading3GPKM(
+        string game
+    )
+    {
+        PKMNTest.PokemonIOTests.TestLoadingAndSaving3GPKM(game);
+    }
+
     [Test]
-    public void _3GPKMTest()
+    public void TestOutside3GPKM()
     {
         PKMNTest.PokemonIOTests.TestOutside3GPKM();
     }
