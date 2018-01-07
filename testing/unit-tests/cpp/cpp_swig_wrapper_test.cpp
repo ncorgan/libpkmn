@@ -482,13 +482,6 @@ TEST(cpp_swig_test, test_pokemon_party)
         EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
     }
 
-    std::vector<pkmn::swig::pokemon2> party_vec = swig_pokemon_party.as_vector();
-    ASSERT_EQ(6, party_vec.size());
-    for(size_t i = 0; i < 6; ++i)
-    {
-        EXPECT_EQ("None", party_vec[i].get_species());
-    }
-
     pkmn::swig::pokemon2 new_pokemon("Charmander", "FireRed", "", 10);
     swig_pokemon_party.set_pokemon(0, new_pokemon);
 

@@ -8,63 +8,70 @@
 using System;
 using NUnit.Framework;
 
-namespace PKMNTest {
+namespace PKMNTest
+{
 
-public class PokemonPartyTests {
+public class PokemonPartyTests
+{
+    private static void TestEmptyPokemonParty(
+        PKMN.PokemonParty2 party
+    )
+    {
+        Assert.AreEqual(party.Length, 6);
 
-    internal static void TestEmptyPokemonParty(
-        PKMN.PokemonParty party,
-        string game
-    ) {
-        Assert.AreEqual(party.Game, game);
-        Assert.AreEqual(party.Count, 6);
-
-        // Make sure trying to get a Pokémon at an invalid index fails.
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                PKMN.Pokemon pokemon = party[-1];
-            }
-        );
-        Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                PKMN.Pokemon pokemon = party[party.Count];
-            }
-        );
-
-        for(int i = 0; i < party.Count; ++i) {
+        for(int i = 0; i < party.Length; ++i)
+        {
             Assert.AreEqual(party[i].Species, "None");
-            Assert.AreEqual(party[i].Game, game);
+            Assert.AreEqual(party[i].Game, party.Game);
 
-            for(int j = 0; j < party[i].Moves.Count; ++j) {
+            for(int j = 0; j < party[i].Moves.Count; ++j)
+            {
                 Assert.AreEqual(party[i].Moves[j].Move, "None");
                 Assert.AreEqual(party[i].Moves[j].PP, 0);
             }
         }
+
+        // Make sure trying to get a Pokémon at an invalid index fails.
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Pokemon2 pokemon = party[-1];
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Pokemon2 pokemon = party[party.Length];
+            }
+        );
     }
 
-    internal static void TestSettingPokemon(
-        PKMN.PokemonParty party
-    ) {
-        PKMN.Pokemon originalFirst = party[0];
-        PKMN.Pokemon originalSecond = party[1];
+    private static void TestSettingPokemon(
+        PKMN.PokemonParty2 party
+    )
+    {
+        PKMN.Pokemon2 originalFirst = party[0];
+        PKMN.Pokemon2 originalSecond = party[1];
 
         // Make sure we can't set Pokémon at invalid indices.
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 party[-1] = originalFirst;
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
-                party[party.Count] = originalSecond;
+            delegate
+            {
+                party[party.Length] = originalSecond;
             }
         );
 
         // Create Pokémon and place in party. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", party.Game, "", 5);
-        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", party.Game, "", 5);
-        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", party.Game, "", 5);
+        PKMN.Pokemon2 bulbasaur = new PKMN.Pokemon2("Bulbasaur", party.Game, "", 5);
+        PKMN.Pokemon2 charmander = new PKMN.Pokemon2("Charmander", party.Game, "", 5);
+        PKMN.Pokemon2 squirtle = new PKMN.Pokemon2("Squirtle", party.Game, "", 5);
 
         party[0] = bulbasaur;
         Assert.AreEqual(party.NumPokemon, 1);
@@ -80,7 +87,8 @@ public class PokemonPartyTests {
 
         // Make sure we can't copy a Pokémon to itself.
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 party[1] = party[1];
             }
         );
@@ -102,7 +110,8 @@ public class PokemonPartyTests {
 
         // Check that Pokémon cannot be placed non-contiguously.
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 party[1] = originalFirst;
             }
         );
@@ -110,7 +119,8 @@ public class PokemonPartyTests {
         Assert.AreEqual(party[1].Species, "Charmander");
 
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 party[4] = bulbasaur;
             }
         );
@@ -130,10 +140,10 @@ public class PokemonPartyTests {
     }
 
     public static void TestPokemonParty(
-        PKMN.PokemonParty party,
-        string game
-    ) {
-        TestEmptyPokemonParty(party, game);
+        PKMN.PokemonParty2 party
+    )
+    {
+        TestEmptyPokemonParty(party);
         TestSettingPokemon(party);
     }
 }

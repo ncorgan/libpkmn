@@ -24,8 +24,8 @@ IF(NUNIT_FOUND)
         CSharpListsTest
         CSharpPathsTest
         CSharpPokemonTest
-        #CSharpPokemonPartyTest
-        #CSharpPokemonPCTest
+        CSharpPokemonPartyTest
+        CSharpPokemonPCTest
         CSharpGUITest_GUI
     )
 
