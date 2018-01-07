@@ -41,6 +41,54 @@
 %ignore pkmn::database::pokemon_entry::get_form_id;
 %ignore pkmn::database::pokemon_entry::get_pokemon_index;
 %ignore pkmn::database::pokemon_entry::get_game_id;
+
+%typemap(cscode) pkmn::database::pokemon_entry
+%{
+    public bool Equals(PokemonEntry rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+        else if(this == rhs)
+        {
+            return true;
+        }
+        else
+        {
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game) &&
+                   this.Form.Equals(rhs.Form);
+        }
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        PokemonEntry rhsEntry = rhs as PokemonEntry;
+        if(rhsEntry == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsEntry);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
+                                       .AddValue<string>(this.Form)
+                                       .ToHashCode();
+    }
+%}
+
 %include <pkmn/database/pokemon_entry.hpp>
 
 %include <csharp/stl_macros.i>

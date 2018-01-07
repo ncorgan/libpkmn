@@ -29,6 +29,52 @@
 
 %ignore pkmn::database::move_entry::get_move_id;
 %ignore pkmn::database::move_entry::get_game_id;
+
+%typemap(cscode) pkmn::database::move_entry
+%{
+    public bool Equals(MoveEntry rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+        else if(this == rhs)
+        {
+            return true;
+        }
+        else
+        {
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game);
+        }
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        MoveEntry rhsEntry = rhs as MoveEntry;
+        if(rhsEntry == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsEntry);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
+                                       .ToHashCode();
+    }
+%}
+
 %include <pkmn/database/move_entry.hpp>
 
 %include <csharp/stl_macros.i>
