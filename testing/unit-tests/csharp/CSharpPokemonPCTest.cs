@@ -29,7 +29,7 @@ public class CSharpPokemonPCTest
     )
     {
         PKMNTest.PokemonPCTests.TestPokemonBox(
-            new PKMN.PokemonBox2(game)
+            new PKMN.PokemonBox(game)
         );
     }
 
@@ -51,7 +51,7 @@ public class CSharpPokemonPCTest
     )
     {
         PKMNTest.PokemonPCTests.TestPokemonPC(
-            new PKMN.PokemonPC2(game)
+            new PKMN.PokemonPC(game)
         );
     }
 }

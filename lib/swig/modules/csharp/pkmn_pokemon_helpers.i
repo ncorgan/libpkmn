@@ -220,22 +220,22 @@ using System.Runtime.InteropServices;"
 // Move slot
 //
 
-%typemap(csimports) pkmn::swig::move_slot2 "
+%typemap(csimports) pkmn::swig::move_slot "
 using System;
 using System.Runtime.InteropServices;"
 
-%ignore pkmn::swig::move_slot2::move_slot2();
-%ignore pkmn::swig::move_slot2::move_slot2(const pkmn::pokemon::sptr&, int);
+%ignore pkmn::swig::move_slot::move_slot();
+%ignore pkmn::swig::move_slot::move_slot(const pkmn::pokemon::sptr&, int);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::move_slot2::get_move() "private";
-%csmethodmodifiers pkmn::swig::move_slot2::set_move(const std::string&) "private";
-%csmethodmodifiers pkmn::swig::move_slot2::get_pp() "private";
-%csmethodmodifiers pkmn::swig::move_slot2::set_pp(int) "private";
-%csmethodmodifiers pkmn::swig::move_slot2::swig_equals(const move_slot2&) const "private";
+%csmethodmodifiers pkmn::swig::move_slot::get_move() "private";
+%csmethodmodifiers pkmn::swig::move_slot::set_move(const std::string&) "private";
+%csmethodmodifiers pkmn::swig::move_slot::get_pp() "private";
+%csmethodmodifiers pkmn::swig::move_slot::set_pp(int) "private";
+%csmethodmodifiers pkmn::swig::move_slot::swig_equals(const move_slot&) const "private";
 
-%typemap(cscode) pkmn::swig::move_slot2
+%typemap(cscode) pkmn::swig::move_slot
 %{
     public string Move
     {
@@ -254,22 +254,22 @@ using System.Runtime.InteropServices;"
 // Move slots
 //
 
-%typemap(csimports) pkmn::swig::move_slots2 "
+%typemap(csimports) pkmn::swig::move_slots "
 using System;
 using System.Runtime.InteropServices;"
 
-%ignore pkmn::swig::move_slots2::move_slots2();
-%ignore pkmn::swig::move_slots2::move_slots2(const pkmn::pokemon::sptr&, int);
+%ignore pkmn::swig::move_slots::move_slots();
+%ignore pkmn::swig::move_slots::move_slots(const pkmn::pokemon::sptr&, int);
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
-%csmethodmodifiers pkmn::swig::move_slots2::get_move_slot(int) "private";
-%csmethodmodifiers pkmn::swig::move_slots2::size() "private";
-%csmethodmodifiers pkmn::swig::move_slots2::swig_equals(const move_slots2&) const "private";
+%csmethodmodifiers pkmn::swig::move_slots::get_move_slot(int) "private";
+%csmethodmodifiers pkmn::swig::move_slots::size() "private";
+%csmethodmodifiers pkmn::swig::move_slots::swig_equals(const move_slots&) const "private";
 
-%typemap(cscode) pkmn::swig::move_slots2
+%typemap(cscode) pkmn::swig::move_slots
 %{
-    public MoveSlot2 this[int index]
+    public MoveSlot this[int index]
     {
         get { return GetMoveSlot(index); }
     }

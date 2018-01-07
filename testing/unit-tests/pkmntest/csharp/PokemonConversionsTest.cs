@@ -22,7 +22,7 @@ public class PokemonConversionsTest
         string destGame
     )
     {
-        PKMN.Pokemon2 firstPokemon = new PKMN.Pokemon2(species, originGame, form, 50);
+        PKMN.Pokemon firstPokemon = new PKMN.Pokemon(species, originGame, form, 50);
 
         int originGeneration = Util.GameToGeneration(originGame);
         int destGeneration = Util.GameToGeneration(destGame);
@@ -108,7 +108,7 @@ public class PokemonConversionsTest
         firstPokemon.Level = rng.Next(2, (destGeneration == 2) ? 63 : 100);
 
         // Convert to the second game and compare.
-        PKMN.Pokemon2 secondPokemon = firstPokemon.ToGame(destGame);
+        PKMN.Pokemon secondPokemon = firstPokemon.ToGame(destGame);
 
         Assert.AreEqual(firstPokemon.Species, secondPokemon.Species);
         Assert.AreEqual(destGame, secondPokemon.Game);

@@ -39,7 +39,7 @@ public class GCNItemsTest
     };
 
     public static void ItemPocketTest(
-        PKMN.ItemList2 itemPocket,
+        PKMN.ItemList itemPocket,
         string game
     )
     {
@@ -99,7 +99,7 @@ public class GCNItemsTest
     }
 
     public static void KeyItemPocketTest(
-        PKMN.ItemList2 keyItemPocket,
+        PKMN.ItemList keyItemPocket,
         string game
     )
     {
@@ -186,7 +186,7 @@ public class GCNItemsTest
     }
 
     public static void BallPocketTest(
-        PKMN.ItemList2 ballPocket,
+        PKMN.ItemList ballPocket,
         string game
     )
     {
@@ -246,7 +246,7 @@ public class GCNItemsTest
     }
 
     public static void TMPocketTest(
-        PKMN.ItemList2 tmPocket,
+        PKMN.ItemList tmPocket,
         string game
     )
     {
@@ -306,7 +306,7 @@ public class GCNItemsTest
     }
 
     public static void BerryPocketTest(
-        PKMN.ItemList2 berryPocket,
+        PKMN.ItemList berryPocket,
         string game
     )
     {
@@ -366,7 +366,7 @@ public class GCNItemsTest
     }
 
     public static void ColognePocketTest(
-        PKMN.ItemList2 colognePocket,
+        PKMN.ItemList colognePocket,
         string game
     )
     {
@@ -432,7 +432,7 @@ public class GCNItemsTest
     }
 
     public static void BattleCDPocketTest(
-        PKMN.ItemList2 battleCDPocket,
+        PKMN.ItemList battleCDPocket,
         string game
     ) {
         int expectedLength = 60;
@@ -474,7 +474,7 @@ public class GCNItemsTest
     }
 
     public static void ItemPCTest(
-        PKMN.ItemList2 itemPC,
+        PKMN.ItemList itemPC,
         string game
     )
     {
@@ -516,7 +516,7 @@ public class GCNItemsTest
     }
 
     public static void ItemBagTest(
-        PKMN.ItemBag2 itemBag,
+        PKMN.ItemBag itemBag,
         string game
     )
     {

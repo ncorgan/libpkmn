@@ -17,7 +17,7 @@ public class CSharpItemsTest {
     public void Gen1RedItemListTest()
     {
         PKMNTest.Gen1ItemsTest.ItemListTest(
-            new PKMN.ItemList2("Items", "Red"),
+            new PKMN.ItemList("Items", "Red"),
             "Red"
         );
     }
@@ -25,7 +25,7 @@ public class CSharpItemsTest {
     public void Gen1RedItemPCTest()
     {
         PKMNTest.Gen1ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Red"),
+            new PKMN.ItemList("PC", "Red"),
             "Red"
         );
     }
@@ -33,7 +33,7 @@ public class CSharpItemsTest {
     public void Gen1RedItemBagTest()
     {
         PKMNTest.Gen1ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Red"),
+            new PKMN.ItemBag("Red"),
             "Red"
         );
     }
@@ -45,7 +45,7 @@ public class CSharpItemsTest {
     public void Gen1BlueItemListTest()
     {
         PKMNTest.Gen1ItemsTest.ItemListTest(
-            new PKMN.ItemList2("Items", "Blue"),
+            new PKMN.ItemList("Items", "Blue"),
             "Blue"
         );
     }
@@ -53,7 +53,7 @@ public class CSharpItemsTest {
     public void Gen1BlueItemPCTest()
     {
         PKMNTest.Gen1ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Blue"),
+            new PKMN.ItemList("PC", "Blue"),
             "Blue"
         );
     }
@@ -61,7 +61,7 @@ public class CSharpItemsTest {
     public void Gen1BlueItemBagTest()
     {
         PKMNTest.Gen1ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Blue"),
+            new PKMN.ItemBag("Blue"),
             "Blue"
         );
     }
@@ -73,7 +73,7 @@ public class CSharpItemsTest {
     public void Gen1YellowItemListTest()
     {
         PKMNTest.Gen1ItemsTest.ItemListTest(
-            new PKMN.ItemList2("Items", "Yellow"),
+            new PKMN.ItemList("Items", "Yellow"),
             "Yellow"
         );
     }
@@ -81,7 +81,7 @@ public class CSharpItemsTest {
     public void Gen1YellowItemPCTest()
     {
         PKMNTest.Gen1ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Yellow"),
+            new PKMN.ItemList("PC", "Yellow"),
             "Yellow"
         );
     }
@@ -89,7 +89,7 @@ public class CSharpItemsTest {
     public void Gen1YellowItemBagTest()
     {
         PKMNTest.Gen1ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Yellow"),
+            new PKMN.ItemBag("Yellow"),
             "Yellow"
         );
     }
@@ -101,7 +101,7 @@ public class CSharpItemsTest {
     public void Gen2GoldItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Gold"),
+            new PKMN.ItemList("Items", "Gold"),
             "Gold"
         );
     }
@@ -109,7 +109,7 @@ public class CSharpItemsTest {
     public void Gen2GoldKeyItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("KeyItems", "Gold"),
+            new PKMN.ItemList("KeyItems", "Gold"),
             "Gold"
         );
     }
@@ -117,7 +117,7 @@ public class CSharpItemsTest {
     public void Gen2GoldBallPocketTest()
     {
         PKMNTest.Gen2ItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Balls", "Gold"),
+            new PKMN.ItemList("Balls", "Gold"),
             "Gold"
         );
     }
@@ -125,7 +125,7 @@ public class CSharpItemsTest {
     public void Gen2GoldTMHMPocketTest()
     {
         PKMNTest.Gen2ItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TM/HM", "Gold"),
+            new PKMN.ItemList("TM/HM", "Gold"),
             "Gold"
         );
     }
@@ -133,7 +133,7 @@ public class CSharpItemsTest {
     public void Gen2GoldItemPCTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Gold"),
+            new PKMN.ItemList("PC", "Gold"),
             "Gold"
         );
     }
@@ -141,7 +141,7 @@ public class CSharpItemsTest {
     public void Gen2GoldItemBagTest()
     {
         PKMNTest.Gen2ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Gold"),
+            new PKMN.ItemBag("Gold"),
             "Gold"
         );
     }
@@ -153,7 +153,7 @@ public class CSharpItemsTest {
     public void Gen2SilverItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Silver"),
+            new PKMN.ItemList("Items", "Silver"),
             "Silver"
         );
     }
@@ -161,7 +161,7 @@ public class CSharpItemsTest {
     public void Gen2SilverKeyItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("KeyItems", "Silver"),
+            new PKMN.ItemList("KeyItems", "Silver"),
             "Silver"
         );
     }
@@ -169,7 +169,7 @@ public class CSharpItemsTest {
     public void Gen2SilverBallPocketTest()
     {
         PKMNTest.Gen2ItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Balls", "Silver"),
+            new PKMN.ItemList("Balls", "Silver"),
             "Silver"
         );
     }
@@ -177,7 +177,7 @@ public class CSharpItemsTest {
     public void Gen2SilverTMHMPocketTest()
     {
         PKMNTest.Gen2ItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TM/HM", "Silver"),
+            new PKMN.ItemList("TM/HM", "Silver"),
             "Silver"
         );
     }
@@ -185,7 +185,7 @@ public class CSharpItemsTest {
     public void Gen2SilverItemPCTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Silver"),
+            new PKMN.ItemList("PC", "Silver"),
             "Silver"
         );
     }
@@ -193,7 +193,7 @@ public class CSharpItemsTest {
     public void Gen2SilverItemBagTest()
     {
         PKMNTest.Gen2ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Silver"),
+            new PKMN.ItemBag("Silver"),
             "Silver"
         );
     }
@@ -205,7 +205,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Crystal"),
+            new PKMN.ItemList("Items", "Crystal"),
             "Crystal"
         );
     }
@@ -213,7 +213,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalKeyItemPocketTest()
     {
         PKMNTest.Gen2ItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("KeyItems", "Crystal"),
+            new PKMN.ItemList("KeyItems", "Crystal"),
             "Crystal"
         );
     }
@@ -221,7 +221,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalBallPocketTest()
     {
         PKMNTest.Gen2ItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Balls", "Crystal"),
+            new PKMN.ItemList("Balls", "Crystal"),
             "Crystal"
         );
     }
@@ -229,7 +229,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalTMHMPocketTest()
     {
         PKMNTest.Gen2ItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TM/HM", "Crystal"),
+            new PKMN.ItemList("TM/HM", "Crystal"),
             "Crystal"
         );
     }
@@ -237,7 +237,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalItemPCTest()
     {
         PKMNTest.Gen2ItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Crystal"),
+            new PKMN.ItemList("PC", "Crystal"),
             "Crystal"
         );
     }
@@ -245,7 +245,7 @@ public class CSharpItemsTest {
     public void Gen2CrystalItemBagTest()
     {
         PKMNTest.Gen2ItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Crystal"),
+            new PKMN.ItemBag("Crystal"),
             "Crystal"
         );
     }
@@ -257,7 +257,7 @@ public class CSharpItemsTest {
     public void GBARubyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Ruby"),
+            new PKMN.ItemList("Items", "Ruby"),
             "Ruby"
         );
     }
@@ -265,7 +265,7 @@ public class CSharpItemsTest {
     public void GBARubyKeyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "Ruby"),
+            new PKMN.ItemList("Key Items", "Ruby"),
             "Ruby"
         );
     }
@@ -273,7 +273,7 @@ public class CSharpItemsTest {
     public void GBARubyBallPocketTest()
     {
         PKMNTest.GBAItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "Ruby"),
+            new PKMN.ItemList("Poké Balls", "Ruby"),
             "Ruby"
         );
     }
@@ -281,7 +281,7 @@ public class CSharpItemsTest {
     public void GBARubyTMHMPocketTest()
     {
         PKMNTest.GBAItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TMs & HMs", "Ruby"),
+            new PKMN.ItemList("TMs & HMs", "Ruby"),
             "Ruby"
         );
     }
@@ -289,7 +289,7 @@ public class CSharpItemsTest {
     public void GBARubyBerryPocketTest()
     {
         PKMNTest.GBAItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berries", "Ruby"),
+            new PKMN.ItemList("Berries", "Ruby"),
             "Ruby"
         );
     }
@@ -297,7 +297,7 @@ public class CSharpItemsTest {
     public void GBARubyItemPCTest()
     {
         PKMNTest.GBAItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Ruby"),
+            new PKMN.ItemList("PC", "Ruby"),
             "Ruby"
         );
     }
@@ -305,7 +305,7 @@ public class CSharpItemsTest {
     public void GBARubyItemBagTest()
     {
         PKMNTest.GBAItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Ruby"),
+            new PKMN.ItemBag("Ruby"),
             "Ruby"
         );
     }
@@ -317,7 +317,7 @@ public class CSharpItemsTest {
     public void GBASapphireItemPocketTest()
     {
         PKMNTest.GBAItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Sapphire"),
+            new PKMN.ItemList("Items", "Sapphire"),
             "Sapphire"
         );
     }
@@ -325,7 +325,7 @@ public class CSharpItemsTest {
     public void GBASapphireKeyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "Sapphire"),
+            new PKMN.ItemList("Key Items", "Sapphire"),
             "Sapphire"
         );
     }
@@ -333,7 +333,7 @@ public class CSharpItemsTest {
     public void GBASapphireBallPocketTest()
     {
         PKMNTest.GBAItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "Sapphire"),
+            new PKMN.ItemList("Poké Balls", "Sapphire"),
             "Sapphire"
         );
     }
@@ -341,7 +341,7 @@ public class CSharpItemsTest {
     public void GBASapphireTMHMPocketTest()
     {
         PKMNTest.GBAItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TMs & HMs", "Sapphire"),
+            new PKMN.ItemList("TMs & HMs", "Sapphire"),
             "Sapphire"
         );
     }
@@ -349,7 +349,7 @@ public class CSharpItemsTest {
     public void GBASapphireBerryPocketTest()
     {
         PKMNTest.GBAItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berries", "Sapphire"),
+            new PKMN.ItemList("Berries", "Sapphire"),
             "Sapphire"
         );
     }
@@ -357,7 +357,7 @@ public class CSharpItemsTest {
     public void GBASapphireItemPCTest()
     {
         PKMNTest.GBAItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Sapphire"),
+            new PKMN.ItemList("PC", "Sapphire"),
             "Sapphire"
         );
     }
@@ -365,7 +365,7 @@ public class CSharpItemsTest {
     public void GBASapphireItemBagTest()
     {
         PKMNTest.GBAItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Sapphire"),
+            new PKMN.ItemBag("Sapphire"),
             "Sapphire"
         );
     }
@@ -377,7 +377,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldItemPocketTest()
     {
         PKMNTest.GBAItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Emerald"),
+            new PKMN.ItemList("Items", "Emerald"),
             "Emerald"
         );
     }
@@ -385,7 +385,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldKeyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "Emerald"),
+            new PKMN.ItemList("Key Items", "Emerald"),
             "Emerald"
         );
     }
@@ -393,7 +393,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldBallPocketTest()
     {
         PKMNTest.GBAItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "Emerald"),
+            new PKMN.ItemList("Poké Balls", "Emerald"),
             "Emerald"
         );
     }
@@ -401,7 +401,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldTMHMPocketTest()
     {
         PKMNTest.GBAItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TMs & HMs", "Emerald"),
+            new PKMN.ItemList("TMs & HMs", "Emerald"),
             "Emerald"
         );
     }
@@ -409,7 +409,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldBerryPocketTest()
     {
         PKMNTest.GBAItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berries", "Emerald"),
+            new PKMN.ItemList("Berries", "Emerald"),
             "Emerald"
         );
     }
@@ -417,7 +417,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldItemPCTest()
     {
         PKMNTest.GBAItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Emerald"),
+            new PKMN.ItemList("PC", "Emerald"),
             "Emerald"
         );
     }
@@ -425,7 +425,7 @@ public class CSharpItemsTest {
     public void GBAEmeraldItemBagTest()
     {
         PKMNTest.GBAItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Emerald"),
+            new PKMN.ItemBag("Emerald"),
             "Emerald"
         );
     }
@@ -437,7 +437,7 @@ public class CSharpItemsTest {
     public void GBAFireRedItemPocketTest()
     {
         PKMNTest.GBAItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "FireRed"),
+            new PKMN.ItemList("Items", "FireRed"),
             "FireRed"
         );
     }
@@ -445,7 +445,7 @@ public class CSharpItemsTest {
     public void GBAFireRedKeyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "FireRed"),
+            new PKMN.ItemList("Key Items", "FireRed"),
             "FireRed"
         );
     }
@@ -453,7 +453,7 @@ public class CSharpItemsTest {
     public void GBAFireRedBallPocketTest()
     {
         PKMNTest.GBAItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "FireRed"),
+            new PKMN.ItemList("Poké Balls", "FireRed"),
             "FireRed"
         );
     }
@@ -461,7 +461,7 @@ public class CSharpItemsTest {
     public void GBAFireRedTMHMPocketTest()
     {
         PKMNTest.GBAItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TM Case", "FireRed"),
+            new PKMN.ItemList("TM Case", "FireRed"),
             "FireRed"
         );
     }
@@ -469,7 +469,7 @@ public class CSharpItemsTest {
     public void GBAFireRedBerryPocketTest()
     {
         PKMNTest.GBAItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berry Pouch", "FireRed"),
+            new PKMN.ItemList("Berry Pouch", "FireRed"),
             "FireRed"
         );
     }
@@ -477,7 +477,7 @@ public class CSharpItemsTest {
     public void GBAFireRedItemPCTest()
     {
         PKMNTest.GBAItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "FireRed"),
+            new PKMN.ItemList("PC", "FireRed"),
             "FireRed"
         );
     }
@@ -485,7 +485,7 @@ public class CSharpItemsTest {
     public void GBAFireRedItemBagTest()
     {
         PKMNTest.GBAItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("FireRed"),
+            new PKMN.ItemBag("FireRed"),
             "FireRed"
         );
     }
@@ -497,7 +497,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenItemPocketTest()
     {
         PKMNTest.GBAItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "LeafGreen"),
+            new PKMN.ItemList("Items", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -505,7 +505,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenKeyItemPocketTest()
     {
         PKMNTest.GBAItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "LeafGreen"),
+            new PKMN.ItemList("Key Items", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -513,7 +513,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenBallPocketTest()
     {
         PKMNTest.GBAItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "LeafGreen"),
+            new PKMN.ItemList("Poké Balls", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -521,7 +521,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenTMHMPocketTest()
     {
         PKMNTest.GBAItemsTest.TMHMPocketTest(
-            new PKMN.ItemList2("TM Case", "LeafGreen"),
+            new PKMN.ItemList("TM Case", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -529,7 +529,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenBerryPocketTest()
     {
         PKMNTest.GBAItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berry Pouch", "LeafGreen"),
+            new PKMN.ItemList("Berry Pouch", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -537,7 +537,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenItemPCTest()
     {
         PKMNTest.GBAItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "LeafGreen"),
+            new PKMN.ItemList("PC", "LeafGreen"),
             "LeafGreen"
         );
     }
@@ -545,7 +545,7 @@ public class CSharpItemsTest {
     public void GBALeafGreenItemBagTest()
     {
         PKMNTest.GBAItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("LeafGreen"),
+            new PKMN.ItemBag("LeafGreen"),
             "LeafGreen"
         );
     }
@@ -557,7 +557,7 @@ public class CSharpItemsTest {
     public void GCNColosseumItemPocketTest()
     {
         PKMNTest.GCNItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "Colosseum"),
+            new PKMN.ItemList("Items", "Colosseum"),
             "Colosseum"
         );
     }
@@ -565,7 +565,7 @@ public class CSharpItemsTest {
     public void GCNColosseumKeyItemPocketTest()
     {
         PKMNTest.GCNItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "Colosseum"),
+            new PKMN.ItemList("Key Items", "Colosseum"),
             "Colosseum"
         );
     }
@@ -573,7 +573,7 @@ public class CSharpItemsTest {
     public void GCNColosseumBallPocketTest()
     {
         PKMNTest.GCNItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "Colosseum"),
+            new PKMN.ItemList("Poké Balls", "Colosseum"),
             "Colosseum"
         );
     }
@@ -581,7 +581,7 @@ public class CSharpItemsTest {
     public void GCNColosseumTMPocketTest()
     {
         PKMNTest.GCNItemsTest.TMPocketTest(
-            new PKMN.ItemList2("TMs", "Colosseum"),
+            new PKMN.ItemList("TMs", "Colosseum"),
             "Colosseum"
         );
     }
@@ -589,7 +589,7 @@ public class CSharpItemsTest {
     public void GCNColosseumBerryPocketTest()
     {
         PKMNTest.GCNItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berries", "Colosseum"),
+            new PKMN.ItemList("Berries", "Colosseum"),
             "Colosseum"
         );
     }
@@ -597,7 +597,7 @@ public class CSharpItemsTest {
     public void GCNColosseumColognePocketTest()
     {
         PKMNTest.GCNItemsTest.ColognePocketTest(
-            new PKMN.ItemList2("Colognes", "Colosseum"),
+            new PKMN.ItemList("Colognes", "Colosseum"),
             "Colosseum"
         );
     }
@@ -605,7 +605,7 @@ public class CSharpItemsTest {
     public void GCNColosseumItemPCTest()
     {
         PKMNTest.GCNItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "Colosseum"),
+            new PKMN.ItemList("PC", "Colosseum"),
             "Colosseum"
         );
     }
@@ -613,7 +613,7 @@ public class CSharpItemsTest {
     public void GCNColosseumItemBagTest()
     {
         PKMNTest.GCNItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("Colosseum"),
+            new PKMN.ItemBag("Colosseum"),
             "Colosseum"
         );
     }
@@ -625,7 +625,7 @@ public class CSharpItemsTest {
     public void GCNXDItemPocketTest()
     {
         PKMNTest.GCNItemsTest.ItemPocketTest(
-            new PKMN.ItemList2("Items", "XD"),
+            new PKMN.ItemList("Items", "XD"),
             "XD"
         );
     }
@@ -633,7 +633,7 @@ public class CSharpItemsTest {
     public void GCNXDKeyItemPocketTest()
     {
         PKMNTest.GCNItemsTest.KeyItemPocketTest(
-            new PKMN.ItemList2("Key Items", "XD"),
+            new PKMN.ItemList("Key Items", "XD"),
             "XD"
         );
     }
@@ -641,7 +641,7 @@ public class CSharpItemsTest {
     public void GCNXDBallPocketTest()
     {
         PKMNTest.GCNItemsTest.BallPocketTest(
-            new PKMN.ItemList2("Poké Balls", "XD"),
+            new PKMN.ItemList("Poké Balls", "XD"),
             "XD"
         );
     }
@@ -649,7 +649,7 @@ public class CSharpItemsTest {
     public void GCNXDTMPocketTest()
     {
         PKMNTest.GCNItemsTest.TMPocketTest(
-            new PKMN.ItemList2("TMs", "XD"),
+            new PKMN.ItemList("TMs", "XD"),
             "XD"
         );
     }
@@ -657,7 +657,7 @@ public class CSharpItemsTest {
     public void GCNXDBerryPocketTest()
     {
         PKMNTest.GCNItemsTest.BerryPocketTest(
-            new PKMN.ItemList2("Berries", "XD"),
+            new PKMN.ItemList("Berries", "XD"),
             "XD"
         );
     }
@@ -665,7 +665,7 @@ public class CSharpItemsTest {
     public void GCNXDColognePocketTest()
     {
         PKMNTest.GCNItemsTest.ColognePocketTest(
-            new PKMN.ItemList2("Colognes", "XD"),
+            new PKMN.ItemList("Colognes", "XD"),
             "XD"
         );
     }
@@ -673,7 +673,7 @@ public class CSharpItemsTest {
     public void GCNXDBattleCDPocketTest()
     {
         PKMNTest.GCNItemsTest.BattleCDPocketTest(
-            new PKMN.ItemList2("Battle CDs", "XD"),
+            new PKMN.ItemList("Battle CDs", "XD"),
             "XD"
         );
     }
@@ -681,7 +681,7 @@ public class CSharpItemsTest {
     public void GCNXDItemPCTest()
     {
         PKMNTest.GCNItemsTest.ItemPCTest(
-            new PKMN.ItemList2("PC", "XD"),
+            new PKMN.ItemList("PC", "XD"),
             "XD"
         );
     }
@@ -689,7 +689,7 @@ public class CSharpItemsTest {
     public void GCNXDItemBagTest()
     {
         PKMNTest.GCNItemsTest.ItemBagTest(
-            new PKMN.ItemBag2("XD"),
+            new PKMN.ItemBag("XD"),
             "XD"
         );
     }

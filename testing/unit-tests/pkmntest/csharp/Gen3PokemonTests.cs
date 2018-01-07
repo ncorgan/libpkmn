@@ -20,7 +20,7 @@ public class Gen3PokemonTests
                                        "Country", "National", "Earth", "World"};
 
     static private void CheckInitialRibbonMap(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         foreach(string contestType in ContestTypes)
@@ -44,7 +44,7 @@ public class Gen3PokemonTests
     }
 
     static private void TestContestRibbons(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         foreach(string contestType in ContestTypes)
@@ -69,7 +69,7 @@ public class Gen3PokemonTests
     }
 
     static private void TestRibbons(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         foreach(string ribbon in Ribbons)
@@ -84,7 +84,7 @@ public class Gen3PokemonTests
         string species
     )
     {
-        PKMN.Pokemon2 pokemon = new PKMN.Pokemon2(species, game, "", 30);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams;
         bool isGamecube = (game.Equals("Colosseum") || game.Equals("XD"));
@@ -154,7 +154,7 @@ public class Gen3PokemonTests
         {
             string shadowSpecies = game.Equals("Colosseum") ? "Ledian" : "Ledyba";
 
-            PKMN.Pokemon2 shadowPokemon = new PKMN.Pokemon2(shadowSpecies, game, "", 50);
+            PKMN.Pokemon shadowPokemon = new PKMN.Pokemon(shadowSpecies, game, "", 50);
             Assert.AreEqual(shadowPokemon.Form, "Standard");
             shadowPokemon.Form = "Shadow";
             Assert.AreEqual(shadowPokemon.Form, "Shadow");
@@ -164,7 +164,7 @@ public class Gen3PokemonTests
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Ledyba", game, "Shadow", 50);
+                    new PKMN.Pokemon("Ledyba", game, "Shadow", 50);
                 }
             );
         }

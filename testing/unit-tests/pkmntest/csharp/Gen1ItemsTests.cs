@@ -24,7 +24,7 @@ public class Gen1ItemsTest
     };
 
     public static void ItemListCommon(
-        PKMN.ItemList2 itemList,
+        PKMN.ItemList itemList,
         string game
     )
     {
@@ -58,7 +58,7 @@ public class Gen1ItemsTest
     }
 
     public static void ItemListTest(
-        PKMN.ItemList2 itemList,
+        PKMN.ItemList itemList,
         string game
     )
     {
@@ -72,7 +72,7 @@ public class Gen1ItemsTest
     }
 
     public static void ItemPCTest(
-        PKMN.ItemList2 itemPC,
+        PKMN.ItemList itemPC,
         string game
     )
     {
@@ -86,7 +86,7 @@ public class Gen1ItemsTest
     }
 
     public static void ItemBagTest(
-        PKMN.ItemBag2 itemBag,
+        PKMN.ItemBag itemBag,
         string game
     )
     {
@@ -103,7 +103,7 @@ public class Gen1ItemsTest
         ItemListTest(itemBag["Items"], game);
 
         // Make sure adding items through the bag adds to the pocket.
-        PKMN.ItemList2 itemPocket = itemBag["Items"];
+        PKMN.ItemList itemPocket = itemBag["Items"];
         Assert.AreEqual(itemPocket.NumItems, 0);
 
         for(int i = 0; i < 8; ++i)

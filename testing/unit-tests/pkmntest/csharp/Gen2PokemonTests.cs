@@ -18,7 +18,7 @@ public class Gen2PokemonTests
         string species
     )
     {
-        PKMN.Pokemon2 pokemon = new PKMN.Pokemon2(species, game, "", 30);
+        PKMN.Pokemon pokemon = new PKMN.Pokemon(species, game, "", 30);
 
         PokemonTestParams testParams = new PokemonTestParams(
                                                "Great Ball",

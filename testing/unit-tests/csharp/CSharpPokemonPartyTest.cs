@@ -29,7 +29,7 @@ public class CSharpPokemonPartyTest
     )
     {
         PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty2(game)
+            new PKMN.PokemonParty(game)
         );
     }
 }

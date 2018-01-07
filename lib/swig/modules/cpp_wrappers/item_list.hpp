@@ -23,20 +23,20 @@ namespace pkmn { namespace swig {
      *
      * itemPocket[0].item = "Potion"
      */
-    class item_list2
+    class item_list
     {
         public:
-            item_list2():
+            item_list():
                 _item_list(nullptr)
             {}
 
-            item_list2(
+            item_list(
                 const pkmn::item_list::sptr& cpp_item_list
             ): _item_list(cpp_item_list)
             {
             }
 
-            item_list2(
+            item_list(
                 const std::string& name,
                 const std::string& game
             ): _item_list(pkmn::item_list::make(name, game))
@@ -44,7 +44,7 @@ namespace pkmn { namespace swig {
             }
 
             bool operator==(
-                const item_list2& rhs
+                const item_list& rhs
             ) const
             {
                 return (_item_list == rhs._item_list);
@@ -70,11 +70,11 @@ namespace pkmn { namespace swig {
                 return _item_list->get_num_items();
             }
 
-            item_slot2 at(
+            item_slot at(
                 int index
             )
             {
-                return item_slot2(_item_list, index);
+                return item_slot(_item_list, index);
             }
 
             void add(

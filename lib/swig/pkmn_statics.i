@@ -11,6 +11,28 @@
  * sptr class.
  */
 
+#ifdef SWIGCSHARP
+
+%{
+    #include <pkmn/pokemon.hpp>
+    #include <cstdint>
+
+    inline uint32_t get_default_trainer_id()
+    {
+        return pkmn::pokemon::DEFAULT_TRAINER_ID;
+    }
+
+    inline std::string get_default_trainer_name()
+    {
+        return pkmn::pokemon::DEFAULT_TRAINER_NAME;
+    }
+%}
+
+uint32_t get_default_trainer_id();
+std::string get_default_trainer_name();
+
+#else
+
 %{
     #include <pkmn/config.hpp>
 
@@ -183,3 +205,5 @@ pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);
+
+#endif // SWIGCSHARP

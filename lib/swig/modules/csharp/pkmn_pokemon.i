@@ -6,369 +6,135 @@
  */
 
 %{
-    #include <pkmn/pokemon.hpp>
+    #include "cpp_wrappers/pokemon.hpp"
+    #include "cpp_wrappers/pokemon_helpers.hpp"
 %}
 
-%typemap(csimports) pkmn::pokemon "
+%import <csharp/pkmn_pokemon_helpers.i>
+
+%include <attribute.i>
+
+%typemap(csimports) pkmn::swig::pokemon "
 using System;
 using System.Runtime.InteropServices;
 using Database;"
-%typemap(csimports) pkmn::shared_ptr<pkmn::pokemon> "
-using System;
-using System.Runtime.InteropServices;
-using Database;"
 
-%rename(IsShinyFunction) pkmn::pokemon::is_shiny;
-%rename(pokemon_base) pkmn::pokemon;
+%ignore pkmn::swig::pokemon::pokemon();
+%ignore pkmn::swig::pokemon::pokemon(const pkmn::pokemon::sptr&);
+%ignore pkmn::swig::pokemon::pokemon(const pkmn::swig::pokemon&);
+%ignore pkmn::swig::pokemon::get_internal() const;
 
-%csmethodmodifiers pkmn::pokemon::get_species "private";
-%csmethodmodifiers pkmn::pokemon::get_game "private";
-%csmethodmodifiers pkmn::pokemon::get_form "private";
-%csmethodmodifiers pkmn::pokemon::set_form(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_database_entry "private";
-%csmethodmodifiers pkmn::pokemon::get_nickname "private";
-%csmethodmodifiers pkmn::pokemon::set_nickname "private";
-%csmethodmodifiers pkmn::pokemon::get_gender "private";
-%csmethodmodifiers pkmn::pokemon::set_gender(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::is_shiny "private";
-%csmethodmodifiers pkmn::pokemon::set_shininess "private";
-%csmethodmodifiers pkmn::pokemon::get_held_item "private";
-%csmethodmodifiers pkmn::pokemon::set_held_item "private";
-%csmethodmodifiers pkmn::pokemon::get_pokerus_duration "private";
-%csmethodmodifiers pkmn::pokemon::set_pokerus_duration "private";
-%csmethodmodifiers pkmn::pokemon::get_original_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::set_original_trainer_name "private";
-%csmethodmodifiers pkmn::pokemon::get_original_trainer_public_id "private";
-%csmethodmodifiers pkmn::pokemon::get_original_trainer_secret_id "private";
-%csmethodmodifiers pkmn::pokemon::get_original_trainer_id "private";
-%csmethodmodifiers pkmn::pokemon::set_original_trainer_public_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_original_trainer_secret_id(uint16_t) "private";
-%csmethodmodifiers pkmn::pokemon::set_original_trainer_id(uint32_t) "private";
-%csmethodmodifiers pkmn::pokemon::get_original_trainer_gender "private";
-%csmethodmodifiers pkmn::pokemon::set_original_trainer_gender(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_current_trainer_friendship "private";
-%csmethodmodifiers pkmn::pokemon::set_current_trainer_friendship(int) "private";
-%csmethodmodifiers pkmn::pokemon::get_ability "private";
-%csmethodmodifiers pkmn::pokemon::set_ability(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_ball "private";
-%csmethodmodifiers pkmn::pokemon::set_ball(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_level_met "private";
-%csmethodmodifiers pkmn::pokemon::set_level_met(int) "private";
-%csmethodmodifiers pkmn::pokemon::get_original_game "private";
-%csmethodmodifiers pkmn::pokemon::set_original_game(const std::string&) "private";
-%csmethodmodifiers pkmn::pokemon::get_personality "private";
-%csmethodmodifiers pkmn::pokemon::set_personality(uint32_t) "private";
-%csmethodmodifiers pkmn::pokemon::get_experience "private";
-%csmethodmodifiers pkmn::pokemon::set_experience(int) "private";
-%csmethodmodifiers pkmn::pokemon::get_level "private";
-%csmethodmodifiers pkmn::pokemon::set_level(int) "private";
-%csmethodmodifiers pkmn::pokemon::get_markings "private";
-%csmethodmodifiers pkmn::pokemon::get_ribbons "private";
-%csmethodmodifiers pkmn::pokemon::get_contest_stats "private";
-%csmethodmodifiers pkmn::pokemon::get_moves "private";
-%csmethodmodifiers pkmn::pokemon::get_EVs "private";
-%csmethodmodifiers pkmn::pokemon::get_IVs "private";
-%csmethodmodifiers pkmn::pokemon::get_stats "private";
-%csmethodmodifiers pkmn::pokemon::get_icon_filepath "private";
-%csmethodmodifiers pkmn::pokemon::get_sprite_filepath "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__sptr_eq "private";
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::pokemon::cptr() "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon> %{
-    public string Species {
-        get {
-            return GetSpecies();
-        }
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::pokemon, std::string, Species, get_species);
+%attributestring(pkmn::swig::pokemon, std::string, Game, get_game);
+%attributestring(pkmn::swig::pokemon, std::string, Form, get_form, set_form);
+%attribute(pkmn::swig::pokemon, bool, IsEgg, is_egg, set_is_egg);
+%attributestring(pkmn::swig::pokemon, std::string, Nickname, get_nickname, set_nickname);
+%attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, DatabaseEntry, get_database_entry);
+%attributestring(pkmn::swig::pokemon, std::string, Condition, get_condition, set_condition);
+%attributestring(pkmn::swig::pokemon, std::string, Gender, get_gender, set_gender);
+%attribute(pkmn::swig::pokemon, bool, IsShiny, is_shiny, set_shininess);
+%attributestring(pkmn::swig::pokemon, std::string, HeldItem, get_held_item, set_held_item);
+%attribute(pkmn::swig::pokemon, int, PokerusDuration, get_pokerus_duration, set_pokerus_duration);
+%attributestring(pkmn::swig::pokemon, std::string, OriginalTrainerName, get_original_trainer_name, set_original_trainer_name);
+%attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerPublicID, get_original_trainer_public_id, set_original_trainer_public_id);
+%attribute(pkmn::swig::pokemon, uint16_t, OriginalTrainerSecretID, get_original_trainer_secret_id, set_original_trainer_secret_id);
+%attribute(pkmn::swig::pokemon, uint32_t, OriginalTrainerID, get_original_trainer_id, set_original_trainer_id);
+%attributestring(pkmn::swig::pokemon, std::string, OriginalTrainerGender, get_original_trainer_gender, set_original_trainer_gender);
+%attribute(pkmn::swig::pokemon, int, CurrentTrainerFriendship, get_current_trainer_friendship, set_current_trainer_friendship);
+%attributestring(pkmn::swig::pokemon, std::string, Ability, get_ability, set_ability);
+%attributestring(pkmn::swig::pokemon, std::string, Ball, get_ball, set_ball);
+%attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
+%attributestring(pkmn::swig::pokemon, std::string, OriginalGame, get_original_game, set_original_game);
+%attribute(pkmn::swig::pokemon, uint32_t, Personality, get_personality, set_personality);
+%attribute(pkmn::swig::pokemon, int, Experience, get_experience, set_experience);
+%attribute(pkmn::swig::pokemon, int, Level, get_level, set_level);
+%attribute(pkmn::swig::pokemon, int, CurrentHP, get_current_hp, set_current_hp);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::EV_map, EVs, get_EVs);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::IV_map, IVs, get_IVs);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::marking_map, Markings, get_markings);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::ribbon_map, Ribbons, get_ribbons);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::contest_stat_map, ContestStats, get_contest_stats);
+%attributeval(pkmn::swig::pokemon, pkmn::swig::move_slots, Moves, get_moves);
+%attributeval(pkmn::swig::pokemon, %arg(std::map<std::string, int>), Stats, get_stats);
+%attributestring(pkmn::swig::pokemon, std::string, IconFilepath, get_icon_filepath);
+%attributestring(pkmn::swig::pokemon, std::string, SpriteFilepath, get_sprite_filepath);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), NumericAttributes, get_numeric_attributes);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), StringAttributes, get_string_attributes);
+
+// As these are not simple getters and setters, this wrapping must be manually done.
+
+%csmethodmodifiers pkmn::swig::pokemon::get_level_met() "private";
+%csmethodmodifiers pkmn::swig::pokemon::set_level_met(int) "private";
+%csmethodmodifiers pkmn::swig::pokemon::get_location_met(bool) "private";
+%csmethodmodifiers pkmn::swig::pokemon::set_location_met(const std::string&, bool) "private";
+
+%typemap(cscode) pkmn::swig::pokemon
+%{
+#if __DOXYGEN__
+    // So internal functions aren't exposed in public documentation...
+    public static readonly uint DEFAULT_TRAINER_ID;
+    public static readonly string DEFAULT_TRAINER_NAME;
+#else
+    public static readonly uint DEFAULT_TRAINER_ID = PKMN.get_default_trainer_id();
+    public static readonly string DEFAULT_TRAINER_NAME = PKMN.get_default_trainer_name();
+#endif
+
+    public string LocationMet
+    {
+        get { return GetLocationMet(false); }
+        set { SetLocationMet(value, false); }
     }
 
-    public string Game {
-        get {
-            return GetGame();
-        }
+    public string LocationMetAsEgg
+    {
+        get { return GetLocationMet(true); }
+        set { SetLocationMet(value, true); }
     }
 
-    public string Form {
-        get {
-            return GetForm();
-        }
-        set {
-            SetForm(value);
-        }
-    }
-
-    public PokemonEntry DatabaseEntry {
-        get {
-            return GetDatabaseEntry();
-        }
-    }
-
-    public string Nickname {
-        get {
-            return GetNickname();
-        }
-        set {
-            SetNickname(value);
-        }
-    }
-
-    public string Gender {
-        get {
-            return GetGender();
-        }
-        set {
-            SetGender(value);
-        }
-    }
-
-    public bool IsShiny {
-        get {
-            return IsShinyFunction();
-        }
-        set {
-            SetShininess(value);
-        }
-    }
-
-    public string HeldItem {
-        get {
-            return GetHeldItem();
-        }
-        set {
-            SetHeldItem(value);
-        }
-    }
-
-    public int PokerusDuration {
-        get {
-            return GetPokerusDuration();
-        }
-        set {
-            SetPokerusDuration(value);
-        }
-    }
-
-    public string OriginalTrainerName {
-        get {
-            return GetOriginalTrainerName();
-        }
-        set {
-            SetOriginalTrainerName(value);
-        }
-    }
-
-    public uint OriginalTrainerID {
-        get {
-            return GetOriginalTrainerID();
-        }
-        set {
-            SetOriginalTrainerID(value);
-        }
-    }
-
-    public ushort OriginalTrainerPublicID {
-        get {
-            return GetOriginalTrainerPublicID();
-        }
-        set {
-            SetOriginalTrainerPublicID(value);
-        }
-    }
-
-    public ushort OriginalTrainerSecretID {
-        get {
-            return GetOriginalTrainerSecretID();
-        }
-        set {
-            SetOriginalTrainerSecretID(value);
-        }
-    }
-
-    public string OriginalTrainerGender {
-        get {
-            return GetOriginalTrainerGender();
-        }
-        set {
-            SetOriginalTrainerGender(value);
-        }
-    }
-
-    public int CurrentTrainerFriendship {
-        get {
-            return GetCurrentTrainerFriendship();
-        }
-        set {
-            SetCurrentTrainerFriendship(value);
-        }
-    }
-
-    public string Ability {
-        get {
-            return GetAbility();
-        }
-        set {
-            SetAbility(value);
-        }
-    }
-
-    public string Ball {
-        get {
-            return GetBall();
-        }
-        set {
-            SetBall(value);
-        }
-    }
-
-    public int LevelMet {
-        get {
-            return GetLevelMet();
-        }
-        set {
-            SetLevelMet(value);
-        }
-    }
-
-    public string OriginalGame {
-        get {
-            return GetOriginalGame();
-        }
-        set {
-            SetOriginalGame(value);
-        }
-    }
-
-    public uint Personality {
-        get {
-            return GetPersonality();
-        }
-        set {
-            SetPersonality(value);
-        }
-    }
-
-    public int Experience {
-        get {
-            return GetExperience();
-        }
-        set {
-            SetExperience(value);
-        }
-    }
-
-    public int Level {
-        get {
-            return GetLevel();
-        }
-        set {
-            SetLevel(value);
-        }
-    }
-
-    public StringBoolDict Markings {
-        get {
-            return GetMarkings();
-        }
-    }
-
-    public StringBoolDict Ribbons {
-        get {
-            return GetRibbons();
-        }
-    }
-
-    public StringIntDict ContestStats {
-        get {
-            return GetContestStats();
-        }
-    }
-
-    public MoveSlotList Moves {
-        get {
-            return GetMoves();
-        }
-    }
-
-    public StringIntDict EVs {
-        get {
-            return GetEVs();
-        }
-    }
-
-    public StringIntDict IVs {
-        get {
-            return GetIVs();
-        }
-    }
-
-    public StringIntDict Stats {
-        get {
-            return GetStats();
-        }
-    }
-
-    public string IconFilepath {
-        get {
-            return GetIconFilepath();
-        }
-    }
-
-    public string SpriteFilepath {
-        get {
-            return GetSpriteFilepath();
-        }
-    }
-
-    /// <summary>Compares two Pokemon instances to determine value equality.</summary>
-    /// <remarks>
-    /// Returns true if the internal shared_ptrs' pointers are equal.
-    /// </remarks>
-    /// <param name="rhs">Pokemon with which to compare self</param>
-    /// <returns>Whether or not Pokemon instances are equal</returns>
-    /// </remarks>
-    public bool Equals(Pokemon rhs) {
-        if(rhs == null) {
+    public bool Equals(Pokemon other)
+    {
+        if(other == null)
+        {
             return false;
-        } else if(this == rhs) {
+        }
+        else if(this == other)
+        {
             return true;
-        } else {
-            return this.__sptr_eq(rhs);
+        }
+        else
+        {
+            return (this.Cptr() == other.Cptr());
         }
     }
 
-    /// <summary>Compares an instance of Pokemon to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not Pokemon and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
+    public override bool Equals(System.Object other)
+    {
+        if(other == null)
+        {
             return false;
         }
 
-        Pokemon rhsSptr = rhs as Pokemon;
-        if(rhsSptr == null) {
+        Pokemon otherAsPokemon = other as Pokemon;
+        if(otherAsPokemon == null)
+        {
             return false;
-        } else {
-            return this.Equals(rhsSptr);
+        }
+        else
+        {
+            return this.Equals(otherAsPokemon);
         }
     }
 
-    /// <summary>Generates a unique hash code for the given Pokemon.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
-                              .ToHashCode();
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                       .ToHashCode();
     }
-
-    public static readonly uint DEFAULT_TRAINER_ID = 2105214279;
-    public static readonly string DEFAULT_TRAINER_NAME = "LibPKMN";
 %}
 
-%ignore DEFAULT_TRAINER_ID;
-%ignore DEFAULT_TRAINER_NAME;
-%ignore from_file;
-%ignore get_native_pc_data;
-%ignore get_native_party_data;
-%include <pkmn/pokemon.hpp>
-%template(Pokemon) pkmn::shared_ptr<pkmn::pokemon>;
-
-%import <csharp/stl_macros.i>
-PKMN_CSHARP_VECTOR(pkmn::pokemon::sptr, Pokemon, PokemonList)
+%include "cpp_wrappers/pokemon.hpp"

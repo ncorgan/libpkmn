@@ -18,29 +18,27 @@
 
 namespace pkmn { namespace swig {
 
-    class pokemon_pc2
+    class pokemon_pc
     {
         public:
-            pokemon_pc2():
+            pokemon_pc():
                 _pokemon_pc(nullptr)
             {}
 
-            pokemon_pc2(
+            pokemon_pc(
                 const pkmn::pokemon_pc::sptr& cpp_pokemon_pc
             ): _pokemon_pc(cpp_pokemon_pc)
             {
-                _populate_list();
             }
 
-            pokemon_pc2(
+            pokemon_pc(
                 const std::string& game
             ): _pokemon_pc(pkmn::pokemon_pc::make(game))
             {
-                _populate_list();
             }
 
             bool operator==(
-                const pokemon_pc2& rhs
+                const pokemon_pc& rhs
             ) const
             {
                 return (_pokemon_pc == rhs._pokemon_pc);
@@ -56,19 +54,14 @@ namespace pkmn { namespace swig {
                 return _pokemon_pc->get_num_boxes();
             }
 
-            inline pkmn::swig::pokemon_box2 get_box(
+            inline pkmn::swig::pokemon_box get_box(
                 int index
             )
             {
                 int num_boxes = _pokemon_pc->get_num_boxes();
                 pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
-                return pkmn::swig::pokemon_box2(_pokemon_pc->get_box(index));
-            }
-
-            inline const std::vector<pkmn::swig::pokemon_box2>& as_vector()
-            {
-                return _pokemon_box_list;
+                return pkmn::swig::pokemon_box(_pokemon_pc->get_box(index));
             }
 
             // Copy the vector, since the const in the reference
@@ -85,18 +78,6 @@ namespace pkmn { namespace swig {
 
         private:
             pkmn::pokemon_pc::sptr _pokemon_pc;
-
-            std::vector<pkmn::swig::pokemon_box2> _pokemon_box_list;
-
-            void _populate_list()
-            {
-                const pkmn::pokemon_box_list_t& internal_vector = _pokemon_pc->as_vector();
-                _pokemon_box_list.reserve(internal_vector.size());
-                for(size_t i = 0; i < internal_vector.size(); ++i)
-                {
-                    _pokemon_box_list.emplace_back(pkmn::swig::pokemon_box2(internal_vector[i]));
-                }
-            }
     };
 
 }}

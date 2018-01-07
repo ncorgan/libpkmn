@@ -24,10 +24,10 @@ public class PokemonIOTests
     {
         string pk1Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk1", game, rng.Next()));
 
-        PKMN.Pokemon2 randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
         randomPokemon.ExportToFile(pk1Path);
 
-        PKMN.Pokemon2 importedPokemon = new PKMN.Pokemon2(pk1Path);
+        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk1Path);
         Util.ComparePokemon(randomPokemon, importedPokemon);
 
         System.IO.File.Delete(pk1Path);
@@ -39,10 +39,10 @@ public class PokemonIOTests
     {
         string pk2Path = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.pk2", game, rng.Next()));
 
-        PKMN.Pokemon2 randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
         randomPokemon.ExportToFile(pk2Path);
 
-        PKMN.Pokemon2 importedPokemon = new PKMN.Pokemon2(pk2Path);
+        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(pk2Path);
         Util.ComparePokemon(randomPokemon, importedPokemon);
 
         System.IO.File.Delete(pk2Path);
@@ -54,10 +54,10 @@ public class PokemonIOTests
     {
         string _3gpkmPath = System.IO.Path.Combine(TmpDir, String.Format("{0}_{1}.3gpkm", game, rng.Next()));
 
-        PKMN.Pokemon2 randomPokemon = Util.GetRandomPokemon(game);
+        PKMN.Pokemon randomPokemon = Util.GetRandomPokemon(game);
         randomPokemon.ExportToFile(_3gpkmPath);
 
-        PKMN.Pokemon2 importedPokemon = new PKMN.Pokemon2(_3gpkmPath);
+        PKMN.Pokemon importedPokemon = new PKMN.Pokemon(_3gpkmPath);
         Util.ComparePokemon(randomPokemon, importedPokemon);
 
         System.IO.File.Delete(_3gpkmPath);
@@ -70,7 +70,7 @@ public class PokemonIOTests
          */
         string _3GPKMDir = System.IO.Path.Combine(LibPKMNTestFiles, "3gpkm");
 
-        PKMN.Pokemon2 mightyena = new PKMN.Pokemon2(
+        PKMN.Pokemon mightyena = new PKMN.Pokemon(
                                           System.IO.Path.Combine(_3GPKMDir, "MIGHTYENA.3gpkm")
                                       );
         Assert.AreEqual(mightyena.Species, "Mightyena");

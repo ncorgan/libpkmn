@@ -18,20 +18,20 @@
 
 namespace pkmn { namespace swig {
 
-    class game_save2
+    class game_save
     {
         public:
-            game_save2():
+            game_save():
                 _game_save(nullptr)
             {}
 
-            game_save2(
+            game_save(
                 const pkmn::game_save::sptr& cpp_game_save
             ): _game_save(cpp_game_save)
             {
             }
 
-            game_save2(
+            game_save(
                 const std::string& filepath 
             ): _game_save(pkmn::game_save::from_file(filepath))
             {
@@ -45,7 +45,7 @@ namespace pkmn { namespace swig {
             }
 
             bool operator==(
-                const game_save2& rhs
+                const game_save& rhs
             ) const
             {
                 return (_game_save == rhs._game_save);
@@ -157,24 +157,24 @@ namespace pkmn { namespace swig {
                 _game_save->set_money(money);
             }
 
-            inline pkmn::swig::pokemon_party2 get_pokemon_party()
+            inline pkmn::swig::pokemon_party get_pokemon_party()
             {
-                return pkmn::swig::pokemon_party2(_game_save->get_pokemon_party());
+                return pkmn::swig::pokemon_party(_game_save->get_pokemon_party());
             }
 
-            inline pkmn::swig::pokemon_pc2 get_pokemon_pc()
+            inline pkmn::swig::pokemon_pc get_pokemon_pc()
             {
-                return pkmn::swig::pokemon_pc2(_game_save->get_pokemon_pc());
+                return pkmn::swig::pokemon_pc(_game_save->get_pokemon_pc());
             }
 
-            inline pkmn::swig::item_bag2 get_item_bag()
+            inline pkmn::swig::item_bag get_item_bag()
             {
-                return pkmn::swig::item_bag2(_game_save->get_item_bag());
+                return pkmn::swig::item_bag(_game_save->get_item_bag());
             }
 
-            inline pkmn::swig::item_list2 get_item_pc()
+            inline pkmn::swig::item_list get_item_pc()
             {
-                return pkmn::swig::item_list2(_game_save->get_item_pc());
+                return pkmn::swig::item_list(_game_save->get_item_pc());
             }
 
             inline uintmax_t cptr()

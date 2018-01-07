@@ -28,7 +28,7 @@ public class GBAItemsTest
     };
 
     public static void ItemPocketTest(
-        PKMN.ItemList2 itemPocket,
+        PKMN.ItemList itemPocket,
         string game
     )
     {
@@ -95,7 +95,7 @@ public class GBAItemsTest
     }
 
     public static void KeyItemPocketTest(
-        PKMN.ItemList2 keyItemPocket,
+        PKMN.ItemList keyItemPocket,
         string game
     )
     {
@@ -172,7 +172,7 @@ public class GBAItemsTest
     }
 
     public static void BallPocketTest(
-        PKMN.ItemList2 ballPocket,
+        PKMN.ItemList ballPocket,
         string game
     )
     {
@@ -229,7 +229,7 @@ public class GBAItemsTest
     }
 
     public static void TMHMPocketTest(
-        PKMN.ItemList2 tmhmPocket,
+        PKMN.ItemList tmhmPocket,
         string game
     )
     {
@@ -290,7 +290,7 @@ public class GBAItemsTest
     }
 
     public static void BerryPocketTest(
-        PKMN.ItemList2 berryPocket,
+        PKMN.ItemList berryPocket,
         string game
     )
     {
@@ -351,7 +351,7 @@ public class GBAItemsTest
     }
 
     public static void ItemPCTest(
-        PKMN.ItemList2 itemPC,
+        PKMN.ItemList itemPC,
         string game
     )
     {
@@ -391,7 +391,7 @@ public class GBAItemsTest
     }
 
     public static void ItemBagTest(
-        PKMN.ItemBag2 itemBag,
+        PKMN.ItemBag itemBag,
         string game
     )
     {

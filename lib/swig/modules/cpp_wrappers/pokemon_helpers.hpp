@@ -427,15 +427,15 @@ namespace pkmn { namespace swig {
             pkmn::pokemon::sptr _pokemon;
     };
 
-    class move_slot2
+    class move_slot
     {
         public:
-            move_slot2():
+            move_slot():
                 _pokemon(nullptr),
                 _index(0)
             {}
 
-            move_slot2(
+            move_slot(
                 const pkmn::pokemon::sptr& cpp_pokemon,
                 int index
             ): _pokemon(cpp_pokemon),
@@ -484,12 +484,12 @@ namespace pkmn { namespace swig {
                 _pokemon->set_move_pp(_index, pp);
             }
 
-            bool operator==(const move_slot2& rhs) const
+            bool operator==(const move_slot& rhs) const
             {
                 return (_pokemon == rhs._pokemon) && (_index == rhs._index);
             }
 
-            bool swig_equals(const move_slot2& rhs) const
+            bool swig_equals(const move_slot& rhs) const
             {
                 return operator==(rhs);
             }
@@ -499,21 +499,21 @@ namespace pkmn { namespace swig {
             int _index;
     };
 
-    class move_slots2
+    class move_slots
     {
         public:
-            move_slots2():
+            move_slots():
                 _pokemon(nullptr)
             {}
 
-            move_slots2(
+            move_slots(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
             {
                 _init();
             }
 
-            move_slot2 get_move_slot(
+            move_slot get_move_slot(
                 int index
             )
             {
@@ -533,12 +533,12 @@ namespace pkmn { namespace swig {
                 return _moves.size();
             }
 
-            bool operator==(const move_slots2& rhs) const
+            bool operator==(const move_slots& rhs) const
             {
                 return (_pokemon == rhs._pokemon) && (_moves == rhs._moves);
             }
 
-            bool swig_equals(const move_slots2& rhs) const
+            bool swig_equals(const move_slots& rhs) const
             {
                 return operator==(rhs);
             }
@@ -546,14 +546,14 @@ namespace pkmn { namespace swig {
         private:
             pkmn::pokemon::sptr _pokemon;
 
-            std::vector<move_slot2> _moves;
+            std::vector<move_slot> _moves;
 
             void _init()
             {
                 for(int i = 0; i < 4; ++i)
                 {
                     _moves.emplace_back(
-                        move_slot2(
+                        move_slot(
                             _pokemon,
                             i
                         )

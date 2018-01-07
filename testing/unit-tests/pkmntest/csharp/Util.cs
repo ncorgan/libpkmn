@@ -69,7 +69,7 @@ internal class Util
         return System.IO.Path.GetRandomFileName().Replace(".","").Substring(0,length);
     }
 
-    internal static PKMN.Pokemon2 GetRandomPokemon(
+    internal static PKMN.Pokemon GetRandomPokemon(
         string game
     )
     {
@@ -94,7 +94,7 @@ internal class Util
             species = pokemonList[rng.Next(0, pokemonList.Count-1)];
         }
 
-        PKMN.Pokemon2 ret = new PKMN.Pokemon2(
+        PKMN.Pokemon ret = new PKMN.Pokemon(
                                     species,
                                     game,
                                     "",
@@ -158,8 +158,8 @@ internal class Util
     }
 
     internal static void ComparePokemon(
-        PKMN.Pokemon2 pokemon1,
-        PKMN.Pokemon2 pokemon2
+        PKMN.Pokemon pokemon1,
+        PKMN.Pokemon pokemon2
     )
     {
         string game = pokemon1.Game;

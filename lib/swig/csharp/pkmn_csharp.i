@@ -62,39 +62,25 @@ std::string GetSWIGVersion();
 
 // Game Save
 %include <csharp/pkmn_game_save.i>
-%include <csharp/pkmn_game_save2.i>
 
 // Item Slot
 %include <csharp/pkmn_item_slot.i>
-%include <csharp/pkmn_item_slot2.i>
 
 // Item List
 %include <csharp/pkmn_item_list.i>
-PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPockets);
-
-%include <csharp/pkmn_item_list2.i>
 
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
-%include <csharp/pkmn_item_bag2.i>
-
-// Move Slot
-%include <csharp/pkmn_move_slot.i>
 
 // Pokémon 
-%include <csharp/pkmn_pokemon.i>
-
 %include <csharp/pkmn_pokemon_helpers.i>
-%include <csharp/pkmn_pokemon2.i>
+%include <csharp/pkmn_pokemon.i>
 
 // Pokémon Box
 %include <csharp/pkmn_pokemon_box.i>
-%include <csharp/pkmn_pokemon_box2.i>
 
 // Pokémon Party
 %include <csharp/pkmn_pokemon_party.i>
-%include <csharp/pkmn_pokemon_party2.i>
 
 // Pokémon PC
 %include <csharp/pkmn_pokemon_pc.i>
-%include <csharp/pkmn_pokemon_pc2.i>

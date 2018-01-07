@@ -26,21 +26,21 @@ namespace pkmn { namespace swig {
      *
      * bulbasaur.EVs["Attack"] = 100
      */
-    class pokemon2
+    class pokemon
     {
         public:
-            pokemon2():
+            pokemon():
                 _pokemon(nullptr)
             {}
 
-            pokemon2(
+            pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
             {
                 _init();
             }
 
-            pokemon2(
+            pokemon(
                 const std::string& species,
                 const std::string& game,
                 const std::string& form,
@@ -50,18 +50,18 @@ namespace pkmn { namespace swig {
                 _init();
             }
 
-            pokemon2(
+            pokemon(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
                 _init();
             }
 
-            inline pokemon2 to_game(
+            inline pokemon to_game(
                 const std::string& game
             )
             {
-                return pokemon2(_pokemon->to_game(game));
+                return pokemon(_pokemon->to_game(game));
             }
 
             inline void export_to_file(
@@ -394,7 +394,7 @@ namespace pkmn { namespace swig {
                 return _contest_stat_map;
             }
 
-            inline move_slots2 get_moves()
+            inline move_slots get_moves()
             {
                 return _move_slots;
             }
@@ -433,7 +433,7 @@ namespace pkmn { namespace swig {
             // TODO: ifdef for specific wrappers
 
             bool operator==(
-                const pokemon2& rhs
+                const pokemon& rhs
             ) const
             {
                 return (_pokemon == rhs._pokemon);
@@ -452,7 +452,7 @@ namespace pkmn { namespace swig {
             marking_map _marking_map;
             ribbon_map _ribbon_map;
             contest_stat_map _contest_stat_map;
-            move_slots2 _move_slots;
+            move_slots _move_slots;
             numeric_attribute_map<pkmn::pokemon> _numeric_attribute_map;
             string_attribute_map<pkmn::pokemon> _string_attribute_map;
 
@@ -463,7 +463,7 @@ namespace pkmn { namespace swig {
                 _marking_map = marking_map(_pokemon);
                 _ribbon_map = ribbon_map(_pokemon);
                 _contest_stat_map = contest_stat_map(_pokemon);
-                _move_slots = move_slots2(_pokemon);
+                _move_slots = move_slots(_pokemon);
                 _numeric_attribute_map = numeric_attribute_map<pkmn::pokemon>(_pokemon);
                 _string_attribute_map = string_attribute_map<pkmn::pokemon>(_pokemon);
             }

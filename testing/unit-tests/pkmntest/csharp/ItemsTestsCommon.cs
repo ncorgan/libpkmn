@@ -13,7 +13,7 @@ namespace PKMNTest
     internal class ItemsTestsCommon
     {
         public static void TestItemListEmptySlots(
-            PKMN.ItemList2 itemList
+            PKMN.ItemList itemList
         )
         {
             Assert.AreEqual(0, itemList.NumItems);
@@ -25,7 +25,7 @@ namespace PKMNTest
         }
 
         public static void TestItemListIndexOutOfRangeException(
-            PKMN.ItemList2 itemList,
+            PKMN.ItemList itemList,
             string itemName
         )
         {
@@ -61,7 +61,7 @@ namespace PKMNTest
         }
 
         public static void TestItemBagInvalidItems(
-            PKMN.ItemBag2 itemBag,
+            PKMN.ItemBag itemBag,
             string[] itemNames
         )
         {
@@ -77,7 +77,7 @@ namespace PKMNTest
         }
 
         public static void TestItemListInvalidItems(
-            PKMN.ItemList2 itemList,
+            PKMN.ItemList itemList,
             string[] itemNames
         )
         {
@@ -98,7 +98,7 @@ namespace PKMNTest
         }
 
         public static void TestItemListSettingItems(
-            PKMN.ItemList2 itemList,
+            PKMN.ItemList itemList,
             string[] itemNames
         )
         {
@@ -163,7 +163,7 @@ namespace PKMNTest
         }
 
         public static void TestItemListAddingAndRemovingItems(
-            PKMN.ItemList2 itemList,
+            PKMN.ItemList itemList,
             string[] itemNames
         )
         {

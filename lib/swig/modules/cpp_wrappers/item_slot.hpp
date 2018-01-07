@@ -14,15 +14,15 @@
 
 namespace pkmn { namespace swig {
 
-    class item_slot2
+    class item_slot
     {
         public:
-            item_slot2():
+            item_slot():
                 _item_list(nullptr),
                 _index(0)
             {}
 
-            item_slot2(
+            item_slot(
                 const pkmn::item_list::sptr& item_list,
                 int index
             ): _item_list(item_list),

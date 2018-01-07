@@ -5,97 +5,84 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-/*
- * Given that this is supposed to be a list, we'll add the []
- * operator to treat it as such. But we can't use the cscode typemap
- * twice, so we can't use the usual SPTR macro.
- */
-
 %{
-    #include <pkmn/pokemon_party.hpp>
+    #include "cpp_wrappers/pokemon_party.hpp"
 %}
 
-%rename(pokemon_party_base) pkmn::pokemon_party;
-%rename(AsList) as_vector;
+%include <attribute.i>
 
-%csmethodmodifiers pkmn::pokemon_party::get_game "private";
-%csmethodmodifiers pkmn::pokemon_party::get_num_pokemon "private";
-%csmethodmodifiers pkmn::pokemon_party::get_pokemon(int) "private";
-%csmethodmodifiers pkmn::pokemon_party::set_pokemon(int, pkmn::pokemon::sptr) "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__sptr_eq "private";
+%typemap(csimports) pkmn::swig::pokemon_party "
+using System;
+using System.Runtime.InteropServices;"
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_party> %{
-    public string Game {
-        get {
-            return GetGame();
-        }
+%ignore pkmn::swig::pokemon_party::pokemon_party();
+%ignore pkmn::swig::pokemon_party::pokemon_party(const pkmn::pokemon_party::sptr&);
+%ignore pkmn::swig::pokemon_party::as_vector;
+
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::pokemon_party::cptr() "private";
+
+// Underlying functions for indexing.
+%csmethodmodifiers pkmn::swig::pokemon_party::get_pokemon(int) "private";
+%csmethodmodifiers pkmn::swig::pokemon_party::set_pokemon(int, const pkmn::swig::pokemon&) "private";
+
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::swig::pokemon_party, std::string, Game, get_game);
+%attribute(pkmn::swig::pokemon_party, int, NumPokemon, get_num_pokemon);
+
+%typemap(cscode) pkmn::swig::pokemon_party
+%{
+    public int Length
+    {
+        get { return 6; }
     }
 
-    public int NumPokemon {
-        get {
-            return GetNumPokemon();
-        }
+    public Pokemon this[int index]
+    {
+        get { return GetPokemon(index); }
+        set { SetPokemon(index, value); }
     }
 
-    public int Count {
-        get {
-            return 6;
-        }
-    }
-
-    /// <summary>Gets the Pokémon at the given index.</summary>
-    /// <exception cref="System.SystemException">If index is invalid</exception>
-    /// <param name="index">Index</param>
-    public Pokemon this[int index] {
-        get {
-            return this.GetPokemon(index);
-        }
-        set {
-            this.SetPokemon(index, value);
-        }
-    }
-
-    /// <summary>Compares two PokemonParty instances to determine value equality.</summary>
-    /// <remarks>
-    /// Returns true if the internal shared_ptrs' pointers are equal.
-    /// </remarks>
-    /// <param name="rhs">PokemonParty with which to compare self</param>
-    /// <returns>Whether or not PokemonParty instances are equal</returns>
-    /// </remarks>
-    public bool Equals(PokemonParty rhs) {
-        if(rhs == null) {
+    public bool Equals(PokemonParty other)
+    {
+        if(other == null)
+        {
             return false;
-        } else if(this == rhs) {
+        }
+        else if(this == other)
+        {
             return true;
-        } else {
-            return this.__sptr_eq(rhs);
+        }
+        else
+        {
+            return (this.Cptr() == other.Cptr());
         }
     }
 
-    /// <summary>Compares an instance of PokemonParty to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not PokemonParty and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
+    public override bool Equals(System.Object other)
+    {
+        if(other == null)
+        {
             return false;
         }
 
-        PokemonParty rhsSptr = rhs as PokemonParty;
-        if(rhsSptr == null) {
+        PokemonParty otherAsPokemonParty = other as PokemonParty;
+        if(otherAsPokemonParty == null)
+        {
             return false;
-        } else {
-            return this.Equals(rhsSptr);
+        }
+        else
+        {
+            return this.Equals(otherAsPokemonParty);
         }
     }
 
-    /// <summary>Generates a unique hash code for the given PokemonParty.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(Cptr())
                               .ToHashCode();
     }
 %}
 
-%include <pkmn/pokemon_party.hpp>
-%template(PokemonParty) pkmn::shared_ptr<pkmn::pokemon_party>;
+%include "cpp_wrappers/pokemon_party.hpp"

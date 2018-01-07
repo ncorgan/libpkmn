@@ -14,7 +14,7 @@ namespace PKMNTest
 public class PokemonPartyTests
 {
     private static void TestEmptyPokemonParty(
-        PKMN.PokemonParty2 party
+        PKMN.PokemonParty party
     )
     {
         Assert.AreEqual(party.Length, 6);
@@ -35,23 +35,23 @@ public class PokemonPartyTests
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Pokemon2 pokemon = party[-1];
+                PKMN.Pokemon pokemon = party[-1];
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Pokemon2 pokemon = party[party.Length];
+                PKMN.Pokemon pokemon = party[party.Length];
             }
         );
     }
 
     private static void TestSettingPokemon(
-        PKMN.PokemonParty2 party
+        PKMN.PokemonParty party
     )
     {
-        PKMN.Pokemon2 originalFirst = party[0];
-        PKMN.Pokemon2 originalSecond = party[1];
+        PKMN.Pokemon originalFirst = party[0];
+        PKMN.Pokemon originalSecond = party[1];
 
         // Make sure we can't set Pokémon at invalid indices.
         Assert.Throws<IndexOutOfRangeException>(
@@ -69,9 +69,9 @@ public class PokemonPartyTests
 
         // Create Pokémon and place in party. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon2 bulbasaur = new PKMN.Pokemon2("Bulbasaur", party.Game, "", 5);
-        PKMN.Pokemon2 charmander = new PKMN.Pokemon2("Charmander", party.Game, "", 5);
-        PKMN.Pokemon2 squirtle = new PKMN.Pokemon2("Squirtle", party.Game, "", 5);
+        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", party.Game, "", 5);
+        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", party.Game, "", 5);
+        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", party.Game, "", 5);
 
         party[0] = bulbasaur;
         Assert.AreEqual(party.NumPokemon, 1);
@@ -140,7 +140,7 @@ public class PokemonPartyTests
     }
 
     public static void TestPokemonParty(
-        PKMN.PokemonParty2 party
+        PKMN.PokemonParty party
     )
     {
         TestEmptyPokemonParty(party);

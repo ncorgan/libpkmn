@@ -52,24 +52,6 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void ItemSlotTest() {
-        PKMN.ItemSlot itemSlot = new PKMN.ItemSlot("Potion", 10);
-        PKMN.ItemSlot itemSlotSame = new PKMN.ItemSlot("Potion", 10);
-        PKMN.ItemSlot itemSlotDifferentItem = new PKMN.ItemSlot("Great Ball", 10);
-        PKMN.ItemSlot itemSlotDifferentAmount = new PKMN.ItemSlot("Potion", 5);
-
-        Assert.AreEqual(itemSlot, itemSlot);
-        Assert.AreEqual(itemSlot, itemSlotSame);
-        Assert.AreEqual(itemSlot.GetHashCode(), itemSlotSame.GetHashCode());
-
-        Assert.AreNotEqual(itemSlot, itemSlotDifferentItem);
-        Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentItem.GetHashCode());
-
-        Assert.AreNotEqual(itemSlot, itemSlotDifferentAmount);
-        Assert.AreNotEqual(itemSlot.GetHashCode(), itemSlotDifferentAmount.GetHashCode());
-    }
-
-    [Test]
     public void LevelupMoveTest() {
         PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
                                                new PKMN.Database.MoveEntry("Scratch", "Red"),
@@ -392,66 +374,6 @@ public class CSharpEqualityHashCodeTest {
 
         Assert.AreNotEqual(stringList, stringListReversed);
         Assert.AreNotEqual(stringList.GetHashCode(), stringListReversed.GetHashCode());
-    }
-
-    [Test]
-    public void ItemPocketsTest() {
-        // Test values
-        PKMN.ItemList itemList1 = new PKMN.ItemList("Items", "Red");
-        PKMN.ItemList itemList2 = new PKMN.ItemList("Balls", "Gold");
-        PKMN.ItemList itemList3 = new PKMN.ItemList("Berries", "Ruby");
-
-        // Test values with same data, different underlying memory
-        PKMN.ItemList itemList4 = new PKMN.ItemList("Items", "Red");
-        PKMN.ItemList itemList5 = new PKMN.ItemList("Balls", "Gold");
-        PKMN.ItemList itemList6 = new PKMN.ItemList("Berries", "Ruby");
-
-        PKMN.ItemPockets itemPockets = new PKMN.ItemPockets();
-        itemPockets["key1"] = itemList1;
-        itemPockets["key2"] = itemList2;
-        itemPockets["key3"] = itemList3;
-
-        PKMN.ItemPockets itemPocketsSame = new PKMN.ItemPockets();
-        itemPocketsSame["key3"] = itemList3;
-        itemPocketsSame["key2"] = itemList2;
-        itemPocketsSame["key1"] = itemList1;
-
-        PKMN.ItemPockets itemPocketsDifferentMemory = new PKMN.ItemPockets();
-        itemPocketsDifferentMemory["key1"] = itemList4;
-        itemPocketsDifferentMemory["key2"] = itemList5;
-        itemPocketsDifferentMemory["key3"] = itemList6;
-
-        Assert.AreEqual(itemPockets, itemPockets);
-        Assert.AreEqual(itemPockets, itemPocketsSame);
-        Assert.AreEqual(itemPockets.GetHashCode(), itemPocketsSame.GetHashCode());
-
-        Assert.AreNotEqual(itemPockets, itemPocketsDifferentMemory);
-        Assert.AreNotEqual(itemPockets.GetHashCode(), itemPocketsDifferentMemory.GetHashCode());
-    }
-
-    [Test]
-    public void ItemSlotListTest() {
-        PKMN.ItemSlotList itemSlotList = new PKMN.ItemSlotList();
-        itemSlotList.Add(new PKMN.ItemSlot("Potion", 10));
-        itemSlotList.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotList.Add(new PKMN.ItemSlot("Razz Berry", 5));
-
-        PKMN.ItemSlotList itemSlotListSame = new PKMN.ItemSlotList();
-        itemSlotListSame.Add(new PKMN.ItemSlot("Potion", 10));
-        itemSlotListSame.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotListSame.Add(new PKMN.ItemSlot("Razz Berry", 5));
-
-        PKMN.ItemSlotList itemSlotListReversed = new PKMN.ItemSlotList();
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Razz Berry", 5));
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Great Ball", 3));
-        itemSlotListReversed.Add(new PKMN.ItemSlot("Potion", 10));
-
-        Assert.AreEqual(itemSlotList, itemSlotList);
-        Assert.AreEqual(itemSlotList, itemSlotListSame);
-        Assert.AreEqual(itemSlotList.GetHashCode(), itemSlotListSame.GetHashCode());
-
-        Assert.AreNotEqual(itemSlotList, itemSlotListReversed);
-        Assert.AreNotEqual(itemSlotList.GetHashCode(), itemSlotListReversed.GetHashCode());
     }
 
     [Test]

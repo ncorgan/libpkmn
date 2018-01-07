@@ -44,7 +44,7 @@ TEST(cpp_swig_test, test_item_slot)
                                             "Items",
                                             "Red"
                                         );
-    pkmn::swig::item_slot2 first_slot(item_pocket, 0);
+    pkmn::swig::item_slot first_slot(item_pocket, 0);
 
     // Set the item name through the native class.
     item_pocket->set_item(
@@ -76,7 +76,7 @@ TEST(cpp_swig_test, test_item_slot)
         "Repel",
         10
     );
-    pkmn::swig::item_slot2 second_slot(item_pocket, 1);
+    pkmn::swig::item_slot second_slot(item_pocket, 1);
     ASSERT_EQ("Repel", second_slot.get_item());
     ASSERT_EQ(10, second_slot.get_amount());
 
@@ -97,7 +97,7 @@ TEST(cpp_swig_test, test_item_slot)
 
 TEST(cpp_swig_test, test_item_list)
 {
-    pkmn::swig::item_list2 swig_item_list("Items", "Red");
+    pkmn::swig::item_list swig_item_list("Items", "Red");
 
     EXPECT_EQ("Items", swig_item_list.get_name());
     EXPECT_EQ("Red", swig_item_list.get_game());
@@ -120,7 +120,7 @@ TEST(cpp_swig_test, test_item_list)
 
 TEST(cpp_swig_test, test_item_bag)
 {
-    pkmn::swig::item_bag2 swig_item_bag("Colosseum");
+    pkmn::swig::item_bag swig_item_bag("Colosseum");
 
     EXPECT_EQ("Colosseum", swig_item_bag.get_game());
 
@@ -132,11 +132,11 @@ TEST(cpp_swig_test, test_item_bag)
         pocket_name_iter != pocket_names_end;
         ++pocket_name_iter)
     {
-        pkmn::swig::item_list2 pocket = swig_item_bag.get_pocket(*pocket_name_iter);
+        pkmn::swig::item_list pocket = swig_item_bag.get_pocket(*pocket_name_iter);
         EXPECT_EQ(*pocket_name_iter, pocket.get_name());
         EXPECT_EQ("Colosseum", pocket.get_game());
 
-        const std::string& valid_item = pocket.get_valid_items().at(0);
+        std::string valid_item = pocket.get_valid_items().at(0);
 
         swig_item_bag.add(valid_item, 5);
         EXPECT_EQ(1, pocket.get_num_items());
@@ -360,7 +360,7 @@ TEST(cpp_swig_test, test_pokemon_helpers)
 
 TEST(cpp_swig_test, test_pokemon)
 {
-    pkmn::swig::pokemon2 swig_pokemon(
+    pkmn::swig::pokemon swig_pokemon(
                              "Bulbasaur",
                              "FireRed",
                              "",
@@ -472,7 +472,7 @@ TEST(cpp_swig_test, test_pokemon)
 
 TEST(cpp_swig_test, test_pokemon_party)
 {
-    pkmn::swig::pokemon_party2 swig_pokemon_party("FireRed");
+    pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_party.get_game());
     EXPECT_EQ(0, swig_pokemon_party.get_num_pokemon());
@@ -482,7 +482,7 @@ TEST(cpp_swig_test, test_pokemon_party)
         EXPECT_EQ("None", swig_pokemon_party.get_pokemon(i).get_species());
     }
 
-    pkmn::swig::pokemon2 new_pokemon("Charmander", "FireRed", "", 10);
+    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
     swig_pokemon_party.set_pokemon(0, new_pokemon);
 
     EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
@@ -490,7 +490,7 @@ TEST(cpp_swig_test, test_pokemon_party)
 
 TEST(cpp_swig_test, test_pokemon_box)
 {
-    pkmn::swig::pokemon_box2 swig_pokemon_box("FireRed");
+    pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_box.get_game());
     EXPECT_EQ(0, swig_pokemon_box.get_num_pokemon());
@@ -502,14 +502,7 @@ TEST(cpp_swig_test, test_pokemon_box)
         EXPECT_EQ("None", swig_pokemon_box.get_pokemon(i).get_species());
     }
 
-    std::vector<pkmn::swig::pokemon2> box_vec = swig_pokemon_box.as_vector();
-    EXPECT_EQ(size_t(swig_pokemon_box.get_capacity()), box_vec.size());
-    for(int i = 0; i < capacity; ++i)
-    {
-        EXPECT_EQ("None", box_vec[i].get_species());
-    }
-
-    pkmn::swig::pokemon2 new_pokemon("Charmander", "FireRed", "", 10);
+    pkmn::swig::pokemon new_pokemon("Charmander", "FireRed", "", 10);
     swig_pokemon_box.set_pokemon(0, new_pokemon);
 
     EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
@@ -517,22 +510,22 @@ TEST(cpp_swig_test, test_pokemon_box)
 
 TEST(cpp_swig_test, test_pokemon_pc)
 {
-    pkmn::swig::pokemon_pc2 swig_pokemon_pc("FireRed");
+    pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
 
     EXPECT_EQ("FireRed", swig_pokemon_pc.get_game());
 
-    std::vector<pkmn::swig::pokemon_box2> pc_vec = swig_pokemon_pc.as_vector();
-    EXPECT_EQ(size_t(swig_pokemon_pc.get_num_boxes()), pc_vec.size());
-
-    for(size_t i = 0; i < pc_vec.size(); ++i)
+    for(size_t i = 0; i < swig_pokemon_pc.get_num_boxes(); ++i)
     {
-        EXPECT_EQ(swig_pokemon_pc.get_box_names()[i], pc_vec[i].get_name());
+        EXPECT_EQ(
+            swig_pokemon_pc.get_box_names()[i],
+            swig_pokemon_pc.get_box(i).get_name()
+        );
     }
 
-    pc_vec[4].set_name("COOL BOX");
+    swig_pokemon_pc.get_box(4).set_name("COOL BOX");
     EXPECT_EQ("COOL BOX", swig_pokemon_pc.get_box_names()[4]);
 
-    pc_vec[4].set_pokemon(4, pkmn::swig::pokemon2("Charizard", "FireRed", "", 50));
+    swig_pokemon_pc.get_box(4).set_pokemon(4, pkmn::swig::pokemon("Charizard", "FireRed", "", 50));
     EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 
@@ -542,7 +535,7 @@ TEST(cpp_swig_test, test_game_save)
 
     fs::path save_filepath(PKSAV_TEST_SAVES / "firered_leafgreen" / "pokemon_firered.sav");
 
-    pkmn::swig::game_save2 swig_game_save(save_filepath.string());
+    pkmn::swig::game_save swig_game_save(save_filepath.string());
 
     EXPECT_EQ(save_filepath.string(), swig_game_save.get_filepath());
     EXPECT_EQ("FireRed", swig_game_save.get_game());

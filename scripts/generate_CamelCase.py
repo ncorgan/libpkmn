@@ -20,13 +20,7 @@ header_text = """/*
  * This file was generated: %s
  */""" % datetime.datetime.now()
 
-ignored_classes = ["game_save",
-                   "item_bag",
-                   "item_list",
-                   "pokemon",
-                   "pokemon_box",
-                   "pokemon_pc",
-                   "numeric_attribute_map",
+ignored_classes = ["numeric_attribute_map",
                    "string_attribute_map",
                    "PKMN_API"]
 

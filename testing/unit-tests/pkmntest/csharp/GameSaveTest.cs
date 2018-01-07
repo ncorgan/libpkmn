@@ -66,7 +66,7 @@ public class GameSaveTest
     }
 
     private static void TestTrainerID(
-        PKMN.GameSave2 gameSave
+        PKMN.GameSave gameSave
     )
     {
         bool gbGame = IsGBGame(gameSave.Game);
@@ -91,7 +91,7 @@ public class GameSaveTest
     }
 
     private static void TestCommonFields(
-        PKMN.GameSave2 gameSave
+        PKMN.GameSave gameSave
     )
     {
         String game = gameSave.Game;
@@ -196,7 +196,7 @@ public class GameSaveTest
         Assert.AreEqual(gameSave.Money, 123456);
 
         // Pokémon Party
-        PKMN.PokemonParty2 party = gameSave.PokemonParty;
+        PKMN.PokemonParty party = gameSave.PokemonParty;
         int numPokemon = party.NumPokemon;
         Assert.AreEqual(party.Length, 6);
 
@@ -215,10 +215,10 @@ public class GameSaveTest
         }
 
         // Pokémon PC
-        PKMN.PokemonPC2 pokemonPC = gameSave.PokemonPC;
+        PKMN.PokemonPC pokemonPC = gameSave.PokemonPC;
         for(int i = 0; i < pokemonPC.Length; ++i)
         {
-            PKMN.PokemonBox2 box = pokemonPC[i];
+            PKMN.PokemonBox box = pokemonPC[i];
 
             Assert.LessOrEqual(box.NumPokemon, box.Length);
 
@@ -242,22 +242,22 @@ public class GameSaveTest
     }
 
     private static void RandomizePokemon(
-        PKMN.GameSave2 gameSave,
+        PKMN.GameSave gameSave,
         PKMN.StringList itemList
     )
     {
         string game = gameSave.Game;
 
-        PKMN.PokemonParty2 party = gameSave.PokemonParty;
+        PKMN.PokemonParty party = gameSave.PokemonParty;
         for(int i = 0; i < 6; ++i)
         {
             party[i] = Util.GetRandomPokemon(game);
         }
 
-        PKMN.PokemonPC2 PC = gameSave.PokemonPC;
+        PKMN.PokemonPC PC = gameSave.PokemonPC;
         for(int i = 0; i < PC.Length; ++i)
         {
-            PKMN.PokemonBox2 box = PC[i];
+            PKMN.PokemonBox box = PC[i];
             for(int j = 0; j < box.Length; ++j)
             {
                 box[j] = Util.GetRandomPokemon(game);
@@ -266,8 +266,8 @@ public class GameSaveTest
     }
 
     public static void CompareItemLists(
-        PKMN.ItemList2 itemList1,
-        PKMN.ItemList2 itemList2
+        PKMN.ItemList itemList1,
+        PKMN.ItemList itemList2
     )
     {
         Assert.AreEqual(itemList1.Game, itemList2.Game);
@@ -283,8 +283,8 @@ public class GameSaveTest
     }
 
     public static void CompareGameSaves(
-        PKMN.GameSave2 save1,
-        PKMN.GameSave2 save2
+        PKMN.GameSave save1,
+        PKMN.GameSave save2
     )
     {
         string game = save1.Game;
@@ -336,8 +336,8 @@ public class GameSaveTest
             );
         }
 
-        PKMN.PokemonPC2 pokemonPC1 = save1.PokemonPC;
-        PKMN.PokemonPC2 pokemonPC2 = save2.PokemonPC;
+        PKMN.PokemonPC pokemonPC1 = save1.PokemonPC;
+        PKMN.PokemonPC pokemonPC2 = save2.PokemonPC;
 
         if(generation >= 2)
         {
@@ -349,8 +349,8 @@ public class GameSaveTest
         }
         for(int i = 0; i < pokemonPC1.Length; ++i)
         {
-            PKMN.PokemonBox2 pokemonBox1 = pokemonPC1[i];
-            PKMN.PokemonBox2 pokemonBox2 = pokemonPC2[i];
+            PKMN.PokemonBox pokemonBox1 = pokemonPC1[i];
+            PKMN.PokemonBox pokemonBox2 = pokemonPC2[i];
 
             if(generation >= 2)
             {
@@ -384,7 +384,7 @@ public class GameSaveTest
         }
         Assert.AreEqual(PKMN.GameSave.DetectType(saveFilepath), type);
 
-        PKMN.GameSave2 gameSave = new PKMN.GameSave2(saveFilepath);
+        PKMN.GameSave gameSave = new PKMN.GameSave(saveFilepath);
         Assert.AreEqual(gameSave.Filepath, saveFilepath);
         Assert.AreEqual(gameSave.Game, game);
 
@@ -404,7 +404,7 @@ public class GameSaveTest
                                       )
                                   );
         gameSave.SaveAs(tempSaveFilepath);
-        PKMN.GameSave2 gameSave2 = new PKMN.GameSave2(tempSaveFilepath);
+        PKMN.GameSave gameSave2 = new PKMN.GameSave(tempSaveFilepath);
         Assert.AreEqual(gameSave2.Filepath, tempSaveFilepath);
 
         CompareGameSaves(

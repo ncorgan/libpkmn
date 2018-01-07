@@ -54,14 +54,14 @@ public class PokemonTestCommon
         {
             if(generation >= 6)
             {
-                new PKMN.Pokemon2(species, game, "Mega", 100);
+                new PKMN.Pokemon(species, game, "Mega", 100);
             }
             else
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2(species, game, "Mega", 100);
+                        new PKMN.Pokemon(species, game, "Mega", 100);
                     }
                 );
             }
@@ -70,14 +70,14 @@ public class PokemonTestCommon
         {
             if(isORAS)
             {
-                new PKMN.Pokemon2(species, game, "Mega", 100);
+                new PKMN.Pokemon(species, game, "Mega", 100);
             }
             else
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2(species, game, "Mega", 100);
+                        new PKMN.Pokemon(species, game, "Mega", 100);
                     }
                 );
             }
@@ -89,14 +89,14 @@ public class PokemonTestCommon
         {
             if(isORAS)
             {
-                new PKMN.Pokemon2("Pikachu", game, form, 5);
+                new PKMN.Pokemon("Pikachu", game, form, 5);
             }
             else if(!form.Equals("Standard"))
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2("Pikachu", game, form, 5);
+                        new PKMN.Pokemon("Pikachu", game, form, 5);
                     }
                 );
             }
@@ -105,35 +105,35 @@ public class PokemonTestCommon
         // Hard-code Mega X/Y cases.
         if(generation >= 6)
         {
-            new PKMN.Pokemon2("Charizard", game, "Mega X", 50);
-            new PKMN.Pokemon2("Charizard", game, "Mega Y", 50);
-            new PKMN.Pokemon2("Mewtwo", game, "Mega X", 50);
-            new PKMN.Pokemon2("Mewtwo", game, "Mega Y", 50);
+            new PKMN.Pokemon("Charizard", game, "Mega X", 50);
+            new PKMN.Pokemon("Charizard", game, "Mega Y", 50);
+            new PKMN.Pokemon("Mewtwo", game, "Mega X", 50);
+            new PKMN.Pokemon("Mewtwo", game, "Mega Y", 50);
         }
         else
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Charizard", game, "Mega X", 50);
+                    new PKMN.Pokemon("Charizard", game, "Mega X", 50);
                 }
             );
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Charizard", game, "Mega Y", 50);
+                    new PKMN.Pokemon("Charizard", game, "Mega Y", 50);
                 }
             );
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Mewtwo", game, "Mega X", 50);
+                    new PKMN.Pokemon("Mewtwo", game, "Mega X", 50);
                 }
             );
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Mewtwo", game, "Mega Y", 50);
+                    new PKMN.Pokemon("Mewtwo", game, "Mega Y", 50);
                 }
             );
         }
@@ -151,14 +151,14 @@ public class PokemonTestCommon
         {
             if(generation >= 6)
             {
-                new PKMN.Pokemon2(species, game, "Mega", 100);
+                new PKMN.Pokemon(species, game, "Mega", 100);
             }
             else
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2(species, game, "Mega", 100);
+                        new PKMN.Pokemon(species, game, "Mega", 100);
                     }
                 );
             }
@@ -167,14 +167,14 @@ public class PokemonTestCommon
         // Only one Generation II Pokémon with a OR/AS-specific Mega form.
         if(isORAS)
         {
-            new PKMN.Pokemon2("Steelix", game, "Mega", 100);
+            new PKMN.Pokemon("Steelix", game, "Mega", 100);
         }
         else
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Steelix", game, "Mega", 100);
+                    new PKMN.Pokemon("Steelix", game, "Mega", 100);
                 }
             );
         }
@@ -182,14 +182,14 @@ public class PokemonTestCommon
         // Spiky-eared Pichu should only work in HG/SS.
         if(game.Equals("HeartGold") || game.Equals("SoulSilver"))
         {
-            new PKMN.Pokemon2("Pichu", game, "Spiky-eared", 100);
+            new PKMN.Pokemon("Pichu", game, "Spiky-eared", 100);
         }
         else
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Pichu", game, "Spiky-eared", 100);
+                    new PKMN.Pokemon("Pichu", game, "Spiky-eared", 100);
                 }
             );
         }
@@ -202,7 +202,7 @@ public class PokemonTestCommon
             {
                 if(generation > 2)
                 {
-                    PKMN.Pokemon2 unown = new PKMN.Pokemon2("Unown", game, form, 10);
+                    PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
                     Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
                     Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
                 }
@@ -211,14 +211,14 @@ public class PokemonTestCommon
                     Assert.Throws<ArgumentOutOfRangeException>(
                         delegate
                         {
-                            new PKMN.Pokemon2("Unown", game, form, 10);
+                            new PKMN.Pokemon("Unown", game, form, 10);
                         }
                     );
                 }
             }
             else
             {
-                PKMN.Pokemon2 unown = new PKMN.Pokemon2("Unown", game, form, 10);
+                PKMN.Pokemon unown = new PKMN.Pokemon("Unown", game, form, 10);
                 Assert.IsTrue(System.IO.File.Exists(unown.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(unown.SpriteFilepath));
             }
@@ -238,14 +238,14 @@ public class PokemonTestCommon
         {
             if(generation >= 6)
             {
-                new PKMN.Pokemon2(species, game, "Mega", 100);
+                new PKMN.Pokemon(species, game, "Mega", 100);
             }
             else
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2(species, game, "Mega", 100);
+                        new PKMN.Pokemon(species, game, "Mega", 100);
                     }
                 );
             }
@@ -254,14 +254,14 @@ public class PokemonTestCommon
         {
             if(isORAS)
             {
-                new PKMN.Pokemon2(species, game, "Mega", 100);
+                new PKMN.Pokemon(species, game, "Mega", 100);
             }
             else
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2(species, game, "Mega", 100);
+                        new PKMN.Pokemon(species, game, "Mega", 100);
                     }
                 );
             }
@@ -271,38 +271,38 @@ public class PokemonTestCommon
         PKMN.Database.PokemonEntry castformEntry = new PKMN.Database.PokemonEntry("Castform", "Omega Ruby", "");
         foreach(string form in castformEntry.Forms)
         {
-            PKMN.Pokemon2 castform = new PKMN.Pokemon2("Castform", game, form, 30);
+            PKMN.Pokemon castform = new PKMN.Pokemon("Castform", game, form, 30);
             Assert.IsTrue(System.IO.File.Exists(castform.IconFilepath));
             Assert.IsTrue(System.IO.File.Exists(castform.SpriteFilepath));
         }
 
         // Primal Reversion forms should only work in OR/AS.
 
-        PKMN.Pokemon2 groudon = new PKMN.Pokemon2("Groudon", game, "", 70);
+        PKMN.Pokemon groudon = new PKMN.Pokemon("Groudon", game, "", 70);
         Assert.IsTrue(System.IO.File.Exists(groudon.IconFilepath));
         Assert.IsTrue(System.IO.File.Exists(groudon.SpriteFilepath));
 
-        PKMN.Pokemon2 kyogre = new PKMN.Pokemon2("Kyogre", game, "", 70);
+        PKMN.Pokemon kyogre = new PKMN.Pokemon("Kyogre", game, "", 70);
         Assert.IsTrue(System.IO.File.Exists(kyogre.IconFilepath));
         Assert.IsTrue(System.IO.File.Exists(kyogre.SpriteFilepath));
 
         if(isORAS)
         {
-            new PKMN.Pokemon2("Groudon", game, "Primal Reversion", 70);
-            new PKMN.Pokemon2("Kyogre", game, "Primal Reversion", 70);
+            new PKMN.Pokemon("Groudon", game, "Primal Reversion", 70);
+            new PKMN.Pokemon("Kyogre", game, "Primal Reversion", 70);
         }
         else
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Groudon", game, "Primal Reversion", 70);
+                    new PKMN.Pokemon("Groudon", game, "Primal Reversion", 70);
                 }
             );
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
                 {
-                    new PKMN.Pokemon2("Kyogre", game, "Primal Reversion", 70);
+                    new PKMN.Pokemon("Kyogre", game, "Primal Reversion", 70);
                 }
             );
         }
@@ -312,7 +312,7 @@ public class PokemonTestCommon
         {
             if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Colosseum") || game.Equals("XD"))
             {
-                PKMN.Pokemon2 deoxys = new PKMN.Pokemon2("Deoxys", game, "Normal", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Normal", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
@@ -320,14 +320,14 @@ public class PokemonTestCommon
             {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate {
-                        new PKMN.Pokemon2("Deoxys", game, "Normal", 70);
+                        new PKMN.Pokemon("Deoxys", game, "Normal", 70);
                     }
                 );
             }
 
             if(game.Equals("FireRed"))
             {
-                PKMN.Pokemon2 deoxys = new PKMN.Pokemon2("Deoxys", game, "Attack", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Attack", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
@@ -336,14 +336,14 @@ public class PokemonTestCommon
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2("Deoxys", game, "Attack", 70);
+                        new PKMN.Pokemon("Deoxys", game, "Attack", 70);
                     }
                 );
             }
 
             if(game.Equals("LeafGreen"))
             {
-                PKMN.Pokemon2 deoxys = new PKMN.Pokemon2("Deoxys", game, "Defense", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Defense", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
@@ -352,14 +352,14 @@ public class PokemonTestCommon
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2("Deoxys", game, "Defense", 70);
+                        new PKMN.Pokemon("Deoxys", game, "Defense", 70);
                     }
                 );
             }
 
             if(game.Equals("Emerald"))
             {
-                PKMN.Pokemon2 deoxys = new PKMN.Pokemon2("Deoxys", game, "Speed", 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, "Speed", 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
@@ -368,7 +368,7 @@ public class PokemonTestCommon
                 Assert.Throws<ArgumentOutOfRangeException>(
                     delegate
                     {
-                        new PKMN.Pokemon2("Deoxys", game, "Speed", 70);
+                        new PKMN.Pokemon("Deoxys", game, "Speed", 70);
                     }
                 );
             }
@@ -379,7 +379,7 @@ public class PokemonTestCommon
             PKMN.Database.PokemonEntry deoxysEntry = new PKMN.Database.PokemonEntry("Deoxys", "Omega Ruby", "");
             foreach(string form in deoxysEntry.Forms)
             {
-                PKMN.Pokemon2 deoxys = new PKMN.Pokemon2("Deoxys", game, form, 70);
+                PKMN.Pokemon deoxys = new PKMN.Pokemon("Deoxys", game, form, 70);
                 Assert.IsTrue(System.IO.File.Exists(deoxys.IconFilepath));
                 Assert.IsTrue(System.IO.File.Exists(deoxys.SpriteFilepath));
             }
@@ -419,7 +419,7 @@ public class PokemonTestCommon
     ) {
 
         // Single-gender
-        PKMN.Pokemon2 nidorina = new PKMN.Pokemon2(
+        PKMN.Pokemon nidorina = new PKMN.Pokemon(
                                         "Nidorina",
                                         game,
                                         "",
@@ -440,7 +440,7 @@ public class PokemonTestCommon
             }
         );
 
-        PKMN.Pokemon2 nidorino = new PKMN.Pokemon2(
+        PKMN.Pokemon nidorino = new PKMN.Pokemon(
                                         "Nidorino",
                                         game,
                                         "",
@@ -461,7 +461,7 @@ public class PokemonTestCommon
             }
         );
 
-        PKMN.Pokemon2 magnemite = new PKMN.Pokemon2(
+        PKMN.Pokemon magnemite = new PKMN.Pokemon(
                                          "Magnemite",
                                          game,
                                          "",
@@ -490,7 +490,7 @@ public class PokemonTestCommon
         };
         foreach(string species in mixedPokemon)
         {
-            PKMN.Pokemon2 pokemon = new PKMN.Pokemon2(
+            PKMN.Pokemon pokemon = new PKMN.Pokemon(
                                            species,
                                            game,
                                            "",
@@ -511,7 +511,7 @@ public class PokemonTestCommon
     }
 
     private static void CheckInitialValues(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -526,7 +526,7 @@ public class PokemonTestCommon
         {
             Assert.AreEqual(pokemon.Nickname, pokemon.Species.ToUpper());
         }
-        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon2.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
 
         if(generation >= 2)
         {
@@ -536,24 +536,24 @@ public class PokemonTestCommon
         Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
         Assert.AreEqual(
             pokemon.OriginalTrainerPublicID,
-            (ushort)(PKMN.Pokemon2.DEFAULT_TRAINER_ID & 0xFFFF)
+            (ushort)(PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF)
         );
         if(generation >= 3)
         {
             Assert.AreEqual(
                 pokemon.OriginalTrainerSecretID,
-                (ushort)(PKMN.Pokemon2.DEFAULT_TRAINER_ID >> 16)
+                (ushort)(PKMN.Pokemon.DEFAULT_TRAINER_ID >> 16)
             );
             Assert.AreEqual(
                 pokemon.OriginalTrainerID,
-                PKMN.Pokemon2.DEFAULT_TRAINER_ID
+                PKMN.Pokemon.DEFAULT_TRAINER_ID
             );
         }
         else
         {
             Assert.AreEqual(
                 pokemon.OriginalTrainerID,
-                (PKMN.Pokemon2.DEFAULT_TRAINER_ID & 0xFFFF)
+                (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF)
             );
         }
 
@@ -610,7 +610,7 @@ public class PokemonTestCommon
     }
 
     private static void CheckInitialMaps(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -709,7 +709,7 @@ public class PokemonTestCommon
     }
 
     static private void TestImageFilepaths(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -738,7 +738,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingAbility(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -802,7 +802,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingBall(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         string ballName,
         string[] invalidBallNames
     )
@@ -842,7 +842,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingCondition(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         System.Collections.Generic.List<string> conditions =
@@ -863,7 +863,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingFriendship(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -906,7 +906,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingItem(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         string validItemName,
         string[] invalidItemNames
     )
@@ -946,7 +946,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingLevels(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -1038,7 +1038,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingLocationMet(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         string expectedOriginalLocation,
         string[] validLocations,
         string[] invalidLocations
@@ -1122,7 +1122,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingMarkings(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -1154,7 +1154,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingMoves(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         string[] validMoveNames,
         string[] invalidMoveNames
     )
@@ -1207,7 +1207,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingOriginalGame(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         string[] validGames,
         string[] invalidGames
     )
@@ -1257,7 +1257,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingPersonality(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         uint testPersonality = (uint)rng.Next();
@@ -1287,7 +1287,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingPokerus(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -1329,7 +1329,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingStats(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         // Check bounds for setting the current HP.
@@ -1366,7 +1366,7 @@ public class PokemonTestCommon
     }
 
     static private void TestSettingTrainerInfo(
-        PKMN.Pokemon2 pokemon
+        PKMN.Pokemon pokemon
     )
     {
         int generation = Util.GameToGeneration(pokemon.Game);
@@ -1468,7 +1468,7 @@ public class PokemonTestCommon
     }
 
     static public void TestCommon(
-        PKMN.Pokemon2 pokemon,
+        PKMN.Pokemon pokemon,
         PokemonTestParams testParams
     )
     {

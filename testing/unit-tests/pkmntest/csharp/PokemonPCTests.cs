@@ -14,7 +14,7 @@ public class PokemonPCTests
 {
 
     private static void TestEmptyPokemonBox(
-        PKMN.PokemonBox2 box
+        PKMN.PokemonBox box
     )
     {
         for(int i = 0; i < box.Length; ++i)
@@ -33,19 +33,19 @@ public class PokemonPCTests
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Pokemon2 pokemon = box[-1];
+                PKMN.Pokemon pokemon = box[-1];
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
             delegate
             {
-                PKMN.Pokemon2 pokemon = box[box.Length];
+                PKMN.Pokemon pokemon = box[box.Length];
             }
         );
     }
 
     private static void TestBoxName(
-        PKMN.PokemonBox2 box
+        PKMN.PokemonBox box
     )
     {
         int generation = Util.GameToGeneration(box.Game);
@@ -80,13 +80,13 @@ public class PokemonPCTests
     }
 
     private static void TestSettingPokemon(
-        PKMN.PokemonBox2 box
+        PKMN.PokemonBox box
     )
     {
         int generation = Util.GameToGeneration(box.Game);
 
-        PKMN.Pokemon2 originalFirst = box[0];
-        PKMN.Pokemon2 originalSecond = box[1];
+        PKMN.Pokemon originalFirst = box[0];
+        PKMN.Pokemon originalSecond = box[1];
 
         // Make sure we can't set Pokémon at invalid indices.
         Assert.Throws<IndexOutOfRangeException>(
@@ -104,9 +104,9 @@ public class PokemonPCTests
 
         // Create Pokémon and place in box. The original variables should
         // still have the same underlying Pokémon.
-        PKMN.Pokemon2 bulbasaur = new PKMN.Pokemon2("Bulbasaur", box.Game, "", 5);
-        PKMN.Pokemon2 charmander = new PKMN.Pokemon2("Charmander", box.Game, "", 5);
-        PKMN.Pokemon2 squirtle = new PKMN.Pokemon2("Squirtle", box.Game, "", 5);
+        PKMN.Pokemon bulbasaur = new PKMN.Pokemon("Bulbasaur", box.Game, "", 5);
+        PKMN.Pokemon charmander = new PKMN.Pokemon("Charmander", box.Game, "", 5);
+        PKMN.Pokemon squirtle = new PKMN.Pokemon("Squirtle", box.Game, "", 5);
 
         box[0] = bulbasaur;
         Assert.AreEqual(box.NumPokemon, 1);
@@ -190,7 +190,7 @@ public class PokemonPCTests
     }
 
     public static void TestPokemonBox(
-        PKMN.PokemonBox2 box
+        PKMN.PokemonBox box
     )
     {
         TestEmptyPokemonBox(box);
@@ -199,7 +199,7 @@ public class PokemonPCTests
     }
 
     private static void TestEmptyPokemonPC(
-        PKMN.PokemonPC2 PC
+        PKMN.PokemonPC PC
     )
     {
         for(int i = 0; i < PC.Length; ++i)
@@ -210,7 +210,7 @@ public class PokemonPCTests
     }
 
     private static void TestBoxNames(
-        PKMN.PokemonPC2 PC
+        PKMN.PokemonPC PC
     )
     {
         int generation = Util.GameToGeneration(PC.Game);
@@ -241,7 +241,7 @@ public class PokemonPCTests
     }
 
     private static void TestSettingPokemonInBoxes(
-        PKMN.PokemonPC2 PC
+        PKMN.PokemonPC PC
     )
     {
         for(int i = 0; i < PC.Length; ++i)
@@ -253,7 +253,7 @@ public class PokemonPCTests
     }
 
     public static void TestPokemonPC(
-        PKMN.PokemonPC2 PC
+        PKMN.PokemonPC PC
     )
     {
         TestEmptyPokemonPC(PC);
