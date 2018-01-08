@@ -13,7 +13,8 @@
 
 #include <stdlib.h>
 
-typedef struct {
+typedef struct
+{
     pkmn_pokemon_box_handle_t* pokemon_boxes;
     size_t length;
 } pkmn_pokemon_box_list_t;
@@ -22,10 +23,17 @@ typedef struct {
 extern "C" {
 #endif
 
-static PKMN_INLINE pkmn_error_t pkmn_pokemon_box_list_free(
+static inline pkmn_error_t pkmn_pokemon_box_list_free(
     pkmn_pokemon_box_list_t* pokemon_box_list
-) {
-    for(size_t i = 0; i < pokemon_box_list->length; ++i) {
+)
+{
+    if(!pokemon_box_list)
+    {
+        return PKMN_ERROR_NULL_POINTER;
+    }
+
+    for(size_t i = 0; i < pokemon_box_list->length; ++i)
+    {
         pkmn_pokemon_box_free(&pokemon_box_list->pokemon_boxes[i]);
     }
 

@@ -76,13 +76,13 @@ pkmn_error_t pkmn_pokemon_from_file(
 
 pkmn_error_t pkmn_pokemon_free(
     pkmn_pokemon_handle_t* handle_ptr
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(handle_ptr);
     PKMN_CHECK_NULL_PARAM((*handle_ptr));
 
     PKMN_CPP_TO_C(
-        delete (*handle_ptr);
-        *handle_ptr = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(handle_ptr);
     )
 }
 
@@ -104,54 +104,60 @@ const char* pkmn_pokemon_strerror(
 pkmn_error_t pkmn_pokemon_get_species(
     pkmn_pokemon_handle_t handle,
     char* species_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* species_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(species_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_species(),
-                    species_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_species(),
+            species_out,
+            buffer_len,
+            species_length_out
+        );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_game(
     pkmn_pokemon_handle_t handle,
     char* game_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* game_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_game(),
-                    game_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_game(),
+            game_out,
+            buffer_len,
+            game_length_out
+        );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_form(
     pkmn_pokemon_handle_t handle,
     char* form_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* form_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(form_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_form(),
-                    form_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_form(),
+            form_out,
+            buffer_len,
+            form_length_out
+        );
     )
 }
 
@@ -175,7 +181,7 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_pokemon_entry_cpp_to_c(
+        pkmn::c::pokemon_entry_cpp_to_c(
             handle->cpp->get_database_entry(),
             database_entry_out
         )
@@ -185,19 +191,20 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
 pkmn_error_t pkmn_pokemon_get_nickname(
     pkmn_pokemon_handle_t handle,
     char* nickname_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* nickname_length_out
 )
 {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_nickname(),
-                    nickname_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_nickname(),
+            nickname_out,
+            buffer_len,
+            nickname_length_out
+        );
     )
 }
 
@@ -348,18 +355,20 @@ pkmn_error_t pkmn_pokemon_set_shininess(
 pkmn_error_t pkmn_pokemon_get_held_item(
     pkmn_pokemon_handle_t handle,
     char* held_item_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* held_item_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(held_item_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_held_item(),
-                    held_item_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_held_item(),
+            held_item_out,
+            buffer_len,
+            held_item_length_out
+        );
     )
 }
 
@@ -401,18 +410,19 @@ pkmn_error_t pkmn_pokemon_set_current_trainer_friendship(
 pkmn_error_t pkmn_pokemon_get_ability(
     pkmn_pokemon_handle_t handle,
     char* ability_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* ability_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ability_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_ability(),
-                    ability_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_ability(),
+            ability_out,
+            buffer_len,
+            ability_length_out
+        );
     )
 }
 
@@ -431,18 +441,19 @@ pkmn_error_t pkmn_pokemon_set_ability(
 pkmn_error_t pkmn_pokemon_get_ball(
     pkmn_pokemon_handle_t handle,
     char* ball_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* ball_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ball_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_ball(),
-                    ball_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_ball(),
+            ball_out,
+            buffer_len,
+            ball_length_out
+        );
     )
 }
 
@@ -485,18 +496,19 @@ pkmn_error_t pkmn_pokemon_get_location_met(
     pkmn_pokemon_handle_t handle,
     bool as_egg,
     char* location_met_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* location_met_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(location_met_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_location_met(as_egg),
-                    location_met_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_location_met(as_egg),
+            location_met_out,
+            buffer_len,
+            location_met_length_out
+        );
     )
 }
 
@@ -519,18 +531,19 @@ pkmn_error_t pkmn_pokemon_set_location_met(
 pkmn_error_t pkmn_pokemon_get_original_game(
     pkmn_pokemon_handle_t handle,
     char* original_game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* original_game_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(original_game_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_original_game(),
-                    original_game_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_original_game(),
+            original_game_out,
+            buffer_len,
+            original_game_length_out
+        );
     )
 }
 
@@ -623,7 +636,7 @@ pkmn_error_t pkmn_pokemon_get_marking_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(marking_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<bool>(
+        pkmn::c::string_map_keys_to_string_list<bool>(
             handle->cpp->get_markings(),
             marking_names_out
         );
@@ -670,7 +683,7 @@ pkmn_error_t pkmn_pokemon_get_ribbon_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ribbon_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<bool>(
+        pkmn::c::string_map_keys_to_string_list<bool>(
             handle->cpp->get_ribbons(),
             ribbon_names_out
         );
@@ -717,7 +730,7 @@ pkmn_error_t pkmn_pokemon_get_moves(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move_slots_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::pkmn_move_slots_cpp_to_c(
+        pkmn::c::move_slots_cpp_to_c(
             handle->cpp->get_moves(),
             move_slots_out
         );
@@ -748,7 +761,7 @@ pkmn_error_t pkmn_pokemon_get_contest_stat_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stat_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_contest_stats(),
             contest_stat_names_out
         );
@@ -795,7 +808,7 @@ pkmn_error_t pkmn_pokemon_get_EV_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EV_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_EVs(),
             EV_names_out
         );
@@ -842,7 +855,7 @@ pkmn_error_t pkmn_pokemon_get_IV_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IV_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_IVs(),
             IV_names_out
         );
@@ -889,7 +902,7 @@ pkmn_error_t pkmn_pokemon_get_stat_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stat_names_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        pkmn::std_map_keys_to_string_list<int>(
+        pkmn::c::string_map_keys_to_string_list<int>(
             handle->cpp->get_stats(),
             stat_names_out
         );
@@ -918,35 +931,37 @@ pkmn_error_t pkmn_pokemon_get_stat(
 pkmn_error_t pkmn_pokemon_get_icon_filepath(
     pkmn_pokemon_handle_t handle,
     char* icon_filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* icon_filepath_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(icon_filepath_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_icon_filepath(),
-                    icon_filepath_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_icon_filepath(),
+            icon_filepath_out,
+            buffer_len,
+            icon_filepath_length_out
+        );
     )
 }
 
 pkmn_error_t pkmn_pokemon_get_sprite_filepath(
     pkmn_pokemon_handle_t handle,
     char* sprite_filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* sprite_filepath_length_out
 ) {
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(sprite_filepath_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        return pkmn::std_string_to_c_str_with_handle<pkmn_pokemon_handle_t>(
-                    handle,
-                    handle->cpp->get_sprite_filepath(),
-                    sprite_filepath_out,
-                    buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_sprite_filepath(),
+            sprite_filepath_out,
+            buffer_len,
+            sprite_filepath_length_out
+        );
     )
 }

@@ -91,6 +91,48 @@ public partial class ItemSlot {
     }
 }
 
+public partial class NaturalGift {
+    /// <summary>Compares two NaturalGift instances to determine value equality.</summary>
+    /// <remarks>
+    /// Two instances are determined to be equal if their type and base power are equal.
+    /// </remarks>
+    /// <param name="rhs">NaturalGift with which to compare self</param>
+    /// <returns>Whether or not NaturalGift instances are equal</returns>
+    public bool Equals(NaturalGift rhs) {
+        if(rhs == null) {
+            return false;
+        } else if(this == rhs) {
+            return true;
+        } else {
+            return (this.Type.Equals(rhs.Type) && this.BasePower == rhs.BasePower);
+        }
+    }
+
+    /// <summary>Compares a NaturalGift to a C# object.</summary>
+    /// <param name="rhs">Object with which to compare self</param>
+    /// <returns>Whether or not NaturalGift and Object are equal</returns>
+    public override bool Equals(System.Object rhs) {
+        if(rhs == null) {
+            return false;
+        }
+
+        NaturalGift rhsNaturalGift = rhs as NaturalGift;
+        if(rhsNaturalGift == null) {
+            return false;
+        } else {
+            return this.Equals(rhsNaturalGift);
+        }
+    }
+
+    /// <summary>Generates a unique hash code for the given NaturalGift.</summary>
+    /// <returns>Unique hash code</returns>
+    public override int GetHashCode() {
+        return HashCodeBuilder.Create().AddValue<string>(this.Type)
+                                       .AddValue<int>(this.BasePower)
+                                       .ToHashCode();
+    }
+}
+
 public partial class SpindaCoords {
     /// <summary>Compares two SpindaCoords instances to determine value equality.</summary>
     /// <remarks>

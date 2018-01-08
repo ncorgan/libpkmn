@@ -109,6 +109,26 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
+    public void NaturalGiftTest()
+    {
+        PKMN.NaturalGift naturalGift = new PKMN.NaturalGift("Normal", 30);
+
+        PKMN.NaturalGift naturalGiftSame = new PKMN.NaturalGift("Normal", 30);
+        PKMN.NaturalGift naturalGiftDifferentType = new PKMN.NaturalGift("Fire", 30);
+        PKMN.NaturalGift naturalGiftDifferentBasePower = new PKMN.NaturalGift("Normal", 40);
+
+        Assert.AreEqual(naturalGift, naturalGift);
+        Assert.AreEqual(naturalGift, naturalGiftSame);
+        Assert.AreEqual(naturalGift.GetHashCode(), naturalGiftSame.GetHashCode());
+
+        Assert.AreNotEqual(naturalGift, naturalGiftDifferentType);
+        Assert.AreNotEqual(naturalGift.GetHashCode(), naturalGiftDifferentType.GetHashCode());
+
+        Assert.AreNotEqual(naturalGift, naturalGiftDifferentBasePower);
+        Assert.AreNotEqual(naturalGift.GetHashCode(), naturalGiftDifferentBasePower.GetHashCode());
+    }
+
+    [Test]
     public void PokemonEntryTest() {
         PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
 

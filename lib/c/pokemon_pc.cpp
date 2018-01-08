@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -28,13 +28,13 @@ pkmn_error_t pkmn_pokemon_pc_make(
 
 pkmn_error_t pkmn_pokemon_pc_free(
     pkmn_pokemon_pc_handle_t* handle_ptr
-) {
+)
+{
     PKMN_CHECK_NULL_PARAM(handle_ptr);
     PKMN_CHECK_NULL_PARAM((*handle_ptr));
 
     PKMN_CPP_TO_C(
-        delete (*handle_ptr);
-        *handle_ptr = NULL;
+        pkmn::c::delete_pointer_and_set_to_null(handle_ptr);
     )
 }
 
@@ -56,17 +56,20 @@ const char* pkmn_pokemon_pc_strerror(
 pkmn_error_t pkmn_pokemon_pc_get_game(
     pkmn_pokemon_pc_handle_t handle,
     char* game_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* game_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(handle);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game_out, handle);
 
     PKMN_CPP_TO_C(
-        return pkmn::std_string_to_c_str(
-                   handle->cpp->get_game(),
-                   game_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            handle->cpp->get_game(),
+            game_out,
+            buffer_len,
+            game_length_out
+        );
     )
 }
 
@@ -107,7 +110,7 @@ pkmn_error_t pkmn_pokemon_pc_as_array(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_box_list_out, handle);
 
     PKMN_CPP_TO_C(
-        pkmn::pkmn_pokemon_box_list_cpp_to_c(
+        pkmn::c::pokemon_box_list_cpp_to_c(
             handle->cpp->as_vector(),
             pokemon_box_list_out
         );
@@ -122,7 +125,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(box_names_out, handle);
 
     PKMN_CPP_TO_C(
-        pkmn::std_vector_std_string_to_string_list(
+        pkmn::c::string_list_cpp_to_c(
             handle->cpp->get_box_names(),
             box_names_out
         );

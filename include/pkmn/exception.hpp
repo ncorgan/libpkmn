@@ -9,6 +9,8 @@
 
 #include <pkmn/config.hpp>
 
+#include <pkmn/utils/floating_point_comparison.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <sstream>
@@ -16,6 +18,8 @@
 #include <string>
 #include <type_traits>
 #include <vector>
+
+#include <iostream>
 
 #ifdef PKMN_PLATFORM_WIN32
 #    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
@@ -237,6 +241,195 @@ namespace pkmn {
             {
                 err_msg.precision(old_precision);
             }
+
+            throw std::out_of_range(err_msg.str().c_str());
+        }
+    }
+
+    enum class value_comparator
+    {
+        LT,
+        LE,
+        EQ,
+        NE,
+        GE,
+        GT
+    };
+
+    template <typename T>
+    void enforce_comparator(
+        const std::string& field,
+        T value,
+        T compare_value,
+        value_comparator comparator
+    )
+    {
+        bool did_comparison_pass = false;
+        std::string nice_comparator_name;
+
+        switch(comparator)
+        {
+            case value_comparator::LT:
+                nice_comparator_name = "<";
+                did_comparison_pass = (value < compare_value);
+                break;
+
+            case value_comparator::LE:
+                nice_comparator_name = "<=";
+                did_comparison_pass = (value <= compare_value);
+                break;
+
+            case value_comparator::EQ:
+                nice_comparator_name = "==";
+                did_comparison_pass = (value == compare_value);
+                break;
+
+            case value_comparator::NE:
+                nice_comparator_name = "!=";
+                did_comparison_pass = (value != compare_value);
+                break;
+
+            case value_comparator::GE:
+                nice_comparator_name = ">=";
+                did_comparison_pass = (value >= compare_value);
+                break;
+
+            case value_comparator::GT:
+                nice_comparator_name = ">";
+                did_comparison_pass = (value > compare_value);
+                break;
+        }
+
+        if(not did_comparison_pass)
+        {
+            std::ostringstream err_msg;
+
+            err_msg << field;
+            err_msg << ": must be ";
+            err_msg << nice_comparator_name;
+            err_msg << " ";
+            err_msg << compare_value;
+            err_msg << ".";
+
+            throw std::out_of_range(err_msg.str().c_str());
+        }
+    }
+
+    template <>
+    inline void enforce_comparator<float>(
+        const std::string& field,
+        float value,
+        float compare_value,
+        value_comparator comparator
+    )
+    {
+        bool did_comparison_pass = false;
+        std::string nice_comparator_name;
+
+        switch(comparator)
+        {
+            case value_comparator::LT:
+                nice_comparator_name = "<";
+                did_comparison_pass = fp_compare_less(value, compare_value);
+                break;
+
+            case value_comparator::LE:
+                nice_comparator_name = "<=";
+                did_comparison_pass = (not fp_compare_greater(value, compare_value));
+                break;
+
+            case value_comparator::EQ:
+                nice_comparator_name = "==";
+                did_comparison_pass = fp_compare_equal(value, compare_value);
+                break;
+
+            case value_comparator::NE:
+                nice_comparator_name = "!=";
+                did_comparison_pass = fp_compare_not_equal(value, compare_value);
+                break;
+
+            case value_comparator::GE:
+                nice_comparator_name = ">=";
+                did_comparison_pass = (not fp_compare_less(value, compare_value));
+                break;
+
+            case value_comparator::GT:
+                nice_comparator_name = ">";
+                did_comparison_pass = fp_compare_greater(value, compare_value);
+                break;
+        }
+
+        if(not did_comparison_pass)
+        {
+            std::ostringstream err_msg;
+            err_msg.precision(2);
+
+            err_msg << field;
+            err_msg << ": must be ";
+            err_msg << nice_comparator_name;
+            err_msg << " ";
+            err_msg << compare_value;
+            err_msg << ".";
+
+            throw std::out_of_range(err_msg.str().c_str());
+        }
+    }
+
+    template <>
+    inline void enforce_comparator<double>(
+        const std::string& field,
+        double value,
+        double compare_value,
+        value_comparator comparator
+    )
+    {
+        bool did_comparison_pass = false;
+        std::string nice_comparator_name;
+
+        switch(comparator)
+        {
+            case value_comparator::LT:
+                nice_comparator_name = "<";
+                did_comparison_pass = fp_compare_less(value, compare_value);
+                break;
+
+            case value_comparator::LE:
+                nice_comparator_name = "<=";
+                did_comparison_pass = (not fp_compare_greater(value, compare_value));
+                break;
+
+            case value_comparator::EQ:
+                nice_comparator_name = "==";
+                did_comparison_pass = fp_compare_equal(value, compare_value);
+                break;
+
+            case value_comparator::NE:
+                nice_comparator_name = "!=";
+                did_comparison_pass = fp_compare_not_equal(value, compare_value);
+                break;
+
+            case value_comparator::GE:
+                nice_comparator_name = ">=";
+                did_comparison_pass = (not fp_compare_less(value, compare_value));
+                break;
+
+            case value_comparator::GT:
+                nice_comparator_name = ">";
+                did_comparison_pass = fp_compare_greater(value, compare_value);
+                break;
+        }
+
+        if(not did_comparison_pass)
+        {
+            std::ostringstream err_msg;
+            err_msg.precision(2);
+
+            err_msg << field;
+            err_msg << ": must be ";
+            err_msg << nice_comparator_name;
+            err_msg << " ";
+            err_msg << compare_value;
+            err_msg << ".";
 
             throw std::out_of_range(err_msg.str().c_str());
         }

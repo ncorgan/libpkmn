@@ -9,7 +9,6 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_calculations_headers
         form.h
         gender.h
-        hidden_power.h
         nature.h
         personality.h
         shininess.h
@@ -24,3 +23,5 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         COMPONENT Headers
     )
 ENDIF()
+
+ADD_SUBDIRECTORY(moves)

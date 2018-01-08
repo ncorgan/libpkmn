@@ -25,4 +25,5 @@ PKMN_PYTHON_MAP(std::string, int,         string_int_dict)
 PKMN_PYTHON_PAIR(std::string, std::string, string_pair)
 
 // std::vector
+PKMN_PYTHON_VECTOR(int, int_list)
 PKMN_PYTHON_VECTOR(std::string, string_list)

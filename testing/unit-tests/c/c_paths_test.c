@@ -21,10 +21,11 @@ static pkmn_error_t error_code = PKMN_ERROR_NONE;
  * tests just make sure the environment variables override the defaults.
  */
 
-static void appdata_dir_test() {
-#if defined(PKMN_PLATFORM_WIN32)
+static void appdata_dir_test()
+{
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_APPDATA_DIR", "C:\\libpkmn\\appdata\\dir");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_APPDATA_DIR=C:\\libpkmn\\appdata\\dir");
 #else
     setenv("PKMN_APPDATA_DIR", "/libpkmn/appdata/dir", 0);
@@ -32,24 +33,27 @@ static void appdata_dir_test() {
 
     error_code = pkmn_get_appdata_dir(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\appdata\\dir", strbuffer);
 #else
     TEST_ASSERT_EQUAL_STRING("/libpkmn/appdata/dir", strbuffer);
 #endif
 }
 
-static void database_path_test() {
+static void database_path_test()
+{
     /*
      * When this unit test is run, the PKMN_DATABASE_PATH environment variable
      * is set to a valid value, so just make sure the call doesn't fail.
      */
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 
@@ -58,9 +62,9 @@ static void database_path_test() {
      * database. This is admittedly fragile, but this test is never meant to be
      * outside the build system.
      */
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", __FILE__);
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     snprintf(
         strbuffer,
         sizeof(strbuffer),
@@ -74,14 +78,15 @@ static void database_path_test() {
 
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 
     // Now just make sure it fails with a non-existent file.
-#if defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_DATABASE_PATH", "C:\\libpkmn\\database\\path");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_DATABASE_PATH=C:\\libpkmn\\database\\path");
 #else
     setenv("PKMN_DATABASE_PATH", "/libpkmn/database/path", 1);
@@ -89,15 +94,17 @@ static void database_path_test() {
 
     error_code = pkmn_get_database_path(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_RUNTIME_ERROR, error_code);
 }
 
-static void images_dir_test() {
-#if defined(PKMN_PLATFORM_WIN32)
+static void images_dir_test()
+{
+#if defined(PKMN_C_PLATFORM_WIN32)
     _putenv_s("PKMN_IMAGES_DIR", "C:\\libpkmn\\images\\dir");
-#elif defined(PKMN_PLATFORM_MINGW)
+#elif defined(PKMN_C_PLATFORM_MINGW)
     putenv("PKMN_IMAGES_DIR=C:\\libpkmn\\images\\dir");
 #else
     setenv("PKMN_IMAGES_DIR", "/libpkmn/images/dir", 1);
@@ -105,20 +112,23 @@ static void images_dir_test() {
 
     error_code = pkmn_get_images_dir(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_EQUAL_STRING("C:\\libpkmn\\images\\dir", strbuffer);
 #else
     TEST_ASSERT_EQUAL_STRING("/libpkmn/images/dir", strbuffer);
 #endif
 }
 
-static void tmp_dir_test() {
+static void tmp_dir_test()
+{
     error_code = pkmn_get_tmp_dir(
                      strbuffer,
-                     sizeof(strbuffer)
+                     sizeof(strbuffer),
+                     NULL
                  );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error_code);
 }

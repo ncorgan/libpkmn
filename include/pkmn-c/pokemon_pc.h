@@ -17,7 +17,7 @@
 #if !defined(PKMN_POKEMON_PC_DECLARED) && !defined(__DOXYGEN__)
 struct pkmn_pokemon_pc_t;
 typedef struct pkmn_pokemon_pc_t pkmn_pokemon_pc_t;
-#define PKMN_POKEmon_pc_PC_DECLARED
+#define PKMN_POKEMON_PC_DECLARED
 #endif
 
 typedef pkmn_pokemon_pc_t* pkmn_pokemon_pc_handle_t;
@@ -26,42 +26,43 @@ typedef pkmn_pokemon_pc_t* pkmn_pokemon_pc_handle_t;
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_make(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_make(
     pkmn_pokemon_pc_handle_t* handle_ptr,
     const char* game
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_free(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_free(
     pkmn_pokemon_pc_handle_t* handle_ptr
 );
 
-PKMN_API const char* pkmn_pokemon_pc_strerror(
+PKMN_C_API const char* pkmn_pokemon_pc_strerror(
     pkmn_pokemon_pc_handle_t handle
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_get_game(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_get_game(
     pkmn_pokemon_pc_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_get_num_boxes(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_get_num_boxes(
     pkmn_pokemon_pc_handle_t handle,
     int* num_boxes_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_get_box(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_get_box(
     pkmn_pokemon_pc_handle_t handle,
     int index,
     pkmn_pokemon_box_handle_t* pokemon_box_handle_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_as_array(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_as_array(
     pkmn_pokemon_pc_handle_t handle,
     pkmn_pokemon_box_list_t* pokemon_box_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_pokemon_pc_get_box_names(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc_get_box_names(
     pkmn_pokemon_pc_handle_t handle,
     pkmn_string_list_t* box_names_out
 );

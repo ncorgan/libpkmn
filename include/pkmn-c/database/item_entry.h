@@ -116,7 +116,7 @@ extern "C" {
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the item or game name is invalid
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the given item was not in the given game
  */
-PKMN_API pkmn_error_t pkmn_database_get_item_entry(
+PKMN_C_API pkmn_error_t pkmn_database_get_item_entry(
     const char* item_name,
     const char* item_game,
     pkmn_database_item_entry_t* item_entry_out
@@ -132,7 +132,7 @@ PKMN_API pkmn_error_t pkmn_database_get_item_entry(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if item_entry is NULL
  */
-PKMN_API pkmn_error_t pkmn_database_item_entry_free(
+PKMN_C_API pkmn_error_t pkmn_database_item_entry_free(
     pkmn_database_item_entry_t* item_entry
 );
 

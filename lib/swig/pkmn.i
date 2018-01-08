@@ -23,6 +23,11 @@
 // SWIG can't parse constexpr
 #define constexpr
 
+#ifdef PKMN_CONSTEXPR
+#undef PKMN_CONSTEXPR
+#endif
+#define PKMN_CONSTEXPR const
+
 /*
  * All SWIG modules will ignore the following functions/classes.
  */

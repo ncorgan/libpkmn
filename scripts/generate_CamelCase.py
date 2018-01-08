@@ -27,6 +27,7 @@ ignored_classes = ["numeric_attribute_map",
 ignored_functions = ["size"]
 
 ignored_files = ["config.hpp",
+                 "exception.hpp",
                  "shared_ptr.hpp",
                  "attribute_engine.hpp"]
 

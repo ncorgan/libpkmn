@@ -53,7 +53,8 @@ static void check_initial_values(
     error = pkmn_pokemon_get_form(
                 pokemon,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
@@ -62,7 +63,8 @@ static void check_initial_values(
     error = pkmn_pokemon_get_species(
                 pokemon,
                 expected_nickname,
-                sizeof(expected_nickname)
+                sizeof(expected_nickname),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     if(generation < 5)
@@ -78,7 +80,8 @@ static void check_initial_values(
     error = pkmn_pokemon_get_nickname(
                 pokemon,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(
@@ -124,7 +127,8 @@ static void check_initial_values(
         error = pkmn_pokemon_get_held_item(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING("None", strbuffer);
@@ -151,7 +155,8 @@ static void check_initial_values(
         error = pkmn_pokemon_get_ball(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING("Premier Ball", strbuffer);
@@ -159,7 +164,8 @@ static void check_initial_values(
         error = pkmn_pokemon_get_original_game(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         if(!strcmp(game, "Colosseum") || !strcmp(game, "XD")) {
@@ -225,7 +231,8 @@ static void check_initial_values(
         error = pkmn_pokemon_get_icon_filepath(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -233,7 +240,8 @@ static void check_initial_values(
         error = pkmn_pokemon_get_sprite_filepath(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -248,7 +256,8 @@ static void check_initial_maps(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -426,7 +435,8 @@ static void test_setting_ability(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -450,7 +460,8 @@ static void test_setting_ability(
         error = pkmn_pokemon_get_ability(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.first, strbuffer);
@@ -464,7 +475,8 @@ static void test_setting_ability(
             error = pkmn_pokemon_get_ability(
                         pokemon,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.second, strbuffer);
@@ -481,7 +493,8 @@ static void test_setting_ability(
             error = pkmn_pokemon_get_ability(
                         pokemon,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(pokemon_entry.hidden_ability, strbuffer);
@@ -490,7 +503,8 @@ static void test_setting_ability(
         error = pkmn_pokemon_get_ability(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_ability(
@@ -513,7 +527,8 @@ static void test_setting_ball(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -530,7 +545,8 @@ static void test_setting_ball(
         error = pkmn_pokemon_get_ball(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(ball_name, strbuffer);
@@ -548,7 +564,8 @@ static void test_setting_ball(
         error = pkmn_pokemon_get_ball(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_ball(
@@ -567,7 +584,8 @@ static void test_image_filepaths(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -577,7 +595,8 @@ static void test_image_filepaths(
     error = pkmn_pokemon_get_icon_filepath(
                 pokemon,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -602,7 +621,8 @@ static void test_image_filepaths(
                 error = pkmn_pokemon_get_sprite_filepath(
                             pokemon,
                             strbuffer,
-                            sizeof(strbuffer)
+                            sizeof(strbuffer),
+                            NULL
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
                 TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -612,7 +632,8 @@ static void test_image_filepaths(
         error = pkmn_pokemon_get_sprite_filepath(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
@@ -627,7 +648,8 @@ static void test_setting_friendship(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -673,7 +695,8 @@ static void test_setting_item(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -690,7 +713,8 @@ static void test_setting_item(
         error = pkmn_pokemon_get_held_item(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(item_name, strbuffer);
@@ -708,7 +732,8 @@ static void test_setting_item(
         error = pkmn_pokemon_get_held_item(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_held_item(
@@ -727,7 +752,8 @@ static void test_setting_levels(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -896,7 +922,8 @@ static void test_setting_location_met(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -910,7 +937,8 @@ static void test_setting_location_met(
                         pokemon,
                         true,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
             error = pkmn_pokemon_set_location_met(
@@ -924,7 +952,8 @@ static void test_setting_location_met(
                         pokemon,
                         false,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
             error = pkmn_pokemon_set_location_met(
@@ -941,7 +970,8 @@ static void test_setting_location_met(
                         pokemon,
                         false,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(expected_original_location, strbuffer);
@@ -958,7 +988,8 @@ static void test_setting_location_met(
                             pokemon,
                             false,
                             strbuffer,
-                            sizeof(strbuffer)
+                            sizeof(strbuffer),
+                            NULL
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
                 TEST_ASSERT_EQUAL_STRING(locations[i], strbuffer);
@@ -982,7 +1013,8 @@ static void test_setting_location_met(
                         pokemon,
                         true,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
             error = pkmn_pokemon_set_location_met(
@@ -998,7 +1030,8 @@ static void test_setting_location_met(
                         pokemon,
                         false,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(expected_original_location, strbuffer);
@@ -1006,7 +1039,8 @@ static void test_setting_location_met(
                         pokemon,
                         true,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(expected_original_location, strbuffer);
@@ -1023,7 +1057,8 @@ static void test_setting_location_met(
                             pokemon,
                             false,
                             strbuffer,
-                            sizeof(strbuffer)
+                            sizeof(strbuffer),
+                            NULL
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
                 TEST_ASSERT_EQUAL_STRING(locations[i], strbuffer);
@@ -1038,7 +1073,8 @@ static void test_setting_location_met(
                             pokemon,
                             true,
                             strbuffer,
-                            sizeof(strbuffer)
+                            sizeof(strbuffer),
+                            NULL
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
                 TEST_ASSERT_EQUAL_STRING(locations[i], strbuffer);
@@ -1075,7 +1111,8 @@ static void test_setting_markings(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1155,7 +1192,8 @@ static void test_setting_moves(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1232,7 +1270,8 @@ static void test_setting_original_game(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1250,7 +1289,8 @@ static void test_setting_original_game(
             error = pkmn_pokemon_get_original_game(
                         pokemon,
                         strbuffer,
-                        sizeof(strbuffer)
+                        sizeof(strbuffer),
+                        NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             if(!strcmp(games[i], "Colosseum") || !strcmp(games[i], "XD")) {
@@ -1276,7 +1316,8 @@ static void test_setting_original_game(
         error = pkmn_pokemon_get_original_game(
                     pokemon,
                     strbuffer,
-                    sizeof(strbuffer)
+                    sizeof(strbuffer),
+                    NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
         error = pkmn_pokemon_set_original_game(
@@ -1295,7 +1336,8 @@ static void test_setting_personality(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1337,7 +1379,8 @@ static void test_setting_stats(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1483,7 +1526,8 @@ static void test_setting_trainer_info(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1503,7 +1547,8 @@ static void test_setting_trainer_info(
     error = pkmn_pokemon_get_nickname(
                 pokemon,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL_STRING("foobarbaz", strbuffer);
 
@@ -1559,7 +1604,8 @@ void pokemon_test_common(
     error = pkmn_pokemon_get_game(
                 pokemon,
                 game,
-                sizeof(game)
+                sizeof(game),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
@@ -1571,9 +1617,7 @@ void pokemon_test_common(
         test_values->valid_ball,
         test_values->invalid_balls
     );
-    if(strcmp(game, "Colosseum") && strcmp(game, "XD")) {
-        test_image_filepaths(pokemon);
-    }
+    test_image_filepaths(pokemon);
     test_setting_friendship(pokemon);
     test_setting_item(
         pokemon,

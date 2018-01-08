@@ -14,6 +14,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_slot.h
         levelup_move.h
         move_slot.h
+        natural_gift.h
         pokemon_list.h
         pokemon_box_list.h
         stats.h
