@@ -9,12 +9,15 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpEqualityHashCodeTest {
+public class CSharpEqualityHashCodeTest
+{
     /*
      * LibPKMN classes
      */
+
     [Test]
-    public void HiddenPowerTest() {
+    public void HiddenPowerTest()
+    {
         PKMN.HiddenPower hiddenPower = new PKMN.HiddenPower("Normal", 30);
 
         PKMN.HiddenPower hiddenPowerSame = new PKMN.HiddenPower("Normal", 30);
@@ -33,7 +36,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void ItemEntryTest() {
+    public void ItemEntryTest()
+    {
         PKMN.Database.ItemEntry itemEntry = new PKMN.Database.ItemEntry("Potion", "Red");
 
         PKMN.Database.ItemEntry itemEntrySame = new PKMN.Database.ItemEntry("Potion", "Red");
@@ -52,28 +56,29 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void LevelupMoveTest() {
+    public void LevelupMoveTest()
+    {
         PKMN.Database.LevelupMove levelupMove = new PKMN.Database.LevelupMove(
-                                               new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                               10
-                                           );
+                                                        new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                        10
+                                                    );
 
         PKMN.Database.LevelupMove levelupMoveSame = new PKMN.Database.LevelupMove(
-                                                   new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                                   10
-                                               );
+                                                            new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                            10
+                                                        );
         PKMN.Database.LevelupMove levelupMoveDifferentMove = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry("Tackle", "Red"),
-                                                            10
-                                                        );
+                                                                     new PKMN.Database.MoveEntry("Tackle", "Red"),
+                                                                     10
+                                                                 );
         PKMN.Database.LevelupMove levelupMoveDifferentGame = new PKMN.Database.LevelupMove(
-                                                            new PKMN.Database.MoveEntry("Scratch", "Blue"),
-                                                            10
-                                                        );
+                                                                     new PKMN.Database.MoveEntry("Scratch", "Blue"),
+                                                                     10
+                                                                 );
         PKMN.Database.LevelupMove levelupMoveDifferentLevel = new PKMN.Database.LevelupMove(
-                                                             new PKMN.Database.MoveEntry("Scratch", "Red"),
-                                                             5
-                                                         );
+                                                                      new PKMN.Database.MoveEntry("Scratch", "Red"),
+                                                                      5
+                                                                  );
 
         Assert.AreEqual(levelupMove, levelupMove);
         Assert.AreEqual(levelupMove, levelupMoveSame);
@@ -90,7 +95,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void MoveEntryTest() {
+    public void MoveEntryTest()
+    {
         PKMN.Database.MoveEntry moveEntry = new PKMN.Database.MoveEntry("Scratch", "Red");
 
         PKMN.Database.MoveEntry moveEntrySame = new PKMN.Database.MoveEntry("Scratch", "Red");
@@ -129,7 +135,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void PokemonEntryTest() {
+    public void PokemonEntryTest()
+    {
         PKMN.Database.PokemonEntry pokemonEntry = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
 
         PKMN.Database.PokemonEntry pokemonEntrySame = new PKMN.Database.PokemonEntry("Venusaur", "Omega Ruby", "");
@@ -152,7 +159,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void SpindaCoordsTest() {
+    public void SpindaCoordsTest()
+    {
         PKMN.SpindaCoords spindaCoords = new PKMN.SpindaCoords(5, 10);
 
         PKMN.SpindaCoords spindaCoordsSame = new PKMN.SpindaCoords(5, 10);
@@ -175,7 +183,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void SpindaSpotsTest() {
+    public void SpindaSpotsTest()
+    {
         PKMN.SpindaSpots spindaSpots = new PKMN.SpindaSpots(
                                                new PKMN.SpindaCoords(1, 2),
                                                new PKMN.SpindaCoords(3, 4),
@@ -216,8 +225,10 @@ public class CSharpEqualityHashCodeTest {
     /*
      * STL containers
      */
+
     [Test]
-    public void StringIntDictTest() {
+    public void StringIntDictTest()
+    {
         PKMN.StringIntDict stringIntDict = new PKMN.StringIntDict();
         stringIntDict["key1"] = 12;
         stringIntDict["key2"] = 34;
@@ -248,7 +259,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void IntPairTest() {
+    public void IntPairTest()
+    {
         PKMN.IntPair intPair = new PKMN.IntPair(123, 456);
 
         PKMN.IntPair intPairSame = new PKMN.IntPair(123, 456);
@@ -271,7 +283,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void StringPairTest() {
+    public void StringPairTest()
+    {
         PKMN.StringPair stringPair = new PKMN.StringPair("abc", "def");
 
         PKMN.StringPair stringPairSame = new PKMN.StringPair("abc", "def");
@@ -294,7 +307,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void StringListTest() {
+    public void StringListTest()
+    {
         PKMN.StringList stringList = new PKMN.StringList();
         stringList.Add("abc");
         stringList.Add("def");
@@ -325,7 +339,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void MoveEntryListTest() {
+    public void MoveEntryListTest()
+    {
         PKMN.Database.MoveEntryList moveEntryList = new PKMN.Database.MoveEntryList();
         moveEntryList.Add(
             new PKMN.Database.MoveEntry("Scratch", "Red")
@@ -368,7 +383,8 @@ public class CSharpEqualityHashCodeTest {
     }
 
     [Test]
-    public void PokemonEntryListTest() {
+    public void PokemonEntryListTest()
+    {
         PKMN.Database.PokemonEntryList pokemonEntryList = new PKMN.Database.PokemonEntryList();
         pokemonEntryList.Add(
             new PKMN.Database.PokemonEntry("Squirtle", "Blue", "")
