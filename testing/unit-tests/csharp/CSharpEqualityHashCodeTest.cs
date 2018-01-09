@@ -222,6 +222,59 @@ public class CSharpEqualityHashCodeTest
         Assert.AreNotEqual(spindaSpots.GetHashCode(), spindaSpotsShuffled.GetHashCode());
     }
 
+    [Test]
+    public void PokemonHelpersTest()
+    {
+        PKMN.Pokemon pokemon = new PKMN.Pokemon("Mew", "Ruby", "", 70);
+
+        // The Pokemon class and its helpers all use the underlying pointer
+        // in generating their hash codes. Make sure these aren't equal.
+
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.EVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.IVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.IVs.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.EVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.ContestStats.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.IVs.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Markings.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.ContestStats.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Ribbons.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Markings.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.Moves.GetHashCode());
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Ribbons.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.NumericAttributes.GetHashCode());
+        Assert.AreNotEqual(pokemon.Moves.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+
+        Assert.AreNotEqual(pokemon.NumericAttributes.GetHashCode(), pokemon.StringAttributes.GetHashCode());
+    }
+
     /*
      * STL containers
      */

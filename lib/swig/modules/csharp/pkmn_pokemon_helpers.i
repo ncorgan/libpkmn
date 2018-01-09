@@ -86,6 +86,7 @@ using System.Runtime.InteropServices;"
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
                                        .AddValue<StringList>(this.Keys)
+                                       .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }
 %}
@@ -167,6 +168,7 @@ using System.Runtime.InteropServices;"
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
                                        .AddValue<StringList>(this.Keys)
+                                       .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }
 %}
@@ -489,6 +491,7 @@ using System.Runtime.InteropServices;"
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
                                        .AddValue<int>(this.Index())
+                                       .AddValue<string>(this.GetType().Name)
                                        .ToHashCode();
     }
 %}
@@ -558,9 +561,14 @@ using System.Runtime.InteropServices;"
 
     public override int GetHashCode()
     {
-        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
-                                       .AddValue<int>(this.Count)
-                                       .ToHashCode();
+        HashCodeBuilder hashCodeBuilder = HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                                                  .AddValue<int>(this.Count);
+        for(int index = 0; index < this.Count; ++index)
+        {
+            hashCodeBuilder = hashCodeBuilder.AddValue<MoveSlot>(this[index]);
+        }
+
+        return hashCodeBuilder.ToHashCode();
     }
 %}
 

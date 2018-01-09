@@ -92,6 +92,7 @@ using System.Runtime.InteropServices;"
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
                                        .AddValue<StringList>(this.Names)
+                                       .AddValue<String>(this.GetType().Name)
                                        .ToHashCode();
     }
 %}
@@ -147,6 +148,7 @@ using System.Runtime.InteropServices;"
     {
         return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
                                        .AddValue<StringList>(this.Names)
+                                       .AddValue<String>(this.GetType().Name)
                                        .ToHashCode();
     }
 %}
