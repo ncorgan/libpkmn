@@ -5,8 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-// TODO: equality, hash code
-
 %{
     #include "cpp_wrappers/attribute_maps.hpp"
 %}
@@ -155,7 +153,7 @@ using System.Runtime.InteropServices;"
 
 // Definitions
 
-%define PKMN_ATTRIBUTE_MAPS(sptr_type, csharp_name_numeric, csharp_name_string)
+%define PKMN_CSHARP_ATTRIBUTE_MAPS(sptr_type, csharp_name_numeric, csharp_name_string)
     %ignore pkmn::swig::numeric_attribute_map<sptr_type>::numeric_attribute_map();
     %template(csharp_name_numeric) pkmn::swig::numeric_attribute_map<sptr_type>;
 
@@ -163,4 +161,4 @@ using System.Runtime.InteropServices;"
     %template(csharp_name_string)  pkmn::swig::string_attribute_map<sptr_type>;
 %enddef
 
-PKMN_ATTRIBUTE_MAPS(pkmn::pokemon, PokemonNumericAttributeMap, PokemonStringAttributeMap);
+PKMN_CSHARP_ATTRIBUTE_MAPS(pkmn::pokemon, PokemonNumericAttributeMap, PokemonStringAttributeMap);

@@ -24,6 +24,9 @@ PKMN_LUA_INIT
 %ignore get_native_pc_data;
 %ignore get_native_party_data;
 
+// Attribute Maps
+%include <lua/pkmn_attribute_maps.i>
+
 // Item Slot
 %include <pkmn/item_slot.hpp>
 PKMN_LUA_VECTOR(pkmn::item_slot, item_slot_list)
@@ -34,11 +37,8 @@ PKMN_LUA_VECTOR(pkmn::item_slot, item_slot_list)
 // Item Bag
 %include <lua/pkmn_item_bag.i>
 
-// Move Slot
-%include <pkmn/move_slot.hpp>
-PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
-
 // Pokémon
+%include <lua/pkmn_pokemon_helpers.i>
 %include <lua/pkmn_pokemon.i>
 
 // Pokémon Box

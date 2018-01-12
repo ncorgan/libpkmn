@@ -43,29 +43,36 @@ namespace pkmn { namespace swig {
             {
             }
 
-            bool operator==(
+            inline bool operator==(
                 const item_list& rhs
             ) const
             {
                 return (_item_list == rhs._item_list);
             }
 
-            std::string get_name()
+            inline bool operator!=(
+                const item_list& rhs
+            ) const
+            {
+                return !operator==(rhs);
+            }
+
+            inline std::string get_name()
             {
                 return _item_list->get_name();
             }
 
-            std::string get_game()
+            inline std::string get_game()
             {
                 return _item_list->get_game();
             }
 
-            int get_capacity()
+            inline int get_capacity()
             {
                 return _item_list->get_capacity();
             }
 
-            int get_num_items()
+            inline int get_num_items()
             {
                 return _item_list->get_num_items();
             }
@@ -77,7 +84,7 @@ namespace pkmn { namespace swig {
                 return item_slot(_item_list, index);
             }
 
-            void add(
+            inline void add(
                 const std::string& item,
                 int amount
             )
@@ -85,7 +92,7 @@ namespace pkmn { namespace swig {
                 _item_list->add(item, amount);
             }
 
-            void remove(
+            inline void remove(
                 const std::string& item,
                 int amount
             )
@@ -93,7 +100,7 @@ namespace pkmn { namespace swig {
                 _item_list->remove(item, amount);
             }
 
-            void move(
+            inline void move(
                 int old_position,
                 int new_position
             )
@@ -103,15 +110,13 @@ namespace pkmn { namespace swig {
 
             // Copy the vector, since the const in the reference
             // is casted away.
-            std::vector<std::string> get_valid_items()
+            inline std::vector<std::string> get_valid_items()
             {
                 return _item_list->get_valid_items();
             }
 
-            // TODO: ifdef for specific wrappers
-
             // For hash code functions
-            uintmax_t cptr()
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_item_list.get());
             }

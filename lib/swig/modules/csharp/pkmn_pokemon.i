@@ -68,8 +68,6 @@ using Database;"
 
 // As these are not simple getters and setters, this wrapping must be manually done.
 
-%csmethodmodifiers pkmn::swig::pokemon::get_level_met() "private";
-%csmethodmodifiers pkmn::swig::pokemon::set_level_met(int) "private";
 %csmethodmodifiers pkmn::swig::pokemon::get_location_met(bool) "private";
 %csmethodmodifiers pkmn::swig::pokemon::set_location_met(const std::string&, bool) "private";
 

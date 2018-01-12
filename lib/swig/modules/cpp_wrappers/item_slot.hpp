@@ -30,7 +30,7 @@ namespace pkmn { namespace swig {
             {
             }
 
-            const std::string& get_item()
+            inline const std::string& get_item()
             {
                 if(!_item_list)
                 {
@@ -40,7 +40,7 @@ namespace pkmn { namespace swig {
                 return _item_list->as_vector().at(_index).item;
             }
 
-            void set_item(
+            inline void set_item(
                 const std::string& item
             )
             {
@@ -58,7 +58,7 @@ namespace pkmn { namespace swig {
                 );
             }
 
-            int get_amount()
+            inline int get_amount()
             {
                 if(!_item_list)
                 {
@@ -68,7 +68,7 @@ namespace pkmn { namespace swig {
                 return _item_list->as_vector().at(_index).amount;
             }
 
-            void set_amount(
+            inline void set_amount(
                 int amount
             )
             {
@@ -82,6 +82,17 @@ namespace pkmn { namespace swig {
                     (amount == 0) ? "None" : get_item(),
                     amount
                 );
+            }
+
+            inline bool operator==(const item_slot& rhs) const
+            {
+                return (this->_item_list == rhs._item_list) &&
+                       (this->_index == rhs._index);
+            }
+
+            inline bool operator!=(const item_slot& rhs) const
+            {
+                return !operator==(rhs);
             }
 
         private:
