@@ -58,9 +58,18 @@ namespace pkmn { namespace swig {
                 int index
             )
             {
-                pkmn::enforce_bounds("Party index", index, 0, 5);
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Party index",
+                    index,
+                    1,
+                    6
+                );
 
+                return pkmn::swig::pokemon(_pokemon_party->get_pokemon(index-1));
+#else
                 return pkmn::swig::pokemon(_pokemon_party->get_pokemon(index));
+#endif
             }
 
             inline void set_pokemon(
@@ -68,10 +77,24 @@ namespace pkmn { namespace swig {
                 const pkmn::swig::pokemon& pokemon
             )
             {
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Party index",
+                    index,
+                    1,
+                    6
+                );
+
+                _pokemon_party->set_pokemon(
+                    index-1,
+                    pokemon.get_internal()
+                );
+#else
                 _pokemon_party->set_pokemon(
                     index,
                     pokemon.get_internal()
                 );
+#endif
             }
 
             uintmax_t cptr()

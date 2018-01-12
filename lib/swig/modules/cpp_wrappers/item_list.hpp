@@ -77,11 +77,22 @@ namespace pkmn { namespace swig {
                 return _item_list->get_num_items();
             }
 
-            item_slot at(
-                int index
+            inline item_slot at(
+                int position
             )
             {
-                return item_slot(_item_list, index);
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Position",
+                    position,
+                    1,
+                    get_num_items()
+                );
+
+                return item_slot(_item_list, position-1);
+#else
+                return item_slot(_item_list, position);
+#endif
             }
 
             inline void add(
@@ -105,7 +116,24 @@ namespace pkmn { namespace swig {
                 int new_position
             )
             {
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Old position",
+                    old_position,
+                    1,
+                    get_num_items()
+                );
+                pkmn::enforce_bounds(
+                    "New position",
+                    new_position,
+                    1,
+                    get_num_items()
+                );
+
+                _item_list->move(old_position-1, new_position-1);
+#else
                 _item_list->move(old_position, new_position);
+#endif
             }
 
             // Copy the vector, since the const in the reference

@@ -502,8 +502,21 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                // TODO: Lua check
-                pkmn::enforce_bounds("Move index", index, 0, 3);
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Move index",
+                    index,
+                    1,
+                    4
+                );
+#else
+                pkmn::enforce_bounds(
+                    "Move index",
+                    index,
+                    0,
+                    3
+                );
+#endif
 
                 return _moves.at(index);
             }

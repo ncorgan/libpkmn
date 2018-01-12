@@ -75,10 +75,18 @@ namespace pkmn { namespace swig {
                 int index
             )
             {
-                int capacity = _pokemon_box->get_capacity();
-                pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Box index",
+                    index,
+                    1,
+                    get_capacity()
+                );
 
+                return pkmn::swig::pokemon(_pokemon_box->get_pokemon(index-1));
+#else
                 return pkmn::swig::pokemon(_pokemon_box->get_pokemon(index));
+#endif
             }
 
             inline void set_pokemon(
@@ -86,10 +94,24 @@ namespace pkmn { namespace swig {
                 const pkmn::swig::pokemon& pokemon
             )
             {
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Box index",
+                    index,
+                    1,
+                    get_capacity()
+                );
+
+                _pokemon_box->set_pokemon(
+                    index-1,
+                    pokemon.get_internal()
+                );
+#else
                 _pokemon_box->set_pokemon(
                     index,
                     pokemon.get_internal()
                 );
+#endif
             }
 
             inline uintmax_t cptr()

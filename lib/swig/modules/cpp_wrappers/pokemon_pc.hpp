@@ -58,10 +58,18 @@ namespace pkmn { namespace swig {
                 int index
             )
             {
-                int num_boxes = _pokemon_pc->get_num_boxes();
-                pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Box index",
+                    index,
+                    1,
+                    get_num_boxes()
+                );
 
+                return pkmn::swig::pokemon_box(_pokemon_pc->get_box(index-1));
+#else
                 return pkmn::swig::pokemon_box(_pokemon_pc->get_box(index));
+#endif
             }
 
             // Copy the vector, since the const in the reference
