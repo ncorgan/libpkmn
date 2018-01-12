@@ -287,19 +287,28 @@ namespace pkmn { namespace swig {
                 _pokemon->set_level_met(level_met);
             }
 
-            inline std::string get_location_met(
-                bool as_egg
-            )
+            inline std::string get_location_met()
             {
-                return _pokemon->get_location_met(as_egg);
+                return _pokemon->get_location_met(false);
             }
 
             inline void set_location_met(
-                const std::string& location,
-                bool as_egg
+                const std::string& location
             )
             {
-                _pokemon->set_location_met(location, as_egg);
+                _pokemon->set_location_met(location, false);
+            }
+
+            inline std::string get_location_met_as_egg()
+            {
+                return _pokemon->get_location_met(true);
+            }
+
+            inline void set_location_met_as_egg(
+                const std::string& location
+            )
+            {
+                _pokemon->set_location_met(location, true);
             }
 
             inline std::string get_original_game()

@@ -42,6 +42,8 @@
 %attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
 %attributestring(pkmn::swig::pokemon, std::string, ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);
+%attributestring(pkmn::swig::pokemon, std::string, location_met, get_location_met, set_location_met);
+%attributestring(pkmn::swig::pokemon, std::string, location_met_as_egg, get_location_met_as_egg, set_location_met_as_egg);
 %attributestring(pkmn::swig::pokemon, std::string, original_game, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon, int, experience, get_experience, set_experience);
@@ -58,13 +60,6 @@
 %attributestring(pkmn::swig::pokemon, std::string, sprite_filepath, get_sprite_filepath);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
-
-// As these are not simple getters and setters, this wrapping must be manually done.
-
-%csmethodmodifiers pkmn::swig::pokemon::get_level_met() "private";
-%csmethodmodifiers pkmn::swig::pokemon::set_level_met(int) "private";
-%csmethodmodifiers pkmn::swig::pokemon::get_location_met(bool) "private";
-%csmethodmodifiers pkmn::swig::pokemon::set_location_met(const std::string&, bool) "private";
 
 %typemap(cscode) pkmn::swig::pokemon
 %{

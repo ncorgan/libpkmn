@@ -49,6 +49,8 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, Ability, get_ability, set_ability);
 %attributestring(pkmn::swig::pokemon, std::string, Ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, LevelMet, get_level_met, set_level_met);
+%attributestring(pkmn::swig::pokemon, std::string, LocationMet, get_location_met, set_location_met);
+%attributestring(pkmn::swig::pokemon, std::string, LocationMetAsEgg, get_location_met_as_egg, set_location_met_as_egg);
 %attributestring(pkmn::swig::pokemon, std::string, OriginalGame, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, Personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon, int, Experience, get_experience, set_experience);
@@ -66,11 +68,6 @@ using Database;"
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), NumericAttributes, get_numeric_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), StringAttributes, get_string_attributes);
 
-// As these are not simple getters and setters, this wrapping must be manually done.
-
-%csmethodmodifiers pkmn::swig::pokemon::get_location_met(bool) "private";
-%csmethodmodifiers pkmn::swig::pokemon::set_location_met(const std::string&, bool) "private";
-
 %typemap(cscode) pkmn::swig::pokemon
 %{
 #if __DOXYGEN__
@@ -81,18 +78,6 @@ using Database;"
     public static readonly uint DEFAULT_TRAINER_ID = PKMN.get_default_trainer_id();
     public static readonly string DEFAULT_TRAINER_NAME = PKMN.get_default_trainer_name();
 #endif
-
-    public string LocationMet
-    {
-        get { return GetLocationMet(false); }
-        set { SetLocationMet(value, false); }
-    }
-
-    public string LocationMetAsEgg
-    {
-        get { return GetLocationMet(true); }
-        set { SetLocationMet(value, true); }
-    }
 
     public bool Equals(Pokemon other)
     {
