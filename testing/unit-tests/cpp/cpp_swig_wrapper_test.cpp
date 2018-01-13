@@ -514,7 +514,7 @@ TEST(cpp_swig_test, test_pokemon_pc)
 
     EXPECT_EQ("FireRed", swig_pokemon_pc.get_game());
 
-    for(size_t i = 0; i < swig_pokemon_pc.get_num_boxes(); ++i)
+    for(int i = 0; i < swig_pokemon_pc.get_num_boxes(); ++i)
     {
         EXPECT_EQ(
             swig_pokemon_pc.get_box_names()[i],
