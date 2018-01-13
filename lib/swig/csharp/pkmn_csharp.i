@@ -14,14 +14,10 @@ PKMN_CSHARP_INIT
 %import <stl_csharp.i>
 
 %{
-    #include <pkmn/item_list.hpp>
-    #include <pkmn/item_bag.hpp>
-
-    #include <pkmn/utils/paths.hpp>
-
     #include <pkmn/build_info.hpp>
 
-    PKMN_INLINE std::string GetSWIGVersion() {
+    inline std::string GetSWIGVersion()
+    {
         return std::string("@SWIG_VERSION@");
     }
 %}
@@ -40,23 +36,6 @@ PKMN_CSHARP_INIT
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
 
-// For all sptrs, for some reason didn't get ignored from pkmn.i
-%ignore make;
-%ignore get_native;
-
-// Bring in our wrapped static functions, don't expose them
-%csmethodmodifiers get_default_trainer_id "internal";
-%csmethodmodifiers get_default_trainer_name "internal";
-%csmethodmodifiers detect_game_save_type "internal";
-%csmethodmodifiers make_game_save "internal";
-%csmethodmodifiers make_item_bag "internal";
-%csmethodmodifiers make_item_list "internal";
-%csmethodmodifiers make_pokemon "internal";
-%csmethodmodifiers make_pokemon_box "internal";
-%csmethodmodifiers make_pokemon_party "internal";
-%csmethodmodifiers make_pokemon_pc "internal";
-%include <pkmn_statics.i>
-
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>
 
@@ -72,7 +51,7 @@ std::string GetSWIGVersion();
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
 
-// Pokémon 
+// Pokémon
 %include <csharp/pkmn_pokemon_helpers.i>
 %include <csharp/pkmn_pokemon.i>
 

@@ -57,6 +57,9 @@ namespace pkmn { namespace swig {
                 _init();
             }
 
+            static const uint32_t DEFAULT_TRAINER_ID;
+            static const std::string DEFAULT_TRAINER_NAME;
+
             inline pokemon to_game(
                 const std::string& game
             )
@@ -477,6 +480,9 @@ namespace pkmn { namespace swig {
                 _string_attribute_map = string_attribute_map<pkmn::pokemon>(_pokemon);
             }
     };
+
+    const uint32_t pokemon::DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
+    const std::string pokemon::DEFAULT_TRAINER_NAME = pkmn::pokemon::DEFAULT_TRAINER_NAME;
 
 }}
 

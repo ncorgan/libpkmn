@@ -70,15 +70,6 @@ using Database;"
 
 %typemap(cscode) pkmn::swig::pokemon
 %{
-#if __DOXYGEN__
-    // So internal functions aren't exposed in public documentation...
-    public static readonly uint DEFAULT_TRAINER_ID;
-    public static readonly string DEFAULT_TRAINER_NAME;
-#else
-    public static readonly uint DEFAULT_TRAINER_ID = PKMN.get_default_trainer_id();
-    public static readonly string DEFAULT_TRAINER_NAME = PKMN.get_default_trainer_name();
-#endif
-
     public bool Equals(Pokemon other)
     {
         if(other == null)

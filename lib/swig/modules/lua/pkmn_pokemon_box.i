@@ -1,60 +1,49 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/pokemon_box.hpp>
+    #include "cpp_wrappers/pokemon_box.hpp"
 %}
 
-%ignore pkmn::pokemon_box::set_pokemon;
-%rename(as_list) as_vector;
-%include <pkmn/pokemon_box.hpp>
+%include <attribute.i>
 
-%extend pkmn::shared_ptr<pkmn::pokemon_box> {
+%ignore pkmn::swig::pokemon_box::pokemon_box();
+%ignore pkmn::swig::pokemon_box::pokemon_box(const pkmn::pokemon_box::sptr&);
+%ignore pkmn::swig::pokemon_box::cptr();
+%ignore pkmn::swig::pokemon_box::at(int);
+%ignore pkmn::swig::pokemon_box::get_capacity();
 
-    void set_pokemon(
-        int index,
-        pkmn::pokemon::sptr pokemon
-    ) throw (std::out_of_range)
+// Convert getter/setter functions into attributes for more idiomatic Lua.
+
+%attributestring(pkmn::swig::pokemon_box, std::string, game, get_game);
+%attributestring(pkmn::swig::pokemon_box, std::string, name, get_name);
+%attributestring(pkmn::swig::pokemon_box, int, num_pokemon, get_num_pokemon);
+
+%extend pkmn::swig::pokemon_box
+{
+    pkmn::swig::pokemon __getitem__(
+        int position
+    )
     {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_pokemon(index-1, pokemon);
-    }
-
-    pkmn::pokemon::sptr __getitem__(
-        int index
-    ) throw (std::out_of_range)
-    {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        return self->get()->as_vector().at(index-1);
+        return self->get_pokemon(position);
     }
 
     void __setitem__(
-        int index, pkmn::pokemon::sptr value
-    ) throw (std::out_of_range)
+        int position,
+        const pkmn::swig::pokemon& pokemon
+    )
     {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_pokemon(index-1, value);
+        self->set_pokemon(position, pokemon);
     }
 
-    bool __eq__(
-        const pkmn::pokemon_box::sptr &rhs
-    ) {
-        return (self->get() == rhs.get());
+    int __len(void*)
+    {
+        return self->get_capacity();
     }
-
-    int __len(void*) {
-        return int(self->get()->get_capacity());
-    }
-
 }
-%template(pokemon_box_sptr) pkmn::shared_ptr<pkmn::pokemon_box>;
 
-%import <lua/stl_macros.i>
-PKMN_LUA_VECTOR(pkmn::pokemon_box::sptr, pokemon_box_list)
+%include "cpp_wrappers/pokemon_box.hpp"

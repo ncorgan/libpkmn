@@ -17,7 +17,6 @@ using System.Runtime.InteropServices;"
 
 %ignore pkmn::swig::game_save::game_save();
 %ignore pkmn::swig::game_save::game_save(const pkmn::game_save::sptr&);
-%ignore pkmn::swig::game_save::as_vector;
 
 // Needed for equality check.
 %csmethodmodifiers pkmn::swig::game_save::cptr() "private";

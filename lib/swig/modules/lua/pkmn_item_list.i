@@ -7,6 +7,8 @@
 
 %{
     #include "cpp_wrappers/item_list.hpp"
+
+    #include <pkmn/exception.hpp>
 %}
 
 %include <attribute.i>
@@ -26,10 +28,10 @@
 %extend pkmn::swig::item_list
 {
     pkmn::swig::item_slot __getitem__(
-        int index
+        int position
     )
     {
-        return self->at(index-1);
+        return self->at(position);
     }
 
     int __len(void*)

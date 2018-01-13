@@ -73,7 +73,7 @@ public class GameSaveTest
 
         Assert.AreEqual(
             gameSave.TrainerID,
-            gbGame ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID
+            gbGame ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DefaultTrainerID
         );
         if(gbGame)
         {
@@ -113,7 +113,7 @@ public class GameSaveTest
         Assert.AreEqual(gameSave.TrainerName, "LibPKMN");
 
         // Trainer ID
-        gameSave.TrainerID = IsGBGame(game) ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID;
+        gameSave.TrainerID = IsGBGame(game) ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DefaultTrainerID;
         TestTrainerID(gameSave);
         gameSave.TrainerPublicID = DEFAULT_TRAINER_PID;
         TestTrainerID(gameSave);
@@ -138,14 +138,14 @@ public class GameSaveTest
             Assert.Throws<ApplicationException>(
                 delegate
                 {
-                   gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
+                   gameSave.RivalName = PKMN.Pokemon.DefaultTrainerName;
                 }
             );
         }
         else
         {
-           gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
-           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+           gameSave.RivalName = PKMN.Pokemon.DefaultTrainerName;
+           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.DefaultTrainerName);
         }
 
         // Trainer Gender

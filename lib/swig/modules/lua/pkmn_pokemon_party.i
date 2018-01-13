@@ -1,58 +1,47 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/pokemon_party.hpp>
+    #include "cpp_wrappers/pokemon_party.hpp"
 %}
 
-%ignore pkmn::pokemon_party::set_pokemon;
-%rename(as_list) as_vector;
-%include <pkmn/pokemon_party.hpp>
+%include <attribute.i>
 
-%extend pkmn::shared_ptr<pkmn::pokemon_party> {
+%ignore pkmn::swig::pokemon_party::pokemon_party();
+%ignore pkmn::swig::pokemon_party::pokemon_party(const pkmn::pokemon_party::sptr&);
+%ignore pkmn::swig::pokemon_party::cptr();
+%ignore pkmn::swig::pokemon_party::at(int);
 
-    void set_pokemon(
-        int index,
-        pkmn::pokemon::sptr pokemon
-    ) throw (std::out_of_range)
+// Convert getter/setter functions into attributes for more idiomatic Lua.
+
+%attributestring(pkmn::swig::pokemon_party, std::string, game, get_game);
+%attributestring(pkmn::swig::pokemon_party, int, num_pokemon, get_num_pokemon);
+
+%extend pkmn::swig::pokemon_party
+{
+    pkmn::swig::pokemon __getitem__(
+        int position
+    )
     {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_pokemon(index-1, pokemon);
-    }
-
-    pkmn::pokemon::sptr __getitem__(
-        int index
-    ) throw (std::out_of_range)
-    {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        return self->get()->as_vector().at(index-1);
+        return self->get_pokemon(position);
     }
 
     void __setitem__(
-        int index, pkmn::pokemon::sptr value
-    ) throw (std::out_of_range)
+        int position,
+        const pkmn::swig::pokemon& pokemon
+    )
     {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        self->get()->set_pokemon(index-1, value);
+        self->set_pokemon(position, pokemon);
     }
 
-    bool __eq__(
-        const pkmn::pokemon_party::sptr &rhs
-    ) {
-        return (self->get() == rhs.get());
-    }
-
-    int __len(void*) {
-        (void)self;
+    int __len(void*)
+    {
         return 6;
     }
-
 }
-%template(pokemon_party_sptr) pkmn::shared_ptr<pkmn::pokemon_party>;
+
+%include "cpp_wrappers/pokemon_party.hpp"

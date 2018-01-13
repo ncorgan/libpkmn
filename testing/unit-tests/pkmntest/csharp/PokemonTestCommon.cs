@@ -526,7 +526,7 @@ public class PokemonTestCommon
         {
             Assert.AreEqual(pokemon.Nickname, pokemon.Species.ToUpper());
         }
-        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        Assert.AreEqual(pokemon.OriginalTrainerName, PKMN.Pokemon.DefaultTrainerName);
 
         if(generation >= 2)
         {
@@ -536,24 +536,24 @@ public class PokemonTestCommon
         Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
         Assert.AreEqual(
             pokemon.OriginalTrainerPublicID,
-            (ushort)(PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF)
+            (ushort)(PKMN.Pokemon.DefaultTrainerID & 0xFFFF)
         );
         if(generation >= 3)
         {
             Assert.AreEqual(
                 pokemon.OriginalTrainerSecretID,
-                (ushort)(PKMN.Pokemon.DEFAULT_TRAINER_ID >> 16)
+                (ushort)(PKMN.Pokemon.DefaultTrainerID >> 16)
             );
             Assert.AreEqual(
                 pokemon.OriginalTrainerID,
-                PKMN.Pokemon.DEFAULT_TRAINER_ID
+                PKMN.Pokemon.DefaultTrainerID
             );
         }
         else
         {
             Assert.AreEqual(
                 pokemon.OriginalTrainerID,
-                (PKMN.Pokemon.DEFAULT_TRAINER_ID & 0xFFFF)
+                (PKMN.Pokemon.DefaultTrainerID & 0xFFFF)
             );
         }
 

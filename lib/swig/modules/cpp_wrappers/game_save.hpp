@@ -32,7 +32,7 @@ namespace pkmn { namespace swig {
             }
 
             game_save(
-                const std::string& filepath 
+                const std::string& filepath
             ): _game_save(pkmn::game_save::from_file(filepath))
             {
             }

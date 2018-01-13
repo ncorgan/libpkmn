@@ -14,17 +14,6 @@ pkmn.gui = require("pkmn_gui_lua")
 pkmn.paths = require("pkmn_paths_lua")
 pkmn.stl = require("pkmn_stl_lua")
 
-pkmn.game_save = pkmn.make_game_save
-pkmn.item_bag = pkmn.make_item_bag
-pkmn.item_list = pkmn.make_item_list
-pkmn.pokemon = pkmn.make_pokemon
-pkmn.pokemon_box = pkmn.make_pokemon_box
-pkmn.pokemon_party = pkmn.make_pokemon_party
-pkmn.pokemon_pc = pkmn.make_pokemon_pc
-
-pkmn.DEFAULT_TRAINER_ID = 2105214279
-pkmn.DEFAULT_TRAINER_NAME = "LibPKMN"
-
 pkmn.VERSION = "@PKMN_VERSION@"
 
 pkmn.buildinfo.SWIG_VERSION = "@SWIG_VERSION@"

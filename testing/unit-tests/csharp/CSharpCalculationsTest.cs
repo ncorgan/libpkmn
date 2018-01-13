@@ -1645,7 +1645,7 @@ public class CSharpCalculationsTest {
             delegate {
                 PKMN.Calculations.GeneratePersonality(
                     "Charmander",
-                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Torrent",
                     "Male",
@@ -1659,7 +1659,7 @@ public class CSharpCalculationsTest {
             delegate {
                 PKMN.Calculations.GeneratePersonality(
                     "Charmander",
-                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
                     "Not a gender",
@@ -1673,7 +1673,7 @@ public class CSharpCalculationsTest {
             delegate {
                 PKMN.Calculations.GeneratePersonality(
                     "Charmander",
-                    PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                    PKMN.Pokemon.DefaultTrainerID,
                     true,
                     "Blaze",
                     "Male",
@@ -1685,7 +1685,7 @@ public class CSharpCalculationsTest {
         // Test and validate a valid call.
         uint personality = PKMN.Calculations.GeneratePersonality(
                                "Charmander",
-                               PKMN.Pokemon.DEFAULT_TRAINER_ID,
+                               PKMN.Pokemon.DefaultTrainerID,
                                true,
                                "Blaze",
                                "Male",
@@ -1699,7 +1699,7 @@ public class CSharpCalculationsTest {
         );
         Assert.IsTrue(
             PKMN.Calculations.ModernShiny(
-                personality, PKMN.Pokemon.DEFAULT_TRAINER_ID
+                personality, PKMN.Pokemon.DefaultTrainerID
             )
         );
     }
