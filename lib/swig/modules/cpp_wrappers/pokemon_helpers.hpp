@@ -509,6 +509,8 @@ namespace pkmn { namespace swig {
                     1,
                     4
                 );
+
+                return _moves.at(index-1);
 #else
                 pkmn::enforce_bounds(
                     "Move index",
@@ -516,9 +518,9 @@ namespace pkmn { namespace swig {
                     0,
                     3
                 );
-#endif
 
                 return _moves.at(index);
+#endif
             }
 
             size_t size()
