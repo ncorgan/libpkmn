@@ -1110,14 +1110,14 @@ function test_personality()
     -- Test and validate a valid call.
     local personality = pkmn.calculations.generate_personality(
                             "Charmander",
-                            pkmn.DEFAULT_TRAINER_ID,
+                            pkmn.pokemon.DEFAULT_TRAINER_ID,
                             true,
                             "Blaze",
                             "Male",
                             "Quiet"
                         )
     luaunit.assertEquals("Male", pkmn.calculations.modern_pokemon_gender("Charmander", personality))
-    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.DEFAULT_TRAINER_ID, personality))
+    luaunit.assertTrue(pkmn.calculations.modern_shiny(pkmn.pokemon.DEFAULT_TRAINER_ID, personality))
 end
 
 function test_gen2_shiny()
@@ -1183,8 +1183,8 @@ function test_pokemon_size()
 
     for i = 1, #pokemon_with_size_checks
     do
-        local height = pokemon_with_size_checks[i]:get_height()
-        local species = pokemon_with_size_checks[i]:get_name()
+        local height = pokemon_with_size_checks[i].height
+        local species = pokemon_with_size_checks[i].name
 
         for j = 1, 10
         do
