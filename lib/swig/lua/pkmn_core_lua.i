@@ -15,7 +15,7 @@ PKMN_LUA_INIT
 %include <lua/pkmn_attribute_maps.i>
 
 // Item Slot
-%include <lua/pkmn_item_list.i>
+%include <lua/pkmn_item_slot.i>
 
 // Item List
 %include <lua/pkmn_item_list.i>

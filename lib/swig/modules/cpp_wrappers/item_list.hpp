@@ -86,7 +86,7 @@ namespace pkmn { namespace swig {
                     "Position",
                     position,
                     1,
-                    get_num_items()
+                    get_capacity()
                 );
 
                 return item_slot(_item_list, position-1);
