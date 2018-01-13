@@ -9,6 +9,19 @@ local pkmn = require("pkmn")
 local luaunit = require("luaunit")
 
 local items_tests = {}
+items_tests.item_list = {}
+
+-- Stupid hacky functions to be able to test indexing and attributes
+
+function items_tests.item_list.get_item_name(items, index)
+    local item_name = items[index].item
+end
+
+function items_tests.item_list.set_item_name(items, index, item_name)
+    items[index].item = item_name
+end
+
+-- Actual common test functions
 
 function items_tests.item_list_test_empty_slot(items)
     for item_index = 1, #items
@@ -43,8 +56,29 @@ function items_tests.item_list_test_setting_items(items, item_names)
     luaunit.assertEquals(items.num_items, 0)
     luaunit.assertEquals(#item_names, 8)
 
-    luaunit.assertError(pkmn.item_list.__getitem, items, 0)
-    luaunit.assertError(pkmn.item_list.__getitem, items, #items+1)
+    -- Make sure invalid indices are caught.
+    luaunit.assertError(
+        items_tests.item_list.get_item_name,
+        items,
+        0
+    )
+    luaunit.assertError(
+        items_tests.item_list.get_item_name,
+        items,
+        #items+1
+    )
+    luaunit.assertError(
+        items_tests.item_list.set_item_name,
+        items,
+        0,
+        item_names[1]
+    )
+    luaunit.assertError(
+        items_tests.item_list.set_item_name,
+        items,
+        #items+1,
+        item_names[1]
+    )
 
     items[1].item = item_names[1]
     items[1].amount = 50
@@ -60,6 +94,14 @@ function items_tests.item_list_test_setting_items(items, item_names)
     luaunit.assertEquals(items[2].amount, 40)
     luaunit.assertEquals(items[3].item, item_names[3])
     luaunit.assertEquals(items[3].amount, 30)
+
+    -- Make sure the item list being contiguous is enforced.
+    luaunit.assertError(
+        items_tests.item_list.set_item_name,
+        items,
+        11,
+        item_names[4]
+    )
 
     items[2].item = "None"
 

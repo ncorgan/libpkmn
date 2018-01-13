@@ -9,8 +9,35 @@ local pkmn = require("pkmn")
 local luaunit = require("luaunit")
 
 local pokemon_pc_tests = {}
+pokemon_pc_tests.pokemon_box = {}
+pokemon_pc_tests.pokemon_pc = {}
 
-pokemon_pc_tests.GAME_TO_GENERATION = {
+-- Stupid hacky functions to be able to test indexing and attributes
+
+function pokemon_pc_tests.pokemon_box.get_pokemon(box, index)
+    local pokemon = box[index]
+end
+
+function pokemon_pc_tests.pokemon_box.set_pokemon(box, index, pokemon)
+    party[index] = pokemon
+end
+
+function pokemon_pc_tests.pokemon_box.get_name(box)
+    local name = box.name
+end
+
+function pokemon_pc_tests.pokemon_box.set_name(box, name)
+    box.name = name
+end
+
+function pokemon_pc_tests.pokemon_pc.get_box(pc, index)
+    local box = pc[index]
+end
+
+-- Actual test functions
+
+pokemon_pc_tests.GAME_TO_GENERATION =
+{
     ["Red"] = 1,
     ["Blue"] = 1,
     ["Yellow"] = 1,
@@ -46,13 +73,41 @@ function pokemon_pc_tests.test_empty_pokemon_box(box, game)
             luaunit.assertEquals(box[box_index].moves[move_index].pp, 0)
         end
     end
+
+    -- Make sure trying to get a Pokémon at an invalid index fails.
+    luaunit.assertError(
+        pokemon_pc_tests.pokemon_box.get_pokemon,
+        box,
+        0
+    )
+    luaunit.assertError(
+        pokemon_pc_tests.pokemon_box.get_pokemon,
+        box,
+        #box+1
+    )
 end
 
 function pokemon_pc_tests.test_box_name(box)
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[box.game]
 
-    if generation > 1
+    if generation == 1
     then
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.get_name,
+            box
+        )
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.set_name,
+            box,
+            "ABCDEFGH"
+        )
+    else
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.set_name,
+            box,
+            "ABCDEFGHI"
+        )
+
         box.name = "ABCDEFGH"
         luaunit.assertEquals(box.name, "ABCDEFGH")
     end
@@ -64,6 +119,20 @@ function pokemon_pc_tests.test_setting_pokemon(box)
 
     local original_first = box[1]
     local original_second = box[2]
+
+    -- Make sure we can't set Pokémon at invalid indices.
+    luaunit.assertError(
+        pokemon_pc_tests.pokemon_box.set_pokemon,
+        box,
+        0,
+        original_first
+    )
+    luaunit.assertError(
+        pokemon_pc_tests.pokemon_box.set_pokemon,
+        box,
+        #box+1,
+        original_second
+    )
 
     -- Create Pokémon and place in box. The original variables should
     -- still have the same underlying Pokémon.
@@ -81,7 +150,12 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     luaunit.assertEquals(box.num_pokemon, 2)
 
     -- Make sure we can't copy a Pokémon to itself.
-    luaunit.assertError(box.set_pokemon, box, 2, box[2])
+    luaunit.assertError(
+        pokemon_pc_tests.pokemon_box.set_pokemon,
+        box,
+        2,
+        box[2]
+    )
     luaunit.assertEquals(box.num_pokemon, 2)
 
     -- Copy a Pokémon whose memory is already part of the box.
@@ -98,8 +172,26 @@ function pokemon_pc_tests.test_setting_pokemon(box)
     luaunit.assertEquals(box.num_pokemon, 3)
 
     -- Check that Pokémon can be placed non-contiguously in the correct games.
-    if generation > 2
+    if generation <= 2
     then
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.set_pokemon,
+            box,
+            2,
+            original_first
+        )
+        luaunit.assertEquals(box.num_pokemon, 3)
+        luaunit.assertEquals(box[2].species, "Charmander")
+
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.set_pokemon,
+            box,
+            5,
+            bulbasaur
+        )
+        luaunit.assertEquals(box.num_pokemon, 3)
+        luaunit.assertEquals(box[5].species, "None")
+    else
         box[2] = original_first
         luaunit.assertEquals(box.num_pokemon, 2)
         luaunit.assertEquals(box[2].species, "None")
@@ -145,8 +237,14 @@ end
 function pokemon_pc_tests.test_box_names(pc)
     local generation = pokemon_pc_tests.GAME_TO_GENERATION[pc.game]
 
-    if generation > 1
+    if generation == 1
     then
+        luaunit.assertError(
+            pokemon_pc_tests.pokemon_box.set_name,
+            pc[1],
+            "ABCDEFGH"
+        )
+    else
         for i = 1, #pc
         do
             local box_name = string.format("BOX%d", i)

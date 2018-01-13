@@ -9,6 +9,19 @@ local pkmn = require("pkmn")
 local luaunit = require("luaunit")
 
 local pokemon_party_tests = {}
+pokemon_party_tests.pokemon_party = {}
+
+-- Stupid hacky functions to be able to test indexing and attributes
+
+function pokemon_party_tests.pokemon_party.get_pokemon(party, index)
+    local pokemon = party[index]
+end
+
+function pokemon_party_tests.pokemon_party.set_pokemon(party, index, pokemon)
+    party[index] = pokemon
+end
+
+-- Actual test functions
 
 function pokemon_party_tests.test_empty_pokemon_party(party, game)
     luaunit.assertEquals(party.game, game)
@@ -25,6 +38,18 @@ function pokemon_party_tests.test_empty_pokemon_party(party, game)
             luaunit.assertEquals(party[party_index].moves[move_index].pp, 0)
         end
     end
+
+    -- Make sure trying to access a Pokémon at an invalid index fails.
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.get_pokemon,
+        party,
+        0
+    )
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.get_pokemon,
+        party,
+        #party+1
+    )
 end
 
 function pokemon_party_tests.test_setting_pokemon(party)
@@ -32,6 +57,20 @@ function pokemon_party_tests.test_setting_pokemon(party)
 
     local original_first = party[1]
     local original_second = party[2]
+
+    -- Make sure we can't set Pokémon at invalid indices.
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.set_pokemon,
+        party,
+        0,
+        original_first
+    )
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.set_pokemon,
+        party,
+        #party+1,
+        original_second
+    )
 
     -- Create Pokémon and place in party. The original variables should
     -- still have the same underlying Pokémon.
@@ -52,7 +91,12 @@ function pokemon_party_tests.test_setting_pokemon(party)
     luaunit.assertEquals(party[1].species, "Squirtle")
 
     -- Make sure we can't copy a Pokémon to itself.
-    luaunit.assertError(party.set_pokemon, 2, party[2])
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.set_pokemon,
+        party,
+        2,
+        party[2]
+    )
     luaunit.assertEquals(party.num_pokemon, 2)
 
     -- Copy a Pokémon whose memory is already part of the party.
@@ -71,11 +115,21 @@ function pokemon_party_tests.test_setting_pokemon(party)
     luaunit.assertEquals(party[3].species, "Charmander")
 
     -- Check that Pokémon cannot be placed non-contiguously.
-    luaunit.assertError(party.set_pokemon, party, 2, original_first)
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.set_pokemon,
+        party,
+        2,
+        original_first
+    )
     luaunit.assertEquals(party.num_pokemon, 3)
     luaunit.assertEquals(party[2].species, "Charmander")
 
-    luaunit.assertError(party.set_pokemon, 5, bulbasaur)
+    luaunit.assertError(
+        pokemon_party_tests.pokemon_party.set_pokemon,
+        party,
+        5,
+        bulbasaur
+    )
     luaunit.assertEquals(party.num_pokemon, 3)
     luaunit.assertEquals(party[5].species, "None")
 
