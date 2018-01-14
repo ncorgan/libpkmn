@@ -15,6 +15,7 @@
 
 #include <pksav/common/pokedex.h>
 
+#include <boost/assert.hpp>
 #include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
@@ -48,9 +49,7 @@ namespace pkmn
        _dirty_seen(true),
        _dirty_caught(true)
     {
-        // TODO: Boost assert
-        assert(!native_has_seen == !native_has_caught);
-
+        BOOST_ASSERT(!native_has_seen == !native_has_caught);
 
         if(native_has_seen)
         {
@@ -60,7 +59,7 @@ namespace pkmn
         }
         else
         {
-            size_t num_bytes = std::ceil(float(_num_pokemon) / 8.0f);
+            size_t num_bytes = static_cast<size_t>(std::ceil(float(_num_pokemon) / 8.0f));
             _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
             _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
 

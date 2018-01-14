@@ -150,7 +150,7 @@ namespace pkmn {
         // NOTE: From my research, the location in PKSav is correct,
         // but they don't necessarily match for some reason. Do this
         // anyway.
-        const size_t num_bytes = std::ceil(386 / 8);
+        const size_t num_bytes = static_cast<size_t>(std::ceil(386 / 8));
 
         std::memcpy(
             _pksav_save.pokedex_seenB,
