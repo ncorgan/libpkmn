@@ -285,7 +285,7 @@ namespace pkmntest {
             }
         }
 
-        if((generation != 2) and (game != "Colosseum") and (game != "XD"))
+        if((game != "Colosseum") and (game != "XD"))
         {
             // Test Pokédex. Any Pokémon in the party and PC must be in the
             // Pokédex.

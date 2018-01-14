@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "game_save_gen2impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "pokedex_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 
@@ -78,6 +79,12 @@ namespace pkmn {
                             _pksav_save.item_pc
                        );
         }
+
+        _pokedex = pkmn::make_shared<pokedex_impl>(
+                       _game_id,
+                       _pksav_save.pokedex_seen,
+                       _pksav_save.pokedex_owned
+                   );
 
         _pokemon_party = pkmn::make_shared<pokemon_party_gen2impl>(
                              _game_id,
@@ -264,10 +271,5 @@ namespace pkmn {
                 3
             );
         )
-    }
-
-    pkmn::pokedex::sptr game_save_gen2impl::get_pokedex()
-    {
-        throw pkmn::unimplemented_error();
     }
 }

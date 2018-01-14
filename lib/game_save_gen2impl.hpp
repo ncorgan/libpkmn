@@ -69,8 +69,6 @@ namespace pkmn {
                 int money
             ) override final;
 
-            pkmn::pokedex::sptr get_pokedex() override final;
-
         private:
             pksav_gen2_save_t _pksav_save;
     };
