@@ -146,6 +146,10 @@ namespace pkmn {
         // three separate times. This class passes the first field
         // into the Pokédex class, so copy it to the other two before
         // calculating the checksum and saving.
+        //
+        // NOTE: From my research, the location in PKSav is correct,
+        // but they don't necessarily match for some reason. Do this
+        // anyway.
         const size_t num_bytes = std::ceil(386 / 8);
 
         std::memcpy(

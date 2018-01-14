@@ -310,7 +310,7 @@ namespace pkmntest {
                 for(const auto& pokemon: box_vector)
                 {
                     std::string species = pokemon->get_species();
-                    if(species != "None")
+                    if((species != "None") and (not pokemon->is_egg()))
                     {
                         EXPECT_TRUE(pokedex->has_seen(species));
                         EXPECT_TRUE(pokedex->has_caught(species));
