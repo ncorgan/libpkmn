@@ -11,7 +11,7 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
-#include <pkmn/calculations/hidden_power.hpp>
+#include <pkmn/calculations/moves/hidden_power.hpp>
 
 #include <boost/config.hpp>
 

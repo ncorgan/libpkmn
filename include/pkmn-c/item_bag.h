@@ -26,32 +26,32 @@ typedef struct
 extern "C" {
 #endif
 
-PKMN_API pkmn_error_t pkmn_item_bag_init(
+PKMN_C_API pkmn_error_t pkmn_item_bag_init(
     const char* game,
     pkmn_item_bag_t* item_bag_out
 );
 
-PKMN_API pkmn_error_t pkmn_item_bag_free(
+PKMN_C_API pkmn_error_t pkmn_item_bag_free(
     pkmn_item_bag_t* item_bag
 );
 
-PKMN_API const char* pkmn_item_bag_strerror(
+PKMN_C_API const char* pkmn_item_bag_strerror(
     pkmn_item_bag_t* item_bag
 );
 
-PKMN_API pkmn_error_t pkmn_item_bag_get_pocket(
+PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
     pkmn_item_bag_t* item_bag,
     const char* pocket_name,
     pkmn_item_list_t** item_list_out
 );
 
-PKMN_API pkmn_error_t pkmn_item_bag_add(
+PKMN_C_API pkmn_error_t pkmn_item_bag_add(
     pkmn_item_bag_t* item_bag,
     const char* item,
     int amount
 );
 
-PKMN_API pkmn_error_t pkmn_item_bag_remove(
+PKMN_C_API pkmn_error_t pkmn_item_bag_remove(
     pkmn_item_bag_t* item_bag,
     const char* item,
     int amount

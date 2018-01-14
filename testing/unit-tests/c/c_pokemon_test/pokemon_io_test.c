@@ -14,7 +14,7 @@
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN];
 
-#if defined(PKMN_PLATFORM_MINGW) || defined(PKMN_PLATFORM_WIN32)
+#if defined(PKMN_C_PLATFORM_MINGW) || defined(PKMN_C_PLATFORM_WIN32)
 #    define FS_SEPARATOR "\\"
 #else
 #    define FS_SEPARATOR "/"
@@ -60,7 +60,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_species(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Mightyena", strbuffer);
@@ -68,7 +69,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_game(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Emerald", strbuffer);
@@ -76,7 +78,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_form(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
@@ -84,7 +87,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_nickname(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("MIGHTYENA", strbuffer);
@@ -111,7 +115,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_held_item(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Heart Scale", strbuffer);
@@ -127,7 +132,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_ability(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Intimidate", strbuffer);
@@ -135,7 +141,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_ball(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Great Ball", strbuffer);
@@ -152,7 +159,8 @@ void test_3gpkm() {
                 mightyena,
                 false,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Route 120", strbuffer);
@@ -160,7 +168,8 @@ void test_3gpkm() {
     error = pkmn_pokemon_get_original_game(
                 mightyena,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Emerald", strbuffer);

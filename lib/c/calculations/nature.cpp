@@ -15,17 +15,18 @@
 pkmn_error_t pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,
-    size_t buffer_len
-) {
+    size_t buffer_len,
+    size_t* nature_length_out
+)
+{
     PKMN_CHECK_NULL_PARAM(nature_out);
 
     PKMN_CPP_TO_C(
-        return pkmn::std_string_to_c_str(
-                   pkmn::calculations::nature(
-                       personality
-                   ),
-                   nature_out,
-                   buffer_len
-               );
+        pkmn::c::string_cpp_to_c(
+            pkmn::calculations::nature(personality),
+            nature_out,
+            buffer_len,
+            nature_length_out
+        );
     )
 }

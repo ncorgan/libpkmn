@@ -9,13 +9,13 @@
 
 #include <pkmn.h>
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>
 #else
 #    include <unistd.h>
 #endif
 
-#ifdef PKMN_PLATFORM_WIN32
+#ifdef PKMN_C_PLATFORM_WIN32
 #    define FS_SEPARATOR "\\"
 #else
 #    define FS_SEPARATOR "/"
@@ -31,10 +31,7 @@ static int dummy_int = 0;
 static uint32_t dummy_uint32_t = 0;
 static float dummy_float = 0;
 static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
-static pkmn_string_list_t dummy_pkmn_string_list_t = {
-    .strings = NULL,
-    .length = 0
-};
+static pkmn_string_list_t dummy_pkmn_string_list_t = { NULL, 0 };
 static pkmn_pokemon_handle_t dummy_pokemon = NULL;
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
@@ -200,23 +197,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_filepath(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_filepath(
                 game_save,
                 NULL, // filepath_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "filepath_out");
-
-    error = pkmn_game_save_get_filepath(
-                game_save,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_save
@@ -250,23 +242,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_game(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_game(
                 game_save,
                 NULL, // game_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "game_out");
-
-    error = pkmn_game_save_get_game(
-        game_save,
-        strbuffer,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_get_original_trainer_info
@@ -307,23 +294,18 @@ static void game_save_error_test() {
     error = pkmn_game_save_get_rival_name(
                 NULL, // handle
                 strbuffer,
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_game_save_get_rival_name(
                 game_save,
                 NULL, // rival_name_out
-                STRBUFFER_LEN
+                STRBUFFER_LEN,
+                NULL
             );
     TEST_GAME_SAVE_NULL_POINTER_RETURN(game_save, "rival_name_out");
-
-    error = pkmn_game_save_get_rival_name(
-        game_save,
-        strbuffer,
-        0
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_game_save_set_rival_name
@@ -796,23 +778,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_species(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_species(
                 pokemon,
                 NULL, // species_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "species_out");
-
-    error = pkmn_pokemon_get_species(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_game
@@ -821,14 +798,16 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_game(
                 pokemon,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "game_out");
 
@@ -839,23 +818,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_form(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_form(
                 pokemon,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form_out");
-
-    error = pkmn_pokemon_get_form(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_form
@@ -872,17 +846,6 @@ static void pokemon_error_test() {
                 NULL // form
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "form");
-
-    /*
-     * pkmn_pokemon_get_game
-     */
-
-    error = pkmn_pokemon_get_game(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_database_entry
@@ -907,23 +870,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_nickname(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_nickname(
                 pokemon,
                 NULL, // nickname_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "nickname_out");
-
-    error = pkmn_pokemon_get_nickname(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_nickname
@@ -1022,23 +980,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_held_item(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_held_item(
                 pokemon,
                 NULL, // held_item_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "held_item_out");
-
-    error = pkmn_pokemon_get_held_item(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_held_item
@@ -1089,23 +1042,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_ability(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_ability(
                 pokemon,
                 NULL, // ability_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ability_out");
-
-    error = pkmn_pokemon_get_ability(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_ability
@@ -1130,23 +1078,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_ball(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_ball(
                 pokemon,
                 NULL, // ball_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "ball_out");
-
-    error = pkmn_pokemon_get_ball(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_ball
@@ -1198,7 +1141,8 @@ static void pokemon_error_test() {
                 NULL, // handle
                 true,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
@@ -1206,17 +1150,10 @@ static void pokemon_error_test() {
                 pokemon,
                 true,
                 NULL, // location_met_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "location_met_out");
-
-    error = pkmn_pokemon_get_location_met(
-                pokemon,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_location_met
@@ -1243,23 +1180,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_original_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_original_game(
                 pokemon,
                 NULL, // original_game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "original_game_out");
-
-    error = pkmn_pokemon_get_original_game(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_set_original_game
@@ -1732,23 +1664,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_icon_filepath(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_icon_filepath(
                 pokemon,
                 NULL, // icon_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "icon_filepath_out");
-
-    error = pkmn_pokemon_get_icon_filepath(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_get_sprite_filepath
@@ -1757,23 +1684,18 @@ static void pokemon_error_test() {
     error = pkmn_pokemon_get_sprite_filepath(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_get_sprite_filepath(
                 pokemon,
                 NULL, // sprite_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_NULL_POINTER_RETURN(pokemon, "sprite_filepath_out");
-
-    error = pkmn_pokemon_get_sprite_filepath(
-                pokemon,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -1844,23 +1766,18 @@ static void pokemon_box_error_test() {
     error = pkmn_pokemon_box_get_name(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_box_get_name(
                 pokemon_box,
                 NULL, // name_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name_out");
-
-    error = pkmn_pokemon_box_get_name(
-                pokemon_box,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_box_set_name
@@ -1885,23 +1802,18 @@ static void pokemon_box_error_test() {
     error = pkmn_pokemon_box_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_box_get_game(
                 pokemon_box,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "game_out");
-
-    error = pkmn_pokemon_box_get_game(
-                pokemon_box,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_box_get_num_pokemon
@@ -2056,23 +1968,18 @@ static void pokemon_party_error_test() {
     error = pkmn_pokemon_party_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_party_get_game(
                 pokemon_party,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "game_out");
-
-    error = pkmn_pokemon_party_get_game(
-                pokemon_party,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_party_get_num_pokemon
@@ -2213,23 +2120,18 @@ static void pokemon_pc_error_test() {
     error = pkmn_pokemon_pc_get_game(
                 NULL, // handle
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("handle");
 
     error = pkmn_pokemon_pc_get_game(
                 pokemon_pc,
                 NULL, // game_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "game_out");
-
-    error = pkmn_pokemon_pc_get_game(
-                pokemon_pc,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_pokemon_pc_get_num_boxes
@@ -2316,19 +2218,10 @@ static void calculations_form_error_test() {
                 0,
                 0,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("form_out");
-
-    error = pkmn_calculations_gen2_unown_form(
-                0,
-                0,
-                0,
-                0,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_calculations_gen3_unown_form
@@ -2337,16 +2230,10 @@ static void calculations_form_error_test() {
     error = pkmn_calculations_gen3_unown_form(
                 0,
                 NULL, // form_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("form_out");
-
-    error = pkmn_calculations_gen3_unown_form(
-                0,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_calculations_wurmple_becomes_silcoon
@@ -2404,39 +2291,6 @@ static void calculations_gender_error_test() {
 }
 
 /*
- * <pkmn-c/calculations/hidden_power.h>
- */
-static void calculations_hidden_power_error_test() {
-    /*
-     * pkmn_calculations_gen2_hidden_power
-     */
-
-    error = pkmn_calculations_gen2_hidden_power(
-                0,
-                0,
-                0,
-                0,
-                NULL // hidden_power_out
-            );
-    TEST_NULL_POINTER_RETURN("hidden_power_out");
-
-    /*
-     * pkmn_calculations_modern_hidden_power
-     */
-
-    error = pkmn_calculations_modern_hidden_power(
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                NULL // hidden_power_out
-            );
-    TEST_NULL_POINTER_RETURN("hidden_power_out");
-}
-
-/*
  * <pkmn-c/calculations/nature.h>
  */
 static void calculations_nature_error_test() {
@@ -2446,7 +2300,8 @@ static void calculations_nature_error_test() {
     error = pkmn_calculations_nature(
                 0,
                 NULL, // nature_out
-                0
+                0,
+                NULL
             );
     TEST_NULL_POINTER_RETURN("nature_out");
 }
@@ -2717,6 +2572,479 @@ static void calculations_stats_error_test() {
                 NULL // stat_range_out
             );
     TEST_NULL_POINTER_RETURN("stat_range_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/critical_hit.h>
+ */
+
+static void calculations_moves_critical_hit_error_test()
+{
+    /*
+     * pkmn_calculations_gen1_critical_hit_chance
+     */
+
+    error = pkmn_calculations_gen1_critical_hit_chance(
+                1,
+                false,
+                false,
+                NULL // critical_hit_chance_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_chance_out");
+
+    /*
+     * pkmn_calculations_critical_hit_chance
+     */
+
+    error = pkmn_calculations_critical_hit_chance(
+                2,
+                1,
+                NULL // critical_hit_chance_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_chance_out");
+
+    /*
+     * pkmn_calculations_gen1_critical_hit_modifier
+     */
+
+    error = pkmn_calculations_gen1_critical_hit_modifier(
+                1,
+                NULL // critical_hit_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_modifier_out");
+
+    /*
+     * pkmn_calculations_critical_hit_modifier
+     */
+
+    error = pkmn_calculations_critical_hit_modifier(
+                2,
+                NULL // critical_hit_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("critical_hit_modifier_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/damage.h>
+ */
+static void calculations_moves_damage_error_test()
+{
+    /*
+     * pkmn_calculations_damage
+     */
+
+    error = pkmn_calculations_damage(
+                1,
+                1,
+                1,
+                1,
+                1.0f,
+                NULL // damage_out
+            );
+    TEST_NULL_POINTER_RETURN("damage_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/hidden_power.h>
+ */
+static void calculations_moves_hidden_power_error_test() {
+    /*
+     * pkmn_calculations_gen2_hidden_power
+     */
+
+    error = pkmn_calculations_gen2_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_NULL_POINTER_RETURN("hidden_power_out");
+
+    /*
+     * pkmn_calculations_modern_hidden_power
+     */
+
+    error = pkmn_calculations_modern_hidden_power(
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                NULL // hidden_power_out
+            );
+    TEST_NULL_POINTER_RETURN("hidden_power_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/modifiers.h>
+ */
+static void calculations_moves_modifiers_error_test()
+{
+    /*
+     * pkmn_calculations_type_damage_modifier
+     */
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                NULL, // attacking_type
+                "",
+                &dummy_float
+            );
+    TEST_NULL_POINTER_RETURN("attacking_type");
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                "",
+                NULL, // defending_type
+                &dummy_float
+            );
+    TEST_NULL_POINTER_RETURN("defending_type");
+
+    error = pkmn_calculations_type_damage_modifier(
+                1,
+                "",
+                "",
+                NULL // type_damage_modifier_out
+            );
+    TEST_NULL_POINTER_RETURN("type_damage_modifier_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/natural_gift.h>
+ */
+static void calculations_moves_natural_gift_error_test()
+{
+    pkmn_natural_gift_t dummy_pkmn_natural_gift_t = { NULL, 0 };
+
+    /*
+     * pkmn_calculations_natural_gift_stats
+     */
+
+    error = pkmn_calculations_natural_gift_stats(
+                NULL, // item_name
+                5,
+                &dummy_pkmn_natural_gift_t
+            );
+    TEST_NULL_POINTER_RETURN("item_name");
+
+    error = pkmn_calculations_natural_gift_stats(
+                "Oran Berry",
+                5,
+                NULL // natural_gift_stats_out
+            );
+    TEST_NULL_POINTER_RETURN("natural_gift_stats_out");
+}
+
+/*
+ * <pkmn-c/calculations/moves/power.h>
+ */
+static void calculations_moves_power_error_test()
+{
+    /*
+     * pkmn_calculations_brine_power
+     */
+
+    error = pkmn_calculations_brine_power(
+                1,
+                1,
+                NULL // brine_power_out
+            );
+    TEST_NULL_POINTER_RETURN("brine_power_out");
+
+    /*
+     * pkmn_calculations_crush_grip_power
+     */
+
+    error = pkmn_calculations_crush_grip_power(
+                1,
+                1,
+                5,
+                NULL // crush_grip_power_out
+            );
+    TEST_NULL_POINTER_RETURN("crush_grip_power_out");
+
+    /*
+     * pkmn_calculations_echoed_voice_powers
+     */
+
+    error = pkmn_calculations_echoed_voice_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_electro_ball_power
+     */
+
+    error = pkmn_calculations_electro_ball_power(
+                1,
+                1,
+                NULL // electro_ball_power_out
+            );
+    TEST_NULL_POINTER_RETURN("electro_ball_power_out");
+
+    /*
+     * pkmn_calculations_eruption_power
+     */
+
+    error = pkmn_calculations_eruption_power(
+                1,
+                1,
+                NULL // eruption_power_out
+            );
+    TEST_NULL_POINTER_RETURN("eruption_power_out");
+
+    /*
+     * pkmn_calculations_flail_power
+     */
+
+    error = pkmn_calculations_flail_power(
+                1,
+                1,
+                NULL // flail_power_out
+            );
+    TEST_NULL_POINTER_RETURN("flail_power_out");
+
+    /*
+     * pkmn_calculations_fling_power
+     */
+
+    error = pkmn_calculations_fling_power(
+                NULL, // held_item
+                &dummy_int
+            );
+    TEST_NULL_POINTER_RETURN("held_item");
+
+    error = pkmn_calculations_fling_power(
+                "",
+                NULL // fling_power_out
+            );
+    TEST_NULL_POINTER_RETURN("fling_power_out");
+
+    /*
+     * pkmn_calculations_frustration_power
+     */
+
+    error = pkmn_calculations_frustration_power(
+                1,
+                NULL // frustration_power_out
+            );
+    TEST_NULL_POINTER_RETURN("frustration_power_out");
+
+    /*
+     * pkmn_calculations_fury_cutter_powers
+     */
+
+    error = pkmn_calculations_fury_cutter_powers(
+                2,
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_grass_knot_power
+     */
+
+    error = pkmn_calculations_grass_knot_power(
+                1.0f,
+                NULL // grass_knot_power_out
+            );
+    TEST_NULL_POINTER_RETURN("grass_knot_power_out");
+
+    /*
+     * pkmn_calculations_gyro_ball_power
+     */
+
+    error = pkmn_calculations_gyro_ball_power(
+                1,
+                1,
+                NULL // gyro_ball_power_out
+            );
+    TEST_NULL_POINTER_RETURN("gyro_ball_power_out");
+
+    /*
+     * pkmn_calculations_heat_crash_power
+     */
+
+    error = pkmn_calculations_heat_crash_power(
+                1.0f,
+                1.0f,
+                NULL // heat_crash_power_out
+            );
+    TEST_NULL_POINTER_RETURN("heat_crash_power_out");
+
+    /*
+     * pkmn_calculations_heavy_slam_power
+     */
+
+    error = pkmn_calculations_heavy_slam_power(
+                1.0f,
+                1.0f,
+                NULL // heavy_slam_power_out
+            );
+    TEST_NULL_POINTER_RETURN("heavy_slam_power_out");
+
+    /*
+     * pkmn_calculations_ice_ball_powers
+     */
+
+    error = pkmn_calculations_ice_ball_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_low_kick_power
+     */
+
+    error = pkmn_calculations_low_kick_power(
+                1.0f,
+                1,
+                NULL // low_kick_power_out
+            );
+    TEST_NULL_POINTER_RETURN("low_kick_power_out");
+
+    /*
+     * pkmn_calculations_power_trip_power
+     */
+
+    error = pkmn_calculations_power_trip_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // power_trip_power_out
+            );
+    TEST_NULL_POINTER_RETURN("power_trip_power_out");
+
+    /*
+     * pkmn_calculations_punishment_power
+     */
+
+    error = pkmn_calculations_punishment_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // punishment_power_out
+            );
+    TEST_NULL_POINTER_RETURN("punishment_power_out");
+
+    /*
+     * pkmn_calculations_return_power
+     */
+
+    error = pkmn_calculations_return_power(
+                1,
+                NULL // return_power_out
+            );
+    TEST_NULL_POINTER_RETURN("return_power_out");
+
+    /*
+     * pkmn_calculations_reversal_power
+     */
+
+    error = pkmn_calculations_reversal_power(
+                1,
+                1,
+                NULL // reversal_power_out
+            );
+    TEST_NULL_POINTER_RETURN("reversal_power_out");
+
+    /*
+     * pkmn_calculations_rollout_powers
+     */
+
+    error = pkmn_calculations_rollout_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_spit_up_power
+     */
+
+    error = pkmn_calculations_spit_up_power(
+                1,
+                NULL // spit_up_power_out
+            );
+    TEST_NULL_POINTER_RETURN("spit_up_power_out");
+
+    /*
+     * pkmn_calculations_stored_power_power
+     */
+
+    error = pkmn_calculations_stored_power_power(
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                NULL // stored_power_power_out
+            );
+    TEST_NULL_POINTER_RETURN("stored_power_power_out");
+
+    /*
+     * pkmn_calculations_triple_kick_powers
+     */
+
+    error = pkmn_calculations_triple_kick_powers(
+                NULL, // powers_buffer
+                0ULL,
+                NULL // num_powers_out (can be NULL)
+            );
+    TEST_NULL_POINTER_RETURN("powers_buffer");
+
+    /*
+     * pkmn_calculations_trump_card_power
+     */
+
+    error = pkmn_calculations_trump_card_power(
+                1,
+                NULL // trump_card_power_out
+            );
+    TEST_NULL_POINTER_RETURN("trump_card_power_out");
+
+    /*
+     * pkmn_calculations_water_spout_power
+     */
+
+    error = pkmn_calculations_water_spout_power(
+                1,
+                1,
+                NULL // water_spout_power_out
+            );
+    TEST_NULL_POINTER_RETURN("water_spout_power_out");
+
+    /*
+     * pkmn_calculations_wring_out_power
+     */
+
+    error = pkmn_calculations_wring_out_power(
+                5,
+                5,
+                5,
+                NULL // wring_out_power_out
+            );
+    TEST_NULL_POINTER_RETURN("wring_out_power_out");
 }
 
 /*
@@ -3060,7 +3388,8 @@ static void database_pokemon_entry_error_test() {
                 NULL, // pokemon_entry
                 false,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
@@ -3068,17 +3397,10 @@ static void database_pokemon_entry_error_test() {
                 &entry,
                 false,
                 NULL, // icon_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("icon_filepath_out");
-
-    error = pkmn_database_pokemon_entry_icon_filepath(
-                &entry,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_database_pokemon_entry_sprite_filepath
@@ -3089,7 +3411,8 @@ static void database_pokemon_entry_error_test() {
                 false,
                 false,
                 strbuffer,
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("pokemon_entry");
 
@@ -3098,18 +3421,10 @@ static void database_pokemon_entry_error_test() {
                 false,
                 false,
                 NULL, // sprite_filepath_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("sprite_filepath_out");
-
-    error = pkmn_database_pokemon_entry_sprite_filepath(
-                &entry,
-                false,
-                false,
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_database_pokemon_entry_free
@@ -3144,6 +3459,18 @@ static void gui_spinda_test()
 }
 
 /*
+ * <pkmn-c/types/string_types.h>
+ */
+static void types_string_types_test()
+{
+    /*
+     * pkmn_string_list_free
+     */
+    error = pkmn_string_list_free(NULL);
+    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+}
+
+/*
  * <pkmn-c/utils/paths.h>
  */
 static void utils_paths_error_test() {
@@ -3153,15 +3480,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_appdata_dir(
                 NULL, // appdata_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("appdata_dir_out");
-
-    error = pkmn_get_appdata_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_database_path
@@ -3169,15 +3491,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_database_path(
                 NULL, // database_path_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("database_path_out");
-
-    error = pkmn_get_database_path(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_images_dir
@@ -3185,15 +3502,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_images_dir(
                 NULL, // images_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("images_dir_out");
-
-    error = pkmn_get_images_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 
     /*
      * pkmn_get_tmp_dir
@@ -3201,15 +3513,10 @@ static void utils_paths_error_test() {
 
     error = pkmn_get_tmp_dir(
                 NULL, // tmp_dir_out
-                sizeof(strbuffer)
+                sizeof(strbuffer),
+                NULL
             );
     TEST_NULL_POINTER_RETURN("tmp_dir_out");
-
-    error = pkmn_get_tmp_dir(
-                strbuffer,
-                0
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_BUFFER_TOO_SMALL, error);
 }
 
 PKMN_C_TEST_MAIN(
@@ -3224,17 +3531,23 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(pokemon_pc_error_test)
     PKMN_C_TEST(calculations_form_error_test)
     PKMN_C_TEST(calculations_gender_error_test)
-    PKMN_C_TEST(calculations_hidden_power_error_test)
     PKMN_C_TEST(calculations_nature_error_test)
     PKMN_C_TEST(calculations_personality_error_test)
     PKMN_C_TEST(calculations_shininess_error_test)
     PKMN_C_TEST(calculations_size_error_test)
     PKMN_C_TEST(calculations_spinda_spots_error_test)
     PKMN_C_TEST(calculations_stats_error_test)
+    PKMN_C_TEST(calculations_moves_critical_hit_error_test)
+    PKMN_C_TEST(calculations_moves_damage_error_test)
+    PKMN_C_TEST(calculations_moves_hidden_power_error_test)
+    PKMN_C_TEST(calculations_moves_modifiers_error_test)
+    PKMN_C_TEST(calculations_moves_natural_gift_error_test)
+    PKMN_C_TEST(calculations_moves_power_error_test)
     PKMN_C_TEST(database_item_entry_error_test)
     PKMN_C_TEST(database_lists_error_test)
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
     PKMN_C_TEST(gui_spinda_test)
+    PKMN_C_TEST(types_string_types_test)
     PKMN_C_TEST(utils_paths_error_test)
 )

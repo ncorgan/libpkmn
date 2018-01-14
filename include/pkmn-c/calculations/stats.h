@@ -32,7 +32,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If the given stat string is invalid
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
  */
-PKMN_API pkmn_error_t pkmn_calculations_gb_stat(
+PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat(
     pkmn_stat_t stat,
     int level,
     int base_stat,
@@ -53,7 +53,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gb_stat(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if stat_rangeout is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_gb_stat_range(
+PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat_range(
     pkmn_stat_t stat,
     int level,
     int base_stat,
@@ -78,7 +78,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gb_stat_range(
  * \returns ::PKMN_ERROR_DOMAIN_ERROR If the given nature modifier is not in (0.9, 1.0, 1.1)
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
  */
-PKMN_API pkmn_error_t pkmn_calculations_modern_stat(
+PKMN_C_API pkmn_error_t pkmn_calculations_modern_stat(
     pkmn_stat_t stat,
     int level,
     float nature_modifier,
@@ -100,7 +100,7 @@ PKMN_API pkmn_error_t pkmn_calculations_modern_stat(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if stat_range_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_calculations_modern_stat_range(
+PKMN_C_API pkmn_error_t pkmn_calculations_modern_stat_range(
     pkmn_stat_t stat,
     int level,
     int base_stat,

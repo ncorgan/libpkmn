@@ -29,6 +29,7 @@ ignored_classes = ["game_save",
                    "PKMN_API"]
 
 ignored_files = ["config.hpp",
+                 "exception.hpp",
                  "shared_ptr.hpp",
                  "attribute_engine.hpp"]
 

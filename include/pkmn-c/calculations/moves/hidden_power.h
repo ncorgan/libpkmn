@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_C_CALCULATIONS_HIDDEN_POWER_H
-#define PKMN_C_CALCULATIONS_HIDDEN_POWER_H
+#ifndef PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H
+#define PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
@@ -27,7 +27,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-15]
  */
-PKMN_API pkmn_error_t pkmn_calculations_gen2_hidden_power(
+PKMN_C_API pkmn_error_t pkmn_calculations_gen2_hidden_power(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -48,7 +48,7 @@ PKMN_API pkmn_error_t pkmn_calculations_gen2_hidden_power(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-31]
  */
-PKMN_API pkmn_error_t pkmn_calculations_modern_hidden_power(
+PKMN_C_API pkmn_error_t pkmn_calculations_modern_hidden_power(
     int IV_HP,
     int IV_attack,
     int IV_defense,
@@ -62,4 +62,4 @@ PKMN_API pkmn_error_t pkmn_calculations_modern_hidden_power(
 }
 #endif
 
-#endif /* PKMN_C_CALCULATIONS_HIDDEN_POWER_H */
+#endif /* PKMN_C_CALCULATIONS_MOVES_HIDDEN_POWER_H */

@@ -68,7 +68,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_detect_type(
+PKMN_C_API pkmn_error_t pkmn_game_save_detect_type(
     const char* filepath,
     pkmn_game_save_type_t* game_save_type_out
 );
@@ -82,7 +82,7 @@ PKMN_API pkmn_error_t pkmn_game_save_detect_type(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given filepath doesn't exist
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_from_file(
+PKMN_C_API pkmn_error_t pkmn_game_save_from_file(
     pkmn_game_save_handle_t* handle_ptr,
     const char* filepath
 ); 
@@ -99,7 +99,7 @@ PKMN_API pkmn_error_t pkmn_game_save_from_file(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle_ptr is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_free(
+PKMN_C_API pkmn_error_t pkmn_game_save_free(
     pkmn_game_save_handle_t* handle_ptr
 );
 
@@ -110,7 +110,7 @@ PKMN_API pkmn_error_t pkmn_game_save_free(
  * \returns The last error message from the handle
  * \returns NULL If the handle is NULL
  */
-PKMN_API const char* pkmn_game_save_strerror(
+PKMN_C_API const char* pkmn_game_save_strerror(
     pkmn_game_save_handle_t handle
 );
 
@@ -120,14 +120,15 @@ PKMN_API const char* pkmn_game_save_strerror(
  * \param handle The handle to the game save to check
  * \param filepath_out The buffer in which to return the filepath
  * \param buffer_len The size of the buffer passed into filepath_out
+ * \param filepath_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or filepath_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if filepath_out is too small for the return string
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_filepath(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_filepath(
     pkmn_game_save_handle_t handle,
     char* filepath_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* filepath_length_out
 );
 
 /*!
@@ -141,7 +142,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_filepath(
  * \returns ::PKMN_ERROR_NULL_POINTER if handle is NULL
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if the save operation fails
  */
-PKMN_API pkmn_error_t pkmn_game_save_save(
+PKMN_C_API pkmn_error_t pkmn_game_save_save(
     pkmn_game_save_handle_t handle
 );
 
@@ -160,7 +161,7 @@ PKMN_API pkmn_error_t pkmn_game_save_save(
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or filepath is null
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if the save operation fails
  */
-PKMN_API pkmn_error_t pkmn_game_save_save_as(
+PKMN_C_API pkmn_error_t pkmn_game_save_save_as(
     pkmn_game_save_handle_t handle,
     const char* filepath
 );
@@ -176,14 +177,15 @@ PKMN_API pkmn_error_t pkmn_game_save_save_as(
  * \param handle The handle to the game save to check
  * \param game_out The buffer in which to return the game
  * \param buffer_len The size of the buffer passed into game_out
+ * \param game_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or game_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if game_out is too small for the return string
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_game(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_game(
     pkmn_game_save_handle_t handle,
     char* game_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* game_length_out
 );
 
 /*!
@@ -194,7 +196,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_game(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_info_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_trainer_info(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_trainer_info(
     pkmn_game_save_handle_t handle,
     pkmn_trainer_info_t* trainer_info_out
 );
@@ -213,7 +215,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_trainer_info(
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or trainer_info is NULL
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the secret ID is not 0 for a Generation I-II save
  */
-PKMN_API pkmn_error_t pkmn_game_save_set_trainer_info(
+PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_info(
     pkmn_game_save_handle_t handle,
     pkmn_trainer_info_t* trainer_info
 );
@@ -227,15 +229,16 @@ PKMN_API pkmn_error_t pkmn_game_save_set_trainer_info(
  * \param handle The handle to the game save to use
  * \param rival_name_out The buffer in which to return the rival name
  * \param buffer_len The size of the buffer passed into rival_name_out
+ * \param rival_name_length_out The actual string length (can be NULL)
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or rival_name_out is NULL
- * \returns ::PKMN_ERROR_BUFFER_TOO_SMALL if rival_name_out is too small for the return string
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the save is for a Gamecube game
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_rival_name(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_rival_name(
     pkmn_game_save_handle_t handle,
     char* rival_name_out,
-    size_t buffer_len
+    size_t buffer_len,
+    size_t* rival_name_length_out
 );
 
 /*!
@@ -258,7 +261,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_rival_name(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given rival name is empty or longer than 7 characters
  * \returns ::PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR if the game has no rival or the rival cannot be renamed
  */
-PKMN_API pkmn_error_t pkmn_game_save_set_rival_name(
+PKMN_C_API pkmn_error_t pkmn_game_save_set_rival_name(
     pkmn_game_save_handle_t handle,
     const char* rival_name
 );
@@ -273,7 +276,7 @@ PKMN_API pkmn_error_t pkmn_game_save_set_rival_name(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or money_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_money(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_money(
     pkmn_game_save_handle_t handle,
     int* money_out
 );
@@ -289,7 +292,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_money(
  * \returns ::PKMN_ERROR_NULL_POINTER if handle is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if the input is not in the range [0-999999].
  */
-PKMN_API pkmn_error_t pkmn_game_save_set_money(
+PKMN_C_API pkmn_error_t pkmn_game_save_set_money(
     pkmn_game_save_handle_t handle,
     int money
 );
@@ -302,7 +305,7 @@ PKMN_API pkmn_error_t pkmn_game_save_set_money(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or pokemon_party_handle_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_party(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_pokemon_party(
     pkmn_game_save_handle_t handle,
     pkmn_pokemon_party_handle_t* pokemon_party_handle_out
 );
@@ -316,7 +319,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_party(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or pokemon_pc_handle_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_pc(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_pokemon_pc(
     pkmn_game_save_handle_t handle,
     pkmn_pokemon_pc_handle_t* pokemon_pc_handle_out
 );
@@ -329,7 +332,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_pokemon_pc(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or item_bag_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_item_bag(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_item_bag(
     pkmn_game_save_handle_t handle,
     pkmn_item_bag_t* item_bag_out
 );
@@ -342,7 +345,7 @@ PKMN_API pkmn_error_t pkmn_game_save_get_item_bag(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if handle or item_pc_out is NULL
  */
-PKMN_API pkmn_error_t pkmn_game_save_get_item_pc(
+PKMN_C_API pkmn_error_t pkmn_game_save_get_item_pc(
     pkmn_game_save_handle_t handle,
     pkmn_item_list_t* item_pc_out
 );
