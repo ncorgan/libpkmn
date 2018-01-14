@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,49 +26,49 @@ namespace pkmn {
 
             void save_as(
                 const std::string &filepath
-            );
+            ) override final;
 
-            std::string get_trainer_name();
+            std::string get_trainer_name() override final;
 
             void set_trainer_name(
                 const std::string &trainer_name
-            );
+            ) override final;
 
-            uint32_t get_trainer_id();
+            uint32_t get_trainer_id() override final;
 
             void set_trainer_id(
                 uint32_t trainer_id
-            );
+            ) override final;
 
-            uint16_t get_trainer_public_id();
+            uint16_t get_trainer_public_id() override final;
 
             void set_trainer_public_id(
                 uint16_t trainer_public_id
-            );
+            ) override final;
 
-            uint16_t get_trainer_secret_id();
+            uint16_t get_trainer_secret_id() override final;
 
             void set_trainer_secret_id(
                 uint16_t trainer_secret_id
-            );
+            ) override final;
 
-            std::string get_trainer_gender();
+            std::string get_trainer_gender() override final;
 
             void set_trainer_gender(
                 const std::string &trainer_gender
-            );
+            ) override final;
 
-            std::string get_rival_name();
+            std::string get_rival_name() override final;
 
             void set_rival_name(
                 const std::string &rival_name
-            );
+            ) override final;
 
-            int get_money();
+            int get_money() override final;
 
             void set_money(
                 int money
-            );
+            ) override final;
 
             pkmn::pokedex::sptr get_pokedex() override final;
 

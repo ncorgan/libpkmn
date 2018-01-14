@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,30 +15,31 @@ BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
 namespace pkmn {
 
-    class game_save_impl: public game_save, boost::noncopyable {
+    class game_save_impl: public game_save, boost::noncopyable
+    {
         public:
             game_save_impl() {};
             explicit game_save_impl(
-                const std::string &filepath
+                const std::string& filepath
             );
 
             virtual ~game_save_impl() {};
 
-            std::string get_filepath();
+            std::string get_filepath() override final;
 
-            void save();
+            void save() override final;
 
-            std::string get_game();
+            std::string get_game() override final;
 
             virtual pkmn::pokedex::sptr get_pokedex() override;
 
-            pkmn::pokemon_party::sptr get_pokemon_party();
+            pkmn::pokemon_party::sptr get_pokemon_party() override final;
 
-            pkmn::pokemon_pc::sptr get_pokemon_pc();
+            pkmn::pokemon_pc::sptr get_pokemon_pc() override final;
 
-            pkmn::item_bag::sptr get_item_bag();
+            pkmn::item_bag::sptr get_item_bag() override final;
 
-            pkmn::item_list::sptr get_item_pc();
+            pkmn::item_list::sptr get_item_pc() override final;
 
         protected:
             std::string _filepath;
