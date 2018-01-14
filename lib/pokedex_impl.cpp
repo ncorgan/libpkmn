@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -119,6 +119,12 @@ namespace pkmn
             );
         )
 
+        // If a Pokémon has not been seen, then it cannot have been caught.
+        if((not has_seen_value) and has_caught(species))
+        {
+            set_has_caught(species, false);
+        }
+
         // Next time get_all_seen() is called, the vector will update.
         _dirty_seen = true;
     }
@@ -191,6 +197,12 @@ namespace pkmn
                 has_caught_value
             );
         )
+
+        // If a Pokémon has been caught, then it must have been seen.
+        if(has_caught_value and (not has_caught(species)))
+        {
+            set_has_seen(species, true);
+        }
 
         // Next time get_all_caught() is called, the vector will update.
         _dirty_caught = true;

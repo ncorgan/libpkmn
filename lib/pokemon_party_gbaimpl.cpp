@@ -131,6 +131,19 @@ namespace pkmn {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
             }
         }
+
+        // If this party is part of a save, set the Pokédex to have both
+        // seen and caught the Pokémon.
+        if(_pokedex.get())
+        {
+            std::string species = new_pokemon->get_species();
+
+            if((species != "None") and (not new_pokemon->is_egg()))
+            {
+                _pokedex->set_has_seen(species, true);
+                _pokedex->set_has_caught(species, true);
+            }
+        }
     }
 
     void pokemon_party_gbaimpl::_from_native() {

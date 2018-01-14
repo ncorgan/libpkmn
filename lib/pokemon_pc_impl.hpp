@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -7,8 +7,12 @@
 #ifndef PKMN_POKEMON_PC_IMPL_HPP
 #define PKMN_POKEMON_PC_IMPL_HPP
 
+#include "pokemon_box_impl.hpp"
+
+#include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
+#include <boost/assert.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <string>
@@ -33,8 +37,21 @@ namespace pkmn {
             const pkmn::pokemon_box_list_t& as_vector() override final;
 
             const std::vector<std::string>& get_box_names() override final;
-            
+
             void* get_native() override final;
+
+            // For internal use
+
+            inline void set_pokedex(
+                pkmn::pokedex::sptr pokedex
+            )
+            {
+                for(const auto& box: _box_list)
+                {
+                    BOOST_ASSERT(dynamic_cast<pokemon_box_impl*>(box.get()));
+                    dynamic_cast<pokemon_box_impl*>(box.get())->set_pokedex(pokedex);
+                }
+            }
 
         protected:
             pkmn::pokemon_box_list_t _box_list;

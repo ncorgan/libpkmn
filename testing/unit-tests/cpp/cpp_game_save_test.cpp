@@ -317,6 +317,42 @@ namespace pkmntest {
                     }
                 }
             }
+
+            // Make sure that when a Pokémon is added to the party or PC, it's
+            // added to the Pokédex. Manually remove the test species from the
+            // Pokédex to confirm this behavior.
+
+            const std::string test_species1 = "Bulbasaur";
+            const std::string test_species2 = "Charmander";
+
+            pokedex->set_has_seen(test_species1, false);
+            ASSERT_FALSE(pokedex->has_seen(test_species1));
+            ASSERT_FALSE(pokedex->has_caught(test_species1));
+
+            pokedex->set_has_seen(test_species2, false);
+            ASSERT_FALSE(pokedex->has_seen(test_species2));
+            ASSERT_FALSE(pokedex->has_caught(test_species2));
+
+            pkmn::pokemon::sptr test_pokemon1 = pkmn::pokemon::make(
+                                                    test_species1,
+                                                    game,
+                                                    "",
+                                                    5
+                                                );
+            pkmn::pokemon::sptr test_pokemon2 = pkmn::pokemon::make(
+                                                    test_species2,
+                                                    game,
+                                                    "",
+                                                    5
+                                                );
+
+            save->get_pokemon_party()->set_pokemon(0, test_pokemon1);
+            EXPECT_TRUE(pokedex->has_seen(test_species1));
+            EXPECT_TRUE(pokedex->has_caught(test_species1));
+
+            save->get_pokemon_pc()->get_box(0)->set_pokemon(0, test_pokemon2);
+            EXPECT_TRUE(pokedex->has_seen(test_species2));
+            EXPECT_TRUE(pokedex->has_caught(test_species2));
         }
     }
 

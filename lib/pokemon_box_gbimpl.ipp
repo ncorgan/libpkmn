@@ -230,6 +230,19 @@ namespace pkmn {
                 );
             )
         }
+
+        // If this box is part of a save, set the Pokédex to have both
+        // seen and caught the Pokémon.
+        if(_pokedex.get())
+        {
+            std::string species = new_pokemon->get_species();
+
+            if((species != "None") and (not new_pokemon->is_egg()))
+            {
+                _pokedex->set_has_seen(species, true);
+                _pokedex->set_has_caught(species, true);
+            }
+        }
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
