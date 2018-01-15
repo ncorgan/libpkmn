@@ -611,6 +611,12 @@ TEST(cpp_swig_helper_test, test_game_save)
     swig_game_save.set_money(12345);
     EXPECT_EQ(12345, swig_game_save.get_money());
 
+    swig_game_save.get_pokedex().get_has_seen().set_has_seen("Bulbasaur", true);
+    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_seen().get_has_seen("Bulbasaur"));
+
+    swig_game_save.get_pokedex().get_has_caught().set_has_caught("Charmander", true);
+    EXPECT_TRUE(swig_game_save.get_pokedex().get_has_caught().get_has_caught("Charmander"));
+
     /*
      * These are the underlying calls for a fairly representative use case. This is the
      * equivalent C# code.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,7 @@
 
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
+#include "swig/modules/cpp_wrappers/pokedex.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
 
@@ -155,6 +156,11 @@ namespace pkmn { namespace swig {
             )
             {
                 _game_save->set_money(money);
+            }
+
+            inline pkmn::swig::pokedex get_pokedex()
+            {
+                return pkmn::swig::pokedex(_game_save->get_pokedex());
             }
 
             inline pkmn::swig::pokemon_party get_pokemon_party()

@@ -64,6 +64,14 @@ namespace pkmn { namespace swig {
                 return !operator==(rhs);
             }
 
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokedex.get());
+            }
+#endif
+
         private:
             pkmn::pokedex::sptr _pokedex;
     };
@@ -114,6 +122,14 @@ namespace pkmn { namespace swig {
             {
                 return !operator==(rhs);
             }
+
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokedex.get());
+            }
+#endif
 
         private:
             pkmn::pokedex::sptr _pokedex;

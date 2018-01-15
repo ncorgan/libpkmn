@@ -32,6 +32,7 @@ using System.Runtime.InteropServices;"
 %attributestring(pkmn::swig::game_save, std::string, TrainerGender, get_trainer_gender, set_trainer_gender);
 %attributestring(pkmn::swig::game_save, std::string, RivalName, get_rival_name, set_rival_name);
 %attribute(pkmn::swig::game_save, int, Money, get_money, set_money);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, Pokedex, get_pokedex);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_party, PokemonParty, get_pokemon_party);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, PokemonPC, get_pokemon_pc);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, ItemBag, get_item_bag);

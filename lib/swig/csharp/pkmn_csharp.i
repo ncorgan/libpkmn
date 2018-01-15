@@ -52,6 +52,7 @@ std::string GetSWIGVersion();
 %include <csharp/pkmn_item_bag.i>
 
 // Pokédex
+%include <csharp/pkmn_pokedex_helpers.i>
 %include <csharp/pkmn_pokedex.i>
 
 // Pokémon

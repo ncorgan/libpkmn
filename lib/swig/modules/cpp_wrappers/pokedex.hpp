@@ -65,6 +65,23 @@ namespace pkmn { namespace swig {
                 return _pokedex->get_num_caught();
             }
 
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_pokedex.get());
+            }
+#else
+            inline bool operator==(const pokedex& rhs) const
+            {
+                return (_pokedex == rhs._pokedex);
+            }
+
+            inline bool operator!=(const pokedex& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
+
         private:
             pkmn::pokedex::sptr _pokedex;
     };
