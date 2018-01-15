@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,6 +11,8 @@
 #include "swig/modules/cpp_wrappers/item_slot.hpp"
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
+#include "swig/modules/cpp_wrappers/pokedex.hpp"
+#include "swig/modules/cpp_wrappers/pokedex_helpers.hpp"
 #include "swig/modules/cpp_wrappers/pokemon.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_helpers.hpp"
 #include "swig/modules/cpp_wrappers/pokemon_party.hpp"
@@ -24,7 +26,7 @@
 
 namespace fs = boost::filesystem;
 
-TEST(cpp_swig_test, test_attribute_maps)
+TEST(cpp_swig_helper_test, test_attribute_maps)
 {
     // TODO: test with class with more attributes
 
@@ -38,7 +40,7 @@ TEST(cpp_swig_test, test_attribute_maps)
     EXPECT_EQ(190, attribute_map.get_attribute("Catch rate"));
 }
 
-TEST(cpp_swig_test, test_item_slot)
+TEST(cpp_swig_helper_test, test_item_slot)
 {
     pkmn::item_list::sptr item_pocket = pkmn::item_list::make(
                                             "Items",
@@ -95,7 +97,7 @@ TEST(cpp_swig_test, test_item_slot)
     EXPECT_EQ(0, second_slot.get_amount());
 }
 
-TEST(cpp_swig_test, test_item_list)
+TEST(cpp_swig_helper_test, test_item_list)
 {
     pkmn::swig::item_list swig_item_list("Items", "Red");
 
@@ -118,7 +120,7 @@ TEST(cpp_swig_test, test_item_list)
     EXPECT_GT(valid_items.size(), 0);
 }
 
-TEST(cpp_swig_test, test_item_bag)
+TEST(cpp_swig_helper_test, test_item_bag)
 {
     pkmn::swig::item_bag swig_item_bag("Colosseum");
 
@@ -155,7 +157,55 @@ TEST(cpp_swig_test, test_item_bag)
     }
 }
 
-TEST(cpp_swig_test, test_invalid_pokemon_helpers)
+TEST(cpp_swig_helper_test, test_invalid_pokedex_helpers)
+{
+    pkmn::swig::pokedex_has_seen_helper has_seen_helper;
+    pkmn::swig::pokedex_has_caught_helper has_caught_helper;
+
+    EXPECT_THROW(
+        has_seen_helper.get_has_seen("Bulbasaur");
+    , std::runtime_error);
+    EXPECT_THROW(
+        has_seen_helper.set_has_seen("Bulbasaur", true);
+    , std::runtime_error);
+
+    EXPECT_THROW(
+        has_caught_helper.get_has_caught("Bulbasaur");
+    , std::runtime_error);
+    EXPECT_THROW(
+        has_caught_helper.set_has_caught("Bulbasaur", true);
+    , std::runtime_error);
+}
+
+TEST(cpp_swig_helper_test, test_pokedex)
+{
+    pkmn::pokedex::sptr cpp_pokedex = pkmn::pokedex::make("Red");
+
+    pkmn::swig::pokedex swig_pokedex(cpp_pokedex);
+    pkmn::swig::pokedex_has_seen_helper seen_helper = swig_pokedex.get_has_seen();
+    pkmn::swig::pokedex_has_caught_helper caught_helper = swig_pokedex.get_has_caught();
+
+    // Set from the internal class and query from the SWIG wrapper.
+    cpp_pokedex->set_has_seen("Bulbasaur", true);
+    cpp_pokedex->set_has_caught("Mewtwo", true);
+    EXPECT_TRUE(seen_helper.get_has_seen("Bulbasaur"));
+    EXPECT_TRUE(caught_helper.get_has_caught("Mewtwo"));
+    EXPECT_EQ(2, swig_pokedex.get_num_seen());
+    EXPECT_EQ(1, swig_pokedex.get_num_caught());
+    EXPECT_EQ(2ULL, swig_pokedex.get_all_seen().size());
+    EXPECT_EQ(1ULL, swig_pokedex.get_all_caught().size());
+
+    // Set from the SWIG wrapper and check from the internal class.
+    seen_helper.set_has_seen("Mewtwo", false);
+    EXPECT_FALSE(cpp_pokedex->has_seen("Mewtwo"));
+    EXPECT_FALSE(cpp_pokedex->has_caught("Mewtwo"));
+    EXPECT_EQ(1, cpp_pokedex->get_num_seen());
+    EXPECT_EQ(0, cpp_pokedex->get_num_caught());
+    EXPECT_EQ(1ULL, cpp_pokedex->get_all_seen().size());
+    EXPECT_EQ(0ULL, cpp_pokedex->get_all_caught().size());
+}
+
+TEST(cpp_swig_helper_test, test_invalid_pokemon_helpers)
 {
     pkmn::swig::EV_map EV_map;
     pkmn::swig::IV_map IV_map;
@@ -215,7 +265,7 @@ static void test_EV_IV_keys(
     EXPECT_EQ(expected_keys, map_keys);
 }
 
-TEST(cpp_swig_test, test_pokemon_helpers)
+TEST(cpp_swig_helper_test, test_pokemon_helpers)
 {
     pkmn::pokemon::sptr pokemon = pkmn::pokemon::make(
                                       "Bulbasaur",
@@ -358,7 +408,7 @@ TEST(cpp_swig_test, test_pokemon_helpers)
     EXPECT_FALSE(contest_stat_map.has_key("Not a key"));
 }
 
-TEST(cpp_swig_test, test_pokemon)
+TEST(cpp_swig_helper_test, test_pokemon)
 {
     pkmn::swig::pokemon swig_pokemon(
                              "Bulbasaur",
@@ -470,7 +520,7 @@ TEST(cpp_swig_test, test_pokemon)
     EXPECT_TRUE(fs::exists(swig_pokemon.get_sprite_filepath()));
 }
 
-TEST(cpp_swig_test, test_pokemon_party)
+TEST(cpp_swig_helper_test, test_pokemon_party)
 {
     pkmn::swig::pokemon_party swig_pokemon_party("FireRed");
 
@@ -488,7 +538,7 @@ TEST(cpp_swig_test, test_pokemon_party)
     EXPECT_EQ("Charmander", swig_pokemon_party.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_test, test_pokemon_box)
+TEST(cpp_swig_helper_test, test_pokemon_box)
 {
     pkmn::swig::pokemon_box swig_pokemon_box("FireRed");
 
@@ -508,7 +558,7 @@ TEST(cpp_swig_test, test_pokemon_box)
     EXPECT_EQ("Charmander", swig_pokemon_box.get_pokemon(0).get_species());
 }
 
-TEST(cpp_swig_test, test_pokemon_pc)
+TEST(cpp_swig_helper_test, test_pokemon_pc)
 {
     pkmn::swig::pokemon_pc swig_pokemon_pc("FireRed");
 
@@ -529,7 +579,7 @@ TEST(cpp_swig_test, test_pokemon_pc)
     EXPECT_EQ("Charizard", swig_pokemon_pc.get_box(4).get_pokemon(4).get_species());
 }
 
-TEST(cpp_swig_test, test_game_save)
+TEST(cpp_swig_helper_test, test_game_save)
 {
     static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 

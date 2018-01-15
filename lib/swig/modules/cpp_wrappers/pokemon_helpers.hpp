@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef CPP_WRAPPERS_HELPERS_HPP
-#define CPP_WRAPPERS_HELPERS_HPP
+#ifndef CPP_WRAPPERS_POKEMON_HELPERS_HPP
+#define CPP_WRAPPERS_POKEMON_HELPERS_HPP
 
 #include "exception_internal.hpp"
 #include "misc_common.hpp"
@@ -559,4 +559,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* CPP_WRAPPERS_HELPERS_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_HELPERS_HPP */
