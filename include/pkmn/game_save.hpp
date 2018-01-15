@@ -10,6 +10,7 @@
 #include <pkmn/config.hpp>
 #include <pkmn/item_bag.hpp>
 #include <pkmn/item_list.hpp>
+#include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
 #include <pkmn/types/shared_ptr.hpp>
@@ -258,6 +259,8 @@ namespace pkmn {
             virtual void set_money(
                 int money
             ) = 0;
+
+            virtual pkmn::pokedex::sptr get_pokedex() = 0;
 
             /*!
              * @brief Returns the trainer's Pokémon party.

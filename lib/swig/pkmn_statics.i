@@ -39,6 +39,7 @@ std::string get_default_trainer_name();
     #include <pkmn/game_save.hpp>
     #include <pkmn/item_list.hpp>
     #include <pkmn/item_bag.hpp>
+    #include <pkmn/pokedex.hpp>
     #include <pkmn/pokemon.hpp>
     #include <pkmn/pokemon_box.hpp>
     #include <pkmn/pokemon_party.hpp>
@@ -60,6 +61,12 @@ std::string get_default_trainer_name();
         const std::string &game
     ) {
         return pkmn::item_bag::make(game);
+    }
+
+    inline pkmn::shared_ptr<pkmn::pokedex> make_pokedex(
+        const std::string &game
+    ) {
+        return pkmn::pokedex::make(game);
     }
 
     inline pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
@@ -202,6 +209,7 @@ uint32_t get_default_trainer_id();
 std::string get_default_trainer_name();
 
 pkmn::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
+pkmn::shared_ptr<pkmn::pokedex> make_pokedex(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
 pkmn::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);

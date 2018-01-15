@@ -284,6 +284,76 @@ namespace pkmntest {
                 }
             }
         }
+
+        if((game != "Colosseum") and (game != "XD"))
+        {
+            // Test Pokédex. Any Pokémon in the party and PC must be in the
+            // Pokédex.
+            pkmn::pokedex::sptr pokedex = save->get_pokedex();
+            EXPECT_GE(pokedex->get_num_seen(), pokedex->get_num_caught());
+
+            const pkmn::pokemon_list_t& party_vector = save->get_pokemon_party()->as_vector();
+            for(const auto& pokemon: party_vector)
+            {
+                std::string species = pokemon->get_species();
+                if(species != "None")
+                {
+                    EXPECT_TRUE(pokedex->has_seen(species));
+                    EXPECT_TRUE(pokedex->has_caught(species));
+                }
+            }
+
+            const pkmn::pokemon_box_list_t& pc_vector = save->get_pokemon_pc()->as_vector();
+            for(const auto& box: pc_vector)
+            {
+                const pkmn::pokemon_list_t& box_vector = box->as_vector();
+                for(const auto& pokemon: box_vector)
+                {
+                    std::string species = pokemon->get_species();
+                    if((species != "None") and (not pokemon->is_egg()))
+                    {
+                        EXPECT_TRUE(pokedex->has_seen(species));
+                        EXPECT_TRUE(pokedex->has_caught(species));
+                    }
+                }
+            }
+
+            // Make sure that when a Pokémon is added to the party or PC, it's
+            // added to the Pokédex. Manually remove the test species from the
+            // Pokédex to confirm this behavior.
+
+            const std::string test_species1 = "Bulbasaur";
+            const std::string test_species2 = "Charmander";
+
+            pokedex->set_has_seen(test_species1, false);
+            ASSERT_FALSE(pokedex->has_seen(test_species1));
+            ASSERT_FALSE(pokedex->has_caught(test_species1));
+
+            pokedex->set_has_seen(test_species2, false);
+            ASSERT_FALSE(pokedex->has_seen(test_species2));
+            ASSERT_FALSE(pokedex->has_caught(test_species2));
+
+            pkmn::pokemon::sptr test_pokemon1 = pkmn::pokemon::make(
+                                                    test_species1,
+                                                    game,
+                                                    "",
+                                                    5
+                                                );
+            pkmn::pokemon::sptr test_pokemon2 = pkmn::pokemon::make(
+                                                    test_species2,
+                                                    game,
+                                                    "",
+                                                    5
+                                                );
+
+            save->get_pokemon_party()->set_pokemon(0, test_pokemon1);
+            EXPECT_TRUE(pokedex->has_seen(test_species1));
+            EXPECT_TRUE(pokedex->has_caught(test_species1));
+
+            save->get_pokemon_pc()->get_box(0)->set_pokemon(0, test_pokemon2);
+            EXPECT_TRUE(pokedex->has_seen(test_species2));
+            EXPECT_TRUE(pokedex->has_caught(test_species2));
+        }
     }
 
     static pkmn::pokemon::sptr get_random_pokemon(
@@ -436,6 +506,15 @@ namespace pkmntest {
             EXPECT_EQ(item_slots1[i].item, item_slots2[i].item);
             EXPECT_EQ(item_slots1[i].amount, item_slots2[i].amount);
         }
+    }
+
+    static void compare_pokedexes(
+        pkmn::pokedex::sptr pokedex1,
+        pkmn::pokedex::sptr pokedex2
+    )
+    {
+        EXPECT_EQ(pokedex1->get_all_seen(), pokedex2->get_all_seen());
+        EXPECT_EQ(pokedex1->get_all_caught(), pokedex2->get_all_caught());
     }
 
     static void compare_pokemon(
@@ -703,6 +782,14 @@ namespace pkmntest {
                     box2->get_pokemon(i)
                 );
             }
+        }
+
+        if((generation != 2) and (game != "Colosseum") and (game != "XD"))
+        {
+            compare_pokedexes(
+                save1->get_pokedex(),
+                save2->get_pokedex()
+            );
         }
     }
 

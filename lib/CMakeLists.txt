@@ -80,6 +80,7 @@ SET(pkmn_sources
     item_list_gen2_tmhmimpl.cpp
     item_list_gcnimpl.cpp
     item_list_modernimpl.cpp
+    pokedex_impl.cpp
     pokemon_impl.cpp
     pokemon_gen1impl.cpp
     pokemon_gen2impl.cpp

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -50,6 +50,9 @@ std::string GetSWIGVersion();
 
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
+
+// Pokédex
+%include <csharp/pkmn_pokedex.i>
 
 // Pokémon
 %include <csharp/pkmn_pokemon_helpers.i>

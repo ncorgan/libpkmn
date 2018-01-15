@@ -183,4 +183,9 @@ namespace pkmn {
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }
+
+    pkmn::pokedex::sptr game_save_gcnimpl::get_pokedex()
+    {
+        throw pkmn::unimplemented_error();
+    }
 }

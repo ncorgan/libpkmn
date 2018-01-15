@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
+#include "pokedex_impl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
 
@@ -19,6 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include <cstring>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -112,6 +114,12 @@ namespace pkmn {
                 break;
         }
 
+        _pokedex = pkmn::make_shared<pokedex_impl>(
+                       _game_id,
+                       _pksav_save.pokedex_seenA,
+                       _pksav_save.pokedex_owned
+                   );
+
         _pokemon_party = pkmn::make_shared<pokemon_party_gbaimpl>(
                              _game_id,
                              _pksav_save.pokemon_party
@@ -124,6 +132,18 @@ namespace pkmn {
         _item_bag = pkmn::make_shared<item_bag_gbaimpl>(
                         _game_id, _pksav_save.item_storage
                     );
+
+        // When a Pokémon is added to the PC or party, it should be
+        // reflected in the Pokédex.
+
+        pokemon_party_impl* party_impl_ptr = dynamic_cast<pokemon_party_impl*>(_pokemon_party.get());
+        pokemon_pc_impl* pc_impl_ptr = dynamic_cast<pokemon_pc_impl*>(_pokemon_pc.get());
+
+        BOOST_ASSERT(party_impl_ptr);
+        BOOST_ASSERT(pc_impl_ptr);
+
+        party_impl_ptr->set_pokedex(_pokedex);
+        pc_impl_ptr->set_pokedex(_pokedex);
     }
 
     game_save_gbaimpl::~game_save_gbaimpl() {
@@ -132,7 +152,29 @@ namespace pkmn {
 
     void game_save_gbaimpl::save_as(
         const std::string &filepath
-    ) {
+    )
+    {
+        // For some reason, the Pokédex seen bitfield is stored
+        // three separate times. This class passes the first field
+        // into the Pokédex class, so copy it to the other two before
+        // calculating the checksum and saving.
+        //
+        // NOTE: From my research, the location in PKSav is correct,
+        // but they don't necessarily match for some reason. Do this
+        // anyway.
+        const size_t num_bytes = static_cast<size_t>(std::ceil(386 / 8));
+
+        std::memcpy(
+            _pksav_save.pokedex_seenB,
+            _pksav_save.pokedex_seenA,
+            num_bytes
+        );
+        std::memcpy(
+            _pksav_save.pokedex_seenC,
+            _pksav_save.pokedex_seenA,
+            num_bytes
+        );
+
         PKSAV_CALL(
             pksav_gba_save_save(
                 filepath.c_str(),

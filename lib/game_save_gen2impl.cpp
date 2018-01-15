@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #include "game_save_gen2impl.hpp"
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "pokedex_impl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 
@@ -19,6 +20,7 @@
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/assert.hpp>
 #include <boost/filesystem.hpp>
 
 #include <stdexcept>
@@ -79,6 +81,12 @@ namespace pkmn {
                        );
         }
 
+        _pokedex = pkmn::make_shared<pokedex_impl>(
+                       _game_id,
+                       _pksav_save.pokedex_seen,
+                       _pksav_save.pokedex_owned
+                   );
+
         _pokemon_party = pkmn::make_shared<pokemon_party_gen2impl>(
                              _game_id,
                              _pksav_save.pokemon_party
@@ -93,6 +101,18 @@ namespace pkmn {
                         _game_id,
                         _pksav_save.item_bag
                     );
+
+        // When a Pokémon is added to the PC or party, it should be
+        // reflected in the Pokédex.
+
+        pokemon_party_impl* party_impl_ptr = dynamic_cast<pokemon_party_impl*>(_pokemon_party.get());
+        pokemon_pc_impl* pc_impl_ptr = dynamic_cast<pokemon_pc_impl*>(_pokemon_pc.get());
+
+        BOOST_ASSERT(party_impl_ptr);
+        BOOST_ASSERT(pc_impl_ptr);
+
+        party_impl_ptr->set_pokedex(_pokedex);
+        pc_impl_ptr->set_pokedex(_pokedex);
     }
 
     game_save_gen2impl::~game_save_gen2impl() {

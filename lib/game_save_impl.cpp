@@ -228,6 +228,11 @@ namespace pkmn {
         return pkmn::database::game_id_to_name(_game_id);
     }
 
+    pkmn::pokedex::sptr game_save_impl::get_pokedex()
+    {
+        return _pokedex;
+    }
+
     pkmn::pokemon_party::sptr game_save_impl::get_pokemon_party() {
         return _pokemon_party;
     }

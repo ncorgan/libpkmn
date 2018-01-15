@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,6 +11,7 @@
 
 #include "pokemon_impl.hpp"
 
+#include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 
 #include <boost/noncopyable.hpp>
@@ -41,8 +42,19 @@ namespace pkmn {
 
             void* get_native() override final;
 
+            // For internal use
+
+            inline void set_pokedex(
+                pkmn::pokedex::sptr pokedex
+            )
+            {
+                _pokedex = pokedex;
+            }
+
         protected:
             pkmn::pokemon_list_t _pokemon_list;
+
+            pkmn::pokedex::sptr _pokedex;
 
             void* _native;
             bool _our_mem;

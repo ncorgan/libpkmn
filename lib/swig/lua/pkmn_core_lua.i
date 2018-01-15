@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,6 +22,9 @@ PKMN_LUA_INIT
 
 // Item Bag
 %include <lua/pkmn_item_bag.i>
+
+// Pokédex
+%include <lua/pkmn_pokedex.i>
 
 // Pokémon
 %include <lua/pkmn_pokemon_helpers.i>
