@@ -23,6 +23,10 @@ namespace pkmn { namespace swig {
                 _pokedex(nullptr)
             {}
 
+            pokedex(const std::string& game):
+                _pokedex(pkmn::pokedex::make(game))
+            {}
+
             pokedex(
                 const pkmn::pokedex::sptr& cpp_pokedex
             ): _pokedex(cpp_pokedex)

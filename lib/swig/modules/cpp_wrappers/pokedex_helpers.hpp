@@ -54,6 +54,13 @@ namespace pkmn { namespace swig {
                 _pokedex->set_has_seen(species, value);
             }
 
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokedex.get());
+            }
+#else
             bool operator==(const pokedex_has_seen_helper& rhs) const
             {
                 return (_pokedex == rhs._pokedex);
@@ -62,13 +69,6 @@ namespace pkmn { namespace swig {
             bool operator!=(const pokedex_has_seen_helper& rhs) const
             {
                 return !operator==(rhs);
-            }
-
-#ifdef SWIGCSHARP
-            // For equality and hash codes
-            uintmax_t cptr()
-            {
-                return uintmax_t(_pokedex.get());
             }
 #endif
 
@@ -113,6 +113,13 @@ namespace pkmn { namespace swig {
                 _pokedex->set_has_caught(species, value);
             }
 
+#ifdef SWIGCSHARP
+            // For equality and hash codes
+            uintmax_t cptr()
+            {
+                return uintmax_t(_pokedex.get());
+            }
+#else
             bool operator==(const pokedex_has_caught_helper& rhs) const
             {
                 return (_pokedex == rhs._pokedex);
@@ -121,13 +128,6 @@ namespace pkmn { namespace swig {
             bool operator!=(const pokedex_has_caught_helper& rhs) const
             {
                 return !operator==(rhs);
-            }
-
-#ifdef SWIGCSHARP
-            // For equality and hash codes
-            uintmax_t cptr()
-            {
-                return uintmax_t(_pokedex.get());
             }
 #endif
 

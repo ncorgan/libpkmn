@@ -28,10 +28,10 @@ using System.Runtime.InteropServices;"
 
 %typemap(cscode) pkmn::swig::pokedex_has_seen_helper
 %{
-    public bool this[string stat]
+    public bool this[string species]
     {
-        get { return GetHasSeen(stat); }
-        set { SetHasSeen(stat, value); }
+        get { return GetHasSeen(species); }
+        set { SetHasSeen(species, value); }
     }
 
     public bool Equals(PokedexHasSeenHelper rhs)
@@ -95,10 +95,10 @@ using System.Runtime.InteropServices;"
 
 %typemap(cscode) pkmn::swig::pokedex_has_caught_helper
 %{
-    public bool this[string stat]
+    public bool this[string species]
     {
-        get { return GetHasCaught(stat); }
-        set { SetHasCaught(stat, value); }
+        get { return GetHasCaught(species); }
+        set { SetHasCaught(species, value); }
     }
 
     public bool Equals(PokedexHasCaughtHelper rhs)
