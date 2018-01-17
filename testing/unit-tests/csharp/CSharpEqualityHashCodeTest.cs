@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -220,6 +220,19 @@ public class CSharpEqualityHashCodeTest
 
         Assert.AreNotEqual(spindaSpots, spindaSpotsShuffled);
         Assert.AreNotEqual(spindaSpots.GetHashCode(), spindaSpotsShuffled.GetHashCode());
+    }
+
+    [Test]
+    public void PokedexHelpersTest()
+    {
+        PKMN.Pokedex pokedex = new PKMN.Pokedex("Ruby");
+
+        // The Pokemon class and its helpers all use the underlying pointer
+        // in generating their hash codes. Make sure these aren't equal.
+
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.HasSeen.GetHashCode());
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.HasCaught.GetHashCode());
+        Assert.AreNotEqual(pokedex.HasSeen.GetHashCode(), pokedex.HasCaught.GetHashCode());
     }
 
     [Test]

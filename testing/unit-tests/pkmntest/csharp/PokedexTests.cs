@@ -68,8 +68,7 @@ public class PokedexTests
 
         // Remove all entries.
 
-        PKMN.StringList allSeen = pokedex.AllSeen;
-        foreach(string species in allSeen)
+        foreach(string species in pokedex.AllSeen)
         {
             pokedex.HasSeen[species] = false;
             Assert.IsFalse(pokedex.HasSeen[species]);
@@ -77,8 +76,7 @@ public class PokedexTests
         Assert.AreEqual(pokedex.NumSeen, 0);
         Assert.AreEqual(pokedex.AllSeen.Count, 0);
 
-        PKMN.StringList allCaught = pokedex.AllCaught;
-        foreach(string species in allCaught)
+        foreach(string species in pokedex.AllCaught)
         {
             pokedex.HasCaught[species] = false;
             Assert.IsFalse(pokedex.HasCaught[species]);

@@ -239,6 +239,74 @@ public class GameSaveTest
                 }
             }
         }
+
+        // Pokédex
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            PKMN.Pokedex pokedex = gameSave.Pokedex;
+            Assert.GreaterOrEqual(pokedex.NumSeen, pokedex.NumCaught);
+
+            for(int partyIndex = 0; partyIndex < party.Length; ++partyIndex)
+            {
+                string species = party[partyIndex].Species;
+                if(!species.Equals("None") && !party[partyIndex].IsEgg)
+                {
+                    Assert.IsTrue(pokedex.HasSeen[species]);
+                    Assert.IsTrue(pokedex.HasCaught[species]);
+                }
+            }
+
+            for(int PCIndex = 0; PCIndex < pokemonPC.Length; ++PCIndex)
+            {
+                PKMN.PokemonBox box = pokemonPC[PCIndex];
+                for(int boxIndex = 0; boxIndex < box.Length; ++boxIndex)
+                {
+                    string species = box[boxIndex].Species;
+                    if(!species.Equals("None") && !box[boxIndex].IsEgg)
+                    {
+                        Assert.IsTrue(pokedex.HasSeen[species]);
+                        Assert.IsTrue(pokedex.HasCaught[species]);
+                    }
+                }
+            }
+
+            // Make sure that when a Pokémon is added to the party or PC, it's
+            // added to the Pokédex. Manually remove the test species from the
+            // Pokédex to confirm this behavior.
+
+            string testSpecies1 = "Bulbasaur";
+            string testSpecies2 = "Charmander";
+
+            pokedex.HasSeen[testSpecies1] = false;
+            Assert.IsFalse(pokedex.HasSeen[testSpecies1]);
+            Assert.IsFalse(pokedex.HasCaught[testSpecies1]);
+
+            pokedex.HasSeen[testSpecies2] = false;
+            Assert.IsFalse(pokedex.HasSeen[testSpecies1]);
+            Assert.IsFalse(pokedex.HasCaught[testSpecies1]);
+
+            PKMN.Pokemon testPokemon1 = new PKMN.Pokemon(
+                                                testSpecies1,
+                                                game,
+                                                "",
+                                                5
+                                            );
+            PKMN.Pokemon testPokemon2 = new PKMN.Pokemon(
+                                                testSpecies2,
+                                                game,
+                                                "",
+                                                5
+                                            );
+
+
+            party[0] = testPokemon1;
+            Assert.IsTrue(pokedex.HasSeen[testSpecies1]);
+            Assert.IsTrue(pokedex.HasCaught[testSpecies1]);
+
+            pokemonPC[0][0] = testPokemon2;
+            Assert.IsTrue(pokedex.HasSeen[testSpecies2]);
+            Assert.IsTrue(pokedex.HasCaught[testSpecies2]);
+        }
     }
 
     private static void RandomizePokemon(
@@ -268,7 +336,7 @@ public class GameSaveTest
         }
     }
 
-    public static void CompareItemLists(
+    private static void CompareItemLists(
         PKMN.ItemList itemList1,
         PKMN.ItemList itemList2
     )
@@ -283,6 +351,15 @@ public class GameSaveTest
             Assert.AreEqual(itemList1[i].Item, itemList2[i].Item);
             Assert.AreEqual(itemList1[i].Amount, itemList2[i].Amount);
         }
+    }
+
+    private static void ComparePokedexes(
+        PKMN.Pokedex pokedex1,
+        PKMN.Pokedex pokedex2
+    )
+    {
+        Assert.AreEqual(pokedex1.AllSeen, pokedex2.AllSeen);
+        Assert.AreEqual(pokedex1.AllCaught, pokedex2.AllCaught);
     }
 
     public static void CompareGameSaves(
@@ -367,6 +444,13 @@ public class GameSaveTest
                     pokemonBox2[j]
                 );
             }
+        }
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            ComparePokedexes(
+                save1.Pokedex,
+                save2.Pokedex
+            );
         }
     }
 
