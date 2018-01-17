@@ -65,6 +65,8 @@ namespace pkmn
 
             std::memset(_native_has_seen, 0, num_bytes);
             std::memset(_native_has_caught, 0, num_bytes);
+
+            _our_mem = true;
         }
     }
 
@@ -93,7 +95,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_seen),
+                reinterpret_cast<const uint8_t*>(_native_has_seen),
                 uint16_t(species_id),
                 &ret
             );
@@ -172,7 +174,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_caught),
+                reinterpret_cast<const uint8_t*>(_native_has_caught),
                 uint16_t(species_id),
                 &ret
             );
