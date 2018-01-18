@@ -24,6 +24,7 @@ PKMN_LUA_INIT
 %include <lua/pkmn_item_bag.i>
 
 // Pokédex
+%include <lua/pkmn_pokedex_helpers.i>
 %include <lua/pkmn_pokedex.i>
 
 // Pokémon
