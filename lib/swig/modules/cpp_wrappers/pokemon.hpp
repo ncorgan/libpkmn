@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef CPP_WRAPPERS_HPP
-#define CPP_WRAPPERS_HPP
+#ifndef CPP_WRAPPERS_POKEMON_HPP
+#define CPP_WRAPPERS_POKEMON_HPP
 
 #include "exception_internal.hpp"
+#include "private_exports.hpp"
 
 #include "attribute_maps.hpp"
 #include "pokemon_helpers.hpp"
@@ -25,19 +26,23 @@ namespace pkmn { namespace swig {
      * itself. It will allow syntax like the following to be used:
      *
      * bulbasaur.EVs["Attack"] = 100
+     *
+     * Per conventions, when used as attributes, these getters won't
+     * throw exceptions and will instead return a default value.
      */
     class pokemon
     {
         public:
             pokemon():
-                _pokemon(nullptr)
+                _pokemon(nullptr),
+                _generation(0)
             {}
 
             pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
-            ): _pokemon(cpp_pokemon)
+            ): _pokemon(cpp_pokemon),
+               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon->get_game()))
             {
-                _init();
             }
 
             pokemon(
@@ -45,16 +50,16 @@ namespace pkmn { namespace swig {
                 const std::string& game,
                 const std::string& form,
                 int level
-            ): _pokemon(pkmn::pokemon::make(species, game, form, level))
+            ): _pokemon(pkmn::pokemon::make(species, game, form, level)),
+               _generation(pkmn::priv::game_name_to_generation(game))
             {
-                _init();
             }
 
             pokemon(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
-                _init();
+                _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
             }
 
             static const uint32_t DEFAULT_TRAINER_ID;
@@ -106,7 +111,7 @@ namespace pkmn { namespace swig {
                 _pokemon->set_is_egg(is_egg);
             }
 
-            // Copying is cheap, and we can't do SWIG attributes without it.
+            // Copy the entry, since the const in the reference is casted away.
             inline pkmn::database::pokemon_entry get_database_entry()
             {
                 return _pokemon->get_database_entry();
@@ -138,7 +143,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_gender()
             {
-                return _pokemon->get_gender();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_gender();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_gender(
@@ -150,7 +162,14 @@ namespace pkmn { namespace swig {
 
             inline bool is_shiny()
             {
-                return _pokemon->is_shiny();
+                if(_generation >= 2)
+                {
+                    return _pokemon->is_shiny();
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             inline void set_shininess(
@@ -162,7 +181,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_held_item()
             {
-                return _pokemon->get_held_item();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_held_item();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_held_item(
@@ -174,7 +200,14 @@ namespace pkmn { namespace swig {
 
             inline int get_pokerus_duration()
             {
-                return _pokemon->get_pokerus_duration();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_pokerus_duration();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline void set_pokerus_duration(int duration)
@@ -201,7 +234,14 @@ namespace pkmn { namespace swig {
 
             inline uint16_t get_original_trainer_secret_id()
             {
-                return _pokemon->get_original_trainer_secret_id();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_original_trainer_secret_id();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline uint32_t get_original_trainer_id()
@@ -232,7 +272,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_original_trainer_gender()
             {
-                return _pokemon->get_original_trainer_gender();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_original_trainer_gender();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_original_trainer_gender(
@@ -244,7 +291,14 @@ namespace pkmn { namespace swig {
 
             inline int get_current_trainer_friendship()
             {
-                return _pokemon->get_current_trainer_friendship();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_current_trainer_friendship();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline void set_current_trainer_friendship(
@@ -256,7 +310,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_ability()
             {
-                return _pokemon->get_ability();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_ability();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_ability(
@@ -268,7 +329,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_ball()
             {
-                return _pokemon->get_ball();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_ball();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_ball(
@@ -280,7 +348,14 @@ namespace pkmn { namespace swig {
 
             inline int get_level_met()
             {
-                return _pokemon->get_level_met();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_level_met();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline void set_level_met(
@@ -292,7 +367,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_location_met()
             {
-                return _pokemon->get_location_met(false);
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_location_met(false);
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_location_met(
@@ -304,7 +386,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_location_met_as_egg()
             {
-                return _pokemon->get_location_met(true);
+                if(_generation >= 4)
+                {
+                    return _pokemon->get_location_met(true);
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_location_met_as_egg(
@@ -316,7 +405,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_original_game()
             {
-                return _pokemon->get_original_game();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_original_game();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_original_game(
@@ -328,7 +424,14 @@ namespace pkmn { namespace swig {
 
             inline uint32_t get_personality()
             {
-                return _pokemon->get_personality();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_personality();
+                }
+                else
+                {
+                    return 0U;
+                }
             }
 
             inline void set_personality(
@@ -374,45 +477,36 @@ namespace pkmn { namespace swig {
 
             inline EV_map get_EVs()
             {
-                return _EV_map;
+                return EV_map(_pokemon);
             }
 
             inline IV_map get_IVs()
             {
-                return _IV_map;
+                return IV_map(_pokemon);
             }
 
             inline marking_map get_markings()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_markings();
-
-                return _marking_map;
+                return marking_map(_pokemon);
             }
 
             inline ribbon_map get_ribbons()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_ribbons();
-
-                return _ribbon_map;
+                return ribbon_map(_pokemon);
             }
 
             inline contest_stat_map get_contest_stats()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_contest_stats();
-
-                return _contest_stat_map;
+                return contest_stat_map(_pokemon);
             }
 
             inline move_slots get_moves()
             {
-                return _move_slots;
+                return move_slots(_pokemon);
             }
 
             // Stats are read-only, so no need to wrap.
-            inline const std::map<std::string, int> get_stats()
+            inline std::map<std::string, int> get_stats()
             {
                 return _pokemon->get_stats();
             }
@@ -429,12 +523,12 @@ namespace pkmn { namespace swig {
 
             numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
             {
-                return _numeric_attribute_map;
+                return numeric_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
             string_attribute_map<pkmn::pokemon> get_string_attributes()
             {
-                return _string_attribute_map;
+                return string_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
             inline pkmn::pokemon::sptr get_internal() const
@@ -442,43 +536,26 @@ namespace pkmn { namespace swig {
                 return _pokemon;
             }
 
-            // TODO: ifdef for specific wrappers
-
-            bool operator==(
-                const pokemon& rhs
-            ) const
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_pokemon.get());
+            }
+#else
+            inline bool operator==(const pokemon& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
 
-            // For hash code functions
-            uintmax_t cptr()
+            inline bool operator!=(const pokemon& rhs) const
             {
-                return uintmax_t(_pokemon.get());
+                return !operator==(rhs);
             }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
-            EV_map _EV_map;
-            IV_map _IV_map;
-            marking_map _marking_map;
-            ribbon_map _ribbon_map;
-            contest_stat_map _contest_stat_map;
-            move_slots _move_slots;
-            numeric_attribute_map<pkmn::pokemon> _numeric_attribute_map;
-            string_attribute_map<pkmn::pokemon> _string_attribute_map;
-
-            void _init()
-            {
-                _EV_map = EV_map(_pokemon);
-                _IV_map = IV_map(_pokemon);
-                _marking_map = marking_map(_pokemon);
-                _ribbon_map = ribbon_map(_pokemon);
-                _contest_stat_map = contest_stat_map(_pokemon);
-                _move_slots = move_slots(_pokemon);
-                _numeric_attribute_map = numeric_attribute_map<pkmn::pokemon>(_pokemon);
-                _string_attribute_map = string_attribute_map<pkmn::pokemon>(_pokemon);
-            }
+            int _generation;
     };
 
     const uint32_t pokemon::DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
@@ -486,4 +563,4 @@ namespace pkmn { namespace swig {
 
 }}
 
-#endif /* CPP_WRAPPERS_HPP */
+#endif /* CPP_WRAPPERS_POKEMON_HPP */

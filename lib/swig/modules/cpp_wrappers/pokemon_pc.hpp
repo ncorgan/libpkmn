@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,26 +22,22 @@ namespace pkmn { namespace swig {
     {
         public:
             pokemon_pc():
-                _pokemon_pc(nullptr)
+                _pokemon_pc(nullptr),
+                _generation(0)
             {}
 
             pokemon_pc(
                 const pkmn::pokemon_pc::sptr& cpp_pokemon_pc
-            ): _pokemon_pc(cpp_pokemon_pc)
+            ): _pokemon_pc(cpp_pokemon_pc),
+               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon_pc->get_game()))
             {
             }
 
             pokemon_pc(
                 const std::string& game
-            ): _pokemon_pc(pkmn::pokemon_pc::make(game))
+            ): _pokemon_pc(pkmn::pokemon_pc::make(game)),
+               _generation(pkmn::priv::game_name_to_generation(game))
             {
-            }
-
-            bool operator==(
-                const pokemon_pc& rhs
-            ) const
-            {
-                return (_pokemon_pc == rhs._pokemon_pc);
             }
 
             inline std::string get_game()
@@ -76,16 +72,36 @@ namespace pkmn { namespace swig {
             // is casted away.
             inline std::vector<std::string> get_box_names()
             {
-                return _pokemon_pc->get_box_names();
+                if(_generation >= 2)
+                {
+                    return _pokemon_pc->get_box_names();
+                }
+                else
+                {
+                    return std::vector<std::string>();
+                }
             }
 
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon_pc.get());
             }
+#else
+            inline bool operator==(const pokemon_pc& rhs) const
+            {
+                return (_pokemon_pc == rhs._pokemon_pc);
+            }
+
+            inline bool operator!=(const pokemon_pc& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon_pc::sptr _pokemon_pc;
+            int _generation;
     };
 
 }}

@@ -43,7 +43,7 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                const std::map<std::string, int>& EVs = _pokemon->get_EVs();
+                const string_int_map& EVs = _pokemon->get_EVs();
                 if(EVs.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid stat.");
@@ -84,15 +84,22 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_EVs().count(key) > 0);
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const EV_map& rhs) const
+#else
+            inline bool operator==(const EV_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const EV_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -119,7 +126,7 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                const std::map<std::string, int>& IVs = _pokemon->get_IVs();
+                const string_int_map& IVs = _pokemon->get_IVs();
                 if(IVs.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid stat.");
@@ -160,15 +167,22 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_IVs().count(key) > 0);
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const IV_map& rhs) const
+#else
+            inline bool operator==(const IV_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const IV_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -195,7 +209,7 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                const std::map<std::string, bool>& markings = _pokemon->get_markings();
+                const string_bool_map& markings = _pokemon->get_markings();
                 if(markings.count(marking) == 0)
                 {
                     throw std::invalid_argument("Invalid marking.");
@@ -236,15 +250,22 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_markings().count(key) > 0);
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const marking_map& rhs) const
+#else
+            inline bool operator==(const marking_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const marking_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -271,7 +292,7 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                const std::map<std::string, bool>& ribbons = _pokemon->get_ribbons();
+                const string_bool_map& ribbons = _pokemon->get_ribbons();
                 if(ribbons.count(ribbon) == 0)
                 {
                     throw std::invalid_argument("Invalid ribbon.");
@@ -312,15 +333,22 @@ namespace pkmn { namespace swig {
                        );
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const ribbon_map& rhs) const
+#else
+            inline bool operator==(const ribbon_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const ribbon_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -347,7 +375,7 @@ namespace pkmn { namespace swig {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
 
-                const std::map<std::string, int>& contest_stats = _pokemon->get_contest_stats();
+                const string_int_map& contest_stats = _pokemon->get_contest_stats();
                 if(contest_stats.count(stat) == 0)
                 {
                     throw std::invalid_argument("Invalid contest stat.");
@@ -388,15 +416,22 @@ namespace pkmn { namespace swig {
                 return (_pokemon->get_contest_stats().count(key) > 0);
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const contest_stat_map& rhs) const
+#else
+            inline bool operator==(const contest_stat_map& rhs) const
             {
                 return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const contest_stat_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -417,7 +452,7 @@ namespace pkmn { namespace swig {
                _index(index)
             {}
 
-            const std::string& get_move()
+            std::string get_move()
             {
                 if(!_pokemon)
                 {
@@ -459,20 +494,28 @@ namespace pkmn { namespace swig {
                 _pokemon->set_move_pp(_index, pp);
             }
 
-            uintmax_t cptr()
-            {
-                return uintmax_t(_pokemon.get());
-            }
-
             int index()
             {
                 return _index;
             }
 
-            bool operator==(const move_slot& rhs) const
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
-                return (_pokemon == rhs._pokemon) && (_index == rhs._index);
+                return uintmax_t(_pokemon.get());
             }
+#else
+            inline bool operator==(const move_slot& rhs) const
+            {
+                return (_pokemon == rhs._pokemon) and
+                       (_index == rhs._index);
+            }
+
+            inline bool operator!=(const move_slot& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
@@ -489,9 +532,7 @@ namespace pkmn { namespace swig {
             move_slots(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon)
-            {
-                _init();
-            }
+            {}
 
             move_slot get_move_slot(
                 int index
@@ -510,7 +551,7 @@ namespace pkmn { namespace swig {
                     4
                 );
 
-                return _moves.at(index-1);
+                return move_slot(_pokemon, index-1);
 #else
                 pkmn::enforce_bounds(
                     "Move index",
@@ -519,42 +560,34 @@ namespace pkmn { namespace swig {
                     3
                 );
 
-                return _moves.at(index);
+                return move_slot(_pokemon, index);
 #endif
             }
 
             size_t size()
             {
-                return _moves.size();
+                return _pokemon->get_moves().size();
             }
 
-            uintmax_t cptr()
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon.get());
             }
-
-            bool operator==(const move_slots& rhs) const
+#else
+            inline bool operator==(const move_slots& rhs) const
             {
-                return (_pokemon == rhs._pokemon) && (_moves == rhs._moves);
+                return (_pokemon == rhs._pokemon);
             }
+
+            inline bool operator!=(const move_slots& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
-
-            std::vector<move_slot> _moves;
-
-            void _init()
-            {
-                for(int i = 0; i < 4; ++i)
-                {
-                    _moves.emplace_back(
-                        move_slot(
-                            _pokemon,
-                            i
-                        )
-                    );
-                }
-            }
     };
 
 }}

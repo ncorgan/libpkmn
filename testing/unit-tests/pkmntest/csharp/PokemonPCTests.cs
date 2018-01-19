@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,6 @@ namespace PKMNTest {
 
 public class PokemonPCTests
 {
-
     private static void TestEmptyPokemonBox(
         PKMN.PokemonBox box
     )
@@ -52,16 +51,14 @@ public class PokemonPCTests
 
         if(generation == 1)
         {
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(box.Name, "");
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
                     box.Name = "ABCDEFGH";
-                }
-            );
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    string name = box.Name;
                 }
             );
         }
@@ -217,6 +214,8 @@ public class PokemonPCTests
 
         if(generation == 1)
         {
+            Assert.AreEqual(PC.BoxNames.Count, 0);
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {

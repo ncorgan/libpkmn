@@ -84,16 +84,28 @@ namespace pkmn { namespace swig {
                 );
             }
 
+            int index()
+            {
+                return _index;
+            }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_item_list.get());
+            }
+#else
             inline bool operator==(const item_slot& rhs) const
             {
-                return (this->_item_list == rhs._item_list) &&
-                       (this->_index == rhs._index);
+                return (_item_list == rhs._item_list) and
+                       (_index == rhs._index);
             }
 
             inline bool operator!=(const item_slot& rhs) const
             {
                 return !operator==(rhs);
             }
+#endif
 
         private:
             pkmn::item_list::sptr _item_list;

@@ -22,10 +22,6 @@ function pokemon_pc_tests.pokemon_box.set_pokemon(box, index, pokemon)
     party[index] = pokemon
 end
 
-function pokemon_pc_tests.pokemon_box.get_name(box)
-    local name = box.name
-end
-
 function pokemon_pc_tests.pokemon_box.set_name(box, name)
     box.name = name
 end
@@ -92,10 +88,7 @@ function pokemon_pc_tests.test_box_name(box)
 
     if generation == 1
     then
-        luaunit.assertError(
-            pokemon_pc_tests.pokemon_box.get_name,
-            box
-        )
+        luaunit.assertEquals(box.name, "")
         luaunit.assertError(
             pokemon_pc_tests.pokemon_box.set_name,
             box,

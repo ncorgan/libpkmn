@@ -43,20 +43,6 @@ namespace pkmn { namespace swig {
             {
             }
 
-            inline bool operator==(
-                const item_list& rhs
-            ) const
-            {
-                return (_item_list == rhs._item_list);
-            }
-
-            inline bool operator!=(
-                const item_list& rhs
-            ) const
-            {
-                return !operator==(rhs);
-            }
-
             inline std::string get_name()
             {
                 return _item_list->get_name();
@@ -143,11 +129,22 @@ namespace pkmn { namespace swig {
                 return _item_list->get_valid_items();
             }
 
-            // For hash code functions
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_item_list.get());
             }
+#else
+            inline bool operator==(const item_list& rhs) const
+            {
+                return (_item_list == rhs._item_list);
+            }
+
+            inline bool operator!=(const item_list& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::item_list::sptr _item_list;

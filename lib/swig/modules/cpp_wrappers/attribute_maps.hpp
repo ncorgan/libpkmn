@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -62,10 +62,22 @@ namespace pkmn { namespace swig {
                 return _internal->get_numeric_attribute_names();
             }
 
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_internal.get());
             }
+#else
+            inline bool operator==(const numeric_attribute_map& rhs) const
+            {
+                return (_internal == rhs._internal);
+            }
+
+            inline bool operator!=(const numeric_attribute_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::shared_ptr<sptr_type> _internal;
@@ -102,10 +114,22 @@ namespace pkmn { namespace swig {
                 return _internal->get_string_attribute_names();
             }
 
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_internal.get());
             }
+#else
+            inline bool operator==(const string_attribute_map& rhs) const
+            {
+                return (_internal == rhs._internal);
+            }
+
+            inline bool operator!=(const string_attribute_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::shared_ptr<sptr_type> _internal;

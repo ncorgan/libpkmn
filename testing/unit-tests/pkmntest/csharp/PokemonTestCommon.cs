@@ -531,9 +531,14 @@ public class PokemonTestCommon
         if(generation >= 2)
         {
             Assert.AreEqual(pokemon.HeldItem, "None");
+            Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
+        }
+        else
+        {
+            // Default value since a getter shouldn't throw an exception.
+            Assert.AreEqual(pokemon.OriginalTrainerGender, "");
         }
 
-        Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
         Assert.AreEqual(
             pokemon.OriginalTrainerPublicID,
             (ushort)(PKMN.Pokemon.DefaultTrainerID & 0xFFFF)
@@ -555,6 +560,9 @@ public class PokemonTestCommon
                 pokemon.OriginalTrainerID,
                 (PKMN.Pokemon.DefaultTrainerID & 0xFFFF)
             );
+
+            // Default value since a getter shouldn't throw an exception.
+            Assert.AreEqual(pokemon.OriginalTrainerSecretID, 0);
         }
 
         if(generation >= 2)
@@ -582,6 +590,12 @@ public class PokemonTestCommon
             {
                 Assert.AreEqual(pokemon.OriginalGame, pokemon.Game);
             }
+        }
+        else
+        {
+            // Default values since getters shouldn't throw exceptions.
+            Assert.AreEqual(pokemon.Ball, "");
+            Assert.AreEqual(pokemon.OriginalGame, "");
         }
 
         Assert.AreEqual(
@@ -786,12 +800,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    string ability = pokemon.Ability;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.Ability, "");
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -826,12 +838,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    string ball = pokemon.Ball;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.Ball, "");
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -890,12 +900,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    int friendship = pokemon.CurrentTrainerFriendship;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.CurrentTrainerFriendship, 0);
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -930,12 +938,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    string heldItem = pokemon.HeldItem;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.HeldItem, "");
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -985,12 +991,10 @@ public class PokemonTestCommon
                     }
                 );
 
-                Assert.Throws<ApplicationException>(
-                    delegate
-                    {
-                        int levelMet = pokemon.LevelMet;
-                    }
-                );
+                // The getter shouldn't throw by convention, but the setter will.
+
+                Assert.AreEqual(pokemon.LevelMet, 0);
+
                 Assert.Throws<ApplicationException>(
                     delegate
                     {
@@ -1049,6 +1053,11 @@ public class PokemonTestCommon
         switch(generation)
         {
             case 1:
+                // The getters shouldn't throw by convention, but the setters will.
+
+                Assert.AreEqual(pokemon.LocationMet, "");
+                Assert.AreEqual(pokemon.LocationMetAsEgg, "");
+
                 Assert.Throws<ApplicationException>(
                     delegate
                     {
@@ -1081,6 +1090,10 @@ public class PokemonTestCommon
                         }
                     );
                 }
+
+                // The getter shouldn't throw by convention, but the setter will.
+
+                Assert.AreEqual(pokemon.LocationMetAsEgg, "");
 
                 Assert.Throws<ApplicationException>(
                     delegate
@@ -1138,12 +1151,6 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    PKMN.MarkingMap markingMap = pokemon.Markings;
-                }
-            );
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -1241,12 +1248,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    string originalGame = pokemon.OriginalGame;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.OriginalGame, "");
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -1271,12 +1276,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    uint personality = pokemon.Personality;
-                }
-            );
+            // The getter shouldn't throw by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.Personality, 0);
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -1313,12 +1316,10 @@ public class PokemonTestCommon
         }
         else
         {
-            Assert.Throws<ApplicationException>(
-                delegate
-                {
-                    int pokerusDuration = pokemon.PokerusDuration;
-                }
-            );
+            // The getter shouldn't set by convention, but the setter will.
+
+            Assert.AreEqual(pokemon.PokerusDuration, 0);
+
             Assert.Throws<ApplicationException>(
                 delegate
                 {

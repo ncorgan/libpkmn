@@ -45,13 +45,6 @@ namespace pkmn { namespace swig {
                 return pkmn::game_save::detect_type(filepath);
             }
 
-            bool operator==(
-                const game_save& rhs
-            ) const
-            {
-                return (_game_save == rhs._game_save);
-            }
-
             inline std::string get_filepath()
             {
                 return _game_save->get_filepath();
@@ -183,10 +176,22 @@ namespace pkmn { namespace swig {
                 return pkmn::swig::item_list(_game_save->get_item_pc());
             }
 
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_game_save.get());
             }
+#else
+            inline bool operator==(const game_save& rhs) const
+            {
+                return (_game_save == rhs._game_save);
+            }
+
+            inline bool operator!=(const game_save& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::game_save::sptr _game_save;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,7 @@
 #define CPP_WRAPPERS_POKEMON_BOX_HPP
 
 #include "exception_internal.hpp"
+#include "private_exports.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
@@ -22,31 +23,34 @@ namespace pkmn { namespace swig {
     {
         public:
             pokemon_box():
-                _pokemon_box(nullptr)
+                _pokemon_box(nullptr),
+                _generation(0)
             {}
 
             pokemon_box(
                 const pkmn::pokemon_box::sptr& cpp_pokemon_box
-            ): _pokemon_box(cpp_pokemon_box)
+            ): _pokemon_box(cpp_pokemon_box),
+               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon_box->get_game()))
             {
             }
 
             pokemon_box(
                 const std::string& game
-            ): _pokemon_box(pkmn::pokemon_box::make(game))
+            ): _pokemon_box(pkmn::pokemon_box::make(game)),
+               _generation(pkmn::priv::game_name_to_generation(game))
             {
-            }
-
-            bool operator==(
-                const pokemon_box& rhs
-            ) const
-            {
-                return (_pokemon_box == rhs._pokemon_box);
             }
 
             inline std::string get_name()
             {
-                return _pokemon_box->get_name();
+                if(_generation >= 2)
+                {
+                    return _pokemon_box->get_name();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_name(
@@ -114,13 +118,26 @@ namespace pkmn { namespace swig {
 #endif
             }
 
+#ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
                 return uintmax_t(_pokemon_box.get());
             }
+#else
+            inline bool operator==(const pokemon_box& rhs) const
+            {
+                return (_pokemon_box == rhs._pokemon_box);
+            }
+
+            inline bool operator!=(const pokemon_box& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::pokemon_box::sptr _pokemon_box;
+            int _generation;
     };
 
 }}
