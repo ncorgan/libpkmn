@@ -5,8 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-// TODO: equality, hash code
-
 %{
     #include "cpp_wrappers/item_slot.hpp"
 %}
@@ -19,7 +17,7 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::item_slot::item_slot(const pkmn::item_list::sptr&, int);
 
 // Needed for equality check.
-%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::cptr() "private";
+%csmethodmodifiers pkmn::swig::item_slot::cptr() "private";
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
