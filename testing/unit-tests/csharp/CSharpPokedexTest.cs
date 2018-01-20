@@ -22,8 +22,6 @@ public class CSharpPokedexTest
     [TestCase("Emerald")]
     [TestCase("FireRed")]
     [TestCase("LeafGreen")]
-    [TestCase("Colosseum")]
-    [TestCase("XD")]
     public void PokedexTest(
         string game
     )

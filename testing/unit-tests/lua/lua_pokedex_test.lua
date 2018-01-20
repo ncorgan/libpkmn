@@ -22,9 +22,7 @@ GAME_TO_GENERATION =
     ["Sapphire"] = 3,
     ["Emerald"] = 3,
     ["FireRed"] = 3,
-    ["LeafGreen"] = 3,
-    ["Colosseum"] = 3,
-    ["XD"] = 3
+    ["LeafGreen"] = 3
 }
 
 function pokedex_test(pokedex)
@@ -175,24 +173,6 @@ end
 
 function test_leafgreen_pokedex()
     pokedex = pkmn.pokedex("LeafGreen")
-    pokedex_test(pokedex)
-end
-
----
---- Colosseum
----
-
-function test_colosseum_pokedex()
-    pokedex = pkmn.pokedex("Colosseum")
-    pokedex_test(pokedex)
-end
-
----
---- XD
----
-
-function test_xd_pokedex()
-    pokedex = pkmn.pokedex("XD")
     pokedex_test(pokedex)
 end
 

@@ -5,12 +5,14 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "misc_common.hpp"
 #include "pokedex_impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
 
+#include <pkmn/exception.hpp>
 #include <pkmn/types/shared_ptr.hpp>
 
 #include <pksav/common/pokedex.h>
@@ -35,6 +37,13 @@ namespace pkmn
     )
     {
         int game_id = pkmn::database::game_name_to_id(game);
+        if(game_is_gamecube(game_id))
+        {
+            throw pkmn::feature_not_in_game_error(
+                      "Pokédex",
+                      game
+                  );
+        }
 
         return pkmn::make_shared<pokedex_impl>(game_id);
     }
