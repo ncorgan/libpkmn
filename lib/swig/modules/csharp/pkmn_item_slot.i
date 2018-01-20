@@ -18,6 +18,9 @@ using System.Runtime.InteropServices;"
 %ignore pkmn::swig::item_slot::item_slot();
 %ignore pkmn::swig::item_slot::item_slot(const pkmn::item_list::sptr&, int);
 
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::cptr() "private";
+
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
 %csmethodmodifiers pkmn::swig::item_slot::get_item() "private";
@@ -38,6 +41,49 @@ using System.Runtime.InteropServices;"
     {
         get { return GetAmount(); }
         set { SetAmount(value); }
+    }
+
+    public bool Equals(ItemSlot rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+        else if(this == rhs)
+        {
+            return true;
+        }
+        else
+        {
+            return (this.Cptr() == rhs.Cptr()) &&
+                   (this.Index() == rhs.Index());
+        }
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        ItemSlot rhsItemSlot = rhs as ItemSlot;
+        if(rhsItemSlot == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsItemSlot);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                       .AddValue<int>(this.Index())
+                                       .AddValue<string>(this.GetType().Name)
+                                       .ToHashCode();
     }
 %}
 

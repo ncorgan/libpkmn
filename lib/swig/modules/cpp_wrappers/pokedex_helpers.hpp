@@ -21,19 +21,29 @@ namespace pkmn { namespace swig {
     {
         public:
             pokedex_has_seen_helper():
-                _pokedex(nullptr)
+                _pokedex(nullptr),
+                _is_gamecube_game(false)
             {}
 
             pokedex_has_seen_helper(
-                const pkmn::pokedex::sptr& pokedex
-            ): _pokedex(pokedex)
+                const pkmn::pokedex::sptr& pokedex,
+                bool is_gamecube_game = false
+            ): _pokedex(pokedex),
+               _is_gamecube_game(is_gamecube_game)
             {}
 
             inline bool get_has_seen(
                 const std::string& species
             )
             {
-                if(!_pokedex)
+                if(_is_gamecube_game)
+                {
+                    throw pkmn::feature_not_in_game_error(
+                              "Pokédex",
+                              "Gamecube games"
+                          );
+                }
+                else if(!_pokedex)
                 {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
@@ -46,7 +56,14 @@ namespace pkmn { namespace swig {
                 bool value
             )
             {
-                if(!_pokedex)
+                if(_is_gamecube_game)
+                {
+                    throw pkmn::feature_not_in_game_error(
+                              "Pokédex",
+                              "Gamecube games"
+                          );
+                }
+                else if(!_pokedex)
                 {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
@@ -74,25 +91,36 @@ namespace pkmn { namespace swig {
 
         private:
             pkmn::pokedex::sptr _pokedex;
+            bool _is_gamecube_game;
     };
 
     class pokedex_has_caught_helper
     {
         public:
             pokedex_has_caught_helper():
-                _pokedex(nullptr)
+                _pokedex(nullptr),
+                _is_gamecube_game(false)
             {}
 
             pokedex_has_caught_helper(
-                const pkmn::pokedex::sptr& pokedex
-            ): _pokedex(pokedex)
+                const pkmn::pokedex::sptr& pokedex,
+                bool is_gamecube_game = false
+            ): _pokedex(pokedex),
+               _is_gamecube_game(is_gamecube_game)
             {}
 
             inline bool get_has_caught(
                 const std::string& species
             )
             {
-                if(!_pokedex)
+                if(_is_gamecube_game)
+                {
+                    throw pkmn::feature_not_in_game_error(
+                              "Pokédex",
+                              "Gamecube games"
+                          );
+                }
+                else if(!_pokedex)
                 {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
@@ -105,7 +133,14 @@ namespace pkmn { namespace swig {
                 bool value
             )
             {
-                if(!_pokedex)
+                if(_is_gamecube_game)
+                {
+                    throw pkmn::feature_not_in_game_error(
+                              "Pokédex",
+                              "Gamecube games"
+                          );
+                }
+                else if(!_pokedex)
                 {
                     throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
                 }
@@ -133,6 +168,7 @@ namespace pkmn { namespace swig {
 
         private:
             pkmn::pokedex::sptr _pokedex;
+            bool _is_gamecube_game;
     };
 
 }}

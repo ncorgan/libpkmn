@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -44,49 +44,6 @@ public partial class HiddenPower {
     public override int GetHashCode() {
         return HashCodeBuilder.Create().AddValue<string>(this.Type)
                                        .AddValue<int>(this.BasePower)
-                                       .ToHashCode();
-    }
-}
-
-public partial class ItemSlot {
-    /// <summary>Compares two ItemSlot instances to determine value equality.</summary>
-    /// <remarks>
-    /// Two instances are determined to be equal if they represent the same item and have
-    /// the same amount.
-    /// </remarks>
-    /// <param name="rhs">ItemSlot with which to compare self</param>
-    /// <returns>Whether or not ItemSlot instances are equal</returns>
-    public bool Equals(ItemSlot rhs) {
-        if(rhs == null) {
-            return false;
-        } else if(this == rhs) {
-            return true;
-        } else {
-            return (this.Item.Equals(rhs.Item) && (this.Amount == rhs.Amount));
-        }
-    }
-
-    /// <summary>Compares a ItemSlot to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not ItemSlot and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
-            return false;
-        }
-
-        ItemSlot rhsEntry = rhs as ItemSlot;
-        if(rhsEntry == null) {
-            return false;
-        } else {
-            return this.Equals(rhsEntry);
-        }
-    }
-
-    /// <summary>Generates a unique hash code for the given ItemSlot.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<string>(this.Item)
-                                       .AddValue<int>(this.Amount)
                                        .ToHashCode();
     }
 }

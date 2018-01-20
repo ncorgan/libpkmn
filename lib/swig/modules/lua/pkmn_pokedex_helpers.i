@@ -15,6 +15,7 @@
 
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper();
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&);
+%ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&, bool);
 %ignore pkmn::swig::pokedex_has_seen_helper::get_has_seen(const std::string&);
 %ignore pkmn::swig::pokedex_has_seen_helper::set_has_seen(const std::string&, bool);
 

@@ -465,7 +465,8 @@ using System.Runtime.InteropServices;"
         }
         else
         {
-            return (this.Cptr() == rhs.Cptr());
+            return (this.Cptr() == rhs.Cptr()) &&
+                   (this.Index() == rhs.Index());
         }
     }
 

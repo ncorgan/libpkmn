@@ -19,6 +19,10 @@ using System.Runtime.InteropServices;"
 
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper();
 %ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&);
+%ignore pkmn::swig::pokedex_has_seen_helper::pokedex_has_seen_helper(const pkmn::pokedex::sptr&, bool);
+
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::pokedex_has_seen_helper::cptr() "private";
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
@@ -86,6 +90,9 @@ using System.Runtime.InteropServices;"
 
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper();
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&);
+
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::cptr() "private";
 
 // Make C++ methods private, replace with properties for more idiomatic C#.
 
