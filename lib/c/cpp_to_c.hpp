@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -105,13 +105,15 @@ typedef struct {
 #include <pkmn-c/item_list.h>
 
 // Internal representations
-typedef struct {
+typedef struct
+{
     pkmn::item_bag::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
 } pkmn_item_bag_internal_t;
 
-typedef struct {
+typedef struct
+{
     pkmn::item_list::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
@@ -172,13 +174,6 @@ namespace pkmn { namespace c {
         }
     }
 
-    void int_list_cpp_to_c(
-        const std::vector<int>& int_list_cpp,
-        int* int_list_ptr,
-        size_t buffer_len,
-        size_t* num_ints_out
-    );
-
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
         pkmn_int_pair_t* int_pair_ptr
@@ -209,6 +204,20 @@ namespace pkmn { namespace c {
             *c_str_ptr,
             string_cpp.c_str(),
             string_cpp.size()
+        );
+    }
+
+    inline void string_cpp_to_c_realloc(
+        const std::string& string_cpp,
+        char** c_str_ptr
+    )
+    {
+        BOOST_ASSERT(c_str_ptr);
+
+        std::free(*c_str_ptr);
+        string_cpp_to_c_alloc(
+            string_cpp,
+            c_str_ptr
         );
     }
 
