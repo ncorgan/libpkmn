@@ -64,8 +64,8 @@ static void pokedex_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(all_pokemon.strings);
 
-    num_seen = (size_t)(rand() % (int)all_pokemon.length);
-    num_caught = (size_t)(rand() % (int)all_pokemon.length);
+    num_seen = (size_t)((rand() % (int)all_pokemon.length/2 + 1));
+    num_caught = (size_t)((rand() % (int)all_pokemon.length/2 + 1));
 
     for(size_t pokemon_index = 0; pokemon_index < num_seen; ++pokemon_index)
     {
