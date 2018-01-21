@@ -14,6 +14,7 @@
 #include <pkmn/item_list.hpp>
 #include <pkmn/item_slot.hpp>
 #include <pkmn/move_slot.hpp>
+#include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon.hpp>
 #include <pkmn/pokemon_box.hpp>
 #include <pkmn/pokemon_party.hpp>
@@ -103,6 +104,7 @@ typedef struct {
 
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
+#include <pkmn-c/pokedex.h>
 
 // Internal representations
 typedef struct
@@ -119,14 +121,25 @@ typedef struct
     std::string last_error;
 } pkmn_item_list_internal_t;
 
+typedef struct
+{
+    pkmn::pokedex::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokedex_internal_t;
+
 // Calls to initialize or update internal representations.
 void init_item_bag(
     pkmn::item_bag::sptr cpp_item_bag,
-    pkmn_item_bag_t* item_bag
+    pkmn_item_bag_t* item_bag_ptr
 );
 void init_item_list(
     pkmn::item_list::sptr cpp_item_list,
-    pkmn_item_list_t* item_list
+    pkmn_item_list_t* item_list_ptr
+);
+void init_pokedex(
+    pkmn::pokedex::sptr cpp_pokedex,
+    pkmn_pokedex_t* pokedex_ptr
 );
 
 namespace pkmn { namespace c {

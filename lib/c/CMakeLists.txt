@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -35,6 +35,7 @@ SET(pkmn_c_sources
     game_save.cpp
     item_bag.cpp
     item_list.cpp
+    pokedex.cpp
     pokemon.cpp
     pokemon_box.cpp
     pokemon_party.cpp
