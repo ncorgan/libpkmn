@@ -15,7 +15,7 @@
 typedef struct
 {
     char* item;
-    int amount;
+    size_t amount;
 } pkmn_item_slot_t;
 
 typedef struct

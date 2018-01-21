@@ -40,6 +40,11 @@ PKMN_C_API const char* pkmn_item_list_strerror(
     pkmn_item_list_t* item_list_ptr
 );
 
+PKMN_C_API pkmn_error_t pkmn_item_list_get_num_items(
+    pkmn_item_list_t* item_list_ptr,
+    size_t* num_items_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_item_list_at(
     pkmn_item_list_t* item_list_ptr,
     size_t position,

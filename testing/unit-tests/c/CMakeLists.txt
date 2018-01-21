@@ -36,12 +36,12 @@ ENDFOREACH(test ${c_tests})
 SET(items_test_srcs
     c_items_test/gen1_items_tests.c
     c_items_test/gen2_items_tests.c
-    c_items_test/gba_items_tests.c
-    c_items_test/gcn_items_tests.c
+    #c_items_test/gba_items_tests.c
+    #c_items_test/gcn_items_tests.c
     c_items_test/items_tests_common.c
     c_items_test/main.c
 )
-#PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
+PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
 
 SET(pokemon_test_srcs
     c_pokemon_test/gen1_pokemon_test.c

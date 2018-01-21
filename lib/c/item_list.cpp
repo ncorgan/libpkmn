@@ -106,6 +106,22 @@ const char* pkmn_item_list_strerror(
     }
 }
 
+pkmn_error_t pkmn_item_list_get_num_items(
+    pkmn_item_list_t* item_list_ptr,
+    size_t* num_items_out
+)
+{
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_items_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::item_list::sptr cpp = internal_ptr->cpp;
+
+        *num_items_out = cpp->get_num_items();
+    )
+}
+
 pkmn_error_t pkmn_item_list_at(
     pkmn_item_list_t* item_list_ptr,
     size_t position,
