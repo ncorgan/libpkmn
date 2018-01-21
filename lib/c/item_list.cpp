@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -129,7 +129,7 @@ pkmn_error_t pkmn_item_list_at(
 pkmn_error_t pkmn_item_list_add(
     pkmn_item_list_t* item_list_ptr,
     const char* item,
-    int amount
+    size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -141,7 +141,7 @@ pkmn_error_t pkmn_item_list_add(
 
         cpp->add(
             item,
-            amount
+            int(amount)
         );
     )
 }
@@ -149,7 +149,7 @@ pkmn_error_t pkmn_item_list_add(
 pkmn_error_t pkmn_item_list_remove(
     pkmn_item_list_t* item_list_ptr,
     const char* item,
-    int amount
+    size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -161,15 +161,15 @@ pkmn_error_t pkmn_item_list_remove(
 
         cpp->remove(
             item,
-            amount
+            int(amount)
         );
     )
 }
 
 pkmn_error_t pkmn_item_list_move(
     pkmn_item_list_t* item_list_ptr,
-    int old_position,
-    int new_position
+    size_t old_position,
+    size_t new_position
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -179,17 +179,17 @@ pkmn_error_t pkmn_item_list_move(
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
 
         cpp->move(
-            old_position,
-            new_position
+            int(old_position),
+            int(new_position)
         );
     )
 }
 
 pkmn_error_t pkmn_item_list_set_item(
     pkmn_item_list_t* item_list_ptr,
-    int position,
+    size_t position,
     const char* item,
-    int amount
+    size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -200,9 +200,9 @@ pkmn_error_t pkmn_item_list_set_item(
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
 
         cpp->set_item(
-            position,
+            int(position),
             item,
-            amount
+            int(amount)
         );
     )
 }

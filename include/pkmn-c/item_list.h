@@ -49,26 +49,26 @@ PKMN_C_API pkmn_error_t pkmn_item_list_at(
 PKMN_C_API pkmn_error_t pkmn_item_list_add(
     pkmn_item_list_t* item_list_ptr,
     const char* item,
-    int amount
+    size_t amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_remove(
     pkmn_item_list_t* item_list_ptr,
     const char* item,
-    int amount
+    size_t amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_move(
     pkmn_item_list_t* item_list_ptr,
-    int old_position,
-    int new_position
+    size_t old_position,
+    size_t new_position
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_set_item(
     pkmn_item_list_t* item_list_ptr,
-    int position,
+    size_t position,
     const char* item,
-    int amount
+    size_t amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_get_valid_items(

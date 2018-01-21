@@ -47,13 +47,13 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
 PKMN_C_API pkmn_error_t pkmn_item_bag_add(
     pkmn_item_bag_t* item_bag_ptr,
     const char* item,
-    int amount
+    size_t amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_bag_remove(
     pkmn_item_bag_t* item_bag_ptr,
     const char* item,
-    int amount
+    size_t amount
 );
 
 #ifdef __cplusplus

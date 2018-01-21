@@ -129,7 +129,7 @@ pkmn_error_t pkmn_item_bag_get_pocket(
 pkmn_error_t pkmn_item_bag_add(
     pkmn_item_bag_t* item_bag_ptr,
     const char* item,
-    int amount
+    size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
@@ -141,7 +141,7 @@ pkmn_error_t pkmn_item_bag_add(
 
         cpp->add(
             item,
-            amount
+            int(amount)
         );
     )
 }
@@ -149,7 +149,7 @@ pkmn_error_t pkmn_item_bag_add(
 pkmn_error_t pkmn_item_bag_remove(
     pkmn_item_bag_t* item_bag_ptr,
     const char* item,
-    int amount
+    size_t amount
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
@@ -161,7 +161,7 @@ pkmn_error_t pkmn_item_bag_remove(
 
         cpp->remove(
             item,
-            amount
+            int(amount)
         );
     )
 }
