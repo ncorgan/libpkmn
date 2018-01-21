@@ -337,7 +337,7 @@ pkmn_error_t pkmn_game_save_get_item_bag(
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         item_bag_out->_internal = reinterpret_cast<void*>(new pkmn_item_bag_internal_t);
         ITEM_BAG_INTERNAL_RCAST(item_bag_out->_internal)->cpp = handle->cpp->get_item_bag();
-        init_item_bag(item_bag_out);
+        init_item_bag(handle->cpp->get_item_bag(), item_bag_out);
     )
 }
 
@@ -351,6 +351,6 @@ pkmn_error_t pkmn_game_save_get_item_pc(
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         item_pc_out->_internal = reinterpret_cast<void*>(new pkmn_item_list_internal_t);
         ITEM_LIST_INTERNAL_RCAST(item_pc_out->_internal)->cpp = handle->cpp->get_item_pc();
-        init_item_list(item_pc_out);
+        init_item_list(handle->cpp->get_item_pc(), item_pc_out);
     )
 }

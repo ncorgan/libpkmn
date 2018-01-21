@@ -21,7 +21,7 @@ SET(c_tests
     c_calculations_test
     c_database_entry_test
     c_error_test
-    c_game_save_test
+    #c_game_save_test
     c_gui_test
     c_lists_test
     c_paths_test
@@ -41,7 +41,7 @@ SET(items_test_srcs
     c_items_test/items_tests_common.c
     c_items_test/main.c
 )
-PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
+#PKMN_ADD_C_TEST(c_items_test "${items_test_srcs}")
 
 SET(pokemon_test_srcs
     c_pokemon_test/gen1_pokemon_test.c

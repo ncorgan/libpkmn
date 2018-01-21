@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,10 +17,7 @@ typedef struct
 {
     char* name;
     char* game;
-
-    size_t num_items;
     size_t capacity;
-    pkmn_item_slots_t item_slots;
 
     void* _internal;
 } pkmn_item_list_t;
@@ -36,41 +33,52 @@ PKMN_C_API pkmn_error_t pkmn_item_list_init(
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_free(
-    pkmn_item_list_t* item_list
+    pkmn_item_list_t* item_list_ptr
 );
 
 PKMN_C_API const char* pkmn_item_list_strerror(
-    pkmn_item_list_t* item_list
+    pkmn_item_list_t* item_list_ptr
+);
+
+PKMN_C_API pkmn_error_t pkmn_item_list_at(
+    pkmn_item_list_t* item_list_ptr,
+    size_t position,
+    pkmn_item_slot_t* item_slot_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_add(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     const char* item,
     int amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_remove(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     const char* item,
     int amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_move(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     int old_position,
     int new_position
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_set_item(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     int position,
     const char* item,
     int amount
 );
 
 PKMN_C_API pkmn_error_t pkmn_item_list_get_valid_items(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     pkmn_string_list_t* valid_items_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_item_list_as_list(
+    pkmn_item_list_t* item_list_ptr,
+    pkmn_item_slots_t* item_slots_out
 );
 
 #ifdef __cplusplus

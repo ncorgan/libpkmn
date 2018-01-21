@@ -121,15 +121,11 @@ typedef struct
 
 // Calls to initialize or update internal representations.
 void init_item_bag(
-    pkmn_item_bag_t* item_bag
-);
-void update_item_bag(
+    pkmn::item_bag::sptr cpp_item_bag,
     pkmn_item_bag_t* item_bag
 );
 void init_item_list(
-    pkmn_item_list_t* item_list
-);
-void update_item_list(
+    pkmn::item_list::sptr cpp_item_list,
     pkmn_item_list_t* item_list
 );
 

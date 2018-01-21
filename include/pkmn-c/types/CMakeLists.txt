@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -10,7 +10,6 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         gender.h
         hidden_power.h
         int_pair.h
-        item_pockets.h
         item_slot.h
         levelup_move.h
         move_slot.h

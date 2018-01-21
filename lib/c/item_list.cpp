@@ -19,50 +19,28 @@
 
 // The caller is expected to be exception-safe.
 void init_item_list(
-    pkmn_item_list_t* item_list
+    pkmn::item_list::sptr cpp_item_list,
+    pkmn_item_list_t* item_list_ptr
 )
 {
-    BOOST_ASSERT(item_list);
+    BOOST_ASSERT(item_list_ptr);
+    BOOST_ASSERT(cpp_item_list.get());
 
-    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
+    item_list_ptr->_internal = new pkmn_item_list_internal_t;
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+
+    internal_ptr->cpp = cpp_item_list;
+    internal_ptr->last_error = "None";
 
     pkmn::c::string_cpp_to_c_alloc(
-        cpp->get_name(),
-        &item_list->name
+        internal_ptr->cpp->get_name(),
+        &item_list_ptr->name
     );
     pkmn::c::string_cpp_to_c_alloc(
-        cpp->get_game(),
-        &item_list->game
+        internal_ptr->cpp->get_game(),
+        &item_list_ptr->game
     );
-
-    item_list->num_items = cpp->get_num_items();
-    item_list->capacity = cpp->get_capacity();
-
-    pkmn::c::item_slots_cpp_to_c(
-        cpp->as_vector(),
-        &item_list->item_slots
-    );
-}
-
-// The caller is expected to be exception-safe.
-void update_item_list(
-    pkmn_item_list_t* item_list
-)
-{
-    BOOST_ASSERT(item_list);
-
-    pkmn::item_list::sptr cpp = INTERNAL_RCAST(item_list->_internal)->cpp;
-
-    for(size_t index = 0; index < item_list->capacity; ++index)
-    {
-        std::free(item_list->item_slots.item_slots[index].item);
-        pkmn::c::item_slot_cpp_to_c(
-            cpp->at(int(index)),
-            &item_list->item_slots.item_slots[index]
-        );
-    }
-
-    item_list->num_items = cpp->get_num_items();
+    item_list_ptr->capacity = internal_ptr->cpp->get_capacity();
 }
 
 pkmn_error_t pkmn_item_list_init(
@@ -77,49 +55,46 @@ pkmn_error_t pkmn_item_list_init(
 
     PKMN_CPP_TO_C(
         pkmn::item_list::sptr cpp = pkmn::item_list::make(name, game);
-        item_list_out->_internal = new pkmn_item_list_internal_t;
-        INTERNAL_RCAST(item_list_out->_internal)->cpp = cpp;
-        INTERNAL_RCAST(item_list_out->_internal)->last_error = "None";
 
-        init_item_list(item_list_out);
+        init_item_list(
+            cpp,
+            item_list_out
+        );
     )
 }
 
 pkmn_error_t pkmn_item_list_free(
-    pkmn_item_list_t* item_list
+    pkmn_item_list_t* item_list_ptr
 )
 {
-    PKMN_CHECK_NULL_PARAM(item_list);
+    PKMN_CHECK_NULL_PARAM(item_list_ptr);
 
-    item_list->name = NULL;
-    item_list->game = NULL;
-    item_list->num_items = 0;
-    item_list->capacity = 0;
-
-    pkmn_item_slots_free(&item_list->item_slots);
+    item_list_ptr->name = nullptr;
+    item_list_ptr->game = nullptr;
+    item_list_ptr->capacity = 0;
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_item_list_internal_t**>(&item_list->_internal)
+            reinterpret_cast<pkmn_item_list_internal_t**>(&item_list_ptr->_internal)
         );
     )
 }
 
 const char* pkmn_item_list_strerror(
-    pkmn_item_list_t* item_list
+    pkmn_item_list_t* item_list_ptr
 )
 {
-    if(!item_list)
+    if(!item_list_ptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     try
     {
-        pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+        pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
         if(!internal_ptr)
         {
-            return NULL;
+            return nullptr;
         }
 
         boost::mutex::scoped_lock lock(internal_ptr->error_mutex);
@@ -127,18 +102,38 @@ const char* pkmn_item_list_strerror(
     }
     catch(...)
     {
-        return NULL;
+        return nullptr;
     }
 }
 
+pkmn_error_t pkmn_item_list_at(
+    pkmn_item_list_t* item_list_ptr,
+    size_t position,
+    pkmn_item_slot_t* item_slot_out
+)
+{
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_slot_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::item_list::sptr cpp = internal_ptr->cpp;
+
+        pkmn::c::item_slot_cpp_to_c(
+            cpp->at(int(position)),
+            item_slot_out
+        );
+    )
+}
+
 pkmn_error_t pkmn_item_list_add(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     const char* item,
     int amount
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -148,19 +143,17 @@ pkmn_error_t pkmn_item_list_add(
             item,
             amount
         );
-
-        update_item_list(item_list);
     )
 }
 
 pkmn_error_t pkmn_item_list_remove(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     const char* item,
     int amount
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -170,19 +163,17 @@ pkmn_error_t pkmn_item_list_remove(
             item,
             amount
         );
-
-        update_item_list(item_list);
     )
 }
 
 pkmn_error_t pkmn_item_list_move(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     int old_position,
     int new_position
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
@@ -191,20 +182,18 @@ pkmn_error_t pkmn_item_list_move(
             old_position,
             new_position
         );
-
-        update_item_list(item_list);
     )
 }
 
 pkmn_error_t pkmn_item_list_set_item(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     int position,
     const char* item,
     int amount
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -215,18 +204,16 @@ pkmn_error_t pkmn_item_list_set_item(
             item,
             amount
         );
-
-        update_item_list(item_list);
     )
 }
 
 pkmn_error_t pkmn_item_list_get_valid_items(
-    pkmn_item_list_t* item_list,
+    pkmn_item_list_t* item_list_ptr,
     pkmn_string_list_t* valid_items_out
 )
 {
-    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list->_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(valid_items_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -235,6 +222,25 @@ pkmn_error_t pkmn_item_list_get_valid_items(
         pkmn::c::string_list_cpp_to_c(
             cpp->get_valid_items(),
             valid_items_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_item_list_as_list(
+    pkmn_item_list_t* item_list_ptr,
+    pkmn_item_slots_t* item_slots_out
+)
+{
+    PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
+    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_slots_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::item_list::sptr cpp = internal_ptr->cpp;
+
+        pkmn::c::item_slots_cpp_to_c(
+            cpp->as_vector(),
+            item_slots_out
         );
     )
 }

@@ -472,14 +472,14 @@ static void item_bag_error_test() {
     error = pkmn_item_bag_get_pocket(
                 NULL, // item_bag
                 "Items",
-                &item_list_ptr
+                item_list_ptr
             );
     TEST_NULL_POINTER_RETURN("item_bag");
 
     error = pkmn_item_bag_get_pocket(
                 &item_bag,
                 NULL, // pocket_name
-                &item_list_ptr
+                item_list_ptr
             );
     TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "pocket_name");
 
