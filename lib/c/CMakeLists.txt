@@ -37,6 +37,7 @@ SET(pkmn_c_sources
     item_list.cpp
     pokedex.cpp
     pokemon.cpp
+    pokemon2.cpp
     pokemon_box.cpp
     pokemon_party.cpp
     pokemon_pc.cpp

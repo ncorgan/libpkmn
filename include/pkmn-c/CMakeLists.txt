@@ -26,6 +26,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         item_list.h
         pokedex.h
         pokemon.h
+        pokemon2.h
         pokemon_box.h
         pokemon_party.h
         pokemon_pc.h

@@ -15,6 +15,7 @@
 #include <pkmn-c/item_list.h>
 #include <pkmn-c/pokedex.h>
 #include <pkmn-c/pokemon.h>
+#include <pkmn-c/pokemon2.h>
 #include <pkmn-c/pokemon_box.h>
 #include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>

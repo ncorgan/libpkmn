@@ -105,6 +105,7 @@ typedef struct {
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
 #include <pkmn-c/pokedex.h>
+#include <pkmn-c/pokemon2.h>
 
 // Internal representations
 typedef struct
@@ -120,6 +121,13 @@ typedef struct
     boost::mutex error_mutex;
     std::string last_error;
 } pkmn_item_list_internal_t;
+
+typedef struct
+{
+    pkmn::pokemon::sptr cpp;
+    boost::mutex error_mutex;
+    std::string last_error;
+} pkmn_pokemon_internal_t;
 
 typedef struct
 {
