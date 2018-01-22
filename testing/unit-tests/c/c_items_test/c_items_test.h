@@ -62,6 +62,10 @@ void test_item_list_add_remove(
     size_t num_items
 );
 
+void test_item_bag_pocket_names(
+    pkmn_item_bag_t* item_bag_ptr
+);
+
 #define GEN1_TEST_FCNS(game) \
     void test_gen1_item_pocket_ ## game (); \
     void test_gen1_item_pc_ ## game (); \

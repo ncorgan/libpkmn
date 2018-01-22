@@ -524,3 +524,39 @@ void test_item_list_add_remove(
     error = pkmn_item_slots_free(&item_slots);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
+
+void test_item_bag_pocket_names(
+    pkmn_item_bag_t* item_bag_ptr
+)
+{
+    TEST_ASSERT_NOT_NULL(item_bag_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    for(size_t pocket_index = 0; pocket_index < item_bag_ptr->pocket_names.length; ++pocket_index)
+    {
+        pkmn_item_list_t pocket =
+        {
+            .name = NULL,
+            .game = NULL,
+            .capacity = 0,
+            ._internal = NULL
+        };
+
+        error = pkmn_item_bag_get_pocket(
+                    item_bag_ptr,
+                    item_bag_ptr->pocket_names.strings[pocket_index],
+                    &pocket
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_NOT_NULL(pocket._internal);
+        TEST_ASSERT_EQUAL_STRING(
+            item_bag_ptr->pocket_names.strings[pocket_index],
+            pocket.name
+        );
+        TEST_ASSERT_EQUAL_STRING(item_bag_ptr->game, pocket.game);
+
+        error = pkmn_item_list_free(&pocket);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+}

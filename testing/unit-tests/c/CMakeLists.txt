@@ -37,8 +37,8 @@ ENDFOREACH(test ${c_tests})
 SET(items_test_srcs
     c_items_test/gen1_items_tests.c
     c_items_test/gen2_items_tests.c
-    #c_items_test/gba_items_tests.c
-    #c_items_test/gcn_items_tests.c
+    c_items_test/gba_items_tests.c
+    c_items_test/gcn_items_tests.c
     c_items_test/items_tests_common.c
     c_items_test/main.c
 )

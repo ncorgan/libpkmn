@@ -555,33 +555,7 @@ static void gen2_item_bag_test(
     TEST_ASSERT_NOT_NULL(item_bag.pocket_names.strings);
     TEST_ASSERT_EQUAL(4, item_bag.pocket_names.length);
 
-    const char* POCKET_NAMES[] = {"Items", "KeyItems", "Balls", "TM/HM"};
-    for(size_t pocket_index = 0; pocket_index < 4; ++pocket_index)
-    {
-        pkmn_item_list_t pocket =
-        {
-            .name = NULL,
-            .game = NULL,
-            .capacity = 0,
-            ._internal = NULL
-        };
-
-        error = pkmn_item_bag_get_pocket(
-                    &item_bag,
-                    POCKET_NAMES[pocket_index],
-                    &pocket
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(pocket._internal);
-        TEST_ASSERT_EQUAL_STRING(
-            pocket.name,
-            POCKET_NAMES[pocket_index]
-        );
-        TEST_ASSERT_EQUAL_STRING(item_bag.game, pocket.game);
-
-        error = pkmn_item_list_free(&pocket);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    }
+    test_item_bag_pocket_names(&item_bag);
 
     pkmn_item_list_t item_pocket;
     pkmn_item_list_t key_item_pocket;
@@ -715,6 +689,23 @@ static void gen2_item_bag_test(
         WRONG_GENERATION_ALL_POCKET_ITEM_NAMES,
         4
     );
+
+    // Free pockets and bag.
+
+    error = pkmn_item_list_free(&item_pocket);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_item_list_free(&key_item_pocket);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_item_list_free(&ball_pocket);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_item_list_free(&tmhm_pocket);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_item_bag_free(&item_bag);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 
 #define GEN2_ITEM_TESTS(test_game) \
