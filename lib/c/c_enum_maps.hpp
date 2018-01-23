@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -36,6 +36,18 @@ namespace pkmn { namespace c {
         ("Special",         PKMN_STAT_SPECIAL)
         ("Special Attack",  PKMN_STAT_SPATK)
         ("Special Defense", PKMN_STAT_SPDEF)
+    ;
+
+    typedef boost::bimap<std::string, pkmn_contest_stat_t> contest_stat_bimap_t;
+    static const contest_stat_bimap_t CONTEST_STAT_BIMAP =
+    boost::assign::list_of<contest_stat_bimap_t::relation>
+        ("Cool",   PKMN_CONTEST_STAT_COOL)
+        ("Beauty", PKMN_CONTEST_STAT_BEAUTY)
+        ("Cute",   PKMN_CONTEST_STAT_CUTE)
+        ("Smart",  PKMN_CONTEST_STAT_SMART)
+        ("Tough",  PKMN_CONTEST_STAT_TOUGH)
+        ("Feel",   PKMN_CONTEST_STAT_FEEL)
+        ("Sheen",  PKMN_CONTEST_STAT_SHEEN)
     ;
 
 }

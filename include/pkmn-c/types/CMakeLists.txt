@@ -7,6 +7,7 @@
 
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
+        attribute_names.h
         gender.h
         hidden_power.h
         int_pair.h
@@ -14,6 +15,8 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         levelup_move.h
         move_slot.h
         natural_gift.h
+        pokemon_filepaths.h
+        pokemon_origin_info.h
         pokemon_info.h
         pokemon_list.h
         pokemon_box_list.h

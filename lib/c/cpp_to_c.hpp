@@ -127,6 +127,8 @@ typedef struct
     pkmn::pokemon::sptr cpp;
     boost::mutex error_mutex;
     std::string last_error;
+
+    int generation;
 } pkmn_pokemon_internal_t;
 
 typedef struct
