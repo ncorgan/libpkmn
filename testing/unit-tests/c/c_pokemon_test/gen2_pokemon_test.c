@@ -54,14 +54,14 @@ static void gen2_pokemon_test(
         &test_values
     );
 
-    pkmn_gender_t gender = PKMN_GENDERLESS;
+    pkmn_gender_t gender = PKMN_GENDER_GENDERLESS;
     int IV = 0;
     bool is_shiny = false;
 
     // Gender affects IVs, so make sure the abstraction reflects that.
     error = pkmn_pokemon_set_gender(
                 pokemon,
-                PKMN_MALE
+                PKMN_GENDER_MALE
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_get_IV(
@@ -83,7 +83,7 @@ static void gen2_pokemon_test(
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
     error = pkmn_pokemon_set_IV(
                 pokemon,
                 "Attack",
@@ -95,7 +95,7 @@ static void gen2_pokemon_test(
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
     error = pkmn_pokemon_set_shininess(

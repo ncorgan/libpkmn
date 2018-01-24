@@ -39,7 +39,7 @@ void test_3gpkm() {
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_GENDERLESS
+        .trainer_gender = PKMN_GENDER_GENDERLESS
     };
 
     snprintf(
@@ -102,7 +102,7 @@ void test_3gpkm() {
     TEST_ASSERT_EQUAL(61415, trainer_info.trainer_id.public_id);
     TEST_ASSERT_EQUAL(3417, trainer_info.trainer_id.secret_id);
     TEST_ASSERT_EQUAL(223997927, trainer_info.trainer_id.id);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_info.trainer_gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, trainer_info.trainer_gender);
 
     bool is_shiny = false;
     error = pkmn_pokemon_is_shiny(

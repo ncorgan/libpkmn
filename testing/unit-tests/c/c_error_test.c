@@ -31,7 +31,7 @@ static int dummy_int = 0;
 static size_t dummy_size_t = 0;
 static uint32_t dummy_uint32_t = 0;
 static float dummy_float = 0;
-static pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
+static pkmn_gender_t dummy_pkmn_gender_t = PKMN_GENDER_MALE;
 static pkmn_string_list_t dummy_pkmn_string_list_t = { NULL, 0 };
 static pkmn_pokemon_handle_t dummy_pokemon = NULL;
 
@@ -2458,7 +2458,7 @@ static void calculations_form_error_test() {
  * <pkmn-c/calculations/gender.h>
  */
 static void calculations_gender_error_test() {
-    pkmn_gender_t dummy_pkmn_gender_t = PKMN_MALE;
+    pkmn_gender_t dummy_pkmn_gender_t = PKMN_GENDER_MALE;
 
     /*
      * pkmn_calculations_gen2_pokemon_gender
@@ -2526,7 +2526,7 @@ static void calculations_personality_error_test() {
                 0,
                 false,
                 strbuffer,
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 strbuffer,
                 &dummy_uint32_t
             );
@@ -2537,7 +2537,7 @@ static void calculations_personality_error_test() {
                 0,
                 false,
                 NULL, // ability
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 strbuffer,
                 &dummy_uint32_t
             );
@@ -2548,7 +2548,7 @@ static void calculations_personality_error_test() {
                 0,
                 false,
                 strbuffer,
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 NULL, // nature
                 &dummy_uint32_t
             );
@@ -2559,7 +2559,7 @@ static void calculations_personality_error_test() {
                 0,
                 false,
                 strbuffer,
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 strbuffer,
                 NULL // personality_out
             );

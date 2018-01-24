@@ -44,7 +44,7 @@ static void check_initial_values(
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_GENDERLESS
+        .trainer_gender = PKMN_GENDER_GENDERLESS
     };
 
     int generation = game_to_generation(game);
@@ -121,7 +121,7 @@ static void check_initial_values(
             trainer_info.trainer_id.id
         );
     }
-    TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, trainer_info.trainer_gender);
 
     if(generation >= 2) {
         error = pkmn_pokemon_get_held_item(
@@ -602,7 +602,7 @@ static void test_image_filepaths(
     TEST_ASSERT_TRUE(file_exists(strbuffer));
 
     if(generation >= 2) {
-        pkmn_gender_t genders[] = {PKMN_MALE, PKMN_FEMALE};
+        pkmn_gender_t genders[] = {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE};
         bool shininess[] = {false, true};
 
         for(int i = 0; i < 2; ++i) {
@@ -1510,7 +1510,7 @@ static void test_setting_trainer_info(
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_GENDERLESS
+        .trainer_gender = PKMN_GENDER_GENDERLESS
     };
     pkmn_trainer_info_t setting_trainer_info =
     {
@@ -1520,7 +1520,7 @@ static void test_setting_trainer_info(
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_FEMALE
+        .trainer_gender = PKMN_GENDER_FEMALE
     };
 
     error = pkmn_pokemon_get_game(

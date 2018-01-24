@@ -21,9 +21,9 @@ namespace pkmn { namespace c {
     typedef boost::bimap<std::string, pkmn_gender_t> gender_bimap_t;
     static const gender_bimap_t GENDER_BIMAP =
     boost::assign::list_of<gender_bimap_t::relation>
-        ("Male",       PKMN_MALE)
-        ("Female",     PKMN_FEMALE)
-        ("Genderless", PKMN_GENDERLESS)
+        ("Male",       PKMN_GENDER_MALE)
+        ("Female",     PKMN_GENDER_FEMALE)
+        ("Genderless", PKMN_GENDER_GENDERLESS)
     ;
 
     typedef boost::bimap<std::string, pkmn_stat_t> stat_bimap_t;

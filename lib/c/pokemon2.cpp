@@ -229,7 +229,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_info(
         }
         else
         {
-            pokemon_info.gender = PKMN_MALE;
+            pokemon_info.gender = PKMN_GENDER_MALE;
             pokemon_info.is_egg = false;
 
             pkmn::c::string_cpp_to_c_alloc(
@@ -399,7 +399,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
         }
         else
         {
-            pokemon_origin_info.trainer_info.gender = PKMN_MALE;
+            pokemon_origin_info.trainer_info.gender = PKMN_GENDER_MALE;
 
             pkmn::c::string_cpp_to_c_alloc(
                 "None",

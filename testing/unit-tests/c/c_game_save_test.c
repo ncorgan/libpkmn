@@ -120,7 +120,7 @@ static void game_save_test_trainer_id(
         {
             .id = 0
         },
-        .trainer_gender = PKMN_FEMALE
+        .trainer_gender = PKMN_GENDER_FEMALE
     };
     error = pkmn_game_save_get_trainer_info(
                 game_save,
@@ -149,7 +149,7 @@ static void game_save_test_trainer_info(
         {
             .id = 0
         },
-        .trainer_gender = PKMN_FEMALE
+        .trainer_gender = PKMN_GENDER_FEMALE
     };
 
     error = pkmn_game_save_get_trainer_info(
@@ -224,11 +224,11 @@ static void game_save_test_trainer_info(
 
     if(is_male_only(game))
     {
-        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
+        TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, trainer_info.trainer_gender);
     }
     else
     {
-        trainer_info.trainer_gender = PKMN_MALE;
+        trainer_info.trainer_gender = PKMN_GENDER_MALE;
         error = pkmn_game_save_set_trainer_info(
                     game_save,
                     &trainer_info
@@ -239,9 +239,9 @@ static void game_save_test_trainer_info(
                     &trainer_info
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_MALE, trainer_info.trainer_gender);
+        TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, trainer_info.trainer_gender);
 
-        trainer_info.trainer_gender = PKMN_FEMALE;
+        trainer_info.trainer_gender = PKMN_GENDER_FEMALE;
         error = pkmn_game_save_set_trainer_info(
                     game_save,
                     &trainer_info
@@ -252,9 +252,9 @@ static void game_save_test_trainer_info(
                     &trainer_info
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(PKMN_FEMALE, trainer_info.trainer_gender);
+        TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, trainer_info.trainer_gender);
 
-        trainer_info.trainer_gender = PKMN_GENDERLESS;
+        trainer_info.trainer_gender = PKMN_GENDER_GENDERLESS;
         error = pkmn_game_save_set_trainer_info(
                     game_save,
                     &trainer_info
@@ -752,7 +752,7 @@ static void compare_pokemon(
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_MALE
+        .trainer_gender = PKMN_GENDER_MALE
     };
     pkmn_trainer_info_t pokemon2_original_trainer_info =
     {
@@ -762,7 +762,7 @@ static void compare_pokemon(
             .public_id = 0,
             .secret_id = 0
         },
-        .trainer_gender = PKMN_MALE
+        .trainer_gender = PKMN_GENDER_MALE
     };
 
     error = pkmn_pokemon_get_species(

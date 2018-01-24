@@ -39,9 +39,9 @@ static const std::unordered_map<std::string, pkmn_game_save_type_t> GAME_SAVE_TY
 
 typedef boost::bimap<std::string, pkmn_gender_t> gender_bimap_t;
 static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-    ("Male",       PKMN_MALE)
-    ("Female",     PKMN_FEMALE)
-    ("Genderless", PKMN_GENDERLESS)
+    ("Male",       PKMN_GENDER_MALE)
+    ("Female",     PKMN_GENDER_FEMALE)
+    ("Genderless", PKMN_GENDER_GENDERLESS)
 ;
 
 static const std::vector<std::string> MALE_ONLY_GAMES = boost::assign::list_of

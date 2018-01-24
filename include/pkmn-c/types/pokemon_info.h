@@ -51,7 +51,7 @@ static inline pkmn_error_t pkmn_pokemon_info_free(
     free(pokemon_info_ptr->nickname);
     pokemon_info_ptr->nickname = NULL;
 
-    pokemon_info_ptr->gender = PKMN_MALE;
+    pokemon_info_ptr->gender = PKMN_GENDER_MALE;
     pokemon_info_ptr->is_egg = false;
 
     free(pokemon_info_ptr->held_item);

@@ -19,7 +19,7 @@ static pkmn_error_t error;
 static int int_result = 0;
 static float float_result = 0;
 static bool bool_result = false;
-static pkmn_gender_t pkmn_gender_t_result = PKMN_MALE;
+static pkmn_gender_t pkmn_gender_t_result = PKMN_GENDER_MALE;
 static pkmn_hidden_power_t pkmn_hidden_power_t_result = { NULL, 0 };
 static pkmn_spinda_spots_t pkmn_spinda_spots_t_result;
 
@@ -1523,13 +1523,13 @@ static void gen2_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Nidorino", 15,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
 
     /*
      * 25% male, 75% female
@@ -1539,13 +1539,13 @@ static void gen2_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Vulpix", 12,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
 
     /*
      * All female
@@ -1555,13 +1555,13 @@ static void gen2_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Nidorina", 15,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
 
     /*
      * Genderless
@@ -1571,13 +1571,13 @@ static void gen2_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, pkmn_gender_t_result);
     error = pkmn_calculations_gen2_pokemon_gender(
                 "Magnemite", 15,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, pkmn_gender_t_result);
 }
 
 static void modern_gender_test() {
@@ -1602,13 +1602,13 @@ static void modern_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Nidorino", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
 
     /*
      * 25% male, 75% female
@@ -1618,13 +1618,13 @@ static void modern_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Vulpix", 191,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, pkmn_gender_t_result);
 
     /*
      * All female
@@ -1634,13 +1634,13 @@ static void modern_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Nidorina", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, pkmn_gender_t_result);
 
     /*
      * Genderless
@@ -1650,13 +1650,13 @@ static void modern_gender_test() {
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, pkmn_gender_t_result);
     error = pkmn_calculations_modern_pokemon_gender(
                 "Magnemite", 0xFFFFFFFF,
                 &pkmn_gender_t_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, pkmn_gender_t_result);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, pkmn_gender_t_result);
 }
 
 static void gen2_hidden_power_test() {
@@ -1979,7 +1979,7 @@ static void nature_test()
 static void personality_test() {
     uint32_t personality = 0;
     bool shiny = false;
-    pkmn_gender_t gender = PKMN_GENDERLESS;
+    pkmn_gender_t gender = PKMN_GENDER_GENDERLESS;
 
     // Test invalid ability.
     error = pkmn_calculations_generate_personality(
@@ -1987,7 +1987,7 @@ static void personality_test() {
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Torrent",
-                PKMN_MALE,
+                PKMN_GENDER_MALE,
                 "Quiet",
                 &personality
             );
@@ -1999,7 +1999,7 @@ static void personality_test() {
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 "Quiet",
                 &personality
             );
@@ -2011,7 +2011,7 @@ static void personality_test() {
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
-                PKMN_MALE,
+                PKMN_GENDER_MALE,
                 "Not a nature",
                 &personality
             );
@@ -2023,7 +2023,7 @@ static void personality_test() {
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
-                PKMN_FEMALE,
+                PKMN_GENDER_FEMALE,
                 "Quiet",
                 &personality
             );
@@ -2044,14 +2044,14 @@ static void personality_test() {
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_FEMALE, gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
 
     error = pkmn_calculations_generate_personality(
                 "Charmander",
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
-                PKMN_MALE,
+                PKMN_GENDER_MALE,
                 "Quiet",
                 &personality
             );
@@ -2072,14 +2072,14 @@ static void personality_test() {
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_MALE, gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
     error = pkmn_calculations_generate_personality(
                 "Magnemite",
                 PKMN_DEFAULT_TRAINER_ID,
                 true,
                 "Magnet Pull",
-                PKMN_GENDERLESS,
+                PKMN_GENDER_GENDERLESS,
                 "Quiet",
                 &personality
             );
@@ -2100,7 +2100,7 @@ static void personality_test() {
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(PKMN_GENDERLESS, gender);
+    TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, gender);
 }
 
 static void gen2_shiny_test() {

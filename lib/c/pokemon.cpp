@@ -25,9 +25,9 @@ static const std::unordered_map<std::string, int> GAME_GENERATIONS = boost::assi
 
 typedef boost::bimap<std::string, pkmn_gender_t> gender_bimap_t;
 static const gender_bimap_t GENDER_BIMAP = boost::assign::list_of<gender_bimap_t::relation>
-    ("Male",       PKMN_MALE)
-    ("Female",     PKMN_FEMALE)
-    ("Genderless", PKMN_GENDERLESS)
+    ("Male",       PKMN_GENDER_MALE)
+    ("Female",     PKMN_GENDER_FEMALE)
+    ("Genderless", PKMN_GENDER_GENDERLESS)
 ;
 
 pkmn_error_t pkmn_pokemon_make(
@@ -311,15 +311,15 @@ pkmn_error_t pkmn_pokemon_set_gender(
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
         switch(gender) {
-            case PKMN_MALE:
+            case PKMN_GENDER_MALE:
                 handle->cpp->set_gender("Male");
                 break;
 
-            case PKMN_FEMALE:
+            case PKMN_GENDER_FEMALE:
                 handle->cpp->set_gender("Female");
                 break;
 
-            case PKMN_GENDERLESS:
+            case PKMN_GENDER_GENDERLESS:
                 handle->cpp->set_gender("Genderless");
                 break;
 

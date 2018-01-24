@@ -63,7 +63,7 @@ static inline pkmn_error_t pkmn_trainer_info_free(
     trainer_info_ptr->name = NULL;
 
     trainer_info_ptr->id.id = 0U;
-    trainer_info_ptr->gender = PKMN_MALE;
+    trainer_info_ptr->gender = PKMN_GENDER_MALE;
 }
 
 #ifdef __cplusplus
