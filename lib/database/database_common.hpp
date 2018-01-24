@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -27,8 +27,10 @@ namespace pkmn { namespace database {
 
     PKMN_INLINE void get_connection(
         sptr &db
-    ) {
-        if(!db) {
+    )
+    {
+        if(!db)
+        {
             db = _get_connection();
         }
     }
@@ -40,15 +42,28 @@ namespace pkmn { namespace database {
     template <typename ret_type>
     ret_type query_db(
         sptr db,
-        const char* query
-    ) {
+        const char* query,
+        const std::string& error_message
+    )
+    {
         SQLite::Statement stmt((*db), query);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             return (ret_type)stmt.getColumn(0);
-        } else {
-            std::ostringstream stream;
-            stream << "Invalid SQLite query: \"" << query << "\"";
-            throw std::invalid_argument(stream.str());
+        }
+        else
+        {
+            if(error_message.empty())
+            {
+                std::ostringstream stream;
+                stream << "Internal error:" << std::endl
+                       << "Invalid SQLite query: \"" << query << "\"";
+                throw std::invalid_argument(stream.str());
+            }
+            else
+            {
+                throw std::invalid_argument(error_message);
+            }
         }
     }
 
@@ -56,17 +71,30 @@ namespace pkmn { namespace database {
     ret_type query_db_bind1(
         sptr db,
         const char* query,
-        bind1_type bind1
-    ) {
+        bind1_type bind1,
+        const std::string& error_message = ""
+    )
+    {
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             return (ret_type)stmt.getColumn(0);
-        } else {
-            std::ostringstream stream;
-            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
-                   << " * Value 1 = " << bind1;
-            throw std::invalid_argument(stream.str());
+        }
+        else
+        {
+            if(error_message.empty())
+            {
+                std::ostringstream stream;
+                stream << "Internal error:" << std::endl
+                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                       << " * Value 1 = " << bind1;
+                throw std::invalid_argument(stream.str());
+            }
+            else
+            {
+                throw std::invalid_argument(error_message);
+            }
         }
     }
 
@@ -75,19 +103,32 @@ namespace pkmn { namespace database {
         sptr db,
         const char* query,
         bind1_type bind1,
-        bind2_type bind2
-    ) {
+        bind2_type bind2,
+        const std::string& error_message = ""
+    )
+    {
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             return (ret_type)stmt.getColumn(0);
-        } else {
-            std::ostringstream stream;
-            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
-                   << " * Value 1 = " << bind1 << std::endl
-                   << " * Value 2 = " << bind2;
-            throw std::invalid_argument(stream.str());
+        }
+        else
+        {
+            if(error_message.empty())
+            {
+                std::ostringstream stream;
+                stream << "Internal error:" << std::endl
+                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                       << " * Value 1 = " << bind1 << std::endl
+                       << " * Value 2 = " << bind2;
+                throw std::invalid_argument(stream.str());
+            }
+            else
+            {
+                throw std::invalid_argument(error_message);
+            }
         }
     }
 
@@ -97,21 +138,34 @@ namespace pkmn { namespace database {
         const char* query,
         bind1_type bind1,
         bind2_type bind2,
-        bind3_type bind3
-    ) {
+        bind3_type bind3,
+        const std::string& error_message = ""
+    )
+    {
         SQLite::Statement stmt((*db), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             return (ret_type)stmt.getColumn(0);
-        } else {
-            std::ostringstream stream;
-            stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
-                   << " * Value 1 = " << bind1 << std::endl
-                   << " * Value 2 = " << bind2 << std::endl
-                   << " * Value 3 = " << bind3 << std::endl;
-            throw std::invalid_argument(stream.str());
+        }
+        else
+        {
+            if(error_message.empty())
+            {
+                std::ostringstream stream;
+                stream << "Internal error:" << std::endl
+                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                       << " * Value 1 = " << bind1 << std::endl
+                       << " * Value 2 = " << bind2 << std::endl
+                       << " * Value 3 = " << bind3 << std::endl;
+                throw std::invalid_argument(stream.str());
+            }
+            else
+            {
+                throw std::invalid_argument(error_message);
+            }
         }
     }
 

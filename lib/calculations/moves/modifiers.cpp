@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,8 @@
 #include <pkmn/calculations/moves/modifiers.hpp>
 
 #include "../database/database_common.hpp"
+
+#include <boost/format.hpp>
 
 namespace pkmn { namespace calculations {
 
@@ -94,8 +96,12 @@ namespace pkmn { namespace calculations {
         }
         else
         {
+            std::string error_message = str(boost::format("Invalid type(s): %s, %s")
+                                            % attacking_type.c_str()
+                                            % defending_type.c_str());
+
             damage_modifier = float(pkmn::database::query_db_bind2<int, const std::string&, const std::string&>(
-                                   _db, query, attacking_type, defending_type
+                                   _db, query, attacking_type, defending_type, error_message
                                )) / 100.0f;
         }
 

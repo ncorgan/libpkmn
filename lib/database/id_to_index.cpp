@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,8 +8,10 @@
 #include "../misc_common.hpp"
 #include "database_common.hpp"
 #include "id_to_index.hpp"
+#include "id_to_string.hpp"
 
 #include <boost/config.hpp>
+#include <boost/format.hpp>
 
 #include <stdexcept>
 
@@ -75,6 +77,9 @@ namespace pkmn { namespace database {
             "SELECT game_index FROM item_game_indices WHERE item_id=? "
             "AND generation_id=?";
 
+        std::string error_message = "Invalid item: ";
+        error_message += item_id_to_name(item_id, game_id_to_version_group(game_id));
+
         int ret = 0;
         if(pkmn::database::maybe_query_db_bind2<int, int, int>(
                _db, main_query, ret, item_id, generation
@@ -100,10 +105,11 @@ namespace pkmn { namespace database {
                         "WHERE item_id=? AND colosseum=?";
 
                     ret = pkmn::database::query_db_bind2<int, int, int>(
-                              _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                              _db, gcn_query, item_id, (colosseum ? 1 : 0),
+                              error_message
                           );
                 } else {
-                    throw std::invalid_argument("This item did not exist in this game.");
+                    throw std::invalid_argument(error_message);
                 }
             }
         } else {
@@ -115,10 +121,11 @@ namespace pkmn { namespace database {
                     "WHERE item_id=? AND colosseum=?";
 
                 ret = pkmn::database::query_db_bind2<int, int, int>(
-                          _db, gcn_query, item_id, (colosseum ? 1 : 0)
+                          _db, gcn_query, item_id, (colosseum ? 1 : 0),
+                          error_message
                       );
             } else {
-                throw std::invalid_argument("This item did not exist in this game.");
+                throw std::invalid_argument(error_message);
             }
         }
 
@@ -138,6 +145,9 @@ namespace pkmn { namespace database {
 
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
 
+        std::string error_message = str(boost::format("Internal error: invalid index %d for game %d.")
+                                        % item_index % game_id);
+
         /*
          * Make sure the item index is valid before attempting to query the
          * database. This check may not succeed for Gamecube games.
@@ -145,7 +155,7 @@ namespace pkmn { namespace database {
         if(not item_index_valid(item_index, version_group_id) and
            not game_is_gamecube(game_id)
         ) {
-            throw std::invalid_argument("Invalid item index.");
+            throw std::invalid_argument(error_message);
         }
 
         /*
@@ -175,7 +185,7 @@ namespace pkmn { namespace database {
                           _db, gcn_query, item_index, (colosseum ? 1 : 0)
                       );
             } else {
-                throw std::invalid_argument("Invalid item index.");
+                throw std::invalid_argument(error_message);
             }
         }
 

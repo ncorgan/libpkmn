@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -133,16 +133,21 @@ namespace pkmn {
 
     // Skips creating item entry
     static std::string get_pocket_name(
-        const std::string &item_name,
+        const std::string& item_name,
         int version_group_id
-    ) {
+    )
+    {
         std::string ret;
         if(not pkmn::database::maybe_query_db_bind2<std::string, int, const std::string&>(
                    _db, list_name_query_with_old_item_name, ret, version_group_id, item_name
            ))
         {
+            std::string error_message = "Invalid item: ";
+            error_message += item_name;
+
             ret = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                       _db, list_name_query, version_group_id, item_name
+                       _db, list_name_query, version_group_id, item_name,
+                       error_message
                   );
         }
 
