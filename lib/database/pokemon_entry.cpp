@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "misc_common.hpp"
+
 #include "database_common.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
@@ -794,12 +796,24 @@ namespace pkmn { namespace database {
 
     int pokemon_entry::get_experience_at_level(
         int level
-    ) const {
+    ) const
+    {
+        // Allow for glitch Pokémon
+        pkmn::enforce_bounds(
+            "Level",
+            level,
+            0,
+            255
+        );
+
         int ret = 0;
 
-        if(_none or _invalid) {
+        if(_none or _invalid)
+        {
             ret = -1;
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT experience.experience FROM pokemon_species "
                 "INNER JOIN experience ON pokemon_species.growth_rate_id=experience.growth_rate_id "

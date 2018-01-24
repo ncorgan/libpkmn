@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/exception.hpp>
+#include "exception_internal.hpp"
 
 #include <pkmn/calculations/moves/critical_hit.hpp>
 

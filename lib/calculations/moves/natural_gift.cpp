@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/moves/natural_gift.hpp>
 
+#include "exception_internal.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
