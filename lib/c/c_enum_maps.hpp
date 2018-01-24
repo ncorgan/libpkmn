@@ -8,6 +8,7 @@
 #ifndef PKMN_C_ENUM_MAPS_HPP
 #define PKMN_C_ENUM_MAPS_HPP
 
+#include <pkmn-c/types/condition.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/stats.h>
 
@@ -48,6 +49,18 @@ namespace pkmn { namespace c {
         ("Tough",  PKMN_CONTEST_STAT_TOUGH)
         ("Feel",   PKMN_CONTEST_STAT_FEEL)
         ("Sheen",  PKMN_CONTEST_STAT_SHEEN)
+    ;
+
+    typedef boost::bimap<std::string, pkmn_condition_t> condition_bimap_t;
+    static const condition_bimap_t CONDITION_BIMAP =
+    boost::assign::list_of<condition_bimap_t::relation>
+        ("None",       PKMN_CONDITION_NONE)
+        ("Asleep",     PKMN_CONDITION_ASLEEP)
+        ("Poison",     PKMN_CONDITION_POISON)
+        ("Burn",       PKMN_CONDITION_BURN)
+        ("Frozen",     PKMN_CONDITION_FROZEN)
+        ("Paralysis",  PKMN_CONDITION_PARALYSIS)
+        ("Bad Poison", PKMN_CONDITION_BAD_POISON)
     ;
 
 }

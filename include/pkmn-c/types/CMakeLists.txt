@@ -8,6 +8,7 @@
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_types_headers
         attribute_names.h
+        condition.h
         gender.h
         hidden_power.h
         int_pair.h

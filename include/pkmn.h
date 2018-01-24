@@ -45,6 +45,7 @@
 #include <pkmn-c/gui/spinda.h>
 
 #include <pkmn-c/types/attribute_names.h>
+#include <pkmn-c/types/condition.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
