@@ -8,6 +8,7 @@
 #include "c_enum_maps.hpp"
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
+#include "exception_internal.hpp"
 
 #include "private_exports.hpp"
 
