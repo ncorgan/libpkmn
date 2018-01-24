@@ -8,7 +8,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/moves/power.hpp>
 
-#include "../database/database_common.hpp"
+#include "exception_internal.hpp"
+#include "database/database_common.hpp"
 
 namespace pkmn { namespace calculations {
 

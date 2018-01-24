@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include <pkmn/exception.hpp>
 #include <pkmn/calculations/moves/modifiers.hpp>
 
-#include "../database/database_common.hpp"
+#include "exception_internal.hpp"
+#include "database/database_common.hpp"
 
 #include <boost/format.hpp>
 

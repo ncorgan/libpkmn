@@ -5,7 +5,9 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "misc_common.hpp"
+
 #include "database_common.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
