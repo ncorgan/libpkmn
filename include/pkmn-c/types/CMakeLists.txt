@@ -16,9 +16,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         levelup_move.h
         move_slot.h
         natural_gift.h
-        pokemon_filepaths.h
-        pokemon_origin_info.h
-        pokemon_info.h
+        pokemon_info_structs.h
         pokemon_list.h
         pokemon_box_list.h
         stats.h
