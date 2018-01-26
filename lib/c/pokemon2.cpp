@@ -693,35 +693,35 @@ pkmn_error_t pkmn_pokemon2_set_move_pp(
 // Stats
 
 // The caller is expected to be exception-safe.
-template <typename enum_type>
-static void copy_stat_map_to_buffer(
-    const std::map<std::string, int>& stat_map,
-    const boost::bimap<std::string, enum_type>& stat_enum_bimap,
-    int* stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t actual_num_stats,
-    size_t* actual_num_stats_out
+template <typename enum_type, typename buffer_type>
+static void copy_map_to_buffer(
+    const std::map<std::string, buffer_type>& value_map,
+    const boost::bimap<std::string, enum_type>& value_enum_bimap,
+    buffer_type* values_buffer_out,
+    size_t value_buffer_size,
+    size_t actual_num_values,
+    size_t* actual_num_values_out
 )
 {
-    BOOST_ASSERT(stats_buffer_out);
+    BOOST_ASSERT(values_buffer_out);
 
     std::memset(
-        stats_buffer_out,
+        values_buffer_out,
         0,
-        stat_buffer_size * sizeof(int)
+        value_buffer_size * sizeof(int)
     );
 
-    for(size_t stat = 0; stat <= actual_num_stats; ++stat)
+    for(size_t value = 0; value <= actual_num_values; ++value)
     {
-        enum_type stat_enum = enum_type(stat);
-        BOOST_ASSERT(stat_enum_bimap.right.count(stat_enum) > 0);
-        stats_buffer_out[stat] = stat_map.at(stat_enum_bimap.right.at(stat_enum));
+        enum_type value_enum = enum_type(value);
+        BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
+        values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
     }
 
     // Optional parameter
-    if(actual_num_stats_out)
+    if(actual_num_values_out)
     {
-        *actual_num_stats_out = actual_num_stats;
+        *actual_num_values_out = actual_num_values;
     }
 }
 
@@ -737,7 +737,7 @@ pkmn_error_t pkmn_pokemon2_get_EVs(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_stat_map_to_buffer(
+        copy_map_to_buffer(
             internal_ptr->cpp->get_EVs(),
             pkmn::c::STAT_BIMAP,
             EVs_buffer_out,
@@ -783,7 +783,7 @@ pkmn_error_t pkmn_pokemon2_get_IVs(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IVs_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_stat_map_to_buffer(
+        copy_map_to_buffer(
             internal_ptr->cpp->get_IVs(),
             pkmn::c::STAT_BIMAP,
             IVs_buffer_out,
@@ -829,7 +829,7 @@ pkmn_error_t pkmn_pokemon2_get_stats(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stats_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_stat_map_to_buffer(
+        copy_map_to_buffer(
             internal_ptr->cpp->get_stats(),
             pkmn::c::STAT_BIMAP,
             stats_buffer_out,
@@ -852,7 +852,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_contest_stats(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stats_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_stat_map_to_buffer(
+        copy_map_to_buffer(
             internal_ptr->cpp->get_contest_stats(),
             pkmn::c::CONTEST_STAT_BIMAP,
             contest_stats_buffer_out,
@@ -887,6 +887,58 @@ pkmn_error_t pkmn_pokemon2_set_contest_stat(
 }
 
 // Misc
+
+pkmn_error_t pkmn_pokemon2_get_markings(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool* has_markings_buffer_out,
+    size_t has_marking_buffer_size,
+    size_t* actual_num_markings_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(has_markings_buffer_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::marking_bimap_t& marking_bimap = (internal_ptr->generation == 3) ?
+            pkmn::c::GEN3_MARKING_BIMAP : pkmn::c::MARKING_BIMAP;
+
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_markings(),
+            marking_bimap,
+            has_markings_buffer_out,
+            has_marking_buffer_size,
+            marking_bimap.size(),
+            actual_num_markings_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_marking(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_marking_t marking,
+    bool has_marking
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        const pkmn::c::marking_bimap_t& marking_bimap = (internal_ptr->generation == 3) ?
+            pkmn::c::GEN3_MARKING_BIMAP : pkmn::c::MARKING_BIMAP;
+
+        pkmn::enforce_value_in_map_keys(
+            "Marking",
+            marking,
+            marking_bimap.right
+        );
+
+        internal_ptr->cpp->set_marking(
+            marking_bimap.right.at(marking),
+            has_marking
+        );
+    )
+}
 
 pkmn_error_t pkmn_pokemon2_has_ribbon(
     pkmn_pokemon2_t* pokemon_ptr,

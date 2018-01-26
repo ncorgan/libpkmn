@@ -10,6 +10,7 @@
 
 #include <pkmn-c/types/condition.h>
 #include <pkmn-c/types/gender.h>
+#include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/stats.h>
 
 #include <boost/assign.hpp>
@@ -61,6 +62,25 @@ namespace pkmn { namespace c {
         ("Frozen",     PKMN_CONDITION_FROZEN)
         ("Paralysis",  PKMN_CONDITION_PARALYSIS)
         ("Bad Poison", PKMN_CONDITION_BAD_POISON)
+    ;
+
+    typedef boost::bimap<std::string, pkmn_marking_t> marking_bimap_t;
+    static const marking_bimap_t GEN3_MARKING_BIMAP =
+    boost::assign::list_of<marking_bimap_t::relation>
+        ("Circle",   PKMN_MARKING_CIRCLE)
+        ("Triangle", PKMN_MARKING_TRIANGLE)
+        ("Square",   PKMN_MARKING_SQUARE)
+        ("Heart",    PKMN_MARKING_HEART)
+    ;
+
+    static const marking_bimap_t MARKING_BIMAP =
+    boost::assign::list_of<marking_bimap_t::relation>
+        ("Circle",   PKMN_MARKING_CIRCLE)
+        ("Triangle", PKMN_MARKING_TRIANGLE)
+        ("Square",   PKMN_MARKING_SQUARE)
+        ("Heart",    PKMN_MARKING_HEART)
+        ("Star",     PKMN_MARKING_STAR)
+        ("Diamond",  PKMN_MARKING_DIAMOND)
     ;
 
 }

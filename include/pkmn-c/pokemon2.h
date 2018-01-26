@@ -13,6 +13,7 @@
 #include <pkmn-c/database/pokemon_entry.h>
 
 #include <pkmn-c/types/attribute_names.h>
+#include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
 #include <pkmn-c/types/pokemon_info_structs.h>
 #include <pkmn-c/types/stats.h>
@@ -257,6 +258,19 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_contest_stat(
 );
 
 // Misc
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_markings(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool* has_markings_buffer_out,
+    size_t has_marking_buffer_size,
+    size_t* actual_num_markings_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_set_has_marking(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_marking_t marking,
+    bool has_marking
+);
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_has_ribbon(
     pkmn_pokemon2_t* pokemon_ptr,
