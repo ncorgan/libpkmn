@@ -9,7 +9,7 @@
 
 #include <pkmn/exception.hpp>
 
-#include <pkmn/utils/floating_point_comparison.hpp>
+#include "utils/floating_point_comparison.hpp"
 
 #include <algorithm>
 #include <limits>
