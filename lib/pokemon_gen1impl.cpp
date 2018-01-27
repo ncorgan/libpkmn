@@ -258,7 +258,7 @@ namespace pkmn
         {
             case 1:
             {
-                ret = pkmn::make_shared<pokemon_gen1impl>(pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen1impl>(pksav_pokemon, game_id);
                 break;
             }
 
@@ -269,7 +269,7 @@ namespace pkmn
                     &pksav_pokemon,
                     &gen2_pksav_pokemon
                 );
-                ret = pkmn::make_shared<pokemon_gen2impl>(gen2_pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen2impl>(gen2_pksav_pokemon, game_id);
                 ret->set_level_met(std::min<int>(63, get_level()));
                 break;
             }

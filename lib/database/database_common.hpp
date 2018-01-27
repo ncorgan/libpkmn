@@ -10,10 +10,10 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/config.hpp>
 
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -21,7 +21,7 @@
 
 namespace pkmn { namespace database {
 
-    typedef pkmn::shared_ptr<SQLite::Database> sptr;
+    typedef std::shared_ptr<SQLite::Database> sptr;
 
     sptr _get_connection();
 

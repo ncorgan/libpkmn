@@ -308,7 +308,7 @@ namespace pkmn
                         {
                             colosseum_pokemon = LibPkmGC::Colosseum::Pokemon(*XD_RCAST);
                         }
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
                     }
                     else
                     {
@@ -321,7 +321,7 @@ namespace pkmn
                         {
                             xd_pokemon = LibPkmGC::XD::Pokemon(*COLO_RCAST);
                         }
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
 
                     ret->set_level_met(get_level());
@@ -334,7 +334,7 @@ namespace pkmn
                         &pksav_pokemon
                     );
 
-                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                 }
 
                 ret->set_original_game(get_original_game());

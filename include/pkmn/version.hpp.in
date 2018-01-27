@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_VERSION_H
-#define PKMN_VERSION_H
+#ifndef PKMN_VERSION_HPP
+#define PKMN_VERSION_HPP
 
 /*!
  * @brief LibPKMN major version.
@@ -45,4 +45,4 @@
  */
 #define PKMN_VERSION_NUMBER @PKMN_VERSION_NUMBER@
 
-#endif /* PKMN_VERSION_H */
+#endif /* PKMN_VERSION_HPP */

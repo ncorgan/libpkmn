@@ -14,7 +14,7 @@
 
 %include <pkmn/pokedex.hpp>
 
-%extend pkmn::shared_ptr<pkmn::pokedex> {
+%extend std::shared_ptr<pkmn::pokedex> {
 
     bool __eq__(
         const pkmn::pokedex::sptr &rhs
@@ -23,4 +23,4 @@
     }
 
 }
-%template(pokedex_sptr) pkmn::shared_ptr<pkmn::pokedex>;
+%template(pokedex_sptr) std::shared_ptr<pkmn::pokedex>;

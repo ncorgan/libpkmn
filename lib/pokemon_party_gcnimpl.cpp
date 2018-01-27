@@ -163,7 +163,7 @@ namespace pkmn {
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
         old_party_pokemon_impl_ptr->unlock();
 
-        _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+        _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
                                    NATIVE_RCAST->pokemon[index],
                                    _game_id
                                );
@@ -186,7 +186,7 @@ namespace pkmn {
         _pokemon_list.resize(PARTY_SIZE);
 
         for(int i = 0; i < PARTY_SIZE; ++i) {
-            _pokemon_list[i] = pkmn::make_shared<pokemon_gcnimpl>(
+            _pokemon_list[i] = std::make_shared<pokemon_gcnimpl>(
                                    NATIVE_RCAST->pokemon[i],
                                    _game_id
                                );

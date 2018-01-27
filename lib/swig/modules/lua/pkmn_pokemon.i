@@ -19,7 +19,7 @@
 
 %include <pkmn/pokemon.hpp>
 
-%extend pkmn::shared_ptr<pkmn::pokemon> {
+%extend std::shared_ptr<pkmn::pokemon> {
 
     void set_move(
         const std::string &move_name,
@@ -38,7 +38,7 @@
     }
 
 }
-%template(pokemon_sptr) pkmn::shared_ptr<pkmn::pokemon>;
+%template(pokemon_sptr) std::shared_ptr<pkmn::pokemon>;
 
 %import <lua/stl_macros.i>
 PKMN_LUA_VECTOR(pkmn::pokemon::sptr, pokemon_list)

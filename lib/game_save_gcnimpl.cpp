@@ -68,20 +68,20 @@ namespace pkmn {
             throw std::invalid_argument("Could not find a save slot.");
         }
 
-        _pokemon_party = pkmn::make_shared<pokemon_party_gcnimpl>(
+        _pokemon_party = std::make_shared<pokemon_party_gcnimpl>(
                              _game_id,
                              _current_slot->player->trainer->party
                          );
-        _pokemon_pc = pkmn::make_shared<pokemon_pc_gcnimpl>(
+        _pokemon_pc = std::make_shared<pokemon_pc_gcnimpl>(
                           _game_id,
                           _current_slot->PC->boxes
                       );
 
-        _item_bag = pkmn::make_shared<item_bag_gcnimpl>(
+        _item_bag = std::make_shared<item_bag_gcnimpl>(
                         _game_id,
                         _current_slot->player->bag
                     );
-        _item_pc = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pc = std::make_shared<item_list_gcnimpl>(
                        GCN_PC_ID, _game_id,
                        _current_slot->PC->items,
                        235, false

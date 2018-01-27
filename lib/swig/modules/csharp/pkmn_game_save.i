@@ -32,10 +32,10 @@
 %csmethodmodifiers pkmn::game_save::get_pokemon_pc() "private";
 %csmethodmodifiers pkmn::game_save::get_item_bag() "private";
 %csmethodmodifiers pkmn::game_save::get_item_pc() "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::game_save>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::game_save>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::game_save>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::game_save> %{
+%typemap(cscode) std::shared_ptr<pkmn::game_save> %{
     public string Filepath {
         get {
             return this.GetFilepath();
@@ -194,4 +194,4 @@
 %ignore from_file;
 %ignore detect_type;
 %include <pkmn/game_save.hpp>
-%template(GameSave) pkmn::shared_ptr<pkmn::game_save>;
+%template(GameSave) std::shared_ptr<pkmn::game_save>;

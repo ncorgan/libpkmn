@@ -61,13 +61,13 @@ namespace pkmn
         switch(pkmn::database::game_id_to_generation(game_id))
         {
             case 1:
-                return pkmn::make_shared<pokemon_gen1impl>(
+                return std::make_shared<pokemon_gen1impl>(
                            std::move(database_entry),
                            level
                        );
 
             case 2:
-                return pkmn::make_shared<pokemon_gen2impl>(
+                return std::make_shared<pokemon_gen2impl>(
                            std::move(database_entry),
                            level
                        );
@@ -75,14 +75,14 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    return pkmn::make_shared<pokemon_gcnimpl>(
+                    return std::make_shared<pokemon_gcnimpl>(
                                std::move(database_entry),
                                level
                            );
                 }
                 else
                 {
-                    return pkmn::make_shared<pokemon_gbaimpl>(
+                    return std::make_shared<pokemon_gbaimpl>(
                                std::move(database_entry),
                                level
                            );

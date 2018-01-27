@@ -56,7 +56,7 @@ namespace pkmn { namespace io {
             throw std::runtime_error("Invalid .pk2.");
         }
 
-        return pkmn::make_shared<pokemon_gen2impl>(
+        return std::make_shared<pokemon_gen2impl>(
                    *reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(buffer.data()),
                    GOLD
                );

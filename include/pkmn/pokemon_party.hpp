@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,27 +9,23 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace pkmn {
 
-    class PKMN_API pokemon_party {
+    class PKMN_API pokemon_party
+    {
         public:
-            typedef pkmn::shared_ptr<pokemon_party> sptr;
-
-            #ifndef __DOXYGEN__
-            pokemon_party() {}
-            virtual ~pokemon_party() {}
-            #endif
+            typedef std::shared_ptr<pokemon_party> sptr;
 
             static sptr make(
-                const std::string &game
+                const std::string& game
             );
 
-            virtual std::string get_game()  = 0;
+            virtual std::string get_game() = 0;
 
             virtual int get_num_pokemon() = 0;
 
@@ -45,6 +41,8 @@ namespace pkmn {
             virtual const pkmn::pokemon_list_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__
+            pokemon_party() {}
+            virtual ~pokemon_party() {}
             virtual void* get_native() = 0;
             #endif
     };

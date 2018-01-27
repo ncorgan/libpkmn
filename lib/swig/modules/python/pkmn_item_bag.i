@@ -13,7 +13,7 @@
 
 %include <pkmn/item_bag.hpp>
 
-%extend pkmn::shared_ptr<pkmn::item_bag> {
+%extend std::shared_ptr<pkmn::item_bag> {
 
     %pythoncode %{
         def __eq__(self, rhs):
@@ -36,4 +36,4 @@
         return int(self->get()->get_pocket_names().size());
     }
 }
-%template(item_bag_sptr) pkmn::shared_ptr<pkmn::item_bag>;
+%template(item_bag_sptr) std::shared_ptr<pkmn::item_bag>;

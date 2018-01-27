@@ -13,7 +13,7 @@
 
 %include <pkmn/item_bag.hpp>
 
-%extend pkmn::shared_ptr<pkmn::item_bag> {
+%extend std::shared_ptr<pkmn::item_bag> {
 
     pkmn::item_list::sptr __getitem__(
         const std::string &key
@@ -32,4 +32,4 @@
     }
 
 }
-%template(item_bag_sptr) pkmn::shared_ptr<pkmn::item_bag>;
+%template(item_bag_sptr) std::shared_ptr<pkmn::item_bag>;

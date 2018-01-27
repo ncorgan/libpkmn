@@ -57,7 +57,7 @@ namespace pkmn { namespace io {
             throw std::runtime_error("Invalid .pk1.");
         }
 
-        return pkmn::make_shared<pokemon_gen1impl>(
+        return std::make_shared<pokemon_gen1impl>(
                    *reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(buffer.data()),
                    RED
                );

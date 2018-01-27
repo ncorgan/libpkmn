@@ -16,10 +16,10 @@
 %csmethodmodifiers pkmn::pokedex::get_num_seen "private";
 %csmethodmodifiers pkmn::pokedex::get_all_caught "private";
 %csmethodmodifiers pkmn::pokedex::get_num_caught "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokedex>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokedex>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokedex>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokedex>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokedex> %{
+%typemap(cscode) std::shared_ptr<pkmn::pokedex> %{
     public string Game
     {
         get
@@ -114,4 +114,4 @@
 %}
 
 %include <pkmn/pokedex.hpp>
-%template(Pokedex) pkmn::shared_ptr<pkmn::pokedex>;
+%template(Pokedex) std::shared_ptr<pkmn::pokedex>;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,17 +13,18 @@
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <cstdint>
 #include <string>
+#include <memory>
 #include <vector>
 
 namespace pkmn {
 
-    class PKMN_API game_save {
+    class PKMN_API game_save
+    {
         public:
-            typedef pkmn::shared_ptr<game_save> sptr;
+            typedef std::shared_ptr<game_save> sptr;
 
             /*!
              * @brief Returns what type of game save is at the given filepath.
@@ -33,12 +34,13 @@ namespace pkmn {
              *  * "Gold/Silver"
              *  * "Crystal"
              *  * "Ruby/Sapphire/Emerald"
+             *  * "FireRed/LeafGreen"
              *  * "Colosseum/XD"
              *
              * \param filepath The filepath to check
              */
             static std::string detect_type(
-                const std::string &filepath
+                const std::string& filepath
             );
 
             /*!
@@ -48,13 +50,8 @@ namespace pkmn {
              * \throws std::invalid_argument if the given filepath is invalid
              */
             static sptr from_file(
-                const std::string &filepath
+                const std::string& filepath
             );
-
-            #ifndef __DOXYGEN__
-            game_save() {};
-            virtual ~game_save() {};
-            #endif
 
             /*!
              * @brief Returns the path from which the given save was imported.
@@ -83,7 +80,7 @@ namespace pkmn {
              * \param filepath The new filepath for the game save
              */
             virtual void save_as(
-                const std::string &filepath
+                const std::string& filepath
             ) = 0;
 
             /*!
@@ -110,7 +107,7 @@ namespace pkmn {
              * \throws std::invalid_argument if the given string is empty or longer than 7 characters
              */
             virtual void set_trainer_name(
-                const std::string &trainer_name
+                const std::string& trainer_name
             ) = 0;
 
             /*!
@@ -207,7 +204,7 @@ namespace pkmn {
              * \throws pkmn::feature_not_in_game_error if the game only has one gender of playable character
              */
             virtual void set_trainer_gender(
-                const std::string &trainer_gender
+                const std::string& trainer_gender
             ) = 0;
 
             /*!
@@ -238,7 +235,7 @@ namespace pkmn {
              * \throws pkmn::feature_not_in_game_error if the game has no rival or the rival cannot be renamed
              */
             virtual void set_rival_name(
-                const std::string &rival_name
+                const std::string& rival_name
             ) = 0;
 
             /*!
@@ -283,6 +280,11 @@ namespace pkmn {
              * \throws pkmn::feature_not_in_game_error if the save is from Generation IV+
              */
             virtual pkmn::item_list::sptr get_item_pc() = 0;
+
+            #ifndef __DOXYGEN__
+            game_save() {};
+            virtual ~game_save() {};
+            #endif
     };
 }
 

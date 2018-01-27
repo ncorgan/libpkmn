@@ -13,7 +13,7 @@
 %rename(as_list) as_vector;
 %include <pkmn/pokemon_box.hpp>
 
-%extend pkmn::shared_ptr<pkmn::pokemon_box> {
+%extend std::shared_ptr<pkmn::pokemon_box> {
 
     void set_pokemon(
         int index,
@@ -54,7 +54,7 @@
     }
 
 }
-%template(pokemon_box_sptr) pkmn::shared_ptr<pkmn::pokemon_box>;
+%template(pokemon_box_sptr) std::shared_ptr<pkmn::pokemon_box>;
 
 %import <lua/stl_macros.i>
 PKMN_LUA_VECTOR(pkmn::pokemon_box::sptr, pokemon_box_list)

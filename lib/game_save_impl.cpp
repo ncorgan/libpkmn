@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,6 +22,7 @@
 #include <boost/filesystem.hpp>
 
 #include <fstream>
+#include <memory>
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -72,7 +73,7 @@ namespace pkmn {
         ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
-        pkmn::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
+        std::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
         if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
             gcn_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(raw.data(), (filesize == GCN_COLOSSEUM_GCI_SIZE)));
         } if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
@@ -184,19 +185,19 @@ namespace pkmn {
 
         switch(save_type) {
             case PKMN_SAVE_TYPE_RED_BLUE_YELLOW:
-                return pkmn::make_shared<game_save_gen1impl>(filepath);
+                return std::make_shared<game_save_gen1impl>(filepath);
 
             case PKMN_SAVE_TYPE_GOLD_SILVER:
             case PKMN_SAVE_TYPE_CRYSTAL:
-                return pkmn::make_shared<game_save_gen2impl>(filepath);
+                return std::make_shared<game_save_gen2impl>(filepath);
 
             case PKMN_SAVE_TYPE_RUBY_SAPPHIRE:
             case PKMN_SAVE_TYPE_EMERALD:
             case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
-                return pkmn::make_shared<game_save_gbaimpl>(filepath);
+                return std::make_shared<game_save_gbaimpl>(filepath);
 
             case PKMN_SAVE_TYPE_COLOSSEUM_XD:
-                return pkmn::make_shared<game_save_gcnimpl>(filepath);
+                return std::make_shared<game_save_gcnimpl>(filepath);
 
             case PKMN_SAVE_TYPE_NONE:
             default:

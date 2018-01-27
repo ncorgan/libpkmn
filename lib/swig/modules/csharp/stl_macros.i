@@ -31,12 +31,12 @@ using System.Runtime.InteropServices;
 %define PKMN_CSHARP_INCLUDE_AND_SPTR(cpp_type, csharp_name)
     %rename(cpp_type ## _base) pkmn:: ## cpp_type;
 
-    %csmethodmodifiers pkmn::shared_ptr<pkmn:: ## cpp_type>::__cptr "
+    %csmethodmodifiers std::shared_ptr<pkmn:: ## cpp_type>::__cptr "
     private";
-    %csmethodmodifiers pkmn::shared_ptr<pkmn:: ## cpp_type>::__sptr_eq "
+    %csmethodmodifiers std::shared_ptr<pkmn:: ## cpp_type>::__sptr_eq "
     private";
 
-    %typemap(cscode) pkmn::shared_ptr<pkmn:: ## cpp_type> %{
+    %typemap(cscode) std::shared_ptr<pkmn:: ## cpp_type> %{
         /// <summary>Compares two csharp_name instances to determine value equality.</summary>
         /// <remarks>
         /// Returns true if the internal shared_ptrs' pointers are equal.
@@ -83,7 +83,7 @@ using System.Runtime.InteropServices;
 
 
     %include <pkmn/ ## cpp_type ## .hpp>
-    %template(csharp_name) pkmn::shared_ptr<pkmn:: ## cpp_type>;
+    %template(csharp_name) std::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
 %define PKMN_CSHARP_VECTOR(cpp_type, csharp_type, csharp_name)

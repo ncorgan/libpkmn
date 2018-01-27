@@ -64,7 +64,7 @@ namespace pkmn {
         _box_list.resize(GCN_NUM_BOXES);
 
         for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-            _box_list[i] = pkmn::make_shared<pokemon_box_gcnimpl>(
+            _box_list[i] = std::make_shared<pokemon_box_gcnimpl>(
                                _game_id,
                                NATIVE_RCAST[i]
                            );

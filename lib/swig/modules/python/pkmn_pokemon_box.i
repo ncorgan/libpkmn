@@ -9,7 +9,7 @@
     #include <pkmn/pokemon_box.hpp>
 %}
 
-%extend pkmn::shared_ptr<pkmn::pokemon_box> {
+%extend std::shared_ptr<pkmn::pokemon_box> {
 
     pkmn::pokemon::sptr __getitem__(
         int index

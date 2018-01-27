@@ -31,16 +31,16 @@ namespace pkmn {
 
         switch(generation) {
             case 1:
-                return pkmn::make_shared<pokemon_pc_gen1impl>(game_id);
+                return std::make_shared<pokemon_pc_gen1impl>(game_id);
 
             case 2:
-                return pkmn::make_shared<pokemon_pc_gen2impl>(game_id);
+                return std::make_shared<pokemon_pc_gen2impl>(game_id);
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    return pkmn::make_shared<pokemon_pc_gcnimpl>(game_id);
+                    return std::make_shared<pokemon_pc_gcnimpl>(game_id);
                 } else {
-                    return pkmn::make_shared<pokemon_pc_gbaimpl>(game_id);
+                    return std::make_shared<pokemon_pc_gbaimpl>(game_id);
                 }
 
             case 4:

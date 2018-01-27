@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,9 +9,9 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/item_slot.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <map>
+#include <memory>
 #include <string>
 
 namespace pkmn {
@@ -28,14 +28,15 @@ namespace pkmn {
      * in the given game. As such, this class will never represent an invalid in-game
      * state unless the original item list was already in an invalid state.
      */
-    class PKMN_API item_list {
+    class PKMN_API item_list
+    {
         public:
             /*!
              * @brief The actual interface for using the item_list class.
              *
              * The item_list class itself is abstract and thus cannot be used directly.
              */
-            typedef pkmn::shared_ptr<item_list> sptr;
+            typedef std::shared_ptr<item_list> sptr;
 
             /*!
              * @brief The factory function for instantiating an item list.
@@ -53,11 +54,6 @@ namespace pkmn {
                 const std::string& name,
                 const std::string& game
             );
-
-            #ifndef __DOXYGEN__
-            item_list() {};
-            virtual ~item_list() {};
-            #endif
 
             /*!
              * @brief Returns the name of the item list.
@@ -156,6 +152,8 @@ namespace pkmn {
             virtual const pkmn::item_slots_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__
+            item_list() {};
+            virtual ~item_list() {};
             virtual void* get_native() = 0;
             #endif
     };

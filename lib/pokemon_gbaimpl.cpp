@@ -332,7 +332,7 @@ namespace pkmn
                             &pksav_pokemon,
                             &colosseum_pokemon
                         );
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
                     }
                     else
                     {
@@ -341,12 +341,12 @@ namespace pkmn
                             &pksav_pokemon,
                             &xd_pokemon
                         );
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
                 }
                 else
                 {
-                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                     ret->set_level_met(get_level());
                     ret->set_original_game(get_game());
                 }

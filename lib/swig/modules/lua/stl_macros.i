@@ -19,12 +19,12 @@
 %enddef
 
 %define PKMN_LUA_SPTR(cpp_type)
-    %extend pkmn::shared_ptr<pkmn:: ## cpp_type> {
-        bool __eq__(const pkmn::shared_ptr<pkmn:: ## cpp_type> rhs) {
+    %extend std::shared_ptr<pkmn:: ## cpp_type> {
+        bool __eq__(const std::shared_ptr<pkmn:: ## cpp_type> rhs) {
             return ((*self) == rhs);
         }
     }
-    %template(cpp_type ## _sptr) pkmn::shared_ptr<pkmn:: ## cpp_type>;
+    %template(cpp_type ## _sptr) std::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
 %define PKMN_LUA_VECTOR(cpp_type, lua_name)

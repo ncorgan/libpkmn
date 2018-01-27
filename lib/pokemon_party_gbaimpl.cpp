@@ -112,7 +112,7 @@ namespace pkmn {
 
         NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
         NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(new_pokemon_native_party_ptr);
-        _pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(
+        _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_LIST_RCAST->party[index],
                                    _game_id
                                );
@@ -161,7 +161,7 @@ namespace pkmn {
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_gba_party_pokemon_t));
             }
 
-            _pokemon_list[i] = pkmn::make_shared<pokemon_gbaimpl>(
+            _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_LIST_RCAST->party[i],
                                    _game_id
                                );

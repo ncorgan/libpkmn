@@ -14,7 +14,7 @@ using System;
 using System.Runtime.InteropServices;
 using Database;"
 
-%typemap(csimports) pkmn::shared_ptr<pkmn::item_list> "
+%typemap(csimports) std::shared_ptr<pkmn::item_list> "
 using System;
 using System.Runtime.InteropServices;
 using Database;"
@@ -29,10 +29,10 @@ using Database;"
 %csmethodmodifiers pkmn::item_list::at(int) "private";
 %csmethodmodifiers pkmn::item_list::set_item(int, pkmn::database::item_entry const&) "private";
 %csmethodmodifiers pkmn::item_list::get_valid_items() "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_list>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::item_list>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::item_list>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::item_list>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::item_list> %{
+%typemap(cscode) std::shared_ptr<pkmn::item_list> %{
     public string Name {
         get { return GetName(); }
     }
@@ -104,4 +104,4 @@ using Database;"
 %}
 
 %include <pkmn/item_list.hpp>
-%template(ItemList) pkmn::shared_ptr<pkmn::item_list>;
+%template(ItemList) std::shared_ptr<pkmn::item_list>;
