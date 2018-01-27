@@ -14,34 +14,6 @@
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_bag_internal_t*>(ptr))
-#define LIST_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
-
-// The caller is expected to be exception-safe.
-void init_item_bag(
-    pkmn::item_bag::sptr cpp_item_bag,
-    pkmn_item_bag_t* item_bag_ptr
-)
-{
-    BOOST_ASSERT(item_bag_ptr);
-    BOOST_ASSERT(cpp_item_bag.get());
-
-    item_bag_ptr->_internal = new pkmn_item_bag_internal_t;
-    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag_ptr->_internal);
-
-    internal_ptr->cpp = cpp_item_bag;
-    internal_ptr->last_error = "None";
-
-    pkmn::c::string_cpp_to_c_alloc(
-        cpp_item_bag->get_game(),
-        &item_bag_ptr->game
-    );
-    pkmn::c::string_list_cpp_to_c(
-        cpp_item_bag->get_pocket_names(),
-        &item_bag_ptr->pocket_names
-    );
-}
-
 pkmn_error_t pkmn_item_bag_init(
     const char* game,
     pkmn_item_bag_t* item_bag_out
@@ -53,7 +25,7 @@ pkmn_error_t pkmn_item_bag_init(
     PKMN_CPP_TO_C(
         pkmn::item_bag::sptr cpp = pkmn::item_bag::make(game);
 
-        init_item_bag(
+        pkmn::c::init_item_bag(
             cpp,
             item_bag_out
         );
@@ -88,7 +60,7 @@ const char* pkmn_item_bag_strerror(
 
     try
     {
-        pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag_ptr->_internal);
+        pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -110,7 +82,7 @@ pkmn_error_t pkmn_item_bag_get_pocket(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pocket_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_list_out, internal_ptr);
 
@@ -119,7 +91,7 @@ pkmn_error_t pkmn_item_bag_get_pocket(
 
         pkmn::item_list::sptr cpp_pocket = cpp->get_pocket(pocket_name);
 
-        init_item_list(
+        pkmn::c::init_item_list(
             cpp_pocket,
             item_list_out
         );
@@ -133,7 +105,7 @@ pkmn_error_t pkmn_item_bag_add(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -153,7 +125,7 @@ pkmn_error_t pkmn_item_bag_remove(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,

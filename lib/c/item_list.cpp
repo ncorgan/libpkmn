@@ -13,36 +13,6 @@
 
 #include <pkmn-c/item_list.h>
 
-#include <cstdio>
-
-#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))
-
-// The caller is expected to be exception-safe.
-void init_item_list(
-    pkmn::item_list::sptr cpp_item_list,
-    pkmn_item_list_t* item_list_ptr
-)
-{
-    BOOST_ASSERT(item_list_ptr);
-    BOOST_ASSERT(cpp_item_list.get());
-
-    item_list_ptr->_internal = new pkmn_item_list_internal_t;
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
-
-    internal_ptr->cpp = cpp_item_list;
-    internal_ptr->last_error = "None";
-
-    pkmn::c::string_cpp_to_c_alloc(
-        internal_ptr->cpp->get_name(),
-        &item_list_ptr->name
-    );
-    pkmn::c::string_cpp_to_c_alloc(
-        internal_ptr->cpp->get_game(),
-        &item_list_ptr->game
-    );
-    item_list_ptr->capacity = internal_ptr->cpp->get_capacity();
-}
-
 pkmn_error_t pkmn_item_list_init(
     const char* name,
     const char* game,
@@ -56,7 +26,7 @@ pkmn_error_t pkmn_item_list_init(
     PKMN_CPP_TO_C(
         pkmn::item_list::sptr cpp = pkmn::item_list::make(name, game);
 
-        init_item_list(
+        pkmn::c::init_item_list(
             cpp,
             item_list_out
         );
@@ -69,8 +39,8 @@ pkmn_error_t pkmn_item_list_free(
 {
     PKMN_CHECK_NULL_PARAM(item_list_ptr);
 
-    item_list_ptr->name = nullptr;
-    item_list_ptr->game = nullptr;
+    pkmn::c::free_pointer_and_set_to_null(&item_list_ptr->name);
+    pkmn::c::free_pointer_and_set_to_null(&item_list_ptr->game);
     item_list_ptr->capacity = 0;
 
     PKMN_CPP_TO_C(
@@ -91,7 +61,7 @@ const char* pkmn_item_list_strerror(
 
     try
     {
-        pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+        pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -112,7 +82,7 @@ pkmn_error_t pkmn_item_list_get_num_items(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_items_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -129,7 +99,7 @@ pkmn_error_t pkmn_item_list_at(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_slot_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -149,7 +119,7 @@ pkmn_error_t pkmn_item_list_add(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -169,7 +139,7 @@ pkmn_error_t pkmn_item_list_remove(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -189,7 +159,7 @@ pkmn_error_t pkmn_item_list_move(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::item_list::sptr cpp = internal_ptr->cpp;
@@ -209,7 +179,7 @@ pkmn_error_t pkmn_item_list_set_item(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -229,7 +199,7 @@ pkmn_error_t pkmn_item_list_get_valid_items(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(valid_items_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -248,7 +218,7 @@ pkmn_error_t pkmn_item_list_as_list(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
-    pkmn_item_list_internal_t* internal_ptr = INTERNAL_RCAST(item_list_ptr->_internal);
+    pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_slots_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,

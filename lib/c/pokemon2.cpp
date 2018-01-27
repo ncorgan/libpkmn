@@ -21,36 +21,6 @@
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_pokemon_internal_t*>(ptr))
-
-// The caller is expected to be exception-safe.
-void init_pokemon(
-    pkmn::pokemon::sptr cpp_pokemon,
-    pkmn_pokemon2_t* pokemon_ptr
-)
-{
-    BOOST_ASSERT(pokemon_ptr);
-    BOOST_ASSERT(cpp_pokemon.get());
-
-    pokemon_ptr->_internal = new pkmn_pokemon_internal_t;
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    internal_ptr->cpp = cpp_pokemon;
-    internal_ptr->last_error = "None";
-    internal_ptr->generation = pkmn::priv::game_name_to_generation(
-                                   internal_ptr->cpp->get_game()
-                               );
-
-    pkmn::c::string_cpp_to_c_alloc(
-        internal_ptr->cpp->get_species(),
-        &pokemon_ptr->species
-    );
-    pkmn::c::string_cpp_to_c_alloc(
-        internal_ptr->cpp->get_game(),
-        &pokemon_ptr->game
-    );
-}
-
 pkmn_trainer_id2_t pkmn_pokemon2_default_trainer_id()
 {
     return {pkmn::pokemon::DEFAULT_TRAINER_ID};
@@ -83,7 +53,7 @@ pkmn_error_t pkmn_pokemon_init(
                                       level
                                   );
 
-        init_pokemon(
+        pkmn::c::init_pokemon(
             cpp,
             pokemon_out
         );
@@ -101,7 +71,7 @@ pkmn_error_t pkmn_pokemon2_init_from_file(
     PKMN_CPP_TO_C(
         pkmn::pokemon::sptr cpp = pkmn::pokemon::from_file(filepath);
 
-        init_pokemon(
+        pkmn::c::init_pokemon(
             cpp,
             pokemon_out
         );
@@ -114,8 +84,8 @@ pkmn_error_t pkmn_pokemon2_free(
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
 
-    pokemon_ptr->species = nullptr;
-    pokemon_ptr->game = nullptr;
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->species);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->game);
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
@@ -135,7 +105,7 @@ const char* pkmn_pokemon2_strerror(
 
     try
     {
-        pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+        pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -157,14 +127,14 @@ pkmn_error_t pkmn_pokemon2_to_game(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(new_pokemon_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::pokemon::sptr new_pokemon_cpp = internal_ptr->cpp->to_game(game);
 
-        init_pokemon(
+        pkmn::c::init_pokemon(
             new_pokemon_cpp,
             new_pokemon_out
         );
@@ -177,7 +147,7 @@ pkmn_error_t pkmn_pokemon2_export_to_file(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(filepath, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -191,7 +161,7 @@ pkmn_error_t pkmn_pokemon2_get_database_entry(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -212,7 +182,7 @@ pkmn_error_t pkmn_pokemon2_get_form(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(form_buffer, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -231,7 +201,7 @@ pkmn_error_t pkmn_pokemon2_set_form(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(form, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -245,7 +215,7 @@ pkmn_error_t pkmn_pokemon2_get_level(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(level_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -259,7 +229,7 @@ pkmn_error_t pkmn_pokemon2_set_level(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_level(level);
@@ -274,7 +244,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_info(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_info_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -341,7 +311,7 @@ pkmn_error_t pkmn_pokemon2_set_is_egg(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_is_egg(is_egg);
@@ -354,7 +324,7 @@ pkmn_error_t pkmn_pokemon2_set_pokerus_duration(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_pokerus_duration(pokerus_duration);
@@ -367,7 +337,7 @@ pkmn_error_t pkmn_pokemon2_set_personality(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_personality(personality);
@@ -380,7 +350,7 @@ pkmn_error_t pkmn_pokemon2_set_gender(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::enforce_value_in_map_keys(
@@ -401,7 +371,7 @@ pkmn_error_t pkmn_pokemon2_set_ability(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ability, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -415,7 +385,7 @@ pkmn_error_t pkmn_pokemon2_set_nickname(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -429,7 +399,7 @@ pkmn_error_t pkmn_pokemon2_set_held_item(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(held_item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -443,7 +413,7 @@ pkmn_error_t pkmn_pokemon2_set_experience(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_experience(experience);
@@ -458,7 +428,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_origin_info_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -535,7 +505,7 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(original_trainer_name, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -549,7 +519,7 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_original_trainer_id(original_trainer_id);
@@ -562,7 +532,7 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_public_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_original_trainer_public_id(
@@ -577,7 +547,7 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_secret_id(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_original_trainer_secret_id(
@@ -592,7 +562,7 @@ pkmn_error_t pkmn_pokemon2_set_original_game(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -606,7 +576,7 @@ pkmn_error_t pkmn_pokemon2_set_ball(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ball, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -621,7 +591,7 @@ pkmn_error_t pkmn_pokemon2_set_location_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(location_met, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -635,7 +605,7 @@ pkmn_error_t pkmn_pokemon2_set_level_met(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_level_met(level_met);
@@ -650,7 +620,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_moves(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move_slots_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -668,7 +638,7 @@ pkmn_error_t pkmn_pokemon2_set_move(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -683,7 +653,7 @@ pkmn_error_t pkmn_pokemon2_set_move_pp(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_move_pp(int(index), pp);
@@ -733,7 +703,7 @@ pkmn_error_t pkmn_pokemon2_get_EVs(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -755,7 +725,7 @@ pkmn_error_t pkmn_pokemon2_set_EV(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::enforce_value_in_map_keys(
@@ -779,7 +749,7 @@ pkmn_error_t pkmn_pokemon2_get_IVs(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IVs_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -801,7 +771,7 @@ pkmn_error_t pkmn_pokemon2_set_IV(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::enforce_value_in_map_keys(
@@ -825,7 +795,7 @@ pkmn_error_t pkmn_pokemon2_get_stats(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stats_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -848,7 +818,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_contest_stats(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stats_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -870,7 +840,7 @@ pkmn_error_t pkmn_pokemon2_set_contest_stat(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::enforce_value_in_map_keys(
@@ -896,7 +866,7 @@ pkmn_error_t pkmn_pokemon2_get_markings(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(has_markings_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -921,7 +891,7 @@ pkmn_error_t pkmn_pokemon2_set_marking(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         const pkmn::c::marking_bimap_t& marking_bimap = (internal_ptr->generation == 3) ?
@@ -947,7 +917,7 @@ pkmn_error_t pkmn_pokemon2_has_ribbon(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ribbon_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(has_ribbon_out, internal_ptr);
 
@@ -971,7 +941,7 @@ pkmn_error_t pkmn_pokemon2_set_has_ribbon(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ribbon_name, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -993,7 +963,7 @@ pkmn_error_t pkmn_pokemon2_get_ribbon_names(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ribbon_names_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -1012,7 +982,7 @@ pkmn_error_t pkmn_pokemon2_get_battle_info(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_battle_info_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -1036,7 +1006,7 @@ pkmn_error_t pkmn_pokemon2_set_current_hp(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_current_hp(current_hp);
@@ -1049,7 +1019,7 @@ pkmn_error_t pkmn_pokemon2_set_condition(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         pkmn::enforce_value_in_map_keys(
@@ -1073,7 +1043,7 @@ pkmn_error_t pkmn_pokemon2_get_numeric_attribute(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(value_out, internal_ptr);
 
@@ -1089,7 +1059,7 @@ pkmn_error_t pkmn_pokemon2_set_numeric_attribute(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -1106,7 +1076,7 @@ pkmn_error_t pkmn_pokemon2_get_string_attribute(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(value_out, internal_ptr);
 
@@ -1127,7 +1097,7 @@ pkmn_error_t pkmn_pokemon2_set_string_attribute(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(value, internal_ptr);
 
@@ -1142,7 +1112,7 @@ pkmn_error_t pkmn_pokemon2_get_attribute_names(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_names_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -1165,7 +1135,7 @@ pkmn_error_t pkmn_pokemon2_get_filepaths(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = INTERNAL_RCAST(pokemon_ptr->_internal);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(filepaths_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,

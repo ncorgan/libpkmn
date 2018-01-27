@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -719,8 +719,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     };
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
-    pkmn::c::pokemon_list_cpp_to_c(
+    pkmn_pokemon_list2_t pokemon_list_c = { NULL, 0 };
+    pkmn::c::pokemon_list2_cpp_to_c(
         pokemon_list_cpp,
         &pokemon_list_c
     );
@@ -728,40 +728,32 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 
     for(size_t i = 0; i < 3; ++i)
     {
-        char species_c[BUFFER_LEN] = {0};
-        char game_c[BUFFER_LEN] = {0};
         int level_c = 0;
 
-        error = pkmn_pokemon_get_species(
-                    pokemon_list_c.pokemon_list[i],
-                    species_c,
-                    sizeof(species_c),
-                    nullptr
-                );
-        EXPECT_EQ(PKMN_ERROR_NONE, error);
-        EXPECT_STREQ(pokemon_list_cpp[i]->get_species().c_str(), species_c);
+        EXPECT_STREQ(
+            pokemon_list_cpp[i]->get_species().c_str(),
+            pokemon_list_c.pokemon[i].species
+        );
+        EXPECT_STREQ(
+            pokemon_list_cpp[i]->get_game().c_str(),
+            pokemon_list_c.pokemon[i].game
+        );
 
-        error = pkmn_pokemon_get_game(
-                    pokemon_list_c.pokemon_list[i],
-                    game_c,
-                    sizeof(game_c),
-                    nullptr
-                );
-        EXPECT_EQ(PKMN_ERROR_NONE, error);
-        EXPECT_STREQ(pokemon_list_cpp[i]->get_game().c_str(), game_c);
-
-        error = pkmn_pokemon_get_level(
-                    pokemon_list_c.pokemon_list[i],
+        error = pkmn_pokemon2_get_level(
+                    &pokemon_list_c.pokemon[i],
                     &level_c
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
-        EXPECT_EQ(level_c, pokemon_list_cpp[i]->get_level());
+        EXPECT_EQ(
+            pokemon_list_cpp[i]->get_level(),
+            level_c
+        );
     }
 
-    pkmn_pokemon_list_free(
+    pkmn_pokemon_list2_free(
         &pokemon_list_c
     );
-    EXPECT_EQ(NULL, pokemon_list_c.pokemon_list);
+    EXPECT_EQ(NULL, pokemon_list_c.pokemon);
     EXPECT_EQ(0, pokemon_list_c.length);
 }
 
@@ -779,41 +771,39 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     pokemon_box_list_cpp[2]->set_name("IJKL");
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
-    pkmn::c::pokemon_box_list_cpp_to_c(
+    pkmn_pokemon_box_list2_t pokemon_box_list_c = { NULL, 0 };
+    pkmn::c::pokemon_box_list2_cpp_to_c(
         pokemon_box_list_cpp,
         &pokemon_box_list_c
     );
     EXPECT_EQ(3, pokemon_box_list_c.length);
 
-    for(size_t i = 0; i < 3; ++i)
+    for(size_t index = 0; index < 3; ++index)
     {
-        char game_c[BUFFER_LEN] = {0};
         char name_c[BUFFER_LEN] = {0};
 
-        error = pkmn_pokemon_box_get_game(
-                    pokemon_box_list_c.pokemon_boxes[i],
-                    game_c,
-                    sizeof(game_c),
-                    nullptr
-                );
-        EXPECT_EQ(PKMN_ERROR_NONE, error);
-        EXPECT_STREQ(pokemon_box_list_cpp[i]->get_game().c_str(), game_c);
+        EXPECT_STREQ(
+            pokemon_box_list_cpp[index]->get_game().c_str(),
+            pokemon_box_list_c.boxes[index].game
+        );
 
-        error = pkmn_pokemon_box_get_name(
-                    pokemon_box_list_c.pokemon_boxes[i],
+        error = pkmn_pokemon_box2_get_name(
+                    &pokemon_box_list_c.boxes[index],
                     name_c,
                     sizeof(name_c),
                     nullptr
                 );
         EXPECT_EQ(PKMN_ERROR_NONE, error);
-        EXPECT_STREQ(pokemon_box_list_cpp[i]->get_name().c_str(), name_c);
+        EXPECT_STREQ(
+            pokemon_box_list_cpp[index]->get_name().c_str(),
+            name_c
+        );
     }
 
-    pkmn_pokemon_box_list_free(
+    pkmn_pokemon_box_list2_free(
         &pokemon_box_list_c
     );
-    EXPECT_EQ(NULL, pokemon_box_list_c.pokemon_boxes);
+    EXPECT_EQ(NULL, pokemon_box_list_c.boxes);
     EXPECT_EQ(0, pokemon_box_list_c.length);
 }
 

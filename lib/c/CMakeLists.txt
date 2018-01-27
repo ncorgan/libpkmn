@@ -35,14 +35,18 @@ SET(pkmn_c_sources
     cpp_to_c.cpp
     error.cpp
     game_save.cpp
+    game_save2.cpp
     item_bag.cpp
     item_list.cpp
     pokedex.cpp
     pokemon.cpp
     pokemon2.cpp
     pokemon_box.cpp
+    pokemon_box2.cpp
     pokemon_party.cpp
+    pokemon_party2.cpp
     pokemon_pc.cpp
+    pokemon_pc2.cpp
 )
 
 

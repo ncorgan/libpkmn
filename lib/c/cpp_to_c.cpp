@@ -7,9 +7,197 @@
 
 #include "cpp_to_c.hpp"
 
+#include "private_exports.hpp"
+
 #include <boost/assert.hpp>
 
 namespace pkmn { namespace c {
+
+    // LibPKMN wrapper class initialization.
+
+    void init_item_bag(
+        pkmn::item_bag::sptr cpp_item_bag,
+        pkmn_item_bag_t* item_bag_ptr
+    )
+    {
+        BOOST_ASSERT(item_bag_ptr);
+        BOOST_ASSERT(cpp_item_bag.get());
+
+        item_bag_ptr->_internal = new pkmn_item_bag_internal_t;
+        pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
+
+        internal_ptr->cpp = cpp_item_bag;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            cpp_item_bag->get_game(),
+            &item_bag_ptr->game
+        );
+        pkmn::c::string_list_cpp_to_c(
+            cpp_item_bag->get_pocket_names(),
+            &item_bag_ptr->pocket_names
+        );
+    }
+
+    void init_item_list(
+        pkmn::item_list::sptr cpp_item_list,
+        pkmn_item_list_t* item_list_ptr
+    )
+    {
+        BOOST_ASSERT(item_list_ptr);
+        BOOST_ASSERT(cpp_item_list.get());
+
+        item_list_ptr->_internal = new pkmn_item_list_internal_t;
+        pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(item_list_ptr->_internal);
+
+        internal_ptr->cpp = cpp_item_list;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_name(),
+            &item_list_ptr->name
+        );
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &item_list_ptr->game
+        );
+        item_list_ptr->capacity = internal_ptr->cpp->get_capacity();
+    }
+
+    void init_pokedex(
+        pkmn::pokedex::sptr cpp_pokedex,
+        pkmn_pokedex_t* pokedex_ptr
+    )
+    {
+        BOOST_ASSERT(pokedex_ptr);
+        BOOST_ASSERT(cpp_pokedex.get());
+
+        pokedex_ptr->_internal = new pkmn_pokedex_internal_t;
+        pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
+
+        internal_ptr->cpp = cpp_pokedex;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &pokedex_ptr->game
+        );
+    }
+
+    void init_pokemon(
+        pkmn::pokemon::sptr cpp_pokemon,
+        pkmn_pokemon2_t* pokemon_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_ptr);
+        BOOST_ASSERT(cpp_pokemon.get());
+
+        pokemon_ptr->_internal = new pkmn_pokemon_internal_t;
+        pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+        internal_ptr->cpp = cpp_pokemon;
+        internal_ptr->last_error = "None";
+        internal_ptr->generation = pkmn::priv::game_name_to_generation(
+                                       internal_ptr->cpp->get_game()
+                                   );
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_species(),
+            &pokemon_ptr->species
+        );
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &pokemon_ptr->game
+        );
+    }
+
+    void init_pokemon_box(
+        pkmn::pokemon_box::sptr cpp_pokemon_box,
+        pkmn_pokemon_box2_t* pokemon_box_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_box_ptr);
+        BOOST_ASSERT(cpp_pokemon_box.get());
+
+        pokemon_box_ptr->_internal = new pkmn_pokemon_box_internal_t;
+        pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+
+        internal_ptr->cpp = cpp_pokemon_box;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &pokemon_box_ptr->game
+        );
+        pokemon_box_ptr->capacity = internal_ptr->cpp->get_capacity();
+    }
+
+    void init_pokemon_party(
+        pkmn::pokemon_party::sptr cpp_pokemon_party,
+        pkmn_pokemon_party2_t* pokemon_party_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_party_ptr);
+        BOOST_ASSERT(cpp_pokemon_party.get());
+
+        pokemon_party_ptr->_internal = new pkmn_pokemon_party_internal_t;
+        pkmn_pokemon_party_internal_t* internal_ptr = POKEMON_PARTY_INTERNAL_RCAST(pokemon_party_ptr->_internal);
+
+        internal_ptr->cpp = cpp_pokemon_party;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &pokemon_party_ptr->game
+        );
+        pokemon_party_ptr->capacity = 6;
+    }
+
+    void init_pokemon_pc(
+        pkmn::pokemon_pc::sptr cpp_pokemon_pc,
+        pkmn_pokemon_pc2_t* pokemon_pc_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_pc_ptr);
+        BOOST_ASSERT(cpp_pokemon_pc.get());
+
+        pokemon_pc_ptr->_internal = new pkmn_pokemon_pc_internal_t;
+        pkmn_pokemon_pc_internal_t* internal_ptr = POKEMON_PC_INTERNAL_RCAST(pokemon_pc_ptr->_internal);
+
+        internal_ptr->cpp = cpp_pokemon_pc;
+        internal_ptr->last_error = "None";
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &pokemon_pc_ptr->game
+        );
+        pokemon_pc_ptr->capacity = 6;
+    }
+
+    void init_game_save(
+        pkmn::game_save::sptr cpp_game_save,
+        pkmn_game_save2_t* game_save_ptr
+    )
+    {
+        BOOST_ASSERT(game_save_ptr);
+        BOOST_ASSERT(cpp_game_save.get());
+
+        game_save_ptr->_internal = new pkmn_game_save_internal_t;
+        pkmn_game_save_internal_t* internal_ptr = GAME_SAVE_INTERNAL_RCAST(game_save_ptr->_internal);
+
+        internal_ptr->cpp = cpp_game_save;
+        internal_ptr->last_error = "None";
+        internal_ptr->generation = pkmn::priv::game_name_to_generation(
+                                       internal_ptr->cpp->get_game()
+                                   );
+
+        pkmn::c::string_cpp_to_c_alloc(
+            internal_ptr->cpp->get_game(),
+            &game_save_ptr->game
+        );
+    }
+
+    // Helper classes
 
     void string_cpp_to_c(
         const std::string& string_cpp,
@@ -427,6 +615,33 @@ namespace pkmn { namespace c {
         pokemon_list_c_ptr->length = num_pokemon;
     }
 
+    void pokemon_list2_cpp_to_c(
+        const pkmn::pokemon_list_t& pokemon_list_cpp,
+        pkmn_pokemon_list2_t* pokemon_list_c_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_list_c_ptr);
+
+        size_t num_pokemon = pokemon_list_cpp.size();
+
+        if(num_pokemon > 0)
+        {
+            pokemon_list_c_ptr->pokemon = (pkmn_pokemon2_t*)std::calloc(
+                                                                num_pokemon,
+                                                                sizeof(pkmn_pokemon2_t)
+                                                            );
+            for(size_t index = 0; index < num_pokemon; ++index)
+            {
+                init_pokemon(
+                    pokemon_list_cpp[index],
+                    &pokemon_list_c_ptr->pokemon[index]
+                );
+            }
+        }
+
+        pokemon_list_c_ptr->length = num_pokemon;
+    }
+
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
         pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
@@ -447,6 +662,33 @@ namespace pkmn { namespace c {
                 pokemon_box_list_c_ptr->pokemon_boxes[index] = new pkmn_pokemon_box_t;
                 pokemon_box_list_c_ptr->pokemon_boxes[index]->cpp = pokemon_box_list_cpp.at(index);
                 pokemon_box_list_c_ptr->pokemon_boxes[index]->last_error = "None";
+            }
+        }
+
+        pokemon_box_list_c_ptr->length = num_boxes;
+    }
+
+    void pokemon_box_list2_cpp_to_c(
+        const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
+        pkmn_pokemon_box_list2_t* pokemon_box_list_c_ptr
+    )
+    {
+        BOOST_ASSERT(pokemon_box_list_c_ptr);
+
+        size_t num_boxes = pokemon_box_list_cpp.size();
+
+        if(num_boxes > 0)
+        {
+            pokemon_box_list_c_ptr->boxes = (pkmn_pokemon_box2_t*)std::calloc(
+                                                                      num_boxes,
+                                                                      sizeof(pkmn_pokemon_box2_t)
+                                                                  );
+            for(size_t index = 0; index < num_boxes; ++index)
+            {
+                init_pokemon_box(
+                    pokemon_box_list_cpp[index],
+                    &pokemon_box_list_c_ptr->boxes[index]
+                );
             }
         }
 

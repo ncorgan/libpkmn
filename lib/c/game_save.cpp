@@ -15,9 +15,6 @@
 
 #include <unordered_map>
 
-#define ITEM_BAG_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_bag_internal_t*>(ptr)
-#define ITEM_LIST_INTERNAL_RCAST(ptr) reinterpret_cast<pkmn_item_list_internal_t*>(ptr)
-
 static const std::unordered_map<std::string, int> GAME_GENERATIONS = boost::assign::map_list_of
     ("Red", 1)("Blue", 1)("Yellow", 1)
     ("Gold", 2)("Silver", 2)("Crystal", 2)
@@ -335,9 +332,10 @@ pkmn_error_t pkmn_game_save_get_item_bag(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_bag_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        item_bag_out->_internal = reinterpret_cast<void*>(new pkmn_item_bag_internal_t);
-        ITEM_BAG_INTERNAL_RCAST(item_bag_out->_internal)->cpp = handle->cpp->get_item_bag();
-        init_item_bag(handle->cpp->get_item_bag(), item_bag_out);
+        pkmn::c::init_item_bag(
+            handle->cpp->get_item_bag(),
+            item_bag_out
+        );
     )
 }
 
@@ -349,8 +347,9 @@ pkmn_error_t pkmn_game_save_get_item_pc(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_pc_out, handle);
 
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        item_pc_out->_internal = reinterpret_cast<void*>(new pkmn_item_list_internal_t);
-        ITEM_LIST_INTERNAL_RCAST(item_pc_out->_internal)->cpp = handle->cpp->get_item_pc();
-        init_item_list(handle->cpp->get_item_pc(), item_pc_out);
+        pkmn::c::init_item_list(
+            handle->cpp->get_item_pc(),
+            item_pc_out
+        );
     )
 }

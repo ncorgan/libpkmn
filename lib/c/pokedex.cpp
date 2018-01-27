@@ -15,29 +15,6 @@
 
 #include <cstdio>
 
-#define INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_pokedex_internal_t*>(ptr))
-
-// The caller is expected to be exception-safe.
-void init_pokedex(
-    pkmn::pokedex::sptr cpp_pokedex,
-    pkmn_pokedex_t* pokedex_ptr
-)
-{
-    BOOST_ASSERT(pokedex_ptr);
-    BOOST_ASSERT(cpp_pokedex.get());
-
-    pokedex_ptr->_internal = new pkmn_pokedex_internal_t;
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
-
-    internal_ptr->cpp = cpp_pokedex;
-    internal_ptr->last_error = "None";
-
-    pkmn::c::string_cpp_to_c_alloc(
-        internal_ptr->cpp->get_game(),
-        &pokedex_ptr->game
-    );
-}
-
 pkmn_error_t pkmn_pokedex_init(
     const char* game,
     pkmn_pokedex_t* pokedex_out
@@ -49,7 +26,7 @@ pkmn_error_t pkmn_pokedex_init(
     PKMN_CPP_TO_C(
         pkmn::pokedex::sptr cpp = pkmn::pokedex::make(game);
 
-        init_pokedex(
+        pkmn::c::init_pokedex(
             cpp,
             pokedex_out
         );
@@ -82,7 +59,7 @@ const char* pkmn_pokedex_strerror(
 
     try
     {
-        pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+        pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -104,7 +81,7 @@ pkmn_error_t pkmn_pokedex_has_seen(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(species, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(has_seen_out, internal_ptr);
 
@@ -120,7 +97,7 @@ pkmn_error_t pkmn_pokedex_set_has_seen(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(species, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -134,7 +111,7 @@ pkmn_error_t pkmn_pokedex_get_all_seen(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(all_seen_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -151,7 +128,7 @@ pkmn_error_t pkmn_pokedex_get_num_seen(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_seen_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -166,7 +143,7 @@ pkmn_error_t pkmn_pokedex_has_caught(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(species, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(has_caught_out, internal_ptr);
 
@@ -182,7 +159,7 @@ pkmn_error_t pkmn_pokedex_set_has_caught(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(species, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -196,7 +173,7 @@ pkmn_error_t pkmn_pokedex_get_all_caught(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(all_caught_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -213,7 +190,7 @@ pkmn_error_t pkmn_pokedex_get_num_caught(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(pokedex_ptr);
-    pkmn_pokedex_internal_t* internal_ptr = INTERNAL_RCAST(pokedex_ptr->_internal);
+    pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(pokedex_ptr->_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_caught_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
