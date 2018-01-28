@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -22,10 +22,13 @@ namespace pkmn { namespace database {
      *
      * \todo some differences between version groups need to be done manually
      */
-    class PKMN_API item_entry {
+    class PKMN_API item_entry
+    {
         public:
-            #ifndef __DOXYGEN__
-            PKMN_CONSTEXPR_OR_INLINE item_entry():
+            /*!
+             * @brief Default constructor. This corresponds to an invalid item.
+             */
+            item_entry():
                 _item_id(0),
                 _item_index(0),
                 _item_list_id(0),
@@ -36,11 +39,12 @@ namespace pkmn { namespace database {
                 _invalid(true)
             {}
 
+#if !defined(__DOXYGEN__) && !defined(SWIG)
             item_entry(
                 int item_index,
                 int game_id
             );
-            #endif
+#endif
 
             /*!
              * @brief Constructor that instantiates an item entry based on its name and game.
@@ -55,9 +59,17 @@ namespace pkmn { namespace database {
              * \throw std::invalid_argument If the given item was not in the given game
              */
             item_entry(
-                const std::string &item_name,
-                const std::string &game_name
+                const std::string& item_name,
+                const std::string& game_name
             );
+
+            item_entry(const item_entry&) = default;
+            item_entry& operator=(const item_entry&) = default;
+
+#ifndef SWIG
+            item_entry(item_entry&&) = default;
+            item_entry& operator=(item_entry&&) = default;
+#endif
 
             /*!
              * @brief Returns the item's name.
@@ -153,38 +165,43 @@ namespace pkmn { namespace database {
              */
             std::string get_fling_effect() const;
 
-            #ifndef __DOXYGEN__
-            PKMN_CONSTEXPR_OR_INLINE int get_item_id() const {
+#ifndef __DOXYGEN__
+            inline int get_item_id() const
+            {
                 return _item_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_item_index() const {
+            inline int get_item_index() const
+            {
                 return _item_index;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_item_list_id() const {
+            inline int get_item_list_id() const
+            {
                 return _item_list_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
+            inline int get_game_id() const
+            {
                 return _game_id;
             }
-            #endif
+#endif
 
             //! Equality check between two item entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator==(
-                const item_entry &rhs
-            ) const {
-                return ((this->_game_id == rhs._game_id) and
-                        (this->_item_id == rhs._item_id));
+            inline bool operator==(
+                const item_entry& rhs
+            ) const
+            {
+                return (this->_game_id == rhs._game_id) and
+                       (this->_item_id == rhs._item_id);
             }
 
             //! Inequality check between two item entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-                const item_entry &rhs
-            ) const {
-                return ((this->_game_id != rhs._game_id) or
-                        (this->_item_id != rhs._item_id));
+            inline bool operator!=(
+                const item_entry& rhs
+            ) const
+            {
+                return !operator==(rhs);
             }
 
         private:

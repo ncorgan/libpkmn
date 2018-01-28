@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,16 +14,15 @@
 
 namespace pkmn { namespace database {
 
-    /*! 
+    /*!
      * @brief Represents a move that a Pokémon learns leveling up.
      */
-    struct levelup_move {
+    struct levelup_move
+    {
         /*!
-         * @brief Default constructor.
-         *
-         * The move entry represents an invalid move.
+         * @brief Default constructor. Corresponds to an invalid move.
          */
-        PKMN_CONSTEXPR_OR_INLINE levelup_move():
+        levelup_move():
             move(pkmn::database::move_entry()),
             level(0) {}
 
@@ -32,30 +31,52 @@ namespace pkmn { namespace database {
          *
          * This calls the copy constructor for the move entry.
          *
-         * \param lmove move entry
+         * \param entry move entry
          * \param move_level level
          */
-        PKMN_CONSTEXPR_OR_INLINE levelup_move(
-            const pkmn::database::move_entry &lmove,
+        levelup_move(
+            const pkmn::database::move_entry& entry,
             int move_level
-        ): move(lmove),
+        ): move(entry),
            level(move_level) {}
+
+        levelup_move(const levelup_move&) = default;
+        levelup_move& operator=(const levelup_move&) = default;
 
 #ifndef SWIG
         /*!
-         * @brief Constructor that takes in references each member.
+         * @brief Constructor that takes in references to each member.
          *
          * This calls the move constructor for the move entry.
          *
-         * \param lmove move entry
+         * \param entry move entry
          * \param move_level level
          */
-        PKMN_CONSTEXPR_OR_INLINE levelup_move(
-            pkmn::database::move_entry&& lmove,
+        levelup_move(
+            pkmn::database::move_entry&& entry,
             int move_level
-        ): move(std::move(lmove)),
+        ): move(std::move(entry)),
            level(move_level) {}
+
+        levelup_move(levelup_move&&) = default;
+        levelup_move& operator=(levelup_move&&) = default;
 #endif
+
+        /*!
+         * @brief Equality check.
+         */
+        inline bool operator==(const levelup_move& rhs) const
+        {
+            return (this->move == rhs.move) and (this->level == rhs.level);
+        }
+
+        /*!
+         * @brief Inequality check.
+         */
+        inline bool operator!=(const levelup_move& rhs) const
+        {
+            return !operator==(rhs);
+        }
 
         /*!
          * @brief The entry for the given move.
@@ -66,30 +87,6 @@ namespace pkmn { namespace database {
          */
         int level;
     };
-
-    #ifndef SWIG
-    /*!
-     * @brief Equality check between two levelup_move instances.
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator==(
-        const levelup_move &lhs,
-        const levelup_move &rhs
-    ) {
-        return (lhs.move == rhs.move) and \
-               (lhs.level == rhs.level);
-    }
-
-    /*!
-     * @brief Inequality check between two levelup_move instances.
-     */
-    PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-        const levelup_move &lhs,
-        const levelup_move &rhs
-    ) {
-        return (lhs.move != rhs.move) or \
-               (lhs.level != rhs.level);
-    }
-    #endif
 
     /*!
      * @brief List of level-up moves.

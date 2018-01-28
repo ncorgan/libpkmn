@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,13 +29,16 @@ namespace pkmn { namespace database {
 
     /*
      * TODO:
-     *  * Fixes from unit test
      *  * See which ctors, move+copy ops, and ID getters can be constexpr'd
      *  * Can any other info be added?
      */
-    class PKMN_API pokemon_entry {
+    class PKMN_API pokemon_entry
+    {
         public:
-            PKMN_CONSTEXPR_OR_INLINE pokemon_entry():
+            /*!
+             * @brief Default constructor. Corresponds to an invalid Pokémon.
+             */
+            pokemon_entry():
                 _species_id(0),
                 _pokemon_id(0),
                 _form_id(0),
@@ -48,18 +51,26 @@ namespace pkmn { namespace database {
                 _shadow(false)
             {}
 
-            #ifndef __DOXYGEN__
+#if !defined(__DOXYGEN__) && !defined(SWIG)
             pokemon_entry(
                 int pokemon_index,
                 int game_id
             );
-            #endif
+#endif
 
             pokemon_entry(
                 const std::string &species_name,
                 const std::string &game_name,
                 const std::string &form_name
             );
+
+            pokemon_entry(const pokemon_entry&) = default;
+            pokemon_entry& operator=(const pokemon_entry&) = default;
+
+#ifndef SWIG
+            pokemon_entry(pokemon_entry&&) = default;
+            pokemon_entry& operator=(pokemon_entry&&) = default;
+#endif
 
             std::string get_name() const;
 
@@ -131,41 +142,43 @@ namespace pkmn { namespace database {
             ) const;
 
             #ifndef __DOXYGEN__
-            PKMN_CONSTEXPR_OR_INLINE int get_species_id() const {
+            inline int get_species_id() const
+            {
                 return _species_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_pokemon_id() const {
+            inline int get_pokemon_id() const
+            {
                 return _pokemon_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_form_id() const {
+            inline int get_form_id() const
+            {
                 return _form_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_pokemon_index() const {
+            inline int get_pokemon_index() const
+            {
                 return _pokemon_index;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
+            inline int get_game_id() const
+            {
                 return _game_id;
             }
             #endif
 
             //! Equality check between two Pokémon entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator==(
-                const pokemon_entry &rhs
-            ) const {
+            inline bool operator==(const pokemon_entry &rhs) const
+            {
                 return ((this->_game_id == rhs._game_id) and
                         (this->_pokemon_id == rhs._pokemon_id));
             }
 
             //! Inequality check between two Pokémon entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-                const pokemon_entry &rhs
-            ) const {
-                return ((this->_game_id != rhs._game_id) or
-                        (this->_pokemon_id != rhs._pokemon_id));
+            inline bool operator!=(const pokemon_entry &rhs) const
+            {
+                return !operator==(rhs);
             }
 
         private:

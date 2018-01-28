@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -25,10 +25,13 @@ namespace pkmn { namespace database {
      *       and Contest Spectaculars (Gen VI)
      * \todo Override target for Generation I-II
      */
-    class PKMN_API move_entry {
+    class PKMN_API move_entry
+    {
         public:
-            #ifndef __DOXYGEN__
-            PKMN_CONSTEXPR_OR_INLINE move_entry():
+            /*!
+             * Default constructor. Corresponds to an invalid item.
+             */
+            move_entry():
                 _move_id(0),
                 _game_id(0),
                 _generation(0),
@@ -36,11 +39,12 @@ namespace pkmn { namespace database {
                 _invalid(true)
             {}
 
+#if !defined(__DOXYGEN__) && !defined(SWIG)
             move_entry(
                 int move_id,
                 int game_id
             );
-            #endif
+#endif
 
             /*!
              * @brief Constructor that instantiates a move entry based on its name and game.
@@ -57,6 +61,14 @@ namespace pkmn { namespace database {
                 const std::string &move_name,
                 const std::string &game_name
             );
+
+            move_entry(const move_entry&) = default;
+            move_entry& operator=(const move_entry&) = default;
+
+#ifndef SWIG
+            move_entry(move_entry&&) = default;
+            move_entry& operator=(move_entry&&) = default;
+#endif
 
             /*!
              * @brief Returns the move's name.
@@ -222,29 +234,28 @@ namespace pkmn { namespace database {
             std::string get_super_contest_effect() const;
 
             #ifndef __DOXYGEN__
-            PKMN_CONSTEXPR_OR_INLINE int get_move_id() const {
+            inline int get_move_id() const
+            {
                 return _move_id;
             }
 
-            PKMN_CONSTEXPR_OR_INLINE int get_game_id() const {
+            inline int get_game_id() const
+            {
                 return _game_id;
             }
             #endif
 
             //! Equality check between two move entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator==(
-                const move_entry &rhs
-            ) const {
-                return ((this->_game_id == rhs._game_id) and
-                        (this->_move_id == rhs._move_id));
+            inline bool operator==(const move_entry &rhs) const
+            {
+                return (this->_game_id == rhs._game_id) and
+                       (this->_move_id == rhs._move_id);
             }
 
             //! Inequality check between two move entries
-            PKMN_CONSTEXPR_OR_INLINE bool operator!=(
-                const move_entry &rhs
-            ) const {
-                return ((this->_game_id != rhs._game_id) or
-                        (this->_move_id != rhs._move_id));
+            inline bool operator!=(const move_entry &rhs) const
+            {
+                return !operator==(rhs);
             }
 
         private:
