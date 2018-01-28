@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,12 @@
 
 namespace pkmn { namespace calculations {
 
+    /*!
+     * @brief Natural Gift stats.
+     *
+     * The type and base power of Natural Gift is determined by the
+     * berry held by the Pokémon when it uses the move.
+     */
     struct natural_gift
     {
         natural_gift():
@@ -54,6 +60,16 @@ namespace pkmn { namespace calculations {
         int base_power;
     };
 
+    /*!
+     * @brief Calculate Natural Gift stats.
+     *
+     * Base powers can vary for the same item between generations.
+     *
+     * \param item_name The name of the item held by the Pokémon
+     * \param generation The generation of the game
+     * \throws std::invalid_argument if the item is not a Berry
+     * \throws std::out_of_range if the generation is not in the range [4-6]
+     */
     PKMN_API natural_gift natural_gift_stats(
         const std::string& item_name,
         int generation

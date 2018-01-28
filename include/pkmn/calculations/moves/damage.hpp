@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,10 +9,22 @@
 
 #include <pkmn/config.hpp>
 
-#include <string>
-
 namespace pkmn { namespace calculations {
 
+    /*!
+     * @brief Damage calculation.
+     *
+     * The modifier can be determined from functions in
+     * <pkmn/calculations/moves/modifiers.hpp>
+     *
+     * \param attacker_level Attacker level (valid values: [1-255])
+     * \param move_base_power The base power of the move being used
+     * \param attack_stat The stat being used for attack (Attack or Special Attack)
+     * \param defense_stat The stat being used for attack (Defense or Special Defense)
+     * \param modifier Further damage modifiers
+     * \throws std::out_of_range if attacker_level is not in the range [1-255]
+     * \throws std::out_of_range if any parameter is negative
+     */
     PKMN_API int damage(
         int attacker_level,
         int move_base_power,

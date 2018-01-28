@@ -78,6 +78,7 @@ namespace pkmn {
              * state.
              *
              * \param filepath The new filepath for the game save
+             * \throws std::runtime_error if the save operation failed
              */
             virtual void save_as(
                 const std::string& filepath
@@ -257,6 +258,11 @@ namespace pkmn {
                 int money
             ) = 0;
 
+            /*!
+             * @brief Returns the trainer's Pokédex.
+             *
+             * \throws pkmn::feature_not_in_game_error if the save is from a Gamecube game
+             */
             virtual pkmn::pokedex::sptr get_pokedex() = 0;
 
             /*!
