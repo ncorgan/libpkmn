@@ -59,14 +59,15 @@ static const pkmn_pokemon_origin_info_t empty_pokemon_origin_info =
 
     .original_game = NULL,
     .ball = NULL,
+};
+static const pkmn_pokemon_current_trainer_info_t empty_pokemon_current_trainer_info =
+{
+    .current_trainer_friendship = 0,
+
     .level_met = 0,
 
     .location_met = NULL,
     .location_met_as_egg = NULL
-};
-static const pkmn_pokemon_current_trainer_info_t empty_pokemon_current_trainer_info =
-{
-    .current_trainer_friendship = 0
 };
 static const pkmn_pokemon_battle_info_t empty_pokemon_battle_info =
 {
@@ -232,8 +233,7 @@ static void check_initial_pokemon_info_values(
 }
 
 static void check_initial_pokemon_origin_info_values(
-    pkmn_pokemon2_t* pokemon_ptr,
-    const char* expected_original_location
+    pkmn_pokemon2_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -274,23 +274,6 @@ static void check_initial_pokemon_origin_info_values(
                     &level
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(level, pokemon_origin_info.level_met);
-
-        TEST_ASSERT_EQUAL_STRING(
-            expected_original_location,
-            pokemon_origin_info.location_met
-        );
-    }
-    else
-    {
-        TEST_ASSERT_EQUAL(
-            0,
-            pokemon_origin_info.level_met
-        );
-        TEST_ASSERT_EQUAL_STRING(
-            "None",
-            pokemon_origin_info.location_met
-        );
     }
 
     if(generation >= 3)
@@ -325,22 +308,73 @@ static void check_initial_pokemon_origin_info_values(
         );
     }
 
+    error = pkmn_pokemon_origin_info_free(&pokemon_origin_info);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+static void check_initial_pokemon_current_trainer_info_values(
+    pkmn_pokemon2_t* pokemon_ptr,
+    const char* expected_original_location
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    pkmn_pokemon_current_trainer_info_t current_trainer_info = empty_pokemon_current_trainer_info;
+
+    int generation = game_to_generation(pokemon_ptr->game);
+
+    error = pkmn_pokemon2_get_current_trainer_info(
+                pokemon_ptr,
+                &current_trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    if(generation >= 2)
+    {
+        int level = 0;
+
+        error = pkmn_pokemon2_get_level(
+                    pokemon_ptr,
+                    &level
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(level, current_trainer_info.level_met);
+
+        TEST_ASSERT_EQUAL_STRING(
+            expected_original_location,
+            current_trainer_info.location_met
+        );
+    }
+    else
+    {
+        TEST_ASSERT_EQUAL(
+            0,
+            current_trainer_info.level_met
+        );
+        TEST_ASSERT_EQUAL_STRING(
+            "None",
+            current_trainer_info.location_met
+        );
+    }
+
     if(generation >= 4)
     {
         TEST_ASSERT_EQUAL_STRING(
             expected_original_location,
-            pokemon_origin_info.location_met_as_egg
+            current_trainer_info.location_met_as_egg
         );
     }
     else
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
-            pokemon_origin_info.location_met_as_egg
+            current_trainer_info.location_met_as_egg
         );
     }
 
-    error = pkmn_pokemon_origin_info_free(&pokemon_origin_info);
+    error = pkmn_pokemon_current_trainer_info_free(&current_trainer_info);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 
@@ -578,7 +612,8 @@ static void check_initial_values(
 
     check_initial_pokemon_filepaths_values(pokemon_ptr);
     check_initial_pokemon_info_values(pokemon_ptr);
-    check_initial_pokemon_origin_info_values(pokemon_ptr, "");
+    check_initial_pokemon_origin_info_values(pokemon_ptr);
+    check_initial_pokemon_current_trainer_info_values(pokemon_ptr, "");
     check_initial_pokemon_battle_info_values(pokemon_ptr);
     check_initial_stats_and_misc(pokemon_ptr);
 }

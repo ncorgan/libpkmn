@@ -73,15 +73,6 @@ pkmn_error_t pkmn_pokemon_origin_info_free(
         pkmn::c::free_pointer_and_set_to_null(
             &pokemon_origin_info_ptr->ball
         );
-
-        pokemon_origin_info_ptr->level_met = 0;
-
-        pkmn::c::free_pointer_and_set_to_null(
-            &pokemon_origin_info_ptr->location_met
-        );
-        pkmn::c::free_pointer_and_set_to_null(
-            &pokemon_origin_info_ptr->location_met_as_egg
-        );
     }
 
     return error;
@@ -94,6 +85,15 @@ pkmn_error_t pkmn_pokemon_current_trainer_info_free(
     PKMN_CHECK_NULL_PARAM(pokemon_current_trainer_info_ptr);
 
     pokemon_current_trainer_info_ptr->current_trainer_friendship = 0;
+
+    pokemon_current_trainer_info_ptr->level_met = 0;
+
+    pkmn::c::free_pointer_and_set_to_null(
+        &pokemon_current_trainer_info_ptr->location_met
+    );
+    pkmn::c::free_pointer_and_set_to_null(
+        &pokemon_current_trainer_info_ptr->location_met_as_egg
+    );
 
     return PKMN_ERROR_NONE;
 }

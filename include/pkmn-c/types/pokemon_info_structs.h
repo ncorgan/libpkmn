@@ -44,15 +44,16 @@ typedef struct
 
     char* original_game;
     char* ball;
-    int level_met;
-
-    char* location_met;
-    char* location_met_as_egg;
 } pkmn_pokemon_origin_info_t;
 
 typedef struct
 {
     int current_trainer_friendship;
+
+    int level_met;
+
+    char* location_met;
+    char* location_met_as_egg;
 } pkmn_pokemon_current_trainer_info_t;
 
 typedef struct

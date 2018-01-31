@@ -462,24 +462,10 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
             std::string cpp_gender = internal_ptr->cpp->get_original_trainer_gender();
             BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(cpp_gender) > 0);
             pokemon_origin_info.original_trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
-
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_location_met(false),
-                &pokemon_origin_info.location_met
-            );
-
-            pokemon_origin_info.level_met = internal_ptr->cpp->get_level_met();
         }
         else
         {
             pokemon_origin_info.original_trainer_info.gender = PKMN_GENDER_MALE;
-
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_origin_info.location_met
-            );
-
-            pokemon_origin_info.level_met = 0;
         }
 
         if(internal_ptr->generation >= 3)
@@ -494,21 +480,6 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
             pkmn::c::string_cpp_to_c_alloc(
                 "None",
                 &pokemon_origin_info.ball
-            );
-        }
-
-        if(internal_ptr->generation >= 4)
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_location_met(true),
-                &pokemon_origin_info.location_met_as_egg
-            );
-        }
-        else
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_origin_info.location_met_as_egg
             );
         }
     )
@@ -645,10 +616,39 @@ pkmn_error_t pkmn_pokemon2_get_current_trainer_info(
         {
             pokemon_current_trainer_info.current_trainer_friendship =
                 internal_ptr->cpp->get_current_trainer_friendship();
+
+            pkmn::c::string_cpp_to_c_alloc(
+                internal_ptr->cpp->get_location_met(false),
+                &pokemon_current_trainer_info.location_met
+            );
+
+            pokemon_current_trainer_info.level_met = internal_ptr->cpp->get_level_met();
         }
         else
         {
             pokemon_current_trainer_info.current_trainer_friendship = 0;
+
+            pkmn::c::string_cpp_to_c_alloc(
+                "None",
+                &pokemon_current_trainer_info.location_met
+            );
+
+            pokemon_current_trainer_info.level_met = internal_ptr->cpp->get_level_met();
+        }
+
+        if(internal_ptr->generation >= 4)
+        {
+            pkmn::c::string_cpp_to_c_alloc(
+                internal_ptr->cpp->get_location_met(true),
+                &pokemon_current_trainer_info.location_met_as_egg
+            );
+        }
+        else
+        {
+            pkmn::c::string_cpp_to_c_alloc(
+                "None",
+                &pokemon_current_trainer_info.location_met_as_egg
+            );
         }
 
         *pokemon_current_trainer_info_ptr = std::move(pokemon_current_trainer_info);
