@@ -453,15 +453,15 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
 
         pkmn::c::string_cpp_to_c_alloc(
             internal_ptr->cpp->get_original_trainer_name(),
-            &pokemon_origin_info.trainer_info.name
+            &pokemon_origin_info.original_trainer_info.name
         );
-        pokemon_origin_info.trainer_info.id.id = internal_ptr->cpp->get_original_trainer_id();
+        pokemon_origin_info.original_trainer_info.id.id = internal_ptr->cpp->get_original_trainer_id();
 
         if(internal_ptr->generation >= 2)
         {
             std::string cpp_gender = internal_ptr->cpp->get_original_trainer_gender();
             BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(cpp_gender) > 0);
-            pokemon_origin_info.trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
+            pokemon_origin_info.original_trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
 
             pkmn::c::string_cpp_to_c_alloc(
                 internal_ptr->cpp->get_location_met(false),
@@ -472,7 +472,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
         }
         else
         {
-            pokemon_origin_info.trainer_info.gender = PKMN_GENDER_MALE;
+            pokemon_origin_info.original_trainer_info.gender = PKMN_GENDER_MALE;
 
             pkmn::c::string_cpp_to_c_alloc(
                 "None",
@@ -624,6 +624,47 @@ pkmn_error_t pkmn_pokemon2_set_level_met(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_level_met(level_met);
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_get_current_trainer_info(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_current_trainer_info_t* pokemon_current_trainer_info_ptr
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_current_trainer_info_ptr, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        // Put the values in a separate struct first so there are
+        // no side effects if there's an error.
+        pkmn_pokemon_current_trainer_info_t pokemon_current_trainer_info;
+
+        if(internal_ptr->generation >= 2)
+        {
+            pokemon_current_trainer_info.current_trainer_friendship =
+                internal_ptr->cpp->get_current_trainer_friendship();
+        }
+        else
+        {
+            pokemon_current_trainer_info.current_trainer_friendship = 0;
+        }
+
+        *pokemon_current_trainer_info_ptr = std::move(pokemon_current_trainer_info);
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_current_trainer_friendship(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int current_trainer_friendship
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_current_trainer_friendship(current_trainer_friendship);
     )
 }
 

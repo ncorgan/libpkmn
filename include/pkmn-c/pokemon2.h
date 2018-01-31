@@ -195,6 +195,18 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_level_met(
     int level_met
 );
 
+// Current trainer info
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_current_trainer_info(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_current_trainer_info_t* pokemon_current_trainer_info_ptr
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_set_current_trainer_friendship(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int current_trainer_friendship
+);
+
 // Moves
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_get_moves(

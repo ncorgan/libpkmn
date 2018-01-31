@@ -63,7 +63,7 @@ pkmn_error_t pkmn_pokemon_origin_info_free(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = pkmn_trainer_info_free(
-                &pokemon_origin_info_ptr->trainer_info
+                &pokemon_origin_info_ptr->original_trainer_info
             );
     if(!error)
     {
@@ -85,6 +85,17 @@ pkmn_error_t pkmn_pokemon_origin_info_free(
     }
 
     return error;
+}
+
+pkmn_error_t pkmn_pokemon_current_trainer_info_free(
+    pkmn_pokemon_current_trainer_info_t* pokemon_current_trainer_info_ptr
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_current_trainer_info_ptr);
+
+    pokemon_current_trainer_info_ptr->current_trainer_friendship = 0;
+
+    return PKMN_ERROR_NONE;
 }
 
 pkmn_error_t pkmn_pokemon_battle_info_free(

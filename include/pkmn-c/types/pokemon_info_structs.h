@@ -40,7 +40,7 @@ typedef struct
 
 typedef struct
 {
-    pkmn_trainer_info2_t trainer_info;
+    pkmn_trainer_info2_t original_trainer_info;
 
     char* original_game;
     char* ball;
@@ -49,6 +49,11 @@ typedef struct
     char* location_met;
     char* location_met_as_egg;
 } pkmn_pokemon_origin_info_t;
+
+typedef struct
+{
+    int current_trainer_friendship;
+} pkmn_pokemon_current_trainer_info_t;
 
 typedef struct
 {
@@ -71,6 +76,10 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_info_free(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_origin_info_free(
     pkmn_pokemon_origin_info_t* pokemon_origin_info_ptr
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon_current_trainer_info_free(
+    pkmn_pokemon_current_trainer_info_t* pokemon_current_trainer_info_ptr
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_battle_info_free(

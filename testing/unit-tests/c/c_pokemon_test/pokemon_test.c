@@ -50,7 +50,7 @@ static const pkmn_pokemon_info_t empty_pokemon_info =
 };
 static const pkmn_pokemon_origin_info_t empty_pokemon_origin_info =
 {
-    .trainer_info =
+    .original_trainer_info =
     {
         .name = NULL,
         .id = {0U},
@@ -63,6 +63,10 @@ static const pkmn_pokemon_origin_info_t empty_pokemon_origin_info =
 
     .location_met = NULL,
     .location_met_as_egg = NULL
+};
+static const pkmn_pokemon_current_trainer_info_t empty_pokemon_current_trainer_info =
+{
+    .current_trainer_friendship = 0
 };
 static const pkmn_pokemon_battle_info_t empty_pokemon_battle_info =
 {
@@ -250,15 +254,15 @@ static void check_initial_pokemon_origin_info_values(
 
     TEST_ASSERT_EQUAL_STRING(
         pkmn_pokemon2_default_trainer_name(),
-        pokemon_origin_info.trainer_info.name
+        pokemon_origin_info.original_trainer_info.name
     );
     TEST_ASSERT_EQUAL(
         default_trainer_id.public_id,
-        pokemon_origin_info.trainer_info.id.public_id
+        pokemon_origin_info.original_trainer_info.id.public_id
     );
     TEST_ASSERT_EQUAL(
         PKMN_GENDER_MALE,
-        pokemon_origin_info.trainer_info.gender
+        pokemon_origin_info.original_trainer_info.gender
     );
 
     if(generation >= 2)
@@ -293,11 +297,11 @@ static void check_initial_pokemon_origin_info_values(
     {
         TEST_ASSERT_EQUAL(
             default_trainer_id.id,
-            pokemon_origin_info.trainer_info.id.id
+            pokemon_origin_info.original_trainer_info.id.id
         );
         TEST_ASSERT_EQUAL(
             default_trainer_id.secret_id,
-            pokemon_origin_info.trainer_info.id.secret_id
+            pokemon_origin_info.original_trainer_info.id.secret_id
         );
 
         TEST_ASSERT_EQUAL_STRING(
@@ -313,11 +317,11 @@ static void check_initial_pokemon_origin_info_values(
     {
         TEST_ASSERT_EQUAL(
             ((uint32_t)default_trainer_id.public_id),
-            pokemon_origin_info.trainer_info.id.id
+            pokemon_origin_info.original_trainer_info.id.id
         );
         TEST_ASSERT_EQUAL(
             0,
-            pokemon_origin_info.trainer_info.id.secret_id
+            pokemon_origin_info.original_trainer_info.id.secret_id
         );
     }
 
@@ -809,9 +813,44 @@ static void test_setting_friendship(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_pokemon_battle_info_t pokemon_battle_info = empty_pokemon_battle_info;
+    pkmn_pokemon_current_trainer_info_t pokemon_current_trainer_info = empty_pokemon_current_trainer_info;
 
     int generation = game_to_generation(pokemon_ptr->game);
+
+    error = pkmn_pokemon2_get_current_trainer_info(
+                pokemon_ptr,
+                &pokemon_current_trainer_info
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    if(generation >= 2)
+    {
+        const int friendship = (rand() % 256);
+
+        error = pkmn_pokemon2_set_current_trainer_friendship(
+                    pokemon_ptr,
+                    friendship
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon2_get_current_trainer_info(
+                    pokemon_ptr,
+                    &pokemon_current_trainer_info
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL(
+            friendship,
+            pokemon_current_trainer_info.current_trainer_friendship
+        );
+    }
+    else
+    {
+        error = pkmn_pokemon2_set_current_trainer_friendship(
+                    pokemon_ptr,
+                    0
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
+    }
 }
 
 /*
