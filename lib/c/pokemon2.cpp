@@ -260,6 +260,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_info(
 
         if(internal_ptr->generation >= 2)
         {
+            pokemon_info.is_shiny = internal_ptr->cpp->is_shiny();
             pokemon_info.is_egg = internal_ptr->cpp->is_egg();
 
             std::string cpp_gender = internal_ptr->cpp->get_gender();
@@ -273,6 +274,7 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_info(
         }
         else
         {
+            pokemon_info.is_shiny = false;
             pokemon_info.is_egg = false;
             pokemon_info.pokerus_duration = 0;
 
@@ -302,6 +304,19 @@ pkmn_error_t pkmn_pokemon2_get_pokemon_info(
         }
 
         *pokemon_info_ptr = std::move(pokemon_info);
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_is_shiny(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool is_shiny
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_shininess(is_shiny);
     )
 }
 

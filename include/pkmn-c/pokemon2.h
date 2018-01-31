@@ -102,6 +102,11 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_pokemon_info(
     pkmn_pokemon_info_t* pokemon_info_ptr
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_set_is_shiny(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool is_shiny
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_is_egg(
     pkmn_pokemon2_t* pokemon_ptr,
     bool is_egg

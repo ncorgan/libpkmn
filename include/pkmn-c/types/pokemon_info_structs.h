@@ -24,6 +24,7 @@ typedef struct
 
 typedef struct
 {
+    bool is_shiny;
     bool is_egg;
     int pokerus_duration;
 

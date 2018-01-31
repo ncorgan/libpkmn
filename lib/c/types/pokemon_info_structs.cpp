@@ -32,6 +32,7 @@ pkmn_error_t pkmn_pokemon_info_free(
 {
     PKMN_CHECK_NULL_PARAM(pokemon_info_ptr);
 
+    pokemon_info_ptr->is_shiny = false;
     pokemon_info_ptr->is_egg = false;
     pokemon_info_ptr->pokerus_duration = 0;
 
