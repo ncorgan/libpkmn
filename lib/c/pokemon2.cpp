@@ -21,6 +21,62 @@
 
 #include <cstdio>
 
+// The caller is expected to be exception-safe.
+template <typename enum_type, typename buffer_type>
+static void copy_map_to_buffer(
+    const std::map<std::string, buffer_type>& value_map,
+    const boost::bimap<std::string, enum_type>& value_enum_bimap,
+    buffer_type* values_buffer_out,
+    size_t value_buffer_size,
+    size_t actual_num_values,
+    size_t* actual_num_values_out
+)
+{
+    BOOST_ASSERT(values_buffer_out);
+
+    std::memset(
+        values_buffer_out,
+        0,
+        value_buffer_size * sizeof(int)
+    );
+
+    for(size_t value = 0; value <= actual_num_values; ++value)
+    {
+        enum_type value_enum = enum_type(value);
+        BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
+        values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
+    }
+
+    // Optional parameter
+    if(actual_num_values_out)
+    {
+        *actual_num_values_out = actual_num_values;
+    }
+}
+
+pkmn_error_t pkmn_pokemon2_get_EVs(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* EVs_buffer_out,
+    size_t stat_buffer_size,
+    size_t* actual_num_EVs_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_EVs(),
+            pkmn::c::STAT_BIMAP,
+            EVs_buffer_out,
+            stat_buffer_size,
+            PKMN_NUM_STATS,
+            actual_num_EVs_out
+        );
+    )
+}
+
 pkmn_trainer_id2_t pkmn_pokemon2_default_trainer_id()
 {
     return {pkmn::pokemon::DEFAULT_TRAINER_ID};
@@ -155,25 +211,6 @@ pkmn_error_t pkmn_pokemon2_export_to_file(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_get_database_entry(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_database_pokemon_entry_t* database_entry_ptr
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_ptr, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::c::pokemon_entry_cpp_to_c(
-            internal_ptr->cpp->get_database_entry(),
-            database_entry_ptr
-        );
-    )
-}
-
-// Common but non-static values
-
 pkmn_error_t pkmn_pokemon2_get_form(
     pkmn_pokemon2_t* pokemon_ptr,
     char* form_buffer,
@@ -209,116 +246,7 @@ pkmn_error_t pkmn_pokemon2_set_form(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_get_level(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int* level_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(level_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        *level_out = internal_ptr->cpp->get_level();
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_level(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int level
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_level(level);
-    )
-}
-
-// Pokémon info
-
-pkmn_error_t pkmn_pokemon2_get_pokemon_info(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_pokemon_info_t* pokemon_info_ptr
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_info_ptr, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        // Put the values in a separate struct first so there are
-        // no side effects if there's an error.
-        pkmn_pokemon_info_t pokemon_info;
-
-        pkmn::c::string_cpp_to_c_alloc(
-            internal_ptr->cpp->get_nickname(),
-            &pokemon_info.nickname
-        );
-        pokemon_info.experience = internal_ptr->cpp->get_experience();
-
-        if(internal_ptr->generation >= 2)
-        {
-            pokemon_info.is_shiny = internal_ptr->cpp->is_shiny();
-            pokemon_info.is_egg = internal_ptr->cpp->is_egg();
-
-            std::string cpp_gender = internal_ptr->cpp->get_gender();
-            BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(cpp_gender) > 0);
-            pokemon_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
-
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_held_item(),
-                &pokemon_info.held_item
-            );
-        }
-        else
-        {
-            pokemon_info.is_shiny = false;
-            pokemon_info.is_egg = false;
-            pokemon_info.pokerus_duration = 0;
-
-            pokemon_info.gender = PKMN_GENDER_MALE;
-
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_info.held_item
-            );
-        }
-
-        if(internal_ptr->generation >= 3)
-        {
-            pokemon_info.personality = internal_ptr->cpp->get_personality();
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_ability(),
-                &pokemon_info.ability
-            );
-        }
-        else
-        {
-            pokemon_info.personality = 0U;
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_info.ability
-            );
-        }
-
-        *pokemon_info_ptr = std::move(pokemon_info);
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_is_shiny(
-    pkmn_pokemon2_t* pokemon_ptr,
-    bool is_shiny
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_shininess(is_shiny);
-    )
-}
+// TODO: get is_egg
 
 pkmn_error_t pkmn_pokemon2_set_is_egg(
     pkmn_pokemon2_t* pokemon_ptr,
@@ -333,29 +261,55 @@ pkmn_error_t pkmn_pokemon2_set_is_egg(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_pokerus_duration(
+pkmn_error_t pkmn_pokemon2_get_database_entry(
     pkmn_pokemon2_t* pokemon_ptr,
-    int pokerus_duration
+    pkmn_database_pokemon_entry_t* database_entry_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_pokerus_duration(pokerus_duration);
+        pkmn::c::pokemon_entry_cpp_to_c(
+            internal_ptr->cpp->get_database_entry(),
+            database_entry_ptr
+        );
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_personality(
+pkmn_error_t pkmn_pokemon2_set_condition(
     pkmn_pokemon2_t* pokemon_ptr,
-    uint32_t personality
+    pkmn_condition_t condition
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_personality(personality);
+        pkmn::enforce_value_in_map_keys(
+            "Condition",
+            condition,
+            pkmn::c::CONDITION_BIMAP.right
+        );
+
+        internal_ptr->cpp->set_condition(
+            pkmn::c::CONDITION_BIMAP.right.at(condition)
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_nickname(
+    pkmn_pokemon2_t* pokemon_ptr,
+    const char* nickname
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_nickname(nickname);
     )
 }
 
@@ -380,31 +334,16 @@ pkmn_error_t pkmn_pokemon2_set_gender(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_ability(
+pkmn_error_t pkmn_pokemon2_set_is_shiny(
     pkmn_pokemon2_t* pokemon_ptr,
-    const char* ability
+    bool is_shiny
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ability, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_ability(ability);
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_nickname(
-    pkmn_pokemon2_t* pokemon_ptr,
-    const char* nickname
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(nickname, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_nickname(nickname);
+        internal_ptr->cpp->set_shininess(is_shiny);
     )
 }
 
@@ -422,66 +361,16 @@ pkmn_error_t pkmn_pokemon2_set_held_item(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_experience(
+pkmn_error_t pkmn_pokemon2_set_pokerus_duration(
     pkmn_pokemon2_t* pokemon_ptr,
-    int experience
+    int pokerus_duration
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_experience(experience);
-    )
-}
-
-// Pokémon origin info
-
-pkmn_error_t pkmn_pokemon2_get_pokemon_origin_info(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_pokemon_origin_info_t* pokemon_origin_info_ptr
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_origin_info_ptr, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        // Put the values in a separate struct first so there are
-        // no side effects if there's an error.
-        pkmn_pokemon_origin_info_t pokemon_origin_info;
-
-        pkmn::c::string_cpp_to_c_alloc(
-            internal_ptr->cpp->get_original_trainer_name(),
-            &pokemon_origin_info.original_trainer_info.name
-        );
-        pokemon_origin_info.original_trainer_info.id.id = internal_ptr->cpp->get_original_trainer_id();
-
-        if(internal_ptr->generation >= 2)
-        {
-            std::string cpp_gender = internal_ptr->cpp->get_original_trainer_gender();
-            BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(cpp_gender) > 0);
-            pokemon_origin_info.original_trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
-        }
-        else
-        {
-            pokemon_origin_info.original_trainer_info.gender = PKMN_GENDER_MALE;
-        }
-
-        if(internal_ptr->generation >= 3)
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_ball(),
-                &pokemon_origin_info.ball
-            );
-        }
-        else
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_origin_info.ball
-            );
-        }
+        internal_ptr->cpp->set_pokerus_duration(pokerus_duration);
     )
 }
 
@@ -496,19 +385,6 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_name(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_original_trainer_name(original_trainer_name);
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_original_trainer_id(
-    pkmn_pokemon2_t* pokemon_ptr,
-    uint32_t original_trainer_id
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_original_trainer_id(original_trainer_id);
     )
 }
 
@@ -542,17 +418,45 @@ pkmn_error_t pkmn_pokemon2_set_original_trainer_secret_id(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_original_game(
+pkmn_error_t pkmn_pokemon2_set_original_trainer_id(
     pkmn_pokemon2_t* pokemon_ptr,
-    const char* game
+    uint32_t original_trainer_id
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_original_game(game);
+        internal_ptr->cpp->set_original_trainer_id(original_trainer_id);
+    )
+}
+
+// TODO: trainer gender
+
+pkmn_error_t pkmn_pokemon2_set_current_trainer_friendship(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int current_trainer_friendship
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_current_trainer_friendship(current_trainer_friendship);
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_ability(
+    pkmn_pokemon2_t* pokemon_ptr,
+    const char* ability
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(ability, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_ability(ability);
     )
 }
 
@@ -567,6 +471,19 @@ pkmn_error_t pkmn_pokemon2_set_ball(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_ball(ball);
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_level_met(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int level_met
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_level_met(level_met);
     )
 }
 
@@ -585,330 +502,70 @@ pkmn_error_t pkmn_pokemon2_set_location_met(
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_level_met(
+pkmn_error_t pkmn_pokemon2_set_original_game(
     pkmn_pokemon2_t* pokemon_ptr,
-    int level_met
+    const char* game
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(game, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_level_met(level_met);
+        internal_ptr->cpp->set_original_game(game);
     )
 }
 
-pkmn_error_t pkmn_pokemon2_get_current_trainer_info(
+pkmn_error_t pkmn_pokemon2_set_personality(
     pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_pokemon_current_trainer_info_t* pokemon_current_trainer_info_ptr
+    uint32_t personality
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_current_trainer_info_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        // Put the values in a separate struct first so there are
-        // no side effects if there's an error.
-        pkmn_pokemon_current_trainer_info_t pokemon_current_trainer_info;
-
-        if(internal_ptr->generation >= 2)
-        {
-            pokemon_current_trainer_info.current_trainer_friendship =
-                internal_ptr->cpp->get_current_trainer_friendship();
-
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_location_met(false),
-                &pokemon_current_trainer_info.location_met
-            );
-
-            pokemon_current_trainer_info.level_met = internal_ptr->cpp->get_level_met();
-        }
-        else
-        {
-            pokemon_current_trainer_info.current_trainer_friendship = 0;
-
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_current_trainer_info.location_met
-            );
-
-            pokemon_current_trainer_info.level_met = internal_ptr->cpp->get_level_met();
-        }
-
-        if(internal_ptr->generation >= 4)
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                internal_ptr->cpp->get_location_met(true),
-                &pokemon_current_trainer_info.location_met_as_egg
-            );
-        }
-        else
-        {
-            pkmn::c::string_cpp_to_c_alloc(
-                "None",
-                &pokemon_current_trainer_info.location_met_as_egg
-            );
-        }
-
-        *pokemon_current_trainer_info_ptr = std::move(pokemon_current_trainer_info);
+        internal_ptr->cpp->set_personality(personality);
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_current_trainer_friendship(
+pkmn_error_t pkmn_pokemon2_set_experience(
     pkmn_pokemon2_t* pokemon_ptr,
-    int current_trainer_friendship
+    int experience
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_current_trainer_friendship(current_trainer_friendship);
+        internal_ptr->cpp->set_experience(experience);
     )
 }
 
-// Moves
-
-PKMN_C_API pkmn_error_t pkmn_pokemon2_get_moves(
+pkmn_error_t pkmn_pokemon2_get_level(
     pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_move_slots_t* move_slots_out
+    int* level_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move_slots_out, internal_ptr);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(level_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::c::move_slots_cpp_to_c(
-            internal_ptr->cpp->get_moves(),
-            move_slots_out
-        );
+        *level_out = internal_ptr->cpp->get_level();
     )
 }
 
-pkmn_error_t pkmn_pokemon2_set_move(
+pkmn_error_t pkmn_pokemon2_set_level(
     pkmn_pokemon2_t* pokemon_ptr,
-    size_t index,
-    const char* move
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_move(move, int(index));
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_move_pp(
-    pkmn_pokemon2_t* pokemon_ptr,
-    size_t index,
-    int pp
+    int level
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        internal_ptr->cpp->set_move_pp(int(index), pp);
-    )
-}
-
-// Stats
-
-// The caller is expected to be exception-safe.
-template <typename enum_type, typename buffer_type>
-static void copy_map_to_buffer(
-    const std::map<std::string, buffer_type>& value_map,
-    const boost::bimap<std::string, enum_type>& value_enum_bimap,
-    buffer_type* values_buffer_out,
-    size_t value_buffer_size,
-    size_t actual_num_values,
-    size_t* actual_num_values_out
-)
-{
-    BOOST_ASSERT(values_buffer_out);
-
-    std::memset(
-        values_buffer_out,
-        0,
-        value_buffer_size * sizeof(int)
-    );
-
-    for(size_t value = 0; value <= actual_num_values; ++value)
-    {
-        enum_type value_enum = enum_type(value);
-        BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
-        values_buffer_out[value] = value_map.at(value_enum_bimap.right.at(value_enum));
-    }
-
-    // Optional parameter
-    if(actual_num_values_out)
-    {
-        *actual_num_values_out = actual_num_values;
-    }
-}
-
-pkmn_error_t pkmn_pokemon2_get_EVs(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int* EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* actual_num_EVs_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_map_to_buffer(
-            internal_ptr->cpp->get_EVs(),
-            pkmn::c::STAT_BIMAP,
-            EVs_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            actual_num_EVs_out
-        );
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_EV(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_stat_t stat,
-    int value
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::enforce_value_in_map_keys(
-            "Stat",
-            stat,
-            pkmn::c::STAT_BIMAP.right
-        );
-
-        internal_ptr->cpp->set_EV(
-            pkmn::c::STAT_BIMAP.right.at(stat),
-            value
-        );
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_get_IVs(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int* IVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* actual_num_IVs_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IVs_buffer_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_map_to_buffer(
-            internal_ptr->cpp->get_IVs(),
-            pkmn::c::STAT_BIMAP,
-            IVs_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            actual_num_IVs_out
-        );
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_IV(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_stat_t stat,
-    int value
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::enforce_value_in_map_keys(
-            "Stat",
-            stat,
-            pkmn::c::STAT_BIMAP.right
-        );
-
-        internal_ptr->cpp->set_IV(
-            pkmn::c::STAT_BIMAP.right.at(stat),
-            value
-        );
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_get_stats(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int* stats_buffer_out,
-    size_t stat_buffer_size,
-    size_t* actual_num_stats_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stats_buffer_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_map_to_buffer(
-            internal_ptr->cpp->get_stats(),
-            pkmn::c::STAT_BIMAP,
-            stats_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            actual_num_stats_out
-        );
-    )
-}
-
-PKMN_C_API pkmn_error_t pkmn_pokemon2_get_contest_stats(
-    pkmn_pokemon2_t* pokemon_ptr,
-    int* contest_stats_buffer_out,
-    size_t contest_stat_buffer_size,
-    size_t* actual_num_contest_stats_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stats_buffer_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_map_to_buffer(
-            internal_ptr->cpp->get_contest_stats(),
-            pkmn::c::CONTEST_STAT_BIMAP,
-            contest_stats_buffer_out,
-            contest_stat_buffer_size,
-            PKMN_NUM_CONTEST_STATS,
-            actual_num_contest_stats_out
-        );
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_contest_stat(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_contest_stat_t contest_stat,
-    int value
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::enforce_value_in_map_keys(
-            "Contest stat",
-            contest_stat,
-            pkmn::c::CONTEST_STAT_BIMAP.right
-        );
-
-        internal_ptr->cpp->set_contest_stat(
-            pkmn::c::CONTEST_STAT_BIMAP.right.at(contest_stat),
-            value
-        );
+        internal_ptr->cpp->set_level(level);
     )
 }
 
@@ -1030,29 +687,191 @@ pkmn_error_t pkmn_pokemon2_get_ribbon_names(
     )
 }
 
-// Battle info
-
-pkmn_error_t pkmn_pokemon2_get_battle_info(
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_contest_stats(
     pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_pokemon_battle_info_t* pokemon_battle_info_ptr
+    int* contest_stats_buffer_out,
+    size_t contest_stat_buffer_size,
+    size_t* actual_num_contest_stats_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
     pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_battle_info_ptr, internal_ptr);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(contest_stats_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        // Put the values in a separate struct first so there are
-        // no side effects if there's an error.
-        pkmn_pokemon_battle_info_t pokemon_battle_info;
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_contest_stats(),
+            pkmn::c::CONTEST_STAT_BIMAP,
+            contest_stats_buffer_out,
+            contest_stat_buffer_size,
+            PKMN_NUM_CONTEST_STATS,
+            actual_num_contest_stats_out
+        );
+    )
+}
 
-        pokemon_battle_info.current_hp = internal_ptr->cpp->get_current_hp();
+pkmn_error_t pkmn_pokemon2_set_contest_stat(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_contest_stat_t contest_stat,
+    int value
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
 
-        std::string cpp_condition = internal_ptr->cpp->get_condition();
-        BOOST_ASSERT(pkmn::c::CONDITION_BIMAP.left.count(cpp_condition) > 0);
-        pokemon_battle_info.condition = pkmn::c::CONDITION_BIMAP.left.at(cpp_condition);
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::enforce_value_in_map_keys(
+            "Contest stat",
+            contest_stat,
+            pkmn::c::CONTEST_STAT_BIMAP.right
+        );
 
-        *pokemon_battle_info_ptr = std::move(pokemon_battle_info);
+        internal_ptr->cpp->set_contest_stat(
+            pkmn::c::CONTEST_STAT_BIMAP.right.at(contest_stat),
+            value
+        );
+    )
+}
+
+// Moves
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_moves(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_move_slots_t* move_slots_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move_slots_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::c::move_slots_cpp_to_c(
+            internal_ptr->cpp->get_moves(),
+            move_slots_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_move(
+    pkmn_pokemon2_t* pokemon_ptr,
+    size_t index,
+    const char* move
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(move, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_move(move, int(index));
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_move_pp(
+    pkmn_pokemon2_t* pokemon_ptr,
+    size_t index,
+    int pp
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_move_pp(int(index), pp);
+    )
+}
+
+// Stats
+
+pkmn_error_t pkmn_pokemon2_set_EV(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_stat_t stat,
+    int value
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::enforce_value_in_map_keys(
+            "Stat",
+            stat,
+            pkmn::c::STAT_BIMAP.right
+        );
+
+        internal_ptr->cpp->set_EV(
+            pkmn::c::STAT_BIMAP.right.at(stat),
+            value
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_get_IVs(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* IVs_buffer_out,
+    size_t stat_buffer_size,
+    size_t* actual_num_IVs_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(IVs_buffer_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_IVs(),
+            pkmn::c::STAT_BIMAP,
+            IVs_buffer_out,
+            stat_buffer_size,
+            PKMN_NUM_STATS,
+            actual_num_IVs_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_set_IV(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_stat_t stat,
+    int value
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::enforce_value_in_map_keys(
+            "Stat",
+            stat,
+            pkmn::c::STAT_BIMAP.right
+        );
+
+        internal_ptr->cpp->set_IV(
+            pkmn::c::STAT_BIMAP.right.at(stat),
+            value
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon2_get_stats(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* stats_buffer_out,
+    size_t stat_buffer_size,
+    size_t* actual_num_stats_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(stats_buffer_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_stats(),
+            pkmn::c::STAT_BIMAP,
+            stats_buffer_out,
+            stat_buffer_size,
+            PKMN_NUM_STATS,
+            actual_num_stats_out
+        );
     )
 }
 
@@ -1066,27 +885,6 @@ pkmn_error_t pkmn_pokemon2_set_current_hp(
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         internal_ptr->cpp->set_current_hp(current_hp);
-    )
-}
-
-pkmn_error_t pkmn_pokemon2_set_condition(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_condition_t condition
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::enforce_value_in_map_keys(
-            "Condition",
-            condition,
-            pkmn::c::CONDITION_BIMAP.right
-        );
-
-        internal_ptr->cpp->set_condition(
-            pkmn::c::CONDITION_BIMAP.right.at(condition)
-        );
     )
 }
 
@@ -1179,29 +977,6 @@ pkmn_error_t pkmn_pokemon2_get_attribute_names(
         pkmn::c::string_list_cpp_to_c(
             internal_ptr->cpp->get_string_attribute_names(),
             &attribute_names_out->string_attribute_names
-        );
-    )
-}
-
-// Filepaths
-
-pkmn_error_t pkmn_pokemon2_get_filepaths(
-    pkmn_pokemon2_t* pokemon_ptr,
-    pkmn_pokemon_filepaths_t* filepaths_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(filepaths_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::c::string_cpp_to_c_alloc(
-            internal_ptr->cpp->get_icon_filepath(),
-            &filepaths_out->icon_filepath
-        );
-        pkmn::c::string_cpp_to_c_alloc(
-            internal_ptr->cpp->get_sprite_filepath(),
-            &filepaths_out->sprite_filepath
         );
     )
 }
