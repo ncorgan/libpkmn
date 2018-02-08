@@ -249,46 +249,152 @@ namespace pkmn { namespace database {
              */
             std::pair<std::string, std::string> get_egg_groups() const;
 
+            /*!
+             * @brief Returns this Pokémon's base stats in the given game.
+             *
+             * This value can differ between generations, as different generations
+             * have different stats, and some stats were changed between generations
+             * to rebalance.
+             *
+             * \returns For "None"/invalid Pokémon: a map whose keys correspond to
+             *          the stats present in the given generation and whose values
+             *          are all 0.
+             */
             std::map<std::string, int> get_base_stats() const;
 
+            /*!
+             * @brief Returns this Pokémon's EV yields for the given game.
+             *
+             * When a Pokémon is defeated in battle, it contributes to the
+             * attacker's EVs. Roughly speaking, if a Pokémon with a high
+             * Speed stat is defeated, the attacker's Speed EV will increase.
+             *
+             * This value can differ between generations, as different generations
+             * have different stats, and some stats were changed between generations
+             * to rebalance.
+             *
+             * \returns For "None"/invalid Pokémon: a map whose keys correspond to
+             *          the stats present in the given generation and whose values
+             *          are all 0.
+             */
             std::map<std::string, int> get_EV_yields() const;
 
+            /*!
+             * @brief Returns this Pokémon's base experience yield.
+             *
+             * When a Pokémon is defeated, this value is part of the equation that
+             * determines how much experience the attacker gains.
+             *
+             * \returns For "None"/invalid Pokémon: -1
+             */
             int get_experience_yield() const;
 
+            /*!
+             * @brief Returns this Pokémon's experience when it reaches a given level.
+             *
+             * This function allows for the input [0-255] to account for "glitch
+             * Pokémon".
+             *
+             * \param level The Pokémon's level
+             * \throws std::out_of_range If level is not in the range [0-255]
+             * \returns For "None"/invalid Pokémon: -1
+             */
             int get_experience_at_level(
                 int level
             ) const;
 
+            /*!
+             * @brief Returns this Pokémon's level when it has the given experience.
+             *
+             * \param experience This Pokémon's experience
+             * \throws std::out_of_range If experience < 0
+             * \returns For "None"/invalid Pokémon: -1
+             */
             int get_level_at_experience(
                 int experience
             ) const;
 
+            /*!
+             * @brief Returns entries for the moves this Pokémon learns by level-up,
+             *        along with their corresponding levels.
+             */
             pkmn::database::levelup_moves_t get_levelup_moves() const;
 
+            /*!
+             * @brief Returns entries for the moves this Pokémon can learn via TM/HM.
+             */
             pkmn::database::move_list_t get_tm_hm_moves() const;
 
+            /*!
+             * @brief Returns entries for the moves this Pokémon can learn via
+             *        breeding.
+             */
             pkmn::database::move_list_t get_egg_moves() const;
 
+            /*!
+             * @brief Returns entries for the moves this Pokémon can learn via
+             *        a Move Tutor in the game this entry corresponds to.
+             */
             pkmn::database::move_list_t get_tutor_moves() const;
 
+            /*!
+             * @brief Returns a list of this Pokémon's forms in the game this
+             *        entry corresponds to.
+             *
+             * Any value returned by this function is a valid input for set_form().
+             */
             std::vector<std::string> get_forms() const;
 
+            /*!
+             * @brief Returns entries for all Pokémon this Pokémon can evolve
+             *        into in the game this entry corresponds to.
+             */
             pkmn::database::pokemon_entries_t get_evolutions() const;
 
+            /*!
+             * @brief Sets the Pokémon form this entry corresponds to.
+             *
+             * Any value in the list returned by get_forms() is a valid input to
+             * this function.
+             *
+             * \param form_name The name of the new form for this entry
+             * \throws std::invalid_argument If the given form is invalid
+             */
             void set_form(
                 const std::string& form_name
             );
 
+            /*!
+             * @brief Returns the filepath of the icon installed with LibPKMN
+             *        corresponding to this Pokémon, as viewed in the party.
+             *
+             * \param female If this Pokémon has visual differences between genders,
+             *               use the icon corresponding to the female form.
+             *
+             * \returns For "None"/invalid Pokémon: a Poké Ball icon
+             */
             std::string get_icon_filepath(
                 bool female
             ) const;
 
+            /*!
+             * @brief Returns the filepath of the sprite installed with LibPKMN
+             *        corresponding to this Pokémon, as viewed in battle.
+             *
+             * \param female If this Pokémon has visual differences between genders,
+             *               use the icon corresponding to the female form.
+             * \param shiny Use the sprite corresponding to a Shiny Pokémon (Generation II+).
+             *
+             * \throws pkmn::feature_not_in_game_error If shiny is true for a
+             *                                         Generation I entry
+             * \returns For "None"/invalid Pokémon: a Substitute picture
+             */
             std::string get_sprite_filepath(
                 bool female,
                 bool shiny
             ) const;
 
-            #ifndef __DOXYGEN__
+#ifndef __DOXYGEN__
             inline int get_species_id() const
             {
                 return _species_id;
@@ -313,7 +419,7 @@ namespace pkmn { namespace database {
             {
                 return _game_id;
             }
-            #endif
+#endif
 
             //! Equality check between two Pokémon entries
             inline bool operator==(const pokemon_entry& rhs) const

@@ -830,12 +830,23 @@ namespace pkmn { namespace database {
 
     int pokemon_entry::get_level_at_experience(
         int experience
-    ) const {
+    ) const
+    {
         int ret = 0;
 
-        if(_none or _invalid) {
+        pkmn::enforce_comparator(
+            "Experience",
+            experience,
+            0,
+            pkmn::value_comparator::GE
+        );
+
+        if(_none or _invalid)
+        {
             ret = -1;
-        } else {
+        }
+        else
+        {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT experience.level FROM experience "
                 "INNER JOIN pokemon_species "
