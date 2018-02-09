@@ -32,7 +32,8 @@ namespace pkmn { namespace calculations {
         ): type(move_type), base_power(move_power)
         {}
 
-        natural_gift(const natural_gift& other) = default;
+        natural_gift(const natural_gift&) = default;
+        natural_gift& operator=(const natural_gift&) = default;
 
 #ifndef SWIG
         natural_gift(
@@ -42,7 +43,6 @@ namespace pkmn { namespace calculations {
         {}
 
         natural_gift(natural_gift&&) = default;
-        natural_gift& operator=(const natural_gift&) = default;
         natural_gift& operator=(natural_gift&&) = default;
 #endif
 
