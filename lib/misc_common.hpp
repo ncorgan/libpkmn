@@ -18,7 +18,7 @@
 
 namespace pkmn {
 
-    PKMN_INLINE bool floats_close(
+    inline bool floats_close(
         float f1,
         float f2
     )
@@ -36,21 +36,21 @@ namespace pkmn {
         ("HP")("Attack")("Defense")("Speed")("Special Attack")("Special Defense")
     ;
 
-    PKMN_INLINE bool string_is_gen1_stat(
+    inline bool string_is_gen1_stat(
         const std::string& stat
     )
     {
         return (std::find(GEN1_STATS.begin(), GEN1_STATS.end(), stat) != GEN1_STATS.end());
     }
 
-    PKMN_INLINE bool string_is_gen2_stat(
+    inline bool string_is_gen2_stat(
         const std::string& stat
     )
     {
         return (std::find(GEN2_STATS.begin(), GEN2_STATS.end(), stat) != GEN2_STATS.end());
     }
 
-    PKMN_INLINE bool string_is_modern_stat(
+    inline bool string_is_modern_stat(
         const std::string& stat
     )
     {

@@ -50,7 +50,7 @@ namespace pkmn { namespace calculations {
          * @brief Assignment operator.
          * \param rhs Coordinates whose members to assign.
          */
-        PKMN_INLINE spinda_coords& operator=(
+        inline spinda_coords& operator=(
             const spinda_coords &rhs
         ) {
             this->x = rhs.x;
@@ -88,7 +88,7 @@ namespace pkmn { namespace calculations {
                    );
         }
 
-        PKMN_INLINE spinda_coords& operator+=(
+        inline spinda_coords& operator+=(
             const spinda_coords &rhs
         ) {
             this->x += rhs.x;
@@ -193,7 +193,7 @@ namespace pkmn { namespace calculations {
          * @brief Assignment operator.
          * \param rhs Spots whose member to assign.
          */
-        PKMN_INLINE spinda_spots& operator=(
+        inline spinda_spots& operator=(
             const spinda_spots &rhs
         ) {
             this->left_ear = rhs.left_ear;
@@ -252,7 +252,7 @@ namespace pkmn { namespace calculations {
                    );
         }
 
-        PKMN_INLINE spinda_spots& operator+=(
+        inline spinda_spots& operator+=(
             const spinda_spots &rhs
         ) {
             this->left_ear += rhs.left_ear;
@@ -262,7 +262,7 @@ namespace pkmn { namespace calculations {
             return *this;
         }
 
-        PKMN_INLINE spinda_spots& operator+=(
+        inline spinda_spots& operator+=(
             const spinda_coords &rhs
         ) {
             this->left_ear += rhs;

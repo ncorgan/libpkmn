@@ -512,7 +512,7 @@ namespace pkmn { namespace database {
         39,40,81,82,122,174,183,184,280,281,282,298,303,439,546,547
     };
 
-    static PKMN_INLINE bool species_id_had_normal_only(
+    static inline bool species_id_had_normal_only(
         int species_id
     ) {
         return (std::find(old_normal_only, old_normal_only+6, species_id) != (old_normal_only+6));
@@ -525,7 +525,7 @@ namespace pkmn { namespace database {
                (species_id == old_normal_primary[1]);
     }
 
-    static PKMN_INLINE bool species_id_had_none_secondary(
+    static inline bool species_id_had_none_secondary(
         int species_id
     ) {
         return (std::find(old_none_secondary, old_none_secondary+14, species_id) != (old_none_secondary+14));
@@ -669,7 +669,7 @@ namespace pkmn { namespace database {
         ("Speed", 0)("Special Attack", 0)("Special Defense", 0)
     ;
 
-    static PKMN_INLINE void execute_stat_stmt_and_get(
+    static inline void execute_stat_stmt_and_get(
         SQLite::Statement &stmt,
         std::map<std::string, int> &ret,
         const std::string &key
@@ -760,7 +760,7 @@ namespace pkmn { namespace database {
         (206,125)(269,161)(345,99)(346,199)(347,99)(348,199)
     ;
 
-    PKMN_INLINE bool gen4_has_different_yield(
+    inline bool gen4_has_different_yield(
         int species_id
     ) {
         return (gen4_different_yields.count(species_id) > 0);
@@ -1248,7 +1248,7 @@ namespace pkmn { namespace database {
     static BOOST_CONSTEXPR const char* image_name_query = \
         "SELECT image_name FROM libpkmn_pokemon_form_names WHERE form_id=?";
 
-    static PKMN_INLINE bool has_different_female_icon(
+    static inline bool has_different_female_icon(
         int species_id
     ) {
         return (species_id == 521 or species_id == 592 or species_id == 593);

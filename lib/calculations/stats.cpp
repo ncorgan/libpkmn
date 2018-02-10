@@ -16,7 +16,7 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_INLINE int gb_stat_common(
+    inline int gb_stat_common(
         int level,
         int base_stat,
         int EV,
@@ -56,7 +56,7 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    PKMN_INLINE int modern_stat_common(
+    inline int modern_stat_common(
         int level,
         int base_stat,
         int EV,

@@ -2154,7 +2154,7 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     EXPECT_TRUE(spots1.right_face == SPOTS1.right_face);
 }
 
-PKMN_INLINE void PKMN_EXPECT_STAT_CLOSE(
+inline void PKMN_EXPECT_STAT_CLOSE(
     int actual, int expected
 ) {
     EXPECT_LE(int(std::abs(actual-expected)), 1);

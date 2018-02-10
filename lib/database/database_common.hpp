@@ -25,7 +25,7 @@ namespace pkmn { namespace database {
 
     sptr _get_connection();
 
-    PKMN_INLINE void get_connection(
+    inline void get_connection(
         sptr &db
     )
     {
@@ -393,7 +393,7 @@ namespace pkmn { namespace database {
                (version_group_item_index_bounds[version_group_id][range][1] == 0);
     }
 
-    PKMN_INLINE bool item_index_valid(
+    inline bool item_index_valid(
         int item_index,
         int version_group_id
     ) {

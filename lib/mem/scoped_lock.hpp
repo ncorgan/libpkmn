@@ -19,14 +19,14 @@ namespace pkmn { namespace mem {
         public:
             scoped_lock() = delete;
 
-            explicit PKMN_INLINE scoped_lock(
+            explicit inline scoped_lock(
                 T* impl
             ): _impl(impl)
             {
                 _impl->_mem_mutex.lock();
             }
 
-            PKMN_INLINE ~scoped_lock() {
+            inline ~scoped_lock() {
                 _impl->_mem_mutex.unlock();
             }
 

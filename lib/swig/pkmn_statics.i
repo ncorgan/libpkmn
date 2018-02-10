@@ -25,31 +25,31 @@
 
     #include <memory>
 
-    PKMN_INLINE std::shared_ptr<pkmn::item_bag> make_item_bag(
+    inline std::shared_ptr<pkmn::item_bag> make_item_bag(
         const std::string &game
     ) {
         return pkmn::item_bag::make(game);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokedex> make_pokedex(
+    inline std::shared_ptr<pkmn::pokedex> make_pokedex(
         const std::string &game
     ) {
         return pkmn::pokedex::make(game);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
+    inline std::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
         const std::string &game
     ) {
         return pkmn::pokemon_box::make(game);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon_party> make_pokemon_party(
+    inline std::shared_ptr<pkmn::pokemon_party> make_pokemon_party(
         const std::string &game
     ) {
         return pkmn::pokemon_party::make(game);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(
+    inline std::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(
         const std::string &game
     ) {
         return pkmn::pokemon_pc::make(game);
@@ -70,7 +70,7 @@
 %{
     #include <boost/locale/encoding_utf.hpp>
 
-    PKMN_INLINE std::string detect_game_save_type(
+    inline std::string detect_game_save_type(
         const std::wstring &filepath
     ) {
         return pkmn::game_save::detect_type(
@@ -78,7 +78,7 @@
                );
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::game_save> make_game_save(
+    inline std::shared_ptr<pkmn::game_save> make_game_save(
         const std::wstring &filepath
     ) {
         return pkmn::game_save::from_file(
@@ -86,7 +86,7 @@
         );
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::item_list> make_item_list(
+    inline std::shared_ptr<pkmn::item_list> make_item_list(
         const std::wstring &name,
         const std::wstring &game
     ) {
@@ -96,7 +96,7 @@
         );
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon> make_pokemon(
+    inline std::shared_ptr<pkmn::pokemon> make_pokemon(
         const std::wstring &species,
         const std::wstring &game,
         const std::wstring &form,
@@ -110,7 +110,7 @@
                );
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon> make_pokemon(
+    inline std::shared_ptr<pkmn::pokemon> make_pokemon(
         const std::wstring &filepath
     ) {
         return pkmn::pokemon::from_file(
@@ -129,26 +129,26 @@ std::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& filepath);
 #else
 
 %{
-    PKMN_INLINE std::string detect_game_save_type(
+    inline std::string detect_game_save_type(
         const std::string &filepath
     ) {
         return pkmn::game_save::detect_type(filepath);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::game_save> make_game_save(
+    inline std::shared_ptr<pkmn::game_save> make_game_save(
         const std::string &filepath
     ) {
         return pkmn::game_save::from_file(filepath);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::item_list> make_item_list(
+    inline std::shared_ptr<pkmn::item_list> make_item_list(
         const std::string &name,
         const std::string &game
     ) {
         return pkmn::item_list::make(name, game);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon> make_pokemon(
+    inline std::shared_ptr<pkmn::pokemon> make_pokemon(
         const std::string &species,
         const std::string &game,
         const std::string &form,
@@ -157,7 +157,7 @@ std::shared_ptr<pkmn::pokemon> make_pokemon(const std::wstring& filepath);
         return pkmn::pokemon::make(species, game, form, level);
     }
 
-    PKMN_INLINE std::shared_ptr<pkmn::pokemon> make_pokemon(
+    inline std::shared_ptr<pkmn::pokemon> make_pokemon(
         const std::string &filepath
     ) {
         return pkmn::pokemon::from_file(filepath);

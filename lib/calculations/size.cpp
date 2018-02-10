@@ -69,7 +69,7 @@ static uint16_t get_s(
     return ret;
 }
 
-PKMN_INLINE static float round_float(float value) {
+inline static float round_float(float value) {
     return float(std::floor(value * 5 + 0.5) / 5);
 }
 
