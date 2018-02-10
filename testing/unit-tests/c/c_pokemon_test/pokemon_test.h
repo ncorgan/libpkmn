@@ -60,7 +60,18 @@ void xd_pokemon_test();
 
 // I/O
 
-void test_3gpkm();
+void red_pk1_test();
+void blue_pk1_test();
+void yellow_pk1_test();
+void gold_pk2_test();
+void silver_pk2_test();
+void crystal_pk2_test();
+void ruby_3gpkm_test();
+void sapphire_3gpkm_test();
+void emerald_3gpkm_test();
+void firered_3gpkm_test();
+void leafgreen_3gpkm_test();
+void test_outside_3gpkm();
 
 // Generation I friendship
 

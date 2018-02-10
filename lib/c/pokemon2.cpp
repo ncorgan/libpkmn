@@ -41,7 +41,8 @@ static void copy_map_to_buffer(
         value_buffer_size * sizeof(int)
     );
 
-    for(size_t value = 0; value < actual_num_values; ++value)
+    size_t internal_num_values = std::min<size_t>(value_buffer_size, actual_num_values);
+    for(size_t value = 0; value < internal_num_values; ++value)
     {
         enum_type value_enum = enum_type(value);
         BOOST_ASSERT(value_enum_bimap.right.count(value_enum) > 0);
