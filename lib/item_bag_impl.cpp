@@ -14,7 +14,7 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 

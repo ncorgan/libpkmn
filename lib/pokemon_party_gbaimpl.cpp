@@ -8,7 +8,7 @@
 #include "exception_internal.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 

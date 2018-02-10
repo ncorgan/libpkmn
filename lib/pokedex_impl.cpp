@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokedex_impl.hpp"
 
 #include "database/database_common.hpp"

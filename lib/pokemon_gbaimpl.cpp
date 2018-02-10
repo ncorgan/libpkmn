@@ -6,7 +6,7 @@
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
@@ -325,7 +325,7 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    if(game_id == COLOSSEUM)
+                    if(game_id == COLOSSEUM_ID)
                     {
                         LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
                         pkmn::conversions::gba_party_pokemon_to_gcn(

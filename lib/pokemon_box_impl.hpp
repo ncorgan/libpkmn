@@ -7,7 +7,7 @@
 #ifndef PKMN_POKEMON_BOX_IMPL_HPP
 #define PKMN_POKEMON_BOX_IMPL_HPP
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include "pokemon_impl.hpp"
 

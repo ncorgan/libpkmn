@@ -12,7 +12,7 @@
 #include "pokemon_pc_gbaimpl.hpp"
 #include "pokemon_pc_gcnimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -25,7 +25,7 @@ namespace pkmn {
         int game_id
     ): pokemon_box_impl(game_id)
     {
-        if(_game_id == COLOSSEUM) {
+        if(_game_id == COLOSSEUM_ID) {
             _native = reinterpret_cast<void*>(new LibPkmGC::Colosseum::PokemonBox);
         } else {
             _native = reinterpret_cast<void*>(new LibPkmGC::XD::PokemonBox);
@@ -48,7 +48,7 @@ namespace pkmn {
 
     pokemon_box_gcnimpl::~pokemon_box_gcnimpl() {
         if(_our_mem) {
-            if(_game_id == COLOSSEUM) {
+            if(_game_id == COLOSSEUM_ID) {
                 delete COLO_RCAST;
             } else {
                 delete XD_RCAST;
@@ -134,7 +134,7 @@ namespace pkmn {
                                                             old_box_pokemon_impl_ptr->_native_pc
                                                         )->clone();
 
-        if(_game_id == COLOSSEUM)
+        if(_game_id == COLOSSEUM_ID)
         {
             rcast_equal<LibPkmGC::Colosseum::Pokemon>(
                 old_box_pokemon_native_ptr,

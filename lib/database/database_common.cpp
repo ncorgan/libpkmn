@@ -6,7 +6,7 @@
  */
 
 #include "database_common.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/utils/paths.hpp>
 

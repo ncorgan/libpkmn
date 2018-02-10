@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_gcnimpl.hpp"
 #include "pokemon_gbaimpl.hpp"
 
@@ -95,7 +95,7 @@ namespace pkmn
         // Connect to database
         pkmn::database::get_connection(_db);
 
-        if(_database_entry.get_game_id() == COLOSSEUM)
+        if(_database_entry.get_game_id() == COLOSSEUM_ID)
         {
             _native_pc = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon);
         }
@@ -211,7 +211,7 @@ namespace pkmn
         const LibPkmGC::Colosseum::Pokemon &native
     ): pokemon_impl(
            int(native.species),
-           COLOSSEUM
+           COLOSSEUM_ID
        )
     {
         // Connect to database
@@ -241,7 +241,7 @@ namespace pkmn
         const LibPkmGC::XD::Pokemon &native
     ): pokemon_impl(
            int(native.species),
-           XD 
+           XD_ID
        )
     {
         // Connect to database
@@ -271,7 +271,7 @@ namespace pkmn
     {
         if(_our_pc_mem)
         {
-            if(_database_entry.get_game_id() == COLOSSEUM)
+            if(_database_entry.get_game_id() == COLOSSEUM_ID)
             {
                 delete COLO_RCAST;
             }
@@ -297,10 +297,10 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    if(game_id == COLOSSEUM)
+                    if(game_id == COLOSSEUM_ID)
                     {
                         LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
-                        if(_database_entry.get_game_id() == COLOSSEUM)
+                        if(_database_entry.get_game_id() == COLOSSEUM_ID)
                         {
                             colosseum_pokemon = *COLO_RCAST;
                         }
@@ -313,7 +313,7 @@ namespace pkmn
                     else
                     {
                         LibPkmGC::XD::Pokemon xd_pokemon;
-                        if(_database_entry.get_game_id() == XD)
+                        if(_database_entry.get_game_id() == XD_ID)
                         {
                             xd_pokemon = *XD_RCAST;
                         }
@@ -386,7 +386,7 @@ namespace pkmn
                                         pkmn::database::query_db_bind2<int, int, int>(
                                             _db, shadow_query,
                                             _database_entry.get_species_id(),
-                                            ((_database_entry.get_game_id() == COLOSSEUM) ? 1 : 0)
+                                            ((_database_entry.get_game_id() == COLOSSEUM_ID) ? 1 : 0)
                                         )
                                     );
         }

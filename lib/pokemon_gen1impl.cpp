@@ -6,7 +6,7 @@
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 

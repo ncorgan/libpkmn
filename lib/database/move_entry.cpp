@@ -6,7 +6,7 @@
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 

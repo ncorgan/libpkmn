@@ -6,7 +6,7 @@
  */
 
 #include "../exception_internal.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/calculations/size.hpp>

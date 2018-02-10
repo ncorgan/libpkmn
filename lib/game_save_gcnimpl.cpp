@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@
 #include "pokemon_party_gcnimpl.hpp"
 #include "pokemon_pc_gcnimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
@@ -48,13 +48,13 @@ namespace pkmn {
         _has_gci_data = false;
         if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
             _colosseum = true;
-            _game_id = COLOSSEUM;
+            _game_id = COLOSSEUM_ID;
 
             _has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), _has_gci_data));
         } else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
             _colosseum = false;
-            _game_id = XD;
+            _game_id = XD_ID;
 
             _has_gci_data = (filesize == GCN_XD_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), _has_gci_data));

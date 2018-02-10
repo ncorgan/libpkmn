@@ -8,7 +8,7 @@
 #include "database_common.hpp"
 #include "id_to_index.hpp"
 #include "id_to_string.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/database/item_entry.hpp>

@@ -12,7 +12,7 @@
 #include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
