@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,7 +15,7 @@
 #include <time.h>
 
 PKMN_C_TEST_MAIN(
-    /*srand((unsigned int)time(NULL));
+    srand((unsigned int)time(NULL));
 
     PKMN_C_TEST(red_pokemon_test);
     PKMN_C_TEST(blue_pokemon_test);
@@ -34,7 +34,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(colosseum_pokemon_test);
     PKMN_C_TEST(xd_pokemon_test);
 
-    PKMN_C_TEST(test_3gpkm);
+    /*PKMN_C_TEST(test_3gpkm);
 
     PKMN_C_TEST(red_friendship_test);
     PKMN_C_TEST(blue_friendship_test);

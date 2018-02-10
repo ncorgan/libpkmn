@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 #ifndef POKEMON_TEST_H
 #define POKEMON_TEST_H
 
-#include <pkmn-c/pokemon.h>
+#include <pkmn-c/pokemon2.h>
 
 typedef struct {
     char* valid_ball;
@@ -29,7 +29,7 @@ typedef struct {
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    pkmn_pokemon_handle_t pokemon,
+    pkmn_pokemon2_t* pokemon_ptr,
     pkmn_test_values_t* test_values
 );
 

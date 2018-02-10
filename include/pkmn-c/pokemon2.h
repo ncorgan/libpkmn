@@ -31,9 +31,9 @@ typedef struct
 extern "C" {
 #endif
 
-pkmn_trainer_id2_t pkmn_pokemon2_default_trainer_id();
+PKMN_C_API pkmn_trainer_id2_t pkmn_pokemon2_default_trainer_id();
 
-const char* pkmn_pokemon2_default_trainer_name();
+PKMN_C_API const char* pkmn_pokemon2_default_trainer_name();
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_init(
     const char* species,
@@ -79,6 +79,11 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_form(
     const char* form
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_is_egg(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool* is_egg_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_is_egg(
     pkmn_pokemon2_t* pokemon_ptr,
     bool is_egg
@@ -89,9 +94,21 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_database_entry(
     pkmn_database_pokemon_entry_t* database_entry_ptr
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_condition(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_condition_t* condition_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_condition(
     pkmn_pokemon2_t* pokemon_ptr,
     pkmn_condition_t condition
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_nickname(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* nickname_out,
+    size_t nickname_buffer_len,
+    size_t* actual_nickname_len_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_nickname(
@@ -99,9 +116,19 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_nickname(
     const char* nickname
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_gender(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_gender_t* gender_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_gender(
     pkmn_pokemon2_t* pokemon_ptr,
     pkmn_gender_t gender
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_is_shiny(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool* is_shiny_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_is_shiny(
@@ -109,14 +136,31 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_is_shiny(
     bool is_shiny
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_held_item(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* held_item_out,
+    size_t held_item_buffer_len,
+    size_t* actual_held_item_len_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_held_item(
     pkmn_pokemon2_t* pokemon_ptr,
     const char* held_item
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_pokerus_duration(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* pokerus_duration_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_pokerus_duration(
     pkmn_pokemon2_t* pokemon_ptr,
     int pokerus_duration
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_original_trainer_info(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_trainer_info2_t* original_trainer_info_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_original_trainer_name(
@@ -139,11 +183,26 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_original_trainer_id(
     uint32_t original_trainer_id
 );
 
-// Original trainer gender
+PKMN_C_API pkmn_error_t pkmn_pokemon2_set_original_trainer_gender(
+    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_gender_t original_trainer_gender
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_current_trainer_friendship(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* current_trainer_friendship_out
+);
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_current_trainer_friendship(
     pkmn_pokemon2_t* pokemon_ptr,
     int current_trainer_friendship
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_ability(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* ability_out,
+    size_t ability_buffer_len,
+    size_t* actual_ability_len_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_ability(
@@ -151,14 +210,34 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_ability(
     const char* ability
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_ball(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* ball_out,
+    size_t ball_buffer_len,
+    size_t* actual_ball_len_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_ball(
     pkmn_pokemon2_t* pokemon_ptr,
     const char* ball
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_level_met(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* level_met_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_level_met(
     pkmn_pokemon2_t* pokemon_ptr,
     int level_met
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_location_met(
+    pkmn_pokemon2_t* pokemon_ptr,
+    bool as_egg,
+    char* location_met_out,
+    size_t location_met_buffer_len,
+    size_t* actual_location_met_len_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_location_met(
@@ -167,14 +246,31 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_set_location_met(
     bool as_egg
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_original_game(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* original_game_out,
+    size_t original_game_buffer_len,
+    size_t* actual_original_game_len_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_original_game(
     pkmn_pokemon2_t* pokemon_ptr,
     const char* game
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_personality(
+    pkmn_pokemon2_t* pokemon_ptr,
+    uint32_t* personality_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_personality(
     pkmn_pokemon2_t* pokemon_ptr,
     uint32_t personality
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_experience(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* experience_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_experience(
@@ -285,12 +381,31 @@ PKMN_C_API pkmn_error_t pkmn_pokemon2_get_stats(
     size_t* actual_num_stats_out
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_current_hp(
+    pkmn_pokemon2_t* pokemon_ptr,
+    int* current_hp_out
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon2_set_current_hp(
     pkmn_pokemon2_t* pokemon_ptr,
     int current_hp
 );
 
 // Filepaths
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_icon_filepath(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* icon_filepath_out,
+    size_t icon_filepath_buffer_len,
+    size_t* actual_icon_filepath_len_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon2_get_sprite_filepath(
+    pkmn_pokemon2_t* pokemon_ptr,
+    char* sprite_filepath_out,
+    size_t sprite_filepath_buffer_len,
+    size_t* actual_sprite_filepath_len_out
+);
 
 // Attributes
 
