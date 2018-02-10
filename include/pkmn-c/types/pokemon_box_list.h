@@ -66,6 +66,9 @@ static inline pkmn_error_t pkmn_pokemon_box_list2_free(
         error = pkmn_pokemon_box2_free(&pokemon_box_list_ptr->boxes[index]);
     }
 
+    pokemon_box_list_ptr->boxes = NULL;
+    pokemon_box_list_ptr->length = 0;
+
     return PKMN_ERROR_NONE;
 }
 
