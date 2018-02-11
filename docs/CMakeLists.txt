@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -40,7 +40,7 @@ ENDIF(PKMN_ENABLE_C)
 
 IF(PKMN_ENABLE_CSHARP)
     PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
-    ADD_DEPENDENCIES(doxygen_csharp_docs pkmn-cs)
+    ADD_DEPENDENCIES(doxygen_csharp_docs PKMN.CSharp)
 ENDIF(PKMN_ENABLE_CSHARP)
 
 #IF(PKMN_ENABLE_JAVA)

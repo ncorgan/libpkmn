@@ -55,25 +55,25 @@ SET(SWIG_CSHARP_LIBRARIES
 INCLUDE(SWIGCSharp)
 SWIG_CSHARP_INIT()
 
-SWIG_BUILD_CSHARP_MODULE(calculations_csharp Calculations TRUE PKMN)
-SWIG_BUILD_CSHARP_MODULE(database_csharp Database TRUE PKMN.Database)
-SWIG_BUILD_CSHARP_MODULE(gui_csharp GUI TRUE PKMN)
-SWIG_BUILD_CSHARP_MODULE(lists_csharp Lists TRUE PKMN.Database)
-SWIG_BUILD_CSHARP_MODULE(paths_csharp Paths TRUE PKMN)
-SWIG_BUILD_CSHARP_MODULE(pkmn_csharp PKMN TRUE PKMN)
-SWIG_BUILD_CSHARP_MODULE(stl_csharp STL TRUE PKMN)
+SWIG_BUILD_CSHARP_MODULE(calculations_csharp pkmn_csharp_calculations Calculations TRUE PKMN)
+SWIG_BUILD_CSHARP_MODULE(pkmn_csharp pkmn_csharp_core PKMN TRUE PKMN)
+SWIG_BUILD_CSHARP_MODULE(database_csharp pkmn_csharp_database Database TRUE PKMN.Database)
+SWIG_BUILD_CSHARP_MODULE(gui_csharp pkmn_csharp_gui GUI TRUE PKMN)
+SWIG_BUILD_CSHARP_MODULE(lists_csharp pkmn_csharp_lists Lists TRUE PKMN.Database)
+SWIG_BUILD_CSHARP_MODULE(paths_csharp pkmn_csharp_paths Paths TRUE PKMN)
+SWIG_BUILD_CSHARP_MODULE(stl_csharp pkmn_csharp_stl STL TRUE PKMN)
 
 SET(swig_modules
-    calculations_csharp
-    database_csharp
-    gui_csharp
-    lists_csharp
-    paths_csharp
-    pkmn_csharp
-    stl_csharp
+    pkmn_csharp_calculations
+    pkmn_csharp_core
+    pkmn_csharp_database
+    pkmn_csharp_gui
+    pkmn_csharp_lists
+    pkmn_csharp_paths
+    pkmn_csharp_stl
 )
 
 # Build the DLL
 SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
 FILE(MAKE_DIRECTORY ${CSHARP_BINARY_DIRECTORY})
-CSHARP_BUILD_DLL("pkmn-cs" "${swig_modules}")
+CSHARP_BUILD_DLL("PKMN.CSharp" "${swig_modules}")

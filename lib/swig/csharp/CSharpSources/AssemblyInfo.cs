@@ -1,6 +1,6 @@
 #region License
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -16,13 +16,18 @@ using System.Runtime.CompilerServices;
 // change them to the information which is associated with the assembly
 // you compile.
 
-[assembly: AssemblyTitle("LibPKMN")]
-[assembly: AssemblyDescription("LibPKMN")]
-[assembly: AssemblyConfiguration("Retail")]
+#if (DEBUG)
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
+#endif
+
+[assembly: AssemblyTitle("LibPKMN - C# Interface")]
+[assembly: AssemblyDescription("LibPKMN - C# Interface")]
 [assembly: AssemblyCompany("Nicholas Corgan")]
-[assembly: AssemblyProduct("pkmn-cs.dll")]
-[assembly: AssemblyDefaultAlias("libpkmn-cs")]
-[assembly: AssemblyCopyright("Copyright © 2016-2017 Nicholas Corgan. All rights reserved.")]
+[assembly: AssemblyProduct("LibPKMN - C# Interface")]
+[assembly: AssemblyDefaultAlias("Generated Assembly")]
+[assembly: AssemblyCopyright("Copyright © 2016- Nicholas Corgan. All rights reserved.")]
 [assembly: AssemblyTrademark("LibPKMN - https://github.com/ncorgan/libpkmn")]
 [assembly: AssemblyCulture("")]
 
@@ -33,8 +38,8 @@ using System.Runtime.CompilerServices;
 // You can specify all values by your own or you can build default build and revision
 // numbers with the '*' character (the default):
 
-[assembly: AssemblyVersion("0")]
-[assembly: AssemblyFileVersion("1")]
+[assembly: AssemblyVersion("@PKMN_VERSION_MAJOR@.@PKMN_VERSION_MINOR@.*")]
+[assembly: AssemblyFileVersion("2")]
 [assembly: AssemblyInformationalVersion("1")]
 
 // The following attributes specify the key for the sign of your assembly. See the

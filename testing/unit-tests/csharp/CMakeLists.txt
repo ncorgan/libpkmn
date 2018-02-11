@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -30,7 +30,7 @@ IF(NUNIT_FOUND)
     )
 
     SET(csharp_pkmn_dlls
-        "${CMAKE_CURRENT_BINARY_DIR}/pkmn-cs.dll;${CMAKE_CURRENT_BINARY_DIR}/pkmntest-cs.dll"
+        "${CMAKE_CURRENT_BINARY_DIR}/PKMN.CSharp.dll;${CMAKE_CURRENT_BINARY_DIR}/PKMNTest.CSharp.dll"
     )
 
     FOREACH(test ${csharp_tests})

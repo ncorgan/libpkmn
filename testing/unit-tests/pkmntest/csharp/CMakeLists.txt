@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-20178 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -31,9 +31,9 @@ ENDFOREACH(src ${pkmntest_cs_srcs})
 SET(CSHARP_BINARY_DIRECTORY ${PKMN_BINARY_DIR}/testing/unit-tests/csharp)
 
 CSHARP_ADD_LIBRARY(
-    "pkmntest-cs"
+    "PKMNTest.CSharp"
     "${CMAKE_CURRENT_BINARY_DIR}/*.cs"
-    ${PKMN_BINARY_DIR}/testing/unit-tests/csharp/pkmn-cs.dll
+    ${PKMN_BINARY_DIR}/testing/unit-tests/csharp/PKMN.CSharp.dll
     ${NUNIT_LIBRARIES}
 )
-ADD_DEPENDENCIES(pkmntest-cs pkmn-cs)
+ADD_DEPENDENCIES(PKMNTest.CSharp PKMN.CSharp)
