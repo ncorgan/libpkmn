@@ -31,12 +31,12 @@
 
 %define PKMN_RUBY_SPTR(cpp_type, ruby_name)
     %rename(ruby_name ## Internal) pkmn:: ## cpp_type;
-    %extend pkmn::shared_ptr<pkmn:: ## cpp_type> {
-        bool __eq__(const pkmn::shared_ptr<pkmn:: ## cpp_type> & rhs) {
+    %extend std::shared_ptr<pkmn:: ## cpp_type> {
+        bool __eq__(const std::shared_ptr<pkmn:: ## cpp_type> & rhs) {
             return (*self) == rhs;
         }
     }
-    %template(ruby_name) pkmn::shared_ptr<pkmn:: ## cpp_type>;
+    %template(ruby_name) std::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
 %define PKMN_RUBY_VECTOR(cpp_type, ruby_name)

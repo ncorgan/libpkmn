@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include "database_common.hpp"
 #include "id_to_index.hpp"
@@ -146,13 +146,17 @@ namespace pkmn { namespace database {
 
         int ret = 0;
 
+        std::string error_message = "Invalid location: ";
+        error_message += location_name;
+
         if(game_is_gamecube(game_id)) {
             static BOOST_CONSTEXPR const char* query = \
                 "SELECT max(range_start) FROM gamecube_location_index_ranges WHERE colosseum=? AND "
                 "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
             ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
-                      _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name
+                      _db, query, ((game_id == COLOSSEUM) ? 1 : 0), location_name,
+                      error_message
                   );
 
             /*
@@ -160,7 +164,7 @@ namespace pkmn { namespace database {
              * still return 0.
              */
             if(ret == 0) {
-                throw std::invalid_argument("This location exists but not in a Gamecube game.");
+                throw std::invalid_argument(error_message);
             }
         } else {
             /*
@@ -186,7 +190,7 @@ namespace pkmn { namespace database {
                     "location_id=(SELECT location_id FROM location_names WHERE name=?)";
 
                 ret = pkmn::database::query_db_bind2<int, int, const std::string&>(
-                          _db, query, generation, location_name
+                          _db, query, generation, location_name, error_message
                       );
             }
         }
@@ -218,6 +222,9 @@ namespace pkmn { namespace database {
         static BOOST_CONSTEXPR const char* query = \
             "SELECT game_index FROM natures WHERE id="
             "(SELECT nature_id FROM nature_names WHERE name=?)";
+
+        std::string error_message = "Invalid nature: ";
+        error_message += nature_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
                    _db, query, nature_name

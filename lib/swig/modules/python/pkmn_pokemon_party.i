@@ -10,7 +10,7 @@
 
 %}
 
-%extend pkmn::shared_ptr<pkmn::pokemon_party> {
+%extend std::shared_ptr<pkmn::pokemon_party> {
 
     pkmn::pokemon::sptr __getitem__(
         int index

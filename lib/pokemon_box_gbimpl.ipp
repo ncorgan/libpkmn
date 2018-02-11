@@ -160,7 +160,7 @@ namespace pkmn {
 
         // Set the entry in the species list.
         NATIVE_LIST_RCAST->entries[index] = *reinterpret_cast<pksav_pc_pokemon_type*>(new_pokemon_native_pc_ptr);
-        _pokemon_list[index] = pkmn::make_shared<libpkmn_pokemon_type>(
+        _pokemon_list[index] = std::make_shared<libpkmn_pokemon_type>(
                                    &NATIVE_LIST_RCAST->entries[index],
                                    _game_id
                                );
@@ -282,7 +282,7 @@ namespace pkmn {
                 std::memset(NATIVE_LIST_RCAST->otnames[i], 0x50, sizeof(NATIVE_LIST_RCAST->otnames[i]));
             }
 
-            _pokemon_list[i] = pkmn::make_shared<libpkmn_pokemon_type>(
+            _pokemon_list[i] = std::make_shared<libpkmn_pokemon_type>(
                                    &NATIVE_LIST_RCAST->entries[i],
                                    _game_id
                                );

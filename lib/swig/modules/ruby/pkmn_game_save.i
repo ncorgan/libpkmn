@@ -38,7 +38,7 @@
 %include "cpp_wrappers/game_save.hpp"
 
 // Suppress shadowing warning when adding static methods.
-%warnfilter(508) pkmn::shared_ptr<pkmn::game_save>;
+%warnfilter(508) std::shared_ptr<pkmn::game_save>;
 
 %extend pkmn::swig::game_save
 {

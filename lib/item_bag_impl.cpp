@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -38,22 +38,22 @@ namespace pkmn {
 
         switch(generation) {
             case 1:
-                return pkmn::make_shared<item_bag_gen1impl>(
+                return std::make_shared<item_bag_gen1impl>(
                            game_id, nullptr
                        );
 
             case 2:
-                return pkmn::make_shared<item_bag_gen2impl>(
+                return std::make_shared<item_bag_gen2impl>(
                            game_id, nullptr
                        );
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    return pkmn::make_shared<item_bag_gcnimpl>(
+                    return std::make_shared<item_bag_gcnimpl>(
                                game_id, nullptr
                            );
                 } else {
-                    return pkmn::make_shared<item_bag_gbaimpl>(
+                    return std::make_shared<item_bag_gbaimpl>(
                                game_id, nullptr
                            );
                 }
@@ -133,16 +133,21 @@ namespace pkmn {
 
     // Skips creating item entry
     static std::string get_pocket_name(
-        const std::string &item_name,
+        const std::string& item_name,
         int version_group_id
-    ) {
+    )
+    {
         std::string ret;
         if(not pkmn::database::maybe_query_db_bind2<std::string, int, const std::string&>(
                    _db, list_name_query_with_old_item_name, ret, version_group_id, item_name
            ))
         {
+            std::string error_message = "Invalid item: ";
+            error_message += item_name;
+
             ret = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                       _db, list_name_query, version_group_id, item_name
+                       _db, list_name_query, version_group_id, item_name,
+                       error_message
                   );
         }
 

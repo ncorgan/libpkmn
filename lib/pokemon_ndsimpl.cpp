@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_ndsimpl.hpp"
 #include "database/id_to_index.hpp"
 #include "database/id_to_string.hpp"

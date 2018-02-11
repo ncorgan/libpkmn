@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_gen1impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
@@ -14,6 +14,7 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
@@ -276,13 +277,13 @@ namespace pkmn
                     &pksav_pokemon,
                     &gen1_pksav_pokemon
                 );
-                ret = pkmn::make_shared<pokemon_gen1impl>(gen1_pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen1impl>(gen1_pksav_pokemon, game_id);
                 break;
             }
 
             case 2:
             {
-                ret = pkmn::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
+                ret = std::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
                 // 63 is the max this value can be.
                 ret->set_level_met(std::min<int>(63, get_level()));
                 break;
@@ -418,7 +419,7 @@ namespace pkmn
         float chance_male = _database_entry.get_chance_male();
         float chance_female = _database_entry.get_chance_female();
 
-        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f))
+        if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
             if(gender != "Genderless")
             {
@@ -429,7 +430,7 @@ namespace pkmn
         {
             if(gender == "Male")
             {
-                if(pkmn::floats_close(chance_male, 0.0f))
+                if(pkmn::fp_compare_equal(chance_male, 0.0f))
                 {
                     throw std::invalid_argument("This Pokémon is female-only.");
                 }
@@ -440,22 +441,22 @@ namespace pkmn
             }
             else if(gender == "Female")
             {
-                if(pkmn::floats_close(chance_female, 0.0f))
+                if(pkmn::fp_compare_equal(chance_female, 0.0f))
                 {
                     throw std::invalid_argument("This Pokémon is male-only.");
                 }
                 else
                 {
                     // Set the IV to the max it can be while still being female.
-                    if(pkmn::floats_close(chance_male, 0.875f))
+                    if(pkmn::fp_compare_equal(chance_male, 0.875f))
                     {
                         set_IV("Attack", 1);
                     }
-                    else if(pkmn::floats_close(chance_male, 0.75f))
+                    else if(pkmn::fp_compare_equal(chance_male, 0.75f))
                     {
                         set_IV("Attack", 3);
                     }
-                    else if(pkmn::floats_close(chance_male, 0.5f))
+                    else if(pkmn::fp_compare_equal(chance_male, 0.5f))
                     {
                         set_IV("Attack", 6);
                     }

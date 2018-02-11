@@ -5,12 +5,12 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "misc_common.hpp"
 #include "pokedex_impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 #include <pkmn/types/shared_ptr.hpp>

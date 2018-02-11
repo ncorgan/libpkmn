@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,7 +21,8 @@ namespace pkmn {
      * a unique item type and the amount of that item in the given pocket. This
      * struct represents a single one of those slots.
      */
-    struct item_slot {
+    struct item_slot
+    {
         /*!
          * @brief Default constructor.
          *
@@ -45,6 +46,9 @@ namespace pkmn {
         ): item(slot_item),
            amount(slot_amount) {}
 
+        item_slot(const item_slot&) = default;
+        item_slot& operator=(const item_slot&) = default;
+
 #ifndef SWIG
         /*!
          * @brief Constructor that takes in references to each member.
@@ -59,7 +63,26 @@ namespace pkmn {
             int slot_amount
         ): item(std::move(slot_item)),
            amount(slot_amount) {}
+
+        item_slot(item_slot&&) = default;
+        item_slot& operator=(item_slot&&) = default;
 #endif
+
+        /*!
+         * @brief Equality check.
+         */
+        inline bool operator==(const item_slot& rhs) const
+        {
+            return (this->item == rhs.item) and (this->amount == rhs.amount);
+        }
+
+        /*!
+         * @brief Inequality check.
+         */
+        inline bool operator!=(const item_slot& rhs) const
+        {
+            return !operator==(rhs);
+        }
 
         /*!
          * @brief The item in the given slot.
@@ -70,30 +93,6 @@ namespace pkmn {
          */
         int amount;
     };
-
-    #ifndef SWIG
-    /*!
-     * @brief Equality check between two item slots.
-     */
-    PKMN_INLINE bool operator==(
-        const item_slot &lhs,
-        const item_slot &rhs
-    ) {
-        return (lhs.item == rhs.item) and \
-               (lhs.amount == rhs.amount);
-    }
-
-    /*!
-     * @brief Inequality check between two item slots.
-     */
-    PKMN_INLINE bool operator!=(
-        const item_slot &lhs,
-        const item_slot &rhs
-    ) {
-        return (lhs.item != rhs.item) or \
-               (lhs.amount != rhs.amount);
-    }
-    #endif /* SWIG */
 
     /*!
      * @brief List of item slots.

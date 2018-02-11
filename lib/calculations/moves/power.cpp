@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/moves/power.hpp>
 
-#include "../database/database_common.hpp"
+#include "exception_internal.hpp"
+#include "database/database_common.hpp"
 
 namespace pkmn { namespace calculations {
 
@@ -222,8 +223,11 @@ namespace pkmn { namespace calculations {
         static const char* query = "SELECT fling_power FROM items WHERE id="
                                    "(SELECT item_id FROM item_names WHERE name=?)";
 
+        std::string error_message = "Invalid item: ";
+        error_message += item;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, item
+                   _db, query, item, error_message
                );
     }
 

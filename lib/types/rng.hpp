@@ -21,14 +21,14 @@ namespace pkmn {
 template <typename T>
 class rng {
     public:
-        PKMN_INLINE rng() {
+        inline rng() {
             _rng.seed(uint32_t(
                 boost::posix_time::microsec_clock::universal_time().time_of_day().total_microseconds() %
                 std::numeric_limits<uint32_t>::max()
             ));
         }
 
-        PKMN_INLINE T rand(
+        inline T rand(
             T min = std::numeric_limits<T>::min(),
             T max = std::numeric_limits<T>::max()
         ) {

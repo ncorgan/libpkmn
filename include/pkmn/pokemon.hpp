@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,9 +12,9 @@
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
 #include <pkmn/types/class_with_attributes.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <cstdint>
+#include <memory>
 #include <map>
 #include <string>
 #include <vector>
@@ -28,22 +28,17 @@ namespace pkmn {
     class PKMN_API pokemon: public class_with_attributes
     {
         public:
-            typedef pkmn::shared_ptr<pokemon> sptr;
-
-            #ifndef __DOXYGEN__
-            pokemon(): class_with_attributes() {}
-            virtual ~pokemon () {}
-            #endif
+            typedef std::shared_ptr<pokemon> sptr;
 
             static sptr make(
-                const std::string &species,
-                const std::string &game,
-                const std::string &form,
+                const std::string& species,
+                const std::string& game,
+                const std::string& form,
                 int level
             );
 
             static sptr from_file(
-                const std::string &filepath
+                const std::string& filepath
             );
 
             static const uint32_t DEFAULT_TRAINER_ID;
@@ -65,7 +60,7 @@ namespace pkmn {
             virtual std::string get_form() = 0;
 
             virtual void set_form(
-                const std::string &form
+                const std::string& form
             ) = 0;
 
             virtual bool is_egg() = 0;
@@ -85,13 +80,13 @@ namespace pkmn {
             virtual std::string get_nickname() = 0;
 
             virtual void set_nickname(
-                const std::string &nickname
+                const std::string& nickname
             ) = 0;
 
             virtual std::string get_gender() = 0;
 
             virtual void set_gender(
-                const std::string &gender
+                const std::string& gender
             ) = 0;
 
             virtual bool is_shiny() = 0;
@@ -103,7 +98,7 @@ namespace pkmn {
             virtual std::string get_held_item() = 0;
 
             virtual void set_held_item(
-                const std::string &held_item
+                const std::string& held_item
             ) = 0;
 
             virtual int get_pokerus_duration() = 0;
@@ -115,7 +110,7 @@ namespace pkmn {
             virtual std::string get_original_trainer_name() = 0;
 
             virtual void set_original_trainer_name(
-                const std::string &trainer_name
+                const std::string& trainer_name
             ) = 0;
 
             virtual uint16_t get_original_trainer_public_id() = 0;
@@ -139,7 +134,7 @@ namespace pkmn {
             virtual std::string get_original_trainer_gender() = 0;
 
             virtual void set_original_trainer_gender(
-                const std::string &trainer_gender
+                const std::string& trainer_gender
             ) = 0;
 
             virtual int get_current_trainer_friendship() = 0;
@@ -151,13 +146,13 @@ namespace pkmn {
             virtual std::string get_ability() = 0;
 
             virtual void set_ability(
-                const std::string &ability
+                const std::string& ability
             ) = 0;
 
             virtual std::string get_ball() = 0;
 
             virtual void set_ball(
-                const std::string &ball
+                const std::string& ball
             ) = 0;
 
             virtual int get_level_met() = 0;
@@ -171,14 +166,14 @@ namespace pkmn {
             ) = 0;
 
             virtual void set_location_met(
-                const std::string &location,
+                const std::string& location,
                 bool as_egg
             ) = 0;
 
             virtual std::string get_original_game() = 0;
 
             virtual void set_original_game(
-                const std::string &game
+                const std::string& game
             ) = 0;
 
             virtual uint32_t get_personality() = 0;
@@ -202,28 +197,28 @@ namespace pkmn {
             virtual const std::map<std::string, bool>& get_markings() = 0;
 
             virtual void set_marking(
-                const std::string &marking,
+                const std::string& marking,
                 bool value
             ) = 0;
 
             virtual const std::map<std::string, bool>& get_ribbons() = 0;
 
             virtual void set_ribbon(
-                const std::string &ribbon,
+                const std::string& ribbon,
                 bool value
             ) = 0;
 
             virtual const std::map<std::string, int>& get_contest_stats() = 0;
 
             virtual void set_contest_stat(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             ) = 0;
 
             virtual const pkmn::move_slots_t& get_moves() = 0;
 
             virtual void set_move(
-                const std::string &move,
+                const std::string& move,
                 int index
             ) = 0;
 
@@ -235,14 +230,14 @@ namespace pkmn {
             virtual const std::map<std::string, int>& get_EVs() = 0;
 
             virtual void set_EV(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             ) = 0;
 
             virtual const std::map<std::string, int>& get_IVs() = 0;
 
             virtual void set_IV(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             ) = 0;
 
@@ -259,6 +254,8 @@ namespace pkmn {
             virtual std::string get_sprite_filepath() = 0;
 
             #ifndef __DOXYGEN__
+            pokemon(): class_with_attributes() {}
+            virtual ~pokemon () {}
             virtual void* get_native_pc_data() = 0;
             virtual void* get_native_party_data() = 0;
             #endif

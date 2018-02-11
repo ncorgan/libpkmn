@@ -12,7 +12,7 @@
 
 #include <algorithm>
 
-static PKMN_INLINE bool string_in_vector(
+static inline bool string_in_vector(
     const std::vector<std::string> &vec,
     const std::string &str
 ) {

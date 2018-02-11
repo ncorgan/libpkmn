@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,8 +10,6 @@
 #include "item_bag_gen2impl.hpp"
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
-
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <cstring>
 
@@ -65,16 +63,16 @@ namespace pkmn {
         int key_item_pocket_id = crystal ? 12 : 7;
         int tmhm_pocket_id     = crystal ? 13 : 8;
 
-        _item_pockets["Items"]    = pkmn::make_shared<item_list_gen2_item_pocketimpl>(
+        _item_pockets["Items"]    = std::make_shared<item_list_gen2_item_pocketimpl>(
                                         item_pocket_id, _game_id, &NATIVE_RCAST->item_pocket
                                     );
-        _item_pockets["Balls"]    = pkmn::make_shared<item_list_gen2_ball_pocketimpl>(
+        _item_pockets["Balls"]    = std::make_shared<item_list_gen2_ball_pocketimpl>(
                                         ball_pocket_id, _game_id, &NATIVE_RCAST->ball_pocket
                                     );
-        _item_pockets["KeyItems"] = pkmn::make_shared<item_list_gen2_key_item_pocketimpl>(
+        _item_pockets["KeyItems"] = std::make_shared<item_list_gen2_key_item_pocketimpl>(
                                         key_item_pocket_id, _game_id, &NATIVE_RCAST->key_item_pocket
                                     );
-        _item_pockets["TM/HM"]    = pkmn::make_shared<item_list_gen2_tmhmimpl>(
+        _item_pockets["TM/HM"]    = std::make_shared<item_list_gen2_tmhmimpl>(
                                         tmhm_pocket_id, _game_id, &NATIVE_RCAST->tmhm_pocket
                                     );
     }

@@ -25,7 +25,7 @@ namespace pkmn { namespace swig {
             {}
 
             numeric_attribute_map(
-                const pkmn::shared_ptr<sptr_type>& internal
+                const std::shared_ptr<sptr_type>& internal
             ): _internal(internal)
             {}
 
@@ -80,7 +80,7 @@ namespace pkmn { namespace swig {
 #endif
 
         private:
-            pkmn::shared_ptr<sptr_type> _internal;
+            std::shared_ptr<sptr_type> _internal;
     };
 
     template <typename sptr_type>
@@ -92,7 +92,7 @@ namespace pkmn { namespace swig {
             {}
 
             string_attribute_map(
-                const pkmn::shared_ptr<sptr_type>& internal
+                const std::shared_ptr<sptr_type>& internal
             ): _internal(internal)
             {}
 
@@ -132,7 +132,7 @@ namespace pkmn { namespace swig {
 #endif
 
         private:
-            pkmn::shared_ptr<sptr_type> _internal;
+            std::shared_ptr<sptr_type> _internal;
     };
 
 }}

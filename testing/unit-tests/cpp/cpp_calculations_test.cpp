@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
@@ -23,8 +25,6 @@
 
 #include <pkmn/database/move_entry.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-
-#include <pkmn/utils/floating_point_comparison.hpp>
 
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
@@ -2154,7 +2154,7 @@ TEST(cpp_calculations_test, spinda_spot_test) {
     EXPECT_TRUE(spots1.right_face == SPOTS1.right_face);
 }
 
-PKMN_INLINE void PKMN_EXPECT_STAT_CLOSE(
+inline void PKMN_EXPECT_STAT_CLOSE(
     int actual, int expected
 ) {
     EXPECT_LE(int(std::abs(actual-expected)), 1);

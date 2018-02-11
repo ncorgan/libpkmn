@@ -12,7 +12,7 @@
 #include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -60,13 +60,13 @@ namespace pkmn {
                 switch(item_list_id) {
                     case 1:
                     case 3:
-                        return pkmn::make_shared<item_list_gen1_bagimpl>(
+                        return std::make_shared<item_list_gen1_bagimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
                     case 2:
                     case 4:
-                        return pkmn::make_shared<item_list_gen1_pcimpl>(
+                        return std::make_shared<item_list_gen1_pcimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
@@ -78,31 +78,31 @@ namespace pkmn {
                 switch(item_list_id) {
                     case 5:
                     case 10:
-                        return pkmn::make_shared<item_list_gen2_item_pocketimpl>(
+                        return std::make_shared<item_list_gen2_item_pocketimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
                     case 6:
                     case 11:
-                        return pkmn::make_shared<item_list_gen2_ball_pocketimpl>(
+                        return std::make_shared<item_list_gen2_ball_pocketimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
                     case 7:
                     case 12:
-                        return pkmn::make_shared<item_list_gen2_key_item_pocketimpl>(
+                        return std::make_shared<item_list_gen2_key_item_pocketimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
                     case 8:
                     case 13:
-                        return pkmn::make_shared<item_list_gen2_tmhmimpl>(
+                        return std::make_shared<item_list_gen2_tmhmimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
                     case 9:
                     case 14:
-                        return pkmn::make_shared<item_list_gen2_pcimpl>(
+                        return std::make_shared<item_list_gen2_pcimpl>(
                                    item_list_id, game_id, nullptr
                                );
 
@@ -112,11 +112,11 @@ namespace pkmn {
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    return pkmn::make_shared<item_list_gcnimpl>(
+                    return std::make_shared<item_list_gcnimpl>(
                                item_list_id, game_id, nullptr, capacity, false
                            );
                 } else {
-                    return pkmn::make_shared<item_list_modernimpl>(
+                    return std::make_shared<item_list_modernimpl>(
                                item_list_id, game_id, nullptr, capacity, false
                            );
                 }

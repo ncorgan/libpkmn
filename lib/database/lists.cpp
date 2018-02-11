@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "utils/misc.hpp"
+
 #include "database_common.hpp"
 #include "id_to_string.hpp"
 
@@ -182,7 +184,7 @@ namespace pkmn { namespace database {
         ("Battle Tower")("S.S. Tidal")("Team Aqua Hideout")
     ;
 
-    static PKMN_INLINE void fix_location_vector(
+    static inline void fix_location_vector(
         std::vector<std::string> &ret,
         int game_id,
         bool whole_generation

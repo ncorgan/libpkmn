@@ -95,7 +95,7 @@ namespace pkmntest {
             pkmn::game_save::sptr _game_save;
     };
 
-    static PKMN_INLINE bool is_gb_game(
+    static inline bool is_gb_game(
         const std::string &game
     ) {
         size_t arr_size = sizeof(GB_GAMES)/sizeof(GB_GAMES[0]);
@@ -106,7 +106,7 @@ namespace pkmntest {
                ) != GB_GAMES+arr_size;
     }
 
-    static PKMN_INLINE bool is_rival_name_set(
+    static inline bool is_rival_name_set(
         const std::string &game
     ) {
         size_t arr_size = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
@@ -117,7 +117,7 @@ namespace pkmntest {
                ) != RIVAL_NAME_SET_GAMES+arr_size;
     }
 
-    static PKMN_INLINE bool is_male_only(
+    static inline bool is_male_only(
         const std::string &game
     ) {
         size_t arr_size = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);

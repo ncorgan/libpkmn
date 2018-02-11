@@ -45,7 +45,7 @@
         return self->get_pocket(index);
     }
 
-    bool __eq__(const pkmn::shared_ptr<pkmn::item_bag>& rhs) {
+    bool __eq__(const std::shared_ptr<pkmn::item_bag>& rhs) {
         return ((*self) == rhs);
     }
 

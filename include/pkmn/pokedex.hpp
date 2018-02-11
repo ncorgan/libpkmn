@@ -8,8 +8,8 @@
 #define PKMN_POKEDEX_HPP
 
 #include <pkmn/config.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -18,16 +18,11 @@ namespace pkmn
     class PKMN_API pokedex
     {
         public:
-            typedef pkmn::shared_ptr<pokedex> sptr;
+            typedef std::shared_ptr<pokedex> sptr;
 
             static sptr make(
                 const std::string& game
             );
-
-            #ifndef __DOXYGEN__
-            pokedex() {};
-            virtual ~pokedex() {};
-            #endif
 
             virtual std::string get_game() = 0;
 
@@ -58,6 +53,8 @@ namespace pkmn
             virtual int get_num_caught() = 0;
 
             #ifndef __DOXYGEN__
+            pokedex() {};
+            virtual ~pokedex() {};
             virtual void* get_native_has_seen() = 0;
             virtual void* get_native_has_caught() = 0;
             #endif

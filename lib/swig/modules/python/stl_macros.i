@@ -60,7 +60,7 @@
 %enddef
 
 %define PKMN_PYTHON_SPTR(cpp_type)
-    %extend pkmn::shared_ptr<pkmn:: ## cpp_type> {
+    %extend std::shared_ptr<pkmn:: ## cpp_type> {
         %pythoncode %{
             def __eq__(self, rhs):
                 if not isinstance(rhs, (cpp_type ## _sptr)):
@@ -72,7 +72,7 @@
                 return not (self == rhs)
         %}
     }
-    %template(cpp_type ## _sptr) pkmn::shared_ptr<pkmn:: ## cpp_type>;
+    %template(cpp_type ## _sptr) std::shared_ptr<pkmn:: ## cpp_type>;
 %enddef
 
 %define PKMN_PYTHON_VECTOR(cpp_type, python_name)

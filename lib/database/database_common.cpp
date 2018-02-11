@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 #include "database_common.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/utils/paths.hpp>
 
+#include <boost/assert.hpp>
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
@@ -24,10 +25,12 @@ namespace pkmn { namespace database {
 
     static pkmn::database::sptr _db;
 
-    pkmn::database::sptr _get_connection() {
-        if(!_db) {
+    pkmn::database::sptr _get_connection()
+    {
+        if(!_db)
+        {
             std::string database_path = pkmn::get_database_path();
-            _db = pkmn::make_shared<SQLite::Database>(database_path.c_str());
+            _db = std::make_shared<SQLite::Database>(database_path.c_str());
 
             // Make sure our Veekun commit matches the database's
             int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
@@ -45,7 +48,8 @@ namespace pkmn { namespace database {
 
     int game_id_to_generation(
         int game_id
-    ) {
+    )
+    {
         // Connect to database
         (void)_get_connection();
 
@@ -60,7 +64,8 @@ namespace pkmn { namespace database {
 
     int game_id_to_version_group(
         int game_id
-    ) {
+    )
+    {
         // Connect to database
         (void)_get_connection();
 
@@ -73,8 +78,9 @@ namespace pkmn { namespace database {
     }
 
     int game_name_to_generation(
-        const std::string &game_name
-    ) {
+        const std::string& game_name
+    )
+    {
         // Connect to database
         (void)_get_connection();
 
@@ -83,14 +89,18 @@ namespace pkmn { namespace database {
             "(SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?))";
 
+        std::string error_message = "Invalid game: ";
+        error_message += game_name;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, game_name
+                   _db, query, game_name, error_message
                );
     }
 
     int game_name_to_version_group(
-        const std::string &game_name
-    ) {
+        const std::string& game_name
+    )
+    {
         // Connect to database
         (void)_get_connection();
 
@@ -98,20 +108,28 @@ namespace pkmn { namespace database {
             "SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?)";
 
+        std::string error_message = "Invalid game: ";
+        error_message += game_name;
+
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, game_name
+                   _db, query, game_name, error_message
                );
     }
 
     std::string fix_veekun_whitespace(
-        const std::string &input
-    ) {
+        const std::string& input
+    )
+    {
         std::string intermediate, s;
         std::istringstream iss(input);
-        while(iss >> s) {
-            if(intermediate.size() > 0) {
+        while(iss >> s)
+        {
+            if(intermediate.size() > 0)
+            {
                 intermediate += " " + s;
-            } else {
+            }
+            else
+            {
                 intermediate = s;
             }
         }
@@ -126,40 +144,59 @@ namespace pkmn { namespace database {
     static PKMN_CONSTEXPR_OR_INLINE bool GAME_IS_B2W2(int game_id) {return (game_id == 21 or game_id == 22);}
 
     std::string alternate_location_string(
-        const std::string &original_string,
+        const std::string& original_string,
         const int location_id,
         const int game_id,
         bool whole_generation,
-        bool* different_found,
-        bool* different_applies
-    ) {
-        *different_found = true;
+        bool* different_found_ptr,
+        bool* different_applies_ptr
+    )
+    {
+        BOOST_ASSERT(different_found_ptr);
+        BOOST_ASSERT(different_applies_ptr);
+
+        *different_found_ptr = true;
 
         std::string ret;
 
-        if(location_id == 210) {
-            *different_applies = GAME_IS_DP(game_id);
+        if(location_id == 210)
+        {
+            *different_applies_ptr = GAME_IS_DP(game_id);
             ret = "Cafe";
-        } else if(location_id == 378) {
-            *different_applies = GAME_IS_B2W2(game_id);
+        }
+        else if(location_id == 378)
+        {
+            *different_applies_ptr = GAME_IS_B2W2(game_id);
             ret = "PWT";
-        } else if(location_id == 486) {
-            *different_applies = (game_id == 8);
+        }
+        else if(location_id == 486)
+        {
+            *different_applies_ptr = (game_id == 8);
             ret = "Aqua Hideout";
-        } else if(location_id == 586) {
-            *different_applies = GAME_IS_E(game_id);
+        }
+        else if(location_id == 586)
+        {
+            *different_applies_ptr = GAME_IS_E(game_id);
             ret = "Battle Frontier";
-        } else if(location_id == 10030) {
-            *different_applies = (GAME_IS_GS(game_id) and not whole_generation);
+        }
+        else if(location_id == 10030)
+        {
+            *different_applies_ptr = (GAME_IS_GS(game_id) and not whole_generation);
             ret = "";
-        } else if(location_id == 10343) {
-            *different_applies = (GAME_IS_RS(game_id) or GAME_IS_E(game_id));
+        }
+        else if(location_id == 10343)
+        {
+            *different_applies_ptr = (GAME_IS_RS(game_id) or GAME_IS_E(game_id));
             ret = "Ferry";
-        } else if(location_id == 10345) {
-            *different_applies = GAME_IS_E(game_id);
+        }
+        else if(location_id == 10345)
+        {
+            *different_applies_ptr = GAME_IS_E(game_id);
             ret = "Aqua Hideout";
-        } else {
-            *different_found = false;
+        }
+        else
+        {
+            *different_found_ptr = false;
             ret = original_string;
         }
 
@@ -200,12 +237,14 @@ namespace pkmn { namespace database {
                                              : gcn_single_pocket_query);
         SQLite::Statement gcn_stmt((*_db), gcn_query);
         gcn_stmt.bind(1, (colosseum ? 1 : 0));
-        if(not all_pockets) {
+        if(not all_pockets)
+        {
             gcn_stmt.bind(2, version_group_id);
             gcn_stmt.bind(3, list_id);
         }
 
-        while(gcn_stmt.executeStep()) {
+        while(gcn_stmt.executeStep())
+        {
             ret.emplace_back(gcn_stmt.getColumn(0));
         }
     }

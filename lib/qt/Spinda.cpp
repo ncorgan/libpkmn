@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,7 +10,8 @@
 
 #ifdef PKMN_ENABLE_QT
 
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "utils/misc.hpp"
 #include "SpindaSpotMap.hpp"
 
 #include <pkmn/calculations/spinda_spots.hpp>

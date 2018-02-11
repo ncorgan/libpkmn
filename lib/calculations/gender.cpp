@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../exception_internal.hpp"
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "utils/misc.hpp"
+#include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/calculations/gender.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
@@ -30,29 +31,29 @@ namespace pkmn { namespace calculations {
 
         std::string ret;
 
-        if(pkmn::floats_close(chance_male, 0.0f) and
-           pkmn::floats_close(chance_female, 0.0f)
+        if(pkmn::fp_compare_equal(chance_male, 0.0f) and
+           pkmn::fp_compare_equal(chance_female, 0.0f)
         )
         {
             ret = "Genderless";
         }
-        else if(pkmn::floats_close(chance_male, 1.0f))
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f))
         {
             ret = "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.875f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.875f))
         {
             ret = (IV_attack < 2) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.75f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.75f))
         {
             ret = (IV_attack < 4) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.5f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.5f))
         {
             ret = (IV_attack < 7) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.25f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.25f))
         {
             ret = (IV_attack < 12) ? "Female" : "Male";
         }
@@ -77,29 +78,29 @@ namespace pkmn { namespace calculations {
 
         std::string ret;
 
-        if(pkmn::floats_close(chance_male, 0.0f) and
-           pkmn::floats_close(chance_female, 0.0f)
+        if(pkmn::fp_compare_equal(chance_male, 0.0f) and
+           pkmn::fp_compare_equal(chance_female, 0.0f)
         )
         {
             ret = "Genderless";
         }
-        else if(pkmn::floats_close(chance_male, 1.0f))
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f))
         {
             ret = "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.875f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.875f))
         {
             ret = (truncated_pid < 31) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.75f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.75f))
         {
             ret = (truncated_pid < 64) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.5f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.5f))
         {
             ret = (truncated_pid < 127) ? "Female" : "Male";
         }
-        else if(pkmn::floats_close(chance_male, 0.25f))
+        else if(pkmn::fp_compare_equal(chance_male, 0.25f))
         {
             ret = (truncated_pid < 191) ? "Female" : "Male";
         }

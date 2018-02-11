@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,10 +8,10 @@
 #include "pokemon_pc_gcnimpl.hpp"
 #include "pokemon_box_gcnimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #define NATIVE_RCAST (reinterpret_cast<LibPkmGC::GC::PokemonBox**>(_native))
-#define GCN_NUM_BOXES (_game_id == COLOSSEUM ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
+#define GCN_NUM_BOXES (_game_id == COLOSSEUM_ID ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
 namespace pkmn {
 
@@ -21,7 +21,7 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new LibPkmGC::GC::PokemonBox*[GCN_NUM_BOXES]);
         for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-            if(_game_id == COLOSSEUM) {
+            if(_game_id == COLOSSEUM_ID) {
                 NATIVE_RCAST[i] = new LibPkmGC::Colosseum::PokemonBox;
             } else {
                 NATIVE_RCAST[i] = new LibPkmGC::XD::PokemonBox;
@@ -46,7 +46,7 @@ namespace pkmn {
     pokemon_pc_gcnimpl::~pokemon_pc_gcnimpl() {
         if(_our_mem) {
             for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-                if(_game_id == COLOSSEUM) {
+                if(_game_id == COLOSSEUM_ID) {
                     delete reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(NATIVE_RCAST[i]);
                 } else {
                     delete reinterpret_cast<LibPkmGC::XD::PokemonBox*>(NATIVE_RCAST[i]);
@@ -64,7 +64,7 @@ namespace pkmn {
         _box_list.resize(GCN_NUM_BOXES);
 
         for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-            _box_list[i] = pkmn::make_shared<pokemon_box_gcnimpl>(
+            _box_list[i] = std::make_shared<pokemon_box_gcnimpl>(
                                _game_id,
                                NATIVE_RCAST[i]
                            );

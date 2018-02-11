@@ -210,7 +210,7 @@ EXTEND_POKEMON_MAP(contest_stat, int);
 }
 
 // Suppress shadowing warning when adding static variables.
-%warnfilter(508) pkmn::shared_ptr<pkmn::pokemon>;
+%warnfilter(508) std::shared_ptr<pkmn::pokemon>;
 
 %extend pkmn::swig::pokemon
 {

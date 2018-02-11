@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,13 +13,14 @@
 #include <windows.h>
 #endif
 
+#include "utils/misc.hpp"
+#include "types/rng.hpp"
+#include "utils/floating_point_comparison.hpp"
+
 #include <pkmn/calculations/personality.hpp>
 
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/database/pokemon_entry.hpp>
-
-#include "misc_common.hpp"
-#include "types/rng.hpp"
 
 #include <boost/assign/list_of.hpp>
 
@@ -42,11 +43,11 @@ namespace pkmn { namespace calculations {
     ) {
         uint32_t ret = 0;
 
-        if(pkmn::floats_close(chance_male, 0.875f)) {
+        if(pkmn::fp_compare_equal(chance_male, 0.875f)) {
             ret = 31;
-        } else if(pkmn::floats_close(chance_male, 0.75f)) {
+        } else if(pkmn::fp_compare_equal(chance_male, 0.75f)) {
             ret = 64;
-        } else if(pkmn::floats_close(chance_male, 0.5f)) {
+        } else if(pkmn::fp_compare_equal(chance_male, 0.5f)) {
             ret = 127;
         } else {
             ret = 191;
@@ -84,15 +85,15 @@ namespace pkmn { namespace calculations {
         }
 
         // Validate gender input.
-        if(pkmn::floats_close((chance_male + chance_female), 0.0f)) {
+        if(pkmn::fp_compare_equal((chance_male + chance_female), 0.0f)) {
             if(gender != "Genderless") {
                 throw std::invalid_argument("This Pokémon is genderless.");
             }
-        } else if(pkmn::floats_close(chance_male, 1.0f)) {
+        } else if(pkmn::fp_compare_equal(chance_male, 1.0f)) {
             if(gender != "Male") {
                 throw std::invalid_argument("This Pokémon is male-only.");
             }
-        } else if(pkmn::floats_close(chance_female, 1.0f)) {
+        } else if(pkmn::fp_compare_equal(chance_female, 1.0f)) {
             if(gender != "Female") {
                 throw std::invalid_argument("This Pokémon is female-only.");
             }

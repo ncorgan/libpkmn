@@ -64,37 +64,37 @@ namespace pkmn {
     #define ITEM_POCKET_CAPACITY ((_game_id == COLOSSEUM) ? 20 : 30)
 
     void item_bag_gcnimpl::_set_ptrs() {
-        _item_pockets["Items"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["Items"] = std::make_shared<item_list_gcnimpl>(
                                      ITEM_POCKET_ID, _game_id, GC_RCAST->regularItems,
                                      ITEM_POCKET_CAPACITY, false
                                  );
-        _item_pockets["Key Items"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["Key Items"] = std::make_shared<item_list_gcnimpl>(
                                          KEY_ITEM_POCKET_ID, _game_id, GC_RCAST->keyItems,
                                          sizeof(GC_RCAST->keyItems)/sizeof(LibPkmGC::Item),
                                          false
                                      );
-        _item_pockets["Poké Balls"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["Poké Balls"] = std::make_shared<item_list_gcnimpl>(
                                           BALL_POCKET_ID, _game_id, GC_RCAST->pokeballs,
                                           sizeof(GC_RCAST->pokeballs)/sizeof(LibPkmGC::Item),
                                           false
                                       );
-        _item_pockets["TMs"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["TMs"] = std::make_shared<item_list_gcnimpl>(
                                    TM_POCKET_ID, _game_id, GC_RCAST->TMs,
                                    sizeof(GC_RCAST->TMs)/sizeof(LibPkmGC::Item),
                                    false
                                );
-        _item_pockets["Berries"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["Berries"] = std::make_shared<item_list_gcnimpl>(
                                        BERRY_POCKET_ID, _game_id, GC_RCAST->berries,
                                        sizeof(GC_RCAST->berries)/sizeof(LibPkmGC::Item),
                                        false
                                    );
-        _item_pockets["Colognes"] = pkmn::make_shared<item_list_gcnimpl>(
+        _item_pockets["Colognes"] = std::make_shared<item_list_gcnimpl>(
                                         COLOGNE_POCKET_ID, _game_id, GC_RCAST->colognes,
                                         sizeof(GC_RCAST->colognes)/sizeof(LibPkmGC::Item),
                                         false
                                     );
         if(_game_id == XD) {
-            _item_pockets["Battle CDs"] = pkmn::make_shared<item_list_gcnimpl>(
+            _item_pockets["Battle CDs"] = std::make_shared<item_list_gcnimpl>(
                                               BATTLE_CD_POCKET_ID, _game_id, XD_RCAST->battleCDs,
                                               sizeof(XD_RCAST->battleCDs)/sizeof(LibPkmGC::Item),
                                               false
