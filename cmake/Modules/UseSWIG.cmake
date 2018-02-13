@@ -281,12 +281,12 @@ MACRO(SWIG_ADD_MODULE name language)
           ${PKMN_SOURCE_DIR}/lib/swig/swigdll.rc.in
           ${swig_rc_path}
       @ONLY)
-      SWIG_ADD_SOURCE_TO_MODULE(${name} swig_generated_source ${swig_rc_path})
   ENDIF()
 
   ADD_LIBRARY(${SWIG_MODULE_${name}_REAL_NAME}
     MODULE
     ${all_swig_sources}
+    ${swig_rc_path}
   )
   IF (${swig_lowercase_language} STREQUAL "java")
     IF (APPLE)
