@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying FILE LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -47,6 +47,7 @@ MACRO(SWIG_BUILD_RUBY_MODULE module_name cplusplus)
     ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
+    SET(SWIG_MODULE_RC_NAME ${module_name})
     SWIG_ADD_MODULE(${module_name} ruby ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
     SET_TARGET_PROPERTIES(${SWIG_MODULE_${module_name}_REAL_NAME} PROPERTIES PREFIX "")
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})

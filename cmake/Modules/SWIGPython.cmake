@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2016,2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying FILE LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@
 #
 # Macro parameters:
 #  * module_name: The module filename, minus the .i extension.
+#  * module_rc_name: The module name used in the DLL resource file
 #  * install_dir: The desired location within the Python directory.
 #  * cplusplus:   TRUE or FALSE, whether or not this is a C++ module.
 #
@@ -58,7 +59,7 @@ SET(PYTHON_INSTALL_DIR ${PYTHON_INSTALL_DIR} CACHE FILEPATH "Python install dire
 ########################################################################
 # Macro to build and install Python SWIG modules
 ########################################################################
-MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
+MACRO(SWIG_BUILD_PYTHON_MODULE module_name module_rc_name install_dir cplusplus)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
@@ -101,6 +102,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
+    SET(SWIG_MODULE_RC_NAME ${module_rc_name})
     SWIG_ADD_MODULE(${module_name} python ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
     SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
 

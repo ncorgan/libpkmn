@@ -17,11 +17,11 @@ VS_VERSION_INFO VERSIONINFO
     BEGIN
       BLOCK "040904b0"
       BEGIN
-        VALUE "FileDescription", "LibPKMN - C Interface"
+        VALUE "FileDescription", "LibPKMN - @SWIG_MODULE_RC_NAME@ @SWIG_LANGUAGE@ Interface"
         VALUE "FileVersion", "@PKMN_VERSION@"
-        VALUE "InternalName", "@LIB_PREFIX@pkmn-c.dll"
+        VALUE "InternalName", "@LIB_PREFIX@@SWIGDLL_BASENAME@.@SWIGDLL_SUFFIX@"
         VALUE "LegalCopyright", "Copyright (c) 2016- Nicholas Corgan"
-        VALUE "OriginalFilename", "@LIB_PREFIX@pkmn-c.dll"
+        VALUE "OriginalFilename", "@LIB_PREFIX@@SWIGDLL_BASENAME@.@SWIGDLL_SUFFIX@"
         VALUE "ProductName", "LibPKMN"
         VALUE "ProductVersion", "@PKMN_VERSION@"
       END

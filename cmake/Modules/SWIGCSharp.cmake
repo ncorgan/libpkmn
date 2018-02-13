@@ -112,6 +112,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_filename nativelib_name csharp_module_name c
     ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
+    SET(SWIG_MODULE_RC_NAME ${csharp_module_name})
     SWIG_ADD_MODULE(${nativelib_name} csharp ${CMAKE_CURRENT_BINARY_DIR}/${swig_filename}.i)
     LIST(LENGTH SWIG_LIBRARIES num_swig_libs)
     IF(${num_swig_libs} GREATER 0)

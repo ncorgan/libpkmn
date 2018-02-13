@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -26,13 +26,13 @@ SET(SWIG_LUA_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_LUA_MODULE(pkmn_buildinfo_lua    TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_calculations_lua TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_core_lua         TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_database_lua     TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_gui_lua          TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_paths_lua        TRUE)
-SWIG_BUILD_LUA_MODULE(pkmn_stl_lua          TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_buildinfo_lua    "Build Info" TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_calculations_lua Calculations TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_core_lua         Core         TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_database_lua     Database     TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_gui_lua          GUI          TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_paths_lua        Paths        TRUE)
+SWIG_BUILD_LUA_MODULE(pkmn_stl_lua          STL          TRUE)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/pkmn.lua
