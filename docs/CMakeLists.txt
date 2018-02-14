@@ -19,8 +19,8 @@ MACRO(PKMN_BUILD_DOXYGEN_DOCS files lang langname)
         COMMENT "Generating ${langname} Doxygen documentation"
     )
     ADD_CUSTOM_TARGET(doxygen_${lang}_docs ALL DEPENDS ${DOXYGEN_OUTPUT_DIR}/html/index.html)
-    INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${PKMN_DOCS_DIR} COMPONENT doxygen)
-ENDMACRO(PKMN_BUILD_DOXYGEN_DOCS)
+    INSTALL(DIRECTORY ${DOXYGEN_OUTPUT_DIR} DESTINATION ${PKMN_DOCS_DIR} COMPONENT Documentation)
+ENDMACRO()
 
 # C++ documentation
 FILE(GLOB_RECURSE hpp_files
@@ -36,14 +36,9 @@ IF(PKMN_ENABLE_C)
         ${PKMN_BINARY_DIR}/include/pkmn-c/*.h
     )
     PKMN_BUILD_DOXYGEN_DOCS("${h_files}" "c" "C")
-ENDIF(PKMN_ENABLE_C)
+ENDIF()
 
 IF(PKMN_ENABLE_CSHARP)
     PKMN_BUILD_DOXYGEN_DOCS("" "csharp" "C#")
     ADD_DEPENDENCIES(doxygen_csharp_docs PKMN.CSharp)
-ENDIF(PKMN_ENABLE_CSHARP)
-
-#IF(PKMN_ENABLE_JAVA)
-#    PKMN_BUILD_DOXYGEN_DOCS("" "java" "Java")
-#    ADD_DEPENDENCIES(doxygen_java_docs pkmn_jar)
-#ENDIF(PKMN_ENABLE_JAVA)
+ENDIF()
