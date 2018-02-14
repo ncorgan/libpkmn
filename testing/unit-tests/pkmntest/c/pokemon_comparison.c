@@ -1,0 +1,638 @@
+/*
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
+ *
+ * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * or copy at http://opensource.org/licenses/MIT)
+ */
+
+#include <pkmntest-c/pokemon_comparison.h>
+#include <pkmntest-c/util.h>
+
+#include <pkmn.h>
+
+#include <unity.h>
+
+#include <string.h>
+
+#define STRBUFFER_LEN 1024
+static const pkmn_string_list_t empty_string_list =
+{
+    .strings = NULL,
+    .length = 0
+};
+static const pkmn_trainer_info2_t empty_trainer_info =
+{
+    .name = NULL,
+    .id = {0},
+    .gender = PKMN_GENDER_GENDERLESS
+};
+static const pkmn_move_slots_t empty_move_slots =
+{
+    .move_slots = NULL,
+    .length = 0
+};
+static const pkmn_pokemon2_t empty_pokemon =
+{
+    .species = NULL,
+    .game = NULL,
+    ._internal = NULL
+};
+
+typedef pkmn_error_t (*pokemon_int_getter_fcn_t)(pkmn_pokemon2_t*,int*);
+typedef pkmn_error_t (*pokemon_uint32_getter_fcn_t)(pkmn_pokemon2_t*,uint32_t*);
+typedef pkmn_error_t (*pokemon_string_getter_fcn_t)(pkmn_pokemon2_t*,char*,size_t,size_t*);
+typedef pkmn_error_t (*pokemon_bool_getter_fcn_t)(pkmn_pokemon2_t*,bool*);
+typedef pkmn_error_t (*pokemon_int_buffer_getter_fcn_t)(pkmn_pokemon2_t*,int*,size_t,size_t*);
+typedef pkmn_error_t (*pokemon_bool_buffer_getter_fcn_t)(pkmn_pokemon2_t*,bool*,size_t,size_t*);
+
+static inline bool random_bool()
+{
+    return ((rand() % 100) > 50);
+}
+
+void get_random_pokemon(
+    pkmn_pokemon2_t* pokemon_ptr,
+    const char* game
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(game);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    int generation = game_to_generation(game);
+
+    pkmn_string_list_t item_list = empty_string_list;
+    pkmn_string_list_t move_list = empty_string_list;
+    pkmn_string_list_t pokemon_list = empty_string_list;
+
+    error = pkmn_database_item_list(game, &item_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_database_move_list(game, &move_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    // Don't deal with Deoxys issues here.
+    const char* species = NULL;
+    if(generation == 3)
+    {
+        do
+        {
+            species = pokemon_list.strings[rand() % pokemon_list.length];
+        } while(!strcmp(species, "Deoxys"));
+    }
+    else
+    {
+        species = pokemon_list.strings[rand() % pokemon_list.length];
+    }
+
+    error = pkmn_pokemon2_init(
+                species,
+                game,
+                "",
+                ((rand() % 99) + 2),
+                pokemon_ptr
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    for(size_t move_index = 0; move_index < 4; ++move_index)
+    {
+        const char* move = NULL;
+        do
+        {
+            move = move_list.strings[rand() % move_list.length];
+        } while(strstr(move, "Shadow"));
+    }
+
+    // Get the EVs first to see which are valid. The same values
+    // will be valid for IVs, so set both here.
+    int EVs[PKMN_NUM_STATS] = {0};
+    error = pkmn_pokemon2_get_EVs(
+                pokemon_ptr,
+                EVs,
+                PKMN_NUM_STATS,
+                NULL
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    for(pkmn_stat_t stat = PKMN_STAT_HP;
+        stat <= PKMN_STAT_SPDEF;
+        ++stat)
+    {
+        if(EVs[stat] != -1)
+        {
+            error = pkmn_pokemon2_set_EV(
+                        pokemon_ptr,
+                        stat,
+                        (rand() % 256)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+            error = pkmn_pokemon2_set_IV(
+                        pokemon_ptr,
+                        stat,
+                        (rand() % 16)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        }
+    }
+
+    if(generation >= 2)
+    {
+        // Keep going until one is holdable.
+        do
+        {
+            error = pkmn_pokemon2_set_held_item(
+                        pokemon_ptr,
+                        item_list.strings[rand() % item_list.length]
+                    );
+        } while(error == PKMN_ERROR_INVALID_ARGUMENT);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+    if(generation >= 3)
+    {
+        // Just do the markings compatible with all games.
+        for(pkmn_marking_t marking = PKMN_MARKING_CIRCLE;
+            marking <= PKMN_MARKING_HEART;
+            ++marking)
+        {
+            error = pkmn_pokemon2_set_has_marking(
+                        pokemon_ptr,
+                        marking,
+                        random_bool()
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        }
+
+        // Just do the contest stats compatible with all games.
+        for(pkmn_contest_stat_t contest_stat = PKMN_CONTEST_STAT_COOL;
+            contest_stat <= PKMN_CONTEST_STAT_TOUGH;
+            ++contest_stat)
+        {
+            error = pkmn_pokemon2_set_contest_stat(
+                        pokemon_ptr,
+                        contest_stat,
+                        (rand() % 256)
+                    );
+            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        }
+    }
+}
+
+static void compare_pokemon_ints(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    const char* field,
+    pokemon_int_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    int int1 = 0;
+    int int2 = 0;
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    error = getter_fcn(pokemon1_ptr, &int1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = getter_fcn(pokemon2_ptr, &int2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MESSAGE(int1, int2, error_message);
+}
+
+static void compare_pokemon_uint32s(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    const char* field,
+    pokemon_uint32_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    uint32_t uint1 = 0;
+    uint32_t uint2 = 0;
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    error = getter_fcn(pokemon1_ptr, &uint1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = getter_fcn(pokemon2_ptr, &uint2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MESSAGE(uint1, uint2, error_message);
+}
+
+static void compare_pokemon_strings(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    const char* field,
+    pokemon_string_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    char strbuffer1[STRBUFFER_LEN] = {0};
+    char strbuffer2[STRBUFFER_LEN] = {0};
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    error = getter_fcn(
+                pokemon1_ptr,
+                strbuffer1,
+                sizeof(strbuffer1),
+                NULL
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = getter_fcn(
+                pokemon2_ptr,
+                strbuffer2,
+                sizeof(strbuffer2),
+                NULL
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_STRING_MESSAGE(strbuffer1, strbuffer2, error_message);
+}
+
+static void compare_pokemon_bools(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    const char* field,
+    pokemon_bool_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    bool bool1 = 0;
+    bool bool2 = 0;
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    error = getter_fcn(pokemon1_ptr, &bool1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = getter_fcn(pokemon2_ptr, &bool2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MESSAGE(bool1, bool2, error_message);
+}
+
+static void compare_pokemon_int_buffers(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    size_t buffer_size,
+    const char* field,
+    pokemon_int_buffer_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    int* int_buffer1 = calloc(buffer_size, sizeof(int));
+    int* int_buffer2 = calloc(buffer_size, sizeof(int));
+
+    error = getter_fcn(pokemon1_ptr, int_buffer1, buffer_size, NULL);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = getter_fcn(pokemon2_ptr, int_buffer2, buffer_size, NULL);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE(
+        int_buffer1,
+        int_buffer2,
+        (buffer_size * sizeof(int)),
+        error_message
+    );
+
+    free(int_buffer2);
+    free(int_buffer1);
+}
+
+static void compare_pokemon_bool_buffers(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    size_t buffer_size,
+    const char* field,
+    pokemon_bool_buffer_getter_fcn_t getter_fcn
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+    TEST_ASSERT_NOT_NULL(field);
+    TEST_ASSERT_NOT_NULL(getter_fcn);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    bool* bool_buffer1 = calloc(buffer_size, sizeof(bool));
+    bool* bool_buffer2 = calloc(buffer_size, sizeof(bool));
+
+    error = getter_fcn(pokemon1_ptr, bool_buffer1, buffer_size, NULL);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = getter_fcn(pokemon2_ptr, bool_buffer2, buffer_size, NULL);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    char error_message[STRBUFFER_LEN] = {0};
+    snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
+
+    TEST_ASSERT_EQUAL_MEMORY_MESSAGE(
+        bool_buffer1,
+        bool_buffer2,
+        (buffer_size * sizeof(bool)),
+        error_message
+    );
+
+    free(bool_buffer2);
+    free(bool_buffer1);
+}
+
+static void compare_locations_met(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr,
+    bool as_egg
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    char strbuffer1[STRBUFFER_LEN] = {0};
+    char strbuffer2[STRBUFFER_LEN] = {0};
+
+    error = pkmn_pokemon2_get_location_met(
+                pokemon1_ptr,
+                as_egg,
+                strbuffer1,
+                sizeof(strbuffer1),
+                NULL
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_pokemon2_get_location_met(
+                pokemon2_ptr,
+                as_egg,
+                strbuffer2,
+                sizeof(strbuffer2),
+                NULL
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(strbuffer1, strbuffer2);
+}
+
+static void compare_ribbons(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    pkmn_string_list_t ribbon_list = empty_string_list;
+    error = pkmn_pokemon2_get_ribbon_names(
+                pokemon1_ptr,
+                &ribbon_list
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    bool has_ribbon1 = false;
+    bool has_ribbon2 = false;
+    for(size_t ribbon_index = 0; ribbon_index < ribbon_list.length; ++ribbon_index)
+    {
+        error = pkmn_pokemon2_has_ribbon(
+                    pokemon1_ptr,
+                    ribbon_list.strings[ribbon_index],
+                    &has_ribbon1
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        error = pkmn_pokemon2_has_ribbon(
+                    pokemon2_ptr,
+                    ribbon_list.strings[ribbon_index],
+                    &has_ribbon2
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL_MESSAGE(
+            has_ribbon1,
+            has_ribbon2,
+            ribbon_list.strings[ribbon_index]
+        );
+    }
+
+    error = pkmn_string_list_free(&ribbon_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+void compare_pokemon(
+    pkmn_pokemon2_t* pokemon1_ptr,
+    pkmn_pokemon2_t* pokemon2_ptr
+)
+{
+    TEST_ASSERT_NOT_NULL(pokemon1_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+    int generation = game_to_generation(pokemon1_ptr->game);
+
+    pkmn_trainer_info2_t original_trainer_info1 = empty_trainer_info;
+    pkmn_trainer_info2_t original_trainer_info2 = empty_trainer_info;
+
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon1_ptr->species,
+        pokemon2_ptr->species
+    );
+
+    // There is no way to determine what game an imported Generation I-II
+    // Pokémon comes from, so LibPKMN defaults to a default valid game.
+    if(generation >= 3)
+    {
+        TEST_ASSERT_EQUAL_STRING(
+            pokemon1_ptr->game,
+            pokemon2_ptr->game
+        );
+        compare_pokemon_strings(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Icon filepath",
+            pkmn_pokemon2_get_icon_filepath
+        );
+        compare_pokemon_strings(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Sprite filepath",
+            pkmn_pokemon2_get_sprite_filepath
+        );
+    }
+
+    error = pkmn_pokemon2_get_original_trainer_info(
+                pokemon1_ptr,
+                &original_trainer_info1
+            );
+    TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
+    error = pkmn_pokemon2_get_original_trainer_info(
+                pokemon2_ptr,
+                &original_trainer_info2
+            );
+    TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(
+        original_trainer_info1.name,
+        original_trainer_info2.name
+    );
+    TEST_ASSERT_EQUAL(
+        original_trainer_info1.id.id,
+        original_trainer_info2.id.id
+    );
+    TEST_ASSERT_EQUAL(
+        original_trainer_info1.gender,
+        original_trainer_info2.gender
+    );
+
+    error = pkmn_trainer_info_free(&original_trainer_info2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_trainer_info_free(&original_trainer_info1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    compare_pokemon_strings(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        "Form",
+        pkmn_pokemon2_get_form
+    );
+    compare_pokemon_ints(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        "Experience",
+        pkmn_pokemon2_get_experience
+    );
+    compare_pokemon_ints(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        "Level",
+        pkmn_pokemon2_get_level
+    );
+    compare_pokemon_strings(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        "Nickname",
+        pkmn_pokemon2_get_nickname
+    );
+    compare_pokemon_int_buffers(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        PKMN_NUM_STATS,
+        "EVs",
+        pkmn_pokemon2_get_EVs
+    );
+    compare_pokemon_int_buffers(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        PKMN_NUM_STATS,
+        "IVs",
+        pkmn_pokemon2_get_IVs
+    );
+    compare_pokemon_int_buffers(
+        pokemon1_ptr,
+        pokemon2_ptr,
+        PKMN_NUM_STATS,
+        "Stats",
+        pkmn_pokemon2_get_stats
+    );
+
+    if(generation >= 2)
+    {
+        compare_pokemon_ints(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Current trainer friendship",
+            pkmn_pokemon2_get_current_trainer_friendship
+        );
+        compare_pokemon_bools(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Is shiny",
+            pkmn_pokemon2_is_shiny
+        );
+        compare_pokemon_strings(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Held item",
+            pkmn_pokemon2_get_held_item
+        );
+        compare_pokemon_ints(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Level met",
+            pkmn_pokemon2_get_level_met
+        );
+        compare_locations_met(pokemon1_ptr, pokemon2_ptr, false);
+    }
+    if(generation >= 3)
+    {
+        compare_pokemon_strings(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Ability",
+            pkmn_pokemon2_get_ability
+        );
+        compare_pokemon_uint32s(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Personality",
+            pkmn_pokemon2_get_personality
+        );
+        compare_pokemon_strings(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            "Ball",
+            pkmn_pokemon2_get_ball
+        );
+        compare_pokemon_bool_buffers(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            PKMN_NUM_MARKINGS,
+            "Markings",
+            pkmn_pokemon2_get_markings
+        );
+        compare_pokemon_int_buffers(
+            pokemon1_ptr,
+            pokemon2_ptr,
+            PKMN_NUM_CONTEST_STATS,
+            "Contest stats",
+            pkmn_pokemon2_get_contest_stats
+        );
+        compare_ribbons(pokemon1_ptr, pokemon2_ptr);
+    }
+    if(generation >= 4)
+    {
+        compare_locations_met(pokemon1_ptr, pokemon2_ptr, true);
+    }
+}
