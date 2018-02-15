@@ -74,7 +74,7 @@ namespace pkmn {
             pkmn::pokedex::sptr get_pokedex() override final;
 
         private:
-            std::shared_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;
+            std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;
 
             std::vector<LibPkmGC::u8> _data;

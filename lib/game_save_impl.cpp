@@ -73,7 +73,7 @@ namespace pkmn {
         ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
         ifile.close();
 
-        std::shared_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
+        std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> gcn_save;
         if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
             gcn_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(raw.data(), (filesize == GCN_COLOSSEUM_GCI_SIZE)));
         } if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
