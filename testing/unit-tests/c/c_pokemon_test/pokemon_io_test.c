@@ -235,7 +235,7 @@ static void pk1_test(
     );
 
     pkmn_pokemon2_t random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, game);
+    get_random_pokemon(&random_pokemon, NULL, game);
 
     error = pkmn_pokemon2_export_to_file(
                 &random_pokemon,
@@ -303,7 +303,7 @@ static void pk2_test(
     );
 
     pkmn_pokemon2_t random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, game);
+    get_random_pokemon(&random_pokemon, NULL, game);
 
     error = pkmn_pokemon2_export_to_file(
                 &random_pokemon,
@@ -371,7 +371,7 @@ static void _3gpkm_test(
     );
 
     pkmn_pokemon2_t random_pokemon = empty_pokemon;
-    get_random_pokemon(&random_pokemon, game);
+    get_random_pokemon(&random_pokemon, NULL, game);
 
     error = pkmn_pokemon2_export_to_file(
                 &random_pokemon,

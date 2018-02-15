@@ -82,4 +82,9 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(firered_3gpkm_test);
     PKMN_C_TEST(leafgreen_3gpkm_test);
     PKMN_C_TEST(test_outside_3gpkm);
+
+    PKMN_C_TEST(gen1_conversions_test);
+    PKMN_C_TEST(gen2_conversions_test);
+    PKMN_C_TEST(gba_conversions_test);
+    PKMN_C_TEST(gcn_conversions_test);
 )

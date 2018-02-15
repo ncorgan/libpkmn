@@ -121,4 +121,11 @@ void leafgreen_unown_test();
 void colosseum_unown_test();
 void xd_unown_test();
 
+// Conversions
+
+void gen1_conversions_test();
+void gen2_conversions_test();
+void gba_conversions_test();
+void gcn_conversions_test();
+
 #endif /* POKEMON_TEST_H */
