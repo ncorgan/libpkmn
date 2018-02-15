@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -32,7 +32,7 @@ namespace pkmn {
         _native = reinterpret_cast<void*>(new pkmn::gcn_pokemon_party_t);
 
         for(size_t i = 0; i < PARTY_SIZE; ++i) {
-            if(_game_id == COLOSSEUM) {
+            if(_game_id == COLOSSEUM_ID) {
                 NATIVE_RCAST->pokemon[i] = new LibPkmGC::Colosseum::Pokemon;
             } else {
                 NATIVE_RCAST->pokemon[i] = new LibPkmGC::XD::Pokemon;
@@ -67,7 +67,7 @@ namespace pkmn {
         // _our_mem applies to the struct members, not the struct itself
         if(_our_mem) {
             for(size_t i = 0; i < PARTY_SIZE; ++i) {
-                if(_game_id == COLOSSEUM) {
+                if(_game_id == COLOSSEUM_ID) {
                     delete COLO_POKEMON(i);
                 } else {
                     delete XD_POKEMON(i);
@@ -134,7 +134,7 @@ namespace pkmn {
                                                             old_party_pokemon_impl_ptr->_native_pc
                                                         )->clone();
 
-        if(_game_id == COLOSSEUM)
+        if(_game_id == COLOSSEUM_ID)
         {
             rcast_equal<LibPkmGC::Colosseum::Pokemon>(
                 old_party_pokemon_native_ptr,
@@ -163,7 +163,7 @@ namespace pkmn {
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
         old_party_pokemon_impl_ptr->unlock();
 
-        _pokemon_list[index] = pkmn::make_shared<pokemon_gcnimpl>(
+        _pokemon_list[index] = std::make_shared<pokemon_gcnimpl>(
                                    NATIVE_RCAST->pokemon[index],
                                    _game_id
                                );
@@ -186,7 +186,7 @@ namespace pkmn {
         _pokemon_list.resize(PARTY_SIZE);
 
         for(int i = 0; i < PARTY_SIZE; ++i) {
-            _pokemon_list[i] = pkmn::make_shared<pokemon_gcnimpl>(
+            _pokemon_list[i] = std::make_shared<pokemon_gcnimpl>(
                                    NATIVE_RCAST->pokemon[i],
                                    _game_id
                                );

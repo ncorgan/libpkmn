@@ -83,6 +83,8 @@ static pkmn::pokemon::sptr get_random_pokemon(
                 );
             } catch(std::invalid_argument&) {}
         }
+
+        ret->set_shininess(get_random_bool());
     }
 
     if(generation >= 3)

@@ -6,14 +6,14 @@
  */
 
 #include "../exception_internal.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/calculations/form.hpp>
 
 namespace pkmn { namespace calculations {
 
-    PKMN_INLINE char gen2_unown_letter(
+    inline char gen2_unown_letter(
         uint8_t IV_attack, uint8_t IV_defense,
         uint8_t IV_speed, uint8_t IV_special
     )
@@ -45,7 +45,7 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    PKMN_INLINE char gen3_unown_letter(
+    inline char gen3_unown_letter(
         const uint8_t* bytes
     )
     {

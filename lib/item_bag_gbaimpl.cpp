@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,8 +14,6 @@
 #include "item_list_modernimpl.hpp"
 
 #include "database/database_common.hpp"
-
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <cstring>
 #include <stdexcept>
@@ -86,27 +84,27 @@ namespace pkmn {
 
         switch(version_group) {
             case VERSION_GROUP_RS:
-                _item_pockets["Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
                                              ITEM_POCKET_IDS[index], _game_id, RS_STORAGE.items,
                                              sizeof(RS_STORAGE.items)/sizeof(pksav_item_t),
                                              false
                                          );
-                _item_pockets["Poké Balls"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
                                                   BALL_POCKET_IDS[index], _game_id, RS_STORAGE.balls,
                                                   sizeof(RS_STORAGE.balls)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets[tmhm_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
                                                  TMHM_POCKET_IDS[index], _game_id, RS_STORAGE.tms_hms,
                                                  sizeof(RS_STORAGE.tms_hms)/sizeof(pksav_item_t),
                                                  false
                                              );
-                _item_pockets[berry_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
                                                   BERRY_POCKET_IDS[index], _game_id, RS_STORAGE.berries,
                                                   sizeof(RS_STORAGE.berries)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets["Key Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
                                                  KEY_ITEM_POCKET_IDS[index], _game_id, RS_STORAGE.key_items,
                                                  sizeof(RS_STORAGE.key_items)/sizeof(pksav_item_t),
                                                  false
@@ -114,27 +112,27 @@ namespace pkmn {
                 break;
 
             case VERSION_GROUP_EMERALD:
-                _item_pockets["Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
                                              ITEM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.items,
                                              sizeof(EMERALD_STORAGE.items)/sizeof(pksav_item_t),
                                              false
                                          );
-                _item_pockets["Poké Balls"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
                                                   BALL_POCKET_IDS[index], _game_id, EMERALD_STORAGE.balls,
                                                   sizeof(EMERALD_STORAGE.balls)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets[tmhm_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
                                                  TMHM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.tms_hms,
                                                  sizeof(EMERALD_STORAGE.tms_hms)/sizeof(pksav_item_t),
                                                  false
                                              );
-                _item_pockets[berry_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
                                                   BERRY_POCKET_IDS[index], _game_id, EMERALD_STORAGE.berries,
                                                   sizeof(EMERALD_STORAGE.berries)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets["Key Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
                                                  KEY_ITEM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.key_items,
                                                  sizeof(EMERALD_STORAGE.key_items)/sizeof(pksav_item_t),
                                                  false
@@ -142,27 +140,27 @@ namespace pkmn {
                 break;
 
             case VERSION_GROUP_FRLG:
-                _item_pockets["Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
                                              ITEM_POCKET_IDS[index], _game_id, FRLG_STORAGE.items,
                                              sizeof(FRLG_STORAGE.items)/sizeof(pksav_item_t),
                                              false
                                          );
-                _item_pockets["Poké Balls"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
                                                   BALL_POCKET_IDS[index], _game_id, FRLG_STORAGE.balls,
                                                   sizeof(FRLG_STORAGE.balls)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets[tmhm_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
                                                  TMHM_POCKET_IDS[index], _game_id, FRLG_STORAGE.tms_hms,
                                                  sizeof(FRLG_STORAGE.tms_hms)/sizeof(pksav_item_t),
                                                  false
                                              );
-                _item_pockets[berry_pocket] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
                                                   BERRY_POCKET_IDS[index], _game_id, FRLG_STORAGE.berries,
                                                   sizeof(FRLG_STORAGE.berries)/sizeof(pksav_item_t),
                                                   false
                                               );
-                _item_pockets["Key Items"] = pkmn::make_shared<item_list_modernimpl>(
+                _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
                                                  KEY_ITEM_POCKET_IDS[index], _game_id, FRLG_STORAGE.key_items,
                                                  sizeof(FRLG_STORAGE.key_items)/sizeof(pksav_item_t),
                                                  false

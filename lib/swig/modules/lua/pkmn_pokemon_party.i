@@ -13,7 +13,7 @@
 %rename(as_list) as_vector;
 %include <pkmn/pokemon_party.hpp>
 
-%extend pkmn::shared_ptr<pkmn::pokemon_party> {
+%extend std::shared_ptr<pkmn::pokemon_party> {
 
     void set_pokemon(
         int index,
@@ -55,4 +55,4 @@
     }
 
 }
-%template(pokemon_party_sptr) pkmn::shared_ptr<pkmn::pokemon_party>;
+%template(pokemon_party_sptr) std::shared_ptr<pkmn::pokemon_party>;

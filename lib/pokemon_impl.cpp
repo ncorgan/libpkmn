@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,10 +12,11 @@
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "database/index_to_string.hpp"
+#include "utils/floating_point_comparison.hpp"
 
 #include "io/pk1.hpp"
 #include "io/pk2.hpp"
@@ -61,13 +62,13 @@ namespace pkmn
         switch(pkmn::database::game_id_to_generation(game_id))
         {
             case 1:
-                return pkmn::make_shared<pokemon_gen1impl>(
+                return std::make_shared<pokemon_gen1impl>(
                            std::move(database_entry),
                            level
                        );
 
             case 2:
-                return pkmn::make_shared<pokemon_gen2impl>(
+                return std::make_shared<pokemon_gen2impl>(
                            std::move(database_entry),
                            level
                        );
@@ -75,14 +76,14 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    return pkmn::make_shared<pokemon_gcnimpl>(
+                    return std::make_shared<pokemon_gcnimpl>(
                                std::move(database_entry),
                                level
                            );
                 }
                 else
                 {
-                    return pkmn::make_shared<pokemon_gbaimpl>(
+                    return std::make_shared<pokemon_gbaimpl>(
                                std::move(database_entry),
                                level
                            );
@@ -482,7 +483,7 @@ namespace pkmn
         float chance_female = _database_entry.get_chance_female();
 
         // Check for invalid genders.
-        if(pkmn::floats_close(chance_male, 0.0f) and pkmn::floats_close(chance_female, 0.0f))
+        if(pkmn::fp_compare_equal(chance_male, 0.0f) and pkmn::fp_compare_equal(chance_female, 0.0f))
         {
             if(gender != "Genderless")
             {
@@ -494,11 +495,11 @@ namespace pkmn
                 return;
             }
         }
-        else if(pkmn::floats_close(chance_male, 1.0f) and gender != "Male")
+        else if(pkmn::fp_compare_equal(chance_male, 1.0f) and gender != "Male")
         {
             throw std::invalid_argument("This Pokémon is male-only.");
         }
-        else if(pkmn::floats_close(chance_female, 1.0f) and gender != "Female")
+        else if(pkmn::fp_compare_equal(chance_female, 1.0f) and gender != "Female")
         {
             throw std::invalid_argument("This Pokémon is female-only.");
         }
@@ -516,15 +517,15 @@ namespace pkmn
             *personality_ptr &= ~0xFF;
 
             pkmn::rng<uint32_t> rng;
-            if(pkmn::floats_close(chance_male, 0.875f))
+            if(pkmn::fp_compare_equal(chance_male, 0.875f))
             {
                 *personality_ptr |= rng.rand(0, 30);
             }
-            else if(pkmn::floats_close(chance_male, 0.75f))
+            else if(pkmn::fp_compare_equal(chance_male, 0.75f))
             {
                 *personality_ptr |= rng.rand(0, 63);
             }
-            else if(pkmn::floats_close(chance_male, 0.5f))
+            else if(pkmn::fp_compare_equal(chance_male, 0.5f))
             {
                 *personality_ptr |= rng.rand(0, 126);
             }

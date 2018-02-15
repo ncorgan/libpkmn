@@ -79,7 +79,7 @@ namespace pkmn { namespace io {
         BOOST_STATIC_CONSTEXPR int DIAMOND = 12;
         game_id = std::max<int>(game_id, DIAMOND);
 
-        return pkmn::make_shared<pokemon_ndsimpl>(
+        return std::make_shared<pokemon_ndsimpl>(
                    *reinterpret_cast<const pksav_nds_pc_pokemon_t*>(buffer.data()),
                    game_id
                );

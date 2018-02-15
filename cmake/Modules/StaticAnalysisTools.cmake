@@ -1,12 +1,12 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 20178 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 SET(PKMN_USE_CLANGTIDY "${PKMN_USE_CLANGTIDY}" CACHE BOOL "Enable Clang-tidy testing")
-SET(PKMN_USE_IWYC "${PKMN_USE_IWYC}" CACHE BOOL "Enable Include-What-You-Use testing")
+SET(PKMN_USE_IWYU "${PKMN_USE_IWYU}" CACHE BOOL "Enable Include-What-You-Use testing")
 
 IF(PKMN_USE_CLANGTIDY)
     if(NOT CLANG_TIDY_EXECUTABLE)
@@ -26,13 +26,13 @@ IF(PKMN_USE_CLANGTIDY)
     )
 ENDIF()
 
-IF(PKMN_USE_IWYC)
-    if(NOT IWYC_EXECUTABLE)
-        FIND_PROGRAM(IWYC_EXECUTABLE NAMES include-what-you-use)
+IF(PKMN_USE_IWYU)
+    if(NOT IWYU_EXECUTABLE)
+        FIND_PROGRAM(IWYU_EXECUTABLE NAMES include-what-you-use)
     ENDIF()
-    MESSAGE(STATUS "Using Include-What-You-Use: ${IWYC_EXECUTABLE}")
+    MESSAGE(STATUS "Using Include-What-You-Use: ${IWYU_EXECUTABLE}")
 
     SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-    SET(IWYC_PROPERTY "${IWYC_EXECUTABLE}")
+    SET(IWYU_PROPERTY "${IWYU_EXECUTABLE}")
 ENDIF()

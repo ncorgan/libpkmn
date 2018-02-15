@@ -69,7 +69,7 @@ namespace pkmn {
                     _game_id = RUBY;
                 }
 
-                _item_pc = pkmn::make_shared<item_list_modernimpl>(
+                _item_pc = std::make_shared<item_list_modernimpl>(
                                 RS_PC, _game_id,
                                 _pksav_save.item_storage->rs.pc_items,
                                 50, false
@@ -96,7 +96,7 @@ namespace pkmn {
                     _game_id = FIRERED;
                 }
 
-                _item_pc = pkmn::make_shared<item_list_modernimpl>(
+                _item_pc = std::make_shared<item_list_modernimpl>(
                                 FRLG_PC, _game_id,
                                 _pksav_save.item_storage->frlg.pc_items,
                                 50, false
@@ -106,7 +106,7 @@ namespace pkmn {
             default: // Emerald
                 _game_id = EMERALD;
 
-                _item_pc = pkmn::make_shared<item_list_modernimpl>(
+                _item_pc = std::make_shared<item_list_modernimpl>(
                                 EMERALD_PC, _game_id,
                                 _pksav_save.item_storage->emerald.pc_items,
                                 50, false
@@ -114,22 +114,22 @@ namespace pkmn {
                 break;
         }
 
-        _pokedex = pkmn::make_shared<pokedex_impl>(
+        _pokedex = std::make_shared<pokedex_impl>(
                        _game_id,
                        _pksav_save.pokedex_seenA,
                        _pksav_save.pokedex_owned
                    );
 
-        _pokemon_party = pkmn::make_shared<pokemon_party_gbaimpl>(
+        _pokemon_party = std::make_shared<pokemon_party_gbaimpl>(
                              _game_id,
                              _pksav_save.pokemon_party
                          );
-        _pokemon_pc = pkmn::make_shared<pokemon_pc_gbaimpl>(
+        _pokemon_pc = std::make_shared<pokemon_pc_gbaimpl>(
                           _game_id,
                           _pksav_save.pokemon_pc
                       );
 
-        _item_bag = pkmn::make_shared<item_bag_gbaimpl>(
+        _item_bag = std::make_shared<item_bag_gbaimpl>(
                         _game_id, _pksav_save.item_storage
                     );
 

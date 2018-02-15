@@ -50,7 +50,7 @@ namespace pkmn {
         if(_pksav_save.gen2_game == PKSAV_GEN2_CRYSTAL) {
             _game_id = CRYSTAL;
 
-            _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
+            _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             CRYSTAL_PC,
                             _game_id,
                             _pksav_save.item_pc
@@ -74,30 +74,30 @@ namespace pkmn {
                 _game_id = GOLD;
             }
 
-            _item_pc = pkmn::make_shared<item_list_gen2_pcimpl>(
+            _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             GS_PC,
                             _game_id,
                             _pksav_save.item_pc
                        );
         }
 
-        _pokedex = pkmn::make_shared<pokedex_impl>(
+        _pokedex = std::make_shared<pokedex_impl>(
                        _game_id,
                        _pksav_save.pokedex_seen,
                        _pksav_save.pokedex_owned
                    );
 
-        _pokemon_party = pkmn::make_shared<pokemon_party_gen2impl>(
+        _pokemon_party = std::make_shared<pokemon_party_gen2impl>(
                              _game_id,
                              _pksav_save.pokemon_party
                          );
-        _pokemon_pc = pkmn::make_shared<pokemon_pc_gen2impl>(
+        _pokemon_pc = std::make_shared<pokemon_pc_gen2impl>(
                           _game_id,
                           _pksav_save.pokemon_boxes,
                           _pksav_save.pokemon_box_names,
                           false
                       );
-        _item_bag = pkmn::make_shared<item_bag_gen2impl>(
+        _item_bag = std::make_shared<item_bag_gen2impl>(
                         _game_id,
                         _pksav_save.item_bag
                     );

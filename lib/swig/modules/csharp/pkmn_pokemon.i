@@ -13,7 +13,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Database;"
-%typemap(csimports) pkmn::shared_ptr<pkmn::pokemon> "
+%typemap(csimports) std::shared_ptr<pkmn::pokemon> "
 using System;
 using System.Runtime.InteropServices;
 using Database;"
@@ -71,10 +71,10 @@ using Database;"
 %csmethodmodifiers pkmn::pokemon::get_stats "private";
 %csmethodmodifiers pkmn::pokemon::get_icon_filepath "private";
 %csmethodmodifiers pkmn::pokemon::get_sprite_filepath "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon> %{
+%typemap(cscode) std::shared_ptr<pkmn::pokemon> %{
     public string Species {
         get {
             return GetSpecies();
@@ -368,7 +368,7 @@ using Database;"
 %ignore get_native_pc_data;
 %ignore get_native_party_data;
 %include <pkmn/pokemon.hpp>
-%template(Pokemon) pkmn::shared_ptr<pkmn::pokemon>;
+%template(Pokemon) std::shared_ptr<pkmn::pokemon>;
 
 %import <csharp/stl_macros.i>
 PKMN_CSHARP_VECTOR(pkmn::pokemon::sptr, Pokemon, PokemonList)

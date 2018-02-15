@@ -142,7 +142,7 @@ namespace pkmn {
 
         NATIVE_RCAST->entries[index] = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
 
-        _pokemon_list[index] = pkmn::make_shared<pokemon_gbaimpl>(
+        _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_RCAST->entries[index],
                                    _game_id
                                );
@@ -168,7 +168,7 @@ namespace pkmn {
         _pokemon_list.resize(capacity);
 
         for(int i = 0; i < capacity; ++i) {
-            _pokemon_list[i] = pkmn::make_shared<pokemon_gbaimpl>(
+            _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_RCAST->entries[i],
                                    _game_id
                                );

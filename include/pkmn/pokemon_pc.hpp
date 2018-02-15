@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,21 +9,17 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/pokemon_box.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace pkmn {
 
-    class PKMN_API pokemon_pc {
+    class PKMN_API pokemon_pc
+    {
         public:
-            typedef pkmn::shared_ptr<pokemon_pc> sptr;
-
-            #ifndef __DOXYGEN__
-            pokemon_pc() {}
-            virtual ~pokemon_pc() {}
-            #endif
+            typedef std::shared_ptr<pokemon_pc> sptr;
 
             static sptr make(
                 const std::string &game
@@ -42,6 +38,8 @@ namespace pkmn {
             virtual const std::vector<std::string>& get_box_names() = 0;
 
             #ifndef __DOXYGEN__
+            pokemon_pc() {}
+            virtual ~pokemon_pc() {}
             virtual void* get_native() = 0;
             #endif
     };

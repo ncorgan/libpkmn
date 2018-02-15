@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,13 +21,14 @@ namespace pkmn {
      * a unique move type and the PP of that move in the given pocket. This
      * struct represents a single one of those slots.
      */
-    struct move_slot {
+    struct move_slot
+    {
         /*!
          * @brief Default constructor.
          *
          * The move entry represents an invalid move.
          */
-        PKMN_INLINE move_slot():
+        move_slot():
             move("None"),
             pp(0) {}
 
@@ -39,11 +40,14 @@ namespace pkmn {
          * \param move_name Move name
          * \param move_pp Move's current PP
          */
-        PKMN_INLINE move_slot(
+        move_slot(
             const std::string& move_name,
             int move_pp
         ): move(move_name),
            pp(move_pp) {}
+
+        move_slot(const move_slot&) = default;
+        move_slot& operator=(const move_slot&) = default;
 
 #ifndef SWIG
         /*!
@@ -54,12 +58,31 @@ namespace pkmn {
          * \param move_name Move entry
          * \param move_pp Move's current PP
          */
-        PKMN_INLINE move_slot(
+        move_slot(
             std::string&& move_name,
-            int move_pp 
+            int move_pp
         ): move(std::move(move_name)),
            pp(std::move(move_pp)) {}
+
+        move_slot(move_slot&&) = default;
+        move_slot& operator=(move_slot&&) = default;
 #endif
+
+        /*!
+         * @brief Equality check.
+         */
+        inline bool operator==(const move_slot& rhs) const
+        {
+            return (this->move == rhs.move) and (this->pp == rhs.pp);
+        }
+
+        /*!
+         * @brief Inequality check.
+         */
+        inline bool operator!=(const move_slot& rhs) const
+        {
+            return !operator==(rhs);
+        }
 
         /*!
          * @brief The move in the given slot.
@@ -70,30 +93,6 @@ namespace pkmn {
          */
         int pp;
     };
-
-    #ifndef SWIG
-    /*!
-     * @brief Equality check between two move slots.
-     */
-    PKMN_INLINE bool operator==(
-        const move_slot &lhs,
-        const move_slot &rhs
-    ) {
-        return (lhs.move == rhs.move) and \
-               (lhs.pp == rhs.pp);
-    }
-
-    /*!
-     * @brief Inequality check between two move slots.
-     */
-    PKMN_INLINE bool operator!=(
-        const move_slot &lhs,
-        const move_slot &rhs
-    ) {
-        return (lhs.move != rhs.move) or \
-               (lhs.pp != rhs.pp);
-    }
-    #endif /* SWIG */
 
     /*!
      * @brief List of move slots.

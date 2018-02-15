@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,8 +9,8 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/item_list.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -26,14 +26,15 @@ namespace pkmn {
      * This class automatically creates item lists that correspond to the types and
      * capacities of the bag in the given game.
      */
-    class PKMN_API item_bag {
+    class PKMN_API item_bag
+    {
         public:
             /*!
              * @brief The actual interface for using the item_bag class.
              *
              * The item_bag class itself is abstract and thus cannot be used directly.
              */
-            typedef pkmn::shared_ptr<item_bag> sptr;
+            typedef std::shared_ptr<item_bag> sptr;
 
             /*!
              * @brief The factory function for creating an item bag.
@@ -46,13 +47,8 @@ namespace pkmn {
              * \throws std::runtime_error If an unimplemented game is given
              */
             static sptr make(
-                const std::string &game
+                const std::string& game
             );
-
-            #ifndef __DOXYGEN__
-            item_bag() {};
-            virtual ~item_bag() {};
-            #endif
 
             /*!
              * @brief Returns which game this item bag comes from.
@@ -72,7 +68,7 @@ namespace pkmn {
              *                               valid pocket
              */
             virtual pkmn::item_list::sptr get_pocket(
-                const std::string &name
+                const std::string& name
             ) = 0;
 
             /*!
@@ -103,7 +99,7 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void add(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) = 0;
 
@@ -125,11 +121,13 @@ namespace pkmn {
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void remove(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) = 0;
 
             #ifndef __DOXYGEN__
+            item_bag() {};
+            virtual ~item_bag() {};
             virtual void* get_native() = 0;
             #endif
     };

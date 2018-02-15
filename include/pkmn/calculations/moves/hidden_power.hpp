@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -32,7 +32,8 @@ namespace pkmn { namespace calculations {
         ): type(move_type), base_power(move_power)
         {}
 
-        hidden_power(const hidden_power& other) = default;
+        hidden_power(const hidden_power&) = default;
+        hidden_power& operator=(const hidden_power&) = default;
 
 #ifndef SWIG
         hidden_power(
@@ -42,7 +43,6 @@ namespace pkmn { namespace calculations {
         {}
 
         hidden_power(hidden_power&&) = default;
-        hidden_power& operator=(const hidden_power&) = default;
         hidden_power& operator=(hidden_power&&) = default;
 #endif
 

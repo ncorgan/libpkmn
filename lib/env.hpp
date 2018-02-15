@@ -21,14 +21,14 @@ static char putenv_buffer[1024];
  * Thin OS-agnostic wrapper for working with environment variables
  */
 
-PKMN_INLINE std::string pkmn_getenv(
+inline std::string pkmn_getenv(
     const std::string &key
 ) {
     char* val = getenv(key.c_str());
     return (val) ? val : "";
 }
 
-PKMN_INLINE void pkmn_setenv(
+inline void pkmn_setenv(
     const std::string &key,
     const std::string &val
 ) {
@@ -48,7 +48,7 @@ PKMN_INLINE void pkmn_setenv(
     #endif
 }
 
-PKMN_INLINE void pkmn_unsetenv(
+inline void pkmn_unsetenv(
     const std::string &key
 ) {
     #if defined(PKMN_PLATFORM_WIN32)

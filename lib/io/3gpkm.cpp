@@ -77,7 +77,7 @@ namespace pkmn { namespace io {
             throw std::runtime_error("Invalid .3gpkm.");
         }
 
-        return pkmn::make_shared<pokemon_gbaimpl>(
+        return std::make_shared<pokemon_gbaimpl>(
                    *reinterpret_cast<const pksav_gba_pc_pokemon_t*>(buffer.data()),
                    game_id
                );

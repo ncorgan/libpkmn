@@ -14,7 +14,7 @@
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -38,22 +38,22 @@ namespace pkmn {
 
         switch(generation) {
             case 1:
-                return pkmn::make_shared<item_bag_gen1impl>(
+                return std::make_shared<item_bag_gen1impl>(
                            game_id, nullptr
                        );
 
             case 2:
-                return pkmn::make_shared<item_bag_gen2impl>(
+                return std::make_shared<item_bag_gen2impl>(
                            game_id, nullptr
                        );
 
             case 3:
                 if(game_is_gamecube(game_id)) {
-                    return pkmn::make_shared<item_bag_gcnimpl>(
+                    return std::make_shared<item_bag_gcnimpl>(
                                game_id, nullptr
                            );
                 } else {
-                    return pkmn::make_shared<item_bag_gbaimpl>(
+                    return std::make_shared<item_bag_gbaimpl>(
                                game_id, nullptr
                            );
                 }

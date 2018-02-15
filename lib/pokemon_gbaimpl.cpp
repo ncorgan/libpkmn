@@ -6,7 +6,7 @@
  */
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokemon_gbaimpl.hpp"
 #include "pokemon_gcnimpl.hpp"
 
@@ -325,14 +325,14 @@ namespace pkmn
             case 3:
                 if(game_is_gamecube(game_id))
                 {
-                    if(game_id == COLOSSEUM)
+                    if(game_id == COLOSSEUM_ID)
                     {
                         LibPkmGC::Colosseum::Pokemon colosseum_pokemon;
                         pkmn::conversions::gba_party_pokemon_to_gcn(
                             &pksav_pokemon,
                             &colosseum_pokemon
                         );
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(colosseum_pokemon);
                     }
                     else
                     {
@@ -341,12 +341,12 @@ namespace pkmn
                             &pksav_pokemon,
                             &xd_pokemon
                         );
-                        ret = pkmn::make_shared<pokemon_gcnimpl>(xd_pokemon);
+                        ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
                 }
                 else
                 {
-                    ret = pkmn::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
+                    ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                     ret->set_level_met(get_level());
                     ret->set_original_game(get_game());
                 }

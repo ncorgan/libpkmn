@@ -11,7 +11,7 @@
 #ifdef PKMN_ENABLE_QT
 
 #include "exception_internal.hpp"
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "SpindaSpotMap.hpp"
 
 #include <pkmn/calculations/spinda_spots.hpp>

@@ -10,10 +10,10 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <boost/config.hpp>
 
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -21,11 +21,11 @@
 
 namespace pkmn { namespace database {
 
-    typedef pkmn::shared_ptr<SQLite::Database> sptr;
+    typedef std::shared_ptr<SQLite::Database> sptr;
 
     sptr _get_connection();
 
-    PKMN_INLINE void get_connection(
+    inline void get_connection(
         sptr &db
     )
     {
@@ -393,7 +393,7 @@ namespace pkmn { namespace database {
                (version_group_item_index_bounds[version_group_id][range][1] == 0);
     }
 
-    PKMN_INLINE bool item_index_valid(
+    inline bool item_index_valid(
         int item_index,
         int version_group_id
     ) {

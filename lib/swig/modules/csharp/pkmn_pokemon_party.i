@@ -22,10 +22,10 @@
 %csmethodmodifiers pkmn::pokemon_party::get_num_pokemon "private";
 %csmethodmodifiers pkmn::pokemon_party::get_pokemon(int) "private";
 %csmethodmodifiers pkmn::pokemon_party::set_pokemon(int, pkmn::pokemon::sptr) "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_party>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_party>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_party>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_party> %{
+%typemap(cscode) std::shared_ptr<pkmn::pokemon_party> %{
     public string Game {
         get {
             return GetGame();
@@ -98,4 +98,4 @@
 %}
 
 %include <pkmn/pokemon_party.hpp>
-%template(PokemonParty) pkmn::shared_ptr<pkmn::pokemon_party>;
+%template(PokemonParty) std::shared_ptr<pkmn::pokemon_party>;

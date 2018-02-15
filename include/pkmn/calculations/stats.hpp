@@ -46,7 +46,7 @@ namespace pkmn { namespace calculations {
      * \param base_stat The base stat value
      * \returns Calculated stats
      */
-    PKMN_INLINE std::pair<int, int> get_gb_stat_range(
+    inline std::pair<int, int> get_gb_stat_range(
         const std::string &stat,
         int level,
         int base_stat
@@ -92,7 +92,7 @@ namespace pkmn { namespace calculations {
      * \param base_stat The base stat value
      * \returns Calculated stats
      */
-    PKMN_INLINE std::pair<int, int> get_modern_stat_range(
+    inline std::pair<int, int> get_modern_stat_range(
         const std::string &stat,
         int level,
         int base_stat

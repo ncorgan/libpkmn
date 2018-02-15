@@ -22,10 +22,10 @@
 %csmethodmodifiers pkmn::pokemon_pc::get_num_boxes "private";
 %csmethodmodifiers pkmn::pokemon_pc::get_box "private";
 %csmethodmodifiers pkmn::pokemon_pc::get_box_names "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_pc>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_pc>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_pc>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_pc> %{
+%typemap(cscode) std::shared_ptr<pkmn::pokemon_pc> %{
     public string Game {
         get {
             return GetGame();
@@ -95,4 +95,4 @@
 %}
 
 %include <pkmn/pokemon_pc.hpp>
-%template(PokemonPC) pkmn::shared_ptr<pkmn::pokemon_pc>;
+%template(PokemonPC) std::shared_ptr<pkmn::pokemon_pc>;

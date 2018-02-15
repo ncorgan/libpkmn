@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "../exception_internal.hpp"
-#include "../misc_common.hpp"
+#include "exception_internal.hpp"
+#include "utils/misc.hpp"
+#include "utils/floating_point_comparison.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/calculations/stats.hpp>
@@ -16,7 +17,7 @@
 
 namespace pkmn { namespace calculations {
 
-    PKMN_INLINE int gb_stat_common(
+    inline int gb_stat_common(
         int level,
         int base_stat,
         int EV,
@@ -56,7 +57,7 @@ namespace pkmn { namespace calculations {
         return ret;
     }
 
-    PKMN_INLINE int modern_stat_common(
+    inline int modern_stat_common(
         int level,
         int base_stat,
         int EV,
@@ -82,9 +83,9 @@ namespace pkmn { namespace calculations {
         int IV
     ) {
         // Input validation
-        if(not pkmn::floats_close(nature_modifier, 0.9f) and
-           not pkmn::floats_close(nature_modifier, 1.0f) and
-           not pkmn::floats_close(nature_modifier, 1.1f))
+        if(pkmn::fp_compare_not_equal(nature_modifier, 0.9f) and
+           pkmn::fp_compare_not_equal(nature_modifier, 1.0f) and
+           pkmn::fp_compare_not_equal(nature_modifier, 1.1f))
         {
             throw std::domain_error("nature_modifier: valid values 0.9, 1.0, 1.1");
         }

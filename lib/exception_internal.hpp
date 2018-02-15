@@ -9,8 +9,15 @@
 
 #include <pkmn/exception.hpp>
 
+#include "utils/misc.hpp"
+#include "utils/floating_point_comparison.hpp"
+
+#include <algorithm>
 #include <limits>
+#include <sstream>
 #include <string>
+#include <type_traits>
+#include <vector>
 
 namespace pkmn
 {
@@ -66,13 +73,7 @@ namespace pkmn
         const std::vector<T>& valid_values
     )
     {
-        auto found_iter = std::find(
-                              valid_values.begin(),
-                              valid_values.end(),
-                              value
-                          );
-
-        if(found_iter == valid_values.end())
+        if(not does_vector_contain_value(valid_values, value))
         {
             std::ostringstream err_msg;
             std::streamsize old_precision = 0;

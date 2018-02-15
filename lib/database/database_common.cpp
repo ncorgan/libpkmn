@@ -6,7 +6,7 @@
  */
 
 #include "database_common.hpp"
-#include "../misc_common.hpp"
+#include "../utils/misc.hpp"
 
 #include <pkmn/utils/paths.hpp>
 
@@ -30,7 +30,7 @@ namespace pkmn { namespace database {
         if(!_db)
         {
             std::string database_path = pkmn::get_database_path();
-            _db = pkmn::make_shared<SQLite::Database>(database_path.c_str());
+            _db = std::make_shared<SQLite::Database>(database_path.c_str());
 
             // Make sure our Veekun commit matches the database's
             int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");

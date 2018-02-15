@@ -25,10 +25,10 @@
 %csmethodmodifiers pkmn::pokemon_box::get_capacity "private";
 %csmethodmodifiers pkmn::pokemon_box::get_pokemon(int) "private";
 %csmethodmodifiers pkmn::pokemon_box::set_pokemon(int, pkmn::pokemon::sptr) "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__cptr "private";
-%csmethodmodifiers pkmn::shared_ptr<pkmn::pokemon_box>::__sptr_eq "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_box>::__cptr "private";
+%csmethodmodifiers std::shared_ptr<pkmn::pokemon_box>::__sptr_eq "private";
 
-%typemap(cscode) pkmn::shared_ptr<pkmn::pokemon_box> %{
+%typemap(cscode) std::shared_ptr<pkmn::pokemon_box> %{
 
     public string Name {
         get {
@@ -111,7 +111,7 @@
 %}
 
 %include <pkmn/pokemon_box.hpp>
-%template(PokemonBox) pkmn::shared_ptr<pkmn::pokemon_box>;
+%template(PokemonBox) std::shared_ptr<pkmn::pokemon_box>;
 
 %import <csharp/stl_macros.i>
 PKMN_CSHARP_VECTOR(pkmn::pokemon_box::sptr, PokemonBox, PokemonBoxList)

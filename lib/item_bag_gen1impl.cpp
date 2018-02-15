@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,8 +9,6 @@
 
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
-
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <cstring>
 
@@ -55,7 +53,7 @@ namespace pkmn {
     }
 
     void item_bag_gen1impl::_set_ptrs() {
-        _item_pockets["Items"] = pkmn::make_shared<item_list_gen1_bagimpl>(
+        _item_pockets["Items"] = std::make_shared<item_list_gen1_bagimpl>(
                                      (_game_id == 3) ? 3 : 1, _game_id, _native
                                  );
     }

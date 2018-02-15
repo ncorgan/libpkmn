@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "misc_common.hpp"
+#include "utils/misc.hpp"
 #include "pokedex_impl.hpp"
 
 #include "database/database_common.hpp"
@@ -13,7 +13,6 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <pksav/common/pokedex.h>
 
@@ -45,7 +44,7 @@ namespace pkmn
                   );
         }
 
-        return pkmn::make_shared<pokedex_impl>(game_id);
+        return std::make_shared<pokedex_impl>(game_id);
     }
 
     pokedex_impl::pokedex_impl(
