@@ -54,8 +54,6 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_party2_set_pokemon(
     pkmn_pokemon2_t* pokemon_ptr
 );
 
-// TODO: if a Pokémon is set, what happens to the Pokémon
-// returned here?
 PKMN_C_API pkmn_error_t pkmn_pokemon_party2_as_list(
     pkmn_pokemon_party2_t* pokemon_party_ptr,
     pkmn_pokemon_list2_t* pokemon_list_out

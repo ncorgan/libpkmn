@@ -13,6 +13,7 @@
 #include <pkmn-c/pokemon_box2.h>
 
 #include <pkmn-c/types/pokemon_box_list.h>
+#include <pkmn-c/types/string_types.h>
 
 typedef struct
 {
@@ -39,10 +40,15 @@ PKMN_C_API const char* pkmn_pokemon_pc2_strerror(
     pkmn_pokemon_pc2_t* pokemon_pc_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_pokemon_pc2_get_pokemon_box(
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc2_get_box(
     pkmn_pokemon_pc2_t* pokemon_pc_ptr,
     size_t index,
     pkmn_pokemon_box2_t* pokemon_box_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon_pc2_get_box_names(
+    pkmn_pokemon_pc2_t* pokemon_pc_ptr,
+    pkmn_string_list_t* box_names_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_pc2_as_list(

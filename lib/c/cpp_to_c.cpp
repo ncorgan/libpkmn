@@ -171,7 +171,7 @@ namespace pkmn { namespace c {
             internal_ptr->cpp->get_game(),
             &pokemon_pc_ptr->game
         );
-        pokemon_pc_ptr->capacity = 6;
+        pokemon_pc_ptr->capacity = internal_ptr->cpp->get_num_boxes();
     }
 
     void init_game_save(

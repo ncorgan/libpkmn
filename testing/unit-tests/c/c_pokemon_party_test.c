@@ -9,8 +9,6 @@
 
 #include <pkmn.h>
 
-#define STRBUFFER_LEN 1024
-
 static const pkmn_pokemon2_t empty_pokemon =
 {
     .species = NULL,

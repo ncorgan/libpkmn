@@ -73,8 +73,8 @@ const char* pkmn_pokemon_pc2_strerror(
     }
 }
 
-pkmn_error_t pkmn_pokemon_box2_get_box(
-    pkmn_pokemon_box2_t* pokemon_pc_ptr,
+pkmn_error_t pkmn_pokemon_pc2_get_box(
+    pkmn_pokemon_pc2_t* pokemon_pc_ptr,
     size_t index,
     pkmn_pokemon_box2_t* pokemon_box_out
 )
@@ -87,6 +87,23 @@ pkmn_error_t pkmn_pokemon_box2_get_box(
         pkmn::c::init_pokemon_box(
             internal_ptr->cpp->get_box(int(index)),
             pokemon_box_out
+        );
+    )
+}
+
+pkmn_error_t pkmn_pokemon_pc2_get_box_names(
+    pkmn_pokemon_pc2_t* pokemon_pc_ptr,
+    pkmn_string_list_t* box_names_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
+    pkmn_pokemon_pc_internal_t* internal_ptr = POKEMON_PC_INTERNAL_RCAST(pokemon_pc_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(box_names_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        pkmn::c::string_list_cpp_to_c(
+            internal_ptr->cpp->get_box_names(),
+            box_names_out
         );
     )
 }
