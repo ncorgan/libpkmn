@@ -61,6 +61,15 @@ static void gen1_pokemon_test(
         &test_values
     );
 
+    // Make sure we can read the relevant attributes.
+    int catch_rate = 0;
+    error = pkmn_pokemon_get_numeric_attribute(
+                &pokemon,
+                "Catch rate",
+                &catch_rate
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
     error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
