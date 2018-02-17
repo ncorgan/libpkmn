@@ -305,7 +305,12 @@ static void game_save_test_common_fields(
 {
     TEST_ASSERT_NOT_NULL(game_save_ptr);
 
+    int generation = game_to_generation(game_save_ptr->game);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
+
+    bool is_game_gamecube = !strcmp(game_save_ptr->game, "Colosseum") ||
+                            !strcmp(game_save_ptr->game, "XD");
 
     pkmn_pokemon_list2_t pokemon_list = empty_pokemon_list;
 
@@ -337,6 +342,24 @@ static void game_save_test_common_fields(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(money, money_from_game_save);
+
+    pkmn_pokedex_t pokedex =
+    {
+        .game = NULL,
+        ._internal = NULL
+    };
+    bool has_seen = false;
+    bool has_caught = false;
+
+    // TODO: check if it's an egg before checking if it's in the Pokédex
+    if(!is_game_gamecube)
+    {
+        error = pkmn_game_save2_get_pokedex(
+                    game_save_ptr,
+                    &pokedex
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
 
     // Test the party.
     pkmn_pokemon_party2_t pokemon_party = empty_pokemon_party;
@@ -379,6 +402,41 @@ static void game_save_test_common_fields(
                     pokemon_list.pokemon[pokemon_index].species
                 ), 0
             );
+
+            if(!is_game_gamecube)
+            {
+                bool is_egg = false;
+                bool is_none = strcmp(pokemon_list.pokemon[pokemon_index].species, "None") == 0;
+                bool is_invalid = (bool)strstr(pokemon_list.pokemon[pokemon_index].species, "Invalid");
+
+                if(generation >= 2)
+                {
+                    error = pkmn_pokemon2_is_egg(
+                                &pokemon_list.pokemon[pokemon_index],
+                                &is_egg
+                            );
+                }
+                TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+                if(!is_egg && !is_none && !is_invalid)
+                {
+                    error = pkmn_pokedex_has_seen(
+                                &pokedex,
+                                pokemon_list.pokemon[pokemon_index].species,
+                                &has_seen
+                            );
+                    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    TEST_ASSERT_TRUE(has_seen);
+
+                    error = pkmn_pokedex_has_caught(
+                                &pokedex,
+                                pokemon_list.pokemon[pokemon_index].species,
+                                &has_caught
+                            );
+                    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    TEST_ASSERT_TRUE(has_caught);
+                }
+            }
         }
         else
         {
@@ -431,9 +489,50 @@ static void game_save_test_common_fields(
                 game_save_ptr->game,
                 pokemon_list.pokemon[pokemon_index].game
             );
+
+            if(!is_game_gamecube)
+            {
+                bool is_egg = false;
+                bool is_none = strcmp(pokemon_list.pokemon[pokemon_index].species, "None") == 0;
+                bool is_invalid = (bool)strstr(pokemon_list.pokemon[pokemon_index].species, "Invalid");
+
+                if(generation >= 2)
+                {
+                    error = pkmn_pokemon2_is_egg(
+                                &pokemon_list.pokemon[pokemon_index],
+                                &is_egg
+                            );
+                }
+                TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+                if(!is_egg && !is_none && !is_invalid)
+                {
+                    error = pkmn_pokedex_has_seen(
+                                &pokedex,
+                                pokemon_list.pokemon[pokemon_index].species,
+                                &has_seen
+                            );
+                    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    TEST_ASSERT_TRUE(has_seen);
+
+                    error = pkmn_pokedex_has_caught(
+                                &pokedex,
+                                pokemon_list.pokemon[pokemon_index].species,
+                                &has_caught
+                            );
+                    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    TEST_ASSERT_TRUE(has_caught);
+                }
+            }
         }
 
         error = pkmn_pokemon_list2_free(&pokemon_list);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+
+    if(!is_game_gamecube)
+    {
+        error = pkmn_pokedex_free(&pokedex);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
 
@@ -677,7 +776,7 @@ static void compare_game_saves(
 
     int generation = game_to_generation(game_save1_ptr->game);
     bool is_game_gamecube = !strcmp(game_save1_ptr->game, "Colosseum") ||
-                            !strcmp(game_save2_ptr->game, "XD");
+                            !strcmp(game_save1_ptr->game, "XD");
 
     // Compare bags.
 
