@@ -45,6 +45,7 @@ static inline bool random_bool()
 
 void get_random_pokemon(
     pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_string_list_t* item_list_ptr,
     const char* species,
     const char* game
 )
@@ -55,12 +56,23 @@ void get_random_pokemon(
     pkmn_error_t error = PKMN_ERROR_NONE;
     int generation = game_to_generation(game);
 
-    pkmn_string_list_t item_list = empty_string_list;
+    pkmn_string_list_t internal_item_list = empty_string_list;
+    pkmn_string_list_t* internal_item_list_ptr = NULL;
+
+    if(item_list_ptr)
+    {
+        internal_item_list_ptr = item_list_ptr;
+    }
+    else
+    {
+        error = pkmn_database_item_list(game, &internal_item_list);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        internal_item_list_ptr = &internal_item_list;
+    }
+
     pkmn_string_list_t move_list = empty_string_list;
     pkmn_string_list_t pokemon_list = empty_string_list;
 
-    error = pkmn_database_item_list(game, &item_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_database_move_list(game, &move_list);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
@@ -145,7 +157,7 @@ void get_random_pokemon(
         {
             error = pkmn_pokemon2_set_held_item(
                         pokemon_ptr,
-                        item_list.strings[rand() % item_list.length]
+                        internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length]
                     );
         } while(error == PKMN_ERROR_INVALID_ARGUMENT);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -196,6 +208,17 @@ void get_random_pokemon(
         }
 
         error = pkmn_string_list_free(&ribbon_names);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+
+    error = pkmn_string_list_free(&pokemon_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_string_list_free(&move_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    if(!item_list_ptr)
+    {
+        error = pkmn_string_list_free(&internal_item_list);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
 }

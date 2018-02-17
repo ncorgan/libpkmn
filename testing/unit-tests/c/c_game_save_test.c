@@ -452,6 +452,10 @@ static void randomize_pokemon(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
+    pkmn_string_list_t item_list = empty_string_list;
+    error = pkmn_database_item_list(game_save_ptr->game, &item_list);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
     pkmn_pokemon_party2_t pokemon_party = empty_pokemon_party;
     error = pkmn_game_save2_get_pokemon_party(
                 game_save_ptr,
@@ -464,6 +468,7 @@ static void randomize_pokemon(
         pkmn_pokemon2_t pokemon = empty_pokemon;
         get_random_pokemon(
             &pokemon,
+            &item_list,
             NULL, // species
             game_save_ptr->game
         );
@@ -504,6 +509,7 @@ static void randomize_pokemon(
             pkmn_pokemon2_t pokemon = empty_pokemon;
             get_random_pokemon(
                 &pokemon,
+                &item_list,
                 NULL, // species
                 game_save_ptr->game
             );
@@ -524,6 +530,9 @@ static void randomize_pokemon(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     error = pkmn_pokemon_pc2_free(&pokemon_pc);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_string_list_free(&item_list);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 

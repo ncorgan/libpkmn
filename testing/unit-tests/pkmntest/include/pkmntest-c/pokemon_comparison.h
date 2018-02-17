@@ -10,6 +10,7 @@
 #include <pkmntest-c/config.h>
 
 #include <pkmn-c/pokemon2.h>
+#include <pkmn-c/types/string_types.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -25,6 +26,7 @@ typedef pkmn_error_t (*pokemon_bool_buffer_getter_fcn_t)(pkmn_pokemon2_t*,bool*,
 
 PKMNTEST_C_API void get_random_pokemon(
     pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_string_list_t* item_list_ptr, // Can be NULL
     const char* species, // Can be NULL
     const char* game
 );
