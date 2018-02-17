@@ -8,7 +8,7 @@
 #include "pokemon_test.h"
 #include "unity.h"
 
-#include <pkmn-c/pokemon2.h>
+#include <pkmn-c/pokemon.h>
 
 #include <pkmntest-c/util.h>
 
@@ -29,7 +29,7 @@
 
 #define STAT_MAX       65535
 
-static const pkmn_trainer_info2_t empty_trainer_info =
+static const pkmn_trainer_info_t empty_trainer_info =
 {
     .name = NULL,
     .id = {0},
@@ -123,7 +123,7 @@ static const pkmn_move_slots_t empty_move_slots =
 };
 
 static void check_initial_values(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -132,7 +132,7 @@ static void check_initial_values(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     pkmn_database_pokemon_entry_t pokemon_entry;
-    error = pkmn_pokemon2_get_database_entry(
+    error = pkmn_pokemon_get_database_entry(
                 pokemon_ptr,
                 &pokemon_entry
             );
@@ -140,7 +140,7 @@ static void check_initial_values(
 
     int generation = game_to_generation(pokemon_ptr->game);
 
-    error = pkmn_pokemon2_get_form(
+    error = pkmn_pokemon_get_form(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -149,7 +149,7 @@ static void check_initial_values(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Standard", strbuffer);
 
-    error = pkmn_pokemon2_get_nickname(
+    error = pkmn_pokemon_get_nickname(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -177,26 +177,26 @@ static void check_initial_values(
         );
     }
 
-    pkmn_trainer_info2_t original_trainer_info = empty_trainer_info;
-    error = pkmn_pokemon2_get_original_trainer_info(
+    pkmn_trainer_info_t original_trainer_info = empty_trainer_info;
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon_ptr,
                 &original_trainer_info
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     TEST_ASSERT_EQUAL_STRING(
-        pkmn_pokemon2_default_trainer_name(),
+        pkmn_pokemon_default_trainer_name(),
         original_trainer_info.name
     );
     TEST_ASSERT_EQUAL(
-        pkmn_pokemon2_default_trainer_id().public_id,
+        pkmn_pokemon_default_trainer_id().public_id,
         original_trainer_info.id.public_id
     );
     if(generation >= 2)
     {
         TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, original_trainer_info.gender);
 
-        error = pkmn_pokemon2_get_held_item(
+        error = pkmn_pokemon_get_held_item(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -206,7 +206,7 @@ static void check_initial_values(
         TEST_ASSERT_EQUAL_STRING("None", strbuffer);
 
         int current_trainer_friendship = 0;
-        error = pkmn_pokemon2_get_current_trainer_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon_ptr,
                     &current_trainer_friendship
                 );
@@ -219,13 +219,13 @@ static void check_initial_values(
         int level = 0;
         int level_met = 0;
 
-        error = pkmn_pokemon2_get_level(
+        error = pkmn_pokemon_get_level(
                     pokemon_ptr,
                     &level
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_EQUAL(0, level);
-        error = pkmn_pokemon2_get_level_met(
+        error = pkmn_pokemon_get_level_met(
                     pokemon_ptr,
                     &level_met
                 );
@@ -235,11 +235,11 @@ static void check_initial_values(
     if(generation >= 3)
     {
         TEST_ASSERT_EQUAL(
-            pkmn_pokemon2_default_trainer_id().id,
+            pkmn_pokemon_default_trainer_id().id,
             original_trainer_info.id.id
         );
 
-        error = pkmn_pokemon2_get_ball(
+        error = pkmn_pokemon_get_ball(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -252,7 +252,7 @@ static void check_initial_values(
         );
 
         // There is no distinction between Colosseum and XD in the game storage.
-        error = pkmn_pokemon2_get_original_game(
+        error = pkmn_pokemon_get_original_game(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -280,7 +280,7 @@ static void check_initial_values(
     int level = 0;
     int experience = 0;
 
-    error = pkmn_pokemon2_get_level(
+    error = pkmn_pokemon_get_level(
                 pokemon_ptr,
                 &level
             );
@@ -291,7 +291,7 @@ static void check_initial_values(
                 &experience_at_level
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_experience(
+    error = pkmn_pokemon_get_experience(
                 pokemon_ptr,
                 &experience
             );
@@ -309,7 +309,7 @@ static void check_initial_values(
         .move_slots = NULL,
         .length = 0
     };
-    error = pkmn_pokemon2_get_moves(
+    error = pkmn_pokemon_get_moves(
                 pokemon_ptr,
                 &move_slots
             );
@@ -328,7 +328,7 @@ static void check_initial_values(
         );
     }
 
-    error = pkmn_pokemon2_get_icon_filepath(
+    error = pkmn_pokemon_get_icon_filepath(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -337,7 +337,7 @@ static void check_initial_values(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_TRUE(file_exists(strbuffer));
 
-    error = pkmn_pokemon2_get_sprite_filepath(
+    error = pkmn_pokemon_get_sprite_filepath(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -347,14 +347,14 @@ static void check_initial_values(
     TEST_ASSERT_TRUE(file_exists(strbuffer));
 
     int current_hp = 0;
-    error = pkmn_pokemon2_get_current_hp(
+    error = pkmn_pokemon_get_current_hp(
                 pokemon_ptr,
                 &current_hp
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
     int stats[PKMN_NUM_STATS] = {0};
-    error = pkmn_pokemon2_get_stats(
+    error = pkmn_pokemon_get_stats(
                 pokemon_ptr,
                 stats,
                 sizeof(stats),
@@ -365,7 +365,7 @@ static void check_initial_values(
 }
 
 static void check_initial_maps(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -380,7 +380,7 @@ static void check_initial_maps(
 
     // EVs
 
-    error = pkmn_pokemon2_get_EVs(
+    error = pkmn_pokemon_get_EVs(
                 pokemon_ptr,
                 EVs,
                 PKMN_NUM_STATS,
@@ -406,7 +406,7 @@ static void check_initial_maps(
 
     // IVs
 
-    error = pkmn_pokemon2_get_IVs(
+    error = pkmn_pokemon_get_IVs(
                 pokemon_ptr,
                 IVs,
                 PKMN_NUM_STATS,
@@ -432,7 +432,7 @@ static void check_initial_maps(
 
     // Stats
 
-    error = pkmn_pokemon2_get_stats(
+    error = pkmn_pokemon_get_stats(
                 pokemon_ptr,
                 stats,
                 PKMN_NUM_STATS,
@@ -470,7 +470,7 @@ static void check_initial_maps(
 
     if(generation >= 3)
     {
-        error = pkmn_pokemon2_get_contest_stats(
+        error = pkmn_pokemon_get_contest_stats(
                     pokemon_ptr,
                     contest_stats,
                     PKMN_NUM_CONTEST_STATS,
@@ -495,7 +495,7 @@ static void check_initial_maps(
 
         // Everything will be false by default, so just make sure the call
         // succeeds.
-        error = pkmn_pokemon2_get_markings(
+        error = pkmn_pokemon_get_markings(
                     pokemon_ptr,
                     markings,
                     PKMN_NUM_MARKINGS,
@@ -503,7 +503,7 @@ static void check_initial_maps(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_ribbon_names(
+        error = pkmn_pokemon_get_ribbon_names(
                     pokemon_ptr,
                     &ribbon_names
                 );
@@ -513,7 +513,7 @@ static void check_initial_maps(
 
         for(size_t ribbon_index = 0; ribbon_index < ribbon_names.length; ++ribbon_index)
         {
-            error = pkmn_pokemon2_has_ribbon(
+            error = pkmn_pokemon_has_ribbon(
                         pokemon_ptr,
                         ribbon_names.strings[ribbon_index],
                         &has_ribbon
@@ -524,7 +524,7 @@ static void check_initial_maps(
     }
     else
     {
-        error = pkmn_pokemon2_get_contest_stats(
+        error = pkmn_pokemon_get_contest_stats(
                     pokemon_ptr,
                     contest_stats,
                     PKMN_NUM_CONTEST_STATS,
@@ -532,7 +532,7 @@ static void check_initial_maps(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_get_markings(
+        error = pkmn_pokemon_get_markings(
                     pokemon_ptr,
                     markings,
                     PKMN_NUM_MARKINGS,
@@ -540,13 +540,13 @@ static void check_initial_maps(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_get_ribbon_names(
+        error = pkmn_pokemon_get_ribbon_names(
                     pokemon_ptr,
                     &ribbon_names
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_has_ribbon(
+        error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     "Cool",
                     &has_ribbon
@@ -556,7 +556,7 @@ static void check_initial_maps(
 }
 
 static void test_image_filepaths(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -566,7 +566,7 @@ static void test_image_filepaths(
 
     int generation = game_to_generation(pokemon_ptr->game);
 
-    error = pkmn_pokemon2_get_icon_filepath(
+    error = pkmn_pokemon_get_icon_filepath(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -584,19 +584,19 @@ static void test_image_filepaths(
         {
             for(size_t is_shiny_index = 0; is_shiny_index < 2; ++is_shiny_index)
             {
-                error = pkmn_pokemon2_set_gender(
+                error = pkmn_pokemon_set_gender(
                             pokemon_ptr,
                             genders[gender_index]
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-                error = pkmn_pokemon2_set_is_shiny(
+                error = pkmn_pokemon_set_is_shiny(
                             pokemon_ptr,
                             is_shiny_bools[is_shiny_index]
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-                error = pkmn_pokemon2_get_sprite_filepath(
+                error = pkmn_pokemon_get_sprite_filepath(
                             pokemon_ptr,
                             strbuffer,
                             sizeof(strbuffer),
@@ -609,7 +609,7 @@ static void test_image_filepaths(
     }
     else
     {
-        error = pkmn_pokemon2_get_sprite_filepath(
+        error = pkmn_pokemon_get_sprite_filepath(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -621,7 +621,7 @@ static void test_image_filepaths(
 }
 
 static void test_setting_ability(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -634,19 +634,19 @@ static void test_setting_ability(
     if(generation >= 3)
     {
         pkmn_database_pokemon_entry_t database_entry = empty_pokemon_entry;
-        error = pkmn_pokemon2_get_database_entry(
+        error = pkmn_pokemon_get_database_entry(
                     pokemon_ptr,
                     &database_entry
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_set_ability(
+        error = pkmn_pokemon_set_ability(
                     pokemon_ptr,
                     database_entry.abilities.first
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_ability(
+        error = pkmn_pokemon_get_ability(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -661,13 +661,13 @@ static void test_setting_ability(
 
         if(strcmp(database_entry.abilities.second, "None"))
         {
-            error = pkmn_pokemon2_set_ability(
+            error = pkmn_pokemon_set_ability(
                         pokemon_ptr,
                         database_entry.abilities.second
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-            error = pkmn_pokemon2_get_ability(
+            error = pkmn_pokemon_get_ability(
                         pokemon_ptr,
                         strbuffer,
                         sizeof(strbuffer),
@@ -683,13 +683,13 @@ static void test_setting_ability(
 
         if((generation >= 5) && !strcmp(database_entry.hidden_ability, "None"))
         {
-            error = pkmn_pokemon2_set_ability(
+            error = pkmn_pokemon_set_ability(
                         pokemon_ptr,
                         database_entry.hidden_ability
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-            error = pkmn_pokemon2_get_ability(
+            error = pkmn_pokemon_get_ability(
                         pokemon_ptr,
                         strbuffer,
                         sizeof(strbuffer),
@@ -706,12 +706,12 @@ static void test_setting_ability(
         error = pkmn_database_pokemon_entry_free(&database_entry);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_set_ability(
+        error = pkmn_pokemon_set_ability(
                     pokemon_ptr,
                     "Not an ability"
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-        error = pkmn_pokemon2_set_ability(
+        error = pkmn_pokemon_set_ability(
                     pokemon_ptr,
                     "Wonder Guard"
                 );
@@ -719,7 +719,7 @@ static void test_setting_ability(
     }
     else
     {
-        error = pkmn_pokemon2_get_ability(
+        error = pkmn_pokemon_get_ability(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -727,7 +727,7 @@ static void test_setting_ability(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_ability(
+        error = pkmn_pokemon_set_ability(
                     pokemon_ptr,
                     "Wonder Guard" // Doesn't matter what it is
                 );
@@ -736,7 +736,7 @@ static void test_setting_ability(
 }
 
 static void test_setting_ball(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     const char* valid_ball_name,
     const char** invalid_ball_names
 )
@@ -752,13 +752,13 @@ static void test_setting_ball(
 
     if(generation >= 3)
     {
-        error = pkmn_pokemon2_set_ball(
+        error = pkmn_pokemon_set_ball(
                     pokemon_ptr,
                     valid_ball_name
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_ball(
+        error = pkmn_pokemon_get_ball(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -773,7 +773,7 @@ static void test_setting_ball(
 
         for(size_t ball_index = 0; invalid_ball_names[ball_index]; ++ball_index)
         {
-            error = pkmn_pokemon2_set_ball(
+            error = pkmn_pokemon_set_ball(
                         pokemon_ptr,
                         invalid_ball_names[ball_index]
                     );
@@ -782,7 +782,7 @@ static void test_setting_ball(
     }
     else
     {
-        error = pkmn_pokemon2_get_ball(
+        error = pkmn_pokemon_get_ball(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -790,7 +790,7 @@ static void test_setting_ball(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_ball(
+        error = pkmn_pokemon_set_ball(
                     pokemon_ptr,
                     "Great Ball" // Doesn't matter what it is
                 );
@@ -799,7 +799,7 @@ static void test_setting_ball(
 }
 
 static void test_setting_condition(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -816,12 +816,12 @@ static void test_setting_condition(
     {
         pkmn_condition_t condition_from_pokemon = PKMN_CONDITION_NONE;
 
-        error = pkmn_pokemon2_set_condition(
+        error = pkmn_pokemon_set_condition(
                     pokemon_ptr,
                     condition
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_get_condition(
+        error = pkmn_pokemon_get_condition(
                     pokemon_ptr,
                     &condition_from_pokemon
                 );
@@ -831,7 +831,7 @@ static void test_setting_condition(
 }
 
 static void test_setting_friendship(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -845,25 +845,25 @@ static void test_setting_friendship(
         const int friendship = 123;
         int friendship_from_pokemon = 0;
 
-        error = pkmn_pokemon2_set_current_trainer_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon_ptr,
                     friendship
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_current_trainer_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon_ptr,
                     &friendship_from_pokemon
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL(friendship, friendship_from_pokemon);
 
-        error = pkmn_pokemon2_set_current_trainer_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon_ptr,
                     -1
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-        error = pkmn_pokemon2_set_current_trainer_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon_ptr,
                     256
                 );
@@ -873,13 +873,13 @@ static void test_setting_friendship(
     {
         int friendship_from_pokemon = 0;
 
-        error = pkmn_pokemon2_get_current_trainer_friendship(
+        error = pkmn_pokemon_get_current_trainer_friendship(
                     pokemon_ptr,
                     &friendship_from_pokemon
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_current_trainer_friendship(
+        error = pkmn_pokemon_set_current_trainer_friendship(
                     pokemon_ptr,
                     0
                 );
@@ -888,7 +888,7 @@ static void test_setting_friendship(
 }
 
 static void test_setting_held_item(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     const char* valid_item_name,
     const char** invalid_item_names
 )
@@ -904,13 +904,13 @@ static void test_setting_held_item(
 
     if(generation >= 2)
     {
-        error = pkmn_pokemon2_set_held_item(
+        error = pkmn_pokemon_set_held_item(
                     pokemon_ptr,
                     valid_item_name
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_held_item(
+        error = pkmn_pokemon_get_held_item(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -925,7 +925,7 @@ static void test_setting_held_item(
 
         for(size_t held_item_index = 0; invalid_item_names[held_item_index]; ++held_item_index)
         {
-            error = pkmn_pokemon2_set_held_item(
+            error = pkmn_pokemon_set_held_item(
                         pokemon_ptr,
                         invalid_item_names[held_item_index]
                     );
@@ -934,7 +934,7 @@ static void test_setting_held_item(
     }
     else
     {
-        error = pkmn_pokemon2_get_held_item(
+        error = pkmn_pokemon_get_held_item(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
@@ -942,7 +942,7 @@ static void test_setting_held_item(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_held_item(
+        error = pkmn_pokemon_set_held_item(
                     pokemon_ptr,
                     "Potion" // Doesn't matter what it is
                 );
@@ -951,7 +951,7 @@ static void test_setting_held_item(
 }
 
 static void test_setting_levels(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -960,19 +960,19 @@ static void test_setting_levels(
 
     int generation = game_to_generation(pokemon_ptr->game);
 
-    error = pkmn_pokemon2_set_level(
+    error = pkmn_pokemon_set_level(
                 pokemon_ptr,
                 -1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon2_set_level(
+    error = pkmn_pokemon_set_level(
                 pokemon_ptr,
                 101
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     pkmn_database_pokemon_entry_t database_entry = empty_pokemon_entry;
-    error = pkmn_pokemon2_get_database_entry(
+    error = pkmn_pokemon_get_database_entry(
                 pokemon_ptr,
                 &database_entry
             );
@@ -988,19 +988,19 @@ static void test_setting_levels(
 
     // Test setting level.
 
-    error = pkmn_pokemon2_set_level(
+    error = pkmn_pokemon_set_level(
                 pokemon_ptr,
                 level
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_level(
+    error = pkmn_pokemon_get_level(
                 pokemon_ptr,
                 &level_from_pokemon
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(level, level_from_pokemon);
 
-    error = pkmn_pokemon2_get_experience(
+    error = pkmn_pokemon_get_experience(
                 pokemon_ptr,
                 &experience_from_pokemon
             );
@@ -1015,19 +1015,19 @@ static void test_setting_levels(
 
     // Test setting experience.
 
-    error = pkmn_pokemon2_set_experience(
+    error = pkmn_pokemon_set_experience(
                 pokemon_ptr,
                 experience
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_experience(
+    error = pkmn_pokemon_get_experience(
                 pokemon_ptr,
                 &experience_from_pokemon
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(experience, experience_from_pokemon);
 
-    error = pkmn_pokemon2_get_level(
+    error = pkmn_pokemon_get_level(
                 pokemon_ptr,
                 &level_from_pokemon
             );
@@ -1056,18 +1056,18 @@ static void test_setting_levels(
     switch(generation)
     {
         case 1:
-            error = pkmn_pokemon2_set_level(
+            error = pkmn_pokemon_set_level(
                         pokemon_ptr,
                         1
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-            error = pkmn_pokemon2_get_level_met(
+            error = pkmn_pokemon_get_level_met(
                         pokemon_ptr,
                         &level_met_from_pokemon
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         10
                     );
@@ -1075,29 +1075,29 @@ static void test_setting_levels(
             break;
 
         case 2:
-            error = pkmn_pokemon2_set_level(
+            error = pkmn_pokemon_set_level(
                         pokemon_ptr,
                         1
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         1
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         101
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         level_met
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            error = pkmn_pokemon2_get_level_met(
+            error = pkmn_pokemon_get_level_met(
                         pokemon_ptr,
                         &level_met_from_pokemon
                     );
@@ -1106,29 +1106,29 @@ static void test_setting_levels(
             break;
 
         default:
-            error = pkmn_pokemon2_set_level(
+            error = pkmn_pokemon_set_level(
                         pokemon_ptr,
                         0
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         -1
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         101
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-            error = pkmn_pokemon2_set_level_met(
+            error = pkmn_pokemon_set_level_met(
                         pokemon_ptr,
                         level_met
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            error = pkmn_pokemon2_get_level_met(
+            error = pkmn_pokemon_get_level_met(
                         pokemon_ptr,
                         &level_met_from_pokemon
                     );
@@ -1139,7 +1139,7 @@ static void test_setting_levels(
 }
 
 static void test_setting_location_met(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     const char* expected_original_location,
     const char** valid_locations,
     const char** invalid_locations
@@ -1158,7 +1158,7 @@ static void test_setting_location_met(
     switch(generation)
     {
         case 1:
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         false,
                         strbuffer,
@@ -1166,14 +1166,14 @@ static void test_setting_location_met(
                         NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-            error = pkmn_pokemon2_set_location_met(
+            error = pkmn_pokemon_set_location_met(
                         pokemon_ptr,
                         valid_locations[0],
                         false
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         true,
                         strbuffer,
@@ -1181,7 +1181,7 @@ static void test_setting_location_met(
                         NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-            error = pkmn_pokemon2_set_location_met(
+            error = pkmn_pokemon_set_location_met(
                         pokemon_ptr,
                         valid_locations[0],
                         true
@@ -1191,7 +1191,7 @@ static void test_setting_location_met(
 
         case 2:
         case 3:
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         false,
                         strbuffer,
@@ -1203,13 +1203,13 @@ static void test_setting_location_met(
 
             for(size_t location_index = 0; valid_locations[location_index]; ++location_index)
             {
-                error = pkmn_pokemon2_set_location_met(
+                error = pkmn_pokemon_set_location_met(
                             pokemon_ptr,
                             valid_locations[location_index],
                             false
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-                error = pkmn_pokemon2_get_location_met(
+                error = pkmn_pokemon_get_location_met(
                             pokemon_ptr,
                             false,
                             strbuffer,
@@ -1220,7 +1220,7 @@ static void test_setting_location_met(
                 TEST_ASSERT_EQUAL_STRING(valid_locations[location_index], strbuffer);
             }
 
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         true,
                         strbuffer,
@@ -1228,7 +1228,7 @@ static void test_setting_location_met(
                         NULL
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-            error = pkmn_pokemon2_set_location_met(
+            error = pkmn_pokemon_set_location_met(
                         pokemon_ptr,
                         valid_locations[0],
                         true
@@ -1237,7 +1237,7 @@ static void test_setting_location_met(
             break;
 
         default:
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         false,
                         strbuffer,
@@ -1247,7 +1247,7 @@ static void test_setting_location_met(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_EQUAL_STRING(expected_original_location, strbuffer);
 
-            error = pkmn_pokemon2_get_location_met(
+            error = pkmn_pokemon_get_location_met(
                         pokemon_ptr,
                         true,
                         strbuffer,
@@ -1259,13 +1259,13 @@ static void test_setting_location_met(
 
             for(size_t location_index = 0; valid_locations[location_index]; ++location_index)
             {
-                error = pkmn_pokemon2_set_location_met(
+                error = pkmn_pokemon_set_location_met(
                             pokemon_ptr,
                             valid_locations[location_index],
                             false
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-                error = pkmn_pokemon2_get_location_met(
+                error = pkmn_pokemon_get_location_met(
                             pokemon_ptr,
                             false,
                             strbuffer,
@@ -1275,13 +1275,13 @@ static void test_setting_location_met(
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
                 TEST_ASSERT_EQUAL_STRING(valid_locations[location_index], strbuffer);
 
-                error = pkmn_pokemon2_set_location_met(
+                error = pkmn_pokemon_set_location_met(
                             pokemon_ptr,
                             valid_locations[location_index],
                             true
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-                error = pkmn_pokemon2_get_location_met(
+                error = pkmn_pokemon_get_location_met(
                             pokemon_ptr,
                             true,
                             strbuffer,
@@ -1297,7 +1297,7 @@ static void test_setting_location_met(
 }
 
 static void test_setting_markings(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -1315,13 +1315,13 @@ static void test_setting_markings(
             (marking <= last_marking);
             ++marking)
         {
-            error = pkmn_pokemon2_set_has_marking(
+            error = pkmn_pokemon_set_has_marking(
                         pokemon_ptr,
                         marking,
                         true
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            error = pkmn_pokemon2_get_markings(
+            error = pkmn_pokemon_get_markings(
                         pokemon_ptr,
                         has_markings,
                         PKMN_NUM_MARKINGS,
@@ -1330,13 +1330,13 @@ static void test_setting_markings(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_TRUE(has_markings[marking]);
 
-            error = pkmn_pokemon2_set_has_marking(
+            error = pkmn_pokemon_set_has_marking(
                         pokemon_ptr,
                         marking,
                         false
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            error = pkmn_pokemon2_get_markings(
+            error = pkmn_pokemon_get_markings(
                         pokemon_ptr,
                         has_markings,
                         PKMN_NUM_MARKINGS,
@@ -1348,14 +1348,14 @@ static void test_setting_markings(
     }
     else
     {
-        error = pkmn_pokemon2_get_markings(
+        error = pkmn_pokemon_get_markings(
                     pokemon_ptr,
                     has_markings,
                     PKMN_NUM_MARKINGS,
                     NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon2_set_has_marking(
+        error = pkmn_pokemon_set_has_marking(
                     pokemon_ptr,
                     PKMN_MARKING_CIRCLE,
                     true
@@ -1365,7 +1365,7 @@ static void test_setting_markings(
 }
 
 static void test_setting_moves(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     const char** valid_move_names,
     const char** invalid_move_names
 )
@@ -1376,13 +1376,13 @@ static void test_setting_moves(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    error = pkmn_pokemon2_set_move(
+    error = pkmn_pokemon_set_move(
                 pokemon_ptr,
                 -1,
                 valid_move_names[0]
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon2_set_move(
+    error = pkmn_pokemon_set_move(
                 pokemon_ptr,
                 4,
                 valid_move_names[0]
@@ -1401,7 +1401,7 @@ static void test_setting_moves(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_set_move(
+        error = pkmn_pokemon_set_move(
                     pokemon_ptr,
                     move_index,
                     valid_move_names[move_index]
@@ -1409,7 +1409,7 @@ static void test_setting_moves(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
         pkmn_move_slots_t move_slots = empty_move_slots;
-        error = pkmn_pokemon2_get_moves(
+        error = pkmn_pokemon_get_moves(
                     pokemon_ptr,
                     &move_slots
                 );
@@ -1426,14 +1426,14 @@ static void test_setting_moves(
         error = pkmn_move_slots_free(&move_slots);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_set_move_pp(
+        error = pkmn_pokemon_set_move_pp(
                     pokemon_ptr,
                     move_index,
                     move_entry.pp[3]
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_moves(
+        error = pkmn_pokemon_get_moves(
                     pokemon_ptr,
                     &move_slots
                 );
@@ -1452,7 +1452,7 @@ static void test_setting_moves(
 
     for(size_t move_index = 0; invalid_move_names[move_index]; ++move_index)
     {
-        error = pkmn_pokemon2_set_move(
+        error = pkmn_pokemon_set_move(
                     pokemon_ptr,
                     0,
                     invalid_move_names[move_index]
@@ -1462,7 +1462,7 @@ static void test_setting_moves(
 }
 
 static void test_setting_original_game(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     const char** valid_game_names,
     const char** invalid_game_names
 )
@@ -1480,12 +1480,12 @@ static void test_setting_original_game(
     {
         for(size_t game_index = 0; valid_game_names[game_index]; ++game_index)
         {
-            error = pkmn_pokemon2_set_original_game(
+            error = pkmn_pokemon_set_original_game(
                         pokemon_ptr,
                         valid_game_names[game_index]
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            error = pkmn_pokemon2_get_original_game(
+            error = pkmn_pokemon_get_original_game(
                         pokemon_ptr,
                         strbuffer,
                         sizeof(strbuffer),
@@ -1508,7 +1508,7 @@ static void test_setting_original_game(
 
         for(size_t game_index = 0; invalid_game_names[game_index]; ++game_index)
         {
-            error = pkmn_pokemon2_set_original_game(
+            error = pkmn_pokemon_set_original_game(
                         pokemon_ptr,
                         invalid_game_names[game_index]
                     );
@@ -1517,14 +1517,14 @@ static void test_setting_original_game(
     }
     else
     {
-        error = pkmn_pokemon2_get_original_game(
+        error = pkmn_pokemon_get_original_game(
                     pokemon_ptr,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon2_set_original_game(
+        error = pkmn_pokemon_set_original_game(
                     pokemon_ptr,
                     valid_game_names[0]
                 );
@@ -1533,7 +1533,7 @@ static void test_setting_original_game(
 }
 
 static void test_setting_personality(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -1547,12 +1547,12 @@ static void test_setting_personality(
 
     if(generation >= 3)
     {
-        error = pkmn_pokemon2_set_personality(
+        error = pkmn_pokemon_set_personality(
                     pokemon_ptr,
                     personality
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_get_personality(
+        error = pkmn_pokemon_get_personality(
                     pokemon_ptr,
                     &personality_from_pokemon
                 );
@@ -1561,12 +1561,12 @@ static void test_setting_personality(
     }
     else
     {
-        error = pkmn_pokemon2_set_personality(
+        error = pkmn_pokemon_set_personality(
                     pokemon_ptr,
                     personality
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon2_get_personality(
+        error = pkmn_pokemon_get_personality(
                     pokemon_ptr,
                     &personality_from_pokemon
                 );
@@ -1575,7 +1575,7 @@ static void test_setting_personality(
 }
 
 static void test_setting_pokerus(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -1588,25 +1588,25 @@ static void test_setting_pokerus(
 
     if(generation >= 2)
     {
-        error = pkmn_pokemon2_set_pokerus_duration(
+        error = pkmn_pokemon_set_pokerus_duration(
                     pokemon_ptr,
                     -1
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-        error = pkmn_pokemon2_set_pokerus_duration(
+        error = pkmn_pokemon_set_pokerus_duration(
                     pokemon_ptr,
                     16
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
         const int pokerus_duration = rand() % 16;
-        error = pkmn_pokemon2_set_pokerus_duration(
+        error = pkmn_pokemon_set_pokerus_duration(
                     pokemon_ptr,
                     pokerus_duration
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_pokerus_duration(
+        error = pkmn_pokemon_get_pokerus_duration(
                     pokemon_ptr,
                     &pokerus_duration_from_pokemon
                 );
@@ -1618,12 +1618,12 @@ static void test_setting_pokerus(
     }
     else
     {
-        error = pkmn_pokemon2_set_pokerus_duration(
+        error = pkmn_pokemon_set_pokerus_duration(
                     pokemon_ptr,
                     0
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-        error = pkmn_pokemon2_get_pokerus_duration(
+        error = pkmn_pokemon_get_pokerus_duration(
                     pokemon_ptr,
                     &pokerus_duration_from_pokemon
                 );
@@ -1632,7 +1632,7 @@ static void test_setting_pokerus(
 }
 
 static void test_setting_stats(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -1642,7 +1642,7 @@ static void test_setting_stats(
     int generation = game_to_generation(pokemon_ptr->game);
 
     int EVs[PKMN_NUM_STATS] = {0};
-    error = pkmn_pokemon2_get_EVs(
+    error = pkmn_pokemon_get_EVs(
                 pokemon_ptr,
                 EVs,
                 PKMN_NUM_STATS,
@@ -1657,14 +1657,14 @@ static void test_setting_stats(
         if(EVs[stat] != -1)
         {
             int new_EV_value = rand() % (max_EV_value + 1);
-            error = pkmn_pokemon2_set_EV(
+            error = pkmn_pokemon_set_EV(
                         pokemon_ptr,
                         stat,
                         new_EV_value
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-            error = pkmn_pokemon2_get_EVs(
+            error = pkmn_pokemon_get_EVs(
                         pokemon_ptr,
                         EVs,
                         PKMN_NUM_STATS,
@@ -1675,7 +1675,7 @@ static void test_setting_stats(
         }
         else
         {
-            error = pkmn_pokemon2_set_EV(
+            error = pkmn_pokemon_set_EV(
                         pokemon_ptr,
                         stat,
                         0
@@ -1685,7 +1685,7 @@ static void test_setting_stats(
     }
 
     int IVs[PKMN_NUM_STATS] = {0};
-    error = pkmn_pokemon2_get_IVs(
+    error = pkmn_pokemon_get_IVs(
                 pokemon_ptr,
                 IVs,
                 PKMN_NUM_STATS,
@@ -1699,14 +1699,14 @@ static void test_setting_stats(
         if(IVs[stat] != -1)
         {
             int new_IV_value = rand() % (max_IV_value + 1);
-            error = pkmn_pokemon2_set_IV(
+            error = pkmn_pokemon_set_IV(
                         pokemon_ptr,
                         stat,
                         new_IV_value
                     );
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-            error = pkmn_pokemon2_get_IVs(
+            error = pkmn_pokemon_get_IVs(
                         pokemon_ptr,
                         IVs,
                         PKMN_NUM_STATS,
@@ -1717,7 +1717,7 @@ static void test_setting_stats(
         }
         else
         {
-            error = pkmn_pokemon2_set_IV(
+            error = pkmn_pokemon_set_IV(
                         pokemon_ptr,
                         stat,
                         0
@@ -1731,7 +1731,7 @@ static void test_setting_stats(
         const int max_contest_stat_value = 255;
 
         int contest_stats[PKMN_NUM_CONTEST_STATS] = {0};
-        error = pkmn_pokemon2_get_contest_stats(
+        error = pkmn_pokemon_get_contest_stats(
                     pokemon_ptr,
                     contest_stats,
                     PKMN_NUM_CONTEST_STATS,
@@ -1746,14 +1746,14 @@ static void test_setting_stats(
             if(contest_stats[contest_stat] != -1)
             {
                 int new_contest_stat_value = rand() % (max_contest_stat_value + 1);
-                error = pkmn_pokemon2_set_contest_stat(
+                error = pkmn_pokemon_set_contest_stat(
                             pokemon_ptr,
                             contest_stat,
                             new_contest_stat_value
                         );
                 TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-                error = pkmn_pokemon2_get_contest_stats(
+                error = pkmn_pokemon_get_contest_stats(
                             pokemon_ptr,
                             contest_stats,
                             PKMN_NUM_CONTEST_STATS,
@@ -1767,7 +1767,7 @@ static void test_setting_stats(
             }
             else
             {
-                error = pkmn_pokemon2_set_contest_stat(
+                error = pkmn_pokemon_set_contest_stat(
                             pokemon_ptr,
                             contest_stat,
                             0
@@ -1779,7 +1779,7 @@ static void test_setting_stats(
     else
     {
         int contest_stats[PKMN_NUM_CONTEST_STATS] = {0};
-        error = pkmn_pokemon2_get_contest_stats(
+        error = pkmn_pokemon_get_contest_stats(
                     pokemon_ptr,
                     contest_stats,
                     PKMN_NUM_CONTEST_STATS,
@@ -1787,7 +1787,7 @@ static void test_setting_stats(
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_contest_stat(
+        error = pkmn_pokemon_set_contest_stat(
                     pokemon_ptr,
                     PKMN_CONTEST_STAT_COOL,
                     0
@@ -1797,7 +1797,7 @@ static void test_setting_stats(
 }
 
 static void test_setting_trainer_info(
-    pkmn_pokemon2_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -1809,25 +1809,25 @@ static void test_setting_trainer_info(
 
     const char* nickname = "foobarbaz";
     const char* trainer_name = "foobar";
-    pkmn_trainer_id2_t expected_trainer_id = {0U};
+    pkmn_trainer_id_t expected_trainer_id = {0U};
 
-    error = pkmn_pokemon2_set_nickname(
+    error = pkmn_pokemon_set_nickname(
                 pokemon_ptr,
                 ""
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon2_set_nickname(
+    error = pkmn_pokemon_set_nickname(
                 pokemon_ptr,
                 "Too long nickname"
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon2_set_nickname(
+    error = pkmn_pokemon_set_nickname(
                 pokemon_ptr,
                 nickname
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_get_nickname(
+    error = pkmn_pokemon_get_nickname(
                 pokemon_ptr,
                 strbuffer,
                 sizeof(strbuffer),
@@ -1836,17 +1836,17 @@ static void test_setting_trainer_info(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(nickname, strbuffer);
 
-    error = pkmn_pokemon2_set_original_trainer_name(
+    error = pkmn_pokemon_set_original_trainer_name(
                 pokemon_ptr,
                 ""
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon2_set_original_trainer_name(
+    error = pkmn_pokemon_set_original_trainer_name(
                 pokemon_ptr,
                 "Too long trainer name"
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon2_set_original_trainer_name(
+    error = pkmn_pokemon_set_original_trainer_name(
                 pokemon_ptr,
                 trainer_name
             );
@@ -1854,18 +1854,18 @@ static void test_setting_trainer_info(
 
     if(generation >= 2)
     {
-        error = pkmn_pokemon2_set_original_trainer_gender(
+        error = pkmn_pokemon_set_original_trainer_gender(
                     pokemon_ptr,
                     PKMN_GENDER_MALE
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_set_original_trainer_gender(
+        error = pkmn_pokemon_set_original_trainer_gender(
                     pokemon_ptr,
                     PKMN_GENDER_FEMALE
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_set_original_trainer_gender(
+        error = pkmn_pokemon_set_original_trainer_gender(
                     pokemon_ptr,
                     PKMN_GENDER_GENDERLESS
                 );
@@ -1873,7 +1873,7 @@ static void test_setting_trainer_info(
     }
     else
     {
-        error = pkmn_pokemon2_set_original_trainer_gender(
+        error = pkmn_pokemon_set_original_trainer_gender(
                     pokemon_ptr,
                     PKMN_GENDER_MALE
                 );
@@ -1886,17 +1886,17 @@ static void test_setting_trainer_info(
         const uint16_t trainer_public_id = 0x1A2B;
         const uint16_t trainer_secret_id = 0x3C4D;
 
-        error = pkmn_pokemon2_set_original_trainer_id(
+        error = pkmn_pokemon_set_original_trainer_id(
                     pokemon_ptr,
                     trainer_id
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_set_original_trainer_public_id(
+        error = pkmn_pokemon_set_original_trainer_public_id(
                     pokemon_ptr,
                     trainer_public_id
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_set_original_trainer_secret_id(
+        error = pkmn_pokemon_set_original_trainer_secret_id(
                     pokemon_ptr,
                     trainer_secret_id
                 );
@@ -1911,23 +1911,23 @@ static void test_setting_trainer_info(
         const uint32_t trainer_id = 0xABCD;
         const uint16_t trainer_public_id = 0x9876;
 
-        error = pkmn_pokemon2_set_original_trainer_id(
+        error = pkmn_pokemon_set_original_trainer_id(
                     pokemon_ptr,
                     too_large_trainer_id
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-        error = pkmn_pokemon2_set_original_trainer_secret_id(
+        error = pkmn_pokemon_set_original_trainer_secret_id(
                     pokemon_ptr,
                     0
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
-        error = pkmn_pokemon2_set_original_trainer_id(
+        error = pkmn_pokemon_set_original_trainer_id(
                     pokemon_ptr,
                     trainer_id
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_set_original_trainer_public_id(
+        error = pkmn_pokemon_set_original_trainer_public_id(
                     pokemon_ptr,
                     trainer_public_id
                 );
@@ -1936,8 +1936,8 @@ static void test_setting_trainer_info(
         expected_trainer_id.id = (uint32_t)trainer_public_id;
     }
 
-    pkmn_trainer_info2_t original_trainer_info = empty_trainer_info;
-    error = pkmn_pokemon2_get_original_trainer_info(
+    pkmn_trainer_info_t original_trainer_info = empty_trainer_info;
+    error = pkmn_pokemon_get_original_trainer_info(
                 pokemon_ptr,
                 &original_trainer_info
             );
@@ -1956,7 +1956,7 @@ static void test_setting_trainer_info(
 }
 
 void pokemon_test_common(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     pkmn_test_values_t* test_values_ptr
 )
 {

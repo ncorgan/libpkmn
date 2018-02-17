@@ -14,7 +14,7 @@
 #include <ctype.h>
 #include <string.h>
 
-static const pkmn_pokemon2_t empty_pokemon =
+static const pkmn_pokemon_t empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
@@ -29,7 +29,7 @@ static void gen2_unown_test(
 )
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t unown = empty_pokemon;
+    pkmn_pokemon_t unown = empty_pokemon;
 
     pkmn_database_pokemon_entry_t unown_entry;
     error = pkmn_database_get_pokemon_entry(
@@ -45,7 +45,7 @@ static void gen2_unown_test(
 
     for(size_t form_index = 0; form_index < unown_entry.forms.length; ++form_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Unown",
                     game,
                     unown_entry.forms.strings[form_index],
@@ -55,7 +55,7 @@ static void gen2_unown_test(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(unown._internal);
 
-        error = pkmn_pokemon2_get_form(
+        error = pkmn_pokemon_get_form(
                     &unown,
                     strbuffer,
                     sizeof(strbuffer),
@@ -68,7 +68,7 @@ static void gen2_unown_test(
         );
 
         // Make sure IVs are properly set.
-        error = pkmn_pokemon2_get_IVs(
+        error = pkmn_pokemon_get_IVs(
                     &unown,
                     IVs,
                     PKMN_NUM_STATS,
@@ -91,7 +91,7 @@ static void gen2_unown_test(
             strbuffer
         );
 
-        error = pkmn_pokemon2_get_icon_filepath(
+        error = pkmn_pokemon_get_icon_filepath(
                     &unown,
                     strbuffer,
                     sizeof(strbuffer),
@@ -100,7 +100,7 @@ static void gen2_unown_test(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
 
-        error = pkmn_pokemon2_get_sprite_filepath(
+        error = pkmn_pokemon_get_sprite_filepath(
                     &unown,
                     strbuffer,
                     sizeof(strbuffer),
@@ -109,13 +109,13 @@ static void gen2_unown_test(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
 
-        error = pkmn_pokemon2_free(&unown);
+        error = pkmn_pokemon_free(&unown);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NULL(unown._internal);
     }
 
     // Make sure setting IVs properly changes the form.
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Unown",
                 game,
                 "A",
@@ -124,35 +124,35 @@ static void gen2_unown_test(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_ATTACK,
                 10
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_DEFENSE,
                 9
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_SPEED,
                 1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_SPECIAL,
                 14
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_get_form(
+    error = pkmn_pokemon_get_form(
                 &unown,
                 strbuffer,
                 sizeof(strbuffer),
@@ -164,13 +164,13 @@ static void gen2_unown_test(
     // Make sure setting the form properly changes the IVs.
     for(size_t form_index = 0; form_index < unown_entry.forms.length; ++form_index)
     {
-        error = pkmn_pokemon2_set_form(
+        error = pkmn_pokemon_set_form(
                     &unown,
                     unown_entry.forms.strings[form_index]
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_get_form(
+        error = pkmn_pokemon_get_form(
                     &unown,
                     strbuffer,
                     sizeof(strbuffer),
@@ -183,7 +183,7 @@ static void gen2_unown_test(
         );
 
         // Make sure IVs are properly set
-        error = pkmn_pokemon2_get_IVs(
+        error = pkmn_pokemon_get_IVs(
                     &unown,
                     IVs,
                     PKMN_NUM_STATS,
@@ -207,7 +207,7 @@ static void gen2_unown_test(
         );
     }
 
-    error = pkmn_pokemon2_free(&unown);
+    error = pkmn_pokemon_free(&unown);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(unown._internal);
 
@@ -222,7 +222,7 @@ static void gen3_unown_test(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t unown = empty_pokemon;
+    pkmn_pokemon_t unown = empty_pokemon;
     uint32_t personality = 0;
 
     pkmn_database_pokemon_entry_t unown_entry;
@@ -239,7 +239,7 @@ static void gen3_unown_test(
         form_index < unown_entry.forms.length;
         ++form_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Unown",
                     game,
                     unown_entry.forms.strings[form_index],
@@ -248,7 +248,7 @@ static void gen3_unown_test(
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
-        error = pkmn_pokemon2_get_form(
+        error = pkmn_pokemon_get_form(
                     &unown,
                     strbuffer,
                     sizeof(strbuffer),
@@ -261,7 +261,7 @@ static void gen3_unown_test(
         );
 
         // Make sure personality is properly set.
-        error = pkmn_pokemon2_get_personality(
+        error = pkmn_pokemon_get_personality(
                     &unown,
                     &personality
                 );
@@ -280,7 +280,7 @@ static void gen3_unown_test(
         );
 
         if(strcmp(game, "Colosseum") && strcmp(game, "XD")) {
-            error = pkmn_pokemon2_get_icon_filepath(
+            error = pkmn_pokemon_get_icon_filepath(
                         &unown,
                         strbuffer,
                         sizeof(strbuffer),
@@ -289,7 +289,7 @@ static void gen3_unown_test(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_TRUE(file_exists(strbuffer));
 
-            error = pkmn_pokemon2_get_sprite_filepath(
+            error = pkmn_pokemon_get_sprite_filepath(
                         &unown,
                         strbuffer,
                         sizeof(strbuffer),
@@ -299,13 +299,13 @@ static void gen3_unown_test(
             TEST_ASSERT_TRUE(file_exists(strbuffer));
         }
 
-        error = pkmn_pokemon2_free(&unown);
+        error = pkmn_pokemon_free(&unown);
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
         TEST_ASSERT_NULL(unown._internal);
     }
 
     // Make sure setting the personality properly sets the form.
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Unown",
                 game,
                 "A",
@@ -315,13 +315,13 @@ static void gen3_unown_test(
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NOT_NULL(unown._internal);
 
-    error = pkmn_pokemon2_set_personality(
+    error = pkmn_pokemon_set_personality(
                 &unown,
                 0x4C07DE71
             );
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
-    error = pkmn_pokemon2_get_form(
+    error = pkmn_pokemon_get_form(
                 &unown,
                 strbuffer,
                 sizeof(strbuffer),
@@ -334,13 +334,13 @@ static void gen3_unown_test(
         form_index < unown_entry.forms.length;
         ++form_index)
     {
-        error = pkmn_pokemon2_set_form(
+        error = pkmn_pokemon_set_form(
                     &unown,
                     unown_entry.forms.strings[form_index]
                 );
         TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
 
-        error = pkmn_pokemon2_get_personality(
+        error = pkmn_pokemon_get_personality(
                     &unown,
                     &personality
                 );
@@ -359,7 +359,7 @@ static void gen3_unown_test(
         );
     }
 
-    error = pkmn_pokemon2_free(&unown);
+    error = pkmn_pokemon_free(&unown);
     TEST_ASSERT_EQUAL(error, PKMN_ERROR_NONE);
     TEST_ASSERT_NULL(unown._internal);
 

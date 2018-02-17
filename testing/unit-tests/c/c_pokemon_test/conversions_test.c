@@ -14,7 +14,7 @@
 
 #include <string.h>
 
-static const pkmn_pokemon2_t empty_pokemon =
+static const pkmn_pokemon_t empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
@@ -37,8 +37,8 @@ static void conversions_test(
     int min_generation = (origin_generation < dest_generation) ? origin_generation
                                                                : dest_generation;
 
-    pkmn_pokemon2_t first_pokemon = empty_pokemon;
-    pkmn_pokemon2_t second_pokemon = empty_pokemon;
+    pkmn_pokemon_t first_pokemon = empty_pokemon;
+    pkmn_pokemon_t second_pokemon = empty_pokemon;
 
     get_random_pokemon(
         &first_pokemon,
@@ -48,7 +48,7 @@ static void conversions_test(
     );
     TEST_ASSERT_NOT_NULL(first_pokemon._internal);
 
-    error = pkmn_pokemon2_to_game(
+    error = pkmn_pokemon_to_game(
                 &first_pokemon,
                 dest_game,
                 &second_pokemon
@@ -68,25 +68,25 @@ static void conversions_test(
         &first_pokemon,
         &second_pokemon,
         "Form",
-        pkmn_pokemon2_get_form
+        pkmn_pokemon_get_form
     );
     compare_pokemon_strings(
         &first_pokemon,
         &second_pokemon,
         "Nickname",
-        pkmn_pokemon2_get_nickname
+        pkmn_pokemon_get_nickname
     );
     compare_pokemon_ints(
         &first_pokemon,
         &second_pokemon,
         "Experience",
-        pkmn_pokemon2_get_experience
+        pkmn_pokemon_get_experience
     );
     compare_pokemon_ints(
         &first_pokemon,
         &second_pokemon,
         "Experience",
-        pkmn_pokemon2_get_level
+        pkmn_pokemon_get_level
     );
 
     compare_pokemon_original_trainer_info(
@@ -106,30 +106,30 @@ static void conversions_test(
             &first_pokemon,
             &second_pokemon,
             "Is shiny",
-            pkmn_pokemon2_is_shiny
+            pkmn_pokemon_is_shiny
         );
         compare_pokemon_strings(
             &first_pokemon,
             &second_pokemon,
             "Held item",
-            pkmn_pokemon2_get_held_item
+            pkmn_pokemon_get_held_item
         );
         compare_pokemon_ints(
             &first_pokemon,
             &second_pokemon,
             "Current trainer friendship",
-            pkmn_pokemon2_get_current_trainer_friendship
+            pkmn_pokemon_get_current_trainer_friendship
         );
 
         int first_pokemon_level = 0;
         int second_pokemon_level_met = 0;
 
-        error = pkmn_pokemon2_get_level(
+        error = pkmn_pokemon_get_level(
                     &first_pokemon,
                     &first_pokemon_level
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon2_get_level_met(
+        error = pkmn_pokemon_get_level_met(
                     &second_pokemon,
                     &second_pokemon_level_met
                 );
@@ -142,31 +142,31 @@ static void conversions_test(
             &first_pokemon,
             &second_pokemon,
             "Ability",
-            pkmn_pokemon2_get_ability
+            pkmn_pokemon_get_ability
         );
         compare_pokemon_strings(
             &first_pokemon,
             &second_pokemon,
             "Ball",
-            pkmn_pokemon2_get_ball
+            pkmn_pokemon_get_ball
         );
         compare_pokemon_strings(
             &first_pokemon,
             &second_pokemon,
             "Original game",
-            pkmn_pokemon2_get_original_game
+            pkmn_pokemon_get_original_game
         );
         compare_pokemon_uint32s(
             &first_pokemon,
             &second_pokemon,
             "Personality",
-            pkmn_pokemon2_get_personality
+            pkmn_pokemon_get_personality
         );
         compare_pokemon_ints(
             &first_pokemon,
             &second_pokemon,
             "Pokérus duration",
-            pkmn_pokemon2_get_pokerus_duration
+            pkmn_pokemon_get_pokerus_duration
         );
 
         if(origin_generation == dest_generation)
@@ -176,14 +176,14 @@ static void conversions_test(
                 &second_pokemon,
                 PKMN_NUM_MARKINGS,
                 "Markings",
-                pkmn_pokemon2_get_markings
+                pkmn_pokemon_get_markings
             );
             compare_pokemon_int_buffers(
                 &first_pokemon,
                 &second_pokemon,
                 PKMN_NUM_CONTEST_STATS,
                 "Contest stats",
-                pkmn_pokemon2_get_contest_stats
+                pkmn_pokemon_get_contest_stats
             );
             compare_pokemon_ribbons(
                 &first_pokemon,

@@ -22,18 +22,13 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         config.h
         error.h
         game_save.h
-        game_save2.h
         item_bag.h
         item_list.h
         pokedex.h
         pokemon.h
-        pokemon2.h
         pokemon_box.h
-        pokemon_box2.h
         pokemon_party.h
-        pokemon_party2.h
         pokemon_pc.h
-        pokemon_pc2.h
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )
 

@@ -8,7 +8,7 @@
 #ifndef POKEMON_TEST_H
 #define POKEMON_TEST_H
 
-#include <pkmn-c/pokemon2.h>
+#include <pkmn-c/pokemon.h>
 
 typedef struct {
     char* valid_ball;
@@ -29,7 +29,7 @@ typedef struct {
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    pkmn_pokemon2_t* pokemon_ptr,
+    pkmn_pokemon_t* pokemon_ptr,
     pkmn_test_values_t* test_values
 );
 
@@ -63,9 +63,9 @@ void xd_pokemon_test();
 void red_pk1_test();
 void blue_pk1_test();
 void yellow_pk1_test();
-void gold_pk2_test();
-void silver_pk2_test();
-void crystal_pk2_test();
+void gold_pk_test();
+void silver_pk_test();
+void crystal_pk_test();
 void ruby_3gpkm_test();
 void sapphire_3gpkm_test();
 void emerald_3gpkm_test();

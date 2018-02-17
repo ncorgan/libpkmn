@@ -1984,7 +1984,7 @@ static void personality_test() {
     // Test invalid ability.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Torrent",
                 PKMN_GENDER_MALE,
@@ -1996,7 +1996,7 @@ static void personality_test() {
     // Test invalid gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Blaze",
                 PKMN_GENDER_GENDERLESS,
@@ -2008,7 +2008,7 @@ static void personality_test() {
     // Test invalid nature.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Blaze",
                 PKMN_GENDER_MALE,
@@ -2020,7 +2020,7 @@ static void personality_test() {
     // Test and validate calls with each gender.
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Blaze",
                 PKMN_GENDER_FEMALE,
@@ -2032,7 +2032,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -2048,7 +2048,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Charmander",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Blaze",
                 PKMN_GENDER_MALE,
@@ -2060,7 +2060,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -2076,7 +2076,7 @@ static void personality_test() {
 
     error = pkmn_calculations_generate_personality(
                 "Magnemite",
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 true,
                 "Magnet Pull",
                 PKMN_GENDER_GENDERLESS,
@@ -2088,7 +2088,7 @@ static void personality_test() {
 
     error = pkmn_calculations_modern_shiny(
                 personality,
-                PKMN_DEFAULT_TRAINER_ID,
+                pkmn_pokemon_default_trainer_id().id,
                 &shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);

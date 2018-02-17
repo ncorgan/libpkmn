@@ -11,17 +11,13 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 #include <pkmn-c/game_save.h>
-#include <pkmn-c/game_save2.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
 #include <pkmn-c/pokedex.h>
 #include <pkmn-c/pokemon.h>
-#include <pkmn-c/pokemon2.h>
 #include <pkmn-c/pokemon_box.h>
 #include <pkmn-c/pokemon_party.h>
-#include <pkmn-c/pokemon_party2.h>
 #include <pkmn-c/pokemon_pc.h>
-#include <pkmn-c/pokemon_pc2.h>
 #include <pkmn-c/version.h>
 
 #include <pkmn-c/calculations/form.h>

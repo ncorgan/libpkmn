@@ -86,7 +86,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon(
         pkmn::pokemon::sptr cpp_pokemon,
-        pkmn_pokemon2_t* pokemon_ptr
+        pkmn_pokemon_t* pokemon_ptr
     )
     {
         BOOST_ASSERT(pokemon_ptr);
@@ -113,7 +113,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_box(
         pkmn::pokemon_box::sptr cpp_pokemon_box,
-        pkmn_pokemon_box2_t* pokemon_box_ptr
+        pkmn_pokemon_box_t* pokemon_box_ptr
     )
     {
         BOOST_ASSERT(pokemon_box_ptr);
@@ -134,7 +134,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_party(
         pkmn::pokemon_party::sptr cpp_pokemon_party,
-        pkmn_pokemon_party2_t* pokemon_party_ptr
+        pkmn_pokemon_party_t* pokemon_party_ptr
     )
     {
         BOOST_ASSERT(pokemon_party_ptr);
@@ -155,7 +155,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_pc(
         pkmn::pokemon_pc::sptr cpp_pokemon_pc,
-        pkmn_pokemon_pc2_t* pokemon_pc_ptr
+        pkmn_pokemon_pc_t* pokemon_pc_ptr
     )
     {
         BOOST_ASSERT(pokemon_pc_ptr);
@@ -176,7 +176,7 @@ namespace pkmn { namespace c {
 
     void init_game_save(
         pkmn::game_save::sptr cpp_game_save,
-        pkmn_game_save2_t* game_save_ptr
+        pkmn_game_save_t* game_save_ptr
     )
     {
         BOOST_ASSERT(game_save_ptr);
@@ -600,35 +600,9 @@ namespace pkmn { namespace c {
 
         if(num_pokemon > 0)
         {
-            pokemon_list_c_ptr->pokemon_list = (pkmn_pokemon_handle_t*)std::calloc(
-                                                                           num_pokemon,
-                                                                           sizeof(pkmn_pokemon_handle_t)
-                                                                       );
-            for(size_t index = 0; index < num_pokemon; ++index)
-            {
-                pokemon_list_c_ptr->pokemon_list[index] = new pkmn_pokemon_t;
-                pokemon_list_c_ptr->pokemon_list[index]->cpp = pokemon_list_cpp.at(index);
-                pokemon_list_c_ptr->pokemon_list[index]->last_error = "None";
-            }
-        }
-
-        pokemon_list_c_ptr->length = num_pokemon;
-    }
-
-    void pokemon_list2_cpp_to_c(
-        const pkmn::pokemon_list_t& pokemon_list_cpp,
-        pkmn_pokemon_list2_t* pokemon_list_c_ptr
-    )
-    {
-        BOOST_ASSERT(pokemon_list_c_ptr);
-
-        size_t num_pokemon = pokemon_list_cpp.size();
-
-        if(num_pokemon > 0)
-        {
-            pokemon_list_c_ptr->pokemon = (pkmn_pokemon2_t*)std::calloc(
+            pokemon_list_c_ptr->pokemon = (pkmn_pokemon_t*)std::calloc(
                                                                 num_pokemon,
-                                                                sizeof(pkmn_pokemon2_t)
+                                                                sizeof(pkmn_pokemon_t)
                                                             );
             for(size_t index = 0; index < num_pokemon; ++index)
             {
@@ -653,35 +627,9 @@ namespace pkmn { namespace c {
 
         if(num_boxes > 0)
         {
-            pokemon_box_list_c_ptr->pokemon_boxes = (pkmn_pokemon_box_handle_t*)std::calloc(
-                                                                                    num_boxes,
-                                                                                    sizeof(pkmn_pokemon_box_handle_t)
-                                                                                );
-            for(size_t index = 0; index < num_boxes; ++index)
-            {
-                pokemon_box_list_c_ptr->pokemon_boxes[index] = new pkmn_pokemon_box_t;
-                pokemon_box_list_c_ptr->pokemon_boxes[index]->cpp = pokemon_box_list_cpp.at(index);
-                pokemon_box_list_c_ptr->pokemon_boxes[index]->last_error = "None";
-            }
-        }
-
-        pokemon_box_list_c_ptr->length = num_boxes;
-    }
-
-    void pokemon_box_list2_cpp_to_c(
-        const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        pkmn_pokemon_box_list2_t* pokemon_box_list_c_ptr
-    )
-    {
-        BOOST_ASSERT(pokemon_box_list_c_ptr);
-
-        size_t num_boxes = pokemon_box_list_cpp.size();
-
-        if(num_boxes > 0)
-        {
-            pokemon_box_list_c_ptr->boxes = (pkmn_pokemon_box2_t*)std::calloc(
+            pokemon_box_list_c_ptr->boxes = (pkmn_pokemon_box_t*)std::calloc(
                                                                       num_boxes,
-                                                                      sizeof(pkmn_pokemon_box2_t)
+                                                                      sizeof(pkmn_pokemon_box_t)
                                                                   );
             for(size_t index = 0; index < num_boxes; ++index)
             {

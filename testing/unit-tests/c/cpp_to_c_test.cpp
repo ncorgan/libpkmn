@@ -719,8 +719,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
     };
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_list2_t pokemon_list_c = { NULL, 0 };
-    pkmn::c::pokemon_list2_cpp_to_c(
+    pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
+    pkmn::c::pokemon_list_cpp_to_c(
         pokemon_list_cpp,
         &pokemon_list_c
     );
@@ -739,7 +739,7 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
             pokemon_list_c.pokemon[i].game
         );
 
-        error = pkmn_pokemon2_get_level(
+        error = pkmn_pokemon_get_level(
                     &pokemon_list_c.pokemon[i],
                     &level_c
                 );
@@ -750,7 +750,7 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
         );
     }
 
-    pkmn_pokemon_list2_free(
+    pkmn_pokemon_list_free(
         &pokemon_list_c
     );
     EXPECT_EQ(NULL, pokemon_list_c.pokemon);
@@ -771,8 +771,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     pokemon_box_list_cpp[2]->set_name("IJKL");
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_list2_t pokemon_box_list_c = { NULL, 0 };
-    pkmn::c::pokemon_box_list2_cpp_to_c(
+    pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
+    pkmn::c::pokemon_box_list_cpp_to_c(
         pokemon_box_list_cpp,
         &pokemon_box_list_c
     );
@@ -787,7 +787,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
             pokemon_box_list_c.boxes[index].game
         );
 
-        error = pkmn_pokemon_box2_get_name(
+        error = pkmn_pokemon_box_get_name(
                     &pokemon_box_list_c.boxes[index],
                     name_c,
                     sizeof(name_c),
@@ -800,7 +800,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
         );
     }
 
-    pkmn_pokemon_box_list2_free(
+    pkmn_pokemon_box_list_free(
         &pokemon_box_list_c
     );
     EXPECT_EQ(NULL, pokemon_box_list_c.boxes);

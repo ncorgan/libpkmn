@@ -79,7 +79,7 @@ GEN1_TEST_FCNS(Yellow);
     void test_gen2_item_pocket_ ## game (); \
     void test_gen2_key_item_pocket_ ## game (); \
     void test_gen2_ball_pocket_ ## game (); \
-    void test_gen2_tmhm_pocket_ ## game (); \
+    void test_gen_tmhm_pocket_ ## game (); \
     void test_gen2_item_pc_ ## game (); \
     void test_gen2_item_bag_ ## game ();
 

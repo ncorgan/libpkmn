@@ -50,49 +50,6 @@
 
 #include "error_internal.hpp"
 
-/*
- * These structs are opaque in the C API, but internally,
- * this is what we use.
- */
-
-typedef struct {
-    pkmn::game_save::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_game_save_t;
-
-typedef struct {
-    pkmn::pokemon::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_t;
-
-typedef struct {
-    pkmn::pokemon_box::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_box_t;
-
-typedef struct {
-    pkmn::pokemon_party::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_party_t;
-
-typedef struct {
-    pkmn::pokemon_pc::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_pc_t;
-
-#define PKMN_GAME_SAVE_DECLARED
-#define PKMN_ITEM_BAG_DECLARED
-#define PKMN_ITEM_LIST_DECLARED
-#define PKMN_POKEMON_DECLARED
-#define PKMN_POKEMON_BOX_DECLARED
-#define PKMN_POKEMON_PARTY_DECLARED
-#define PKMN_POKEMON_PC_DECLARED
-
 #include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
@@ -102,14 +59,14 @@ typedef struct {
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/string_types.h>
 
-#include <pkmn-c/game_save2.h>
+#include <pkmn-c/game_save.h>
 #include <pkmn-c/item_bag.h>
 #include <pkmn-c/item_list.h>
 #include <pkmn-c/pokedex.h>
-#include <pkmn-c/pokemon2.h>
-#include <pkmn-c/pokemon_box2.h>
-#include <pkmn-c/pokemon_party2.h>
-#include <pkmn-c/pokemon_pc2.h>
+#include <pkmn-c/pokemon.h>
+#include <pkmn-c/pokemon_box.h>
+#include <pkmn-c/pokemon_party.h>
+#include <pkmn-c/pokemon_pc.h>
 
 // Internal representations
 typedef struct
@@ -201,27 +158,27 @@ namespace pkmn { namespace c {
 
     void init_pokemon(
         pkmn::pokemon::sptr cpp_pokemon,
-        pkmn_pokemon2_t* pokemon_ptr
+        pkmn_pokemon_t* pokemon_ptr
     );
 
     void init_pokemon_box(
         pkmn::pokemon_box::sptr cpp_pokemon_box,
-        pkmn_pokemon_box2_t* pokemon_box_ptr
+        pkmn_pokemon_box_t* pokemon_box_ptr
     );
 
     void init_pokemon_party(
         pkmn::pokemon_party::sptr cpp_pokemon_party,
-        pkmn_pokemon_party2_t* pokemon_party_ptr
+        pkmn_pokemon_party_t* pokemon_party_ptr
     );
 
     void init_pokemon_pc(
         pkmn::pokemon_pc::sptr cpp_pokemon_pc,
-        pkmn_pokemon_pc2_t* pokemon_pc_ptr
+        pkmn_pokemon_pc_t* pokemon_pc_ptr
     );
 
     void init_game_save(
         pkmn::game_save::sptr cpp_game_save,
-        pkmn_game_save2_t* game_save_ptr
+        pkmn_game_save_t* game_save_ptr
     );
 
     template <typename pointer_type>
@@ -472,19 +429,9 @@ namespace pkmn { namespace c {
         pkmn_pokemon_list_t* pokemon_list_c_ptr
     );
 
-    void pokemon_list2_cpp_to_c(
-        const pkmn::pokemon_list_t& pokemon_list_cpp,
-        pkmn_pokemon_list2_t* pokemon_list_c_ptr
-    );
-
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
         pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
-    );
-
-    void pokemon_box_list2_cpp_to_c(
-        const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        pkmn_pokemon_box_list2_t* pokemon_box_list_c_ptr
     );
 }
 }

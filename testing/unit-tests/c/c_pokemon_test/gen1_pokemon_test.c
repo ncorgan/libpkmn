@@ -20,14 +20,14 @@ static void gen1_pokemon_test(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t pokemon =
+    pkmn_pokemon_t pokemon =
     {
         .species = NULL,
         .game = NULL,
         ._internal = NULL
     };
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 species,
                 game,
                 "",
@@ -61,7 +61,7 @@ static void gen1_pokemon_test(
         &test_values
     );
 
-    error = pkmn_pokemon2_free(&pokemon);
+    error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 

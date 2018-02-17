@@ -270,7 +270,7 @@ static void gen2_ball_pocket_test(
     TEST_ASSERT_EQUAL(0, valid_items.length);
 }
 
-static void gen2_tmhm_pocket_test(
+static void gen_tmhm_pocket_test(
     pkmn_item_list_t* tmhm_pocket_ptr,
     const char* game
 )
@@ -577,7 +577,7 @@ static void gen2_item_bag_test(
     gen2_item_pocket_test(&item_pocket, game);
     gen2_key_item_pocket_test(&key_item_pocket, game);
     gen2_ball_pocket_test(&ball_pocket, game);
-    gen2_tmhm_pocket_test(&tmhm_pocket, game);
+    gen_tmhm_pocket_test(&tmhm_pocket, game);
 
     // Make sure adding items through the bag adds to the proper pockets.
     check_num_items(&item_pocket, 0);
@@ -796,7 +796,7 @@ void test_gen2_ball_pocket_ ## test_game () \
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
     TEST_ASSERT_NULL(ball_pocket._internal); \
 } \
-void test_gen2_tmhm_pocket_ ## test_game () \
+void test_gen_tmhm_pocket_ ## test_game () \
 { \
     pkmn_error_t error = PKMN_ERROR_NONE; \
  \
@@ -816,7 +816,7 @@ void test_gen2_tmhm_pocket_ ## test_game () \
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
     TEST_ASSERT_NOT_NULL(tmhm_pocket._internal); \
  \
-    gen2_tmhm_pocket_test( \
+    gen_tmhm_pocket_test( \
         &tmhm_pocket, \
         #test_game \
     ); \

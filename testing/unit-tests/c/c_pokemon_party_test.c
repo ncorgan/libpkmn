@@ -9,20 +9,20 @@
 
 #include <pkmn.h>
 
-static const pkmn_pokemon2_t empty_pokemon =
+static const pkmn_pokemon_t empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_list2_t empty_pokemon_list =
+static const pkmn_pokemon_list_t empty_pokemon_list =
 {
     .pokemon = NULL,
     .length = 0
 };
 
 static void test_empty_pokemon_party(
-    pkmn_pokemon_party2_t* party_ptr
+    pkmn_pokemon_party_t* party_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(party_ptr);
@@ -31,16 +31,16 @@ static void test_empty_pokemon_party(
 
     size_t num_pokemon = 6;
 
-    pkmn_pokemon_list2_t pokemon_list = empty_pokemon_list;
+    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
 
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(0, num_pokemon);
 
-    error = pkmn_pokemon_party2_as_list(
+    error = pkmn_pokemon_party_as_list(
                 party_ptr,
                 &pokemon_list
             );
@@ -60,14 +60,14 @@ static void test_empty_pokemon_party(
         );
     }
 
-    error = pkmn_pokemon_list2_free(&pokemon_list);
+    error = pkmn_pokemon_list_free(&pokemon_list);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(pokemon_list.pokemon);
     TEST_ASSERT_EQUAL(0, pokemon_list.length);
 }
 
 static void test_setting_pokemon_in_party(
-    pkmn_pokemon_party2_t* party_ptr
+    pkmn_pokemon_party_t* party_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(party_ptr);
@@ -76,10 +76,10 @@ static void test_setting_pokemon_in_party(
 
     size_t num_pokemon = 0;
 
-    pkmn_pokemon2_t original_first = empty_pokemon;
-    pkmn_pokemon2_t original_second = empty_pokemon;
+    pkmn_pokemon_t original_first = empty_pokemon;
+    pkmn_pokemon_t original_second = empty_pokemon;
 
-    error = pkmn_pokemon_party2_get_pokemon(
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 0,
                 &original_first
@@ -87,7 +87,7 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(original_first._internal);
 
-    error = pkmn_pokemon_party2_get_pokemon(
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 1,
                 &original_second
@@ -96,13 +96,13 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_NOT_NULL(original_second._internal);
 
     // Make sure we can't get Pokémon at invalid indices.
-    error = pkmn_pokemon_party2_get_pokemon(
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 -1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon_party2_get_pokemon(
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 party_ptr->capacity + 1,
                 &original_first
@@ -110,13 +110,13 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     // Make sure we can't set Pokémon at invalid indices.
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 -1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 party_ptr->capacity + 1,
                 &original_first
@@ -128,11 +128,11 @@ static void test_setting_pokemon_in_party(
      * have the same underlying Pokémon.
      */
 
-    pkmn_pokemon2_t bulbasaur = empty_pokemon;
-    pkmn_pokemon2_t charmander = empty_pokemon;
-    pkmn_pokemon2_t squirtle = empty_pokemon;
+    pkmn_pokemon_t bulbasaur = empty_pokemon;
+    pkmn_pokemon_t charmander = empty_pokemon;
+    pkmn_pokemon_t squirtle = empty_pokemon;
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Bulbasaur",
                 party_ptr->game,
                 "",
@@ -142,7 +142,7 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(bulbasaur._internal);
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Charmander",
                 party_ptr->game,
                 "",
@@ -152,7 +152,7 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(charmander._internal);
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Squirtle",
                 party_ptr->game,
                 "",
@@ -162,26 +162,26 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(squirtle._internal);
 
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 0,
                 &bulbasaur
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(1, num_pokemon);
 
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 1,
                 &charmander
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
@@ -189,13 +189,13 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
     // Replace one of the new ones.
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 0,
                 &squirtle
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
@@ -205,8 +205,8 @@ static void test_setting_pokemon_in_party(
     // Copy a Pokémon whose memory is already part of the party. Make sure we
     // can't copy it to itself.
 
-    pkmn_pokemon2_t second_in_party = empty_pokemon;
-    error = pkmn_pokemon_party2_get_pokemon(
+    pkmn_pokemon_t second_in_party = empty_pokemon;
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 1,
                 &second_in_party
@@ -214,19 +214,19 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NOT_NULL(second_in_party._internal);
 
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 1,
                 &second_in_party
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 2,
                 &second_in_party
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
@@ -234,13 +234,13 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(3, num_pokemon);
 
     // We should be able to clear the last contiguous Pokémon.
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 2,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
         party_ptr,
         &num_pokemon
     );
@@ -248,39 +248,39 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
     // Put it back.
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 2,
                 &second_in_party
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
         party_ptr,
         &num_pokemon
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(3, num_pokemon);
 
-    error = pkmn_pokemon2_free(&second_in_party);
+    error = pkmn_pokemon_free(&second_in_party);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(second_in_party._internal);
 
     // Check that Pokémon cannot be placed non-contiguously.
 
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_party2_get_num_pokemon(
+    error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
                 &num_pokemon
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(3, num_pokemon);
 
-    error = pkmn_pokemon_party2_get_pokemon(
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 1,
                 &second_in_party
@@ -288,19 +288,19 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("Charmander", second_in_party.species);
 
-    error = pkmn_pokemon2_free(&second_in_party);
+    error = pkmn_pokemon_free(&second_in_party);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(second_in_party._internal);
 
-    error = pkmn_pokemon_party2_set_pokemon(
+    error = pkmn_pokemon_party_set_pokemon(
                 party_ptr,
                 4,
                 &bulbasaur
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-    pkmn_pokemon2_t fifth_in_party = empty_pokemon;
-    error = pkmn_pokemon_party2_get_pokemon(
+    pkmn_pokemon_t fifth_in_party = empty_pokemon;
+    error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 4,
                 &fifth_in_party
@@ -308,7 +308,7 @@ static void test_setting_pokemon_in_party(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING("None", fifth_in_party.species);
 
-    error = pkmn_pokemon2_free(&fifth_in_party);
+    error = pkmn_pokemon_free(&fifth_in_party);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(fifth_in_party._internal);
 
@@ -316,8 +316,8 @@ static void test_setting_pokemon_in_party(
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    pkmn_pokemon_list2_t pokemon_list = empty_pokemon_list;
-    error = pkmn_pokemon_party2_as_list(
+    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    error = pkmn_pokemon_party_as_list(
                 party_ptr,
                 &pokemon_list
             );
@@ -345,27 +345,27 @@ static void test_setting_pokemon_in_party(
 
     // Cleanup
 
-    error = pkmn_pokemon_list2_free(&pokemon_list);
+    error = pkmn_pokemon_list_free(&pokemon_list);
     TEST_ASSERT_NULL(pokemon_list.pokemon);
     TEST_ASSERT_EQUAL(0, pokemon_list.length);
 
-    error = pkmn_pokemon2_free(&original_first);
+    error = pkmn_pokemon_free(&original_first);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(original_first._internal);
 
-    error = pkmn_pokemon2_free(&original_second);
+    error = pkmn_pokemon_free(&original_second);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(original_second._internal);
 
-    error = pkmn_pokemon2_free(&bulbasaur);
+    error = pkmn_pokemon_free(&bulbasaur);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(bulbasaur._internal);
 
-    error = pkmn_pokemon2_free(&charmander);
+    error = pkmn_pokemon_free(&charmander);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(charmander._internal);
 
-    error = pkmn_pokemon2_free(&squirtle);
+    error = pkmn_pokemon_free(&squirtle);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(squirtle._internal);
 }
@@ -378,14 +378,14 @@ static void pokemon_party_test_common(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_pokemon_party2_t party =
+    pkmn_pokemon_party_t party =
     {
         .game = NULL,
         .capacity = 0,
         ._internal = NULL
     };
 
-    error = pkmn_pokemon_party2_init(
+    error = pkmn_pokemon_party_init(
                 game,
                 &party
             );
@@ -397,7 +397,7 @@ static void pokemon_party_test_common(
     test_empty_pokemon_party(&party);
     test_setting_pokemon_in_party(&party);
 
-    error = pkmn_pokemon_party2_free(&party);
+    error = pkmn_pokemon_party_free(&party);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_NULL(party.game);
     TEST_ASSERT_EQUAL(0, party.capacity);

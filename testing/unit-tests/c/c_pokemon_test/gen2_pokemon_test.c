@@ -20,14 +20,14 @@ static void gen2_pokemon_test(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t pokemon =
+    pkmn_pokemon_t pokemon =
     {
         .species = NULL,
         .game = NULL,
         ._internal = NULL
     };
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 species,
                 game,
                 "",
@@ -66,12 +66,12 @@ static void gen2_pokemon_test(
     bool is_shiny = false;
 
     // Gender affects IVs, so make sure the abstraction reflects that.
-    error = pkmn_pokemon2_set_gender(
+    error = pkmn_pokemon_set_gender(
                 &pokemon,
                 PKMN_GENDER_MALE
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_IVs(
+    error = pkmn_pokemon_get_IVs(
                 &pokemon,
                 IVs,
                 PKMN_NUM_STATS,
@@ -80,25 +80,25 @@ static void gen2_pokemon_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(15, IVs[PKMN_STAT_ATTACK]);
 
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &pokemon,
                 PKMN_STAT_ATTACK,
                 0
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_gender(
+    error = pkmn_pokemon_get_gender(
                 &pokemon,
                 &gender
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
-    error = pkmn_pokemon2_set_IV(
+    error = pkmn_pokemon_set_IV(
                 &pokemon,
                 PKMN_STAT_ATTACK,
                 15
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_get_gender(
+    error = pkmn_pokemon_get_gender(
                 &pokemon,
                 &gender
             );
@@ -106,18 +106,18 @@ static void gen2_pokemon_test(
     TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
-    error = pkmn_pokemon2_set_is_shiny(
+    error = pkmn_pokemon_set_is_shiny(
                 &pokemon,
                 false
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_is_shiny(
+    error = pkmn_pokemon_is_shiny(
                 &pokemon,
                 &is_shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_FALSE(is_shiny);
-    error = pkmn_pokemon2_get_IVs(
+    error = pkmn_pokemon_get_IVs(
                 &pokemon,
                 IVs,
                 PKMN_NUM_STATS,
@@ -126,18 +126,18 @@ static void gen2_pokemon_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(13, IVs[PKMN_STAT_ATTACK]);
 
-    error = pkmn_pokemon2_set_is_shiny(
+    error = pkmn_pokemon_set_is_shiny(
                 &pokemon,
                 true
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon2_is_shiny(
+    error = pkmn_pokemon_is_shiny(
                 &pokemon,
                 &is_shiny
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_TRUE(is_shiny);
-    error = pkmn_pokemon2_get_IVs(
+    error = pkmn_pokemon_get_IVs(
                 &pokemon,
                 IVs,
                 PKMN_NUM_STATS,
@@ -150,7 +150,7 @@ static void gen2_pokemon_test(
     TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_SPEED]);
     TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_SPECIAL]);
 
-    error = pkmn_pokemon2_free(&pokemon);
+    error = pkmn_pokemon_free(&pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 

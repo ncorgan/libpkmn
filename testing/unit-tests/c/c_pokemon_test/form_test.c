@@ -20,7 +20,7 @@ static void test_gen1_pokemon_forms(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t pokemon =
+    pkmn_pokemon_t pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -39,7 +39,7 @@ static void test_gen1_pokemon_forms(
         gen1_pokemon_with_xy_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen1_pokemon_with_xy_mega_forms[pokemon_index],
                     game,
                     "Mega",
@@ -51,7 +51,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -70,7 +70,7 @@ static void test_gen1_pokemon_forms(
         gen1_pokemon_with_oras_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen1_pokemon_with_oras_mega_forms[pokemon_index],
                     game,
                     "Mega",
@@ -82,7 +82,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -108,7 +108,7 @@ static void test_gen1_pokemon_forms(
     {
         TEST_ASSERT_NOT_NULL(oras_pikachu_entry.forms.strings[form_index]);
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Pikachu",
                     game,
                     oras_pikachu_entry.forms.strings[form_index],
@@ -120,7 +120,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -143,7 +143,7 @@ static void test_gen1_pokemon_forms(
         gen1_pokemon_with_two_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen1_pokemon_with_two_mega_forms[pokemon_index],
                     game,
                     "Mega X",
@@ -155,7 +155,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -165,7 +165,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_NULL(pokemon._internal);
         }
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen1_pokemon_with_two_mega_forms[pokemon_index],
                     game,
                     "Mega Y",
@@ -177,7 +177,7 @@ static void test_gen1_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -196,7 +196,7 @@ static void test_gen2_pokemon_forms(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t pokemon =
+    pkmn_pokemon_t pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -215,7 +215,7 @@ static void test_gen2_pokemon_forms(
         gen2_pokemon_with_xy_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen2_pokemon_with_xy_mega_forms[pokemon_index],
                     game,
                     "Mega",
@@ -227,7 +227,7 @@ static void test_gen2_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
@@ -238,7 +238,7 @@ static void test_gen2_pokemon_forms(
         }
     }
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Steelix",
                 game,
                 "Mega",
@@ -250,7 +250,7 @@ static void test_gen2_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
     else
@@ -260,7 +260,7 @@ static void test_gen2_pokemon_forms(
     TEST_ASSERT_NULL(pokemon._internal);
 
     // Spiky-eared Pichu should only work in HG/SS.
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Pichu",
                 game,
                 "Spiky-eared",
@@ -272,7 +272,7 @@ static void test_gen2_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
     else
@@ -294,7 +294,7 @@ static void test_gen2_pokemon_forms(
     for(size_t i = 0; i < 26; ++i)
     {
         TEST_ASSERT_NOT_NULL(unown_entry.forms.strings[i]);
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Unown",
                     game,
                     unown_entry.forms.strings[i],
@@ -304,7 +304,7 @@ static void test_gen2_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NULL(pokemon._internal);
     }
@@ -312,7 +312,7 @@ static void test_gen2_pokemon_forms(
     error = pkmn_database_pokemon_entry_free(&unown_entry);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Unown",
                 game,
                 "!",
@@ -324,7 +324,7 @@ static void test_gen2_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
     else
@@ -333,7 +333,7 @@ static void test_gen2_pokemon_forms(
     }
     TEST_ASSERT_NULL(pokemon._internal);
 
-    error = pkmn_pokemon2_init(
+    error = pkmn_pokemon_init(
                 "Unown",
                 game,
                 "?",
@@ -345,7 +345,7 @@ static void test_gen2_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
     else
@@ -362,7 +362,7 @@ static void test_gen3_pokemon_forms(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon2_t pokemon =
+    pkmn_pokemon_t pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -382,7 +382,7 @@ static void test_gen3_pokemon_forms(
         gen3_pokemon_with_xy_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen3_pokemon_with_xy_mega_forms[pokemon_index],
                     game,
                     "Mega",
@@ -394,7 +394,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -413,7 +413,7 @@ static void test_gen3_pokemon_forms(
         gen3_pokemon_with_oras_mega_forms[pokemon_index];
         ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     gen3_pokemon_with_oras_mega_forms[pokemon_index],
                     game,
                     "Mega",
@@ -425,7 +425,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -448,7 +448,7 @@ static void test_gen3_pokemon_forms(
     for(size_t form_index = 0; form_index < 4; ++form_index)
     {
         TEST_ASSERT_NOT_NULL(castform_entry.forms.strings[form_index]);
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Castform",
                     game,
                     castform_entry.forms.strings[form_index],
@@ -458,7 +458,7 @@ static void test_gen3_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NULL(pokemon._internal);
     }
@@ -470,7 +470,7 @@ static void test_gen3_pokemon_forms(
     static const char* primal_version_pokemon[] = {"Groudon", "Kyogre"};
     for(size_t pokemon_index = 0; pokemon_index < 2; ++pokemon_index)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     primal_version_pokemon[pokemon_index],
                     game,
                     "Standard",
@@ -480,10 +480,10 @@ static void test_gen3_pokemon_forms(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_free(&pokemon);
+        error = pkmn_pokemon_free(&pokemon);
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     primal_version_pokemon[pokemon_index],
                     game,
                     "Primal Reversion",
@@ -495,7 +495,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -508,7 +508,7 @@ static void test_gen3_pokemon_forms(
     // In Generation III, Deoxys's form is game-specific.
     if(generation == 3)
     {
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Deoxys",
                     game,
                     "Normal",
@@ -521,7 +521,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -530,7 +530,7 @@ static void test_gen3_pokemon_forms(
         }
         TEST_ASSERT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Deoxys",
                     game,
                     "Attack",
@@ -542,7 +542,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -551,7 +551,7 @@ static void test_gen3_pokemon_forms(
         }
         TEST_ASSERT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Deoxys",
                     game,
                     "Defense",
@@ -563,7 +563,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -572,7 +572,7 @@ static void test_gen3_pokemon_forms(
         }
         TEST_ASSERT_NULL(pokemon._internal);
 
-        error = pkmn_pokemon2_init(
+        error = pkmn_pokemon_init(
                     "Deoxys",
                     game,
                     "Speed",
@@ -584,7 +584,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
         }
         else
@@ -609,7 +609,7 @@ static void test_gen3_pokemon_forms(
         {
             TEST_ASSERT_NOT_NULL(deoxys_entry.forms.strings[form_index]);
 
-            error = pkmn_pokemon2_init(
+            error = pkmn_pokemon_init(
                         "Deoxys",
                         game,
                         deoxys_entry.forms.strings[form_index],
@@ -619,7 +619,7 @@ static void test_gen3_pokemon_forms(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-            error = pkmn_pokemon2_free(&pokemon);
+            error = pkmn_pokemon_free(&pokemon);
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
