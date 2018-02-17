@@ -92,7 +92,7 @@ void get_random_pokemon(
                 actual_species,
                 game,
                 "",
-                ((rand() % 63) + 1), // To not run into Generation II level met limit
+                ((rand() % 62) + 2), // To not run into Generation II level met limit
                 pokemon_ptr
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);

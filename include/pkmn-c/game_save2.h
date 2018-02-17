@@ -21,6 +21,26 @@
 
 #include <stdint.h>
 
+typedef enum
+{
+    //! Not a valid save.
+    PKMN_GAME_SAVE_TYPE2_NONE = 0,
+    //! Red/Blue/Yellow
+    PKMN_GAME_SAVE_TYPE2_RED_BLUE_YELLOW,
+    //! Gold/Silver
+    PKMN_GAME_SAVE_TYPE2_GOLD_SILVER,
+    //! Crystal
+    PKMN_GAME_SAVE_TYPE2_CRYSTAL,
+    //! Ruby/Sapphire
+    PKMN_GAME_SAVE_TYPE2_RUBY_SAPPHIRE,
+    //! Emerald
+    PKMN_GAME_SAVE_TYPE2_EMERALD,
+    //! FireRed/LeafGreen
+    PKMN_GAME_SAVE_TYPE2_FIRERED_LEAFGREEN,
+    //! Colosseum/XD
+    PKMN_GAME_SAVE_TYPE2_COLOSSEUM_XD
+} pkmn_game_save_type2_t;
+
 typedef struct
 {
     char* game;
@@ -31,6 +51,11 @@ typedef struct
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+PKMN_C_API pkmn_error_t pkmn_game_save2_detect_type(
+    const char* filepath,
+    pkmn_game_save_type2_t* game_save_type_out
+);
 
 PKMN_C_API pkmn_error_t pkmn_game_save2_init_from_file(
     const char* filepath,

@@ -15,6 +15,34 @@
 
 #include <pkmn-c/game_save2.h>
 
+static const std::unordered_map<std::string, pkmn_game_save_type2_t> GAME_SAVE_TYPES =
+{
+    {"None", PKMN_GAME_SAVE_TYPE2_NONE},
+    {"Red/Blue/Yellow", PKMN_GAME_SAVE_TYPE2_RED_BLUE_YELLOW},
+    {"Gold/Silver", PKMN_GAME_SAVE_TYPE2_GOLD_SILVER},
+    {"Crystal", PKMN_GAME_SAVE_TYPE2_CRYSTAL},
+    {"Ruby/Sapphire", PKMN_GAME_SAVE_TYPE2_RUBY_SAPPHIRE},
+    {"Emerald", PKMN_GAME_SAVE_TYPE2_EMERALD},
+    {"FireRed/LeafGreen", PKMN_GAME_SAVE_TYPE2_FIRERED_LEAFGREEN},
+    {"Colosseum/XD", PKMN_GAME_SAVE_TYPE2_COLOSSEUM_XD}
+};
+
+pkmn_error_t pkmn_game_save2_detect_type(
+    const char* filepath,
+    pkmn_game_save_type2_t* game_save_type_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(filepath);
+    PKMN_CHECK_NULL_PARAM(game_save_type_out);
+
+    PKMN_CPP_TO_C(
+        std::string cpp_game_save_type = pkmn::game_save::detect_type(filepath);
+        BOOST_ASSERT(GAME_SAVE_TYPES.count(cpp_game_save_type) > 0);
+
+        *game_save_type_out = GAME_SAVE_TYPES.at(cpp_game_save_type);
+    )
+}
+
 pkmn_error_t pkmn_game_save2_init_from_file(
     const char* filepath,
     pkmn_game_save2_t* game_save_out
@@ -213,7 +241,7 @@ PKMN_C_API pkmn_error_t pkmn_game_save2_set_trainer_secret_id(
     )
 }
 
-pkmn_error_t pkmn_game_save2_set_gender(
+pkmn_error_t pkmn_game_save2_set_trainer_gender(
     pkmn_game_save2_t* game_save_ptr,
     pkmn_gender_t gender
 )
