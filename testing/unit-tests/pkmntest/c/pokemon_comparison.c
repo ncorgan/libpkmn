@@ -31,12 +31,6 @@ static const pkmn_move_slots_t empty_move_slots =
     .move_slots = NULL,
     .length = 0
 };
-static const pkmn_pokemon_t empty_pokemon =
-{
-    .species = NULL,
-    .game = NULL,
-    ._internal = NULL
-};
 
 static inline bool random_bool()
 {
