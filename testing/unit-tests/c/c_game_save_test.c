@@ -70,11 +70,6 @@ static const pkmn_pokemon_party_t empty_pokemon_party =
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_party_t empty_pokemon_box =
-{
-    .game = NULL,
-    ._internal = NULL
-};
 static const pkmn_pokemon_pc_t empty_pokemon_pc =
 {
     .game = NULL,

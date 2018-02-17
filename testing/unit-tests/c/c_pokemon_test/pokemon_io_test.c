@@ -51,13 +51,6 @@ static const pkmn_pokemon_t empty_pokemon =
     ._internal = NULL
 };
 
-typedef pkmn_error_t (*pokemon_int_getter_fcn_t)(pkmn_pokemon_t*,int*);
-typedef pkmn_error_t (*pokemon_uint32_getter_fcn_t)(pkmn_pokemon_t*,uint32_t*);
-typedef pkmn_error_t (*pokemon_string_getter_fcn_t)(pkmn_pokemon_t*,char*,size_t,size_t*);
-typedef pkmn_error_t (*pokemon_bool_getter_fcn_t)(pkmn_pokemon_t*,bool*);
-typedef pkmn_error_t (*pokemon_int_buffer_getter_fcn_t)(pkmn_pokemon_t*,int*,size_t,size_t*);
-typedef pkmn_error_t (*pokemon_bool_buffer_getter_fcn_t)(pkmn_pokemon_t*,bool*,size_t,size_t*);
-
 static void test_pokemon_string(
     pkmn_pokemon_t* pokemon_ptr,
     const char* field,

@@ -46,11 +46,13 @@
 #include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/condition.h>
 #include <pkmn-c/types/gender.h>
+#include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>
+#include <pkmn-c/types/natural_gift.h>
 #include <pkmn-c/types/pokemon_list.h>
 #include <pkmn-c/types/pokemon_box_list.h>
 #include <pkmn-c/types/stats.h>
