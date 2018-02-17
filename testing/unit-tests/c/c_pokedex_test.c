@@ -242,7 +242,8 @@ POKEDEX_TEST_FCN(FireRed)
 POKEDEX_TEST_FCN(LeafGreen)
 
 PKMN_C_TEST_MAIN(
-    srand(time(0));
+    srand((unsigned int)time(0));
+
     PKMN_C_TEST(Red_test_pokedex)
     PKMN_C_TEST(Blue_test_pokedex)
     PKMN_C_TEST(Yellow_test_pokedex)
