@@ -10,6 +10,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         attribute_names.h
         condition.h
         gender.h
+        hidden_power.h
         int_pair.h
         item_slot.h
         levelup_move.h
