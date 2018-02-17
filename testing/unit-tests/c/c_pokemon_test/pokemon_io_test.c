@@ -16,6 +16,12 @@
 
 #define STRBUFFER_LEN 1024
 
+#ifdef PKMN_C_PLATFORM_WIN32
+#    include <windows.h>
+#else
+#    include <unistd.h>
+#endif
+
 #if defined(PKMN_C_PLATFORM_MINGW) || defined(PKMN_C_PLATFORM_WIN32)
 #    define FS_SEPARATOR "\\"
 #else
@@ -256,6 +262,12 @@ static void pk1_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon2_free(&imported_pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+#ifdef PKMN_C_PLATFORM_WIN32
+    TEST_ASSERT_NOT_EQUAL(DeleteFile(pk1_path), 0);
+#else
+    TEST_ASSERT_EQUAL(remove(pk1_path), 0);
+#endif
 }
 
 void red_pk1_test()
@@ -324,6 +336,12 @@ static void pk2_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon2_free(&imported_pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+#ifdef PKMN_C_PLATFORM_WIN32
+    TEST_ASSERT_NOT_EQUAL(DeleteFile(pk2_path), 0);
+#else
+    TEST_ASSERT_EQUAL(remove(pk2_path), 0);
+#endif
 }
 
 void gold_pk2_test()
@@ -392,6 +410,12 @@ static void _3gpkm_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon2_free(&imported_pokemon);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+#ifdef PKMN_C_PLATFORM_WIN32
+    TEST_ASSERT_NOT_EQUAL(DeleteFile(_3gpkm_path), 0);
+#else
+    TEST_ASSERT_EQUAL(remove(_3gpkm_path), 0);
+#endif
 }
 
 void ruby_3gpkm_test()
