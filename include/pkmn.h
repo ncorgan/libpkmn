@@ -48,7 +48,6 @@
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/int_pair.h>
 #include <pkmn-c/types/item_slot.h>
-#include <pkmn-c/types/hidden_power.h>
 #include <pkmn-c/types/levelup_move.h>
 #include <pkmn-c/types/marking.h>
 #include <pkmn-c/types/move_slot.h>

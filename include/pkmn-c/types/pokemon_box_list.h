@@ -23,27 +23,9 @@ typedef struct
 extern "C" {
 #endif
 
-static inline pkmn_error_t pkmn_pokemon_box_list_free(
+PKMN_C_API pkmn_error_t pkmn_pokemon_box_list_free(
     pkmn_pokemon_box_list_t* pokemon_box_list_ptr
-)
-{
-    if(!pokemon_box_list_ptr)
-    {
-        return PKMN_ERROR_NULL_POINTER;
-    }
-
-    pkmn_error_t error = PKMN_ERROR_NONE;
-
-    for(size_t index = 0; (index < pokemon_box_list_ptr->length) && !error; ++index)
-    {
-        error = pkmn_pokemon_box_free(&pokemon_box_list_ptr->boxes[index]);
-    }
-
-    pokemon_box_list_ptr->boxes = NULL;
-    pokemon_box_list_ptr->length = 0;
-
-    return PKMN_ERROR_NONE;
-}
+);
 
 #ifdef __cplusplus
 }

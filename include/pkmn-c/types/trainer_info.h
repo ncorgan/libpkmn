@@ -13,9 +13,6 @@
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/trainer_id.h>
 
-#include <stdint.h>
-#include <stdlib.h>
-
 typedef struct
 {
     char* name;
@@ -27,23 +24,9 @@ typedef struct
 extern "C" {
 #endif
 
-static inline pkmn_error_t pkmn_trainer_info_free(
+PKMN_C_API pkmn_error_t pkmn_trainer_info_free(
     pkmn_trainer_info_t* trainer_info_ptr
-)
-{
-    if(!trainer_info_ptr)
-    {
-        return PKMN_ERROR_NULL_POINTER;
-    }
-
-    free(trainer_info_ptr->name);
-    trainer_info_ptr->name = NULL;
-
-    trainer_info_ptr->id.id = 0U;
-    trainer_info_ptr->gender = PKMN_GENDER_MALE;
-
-    return PKMN_ERROR_NONE;
-}
+);
 
 #ifdef __cplusplus
 }

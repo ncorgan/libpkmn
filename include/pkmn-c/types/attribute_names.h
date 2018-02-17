@@ -7,6 +7,7 @@
 #ifndef PKMN_C_TYPES_ATTRIBUTE_NAMES_H
 #define PKMN_C_TYPES_ATTRIBUTE_NAMES_H
 
+#include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
 #include <pkmn-c/types/string_types.h>
@@ -21,18 +22,9 @@ typedef struct
 extern "C" {
 #endif
 
-static inline pkmn_error_t pkmn_attribute_names_free(
+PKMN_C_API pkmn_error_t pkmn_attribute_names_free(
     pkmn_attribute_names_t* attribute_names_ptr
-)
-{
-    if(!attribute_names_ptr)
-    {
-        return PKMN_ERROR_NULL_POINTER;
-    }
-
-    pkmn_string_list_free(&attribute_names_ptr->numeric_attribute_names);
-    pkmn_string_list_free(&attribute_names_ptr->string_attribute_names);
-}
+);
 
 #ifdef __cplusplus
 }
