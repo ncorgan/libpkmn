@@ -131,6 +131,14 @@ ENDIF()
 ########################################################################
 ADD_SUBDIRECTORY(PkmGCTools/LibPkmGC)
 
+IF(PLATFORM_LITTLE_ENDIAN)
+    SET(PKSAV_LITTLE_ENDIAN TRUE CACHE BOOL "Build PKSav with little endian")
+    SET(PKSAV_BIG_ENDIAN    FALSE CACHE BOOL "Build PKSav with big endian")
+ELSE()
+    SET(PKSAV_LITTLE_ENDIAN FALSE CACHE BOOL "Build PKSav with little endian")
+    SET(PKSAV_BIG_ENDIAN    TRUE CACHE BOOL "Build PKSav with little endian")
+ENDIF()
+
 ADD_SUBDIRECTORY(pksav)
 
 ########################################################################
