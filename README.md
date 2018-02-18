@@ -1,6 +1,23 @@
 LibPKMN
 ===============================================
 
+RELEASE TODO
+-------------------------------------
+
+* Coding
+  * Style and coding consistency
+* Testing
+  * LibPKMN C/C++ applications without CMake
+    * Makefiles
+    * MSVC solutions
+    * QMake for using Qt widgets
+  * Applications with all APIs with usual importing means
+* Misc
+  * LGPL PKSav, LibPKMN APIs
+
+Actual README
+-------------------------------------
+
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ncorgan/libpkmn/blob/master/LICENSE.txt)
 [![Travis-CI Build](https://travis-ci.org/ncorgan/libpkmn.svg)](https://travis-ci.org/ncorgan/libpkmn)
 [![AppVeyor Build](https://ci.appveyor.com/api/projects/status/github/ncorgan/libpkmn)](https://ci.appveyor.com/project/ncorgan/libpkmn)
@@ -23,8 +40,11 @@ Features in development:
  * Objective-C API
 
 Future planned features:
+ * OS X support
+ * PyQt classes using SIP
  * Legality checks
  * Generation VII save support
+ * Pokémon Showdown plugin
 
 Build Dependencies
 -------------------------------------
