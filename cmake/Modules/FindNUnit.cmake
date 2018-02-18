@@ -71,32 +71,6 @@ else()
     set(NUNIT_COMMAND ${NUNIT64_COMMAND})
 endif()
 
-if(NOT NUNIT_LIBRARY OR NOT NUNIT_COMMAND)
-    if(NUNIT_ROOT)
-        if(NOT NUNIT_LIBRARY)
-            message(WARNING "NUNIT library not found at root: ${NUNIT_ROOT}")
-        else()
-            message(WARNING "NUNIT command not found at root: ${NUNIT_ROOT} with library: ${NUNIT_LIBRARY}")
-        endif()
-    endif()
-    include(ExternalProject)
-    ExternalProject_Add(
-            NUnit
-            URL https://github.com/nunit/nunitv2/releases/download/2.6.4/NUnit-2.6.4.zip
-            UPDATE_COMMAND ""
-            CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
-            INSTALL_COMMAND ""
-    )
-    ExternalProject_Get_Property(NUnit SOURCE_DIR)
-    set(NUNIT_LIBRARY ${SOURCE_DIR}/bin/nunit.framework.dll)
-    set(NUNIT32_COMMAND ${SOURCE_DIR}/bin/nunit-console-x86.exe)
-    set(NUNIT64_COMMAND ${SOURCE_DIR}/bin/nunit-console.exe)
-    set(NUNIT_TARGET NUnit)
-else()
-    set(NUNIT_TARGET "")
-endif()
-
 if("${CSHARP_PLATFORM}" STREQUAL "x86")
     set(NUNIT_COMMAND ${NUNIT32_COMMAND})
 else()
