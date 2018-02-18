@@ -69,8 +69,12 @@ void get_random_pokemon(
 
     error = pkmn_database_move_list(game, &move_list);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    if(!species)
+    {
+        error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
 
     // Don't deal with Deoxys issues here.
     const char* actual_species = NULL;
@@ -205,8 +209,12 @@ void get_random_pokemon(
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
 
-    error = pkmn_string_list_free(&pokemon_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    if(!species)
+    {
+        error = pkmn_string_list_free(&pokemon_list);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    }
+
     error = pkmn_string_list_free(&move_list);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 

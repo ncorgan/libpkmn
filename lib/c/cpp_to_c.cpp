@@ -16,7 +16,7 @@ namespace pkmn { namespace c {
     // LibPKMN wrapper class initialization.
 
     void init_item_bag(
-        pkmn::item_bag::sptr cpp_item_bag,
+        const pkmn::item_bag::sptr& cpp_item_bag,
         pkmn_item_bag_t* item_bag_ptr
     )
     {
@@ -40,7 +40,7 @@ namespace pkmn { namespace c {
     }
 
     void init_item_list(
-        pkmn::item_list::sptr cpp_item_list,
+        const pkmn::item_list::sptr& cpp_item_list,
         pkmn_item_list_t* item_list_ptr
     )
     {
@@ -65,7 +65,7 @@ namespace pkmn { namespace c {
     }
 
     void init_pokedex(
-        pkmn::pokedex::sptr cpp_pokedex,
+        const pkmn::pokedex::sptr& cpp_pokedex,
         pkmn_pokedex_t* pokedex_ptr
     )
     {
@@ -85,7 +85,7 @@ namespace pkmn { namespace c {
     }
 
     void init_pokemon(
-        pkmn::pokemon::sptr cpp_pokemon,
+        const pkmn::pokemon::sptr& cpp_pokemon,
         pkmn_pokemon_t* pokemon_ptr
     )
     {
@@ -112,7 +112,7 @@ namespace pkmn { namespace c {
     }
 
     void init_pokemon_box(
-        pkmn::pokemon_box::sptr cpp_pokemon_box,
+        const pkmn::pokemon_box::sptr& cpp_pokemon_box,
         pkmn_pokemon_box_t* pokemon_box_ptr
     )
     {
@@ -133,7 +133,7 @@ namespace pkmn { namespace c {
     }
 
     void init_pokemon_party(
-        pkmn::pokemon_party::sptr cpp_pokemon_party,
+        const pkmn::pokemon_party::sptr& cpp_pokemon_party,
         pkmn_pokemon_party_t* pokemon_party_ptr
     )
     {
@@ -154,7 +154,7 @@ namespace pkmn { namespace c {
     }
 
     void init_pokemon_pc(
-        pkmn::pokemon_pc::sptr cpp_pokemon_pc,
+        const pkmn::pokemon_pc::sptr& cpp_pokemon_pc,
         pkmn_pokemon_pc_t* pokemon_pc_ptr
     )
     {
@@ -175,7 +175,7 @@ namespace pkmn { namespace c {
     }
 
     void init_game_save(
-        pkmn::game_save::sptr cpp_game_save,
+        const pkmn::game_save::sptr& cpp_game_save,
         pkmn_game_save_t* game_save_ptr
     )
     {

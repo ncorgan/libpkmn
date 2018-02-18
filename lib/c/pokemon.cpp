@@ -72,29 +72,6 @@ static void copy_map_to_buffer(
     }
 }
 
-pkmn_error_t pkmn_pokemon_get_EVs(
-    pkmn_pokemon_t* pokemon_ptr,
-    int* EVs_buffer_out,
-    size_t stat_buffer_size,
-    size_t* actual_num_EVs_out
-)
-{
-    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
-    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
-
-    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        copy_map_to_buffer(
-            internal_ptr->cpp->get_EVs(),
-            pkmn::c::STAT_BIMAP,
-            EVs_buffer_out,
-            stat_buffer_size,
-            PKMN_NUM_STATS,
-            actual_num_EVs_out
-        );
-    )
-}
-
 pkmn_trainer_id_t pkmn_pokemon_default_trainer_id()
 {
     return {pkmn::pokemon::DEFAULT_TRAINER_ID};
@@ -1108,6 +1085,29 @@ pkmn_error_t pkmn_pokemon_set_move_pp(
 }
 
 // Stats
+
+pkmn_error_t pkmn_pokemon_get_EVs(
+    pkmn_pokemon_t* pokemon_ptr,
+    int* EVs_buffer_out,
+    size_t stat_buffer_size,
+    size_t* actual_num_EVs_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(EVs_buffer_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        copy_map_to_buffer(
+            internal_ptr->cpp->get_EVs(),
+            pkmn::c::STAT_BIMAP,
+            EVs_buffer_out,
+            stat_buffer_size,
+            PKMN_NUM_STATS,
+            actual_num_EVs_out
+        );
+    )
+}
 
 pkmn_error_t pkmn_pokemon_set_EV(
     pkmn_pokemon_t* pokemon_ptr,

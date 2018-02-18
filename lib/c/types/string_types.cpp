@@ -24,7 +24,7 @@ pkmn_error_t pkmn_string_list_free(
         {
             std::free(string_list_ptr->strings[string_index]);
         }
-        pkmn::c::free_pointer_and_set_to_null(&string_list_ptr->strings);
+        std::free(string_list_ptr->strings);
     }
 
     string_list_ptr->strings = nullptr;

@@ -346,7 +346,6 @@ static void game_save_test_common_fields(
     bool has_seen = false;
     bool has_caught = false;
 
-    // TODO: check if it's an egg before checking if it's in the Pokédex
     if(!is_game_gamecube)
     {
         error = pkmn_game_save_get_pokedex(
@@ -1014,9 +1013,9 @@ static void test_game_save(
     TEST_ASSERT_EQUAL(remove(tmp_save_filepath), 0);
 #endif
 
-    error = pkmn_game_save_free(&game_save);
+    error = pkmn_game_save_free(&game_save2);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(game_save._internal);
+    TEST_ASSERT_NULL(game_save2._internal);
 
     error = pkmn_game_save_free(&game_save);
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
