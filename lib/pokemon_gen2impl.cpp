@@ -500,6 +500,7 @@ namespace pkmn
             static const uint16_t shiny_iv_data = pksav_littleendian16(0xFAAA);
             GEN2_PC_RCAST->iv_data = shiny_iv_data;
             _init_gb_IV_map(&GEN2_PC_RCAST->iv_data);
+            _populate_party_data();
         }
         else
         {
