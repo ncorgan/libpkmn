@@ -19,7 +19,8 @@
 static char strbuffer[STRBUFFER_LEN];
 static pkmn_error_t error = PKMN_ERROR_NONE;
 
-static const char* contest_types[] = {
+static const char* contest_types[] =
+{
     "Cool", "Beauty", "Cute", "Smart", "Tough"
 };
 

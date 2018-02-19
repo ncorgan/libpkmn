@@ -32,7 +32,7 @@
 static const pkmn_trainer_info_t empty_trainer_info =
 {
     .name = NULL,
-    .id = {0},
+    .id = {0U},
     .gender = PKMN_GENDER_MALE
 };
 
@@ -131,7 +131,7 @@ static void check_initial_values(
     char strbuffer[STRBUFFER_LEN] = {0};
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_database_pokemon_entry_t pokemon_entry;
+    pkmn_database_pokemon_entry_t pokemon_entry = empty_pokemon_entry;
     error = pkmn_pokemon_get_database_entry(
                 pokemon_ptr,
                 &pokemon_entry
@@ -328,6 +328,9 @@ static void check_initial_values(
         );
     }
 
+    error = pkmn_move_slots_free(&move_slots);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
     error = pkmn_pokemon_get_icon_filepath(
                 pokemon_ptr,
                 strbuffer,
@@ -357,7 +360,7 @@ static void check_initial_values(
     error = pkmn_pokemon_get_stats(
                 pokemon_ptr,
                 stats,
-                sizeof(stats),
+                PKMN_NUM_STATS,
                 NULL
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
