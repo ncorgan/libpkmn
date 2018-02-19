@@ -28,6 +28,10 @@ SET(pkmn_qt_classes
     TypeListComboBox
 )
 FOREACH(class ${pkmn_qt_classes})
+    CONFIGURE_FILE(
+        ${CMAKE_CURRENT_SOURCE_DIR}/${class}.hpp
+        ${PKMN_BINARY_DIR}/include/pkmn/qt/${class}.hpp
+    COPYONLY)
     LIST(APPEND pkmn_qt_headers
         ${PKMN_BINARY_DIR}/include/pkmn/qt/${class}.hpp
     )
@@ -46,10 +50,6 @@ IF(PKMN_ENABLE_QT)
         CONFIGURE_FILE(
             ${CMAKE_CURRENT_SOURCE_DIR}/${class}.cpp
             ${CMAKE_CURRENT_BINARY_DIR}/../${class}.cpp
-        COPYONLY)
-        CONFIGURE_FILE(
-            ${CMAKE_CURRENT_SOURCE_DIR}/${class}.hpp
-            ${PKMN_BINARY_DIR}/include/pkmn/qt/${class}.hpp
         COPYONLY)
         LIST(APPEND pkmn_qt_sources
             ${CMAKE_CURRENT_BINARY_DIR}/../${class}.cpp

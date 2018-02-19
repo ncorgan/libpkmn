@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -15,11 +15,6 @@ IF(DESIRED_QT_VERSION MATCHES 5)
     FIND_PACKAGE(Qt5Test)
     IF(Qt5Widgets_FOUND AND Qt5Test_FOUND)
         SET(QT_FOUND TRUE)
-
-        IF(DEFINED PKMN_ENABLE_QT AND NOT PKMN_ENABLE_QT)
-            SET(PKMN_QT4 FALSE CACHE BOOL "Using Qt4")
-            SET(PKMN_QT5 TRUE CACHE BOOL "Using Qt5")
-        ENDIF(DEFINED PKMN_ENABLE_QT AND NOT PKMN_ENABLE_QT)
 
         SET(QTx_INCLUDE_DIRS
             ${Qt5Widgets_INCLUDE_DIRS}
@@ -37,11 +32,6 @@ ELSE()
     SET(QT_FOUND ${Qt4_FOUND})
     IF(QT_FOUND)
         INCLUDE(UseQt4)
-
-        IF(DEFINED PKMN_ENABLE_QT AND NOT PKMN_ENABLE_QT)
-            SET(PKMN_QT4 TRUE CACHE BOOL "Using Qt4")
-            SET(PKMN_QT5 FALSE CACHE BOOL "Using Qt5")
-        ENDIF(DEFINED PKMN_ENABLE_QT AND NOT PKMN_ENABLE_QT)
 
         SET(QTx_INCLUDE_DIRS
             ${QT_INCLUDE_DIR}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,7 +17,8 @@ namespace pkmn { namespace qt {
     ): QComboBox(parent)
     {
         std::vector<std::string> shadow_pokemon = pkmn::database::get_gamecube_shadow_pokemon_list(colosseum);
-        for(const std::string& gamecube_shadow_pokemon: shadow_pokemon) {
+        for(const std::string& gamecube_shadow_pokemon: shadow_pokemon)
+        {
             addItem(QString::fromStdString(gamecube_shadow_pokemon));
         }
 

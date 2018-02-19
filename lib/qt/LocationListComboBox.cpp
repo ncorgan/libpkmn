@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@
 namespace pkmn { namespace qt {
 
     LocationListComboBox::LocationListComboBox(
-        const QString &game,
+        const QString& game,
         bool wholeGeneration,
         QWidget* parent
     ): QComboBox(parent)
@@ -21,7 +21,8 @@ namespace pkmn { namespace qt {
                                                  game.toStdString(),
                                                  wholeGeneration
                                              );
-        for(const std::string& location: locations) {
+        for(const std::string& location: locations)
+        {
             addItem(QString::fromStdString(location));
         }
 
