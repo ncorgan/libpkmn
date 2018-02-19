@@ -11,5 +11,5 @@ Requires:
 Requires.private:
 Conflicts:
 Cflags: -I${includedir}
-Libs: -L${libdir} -lpkmn-c -lpkmn -lpksav
+Libs: -L${libdir} -lpkmn-c -lpkmn -lpksav -lPkmGC
 Libs.private:
