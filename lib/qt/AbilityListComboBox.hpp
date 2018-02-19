@@ -30,7 +30,7 @@ namespace pkmn { namespace qt {
              *
              * \param generation which generation
              * \param parent parent widget
-             * \throws pkmn::range_error if generation is not [3-6]
+             * \throws std::out_of_range if generation is not [3-6]
              */
             AbilityListComboBox(
                 int generation,

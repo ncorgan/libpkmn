@@ -33,7 +33,7 @@ namespace pkmn { namespace qt {
              * \param generation which generation
              * \param includePrevious include Pokémon from previous generations.
              * \param parent parent widget
-             * \throws pkmn::range_error if generation is not [1-6]
+             * \throws std::out_of_range if generation is not [1-6]
              */
             PokemonListComboBox(
                 int generation,
