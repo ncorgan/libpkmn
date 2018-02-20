@@ -44,24 +44,40 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 sudo ldconfig
 [ $? -ne 0 ] && exit 1
 
-# Test external C++ project
+# Test external C++ CMake project that uses FindPKMN.cmake
 mkdir $REPO_TOPLEVEL/test-env/cpp-app
 [ $? -ne 0 ] && exit 1
 cd $REPO_TOPLEVEL/test-env/cpp-app
 [ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/cpp
+cmake $REPO_TOPLEVEL/testing/applications/cpp/cmake
 [ $? -ne 0 ] && exit 1
 make
 [ $? -ne 0 ] && exit 1
 ./pkmn-cpp-app
 [ $? -ne 0 ] && exit 1
 
-# Test external C project
+# Test external C++ project that uses raw Makefiles
+cd $REPO_TOPLEVEL/testing/application/cpp/makefiles
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-cpp-app
+[ $? -ne 0 ] && exit 1
+
+# Test external C CMake project that uses FindPKMN-C.cmake
 mkdir $REPO_TOPLEVEL/test-env/c-app
 [ $? -ne 0 ] && exit 1
 cd $REPO_TOPLEVEL/test-env/c-app
 [ $? -ne 0 ] && exit 1
-cmake $REPO_TOPLEVEL/testing/applications/c
+cmake $REPO_TOPLEVEL/testing/applications/c/cmake
+[ $? -ne 0 ] && exit 1
+make
+[ $? -ne 0 ] && exit 1
+./pkmn-c-app
+[ $? -ne 0 ] && exit 1
+
+# Test external C project that uses raw Makefiles
+cd $REPO_TOPLEVEL/testing/application/c/makefiles
 [ $? -ne 0 ] && exit 1
 make
 [ $? -ne 0 ] && exit 1
