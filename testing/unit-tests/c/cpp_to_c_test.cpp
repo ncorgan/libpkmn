@@ -15,7 +15,7 @@ extern "C" {
     const char* pkmn_strerror();
 }
 
-#include <pkmn-c.h>
+#include <pkmn-c/types.h>
 
 #include <pksav.h>
 

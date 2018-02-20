@@ -19,7 +19,9 @@ CONFIGURE_FILE(
 IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_c_headers
         build_info.h
+        calculations.h
         config.h
+        database.h
         error.h
         game_save.h
         item_bag.h
@@ -29,6 +31,7 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
         pokemon_box.h
         pokemon_party.h
         pokemon_pc.h
+        types.h
         ${CMAKE_CURRENT_BINARY_DIR}/version.h
     )
 
