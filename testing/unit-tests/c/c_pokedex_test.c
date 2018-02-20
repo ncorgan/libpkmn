@@ -8,7 +8,7 @@
 #include "c_test_common.h"
 #include "pkmntest-c/util.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #include <stdlib.h>
 #include <time.h>

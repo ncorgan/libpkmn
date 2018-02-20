@@ -9,7 +9,7 @@
 
 #include "pokemon_test.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #include <stdlib.h>
 #include <time.h>

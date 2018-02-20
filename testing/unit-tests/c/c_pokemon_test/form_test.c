@@ -9,7 +9,7 @@
 
 #include <pkmntest-c/util.h>
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #include <string.h>
 

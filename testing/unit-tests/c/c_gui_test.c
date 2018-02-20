@@ -7,7 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>

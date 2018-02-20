@@ -7,7 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 static void ability_list_test()
 {

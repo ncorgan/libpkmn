@@ -9,7 +9,7 @@
 
 #include <pkmntest-c/util.h>
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};

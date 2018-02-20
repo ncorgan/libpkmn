@@ -9,7 +9,7 @@
 
 #include "c_items_test.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #define GEN1_UNITY_TESTS(game) \
 { \

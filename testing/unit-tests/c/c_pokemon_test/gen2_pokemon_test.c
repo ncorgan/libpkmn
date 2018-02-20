@@ -9,7 +9,7 @@
 
 #include "pokemon_test.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 static void gen2_pokemon_test(
     const char* species,

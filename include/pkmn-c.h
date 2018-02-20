@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_H
-#define PKMN_H
+#ifndef PKMN_C_H
+#define PKMN_C_H
 
 #include <pkmn-c/build_info.h>
 #include <pkmn-c/config.h>
@@ -62,4 +62,4 @@
 
 #include <pkmn-c/utils/paths.h>
 
-#endif /* PKMN_H */
+#endif /* PKMN_C_H */

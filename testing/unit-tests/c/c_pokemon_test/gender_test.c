@@ -7,7 +7,7 @@
 
 #include <unity.h>
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 static const pkmn_pokemon_t empty_pokemon =
 {
