@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -67,5 +67,17 @@ make
 [ $? -ne 0 ] && exit 1
 ./pkmn-c-app
 [ $? -ne 0 ] && exit 1
+
+# Test external Lua application
+cd $REPO_TOPLEVEL/testing/applications/lua
+lua pkmn-lua-app.lua
+
+# Test external Python application
+cd $REPO_TOPLEVEL/testing/applications/python
+python${PYTHON_VERSION} pkmn-python-app.py
+
+# Test external Ruby application
+cd $REPO_TOPLEVEL/testing/applications/ruby
+ruby pkmn-ruby-app.rb
 
 echo # So we can check the last error code
