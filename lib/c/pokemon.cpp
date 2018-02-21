@@ -38,7 +38,7 @@ static void copy_map_to_buffer(
     std::memset(
         values_buffer_out,
         0,
-        value_buffer_size * sizeof(int)
+        value_buffer_size * sizeof(buffer_type)
     );
 
     size_t internal_num_values = std::min<size_t>(value_buffer_size, actual_num_values);

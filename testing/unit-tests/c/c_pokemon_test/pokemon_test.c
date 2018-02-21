@@ -137,6 +137,14 @@ static void check_initial_values(
                 &pokemon_entry
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon_ptr->species,
+        pokemon_entry.name
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        pokemon_ptr->game,
+        pokemon_entry.game
+    );
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -316,7 +324,7 @@ static void check_initial_values(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
 
-    for(size_t move_index = 0; move_index < move_slots.length; ++ move_index)
+    for(size_t move_index = 0; move_index < move_slots.length; ++move_index)
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
