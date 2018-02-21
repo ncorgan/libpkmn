@@ -185,7 +185,6 @@ namespace pkmn { namespace c {
     inline void delete_pointer_and_set_to_null(pointer_type** pointer_ptr)
     {
         BOOST_ASSERT(pointer_ptr);
-        BOOST_ASSERT(*pointer_ptr);
 
         delete (*pointer_ptr);
         *pointer_ptr = nullptr;
@@ -195,7 +194,6 @@ namespace pkmn { namespace c {
     inline void free_pointer_and_set_to_null(pointer_type** pointer_ptr)
     {
         BOOST_ASSERT(pointer_ptr);
-        BOOST_ASSERT(*pointer_ptr);
 
         std::free(*pointer_ptr);
         *pointer_ptr = nullptr;
