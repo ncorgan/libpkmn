@@ -38,8 +38,7 @@ pkmn_error_t pkmn_item_bag_free(
 {
     PKMN_CHECK_NULL_PARAM(item_bag_ptr);
 
-    item_bag_ptr->game = nullptr;
-
+    pkmn::c::free_pointer_and_set_to_null(&item_bag_ptr->game);
     pkmn_string_list_free(&item_bag_ptr->pocket_names);
 
     PKMN_CPP_TO_C(
