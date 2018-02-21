@@ -23,7 +23,7 @@
     PKMN_C_TEST(test_gen2_item_pocket_ ## game ) \
     PKMN_C_TEST(test_gen2_key_item_pocket_ ## game ) \
     PKMN_C_TEST(test_gen2_ball_pocket_ ## game ) \
-    PKMN_C_TEST(test_gen_tmhm_pocket_ ## game ) \
+    PKMN_C_TEST(test_gen2_tmhm_pocket_ ## game ) \
     PKMN_C_TEST(test_gen2_item_pc_ ## game ) \
     PKMN_C_TEST(test_gen2_item_bag_ ## game ) \
 }
