@@ -73,6 +73,8 @@ namespace pkmn
 
             std::memset(_native_has_seen, 0, num_bytes);
             std::memset(_native_has_caught, 0, num_bytes);
+
+            _our_mem = true;
         }
     }
 

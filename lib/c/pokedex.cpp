@@ -39,7 +39,7 @@ pkmn_error_t pkmn_pokedex_free(
 {
     PKMN_CHECK_NULL_PARAM(pokedex_ptr);
 
-    pokedex_ptr->game = nullptr;
+    pkmn::c::free_pointer_and_set_to_null(&pokedex_ptr->game);
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
