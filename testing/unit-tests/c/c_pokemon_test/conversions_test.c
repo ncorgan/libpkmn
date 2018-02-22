@@ -191,6 +191,12 @@ static void conversions_test(
             );
         }
     }
+
+    error = pkmn_pokemon_free(&second_pokemon);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_pokemon_free(&first_pokemon);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }
 
 void gen1_conversions_test()

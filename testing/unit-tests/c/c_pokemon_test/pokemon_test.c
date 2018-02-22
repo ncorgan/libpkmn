@@ -532,6 +532,9 @@ static void check_initial_maps(
             TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
             TEST_ASSERT_FALSE(has_ribbon);
         }
+
+        error = pkmn_string_list_free(&ribbon_names);
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     }
     else
     {
