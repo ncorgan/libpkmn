@@ -789,6 +789,11 @@ static void compare_game_saves(
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     compare_item_bags(&item_bag1, &item_bag2);
 
+    error = pkmn_item_bag_free(&item_bag2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    error = pkmn_item_bag_free(&item_bag1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
     // Compare item PCs (if applicable).
     if((generation <= 3) || !is_game_gamecube)
     {
