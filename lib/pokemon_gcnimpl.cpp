@@ -42,9 +42,6 @@
 
 namespace pkmn
 {
-
-    static pkmn::database::sptr _db;
-
     BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
     typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
@@ -92,9 +89,6 @@ namespace pkmn
         int level
     ): pokemon_impl(std::move(database_entry))
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         if(_database_entry.get_game_id() == COLOSSEUM_ID)
         {
             _native_pc = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon);
@@ -184,9 +178,6 @@ namespace pkmn
            game_id
        )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         _native_pc = reinterpret_cast<void*>(native);
         _our_pc_mem = false;
 
@@ -214,9 +205,6 @@ namespace pkmn
            COLOSSEUM_ID
        )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         _native_pc = reinterpret_cast<void*>(new LibPkmGC::Colosseum::Pokemon(native));
         _our_pc_mem = true;
 
@@ -244,9 +232,6 @@ namespace pkmn
            XD_ID
        )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         _native_pc = reinterpret_cast<void*>(new LibPkmGC::XD::Pokemon(native));
         _our_pc_mem = true;
 
@@ -384,7 +369,7 @@ namespace pkmn
 
             GC_RCAST->shadowPkmID = LibPkmGC::u16(
                                         pkmn::database::query_db_bind2<int, int, int>(
-                                            _db, shadow_query,
+                                            shadow_query,
                                             _database_entry.get_species_id(),
                                             ((_database_entry.get_game_id() == COLOSSEUM_ID) ? 1 : 0)
                                         )

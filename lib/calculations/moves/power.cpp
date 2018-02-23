@@ -13,8 +13,6 @@
 
 namespace pkmn { namespace calculations {
 
-    static pkmn::database::sptr _db;
-
     int brine_power(
         int target_current_hp,
         int target_max_hp
@@ -218,8 +216,6 @@ namespace pkmn { namespace calculations {
         const std::string& item
     )
     {
-        pkmn::database::get_connection(_db);
-
         static const char* query = "SELECT fling_power FROM items WHERE id="
                                    "(SELECT item_id FROM item_names WHERE name=?)";
 
@@ -227,7 +223,7 @@ namespace pkmn { namespace calculations {
         error_message += item;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, item, error_message
+                   query, item, error_message
                );
     }
 

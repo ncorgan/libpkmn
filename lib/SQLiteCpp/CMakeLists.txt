@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2016,2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -27,7 +27,7 @@ ADD_LIBRARY(SQLiteCpp STATIC ${SQLiteCpp_sources})
 TARGET_LINK_LIBRARIES(SQLiteCpp ${SQLITE3_LIBRARY_RELEASE})
 IF(UNIX)
     SET_TARGET_PROPERTIES(SQLiteCpp PROPERTIES
-        COMPILE_FLAGS "-DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_COLUMN_METADATA -fPIC ${PKMN_SQLITE_DEBUG_FLAG}"
+        COMPILE_FLAGS "-DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_COLUMN_METADATA -fPIC -std=c++11 ${PKMN_SQLITE_DEBUG_FLAG}"
     )
 ELSE()
     SET_TARGET_PROPERTIES(SQLiteCpp PROPERTIES
