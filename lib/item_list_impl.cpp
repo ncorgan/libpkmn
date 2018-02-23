@@ -26,15 +26,10 @@
 
 namespace pkmn {
 
-    static pkmn::database::sptr _db;
-
     item_list::sptr item_list::make(
         const std::string &name,
         const std::string &game
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
         int item_list_id = 0;
@@ -45,7 +40,10 @@ namespace pkmn {
             "version_group_id=(SELECT version_group_id FROM versions "
             "WHERE id=?)";
 
-        SQLite::Statement stmt((*_db), id_capacity_query);
+        SQLite::Statement stmt(
+            pkmn::database::get_connection(),
+            id_capacity_query
+        );
         stmt.bind(1, name);
         stmt.bind(2, game_id);
         if(stmt.executeStep()) {
@@ -170,15 +168,12 @@ namespace pkmn {
        _our_mem(false),
        _native(nullptr)
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         static BOOST_CONSTEXPR const char* capacity_query = \
             "SELECT capacity FROM libpkmn_item_lists WHERE id=? AND "
             "version_group_id=?";
 
         _capacity = pkmn::database::query_db_bind2<int, int, int>(
-                        _db, capacity_query, _item_list_id,
+                        capacity_query, _item_list_id,
                         _version_group_id
                     );
 
@@ -195,7 +190,7 @@ namespace pkmn {
             "version_group_id=?";
 
         return pkmn::database::query_db_bind2<std::string, int, int>(
-                   _db, query, _item_list_id, _version_group_id
+                   query, _item_list_id, _version_group_id
                );
     }
 
@@ -451,7 +446,7 @@ namespace pkmn {
                     "AND item_names.name LIKE '%Berry'";
 
                 pkmn::database::query_db_list_bind1<std::string, int>(
-                    _db, berry_list_query, _valid_items,
+                    berry_list_query, _valid_items,
                     pkmn::database::game_id_to_generation(_game_id)
                 );
             } else {

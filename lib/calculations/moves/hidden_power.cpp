@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -19,9 +19,7 @@
 
 namespace pkmn { namespace calculations {
 
-    static pkmn::database::sptr _db;
-
-    static BOOST_CONSTEXPR const char* stat_name_query = \
+    static BOOST_CONSTEXPR const char* stat_name_query =
         "SELECT name FROM type_names WHERE local_language_id=9 AND type_id=?";
 
     // Most significant bit
@@ -50,9 +48,6 @@ namespace pkmn { namespace calculations {
         int IV_speed,
         int IV_special
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         // Input validation
         pkmn::enforce_IV_bounds("Attack",  IV_attack,  false);
         pkmn::enforce_IV_bounds("Defense", IV_defense, false);
@@ -67,7 +62,7 @@ namespace pkmn { namespace calculations {
 
         return hidden_power(
                    pkmn::database::query_db_bind1<std::string, int>(
-                       _db, stat_name_query,
+                       stat_name_query,
                        gen2_hidden_power_type(IV_attack, IV_defense)
                    ),
                    gen2_hidden_power_base_power(v, w, x, y, Z)
@@ -101,9 +96,6 @@ namespace pkmn { namespace calculations {
         int IV_spatk,
         int IV_spdef
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         // Input validation
         pkmn::enforce_IV_bounds("HP",              IV_HP,      true);
         pkmn::enforce_IV_bounds("Attack",          IV_attack,  true);
@@ -128,7 +120,7 @@ namespace pkmn { namespace calculations {
 
         return hidden_power(
                    pkmn::database::query_db_bind1<std::string, int>(
-                       _db, stat_name_query,
+                       stat_name_query,
                        modern_hidden_power_type(a, b, c, d, e, f)
                    ),
                    modern_hidden_power_base_power(u, v, w, x, y, z)

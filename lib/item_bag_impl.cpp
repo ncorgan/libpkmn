@@ -23,9 +23,6 @@
 #include <stdexcept>
 
 namespace pkmn {
-
-    static pkmn::database::sptr _db;
-
     item_bag::sptr item_bag::make(
         const std::string &game
     ) {
@@ -75,9 +72,6 @@ namespace pkmn {
        _our_mem(false),
        _native(nullptr)
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         // Populate pocket name vector
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
         static BOOST_CONSTEXPR const char* query = \
@@ -85,7 +79,7 @@ namespace pkmn {
             "AND name != 'PC'";
 
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db, query, _item_pocket_names, version_group_id
+            query, _item_pocket_names, version_group_id
         );
     }
 
@@ -139,14 +133,14 @@ namespace pkmn {
     {
         std::string ret;
         if(not pkmn::database::maybe_query_db_bind2<std::string, int, const std::string&>(
-                   _db, list_name_query_with_old_item_name, ret, version_group_id, item_name
+                   list_name_query_with_old_item_name, ret, version_group_id, item_name
            ))
         {
             std::string error_message = "Invalid item: ";
             error_message += item_name;
 
             ret = pkmn::database::query_db_bind2<std::string, int, const std::string&>(
-                       _db, list_name_query, version_group_id, item_name,
+                       list_name_query, version_group_id, item_name,
                        error_message
                   );
         }
