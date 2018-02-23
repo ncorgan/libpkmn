@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 local pkmn = require("pkmn")
 local luaunit = require("luaunit")
 
-local LIBPKMN_TEST_FILES = "@LIBPKMN_TEST_FILES@"
+local LIBPKMN_TEST_FILES = pkmn.paths.getenv("LIBPKMN_TEST_FILES")
 
 local utils = {}
 

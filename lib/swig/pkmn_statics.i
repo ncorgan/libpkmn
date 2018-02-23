@@ -1,92 +1,9 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-
-/*
- * This file contains re-declarations of pkmn's static functions, such as sptrs'
- * make function. This prevents make from becoming a non-static member of the
- * sptr class.
- */
-
-#ifdef SWIGCSHARP
-
-%{
-    #include <pkmn/pokemon.hpp>
-    #include <cstdint>
-
-    inline uint32_t get_default_trainer_id()
-    {
-        return pkmn::pokemon::DEFAULT_TRAINER_ID;
-    }
-
-    inline std::string get_default_trainer_name()
-    {
-        return pkmn::pokemon::DEFAULT_TRAINER_NAME;
-    }
-%}
-
-uint32_t get_default_trainer_id();
-std::string get_default_trainer_name();
-
-#else
-
-%{
-    #include <pkmn/config.hpp>
-
-    #include <pkmn/game_save.hpp>
-    #include <pkmn/item_list.hpp>
-    #include <pkmn/item_bag.hpp>
-    #include <pkmn/pokedex.hpp>
-    #include <pkmn/pokemon.hpp>
-    #include <pkmn/pokemon_box.hpp>
-    #include <pkmn/pokemon_party.hpp>
-    #include <pkmn/pokemon_pc.hpp>
-
-    #include <pkmn/types/shared_ptr.hpp>
-
-    inline uint32_t get_default_trainer_id()
-    {
-        return pkmn::pokemon::DEFAULT_TRAINER_ID;
-    }
-
-    inline std::string get_default_trainer_name()
-    {
-        return pkmn::pokemon::DEFAULT_TRAINER_NAME;
-    }
-
-    inline std::shared_ptr<pkmn::item_bag> make_item_bag(
-        const std::string &game
-    ) {
-        return pkmn::item_bag::make(game);
-    }
-
-    inline std::shared_ptr<pkmn::pokedex> make_pokedex(
-        const std::string &game
-    ) {
-        return pkmn::pokedex::make(game);
-    }
-
-    inline std::shared_ptr<pkmn::pokemon_box> make_pokemon_box(
-        const std::string &game
-    ) {
-        return pkmn::pokemon_box::make(game);
-    }
-
-    inline std::shared_ptr<pkmn::pokemon_party> make_pokemon_party(
-        const std::string &game
-    ) {
-        return pkmn::pokemon_party::make(game);
-    }
-
-    inline std::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(
-        const std::string &game
-    ) {
-        return pkmn::pokemon_pc::make(game);
-    }
-%}
 
 %include <std_string.i>
 
@@ -203,15 +120,4 @@ std::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& species, const st
                                              const std::string& form, int level);
 std::shared_ptr<pkmn::pokemon> make_pokemon(const std::string& filepath);
 
-#endif
-
-uint32_t get_default_trainer_id();
-std::string get_default_trainer_name();
-
-std::shared_ptr<pkmn::item_bag> make_item_bag(const std::string& game);
-std::shared_ptr<pkmn::pokedex> make_pokedex(const std::string& game);
-std::shared_ptr<pkmn::pokemon_box> make_pokemon_box(const std::string& game);
-std::shared_ptr<pkmn::pokemon_party> make_pokemon_party(const std::string& game);
-std::shared_ptr<pkmn::pokemon_pc> make_pokemon_pc(const std::string& game);
-
-#endif // SWIGCSHARP
+#endif // SWIGPYTHON && SWIG_VERSION < 0x030008

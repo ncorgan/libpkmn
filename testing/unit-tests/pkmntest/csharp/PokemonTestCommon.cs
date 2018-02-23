@@ -536,6 +536,7 @@ public class PokemonTestCommon
         else
         {
             // Default value since a getter shouldn't throw an exception.
+            Assert.AreEqual(pokemon.HeldItem, "");
             Assert.AreEqual(pokemon.OriginalTrainerGender, "");
         }
 
@@ -674,7 +675,7 @@ public class PokemonTestCommon
         foreach(string key in pokemon.IVs.Keys)
         {
             Assert.IsTrue(pokemon.IVs[key] >= 0);
-            Assert.IsTrue(pokemon.IVs[key] <= ((generation >= 3) ? 31 : 16));
+            Assert.IsTrue(pokemon.IVs[key] <= ((generation >= 3) ? 31 : 15));
         }
 
         // Stats
