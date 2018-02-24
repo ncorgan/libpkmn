@@ -43,6 +43,7 @@
 
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper();
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&);
+%ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&, bool);
 %ignore pkmn::swig::pokedex_has_caught_helper::get_has_caught(const std::string&);
 %ignore pkmn::swig::pokedex_has_caught_helper::set_has_caught(const std::string&, bool);
 

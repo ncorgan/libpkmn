@@ -90,6 +90,7 @@ using System.Runtime.InteropServices;"
 
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper();
 %ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&);
+%ignore pkmn::swig::pokedex_has_caught_helper::pokedex_has_caught_helper(const pkmn::pokedex::sptr&, bool);
 
 // Needed for equality check.
 %csmethodmodifiers pkmn::swig::pokedex_has_caught_helper::cptr() "private";
