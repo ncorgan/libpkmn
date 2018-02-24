@@ -16,6 +16,8 @@ PKMN_CSHARP_INIT
 %{
     #include <pkmn/build_info.hpp>
 
+    #include "private_exports.hpp"
+
     inline std::string GetSWIGVersion()
     {
         return std::string("@SWIG_VERSION@");
@@ -35,6 +37,14 @@ PKMN_CSHARP_INIT
 %include <pkmn/build_info.hpp>
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
+
+// Will be called on import
+
+%rename(InitializeDatabaseConnection) initialize_database_connection;
+%csmethodmodifiers initialize_database_connection "internal";
+namespace pkmn { namespace priv {
+    void initialize_database_connection();
+}}
 
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>

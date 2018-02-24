@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -15,24 +15,28 @@ import datetime
 from optparse import OptionParser
 import os
 
-GUI_FILES = ["GUI.cs"]
+PARTIAL_CLASS_FILES = ["GUI.cs", "PKMN.cs"]
 
-def make_gui_a_partial_class(filename):
+def make_a_partial_class(filename):
     f = open(filename, "r")
     flines = f.readlines()
     f.close()
 
     # Already done
-    if "make_gui_a_partial_class" in flines[0]:
+    if "make_a_partial_class" in flines[0]:
         return
 
     # Find and fix the appropriate line
     for i in range(len(flines)):
-        if "class GUI" in flines[i]:
-            flines[i] = flines[i].replace("class GUI", "partial class GUI")
+        for class_name in ["GUI", "PKMN"]:
+            if "class {0}".format(class_name) in flines[i]:
+                flines[i] = flines[i].replace(
+                                "class {0}".format(class_name),
+                                "partial class {0}".format(class_name)
+                            )
 
     f = open(filename, "w")
-    f.write("// make_gui_a_partial_class\n")
+    f.write("// make_a_partial_class\n")
     for line in flines:
         f.write(line)
     f.close()
@@ -80,5 +84,5 @@ if __name__ == "__main__":
             if filename.endswith(".cs"):
                 if "_base" in filename:
                     remove_class_with_attributes_inheritance(filename)
-                if filename in GUI_FILES:
-                    make_gui_a_partial_class(filename)
+                if filename in PARTIAL_CLASS_FILES:
+                    make_a_partial_class(filename)

@@ -8,8 +8,10 @@
 SET(csharp_files
     AssemblyInfo.cs
     BuildInfo.cs
+    DatabaseInitializer.cs
     Equality.cs
     HashCodeBuilder.cs
+    ManualPKMN.cs
     ManualGUI.cs
     SpindaOperators.cs
 )
