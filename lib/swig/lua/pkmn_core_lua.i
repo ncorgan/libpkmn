@@ -8,6 +8,16 @@
 %include <lua/lua_init.i>
 PKMN_LUA_INIT
 
+// Will be called on import
+
+%{
+    #include "private_exports.hpp"
+%}
+
+namespace pkmn { namespace priv {
+    void initialize_database_connection();
+}}
+
 %import <pkmn_database_lua.i>
 %import <pkmn_stl_lua.i>
 
