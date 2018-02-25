@@ -219,7 +219,6 @@ internal class Util
             Assert.AreEqual(pokemon1.Ability, pokemon2.Ability);
             Assert.AreEqual(pokemon1.Ball, pokemon2.Ball);
             Assert.AreEqual(pokemon1.Personality, pokemon2.Personality);
-            Assert.AreEqual(pokemon1.Gender, pokemon2.Gender);
 
             Assert.AreEqual(pokemon1.Markings.Keys, pokemon2.Markings.Keys);
             foreach(string marking in pokemon1.Markings.Keys)

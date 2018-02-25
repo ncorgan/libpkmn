@@ -7,6 +7,8 @@
 
 local pkmn = require("pkmn")
 local luaunit = require("luaunit")
+
+local pkmntest_utils = require("pkmntest_utils")
 local pokemon_tests = require("pokemon_tests")
 
 local gen3_pokemon_tests = {}
@@ -95,8 +97,8 @@ function gen3_pokemon_tests.unown_test(game)
         local form_from_personality = pkmn.calculations.gen3_unown_form(unown.personality)
         luaunit.assertEquals(form_from_personality, unown.form)
 
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
     unown = pkmn.pokemon("Unown", game, "A", 5)
@@ -111,8 +113,8 @@ function gen3_pokemon_tests.unown_test(game)
         local form_from_personality = pkmn.calculations.gen3_unown_form(unown.personality)
         luaunit.assertEquals(form_from_personality, unown.form)
 
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
     -- Make sure setting the personality properly sets the form.

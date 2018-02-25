@@ -7,6 +7,8 @@
 
 local pkmn = require("pkmn")
 local luaunit = require("luaunit")
+
+local pkmntest_utils = require("pkmntest_utils")
 local pokemon_tests = require("pokemon_tests")
 
 local gen2_pokemon_tests = {}
@@ -31,8 +33,8 @@ function gen2_pokemon_tests.unown_test(game)
                               )
         luaunit.assertEquals(form_from_IVs, unown.form)
 
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
     unown = pkmn.pokemon("Unown", game, "A", 5)
@@ -51,8 +53,8 @@ function gen2_pokemon_tests.unown_test(game)
                               )
         luaunit.assertEquals(form_from_IVs, unown.form)
 
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-        luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
     end
 
     -- Make sure setting IVs properly sets the form.

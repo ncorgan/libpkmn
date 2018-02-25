@@ -7,6 +7,7 @@
 
 local bit32 = require("bit32")
 local pkmn = require("pkmn")
+local pkmntest_utils = require("pkmntest_utils")
 local luaunit = require("luaunit")
 
 local pokemon_tests = {}
@@ -55,12 +56,6 @@ pokemon_tests.GEN3_POKEMON_WITH_ORAS_MEGA_FORMS =
     "Sceptile", "Swampert", "Sableye", "Sharpedo", "Camerupt",
     "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
 }
-
--- http://stackoverflow.com/a/4991602
-function pokemon_tests.file_exists(name)
-    local f=io.open(name,"r")
-    if f~=nil then io.close(f) return true else return false end
-end
 
 -- Stupid hacky functions because Luaunit can't check setters.
 
@@ -162,19 +157,6 @@ end
 
 function pokemon_tests.pokemon_set_pokerus_duration(pokemon, pokerus_duration)
     pokemon.pokerus_duration = pokerus_duration
-end
-
--- Helper functions to make sure SWIG+Lua properly enforces bounds
--- for parameters only constrained by the size of a type.
-
-function pokemon_tests.enforce_uint16_param(var, func)
-    luaunit.assertError(func, var, -1)
-    luaunit.assertError(func, var, 0xFFFF+1)
-end
-
-function pokemon_tests.enforce_uint32_param(var, func)
-    luaunit.assertError(func, var, -1)
-    luaunit.assertError(func, var, 0xFFFFFFFF+1)
 end
 
 -- Actual tests
@@ -324,8 +306,8 @@ function pokemon_tests.gen2_forms_test(game)
         local unown = pkmn.pokemon("Unown", game, letters:sub(letter_index,letter_index), 10)
         if game ~= "Colosseum" and game ~= "XD"
         then
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
         end
     end
 
@@ -334,15 +316,15 @@ function pokemon_tests.gen2_forms_test(game)
         local unown = pkmn.pokemon("Unown", game, "!", 10)
         if game ~= "Colosseum" and game ~= "XD"
         then
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
         end
 
         unown = pkmn.pokemon("Unown", game, "?", 10)
         if game ~= "Colosseum" and game ~= "XD"
         then
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(unown.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(unown.sprite_filepath))
         end
     else
         luaunit.assertError(pkmn.pokemon, "Unown", game, "!", 10)
@@ -404,8 +386,8 @@ function pokemon_tests.gen3_forms_test(game)
         local castform = pkmn.pokemon("Castform", game, castform_forms[form_index], 30)
         if game ~= "Colosseum" and game ~= "XD"
         then
-            luaunit.assertTrue(pokemon_tests.file_exists(castform.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(castform.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(castform.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(castform.sprite_filepath))
         end
     end
 
@@ -416,8 +398,8 @@ function pokemon_tests.gen3_forms_test(game)
         local pokemon = pkmn.pokemon(species[species_index], game, "", 70)
         if game ~= "Colosseum" and game ~= "XD"
         then
-            luaunit.assertTrue(pokemon_tests.file_exists(pokemon.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(pokemon.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.sprite_filepath))
         end
 
         if game == "Omega Ruby" or game == "Alpha Sapphire"
@@ -436,8 +418,8 @@ function pokemon_tests.gen3_forms_test(game)
             local deoxys = pkmn.pokemon("Deoxys", game, "Normal", 70)
             if game ~= "Colosseum" and game ~= "XD"
             then
-                luaunit.assertTrue(pokemon_tests.file_exists(deoxys.icon_filepath))
-                luaunit.assertTrue(pokemon_tests.file_exists(deoxys.sprite_filepath))
+                luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
+                luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
             end
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Normal", 70)
@@ -446,8 +428,8 @@ function pokemon_tests.gen3_forms_test(game)
         if game == "FireRed"
         then
             local deoxys = pkmn.pokemon("Deoxys", game, "Attack", 70)
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Attack", 70)
         end
@@ -455,8 +437,8 @@ function pokemon_tests.gen3_forms_test(game)
         if game == "LeafGreen"
         then
             local deoxys = pkmn.pokemon("Deoxys", game, "Defense", 70)
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Defense", 70)
         end
@@ -464,8 +446,8 @@ function pokemon_tests.gen3_forms_test(game)
         if game == "Emerald"
         then
             local deoxys = pkmn.pokemon("Deoxys", game, "Speed", 70)
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         else
             luaunit.assertError(pkmn.pokemon, "Deoxys", game, "Speed", 70)
         end
@@ -474,8 +456,8 @@ function pokemon_tests.gen3_forms_test(game)
         for form_index = 1, #deoxys_forms
         do
             local deoxys = pkmn.pokemon("Deoxys", game, deoxys_forms[form_index], 70)
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.icon_filepath))
-            luaunit.assertTrue(pokemon_tests.file_exists(deoxys.sprite_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.icon_filepath))
+            luaunit.assertTrue(pkmntest_utils.file_exists(deoxys.sprite_filepath))
         end
     end
 end
@@ -566,8 +548,8 @@ function pokemon_tests.check_initial_values(pokemon)
         luaunit.assertEquals(pokemon.moves[move_index].pp, 0)
     end
 
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon.icon_filepath))
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon.sprite_filepath))
+    luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.icon_filepath))
+    luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.sprite_filepath))
 
     luaunit.assertEquals(pokemon.current_hp, pokemon.stats["HP"])
 
@@ -775,7 +757,7 @@ end
 function pokemon_tests.test_image_filepaths(pokemon)
     local generation = pokemon_tests.GAME_TO_GENERATION[pokemon.game]
 
-    luaunit.assertTrue(pokemon_tests.file_exists(pokemon.icon_filepath))
+    luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.icon_filepath))
 
     if generation >= 2
     then
@@ -788,11 +770,11 @@ function pokemon_tests.test_image_filepaths(pokemon)
             do
                 pokemon.gender = genders[gender_index]
                 pokemon.is_shiny = is_shiny_bools[is_shiny_index]
-                luaunit.assertTrue(pokemon_tests.file_exists(pokemon.sprite_filepath))
+                luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.sprite_filepath))
             end
         end
     else
-        luaunit.assertTrue(pokemon_tests.file_exists(pokemon.sprite_filepath))
+        luaunit.assertTrue(pkmntest_utils.file_exists(pokemon.sprite_filepath))
     end
 end
 
@@ -1227,7 +1209,7 @@ function pokemon_tests.test_setting_personality(pokemon)
         luaunit.assertEquals(pokemon.personality, test_personality)
 
         -- Make sure SWIG+Lua properly enforces the uint32_t bounds.
-        pokemon_tests.enforce_uint32_param(
+        pkmntest_utils.enforce_uint32_param(
             pokemon_tests.pokemon_set_personality,
             pokemon
         )
@@ -1411,15 +1393,15 @@ function pokemon_tests.test_setting_trainer_info(pokemon)
 
     -- Make sure SWIG+Lua properly enforces that numeric values fit
     -- inside the range of the corresponding C++ types.
-    pokemon_tests.enforce_uint16_param(
+    pkmntest_utils.enforce_uint16_param(
         pokemon_tests.pokemon_set_original_trainer_public_id,
         pokemon
     )
-    pokemon_tests.enforce_uint16_param(
+    pkmntest_utils.enforce_uint16_param(
         pokemon_tests.pokemon_set_original_trainer_secret_id,
         pokemon
     )
-    pokemon_tests.enforce_uint32_param(
+    pkmntest_utils.enforce_uint32_param(
         pokemon_tests.pokemon_set_original_trainer_id,
         pokemon
     )
