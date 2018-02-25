@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,6 +26,7 @@
 %attributestring(pkmn::swig::game_save, std::string, trainer_gender, get_trainer_gender, set_trainer_gender);
 %attributestring(pkmn::swig::game_save, std::string, rival_name, get_rival_name, set_rival_name);
 %attribute(pkmn::swig::game_save, int, money, get_money, set_money);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, pokedex, get_pokedex);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_party, pokemon_party, get_pokemon_party);
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, pokemon_pc, get_pokemon_pc);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, item_bag, get_item_bag);

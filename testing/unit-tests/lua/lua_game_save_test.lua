@@ -259,6 +259,32 @@ function game_save_test.test_common_fields(save)
             end
         end
     end
+
+    -- Pokédex
+
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        for party_index = 1, #save.pokemon_party
+        do
+            if save.pokemon_party[party_index].species ~= "None" and not save.pokemon_party[party_index].is_egg
+            then
+                luaunit.assertTrue(save.pokedex.has_seen[save.pokemon_party[party_index].species])
+                luaunit.assertTrue(save.pokedex.has_caught[save.pokemon_party[party_index].species])
+            end
+        end
+
+        for pc_index = 1, #save.pokemon_pc
+        do
+            for box_index = 1, #save.pokemon_pc[pc_index]
+            do
+                if save.pokemon_pc[pc_index][box_index].species ~= "None" and not save.pokemon_pc[pc_index][box_index].is_egg
+                then
+                    luaunit.assertTrue(save.pokedex.has_seen[save.pokemon_pc[pc_index][box_index].species])
+                    luaunit.assertTrue(save.pokedex.has_caught[save.pokemon_pc[pc_index][box_index].species])
+                end
+            end
+        end
+    end
 end
 
 function game_save_test.randomize_pokemon(save, item_list)
@@ -375,6 +401,12 @@ function game_save_test.compare_game_saves(save1, save2)
                 pc2[pc_index][box_index]
             )
         end
+    end
+
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertEquals(save1.pokedex.all_seen, save2.pokedex.all_seen)
+        luaunit.assertEquals(save1.pokedex.all_caught, save2.pokedex.all_caught)
     end
 end
 
