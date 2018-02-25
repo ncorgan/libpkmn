@@ -68,7 +68,7 @@ function gen2_pokemon_tests.common(game, species)
     local test_params =
     {
         valid_ball = "Great Ball",
-        invalid_ball = {"Great Ball"},
+        invalid_balls = {"Great Ball"},
 
         valid_item = "Berry",
         invalid_items = {"Razz Berry", "Bicycle"},
@@ -111,7 +111,7 @@ end
 
 -- Gold
 
-function test_red_pokemon()
+function test_gold_pokemon()
     gen2_pokemon_tests.common("Gold", "Cyndaquil")
 end
 
@@ -129,7 +129,7 @@ end
 
 -- Silver
 
-function test_blue_pokemon()
+function test_silver_pokemon()
     gen2_pokemon_tests.common("Silver", "Totodile")
 end
 
@@ -147,7 +147,7 @@ end
 
 -- Crystal
 
-function test_yellow_pokemon()
+function test_crystal_pokemon()
     gen2_pokemon_tests.common("Crystal", "Chikorita")
 end
 

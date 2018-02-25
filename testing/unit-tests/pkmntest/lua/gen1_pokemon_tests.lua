@@ -16,7 +16,7 @@ function gen1_pokemon_tests.common(game, species)
     local test_params =
     {
         valid_ball = "Great Ball",
-        invalid_ball = {"Great Ball"},
+        invalid_balls = {"Great Ball"},
 
         valid_item = "Potion",
         invalid_items = {"Potion"},

@@ -597,7 +597,7 @@ function pokemon_tests.check_initial_values(pokemon)
     then
         luaunit.assertEquals(
             pokemon.original_trainer_secret_id,
-            bit32.rshift(bit32.band(pkmn.pokemon.DEFAULT_TRAINER_ID, 0xFFFF), 16)
+            bit32.rshift(bit32.band(pkmn.pokemon.DEFAULT_TRAINER_ID, 0xFFFF0000), 16)
         )
         luaunit.assertEquals(
             pokemon.original_trainer_id,
@@ -747,7 +747,7 @@ function pokemon_tests.check_initial_maps(pokemon)
         end
 
         local marking_names = pokemon.markings.keys
-        for marking_index = 1, #markings
+        for marking_index = 1, #marking_names
         do
             luaunit.assertFalse(pokemon.markings[marking_names[marking_index]])
         end
@@ -874,7 +874,7 @@ function pokemon_tests.test_setting_condition(pokemon)
     local conditions = {"None", "Asleep", "Poison", "Burn", "Frozen", "Paralysis"}
     if generation >= 3
     then
-        conditions[#conditions] = {"Bad Poison"}
+        conditions[#conditions] = "Bad Poison"
     end
 
     for condition_index = 1, #conditions
@@ -1109,7 +1109,7 @@ function pokemon_tests.test_setting_markings(pokemon)
     if generation >= 3
     then
         marking_names = pokemon.markings.keys
-        for marking_index = 1, #marking_Names
+        for marking_index = 1, #marking_names
         do
             luaunit.assertFalse(pokemon.markings[marking_names[marking_index]])
             pokemon.markings[marking_names[marking_index]] = true
@@ -1220,7 +1220,8 @@ function pokemon_tests.test_setting_personality(pokemon)
 
     if generation >= 3
     then
-        local test_personality = math.random(0, 0xFFFFFFFF)
+        -- Apparently, 0xFFFFFFFF is too large for math.random
+        local test_personality = bit32.bor(math.random(0, 0xFFFF), bit32.lshift(math.random(0, 0xFFFF), 16))
 
         pokemon.personality = test_personality
         luaunit.assertEquals(pokemon.personality, test_personality)
@@ -1380,10 +1381,10 @@ function pokemon_tests.test_setting_trainer_info(pokemon)
         luaunit.assertEquals(pokemon.original_trainer_public_id, 0x1A2B)
         luaunit.assertEquals(pokemon.original_trainer_secret_id, 0x1234)
 
-        pokemon.original_trainer_secret_id = 0x1234ABCD
-        luaunit.assertEquals(pokemon.original_trainer_id, 0x1234ABCD)
-        luaunit.assertEquals(pokemon.original_trainer_public_id, 0xABCD)
-        luaunit.assertEquals(pokemon.original_trainer_secret_id, 0x1234)
+        pokemon.original_trainer_secret_id = 0x3C4D
+        luaunit.assertEquals(pokemon.original_trainer_id, 0x3C4D1A2B)
+        luaunit.assertEquals(pokemon.original_trainer_public_id, 0x1A2B)
+        luaunit.assertEquals(pokemon.original_trainer_secret_id, 0x3C4D)
     else
         luaunit.assertError(
             pokemon_tests.pokemon_set_original_trainer_id,

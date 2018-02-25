@@ -240,7 +240,7 @@ MACRO(PKMN_ADD_CSHARP_TEST test_name test_srcs test_dlls)
 ENDMACRO(PKMN_ADD_CSHARP_TEST)
 
 MACRO(PKMN_ADD_LUA_TEST test_name)
-    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\" -o TAP")
+    SET(CMD "\"${LUA_INTERPRETER}\" \"${CMAKE_CURRENT_SOURCE_DIR}/${test_name}.lua\" -o TAP -v")
     PKMN_ADD_TEST(${test_name} ${CMD})
 ENDMACRO(PKMN_ADD_LUA_TEST test_name)
 
