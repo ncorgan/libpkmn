@@ -94,6 +94,15 @@ function pkmntest_utils.concat_path(path1, path2)
     end
 end
 
+function pkmntest_utils.concat_paths(path1, path2, path3)
+    if pkmntest_utils.is_windows()
+    then
+        return string.format("%s\\%s\\%s", path1, path2, path3)
+    else
+        return string.format("%s/%s/%s", path1, path2, path3)
+    end
+end
+
 function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_list, item_list)
     local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 

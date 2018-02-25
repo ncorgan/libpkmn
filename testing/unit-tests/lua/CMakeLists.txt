@@ -35,7 +35,7 @@ IF(LUAUNIT_FOUND)
         lua_buildinfo_test
         lua_calculations_test
         lua_database_entry_test
-        #lua_game_save_test
+        lua_game_save_test
         lua_gui_test
         lua_items_test
         lua_lists_test
