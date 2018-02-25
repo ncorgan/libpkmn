@@ -66,10 +66,6 @@ function pkmntest_utils.random_string(len)
     return ret
 end
 
-function pkmntest_utils.random_value_from_list(list)
-    return list[math.random(1, #list)]
-end
-
 -- Helper functions to make sure SWIG+Lua properly enforces bounds
 -- for parameters only constrained by the size of a type.
 
@@ -98,15 +94,10 @@ function pkmntest_utils.concat_path(path1, path2)
     end
 end
 
-function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
-    local generation = game_save_test.GAME_TO_GENERATION[game]
+function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_list, item_list)
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
-    local species = ""
-    repeat
-        species = pokemon_list[math.random(1, #pokemon_list)]
-    until (generation ~= 3 or species ~= "Deoxys")
-
-    ret = pkmn.pokemon(species, game, "", math.random(2, 100))
+    local ret = pkmn.pokemon(species, game, "", math.random(2, 63)) -- To account for Gen II level met limitation
 
     for move_index = 1, 4
     do
@@ -114,7 +105,7 @@ function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_l
         repeat
             move = move_list[math.random(1, #move_list)]
         until string.find(move, "Shadow") == nil
-        ret.moves[move_index] = move
+        ret.moves[move_index].move = move
     end
 
     for EV_index = 1, #ret.EVs
@@ -137,7 +128,7 @@ function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_l
             pcall(pokemon_set_held_item, ret, item_list[math.random(1, #item_list)])
         until ret.held_item ~= "None"
 
-        ret.pokerus_duration = math.random(0, 16)
+        ret.pokerus_duration = math.random(0, 15)
     end
     if generation >= 3
     then
@@ -156,6 +147,18 @@ function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_l
     end
 
     return ret
+end
+
+function pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
+
+    -- Don't deal with Deoxys issues here.
+    local species = ""
+    repeat
+        species = pokemon_list[math.random(1, #pokemon_list)]
+    until (generation ~= 3 or species ~= "Deoxys")
+
+    return pkmntest_utils.get_specific_random_pokemon(game, species, "", move_list, item_list)
 end
 
 function pkmntest_utils.compare_pokemon(pokemon1, pokemon2)
@@ -194,12 +197,12 @@ function pkmntest_utils.compare_pokemon(pokemon1, pokemon2)
         )
     end
 
-    luaunit.assertEquals(pokemon1.stats.keys, pokemon2.stats.keys)
+    luaunit.assertEquals(pokemon1.stats:keys(), pokemon2.stats:keys())
     for stat_index = 1, #pokemon1.stats
     do
         luaunit.assertEquals(
-            pokemon1.stats[pokemon1.stats.keys[stat_index]],
-            pokemon2.stats[pokemon2.stats.keys[stat_index]]
+            pokemon1.stats[pokemon1.stats:keys()[stat_index]],
+            pokemon2.stats[pokemon2.stats:keys()[stat_index]]
         )
     end
 

@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -14,7 +14,8 @@ local tests = {
     require("gen1_pokemon_tests"),
     require("gen2_pokemon_tests"),
     require("gen3_pokemon_tests"),
-    --require("pokemon_conversions_tests"),
+    require("pokemon_io_tests"),
+    require("pokemon_conversions_tests")
 }
 
 local runner = luaunit.LuaUnit.new()

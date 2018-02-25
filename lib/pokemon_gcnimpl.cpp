@@ -160,6 +160,7 @@ namespace pkmn
         _init_markings_map();
         set_level(level);
         _update_moves(-1);
+        _populate_party_data();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -188,6 +189,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -215,6 +217,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
@@ -242,6 +245,7 @@ namespace pkmn
         _init_gcn_contest_stats_map();
         _init_markings_map();
         _update_moves(-1);
+        _update_stat_map();
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
