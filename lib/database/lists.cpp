@@ -21,24 +21,19 @@
 
 namespace pkmn { namespace database {
 
-    static pkmn::database::sptr _db;
-
     std::vector<std::string> get_ability_list(
         int generation
     ) {
         pkmn::enforce_bounds("generation", generation, 3, 6);
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM ability_names WHERE local_language_id=9 AND "
             "ability_id IN (SELECT id FROM abilities WHERE generation_id<=? "
             "AND is_main_series=1) ORDER BY name";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db, query, ret, generation
+            query, ret, generation
         );
 
         return ret;
@@ -50,22 +45,18 @@ namespace pkmn { namespace database {
     ) {
         pkmn::enforce_bounds("generation", generation, 1, 6);
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* with_previous_query = \
+        static BOOST_CONSTEXPR const char* with_previous_query =
             "SELECT name FROM version_names WHERE local_language_id=9 AND version_id IN "
             "(SELECT id FROM versions WHERE version_group_id IN "
             "(SELECT id FROM version_groups WHERE generation_id<=?))";
 
-        static BOOST_CONSTEXPR const char* no_previous_query = \
+        static BOOST_CONSTEXPR const char* no_previous_query =
             "SELECT name FROM version_names WHERE local_language_id=9 AND version_id IN "
             "(SELECT id FROM versions WHERE version_group_id IN "
             "(SELECT id FROM version_groups WHERE generation_id=?))";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db,
             (include_previous ? with_previous_query : no_previous_query),
             ret, generation
         );
@@ -77,16 +68,13 @@ namespace pkmn { namespace database {
         bool colosseum
     )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* shadow_pokemon_query = \
+        static BOOST_CONSTEXPR const char* shadow_pokemon_query =
             "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND pokemon_species_id IN "
             "(SELECT species_id FROM shadow_pokemon WHERE colosseum=?)";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db, shadow_pokemon_query, ret, (colosseum ? 1 : 0)
+            shadow_pokemon_query, ret, (colosseum ? 1 : 0)
         );
         std::sort(ret.begin(), ret.end(), boost::algorithm::is_less());
         return ret;
@@ -230,9 +218,6 @@ namespace pkmn { namespace database {
         const std::string &game,
         bool whole_generation
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         int game_id          = game_name_to_id(game);
         int version_group_id = game_id_to_version_group(game_id);
         int generation       = game_id_to_generation(game_id);
@@ -246,19 +231,19 @@ namespace pkmn { namespace database {
         if(game_is_gamecube(game_id)) {
             BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
 
-            static BOOST_CONSTEXPR const char* query = \
+            static BOOST_CONSTEXPR const char* query =
                 "SELECT name FROM location_names WHERE local_language_id=9 AND "
                 "location_id IN (SELECT DISTINCT location_id FROM gamecube_location_index_ranges "
                 "WHERE colosseum IN (?,?))";
 
             pkmn::database::query_db_list_bind2<std::string, int>(
-                _db, query, ret,
+                query, ret,
                 (whole_generation ? 0 : ((game_id == COLOSSEUM) ? 1 : 0)),
                 (whole_generation ? 1 : ((game_id == COLOSSEUM) ? 1 : 0))
             );
         } else {
             if(whole_generation) {
-                static BOOST_CONSTEXPR const char* query = \
+                static BOOST_CONSTEXPR const char* query =
                     "SELECT name FROM location_names WHERE local_language_id=9 "
                     "AND location_id IN (SELECT locations.id FROM locations "
                     "INNER JOIN location_game_indices ON "
@@ -266,7 +251,7 @@ namespace pkmn { namespace database {
                     "location_game_indices.generation_id=?)";
 
                 pkmn::database::query_db_list_bind1<std::string, int>(
-                    _db, query, ret, generation
+                    query, ret, generation
                 );
             } else {
                 /*
@@ -313,7 +298,10 @@ namespace pkmn { namespace database {
                 };
 
                 for(int i = 0; i < (version_group_has_single_region(version_group_id) ? 1 : 2); ++i) {
-                    SQLite::Statement stmt((*_db), queries[num_ranges_in_version_group[version_group_id]]);
+                    SQLite::Statement stmt(
+                        get_connection(),
+                        queries[num_ranges_in_version_group[version_group_id]]
+                    );
                     stmt.bind(1, generation);
                     stmt.bind(2, version_group_region_ids[version_group_id][i]);
 
@@ -347,10 +335,7 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_move_list(
         const std::string &game
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* main_query = \
+        static BOOST_CONSTEXPR const char* main_query =
             "SELECT name FROM move_names WHERE local_language_id=9 AND "
             "move_id IN (SELECT id FROM moves WHERE generation_id<=? AND "
             "type_id<100) ORDER BY move_id";
@@ -359,7 +344,7 @@ namespace pkmn { namespace database {
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db, main_query, ret, generation
+            main_query, ret, generation
         );
 
         BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
@@ -377,21 +362,21 @@ namespace pkmn { namespace database {
          */
         int game_id = game_name_to_id(game);
         if(game_id == COLOSSEUM) {
-            static BOOST_CONSTEXPR const char* shadow_query = \
+            static BOOST_CONSTEXPR const char* shadow_query =
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id=10001";
 
             pkmn::database::query_db_list<std::string>(
-                _db, shadow_query, ret
+                shadow_query, ret
             );
         } else if(game_id == XD) {
-            static BOOST_CONSTEXPR const char* shadow_query = \
+            static BOOST_CONSTEXPR const char* shadow_query =
                 "SELECT name FROM move_names WHERE local_language_id=9 AND "
                 "move_id IN (SELECT id FROM moves WHERE type_id=10002) "
                 "ORDER BY move_id";
 
             pkmn::database::query_db_list<std::string>(
-                _db, shadow_query, ret
+                shadow_query, ret
             );
         } else if(game_id == X or game_id == Y) {
             for(size_t i = 0; i < 4; ++i) {
@@ -403,17 +388,14 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_nature_list() {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT nature_names.name FROM nature_names INNER JOIN natures ON "
             "(nature_names.nature_id=natures.id) WHERE nature_names.local_language_id=9 "
             "ORDER BY natures.game_index";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
-            _db, query, ret
+            query, ret
         );
 
         return ret;
@@ -425,22 +407,18 @@ namespace pkmn { namespace database {
     ) {
         pkmn::enforce_bounds("generation", generation, 1, 6);
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* with_previous_query = \
+        static BOOST_CONSTEXPR const char* with_previous_query =
             "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
             "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id<=?) "
             "ORDER BY pokemon_species_id";
 
-        static BOOST_CONSTEXPR const char* no_previous_query = \
+        static BOOST_CONSTEXPR const char* no_previous_query =
             "SELECT name FROM pokemon_species_names WHERE local_language_id=9 AND "
             "pokemon_species_id IN (SELECT id FROM pokemon_species WHERE generation_id=?) "
             "ORDER BY pokemon_species_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db,
             (include_previous ? with_previous_query : no_previous_query),
             ret, generation
         );
@@ -449,16 +427,13 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_region_list() {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM region_names WHERE local_language_id=9 "
             "AND region_id<=6 ORDER BY region_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
-            _db, query, ret
+            query, ret
         );
         ret.insert(ret.begin()+3, "Orre");
 
@@ -473,15 +448,12 @@ namespace pkmn { namespace database {
     }
 
     std::vector<std::string> get_super_training_medal_list() {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM ribbons_medals WHERE super_training_medal=1";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list<std::string>(
-            _db, query, ret
+            query, ret
         );
 
         return ret;
@@ -490,19 +462,16 @@ namespace pkmn { namespace database {
     std::vector<std::string> get_type_list(
         const std::string &game
     ) {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         int generation = game_name_to_generation(game);
 
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT name FROM type_names WHERE local_language_id=9 AND "
             "type_id IN (SELECT id FROM types WHERE generation_id<=?) "
             "AND type_id<100 ORDER BY type_id";
 
         std::vector<std::string> ret;
         pkmn::database::query_db_list_bind1<std::string, int>(
-            _db, query, ret, generation
+            query, ret, generation
         );
 
         BOOST_STATIC_CONSTEXPR int GOLD   = 4;

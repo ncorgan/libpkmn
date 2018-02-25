@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,8 +26,6 @@
 #include <ctime>
 
 namespace pkmn { namespace conversions {
-
-    static pkmn::database::sptr _db;
 
     /*
      * Between Generations I-II, the Special stat was separated into
@@ -107,9 +105,6 @@ namespace pkmn { namespace conversions {
         pksav_gen2_pc_pokemon_t* to
     )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         std::memset(to, 0, sizeof(*to));
         to->species = uint8_t(convert_pokemon_game_index(
                           from->species,
@@ -181,9 +176,6 @@ namespace pkmn { namespace conversions {
         pksav_gen1_pc_pokemon_t* to
     )
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         const int RED = 1;
 
         std::memset(to, 0, sizeof(*to));
@@ -200,7 +192,7 @@ namespace pkmn { namespace conversions {
             "game_index=? AND version_id=1) AND stat_id=1";
 
         int hp_stat = pkmn::database::query_db_bind1<int, int>(
-                          _db, hp_stat_query, from->species
+                          hp_stat_query, from->species
                       );
 
         uint8_t IV = 0;
@@ -239,7 +231,7 @@ namespace pkmn { namespace conversions {
             "game_index=?) AND slot=1)";
 
         to->types[0] = uint8_t(pkmn::database::query_db_bind1<int, int>(
-                                   _db, type1_query,
+                                   type1_query,
                                    from->species
                               ));
 
@@ -252,7 +244,7 @@ namespace pkmn { namespace conversions {
 
         int dummy_type2 = 0;
         if(pkmn::database::maybe_query_db_bind1<int, int>(
-               _db, type2_query, dummy_type2,
+               type2_query, dummy_type2,
                from->species
            ))
         {

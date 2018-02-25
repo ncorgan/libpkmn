@@ -17,54 +17,45 @@
 
 namespace pkmn { namespace database {
 
-    static pkmn::database::sptr _db;
-
     int game_id_to_index(
         int game_id
-    ) {
-        if(game_id == 0) {
+    )
+    {
+        if(game_id == 0)
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT game_index FROM version_game_indices WHERE version_id=?";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, game_id
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, game_id);
     }
 
     int game_index_to_id(
         int game_index
-    ) {
-        if(game_index == 0) {
+    )
+    {
+        if(game_index == 0)
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT version_id FROM version_game_indices WHERE game_index=?";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, game_index
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, game_index);
     }
 
     int item_id_to_index(
         int item_id,
         int game_id
-    ) {
-        if(item_id == 0 or game_id == 0) {
+    )
+    {
+        if((item_id == 0) or (game_id == 0))
+        {
             return 0;
         }
-
-        // Connect to database
-        pkmn::database::get_connection(_db);
 
         int generation = pkmn::database::game_id_to_generation(game_id);
 
@@ -73,7 +64,7 @@ namespace pkmn { namespace database {
          * fails for a Gamecube game, check that table. If it fails
          * for any other game, it failed overall.
          */
-        static BOOST_CONSTEXPR const char* main_query = \
+        static BOOST_CONSTEXPR const char* main_query =
             "SELECT game_index FROM item_game_indices WHERE item_id=? "
             "AND generation_id=?";
 
@@ -82,7 +73,7 @@ namespace pkmn { namespace database {
 
         int ret = 0;
         if(pkmn::database::maybe_query_db_bind2<int, int, int>(
-               _db, main_query, ret, item_id, generation
+               main_query, ret, item_id, generation
            ))
         {
             /*
@@ -91,40 +82,50 @@ namespace pkmn { namespace database {
              */
             BOOST_STATIC_CONSTEXPR int RS = 5;
             int version_group_id = pkmn::database::game_id_to_version_group(game_id);
-            if(item_id < 10000 and (version_group_id == 12 or version_group_id == 13)) {
+            if(item_id < 10000 and (version_group_id == 12 or version_group_id == 13))
+            {
                 version_group_id = RS;
             }
 
-            if(not item_index_valid(ret, version_group_id)) {
-                if(game_is_gamecube(game_id)) {
+            if(not item_index_valid(ret, version_group_id))
+            {
+                if(game_is_gamecube(game_id))
+                {
                     // This may share a name but be in the Gamecube indices.
                     bool colosseum = (game_id == 19);
 
-                    static BOOST_CONSTEXPR const char* gcn_query = \
+                    static BOOST_CONSTEXPR const char* gcn_query =
                         "SELECT game_index FROM gamecube_item_game_indices "
                         "WHERE item_id=? AND colosseum=?";
 
                     ret = pkmn::database::query_db_bind2<int, int, int>(
-                              _db, gcn_query, item_id, (colosseum ? 1 : 0),
+                              gcn_query, item_id, (colosseum ? 1 : 0),
                               error_message
                           );
-                } else {
+                }
+                else
+                {
                     throw std::invalid_argument(error_message);
                 }
             }
-        } else {
-            if(game_is_gamecube(game_id)) {
+        }
+        else
+        {
+            if(game_is_gamecube(game_id))
+            {
                 bool colosseum = (game_id == 19);
 
-                static BOOST_CONSTEXPR const char* gcn_query = \
+                static BOOST_CONSTEXPR const char* gcn_query =
                     "SELECT game_index FROM gamecube_item_game_indices "
                     "WHERE item_id=? AND colosseum=?";
 
                 ret = pkmn::database::query_db_bind2<int, int, int>(
-                          _db, gcn_query, item_id, (colosseum ? 1 : 0),
+                          gcn_query, item_id, (colosseum ? 1 : 0),
                           error_message
                       );
-            } else {
+            }
+            else
+            {
                 throw std::invalid_argument(error_message);
             }
         }
@@ -135,13 +136,12 @@ namespace pkmn { namespace database {
     int item_index_to_id(
         int item_index,
         int game_id
-    ) {
-        if(item_index == 0 or game_id == 0) {
+    )
+    {
+        if((item_index == 0) or (game_id == 0))
+        {
             return 0;
         }
-
-        // Connect to database
-        pkmn::database::get_connection(_db);
 
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
 
@@ -154,7 +154,8 @@ namespace pkmn { namespace database {
          */
         if(not item_index_valid(item_index, version_group_id) and
            not game_is_gamecube(game_id)
-        ) {
+        )
+        {
             throw std::invalid_argument(error_message);
         }
 
@@ -165,26 +166,30 @@ namespace pkmn { namespace database {
          */
         int generation = pkmn::database::game_id_to_generation(game_id);
 
-        static BOOST_CONSTEXPR const char* main_query = \
+        static BOOST_CONSTEXPR const char* main_query =
             "SELECT item_id FROM item_game_indices WHERE game_index=? "
             "AND generation_id=?";
 
         int ret = 0;
         if(not pkmn::database::maybe_query_db_bind2<int, int, int>(
-               _db, main_query, ret, item_index, generation
+               main_query, ret, item_index, generation
            )
-        ) {
-            if(game_is_gamecube(game_id)) {
+        )
+        {
+            if(game_is_gamecube(game_id))
+            {
                 bool colosseum = (game_id == 19);
 
-                static BOOST_CONSTEXPR const char* gcn_query = \
+                static BOOST_CONSTEXPR const char* gcn_query =
                     "SELECT item_id FROM gamecube_item_game_indices "
                     "WHERE game_index=? AND colosseum=?";
 
                 ret = pkmn::database::query_db_bind2<int, int, int>(
-                          _db, gcn_query, item_index, (colosseum ? 1 : 0)
+                          gcn_query, item_index, (colosseum ? 1 : 0)
                       );
-            } else {
+            }
+            else
+            {
                 throw std::invalid_argument(error_message);
             }
         }
@@ -192,111 +197,71 @@ namespace pkmn { namespace database {
         return ret;
     }
 
-    int location_id_to_index(
-        int location_id,
-        int game_id
-    ) {
-        if(location_id == 0 or game_id == 0) {
-            return 0;
-        }
-
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        (void)location_id;
-        (void)game_id;
-        return 0;
-    }
-
-    int location_index_to_id(
-        int location_index,
-        int game_id
-    ) {
-        if(location_index == 0 or game_id == 0) {
-            return 0;
-        }
-
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        (void)location_index;
-        (void)game_id;
-        return 0;
-    }
-
     int nature_id_to_index(
         int nature_id
-    ) {
-        if(nature_id == 0) {
+    )
+    {
+        if(nature_id == 0)
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT game_index FROM natures WHERE id=?";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, nature_id
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, nature_id);
     }
 
     int nature_index_to_id(
         int nature_index
-    ) {
-        if(nature_index == 0) {
+    )
+    {
+        if(nature_index == 0)
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT id FROM natures WHERE game_index=?";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, nature_index
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, nature_index);
     }
 
     int pokemon_id_to_index(
         int pokemon_id,
         int game_id
-    ) {
-        if(pokemon_id == 0 or game_id == 0) {
+    )
+    {
+        if((pokemon_id == 0) or (game_id == 0))
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT game_index FROM pokemon_game_indices WHERE "
             "pokemon_id=? AND version_id=?";
 
         return pkmn::database::query_db_bind2<int, int, int>(
-                   _db, query, pokemon_id, game_id
+                   query, pokemon_id, game_id
                );
     }
 
     int pokemon_index_to_id(
         int pokemon_index,
         int game_id
-    ) {
-        if(pokemon_index == 0 or game_id == 0) {
+    )
+    {
+        if((pokemon_index == 0) or (game_id == 0))
+        {
             return 0;
         }
 
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT pokemon_id FROM pokemon_game_indices WHERE "
             "game_index=? AND version_id=?";
 
         return pkmn::database::query_db_bind2<int, int, int>(
-                   _db, query, pokemon_index, game_id
+                   query, pokemon_index, game_id
                );
     }
 

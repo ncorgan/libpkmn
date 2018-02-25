@@ -24,8 +24,6 @@
 
 namespace pkmn
 {
-    static pkmn::database::sptr _db;
-
     static const std::vector<size_t> generation_pokedex_sizes =
     {
         0, 151, 251, 386, 493, 649, 721, 807
@@ -267,8 +265,6 @@ namespace pkmn
         std::vector<std::string>& member_vector
     )
     {
-        pkmn::database::get_connection(_db);
-
         member_vector.clear();
 
         std::string query_numbers;
@@ -297,7 +293,6 @@ namespace pkmn
         static boost::format query_format("SELECT name FROM pokemon_species_names WHERE local_language_id=9 "
                                           "AND pokemon_species_id IN (%s) ORDER BY pokemon_species_id");
         pkmn::database::query_db_list(
-            _db,
             str(query_format % query_numbers).c_str(),
             member_vector
         );

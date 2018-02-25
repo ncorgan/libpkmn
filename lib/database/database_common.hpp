@@ -23,17 +23,8 @@ namespace pkmn { namespace database {
 
     typedef std::shared_ptr<SQLite::Database> sptr;
 
-    sptr _get_connection();
-
-    inline void get_connection(
-        sptr &db
-    )
-    {
-        if(!db)
-        {
-            db = _get_connection();
-        }
-    }
+    void initialize_connection();
+    SQLite::Database* get_connection();
 
     /*
      * Templated query functions
@@ -41,12 +32,11 @@ namespace pkmn { namespace database {
 
     template <typename ret_type>
     ret_type query_db(
-        sptr db,
         const char* query,
         const std::string& error_message
     )
     {
-        SQLite::Statement stmt((*db), query);
+        SQLite::Statement stmt(get_connection(), query);
         if(stmt.executeStep())
         {
             return (ret_type)stmt.getColumn(0);
@@ -69,13 +59,12 @@ namespace pkmn { namespace database {
 
     template <typename ret_type, typename bind1_type>
     ret_type query_db_bind1(
-        sptr db,
         const char* query,
         bind1_type bind1,
         const std::string& error_message = ""
     )
     {
-        SQLite::Statement stmt((*db), query);
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         if(stmt.executeStep())
         {
@@ -100,14 +89,13 @@ namespace pkmn { namespace database {
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
     ret_type query_db_bind2(
-        sptr db,
         const char* query,
         bind1_type bind1,
         bind2_type bind2,
         const std::string& error_message = ""
     )
     {
-        SQLite::Statement stmt((*db), query);
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         if(stmt.executeStep())
@@ -134,7 +122,6 @@ namespace pkmn { namespace database {
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
     ret_type query_db_bind3(
-        sptr db,
         const char* query,
         bind1_type bind1,
         bind2_type bind2,
@@ -142,7 +129,7 @@ namespace pkmn { namespace database {
         const std::string& error_message = ""
     )
     {
-        SQLite::Statement stmt((*db), query);
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
@@ -175,74 +162,82 @@ namespace pkmn { namespace database {
 
     template <typename ret_type>
     bool maybe_query_db(
-        sptr db,
         const char* query,
-        ret_type &out
-    ) {
-        SQLite::Statement stmt((*db), query);
-        if(stmt.executeStep()) {
+        ret_type& out
+    )
+    {
+        bool ret = false;
+        SQLite::Statement stmt(get_connection(), query);
+        if(stmt.executeStep())
+        {
             out = (ret_type)stmt.getColumn(0);
-            return true;
-        } else {
-            return false;
+            ret = true;
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type>
     bool maybe_query_db_bind1(
-        sptr db,
         const char* query,
-        ret_type &out,
+        ret_type& out,
         bind1_type bind1
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        bool ret = false;
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             out = (ret_type)stmt.getColumn(0);
-            return true;
-        } else {
-            return false;
+            ret = true;
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
     bool maybe_query_db_bind2(
-        sptr db,
         const char* query,
-        ret_type &out,
+        ret_type& out,
         bind1_type bind1,
         bind2_type bind2
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        bool ret = false;
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             out = (ret_type)stmt.getColumn(0);
-            return true;
-        } else {
-            return false;
+            ret = true;
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
     bool maybe_query_db_bind2(
-        sptr db,
         const char* query,
-        ret_type &out,
+        ret_type& out,
         bind1_type bind1,
         bind2_type bind2,
         bind3_type bind3
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        bool ret = false;
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
-        if(stmt.executeStep()) {
+        if(stmt.executeStep())
+        {
             out = (ret_type)stmt.getColumn(0);
-            return true;
-        } else {
-            return false;
+            ret = true;
         }
+
+        return ret;
     }
 
     /*
@@ -251,60 +246,64 @@ namespace pkmn { namespace database {
 
     template <typename ret_type>
     static void query_db_list(
-        sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec
-    ) {
-        SQLite::Statement stmt((*db), query);
-        while(stmt.executeStep()) {
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query);
+        while(stmt.executeStep())
+        {
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
     template <typename ret_type, typename bind1_type>
     static void query_db_list_bind1(
-        sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,
         bind1_type bind1
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
-        while(stmt.executeStep()) {
+        while(stmt.executeStep())
+        {
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
     static void query_db_list_bind2(
-        sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,
         bind1_type bind1,
         bind2_type bind2
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
-        while(stmt.executeStep()) {
+        while(stmt.executeStep())
+        {
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
     static void query_db_list_bind3(
-        sptr db,
         const char* query,
         std::vector<ret_type> &ret_vec,
         bind1_type bind1,
         bind1_type bind2,
         bind1_type bind3
-    ) {
-        SQLite::Statement stmt((*db), query);
+    )
+    {
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
-        while(stmt.executeStep()) {
+        while(stmt.executeStep())
+        {
             ret_vec.emplace_back((ret_type)stmt.getColumn(0));
         }
     }

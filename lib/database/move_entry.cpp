@@ -21,14 +21,13 @@
 
 namespace pkmn { namespace database {
 
-    static pkmn::database::sptr _db;
-
     /*
      * This array lists the upper bound of valid move IDs
      * for each generation. This is trivial enough not to
      * warrant a database query.
      */
-    BOOST_STATIC_CONSTEXPR int MOVE_INDEX_BOUNDS[] = {
+    BOOST_STATIC_CONSTEXPR int MOVE_INDEX_BOUNDS[] =
+    {
         -1, 165, 251, 354, 467, 559, 621
     };
 
@@ -52,9 +51,6 @@ namespace pkmn { namespace database {
         _game_id(game_id),
         _none(move_id == 0)
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         _generation = pkmn::database::game_id_to_generation(
                           _game_id
                       );
@@ -86,9 +82,6 @@ namespace pkmn { namespace database {
     ):
         _none(move_name == "None")
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         // Input validation
         _game_id = pkmn::database::game_name_to_id(
                        game_name
@@ -187,7 +180,7 @@ namespace pkmn { namespace database {
                 "AND type_id=(SELECT type_id FROM moves WHERE id=?)";
 
             ret = pkmn::database::query_db_bind1<std::string, int>(
-                      _db, query, _move_id
+                      query, _move_id
                   );
         }
 
@@ -205,7 +198,7 @@ namespace pkmn { namespace database {
                 "AND language_id=9";
 
             std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
-                                      _db, query, _move_id
+                                      query, _move_id
                                   );
             ret = fix_veekun_whitespace(from_db);
         }
@@ -227,7 +220,7 @@ namespace pkmn { namespace database {
                 "(SELECT target_id FROM moves WHERE id=?))";
 
             ret = pkmn::database::query_db_bind1<std::string, int>(
-                       _db, query, _move_id
+                       query, _move_id
                    );
         }
 
@@ -256,7 +249,7 @@ namespace pkmn { namespace database {
 
             bool old_game = (_generation < 4 and not game_is_gamecube(_game_id));
             int damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      _db, main_query, _move_id
+                                      main_query, _move_id
                                   );
 
             static BOOST_CONSTEXPR const char* damage_classes[] = {
@@ -265,7 +258,7 @@ namespace pkmn { namespace database {
 
             if(old_game and damage_class_id > 1) {
                 damage_class_id = pkmn::database::query_db_bind1<int, int>(
-                                      _db, old_games_query, _move_id
+                                      old_games_query, _move_id
                                   );
             }
 
@@ -304,7 +297,7 @@ namespace pkmn { namespace database {
             if(_generation < 6) {
                 int old_ret = 0;
                 if(pkmn::database::maybe_query_db_bind1<int, int>(
-                       _db, old_queries[_generation], old_ret,
+                       old_queries[_generation], old_ret,
                        _move_id
                    ))
                 {
@@ -313,12 +306,12 @@ namespace pkmn { namespace database {
                 else
                 {
                     ret = pkmn::database::query_db_bind1<int, int>(
-                              _db, main_query, _move_id
+                              main_query, _move_id
                           );
                 }
             } else {
                 ret = pkmn::database::query_db_bind1<int, int>(
-                          _db, main_query, _move_id
+                          main_query, _move_id
                       );
             }
         }
@@ -360,7 +353,7 @@ namespace pkmn { namespace database {
             if(_generation < 6)
             {
                 (void)pkmn::database::maybe_query_db_bind1<int, int>(
-                          _db, old_queries[_generation],
+                          old_queries[_generation],
                           base_pp, _move_id
                       );
             }
@@ -368,7 +361,7 @@ namespace pkmn { namespace database {
             if(base_pp == -1)
             {
                 base_pp = pkmn::database::query_db_bind1<int, int>(
-                              _db, main_query, _move_id
+                              main_query, _move_id
                           );
             }
 
@@ -411,7 +404,7 @@ namespace pkmn { namespace database {
             if(_generation < 6) {
                 double old_ret;
                 if(pkmn::database::maybe_query_db_bind1<double, int>(
-                       _db, old_queries[_generation], old_ret,
+                       old_queries[_generation], old_ret,
                        _move_id
                    ))
                 {
@@ -422,13 +415,13 @@ namespace pkmn { namespace database {
                 {
                     // SQLite uses doubles, so avoid implicit casting ambiguity
                     ret = (static_cast<float>(pkmn::database::query_db_bind1<double, int>(
-                                                  _db, main_query, _move_id
+                                                  main_query, _move_id
                                              ))) / 100.0f;
                 }
             } else {
                 // SQLite uses doubles, so avoid implicit casting ambiguity
                 ret = (static_cast<float>(pkmn::database::query_db_bind1<double, int>(
-                                              _db, main_query, _move_id
+                                              main_query, _move_id
                                          ))) / 100.0f;
             }
         }
@@ -461,7 +454,7 @@ namespace pkmn { namespace database {
             if(_generation < 6) {
                 int old_ret = 0;
                 if(pkmn::database::maybe_query_db_bind1<int, int>(
-                       _db, old_queries[_generation], old_ret,
+                       old_queries[_generation], old_ret,
                        _move_id
                     ))
                 {
@@ -470,12 +463,12 @@ namespace pkmn { namespace database {
                 else
                 {
                     ret = pkmn::database::query_db_bind1<int, int>(
-                              _db, main_query, _move_id
+                              main_query, _move_id
                           );
                 }
             } else {
                 ret = pkmn::database::query_db_bind1<int, int>(
-                          _db, main_query, _move_id
+                          main_query, _move_id
                       );
             }
         }
@@ -492,7 +485,7 @@ namespace pkmn { namespace database {
             "SELECT effect_chance FROM moves WHERE id=?";
 
         int effect_chance = pkmn::database::query_db_bind1<int, int>(
-                                _db, query, move_id
+                                query, move_id
                             );
 
         std::string ret = input;
@@ -532,7 +525,7 @@ namespace pkmn { namespace database {
                 "(SELECT effect_id FROM moves WHERE id=?)";
 
             std::string from_db = pkmn::database::query_db_bind1<std::string, int>(
-                                      _db, query, _move_id
+                                      query, _move_id
                                   );
             ret = _cleanup_effect(from_db, _move_id);
         }
@@ -555,7 +548,7 @@ namespace pkmn { namespace database {
                 "AND local_language_id=9";
 
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       _db, query, ret, _move_id
+                       query, ret, _move_id
                ))
             {
                 ret = "None";
@@ -579,7 +572,7 @@ namespace pkmn { namespace database {
                 "(SELECT contest_effect_id FROM moves WHERE id=?)";
 
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       _db, query, ret, _move_id
+                       query, ret, _move_id
                ))
             {
                 ret = "None";
@@ -602,7 +595,7 @@ namespace pkmn { namespace database {
                 "(SELECT super_contest_effect_id FROM moves WHERE id=?)";
 
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       _db, query, ret, _move_id
+                       query, ret, _move_id
                ))
             {
                 ret = "None";

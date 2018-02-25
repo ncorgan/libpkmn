@@ -4,6 +4,7 @@
  * @brief   A prepared SQLite Statement is a compiled SQL query ready to be executed, pointing to a row of result.
  *
  * Copyright (c) 2012-2015 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+ *                    2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -57,6 +58,11 @@ public:
      */
     Statement(Database& aDatabase, const char* apQuery);
 
+    Statement(Database* pDatabase, const char* apQuery):
+        Statement(*pDatabase, apQuery)
+    {
+    }
+
     /**
      * @brief Compile and register the SQL query for the provided SQLite Database Connection
      *
@@ -66,6 +72,11 @@ public:
      * Exception is thrown in case of error, then the Statement object is NOT constructed.
      */
     Statement(Database& aDatabase, const std::string& aQuery);
+
+    Statement(Database* pDatabase, const std::string& aQuery):
+        Statement(*pDatabase, aQuery)
+    {
+    }
 
     /**
      * @brief Finalize and unregister the SQL query from the SQLite Database Connection.
