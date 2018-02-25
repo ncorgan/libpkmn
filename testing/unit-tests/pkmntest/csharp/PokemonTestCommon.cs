@@ -1186,6 +1186,15 @@ public class PokemonTestCommon
             pokemon.Moves[moveIndex].PP = maxPP;
             Assert.AreEqual(pokemon.Moves[moveIndex].PP, maxPP);
         }
+        foreach(string invalidMoveName in invalidMoveNames)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate
+                {
+                    pokemon.Moves[0].Move = invalidMoveName;
+                }
+            );
+        }
 
         Assert.Throws<IndexOutOfRangeException>(
             delegate
