@@ -13,7 +13,6 @@
 #include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
-#include <pkmn/types/shared_ptr.hpp>
 
 #include <pksav/common/pokedex.h>
 
@@ -43,7 +42,7 @@ namespace pkmn
                   );
         }
 
-        return pkmn::make_shared<pokedex_impl>(game_id);
+        return std::make_shared<pokedex_impl>(game_id);
     }
 
     pokedex_impl::pokedex_impl(
