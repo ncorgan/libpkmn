@@ -15,9 +15,9 @@
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/thread/lock_guard.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include <algorithm>
+#include <atomic>
 #include <sstream>
 #include <stdexcept>
 
@@ -29,11 +29,11 @@ namespace pkmn { namespace database {
 
     void initialize_connection()
     {
-        static boost::mutex _db_connection_mutex;
-        boost::mutex::scoped_lock db_connection_lock(_db_connection_mutex);
+        static std::atomic_bool atomic_is_db_initialized(false);
 
-        if(!_database_uptr)
+        if(!atomic_is_db_initialized)
         {
+            BOOST_ASSERT(!_database_uptr);
             std::string database_path = pkmn::get_database_path();
             _database_uptr.reset(new SQLite::Database(database_path));
 
@@ -43,6 +43,8 @@ namespace pkmn { namespace database {
             {
                 throw std::runtime_error("This database is incompatible with this version of LibPKMN.");
             }
+
+            atomic_is_db_initialized = true;
         }
     }
 
