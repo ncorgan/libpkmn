@@ -9,6 +9,7 @@
 #define CPP_WRAPPERS_POKEMON_HELPERS_HPP
 
 #include "exception_internal.hpp"
+#include "private_exports.hpp"
 #include "utils/misc.hpp"
 
 #include <pkmn/config.hpp>
@@ -233,14 +234,28 @@ namespace pkmn { namespace swig {
 
             inline size_t size()
             {
-                return _pokemon->get_markings().size();
+                size_t ret = 0;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = _pokemon->get_markings().size();
+                }
+
+                return ret;
             }
 
             inline std::vector<std::string> keys()
             {
-                return pkmn::map_keys_to_vector<string_bool_map, std::string>(
-                           _pokemon->get_markings()
-                       );
+                std::vector<std::string> ret;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = pkmn::map_keys_to_vector<string_bool_map, std::string>(
+                              _pokemon->get_markings()
+                          );
+                }
+
+                return ret;
             }
 
             inline bool has_key(
@@ -323,14 +338,28 @@ namespace pkmn { namespace swig {
 
             inline size_t size()
             {
-                return _pokemon->get_ribbons().size();
+                size_t ret = 0;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = _pokemon->get_ribbons().size();
+                }
+
+                return ret;
             }
 
             inline std::vector<std::string> keys()
             {
-                return pkmn::map_keys_to_vector<string_bool_map, std::string>(
-                           _pokemon->get_ribbons()
-                       );
+                std::vector<std::string> ret;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = pkmn::map_keys_to_vector<string_bool_map, std::string>(
+                              _pokemon->get_ribbons()
+                          );
+                }
+
+                return ret;
             }
 
 #ifdef SWIGCSHARP
@@ -399,14 +428,28 @@ namespace pkmn { namespace swig {
 
             inline size_t size()
             {
-                return _pokemon->get_contest_stats().size();
+                size_t ret = 0;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = _pokemon->get_contest_stats().size();
+                }
+
+                return ret;
             }
 
             inline std::vector<std::string> keys()
             {
-                return pkmn::map_keys_to_vector<string_int_map, std::string>(
-                           _pokemon->get_contest_stats()
-                       );
+                std::vector<std::string> ret;
+
+                if(pkmn::priv::game_name_to_generation(_pokemon->get_game()) >= 3)
+                {
+                    ret = pkmn::map_keys_to_vector<string_int_map, std::string>(
+                              _pokemon->get_contest_stats()
+                          );
+                }
+
+                return ret;
             }
 
             inline bool has_key(

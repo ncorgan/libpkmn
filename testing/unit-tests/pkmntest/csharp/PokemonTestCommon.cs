@@ -684,7 +684,7 @@ public class PokemonTestCommon
         Assert.IsTrue(pokemon.Stats.ContainsKey("Attack"));
         Assert.IsTrue(pokemon.Stats.ContainsKey("Defense"));
         Assert.IsTrue(pokemon.Stats.ContainsKey("Speed"));
-        if(generation >= 3)
+        if(generation >= 2)
         {
             Assert.IsFalse(pokemon.Stats.ContainsKey("Special"));
             Assert.IsTrue(pokemon.Stats.ContainsKey("Special Attack"));
@@ -704,6 +704,28 @@ public class PokemonTestCommon
 
         if(generation >= 3)
         {
+            // Contest Stats
+
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Cool"));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Beauty"));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Cute"));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Smart"));
+            Assert.IsTrue(pokemon.ContestStats.ContainsKey("Tough"));
+            if(generation == 3)
+            {
+                Assert.IsTrue(pokemon.ContestStats.ContainsKey("Feel"));
+                Assert.IsFalse(pokemon.ContestStats.ContainsKey("Sheen"));
+            }
+            else
+            {
+                Assert.IsFalse(pokemon.ContestStats.ContainsKey("Feel"));
+                Assert.IsTrue(pokemon.ContestStats.ContainsKey("Sheen"));
+            }
+            foreach(string contestStat in pokemon.ContestStats.Keys)
+            {
+                Assert.AreEqual(pokemon.ContestStats[contestStat], 0);
+            }
+
             // Markings
 
             Assert.IsTrue(pokemon.Markings.ContainsKey("Circle"));
@@ -719,6 +741,10 @@ public class PokemonTestCommon
             {
                 Assert.IsFalse(pokemon.Markings.ContainsKey("Star"));
                 Assert.IsFalse(pokemon.Markings.ContainsKey("Diamond"));
+            }
+            foreach(string marking in pokemon.Markings.Keys)
+            {
+                Assert.IsFalse(pokemon.Markings[marking]);
             }
         }
     }
@@ -1152,6 +1178,7 @@ public class PokemonTestCommon
         }
         else
         {
+            Assert.AreEqual(pokemon.Markings.Count, 0);
             Assert.Throws<ApplicationException>(
                 delegate
                 {
@@ -1374,6 +1401,18 @@ public class PokemonTestCommon
         pokemon.EVs["HP"] = 0;
         pokemon.IVs["HP"] = 0;
         Assert.LessOrEqual(pokemon.CurrentHP, currentHP);
+
+        int generation = Util.GameToGeneration(pokemon.Game);
+
+        if(generation >= 3)
+        {
+            foreach(string contestStat in pokemon.ContestStats.Keys)
+            {
+                int statValue = rng.Next(0, 256);
+                pokemon.ContestStats[contestStat] = statValue;
+                Assert.AreEqual(pokemon.ContestStats[contestStat], statValue);
+            }
+        }
     }
 
     static private void TestSettingTrainerInfo(
@@ -1418,6 +1457,9 @@ public class PokemonTestCommon
         {
             pokemon.OriginalTrainerGender = "Male";
             Assert.AreEqual(pokemon.OriginalTrainerGender, "Male");
+
+            pokemon.OriginalTrainerGender = "Female";
+            Assert.AreEqual(pokemon.OriginalTrainerGender, "Female");
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 delegate
@@ -1484,6 +1526,7 @@ public class PokemonTestCommon
     )
     {
         CheckInitialValues(pokemon);
+        CheckInitialMaps(pokemon);
         TestSettingAbility(pokemon);
         TestSettingBall(
             pokemon,

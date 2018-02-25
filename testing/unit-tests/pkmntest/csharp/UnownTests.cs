@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace PKMNTest
 {
 
-public class UnownTests 
+public class UnownTests
 {
     public static void Gen2UnownTest(
         string game
