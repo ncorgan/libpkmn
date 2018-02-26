@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -25,11 +25,10 @@ class gen2_items_test(items_tests):
 
     def __test_item_pocket(self, item_pocket, game):
         # Check unchanging and initial values.
-        self.assertEqual(len(item_pocket.as_list()), 20)
-        self.assertEqual(item_pocket.get_name(), "Items")
-        self.assertEqual(item_pocket.get_game(), game)
-        self.assertEqual(item_pocket.get_capacity(), 20)
-        self.assertEqual(item_pocket.get_num_items(), 0)
+        self.assertEqual(len(item_pocket), 20)
+        self.assertEqual(item_pocket.name, "Items")
+        self.assertEqual(item_pocket.game, game)
+        self.assertEqual(item_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
         self.item_list_test_empty_slot(item_pocket)
@@ -56,17 +55,16 @@ class gen2_items_test(items_tests):
              u"Flower Mail", u"Burn Heal", u"PSNCureBerry", u"Stick"]
         )
 
-        valid_items = item_pocket.get_valid_items()
+        valid_items = item_pocket.valid_items
         self.assertGreater(len(valid_items), 0)
         self.item_list_test_both_text_types(item_pocket)
 
     def __test_key_item_pocket(self, key_item_pocket, game):
         # Check unchanging and initial values.
-        self.assertEqual(len(key_item_pocket.as_list()), 26)
-        self.assertEqual(key_item_pocket.get_name(), "KeyItems")
-        self.assertEqual(key_item_pocket.get_game(), game)
-        self.assertEqual(key_item_pocket.get_capacity(), 26)
-        self.assertEqual(key_item_pocket.get_num_items(), 0)
+        self.assertEqual(key_item_pocket.name, "KeyItems")
+        self.assertEqual(key_item_pocket.game, game)
+        self.assertEqual(len(key_item_pocket), 26)
+        self.assertEqual(key_item_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
         self.item_list_test_empty_slot(key_item_pocket)
@@ -91,7 +89,7 @@ class gen2_items_test(items_tests):
             for item in self.__crystal_items:
                 key_item_pocket.add(item, 1)
                 key_item_pocket.remove(item, 1)
-            self.assertEqual(key_item_pocket.get_num_items(), 0)
+            self.assertEqual(key_item_pocket.num_items, 0)
         else:
             self.item_class_test_invalid_items(
                 key_item_pocket,
@@ -105,17 +103,16 @@ class gen2_items_test(items_tests):
              u"Silver Wing", u"Lost Item", u"SquirtBottle", u"Rainbow Wing"]
         )
 
-        valid_items = key_item_pocket.get_valid_items()
+        valid_items = key_item_pocket.valid_items
         self.assertGreater(len(valid_items), 0)
         self.item_list_test_both_text_types(key_item_pocket)
 
     def __test_ball_pocket(self, ball_pocket, game):
         # Check unchanging and initial values.
-        self.assertEqual(len(ball_pocket.as_list()), 12)
-        self.assertEqual(ball_pocket.get_name(), "Balls")
-        self.assertEqual(ball_pocket.get_game(), game)
-        self.assertEqual(ball_pocket.get_capacity(), 12)
-        self.assertEqual(ball_pocket.get_num_items(), 0)
+        self.assertEqual(ball_pocket.name, "Balls")
+        self.assertEqual(ball_pocket.game, game)
+        self.assertEqual(len(ball_pocket), 12)
+        self.assertEqual(ball_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
         self.item_list_test_empty_slot(ball_pocket)
@@ -143,19 +140,18 @@ class gen2_items_test(items_tests):
             item_names
         )
 
-        valid_items = ball_pocket.get_valid_items()
+        valid_items = ball_pocket.valid_items
         self.assertGreater(len(valid_items), 0)
         self.item_list_test_both_text_types(ball_pocket)
 
     def __test_tmhm_pocket(self, tmhm_pocket, game):
         # Check unchanging and initial values.
-        self.assertEqual(tmhm_pocket.get_name(), "TM/HM")
-        self.assertEqual(tmhm_pocket.get_game(), game)
-        self.assertEqual(tmhm_pocket.get_capacity(), 57)
-        self.assertEqual(tmhm_pocket.get_num_items(), 0)
+        self.assertEqual(tmhm_pocket.name, "TM/HM")
+        self.assertEqual(tmhm_pocket.game, game)
+        self.assertEqual(len(tmhm_pocket), 57)
+        self.assertEqual(tmhm_pocket.num_items, 0)
 
         # Make sure item slots start as correctly empty.
-        self.assertEqual(len(tmhm_pocket.as_list()), tmhm_pocket.get_capacity())
         for i in range(1,51):
             name = "TM{0}".format(str(i).zfill(2))
             self.assertEqual(tmhm_pocket[i-1].item, name)
@@ -191,39 +187,38 @@ class gen2_items_test(items_tests):
         for i in range(1,51):
             name = "TM{0}".format(str(i).zfill(2))
             tmhm_pocket.add(name, 50)
-            self.assertEqual(tmhm_pocket.get_num_items(), i)
+            self.assertEqual(tmhm_pocket.num_items, i)
             self.assertEqual(tmhm_pocket[i-1].item, name)
             self.assertEqual(tmhm_pocket[i-1].amount, 50)
         for i in range(1,51)[::-1]:
             name = "TM{0}".format(str(i).zfill(2))
             tmhm_pocket.remove(name, 50)
-            self.assertEqual(tmhm_pocket.get_num_items(), i-1)
+            self.assertEqual(tmhm_pocket.num_items, i-1)
             self.assertEqual(tmhm_pocket[i-1].item, name)
             self.assertEqual(tmhm_pocket[i-1].amount, 0)
         for i in range(1,8):
             name = "HM{0}".format(str(i).zfill(2))
             tmhm_pocket.add(name, 1)
-            self.assertEqual(tmhm_pocket.get_num_items(), i)
+            self.assertEqual(tmhm_pocket.num_items, i)
             self.assertEqual(tmhm_pocket[50+i-1].item, name)
             self.assertEqual(tmhm_pocket[50+i-1].amount, 1)
         for i in range(1,8)[::-1]:
             name = "HM{0}".format(str(i).zfill(2))
             tmhm_pocket.remove(name, 1)
-            self.assertEqual(tmhm_pocket.get_num_items(), i-1)
+            self.assertEqual(tmhm_pocket.num_items, i-1)
             self.assertEqual(tmhm_pocket[50+i-1].item, name)
             self.assertEqual(tmhm_pocket[50+i-1].amount, 0)
 
-        valid_items = tmhm_pocket.get_valid_items()
+        valid_items = tmhm_pocket.valid_items
         self.assertEqual(len(valid_items), 57)
         self.item_list_test_both_text_types_with_strings(tmhm_pocket, "TM01", u"TM01")
 
     def __test_pc(self, pc, game):
         # Check unchanging and initial values.
-        self.assertEqual(len(pc.as_list()), 50)
-        self.assertEqual(pc.get_name(), "PC")
-        self.assertEqual(pc.get_game(), game)
-        self.assertEqual(pc.get_capacity(), 50)
-        self.assertEqual(pc.get_num_items(), 0)
+        self.assertEqual(pc.name, "PC")
+        self.assertEqual(pc.game, game)
+        self.assertEqual(len(pc), 50)
+        self.assertEqual(pc.num_items, 0)
 
         # Make sure item slots start as correctly empty.
         self.item_list_test_empty_slot(pc)
@@ -236,7 +231,7 @@ class gen2_items_test(items_tests):
             for item in self.__crystal_items:
                 pc.add(item, 1)
                 pc.remove(item, 1)
-            self.assertEqual(pc.get_num_items(), 0)
+            self.assertEqual(pc.num_items, 0)
         else:
             self.item_class_test_invalid_items(
                 pc,
@@ -256,21 +251,22 @@ class gen2_items_test(items_tests):
              u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
         )
 
-        valid_items = pc.get_valid_items()
+        valid_items = pc.valid_items
         full_item_list = pkmn.database.get_item_list(game)
         self.assertEqual(len(valid_items), len(full_item_list))
         self.item_list_test_both_text_types(pc)
 
     def __test_item_bag(self, bag, game):
         # Check unchanging and initial values.
-        self.assertEqual(bag.get_game(), game)
+        self.assertEqual(bag.game, game)
 
-        pockets = bag.get_pockets()
-        self.assertEqual(len(pockets), 4)
-        self.assertTrue(pockets.has_key("Items"))
-        self.assertTrue(pockets.has_key("KeyItems"))
-        self.assertTrue(pockets.has_key("Balls"))
-        self.assertTrue(pockets.has_key("TM/HM"))
+        self.assertEqual(len(bag), 4)
+        self.assertEqual(len(bag.pocket_names), 4)
+
+        self.assertTrue("Items" in bag.pocket_names)
+        self.assertTrue("KeyItems" in bag.pocket_names)
+        self.assertTrue("Balls" in bag.pocket_names)
+        self.assertTrue("TM/HM" in bag.pocket_names)
 
         self.__test_item_pocket(bag["Items"], game)
         self.__test_key_item_pocket(bag["KeyItems"], game)
@@ -282,10 +278,10 @@ class gen2_items_test(items_tests):
                  u"Berry", u"SquirtBottle", u"Friend Ball", u"HM01"]
 
         # Make sure adding items through the bag adds to the proper pockets.
-        self.assertEqual(bag["Items"].get_num_items(), 0)
-        self.assertEqual(bag["KeyItems"].get_num_items(), 0)
-        self.assertEqual(bag["Balls"].get_num_items(), 0)
-        self.assertEqual(bag["TM/HM"].get_num_items(), 0)
+        self.assertEqual(bag["Items"].num_items, 0)
+        self.assertEqual(bag["KeyItems"].num_items, 0)
+        self.assertEqual(bag["Balls"].num_items, 0)
+        self.assertEqual(bag["TM/HM"].num_items, 0)
         for item in items:
             bag.add(item, 5)
 

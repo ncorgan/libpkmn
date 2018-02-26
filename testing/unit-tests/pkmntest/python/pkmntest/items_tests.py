@@ -35,47 +35,39 @@ class items_tests(unittest.TestCase):
             return (input_str, input_str)
 
     def item_bag_test_get_pockets_with_both_text_types(self, bag):
-        pockets = bag.get_pockets()
-        for pocket_name in pockets:
+        for pocket_name in bag.pocket_names:
             strs = self.__get_both_string_types(pocket_name)
-
-            # Test getting pockets from bag
-            self.assertEqual(bag.get_pocket(strs[0]), bag.get_pocket(strs[1]))
             self.assertEqual(bag[strs[0]], bag[strs[1]])
-
-            # Test getting pockets standalone
-            from_str = pkmn.item_list(strs[0], bag.get_game())
-            from_unicode = pkmn.item_list(strs[1], bag.get_game())
 
     def item_list_test_both_text_types_with_strings(self, items, as_str, as_unicode):
         items.add(as_str, 1)
         items.add(as_unicode, 1)
-        self.assertEqual(items.get_num_items(), 1)
+        self.assertEqual(items.num_items, 1)
         self.assertEqual(items[0].amount, 2)
 
         items.remove(as_str, 2)
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.num_items, 0)
         self.assertEqual(items[0].amount, 0)
 
         items.add(as_str, 1)
         items.add(as_unicode, 1)
-        self.assertEqual(items.get_num_items(), 1)
+        self.assertEqual(items.num_items, 1)
         self.assertEqual(items[0].amount, 2)
 
         items.remove(as_unicode, 2)
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.num_items, 0)
         self.assertEqual(items[0].amount, 0)
 
     # No matter the version of Python or SWIG, we should be able
     # to use ASCII or Unicode from Python.
     def item_list_test_both_text_types(self, items):
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.num_items, 0)
 
-        strs = self.__get_both_string_types(items.get_valid_items()[0])
+        strs = self.__get_both_string_types(items.valid_items[0])
         self.item_list_test_both_text_types_with_strings(items, strs[0], strs[1])
 
     def item_list_test_empty_slot(self, items):
-        for i in range(items.get_capacity()):
+        for i in range(len(items)):
             self.assertEqual(items[i].item, "None")
             self.assertEqual(items[i].amount, 0)
 
@@ -97,7 +89,7 @@ class items_tests(unittest.TestCase):
     def item_list_test_add_remove(self, items, item_names):
         self.assertEqual(len(item_names), 8)
 
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.num_items, 0)
 
         items.add(item_names[0], 30)
         items.add(item_names[1], 99)
@@ -109,7 +101,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 99)
         self.assertStringEqual(items[2].item, item_names[2])
         self.assertEqual(items[2].amount, 1)
-        self.assertEqual(items.get_num_items(), 3)
+        self.assertEqual(items.num_items, 3)
 
         items.add(item_names[2], 15)
 
@@ -119,7 +111,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 99)
         self.assertStringEqual(items[2].item, item_names[2])
         self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
+        self.assertEqual(items.num_items, 3)
 
         items.remove(item_names[1], 20)
 
@@ -129,7 +121,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 79)
         self.assertStringEqual(items[2].item, item_names[2])
         self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
+        self.assertEqual(items.num_items, 3)
 
         items.move(0, 1)
 
@@ -139,7 +131,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 30)
         self.assertStringEqual(items[2].item, item_names[2])
         self.assertEqual(items[2].amount, 16)
-        self.assertEqual(items.get_num_items(), 3)
+        self.assertEqual(items.num_items, 3)
 
         items.remove(item_names[0], 30)
 
@@ -149,7 +141,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 16)
         self.assertEqual(items[2].item, "None")
         self.assertEqual(items[2].amount, 0)
-        self.assertEqual(items.get_num_items(), 2)
+        self.assertEqual(items.num_items, 2)
 
         items.add(item_names[3], 90)
 
@@ -159,7 +151,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[1].amount, 16)
         self.assertStringEqual(items[2].item, item_names[3])
         self.assertEqual(items[2].amount, 90)
-        self.assertEqual(items.get_num_items(), 3)
+        self.assertEqual(items.num_items, 3)
 
         items.add(item_names[4], 2)
 
@@ -171,7 +163,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[2].amount, 90)
         self.assertStringEqual(items[3].item, item_names[4])
         self.assertEqual(items[3].amount, 2)
-        self.assertEqual(items.get_num_items(), 4)
+        self.assertEqual(items.num_items, 4)
 
         items.remove(item_names[1], 30)
 
@@ -183,7 +175,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[2].amount, 90)
         self.assertStringEqual(items[3].item, item_names[4])
         self.assertEqual(items[3].amount, 2)
-        self.assertEqual(items.get_num_items(), 4)
+        self.assertEqual(items.num_items, 4)
 
         items.add(item_names[5], 12)
 
@@ -197,7 +189,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[3].amount, 2)
         self.assertStringEqual(items[4].item, item_names[5])
         self.assertEqual(items[4].amount, 12)
-        self.assertEqual(items.get_num_items(), 5)
+        self.assertEqual(items.num_items, 5)
 
         items.remove(item_names[2], 16)
 
@@ -209,7 +201,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[2].amount, 2)
         self.assertStringEqual(items[3].item, item_names[5])
         self.assertEqual(items[3].amount, 12)
-        self.assertEqual(items.get_num_items(), 4)
+        self.assertEqual(items.num_items, 4)
 
         items.add(item_names[6], 65)
 
@@ -223,7 +215,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[3].amount, 12)
         self.assertStringEqual(items[4].item, item_names[6])
         self.assertEqual(items[4].amount, 65)
-        self.assertEqual(items.get_num_items(), 5)
+        self.assertEqual(items.num_items, 5)
 
         items.add(item_names[7], 6)
 
@@ -239,7 +231,7 @@ class items_tests(unittest.TestCase):
         self.assertEqual(items[4].amount, 65)
         self.assertStringEqual(items[5].item, item_names[7])
         self.assertEqual(items[5].amount, 6)
-        self.assertEqual(items.get_num_items(), 6)
+        self.assertEqual(items.num_items, 6)
 
         items.remove(item_names[4], 2)
         items.remove(item_names[1], 49)
@@ -248,4 +240,4 @@ class items_tests(unittest.TestCase):
         items.remove(item_names[3], 90)
         items.remove(item_names[6], 65)
 
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.num_items, 0)
