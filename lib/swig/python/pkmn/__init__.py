@@ -11,9 +11,6 @@ from .stl_python import *
 from . import calculations
 from . import database
 
-DEFAULT_TRAINER_ID = 2105214279
-DEFAULT_TRAINER_NAME = "LibPKMN"
-
 VERSION = "@PKMN_VERSION@"
 
 initialize_database_connection()

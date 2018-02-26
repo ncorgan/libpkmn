@@ -17,6 +17,7 @@
 %ignore pkmn::swig::item_list::item_list(const pkmn::item_list::sptr&);
 %ignore pkmn::swig::item_list::cptr();
 %ignore pkmn::swig::item_list::at(int);
+%ignore pkmn::swig::item_list::get_capacity();
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 

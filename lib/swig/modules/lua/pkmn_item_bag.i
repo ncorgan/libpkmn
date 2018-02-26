@@ -15,6 +15,7 @@
 %ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
 %ignore pkmn::swig::item_bag::cptr();
 %ignore pkmn::swig::item_bag::at(int);
+%ignore pkmn::swig::item_bag::get_pocket(const std::string&);
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 

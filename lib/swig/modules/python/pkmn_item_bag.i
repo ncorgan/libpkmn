@@ -6,34 +6,35 @@
  */
 
 %{
-    #include <pkmn/item_bag.hpp>
+    #include "cpp_wrappers/item_bag.hpp"
 %}
 
-%include <std_string.i>
+%include <attribute.i>
 
-%include <pkmn/item_bag.hpp>
+%ignore pkmn::swig::item_bag::item_bag();
+%ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
+%ignore pkmn::swig::item_bag::cptr();
+%ignore pkmn::swig::item_bag::at(int);
+%ignore pkmn::swig::item_bag::get_pocket(const std::string&);
 
-%extend std::shared_ptr<pkmn::item_bag> {
+// Convert getter/setter functions into attributes for more idiomatic Python.
 
-    %pythoncode %{
-        def __eq__(self, rhs):
-            if not isinstance(rhs, (item_bag_sptr)):
-                return False
-            else:
-                return self.__sptr_eq(rhs)
+%attributestring(pkmn::swig::item_bag, std::string, game, get_game);
+%attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), pocket_names, get_pocket_names);
 
-        def __ne__(self, rhs):
-            return not (self == rhs)
-    %}
-
-    pkmn::item_list::sptr __getitem__(
-        const std::string &key
-    ) {
-        return self->get()->get_pocket(key);
+%extend pkmn::swig::item_bag
+{
+    pkmn::swig::item_list __getitem__(
+        const std::string& pocket_name
+    )
+    {
+        return self->get_pocket(pocket_name);
     }
 
-    int __len__() {
-        return int(self->get()->get_pocket_names().size());
+    int __len__()
+    {
+        return int(self->get_pocket_names().size());
     }
 }
-%template(item_bag_sptr) std::shared_ptr<pkmn::item_bag>;
+
+%include "cpp_wrappers/item_bag.hpp"
