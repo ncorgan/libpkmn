@@ -24,3 +24,6 @@ PKMN_PYTHON_INIT
 %include <python/pkmn_database_pokemon_entry.i>
 
 %include <pkmn/database/lists.hpp>
+
+%include <pkmn/database/levelup_move.hpp>
+PKMN_PYTHON_VECTOR(pkmn::database::levelup_move, levelup_moves)

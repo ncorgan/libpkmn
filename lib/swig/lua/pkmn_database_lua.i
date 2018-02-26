@@ -26,5 +26,3 @@ PKMN_LUA_INIT
 
 %include <pkmn/database/levelup_move.hpp>
 PKMN_LUA_VECTOR(pkmn::database::levelup_move, levelup_moves)
-
-%include <pkmn/database/pokemon_entry.hpp>
