@@ -14,6 +14,10 @@
 #include "attribute_maps.hpp"
 #include "pokemon_helpers.hpp"
 
+#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
+#    include <boost/locale/encoding_utf.hpp>
+#endif
+
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
@@ -45,6 +49,162 @@ namespace pkmn { namespace swig {
             {
             }
 
+/*
+ * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
+ * Python 2 "unicode" type to be converted to a char* or std::string. There's
+ * no way for a SWIG project to bring this in, so we need this ugly workaround
+ * when using earlier verisons of SWIG.
+ *
+ * Using a std::wstring for the getters is not necessary for this purpose, but
+ * to use SWIG attributes, the types need to be the same.
+ */
+#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
+            pokemon(
+                const wstd::string& species,
+                const wstd::string& game,
+                const wstd::string& form,
+                int level
+            ): _pokemon(pkmn::pokemon::make(
+                   boost::locale::conv::utf_to_utf<char>(species),
+                   boost::locale::conv::utf_to_utf<char>(game),
+                   boost::locale::conv::utf_to_utf<char>(form),
+                   level
+               )),
+               _generation(pkmn::priv::game_name_to_generation(game))
+            {
+            }
+
+            pokemon(
+                const std::wstring& filepath
+            ): _pokemon(pkmn::pokemon::from_file(
+                   boost::locale::conv::utf_to_utf8<char>(filepath)
+               ))
+            {
+                _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
+            }
+
+            inline std::wstring get_ball()
+            {
+                if(_generation >= 3)
+                {
+                    return boost::locale::conv::utf_to_utf<wchar_t>(_pokemon->get_ball());
+                }
+                else
+                {
+                    return L"";
+                }
+            }
+
+            inline void set_ball(
+                const std::wstring& ball
+            )
+            {
+                _pokemon->set_ball(boost::locale::conv::utf_to_utf<char>(ball));
+            }
+
+            inline std::wstring get_held_item()
+            {
+                if(_generation >= 2)
+                {
+                    return boost::locale::conv::utf_to_utf<wchar_t>(
+                               _pokemon->get_held_item()
+                           );
+                }
+                else
+                {
+                    return L"";
+                }
+            }
+
+            inline void set_held_item(
+                const std::wstring& held_item
+            )
+            {
+                _pokemon->set_held_item(
+                    boost::locale::conv::utf_to_utf<char>(held_item)
+                );
+            }
+
+            inline std::wstring get_nickname()
+            {
+                return boost::locale::conv::utf_to_utf<wchar_t>(
+                           _pokemon->get_nickname()
+                       );
+            }
+
+            inline void set_nickname(
+                const std::wstring& nickname
+            )
+            {
+                _pokemon->set_nickname(
+                    boost::locale::conv::utf_to_utf<char>(nickname)
+                );
+            }
+
+            inline std::wstring get_original_trainer_name()
+            {
+                return boost::locale::conv::utf_to_utf<wchar_t>(
+                           _pokemon->get_original_trainer_name()
+                       );
+            }
+
+            inline void set_original_trainer_name(
+                const std::wstring& trainer_name
+            )
+            {
+                _pokemon->set_original_trainer_name(
+                    boost::locale::conv::utf_to_utf<char>(trainer_name)
+                );
+            }
+
+            inline std::wstring get_location_met()
+            {
+                if(_generation >= 2)
+                {
+                    return boost::locale::conv::utf_to_utf<wchar_t>(
+                               _pokemon->get_location_met(false)
+                           );
+                }
+                else
+                {
+                    return L"";
+                }
+            }
+
+            inline void set_location_met(
+                const std::wstring& location
+            )
+            {
+                _pokemon->set_location_met(
+                    boost::locale::conv::utf_to_utf<char>(location),
+                    false
+                );
+            }
+
+            inline wstd::string get_location_met_as_egg()
+            {
+                if(_generation >= 4)
+                {
+                    return boost::locale::conv::utf_to_utf<wchar_t>(
+                               _pokemon->get_location_met(true)
+                           );
+                }
+                else
+                {
+                    return L"";
+                }
+            }
+
+            inline void set_location_met_as_egg(
+                const std::wstring& location
+            )
+            {
+                _pokemon->set_location_met(
+                    boost::locale::conv::utf_to_utf<char>(location),
+                    true
+                );
+            }
+#else
             pokemon(
                 const std::string& species,
                 const std::string& game,
@@ -61,6 +221,107 @@ namespace pkmn { namespace swig {
             {
                 _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
             }
+
+            inline std::string get_ball()
+            {
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_ball();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            inline void set_ball(
+                const std::string& ball
+            )
+            {
+                _pokemon->set_ball(ball);
+            }
+
+            inline std::string get_held_item()
+            {
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_held_item();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            inline void set_held_item(
+                const std::string& held_item
+            )
+            {
+                _pokemon->set_held_item(held_item);
+            }
+
+            inline std::string get_nickname()
+            {
+                return _pokemon->get_nickname();
+            }
+
+            inline void set_nickname(
+                const std::string& nickname
+            )
+            {
+                _pokemon->set_nickname(nickname);
+            }
+
+            inline std::string get_original_trainer_name()
+            {
+                return _pokemon->get_original_trainer_name();
+            }
+
+            inline void set_original_trainer_name(
+                const std::string& trainer_name
+            )
+            {
+                _pokemon->set_original_trainer_name(trainer_name);
+            }
+
+            inline std::string get_location_met()
+            {
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_location_met(false);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            inline void set_location_met(
+                const std::string& location
+            )
+            {
+                _pokemon->set_location_met(location, false);
+            }
+
+            inline std::string get_location_met_as_egg()
+            {
+                if(_generation >= 4)
+                {
+                    return _pokemon->get_location_met(true);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            inline void set_location_met_as_egg(
+                const std::string& location
+            )
+            {
+                _pokemon->set_location_met(location, true);
+            }
+#endif
 
             static const uint32_t DEFAULT_TRAINER_ID;
             static const std::string DEFAULT_TRAINER_NAME;
@@ -129,18 +390,6 @@ namespace pkmn { namespace swig {
                 _pokemon->set_condition(condition);
             }
 
-            inline std::string get_nickname()
-            {
-                return _pokemon->get_nickname();
-            }
-
-            inline void set_nickname(
-                const std::string& nickname
-            )
-            {
-                _pokemon->set_nickname(nickname);
-            }
-
             inline std::string get_gender()
             {
                 if(_generation >= 2)
@@ -179,25 +428,6 @@ namespace pkmn { namespace swig {
                 _pokemon->set_shininess(value);
             }
 
-            inline std::string get_held_item()
-            {
-                if(_generation >= 2)
-                {
-                    return _pokemon->get_held_item();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            inline void set_held_item(
-                const std::string& held_item
-            )
-            {
-                _pokemon->set_held_item(held_item);
-            }
-
             inline int get_pokerus_duration()
             {
                 if(_generation >= 2)
@@ -213,18 +443,6 @@ namespace pkmn { namespace swig {
             inline void set_pokerus_duration(int duration)
             {
                 _pokemon->set_pokerus_duration(duration);
-            }
-
-            inline std::string get_original_trainer_name()
-            {
-                return _pokemon->get_original_trainer_name();
-            }
-
-            inline void set_original_trainer_name(
-                const std::string& trainer_name
-            )
-            {
-                _pokemon->set_original_trainer_name(trainer_name);
             }
 
             inline uint16_t get_original_trainer_public_id()
@@ -327,25 +545,6 @@ namespace pkmn { namespace swig {
                 _pokemon->set_ability(ability);
             }
 
-            inline std::string get_ball()
-            {
-                if(_generation >= 3)
-                {
-                    return _pokemon->get_ball();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            inline void set_ball(
-                const std::string& ball
-            )
-            {
-                _pokemon->set_ball(ball);
-            }
-
             inline int get_level_met()
             {
                 if(_generation >= 2)
@@ -363,44 +562,6 @@ namespace pkmn { namespace swig {
             )
             {
                 _pokemon->set_level_met(level_met);
-            }
-
-            inline std::string get_location_met()
-            {
-                if(_generation >= 2)
-                {
-                    return _pokemon->get_location_met(false);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            inline void set_location_met(
-                const std::string& location
-            )
-            {
-                _pokemon->set_location_met(location, false);
-            }
-
-            inline std::string get_location_met_as_egg()
-            {
-                if(_generation >= 4)
-                {
-                    return _pokemon->get_location_met(true);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            inline void set_location_met_as_egg(
-                const std::string& location
-            )
-            {
-                _pokemon->set_location_met(location, true);
             }
 
             inline std::string get_original_game()

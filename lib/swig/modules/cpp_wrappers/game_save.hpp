@@ -11,6 +11,10 @@
 #include <pkmn/config.hpp>
 #include <pkmn/game_save.hpp>
 
+#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
+#    include <boost/locale/encoding_utf.hpp>
+#endif
+
 #include "swig/modules/cpp_wrappers/item_list.hpp"
 #include "swig/modules/cpp_wrappers/item_bag.hpp"
 #include "swig/modules/cpp_wrappers/pokedex.hpp"
@@ -32,6 +36,71 @@ namespace pkmn { namespace swig {
             {
             }
 
+/*
+ * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
+ * Python 2 "unicode" type to be converted to a char* or std::string. There's
+ * no way for a SWIG project to bring this in, so we need this ugly workaround
+ * when using earlier verisons of SWIG.
+ */
+#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
+            game_save(
+                const std::wstring& filepath
+            ): _game_save(pkmn::game_save::from_file(
+                   boost::locale::conv::utf_to_utf<char>(filepath)
+               ))
+            {
+            }
+
+            static std::string detect_type(
+                const std::string& filepath
+            )
+            {
+                return pkmn::game_save::detect_type(
+                           boost::locale::conv::utf_to_utf<char>(filepath)
+                       );
+            }
+
+            inline void save_as(
+                const std::wstring& filepath
+            )
+            {
+                _game_save->save_as(
+                    boost::locale::conv::utf_to_utf<char>(filepath)
+                );
+            }
+
+            inline std::wstring get_trainer_name()
+            {
+                return boost::locale::conv::utf_to_utf<wchar_t>(
+                           _game_save->get_trainer_name()
+                       );
+            }
+
+            inline void set_trainer_name(
+                const std::wstring& trainer_name
+            )
+            {
+                _game_save->set_trainer_name(
+                    boost::locale::conv::utf_to_utf<char>(trainer_name)
+                );
+            }
+
+            inline std::wstring get_rival_name()
+            {
+                return boost::locale::conv::utf_to_utf<wchar_t>(
+                           _game_save->get_rival_name()
+                       );
+            }
+
+            inline void set_rival_name(
+                const std::wstring& rival_name
+            )
+            {
+                _game_save->set_rival_name(
+                    boost::locale::conv::utf_to_utf<char>(rival_name)
+                );
+            }
+#else
             game_save(
                 const std::string& filepath
             ): _game_save(pkmn::game_save::from_file(filepath))
@@ -45,26 +114,11 @@ namespace pkmn { namespace swig {
                 return pkmn::game_save::detect_type(filepath);
             }
 
-            inline std::string get_filepath()
-            {
-                return _game_save->get_filepath();
-            }
-
-            inline void save()
-            {
-                _game_save->save();
-            }
-
             inline void save_as(
                 const std::string& filepath
             )
             {
                 _game_save->save_as(filepath);
-            }
-
-            inline std::string get_game()
-            {
-                return _game_save->get_game();
             }
 
             inline std::string get_trainer_name()
@@ -77,6 +131,33 @@ namespace pkmn { namespace swig {
             )
             {
                 _game_save->set_trainer_name(trainer_name);
+            }
+
+            inline std::string get_rival_name()
+            {
+                return _game_save->get_rival_name();
+            }
+
+            inline void set_rival_name(
+                const std::string& rival_name
+            )
+            {
+                _game_save->set_rival_name(rival_name);
+            }
+#endif
+            inline std::string get_filepath()
+            {
+                return _game_save->get_filepath();
+            }
+
+            inline void save()
+            {
+                _game_save->save();
+            }
+
+            inline std::string get_game()
+            {
+                return _game_save->get_game();
             }
 
             inline uint32_t get_trainer_id()
@@ -125,18 +206,6 @@ namespace pkmn { namespace swig {
             )
             {
                 _game_save->set_trainer_gender(trainer_gender);
-            }
-
-            inline std::string get_rival_name()
-            {
-                return _game_save->get_rival_name();
-            }
-
-            inline void set_rival_name(
-                const std::string& rival_name
-            )
-            {
-                _game_save->set_rival_name(rival_name);
             }
 
             inline int get_money()
