@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
+
+import base_test
 
 import pkmn
 
@@ -13,30 +15,11 @@ import unittest
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
-class items_tests(unittest.TestCase):
-
-    def assertStringEqual(self, str1, str2):
-        if PYTHON_MAJOR_VERSION == 2:
-            if "str" in str(type(str1)):
-                str1 = str1.decode("utf-8")
-            if "str" in str(type(str2)):
-                str2 = str2.decode("utf-8")
-
-        self.assertEqual(str1, str2)
-
-    def __get_both_string_types(self, input_str):
-        if PYTHON_MAJOR_VERSION == 2:
-            # Which call succeeds depends on SWIG version
-            try:
-                return (input_str, input_str.decode("utf-8"))
-            except:
-                return (input_str, unicode(input_str))
-        else:
-            return (input_str, input_str)
+class items_tests(base_test.base_test):
 
     def item_bag_test_get_pockets_with_both_text_types(self, bag):
         for pocket_name in bag.pocket_names:
-            strs = self.__get_both_string_types(pocket_name)
+            strs = self.get_both_string_types(pocket_name)
             self.assertEqual(bag[strs[0]], bag[strs[1]])
 
     def item_list_test_both_text_types_with_strings(self, items, as_str, as_unicode):
@@ -63,7 +46,7 @@ class items_tests(unittest.TestCase):
     def item_list_test_both_text_types(self, items):
         self.assertEqual(items.num_items, 0)
 
-        strs = self.__get_both_string_types(items.valid_items[0])
+        strs = self.get_both_string_types(items.valid_items[0])
         self.item_list_test_both_text_types_with_strings(items, strs[0], strs[1])
 
     def item_list_test_empty_slot(self, items):

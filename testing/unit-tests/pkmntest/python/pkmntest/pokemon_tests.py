@@ -6,6 +6,8 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+import base_test
+
 import pkmn
 
 import os
@@ -76,26 +78,7 @@ class pokemon_test_params:
         self.valid_original_games = valid_original_games
         self.invalid_original_games = invalid_original_games
 
-class pokemon_tests(unittest.TestCase):
-
-    def assertStringEqual(self, str1, str2):
-        if PYTHON_MAJOR_VERSION == 2:
-            if "str" in str(type(str1)):
-                str1 = str1.decode("utf-8")
-            if "str" in str(type(str2)):
-                str2 = str2.decode("utf-8")
-
-        self.assertEqual(str1, str2)
-
-    def __get_both_string_types(self, input_str):
-        if PYTHON_MAJOR_VERSION == 2:
-            # Which call succeeds depends on SWIG version
-            try:
-                return (input_str, input_str.decode("utf-8"))
-            except:
-                return (input_str, unicode(input_str))
-        else:
-            return (input_str, input_str)
+class pokemon_tests(base_test.base_test):
 
     def gen1_forms_test(self, game):
         generation = GAME_TO_GENERATION[game]
