@@ -805,11 +805,14 @@ public class PokemonTestCommon
 
             if(generation >= 5)
             {
-                pokemon.Ability = pokemon.DatabaseEntry.HiddenAbility;
-                Assert.AreEqual(
-                    pokemon.Ability,
-                    pokemon.DatabaseEntry.HiddenAbility
-                );
+                if(!pokemon.DatabaseEntry.Ability.Equals("None"))
+                {
+                    pokemon.Ability = pokemon.DatabaseEntry.HiddenAbility;
+                    Assert.AreEqual(
+                        pokemon.Ability,
+                        pokemon.DatabaseEntry.HiddenAbility
+                    );
+                }
             }
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -1353,7 +1356,7 @@ public class PokemonTestCommon
         }
         else
         {
-            // The getter shouldn't set by convention, but the setter will.
+            // The getter shouldn't throw by convention, but the setter will.
 
             Assert.AreEqual(pokemon.PokerusDuration, 0);
 

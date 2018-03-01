@@ -21,14 +21,7 @@ if __name__ == "__main__":
     suite3 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.gen3_pokemon_test)
     test_program3 = unittest.TextTestRunner(verbosity=3).run(suite3)
 
-    suite4 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.pokemon_conversions_test)
-    test_program4 = unittest.TextTestRunner(verbosity=3).run(suite4)
-
-    suite5 = unittest.TestLoader().loadTestsFromTestCase(pkmntest.pokemon_io_test)
-    test_program5 = unittest.TextTestRunner(verbosity=3).run(suite5)
-
     success = test_program1.wasSuccessful() and test_program2.wasSuccessful() and \
-              test_program3.wasSuccessful() and test_program4.wasSuccessful() and \
-              test_program4.wasSuccessful()
+              test_program3.wasSuccessful()
 
     sys.exit(0 if success else 1)
