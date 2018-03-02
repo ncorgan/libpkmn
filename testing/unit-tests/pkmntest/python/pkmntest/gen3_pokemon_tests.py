@@ -8,11 +8,19 @@
 
 import pkmn
 
-import pokemon_tests
+import pokemon_test_base
 
 import os
 import random
 import unittest
+
+from nose_parameterized import parameterized
+
+def test_name_func_pokemon(testcase_func, param_num, param):
+    return "{0}_{1}".format(testcase_func.__name__, param.args[1])
+
+def test_name_func_unown(testcase_func, param_num, param):
+    return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
 MARKINGS = ["Circle", "Triangle", "Square", "Heart"]
 CONTEST_TYPES = ["Cool", "Beauty", "Cute", "Smart", "Tough"]
@@ -22,14 +30,23 @@ RIBBONS = ["Champion", "Winning", "Victory", "Artist",
            "Country", "National", "Earth", "World"]
 STATS = ["HP", "Attack", "Defense", "Speed", "Special Attack", "Special Defense"]
 
-class gen3_pokemon_test(pokemon_tests.pokemon_tests):
+class gen3_pokemon_test(pokemon_test_base.pokemon_test_base):
 
-    def gen3_pokemon_test(self, species, game):
+    @parameterized.expand([
+        ("Torchic", "Ruby"),
+        ("Mudkip", "Sapphire"),
+        ("Treecko", "Emerald"),
+        ("Charmander", "FireRed"),
+        ("Bulbasaur", "LeafGreen"),
+        ("Espeon", "Colosseum"),
+        ("Umbreon", "XD")
+    ], testcase_func_name=test_name_func_pokemon)
+    def test_pokemon(self, species, game):
         pokemon = pkmn.pokemon(species, game, "", 30)
         test_params = None
 
         if game in ["Colosseum", "XD"]:
-            test_params = pokemon_tests.pokemon_test_params(
+            test_params = pokemon_test_base.pokemon_test_params(
                               "Great Ball",
                               ["Friend Ball", "Heal Ball"],
                               "Razz Berry",
@@ -43,7 +60,7 @@ class gen3_pokemon_test(pokemon_tests.pokemon_tests):
                               ["Gold", "HeartGold"]
                           )
         else:
-            test_params = pokemon_tests.pokemon_test_params(
+            test_params = pokemon_test_base.pokemon_test_params(
                               "Great Ball",
                               ["Friend Ball", "Heal Ball"],
                               "Razz Berry",
@@ -59,7 +76,12 @@ class gen3_pokemon_test(pokemon_tests.pokemon_tests):
 
         self.common_test(pokemon, test_params)
 
-    def unown_test(self, game):
+    @parameterized.expand([
+        "Ruby", "Sapphire", "Emerald",
+        "FireRed", "LeafGreen",
+        "Colosseum", "XD"
+    ], testcase_func_name=test_name_func_unown)
+    def test_unown(self, game):
         unown_entry = pkmn.database.pokemon_entry("Unown", game, "")
 
         unown = None
@@ -94,115 +116,3 @@ class gen3_pokemon_test(pokemon_tests.pokemon_tests):
         # Make sure setting the personality properly sets the form.
         unown.personality = 0x4C07DE71;
         self.assertEqual(unown.form, "B");
-
-    #
-    # Ruby
-    #
-
-    def test_ruby_forms(self):
-        self.forms_test("Ruby")
-
-    def test_ruby_gender(self):
-        self.gender_test("Ruby")
-
-    def test_ruby_unown(self):
-        self.unown_test("Ruby")
-
-    def test_ruby_pokemon(self):
-        self.gen3_pokemon_test("Torchic", "Ruby")
-
-    #
-    # Sapphire
-    #
-
-    def test_sapphire_forms(self):
-        self.forms_test("Sapphire")
-
-    def test_sapphire_gender(self):
-        self.gender_test("Sapphire")
-
-    def test_sapphire_unown(self):
-        self.unown_test("Sapphire")
-
-    def test_sapphire_pokemon(self):
-        self.gen3_pokemon_test("Mudkip", "Sapphire")
-
-    #
-    # Emerald
-    #
-
-    def test_emerald_forms(self):
-        self.forms_test("Emerald")
-
-    def test_emerald_gender(self):
-        self.gender_test("Emerald")
-
-    def test_emerald_unown(self):
-        self.unown_test("Emerald")
-
-    def test_emerald_pokemon(self):
-        self.gen3_pokemon_test("Treecko", "Emerald")
-
-    #
-    # FireRed
-    #
-
-    def test_firered_forms(self):
-        self.forms_test("FireRed")
-
-    def test_firered_gender(self):
-        self.gender_test("FireRed")
-
-    def test_firered_unown(self):
-        self.unown_test("FireRed")
-
-    def test_firered_pokemon(self):
-        self.gen3_pokemon_test("Charmander", "FireRed")
-
-    #
-    # LeafGreen
-    #
-
-    def test_leafgreen_forms(self):
-        self.forms_test("LeafGreen")
-
-    def test_leafgreen_gender(self):
-        self.gender_test("LeafGreen")
-
-    def test_leafgreen_unown(self):
-        self.unown_test("LeafGreen")
-
-    def test_leafgreen_pokemon(self):
-        self.gen3_pokemon_test("Bulbasaur", "LeafGreen")
-
-    #
-    # Colosseum
-    #
-
-    def test_colosseum_forms(self):
-        self.forms_test("Colosseum")
-
-    def test_colosseum_gender(self):
-        self.gender_test("Colosseum")
-
-    def test_colosseum_unown(self):
-        self.unown_test("Colosseum")
-
-    def test_colosseum_pokemon(self):
-        self.gen3_pokemon_test("Espeon", "Colosseum")
-
-    #
-    # XD
-    #
-
-    def test_xd_forms(self):
-        self.forms_test("XD")
-
-    def test_xd_gender(self):
-        self.gender_test("XD")
-
-    def test_xd_unown(self):
-        self.unown_test("XD")
-
-    def test_xd_pokemon(self):
-        self.gen3_pokemon_test("Umbreon", "XD")

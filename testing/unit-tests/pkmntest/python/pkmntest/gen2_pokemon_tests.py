@@ -8,16 +8,29 @@
 
 import pkmn
 
-import pokemon_tests
+import pokemon_test_base
 
 import os
 import unittest
 
-class gen2_pokemon_test(pokemon_tests.pokemon_tests):
+from nose_parameterized import parameterized
 
-    def gen2_pokemon_test(self, species, game):
+def test_name_func_pokemon(testcase_func, param_num, param):
+    return "{0}_{1}".format(testcase_func.__name__, param.args[1])
+
+def test_name_func_unown(testcase_func, param_num, param):
+    return "{0}_{1}".format(testcase_func.__name__, param.args[0])
+
+class gen2_pokemon_test(pokemon_test_base.pokemon_test_base):
+
+    @parameterized.expand([
+        ("Cyndaquil", "Gold"),
+        ("Totodile", "Silver"),
+        ("Chikorita", "Crystal")
+    ], testcase_func_name=test_name_func_pokemon)
+    def test_pokemon(self, species, game):
         pokemon = pkmn.pokemon(species, game, "", 30)
-        test_params = pokemon_tests.pokemon_test_params(
+        test_params = pokemon_test_base.pokemon_test_params(
                           "Great Ball",
                           ["Great Ball"],
                           "Berry",
@@ -55,7 +68,10 @@ class gen2_pokemon_test(pokemon_tests.pokemon_tests):
         self.assertEqual(pokemon.IVs["Speed"], 10)
         self.assertEqual(pokemon.IVs["Special"], 10)
 
-    def unown_test(self, game):
+    @parameterized.expand([
+        "Gold", "Silver", "Crystal"
+    ], testcase_func_name=test_name_func_unown)
+    def test_unown(self, game):
         unown_entry = pkmn.database.pokemon_entry("Unown", game, "")
 
         unown = None
@@ -99,51 +115,3 @@ class gen2_pokemon_test(pokemon_tests.pokemon_tests):
         unown.IVs["Speed"] = 1;
         unown.IVs["Special"] = 14;
         self.assertEquals(unown.form, "G");
-
-    #
-    # Gold
-    #
-
-    def test_gold_forms(self):
-        self.forms_test("Gold")
-
-    def test_gold_gender(self):
-        self.gender_test("Gold")
-
-    def test_gold_unown(self):
-        self.unown_test("Gold")
-
-    def test_gold_pokemon(self):
-        self.gen2_pokemon_test("Cyndaquil", "Gold")
-
-    #
-    # Silver
-    #
-
-    def test_silver_forms(self):
-        self.forms_test("Silver")
-
-    def test_silver_gender(self):
-        self.gender_test("Silver")
-
-    def test_silver_unown(self):
-        self.unown_test("Silver")
-
-    def test_silver_pokemon(self):
-        self.gen2_pokemon_test("Totodile", "Silver")
-
-    #
-    # Crystal
-    #
-
-    def test_crystal_forms(self):
-        self.forms_test("Crystal")
-
-    def test_crystal_gender(self):
-        self.gender_test("Crystal")
-
-    def test_crystal_unown(self):
-        self.unown_test("Crystal")
-
-    def test_crystal_pokemon(self):
-        self.gen2_pokemon_test("Chikorita", "Crystal")

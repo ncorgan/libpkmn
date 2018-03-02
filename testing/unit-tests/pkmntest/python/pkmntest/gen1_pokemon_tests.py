@@ -8,16 +8,27 @@
 
 import pkmn
 
-import pokemon_tests
+import pokemon_test_base
 
 import os
 import unittest
 
-class gen1_pokemon_test(pokemon_tests.pokemon_tests):
+from nose_parameterized import parameterized
 
-    def gen1_pokemon_test(self, species, game):
+def test_name_func(testcase_func, param_num, param):
+    return "{0}_{1}".format(testcase_func.__name__, param.args[1])
+
+class gen1_pokemon_test(pokemon_test_base.pokemon_test_base):
+
+    @parameterized.expand([
+        ("Charmander", "Red"),
+        ("Squirtle", "Blue"),
+        ("Bulbasaur", "Yellow")
+    ],
+    testcase_func_name=test_name_func)
+    def test_pokemon(self, species, game):
         pokemon = pkmn.pokemon(species, game, "", 30)
-        test_params = pokemon_tests.pokemon_test_params(
+        test_params = pokemon_test_base.pokemon_test_params(
                           "Great Ball",
                           ["Great Ball"],
                           "Potion",
@@ -34,33 +45,3 @@ class gen1_pokemon_test(pokemon_tests.pokemon_tests):
 
         # Test attributes.
         self.assertEqual(pokemon.numeric_attributes["Catch rate"], 45)
-
-    #
-    # Red
-    #
-
-    def test_red_forms(self):
-        self.forms_test("Red")
-
-    def test_red_pokemon(self):
-        self.gen1_pokemon_test("Charmander", "Red")
-
-    #
-    # Blue
-    #
-
-    def test_blue_forms(self):
-        self.forms_test("Blue")
-
-    def test_blue_pokemon(self):
-        self.gen1_pokemon_test("Squirtle", "Blue")
-
-    #
-    # Yellow
-    #
-
-    def test_yellow_forms(self):
-        self.forms_test("Yellow")
-
-    def test_yellow_pokemon(self):
-        self.gen1_pokemon_test("Bulbasaur", "Yellow")

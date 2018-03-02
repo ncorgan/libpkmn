@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@ from .gen2_pokemon_tests import *
 from .gen3_pokemon_tests import *
 from .gba_items_tests import *
 from .gcn_items_tests import *
+from .pokemon_common_tests import *
 from .pokemon_conversions_tests import *
 from .pokemon_io_tests import *
 from .pokemon_party_tests import *
