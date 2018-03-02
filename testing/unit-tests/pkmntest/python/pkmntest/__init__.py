@@ -5,6 +5,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+from .base_test import *
 from .gen1_items_tests import *
 from .gen1_pokemon_tests import *
 from .gen2_items_tests import *

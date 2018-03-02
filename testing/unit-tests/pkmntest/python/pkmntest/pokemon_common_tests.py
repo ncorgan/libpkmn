@@ -23,12 +23,6 @@ def test_name_func(testcase_func, param_num, param):
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
-ALL_GAMES = [
-    "Red", "Blue", "Yellow",
-    "Gold", "Silver", "Crystal",
-    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
-]
-
 GAME_TO_GENERATION = {
     "Red": 1,
     "Blue": 1,
@@ -225,7 +219,7 @@ class pokemon_common_tests(base_test.base_test):
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
 
-    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
+    @parameterized.expand(base_test.ALL_GAMES, testcase_func_name=test_name_func)
     def test_forms(self, game):
         generation = GAME_TO_GENERATION[game]
 
@@ -236,7 +230,7 @@ class pokemon_common_tests(base_test.base_test):
         if generation >= 3:
             self.gen3_forms_test(game)
 
-    @parameterized.expand(ALL_GAMES[3:], testcase_func_name=test_name_func)
+    @parameterized.expand(base_test.ALL_GAMES[3:], testcase_func_name=test_name_func)
     def test_gender(self, game):
         # Single-gender
         nidorina = pkmn.pokemon("Nidorina", game, "", 50)

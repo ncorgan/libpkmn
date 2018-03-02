@@ -16,6 +16,12 @@ import unittest
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
+ALL_GAMES = [
+    "Red", "Blue", "Yellow",
+    "Gold", "Silver", "Crystal",
+    "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
+]
+
 GAME_TO_GENERATION = {
     "Red": 1,
     "Blue": 1,
