@@ -805,7 +805,7 @@ public class PokemonTestCommon
 
             if(generation >= 5)
             {
-                if(!pokemon.DatabaseEntry.Ability.Equals("None"))
+                if(!pokemon.DatabaseEntry.HiddenAbility.Equals("None"))
                 {
                     pokemon.Ability = pokemon.DatabaseEntry.HiddenAbility;
                     Assert.AreEqual(
