@@ -37,6 +37,8 @@ static float dummy_float = 0;
 static pkmn_string_list_t dummy_string_list = { NULL, 0 };
 static pkmn_trainer_info_t dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
 static pkmn_attribute_names_t dummy_attribute_names = {{NULL, 0}, {NULL, 0}};
+static pkmn_pokemon_t dummy_pokemon = {NULL, NULL, NULL};
+static pkmn_pokemon_list_t dummy_pokemon_list = { NULL, 0 };
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
 
@@ -2084,6 +2086,389 @@ static void pokemon_error_test()
 }
 
 /*
+ * <pkmn-c/pokemon_box.h>
+ */
+static void pokemon_box_error_test()
+{
+    pkmn_pokemon_box_t pokemon_box =
+    {
+        .game = NULL,
+        .capacity = 0,
+        ._internal = NULL
+    };
+
+    error = pkmn_pokemon_box_init(
+                "Red",
+                &pokemon_box
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    /*
+     * pkmn_pokemon_box_init
+     */
+
+    error = pkmn_pokemon_box_init(
+                NULL,
+                &pokemon_box
+            );
+    TEST_NULL_POINTER_RETURN("game");
+
+    error = pkmn_pokemon_box_init(
+                "Red",
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_out");
+
+    /*
+     * pkmn_pokemon_box_free
+     */
+
+    error = pkmn_pokemon_box_free(NULL);
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    /*
+     * pkmn_pokemon_box_strerror
+     */
+
+    const char* pokemon_box_strerror = pkmn_pokemon_box_strerror(NULL);
+    TEST_ASSERT_NULL(pokemon_box_strerror);
+
+    /*
+     * pkmn_pokemon_box_get_name
+     */
+
+    error = pkmn_pokemon_box_get_name(
+                NULL,
+                strbuffer,
+                0,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_get_name(
+                &pokemon_box,
+                NULL,
+                0,
+                &dummy_size_t
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name_buffer_out");
+
+    /*
+     * pkmn_pokemon_box_set_name
+     */
+
+    error = pkmn_pokemon_box_set_name(
+                NULL,
+                strbuffer
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_set_name(
+                &pokemon_box,
+                NULL
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "name");
+
+    /*
+     * pkmn_pokemon_box_get_num_pokemon
+     */
+
+    error = pkmn_pokemon_box_get_num_pokemon(
+                NULL,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_get_num_pokemon(
+                &pokemon_box,
+                NULL
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "num_pokemon_out");
+
+    /*
+     * pkmn_pokemon_box_get_pokemon
+     */
+
+    error = pkmn_pokemon_box_get_pokemon(
+                NULL,
+                0,
+                &dummy_pokemon
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_get_pokemon(
+                &pokemon_box,
+                0,
+                NULL
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_out");
+
+    /*
+     * pkmn_pokemon_box_set_pokemon
+     */
+
+    error = pkmn_pokemon_box_set_pokemon(
+                NULL,
+                0,
+                &dummy_pokemon
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_set_pokemon(
+                &pokemon_box,
+                0,
+                NULL
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_ptr");
+
+    /*
+     * pkmn_pokemon_box_as_list
+     */
+
+    error = pkmn_pokemon_box_as_list(
+                NULL,
+                &dummy_pokemon_list
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_box_ptr");
+
+    error = pkmn_pokemon_box_as_list(
+                &pokemon_box,
+                NULL
+            );
+    TEST_POKEMON_BOX_NULL_POINTER_RETURN(pokemon_box, "pokemon_list_out");
+
+    // Cleanup
+    error = pkmn_pokemon_box_free(&pokemon_box);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+/*
+ * <pkmn-c/pokemon_party.h>
+ */
+static void pokemon_party_error_test()
+{
+    pkmn_pokemon_party_t pokemon_party =
+    {
+        .game = NULL,
+        .capacity = 0,
+        ._internal = NULL
+    };
+
+    error = pkmn_pokemon_party_init(
+                "Red",
+                &pokemon_party
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    /*
+     * pkmn_pokemon_party_init
+     */
+
+    error = pkmn_pokemon_party_init(
+                NULL,
+                &pokemon_party
+            );
+    TEST_NULL_POINTER_RETURN("game");
+
+    error = pkmn_pokemon_party_init(
+                "Red",
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_party_out");
+
+    /*
+     * pkmn_pokemon_party_free
+     */
+
+    error = pkmn_pokemon_party_free(NULL);
+    TEST_NULL_POINTER_RETURN("pokemon_party_ptr");
+
+    /*
+     * pkmn_pokemon_party_strerror
+     */
+
+    const char* pokemon_party_strerror = pkmn_pokemon_party_strerror(NULL);
+    TEST_ASSERT_NULL(pokemon_party_strerror);
+
+    /*
+     * pkmn_pokemon_party_get_num_pokemon
+     */
+
+    error = pkmn_pokemon_party_get_num_pokemon(
+                NULL,
+                &dummy_size_t
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_party_ptr");
+
+    error = pkmn_pokemon_party_get_num_pokemon(
+                &pokemon_party,
+                NULL
+            );
+    TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "num_pokemon_out");
+
+    /*
+     * pkmn_pokemon_party_get_pokemon
+     */
+
+    error = pkmn_pokemon_party_get_pokemon(
+                NULL,
+                0,
+                &dummy_pokemon
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_party_ptr");
+
+    error = pkmn_pokemon_party_get_pokemon(
+                &pokemon_party,
+                0,
+                NULL
+            );
+    TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "pokemon_out");
+
+    /*
+     * pkmn_pokemon_party_set_pokemon
+     */
+
+    error = pkmn_pokemon_party_set_pokemon(
+                NULL,
+                0,
+                &dummy_pokemon
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_party_ptr");
+
+    error = pkmn_pokemon_party_set_pokemon(
+                &pokemon_party,
+                0,
+                NULL
+            );
+    TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "pokemon_ptr");
+
+    /*
+     * pkmn_pokemon_party_as_list
+     */
+
+    error = pkmn_pokemon_party_as_list(
+                NULL,
+                &dummy_pokemon_list
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_party_ptr");
+
+    error = pkmn_pokemon_party_as_list(
+                &pokemon_party,
+                NULL
+            );
+    TEST_POKEMON_PARTY_NULL_POINTER_RETURN(pokemon_party, "pokemon_list_out");
+
+    // Cleanup
+    error = pkmn_pokemon_party_free(&pokemon_party);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+/*
+ * <pkmn-c/pokemon_pc.h>
+ */
+static void pokemon_pc_error_test()
+{
+    pkmn_pokemon_pc_t pokemon_pc =
+    {
+        .game = NULL,
+        .capacity = 0,
+        ._internal = NULL
+    };
+    pkmn_pokemon_box_t dummy_pokemon_box = {NULL, 0, NULL};
+    pkmn_pokemon_box_list_t dummy_pokemon_box_list = {NULL, 0};
+
+    error = pkmn_pokemon_pc_init(
+                "Red",
+                &pokemon_pc
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    /*
+     * pkmn_pokemon_pc_init
+     */
+
+    error = pkmn_pokemon_pc_init(
+                NULL,
+                &pokemon_pc
+            );
+    TEST_NULL_POINTER_RETURN("game");
+
+    error = pkmn_pokemon_pc_init(
+                "Red",
+                NULL
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_pc_out");
+
+    /*
+     * pkmn_pokemon_pc_free
+     */
+
+    error = pkmn_pokemon_pc_free(NULL);
+    TEST_NULL_POINTER_RETURN("pokemon_pc_ptr");
+
+    /*
+     * pkmn_pokemon_pc_strerror
+     */
+
+    const char* pokemon_pc_strerror = pkmn_pokemon_pc_strerror(NULL);
+    TEST_ASSERT_NULL(pokemon_pc_strerror);
+
+    /*
+     * pkmn_pokemon_pc_get_box
+     */
+
+    error = pkmn_pokemon_pc_get_box(
+                NULL,
+                0,
+                &dummy_pokemon_box
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_pc_ptr");
+
+    error = pkmn_pokemon_pc_get_box(
+                &pokemon_pc,
+                0,
+                NULL
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "pokemon_box_out");
+
+    /*
+     * pkmn_pokemon_pc_get_box_names
+     */
+
+    error = pkmn_pokemon_pc_get_box_names(
+                NULL,
+                &dummy_string_list
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_pc_ptr");
+
+    error = pkmn_pokemon_pc_get_box_names(
+                &pokemon_pc,
+                NULL
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "box_names_out");
+
+    /*
+     * pkmn_pokemon_pc_as_list
+     */
+
+    error = pkmn_pokemon_pc_as_list(
+                NULL,
+                &dummy_pokemon_box_list
+            );
+    TEST_NULL_POINTER_RETURN("pokemon_pc_ptr");
+
+    error = pkmn_pokemon_pc_as_list(
+                &pokemon_pc,
+                NULL
+            );
+    TEST_POKEMON_PC_NULL_POINTER_RETURN(pokemon_pc, "pokemon_box_list_out");
+
+    // Cleanup
+    error = pkmn_pokemon_pc_free(&pokemon_pc);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+}
+
+/*
  * <pkmn-c/calculations/form.h>
  */
 static void calculations_form_error_test() {
@@ -3406,6 +3791,9 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(item_list_error_test)
     PKMN_C_TEST(pokedex_error_test)
     PKMN_C_TEST(pokemon_error_test)
+    PKMN_C_TEST(pokemon_box_error_test)
+    PKMN_C_TEST(pokemon_party_error_test)
+    PKMN_C_TEST(pokemon_pc_error_test)
     PKMN_C_TEST(calculations_form_error_test)
     PKMN_C_TEST(calculations_gender_error_test)
     PKMN_C_TEST(calculations_nature_error_test)
