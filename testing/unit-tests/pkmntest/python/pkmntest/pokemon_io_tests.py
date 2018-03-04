@@ -20,7 +20,7 @@ def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
 LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
-TMP_DIR = pkmn.get_tmp_dir()
+TMP_DIR = pkmn.paths.get_tmp_dir()
 
 class pokemon_io_test(base_test.base_test):
 

@@ -19,7 +19,7 @@ import sys
 
 LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 PKSAV_TEST_SAVES = os.environ["PKSAV_TEST_SAVES"]
-PKMN_TMP_DIR = pkmn.get_tmp_dir()
+PKMN_TMP_DIR = pkmn.paths.get_tmp_dir()
 
 TOO_LONG_OT_NAME = "LibPKMNLibPKMN"
 DEFAULT_TRAINER_PID = 1351
@@ -204,11 +204,32 @@ class game_save_test(pkmntest.base_test.base_test):
                     else:
                         self.assertEquals(box[box_index].species, "None")
 
+        # Pokedex
+        if self.save.game not in ["Colosseum", "XD"]:
+            pokedex = self.save.pokedex
+            self.assertGreaterEqual(
+                pokedex.num_seen,
+                pokedex.num_caught
+            )
+
+            for pokemon in self.save.pokemon_party:
+                species = pokemon.species
+                if species != "None" and not pokemon.is_egg:
+                    self.assertTrue(pokedex.has_seen[species])
+                    self.assertTrue(pokedex.has_caught[species])
+
+            for box in self.save.pokemon_pc:
+                for pokemon in box:
+                    species = pokemon.species
+                    if species != "None" and not pokemon.is_egg:
+                        self.assertTrue(pokedex.has_seen[species])
+                        self.assertTrue(pokedex.has_caught[species])
+
     def __randomize_pokemon(self, item_list):
         game = self.save.game
         generation = GAME_GENERATIONS[game]
-        pokemon_list = pkmn.database.get_pokemon_list(generation, True)
-        move_list = pkmn.database.get_move_list(game)
+        pokemon_list = pkmn.database.lists.get_pokemon_list(generation, True)
+        move_list = pkmn.database.lists.get_move_list(game)
 
         party = self.save.pokemon_party
         for party_index in range(6):
@@ -295,7 +316,7 @@ class game_save_test(pkmntest.base_test.base_test):
         self.save = pkmn.game_save(filepath)
         self.assertEquals(self.save.game, expected_game)
 
-        item_list = pkmn.database.get_item_list(expected_game)
+        item_list = pkmn.database.lists.get_item_list(expected_game)
 
         self.__test_common_fields()
         # TODO: randomize_items
