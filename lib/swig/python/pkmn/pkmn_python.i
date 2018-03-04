@@ -11,7 +11,6 @@ PKMN_PYTHON_INIT
 // Will be called on import
 
 %{
-    #include <pkmn/build_info.hpp>
     #include <pkmn/utils/paths.hpp>
 
     #include "private_exports.hpp"
@@ -26,9 +25,6 @@ namespace pkmn { namespace priv {
 
 %import <database/database_python.i>
 %import <stl_python.i>
-
-%include <pkmn/build_info.hpp>
-%include <pkmn/utils/paths.hpp>
 
 // Attribute Maps
 %include <python/pkmn_attribute_maps.i>

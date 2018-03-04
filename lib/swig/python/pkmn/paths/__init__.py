@@ -5,4 +5,4 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-from . import lists
+from .paths_python import *

@@ -8,8 +8,11 @@
 from .pkmn_python import *
 from .stl_python import *
 
+from . import buildinfo
 from . import calculations
 from . import database
+from . import paths
+from . import qt
 
 VERSION = "@PKMN_VERSION@"
 

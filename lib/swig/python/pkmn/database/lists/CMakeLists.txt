@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -15,9 +15,9 @@ SET(SWIG_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SWIG_PYTHON_INCLUDE_DIRS
     ${SWIG_MODULE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}/..
-    ${SWIG_MODULE_DIR}/../..
-    ${SWIG_MODULE_DIR}/../../modules
+    ${CMAKE_CURRENT_BINARY_DIR}/../..
+    ${SWIG_MODULE_DIR}/../../..
+    ${SWIG_MODULE_DIR}/../../../modules
     ${PKMN_SOURCE_DIR}/include
     ${PKMN_BINARY_DIR}/include
 )
@@ -26,11 +26,4 @@ SET(SWIG_PYTHON_LIBRARIES
     pkmn
 )
 
-SWIG_BUILD_PYTHON_MODULE(pkmn_python pkmn TRUE)
-SWIG_BUILD_PYTHON_MODULE(stl_python  pkmn TRUE)
-
-ADD_SUBDIRECTORY(buildinfo)
-ADD_SUBDIRECTORY(calculations)
-ADD_SUBDIRECTORY(database)
-ADD_SUBDIRECTORY(qt)
-ADD_SUBDIRECTORY(paths)
+SWIG_BUILD_PYTHON_MODULE(lists_python pkmn/database/lists TRUE)
