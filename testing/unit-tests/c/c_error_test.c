@@ -120,11 +120,19 @@ static void populate_pksav_saves()
     TEST_ASSERT_EQUAL_STRING(strbuffer, pkmn_pokemon_pc_strerror(&pokemon_pc)); \
 }
 
+static void test_pkmn_strerror_as_first_call()
+{
+    const char* strerror_output = pkmn_strerror();
+    TEST_ASSERT_EQUAL_STRING("None", strerror_output);
+}
+
 /*
  * <pkmn-c/game_save.h>
  */
 static void game_save_error_test()
 {
+    populate_pksav_saves();
+
     pkmn_game_save_type_t dummy_game_save_type = PKMN_GAME_SAVE_TYPE_NONE;
 
     pkmn_item_bag_t dummy_item_bag = { NULL, { NULL, 0 }, NULL };
@@ -3904,8 +3912,7 @@ static void utils_paths_error_test() {
 }
 
 PKMN_C_TEST_MAIN(
-    populate_pksav_saves();
-
+    PKMN_C_TEST(test_pkmn_strerror_as_first_call)
     PKMN_C_TEST(game_save_error_test)
     PKMN_C_TEST(item_bag_error_test)
     PKMN_C_TEST(item_list_error_test)
