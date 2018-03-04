@@ -3723,6 +3723,108 @@ static void gui_spinda_test()
 }
 
 /*
+ * <pkmn-c/types/hidden_power.h>
+ */
+static void types_hidden_power_test()
+{
+    /*
+     * pkmn_hidden_power_free
+     */
+    error = pkmn_hidden_power_free(NULL);
+    TEST_NULL_POINTER_RETURN("hidden_power_ptr");
+}
+
+/*
+ * <pkmn-c/types/item_slot.h>
+ */
+static void types_item_slot_test()
+{
+    /*
+     * pkmn_item_slot_free
+     */
+    error = pkmn_item_slot_free(NULL);
+    TEST_NULL_POINTER_RETURN("item_slot_ptr");
+
+    /*
+     * pkmn_item_slots_free
+     */
+    error = pkmn_item_slots_free(NULL);
+    TEST_NULL_POINTER_RETURN("item_slots_ptr");
+}
+
+/*
+ * <pkmn-c/types/levelup_move.h>
+ */
+static void types_levelup_move_test()
+{
+    /*
+     * pkmn_levelup_move_free
+     */
+    error = pkmn_levelup_move_free(NULL);
+    TEST_NULL_POINTER_RETURN("levelup_move_ptr");
+
+    /*
+     * pkmn_levelup_moves_free
+     */
+    error = pkmn_levelup_moves_free(NULL);
+    TEST_NULL_POINTER_RETURN("levelup_moves_ptr");
+}
+
+/*
+ * <pkmn-c/types/move_slot.h>
+ */
+static void types_move_slot_test()
+{
+    /*
+     * pkmn_move_slot_free
+     */
+    error = pkmn_move_slot_free(NULL);
+    TEST_NULL_POINTER_RETURN("move_slot_ptr");
+
+    /*
+     * pkmn_move_slots_free
+     */
+    error = pkmn_move_slots_free(NULL);
+    TEST_NULL_POINTER_RETURN("move_slots_ptr");
+}
+
+/*
+ * <pkmn-c/types/natural_gift.h>
+ */
+static void types_natural_gift_test()
+{
+    /*
+     * pkmn_natural_gift_free
+     */
+    error = pkmn_natural_gift_free(NULL);
+    TEST_NULL_POINTER_RETURN("natural_gift_ptr");
+}
+
+/*
+ * <pkmn-c/types/pokemon_box_list.h>
+ */
+static void types_pokemon_box_list_test()
+{
+    /*
+     * pkmn_pokemon_box_list_free
+     */
+    error = pkmn_pokemon_box_list_free(NULL);
+    TEST_NULL_POINTER_RETURN("pokemon_box_list_ptr");
+}
+
+/*
+ * <pkmn-c/types/pokemon_list.h>
+ */
+static void types_pokemon_list_test()
+{
+    /*
+     * pkmn_pokemon_list_free
+     */
+    error = pkmn_pokemon_list_free(NULL);
+    TEST_NULL_POINTER_RETURN("pokemon_list_ptr");
+}
+
+/*
  * <pkmn-c/types/string_types.h>
  */
 static void types_string_types_test()
@@ -3731,7 +3833,25 @@ static void types_string_types_test()
      * pkmn_string_list_free
      */
     error = pkmn_string_list_free(NULL);
-    TEST_ASSERT_EQUAL(error, PKMN_ERROR_NULL_POINTER);
+    TEST_NULL_POINTER_RETURN("string_list_ptr");
+
+    /*
+     * pkmn_string_pair_free
+     */
+    error = pkmn_string_pair_free(NULL);
+    TEST_NULL_POINTER_RETURN("string_pair_ptr");
+}
+
+/*
+ * <pkmn-c/types/trainer_info.h>
+ */
+static void types_trainer_info_test()
+{
+    /*
+     * pkmn_trainer_info_free
+     */
+    error = pkmn_trainer_info_free(NULL);
+    TEST_NULL_POINTER_RETURN("trainer_info_ptr");
 }
 
 /*
@@ -3813,6 +3933,14 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
     PKMN_C_TEST(gui_spinda_test)
+    PKMN_C_TEST(types_hidden_power_test)
+    PKMN_C_TEST(types_item_slot_test)
+    PKMN_C_TEST(types_levelup_move_test)
+    PKMN_C_TEST(types_move_slot_test)
+    PKMN_C_TEST(types_natural_gift_test)
+    PKMN_C_TEST(types_pokemon_box_list_test)
+    PKMN_C_TEST(types_pokemon_list_test)
+    PKMN_C_TEST(types_trainer_info_test)
     PKMN_C_TEST(types_string_types_test)
     PKMN_C_TEST(utils_paths_error_test)
 )
