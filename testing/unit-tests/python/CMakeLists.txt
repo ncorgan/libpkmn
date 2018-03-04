@@ -9,6 +9,7 @@
 # Python tests
 #
 SET(python_tests
+    python_buildinfo_test
     python_calculations_test
     python_database_entry_test
     python_game_save_test
@@ -19,6 +20,7 @@ SET(python_tests
     python_pokemon_test
     python_pokemon_party_test
     python_pokemon_pc_test
+    python_qt_test
 )
 
 FOREACH(test ${python_tests})
