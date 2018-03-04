@@ -14,8 +14,10 @@
 #include <boost/assign.hpp>
 #include <boost/config.hpp>
 #include <boost/algorithm/string/compare.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <algorithm>
+#include <atomic>
 #include <sstream>
 #include <stdexcept>
 
@@ -23,23 +25,33 @@
 
 namespace pkmn { namespace database {
 
-    static pkmn::database::sptr _db;
+    static std::unique_ptr<SQLite::Database> _database_uptr;
 
-    pkmn::database::sptr _get_connection()
+    void initialize_connection()
     {
-        if(!_db)
-        {
-            std::string database_path = pkmn::get_database_path();
-            _db = std::make_shared<SQLite::Database>(database_path.c_str());
+        static std::atomic_bool atomic_is_db_initialized(false);
 
-            // Make sure our Veekun commit matches the database's
-            int compat_num = _db->execAndGet("SELECT compat_num FROM compat_num");
-            if(compat_num != PKMN_COMPAT_NUM) {
+        if(!atomic_is_db_initialized)
+        {
+            BOOST_ASSERT(!_database_uptr);
+            std::string database_path = pkmn::get_database_path();
+            _database_uptr.reset(new SQLite::Database(database_path));
+
+            // Make sure our Veekun commit matches the database's.
+            int compat_num = _database_uptr->execAndGet("SELECT compat_num FROM compat_num");
+            if(compat_num != PKMN_COMPAT_NUM)
+            {
                 throw std::runtime_error("This database is incompatible with this version of LibPKMN.");
             }
-        }
 
-        return _db;
+            atomic_is_db_initialized = true;
+        }
+    }
+
+    SQLite::Database* get_connection()
+    {
+        initialize_connection();
+        return _database_uptr.get();
     }
 
     /*
@@ -50,41 +62,28 @@ namespace pkmn { namespace database {
         int game_id
     )
     {
-        // Connect to database
-        (void)_get_connection();
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT generation_id FROM version_groups WHERE id="
             "(SELECT version_group_id FROM versions WHERE id=?)";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, game_id
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, game_id);
     }
 
     int game_id_to_version_group(
         int game_id
     )
     {
-        // Connect to database
-        (void)_get_connection();
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT version_group_id FROM versions WHERE id=?";
 
-        return pkmn::database::query_db_bind1<int, int>(
-                   _db, query, game_id
-               );
+        return pkmn::database::query_db_bind1<int, int>(query, game_id);
     }
 
     int game_name_to_generation(
         const std::string& game_name
     )
     {
-        // Connect to database
-        (void)_get_connection();
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT generation_id FROM version_groups WHERE id="
             "(SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?))";
@@ -93,7 +92,7 @@ namespace pkmn { namespace database {
         error_message += game_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, game_name, error_message
+                   query, game_name, error_message
                );
     }
 
@@ -101,10 +100,7 @@ namespace pkmn { namespace database {
         const std::string& game_name
     )
     {
-        // Connect to database
-        (void)_get_connection();
-
-        static BOOST_CONSTEXPR const char* query = \
+        static BOOST_CONSTEXPR const char* query =
             "SELECT version_group_id FROM versions WHERE id="
             "(SELECT version_id FROM version_names WHERE name=?)";
 
@@ -112,7 +108,7 @@ namespace pkmn { namespace database {
         error_message += game_name;
 
         return pkmn::database::query_db_bind1<int, const std::string&>(
-                   _db, query, game_name, error_message
+                   query, game_name, error_message
                );
     }
 
@@ -212,14 +208,14 @@ namespace pkmn { namespace database {
         int version_group_id = colosseum ? 12 : 13;
         bool all_pockets = (list_id == -1);
 
-        static BOOST_CONSTEXPR const char* gcn_all_pockets_query = \
+        static BOOST_CONSTEXPR const char* gcn_all_pockets_query =
             "SELECT name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT DISTINCT items.id FROM items "
             "INNER JOIN gamecube_item_game_indices ON "
             "(items.id=gamecube_item_game_indices.item_id) WHERE "
             "gamecube_item_game_indices.colosseum=?)";
 
-        static BOOST_CONSTEXPR const char* gcn_single_pocket_query = \
+        static BOOST_CONSTEXPR const char* gcn_single_pocket_query =
             "SELECT name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT DISTINCT items.id FROM items "
             "INNER JOIN gamecube_item_game_indices ON "
@@ -235,7 +231,7 @@ namespace pkmn { namespace database {
 
         const char* gcn_query = (all_pockets ? gcn_all_pockets_query
                                              : gcn_single_pocket_query);
-        SQLite::Statement gcn_stmt((*_db), gcn_query);
+        SQLite::Statement gcn_stmt(get_connection(), gcn_query);
         gcn_stmt.bind(1, (colosseum ? 1 : 0));
         if(not all_pockets)
         {
@@ -252,15 +248,13 @@ namespace pkmn { namespace database {
     void _get_item_list(
         std::vector<std::string> &ret,
         int list_id, int game_id
-    ) {
-        // Connect to database
-        (void)_get_connection();
-
+    )
+    {
         int generation = pkmn::database::game_id_to_generation(game_id);
         int version_group_id = pkmn::database::game_id_to_version_group(game_id);
         bool all_pockets = (list_id == -1);
 
-        static BOOST_CONSTEXPR const char* all_pockets_query = \
+        static BOOST_CONSTEXPR const char* all_pockets_query =
             "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT items.id FROM items "
             "INNER JOIN item_game_indices ON "
@@ -268,7 +262,7 @@ namespace pkmn { namespace database {
             "item_game_indices.generation_id=? AND "
             "item_game_indices.game_index>=? AND item_game_indices.game_index<=?)";
 
-        static BOOST_CONSTEXPR const char* single_pocket_query = \
+        static BOOST_CONSTEXPR const char* single_pocket_query =
             "SELECT item_id,name FROM item_names WHERE local_language_id=9 "
             "AND item_id IN (SELECT items.id FROM items "
             "INNER JOIN item_game_indices ON "
@@ -284,46 +278,56 @@ namespace pkmn { namespace database {
             "WHERE version_group_id=? AND veekun_pocket_to_libpkmn_list.libpkmn_list_id=?)))";
 
         const char* query = (all_pockets ? all_pockets_query : single_pocket_query);
-        for(int i = 0; i < 4; ++i) {
-            if(not item_range_empty(version_group_id, i)) {
-                SQLite::Statement stmt((*_db), query);
+        for(int i = 0; i < 4; ++i)
+        {
+            if(not item_range_empty(version_group_id, i))
+            {
+                SQLite::Statement stmt(get_connection(), query);
                 stmt.bind(1, generation);
                 stmt.bind(2, version_group_item_index_bounds[version_group_id][i][0]);
                 stmt.bind(3, version_group_item_index_bounds[version_group_id][i][1]);
-                if(not all_pockets) {
+                if(not all_pockets)
+                {
                     stmt.bind(4, version_group_id);
                     stmt.bind(5, list_id);
                 }
 
-                while(stmt.executeStep()) {
+                while(stmt.executeStep())
+                {
                     /*
                      * Some items' names changed in Generation IV (TODO: confirm this or V).
                      * If the function is called for an older game, substitute in old names
                      * as needed.
                      */
                     BOOST_STATIC_CONSTEXPR int XY = 25;
-                    if(game_id <= XY) {
+                    if(game_id <= XY)
+                    {
                         std::string old_name;
-                        static BOOST_CONSTEXPR const char* old_name_query = \
+                        static BOOST_CONSTEXPR const char* old_name_query =
                             "SELECT name FROM old_item_names WHERE local_language_id=9 AND "
                             "item_id=? AND latest_version_group>=? ORDER BY latest_version_group";
                         if(pkmn::database::maybe_query_db_bind2<std::string, int, int>(
-                               _db, old_name_query, old_name,
+                               old_name_query, old_name,
                                int(stmt.getColumn(0)), version_group_id
                            ))
                         {
                             ret.emplace_back(old_name);
-                        } else {
+                        }
+                        else
+                        {
                             ret.emplace_back(stmt.getColumn(1));
                         }
-                    } else {
+                    }
+                    else
+                    {
                         ret.emplace_back(stmt.getColumn(1));
                     }
                 }
             }
         }
 
-        if(game_is_gamecube(game_id)) {
+        if(game_is_gamecube(game_id))
+        {
             _get_gamecube_items(
                 ret,
                 list_id,

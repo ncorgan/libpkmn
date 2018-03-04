@@ -100,7 +100,7 @@ namespace pkmn { namespace database {
         int version_group_id,
         bool tmhm
     ) {
-        SQLite::Statement stmt((*_db), query);
+        SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, pokemon_id);
         stmt.bind(2, version_group_id);
         if(tmhm) {
@@ -126,9 +126,6 @@ namespace pkmn { namespace database {
         _none(pokemon_index == 0),
         _shadow(false)
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         /*
          * Game-related info
          */
@@ -171,7 +168,7 @@ namespace pkmn { namespace database {
                 "WHERE game_index=?)";
 
             _form_id = pkmn::database::query_db_bind1<int, int>(
-                           _db, unown_query, _pokemon_index
+                           unown_query, _pokemon_index
                        );
 
         } else if(_generation == 3 and _pokemon_index == DEOXYS_GEN3_INDEX) {
@@ -218,11 +215,11 @@ namespace pkmn { namespace database {
                 _species_id = _pokemon_id = _form_id = -1;
             } else {
                 _species_id = pkmn::database::query_db_bind1<int, int>(
-                                  _db, species_id_query, _pokemon_id
+                                  species_id_query, _pokemon_id
                               );
 
                 _form_id = pkmn::database::query_db_bind1<int, int>(
-                               _db, form_id_query, _pokemon_id
+                               form_id_query, _pokemon_id
                            );
             }
         }
@@ -237,9 +234,6 @@ namespace pkmn { namespace database {
         _invalid(false),
         _shadow(false)
     {
-        // Connect to database
-        pkmn::database::get_connection(_db);
-
         /*
          * Game-related info
          */
@@ -302,7 +296,7 @@ namespace pkmn { namespace database {
                 "pokemon_species_id=? AND local_language_id=9";
 
             ret = pkmn::database::query_db_bind1<std::string, int>(
-                      _db, query, _species_id
+                      query, _species_id
                   );
         }
 
@@ -326,7 +320,7 @@ namespace pkmn { namespace database {
                 "species_id=? AND version_id=? AND language_id=9";
 
             std::string from_db = pkmn::database::query_db_bind2<std::string, int, int>(
-                                      _db, query, _species_id, game_id
+                                      query, _species_id, game_id
                                   );
             ret = fix_veekun_whitespace(from_db);
         }
@@ -342,7 +336,7 @@ namespace pkmn { namespace database {
 
         std::string ret;
         if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query, ret, species_id
+                   query, ret, species_id
            ))
         {
             ret = "Standard";
@@ -367,7 +361,7 @@ namespace pkmn { namespace database {
                 "SELECT name FROM libpkmn_pokemon_form_names WHERE form_id=?";
 
             ret = pkmn::database::query_db_bind1<std::string, int>(
-                      _db, query, _form_id
+                      query, _form_id
                   );
         }
 
@@ -383,7 +377,7 @@ namespace pkmn { namespace database {
                 "SELECT height FROM pokemon WHERE id=?";
 
             double from_db = pkmn::database::query_db_bind1<double, int>(
-                                 _db, query, _pokemon_id
+                                 query, _pokemon_id
                              );
 
             ret = (float(from_db) / 10.0f);
@@ -402,7 +396,7 @@ namespace pkmn { namespace database {
                 "SELECT weight FROM pokemon WHERE id=?";
 
             double from_db = pkmn::database::query_db_bind1<double, int>(
-                                 _db, query, _pokemon_id
+                                 query, _pokemon_id
                              );
 
             ret = (float(from_db) / 10.0f);
@@ -435,7 +429,7 @@ namespace pkmn { namespace database {
                 "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
             int gender_rate_from_db = pkmn::database::query_db_bind1<int, int>(
-                                          _db, query, _species_id
+                                          query, _species_id
                                       );
             ret = _veekun_gender_rates.at(gender_rate_from_db);
         }
@@ -453,7 +447,7 @@ namespace pkmn { namespace database {
                 "SELECT gender_rate FROM pokemon_species WHERE id=?";
 
             int gender_rate_from_db = pkmn::database::query_db_bind1<int, int>(
-                                          _db, query, _species_id
+                                          query, _species_id
                                       );
             if(gender_rate_from_db == -1) {
                 ret = 0.0f;
@@ -477,7 +471,7 @@ namespace pkmn { namespace database {
 
             // SQLite has no bool type, so just test the integral value
             ret = (pkmn::database::query_db_bind1<int, int>(
-                      _db, query, _species_id
+                      query, _species_id
                    ) > 0);
         }
 
@@ -495,7 +489,7 @@ namespace pkmn { namespace database {
                 "SELECT base_happiness FROM pokemon_species WHERE id=?";
 
             ret = pkmn::database::query_db_bind1<int, int>(
-                      _db, query, _species_id
+                      query, _species_id
                   );
         }
 
@@ -554,10 +548,10 @@ namespace pkmn { namespace database {
                 "(SELECT type_id FROM pokemon_types WHERE pokemon_id=? AND slot=2)";
 
             ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            _db, query1, _pokemon_id
+                            query1, _pokemon_id
                         );
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query2, ret.second, _pokemon_id
+                   query2, ret.second, _pokemon_id
                )) {
                 ret.second = "None";
             }
@@ -591,10 +585,10 @@ namespace pkmn { namespace database {
                 "is_hidden=0 AND slot=2)";
 
             ret.first = pkmn::database::query_db_bind1<std::string, int>(
-                            _db, query1, _pokemon_id
+                            query1, _pokemon_id
                         );
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                   _db, query2, ret.second, _pokemon_id
+                   query2, ret.second, _pokemon_id
                )) {
                 ret.second = "None";
             }
@@ -618,7 +612,7 @@ namespace pkmn { namespace database {
                 "is_hidden=1)";
 
             if(not pkmn::database::maybe_query_db_bind1<std::string, int>(
-                       _db, query, ret, _pokemon_id
+                       query, ret, _pokemon_id
               ))
             {
                 ret = "None";
@@ -642,7 +636,7 @@ namespace pkmn { namespace database {
                 "(SELECT egg_group_id FROM pokemon_egg_groups WHERE species_id=? "
                 "ORDER BY egg_group_id)";
 
-            SQLite::Statement stmt((*_db), query);
+            SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
 
             stmt.executeStep();
@@ -694,7 +688,7 @@ namespace pkmn { namespace database {
                 "stat_id IN (1,2,3,4,5,6)";
 
             SQLite::Statement stmt(
-                (*_db),
+                get_connection(),
                 ((_generation == 1) ? old_query : main_query)
             );
             stmt.bind(1, _pokemon_id);
@@ -735,7 +729,7 @@ namespace pkmn { namespace database {
                 "SELECT effort FROM pokemon_stats WHERE pokemon_id=? AND "
                 "stat_id IN (1,2,3,4,5,6)";
 
-            SQLite::Statement stmt((*_db), query);
+            SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
 
             execute_stat_stmt_and_get(stmt, ret, "HP");
@@ -782,11 +776,11 @@ namespace pkmn { namespace database {
                 ret = gen4_different_yields.at(_species_id);
             } else if(_generation < 5) {
                 ret = pkmn::database::query_db_bind1<int, int>(
-                          _db, old_query, _species_id
+                          old_query, _species_id
                       );
             } else {
                 ret = pkmn::database::query_db_bind1<int, int>(
-                          _db, main_query, _pokemon_id
+                          main_query, _pokemon_id
                       );
             }
         }
@@ -821,7 +815,7 @@ namespace pkmn { namespace database {
                 "ORDER BY experience.experience";
 
             ret = pkmn::database::query_db_bind2<int, int, int>(
-                      _db, query, _species_id, level
+                      query, _species_id, level
                   );
         }
 
@@ -856,7 +850,7 @@ namespace pkmn { namespace database {
                 "AND pokemon_species.id=?) ORDER BY experience.level DESC";
 
             ret = pkmn::database::query_db_bind2<int, int, int>(
-                      _db, query, experience, _species_id
+                      query, experience, _species_id
                   );
         }
 
@@ -871,7 +865,7 @@ namespace pkmn { namespace database {
                 "SELECT move_id,level FROM pokemon_moves WHERE pokemon_id=? "
                 "AND version_group_id=? AND pokemon_move_method_id=1 ORDER BY level";
 
-            SQLite::Statement stmt((*_db), query);
+            SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _pokemon_id);
             stmt.bind(2, _version_group_id);
             while(stmt.executeStep()) {
@@ -935,7 +929,7 @@ namespace pkmn { namespace database {
                 "pokemon_id=? AND version_group_id=?";
 
             int species_id = _species_id;
-            SQLite::Statement stmt((*_db), evolution_query);
+            SQLite::Statement stmt(get_connection(), evolution_query);
             stmt.bind(1, species_id);
             while(stmt.executeStep()) {
                 // The final query will be valid but return 0, which we can't use
@@ -1003,7 +997,7 @@ namespace pkmn { namespace database {
                     "form_id!=? AND form_id!=10057";
 
                 pkmn::database::query_db_list_bind3<std::string, int, int, int>(
-                    _db, form_ids_query, ret, _version_group_id, _species_id, _species_id
+                    form_ids_query, ret, _version_group_id, _species_id, _species_id
                 );
             }
 
@@ -1020,7 +1014,7 @@ namespace pkmn { namespace database {
 
                 int shadow_pokemon_id = -1;
                 bool has_shadow = pkmn::database::maybe_query_db_bind2<int, int, int>(
-                                      _db, shadow_query, shadow_pokemon_id, _species_id,
+                                      shadow_query, shadow_pokemon_id, _species_id,
                                       ((_game_id == COLOSSEUM) ? 1 : 0)
                                   );
                 if(has_shadow)
@@ -1044,7 +1038,7 @@ namespace pkmn { namespace database {
 
             std::string game = this->get_game();
 
-            SQLite::Statement stmt((*_db), query);
+            SQLite::Statement stmt(get_connection(), query);
             stmt.bind(1, _species_id);
             stmt.bind(2, _generation);
             while(stmt.executeStep()) {
@@ -1103,7 +1097,7 @@ namespace pkmn { namespace database {
                             "(SELECT form_id FROM libpkmn_pokemon_form_names WHERE name=?) "
                             "AND pokemon_id IN (SELECT id FROM pokemon WHERE species_id=?)";
 
-                        SQLite::Statement stmt((*_db), query);
+                        SQLite::Statement stmt(get_connection(), query);
                         stmt.bind(1, form_name);
                         stmt.bind(2, _species_id);
                         stmt.executeStep();
@@ -1172,7 +1166,7 @@ namespace pkmn { namespace database {
                     "SELECT game_index FROM gen3_unown_game_indices WHERE form_id=?";
 
                 _pokemon_index = pkmn::database::query_db_bind1<int, int>(
-                                     _db, unown_query, _form_id
+                                     unown_query, _form_id
                                  );
             } else {
                 static BOOST_CONSTEXPR const char* pokemon_index_query = \
@@ -1201,11 +1195,11 @@ namespace pkmn { namespace database {
                  * and hope for the best.
                  */
                 if(not pkmn::database::maybe_query_db_bind2<int, int, int>(
-                           _db, pokemon_index_query, _pokemon_index, _pokemon_id, game_id
+                           pokemon_index_query, _pokemon_index, _pokemon_id, game_id
                        )
                 ) {
                     _pokemon_index = pkmn::database::query_db_bind2<int, int, int>(
-                                         _db, pokemon_index_query, _species_id, game_id
+                                         pokemon_index_query, _species_id, game_id
                                      );
                 }
             }
@@ -1272,7 +1266,7 @@ namespace pkmn { namespace database {
 
             std::string form_suffix;
             (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
-                      _db, image_name_query, form_suffix, _form_id
+                      image_name_query, form_suffix, _form_id
                   );
             if(not form_suffix.empty()) {
                 form_suffix.insert(0, "-");
@@ -1314,7 +1308,7 @@ namespace pkmn { namespace database {
 
             std::string form_suffix;
             (void)pkmn::database::maybe_query_db_bind1<std::string, int>(
-                      _db, image_name_query, form_suffix, _form_id
+                      image_name_query, form_suffix, _form_id
                   );
             if(not form_suffix.empty()) {
                 form_suffix.insert(0, "-");

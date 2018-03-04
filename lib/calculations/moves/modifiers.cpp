@@ -14,8 +14,6 @@
 
 namespace pkmn { namespace calculations {
 
-    static pkmn::database::sptr _db;
-
     float type_damage_modifier(
         int generation,
         const std::string &attacking_type,
@@ -67,8 +65,6 @@ namespace pkmn { namespace calculations {
             }
         }
 
-        pkmn::database::get_connection(_db);
-
         float damage_modifier = 0.0f;
         const char* query = "";
 
@@ -101,7 +97,7 @@ namespace pkmn { namespace calculations {
                                             % defending_type.c_str());
 
             damage_modifier = float(pkmn::database::query_db_bind2<int, const std::string&, const std::string&>(
-                                   _db, query, attacking_type, defending_type, error_message
+                                   query, attacking_type, defending_type, error_message
                                )) / 100.0f;
         }
 

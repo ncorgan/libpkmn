@@ -14,8 +14,6 @@
 
 namespace pkmn { namespace calculations {
 
-    static pkmn::database::sptr _db;
-
     natural_gift natural_gift_stats(
         const std::string& item_name,
         int generation
@@ -27,8 +25,6 @@ namespace pkmn { namespace calculations {
             4,
             6
         );
-
-        pkmn::database::get_connection(_db);
 
         natural_gift ret;
 
@@ -42,7 +38,10 @@ namespace pkmn { namespace calculations {
 
         const char* query = (generation <= 5) ? gen_4_5_query : gen_6_query;
 
-        SQLite::Statement stmt((*_db), query);
+        SQLite::Statement stmt(
+            pkmn::database::get_connection(),
+            query
+        );
         stmt.bind(1, item_name);
 
         if(stmt.executeStep())

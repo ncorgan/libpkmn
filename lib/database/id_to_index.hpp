@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -37,20 +37,6 @@ namespace pkmn { namespace database {
 
     int item_index_to_id(
         int item_index,
-        int game_id
-    );
-
-    /*
-     * Locations
-     */
-
-    int location_id_to_index(
-        int location_id,
-        int game_id
-    );
-
-    int location_index_to_id(
-        int location_index,
         int game_id
     );
 
