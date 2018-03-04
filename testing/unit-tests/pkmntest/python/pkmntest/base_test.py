@@ -21,6 +21,7 @@ ALL_GAMES = [
     "Gold", "Silver", "Crystal",
     "Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"
 ]
+ALL_MAIN_SERIES_GAMES = [game for game in ALL_GAMES if game not in ["Colosseum", "XD"]]
 
 GAME_TO_GENERATION = {
     "Red": 1,

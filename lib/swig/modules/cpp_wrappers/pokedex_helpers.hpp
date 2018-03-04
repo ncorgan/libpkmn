@@ -15,6 +15,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/pokedex.hpp>
 
+// TODO: fix logic of Gamecube error
 namespace pkmn { namespace swig {
 
     class pokedex_has_seen_helper
