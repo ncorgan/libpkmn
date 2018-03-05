@@ -69,8 +69,18 @@ namespace pkmn {
                 int money
             ) override final;
 
+            // Functions for attributes
+
+            int get_casino_coins();
+
+            void set_casino_coins(
+                int casino_coins
+            );
+
         private:
             pksav_gba_save_t _pksav_save;
+
+            void _register_attributes();
     };
 
 }
