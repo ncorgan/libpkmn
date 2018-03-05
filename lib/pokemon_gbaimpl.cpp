@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -147,6 +147,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -183,6 +185,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -218,6 +222,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -255,6 +261,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
@@ -292,6 +300,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
     }
 
     pokemon_gbaimpl::~pokemon_gbaimpl()
@@ -1257,6 +1267,27 @@ namespace pkmn
         return ret;
     }
 
+    bool pokemon_gbaimpl::get_is_obedient()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        return bool(_misc->ribbons_obedience & PKSAV_GBA_OBEDIENCE_MASK);
+    }
+
+    void pokemon_gbaimpl::set_is_obedient(bool is_obedient)
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        if(is_obedient)
+        {
+            _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
+        }
+        else
+        {
+            _misc->ribbons_obedience &= ~PKSAV_GBA_OBEDIENCE_MASK;
+        }
+    }
+
     void pokemon_gbaimpl::_set_contest_ribbon(
         const std::string &ribbon,
         bool value
@@ -1442,5 +1473,16 @@ namespace pkmn
             pid_as_bytes[i] &= ~0x3;
             pid_as_bytes[i] |= ((num & (0x3 << (2*i))) >> (2*i));
         }
+    }
+
+    void pokemon_gbaimpl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Obedient?",
+            std::bind(&pokemon_gbaimpl::get_is_obedient, this),
+            std::bind(&pokemon_gbaimpl::set_is_obedient, this, _1)
+        );
     }
 }

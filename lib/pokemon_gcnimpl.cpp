@@ -166,6 +166,8 @@ namespace pkmn
             _set_unown_personality_from_form();
         }
 
+        _register_attributes();
+
         _native_party = nullptr;
         _our_party_mem = false;
     }
@@ -194,6 +196,8 @@ namespace pkmn
             _set_unown_personality_from_form();
         }
 
+        _register_attributes();
+
         _native_party = nullptr;
         _our_party_mem = false;
     }
@@ -221,6 +225,8 @@ namespace pkmn
             _set_unown_personality_from_form();
         }
 
+        _register_attributes();
+
         _native_party = nullptr;
         _our_party_mem = false;
     }
@@ -247,6 +253,8 @@ namespace pkmn
         {
             _set_unown_personality_from_form();
         }
+
+        _register_attributes();
 
         _native_party = nullptr;
         _our_party_mem = false;
@@ -1224,6 +1232,20 @@ namespace pkmn
         GC_RCAST->partyData.currentHP = static_cast<LibPkmGC::u16>(hp);
     }
 
+    bool pokemon_gcnimpl::get_is_obedient()
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        return GC_RCAST->obedient;
+    }
+
+    void pokemon_gcnimpl::set_is_obedient(bool is_obedient)
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        GC_RCAST->obedient = is_obedient;
+    }
+
     void pokemon_gcnimpl::_populate_party_data() {
         GC_RCAST->resetPartyData();
         _update_stat_map();
@@ -1343,5 +1365,16 @@ namespace pkmn
         _markings["Triangle"] = GC_RCAST->markings.triangle;
         _markings["Square"]   = GC_RCAST->markings.square;
         _markings["Heart"]    = GC_RCAST->markings.heart;
+    }
+
+    void pokemon_gcnimpl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Obedient?",
+            std::bind(&pokemon_gcnimpl::get_is_obedient, this),
+            std::bind(&pokemon_gcnimpl::set_is_obedient, this, _1)
+        );
     }
 }
