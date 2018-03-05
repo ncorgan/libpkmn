@@ -69,8 +69,24 @@ namespace pkmn {
                 int money
             ) override final;
 
+            // Functions for attributes
+
+            int get_casino_coins();
+
+            void set_casino_coins(
+                int casino_coins
+            );
+
+            int get_pikachu_friendship();
+
+            void set_pikachu_friendship(
+                int pikachu_friendship
+            );
+
         private:
             pksav_gen1_save_t _pksav_save;
+
+            void _register_attributes();
     };
 
 }

@@ -110,6 +110,8 @@ namespace pkmn {
 
         party_impl_ptr->set_pokedex(_pokedex);
         pc_impl_ptr->set_pokedex(_pokedex);
+
+        _register_attributes();
     }
 
     game_save_gen1impl::~game_save_gen1impl() {
@@ -264,5 +266,90 @@ namespace pkmn {
                 3
             )
         )
+    }
+
+    // Functions for attributes
+
+    int game_save_gen1impl::get_casino_coins()
+    {
+        uint32_t ret = 0;
+
+        PKSAV_CALL(
+            pksav_from_bcd(
+                _pksav_save.casino_coins,
+                2,
+                &ret
+            )
+        );
+
+        return int(ret);
+    }
+
+    void game_save_gen1impl::set_casino_coins(
+        int casino_coins
+    )
+    {
+        pkmn::enforce_bounds(
+            "Casino coins",
+            casino_coins,
+            0,
+            9999
+        );
+
+        // Work around PKSav not taking in a buffer size parameter on set
+        // by clearing the buffer and manually setting smaller numbers at
+        // the right-most byte.
+        std::memset(_pksav_save.casino_coins, 0, 2);
+
+        uint8_t* casino_coins_ptr = _pksav_save.casino_coins;
+        if(casino_coins > 99)
+        {
+        }
+
+        PKSAV_CALL(
+            pksav_to_bcd(
+                uint32_t(casino_coins),
+                casino_coins_ptr
+            )
+        );
+    }
+
+    int game_save_gen1impl::get_pikachu_friendship()
+    {
+        return *_pksav_save.pikachu_friendship;
+    }
+
+    void game_save_gen1impl::set_pikachu_friendship(
+        int pikachu_friendship
+    )
+    {
+        pkmn::enforce_bounds(
+            "Pikachu friendship",
+            pikachu_friendship,
+            0,
+            255
+        );
+
+        *_pksav_save.pikachu_friendship = uint8_t(pikachu_friendship);
+    }
+
+    void game_save_gen1impl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Casino coins",
+            std::bind(&game_save_gen1impl::get_casino_coins, this),
+            std::bind(&game_save_gen1impl::set_casino_coins, this, _1)
+        );
+
+        if(_game_id == YELLOW)
+        {
+            _numeric_attribute_engine.register_attribute_fcns(
+                "Pikachu friendship",
+                std::bind(&game_save_gen1impl::get_pikachu_friendship, this),
+                std::bind(&game_save_gen1impl::set_pikachu_friendship, this, _1)
+            );
+        }
     }
 }
