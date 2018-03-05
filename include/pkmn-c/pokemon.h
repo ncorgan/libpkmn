@@ -435,6 +435,18 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_string_attribute(
     const char* value
 );
 
+PKMN_C_API pkmn_error_t pkmn_pokemon_get_boolean_attribute(
+    pkmn_pokemon_t* pokemon_ptr,
+    const char* attribute_name,
+    bool* value_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_pokemon_set_boolean_attribute(
+    pkmn_pokemon_t* pokemon_ptr,
+    const char* attribute_name,
+    bool value
+);
+
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_attribute_names(
     pkmn_pokemon_t* pokemon_ptr,
     pkmn_attribute_names_t* attribute_names_out

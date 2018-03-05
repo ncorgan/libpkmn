@@ -16,6 +16,7 @@
 #include <pkmn-c/pokemon_party.h>
 #include <pkmn-c/pokemon_pc.h>
 
+#include <pkmn-c/types/attribute_names.h>
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/trainer_info.h>
 
@@ -169,6 +170,51 @@ PKMN_C_API pkmn_error_t pkmn_game_save_get_item_bag(
 PKMN_C_API pkmn_error_t pkmn_game_save_get_item_pc(
     pkmn_game_save_t* game_save_ptr,
     pkmn_item_list_t* item_pc_out
+);
+
+// Attributes
+
+PKMN_C_API pkmn_error_t pkmn_game_save_get_numeric_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    int* value_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_set_numeric_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    int value
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_get_string_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    char* value_out,
+    size_t value_buffer_len,
+    size_t* actual_value_len_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_set_string_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    const char* value
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_get_boolean_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    bool* value_out
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_set_boolean_attribute(
+    pkmn_game_save_t* game_save_ptr,
+    const char* attribute_name,
+    bool value
+);
+
+PKMN_C_API pkmn_error_t pkmn_game_save_get_attribute_names(
+    pkmn_game_save_t* game_save_ptr,
+    pkmn_attribute_names_t* attribute_names_out
 );
 
 #ifdef __cplusplus

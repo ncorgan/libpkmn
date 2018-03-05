@@ -1342,6 +1342,37 @@ pkmn_error_t pkmn_pokemon_set_string_attribute(
     )
 }
 
+pkmn_error_t pkmn_pokemon_get_boolean_attribute(
+    pkmn_pokemon_t* pokemon_ptr,
+    const char* attribute_name,
+    bool* value_out
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(value_out, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        *value_out = internal_ptr->cpp->get_boolean_attribute(attribute_name);
+    )
+}
+
+pkmn_error_t pkmn_pokemon_set_boolean_attribute(
+    pkmn_pokemon_t* pokemon_ptr,
+    const char* attribute_name,
+    bool value
+)
+{
+    PKMN_CHECK_NULL_PARAM(pokemon_ptr);
+    pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_name, internal_ptr);
+
+    PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
+        internal_ptr->cpp->set_boolean_attribute(attribute_name, value);
+    )
+}
+
 pkmn_error_t pkmn_pokemon_get_attribute_names(
     pkmn_pokemon_t* pokemon_ptr,
     pkmn_attribute_names_t* attribute_names_out
@@ -1359,6 +1390,10 @@ pkmn_error_t pkmn_pokemon_get_attribute_names(
         pkmn::c::string_list_cpp_to_c(
             internal_ptr->cpp->get_string_attribute_names(),
             &attribute_names_out->string_attribute_names
+        );
+        pkmn::c::string_list_cpp_to_c(
+            internal_ptr->cpp->get_boolean_attribute_names(),
+            &attribute_names_out->boolean_attribute_names
         );
     )
 }

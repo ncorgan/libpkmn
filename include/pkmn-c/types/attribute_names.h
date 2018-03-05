@@ -16,6 +16,7 @@ typedef struct
 {
     pkmn_string_list_t numeric_attribute_names;
     pkmn_string_list_t string_attribute_names;
+    pkmn_string_list_t boolean_attribute_names;
 } pkmn_attribute_names_t;
 
 #ifdef __cplusplus

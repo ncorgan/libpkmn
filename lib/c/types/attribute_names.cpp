@@ -21,6 +21,10 @@ pkmn_error_t pkmn_attribute_names_free(
     if(!error)
     {
         error = pkmn_string_list_free(&attribute_names_ptr->string_attribute_names);
+        if(!error)
+        {
+            error = pkmn_string_list_free(&attribute_names_ptr->boolean_attribute_names);
+        }
     }
 
     return error;

@@ -36,7 +36,7 @@ static uint32_t dummy_uint32 = 0;
 static float dummy_float = 0;
 static pkmn_string_list_t dummy_string_list = { NULL, 0 };
 static pkmn_trainer_info_t dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
-static pkmn_attribute_names_t dummy_attribute_names = {{NULL, 0}, {NULL, 0}};
+static pkmn_attribute_names_t dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
 static pkmn_pokemon_t dummy_pokemon = {NULL, NULL, NULL};
 static pkmn_pokemon_list_t dummy_pokemon_list = { NULL, 0 };
 
