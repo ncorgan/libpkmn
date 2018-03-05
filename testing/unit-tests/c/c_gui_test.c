@@ -119,9 +119,9 @@ static void spinda_test()
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    const char* qt_version = pkmn_qt_version();
+    const char* qt_version = pkmn_buildinfo_qt_version();
 
-    if(strcmp(pkmn_qt_version(), "N/A"))
+    if(strcmp(qt_version, "N/A"))
     {
         const char* SPINDA_FORMAT = "spinda_%d_%d_%u.png";
 
