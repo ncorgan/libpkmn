@@ -15,11 +15,12 @@
 #    include <boost/locale/encoding_utf.hpp>
 #endif
 
-#include "swig/modules/cpp_wrappers/item_list.hpp"
-#include "swig/modules/cpp_wrappers/item_bag.hpp"
-#include "swig/modules/cpp_wrappers/pokedex.hpp"
-#include "swig/modules/cpp_wrappers/pokemon_party.hpp"
-#include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
+#include "attribute_maps.hpp"
+#include "item_list.hpp"
+#include "item_bag.hpp"
+#include "pokedex.hpp"
+#include "pokemon_party.hpp"
+#include "pokemon_pc.hpp"
 
 namespace pkmn { namespace swig {
 
@@ -243,6 +244,21 @@ namespace pkmn { namespace swig {
             inline pkmn::swig::item_list get_item_pc()
             {
                 return pkmn::swig::item_list(_game_save->get_item_pc());
+            }
+
+            numeric_attribute_map<pkmn::game_save> get_numeric_attributes()
+            {
+                return numeric_attribute_map<pkmn::game_save>(_game_save);
+            }
+
+            string_attribute_map<pkmn::game_save> get_string_attributes()
+            {
+                return string_attribute_map<pkmn::game_save>(_game_save);
+            }
+
+            boolean_attribute_map<pkmn::game_save> get_boolean_attributes()
+            {
+                return boolean_attribute_map<pkmn::game_save>(_game_save);
             }
 
 #ifdef SWIGCSHARP

@@ -22,6 +22,7 @@ header_text = """/*
 
 ignored_classes = ["numeric_attribute_map",
                    "string_attribute_map",
+                   "boolean_attribute_map",
                    "PKMN_API"]
 
 ignored_functions = ["size"]

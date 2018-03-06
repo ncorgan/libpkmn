@@ -37,6 +37,18 @@ class string_attribute_map
         uintmax_t cptr();
 };
 
+template <class sptr_type>
+class boolean_attribute_map
+{
+    public:
+        bool get_attribute(const std::string& attribute);
+        void set_attribute(const std::string& attribute, bool value);
+        std::vector<std::string> get_attribute_names();
+
+        // For internal use
+        uintmax_t cptr();
+};
+
 }}
 
 // Numeric attributes
@@ -151,14 +163,74 @@ using System.Runtime.InteropServices;"
     }
 %}
 
+// Boolean attributes
+
+%typemap(csimports) pkmn::swig::boolean_attribute_map "
+using System;
+using System.Runtime.InteropServices;"
+
+%csmethodmodifiers pkmn::swig::boolean_attribute_map::get_attribute "private";
+%csmethodmodifiers pkmn::swig::boolean_attribute_map::set_attribute "private";
+%csmethodmodifiers pkmn::swig::boolean_attribute_map::get_attribute_names "private";
+%csmethodmodifiers pkmn::swig::boolean_attribute_map::cptr "private";
+
+%typemap(cscode) pkmn::swig::boolean_attribute_map
+%{
+    public bool this[string attributeName]
+    {
+        get { return GetAttribute(attributeName); }
+        set { SetAttribute(attributeName, value); }
+    }
+
+    public StringList Names
+    {
+        get { return GetAttributeNames(); }
+    }
+
+    public bool Equals($csclassname rhs)
+    {
+        return (this.Cptr() == rhs.Cptr());
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        $csclassname rhsAsClass = rhs as $csclassname;
+        if(rhsAsClass == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsAsClass);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(this.Cptr())
+                                       .AddValue<StringList>(this.Names)
+                                       .AddValue<String>(this.GetType().Name)
+                                       .ToHashCode();
+    }
+%}
+
 // Definitions
 
-%define PKMN_CSHARP_ATTRIBUTE_MAPS(sptr_type, csharp_name_numeric, csharp_name_string)
+%define PKMN_CSHARP_ATTRIBUTE_MAPS(sptr_type, csharp_name_numeric, csharp_name_string, csharp_name_boolean)
     %ignore pkmn::swig::numeric_attribute_map<sptr_type>::numeric_attribute_map();
     %template(csharp_name_numeric) pkmn::swig::numeric_attribute_map<sptr_type>;
 
     %ignore pkmn::swig::string_attribute_map<sptr_type>::string_attribute_map();
     %template(csharp_name_string)  pkmn::swig::string_attribute_map<sptr_type>;
+
+    %ignore pkmn::swig::boolean_attribute_map<sptr_type>::boolean_attribute_map();
+    %template(csharp_name_boolean) pkmn::swig::boolean_attribute_map<sptr_type>;
 %enddef
 
-PKMN_CSHARP_ATTRIBUTE_MAPS(pkmn::pokemon, PokemonNumericAttributeMap, PokemonStringAttributeMap);
+PKMN_CSHARP_ATTRIBUTE_MAPS(pkmn::pokemon, PokemonNumericAttributeMap, PokemonStringAttributeMap, PokemonBooleanAttributeMap);
+PKMN_CSHARP_ATTRIBUTE_MAPS(pkmn::game_save, GameSaveNumericAttributeMap, GameSaveStringAttributeMap, GameSaveBooleanAttributeMap);

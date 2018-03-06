@@ -12,6 +12,7 @@
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
+#include <pkmn/game_save.hpp>
 #include <pkmn/pokemon.hpp>
 
 namespace pkmn { namespace swig {
@@ -126,6 +127,58 @@ namespace pkmn { namespace swig {
             }
 
             inline bool operator!=(const string_attribute_map& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
+
+        private:
+            std::shared_ptr<sptr_type> _internal;
+    };
+
+    template <typename sptr_type>
+    class boolean_attribute_map
+    {
+        public:
+            boolean_attribute_map():
+                _internal(nullptr)
+            {}
+
+            boolean_attribute_map(
+                const std::shared_ptr<sptr_type>& internal
+            ): _internal(internal)
+            {}
+
+            inline bool get_attribute(const std::string& attribute)
+            {
+                return _internal->get_boolean_attribute(attribute);
+            }
+
+            inline void set_attribute(
+                const std::string& attribute,
+                bool value
+            )
+            {
+                _internal->set_boolean_attribute(attribute, value);
+            }
+
+            inline std::vector<std::string> get_attribute_names()
+            {
+                return _internal->get_boolean_attribute_names();
+            }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_internal.get());
+            }
+#else
+            inline bool operator==(const boolean_attribute_map& rhs) const
+            {
+                return (_internal == rhs._internal);
+            }
+
+            inline bool operator!=(const boolean_attribute_map& rhs) const
             {
                 return !operator==(rhs);
             }

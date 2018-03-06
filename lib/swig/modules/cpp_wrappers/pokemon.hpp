@@ -692,6 +692,11 @@ namespace pkmn { namespace swig {
                 return string_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
+            boolean_attribute_map<pkmn::pokemon> get_boolean_attributes()
+            {
+                return boolean_attribute_map<pkmn::pokemon>(_pokemon);
+            }
+
             inline pkmn::pokemon::sptr get_internal() const
             {
                 return _pokemon;

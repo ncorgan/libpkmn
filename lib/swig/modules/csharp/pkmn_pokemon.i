@@ -67,6 +67,7 @@ using Database;"
 %attributestring(pkmn::swig::pokemon, std::string, SpriteFilepath, get_sprite_filepath);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), NumericAttributes, get_numeric_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), StringAttributes, get_string_attributes);
+%attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), BooleanAttributes, get_boolean_attributes);
 
 %typemap(cscode) pkmn::swig::pokemon
 %{

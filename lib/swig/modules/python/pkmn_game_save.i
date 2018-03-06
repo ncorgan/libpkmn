@@ -29,6 +29,9 @@
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, pokemon_pc, get_pokemon_pc);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, item_bag, get_item_bag);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_list, item_pc, get_item_pc);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::numeric_attribute_map<pkmn::game_save>), numeric_attributes, get_numeric_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::string_attribute_map<pkmn::game_save>), string_attributes, get_string_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::boolean_attribute_map<pkmn::game_save>), boolean_attributes, get_boolean_attributes);
 
 /*
  * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the

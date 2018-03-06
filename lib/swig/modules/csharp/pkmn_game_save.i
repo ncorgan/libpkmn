@@ -37,6 +37,9 @@ using System.Runtime.InteropServices;"
 %attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, PokemonPC, get_pokemon_pc);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, ItemBag, get_item_bag);
 %attributeval(pkmn::swig::game_save, pkmn::swig::item_list, ItemPC, get_item_pc);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::numeric_attribute_map<pkmn::game_save>), NumericAttributes, get_numeric_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::string_attribute_map<pkmn::game_save>), StringAttributes, get_string_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::boolean_attribute_map<pkmn::game_save>), BooleanAttributes, get_boolean_attributes);
 
 %typemap(cscode) pkmn::swig::game_save
 %{
