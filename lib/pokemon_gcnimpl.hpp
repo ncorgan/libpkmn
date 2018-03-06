@@ -215,6 +215,12 @@ namespace pkmn {
                 int hp
             ) override final;
 
+            // Functions for attributes
+
+            bool get_is_obedient();
+
+            void set_is_obedient(bool is_obedient);
+
         private:
 
             void _populate_party_data() override final;
@@ -233,6 +239,8 @@ namespace pkmn {
             void _update_ribbons_map() override final;
             void _update_EV_map() override final;
             void _update_stat_map() override final;
+
+            void _register_attributes();
     };
 
 }

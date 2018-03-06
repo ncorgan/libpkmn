@@ -144,6 +144,8 @@ namespace pkmn {
 
         party_impl_ptr->set_pokedex(_pokedex);
         pc_impl_ptr->set_pokedex(_pokedex);
+
+        _register_attributes();
     }
 
     game_save_gbaimpl::~game_save_gbaimpl() {
@@ -323,5 +325,37 @@ namespace pkmn {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
         *_pksav_save.money = pksav_littleendian32(uint32_t(money));
+    }
+
+    // Functions for attributes
+
+    int game_save_gbaimpl::get_casino_coins()
+    {
+        return pksav_littleendian16(*_pksav_save.casino_coins);
+    }
+
+    void game_save_gbaimpl::set_casino_coins(
+        int casino_coins
+    )
+    {
+        pkmn::enforce_bounds(
+            "Casino coins",
+            casino_coins,
+            0,
+            9999
+        );
+
+        *_pksav_save.casino_coins = pksav_littleendian16(uint16_t(casino_coins));
+    }
+
+    void game_save_gbaimpl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Casino coins",
+            std::bind(&game_save_gbaimpl::get_casino_coins, this),
+            std::bind(&game_save_gbaimpl::set_casino_coins, this, _1)
+        );
     }
 }

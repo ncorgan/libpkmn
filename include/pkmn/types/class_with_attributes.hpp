@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -59,9 +59,30 @@ namespace pkmn {
                 return _string_attribute_engine.get_attribute_names();
             }
 
+            inline bool get_boolean_attribute(
+                const std::string& attribute_name
+            )
+            {
+                return _boolean_attribute_engine.get_attribute(attribute_name);
+            }
+
+            inline void set_boolean_attribute(
+                const std::string& attribute_name,
+                bool value
+            )
+            {
+                _boolean_attribute_engine.set_attribute(attribute_name, value);
+            }
+
+            inline std::vector<std::string> get_boolean_attribute_names()
+            {
+                return _boolean_attribute_engine.get_attribute_names();
+            }
+
         protected:
             pkmn::attribute_engine<int> _numeric_attribute_engine;
             pkmn::attribute_engine<std::string> _string_attribute_engine;
+            pkmn::attribute_engine<bool> _boolean_attribute_engine;
     };
 }
 

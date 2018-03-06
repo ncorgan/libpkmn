@@ -17,7 +17,8 @@ class attribute_test_class: public pkmn::class_with_attributes
         attribute_test_class():
             pkmn::class_with_attributes(),
             _int1(1), _int2(2), _int3(3),
-            _string1("One"), _string2("Two"), _string3("Three")
+            _string1("One"), _string2("Two"), _string3("Three"),
+            _bool1(false), _bool2(true), _bool3(false)
         {
             _register_attributes();
         }
@@ -31,6 +32,10 @@ class attribute_test_class: public pkmn::class_with_attributes
         std::string _string1; // Read/write
         std::string _string2; // Read-only
         std::string _string3; // Write-only
+
+        bool _bool1; // Read/write
+        bool _bool2; // Read-only
+        bool _bool3; // Write-only
 
         int _get_int1()
         {
@@ -72,6 +77,26 @@ class attribute_test_class: public pkmn::class_with_attributes
             _string3 = value;
         }
 
+        bool _get_bool1()
+        {
+            return _bool1;
+        }
+
+        void _set_bool1(bool value)
+        {
+            _bool1 = value;
+        }
+
+        bool _get_bool2()
+        {
+            return _bool2;
+        }
+
+        void _set_bool3(bool value)
+        {
+            _int3 = value;
+        }
+
         void _register_attributes()
         {
             using namespace std::placeholders;
@@ -107,6 +132,22 @@ class attribute_test_class: public pkmn::class_with_attributes
                 nullptr,
                 std::bind(&attribute_test_class::_set_string3, this, _1)
             );
+
+            _boolean_attribute_engine.register_attribute_fcns(
+                "bool1",
+                std::bind(&attribute_test_class::_get_bool1, this),
+                std::bind(&attribute_test_class::_set_bool1, this, _1)
+            );
+            _boolean_attribute_engine.register_attribute_fcns(
+                "bool2",
+                std::bind(&attribute_test_class::_get_bool2, this),
+                nullptr
+            );
+            _boolean_attribute_engine.register_attribute_fcns(
+                "bool3",
+                nullptr,
+                std::bind(&attribute_test_class::_set_bool3, this, _1)
+            );
         }
 };
 
@@ -119,12 +160,16 @@ TEST(cpp_attribute_test, test_attribute_engine)
     EXPECT_EQ(2, test_class.get_numeric_attribute("int2"));
     EXPECT_EQ("One", test_class.get_string_attribute("string1"));
     EXPECT_EQ("Two", test_class.get_string_attribute("string2"));
+    EXPECT_FALSE(test_class.get_boolean_attribute("bool1"));
+    EXPECT_TRUE(test_class.get_boolean_attribute("bool2"));
 
     // Set and get values for read/write attributes.
     test_class.set_numeric_attribute("int1", 101);
     EXPECT_EQ(101, test_class.get_numeric_attribute("int1"));
     test_class.set_string_attribute("string1", "101");
     EXPECT_EQ("101", test_class.get_string_attribute("string1"));
+    test_class.set_boolean_attribute("bool1", true);
+    EXPECT_TRUE(test_class.get_boolean_attribute("bool1"));
 
     // Attempt to write read-only attributes.
     EXPECT_THROW(
@@ -133,6 +178,9 @@ TEST(cpp_attribute_test, test_attribute_engine)
     EXPECT_THROW(
         test_class.set_string_attribute("string2", "102");
     , std::invalid_argument);
+    EXPECT_THROW(
+        test_class.set_boolean_attribute("bool2", false);
+    , std::invalid_argument);
 
     // Attempt to read write-only attributes.
     EXPECT_THROW(
@@ -140,6 +188,9 @@ TEST(cpp_attribute_test, test_attribute_engine)
     , std::invalid_argument);
     EXPECT_THROW(
         test_class.get_string_attribute("string3");
+    , std::invalid_argument);
+    EXPECT_THROW(
+        test_class.get_boolean_attribute("bool3");
     , std::invalid_argument);
 
     // Attempt to get/set invalid attributes.
@@ -155,11 +206,19 @@ TEST(cpp_attribute_test, test_attribute_engine)
     EXPECT_THROW(
         test_class.set_string_attribute("Not an attribute", "0");
     , std::invalid_argument);
+    EXPECT_THROW(
+        test_class.get_boolean_attribute("Not an attribute");
+    , std::invalid_argument);
+    EXPECT_THROW(
+        test_class.set_boolean_attribute("Not an attribute", true);
+    , std::invalid_argument);
 
     // Read attribute names.
     const std::vector<std::string> expected_numeric_attribute_names = {"int1", "int2", "int3"};
     const std::vector<std::string> expected_string_attribute_names = {"string1", "string2", "string3"};
+    const std::vector<std::string> expected_boolean_attribute_names = {"bool1", "bool2", "bool3"};
 
     EXPECT_EQ(expected_numeric_attribute_names, test_class.get_numeric_attribute_names());
     EXPECT_EQ(expected_string_attribute_names, test_class.get_string_attribute_names());
+    EXPECT_EQ(expected_boolean_attribute_names, test_class.get_boolean_attribute_names());
 }
