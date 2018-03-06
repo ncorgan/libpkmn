@@ -5,6 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include <pkmntest-c/misc_comparison.h>
 #include <pkmntest-c/pokemon_comparison.h>
 #include <pkmntest-c/util.h>
 
@@ -30,6 +31,24 @@ static const pkmn_move_slots_t empty_move_slots =
 {
     .move_slots = NULL,
     .length = 0
+};
+static const pkmn_attribute_names_t empty_attribute_names =
+{
+    .numeric_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    },
+    .string_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    },
+    .boolean_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    }
 };
 
 static inline bool random_bool()
@@ -586,17 +605,19 @@ void compare_pokemon_ribbons(
 
 void compare_pokemon(
     pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon_ptr
+    pkmn_pokemon_t* pokemon2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon1_ptr);
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon1_ptr->game);
 
     TEST_ASSERT_EQUAL_STRING(
         pokemon1_ptr->species,
-        pokemon_ptr->species
+        pokemon2_ptr->species
     );
 
     // There is no way to determine what game an imported Generation I-II
@@ -605,17 +626,17 @@ void compare_pokemon(
     {
         TEST_ASSERT_EQUAL_STRING(
             pokemon1_ptr->game,
-            pokemon_ptr->game
+            pokemon2_ptr->game
         );
         compare_pokemon_strings(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Icon filepath",
             pkmn_pokemon_get_icon_filepath
         );
         compare_pokemon_strings(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Sprite filepath",
             pkmn_pokemon_get_sprite_filepath
         );
@@ -623,45 +644,45 @@ void compare_pokemon(
 
     compare_pokemon_strings(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         "Form",
         pkmn_pokemon_get_form
     );
     compare_pokemon_ints(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         "Experience",
         pkmn_pokemon_get_experience
     );
     compare_pokemon_ints(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         "Level",
         pkmn_pokemon_get_level
     );
     compare_pokemon_strings(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         "Nickname",
         pkmn_pokemon_get_nickname
     );
     compare_pokemon_int_buffers(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         PKMN_NUM_STATS,
         "EVs",
         pkmn_pokemon_get_EVs
     );
     compare_pokemon_int_buffers(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         PKMN_NUM_STATS,
         "IVs",
         pkmn_pokemon_get_IVs
     );
     compare_pokemon_int_buffers(
         pokemon1_ptr,
-        pokemon_ptr,
+        pokemon2_ptr,
         PKMN_NUM_STATS,
         "Stats",
         pkmn_pokemon_get_stats
@@ -669,79 +690,182 @@ void compare_pokemon(
 
     compare_pokemon_original_trainer_info(
         pokemon1_ptr,
-        pokemon_ptr
+        pokemon2_ptr
     );
     compare_pokemon_moves(
         pokemon1_ptr,
-        pokemon_ptr
+        pokemon2_ptr
     );
 
     if(generation >= 2)
     {
         compare_pokemon_ints(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Current trainer friendship",
             pkmn_pokemon_get_current_trainer_friendship
         );
         compare_pokemon_bools(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Is shiny",
             pkmn_pokemon_is_shiny
         );
         compare_pokemon_strings(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Held item",
             pkmn_pokemon_get_held_item
         );
         compare_pokemon_ints(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Level met",
             pkmn_pokemon_get_level_met
         );
-        compare_pokemon_locations_met(pokemon1_ptr, pokemon_ptr, false);
+        compare_pokemon_locations_met(pokemon1_ptr, pokemon2_ptr, false);
     }
     if(generation >= 3)
     {
         compare_pokemon_strings(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Ability",
             pkmn_pokemon_get_ability
         );
         compare_pokemon_uint32s(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Personality",
             pkmn_pokemon_get_personality
         );
         compare_pokemon_strings(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             "Ball",
             pkmn_pokemon_get_ball
         );
         compare_pokemon_bool_buffers(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             PKMN_NUM_MARKINGS,
             "Markings",
             pkmn_pokemon_get_markings
         );
         compare_pokemon_int_buffers(
             pokemon1_ptr,
-            pokemon_ptr,
+            pokemon2_ptr,
             PKMN_NUM_CONTEST_STATS,
             "Contest stats",
             pkmn_pokemon_get_contest_stats
         );
-        compare_pokemon_ribbons(pokemon1_ptr, pokemon_ptr);
+        compare_pokemon_ribbons(pokemon1_ptr, pokemon2_ptr);
     }
     if(generation >= 4)
     {
-        compare_pokemon_locations_met(pokemon1_ptr, pokemon_ptr, true);
+        compare_pokemon_locations_met(pokemon1_ptr, pokemon2_ptr, true);
     }
+
+    // Compare attributes.
+
+    pkmn_attribute_names_t attribute_names1 = empty_attribute_names;
+    error = pkmn_pokemon_get_attribute_names(
+                pokemon1_ptr,
+                &attribute_names1
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    pkmn_attribute_names_t attribute_names2 = empty_attribute_names;
+    error = pkmn_pokemon_get_attribute_names(
+                pokemon2_ptr,
+                &attribute_names2
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    compare_attribute_names(
+        &attribute_names1,
+        &attribute_names2
+    );
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.numeric_attribute_names.length;
+        ++attribute_index)
+    {
+        int attribute_value1 = 0;
+        int attribute_value2 = 0;
+
+        error = pkmn_pokemon_get_numeric_attribute(
+                    pokemon1_ptr,
+                    attribute_names1.numeric_attribute_names.strings[attribute_index],
+                    &attribute_value1
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon_get_numeric_attribute(
+                    pokemon2_ptr,
+                    attribute_names2.numeric_attribute_names.strings[attribute_index],
+                    &attribute_value2
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
+    }
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.string_attribute_names.length;
+        ++attribute_index)
+    {
+        char attribute_value1[STRBUFFER_LEN] = {0};
+        char attribute_value2[STRBUFFER_LEN] = {0};
+
+        error = pkmn_pokemon_get_string_attribute(
+                    pokemon1_ptr,
+                    attribute_names1.string_attribute_names.strings[attribute_index],
+                    attribute_value1,
+                    sizeof(attribute_value1),
+                    NULL
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon_get_string_attribute(
+                    pokemon2_ptr,
+                    attribute_names2.string_attribute_names.strings[attribute_index],
+                    attribute_value2,
+                    sizeof(attribute_value2),
+                    NULL
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL_STRING(attribute_value1, attribute_value2);
+    }
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.boolean_attribute_names.length;
+        ++attribute_index)
+    {
+        bool attribute_value1 = 0;
+        bool attribute_value2 = 0;
+
+        error = pkmn_pokemon_get_boolean_attribute(
+                    pokemon1_ptr,
+                    attribute_names1.boolean_attribute_names.strings[attribute_index],
+                    &attribute_value1
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        error = pkmn_pokemon_get_boolean_attribute(
+                    pokemon2_ptr,
+                    attribute_names2.boolean_attribute_names.strings[attribute_index],
+                    &attribute_value2
+                );
+        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+        TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
+    }
+
+    error = pkmn_attribute_names_free(&attribute_names1);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+
+    error = pkmn_attribute_names_free(&attribute_names2);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 }

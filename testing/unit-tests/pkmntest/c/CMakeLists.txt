@@ -23,6 +23,7 @@ SET(pkmntest_c_libs
 )
 
 SET(pkmntest_c_sources
+    misc_comparison.c
     pokemon_comparison.c
 )
 

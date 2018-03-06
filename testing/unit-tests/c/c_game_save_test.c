@@ -7,6 +7,7 @@
 
 #include "c_test_common.h"
 
+#include <pkmntest-c/misc_comparison.h>
 #include <pkmntest-c/pokemon_comparison.h>
 #include <pkmntest-c/util.h>
 
@@ -116,6 +117,24 @@ static const pkmn_item_slots_t empty_item_slots =
 {
     .item_slots = NULL,
     .length = 0
+};
+static const pkmn_attribute_names_t empty_attribute_names =
+{
+    .numeric_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    },
+    .string_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    },
+    .boolean_attribute_names =
+    {
+        .strings = NULL,
+        .length = 0
+    }
 };
 
 // Helper functions
@@ -291,6 +310,130 @@ static void game_save_test_rival_name(
             strbuffer,
             pkmn_pokemon_default_trainer_name()
         );
+    }
+}
+
+static void game_save_test_attributes(
+    pkmn_game_save_t* game_save_ptr
+)
+{
+    TEST_ASSERT_NOT_NULL(game_save_ptr);
+
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    int generation = game_to_generation(game_save_ptr->game);
+    switch(generation)
+    {
+        case 1:
+        {
+            int num_casino_coins = -1;
+            error = pkmn_game_save_get_numeric_attribute(
+                        game_save_ptr,
+                        "Casino coins",
+                        &num_casino_coins
+                    );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+            TEST_ASSERT_TRUE(num_casino_coins >= 0);
+            TEST_ASSERT_TRUE(num_casino_coins <= 9999);
+
+            // TODO: uncomment after fixing:
+            //  * https://github.com/ncorgan/pksav/issues/3
+            /*int new_num_casino_coins = (rand() % 10000);
+            error = pkmn_game_save_set_numeric_attribute(
+                        game_save_ptr,
+                        "Casino coins",
+                        new_num_casino_coins
+                    );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+
+            error = pkmn_game_save_get_numeric_attribute(
+                        game_save_ptr,
+                        "Casino coins",
+                        &num_casino_coins
+                    );
+            PKMN_TEST_ASSERT_SUCCESS(error);
+            TEST_ASSERT_EQUAL(
+                new_num_casino_coins,
+                num_casino_coins
+            );*/
+
+            int pikachu_friendship = -1;
+            error = pkmn_game_save_get_numeric_attribute(
+                        game_save_ptr,
+                        "Pikachu friendship",
+                        &pikachu_friendship
+                    );
+            if(!strcmp(game_save_ptr->game, "Yellow"))
+            {
+                PKMN_TEST_ASSERT_SUCCESS(error);
+
+                int new_pikachu_friendship = (rand() % 256);
+                error = pkmn_game_save_set_numeric_attribute(
+                            game_save_ptr,
+                            "Pikachu friendship",
+                            new_pikachu_friendship
+                        );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+
+                error = pkmn_game_save_get_numeric_attribute(
+                            game_save_ptr,
+                            "Pikachu friendship",
+                            &pikachu_friendship
+                        );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+                TEST_ASSERT_EQUAL(
+                    new_pikachu_friendship,
+                    pikachu_friendship
+                );
+            }
+            else
+            {
+                TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
+            }
+
+            break;
+        }
+
+        case 3:
+        {
+            bool is_game_gamecube = !strcmp(game_save_ptr->game, "Colosseum") ||
+                                    !strcmp(game_save_ptr->game, "XD");
+            if(!is_game_gamecube)
+            {
+                int num_casino_coins = -1;
+                error = pkmn_game_save_get_numeric_attribute(
+                            game_save_ptr,
+                            "Casino coins",
+                            &num_casino_coins
+                        );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+                TEST_ASSERT_TRUE(num_casino_coins >= 0);
+                TEST_ASSERT_TRUE(num_casino_coins <= 9999);
+
+                int new_num_casino_coins = (rand() % 10000);
+                error = pkmn_game_save_set_numeric_attribute(
+                            game_save_ptr,
+                            "Casino coins",
+                            new_num_casino_coins
+                        );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+
+                error = pkmn_game_save_get_numeric_attribute(
+                            game_save_ptr,
+                            "Casino coins",
+                            &num_casino_coins
+                        );
+                PKMN_TEST_ASSERT_SUCCESS(error);
+                TEST_ASSERT_EQUAL(
+                    new_num_casino_coins,
+                    num_casino_coins
+                );
+            }
+            break;
+        }
+
+        default:
+            break;
     }
 }
 
@@ -535,6 +678,8 @@ static void game_save_test_common_fields(
 
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
+
+    game_save_test_attributes(game_save_ptr);
 }
 
 static void randomize_pokemon(
@@ -752,11 +897,11 @@ static void compare_pokemon_lists(
 
 static void compare_game_saves(
     pkmn_game_save_t* game_save1_ptr,
-    pkmn_game_save_t* game_save_ptr
+    pkmn_game_save_t* game_save2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save1_ptr);
-    TEST_ASSERT_NOT_NULL(game_save_ptr);
+    TEST_ASSERT_NOT_NULL(game_save2_ptr);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
@@ -765,7 +910,7 @@ static void compare_game_saves(
 
     TEST_ASSERT_EQUAL_STRING(
         game_save1_ptr->game,
-        game_save_ptr->game
+        game_save2_ptr->game
     );
 
     int generation = game_to_generation(game_save1_ptr->game);
@@ -783,7 +928,7 @@ static void compare_game_saves(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_item_bag(
-                game_save_ptr,
+                game_save2_ptr,
                 &item_bag2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -806,7 +951,7 @@ static void compare_game_saves(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_game_save_get_item_pc(
-                    game_save_ptr,
+                    game_save2_ptr,
                     &item_pc
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -830,7 +975,7 @@ static void compare_game_saves(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_pokemon_party(
-                game_save_ptr,
+                game_save2_ptr,
                 &pokemon_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -916,6 +1061,109 @@ static void compare_game_saves(
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_pc_free(&pokemon_pc1);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    // Compare attributes.
+
+    pkmn_attribute_names_t attribute_names1 = empty_attribute_names;
+    error = pkmn_game_save_get_attribute_names(
+                game_save1_ptr,
+                &attribute_names1
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    pkmn_attribute_names_t attribute_names2 = empty_attribute_names;
+    error = pkmn_game_save_get_attribute_names(
+                game_save2_ptr,
+                &attribute_names2
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    compare_attribute_names(
+        &attribute_names1,
+        &attribute_names2
+    );
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.numeric_attribute_names.length;
+        ++attribute_index)
+    {
+        int attribute_value1 = 0;
+        int attribute_value2 = 0;
+
+        error = pkmn_game_save_get_numeric_attribute(
+                    game_save1_ptr,
+                    attribute_names1.numeric_attribute_names.strings[attribute_index],
+                    &attribute_value1
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        error = pkmn_game_save_get_numeric_attribute(
+                    game_save2_ptr,
+                    attribute_names2.numeric_attribute_names.strings[attribute_index],
+                    &attribute_value2
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
+    }
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.string_attribute_names.length;
+        ++attribute_index)
+    {
+        char attribute_value1[STRBUFFER_LEN] = {0};
+        char attribute_value2[STRBUFFER_LEN] = {0};
+
+        error = pkmn_game_save_get_string_attribute(
+                    game_save1_ptr,
+                    attribute_names1.string_attribute_names.strings[attribute_index],
+                    attribute_value1,
+                    sizeof(attribute_value1),
+                    NULL
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        error = pkmn_game_save_get_string_attribute(
+                    game_save2_ptr,
+                    attribute_names2.string_attribute_names.strings[attribute_index],
+                    attribute_value2,
+                    sizeof(attribute_value2),
+                    NULL
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        TEST_ASSERT_EQUAL_STRING(attribute_value1, attribute_value2);
+    }
+
+    for(size_t attribute_index = 0;
+        attribute_index < attribute_names1.boolean_attribute_names.length;
+        ++attribute_index)
+    {
+        bool attribute_value1 = 0;
+        bool attribute_value2 = 0;
+
+        error = pkmn_game_save_get_boolean_attribute(
+                    game_save1_ptr,
+                    attribute_names1.boolean_attribute_names.strings[attribute_index],
+                    &attribute_value1
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        error = pkmn_game_save_get_boolean_attribute(
+                    game_save2_ptr,
+                    attribute_names2.boolean_attribute_names.strings[attribute_index],
+                    &attribute_value2
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
+
+        TEST_ASSERT_EQUAL(attribute_value1, attribute_value2);
+    }
+
+    error = pkmn_attribute_names_free(&attribute_names1);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
+    error = pkmn_attribute_names_free(&attribute_names2);
     PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
