@@ -94,7 +94,7 @@ class attribute_test_class: public pkmn::class_with_attributes
 
         void _set_bool3(bool value)
         {
-            _int3 = value;
+            _bool3 = value;
         }
 
         void _register_attributes()
