@@ -98,8 +98,8 @@ class pokemon_conversions_test(base_test.base_test):
         min_generation = min(origin_generation, dest_generation)
         game_for_lists = origin_game if min_generation == origin_generation else dest_game
 
-        items = pkmn.database.get_item_list(game_for_lists)
-        moves = pkmn.database.get_move_list(game_for_lists)
+        items = pkmn.database.lists.get_item_list(game_for_lists)
+        moves = pkmn.database.lists.get_move_list(game_for_lists)
 
         first_pokemon = self.get_specific_random_pokemon(
                             origin_game,

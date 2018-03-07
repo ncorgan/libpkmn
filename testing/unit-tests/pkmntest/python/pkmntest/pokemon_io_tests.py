@@ -30,9 +30,9 @@ class pokemon_io_test(base_test.base_test):
     def test_saving_and_loading_pk1(self, game):
         pk1_path = os.path.join(TMP_DIR, "{0}_{1}.pk1".format(game, random.randint(0, 1000)))
 
-        item_list = pkmn.database.get_item_list(game)
-        move_list = pkmn.database.get_move_list(game)
-        pokemon_list = pkmn.database.get_pokemon_list(1, True)
+        item_list = pkmn.database.lists.get_item_list(game)
+        move_list = pkmn.database.lists.get_move_list(game)
+        pokemon_list = pkmn.database.lists.get_pokemon_list(1, True)
 
         random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
         random_pokemon.export_to_file(pk1_path)
@@ -48,9 +48,9 @@ class pokemon_io_test(base_test.base_test):
     def test_saving_and_loading_pk2(self, game):
         pk2_path = os.path.join(TMP_DIR, "{0}_{1}.pk2".format(game, random.randint(0, 1000)))
 
-        item_list = pkmn.database.get_item_list(game)
-        move_list = pkmn.database.get_move_list(game)
-        pokemon_list = pkmn.database.get_pokemon_list(2, True)
+        item_list = pkmn.database.lists.get_item_list(game)
+        move_list = pkmn.database.lists.get_move_list(game)
+        pokemon_list = pkmn.database.lists.get_pokemon_list(2, True)
 
         random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
         random_pokemon.export_to_file(pk2_path)
@@ -66,9 +66,9 @@ class pokemon_io_test(base_test.base_test):
     def test_saving_and_loading_3gpkm(self, game):
         _3gpkm_path = os.path.join(TMP_DIR, "{0}_{1}.3gpkm".format(game, random.randint(0, 1000)))
 
-        item_list = pkmn.database.get_item_list(game)
-        move_list = pkmn.database.get_move_list(game)
-        pokemon_list = pkmn.database.get_pokemon_list(3, True)
+        item_list = pkmn.database.lists.get_item_list(game)
+        move_list = pkmn.database.lists.get_move_list(game)
+        pokemon_list = pkmn.database.lists.get_pokemon_list(3, True)
 
         random_pokemon = self.get_random_pokemon(game, pokemon_list, move_list, item_list)
         random_pokemon.export_to_file(_3gpkm_path)
