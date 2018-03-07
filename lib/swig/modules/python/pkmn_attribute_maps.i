@@ -117,15 +117,15 @@ class boolean_attribute_map
 
 %define PKMN_PYTHON_ATTRIBUTE_MAPS(sptr_type, python_name_numeric, python_name_string, python_name_boolean)
     %ignore pkmn::swig::numeric_attribute_map<sptr_type>::numeric_attribute_map();
-    %attributeval(pkmn::swig::numeric_attribute_map<sptr_type>, %arg(std::vector<std::string>), attribute_names, get_attribute_names);
+    %attributeval(pkmn::swig::numeric_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
     %template(python_name_numeric) pkmn::swig::numeric_attribute_map<sptr_type>;
 
     %ignore pkmn::swig::string_attribute_map<sptr_type>::string_attribute_map();
-    %attributeval(pkmn::swig::string_attribute_map<sptr_type>, %arg(std::vector<std::string>), attribute_names, get_attribute_names);
+    %attributeval(pkmn::swig::string_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
     %template(python_name_string)  pkmn::swig::string_attribute_map<sptr_type>;
 
     %ignore pkmn::swig::boolean_attribute_map<sptr_type>::boolean_attribute_map();
-    %attributeval(pkmn::swig::boolean_attribute_map<sptr_type>, %arg(std::vector<std::string>), attribute_names, get_attribute_names);
+    %attributeval(pkmn::swig::boolean_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
     %template(python_name_boolean)  pkmn::swig::boolean_attribute_map<sptr_type>;
 %enddef
 

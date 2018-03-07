@@ -309,6 +309,59 @@ public class GameSaveTest
         }
     }
 
+    private static void TestAttributes(
+        PKMN.GameSave gameSave
+    )
+    {
+        string game = gameSave.Game;
+        int generation = Util.GameToGeneration(game);
+        switch(generation)
+        {
+            case 1:
+                Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Casino coins"));
+                Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
+                Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
+
+                // TODO: uncomment after fixing:
+                //  * https://github.com/ncorgan/pksav/issues/3
+                /*int casinoCoins = rng.Next(0, 9999);
+                gameSave.NumericAttributes["Casino coins"] = casinoCoins;
+                Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);*/
+
+                if(game.Equals("Yellow"))
+                {
+                    Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Pikachu friendship"));
+                    Assert.GreaterOrEqual(gameSave.NumericAttributes["Pikachu friendship"], 0);
+                    Assert.LessOrEqual(gameSave.NumericAttributes["Pikachu friendship"], 255);
+
+                    int pikachuFriendship = rng.Next(0, 255);
+                    gameSave.NumericAttributes["Pikachu friendship"] = pikachuFriendship;
+                    Assert.AreEqual(gameSave.NumericAttributes["Pikachu friendship"], pikachuFriendship);
+                }
+                else
+                {
+                    Assert.IsFalse(gameSave.NumericAttributes.Names.Contains("Pikachu friendship"));
+                }
+                break;
+
+            case 3:
+                if(!game.Equals("Colosseum") && !game.Equals("XD"))
+                {
+                    Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Casino coins"));
+                    Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
+                    Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
+
+                    int casinoCoins = rng.Next(0, 9999);
+                    gameSave.NumericAttributes["Casino coins"] = casinoCoins;
+                    Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private static void RandomizePokemon(
         PKMN.GameSave gameSave,
         PKMN.StringList itemList
@@ -452,6 +505,31 @@ public class GameSaveTest
                 save2.Pokedex
             );
         }
+
+        Assert.AreEqual(save1.NumericAttributes.Names, save2.NumericAttributes.Names);
+        foreach(string attributeName in save1.NumericAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.NumericAttributes[attributeName],
+                save2.NumericAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(save1.StringAttributes.Names, save2.StringAttributes.Names);
+        foreach(string attributeName in save1.StringAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.StringAttributes[attributeName],
+                save2.StringAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(save1.BooleanAttributes.Names, save2.BooleanAttributes.Names);
+        foreach(string attributeName in save1.BooleanAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.BooleanAttributes[attributeName],
+                save2.BooleanAttributes[attributeName]
+            );
+        }
     }
 
     public static void TestGameSave(
@@ -478,6 +556,8 @@ public class GameSaveTest
         PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
 
         TestCommonFields(gameSave);
+        TestAttributes(gameSave);
+
         // TODO: RandomizeItems
         RandomizePokemon(
             gameSave,

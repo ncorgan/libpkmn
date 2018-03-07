@@ -287,6 +287,45 @@ function game_save_test.test_common_fields(save)
     end
 end
 
+function game_save_test.test_attributes(save)
+    local game = save.game
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
+
+    if generation == 1
+    then
+        luaunit.assertTrue(save.numeric_attributes["Casino coins"] >= 0)
+        luaunit.assertTrue(save.numeric_attributes["Casino coins"] <= 9999)
+        -- TODO: uncomment after fixing:
+        --  * https://github.com/ncorgan/pksav/issues/3
+        --[[
+        local casino_coins = math.random(0, 9999)
+        save.numeric_attributes["Casino coins"] = casino_coins
+        luaunit.assertEquals(save.numeric_attributes["Casino coins"], casino_coins)
+        --]]
+
+        if game == "Yellow"
+        then
+            luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] >= 0)
+            luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] <= 255)
+
+            local pikachu_friendship = math.random(0, 255)
+            save.numeric_attributes["Pikachu friendship"] = pikachu_friendship
+            luaunit.assertEquals(save.numeric_attributes["Pikachu friendship"], pikachu_friendship)
+        end
+    elseif generation == 3
+    then
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(save.numeric_attributes["Casino coins"] >= 0)
+            luaunit.assertTrue(save.numeric_attributes["Casino coins"] <= 9999)
+
+            local casino_coins = math.random(0, 9999)
+            save.numeric_attributes["Casino coins"] = casino_coins
+            luaunit.assertEquals(save.numeric_attributes["Casino coins"], casino_coins)
+        end
+    end
+end
+
 function game_save_test.randomize_pokemon(save, item_list)
     local game = save.game
     local generation = pkmntest_utils.GAME_TO_GENERATION[game]
@@ -408,6 +447,8 @@ function game_save_test.compare_game_saves(save1, save2)
         luaunit.assertEquals(save1.pokedex.all_seen, save2.pokedex.all_seen)
         luaunit.assertEquals(save1.pokedex.all_caught, save2.pokedex.all_caught)
     end
+
+    pkmntest_utils.compare_attributes(save1, save2)
 end
 
 function game_save_test.test_game_save(expected_type, expected_game, subdir, filename)
@@ -427,6 +468,7 @@ function game_save_test.test_game_save(expected_type, expected_game, subdir, fil
     local item_list = pkmn.database.get_item_list(expected_game)
 
     game_save_test.test_common_fields(save)
+    game_save_test.test_attributes(save)
     -- TODO: randomize_items
     game_save_test.randomize_pokemon(save, item_list)
 

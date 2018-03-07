@@ -63,6 +63,37 @@ class base_test(unittest.TestCase):
         else:
             return (input_str, input_str)
 
+    def compare_attributes(self, var1, var2):
+        self.assertEqual(
+            var1.numeric_attributes.names,
+            var2.numeric_attributes.names
+        )
+        for attribute_name in var1.numeric_attributes.names:
+            self.assertEqual(
+                var1.numeric_attributes[attribute_name],
+                var2.numeric_attributes[attribute_name]
+            )
+
+        self.assertEqual(
+            var1.string_attributes.names,
+            var2.string_attributes.names
+        )
+        for attribute_name in var1.string_attributes.names:
+            self.assertEqual(
+                var1.string_attributes[attribute_name],
+                var2.string_attributes[attribute_name]
+            )
+
+        self.assertEqual(
+            var1.boolean_attributes.names,
+            var2.boolean_attributes.names
+        )
+        for attribute_name in var1.boolean_attributes.names:
+            self.assertEqual(
+                var1.boolean_attributes[attribute_name],
+                var2.boolean_attributes[attribute_name]
+            )
+
     def get_specific_random_pokemon(
         self,
         game,
@@ -156,6 +187,8 @@ class base_test(unittest.TestCase):
         if pokemon1.game == pokemon2.game:
             self.assertEqual(pokemon1.icon_filepath, pokemon2.icon_filepath)
             self.assertEqual(pokemon1.sprite_filepath, pokemon2.sprite_filepath)
+
+        self.compare_attributes(pokemon1, pokemon2)
 
         if generation >= 2:
             self.assertEqual(pokemon1.original_trainer_gender, pokemon2.original_trainer_gender)

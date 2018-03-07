@@ -203,6 +203,31 @@ internal class Util
             Assert.AreEqual(pokemon1.SpriteFilepath, pokemon2.SpriteFilepath);
         }
 
+        Assert.AreEqual(pokemon1.NumericAttributes.Names, pokemon2.NumericAttributes.Names);
+        foreach(string attributeName in pokemon1.NumericAttributes.Names)
+        {
+            Assert.AreEqual(
+                pokemon1.NumericAttributes[attributeName],
+                pokemon2.NumericAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(pokemon1.StringAttributes.Names, pokemon2.StringAttributes.Names);
+        foreach(string attributeName in pokemon1.StringAttributes.Names)
+        {
+            Assert.AreEqual(
+                pokemon1.StringAttributes[attributeName],
+                pokemon2.StringAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(pokemon1.BooleanAttributes.Names, pokemon2.BooleanAttributes.Names);
+        foreach(string attributeName in pokemon1.BooleanAttributes.Names)
+        {
+            Assert.AreEqual(
+                pokemon1.BooleanAttributes[attributeName],
+                pokemon2.BooleanAttributes[attributeName]
+            );
+        }
+
         if(generation >= 2)
         {
             Assert.AreEqual(pokemon1.OriginalTrainerGender, pokemon2.OriginalTrainerGender);

@@ -225,6 +225,70 @@ class game_save_test(pkmntest.base_test.base_test):
                         self.assertTrue(pokedex.has_seen[species])
                         self.assertTrue(pokedex.has_caught[species])
 
+    def __test_attributes(self):
+        game = self.save.game
+        generation = GAME_GENERATIONS[game]
+
+        if generation == 1:
+            self.assertTrue("Casino coins" in self.save.numeric_attributes.names)
+            self.assertGreaterEqual(
+                self.save.numeric_attributes["Casino coins"],
+                0
+            )
+            self.assertLessEqual(
+                self.save.numeric_attributes["Casino coins"],
+                9999
+            )
+
+            # TODO: uncomment after fixing:
+            #  * https://github.com/ncorgan/pksav/issues/3
+            '''
+            casino_coins = random.randint(0, 9999)
+            self.save.numeric_attributes["Casino coins"] = casino_coins
+            self.assertEqual(
+                self.save.numeric_attributes["Casino coins"],
+                casino_coins
+            )
+            '''
+
+            if game == "Yellow":
+                self.assertTrue("Pikachu friendship" in self.save.numeric_attributes.names)
+                self.assertGreaterEqual(
+                    self.save.numeric_attributes["Pikachu friendship"],
+                    0
+                )
+                self.assertLessEqual(
+                    self.save.numeric_attributes["Pikachu friendship"],
+                    255
+                )
+
+                pikachu_friendship = random.randint(0, 255)
+                self.save.numeric_attributes["Pikachu friendship"] = pikachu_friendship
+                self.assertEqual(
+                    self.save.numeric_attributes["Pikachu friendship"],
+                    pikachu_friendship
+                )
+            else:
+                self.assertFalse("Pikachu friendship" in self.save.numeric_attributes.names)
+        elif generation == 3:
+            if game != "Colosseum" and game != "XD":
+                self.assertTrue("Casino coins" in self.save.numeric_attributes.names)
+                self.assertGreaterEqual(
+                    self.save.numeric_attributes["Casino coins"],
+                    0
+                )
+                self.assertLessEqual(
+                    self.save.numeric_attributes["Casino coins"],
+                    9999
+                )
+
+                casino_coins = random.randint(0, 9999)
+                self.save.numeric_attributes["Casino coins"] = casino_coins
+                self.assertEqual(
+                    self.save.numeric_attributes["Casino coins"],
+                    casino_coins
+                )
+
     def __randomize_pokemon(self, item_list):
         game = self.save.game
         generation = GAME_GENERATIONS[game]
@@ -319,6 +383,7 @@ class game_save_test(pkmntest.base_test.base_test):
         item_list = pkmn.database.lists.get_item_list(expected_game)
 
         self.__test_common_fields()
+        self.__test_attributes()
         # TODO: randomize_items
         self.__randomize_pokemon(item_list)
 
@@ -327,6 +392,7 @@ class game_save_test(pkmntest.base_test.base_test):
 
         self.save2 = pkmn.game_save(temp_save_filepath)
         self.__compare_game_saves()
+        self.compare_attributes(self.save, self.save2)
 
         os.remove(temp_save_filepath)
 

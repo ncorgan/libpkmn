@@ -103,6 +103,38 @@ function pkmntest_utils.concat_paths(path1, path2, path3)
     end
 end
 
+function pkmntest_utils.compare_attributes(var1, var2)
+    luaunit.assertEquals(var1.numeric_attributes.names, var2.numeric_attributes.names)
+    local numeric_attribute_names = var1.numeric_attributes.names
+    for attribute_index = 1, #numeric_attribute_names
+    do
+        luaunit.assertEquals(
+            var1.numeric_attributes[numeric_attribute_names[attribute_index]],
+            var2.numeric_attributes[numeric_attribute_names[attribute_index]]
+        )
+    end
+
+    luaunit.assertEquals(var1.string_attributes.names, var2.string_attributes.names)
+    local string_attribute_names = var1.string_attributes.names
+    for attribute_index = 1, #string_attribute_names
+    do
+        luaunit.assertEquals(
+            var1.string_attributes[string_attribute_names[attribute_index]],
+            var2.string_attributes[string_attribute_names[attribute_index]]
+        )
+    end
+
+    luaunit.assertEquals(var1.boolean_attributes.names, var2.boolean_attributes.names)
+    local boolean_attribute_names = var1.boolean_attributes.names
+    for attribute_index = 1, #boolean_attribute_names
+    do
+        luaunit.assertEquals(
+            var1.boolean_attributes[boolean_attribute_names[attribute_index]],
+            var2.boolean_attributes[boolean_attribute_names[attribute_index]]
+        )
+    end
+end
+
 function pkmntest_utils.get_specific_random_pokemon(game, species, form, move_list, item_list)
     local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
@@ -220,6 +252,8 @@ function pkmntest_utils.compare_pokemon(pokemon1, pokemon2)
         luaunit.assertEquals(pokemon1.icon_filepath, pokemon2.icon_filepath)
         luaunit.assertEquals(pokemon1.sprite_filepath, pokemon2.sprite_filepath)
     end
+
+    pkmntest_utils.compare_attributes(pokemon1, pokemon2)
 
     if generation >= 2
     then
