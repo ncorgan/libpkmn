@@ -47,7 +47,7 @@ static void check_initial_ribbons(
                 pokemon_ptr,
                 &ribbon_names
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(32, ribbon_names.length);
 
     for(int type_index = 0; type_index < 5; ++type_index)
@@ -76,7 +76,7 @@ static void check_initial_ribbons(
     }
 
     error = pkmn_string_list_free(&ribbon_names);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void test_contest_ribbons(
@@ -116,35 +116,35 @@ static void test_contest_ribbons(
                     hyper_ribbon_name,
                     true
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     contest_types[type_index],
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     super_ribbon_name,
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     hyper_ribbon_name,
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     master_ribbon_name,
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_FALSE(has_ribbon);
     }
 }
@@ -163,7 +163,7 @@ static void test_ribbons(
                     ribbons[ribbon_index],
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_FALSE(has_ribbon);
 
         error = pkmn_pokemon_set_has_ribbon(
@@ -171,14 +171,14 @@ static void test_ribbons(
                     ribbons[ribbon_index],
                     true
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     ribbons[ribbon_index],
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_ribbon);
     }
 }
@@ -206,7 +206,7 @@ static void gba_pokemon_test(
                 30,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon._internal);
 
     pkmn_test_values_t test_values =
@@ -243,7 +243,7 @@ static void gba_pokemon_test(
     test_ribbons(&pokemon);
 
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void gcn_pokemon_test(
@@ -269,7 +269,7 @@ static void gcn_pokemon_test(
                 30,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon._internal);
 
     pkmn_test_values_t test_values =
@@ -306,7 +306,7 @@ static void gcn_pokemon_test(
     test_ribbons(&pokemon);
 
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void ruby_pokemon_test()

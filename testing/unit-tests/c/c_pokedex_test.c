@@ -32,7 +32,7 @@ static void pokedex_test(
                 game,
                 &pokedex
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(game, pokedex.game);
     TEST_ASSERT_NOT_NULL(pokedex._internal);
 
@@ -43,7 +43,7 @@ static void pokedex_test(
                 &pokedex,
                 &num_seen
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_seen);
 
     size_t num_caught = 0;
@@ -51,7 +51,7 @@ static void pokedex_test(
                 &pokedex,
                 &num_caught
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_caught);
 
     // Set random Pokémon to be seen and caught.
@@ -61,7 +61,7 @@ static void pokedex_test(
         .length = 0
     };
     error = pkmn_database_pokemon_list(generation, true, &all_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(all_pokemon.strings);
 
     num_seen = (size_t)((rand() % (int)all_pokemon.length/2 + 1));
@@ -74,7 +74,7 @@ static void pokedex_test(
                     all_pokemon.strings[pokemon_index],
                     true
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         bool has_seen = false;
         error = pkmn_pokedex_has_seen(
@@ -82,7 +82,7 @@ static void pokedex_test(
                     all_pokemon.strings[pokemon_index],
                     &has_seen
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_seen);
     }
 
@@ -91,7 +91,7 @@ static void pokedex_test(
                 &pokedex,
                 &num_seen_after
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(num_seen, num_seen_after);
 
     for(size_t pokemon_index = (all_pokemon.length-num_caught); pokemon_index < all_pokemon.length; ++pokemon_index)
@@ -101,7 +101,7 @@ static void pokedex_test(
                     all_pokemon.strings[pokemon_index],
                     true
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         bool has_caught = false;
         error = pkmn_pokedex_has_caught(
@@ -109,7 +109,7 @@ static void pokedex_test(
                     all_pokemon.strings[pokemon_index],
                     &has_caught
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(has_caught);
     }
 
@@ -118,7 +118,7 @@ static void pokedex_test(
                 &pokedex,
                 &num_caught_after
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(num_caught, num_caught_after);
 
     // Remove all seen.
@@ -132,7 +132,7 @@ static void pokedex_test(
                 &pokedex,
                 &all_seen
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(all_seen.strings);
 
     for(size_t pokemon_index = 0; pokemon_index < all_seen.length; ++pokemon_index)
@@ -142,7 +142,7 @@ static void pokedex_test(
                     all_seen.strings[pokemon_index],
                     false
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         bool has_seen = true;
         error = pkmn_pokedex_has_seen(
@@ -150,7 +150,7 @@ static void pokedex_test(
                     all_seen.strings[pokemon_index],
                     &has_seen
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_FALSE(has_seen);
     }
 
@@ -159,11 +159,11 @@ static void pokedex_test(
                 &pokedex,
                 &num_seen_after
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_seen_after);
 
     error = pkmn_string_list_free(&all_seen);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(all_seen.strings);
 
     // Remove all caught.
@@ -177,7 +177,7 @@ static void pokedex_test(
                 &pokedex,
                 &all_caught
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(all_caught.strings);
 
     for(size_t pokemon_index = 0; pokemon_index < all_caught.length; ++pokemon_index)
@@ -187,7 +187,7 @@ static void pokedex_test(
                     all_caught.strings[pokemon_index],
                     false
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         bool has_caught = true;
         error = pkmn_pokedex_has_caught(
@@ -195,7 +195,7 @@ static void pokedex_test(
                     all_caught.strings[pokemon_index],
                     &has_caught
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_FALSE(has_caught);
     }
 
@@ -204,19 +204,19 @@ static void pokedex_test(
                 &pokedex,
                 &num_caught_after
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_caught_after);
 
     error = pkmn_string_list_free(&all_caught);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(all_caught.strings);
 
     error = pkmn_string_list_free(&all_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(all_pokemon.strings);
 
     error = pkmn_pokedex_free(&pokedex);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(pokedex.game);
     TEST_ASSERT_NULL(pokedex._internal);
 }

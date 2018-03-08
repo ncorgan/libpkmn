@@ -30,7 +30,7 @@ void check_num_items(
                 item_list_ptr,
                 &num_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(expected_num_items, num_items);
 }
 
@@ -57,13 +57,13 @@ void check_item_at_index(
                 index,
                 &item_slot
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL_STRING(expected_item_name, item_slot.item);
     TEST_ASSERT_EQUAL(expected_item_amount, item_slot.amount);
 
     error = pkmn_item_slot_free(&item_slot);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 // Test functions
@@ -82,7 +82,7 @@ void test_item_list_empty_slots(
                 item_list_ptr,
                 &num_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_items);
 
     pkmn_item_slots_t item_slots =
@@ -94,7 +94,7 @@ void test_item_list_empty_slots(
                 item_list_ptr,
                 &item_slots
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_slots.item_slots);
     TEST_ASSERT_EQUAL(item_list_ptr->capacity, item_slots.length);
 
@@ -108,7 +108,7 @@ void test_item_list_empty_slots(
     }
 
     error = pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void test_item_list_out_of_range_error(
@@ -127,7 +127,7 @@ void test_item_list_out_of_range_error(
                 item_list_ptr,
                 &old_num_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_add(
                 item_list_ptr,
@@ -192,7 +192,7 @@ void test_item_list_invalid_items(
                 item_list_ptr,
                 &num_items_before
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     for(size_t item_num = 0; item_num < num_items; ++item_num)
     {
@@ -251,21 +251,21 @@ void test_item_list_set_item(
         item_names[0],
         50
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_set_item(
         item_list_ptr,
         1,
         item_names[1],
         40
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_set_item(
         item_list_ptr,
         2,
         item_names[2],
         30
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[0], 50);
     check_item_at_index(item_list_ptr, 1, item_names[1], 40);
@@ -280,7 +280,7 @@ void test_item_list_set_item(
                     "None",
                     0
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     check_item_at_index(item_list_ptr, 0, "None", 0);
@@ -307,19 +307,19 @@ void test_item_list_add_remove(
                 item_names[0],
                 30
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 item_list_ptr,
                 item_names[1],
                 99
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 item_list_ptr,
                 item_names[2],
                 1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[0], 30);
     check_item_at_index(item_list_ptr, 1, item_names[1], 99);
@@ -331,7 +331,7 @@ void test_item_list_add_remove(
                 item_names[2],
                 15
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[0], 30);
     check_item_at_index(item_list_ptr, 1, item_names[1], 99);
@@ -343,7 +343,7 @@ void test_item_list_add_remove(
                 item_names[1],
                 20
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[0], 30);
     check_item_at_index(item_list_ptr, 1, item_names[1], 79);
@@ -355,7 +355,7 @@ void test_item_list_add_remove(
                 0,
                 1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 79);
     check_item_at_index(item_list_ptr, 1, item_names[0], 30);
@@ -367,7 +367,7 @@ void test_item_list_add_remove(
                 item_names[0],
                 30
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 79);
     check_item_at_index(item_list_ptr, 1, item_names[2], 16);
@@ -379,7 +379,7 @@ void test_item_list_add_remove(
                 item_names[3],
                 90
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 79);
     check_item_at_index(item_list_ptr, 1, item_names[2], 16);
@@ -391,7 +391,7 @@ void test_item_list_add_remove(
                 item_names[4],
                 2
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 79);
     check_item_at_index(item_list_ptr, 1, item_names[2], 16);
@@ -404,7 +404,7 @@ void test_item_list_add_remove(
                 item_names[1],
                 30
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 49);
     check_item_at_index(item_list_ptr, 1, item_names[2], 16);
@@ -417,7 +417,7 @@ void test_item_list_add_remove(
                 item_names[5],
                 12
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 49);
     check_item_at_index(item_list_ptr, 1, item_names[2], 16);
@@ -431,7 +431,7 @@ void test_item_list_add_remove(
                 item_names[2],
                 16
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 49);
     check_item_at_index(item_list_ptr, 1, item_names[3], 90);
@@ -444,7 +444,7 @@ void test_item_list_add_remove(
                 item_names[6],
                 65
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 49);
     check_item_at_index(item_list_ptr, 1, item_names[3], 90);
@@ -458,7 +458,7 @@ void test_item_list_add_remove(
                 item_names[7],
                 6
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(item_list_ptr, 0, item_names[1], 49);
     check_item_at_index(item_list_ptr, 1, item_names[3], 90);
@@ -480,7 +480,7 @@ void test_item_list_add_remove(
                 item_list_ptr,
                 &item_slots
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_slots.item_slots);
     TEST_ASSERT_EQUAL(item_list_ptr->capacity, item_slots.length);
 
@@ -517,12 +517,12 @@ void test_item_list_add_remove(
                     item_slots.item_slots[item_index].item,
                     item_slots.item_slots[item_index].amount
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     check_num_items(item_list_ptr, 0);
 
     error = pkmn_item_slots_free(&item_slots);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void test_item_bag_pocket_names(
@@ -548,7 +548,7 @@ void test_item_bag_pocket_names(
                     item_bag_ptr->pocket_names.strings[pocket_index],
                     &pocket
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pocket._internal);
         TEST_ASSERT_EQUAL_STRING(
             item_bag_ptr->pocket_names.strings[pocket_index],
@@ -557,6 +557,6 @@ void test_item_bag_pocket_names(
         TEST_ASSERT_EQUAL_STRING(item_bag_ptr->game, pocket.game);
 
         error = pkmn_item_list_free(&pocket);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 }

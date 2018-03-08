@@ -48,11 +48,11 @@ static void test_gen1_pokemon_forms(
                 );
         if(generation >= 6)
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -79,11 +79,11 @@ static void test_gen1_pokemon_forms(
                 );
         if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -101,7 +101,7 @@ static void test_gen1_pokemon_forms(
                 "",
                 &oras_pikachu_entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT(oras_pikachu_entry.forms.length > 0);
 
     for(size_t form_index = 1; form_index < oras_pikachu_entry.forms.length; ++form_index)
@@ -117,11 +117,11 @@ static void test_gen1_pokemon_forms(
                 );
         if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -132,7 +132,7 @@ static void test_gen1_pokemon_forms(
     }
 
     error = pkmn_database_pokemon_entry_free(&oras_pikachu_entry);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     static const char* gen1_pokemon_with_two_mega_forms[] =
     {
@@ -152,11 +152,11 @@ static void test_gen1_pokemon_forms(
                 );
         if(generation >= 6)
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -174,11 +174,11 @@ static void test_gen1_pokemon_forms(
                 );
         if(generation >= 6)
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -224,11 +224,11 @@ static void test_gen2_pokemon_forms(
                 );
         if(generation >= 6)
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
         else
@@ -247,11 +247,11 @@ static void test_gen2_pokemon_forms(
             );
     if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
     {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     else
     {
@@ -269,11 +269,11 @@ static void test_gen2_pokemon_forms(
             );
     if(!strcmp(game, "HeartGold") || !strcmp(game, "SoulSilver"))
     {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     else
     {
@@ -289,7 +289,7 @@ static void test_gen2_pokemon_forms(
                 "",
                 &unown_entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(28, unown_entry.forms.length);
     for(size_t i = 0; i < 26; ++i)
     {
@@ -301,16 +301,16 @@ static void test_gen2_pokemon_forms(
                     10,
                     &pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NULL(pokemon._internal);
     }
 
     error = pkmn_database_pokemon_entry_free(&unown_entry);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_init(
                 "Unown",
@@ -321,11 +321,11 @@ static void test_gen2_pokemon_forms(
             );
     if(generation >= 3)
     {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     else
     {
@@ -342,11 +342,11 @@ static void test_gen2_pokemon_forms(
             );
     if(generation >= 3)
     {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     else
     {
@@ -391,11 +391,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(generation >= 6)
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -422,11 +422,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -443,7 +443,7 @@ static void test_gen3_pokemon_forms(
                 "",
                 &castform_entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, castform_entry.forms.length);
     for(size_t form_index = 0; form_index < 4; ++form_index)
     {
@@ -455,16 +455,16 @@ static void test_gen3_pokemon_forms(
                     30,
                     &pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NULL(pokemon._internal);
     }
 
     error = pkmn_database_pokemon_entry_free(&castform_entry);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     // Primal Reversion forms should only work in OR/AS.
     static const char* primal_version_pokemon[] = {"Groudon", "Kyogre"};
@@ -477,11 +477,11 @@ static void test_gen3_pokemon_forms(
                     70,
                     &pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(pokemon._internal);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_init(
                     primal_version_pokemon[pokemon_index],
@@ -492,11 +492,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(!strcmp(game, "Omega Ruby") || !strcmp(game, "Alpha Sapphire"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -518,11 +518,11 @@ static void test_gen3_pokemon_forms(
         if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire") ||
            !strcmp(game, "Colosseum") || !strcmp(game, "XD"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -539,11 +539,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(!strcmp(game, "FireRed"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -560,11 +560,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(!strcmp(game, "LeafGreen"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -581,11 +581,11 @@ static void test_gen3_pokemon_forms(
                 );
         if(!strcmp(game, "Emerald"))
         {
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
         else
         {
@@ -602,7 +602,7 @@ static void test_gen3_pokemon_forms(
                     "",
                     &deoxys_entry
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(4, deoxys_entry.forms.length);
 
         for(size_t form_index = 0; form_index < 4; ++form_index)
@@ -616,16 +616,16 @@ static void test_gen3_pokemon_forms(
                         70,
                         &pokemon
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NOT_NULL(pokemon._internal);
 
             error = pkmn_pokemon_free(&pokemon);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_NULL(pokemon._internal);
         }
 
         error = pkmn_database_pokemon_entry_free(&deoxys_entry);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 }
 

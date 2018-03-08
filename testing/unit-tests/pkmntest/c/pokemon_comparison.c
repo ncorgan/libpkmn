@@ -60,7 +60,7 @@ void get_random_pokemon(
     else
     {
         error = pkmn_database_item_list(game, &internal_item_list);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         internal_item_list_ptr = &internal_item_list;
     }
 
@@ -68,12 +68,12 @@ void get_random_pokemon(
     pkmn_string_list_t pokemon_list = empty_string_list;
 
     error = pkmn_database_move_list(game, &move_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(!species)
     {
         error = pkmn_database_pokemon_list(generation, true, &pokemon_list);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     // Don't deal with Deoxys issues here.
@@ -105,7 +105,7 @@ void get_random_pokemon(
                 ((rand() % 62) + 2), // To not run into Generation II level met limit
                 pokemon_ptr
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     for(size_t move_index = 0; move_index < 4; ++move_index)
     {
@@ -125,7 +125,7 @@ void get_random_pokemon(
                 PKMN_NUM_STATS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     for(pkmn_stat_t stat = PKMN_STAT_HP;
         stat <= PKMN_STAT_SPDEF;
         ++stat)
@@ -137,14 +137,14 @@ void get_random_pokemon(
                         stat,
                         (rand() % 256)
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_pokemon_set_IV(
                         pokemon_ptr,
                         stat,
                         (rand() % 16)
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
     }
 
@@ -158,13 +158,13 @@ void get_random_pokemon(
                         internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length]
                     );
         } while(error == PKMN_ERROR_INVALID_ARGUMENT);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_set_is_shiny(
                     pokemon_ptr,
                     random_bool()
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     if(generation >= 3)
     {
@@ -178,7 +178,7 @@ void get_random_pokemon(
                         marking,
                         random_bool()
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
 
         // Just do the contest stats compatible with all games.
@@ -191,7 +191,7 @@ void get_random_pokemon(
                         contest_stat,
                         (rand() % 256)
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
 
         pkmn_string_list_t ribbon_names = empty_string_list;
@@ -202,26 +202,26 @@ void get_random_pokemon(
                         ribbon_names.strings[ribbon_index],
                         random_bool()
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
         }
 
         error = pkmn_string_list_free(&ribbon_names);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     if(!species)
     {
         error = pkmn_string_list_free(&pokemon_list);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     error = pkmn_string_list_free(&move_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(!item_list_ptr)
     {
         error = pkmn_string_list_free(&internal_item_list);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 }
 
@@ -243,9 +243,9 @@ void compare_pokemon_ints(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = getter_fcn(pokemon1_ptr, &int1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = getter_fcn(pokemon_ptr, &int2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -271,9 +271,9 @@ void compare_pokemon_uint32s(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = getter_fcn(pokemon1_ptr, &uint1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = getter_fcn(pokemon_ptr, &uint2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -304,7 +304,7 @@ void compare_pokemon_strings(
                 sizeof(strbuffer1),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = getter_fcn(
                 pokemon_ptr,
@@ -312,7 +312,7 @@ void compare_pokemon_strings(
                 sizeof(strbuffer2),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -338,9 +338,9 @@ void compare_pokemon_bools(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = getter_fcn(pokemon1_ptr, &bool1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = getter_fcn(pokemon_ptr, &bool2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -367,9 +367,9 @@ void compare_pokemon_int_buffers(
     int* int_buffer2 = calloc(buffer_size, sizeof(int));
 
     error = getter_fcn(pokemon1_ptr, int_buffer1, buffer_size, NULL);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = getter_fcn(pokemon_ptr, int_buffer2, buffer_size, NULL);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -404,9 +404,9 @@ void compare_pokemon_bool_buffers(
     bool* bool_buffer2 = calloc(buffer_size, sizeof(bool));
 
     error = getter_fcn(pokemon1_ptr, bool_buffer1, buffer_size, NULL);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = getter_fcn(pokemon_ptr, bool_buffer2, buffer_size, NULL);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char error_message[STRBUFFER_LEN] = {0};
     snprintf(error_message, sizeof(error_message), "Mismatched %s", field);
@@ -459,9 +459,9 @@ void compare_pokemon_original_trainer_info(
     );
 
     error = pkmn_trainer_info_free(&original_trainer_info2);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_trainer_info_free(&original_trainer_info1);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon_moves(
@@ -481,12 +481,12 @@ void compare_pokemon_moves(
                 pokemon1_ptr,
                 &move_slots1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_moves(
                 pokemon_ptr,
                 &move_slots2
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL(4, move_slots1.length);
     TEST_ASSERT_EQUAL(4, move_slots2.length);
@@ -528,7 +528,7 @@ void compare_pokemon_locations_met(
                 sizeof(strbuffer1),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_location_met(
                 pokemon_ptr,
                 as_egg,
@@ -536,7 +536,7 @@ void compare_pokemon_locations_met(
                 sizeof(strbuffer2),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(strbuffer1, strbuffer2);
 }
 
@@ -555,7 +555,7 @@ void compare_pokemon_ribbons(
                 pokemon1_ptr,
                 &ribbon_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     bool has_ribbon1 = false;
     bool has_ribbon2 = false;
@@ -566,13 +566,13 @@ void compare_pokemon_ribbons(
                     ribbon_list.strings[ribbon_index],
                     &has_ribbon1
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
                     ribbon_list.strings[ribbon_index],
                     &has_ribbon2
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_MESSAGE(
             has_ribbon1,
             has_ribbon2,
@@ -581,7 +581,7 @@ void compare_pokemon_ribbons(
     }
 
     error = pkmn_string_list_free(&ribbon_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void compare_pokemon(

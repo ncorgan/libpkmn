@@ -72,7 +72,7 @@ static void gen1_item_list_test_common(
                 item_list_ptr,
                 &valid_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -85,16 +85,16 @@ static void gen1_item_list_test_common(
                 item_list_ptr->game,
                 &full_item_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(full_item_list.strings);
     TEST_ASSERT_TRUE(full_item_list.length > 0);
 
     TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
 
     error = pkmn_string_list_free(&valid_items);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_string_list_free(&full_item_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void gen1_item_pocket_test(
@@ -133,7 +133,7 @@ static void gen1_item_pc_test(
                 game,
                 &item_pc
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_pc._internal);
 
     TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
@@ -143,7 +143,7 @@ static void gen1_item_pc_test(
     gen1_item_list_test_common(&item_pc);
 
     error = pkmn_item_list_free(&item_pc);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(item_pc._internal);
 }
 
@@ -170,7 +170,7 @@ static void gen1_item_bag_test(
                 game,
                 &item_bag
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(game, item_bag.game);
 
     TEST_ASSERT_EQUAL(1, item_bag.pocket_names.length);
@@ -188,7 +188,7 @@ static void gen1_item_bag_test(
                 "Items",
                 &item_pocket
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     gen1_item_pocket_test(
         &item_pocket,
@@ -203,7 +203,7 @@ static void gen1_item_bag_test(
                     ITEM_NAMES[item_index],
                     (item_index+1)
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     check_num_items(&item_pocket, 8);
 
@@ -226,7 +226,7 @@ static void gen1_item_bag_test(
                     ITEM_NAMES[item_index],
                     (item_index+1)
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     check_num_items(&item_pocket, 0);
 
@@ -243,10 +243,10 @@ static void gen1_item_bag_test(
     // Free the pocket and bag.
 
     error = pkmn_item_list_free(&item_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_free(&item_bag);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 #define GEN1_ITEM_TESTS(test_game) \
@@ -267,7 +267,7 @@ void test_gen1_item_pocket_ ## test_game () \
                 #test_game, \
                 &item_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(item_pocket._internal); \
  \
     gen1_item_pocket_test( \
@@ -276,7 +276,7 @@ void test_gen1_item_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&item_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(item_pocket._internal); \
 } \
 void test_gen1_item_pc_ ## test_game () \

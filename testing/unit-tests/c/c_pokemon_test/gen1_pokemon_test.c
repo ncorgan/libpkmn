@@ -34,7 +34,7 @@ static void gen1_pokemon_test(
                 30,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon._internal);
 
     pkmn_test_values_t test_values =
@@ -68,10 +68,10 @@ static void gen1_pokemon_test(
                 "Catch rate",
                 &catch_rate
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void red_pokemon_test()

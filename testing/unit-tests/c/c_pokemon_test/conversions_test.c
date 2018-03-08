@@ -53,7 +53,7 @@ static void conversions_test(
                 dest_game,
                 &second_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(second_pokemon._internal);
 
     // Comparison
@@ -128,12 +128,12 @@ static void conversions_test(
                     &first_pokemon,
                     &first_pokemon_level
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_get_level_met(
                     &second_pokemon,
                     &second_pokemon_level_met
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(first_pokemon_level, second_pokemon_level_met);
     }
     if(min_generation >= 3)
@@ -193,10 +193,10 @@ static void conversions_test(
     }
 
     error = pkmn_pokemon_free(&second_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_free(&first_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void gen1_conversions_test()

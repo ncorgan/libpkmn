@@ -34,7 +34,7 @@ static void gen2_pokemon_test(
                 30,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon._internal);
 
     pkmn_test_values_t test_values =
@@ -70,14 +70,14 @@ static void gen2_pokemon_test(
                 &pokemon,
                 PKMN_GENDER_MALE
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
                 IVs,
                 PKMN_NUM_STATS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(15, IVs[PKMN_STAT_ATTACK]);
 
     error = pkmn_pokemon_set_IV(
@@ -85,24 +85,24 @@ static void gen2_pokemon_test(
                 PKMN_STAT_ATTACK,
                 0
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_gender(
                 &pokemon,
                 &gender
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
     error = pkmn_pokemon_set_IV(
                 &pokemon,
                 PKMN_STAT_ATTACK,
                 15
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_get_gender(
                 &pokemon,
                 &gender
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
     // Shininess affects IVs, so make sure the abstraction reflects that.
@@ -110,12 +110,12 @@ static void gen2_pokemon_test(
                 &pokemon,
                 false
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_is_shiny(
                 &pokemon,
                 &is_shiny
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_FALSE(is_shiny);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
@@ -123,19 +123,19 @@ static void gen2_pokemon_test(
                 PKMN_NUM_STATS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(13, IVs[PKMN_STAT_ATTACK]);
 
     error = pkmn_pokemon_set_is_shiny(
                 &pokemon,
                 true
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_is_shiny(
                 &pokemon,
                 &is_shiny
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_TRUE(is_shiny);
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
@@ -143,7 +143,7 @@ static void gen2_pokemon_test(
                 PKMN_NUM_STATS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL(15, IVs[PKMN_STAT_ATTACK]);
     TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_DEFENSE]);
@@ -151,7 +151,7 @@ static void gen2_pokemon_test(
     TEST_ASSERT_EQUAL(10, IVs[PKMN_STAT_SPECIAL]);
 
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 void gold_pokemon_test()

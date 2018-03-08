@@ -136,7 +136,7 @@ static void spinda_test()
                     sizeof(PKMN_TMP_DIR),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         for(int generation = 3; generation <= 5; ++generation)
         {
@@ -180,7 +180,7 @@ static void spinda_test()
                         false,
                         test_spinda_filepath
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
             TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
             delete_file(test_spinda_filepath);
@@ -222,7 +222,7 @@ static void spinda_test()
                         true,
                         test_spinda_filepath
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
             TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
             delete_file(test_spinda_filepath);

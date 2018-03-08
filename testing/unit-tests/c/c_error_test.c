@@ -149,7 +149,7 @@ static void game_save_error_test()
                 filepath,
                 &game_save
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_game_save_detect_type
@@ -224,7 +224,7 @@ static void game_save_error_test()
                 sizeof(strbuffer),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_game_save_save
@@ -348,7 +348,7 @@ static void game_save_error_test()
                 sizeof(strbuffer),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_game_save_set_rival_name
@@ -474,7 +474,7 @@ static void game_save_error_test()
 
     // Cleanup
     error = pkmn_game_save_free(&game_save);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -489,7 +489,7 @@ static void item_bag_error_test()
                 "Red",
                 &item_bag
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_item_bag_init
@@ -587,7 +587,7 @@ static void item_bag_error_test()
     TEST_ITEM_BAG_NULL_POINTER_RETURN(item_bag, "item");
 
     error = pkmn_item_bag_free(&item_bag);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -602,7 +602,7 @@ static void item_list_error_test()
                 "Red",
                 &item_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_item_list_init
@@ -744,7 +744,7 @@ static void pokedex_error_test()
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     error = pkmn_pokedex_init("Red", &pokedex);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_pokedex_init
@@ -950,7 +950,7 @@ static void pokemon_error_test()
                 5,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_pokemon_init
@@ -2082,7 +2082,7 @@ static void pokemon_error_test()
 
     // Cleanup
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -2101,7 +2101,7 @@ static void pokemon_box_error_test()
                 "Red",
                 &pokemon_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_pokemon_box_init
@@ -2239,7 +2239,7 @@ static void pokemon_box_error_test()
 
     // Cleanup
     error = pkmn_pokemon_box_free(&pokemon_box);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -2258,7 +2258,7 @@ static void pokemon_party_error_test()
                 "Red",
                 &pokemon_party
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_pokemon_party_init
@@ -2360,7 +2360,7 @@ static void pokemon_party_error_test()
 
     // Cleanup
     error = pkmn_pokemon_party_free(&pokemon_party);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -2381,7 +2381,7 @@ static void pokemon_pc_error_test()
                 "Red",
                 &pokemon_pc
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_pokemon_pc_init
@@ -2465,7 +2465,7 @@ static void pokemon_pc_error_test()
 
     // Cleanup
     error = pkmn_pokemon_pc_free(&pokemon_pc);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*
@@ -3554,7 +3554,7 @@ static void database_pokemon_entry_error_test() {
                 "",
                 &entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     /*
      * pkmn_database_get_pokemon_entry
@@ -3702,7 +3702,7 @@ static void database_pokemon_entry_error_test() {
     error = pkmn_database_pokemon_entry_free(
                 &entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 /*

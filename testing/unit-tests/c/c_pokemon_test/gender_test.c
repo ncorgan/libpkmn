@@ -34,21 +34,21 @@ static void gender_test(
                 50,
                 &nidorina
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(nidorina._internal);
 
     error = pkmn_pokemon_get_gender(
                 &nidorina,
                 &gender
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
 
     error = pkmn_pokemon_set_gender(
                 &nidorina,
                 PKMN_GENDER_FEMALE
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_set_gender(
                 &nidorina,
                 PKMN_GENDER_MALE
@@ -61,7 +61,7 @@ static void gender_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_pokemon_free(&nidorina);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(nidorina._internal);
 
     pkmn_pokemon_t nidorino = empty_pokemon;
@@ -72,21 +72,21 @@ static void gender_test(
                 50,
                 &nidorino
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(nidorino._internal);
 
     error = pkmn_pokemon_get_gender(
                 &nidorino,
                 &gender
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
     error = pkmn_pokemon_set_gender(
                 &nidorino,
                 PKMN_GENDER_MALE
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_set_gender(
                 &nidorino,
                 PKMN_GENDER_FEMALE
@@ -99,7 +99,7 @@ static void gender_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_pokemon_free(&nidorino);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(nidorino._internal);
 
     pkmn_pokemon_t magnemite = empty_pokemon;
@@ -110,21 +110,21 @@ static void gender_test(
                 50,
                 &magnemite
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(magnemite._internal);
 
     error = pkmn_pokemon_get_gender(
                 &magnemite,
                 &gender
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, gender);
 
     error = pkmn_pokemon_set_gender(
                 &magnemite,
                 PKMN_GENDER_GENDERLESS
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_set_gender(
                 &magnemite,
                 PKMN_GENDER_MALE
@@ -137,7 +137,7 @@ static void gender_test(
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
     error = pkmn_pokemon_free(&magnemite);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(magnemite._internal);
 
     static const char* mixed_pokemon[] =
@@ -161,37 +161,37 @@ static void gender_test(
                     50,
                     &pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_get_gender(
                     &pokemon,
                     &gender
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_EQUAL(PKMN_GENDER_GENDERLESS, gender);
 
         error = pkmn_pokemon_set_gender(
                     &pokemon,
                     PKMN_GENDER_MALE
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_get_gender(
                     &pokemon,
                     &gender
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(PKMN_GENDER_MALE, gender);
 
         error = pkmn_pokemon_set_gender(
                     &pokemon,
                     PKMN_GENDER_FEMALE
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_get_gender(
                     &pokemon,
                     &gender
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, gender);
 
         error = pkmn_pokemon_set_gender(
@@ -201,7 +201,7 @@ static void gender_test(
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
         error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NULL(pokemon._internal);
     }
 }

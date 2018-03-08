@@ -38,7 +38,7 @@ static void gen2_unown_test(
                 "",
                 &unown_entry
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(26, unown_entry.forms.length);
 
     int IVs[PKMN_NUM_STATS] = {0};
@@ -52,7 +52,7 @@ static void gen2_unown_test(
                     5,
                     &unown
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(unown._internal);
 
         error = pkmn_pokemon_get_form(
@@ -61,7 +61,7 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
             unown_entry.forms.strings[form_index],
             strbuffer
@@ -74,7 +74,7 @@ static void gen2_unown_test(
                     PKMN_NUM_STATS,
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_calculations_gen2_unown_form(
                     IVs[PKMN_STAT_ATTACK],
@@ -85,7 +85,7 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
             unown_entry.forms.strings[form_index],
             strbuffer
@@ -97,7 +97,7 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
 
         error = pkmn_pokemon_get_sprite_filepath(
@@ -106,11 +106,11 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_TRUE(file_exists(strbuffer));
 
         error = pkmn_pokemon_free(&unown);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NULL(unown._internal);
     }
 
@@ -122,35 +122,35 @@ static void gen2_unown_test(
                 5,
                 &unown
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_ATTACK,
                 10
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_DEFENSE,
                 9
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_SPEED,
                 1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_set_IV(
                 &unown,
                 PKMN_STAT_SPECIAL,
                 14
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_pokemon_get_form(
                 &unown,
@@ -158,7 +158,7 @@ static void gen2_unown_test(
                 sizeof(strbuffer),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING("G", strbuffer);
 
     // Make sure setting the form properly changes the IVs.
@@ -168,7 +168,7 @@ static void gen2_unown_test(
                     &unown,
                     unown_entry.forms.strings[form_index]
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_get_form(
                     &unown,
@@ -176,7 +176,7 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
             unown_entry.forms.strings[form_index],
             strbuffer
@@ -189,7 +189,7 @@ static void gen2_unown_test(
                     PKMN_NUM_STATS,
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_calculations_gen2_unown_form(
                     IVs[PKMN_STAT_ATTACK],
@@ -200,7 +200,7 @@ static void gen2_unown_test(
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
             unown_entry.forms.strings[form_index],
             strbuffer
@@ -208,11 +208,11 @@ static void gen2_unown_test(
     }
 
     error = pkmn_pokemon_free(&unown);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(unown._internal);
 
     error = pkmn_database_pokemon_entry_free(&unown_entry);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void gen3_unown_test(
@@ -286,7 +286,7 @@ static void gen3_unown_test(
                         sizeof(strbuffer),
                         NULL
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(strbuffer));
 
             error = pkmn_pokemon_get_sprite_filepath(
@@ -295,7 +295,7 @@ static void gen3_unown_test(
                         sizeof(strbuffer),
                         NULL
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(strbuffer));
         }
 

@@ -115,7 +115,7 @@ static void gcn_item_pocket_test(
                              item_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -206,7 +206,7 @@ static void gcn_key_item_pocket_test(
                              key_item_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -287,7 +287,7 @@ static void gcn_ball_pocket_test(
                              ball_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -368,7 +368,7 @@ static void gcn_tm_pocket_test(
                              tm_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -449,7 +449,7 @@ static void gcn_berry_pocket_test(
                              berry_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -506,32 +506,32 @@ static void gcn_cologne_pocket_test(
                 "Joy Scent",
                 3
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 cologne_pocket_ptr,
                 "Excite Scent",
                 3
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_add(
                 cologne_pocket_ptr,
                 "Vivid Scent",
                 3
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_remove(
                 cologne_pocket_ptr,
                 "Excite Scent",
                 3
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_remove(
                 cologne_pocket_ptr,
                 "Vivid Scent",
                 1
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_item_at_index(cologne_pocket_ptr, 0, "Joy Scent", 3);
     check_item_at_index(cologne_pocket_ptr, 1, "Vivid Scent", 2);
@@ -542,13 +542,13 @@ static void gcn_cologne_pocket_test(
                 "Joy Scent",
                 3
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_remove(
                 cologne_pocket_ptr,
                 "Vivid Scent",
                 2
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     check_num_items(cologne_pocket_ptr, 0);
 
@@ -561,7 +561,7 @@ static void gcn_cologne_pocket_test(
                 cologne_pocket_ptr,
                 &valid_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -630,7 +630,7 @@ static void gcn_battle_cd_pocket_test(
                              battle_cd_pocket_ptr,
                              &valid_items
                          );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -662,7 +662,7 @@ static void gcn_item_pc_test(
                 game,
                 &item_pc
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_NOT_NULL(item_pc._internal);
 
@@ -712,7 +712,7 @@ static void gcn_item_pc_test(
                 &item_pc,
                 &valid_items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
@@ -725,19 +725,19 @@ static void gcn_item_pc_test(
                 item_pc.game,
                 &full_item_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(full_item_list.strings);
     TEST_ASSERT_TRUE(full_item_list.length > 0);
 
     TEST_ASSERT_EQUAL(full_item_list.length, valid_items.length);
 
     error = pkmn_string_list_free(&valid_items);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_string_list_free(&full_item_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&item_pc);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(item_pc._internal);
 }
 
@@ -766,42 +766,42 @@ static void get_common_bag_pockets(
                 "Items",
                 item_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
                 "Key Items",
                 key_item_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
                 "Poké Balls",
                 ball_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
                 "TMs",
                 tm_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
                 "Berries",
                 berry_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
                 "Colognes",
                 cologne_pocket_ptr_out
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 static void gcn_item_bag_test(
@@ -830,7 +830,7 @@ static void gcn_item_bag_test(
                 game,
                 &item_bag
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_bag._internal);
 
     TEST_ASSERT_EQUAL(num_pockets, item_bag.pocket_names.length);
@@ -875,7 +875,7 @@ static void gcn_item_bag_test(
                     "Battle CDs",
                     &battle_cd_pocket
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NOT_NULL(battle_cd_pocket._internal);
 
         gcn_battle_cd_pocket_test(&battle_cd_pocket);
@@ -901,7 +901,7 @@ static void gcn_item_bag_test(
             all_pocket_item_names[item_index],
             5
         );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     check_item_at_index(&item_pocket, 0, "Potion", 5);
@@ -942,7 +942,7 @@ static void gcn_item_bag_test(
             all_pocket_item_names[item_index],
             5
         );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
     check_num_items(&item_pocket, 0);
     check_num_items(&key_item_pocket, 0);
@@ -995,31 +995,31 @@ static void gcn_item_bag_test(
     // Free pockets and bag.
 
     error = pkmn_item_list_free(&item_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&key_item_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&ball_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&tm_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&berry_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_list_free(&cologne_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     if(!is_colosseum)
     {
         error = pkmn_item_list_free(&battle_cd_pocket);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
     error = pkmn_item_bag_free(&item_bag);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
 #define GCN_ITEM_TESTS(test_game) \
@@ -1040,7 +1040,7 @@ void test_gcn_item_pocket_ ## test_game () \
                 #test_game, \
                 &item_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(item_pocket._internal); \
  \
     gcn_item_pocket_test( \
@@ -1049,7 +1049,7 @@ void test_gcn_item_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&item_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(item_pocket._internal); \
 } \
 void test_gcn_key_item_pocket_ ## test_game () \
@@ -1069,7 +1069,7 @@ void test_gcn_key_item_pocket_ ## test_game () \
                 #test_game, \
                 &key_item_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(key_item_pocket._internal); \
  \
     gcn_key_item_pocket_test( \
@@ -1078,7 +1078,7 @@ void test_gcn_key_item_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&key_item_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(key_item_pocket._internal); \
 } \
 void test_gcn_ball_pocket_ ## test_game () \
@@ -1098,7 +1098,7 @@ void test_gcn_ball_pocket_ ## test_game () \
                 #test_game, \
                 &ball_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(ball_pocket._internal); \
  \
     gcn_ball_pocket_test( \
@@ -1107,7 +1107,7 @@ void test_gcn_ball_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&ball_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(ball_pocket._internal); \
 } \
 void test_gcn_tm_pocket_ ## test_game () \
@@ -1127,7 +1127,7 @@ void test_gcn_tm_pocket_ ## test_game () \
                 #test_game, \
                 &tm_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(tm_pocket._internal); \
  \
     gcn_tm_pocket_test( \
@@ -1136,7 +1136,7 @@ void test_gcn_tm_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&tm_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(tm_pocket._internal); \
 } \
 void test_gcn_berry_pocket_ ## test_game () \
@@ -1156,7 +1156,7 @@ void test_gcn_berry_pocket_ ## test_game () \
                 #test_game, \
                 &berry_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(berry_pocket._internal); \
  \
     gcn_berry_pocket_test( \
@@ -1165,7 +1165,7 @@ void test_gcn_berry_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&berry_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(berry_pocket._internal); \
 } \
 void test_gcn_cologne_pocket_ ## test_game () \
@@ -1185,7 +1185,7 @@ void test_gcn_cologne_pocket_ ## test_game () \
                 #test_game, \
                 &cologne_pocket \
             ); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NOT_NULL(cologne_pocket._internal); \
  \
     gcn_cologne_pocket_test( \
@@ -1194,7 +1194,7 @@ void test_gcn_cologne_pocket_ ## test_game () \
     ); \
  \
     error = pkmn_item_list_free(&cologne_pocket); \
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error); \
+    PKMN_TEST_ASSERT_SUCCESS(error); \
     TEST_ASSERT_NULL(cologne_pocket._internal); \
 } \
 void test_gcn_item_pc_ ## test_game () \
@@ -1226,7 +1226,7 @@ void test_gcn_battle_cd_pocket_XD()
                 "XD",
                 &battle_cd_pocket
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(battle_cd_pocket._internal);
 
     gcn_battle_cd_pocket_test(
@@ -1234,6 +1234,6 @@ void test_gcn_battle_cd_pocket_XD()
     );
 
     error = pkmn_item_list_free(&battle_cd_pocket);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(battle_cd_pocket._internal);
 }

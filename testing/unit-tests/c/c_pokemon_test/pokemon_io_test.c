@@ -80,7 +80,7 @@ static void test_pokemon_string(
                 sizeof(strbuffer),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING_MESSAGE(
         expected_value,
         strbuffer,
@@ -111,7 +111,7 @@ static void test_pokemon_int(
     );
 
     error = getter_fcn(pokemon_ptr, &value_from_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
         value_from_pokemon,
@@ -142,7 +142,7 @@ static void test_pokemon_uint32(
     );
 
     error = getter_fcn(pokemon_ptr, &value_from_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
         value_from_pokemon,
@@ -173,7 +173,7 @@ static void test_pokemon_bool(
     );
 
     error = getter_fcn(pokemon_ptr, &value_from_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
         value_from_pokemon,
@@ -200,7 +200,7 @@ static void test_location_met(
                 sizeof(strbuffer),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(expected_value, strbuffer);
 }
 
@@ -220,7 +220,7 @@ static void pk1_test(
                 sizeof(tmp_dir),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char pk1_path[STRBUFFER_LEN] = {0};
     snprintf(
@@ -240,21 +240,21 @@ static void pk1_test(
                 &random_pokemon,
                 pk1_path
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     pkmn_pokemon_t imported_pokemon = empty_pokemon;
     error = pkmn_pokemon_init_from_file(
                 pk1_path,
                 &imported_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     compare_pokemon(&random_pokemon, &imported_pokemon);
 
     error = pkmn_pokemon_free(&random_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_free(&imported_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
 #ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_NOT_EQUAL(DeleteFile(pk1_path), 0);
@@ -294,7 +294,7 @@ static void pk_test(
                 sizeof(tmp_dir),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char pk2_path[STRBUFFER_LEN] = {0};
     snprintf(
@@ -314,21 +314,21 @@ static void pk_test(
                 &random_pokemon,
                 pk2_path
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     pkmn_pokemon_t imported_pokemon = empty_pokemon;
     error = pkmn_pokemon_init_from_file(
                 pk2_path,
                 &imported_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     compare_pokemon(&random_pokemon, &imported_pokemon);
 
     error = pkmn_pokemon_free(&random_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_free(&imported_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
 #ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_NOT_EQUAL(DeleteFile(pk2_path), 0);
@@ -368,7 +368,7 @@ static void _3gpkm_test(
                 sizeof(tmp_dir),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     char _3gpkm_path[STRBUFFER_LEN] = {0};
     snprintf(
@@ -388,21 +388,21 @@ static void _3gpkm_test(
                 &random_pokemon,
                 _3gpkm_path
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     pkmn_pokemon_t imported_pokemon = empty_pokemon;
     error = pkmn_pokemon_init_from_file(
                 _3gpkm_path,
                 &imported_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     compare_pokemon(&random_pokemon, &imported_pokemon);
 
     error = pkmn_pokemon_free(&random_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_free(&imported_pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
 #ifdef PKMN_C_PLATFORM_WIN32
     TEST_ASSERT_NOT_EQUAL(DeleteFile(_3gpkm_path), 0);
@@ -459,7 +459,7 @@ void test_outside_3gpkm()
                 _3gpkm_path,
                 &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.species);
     TEST_ASSERT_EQUAL_STRING("Emerald", pokemon.game);
@@ -487,13 +487,13 @@ void test_outside_3gpkm()
                 &pokemon,
                 &original_trainer_info
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING("A", original_trainer_info.name);
     TEST_ASSERT_EQUAL(223997927, original_trainer_info.id.id);
     TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, original_trainer_info.gender);
 
     error = pkmn_trainer_info_free(&original_trainer_info);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     test_pokemon_int(
         &pokemon,
@@ -556,7 +556,7 @@ void test_outside_3gpkm()
                 PKMN_NUM_MARKINGS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     for(pkmn_marking_t marking = PKMN_MARKING_CIRCLE;
         marking <= PKMN_MARKING_DIAMOND;
         ++marking)
@@ -569,7 +569,7 @@ void test_outside_3gpkm()
                 &pokemon,
                 &ribbon_names
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(32, ribbon_names.length);
     for(size_t ribbon_index = 0; ribbon_index < ribbon_names.length; ++ribbon_index)
     {
@@ -579,7 +579,7 @@ void test_outside_3gpkm()
                     ribbon_names.strings[ribbon_index],
                     &has_ribbon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         if(!strcmp(ribbon_names.strings[ribbon_index], "Champion"))
         {
@@ -592,7 +592,7 @@ void test_outside_3gpkm()
     }
 
     error = pkmn_string_list_free(&ribbon_names);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     int contest_stats[PKMN_NUM_CONTEST_STATS] = {0};
     error = pkmn_pokemon_get_contest_stats(
@@ -601,7 +601,7 @@ void test_outside_3gpkm()
                 PKMN_NUM_CONTEST_STATS,
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     for(pkmn_contest_stat_t contest_stat = PKMN_CONTEST_STAT_COOL;
         contest_stat <= PKMN_CONTEST_STAT_FEEL;
         ++contest_stat)
@@ -614,7 +614,7 @@ void test_outside_3gpkm()
                 &pokemon,
                 &move_slots
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
     TEST_ASSERT_EQUAL_STRING("Crunch", move_slots.move_slots[0].move);
     TEST_ASSERT_EQUAL_STRING("Strength", move_slots.move_slots[1].move);
@@ -622,7 +622,7 @@ void test_outside_3gpkm()
     TEST_ASSERT_EQUAL_STRING("Double-Edge", move_slots.move_slots[3].move);
 
     error = pkmn_move_slots_free(&move_slots);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
     int EVs[PKMN_NUM_STATS] = {0};
     error = pkmn_pokemon_get_EVs(
@@ -631,7 +631,7 @@ void test_outside_3gpkm()
                 sizeof(EVs),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(30, EVs[PKMN_STAT_HP]);
     TEST_ASSERT_EQUAL(110, EVs[PKMN_STAT_ATTACK]);
     TEST_ASSERT_EQUAL(32, EVs[PKMN_STAT_DEFENSE]);
@@ -647,7 +647,7 @@ void test_outside_3gpkm()
                 sizeof(IVs),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(26, IVs[PKMN_STAT_HP]);
     TEST_ASSERT_EQUAL(28, IVs[PKMN_STAT_ATTACK]);
     TEST_ASSERT_EQUAL(4, IVs[PKMN_STAT_DEFENSE]);
@@ -663,7 +663,7 @@ void test_outside_3gpkm()
                 sizeof(stats),
                 NULL
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(146, stats[PKMN_STAT_HP]);
     TEST_ASSERT_EQUAL(122, stats[PKMN_STAT_ATTACK]);
     TEST_ASSERT_EQUAL(81, stats[PKMN_STAT_DEFENSE]);
@@ -673,5 +673,5 @@ void test_outside_3gpkm()
     TEST_ASSERT_EQUAL(88, stats[PKMN_STAT_SPDEF]);
 
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
