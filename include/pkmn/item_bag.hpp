@@ -19,7 +19,7 @@ namespace pkmn {
     /*!
      * @brief A bag of items, sorted into different pockets.
      *
-     * This class is an abstraction of the different in-game representation of a
+     * This class is an abstraction of the different in-game representations of a
      * trainer's item bag throughout the different games, providing a common API for
      * interacting with the bag.
      *
@@ -56,7 +56,7 @@ namespace pkmn {
             virtual std::string get_game() = 0;
 
             /*!
-             * @brief Returns an interface to the bag's pocket with the given game.
+             * @brief Returns an interface to the bag's pocket with the given name.
              *
              * The item_list::sptr returned from this function shares the same underlying
              * memory as the item_bag::sptr that created it, so calling item_bag::add or
@@ -87,10 +87,6 @@ namespace pkmn {
              * This function figures out the appropriate pocket based on the given item and
              * adds the item to it.
              *
-             * Any item_list::sptr returned by an item_bag function will share its underlying
-             * memory, so this function will affect any item_lists corresponding to the same
-             * pocket.
-             *
              * \param item_name Name of the item to add
              * \param amount How many of the item to add
              * \throws std::invalid_argument If the item name is invalid
@@ -104,20 +100,16 @@ namespace pkmn {
             ) = 0;
 
             /*!
-             * @brief Removes the given amount of the given item to the appropriate pocket.
+             * @brief Removes the given amount of the given item from the appropriate pocket.
              *
              * This function figures out the appropriate pocket based on the given item and
-             * adds the item to it.
-             *
-             * Any item_list::sptr returned by an item_bag function will share its underlying
-             * memory, so this function will affect any item_lists corresponding to the same
-             * pocket.
+             * removes the item from it.
              *
              * \param item_name Name of the item to add
              * \param amount How many of the item to add
              * \throws std::invalid_argument If the item name is invalid
              * \throws std::invalid_argument If the item cannot be added to (and thus removed
-             *                               from any of this game's pockets)
+             *                               from any of this bag's pockets)
              * \throws std::out_of_range If the amount is not in the range [0,99]
              */
             virtual void remove(
