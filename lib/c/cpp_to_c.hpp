@@ -437,6 +437,29 @@ namespace pkmn { namespace c {
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
         pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
     );
+
+    template <typename sptr_type>
+    void get_attribute_names_from_sptr(
+        const std::shared_ptr<sptr_type>& libpkmn_sptr,
+        pkmn_attribute_names_t* attribute_names_out
+    )
+    {
+        BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
+        BOOST_ASSERT(attribute_names_out != nullptr);
+
+        pkmn::c::string_list_cpp_to_c(
+            libpkmn_sptr->get_numeric_attribute_names(),
+            &attribute_names_out->numeric_attribute_names
+        );
+        pkmn::c::string_list_cpp_to_c(
+            libpkmn_sptr->get_string_attribute_names(),
+            &attribute_names_out->string_attribute_names
+        );
+        pkmn::c::string_list_cpp_to_c(
+            libpkmn_sptr->get_boolean_attribute_names(),
+            &attribute_names_out->boolean_attribute_names
+        );
+    }
 }
 }
 

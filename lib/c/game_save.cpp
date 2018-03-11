@@ -526,17 +526,9 @@ pkmn_error_t pkmn_game_save_get_attribute_names(
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(attribute_names_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn::c::string_list_cpp_to_c(
-            internal_ptr->cpp->get_numeric_attribute_names(),
-            &attribute_names_out->numeric_attribute_names
-        );
-        pkmn::c::string_list_cpp_to_c(
-            internal_ptr->cpp->get_string_attribute_names(),
-            &attribute_names_out->string_attribute_names
-        );
-        pkmn::c::string_list_cpp_to_c(
-            internal_ptr->cpp->get_boolean_attribute_names(),
-            &attribute_names_out->boolean_attribute_names
+        pkmn::c::get_attribute_names_from_sptr(
+            internal_ptr->cpp,
+            attribute_names_out
         );
     )
 }
