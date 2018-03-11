@@ -38,6 +38,11 @@ static void pokedex_test(
 
     // Check initial values.
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokedex_strerror(&pokedex)
+    );
+
     size_t num_seen = 0;
     error = pkmn_pokedex_get_num_seen(
                 &pokedex,

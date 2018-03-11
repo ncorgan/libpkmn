@@ -249,6 +249,11 @@ static void pk1_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(&imported_pokemon)
+    );
+
     compare_pokemon(&random_pokemon, &imported_pokemon);
 
     error = pkmn_pokemon_free(&random_pokemon);
@@ -280,7 +285,7 @@ void yellow_pk1_test()
 
 // Generation II
 
-static void pk_test(
+static void pk2_test(
     const char* game
 )
 {
@@ -323,6 +328,11 @@ static void pk_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(&imported_pokemon)
+    );
+
     compare_pokemon(&random_pokemon, &imported_pokemon);
 
     error = pkmn_pokemon_free(&random_pokemon);
@@ -337,19 +347,19 @@ static void pk_test(
 #endif
 }
 
-void gold_pk_test()
+void gold_pk2_test()
 {
-    pk_test("Gold");
+    pk2_test("Gold");
 }
 
-void silver_pk_test()
+void silver_pk2_test()
 {
-    pk_test("Silver");
+    pk2_test("Silver");
 }
 
-void crystal_pk_test()
+void crystal_pk2_test()
 {
-    pk_test("Crystal");
+    pk2_test("Crystal");
 }
 
 // Generation III
@@ -396,6 +406,11 @@ static void _3gpkm_test(
                 &imported_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(&imported_pokemon)
+    );
 
     compare_pokemon(&random_pokemon, &imported_pokemon);
 

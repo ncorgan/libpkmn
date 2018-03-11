@@ -128,6 +128,11 @@ static void check_initial_values(
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(pokemon_ptr)
+    );
+
     char strbuffer[STRBUFFER_LEN] = {0};
     pkmn_error_t error = PKMN_ERROR_NONE;
 

@@ -34,7 +34,7 @@ static void gen1_item_list_test_common(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as correctly empty.
-    test_item_list_empty_slots(item_list_ptr);
+    test_item_list_initial_values(item_list_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -172,6 +172,11 @@ static void gen1_item_bag_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(game, item_bag.game);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_item_bag_strerror(&item_bag)
+    );
 
     TEST_ASSERT_EQUAL(1, item_bag.pocket_names.length);
     TEST_ASSERT_EQUAL_STRING("Items", item_bag.pocket_names.strings[0]);

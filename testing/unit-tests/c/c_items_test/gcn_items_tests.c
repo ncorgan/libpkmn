@@ -59,7 +59,7 @@ static void gcn_item_pocket_test(
     TEST_ASSERT_EQUAL(capacity, item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(item_pocket_ptr);
+    test_item_list_initial_values(item_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -141,7 +141,7 @@ static void gcn_key_item_pocket_test(
     TEST_ASSERT_EQUAL(43, key_item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(key_item_pocket_ptr);
+    test_item_list_initial_values(key_item_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(key_item_pocket_ptr, gcn_item);
@@ -231,7 +231,7 @@ static void gcn_ball_pocket_test(
     TEST_ASSERT_EQUAL(16, ball_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(ball_pocket_ptr);
+    test_item_list_initial_values(ball_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -312,7 +312,7 @@ static void gcn_tm_pocket_test(
     TEST_ASSERT_EQUAL(64, tm_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(tm_pocket_ptr);
+    test_item_list_initial_values(tm_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -393,7 +393,7 @@ static void gcn_berry_pocket_test(
     TEST_ASSERT_EQUAL(46, berry_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(berry_pocket_ptr);
+    test_item_list_initial_values(berry_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -476,7 +476,7 @@ static void gcn_cologne_pocket_test(
     pkmn_error_t error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(cologne_pocket_ptr);
+    test_item_list_initial_values(cologne_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -582,7 +582,7 @@ static void gcn_battle_cd_pocket_test(
     TEST_ASSERT_EQUAL(60, battle_cd_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(battle_cd_pocket_ptr);
+    test_item_list_initial_values(battle_cd_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -671,7 +671,7 @@ static void gcn_item_pc_test(
     TEST_ASSERT_EQUAL(235, item_pc.capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(&item_pc);
+    test_item_list_initial_values(&item_pc);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -832,6 +832,11 @@ static void gcn_item_bag_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_bag._internal);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_item_bag_strerror(&item_bag)
+    );
 
     TEST_ASSERT_EQUAL(num_pockets, item_bag.pocket_names.length);
 

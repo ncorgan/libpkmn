@@ -68,12 +68,17 @@ void check_item_at_index(
 
 // Test functions
 
-void test_item_list_empty_slots(
+void test_item_list_initial_values(
     pkmn_item_list_t* item_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
     TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_item_list_strerror(item_list_ptr)
+    );
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 

@@ -394,6 +394,11 @@ static void pokemon_party_test_common(
     TEST_ASSERT_EQUAL_STRING(game, party.game);
     TEST_ASSERT_EQUAL(6, party.capacity);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_party_strerror(&party)
+    );
+
     test_empty_pokemon_party(&party);
     test_setting_pokemon_in_party(&party);
 
@@ -490,7 +495,8 @@ static void colosseum_pokemon_party_test()
 
 // XD
 
-static void xd_pokemon_party_test() {
+static void xd_pokemon_party_test()
+{
     pokemon_party_test_common("XD");
 }
 

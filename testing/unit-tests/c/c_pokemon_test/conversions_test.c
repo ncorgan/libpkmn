@@ -56,8 +56,12 @@ static void conversions_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(second_pokemon._internal);
 
-    // Comparison
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(&second_pokemon)
+    );
 
+    // Comparison
 
     TEST_ASSERT_EQUAL_STRING(first_pokemon.species, second_pokemon.species);
     TEST_ASSERT_EQUAL_STRING(dest_game, second_pokemon.game);

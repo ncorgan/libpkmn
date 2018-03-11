@@ -29,7 +29,7 @@ void check_item_at_index(
 
 // Test functions
 
-void test_item_list_empty_slots(
+void test_item_list_initial_values(
     pkmn_item_list_t* list
 );
 
