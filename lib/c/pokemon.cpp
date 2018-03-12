@@ -79,8 +79,7 @@ pkmn_trainer_id_t pkmn_pokemon_default_trainer_id()
 
 const char* pkmn_pokemon_default_trainer_name()
 {
-    static const std::string DEFAULT_TRAINER_NAME = pkmn::pokemon::DEFAULT_TRAINER_NAME;
-    return DEFAULT_TRAINER_NAME.c_str();
+    return pkmn::pokemon::DEFAULT_TRAINER_NAME.c_str();
 }
 
 pkmn_error_t pkmn_pokemon_init(
