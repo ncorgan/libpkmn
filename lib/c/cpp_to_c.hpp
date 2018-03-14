@@ -184,7 +184,7 @@ namespace pkmn { namespace c {
     template <typename pointer_type>
     inline void delete_pointer_and_set_to_null(pointer_type** pointer_ptr)
     {
-        BOOST_ASSERT(pointer_ptr);
+        BOOST_ASSERT(pointer_ptr != nullptr);
 
         delete (*pointer_ptr);
         *pointer_ptr = nullptr;
@@ -193,7 +193,7 @@ namespace pkmn { namespace c {
     template <typename pointer_type>
     inline void free_pointer_and_set_to_null(pointer_type** pointer_ptr)
     {
-        BOOST_ASSERT(pointer_ptr);
+        BOOST_ASSERT(pointer_ptr != nullptr);
 
         std::free(*pointer_ptr);
         *pointer_ptr = nullptr;
@@ -207,7 +207,7 @@ namespace pkmn { namespace c {
         size_t* num_values_out
     )
     {
-        BOOST_ASSERT(list_ptr);
+        BOOST_ASSERT(list_ptr != nullptr);
 
         if(!list_cpp.empty())
         {
@@ -229,7 +229,7 @@ namespace pkmn { namespace c {
         pkmn_int_pair_t* int_pair_ptr
     )
     {
-        BOOST_ASSERT(int_pair_ptr);
+        BOOST_ASSERT(int_pair_ptr != nullptr);
 
         int_pair_ptr->first = int_pair_cpp.first;
         int_pair_ptr->second = int_pair_cpp.second;
@@ -247,7 +247,7 @@ namespace pkmn { namespace c {
         char** c_str_ptr
     )
     {
-        BOOST_ASSERT(c_str_ptr);
+        BOOST_ASSERT(c_str_ptr != nullptr);
 
         *c_str_ptr = (char*)std::calloc(string_cpp.size()+1, sizeof(char));
         std::strncpy(
@@ -262,7 +262,7 @@ namespace pkmn { namespace c {
         char** c_str_ptr
     )
     {
-        BOOST_ASSERT(c_str_ptr);
+        BOOST_ASSERT(c_str_ptr != nullptr);
 
         std::free(*c_str_ptr);
         string_cpp_to_c_alloc(
@@ -281,7 +281,7 @@ namespace pkmn { namespace c {
         pkmn_string_pair_t* c_pair_ptr
     )
     {
-        BOOST_ASSERT(c_pair_ptr);
+        BOOST_ASSERT(c_pair_ptr != nullptr);
 
         string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
         string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
@@ -293,29 +293,39 @@ namespace pkmn { namespace c {
         pkmn_string_list_t* string_list_c_ptr
     )
     {
-        BOOST_ASSERT(string_list_c_ptr);
+        BOOST_ASSERT(string_list_c_ptr != nullptr);
 
-        size_t num_keys = map_cpp.size();
-        if(num_keys > 0)
+        // Make all C++ calls and operate on a second struct until we
+        // know everything succeeds before changing any user output.
+        // If this fails, we'll leak, but it's small enough to not be
+        // a concern.
+        pkmn_string_list_t temp_string_list =
         {
-            string_list_c_ptr->strings = (char**)std::calloc(
-                                                     num_keys,
-                                                     sizeof(char*)
-                                                 );
+            .strings = nullptr,
+            .length = map_cpp.size()
+        };
+
+        if(temp_string_list.length > 0)
+        {
+            temp_string_list.strings = (char**)std::calloc(
+                                                   temp_string_list.length,
+                                                   sizeof(char*)
+                                               );
             size_t index = 0;
             for(auto map_iter = map_cpp.begin();
-                (map_iter != map_cpp.end()) && (index < num_keys);
-                ++map_iter, ++index
-               )
+                (map_iter != map_cpp.end()) && (index < temp_string_list.length);
+                ++map_iter, ++index)
             {
                 string_cpp_to_c_alloc(
                     map_iter->first,
-                    &string_list_c_ptr->strings[index]
+                    &temp_string_list.strings[index]
                 );
             }
         }
 
-        string_list_c_ptr->length = num_keys;
+        // Everything succeeded, so move it into the pointer the caller
+        // provided.
+        *string_list_c_ptr = std::move(temp_string_list);
     }
 
     inline void hidden_power_cpp_to_c(
@@ -323,7 +333,7 @@ namespace pkmn { namespace c {
         pkmn_hidden_power_t* hidden_power_c_ptr
     )
     {
-        BOOST_ASSERT(hidden_power_c_ptr);
+        BOOST_ASSERT(hidden_power_c_ptr != nullptr);
 
         string_cpp_to_c_alloc(
             hidden_power_cpp.type,
@@ -337,7 +347,7 @@ namespace pkmn { namespace c {
         pkmn_natural_gift_t* natural_gift_c_ptr
     )
     {
-        BOOST_ASSERT(natural_gift_c_ptr);
+        BOOST_ASSERT(natural_gift_c_ptr != nullptr);
 
         string_cpp_to_c_alloc(
             natural_gift_cpp.type,
@@ -351,7 +361,7 @@ namespace pkmn { namespace c {
         pkmn_item_slot_t* item_slot_c_ptr
     )
     {
-        BOOST_ASSERT(item_slot_c_ptr);
+        BOOST_ASSERT(item_slot_c_ptr != nullptr);
 
         string_cpp_to_c_alloc(
             item_slot_cpp.item,
@@ -370,7 +380,7 @@ namespace pkmn { namespace c {
         pkmn_levelup_move_t* levelup_move_c_ptr
     )
     {
-        BOOST_ASSERT(levelup_move_c_ptr);
+        BOOST_ASSERT(levelup_move_c_ptr != nullptr);
 
         string_cpp_to_c_alloc(
             levelup_move_cpp.move.get_name(),
@@ -394,7 +404,7 @@ namespace pkmn { namespace c {
         pkmn_move_slot_t* move_slot_c_ptr
     )
     {
-        BOOST_ASSERT(move_slot_c_ptr);
+        BOOST_ASSERT(move_slot_c_ptr != nullptr);
 
         string_cpp_to_c_alloc(
             move_slot_cpp.move,
@@ -447,18 +457,45 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
         BOOST_ASSERT(attribute_names_out != nullptr);
 
-        pkmn::c::string_list_cpp_to_c(
+        // Make all C++ calls and operate on a second struct until we
+        // know everything succeeds before changing any user output.
+        // If this fails, we'll leak, but it's small enough to not be
+        // a concern.
+        pkmn_attribute_names_t temp_attribute_names =
+        {
+            .numeric_attribute_names =
+            {
+                .strings = nullptr,
+                .length = 0ULL
+            },
+            .string_attribute_names =
+            {
+                .strings = nullptr,
+                .length = 0ULL
+            },
+            .boolean_attribute_names =
+            {
+                .strings = nullptr,
+                .length = 0ULL
+            }
+        };
+
+        string_list_cpp_to_c(
             libpkmn_sptr->get_numeric_attribute_names(),
-            &attribute_names_out->numeric_attribute_names
+            &temp_attribute_names.numeric_attribute_names
         );
-        pkmn::c::string_list_cpp_to_c(
+        string_list_cpp_to_c(
             libpkmn_sptr->get_string_attribute_names(),
-            &attribute_names_out->string_attribute_names
+            &temp_attribute_names.string_attribute_names
         );
-        pkmn::c::string_list_cpp_to_c(
+        string_list_cpp_to_c(
             libpkmn_sptr->get_boolean_attribute_names(),
-            &attribute_names_out->boolean_attribute_names
+            &temp_attribute_names.boolean_attribute_names
         );
+
+        // Everything succeeded, so move it into the pointer the caller
+        // provided.
+        *attribute_names_out = std::move(temp_attribute_names);
     }
 }
 }
