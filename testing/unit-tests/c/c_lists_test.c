@@ -7,7 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 static void ability_list_test()
 {
@@ -28,7 +28,7 @@ static void ability_list_test()
     error = pkmn_database_ability_list(
                 6, &abilities
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(abilities.strings);
     TEST_ASSERT_EQUAL(191, abilities.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -63,7 +63,7 @@ static void game_list_test()
                 true,
                 &games
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(games.strings);
     TEST_ASSERT_EQUAL(26, games.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -93,7 +93,7 @@ static void gamecube_shadow_pokemon_list_test()
                 true,
                 &gamecube_shadow_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(48, gamecube_shadow_pokemon.length);
 
     pkmn_string_list_free(&gamecube_shadow_pokemon);
@@ -103,7 +103,7 @@ static void gamecube_shadow_pokemon_list_test()
     error = pkmn_database_gamecube_shadow_pokemon_list(
                 false, &gamecube_shadow_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(83, gamecube_shadow_pokemon.length);
 
     pkmn_string_list_free(&gamecube_shadow_pokemon);
@@ -131,7 +131,7 @@ static void item_list_test()
                 "HeartGold",
                 &items
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(items.strings);
     TEST_ASSERT_EQUAL(513, items.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -168,7 +168,7 @@ static void location_list_test()
                      "Emerald", false,
                      &locations
                  );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(locations.strings);
     TEST_ASSERT_EQUAL(106, locations.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -205,7 +205,7 @@ static void move_list_test()
                 "Red",
                 &moves
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(moves.strings);
     TEST_ASSERT_EQUAL(165, moves.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -234,7 +234,7 @@ static void nature_list_test()
     error = pkmn_database_nature_list(
                 &natures
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(natures.strings);
     TEST_ASSERT_EQUAL(25, natures.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -272,7 +272,7 @@ static void pokemon_list_test()
                true,
                &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon.strings);
     TEST_ASSERT_EQUAL(151, pokemon.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -301,7 +301,7 @@ static void region_list_test()
     error = pkmn_database_region_list(
                 &regions
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(regions.strings);
     TEST_ASSERT_EQUAL(7, regions.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -335,7 +335,7 @@ static void super_training_medal_list_test()
     error = pkmn_database_super_training_medal_list(
                 &super_training_medals
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(super_training_medals.strings);
     TEST_ASSERT_EQUAL(30, super_training_medals.length);
     TEST_ASSERT_EQUAL_STRING(
@@ -372,7 +372,7 @@ static void type_list_test()
                 "Alpha Sapphire",
                 &types
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(types.strings);
     TEST_ASSERT_EQUAL(18, types.length);
     TEST_ASSERT_EQUAL_STRING(

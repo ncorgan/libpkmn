@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -66,6 +66,7 @@ SET(pkmn_sources
     ${pkmn_utils_sources}
     build_info.cpp
     exception.cpp
+    private_exports.cpp
     game_save_impl.cpp
     game_save_gen1impl.cpp
     game_save_gen2impl.cpp

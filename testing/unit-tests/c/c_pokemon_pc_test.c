@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,31 +9,51 @@
 
 #include <pkmntest-c/util.h>
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #define STRBUFFER_LEN 1024
-
-static pkmn_error_t error = PKMN_ERROR_NONE;
 static char strbuffer[STRBUFFER_LEN] = {0};
 
+static const pkmn_pokemon_t empty_pokemon =
+{
+    .species = NULL,
+    .game = NULL,
+    ._internal = NULL
+};
+static const pkmn_pokemon_box_t empty_pokemon_box =
+{
+    .game = NULL,
+    .capacity = 0,
+    ._internal = NULL
+};
+static const pkmn_pokemon_list_t empty_pokemon_list =
+{
+    .pokemon = NULL,
+    .length = 0
+};
+static const pkmn_pokemon_box_list_t empty_pokemon_box_list =
+{
+    .boxes = NULL,
+    .length = 0
+};
+static const pkmn_string_list_t empty_string_list =
+{
+    .strings = NULL,
+    .length = 0
+};
+
 static void test_empty_pokemon_box(
-    pkmn_pokemon_box_handle_t box,
-    const char* game
+    pkmn_pokemon_box_t* box_ptr
 )
 {
-    int generation = game_to_generation(game);
+    TEST_ASSERT_NOT_NULL(box_ptr);
 
-    error = pkmn_pokemon_box_get_game(
-                box,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
+    pkmn_error_t error = PKMN_ERROR_NONE;
+
+    int generation = game_to_generation(box_ptr->game);
 
     error = pkmn_pokemon_box_get_name(
-                box,
+                box_ptr,
                 strbuffer,
                 sizeof(strbuffer),
                 NULL
@@ -44,124 +64,65 @@ static void test_empty_pokemon_box(
     }
     else
     {
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING(game, strbuffer);
+        PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    pkmn_pokemon_list_t pokemon_list =
-    {
-        .pokemon_list = NULL,
-        .length = 0
-    };
-    error = pkmn_pokemon_box_as_array(
-                box,
-                &pokemon_list
-            );
+    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
 
-    int num_pokemon = 0;
+    size_t num_pokemon = 0;
     error = pkmn_pokemon_box_get_num_pokemon(
-                box,
+                box_ptr,
                 &num_pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_pokemon);
 
-    int capacity = 0;
-    error = pkmn_pokemon_box_get_capacity(
-                box,
-                &capacity
+    error = pkmn_pokemon_box_as_list(
+                box_ptr,
+                &pokemon_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_TRUE(pokemon_list.length > 0);
 
-    TEST_ASSERT_EQUAL(((int)pokemon_list.length), capacity);
-
-    // Make sure trying to get a Pokémon at an invalid index fails.
-    pkmn_pokemon_handle_t pokemon = NULL;
-    error = pkmn_pokemon_box_get_pokemon(
-                box,
-                -1,
-                &pokemon
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon_box_get_pokemon(
-                box,
-                capacity,
-                &pokemon
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-
-    for(int i = 0; i < capacity; ++i)
+    for(size_t pokemon_index = 0; pokemon_index < pokemon_list.length; ++pokemon_index)
     {
-        error = pkmn_pokemon_get_species(
-                    pokemon_list.pokemon_list[i],
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("None", strbuffer);
-
-        error = pkmn_pokemon_get_game(
-                    pokemon_list.pokemon_list[i],
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-        pkmn_move_slots_t move_slots =
-        {
-            .move_slots = NULL,
-            .length = 0
-        };
-        error = pkmn_pokemon_get_moves(
-                    pokemon_list.pokemon_list[i],
-                    &move_slots
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(4, move_slots.length);
-
-        for(int j = 0; j < 4; ++j)
-        {
-            TEST_ASSERT_EQUAL_STRING("None", move_slots.move_slots[j].move);
-            TEST_ASSERT_EQUAL(0, move_slots.move_slots[j].pp);
-        }
-
-        error = pkmn_move_slots_free(&move_slots);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        TEST_ASSERT_EQUAL_STRING(
+            "None",
+            pokemon_list.pokemon[pokemon_index].species
+        );
+        TEST_ASSERT_EQUAL_STRING(
+            box_ptr->game,
+            pokemon_list.pokemon[pokemon_index].game
+        );
     }
 
     error = pkmn_pokemon_list_free(&pokemon_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_EQUAL(0, pokemon_list.length);
 }
 
 static void test_box_name(
-    pkmn_pokemon_box_handle_t box
+    pkmn_pokemon_box_t* box_ptr
 )
 {
+    TEST_ASSERT_NOT_NULL(box_ptr);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    error = pkmn_pokemon_box_get_game(
-                box,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    int generation = game_to_generation(strbuffer);
+    int generation = game_to_generation(box_ptr->game);
 
     if(generation == 1)
     {
         error = pkmn_pokemon_box_set_name(
-                    box,
+                    box_ptr,
                     "ABCDEFGH"
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
         error = pkmn_pokemon_box_get_name(
-                    box,
+                    box_ptr,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -171,82 +132,84 @@ static void test_box_name(
     else
     {
         error = pkmn_pokemon_box_set_name(
-                    box,
+                    box_ptr,
                     "ABCDEFGHI"
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
         error = pkmn_pokemon_box_set_name(
-                    box,
+                    box_ptr,
                     "ABCDEFGH"
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_box_get_name(
-                    box,
+                    box_ptr,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING("ABCDEFGH", strbuffer);
     }
 }
 
 static void test_setting_pokemon_in_box(
-    pkmn_pokemon_box_handle_t box
+    pkmn_pokemon_box_t* box_ptr
 )
 {
+    TEST_ASSERT_NOT_NULL(box_ptr);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
-    char game[STRBUFFER_LEN] = {0};
-    int num_pokemon = 0;
 
-    error = pkmn_pokemon_box_get_game(
-                box,
-                game,
-                sizeof(game),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    size_t num_pokemon = 0;
 
-    int generation = game_to_generation(game);
+    pkmn_pokemon_t original_first = empty_pokemon;
+    pkmn_pokemon_t original_second = empty_pokemon;
 
-    pkmn_pokemon_handle_t original_first = NULL;
-    pkmn_pokemon_handle_t original_second = NULL;
+    int generation = game_to_generation(box_ptr->game);
 
     error = pkmn_pokemon_box_get_pokemon(
-                box,
+                box_ptr,
                 0,
                 &original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(original_first);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(original_first._internal);
 
     error = pkmn_pokemon_box_get_pokemon(
-                box,
+                box_ptr,
                 1,
                 &original_second
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(original_second);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(original_second._internal);
+
+    // Make sure we can't get Pokémon at invalid indices.
+    error = pkmn_pokemon_box_get_pokemon(
+                box_ptr,
+                -1,
+                &original_first
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+    error = pkmn_pokemon_box_get_pokemon(
+                box_ptr,
+                box_ptr->capacity + 1,
+                &original_first
+            );
+    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     // Make sure we can't set Pokémon at invalid indices.
-    int capacity = 0;
-    error = pkmn_pokemon_box_get_capacity(
-                box,
-                &capacity
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 -1,
-                original_first
+                &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_box_set_pokemon(
-                box,
-                capacity,
-                original_first
+                box_ptr,
+                box_ptr->capacity + 1,
+                &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
@@ -254,754 +217,559 @@ static void test_setting_pokemon_in_box(
      * Create new Pokémon and place in box. The original variables should
      * have the same underlying Pokémon.
      */
-    pkmn_pokemon_handle_t bulbasaur = NULL;
-    error = pkmn_pokemon_make(
-                &bulbasaur,
+
+    pkmn_pokemon_t bulbasaur = empty_pokemon;
+    pkmn_pokemon_t charmander = empty_pokemon;
+    pkmn_pokemon_t squirtle = empty_pokemon;
+
+    error = pkmn_pokemon_init(
                 "Bulbasaur",
-                game,
+                box_ptr->game,
                 "",
-                5
+                5,
+                &bulbasaur
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(bulbasaur);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(bulbasaur._internal);
 
-    pkmn_pokemon_handle_t charmander = NULL;
-    error = pkmn_pokemon_make(
-                &charmander,
+    error = pkmn_pokemon_init(
                 "Charmander",
-                game,
+                box_ptr->game,
                 "",
-                5
+                5,
+                &charmander
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(charmander);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(charmander._internal);
 
-    pkmn_pokemon_handle_t squirtle = NULL;
-    error = pkmn_pokemon_make(
-                &squirtle,
+    error = pkmn_pokemon_init(
                 "Squirtle",
-                game,
+                box_ptr->game,
                 "",
-                5
+                5,
+                &squirtle
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(squirtle);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(squirtle._internal);
 
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 0,
-                bulbasaur
+                &bulbasaur
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
-        &num_pokemon
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                box_ptr,
+                &num_pokemon
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(1, num_pokemon);
 
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 1,
-                charmander
+                &charmander
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
-        &num_pokemon
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                box_ptr,
+                &num_pokemon
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
     // Replace one of the new ones.
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 0,
-                squirtle
+                &squirtle
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
-        &num_pokemon
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                box_ptr,
+                &num_pokemon
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
     // Copy a Pokémon whose memory is already part of the box. Make sure we
     // can't copy it to itself.
-    pkmn_pokemon_handle_t second_in_box = NULL;
+
+    pkmn_pokemon_t second_in_box = empty_pokemon;
     error = pkmn_pokemon_box_get_pokemon(
-                box,
+                box_ptr,
                 1,
                 &second_in_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(second_in_box._internal);
+
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 1,
-                second_in_box
+                &second_in_box
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    error = pkmn_pokemon_box_get_num_pokemon(
-        box,
-        &num_pokemon
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(2, num_pokemon);
-
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 2,
-                second_in_box
+                &second_in_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
-        &num_pokemon
-    );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                box_ptr,
+                &num_pokemon
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(3, num_pokemon);
 
-    // We should always be able to clear the last contiguous Pokémon.
+    // We should be able to clear the last contiguous Pokémon.
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 2,
-                original_first
+                &original_first
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
+        box_ptr,
         &num_pokemon
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(2, num_pokemon);
 
     // Put it back.
     error = pkmn_pokemon_box_set_pokemon(
-                box,
+                box_ptr,
                 2,
-                second_in_box
+                &second_in_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box,
+        box_ptr,
         &num_pokemon
     );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(3, num_pokemon);
 
     error = pkmn_pokemon_free(&second_in_box);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(second_in_box);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(second_in_box._internal);
 
     // Check that Pokémon can be placed non-contiguously in the correct games.
-    pkmn_pokemon_handle_t fifth_in_box = NULL;
-    if(generation <= 2) {
+    pkmn_pokemon_t fifth_in_box = empty_pokemon;
+
+    if(generation <= 2)
+    {
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     1,
-                    original_first
+                    &original_first
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         error = pkmn_pokemon_box_get_num_pokemon(
-            box,
-            &num_pokemon
-        );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    box_ptr,
+                    &num_pokemon
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(3, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box,
+                    box_ptr,
                     1,
                     &second_in_box
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    second_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_STRING("Charmander", second_in_box.species);
 
         error = pkmn_pokemon_free(&second_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(second_in_box);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(second_in_box._internal);
 
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     4,
-                    bulbasaur
+                    &bulbasaur
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-        error = pkmn_pokemon_box_get_num_pokemon(
-            box,
-            &num_pokemon
-        );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL(3, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box,
+                    box_ptr,
                     4,
                     &fifth_in_box
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    fifth_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("None", strbuffer);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_STRING("None", fifth_in_box.species);
 
         error = pkmn_pokemon_free(&fifth_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(fifth_in_box);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(fifth_in_box._internal);
     }
     else
     {
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     1,
-                    original_first
+                    &original_first
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_get_num_pokemon(
-            box,
-            &num_pokemon
-        );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    box_ptr,
+                    &num_pokemon
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(2, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box,
+                    box_ptr,
                     1,
                     &second_in_box
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    second_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("None", strbuffer);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_STRING("None", second_in_box.species);
 
         error = pkmn_pokemon_free(&second_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(second_in_box);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(second_in_box._internal);
 
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     4,
-                    bulbasaur
+                    &bulbasaur
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_get_num_pokemon(
-            box,
-            &num_pokemon
-        );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+                    box_ptr,
+                    &num_pokemon
+                );
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(3, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box,
+                    box_ptr,
                     4,
                     &fifth_in_box
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    fifth_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("Bulbasaur", strbuffer);
-
-        error = pkmn_pokemon_free(&fifth_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(fifth_in_box);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_EQUAL_STRING("Bulbasaur", fifth_in_box.species);
 
         // Restore it to how it was.
+
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     1,
-                    charmander
+                    &charmander
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_set_pokemon(
-                    box,
+                    box_ptr,
                     4,
-                    original_first
+                    &original_first
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        error = pkmn_pokemon_box_get_pokemon(
-                    box,
-                    3,
-                    &fifth_in_box
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        error = pkmn_pokemon_box_get_num_pokemon(
+                    box_ptr,
+                    &num_pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(3, num_pokemon);
-
-        error = pkmn_pokemon_box_get_pokemon(
-                    box,
-                    1,
-                    &second_in_box
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    second_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
-
-        error = pkmn_pokemon_box_get_pokemon(
-                    box,
-                    4,
-                    &fifth_in_box
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_get_species(
-                    fifth_in_box,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("None", strbuffer);
-
-        error = pkmn_pokemon_free(&second_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(second_in_box);
-
-        error = pkmn_pokemon_free(&fifth_in_box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(fifth_in_box);
     }
+
+    error = pkmn_pokemon_free(&second_in_box);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(second_in_box._internal);
+
+    error = pkmn_pokemon_free(&fifth_in_box);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(fifth_in_box._internal);
 
     /*
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    pkmn_pokemon_handle_t current_first = NULL;
-    pkmn_pokemon_handle_t current_second = NULL;
-    pkmn_pokemon_handle_t current_third = NULL;
+    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    error = pkmn_pokemon_box_as_list(
+                box_ptr,
+                &pokemon_list
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_TRUE(pokemon_list.length > 0);
 
-    error = pkmn_pokemon_box_get_pokemon(
-                box,
-                0,
-                &current_first
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_species(
-                current_first,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Squirtle", strbuffer);
-
-    error = pkmn_pokemon_box_get_pokemon(
-                box,
-                1,
-                &current_second
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_species(
-                current_second,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
-
-    error = pkmn_pokemon_box_get_pokemon(
-                box,
-                2,
-                &current_third
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    error = pkmn_pokemon_get_species(
-                current_third,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
-
-    error = pkmn_pokemon_get_species(
-                original_first,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("None", strbuffer);
-    error = pkmn_pokemon_get_species(
-                original_second,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("None", strbuffer);
-
-    error = pkmn_pokemon_get_species(
-                bulbasaur,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Bulbasaur", strbuffer);
-    error = pkmn_pokemon_get_species(
-                charmander,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
-    error = pkmn_pokemon_get_species(
-                squirtle,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING("Squirtle", strbuffer);
+    TEST_ASSERT_EQUAL_STRING(
+        "Squirtle",
+        pokemon_list.pokemon[0].species
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        "Charmander",
+        pokemon_list.pokemon[1].species
+    );
+    TEST_ASSERT_EQUAL_STRING(
+        "Charmander",
+        pokemon_list.pokemon[2].species
+    );
+    TEST_ASSERT_EQUAL_STRING("None", original_first.species);
+    TEST_ASSERT_EQUAL_STRING("None", original_second.species);
+    TEST_ASSERT_EQUAL_STRING("Bulbasaur", bulbasaur.species);
+    TEST_ASSERT_EQUAL_STRING("Charmander", charmander.species);
+    TEST_ASSERT_EQUAL_STRING("Squirtle", squirtle.species);
 
     // Cleanup
 
+    error = pkmn_pokemon_list_free(&pokemon_list);
+    TEST_ASSERT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_EQUAL(0, pokemon_list.length);
+
     error = pkmn_pokemon_free(&original_first);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(original_first);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(original_first._internal);
 
     error = pkmn_pokemon_free(&original_second);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(original_second);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(original_second._internal);
 
     error = pkmn_pokemon_free(&bulbasaur);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(bulbasaur);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(bulbasaur._internal);
 
     error = pkmn_pokemon_free(&charmander);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(charmander);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(charmander._internal);
 
     error = pkmn_pokemon_free(&squirtle);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(squirtle);
-
-    error = pkmn_pokemon_free(&current_first);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(current_first);
-
-    error = pkmn_pokemon_free(&current_second);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(current_second);
-
-    error = pkmn_pokemon_free(&current_third);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(current_third);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(squirtle._internal);
 }
 
 static void test_empty_pokemon_pc(
-    pkmn_pokemon_pc_handle_t pc,
-    const char* game
+    pkmn_pokemon_pc_t* pc_ptr
 )
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    error = pkmn_pokemon_pc_get_game(
-                pc,
-                strbuffer,
-                sizeof(strbuffer),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL_STRING(game, strbuffer);
-
-    int num_boxes = 0;
-    error = pkmn_pokemon_pc_get_num_boxes(
-                pc,
-                &num_boxes
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    // Make sure we can't get boxes at invalid indices.
-    pkmn_pokemon_box_handle_t pokemon_box;
-    error = pkmn_pokemon_pc_get_box(
-                pc,
-                -1,
-                &pokemon_box
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    error = pkmn_pokemon_pc_get_box(
-                pc,
-                num_boxes,
-                &pokemon_box
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-
-    pkmn_pokemon_box_list_t pokemon_box_list;
-    error = pkmn_pokemon_pc_as_array(
-                pc,
+    pkmn_pokemon_box_list_t pokemon_box_list = empty_pokemon_box_list;
+    error = pkmn_pokemon_pc_as_list(
+                pc_ptr,
                 &pokemon_box_list
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_EQUAL(num_boxes, pokemon_box_list.length);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon_box_list.boxes);
+    TEST_ASSERT_TRUE(pokemon_box_list.length > 0);
 
-    for(int i = 0; i < num_boxes; ++i)
+    for(size_t box_index = 0; box_index < pokemon_box_list.length; ++box_index)
     {
+        TEST_ASSERT_EQUAL_STRING(
+            pc_ptr->game,
+            pokemon_box_list.boxes[box_index].game
+        );
         test_empty_pokemon_box(
-            pokemon_box_list.pokemon_boxes[i],
-            game
+            &pokemon_box_list.boxes[box_index]
         );
     }
 
     error = pkmn_pokemon_box_list_free(&pokemon_box_list);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(pokemon_box_list.pokemon_boxes);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(pokemon_box_list.boxes);
     TEST_ASSERT_EQUAL(0, pokemon_box_list.length);
 }
 
 static void test_pc_box_names(
-    pkmn_pokemon_pc_handle_t pc
+    pkmn_pokemon_pc_t* pc_ptr
 )
 {
+    TEST_ASSERT_NOT_NULL(pc_ptr);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_handle_t box = NULL;
-    pkmn_string_list_t box_names;
-    char game[STRBUFFER_LEN] = {0};
+    pkmn_string_list_t box_names = empty_string_list;
 
-    error = pkmn_pokemon_pc_get_game(
-                pc,
-                game,
-                sizeof(game),
-                NULL
-            );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-    int generation = game_to_generation(game);
+    int generation = game_to_generation(pc_ptr->game);
 
     if(generation == 1)
     {
-        error = pkmn_pokemon_pc_get_box(
-                    pc,
-                    0,
-                    &box
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-
-        error = pkmn_pokemon_box_set_name(
-                    box,
-                    "ABCDEFGH"
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-
         error = pkmn_pokemon_pc_get_box_names(
-                    pc,
+                    pc_ptr,
                     &box_names
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
-
-        error = pkmn_pokemon_box_free(&box);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NULL(box);
     }
     else
     {
-        int num_boxes = 0;
-        error = pkmn_pokemon_pc_get_num_boxes(
-                    pc,
-                    &num_boxes
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        for(size_t box_index = 0; box_index < pc_ptr->capacity; ++box_index)
+        {
+            pkmn_pokemon_box_t pokemon_box = empty_pokemon_box;
 
-        for(int i = 0; i < num_boxes; ++i) {
             error = pkmn_pokemon_pc_get_box(
-                        pc,
-                        i,
-                        &box
+                        pc_ptr,
+                        box_index,
+                        &pokemon_box
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
 
             char box_name[10] = {0};
-            snprintf(box_name, sizeof(box_name), "BOX%d", (i+1));
+            snprintf(box_name, sizeof(box_name), "BOX%zu", (box_index+1));
 
             error = pkmn_pokemon_box_set_name(
-                        box,
+                        &pokemon_box,
                         box_name
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
 
-            error = pkmn_pokemon_box_free(&box);
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-            TEST_ASSERT_NULL(box);
+            error = pkmn_pokemon_box_free(&pokemon_box);
+            PKMN_TEST_ASSERT_SUCCESS(error);
+            TEST_ASSERT_NULL(pokemon_box._internal);
         }
 
         error = pkmn_pokemon_pc_get_box_names(
-                    pc,
+                    pc_ptr,
                     &box_names
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        for(int i = 0; i < num_boxes; ++i)
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        for(size_t box_index = 0; box_index < pc_ptr->capacity; ++box_index)
         {
             char expected_box_name[10] = {0};
-            snprintf(expected_box_name, sizeof(expected_box_name), "BOX%d", (i+1));
-            TEST_ASSERT_EQUAL_STRING(expected_box_name, box_names.strings[i]);
+            snprintf(expected_box_name, sizeof(expected_box_name), "BOX%zu", (box_index+1));
+            TEST_ASSERT_EQUAL_STRING(expected_box_name, box_names.strings[box_index]);
         }
 
         error = pkmn_string_list_free(&box_names);
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_NULL(box_names.strings);
         TEST_ASSERT_EQUAL(0, box_names.length);
     }
 }
 
 static void test_setting_pokemon_in_boxes(
-    pkmn_pokemon_pc_handle_t pc
+    pkmn_pokemon_pc_t* pc_ptr
 )
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_handle_t pokemon = NULL;
-    pkmn_pokemon_box_list_t pokemon_boxes;
+    pkmn_pokemon_box_list_t pokemon_boxes = empty_pokemon_box_list;
 
-    error = pkmn_pokemon_pc_as_array(
-                pc,
+    error = pkmn_pokemon_pc_as_list(
+                pc_ptr,
                 &pokemon_boxes
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 
-    for(size_t i = 0; i < pokemon_boxes.length; ++i)
+    for(size_t box_index = 0; box_index < pokemon_boxes.length; ++box_index)
     {
         test_setting_pokemon_in_box(
-            pokemon_boxes.pokemon_boxes[i]
+            &pokemon_boxes.boxes[box_index]
         );
     }
 
-    for(size_t i = 0; i < pokemon_boxes.length; ++i)
+    for(size_t box_index = 0; box_index < pokemon_boxes.length; ++box_index)
     {
+        pkmn_pokemon_t first_pokemon = empty_pokemon;
+        pkmn_pokemon_t second_pokemon = empty_pokemon;
+        pkmn_pokemon_t third_pokemon = empty_pokemon;
+
         error = pkmn_pokemon_box_get_pokemon(
-                    pokemon_boxes.pokemon_boxes[i],
+                    &pokemon_boxes.boxes[box_index],
                     0,
-                    &pokemon
+                    &first_pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(pokemon);
-
-        error = pkmn_pokemon_get_species(
-                    pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
-                );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("Squirtle", strbuffer);
-
-        error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_NULL(pokemon);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NOT_NULL(first_pokemon._internal);
+        TEST_ASSERT_EQUAL_STRING("Squirtle", first_pokemon.species);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    pokemon_boxes.pokemon_boxes[i],
+                    &pokemon_boxes.boxes[box_index],
                     1,
-                    &pokemon
+                    &second_pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_NOT_NULL(pokemon);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NOT_NULL(second_pokemon._internal);
+        TEST_ASSERT_EQUAL_STRING("Charmander", second_pokemon.species);
 
-        error = pkmn_pokemon_get_species(
-                    pokemon,
-                    strbuffer,
-                    sizeof(strbuffer),
-                    NULL
+        error = pkmn_pokemon_box_get_pokemon(
+                    &pokemon_boxes.boxes[box_index],
+                    2,
+                    &third_pokemon
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-        TEST_ASSERT_EQUAL_STRING("Charmander", strbuffer);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NOT_NULL(third_pokemon._internal);
+        TEST_ASSERT_EQUAL_STRING("Charmander", third_pokemon.species);
 
-        error = pkmn_pokemon_free(&pokemon);
-        TEST_ASSERT_NULL(pokemon);
+        error = pkmn_pokemon_free(&third_pokemon);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(third_pokemon._internal);
+
+        error = pkmn_pokemon_free(&second_pokemon);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(second_pokemon._internal);
+
+        error = pkmn_pokemon_free(&first_pokemon);
+        PKMN_TEST_ASSERT_SUCCESS(error);
+        TEST_ASSERT_NULL(first_pokemon._internal);
     }
 
     error = pkmn_pokemon_box_list_free(&pokemon_boxes);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(pokemon_boxes.boxes);
+    TEST_ASSERT_EQUAL(0, pokemon_boxes.length);
 }
 
 static void pokemon_box_test(
     const char* game
-) {
+)
+{
+    TEST_ASSERT_NOT_NULL(game);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_handle_t pokemon_box = NULL;
+    pkmn_pokemon_box_t pokemon_box = empty_pokemon_box;
 
-    error = pkmn_pokemon_box_make(
-                &pokemon_box,
-                game
+    error = pkmn_pokemon_box_init(
+                game,
+                &pokemon_box
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon_box._internal);
 
-    test_empty_pokemon_box(
-        pokemon_box,
-        game
-    );
-
-    test_box_name(pokemon_box);
-
-    test_setting_pokemon_in_box(pokemon_box);
+    test_empty_pokemon_box(&pokemon_box);
+    test_box_name(&pokemon_box);
+    test_setting_pokemon_in_box(&pokemon_box);
 
     error = pkmn_pokemon_box_free(&pokemon_box);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(pokemon_box);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(pokemon_box._internal);
 }
 
 static void pokemon_pc_test(
     const char* game
-) {
+)
+{
+    TEST_ASSERT_NOT_NULL(game);
+
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_pc_handle_t pokemon_pc = NULL;
+    pkmn_pokemon_pc_t pokemon_pc =
+    {
+        .game = NULL,
+        ._internal = NULL
+    };
 
-    error = pkmn_pokemon_pc_make(
-                &pokemon_pc,
-                game
+    error = pkmn_pokemon_pc_init(
+                game,
+                &pokemon_pc
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon_pc._internal);
 
-    test_empty_pokemon_pc(
-        pokemon_pc,
-        game
-    );
-
-    test_pc_box_names(pokemon_pc);
-
-    test_setting_pokemon_in_boxes(pokemon_pc);
+    test_empty_pokemon_pc(&pokemon_pc);
+    test_pc_box_names(&pokemon_pc);
+    test_setting_pokemon_in_boxes(&pokemon_pc);
 
     error = pkmn_pokemon_pc_free(&pokemon_pc);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NULL(pokemon_pc);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NULL(pokemon_pc._internal);
 }
 
 #define BOX_AND_PC_TEST_FCNS(test_game, game_name) \
-    static void test_game ## _pokemon_box_test() { \
+    static void test_game ## _pokemon_box_test() \
+    { \
         pokemon_box_test(game_name); \
     } \
-    static void test_game ## _pokemon_pc_test() { \
+    static void test_game ## _pokemon_pc_test() \
+    { \
         pokemon_pc_test(game_name); \
     }
 

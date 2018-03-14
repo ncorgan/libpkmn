@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,7 +29,7 @@ typedef struct {
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    pkmn_pokemon_handle_t pokemon,
+    pkmn_pokemon_t* pokemon_ptr,
     pkmn_test_values_t* test_values
 );
 
@@ -60,7 +60,18 @@ void xd_pokemon_test();
 
 // I/O
 
-void test_3gpkm();
+void red_pk1_test();
+void blue_pk1_test();
+void yellow_pk1_test();
+void gold_pk_test();
+void silver_pk_test();
+void crystal_pk_test();
+void ruby_3gpkm_test();
+void sapphire_3gpkm_test();
+void emerald_3gpkm_test();
+void firered_3gpkm_test();
+void leafgreen_3gpkm_test();
+void test_outside_3gpkm();
 
 // Generation I friendship
 
@@ -109,5 +120,12 @@ void firered_unown_test();
 void leafgreen_unown_test();
 void colosseum_unown_test();
 void xd_unown_test();
+
+// Conversions
+
+void gen1_conversions_test();
+void gen2_conversions_test();
+void gba_conversions_test();
+void gcn_conversions_test();
 
 #endif /* POKEMON_TEST_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,7 +15,7 @@
 
 typedef struct
 {
-    pkmn_pokemon_box_handle_t* pokemon_boxes;
+    pkmn_pokemon_box_t* boxes;
     size_t length;
 } pkmn_pokemon_box_list_t;
 
@@ -23,25 +23,9 @@ typedef struct
 extern "C" {
 #endif
 
-static inline pkmn_error_t pkmn_pokemon_box_list_free(
-    pkmn_pokemon_box_list_t* pokemon_box_list
-)
-{
-    if(!pokemon_box_list)
-    {
-        return PKMN_ERROR_NULL_POINTER;
-    }
-
-    for(size_t i = 0; i < pokemon_box_list->length; ++i)
-    {
-        pkmn_pokemon_box_free(&pokemon_box_list->pokemon_boxes[i]);
-    }
-
-    pokemon_box_list->pokemon_boxes = NULL;
-    pokemon_box_list->length = 0;
-
-    return PKMN_ERROR_NONE;
-}
+PKMN_C_API pkmn_error_t pkmn_pokemon_box_list_free(
+    pkmn_pokemon_box_list_t* pokemon_box_list_ptr
+);
 
 #ifdef __cplusplus
 }
