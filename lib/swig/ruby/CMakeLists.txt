@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS ${header_files}
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
     COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=ruby --include-dir=${PKMN_SOURCE_DIR}/include --output=${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
+    COMMAND ${PYTHON_EXECUTABLE} ${PKMN_SOURCE_DIR}/scripts/generate_CamelCase.py --language=ruby --include-dir=${PKMN_SOURCE_DIR}/lib/swig/modules/cpp_wrappers --output=${CMAKE_CURRENT_BINARY_DIR}/ruby_CamelCase.i
     COMMENT "Generating ruby_CamelCase.i"
 )
 ADD_CUSTOM_TARGET(

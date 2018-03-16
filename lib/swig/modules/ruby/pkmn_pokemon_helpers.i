@@ -17,7 +17,7 @@
 %ignore pkmn::swig::EV_map::EV_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::EV_map::cptr();
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributeval(pkmn::swig::EV_map, %arg(std::vector<std::string>), keys, keys);
 
@@ -36,9 +36,28 @@
         self->set_EV(stat, value);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
         return self->keys().size();
+    }
+
+    pkmn::swig::EV_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> keys = self->keys();
+        for(const std::string& key: keys)
+        {
+            k = SWIG_From_std_string(key);
+            v = SWIG_From_int(self->get_EV(key));
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -50,7 +69,7 @@
 %ignore pkmn::swig::IV_map::IV_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::IV_map::cptr();
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributeval(pkmn::swig::IV_map, %arg(std::vector<std::string>), keys, keys);
 
@@ -69,9 +88,28 @@
         self->set_IV(stat, value);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
-        return self->keys().size();
+        return int(self->keys().size());
+    }
+
+    pkmn::swig::IV_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> keys = self->keys();
+        for(const std::string& key: keys)
+        {
+            k = SWIG_From_std_string(key);
+            v = SWIG_From_int(self->get_IV(key));
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -83,7 +121,7 @@
 %ignore pkmn::swig::marking_map::marking_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::marking_map::get_internal;
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributeval(pkmn::swig::marking_map, %arg(std::vector<std::string>), keys, keys);
 
@@ -102,9 +140,28 @@
         self->set_marking(marking, value);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
-        return self->keys().size();
+        return int(self->keys().size());
+    }
+
+    pkmn::swig::marking_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> keys = self->keys();
+        for(const std::string& key: keys)
+        {
+            k = SWIG_From_std_string(key);
+            v = self->get_marking(key) ? Qtrue : Qfalse;
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -116,7 +173,7 @@
 %ignore pkmn::swig::ribbon_map::ribbon_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::ribbon_map::get_internal;
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributeval(pkmn::swig::ribbon_map, %arg(std::vector<std::string>), keys, keys);
 
@@ -135,9 +192,28 @@
         self->set_ribbon(ribbon, value);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
-        return self->keys().size();
+        return int(self->keys().size());
+    }
+
+    pkmn::swig::ribbon_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> keys = self->keys();
+        for(const std::string& key: keys)
+        {
+            k = SWIG_From_std_string(key);
+            v = self->get_ribbon(key) ? Qtrue : Qfalse;
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -149,7 +225,7 @@
 %ignore pkmn::swig::contest_stat_map::contest_stat_map(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::contest_stat_map::cptr();
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributeval(pkmn::swig::contest_stat_map, %arg(std::vector<std::string>), keys, keys);
 
@@ -168,9 +244,28 @@
         self->set_contest_stat(stat, value);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
-        return self->keys().size();
+        return int(self->keys().size());
+    }
+
+    pkmn::swig::contest_stat_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> keys = self->keys();
+        for(const std::string& key: keys)
+        {
+            k = SWIG_From_std_string(key);
+            v = SWIG_From_int(self->get_contest_stat(key));
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -183,7 +278,7 @@
 %ignore pkmn::swig::move_slot::index();
 %ignore pkmn::swig::move_slot::cptr();
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %attributestring(pkmn::swig::move_slot, std::string, move, get_move, set_move);
 %attribute(pkmn::swig::move_slot, int, pp, get_pp, set_pp);
@@ -192,23 +287,55 @@
 // Move slots
 //
 
+// Needed to avoid compile error
+%{
+    namespace swig
+    {
+        template <> struct traits<pkmn::swig::move_slot>
+        {
+            typedef pointer_category category;
+            static const char* type_name()
+            {
+                return "pkmn::swig::move_slot";
+            }
+        };
+    }
+%}
+
 %ignore pkmn::swig::move_slots::move_slots();
 %ignore pkmn::swig::move_slots::move_slots(const pkmn::pokemon::sptr&);
 %ignore pkmn::swig::move_slots::size();
 %ignore pkmn::swig::move_slots::cptr();
 
-// Replace methods with more idiomatic Lua.
+// Replace methods with more idiomatic Ruby.
 
 %extend pkmn::swig::move_slots
 {
-    pkmn::swig::move_slot __getitem__(size_t index)
+    pkmn::swig::move_slot __getitem__(int index)
     {
-        return self->get_move_slot(int(index));
+        return self->get_move_slot(index);
     }
 
-    size_t __len(void*)
+    size_t __len__()
     {
-        return self->size();
+        return int(self->size());
+    }
+
+    pkmn::swig::move_slots* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE r;
+        for(size_t move_index = 0; move_index < self->size(); ++move_index)
+        {
+            r = swig::from<pkmn::swig::move_slot>(self->get_move_slot(move_index));
+            rb_yield(r);
+        }
+
+        return self;
     }
 }
 

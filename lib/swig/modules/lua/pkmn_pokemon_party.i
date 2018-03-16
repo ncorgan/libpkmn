@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,8 +13,9 @@
 
 %ignore pkmn::swig::pokemon_party::pokemon_party();
 %ignore pkmn::swig::pokemon_party::pokemon_party(const pkmn::pokemon_party::sptr&);
+%ignore pkmn::swig::pokemon_party::get_pokemon(int);
+%ignore pkmn::swig::pokemon_party::get_pokemon(int, const pkmn::swig::pokemon&);
 %ignore pkmn::swig::pokemon_party::cptr();
-%ignore pkmn::swig::pokemon_party::at(int);
 
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 

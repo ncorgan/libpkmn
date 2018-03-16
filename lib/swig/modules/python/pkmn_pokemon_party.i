@@ -13,8 +13,9 @@
 
 %ignore pkmn::swig::pokemon_party::pokemon_party();
 %ignore pkmn::swig::pokemon_party::pokemon_party(const pkmn::pokemon_party::sptr&);
+%ignore pkmn::swig::pokemon_party::get_pokemon(int);
+%ignore pkmn::swig::pokemon_party::get_pokemon(int, const pkmn::swig::pokemon&);
 %ignore pkmn::swig::pokemon_party::cptr();
-%ignore pkmn::swig::pokemon_party::at(int);
 
 // Convert getter/setter functions into attributes for more idiomatic Python.
 
@@ -24,21 +25,21 @@
 %extend pkmn::swig::pokemon_party
 {
     pkmn::swig::pokemon __getitem__(
-        int position
+        size_t position
     )
     {
-        return self->get_pokemon(position);
+        return self->get_pokemon(int(position));
     }
 
     void __setitem__(
-        int position,
+        size_t position,
         const pkmn::swig::pokemon& pokemon
     )
     {
-        self->set_pokemon(position, pokemon);
+        self->set_pokemon(int(position), pokemon);
     }
 
-    int __len__()
+    size_t __len__()
     {
         return 6;
     }

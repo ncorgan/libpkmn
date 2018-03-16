@@ -20,3 +20,5 @@ module PKMN
         SWIG_VERSION = "@SWIG_VERSION@"
     end
 end
+
+PKMN::initialize_database_connection()

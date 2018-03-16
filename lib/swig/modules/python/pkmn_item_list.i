@@ -29,13 +29,13 @@
 %extend pkmn::swig::item_list
 {
     pkmn::swig::item_slot __getitem__(
-        int position
+        size_t position
     )
     {
-        return self->at(position);
+        return self->at(int(position));
     }
 
-    int __len__()
+    size_t __len__()
     {
         return self->get_capacity();
     }

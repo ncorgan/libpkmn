@@ -14,7 +14,7 @@
 %ignore pkmn::swig::pokemon_pc::pokemon_pc();
 %ignore pkmn::swig::pokemon_pc::pokemon_pc(const pkmn::pokemon_pc::sptr&);
 %ignore pkmn::swig::pokemon_pc::cptr();
-%ignore pkmn::swig::pokemon_pc::at(int);
+%ignore pkmn::swig::pokemon_pc::get_box(int);
 %ignore pkmn::swig::pokemon_pc::get_num_boxes();
 
 // Convert getter/setter functions into attributes for more idiomatic Python.
@@ -25,13 +25,13 @@
 %extend pkmn::swig::pokemon_pc
 {
     pkmn::swig::pokemon_box __getitem__(
-        int position
+        size_t position
     )
     {
-        return self->get_box(position);
+        return self->get_box(int(position));
     }
 
-    int __len__()
+    size_t __len__()
     {
         return self->get_num_boxes();
     }

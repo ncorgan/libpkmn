@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +18,6 @@
 %ignore pkmn::swig::item_bag::item_bag();
 %ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
 %ignore pkmn::swig::item_bag::cptr();
-%ignore pkmn::swig::item_bag::at(int);
 %ignore pkmn::swig::item_bag::get_pocket(const std::string&);
 
 // Convert getter/setter functions into attributes for more idiomatic Python.
@@ -52,9 +51,9 @@
     }
 #endif
 
-    int __len__()
+    size_t __len__()
     {
-        return int(self->get_pocket_names().size());
+        return self->get_pocket_names().size();
     }
 }
 
