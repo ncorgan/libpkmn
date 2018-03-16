@@ -37,7 +37,7 @@ class pokedex_test(pkmntest.base_test.base_test):
         self.assertEqual(len(pokedex.all_caught), 0)
 
         # Set random Pokemon to be seen and caught.
-        all_pokemon = pkmn.database.get_pokemon_list(generation, True)
+        all_pokemon = pkmn.database.lists.get_pokemon_list(generation, True)
         num_seen = random.randint(0, len(all_pokemon))
         num_caught = random.randint(0, len(all_pokemon))
 

@@ -42,7 +42,7 @@ class gen1_items_test(items_tests):
              "TM34", "Moon Stone", "Bicycle", "Full Heal"]
         )
 
-        full_item_list = pkmn.database.get_item_list(game)
+        full_item_list = pkmn.database.lists.get_item_list(game)
         self.assertEqual(len(items.valid_items), len(full_item_list))
         self.item_list_test_both_text_types(items)
 

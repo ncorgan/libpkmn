@@ -21,7 +21,7 @@
 // Convert getter/setter functions into attributes for more idiomatic Lua.
 
 %attributestring(pkmn::swig::pokemon_box, std::string, game, get_game);
-%attributestring(pkmn::swig::pokemon_box, std::string, name, get_name);
+%attributestring(pkmn::swig::pokemon_box, std::string, name, get_name, set_name);
 %attributestring(pkmn::swig::pokemon_box, int, num_pokemon, get_num_pokemon);
 
 %extend pkmn::swig::pokemon_box

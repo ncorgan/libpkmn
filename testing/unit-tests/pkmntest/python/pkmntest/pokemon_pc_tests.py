@@ -26,7 +26,7 @@ class pokemon_pc_tests(base_test.base_test):
         self.assertEqual(box.name, "")
 
         # Make sure trying to get a Pokemon at an invalid index fails.
-        with self.assertRaises(IndexError):
+        with self.assertRaises(OverflowError):
             box[-1]
         with self.assertRaises(IndexError):
             box[len(box)]
@@ -70,7 +70,7 @@ class pokemon_pc_tests(base_test.base_test):
         original_second = box[1]
 
         # Make sure we can't set Pokemon at invalid indices.
-        with self.assertRaises(IndexError):
+        with self.assertRaises(OverflowError):
             box[-1] = original_first
         with self.assertRaises(IndexError):
             box[len(box)] = original_second

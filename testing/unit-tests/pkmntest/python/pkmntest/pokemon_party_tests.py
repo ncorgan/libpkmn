@@ -23,7 +23,7 @@ class pokemon_party_tests(base_test.base_test):
         self.assertEqual(len(party), 6)
 
         # Make sure trying to get a Pokemon at an invalid index fails.
-        with self.assertRaises(IndexError):
+        with self.assertRaises(OverflowError):
             party[-1]
         with self.assertRaises(IndexError):
             party[len(party)]
@@ -43,7 +43,7 @@ class pokemon_party_tests(base_test.base_test):
         original_second = party[1]
 
         # Make sure we can't set Pokemon at invalid indices.
-        with self.assertRaises(IndexError):
+        with self.assertRaises(OverflowError):
             party[-1] = original_first
         with self.assertRaises(IndexError):
             party[len(party)] = original_second

@@ -252,7 +252,7 @@ class gen2_items_test(items_tests):
         )
 
         valid_items = pc.valid_items
-        full_item_list = pkmn.database.get_item_list(game)
+        full_item_list = pkmn.database.lists.get_item_list(game)
         self.assertEqual(len(valid_items), len(full_item_list))
         self.item_list_test_both_text_types(pc)
 
