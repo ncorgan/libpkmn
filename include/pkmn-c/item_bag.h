@@ -73,6 +73,7 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_init(
  * \param item_bag_ptr A pointer to the item bag struct to free
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if item_bag_ptr is NULL
+ * \returns ::PKMN_ERROR_OUT_OF_RANGE if position is outside the range [0,capacity-1]
  */
 PKMN_C_API pkmn_error_t pkmn_item_bag_free(
     pkmn_item_bag_t* item_bag_ptr
@@ -102,9 +103,9 @@ PKMN_C_API const char* pkmn_item_bag_strerror(
  * \param pocket_name Name of the pocket to return
  * \param item_list_out Output pointer in which to return the pocket
  * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given name does not correspond to a
  *                                        valid pocket
- * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
     pkmn_item_bag_t* item_bag_ptr,
@@ -122,6 +123,7 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
  * \param item Name of the item to add
  * \param amount How many of the item to add
  * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item name is invalid
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item cannot be added to any
  *                                        of this bag's pockets
@@ -143,6 +145,7 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_add(
  * \param item Name of the item to add
  * \param amount How many of the item to add
  * \returns ::PKMN_ERROR_NONE upon successful completion
+ * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item name is invalid
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item cannot be removed from any
  *                                        of this bag's pockets

@@ -125,13 +125,24 @@ namespace pkmn {
              * \param old_position The position of the slot to move
              * \param new_position Where to move the given slot
              * \throws std::out_of_range If either parameter is outside the range [0,num_items-1]
-             * \throw std::runtime_error If items in the given list cannot be moved
+             * \throws std::runtime_error If items in the given list cannot be moved
              */
             virtual void move(
                 int old_position,
                 int new_position
             ) = 0;
 
+            /*!
+             * @brief Sets the given item slot to the given item and amount.
+             *
+             * \param position The position for which to set the item
+             * \param item_name The name of the item to set
+             * \param amount How much of the item to put in the slot
+             * \throws std::invalid_argument If the item cannot be included in the given list
+             * \throws std::out_of_range If position is outside the range [0,num_items-1]
+             * \throws std::runtime_error If the pocket's items are locked in one slot and the
+             *                            given item does not match that slot
+             */
             virtual void set_item(
                 int position,
                 const std::string& item_name,
