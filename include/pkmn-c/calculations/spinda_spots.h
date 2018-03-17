@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,13 +11,17 @@
 #include <pkmn-c/error.h>
 
 //! X/Y coordinates of an individual Spinda spot.
-typedef struct {
+typedef struct
+{
+    //! X coordinate.
     int x;
+    //! Y coordinate.
     int y;
 } pkmn_spinda_coords_t;
 
 //! Coordinates of all four Spinda spots.
-typedef struct {
+typedef struct
+{
     //! Coordinates of the left ear spot.
     pkmn_spinda_coords_t left_ear;
     //! Coordinates of the right ear spot.
@@ -38,8 +42,8 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords(
-    const pkmn_spinda_coords_t* coords1,
-    const pkmn_spinda_coords_t* coords2,
+    const pkmn_spinda_coords_t* coords1_ptr,
+    const pkmn_spinda_coords_t* coords2_ptr,
     pkmn_spinda_coords_t* result_out
 );
 
@@ -49,8 +53,8 @@ PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords(
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_spots(
-    const pkmn_spinda_spots_t* spots1,
-    const pkmn_spinda_spots_t* spots2,
+    const pkmn_spinda_spots_t* spots1_ptr,
+    const pkmn_spinda_spots_t* spots2_ptr,
     pkmn_spinda_spots_t* result_out
 );
 
@@ -60,8 +64,8 @@ PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_spots(
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
-    const pkmn_spinda_spots_t* spots,
-    const pkmn_spinda_coords_t* coords,
+    const pkmn_spinda_spots_t* spots_ptr,
+    const pkmn_spinda_coords_t* coords_ptr,
     pkmn_spinda_spots_t* result_out
 );
 

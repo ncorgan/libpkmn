@@ -2046,7 +2046,8 @@ TEST(cpp_calculations_test, pokemon_size_test) {
     }
 }
 
-TEST(cpp_calculations_test, spinda_coords_test) {
+TEST(cpp_calculations_test, spinda_coords_test)
+{
     /*
      * Check (in)equality operators.
      */
@@ -2054,10 +2055,8 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_coords COORDS2(123,456);
     PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_coords COORDS3(456,123);
 
-    EXPECT_TRUE(COORDS1 == COORDS2);
-    EXPECT_FALSE(COORDS1 != COORDS2);
-    EXPECT_TRUE(COORDS1 != COORDS3);
-    EXPECT_FALSE(COORDS1 == COORDS3);
+    EXPECT_EQ(COORDS1, COORDS2);
+    EXPECT_NE(COORDS1, COORDS3);
 
     /*
      * Test adding coordinates.
@@ -2071,7 +2070,8 @@ TEST(cpp_calculations_test, spinda_coords_test) {
     EXPECT_EQ(1035, added_coords.y);
 }
 
-TEST(cpp_calculations_test, spinda_spot_test) {
+TEST(cpp_calculations_test, spinda_spot_test)
+{
     /*
      * Check (in)equality operators.
      */
@@ -2093,8 +2093,8 @@ TEST(cpp_calculations_test, spinda_spot_test) {
         pkmn::calculations::spinda_coords(2,15),
         pkmn::calculations::spinda_coords(1,4)
     );
-    EXPECT_TRUE(SPOTS1 == SPOTS2);
-    EXPECT_TRUE(SPOTS1 != SPOTS3);
+    EXPECT_EQ(SPOTS1, SPOTS2);
+    EXPECT_NE(SPOTS1, SPOTS3);
 
     /*
      * Test adding spots.
@@ -2145,13 +2145,11 @@ TEST(cpp_calculations_test, spinda_spot_test) {
      * Source: https://github.com/magical/spinda
      */
 
-    pkmn::calculations::spinda_spots spots1 = pkmn::calculations::spinda_spot_offset(
-                                                  4064348759
-                                              );
-    EXPECT_TRUE(spots1.left_ear   == SPOTS1.left_ear);
-    EXPECT_TRUE(spots1.right_ear  == SPOTS1.right_ear);
-    EXPECT_TRUE(spots1.left_face  == SPOTS1.left_face);
-    EXPECT_TRUE(spots1.right_face == SPOTS1.right_face);
+    PKMN_CONSTEXPR_OR_CONST pkmn::calculations::spinda_spots spots1 =
+        pkmn::calculations::spinda_spot_offset(
+            4064348759
+        );
+    EXPECT_EQ(spots1, SPOTS1);
 }
 
 inline void PKMN_EXPECT_STAT_CLOSE(

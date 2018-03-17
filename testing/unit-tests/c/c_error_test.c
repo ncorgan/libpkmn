@@ -2698,7 +2698,8 @@ static void calculations_size_error_test() {
 /*
  * <pkmn-c/calculations/spinda_spots.h>
  */
-static void calculations_spinda_spots_error_test() {
+static void calculations_spinda_spots_error_test()
+{
     pkmn_spinda_coords_t dummy_coords;
     pkmn_spinda_spots_t dummy_spots;
 
@@ -2707,23 +2708,23 @@ static void calculations_spinda_spots_error_test() {
      */
 
     error = pkmn_calculations_add_spinda_coords(
-                NULL, // coords1
+                NULL,
                 &dummy_coords,
                 &dummy_coords
             );
-    TEST_NULL_POINTER_RETURN("coords1");
+    TEST_NULL_POINTER_RETURN("coords1_ptr");
 
     error = pkmn_calculations_add_spinda_coords(
                 &dummy_coords,
-                NULL, // coords2
+                NULL,
                 &dummy_coords
             );
-    TEST_NULL_POINTER_RETURN("coords2");
+    TEST_NULL_POINTER_RETURN("coords2_ptr");
 
     error = pkmn_calculations_add_spinda_coords(
                 &dummy_coords,
                 &dummy_coords,
-                NULL // result_out
+                NULL
             );
     TEST_NULL_POINTER_RETURN("result_out");
 
@@ -2732,23 +2733,23 @@ static void calculations_spinda_spots_error_test() {
      */
 
     error = pkmn_calculations_add_spinda_spots(
-                NULL, // spots1
+                NULL,
                 &dummy_spots,
                 &dummy_spots
             );
-    TEST_NULL_POINTER_RETURN("spots1");
+    TEST_NULL_POINTER_RETURN("spots1_ptr");
 
     error = pkmn_calculations_add_spinda_spots(
                 &dummy_spots,
-                NULL, // spots2
+                NULL,
                 &dummy_spots
             );
-    TEST_NULL_POINTER_RETURN("spots2");
+    TEST_NULL_POINTER_RETURN("spots2_ptr");
 
     error = pkmn_calculations_add_spinda_spots(
                 &dummy_spots,
                 &dummy_spots,
-                NULL // result_out
+                NULL
             );
     TEST_NULL_POINTER_RETURN("result_out");
 
@@ -2757,23 +2758,23 @@ static void calculations_spinda_spots_error_test() {
      */
 
     error = pkmn_calculations_add_spinda_coords_to_spots(
-                NULL, // spots
+                NULL,
                 &dummy_coords,
                 &dummy_spots
             );
-    TEST_NULL_POINTER_RETURN("spots");
+    TEST_NULL_POINTER_RETURN("spots_ptr");
 
     error = pkmn_calculations_add_spinda_coords_to_spots(
                 &dummy_spots,
-                NULL, // coords
+                NULL,
                 &dummy_spots
             );
-    TEST_NULL_POINTER_RETURN("coords");
+    TEST_NULL_POINTER_RETURN("coords_ptr");
 
     error = pkmn_calculations_add_spinda_coords_to_spots(
                 &dummy_spots,
                 &dummy_coords,
-                NULL // result_out
+                NULL
             );
     TEST_NULL_POINTER_RETURN("result_out");
 
@@ -2783,7 +2784,7 @@ static void calculations_spinda_spots_error_test() {
 
     error = pkmn_calculations_spinda_spot_offset(
                 0,
-                NULL // spot_offset_out
+                NULL
             );
     TEST_NULL_POINTER_RETURN("spot_offset_out");
 }
