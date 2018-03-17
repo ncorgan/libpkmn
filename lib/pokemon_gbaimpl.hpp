@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -223,6 +223,12 @@ namespace pkmn {
 
             std::string get_sprite_filepath() override final;
 
+            // Functions for attributes
+
+            bool get_is_obedient();
+
+            void set_is_obedient(bool is_obedient);
+
         private:
 
             void _set_contest_ribbon(
@@ -243,6 +249,8 @@ namespace pkmn {
             void _update_ribbons_map() override final;
             void _update_EV_map() override final;
             void _update_stat_map() override final;
+
+            void _register_attributes();
 
             pksav_gba_pokemon_growth_t*  _growth;
             pksav_gba_pokemon_attacks_t* _attacks;

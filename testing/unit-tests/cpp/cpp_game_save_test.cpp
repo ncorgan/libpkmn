@@ -8,6 +8,7 @@
 #include "env.hpp"
 #include "pksav/enum_maps.hpp"
 #include "types/rng.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmntest/config.hpp>
 #include <pkmntest/util.hpp>
@@ -353,6 +354,113 @@ namespace pkmntest {
             save->get_pokemon_pc()->get_box(0)->set_pokemon(0, test_pokemon2);
             EXPECT_TRUE(pokedex->has_seen(test_species2));
             EXPECT_TRUE(pokedex->has_caught(test_species2));
+        }
+    }
+
+    static void game_save_test_attributes(
+        pkmn::game_save::sptr save
+    )
+    {
+        std::string game = save->get_game();
+        int generation = game_generations.at(game);
+        pkmn::rng<int> int_rng;
+
+        switch(generation)
+        {
+            case 1:
+            {
+                ASSERT_TRUE(
+                    pkmn::does_vector_contain_value<std::string>(
+                        save->get_numeric_attribute_names(),
+                        "Casino coins"
+                    )
+                );
+                EXPECT_GE(
+                    save->get_numeric_attribute("Casino coins"),
+                    0
+                );
+                EXPECT_LE(
+                    save->get_numeric_attribute("Casino coins"),
+                    9999
+                );
+
+                // TODO: uncomment after fixing:
+                //  * https://github.com/ncorgan/pksav/issues/3
+
+                /*int num_casino_coins = int_rng.rand(0, 99);
+                save->set_numeric_attribute("Casino coins", num_casino_coins);
+                EXPECT_EQ(
+                    num_casino_coins,
+                    save->get_numeric_attribute("Casino coins")
+                );*/
+
+                if(game == "Yellow")
+                {
+                    ASSERT_TRUE(
+                        pkmn::does_vector_contain_value<std::string>(
+                            save->get_numeric_attribute_names(),
+                            "Pikachu friendship"
+                        )
+                    );
+                    EXPECT_GE(
+                        save->get_numeric_attribute("Pikachu friendship"),
+                        0
+                    );
+                    EXPECT_LE(
+                        save->get_numeric_attribute("Pikachu friendship"),
+                        255
+                    );
+
+                    int pikachu_friendship = int_rng.rand(0, 255);
+                    save->set_numeric_attribute("Pikachu friendship", pikachu_friendship);
+                    EXPECT_EQ(
+                        pikachu_friendship,
+                        save->get_numeric_attribute("Pikachu friendship")
+                    );
+                }
+                else
+                {
+                    ASSERT_FALSE(
+                        pkmn::does_vector_contain_value<std::string>(
+                            save->get_numeric_attribute_names(),
+                            "Pikachu friendship"
+                        )
+                    );
+                }
+                break;
+            }
+
+            case 3:
+            {
+                if((game != "Colosseum") and (game != "XD"))
+                {
+                    ASSERT_TRUE(
+                        pkmn::does_vector_contain_value<std::string>(
+                            save->get_numeric_attribute_names(),
+                            "Casino coins"
+                        )
+                    );
+                    EXPECT_GE(
+                        save->get_numeric_attribute("Casino coins"),
+                        0
+                    );
+                    EXPECT_LE(
+                        save->get_numeric_attribute("Casino coins"),
+                        9999
+                    );
+
+                    int num_casino_coins = int_rng.rand(0, 9999);
+                    save->set_numeric_attribute("Casino coins", num_casino_coins);
+                    EXPECT_EQ(
+                        num_casino_coins,
+                        save->get_numeric_attribute("Casino coins")
+                    );
+                }
+                break;
+            }
+
+            default:
+                break;
         }
     }
 
@@ -813,6 +921,7 @@ namespace pkmntest {
         std::vector<std::string> item_list = pkmn::database::get_item_list(save->get_game());
 
         pkmntest::game_save_test_common_fields(save);
+        pkmntest::game_save_test_attributes(save);
         pkmntest::randomize_items(
             save,
             item_list

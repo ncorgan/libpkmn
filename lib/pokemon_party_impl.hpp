@@ -86,6 +86,12 @@ namespace pkmn {
                     party_pokemon_party_data_copy_ptr
                 );
 
+                // The old Pokémon's party data may have been allocated.
+                if(old_party_pokemon_impl_ptr->_our_party_mem)
+                {
+                    delete reinterpret_cast<native_party_data_type*>(old_party_pokemon_impl_ptr->_native_party);
+                }
+
                 old_party_pokemon_impl_ptr->_native_pc = reinterpret_cast<void*>(party_pokemon_pc_copy_ptr);
                 old_party_pokemon_impl_ptr->_native_party = reinterpret_cast<void*>(party_pokemon_party_data_copy_ptr);
                 old_party_pokemon_impl_ptr->_our_pc_mem = true;

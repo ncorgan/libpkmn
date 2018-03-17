@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,61 +9,54 @@
 
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
-#include <pkmn-c/pokemon.h>
 
+#include <pkmn-c/pokemon.h>
 #include <pkmn-c/types/pokemon_list.h>
 
-#if !defined(PKMN_POKEMON_PARTY_DECLARED) && !defined(__DOXYGEN__)
-struct pkmn_pokemon_party_t;
-typedef struct pkmn_pokemon_party_t pkmn_pokemon_party_t;
-#define PKMN_POKEMON_PARTY_DECLARED
-#endif
+typedef struct
+{
+    char* game;
+    size_t capacity;
 
-typedef pkmn_pokemon_party_t* pkmn_pokemon_party_handle_t;
+    void* _internal;
+} pkmn_pokemon_party_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_pokemon_party_make(
-    pkmn_pokemon_party_handle_t* handle_ptr,
-    const char* game
+PKMN_C_API pkmn_error_t pkmn_pokemon_party_init(
+    const char* game,
+    pkmn_pokemon_party_t* pokemon_party_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_party_free(
-    pkmn_pokemon_party_handle_t* handle_ptr
+    pkmn_pokemon_party_t* pokemon_party_ptr
 );
 
 PKMN_C_API const char* pkmn_pokemon_party_strerror(
-    pkmn_pokemon_party_handle_t handle
-);
-
-PKMN_C_API pkmn_error_t pkmn_pokemon_party_get_game(
-    pkmn_pokemon_party_handle_t handle,
-    char* game_out,
-    size_t buffer_len,
-    size_t* game_length_out
+    pkmn_pokemon_party_t* pokemon_party_ptr
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_party_get_num_pokemon(
-    pkmn_pokemon_party_handle_t handle,
-    int* num_pokemon_out
+    pkmn_pokemon_party_t* pokemon_party_ptr,
+    size_t* num_pokemon_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_party_get_pokemon(
-    pkmn_pokemon_party_handle_t handle,
-    int index,
-    pkmn_pokemon_handle_t* pokemon_handle_out
+    pkmn_pokemon_party_t* pokemon_party_ptr,
+    size_t position,
+    pkmn_pokemon_t* pokemon_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_party_set_pokemon(
-    pkmn_pokemon_party_handle_t handle,
-    int index,
-    pkmn_pokemon_handle_t pokemon_handle
+    pkmn_pokemon_party_t* pokemon_party_ptr,
+    size_t position,
+    pkmn_pokemon_t* pokemon_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_pokemon_party_as_array(
-    pkmn_pokemon_party_handle_t handle,
+PKMN_C_API pkmn_error_t pkmn_pokemon_party_as_list(
+    pkmn_pokemon_party_t* pokemon_party_ptr,
     pkmn_pokemon_list_t* pokemon_list_out
 );
 

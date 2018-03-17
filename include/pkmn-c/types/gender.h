@@ -8,9 +8,9 @@
 #define PKMN_C_TYPES_GENDER_H
 
 typedef enum {
-    PKMN_MALE = 0,
-    PKMN_FEMALE,
-    PKMN_GENDERLESS
+    PKMN_GENDER_MALE = 0,
+    PKMN_GENDER_FEMALE,
+    PKMN_GENDER_GENDERLESS
 } pkmn_gender_t;
 
 #endif /* PKMN_C_TYPES_GENDER_H */

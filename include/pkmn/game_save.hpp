@@ -13,11 +13,16 @@
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
+#include <pkmn/types/class_with_attributes.hpp>
 
 #include <cstdint>
 #include <string>
 #include <memory>
 #include <vector>
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(disable: 4275) // An exported class was derived from a class that was not exported.
+#endif
 
 namespace pkmn {
 
@@ -32,7 +37,7 @@ namespace pkmn {
      * Through this class, you can read and edit all trainer Pokémon, item
      * bag contents, and Pokédex stats, among other miscellaneous items.
      */
-    class PKMN_API game_save
+    class PKMN_API game_save: public class_with_attributes
     {
         public:
             typedef std::shared_ptr<game_save> sptr;
@@ -307,5 +312,9 @@ namespace pkmn {
             #endif
     };
 }
+
+#ifdef PKMN_PLATFORM_WIN32
+#    pragma warning(default: 4275)
+#endif
 
 #endif /* PKMN_GAME_SAVE_HPP */
