@@ -12,6 +12,12 @@
 
 #include <pkmn/build_info.hpp>
 
+const char* pkmn_buildinfo_about()
+{
+    static const std::string about = pkmn::build_info::about();
+    return about.c_str();
+}
+
 const char* pkmn_buildinfo_boost_version()
 {
     static const std::string boost_version = pkmn::build_info::get_boost_version();

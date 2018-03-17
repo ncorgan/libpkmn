@@ -11,6 +11,13 @@
 
 #include <string.h>
 
+static void about_test()
+{
+    const char* about = pkmn_buildinfo_about();
+    TEST_ASSERT_NOT_NULL(about);
+    TEST_ASSERT_TRUE(strlen(about) > 0);
+}
+
 static void boost_version_test()
 {
     const char* boost_version = pkmn_buildinfo_boost_version();
@@ -54,6 +61,7 @@ static void sqlitecpp_version_test()
 }
 
 PKMN_C_TEST_MAIN(
+    PKMN_C_TEST(about_test)
     PKMN_C_TEST(boost_version_test)
     PKMN_C_TEST(libpkmgc_version_test)
     PKMN_C_TEST(pksav_version_test)

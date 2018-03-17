@@ -17,6 +17,13 @@ extern "C" {
 #endif
 
 /*!
+ * @brief Returns a string describing this LibPKMN build.
+ *
+ * The value returned is guaranteed to be non-NULL.
+ */
+PKMN_C_API const char* pkmn_buildinfo_about();
+
+/*!
  * @brief Returns the version of Boost used in this build of LibPKMN.
  *
  * The value returned is guaranteed to be non-NULL.

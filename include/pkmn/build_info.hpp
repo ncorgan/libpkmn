@@ -13,6 +13,9 @@
 
 namespace pkmn { namespace build_info {
 
+    /*!
+     * @brief Returns a string describing this LibPKMN build.
+     */
     PKMN_API std::string about();
 
     /*!
