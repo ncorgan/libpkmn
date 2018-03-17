@@ -126,6 +126,11 @@ void get_random_pokemon(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_strerror(pokemon_ptr)
+    );
+
     for(size_t move_index = 0; move_index < 4; ++move_index)
     {
         const char* move = NULL;

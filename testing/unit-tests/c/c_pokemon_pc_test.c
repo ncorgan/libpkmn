@@ -725,6 +725,11 @@ static void pokemon_box_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon_box._internal);
 
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_box_strerror(&pokemon_box)
+    );
+
     test_empty_pokemon_box(&pokemon_box);
     test_box_name(&pokemon_box);
     test_setting_pokemon_in_box(&pokemon_box);
@@ -753,6 +758,11 @@ static void pokemon_pc_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(pokemon_pc._internal);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_pokemon_pc_strerror(&pokemon_pc)
+    );
 
     test_empty_pokemon_pc(&pokemon_pc);
     test_pc_box_names(&pokemon_pc);

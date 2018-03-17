@@ -55,7 +55,7 @@ static void gba_item_pocket_test(
     TEST_ASSERT_EQUAL(expected_capacity, item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(item_pocket_ptr);
+    test_item_list_initial_values(item_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -137,7 +137,7 @@ static void gba_key_item_pocket_test(
     TEST_ASSERT_EQUAL(expected_capacity, key_item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(key_item_pocket_ptr);
+    test_item_list_initial_values(key_item_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -230,7 +230,7 @@ static void gba_ball_pocket_test(
     TEST_ASSERT_EQUAL(expected_capacity, ball_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(ball_pocket_ptr);
+    test_item_list_initial_values(ball_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -311,7 +311,7 @@ static void gba_tmhm_pocket_test(
     TEST_ASSERT_EQUAL(expected_capacity, tmhm_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(tmhm_pocket_ptr);
+    test_item_list_initial_values(tmhm_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -392,7 +392,7 @@ static void gba_berry_pocket_test(
     TEST_ASSERT_EQUAL(expected_capacity, berry_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(berry_pocket_ptr);
+    test_item_list_initial_values(berry_pocket_ptr);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -475,7 +475,7 @@ static void gba_item_pc_test(
     TEST_ASSERT_NOT_NULL(item_pc._internal);
 
     // Make sure item slots start as completely empty.
-    test_item_list_empty_slots(&item_pc);
+    test_item_list_initial_values(&item_pc);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
@@ -625,6 +625,11 @@ static void gba_item_bag_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_bag._internal);
+
+    TEST_ASSERT_EQUAL_STRING(
+        "None",
+        pkmn_item_bag_strerror(&item_bag)
+    );
 
     TEST_ASSERT_NOT_NULL(item_bag.pocket_names.strings);
     TEST_ASSERT_EQUAL(5, item_bag.pocket_names.length);
