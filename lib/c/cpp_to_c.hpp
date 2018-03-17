@@ -301,8 +301,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_string_list_t temp_string_list =
         {
-            .strings = nullptr,
-            .length = map_cpp.size()
+            nullptr,       // strings
+            map_cpp.size() // length
         };
 
         if(temp_string_list.length > 0)
@@ -463,20 +463,20 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_attribute_names_t temp_attribute_names =
         {
-            .numeric_attribute_names =
+            // numeric_attribute_names
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .string_attribute_names =
+            // string_attribute_names
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .boolean_attribute_names =
+            // boolean_attribute_names
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             }
         };
 

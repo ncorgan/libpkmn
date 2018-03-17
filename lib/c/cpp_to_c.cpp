@@ -11,6 +11,11 @@
 
 #include <boost/assert.hpp>
 
+/*
+ * Note that despite pkmn_*_t being C structs, we can't use designated
+ * initializers in C++.
+ */
+
 namespace pkmn { namespace c {
 
     // LibPKMN wrapper class initialization.
@@ -29,13 +34,13 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_item_bag_t temp_item_bag =
         {
-            .game = nullptr,
-            .pocket_names =
+            nullptr, // game
+            // pocket_names
             {
-                .strings = nullptr,
-                .length = 0
+                nullptr, // strings
+                0        // length
             },
-            ._internal = nullptr
+            nullptr // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -71,10 +76,10 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_item_list_t temp_item_list =
         {
-            .name = nullptr,
-            .game = nullptr,
-            .capacity = 0ULL,
-            ._internal = nullptr
+            nullptr, // name
+            nullptr, // game
+            0ULL,    // capacity
+            nullptr  // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -111,8 +116,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokedex_t temp_pokedex =
         {
-            .game = nullptr,
-            ._internal = nullptr
+            nullptr, // game
+            nullptr // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -144,9 +149,9 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_t temp_pokemon =
         {
-            .species = nullptr,
-            .game = nullptr,
-            ._internal = nullptr
+            nullptr, // species
+            nullptr, // game
+            nullptr // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -185,9 +190,9 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_box_t temp_pokemon_box =
         {
-            .game = nullptr,
-            .capacity = 0ULL,
-            ._internal = nullptr
+            nullptr, // game
+            0ULL,    // capacity
+            nullptr  // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -220,9 +225,9 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_party_t temp_pokemon_party =
         {
-            .game = nullptr,
-            .capacity = 0ULL,
-            ._internal = nullptr
+            nullptr, // game
+            0ULL,    // capacity
+            nullptr  // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -255,9 +260,9 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_pc_t temp_pokemon_pc =
         {
-            .game = nullptr,
-            .capacity = 0ULL,
-            ._internal = nullptr
+            nullptr, // game
+            0ULL,    // capacity
+            nullptr  // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -290,8 +295,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_game_save_t temp_game_save =
         {
-            .game = nullptr,
-            ._internal = nullptr
+            nullptr, // game
+            nullptr  // _internal
         };
 
         string_cpp_to_c_alloc(
@@ -359,8 +364,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_string_list_t temp_string_list =
         {
-            .strings = nullptr,
-            .length = string_list_cpp.size()
+            nullptr,               // strings
+            string_list_cpp.size() // length
         };
 
         if(temp_string_list.length > 0)
@@ -398,8 +403,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_item_slots_t temp_item_slots =
         {
-            .item_slots = nullptr,
-            .length = item_slots_cpp.size()
+            nullptr,              // item_slots
+            item_slots_cpp.size() // length
         };
 
         if(temp_item_slots.length > 0)
@@ -437,8 +442,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_levelup_moves_t temp_levelup_moves =
         {
-            .levelup_moves = nullptr,
-            .length = levelup_moves_cpp.size()
+            nullptr,                 // levelup_moves
+            levelup_moves_cpp.size() // length
         };
 
         if(temp_levelup_moves.length > 0)
@@ -476,8 +481,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_string_list_t temp_string_list =
         {
-            .strings = nullptr,
-            .length = move_list.size()
+            nullptr,         // strings
+            move_list.size() // length
         };
 
         if(temp_string_list.length > 0)
@@ -515,8 +520,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_move_slots_t temp_move_slots =
         {
-            .move_slots = nullptr,
-            .length = move_slots_cpp.size()
+            nullptr,              // move_slots
+            move_slots_cpp.size() // length
         };
 
         if(temp_move_slots.length > 0)
@@ -554,8 +559,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_string_list_t temp_string_list =
         {
-            .strings = nullptr,
-            .length = pokemon_entries.size()
+            nullptr,               // strings
+            pokemon_entries.size() // length
         };
 
         if(temp_string_list.length > 0)
@@ -593,15 +598,15 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_database_item_entry_t temp_item_entry =
         {
-            .name = nullptr,
-            .game = nullptr,
-            .category = nullptr,
-            .pocket = nullptr,
-            .description = nullptr,
-            .cost = 0,
-            .holdable = false,
-            .fling_power = 0,
-            .fling_effect = nullptr
+            nullptr, // name
+            nullptr, // game
+            nullptr, // category
+            nullptr, // pocket
+            nullptr, // description
+            0,       // cost
+            false,   // holdable
+            0,       // fling_power
+            nullptr  // fling_effect
         };
 
         string_cpp_to_c_alloc(
@@ -651,18 +656,18 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_database_move_entry_t temp_move_entry =
         {
-            .name = nullptr,
-            .game = nullptr,
-            .description = nullptr,
-            .target = nullptr,
-            .damage_class = nullptr,
-            .base_power = 0,
-            .pp = {0},
-            .accuracy = 0.0f,
-            .effect = nullptr,
-            .contest_type = nullptr,
-            .contest_effect = nullptr,
-            .super_contest_effect = nullptr,
+            nullptr, // name
+            nullptr, // game
+            nullptr, // description
+            nullptr, // target
+            nullptr, // damage_class
+            0,       // base_power
+            {0},     // pp
+            0.0f,    // accuracy
+            nullptr, // effect
+            nullptr, // contest_type
+            nullptr, // contest_effect
+            nullptr, // super_contest_effect
         };
 
         string_cpp_to_c_alloc(
@@ -723,65 +728,65 @@ namespace pkmn { namespace c {
 
         pkmn_database_pokemon_entry_t temp_pokemon_entry =
         {
-            .name = nullptr,
-            .game = nullptr,
-            .species = nullptr,
-            .form = nullptr,
-            .pokedex_entry = nullptr,
-            .height = 0.0f,
-            .weight = 0.0f,
-            .chance_male = 0.0f,
-            .chance_female = 0.0f,
-            .has_gender_differences = false,
-            .base_friendship = 0,
-            .types =
+            nullptr, // name
+            nullptr, // game
+            nullptr, // species
+            nullptr, // form
+            nullptr, // pokedex_entry
+            0.0f, // height
+            0.0f, // weight
+            0.0f, // chance_male
+            0.0f, // chance_female
+            false, // has_gender_differences
+            0, // base_friendship
+            //types
             {
-                .first = nullptr,
-                .second = nullptr,
+                nullptr, // first
+                nullptr  // second
             },
-            .abilities =
+            //abilities
             {
-                .first = nullptr,
-                .second = nullptr,
+                nullptr, // first
+                nullptr  // second
             },
-            .hidden_ability = nullptr,
-            .egg_groups =
+            nullptr, // hidden_ability
+            //egg_groups
             {
-                .first = nullptr,
-                .second = nullptr,
+                nullptr, // first
+                nullptr  // second
             },
-            .base_stats = {0},
-            .EV_yields = {0},
-            .experience_yield = 0,
-            .levelup_moves =
+            {0}, // base_stats
+            {0}, // EV_yields
+            0, // experience_yield
+            //levelup_moves
             {
-                .levelup_moves = nullptr,
-                .length = 0ULL
+                nullptr, // levelup_moves
+                0ULL     // length
             },
-            .tm_hm_moves =
+            //tm_hm_moves
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .egg_moves =
+            //egg_moves
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .tutor_moves =
+            //tutor_moves
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .forms =
+            //forms
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
-            .evolutions =
+            //evolutions
             {
-                .strings = nullptr,
-                .length = 0ULL
+                nullptr, // strings
+                0ULL     // length
             },
         };
 
@@ -911,8 +916,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_list_t temp_pokemon_list =
         {
-            .pokemon = nullptr,
-            .length = pokemon_list_cpp.size()
+            nullptr,                // pokemon_list
+            pokemon_list_cpp.size() // length
         };
 
         if(temp_pokemon_list.length > 0)
@@ -950,8 +955,8 @@ namespace pkmn { namespace c {
         // a concern.
         pkmn_pokemon_box_list_t temp_pokemon_box_list =
         {
-            .boxes = nullptr,
-            .length = pokemon_box_list_cpp.size()
+            nullptr,                    // boxes
+            pokemon_box_list_cpp.size() // length
         };
 
         if(temp_pokemon_box_list.length > 0)
