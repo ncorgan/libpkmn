@@ -82,8 +82,8 @@ pkmn_error_t pkmn_calculations_electro_ball_power(
 }
 
 pkmn_error_t pkmn_calculations_eruption_power(
-    int attacker_hp,
-    int target_hp,
+    int attacker_current_hp,
+    int attacker_max_hp,
     int* eruption_power_out
 )
 {
@@ -91,8 +91,8 @@ pkmn_error_t pkmn_calculations_eruption_power(
 
     PKMN_CPP_TO_C(
         *eruption_power_out = pkmn::calculations::eruption_power(
-                                  attacker_hp,
-                                  target_hp
+                                  attacker_current_hp,
+                                  attacker_max_hp
                               );
     )
 }

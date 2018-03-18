@@ -14,9 +14,6 @@ namespace pkmn { namespace calculations {
     /*!
      * @brief Damage calculation.
      *
-     * The modifier can be determined from functions in
-     * <pkmn/calculations/moves/modifiers.hpp>
-     *
      * \param attacker_level Attacker level (valid values: [1-255])
      * \param move_base_power The base power of the move being used
      * \param attack_stat The stat being used for attack (Attack or Special Attack)
