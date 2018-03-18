@@ -10,9 +10,18 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
+/*!
+ * @brief A struct containing the values relevant to Hidden Power.
+ *
+ * These values are populated by ::pkmn_calculations_gen2_hidden_power
+ * or ::pkmn_calculations_modern_hidden_power and must be freed with
+ * ::pkmn_hidden_power_free.
+ */
 typedef struct
 {
+    //! The type of the move when used by a Pokémon with specific IVs.
     char* type;
+    //! The base power of hte move when used by a Pokémon with specific IVs.
     int base_power;
 } pkmn_hidden_power_t;
 
@@ -20,6 +29,13 @@ typedef struct
 extern "C" {
 #endif
 
+/*!
+ * @brief Frees memory dynamically allocated in a pkmn_hidden_power_t.
+ *
+ * \param hidden_power_ptr The Hidden Power struct whose memory to free
+ * \returns ::PKMN_ERROR_NONE upon success
+ * \returns ::PKMN_ERROR_NULL_POINTER if hidden_power_ptr is NULL
+ */
 PKMN_C_API pkmn_error_t pkmn_hidden_power_free(
     pkmn_hidden_power_t* hidden_power_ptr
 );
