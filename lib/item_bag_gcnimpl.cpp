@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,6 +14,8 @@
 
 #include "libpkmgc_includes.hpp"
 
+#include <boost/thread/lock_guard.hpp>
+
 namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int COLOSSEUM = 19;
@@ -24,13 +26,19 @@ namespace pkmn {
         void* ptr
     ): item_bag_impl(game_id)
     {
-        if(ptr) {
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
-        } else {
-            if(_game_id == COLOSSEUM) {
+        }
+        else
+        {
+            if(_game_id == COLOSSEUM)
+            {
                 _native = reinterpret_cast<void*>(new LibPkmGC::Colosseum::BagData);
-            } else {
+            }
+            else
+            {
                 _native = reinterpret_cast<void*>(new LibPkmGC::XD::BagData);
             }
 
@@ -40,13 +48,18 @@ namespace pkmn {
         _set_ptrs();
     }
 
-    item_bag_gcnimpl::~item_bag_gcnimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_bag_gcnimpl::~item_bag_gcnimpl()
+    {
+        boost::lock_guard<item_bag_gcnimpl> lock(*this);
 
-        if(_our_mem) {
-            if(_game_id == COLOSSEUM) {
+        if(_our_mem)
+        {
+            if(_game_id == COLOSSEUM)
+            {
                 delete COLO_RCAST;
-            } else {
+            }
+            else
+            {
                 delete XD_RCAST;
             }
         }
@@ -63,7 +76,8 @@ namespace pkmn {
     // This is stored as a pointer, so we can't use the nicer sizeof approach.
     #define ITEM_POCKET_CAPACITY ((_game_id == COLOSSEUM) ? 20 : 30)
 
-    void item_bag_gcnimpl::_set_ptrs() {
+    void item_bag_gcnimpl::_set_ptrs()
+    {
         _item_pockets["Items"] = std::make_shared<item_list_gcnimpl>(
                                      ITEM_POCKET_ID, _game_id, GC_RCAST->regularItems,
                                      ITEM_POCKET_CAPACITY, false
@@ -93,7 +107,8 @@ namespace pkmn {
                                         sizeof(GC_RCAST->colognes)/sizeof(LibPkmGC::Item),
                                         false
                                     );
-        if(_game_id == XD) {
+        if(_game_id == XD)
+        {
             _item_pockets["Battle CDs"] = std::make_shared<item_list_gcnimpl>(
                                               BATTLE_CD_POCKET_ID, _game_id, XD_RCAST->battleCDs,
                                               sizeof(XD_RCAST->battleCDs)/sizeof(LibPkmGC::Item),

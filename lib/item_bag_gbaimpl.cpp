@@ -15,6 +15,8 @@
 
 #include "database/database_common.hpp"
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 #include <stdexcept>
 
@@ -49,16 +51,18 @@ namespace pkmn {
         _set_ptrs();
     }
 
-    item_bag_gbaimpl::~item_bag_gbaimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_bag_gbaimpl::~item_bag_gbaimpl()
+    {
+        boost::lock_guard<item_bag_gbaimpl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }
 
-    void item_bag_gbaimpl::_set_ptrs() {
-
+    void item_bag_gbaimpl::_set_ptrs()
+    {
         BOOST_STATIC_CONSTEXPR int VERSION_GROUP_RS = 5;
         BOOST_STATIC_CONSTEXPR int VERSION_GROUP_EMERALD = 6;
         BOOST_STATIC_CONSTEXPR int VERSION_GROUP_FRLG = 7;
@@ -82,7 +86,8 @@ namespace pkmn {
         std::string tmhm_pocket = (version_group == VERSION_GROUP_FRLG) ? "TM Case"
                                                                         : "TMs & HMs";
 
-        switch(version_group) {
+        switch(version_group)
+        {
             case VERSION_GROUP_RS:
                 _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
                                              ITEM_POCKET_IDS[index], _game_id, RS_STORAGE.items,

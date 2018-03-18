@@ -11,6 +11,8 @@
 
 #include <pkmn/exception.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 
 #define NATIVE_RCAST (reinterpret_cast<pkmn::gen1_pokemon_boxes_t*>(_native))
@@ -74,10 +76,15 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_pc_gen1impl::~pokemon_pc_gen1impl() {
+    pokemon_pc_gen1impl::~pokemon_pc_gen1impl()
+    {
+        boost::lock_guard<pokemon_pc_gen1impl> lock(*this);
+
         // _our_mem applies to the box pointers, not the struct
-        if(_our_mem) {
-            for(int i = 0; i < GEN1_NUM_BOXES; ++i) {
+        if(_our_mem)
+        {
+            for(int i = 0; i < GEN1_NUM_BOXES; ++i)
+            {
                 delete NATIVE_RCAST->boxes[i];
             }
         }
@@ -85,14 +92,17 @@ namespace pkmn {
         delete NATIVE_RCAST;
     }
 
-    int pokemon_pc_gen1impl::get_num_boxes() {
+    int pokemon_pc_gen1impl::get_num_boxes()
+    {
         return GEN1_NUM_BOXES;
     }
 
-    void pokemon_pc_gen1impl::_from_native() {
+    void pokemon_pc_gen1impl::_from_native()
+    {
         _box_list.resize(GEN1_NUM_BOXES);
 
-        for(int i = 0; i < GEN1_NUM_BOXES; ++i) {
+        for(int i = 0; i < GEN1_NUM_BOXES; ++i)
+        {
             _box_list[i] = std::make_shared<pokemon_box_gen1impl>(
                                _game_id,
                                NATIVE_RCAST->boxes[i]
@@ -100,7 +110,8 @@ namespace pkmn {
         }
     }
 
-    void pokemon_pc_gen1impl::_update_box_names() {
+    void pokemon_pc_gen1impl::_update_box_names()
+    {
         throw pkmn::feature_not_in_game_error("Box names", "Generation I");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -46,13 +46,20 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_party_gbaimpl::~pokemon_party_gbaimpl() {
-        if(_our_mem) {
+    pokemon_party_gbaimpl::~pokemon_party_gbaimpl()
+    {
+        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
+
+        if(_our_mem)
+        {
             delete NATIVE_LIST_RCAST;
         }
     }
 
-    int pokemon_party_gbaimpl::get_num_pokemon() {
+    int pokemon_party_gbaimpl::get_num_pokemon()
+    {
+        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
+
         return int(pksav_littleendian32(NATIVE_LIST_RCAST->count));
     }
 
@@ -75,7 +82,7 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::mutex::scoped_lock(_mem_mutex);
+        boost::lock_guard<pokemon_party_gbaimpl> lock(*this);
 
         // If the given Pokémon isn't from this party's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;
@@ -121,13 +128,15 @@ namespace pkmn {
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon)
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None") {
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None")
+            {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
             }
         }
         else if(index == (num_pokemon-1))
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species == "None") {
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species == "None")
+            {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
             }
         }
@@ -146,18 +155,21 @@ namespace pkmn {
         }
     }
 
-    void pokemon_party_gbaimpl::_from_native() {
+    void pokemon_party_gbaimpl::_from_native()
+    {
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);
 
         int num_pokemon = get_num_pokemon();
 
-        for(int i = 0; i < PARTY_SIZE; ++i) {
+        for(int i = 0; i < PARTY_SIZE; ++i)
+        {
             /*
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc.blocks.growth.species) > 0) {
+            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc.blocks.growth.species) > 0)
+            {
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_gba_party_pokemon_t));
             }
 

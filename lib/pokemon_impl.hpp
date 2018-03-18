@@ -39,7 +39,7 @@ namespace pkmn {
     class pokemon_party_impl;
 
     class pokemon_impl: public pokemon,
-                        public boost::noncopyable,
+                        private boost::noncopyable,
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:

@@ -23,6 +23,8 @@
 #include <boost/assert.hpp>
 #include <boost/filesystem.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <stdexcept>
 
 namespace fs = boost::filesystem;
@@ -47,9 +49,12 @@ namespace pkmn {
             );
         )
 
-        if(_pksav_save.yellow) {
+        if(_pksav_save.yellow)
+        {
             _game_id = YELLOW;
-        } else {
+        }
+        else
+        {
             /*
              * As there is no way to distinguish Red and Blue saves from the saves
              * themselves, we'll try to depend on the fact that .sav files match
@@ -62,13 +67,20 @@ namespace pkmn {
             std::string filename_lower = boost::algorithm::to_lower_copy(
                                               fs::path(filepath).stem().string()
                                          );
-            if(filename_lower.find("red") != std::string::npos) {
+            if(filename_lower.find("red") != std::string::npos)
+            {
                 _game_id = RED;
-            } else if(filename_lower.find("blue") != std::string::npos) {
+            }
+            else if(filename_lower.find("blue") != std::string::npos)
+            {
                 _game_id = BLUE;
-            } else if(filename_lower.find("yellow") != std::string::npos) {
+            }
+            else if(filename_lower.find("yellow") != std::string::npos)
+            {
                 _game_id = YELLOW;
-            } else {
+            }
+            else
+            {
                 // Default to Red, doesn't practically matter within a version group
                 _game_id = RED;
             }
@@ -114,13 +126,19 @@ namespace pkmn {
         _register_attributes();
     }
 
-    game_save_gen1impl::~game_save_gen1impl() {
+    game_save_gen1impl::~game_save_gen1impl()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         pksav_gen1_save_free(&_pksav_save);
     }
 
     void game_save_gen1impl::save_as(
         const std::string &filepath
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         PKSAV_CALL(
             pksav_gen1_save_save(
                 filepath.c_str(),
@@ -131,7 +149,10 @@ namespace pkmn {
         _filepath = fs::absolute(filepath).string();
     }
 
-    std::string game_save_gen1impl::get_trainer_name() {
+    std::string game_save_gen1impl::get_trainer_name()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         char trainer_name[8] = {0};
         PKSAV_CALL(
             pksav_text_from_gen1(
@@ -154,6 +175,8 @@ namespace pkmn {
             1,
             7
         );
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
 
         PKSAV_CALL(
             pksav_text_to_gen1(
@@ -164,7 +187,10 @@ namespace pkmn {
         )
     }
 
-    uint32_t game_save_gen1impl::get_trainer_id() {
+    uint32_t game_save_gen1impl::get_trainer_id()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         return pksav_bigendian16(*_pksav_save.trainer_id);
     }
 
@@ -174,40 +200,53 @@ namespace pkmn {
     {
         pkmn::enforce_gb_trainer_id_bounds(trainer_id);
 
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
     }
 
-    uint16_t game_save_gen1impl::get_trainer_public_id() {
+    uint16_t game_save_gen1impl::get_trainer_public_id()
+    {
         return pksav_bigendian16(*_pksav_save.trainer_id);
     }
 
     void game_save_gen1impl::set_trainer_public_id(
         uint16_t trainer_public_id
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         *_pksav_save.trainer_id = pksav_bigendian16(trainer_public_id);
     }
 
-    uint16_t game_save_gen1impl::get_trainer_secret_id() {
+    uint16_t game_save_gen1impl::get_trainer_secret_id()
+    {
         throw pkmn::feature_not_in_game_error("Secret ID", "Generation I");
     }
 
     void game_save_gen1impl::set_trainer_secret_id(
         PKMN_UNUSED(uint16_t trainer_secret_id)
-    ) {
+    )
+    {
         throw pkmn::feature_not_in_game_error("Secret ID", "Generation I");
     }
 
-    std::string game_save_gen1impl::get_trainer_gender() {
+    std::string game_save_gen1impl::get_trainer_gender()
+    {
         return "Male";
     }
 
     void game_save_gen1impl::set_trainer_gender(
         PKMN_UNUSED(const std::string &trainer_gender)
-    ) {
+    )
+    {
         throw pkmn::feature_not_in_game_error("All trainers are male in Generation I.");
     }
 
-    std::string game_save_gen1impl::get_rival_name() {
+    std::string game_save_gen1impl::get_rival_name()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         char rival_name[8] = {0};
         PKSAV_CALL(
             pksav_text_from_gen1(
@@ -231,6 +270,8 @@ namespace pkmn {
             7
         );
 
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         PKSAV_CALL(
             pksav_text_to_gen1(
                 rival_name.c_str(),
@@ -240,7 +281,10 @@ namespace pkmn {
         )
     }
 
-    int game_save_gen1impl::get_money() {
+    int game_save_gen1impl::get_money()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         uint32_t ret = 0;
         PKSAV_CALL(
             pksav_from_base256(
@@ -259,6 +303,8 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
 
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         PKSAV_CALL(
             pksav_to_base256(
                 uint32_t(money),
@@ -272,6 +318,8 @@ namespace pkmn {
 
     int game_save_gen1impl::get_casino_coins()
     {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         uint32_t ret = 0;
 
         PKSAV_CALL(
@@ -296,6 +344,8 @@ namespace pkmn {
             9999
         );
 
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         // Work around PKSav not taking in a buffer size parameter on set
         // by clearing the buffer and manually setting smaller numbers at
         // the right-most byte.
@@ -316,6 +366,8 @@ namespace pkmn {
 
     int game_save_gen1impl::get_pikachu_friendship()
     {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
         return *_pksav_save.pikachu_friendship;
     }
 
@@ -329,6 +381,8 @@ namespace pkmn {
             0,
             255
         );
+
+        boost::lock_guard<game_save_gen1impl> lock(*this);
 
         *_pksav_save.pikachu_friendship = uint8_t(pikachu_friendship);
     }

@@ -10,12 +10,16 @@
 #include <pkmn/game_save.hpp>
 
 #include <boost/noncopyable.hpp>
+#include <boost/thread/lockable_adapter.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
 namespace pkmn {
 
-    class game_save_impl: public game_save, boost::noncopyable
+    class game_save_impl: public game_save,
+                          private boost::noncopyable,
+                          public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
             game_save_impl() {};

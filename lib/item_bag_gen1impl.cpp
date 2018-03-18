@@ -10,6 +10,8 @@
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 
 namespace pkmn {
@@ -19,10 +21,13 @@ namespace pkmn {
         void* ptr
     ): item_bag_impl(game_id)
     {
-        if(ptr) {
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new pksav_gen1_item_bag_t);
             std::memset(_native, 0, sizeof(pksav_gen1_item_bag_t));
             NATIVE_RCAST->terminator = 0xFF;
@@ -44,10 +49,12 @@ namespace pkmn {
         _set_ptrs();
     }
 
-    item_bag_gen1impl::~item_bag_gen1impl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_bag_gen1impl::~item_bag_gen1impl()
+    {
+        boost::lock_guard<item_bag_gen1impl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }

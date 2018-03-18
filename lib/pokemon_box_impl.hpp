@@ -15,13 +15,17 @@
 #include <pkmn/pokemon_box.hpp>
 
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread/lockable_adapter.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <string>
 
 namespace pkmn {
 
-    class pokemon_box_impl: public pokemon_box, public boost::noncopyable {
+    class pokemon_box_impl: public pokemon_box,
+                            private boost::noncopyable,
+                            public boost::basic_lockable_adapter<boost::recursive_mutex>
+    {
         public:
             pokemon_box_impl() {}
             explicit pokemon_box_impl(
@@ -57,8 +61,6 @@ namespace pkmn {
 
             void* _native;
             bool _our_mem;
-
-            boost::mutex _mem_mutex;
 
             int _game_id, _generation;
 

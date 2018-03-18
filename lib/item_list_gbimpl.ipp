@@ -9,6 +9,8 @@
 
 #include <pkmn/database/item_entry.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 
 #define GBLIST_RCAST reinterpret_cast<list_type*>(_native)
@@ -49,10 +51,12 @@ namespace pkmn {
     }
 
     template<typename list_type>
-    item_list_gbimpl<list_type>::~item_list_gbimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_list_gbimpl<list_type>::~item_list_gbimpl()
+    {
+        boost::lock_guard<item_list_gbimpl<list_type>>(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete GBLIST_RCAST;
         }
     }
@@ -60,8 +64,9 @@ namespace pkmn {
     template<typename list_type>
     void item_list_gbimpl<list_type>::_from_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gbimpl<list_type>>(*this);
 
         if(index == -1) {
             for(int i = 0; i < _capacity; ++i) {
@@ -85,30 +90,38 @@ namespace pkmn {
     template<typename list_type>
     void item_list_gbimpl<list_type>::_to_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gbimpl<list_type>>(*this);
 
         bool count_set = false;
-        if(index == -1) {
-            for(int i = 0; i < _capacity; ++i) {
+        if(index == -1)
+        {
+            for(int i = 0; i < _capacity; ++i)
+            {
                 GBLIST_RCAST->items[i].index = uint8_t(pkmn::database::item_entry(
                                                            _item_slots[i].item,
                                                            get_game()
                                                        ).get_item_index());
                 GBLIST_RCAST->items[i].count = uint8_t(_item_slots[i].amount);
-                if(not count_set and GBLIST_RCAST->items[i].index == 0) {
+                if(not count_set and GBLIST_RCAST->items[i].index == 0)
+                {
                     GBLIST_RCAST->count = uint8_t(i);
                     count_set = true;
                 }
             }
-        } else {
+        }
+        else
+        {
             GBLIST_RCAST->items[index].index = uint8_t(pkmn::database::item_entry(
                                                            _item_slots[index].item,
                                                            get_game()
                                                        ).get_item_index());
             GBLIST_RCAST->items[index].count = uint8_t(_item_slots[index].amount);
-            for(int i = 0; i < _capacity and not count_set; ++i) {
-                if(GBLIST_RCAST->items[i].index == 0) {
+            for(int i = 0; i < _capacity and not count_set; ++i)
+            {
+                if(GBLIST_RCAST->items[i].index == 0)
+                {
                     GBLIST_RCAST->count = uint8_t(i);
                     count_set = true;
                 }
