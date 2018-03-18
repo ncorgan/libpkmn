@@ -93,7 +93,7 @@ function gen3_pokemon_tests.check_contest_stats_map(contest_stats_map)
     end
 
     luaunit.assertTrue(contest_stats_map:has_key("Feel"))
-    luaunit.assertTrue(contest_stats_map["Feel"])
+    luaunit.assertEquals(contest_stats_map["Feel"], 0)
     luaunit.assertFalse(contest_stats_map:has_key("Sheen"))
 end
 
