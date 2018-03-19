@@ -555,7 +555,8 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable()) {
+        if(not item.holdable() and (held_item != "None"))
+        {
             throw std::invalid_argument("This item is not holdable.");
         }
 
