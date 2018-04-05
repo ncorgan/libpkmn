@@ -7,6 +7,8 @@
 
 #include "utils/misc.hpp"
 #include "pokedex_impl.hpp"
+#include "pokedex_gbimpl.hpp"
+#include "pokedex_gbaimpl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
@@ -16,7 +18,6 @@
 
 #include <pksav/common/pokedex.h>
 
-#include <boost/assert.hpp>
 #include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
@@ -24,7 +25,7 @@
 
 namespace pkmn
 {
-    static const std::vector<size_t> generation_pokedex_sizes =
+    static const std::vector<size_t> GENERATION_POKEDEX_SIZES =
     {
         0, 151, 251, 386, 493, 649, 721, 807
     };
@@ -34,82 +35,56 @@ namespace pkmn
     )
     {
         int game_id = pkmn::database::game_name_to_id(game);
-        if(game_is_gamecube(game_id))
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        pokedex::sptr ret;
+
+        switch(generation)
         {
-            throw pkmn::feature_not_in_game_error(
-                      "Pokédex",
-                      game
-                  );
+            case 1:
+            case 2:
+                ret = std::make_shared<pokedex_gbimpl>(game_id);
+                break;
+
+            case 3:
+                if(game_is_gamecube(game_id))
+                {
+                    throw pkmn::feature_not_in_game_error(
+                              "Pokédex",
+                              game
+                          );
+                }
+                else
+                {
+                    ret = std::make_shared<pokedex_gbaimpl>(game_id);
+                }
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::invalid_argument("Invalid game.");
         }
 
-        return std::make_shared<pokedex_impl>(game_id);
+        return ret;
     }
 
     pokedex_impl::pokedex_impl(
-        int game_id,
-        void* native_has_seen,
-        void* native_has_caught
+        int game_id
     ): _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id)),
-       _num_pokemon(generation_pokedex_sizes.at(_generation)),
+       _num_pokemon(GENERATION_POKEDEX_SIZES.at(_generation)),
        _dirty_seen(true),
        _dirty_caught(true)
-    {
-        BOOST_ASSERT(!native_has_seen == !native_has_caught);
-
-        if(native_has_seen)
-        {
-            _native_has_seen = native_has_seen;
-            _native_has_caught = native_has_caught;
-            _our_mem = false;
-        }
-        else
-        {
-            size_t num_bytes = static_cast<size_t>(std::ceil(float(_num_pokemon) / 8.0f));
-            _native_has_seen = reinterpret_cast<void*>(new uint8_t[num_bytes]);
-            _native_has_caught = reinterpret_cast<void*>(new uint8_t[num_bytes]);
-
-            std::memset(_native_has_seen, 0, num_bytes);
-            std::memset(_native_has_caught, 0, num_bytes);
-
-            _our_mem = true;
-        }
-    }
-
-    pokedex_impl::~pokedex_impl()
-    {
-        boost::lock_guard<pokedex_impl> lock(*this);
-
-        if(_our_mem)
-        {
-            delete[] reinterpret_cast<uint8_t*>(_native_has_seen);
-            delete[] reinterpret_cast<uint8_t*>(_native_has_caught);
-        }
-    }
+    {}
 
     std::string pokedex_impl::get_game()
     {
         return pkmn::database::game_id_to_name(_game_id);
-    }
-
-    bool pokedex_impl::has_seen(
-        const std::string& species
-    )
-    {
-        boost::lock_guard<pokedex_impl> lock(*this);
-
-        int species_id = pkmn::database::species_name_to_id(species);
-        bool ret = false;
-
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_seen),
-                uint16_t(species_id),
-                &ret
-            );
-        )
-
-        return ret;
     }
 
     void pokedex_impl::set_has_seen(
@@ -121,13 +96,7 @@ namespace pkmn
 
         int species_id = pkmn::database::species_name_to_id(species);
 
-        PKSAV_CALL(
-            pksav_set_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_seen),
-                uint16_t(species_id),
-                has_seen_value
-            );
-        )
+        _set_has_seen(species_id, has_seen_value);
 
         // If a Pokémon has not been seen, then it cannot have been caught.
         if((not has_seen_value) and has_caught(species))
@@ -145,10 +114,7 @@ namespace pkmn
 
         if(_dirty_seen)
         {
-            _update_member_vector(
-                reinterpret_cast<const uint8_t*>(_native_has_seen),
-                _all_seen
-            );
+            _update_all_seen();
             _dirty_seen = false;
         }
 
@@ -161,34 +127,11 @@ namespace pkmn
 
         if(_dirty_seen)
         {
-            _update_member_vector(
-                reinterpret_cast<const uint8_t*>(_native_has_seen),
-                _all_seen
-            );
+            _update_all_seen();
             _dirty_seen = false;
         }
 
         return int(_all_seen.size());
-    }
-
-    bool pokedex_impl::has_caught(
-        const std::string& species
-    )
-    {
-        boost::lock_guard<pokedex_impl> lock(*this);
-
-        int species_id = pkmn::database::species_name_to_id(species);
-        bool ret = false;
-
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_caught),
-                uint16_t(species_id),
-                &ret
-            );
-        )
-
-        return ret;
     }
 
     void pokedex_impl::set_has_caught(
@@ -200,13 +143,7 @@ namespace pkmn
 
         int species_id = pkmn::database::species_name_to_id(species);
 
-        PKSAV_CALL(
-            pksav_set_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_caught),
-                uint16_t(species_id),
-                has_caught_value
-            );
-        )
+        _set_has_caught(species_id, has_caught_value);
 
         // If a Pokémon has been caught, then it must have been seen.
         if(has_caught_value and (not has_caught(species)))
@@ -224,10 +161,7 @@ namespace pkmn
 
         if(_dirty_caught)
         {
-            _update_member_vector(
-                reinterpret_cast<const uint8_t*>(_native_has_caught),
-                _all_caught
-            );
+            _update_all_caught();
             _dirty_caught = false;
         }
 
@@ -240,31 +174,14 @@ namespace pkmn
 
         if(_dirty_caught)
         {
-            _update_member_vector(
-                reinterpret_cast<const uint8_t*>(_native_has_caught),
-                _all_caught
-            );
+            _update_all_caught();
             _dirty_caught = false;
         }
 
         return int(_all_caught.size());
     }
 
-    void* pokedex_impl::get_native_has_seen()
-    {
-        boost::lock_guard<pokedex_impl> lock(*this);
-
-        return _native_has_seen;
-    }
-
-    void* pokedex_impl::get_native_has_caught()
-    {
-        boost::lock_guard<pokedex_impl> lock(*this);
-
-        return _native_has_caught;
-    }
-
-    void pokedex_impl::_update_member_vector(
+    void pokedex_impl::_update_member_vector_with_pksav(
         const uint8_t* native_list,
         std::vector<std::string>& member_vector
     )
@@ -272,13 +189,13 @@ namespace pkmn
         member_vector.clear();
 
         std::string query_numbers;
-        for(uint16_t i = 1; i <= _num_pokemon; ++i)
+        for(uint16_t pokedex_num = 1; pokedex_num <= _num_pokemon; ++pokedex_num)
         {
             bool is_bit_present = false;
             PKSAV_CALL(
                 pksav_get_pokedex_bit(
                     native_list,
-                    i,
+                    pokedex_num,
                     &is_bit_present
                 );
             )
@@ -290,7 +207,7 @@ namespace pkmn
                     query_numbers.append(",");
                 }
 
-                query_numbers.append(std::to_string(i));
+                query_numbers.append(std::to_string(pokedex_num));
             }
         }
 

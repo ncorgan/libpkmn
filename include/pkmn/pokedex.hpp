@@ -55,8 +55,6 @@ namespace pkmn
             #ifndef __DOXYGEN__
             pokedex() {};
             virtual ~pokedex() {};
-            virtual void* get_native_has_seen() = 0;
-            virtual void* get_native_has_caught() = 0;
             #endif
     };
 }

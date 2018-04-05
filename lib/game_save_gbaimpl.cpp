@@ -9,7 +9,7 @@
 #include "game_save_gbaimpl.hpp"
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
-#include "pokedex_impl.hpp"
+#include "pokedex_gbaimpl.hpp"
 #include "pokemon_party_gbaimpl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
 
@@ -125,11 +125,9 @@ namespace pkmn {
                 break;
         }
 
-        // TODO: replace with GBA-specific impl
-        _pokedex = std::make_shared<pokedex_impl>(
+        _pokedex = std::make_shared<pokedex_gbaimpl>(
                        _game_id,
-                       _pksav_save.pokedex.seen_ptrA,
-                       _pksav_save.pokedex.owned_ptr
+                       &_pksav_save.pokedex
                    );
 
         _pokemon_party = std::make_shared<pokemon_party_gbaimpl>(

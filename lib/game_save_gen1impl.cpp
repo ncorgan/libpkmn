@@ -8,7 +8,7 @@
 #include "game_save_gen1impl.hpp"
 #include "item_bag_gen1impl.hpp"
 #include "item_list_gbimpl.hpp"
-#include "pokedex_impl.hpp"
+#include "pokedex_gbimpl.hpp"
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen1impl.hpp"
 
@@ -86,7 +86,7 @@ namespace pkmn {
             }
         }
 
-        _pokedex = std::make_shared<pokedex_impl>(
+        _pokedex = std::make_shared<pokedex_gbimpl>(
                        _game_id,
                        _pksav_save.pokedex_lists.seen_ptr,
                        _pksav_save.pokedex_lists.owned_ptr

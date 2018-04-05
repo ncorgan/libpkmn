@@ -95,7 +95,7 @@ namespace pkmn
                 throw pkmn::unimplemented_error();
 
             default:
-                throw std::runtime_error("Invalid game.");
+                throw std::invalid_argument("Invalid game.");
         }
     }
 

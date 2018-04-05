@@ -21,21 +21,15 @@ namespace pkmn
         public:
             pokedex_impl() {}
             pokedex_impl(
-                int game_id,
-                void* native_has_seen = nullptr,
-                void* native_has_caught = nullptr
+                int game_id
             );
 
-            ~pokedex_impl();
+            virtual ~pokedex_impl() {};
 
             pokedex_impl(pokedex_impl&&) = default;
             pokedex_impl& operator=(pokedex_impl&&) = default;
 
             std::string get_game() override final;
-
-            bool has_seen(
-                const std::string& species
-            ) override final;
 
             void set_has_seen(
                 const std::string& species,
@@ -46,10 +40,6 @@ namespace pkmn
 
             int get_num_seen() override final;
 
-            bool has_caught(
-                const std::string& species
-            ) override final;
-
             void set_has_caught(
                 const std::string& species,
                 bool has_caught_value
@@ -58,10 +48,6 @@ namespace pkmn
             const std::vector<std::string>& get_all_caught() override final;
 
             int get_num_caught() override final;
-
-            void* get_native_has_seen() override final;
-
-            void* get_native_has_caught() override final;
 
         protected:
             int _game_id;
@@ -76,15 +62,23 @@ namespace pkmn
 
             bool _our_mem;
 
-            void* _native_has_seen;
-            void* _native_has_caught;
-
-            void _update_member_vector(
+            void _update_member_vector_with_pksav(
                 const uint8_t* native_list,
                 std::vector<std::string>& member_vector
             );
-    };
 
+            virtual void _set_has_seen(
+                int species_id,
+                bool has_seen_value
+            ) = 0;
+            virtual void _set_has_caught(
+                int species_id,
+                bool has_caught_value
+            ) = 0;
+
+            virtual void _update_all_seen() = 0;
+            virtual void _update_all_caught() = 0;
+    };
 }
 
 #endif /* PKMN_POKEDEX_IMPL_HPP */
