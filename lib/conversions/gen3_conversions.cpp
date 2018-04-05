@@ -38,7 +38,7 @@ namespace pkmn { namespace conversions {
         (0x0207, LibPkmGC::Spanish)
     ;
 
-    typedef boost::bimap<pksav_condition_mask_t, LibPkmGC::PokemonStatus> gen3_condition_conversion_bimap_t;
+    typedef boost::bimap<enum pksav_condition_mask, LibPkmGC::PokemonStatus> gen3_condition_conversion_bimap_t;
     static const gen3_condition_conversion_bimap_t GEN3_CONDITION_CONVERSION_BIMAP =
     boost::assign::list_of<gen3_condition_conversion_bimap_t::relation>
         (PKSAV_CONDITION_NONE,       LibPkmGC::NoStatus)
@@ -81,7 +81,7 @@ namespace pkmn { namespace conversions {
         (PKSAV_GEN3_WORLD_RIBBON_MASK,    LIBPKMGC_RIBBON_WORLD)
     ;
 
-    typedef boost::bimap<pksav_battle_stat_t, libpkmgc_stat_t> gen3_stat_bimap_t;
+    typedef boost::bimap<enum pksav_battle_stat, libpkmgc_stat_t> gen3_stat_bimap_t;
     static const gen3_stat_bimap_t GEN3_STAT_BIMAP = boost::assign::list_of<gen3_stat_bimap_t::relation>
         (PKSAV_STAT_HP,      LIBPKMGC_STAT_HP)
         (PKSAV_STAT_ATTACK,  LIBPKMGC_STAT_ATTACK)
@@ -92,14 +92,14 @@ namespace pkmn { namespace conversions {
     ;
 
     void gba_pc_pokemon_to_gcn(
-        const pksav_gba_pc_pokemon_t* from,
+        const struct pksav_gba_pc_pokemon* from,
         LibPkmGC::GC::Pokemon* to
     )
     {
-        const pksav_gba_pokemon_growth_t* from_growth = &from->blocks.growth;
-        const pksav_gba_pokemon_attacks_t* from_attacks = &from->blocks.attacks;
-        const pksav_gba_pokemon_effort_t* from_effort = &from->blocks.effort;
-        const pksav_gba_pokemon_misc_t* from_misc = &from->blocks.misc;
+        const struct pksav_gba_pokemon_growth_block* from_growth = &from->blocks.growth;
+        const struct pksav_gba_pokemon_attacks_block* from_attacks = &from->blocks.attacks;
+        const struct pksav_gba_pokemon_effort_block* from_effort = &from->blocks.effort;
+        const struct pksav_gba_pokemon_misc_block* from_misc = &from->blocks.misc;
 
         to->species = LibPkmGC::PokemonSpeciesIndex(pksav_littleendian16(from_growth->species));
 
@@ -125,7 +125,7 @@ namespace pkmn { namespace conversions {
 
         char otname[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gba(
+            pksav_gba_import_text(
                 from->otname,
                 otname,
                 7
@@ -135,7 +135,7 @@ namespace pkmn { namespace conversions {
 
         char nickname[11] = {0};
         PKSAV_CALL(
-            pksav_text_from_gba(
+            pksav_gba_import_text(
                 from->nickname,
                 nickname,
                 10
@@ -146,10 +146,10 @@ namespace pkmn { namespace conversions {
         to->contestLuster = from_effort->contest_stats.sheen;
         to->pokerusStatus = from_misc->pokerus;
 
-        to->markings.circle = bool(from->markings & PKSAV_MARKING_CIRCLE);
-        to->markings.square = bool(from->markings & PKSAV_MARKING_SQUARE);
+        to->markings.circle   = bool(from->markings & PKSAV_MARKING_CIRCLE);
+        to->markings.square   = bool(from->markings & PKSAV_MARKING_SQUARE);
         to->markings.triangle = bool(from->markings & PKSAV_MARKING_TRIANGLE);
-        to->markings.heart = bool(from->markings & PKSAV_MARKING_HEART);
+        to->markings.heart    = bool(from->markings & PKSAV_MARKING_HEART);
 
         to->experience = pksav_littleendian32(from_growth->exp);
         to->SID = pksav_littleendian16(from->ot_id.sid);
@@ -227,7 +227,7 @@ namespace pkmn { namespace conversions {
     }
 
     void gba_party_pokemon_to_gcn(
-        const pksav_gba_party_pokemon_t* from,
+        const struct pksav_gba_party_pokemon* from,
         LibPkmGC::GC::Pokemon* to
     )
     {
@@ -255,7 +255,7 @@ namespace pkmn { namespace conversions {
 
     void gcn_pokemon_to_gba_pc(
         const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_pc_pokemon_t* to
+        struct pksav_gba_pc_pokemon* to
     )
     {
         std::memset(to, 0, sizeof(*to));
@@ -265,7 +265,7 @@ namespace pkmn { namespace conversions {
         to->ot_id.sid   = pksav_littleendian16(from->SID);
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 from->name->toUTF8(),
                 to->nickname,
                 10
@@ -275,7 +275,7 @@ namespace pkmn { namespace conversions {
         to->language = pksav_littleendian16(GEN3_LANGUAGE_BIMAP.right.at(from->version.language));
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 from->OTName->toUTF8(),
                 to->otname,
                 7
@@ -299,10 +299,10 @@ namespace pkmn { namespace conversions {
             to->markings |= PKSAV_MARKING_HEART;
         }
 
-        pksav_gba_pokemon_growth_t* to_growth = &to->blocks.growth;
-        pksav_gba_pokemon_attacks_t* to_attacks = &to->blocks.attacks;
-        pksav_gba_pokemon_effort_t* to_effort = &to->blocks.effort;
-        pksav_gba_pokemon_misc_t* to_misc = &to->blocks.misc;
+        struct pksav_gba_pokemon_growth_block* to_growth = &to->blocks.growth;
+        struct pksav_gba_pokemon_attacks_block* to_attacks = &to->blocks.attacks;
+        struct pksav_gba_pokemon_effort_block* to_effort = &to->blocks.effort;
+        struct pksav_gba_pokemon_misc_block* to_misc = &to->blocks.misc;
 
         to_growth->species = pksav_littleendian16(uint16_t(from->species));
 
@@ -400,7 +400,7 @@ namespace pkmn { namespace conversions {
 
     void gcn_pokemon_to_gba_party(
         const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_party_pokemon_t* to
+        struct pksav_gba_party_pokemon* to
     )
     {
         gcn_pokemon_to_gba_pc(

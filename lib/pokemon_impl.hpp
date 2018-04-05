@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,7 +21,7 @@
 #include <stdexcept>
 #include <unordered_map>
 
-static const std::unordered_map<std::string, pksav_battle_stat_t> pkmn_stats_to_pksav = boost::assign::map_list_of
+static const std::unordered_map<std::string, enum pksav_battle_stat> pkmn_stats_to_pksav = boost::assign::map_list_of
     ("HP",              PKSAV_STAT_HP)
     ("Attack",          PKSAV_STAT_ATTACK)
     ("Defense",         PKSAV_STAT_DEFENSE)
@@ -143,7 +143,7 @@ namespace pkmn {
             );
 
             void _init_contest_stat_map(
-                const pksav_contest_stats_t* native_ptr
+                const struct pksav_contest_stats* native_ptr
             );
 
             void _init_markings_map(
@@ -187,7 +187,7 @@ namespace pkmn {
             void _set_contest_stat(
                 const std::string &stat,
                 int value,
-                pksav_contest_stats_t* native_ptr
+                struct pksav_contest_stats* native_ptr
             );
 
             void _set_marking(
@@ -201,7 +201,7 @@ namespace pkmn {
                 const std::string &ribbon,
                 bool value,
                 native_type* native,
-                const std::map<std::string, mask_type> &masks
+                const std::unordered_map<std::string, mask_type> &masks
             ) {
                 if(masks.find(ribbon) == masks.end()) {
                     throw std::invalid_argument("Invalid ribbon.");

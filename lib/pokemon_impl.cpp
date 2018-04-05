@@ -413,7 +413,7 @@ namespace pkmn
     }
 
     void pokemon_impl::_init_contest_stat_map(
-        const pksav_contest_stats_t* native_ptr
+        const struct pksav_contest_stats* native_ptr
     )
     {
         _contest_stats["Cool"]   = int(native_ptr->cool);
@@ -627,7 +627,7 @@ namespace pkmn
     void pokemon_impl::_set_contest_stat(
         const std::string &stat,
         int value,
-        pksav_contest_stats_t* native_ptr
+        struct pksav_contest_stats* native_ptr
     )
     {
         pkmn::enforce_value_in_map_keys(

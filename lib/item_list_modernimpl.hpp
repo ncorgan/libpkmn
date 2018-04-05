@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +18,7 @@ namespace pkmn {
             item_list_modernimpl(
                 int item_list_id,
                 int game_id,
-                pksav_item_t* ptr,
+                struct pksav_item* ptr,
                 size_t capacity,
                 bool copy
             );

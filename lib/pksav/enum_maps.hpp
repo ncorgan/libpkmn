@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,7 +20,7 @@ namespace pksav {
 
 // Status conditions
 
-typedef boost::bimap<std::string, pksav_gb_condition_t> gb_condition_bimap_t;
+typedef boost::bimap<std::string, enum pksav_gb_condition> gb_condition_bimap_t;
 static const gb_condition_bimap_t GB_CONDITION_BIMAP =
 boost::assign::list_of<gb_condition_bimap_t::relation>
     ("None",      PKSAV_GB_CONDITION_NONE)
@@ -31,7 +31,7 @@ boost::assign::list_of<gb_condition_bimap_t::relation>
     ("Paralysis", PKSAV_GB_CONDITION_PARALYZ)
 ;
 
-typedef boost::bimap<std::string, pksav_condition_mask_t> condition_mask_bimap_t;
+typedef boost::bimap<std::string, enum pksav_condition_mask> condition_mask_bimap_t;
 static const condition_mask_bimap_t CONDITION_MASK_BIMAP =
 boost::assign::list_of<condition_mask_bimap_t::relation>
     ("None",       PKSAV_CONDITION_NONE)
@@ -45,7 +45,7 @@ boost::assign::list_of<condition_mask_bimap_t::relation>
 
 // Misc
 
-typedef boost::bimap<std::string, pksav_gen1_type_t> gen1_type_bimap_t;
+typedef boost::bimap<std::string, enum pksav_gen1_type> gen1_type_bimap_t;
 static const gen1_type_bimap_t GEN1_TYPE_BIMAP =
 boost::assign::list_of<gen1_type_bimap_t::relation>
     ("Normal",   PKSAV_GEN1_TYPE_NORMAL)

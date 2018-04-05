@@ -21,19 +21,19 @@ namespace pkmn {
                 int level
             );
             pokemon_gbaimpl(
-                pksav_gba_pc_pokemon_t* pc,
+                struct pksav_gba_pc_pokemon* pc,
                 int game_id
             );
             pokemon_gbaimpl(
-                pksav_gba_party_pokemon_t* party,
+                struct pksav_gba_party_pokemon* party,
                 int game_id
             );
             pokemon_gbaimpl(
-                const pksav_gba_pc_pokemon_t &pc,
+                const struct pksav_gba_pc_pokemon &pc,
                 int game_id
             );
             pokemon_gbaimpl(
-                const pksav_gba_party_pokemon_t &party,
+                const struct pksav_gba_party_pokemon &party,
                 int game_id
             );
 
@@ -252,10 +252,10 @@ namespace pkmn {
 
             void _register_attributes();
 
-            pksav_gba_pokemon_growth_t*  _growth;
-            pksav_gba_pokemon_attacks_t* _attacks;
-            pksav_gba_pokemon_effort_t*  _effort;
-            pksav_gba_pokemon_misc_t*    _misc;
+            struct pksav_gba_pokemon_growth_block*  _growth;
+            struct pksav_gba_pokemon_attacks_block* _attacks;
+            struct pksav_gba_pokemon_effort_block*  _effort;
+            struct pksav_gba_pokemon_misc_block*    _misc;
     };
 
 }

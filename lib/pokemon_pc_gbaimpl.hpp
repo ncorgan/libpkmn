@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -23,11 +23,11 @@ namespace pkmn {
             );
             pokemon_pc_gbaimpl(
                 int game_id,
-                pksav_gba_pokemon_pc_t* native
+                struct pksav_gba_pokemon_pc* native
             );
             pokemon_pc_gbaimpl(
                 int game_id,
-                const pksav_gba_pokemon_pc_t &native
+                const struct pksav_gba_pokemon_pc& native
             );
 
             ~pokemon_pc_gbaimpl();

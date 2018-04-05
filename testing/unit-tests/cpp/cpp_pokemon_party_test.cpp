@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -191,7 +191,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
     // On the C++ level, check the underlying representation.
     switch(generation) {
         case 1: {
-            pksav_gen1_pokemon_party_t* native = reinterpret_cast<pksav_gen1_pokemon_party_t*>(party->get_native());
+            struct pksav_gen1_pokemon_party* native = reinterpret_cast<pksav_gen1_pokemon_party*>(party->get_native());
             EXPECT_EQ(3, native->count);
             EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), native->species[0]);
             EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->species[1]);
@@ -206,7 +206,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
                 char nickname[11] = {};
                 PKSAV_CALL(
-                    pksav_text_from_gen1(
+                    pksav_gen1_import_text(
                         native->nicknames[i],
                         nickname,
                         10
@@ -220,7 +220,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
                 char otname[11] = {};
                 PKSAV_CALL(
-                    pksav_text_from_gen1(
+                    pksav_gen1_import_text(
                         native->otnames[i],
                         otname,
                         10
@@ -229,14 +229,14 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 EXPECT_TRUE(std::strlen(otname) > 0);
                 EXPECT_EQ(
                     party->get_pokemon(i)->get_original_trainer_name(),
-                    otname 
+                    otname
                 );
             }
             break;
         }
 
         case 2: {
-            pksav_gen2_pokemon_party_t* native = reinterpret_cast<pksav_gen2_pokemon_party_t*>(party->get_native());
+            struct pksav_gen2_pokemon_party* native = reinterpret_cast<pksav_gen2_pokemon_party*>(party->get_native());
             EXPECT_EQ(3, native->count);
             EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), native->species[0]);
             EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->species[1]);
@@ -251,7 +251,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
                 char nickname[11] = {};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native->nicknames[i],
                         nickname,
                         10
@@ -265,7 +265,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
 
                 char otname[11] = {};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native->otnames[i],
                         otname,
                         10
@@ -274,7 +274,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                 EXPECT_TRUE(std::strlen(otname) > 0);
                 EXPECT_EQ(
                     party->get_pokemon(i)->get_original_trainer_name(),
-                    otname 
+                    otname
                 );
             }
             break;
@@ -293,7 +293,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
                     EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), native->pokemon[i]);
                 }
             } else {
-                pksav_gba_pokemon_party_t* native = reinterpret_cast<pksav_gba_pokemon_party_t*>(party->get_native());
+                struct pksav_gba_pokemon_party* native = reinterpret_cast<pksav_gba_pokemon_party*>(party->get_native());
                 EXPECT_EQ(3, native->count);
                 EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), native->party[0].pc.blocks.growth.species);
                 EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->party[1].pc.blocks.growth.species);

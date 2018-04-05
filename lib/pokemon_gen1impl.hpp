@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,19 +21,19 @@ namespace pkmn {
                 int level
             );
             pokemon_gen1impl(
-                pksav_gen1_pc_pokemon_t* pc,
+                struct pksav_gen1_pc_pokemon* pc,
                 int game_id
             );
             pokemon_gen1impl(
-                pksav_gen1_party_pokemon_t* party,
+                struct pksav_gen1_party_pokemon* party,
                 int game_id
             );
             pokemon_gen1impl(
-                const pksav_gen1_pc_pokemon_t& pc,
+                const struct pksav_gen1_pc_pokemon& pc,
                 int game_id
             );
             pokemon_gen1impl(
-                const pksav_gen1_party_pokemon_t& party,
+                const struct pksav_gen1_party_pokemon& party,
                 int game_id
             );
 

@@ -43,7 +43,7 @@ namespace pkmn {
     ): game_save_impl(filepath)
     {
         PKSAV_CALL(
-            pksav_gba_save_load(
+            pksav_gba_load_save_from_file(
                 _filepath.c_str(),
                 &_pksav_save
             );
@@ -53,9 +53,9 @@ namespace pkmn {
                                    fs::path(filepath).stem().string()
                                );
         boost::erase_all(filename, " ");
-        switch(_pksav_save.gba_game)
+        switch(_pksav_save.save_type)
         {
-            case PKSAV_GBA_RS:
+            case PKSAV_GBA_SAVE_TYPE_RS:
                 /*
                  * As there is no way to distinguish Ruby and Sapphire saves from the saves
                  * themselves, we'll try to depend on the fact that .sav files match
@@ -78,12 +78,12 @@ namespace pkmn {
 
                 _item_pc = std::make_shared<item_list_modernimpl>(
                                 RS_PC, _game_id,
-                                _pksav_save.item_storage->rs.pc_items,
+                                _pksav_save.item_storage.pc_ptr->items,
                                 50, false
                            );
                 break;
 
-            case PKSAV_GBA_FRLG:
+            case PKSAV_GBA_SAVE_TYPE_FRLG:
                 /*
                  * As there is no way to distinguish FireRed and LeafGreen saves from the saves
                  * themselves, we'll try to depend on the fact that .sav files match
@@ -109,7 +109,7 @@ namespace pkmn {
 
                 _item_pc = std::make_shared<item_list_modernimpl>(
                                 FRLG_PC, _game_id,
-                                _pksav_save.item_storage->frlg.pc_items,
+                                _pksav_save.item_storage.pc_ptr->items,
                                 50, false
                            );
                 break;
@@ -119,29 +119,30 @@ namespace pkmn {
 
                 _item_pc = std::make_shared<item_list_modernimpl>(
                                 EMERALD_PC, _game_id,
-                                _pksav_save.item_storage->emerald.pc_items,
+                                _pksav_save.item_storage.pc_ptr->items,
                                 50, false
                            );
                 break;
         }
 
+        // TODO: replace with GBA-specific impl
         _pokedex = std::make_shared<pokedex_impl>(
                        _game_id,
-                       _pksav_save.pokedex_seenA,
-                       _pksav_save.pokedex_owned
+                       _pksav_save.pokedex.seen_ptrA,
+                       _pksav_save.pokedex.owned_ptr
                    );
 
         _pokemon_party = std::make_shared<pokemon_party_gbaimpl>(
                              _game_id,
-                             _pksav_save.pokemon_party
+                             _pksav_save.pokemon_storage.party_ptr
                          );
         _pokemon_pc = std::make_shared<pokemon_pc_gbaimpl>(
                           _game_id,
-                          _pksav_save.pokemon_pc
+                          _pksav_save.pokemon_storage.pc_ptr
                       );
 
         _item_bag = std::make_shared<item_bag_gbaimpl>(
-                        _game_id, _pksav_save.item_storage
+                        _game_id, _pksav_save.item_storage.bag_ptr
                     );
 
         // When a Pokémon is added to the PC or party, it should be
@@ -163,7 +164,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        pksav_gba_save_free(&_pksav_save);
+        pksav_gba_free_save(&_pksav_save);
     }
 
     void game_save_gbaimpl::save_as(
@@ -171,34 +172,6 @@ namespace pkmn {
     )
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
-
-        // For some reason, the Pokédex seen bitfield is stored
-        // three separate times. This class passes the first field
-        // into the Pokédex class, so copy it to the other two before
-        // calculating the checksum and saving.
-        //
-        // NOTE: From my research, the location in PKSav is correct,
-        // but they don't necessarily match for some reason. Do this
-        // anyway.
-        const size_t num_bytes = static_cast<size_t>(std::ceil(386 / 8));
-
-        std::memcpy(
-            _pksav_save.pokedex_seenB,
-            _pksav_save.pokedex_seenA,
-            num_bytes
-        );
-        std::memcpy(
-            _pksav_save.pokedex_seenC,
-            _pksav_save.pokedex_seenA,
-            num_bytes
-        );
-
-        PKSAV_CALL(
-            pksav_gba_save_save(
-                filepath.c_str(),
-                &_pksav_save
-            );
-        )
 
         _filepath = fs::absolute(filepath).string();
     }
@@ -209,8 +182,8 @@ namespace pkmn {
 
         char trainer_name[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gba(
-                _pksav_save.trainer_info->name,
+            pksav_gba_import_text(
+                _pksav_save.trainer_info.name_ptr,
                 trainer_name,
                 7
             );
@@ -233,9 +206,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 trainer_name.c_str(),
-                _pksav_save.trainer_info->name,
+                _pksav_save.trainer_info.name_ptr,
                 7
             );
         )
@@ -245,7 +218,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        return pksav_littleendian32(_pksav_save.trainer_info->trainer_id.id);
+        return pksav_littleendian32(_pksav_save.trainer_info.id_ptr->id);
     }
 
     void game_save_gbaimpl::set_trainer_id(
@@ -254,14 +227,14 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        _pksav_save.trainer_info->trainer_id.id = pksav_littleendian32(trainer_id);
+        _pksav_save.trainer_info.id_ptr->id = pksav_littleendian32(trainer_id);
     }
 
     uint16_t game_save_gbaimpl::get_trainer_public_id()
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(_pksav_save.trainer_info->trainer_id.pid);
+        return pksav_littleendian16(_pksav_save.trainer_info.id_ptr->pid);
     }
 
     void game_save_gbaimpl::set_trainer_public_id(
@@ -270,14 +243,14 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        _pksav_save.trainer_info->trainer_id.pid = pksav_littleendian16(trainer_public_id);
+        _pksav_save.trainer_info.id_ptr->pid = pksav_littleendian16(trainer_public_id);
     }
 
     uint16_t game_save_gbaimpl::get_trainer_secret_id()
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(_pksav_save.trainer_info->trainer_id.sid);
+        return pksav_littleendian16(_pksav_save.trainer_info.id_ptr->sid);
     }
 
     void game_save_gbaimpl::set_trainer_secret_id(
@@ -286,14 +259,14 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        _pksav_save.trainer_info->trainer_id.sid = pksav_littleendian16(trainer_secret_id);
+        _pksav_save.trainer_info.id_ptr->sid = pksav_littleendian16(trainer_secret_id);
     }
 
     std::string game_save_gbaimpl::get_trainer_gender()
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        return (_pksav_save.trainer_info->gender == 0) ? "Male" : "Female";
+        return (*_pksav_save.trainer_info.gender_ptr == 0) ? "Male" : "Female";
     }
 
     void game_save_gbaimpl::set_trainer_gender(
@@ -304,11 +277,11 @@ namespace pkmn {
 
         if(trainer_gender == "Male")
         {
-            _pksav_save.trainer_info->gender = 0;
+            *_pksav_save.trainer_info.gender_ptr = 0;
         }
         else if(trainer_gender == "Female")
         {
-            _pksav_save.trainer_info->gender = 1;
+            *_pksav_save.trainer_info.gender_ptr = 1;
         }
         else
         {
@@ -322,12 +295,12 @@ namespace pkmn {
 
         std::string ret;
 
-        if(_pksav_save.gba_game == PKSAV_GBA_FRLG)
+        if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
         {
             char rival_name[8] = {0};
             PKSAV_CALL(
-                pksav_text_from_gba(
-                    _pksav_save.rival_name,
+                pksav_gba_import_text(
+                    _pksav_save.misc_fields.rival_name_ptr,
                     rival_name,
                     7
                 );
@@ -337,7 +310,7 @@ namespace pkmn {
         }
         else
         {
-            ret = (_pksav_save.trainer_info->gender == 0) ? "MAY" : "BRENDAN";
+            ret = (*_pksav_save.trainer_info.gender_ptr == 0) ? "MAY" : "BRENDAN";
         }
 
         return ret;
@@ -347,7 +320,7 @@ namespace pkmn {
         const std::string &rival_name
     )
     {
-        if(_pksav_save.gba_game == PKSAV_GBA_FRLG)
+        if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
         {
             pkmn::enforce_string_length(
                 "Rival name",
@@ -359,9 +332,9 @@ namespace pkmn {
             boost::lock_guard<game_save_gbaimpl> lock(*this);
 
             PKSAV_CALL(
-                pksav_text_to_gba(
+                pksav_gba_export_text(
                     rival_name.c_str(),
-                    _pksav_save.rival_name,
+                    _pksav_save.misc_fields.rival_name_ptr,
                     7
                 );
             )
@@ -373,7 +346,7 @@ namespace pkmn {
     }
 
     int game_save_gbaimpl::get_money() {
-        return int(pksav_littleendian32(*_pksav_save.money));
+        return int(pksav_littleendian32(*_pksav_save.trainer_info.money_ptr));
     }
 
     void game_save_gbaimpl::set_money(
@@ -384,7 +357,7 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        *_pksav_save.money = pksav_littleendian32(uint32_t(money));
+        *_pksav_save.trainer_info.money_ptr = pksav_littleendian32(uint32_t(money));
     }
 
     // Functions for attributes
@@ -393,7 +366,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        return pksav_littleendian16(*_pksav_save.casino_coins);
+        return pksav_littleendian16(*_pksav_save.misc_fields.casino_coins_ptr);
     }
 
     void game_save_gbaimpl::set_casino_coins(
@@ -409,9 +382,10 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
-        *_pksav_save.casino_coins = pksav_littleendian16(uint16_t(casino_coins));
+        *_pksav_save.misc_fields.casino_coins_ptr = pksav_littleendian16(uint16_t(casino_coins));
     }
 
+    // TODO: Nat Pokedex unlocked?
     void game_save_gbaimpl::_register_attributes()
     {
         using std::placeholders::_1;

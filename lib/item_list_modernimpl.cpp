@@ -16,22 +16,22 @@
 #include <algorithm>
 #include <cstring>
 
-#define NATIVE_RCAST (reinterpret_cast<pksav_item_t*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_item*>(_native))
 
 namespace pkmn {
 
     item_list_modernimpl::item_list_modernimpl(
         int item_list_id,
         int game_id,
-        pksav_item_t* ptr,
+        struct pksav_item* ptr,
         size_t capacity,
         bool copy
     ): item_list_impl(item_list_id, game_id)
     {
         if(ptr) {
             if(copy) {
-                _native = reinterpret_cast<void*>(new pksav_item_t[capacity]);
-                std::memcpy(_native, ptr, sizeof(pksav_item_t)*capacity);
+                _native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
+                std::memcpy(_native, ptr, sizeof(struct pksav_item)*capacity);
                 _our_mem = true;
             } else {
                 _native = ptr;
@@ -40,8 +40,8 @@ namespace pkmn {
 
             _from_native();
         } else {
-            _native = reinterpret_cast<void*>(new pksav_item_t[capacity]);
-            std::memset(_native, 0, sizeof(pksav_item_t)*capacity);
+            _native = reinterpret_cast<void*>(new struct pksav_item[capacity]);
+            std::memset(_native, 0, sizeof(struct pksav_item)*capacity);
             _our_mem = true;
 
         }

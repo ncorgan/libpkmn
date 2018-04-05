@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -58,18 +58,18 @@ namespace pkmn {
 
     // Generation I
     typedef pokemon_party_gbimpl<
-                pksav_gen1_pokemon_party_t,
-                pksav_gen1_pc_pokemon_t,
-                pksav_gen1_pokemon_party_data_t,
-                pksav_gen1_party_pokemon_t,
+                struct pksav_gen1_pokemon_party,
+                struct pksav_gen1_pc_pokemon,
+                struct pksav_gen1_pokemon_party_data,
+                struct pksav_gen1_party_pokemon,
                 pokemon_gen1impl> pokemon_party_gen1impl;
 
     // Generation II
     typedef pokemon_party_gbimpl<
-                pksav_gen2_pokemon_party_t,
-                pksav_gen2_pc_pokemon_t,
-                pksav_gen2_pokemon_party_data_t,
-                pksav_gen2_party_pokemon_t,
+                struct pksav_gen2_pokemon_party,
+                struct pksav_gen2_pc_pokemon,
+                struct pksav_gen2_pokemon_party_data,
+                struct pksav_gen2_party_pokemon,
                 pokemon_gen2impl> pokemon_party_gen2impl;
 }
 

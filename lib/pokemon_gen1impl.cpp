@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -37,8 +37,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#define GEN1_PC_RCAST    (reinterpret_cast<pksav_gen1_pc_pokemon_t*>(_native_pc))
-#define GEN1_PARTY_RCAST (reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party))
+#define GEN1_PC_RCAST    (reinterpret_cast<struct pksav_gen1_pc_pokemon*>(_native_pc))
+#define GEN1_PARTY_RCAST (reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(_native_party))
 
 /*
  * Catch rates
@@ -69,12 +69,12 @@ namespace pkmn
     ): pokemon_impl(std::move(database_entry)),
        _yellow_pikachu_friendship(0)
     {
-        _native_pc  = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
-        std::memset(_native_pc, 0, sizeof(pksav_gen1_pc_pokemon_t));
+        _native_pc  = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
+        std::memset(_native_pc, 0, sizeof(struct pksav_gen1_pc_pokemon));
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
-        std::memset(_native_party, 0, sizeof(pksav_gen1_pokemon_party_data_t));
+        _native_party = reinterpret_cast<void*>(new struct pksav_gen1_pokemon_party_data);
+        std::memset(_native_party, 0, sizeof(struct pksav_gen1_pokemon_party_data));
         _our_party_mem = true;
 
         _nickname = boost::algorithm::to_upper_copy(
@@ -112,7 +112,7 @@ namespace pkmn
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
-        pksav_gen1_pc_pokemon_t* pc,
+        struct pksav_gen1_pc_pokemon* pc,
         int game_id
     ): pokemon_impl(pc->species, game_id),
        _yellow_pikachu_friendship(0)
@@ -120,7 +120,7 @@ namespace pkmn
         _native_pc = reinterpret_cast<void*>(pc);
         _our_pc_mem = false;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gen1_pokemon_party_data);
         _populate_party_data();
         _our_party_mem = true;
 
@@ -141,7 +141,7 @@ namespace pkmn
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
-        pksav_gen1_party_pokemon_t* party,
+        struct pksav_gen1_party_pokemon* party,
         int game_id
     ): pokemon_impl(party->pc.species, game_id),
        _yellow_pikachu_friendship(0)
@@ -169,16 +169,16 @@ namespace pkmn
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
-        const pksav_gen1_pc_pokemon_t& pc,
+        const struct pksav_gen1_pc_pokemon& pc,
         int game_id
     ): pokemon_impl(pc.species, game_id),
        _yellow_pikachu_friendship(0)
     {
-        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        _native_pc = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
         *GEN1_PC_RCAST = pc;
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gen1_pokemon_party_data);
         _populate_party_data();
         _our_party_mem = true;
 
@@ -199,16 +199,16 @@ namespace pkmn
     }
 
     pokemon_gen1impl::pokemon_gen1impl(
-        const pksav_gen1_party_pokemon_t& party,
+        const struct pksav_gen1_party_pokemon& party,
         int game_id
     ): pokemon_impl(party.pc.species, game_id),
        _yellow_pikachu_friendship(0)
     {
-        _native_pc = reinterpret_cast<void*>(new pksav_gen1_pc_pokemon_t);
+        _native_pc = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
         *GEN1_PC_RCAST = party.pc;
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gen1_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gen1_pokemon_party_data);
         *GEN1_PARTY_RCAST = party.party_data;
         _our_party_mem = true;
 
@@ -248,7 +248,7 @@ namespace pkmn
 
         pkmn::pokemon::sptr ret;
 
-        pksav_gen1_party_pokemon_t pksav_pokemon;
+        struct pksav_gen1_party_pokemon pksav_pokemon;
         pksav_pokemon.pc = *GEN1_PC_RCAST;
         pksav_pokemon.party_data = *GEN1_PARTY_RCAST;
 
@@ -264,7 +264,7 @@ namespace pkmn
 
             case 2:
             {
-                pksav_gen2_party_pokemon_t gen2_pksav_pokemon;
+                struct pksav_gen2_party_pokemon gen2_pksav_pokemon;
                 pkmn::conversions::gen1_party_pokemon_to_gen2(
                     &pksav_pokemon,
                     &gen2_pksav_pokemon
@@ -294,7 +294,7 @@ namespace pkmn
             boost::lock_guard<pokemon_gen1impl> lock(*this);
 
             std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gen1_pc_pokemon_t));
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(struct pksav_gen1_pc_pokemon));
             ofile.close();
         }
         else
@@ -329,7 +329,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
         std::string ret = "None";
-        pksav_gb_condition_t gb_condition = static_cast<pksav_gb_condition_t>(GEN1_PC_RCAST->condition);
+        enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(GEN1_PC_RCAST->condition);
 
         if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition))
         {
@@ -631,9 +631,9 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-        uint32_t ret = 0;
+        size_t ret = 0;
         PKSAV_CALL(
-            pksav_from_base256(
+            pksav_import_base256(
                 GEN1_PC_RCAST->exp,
                 3,
                 &ret
@@ -653,7 +653,7 @@ namespace pkmn
         pkmn::enforce_bounds("Experience", experience, 0, max_experience);
 
         PKSAV_CALL(
-            pksav_to_base256(
+            pksav_export_base256(
                 experience,
                 GEN1_PC_RCAST->exp,
                 3
@@ -685,7 +685,7 @@ namespace pkmn
         GEN1_PC_RCAST->level = GEN1_PARTY_RCAST->level = uint8_t(level);
 
         PKSAV_CALL(
-            pksav_to_base256(
+            pksav_export_base256(
                 uint32_t(_database_entry.get_experience_at_level(level)),
                 GEN1_PC_RCAST->exp,
                 3
@@ -875,8 +875,8 @@ namespace pkmn
     {
         pksav::gen1_pc_pokemon_to_party_data(
             _database_entry,
-            reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(_native_party)
+            reinterpret_cast<const struct pksav_gen1_pc_pokemon*>(_native_pc),
+            reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(_native_party)
         );
 
         GEN1_PC_RCAST->current_hp = GEN1_PARTY_RCAST->max_hp;

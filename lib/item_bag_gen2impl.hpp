@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,7 +21,7 @@ namespace pkmn {
             );
             item_bag_gen2impl(
                 int game_id,
-                const pksav_gen2_item_bag_t &item_bag
+                const struct pksav_gen2_item_bag& item_bag
             );
 
             ~item_bag_gen2impl();

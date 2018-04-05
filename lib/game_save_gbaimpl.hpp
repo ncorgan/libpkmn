@@ -78,7 +78,7 @@ namespace pkmn {
             );
 
         private:
-            pksav_gba_save_t _pksav_save;
+            struct pksav_gba_save _pksav_save;
 
             void _register_attributes();
     };

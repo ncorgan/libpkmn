@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,8 +15,10 @@ namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int GEN1_NUM_BOXES = 12;
 
-    typedef struct {
-        pksav_gen1_pokemon_box_t* boxes[GEN1_NUM_BOXES];
+    // TODO: replace with pksav_gen1_pokemon_storage pointer
+    typedef struct
+    {
+        struct pksav_gen1_pokemon_box* boxes[GEN1_NUM_BOXES];
     } gen1_pokemon_boxes_t;
 
     class pokemon_pc_gen1impl: public pokemon_pc_impl {
@@ -27,12 +29,12 @@ namespace pkmn {
             );
             pokemon_pc_gen1impl(
                 int game_id,
-                pksav_gen1_pokemon_box_t* native,
+                struct pksav_gen1_pokemon_box* native,
                 bool copy
             );
             pokemon_pc_gen1impl(
                 int game_id,
-                pksav_gen1_pokemon_box_t** native,
+                struct pksav_gen1_pokemon_box** native,
                 bool copy
             );
 

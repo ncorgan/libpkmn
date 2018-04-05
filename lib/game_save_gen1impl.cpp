@@ -43,13 +43,13 @@ namespace pkmn {
     ): game_save_impl(filepath)
     {
         PKSAV_CALL(
-            pksav_gen1_save_load(
+            pksav_gen1_load_save_from_file(
                 _filepath.c_str(),
                 &_pksav_save
             );
         )
 
-        if(_pksav_save.yellow)
+        if(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_YELLOW)
         {
             _game_id = YELLOW;
         }
@@ -88,27 +88,27 @@ namespace pkmn {
 
         _pokedex = std::make_shared<pokedex_impl>(
                        _game_id,
-                       _pksav_save.pokedex_seen,
-                       _pksav_save.pokedex_owned
+                       _pksav_save.pokedex_lists.seen_ptr,
+                       _pksav_save.pokedex_lists.owned_ptr
                    );
 
         _pokemon_party = std::make_shared<pokemon_party_gen1impl>(
                              _game_id,
-                             _pksav_save.pokemon_party
+                             _pksav_save.pokemon_storage.party_ptr
                          );
         _pokemon_pc = std::make_shared<pokemon_pc_gen1impl>(
                           _game_id,
-                          _pksav_save.pokemon_boxes,
+                          _pksav_save.pokemon_storage.box_ptrs,
                           false
                       );
         _item_bag = std::make_shared<item_bag_gen1impl>(
                         _game_id,
-                        _pksav_save.item_bag
+                        _pksav_save.item_storage.item_bag_ptr
                     );
         _item_pc = std::make_shared<item_list_gen1_pcimpl>(
                         (_game_id == YELLOW) ? YELLOW_PC : RB_PC,
                         _game_id,
-                        _pksav_save.item_pc
+                        _pksav_save.item_storage.item_pc_ptr
                    );
 
         // When a Pokémon is added to the PC or party, it should be
@@ -130,7 +130,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        pksav_gen1_save_free(&_pksav_save);
+        pksav_gen1_free_save(&_pksav_save);
     }
 
     void game_save_gen1impl::save_as(
@@ -155,8 +155,8 @@ namespace pkmn {
 
         char trainer_name[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gen1(
-                _pksav_save.trainer_name,
+            pksav_gen1_import_text(
+                _pksav_save.trainer_info.name_ptr,
                 trainer_name,
                 7
             );
@@ -179,9 +179,9 @@ namespace pkmn {
 
 
         PKSAV_CALL(
-            pksav_text_to_gen1(
+            pksav_gen1_export_text(
                 trainer_name.c_str(),
-                _pksav_save.trainer_name,
+                _pksav_save.trainer_info.name_ptr,
                 7
             );
         )
@@ -191,7 +191,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        return pksav_bigendian16(*_pksav_save.trainer_id);
+        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
     }
 
     void game_save_gen1impl::set_trainer_id(
@@ -202,12 +202,12 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
+        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(uint16_t(trainer_id));
     }
 
     uint16_t game_save_gen1impl::get_trainer_public_id()
     {
-        return pksav_bigendian16(*_pksav_save.trainer_id);
+        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
     }
 
     void game_save_gen1impl::set_trainer_public_id(
@@ -216,7 +216,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        *_pksav_save.trainer_id = pksav_bigendian16(trainer_public_id);
+        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(trainer_public_id);
     }
 
     uint16_t game_save_gen1impl::get_trainer_secret_id()
@@ -249,8 +249,8 @@ namespace pkmn {
 
         char rival_name[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gen1(
-                _pksav_save.rival_name,
+            pksav_gen1_import_text(
+                _pksav_save.misc_fields.rival_name_ptr,
                 rival_name,
                 7
             );
@@ -273,9 +273,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gen1(
+            pksav_gen1_export_text(
                 rival_name.c_str(),
-                _pksav_save.rival_name,
+                _pksav_save.misc_fields.rival_name_ptr,
                 7
             );
         )
@@ -285,16 +285,16 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        uint32_t ret = 0;
+        size_t money_from_pksav = 0;
         PKSAV_CALL(
-            pksav_from_base256(
-                _pksav_save.money,
+            pksav_import_base256(
+                _pksav_save.trainer_info.money_ptr,
                 3,
-                &ret
+                &money_from_pksav
             );
         )
 
-        return int(ret);
+        return int(money_from_pksav);
     }
 
     void game_save_gen1impl::set_money(
@@ -306,9 +306,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
         PKSAV_CALL(
-            pksav_to_base256(
-                uint32_t(money),
-                _pksav_save.money,
+            pksav_export_base256(
+                size_t(money),
+                _pksav_save.trainer_info.money_ptr,
                 3
             )
         )
@@ -320,17 +320,16 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        uint32_t ret = 0;
-
+        size_t casino_coins_from_pksav = 0;
         PKSAV_CALL(
-            pksav_from_bcd(
-                _pksav_save.casino_coins,
+            pksav_import_bcd(
+                _pksav_save.misc_fields.casino_coins_ptr,
                 2,
-                &ret
+                &casino_coins_from_pksav
             )
         );
 
-        return int(ret);
+        return int(casino_coins_from_pksav);
     }
 
     void game_save_gen1impl::set_casino_coins(
@@ -346,20 +345,11 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        // Work around PKSav not taking in a buffer size parameter on set
-        // by clearing the buffer and manually setting smaller numbers at
-        // the right-most byte.
-        std::memset(_pksav_save.casino_coins, 0, 2);
-
-        uint8_t* casino_coins_ptr = _pksav_save.casino_coins;
-        if(casino_coins > 99)
-        {
-        }
-
         PKSAV_CALL(
-            pksav_to_bcd(
-                uint32_t(casino_coins),
-                casino_coins_ptr
+            pksav_export_bcd(
+                size_t(casino_coins),
+                _pksav_save.misc_fields.casino_coins_ptr,
+                2
             )
         );
     }
@@ -368,7 +358,10 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        return *_pksav_save.pikachu_friendship;
+        BOOST_ASSERT(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_YELLOW);
+        BOOST_ASSERT(_pksav_save.misc_fields.pikachu_friendship_ptr != nullptr);
+
+        return *_pksav_save.misc_fields.pikachu_friendship_ptr;
     }
 
     void game_save_gen1impl::set_pikachu_friendship(
@@ -384,7 +377,7 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen1impl> lock(*this);
 
-        *_pksav_save.pikachu_friendship = uint8_t(pikachu_friendship);
+        *_pksav_save.misc_fields.pikachu_friendship_ptr = uint8_t(pikachu_friendship);
     }
 
     void game_save_gen1impl::_register_attributes()

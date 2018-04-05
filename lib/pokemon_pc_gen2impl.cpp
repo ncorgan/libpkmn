@@ -29,14 +29,14 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
         for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
-            NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
-            std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(pksav_gen2_pokemon_box_t));
+            NATIVE_RCAST->boxes[i] = new struct pksav_gen2_pokemon_box;
+            std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(struct pksav_gen2_pokemon_box));
             std::memset(NATIVE_RCAST->boxes[i]->nicknames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->nicknames));
             std::memset(NATIVE_RCAST->boxes[i]->otnames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->otnames));
             NATIVE_RCAST->boxes[i]->species[20] = 0xFF;
         }
-        NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
-        std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(pksav_gen2_pokemon_box_names_t));
+        NATIVE_RCAST->box_names = new struct pksav_gen2_pokemon_box_names;
+        std::memset(NATIVE_RCAST->box_names, GEN2_TEXT_TERMINATOR, sizeof(struct pksav_gen2_pokemon_box_names));
 
         _our_mem = true;
 
@@ -45,8 +45,8 @@ namespace pkmn {
 
     pokemon_pc_gen2impl::pokemon_pc_gen2impl(
         int game_id,
-        pksav_gen2_pokemon_box_t** boxes,
-        pksav_gen2_pokemon_box_names_t* box_names,
+        struct pksav_gen2_pokemon_box** boxes,
+        struct pksav_gen2_pokemon_box_names* box_names,
         bool copy
     ): pokemon_pc_impl(game_id)
     {
@@ -55,10 +55,10 @@ namespace pkmn {
         {
             for(int i = 0; i < GEN2_NUM_BOXES; ++i)
             {
-                NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
+                NATIVE_RCAST->boxes[i] = new struct pksav_gen2_pokemon_box;
                 *NATIVE_RCAST->boxes[i] = *boxes[i];
             }
-            NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
+            NATIVE_RCAST->box_names = new struct pksav_gen2_pokemon_box_names;
             *NATIVE_RCAST->box_names = *box_names;
         }
         else
@@ -110,7 +110,7 @@ namespace pkmn {
 
             char box_name[10] = {0};
             PKSAV_CALL(
-                pksav_text_from_gen2(
+                pksav_gen2_import_text(
                     NATIVE_RCAST->box_names->names[i],
                     box_name,
                     9
@@ -129,7 +129,7 @@ namespace pkmn {
             _box_names[i] = _box_list[i]->get_name();
 
             PKSAV_CALL(
-                pksav_text_to_gen2(
+                pksav_gen2_export_text(
                     _box_names[i].c_str(),
                     NATIVE_RCAST->box_names->names[i],
                     9

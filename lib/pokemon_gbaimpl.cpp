@@ -50,8 +50,8 @@
 #include <fstream>
 #include <stdexcept>
 
-#define GBA_PC_RCAST    (reinterpret_cast<pksav_gba_pc_pokemon_t*>(_native_pc))
-#define GBA_PARTY_RCAST (reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party))
+#define GBA_PC_RCAST    (reinterpret_cast<struct pksav_gba_pc_pokemon*>(_native_pc))
+#define GBA_PARTY_RCAST (reinterpret_cast<struct pksav_gba_pokemon_party_data*>(_native_party))
 
 namespace fs = boost::filesystem;
 
@@ -64,12 +64,12 @@ namespace pkmn
         int level
     ): pokemon_impl(std::move(database_entry))
     {
-        _native_pc  = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
-        std::memset(_native_pc, 0, sizeof(pksav_gba_pc_pokemon_t));
+        _native_pc  = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
+        std::memset(_native_pc, 0, sizeof(struct pksav_gba_pc_pokemon));
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
-        std::memset(_native_party, 0, sizeof(pksav_gba_pokemon_party_data_t));
+        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
+        std::memset(_native_party, 0, sizeof(struct pksav_gba_pokemon_party_data));
         _our_party_mem = true;
 
         // Set block pointers
@@ -83,7 +83,7 @@ namespace pkmn
         GBA_PC_RCAST->ot_id.id = pksav_littleendian32(DEFAULT_TRAINER_ID);
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 boost::algorithm::to_upper_copy(
                     _database_entry.get_name()
                 ).c_str(),
@@ -95,7 +95,7 @@ namespace pkmn
         // TODO: language (should be enum in PKSav)
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 DEFAULT_TRAINER_NAME.c_str(),
                 GBA_PC_RCAST->otname,
                 7
@@ -108,7 +108,6 @@ namespace pkmn
                        ));
         _growth->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        // TODO: Use PKSav PRNG after refactor merged in
         _effort->ev_hp    = rng.rand();
         _effort->ev_atk   = rng.rand();
         _effort->ev_def   = rng.rand();
@@ -152,7 +151,7 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        pksav_gba_pc_pokemon_t* pc,
+        struct pksav_gba_pc_pokemon* pc,
         int game_id
     ): pokemon_impl(
            pksav_littleendian16(pc->blocks.growth.species),
@@ -162,7 +161,7 @@ namespace pkmn
         _native_pc = reinterpret_cast<void*>(pc);
         _our_pc_mem = false;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
         _populate_party_data();
         _our_party_mem = true;
 
@@ -190,7 +189,7 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        pksav_gba_party_pokemon_t* party,
+        struct pksav_gba_party_pokemon* party,
         int game_id
     ): pokemon_impl(
            pksav_littleendian16(party->pc.blocks.growth.species),
@@ -227,18 +226,18 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        const pksav_gba_pc_pokemon_t &pc,
+        const struct pksav_gba_pc_pokemon &pc,
         int game_id
     ): pokemon_impl(
            pksav_littleendian16(pc.blocks.growth.species),
            game_id
        )
     {
-        _native_pc = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        _native_pc = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
         *GBA_PC_RCAST = pc;
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
         _populate_party_data();
         _our_party_mem = true;
 
@@ -266,18 +265,18 @@ namespace pkmn
     }
 
     pokemon_gbaimpl::pokemon_gbaimpl(
-        const pksav_gba_party_pokemon_t &party,
+        const struct pksav_gba_party_pokemon &party,
         int game_id
     ): pokemon_impl(
            pksav_littleendian16(party.pc.blocks.growth.species),
            game_id
        )
     {
-        _native_pc = reinterpret_cast<void*>(new pksav_gba_pc_pokemon_t);
+        _native_pc = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
         *GBA_PC_RCAST = party.pc;
         _our_pc_mem = true;
 
-        _native_party = reinterpret_cast<void*>(new pksav_gba_pokemon_party_data_t);
+        _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
         *GBA_PARTY_RCAST = party.party_data;
         _our_party_mem = true;
 
@@ -324,7 +323,7 @@ namespace pkmn
 
         pkmn::pokemon::sptr ret;
 
-        pksav_gba_party_pokemon_t pksav_pokemon;
+        struct pksav_gba_party_pokemon pksav_pokemon;
         pksav_pokemon.pc = *GBA_PC_RCAST;
         pksav_pokemon.party_data = *GBA_PARTY_RCAST;
 
@@ -384,7 +383,7 @@ namespace pkmn
             boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
             std::ofstream ofile(filepath, std::ios::binary);
-            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(pksav_gba_pc_pokemon_t));
+            ofile.write(static_cast<const char*>(get_native_pc_data()), sizeof(struct pksav_gba_pc_pokemon));
             ofile.close();
         }
         else
@@ -484,7 +483,7 @@ namespace pkmn
 
         char nickname[11] = {0};
         PKSAV_CALL(
-            pksav_text_from_gba(
+            pksav_gba_import_text(
                 GBA_PC_RCAST->nickname,
                 nickname,
                 10
@@ -508,7 +507,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 nickname.c_str(),
                 GBA_PC_RCAST->nickname,
                 10
@@ -625,7 +624,7 @@ namespace pkmn
 
         char otname[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gba(
+            pksav_gba_import_text(
                 GBA_PC_RCAST->otname,
                 otname,
                 7
@@ -649,7 +648,7 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gba(
+            pksav_gba_export_text(
                 trainer_name.c_str(),
                 GBA_PC_RCAST->otname,
                 7
@@ -1029,7 +1028,7 @@ namespace pkmn
         );
     }
 
-    static const std::map<std::string, pksav_gen3_ribbon_mask_t> gba_ribbons = boost::assign::map_list_of
+    static const std::unordered_map<std::string, enum pksav_gen3_ribbon_mask> gba_ribbons = boost::assign::map_list_of
         ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
         ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
         ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
@@ -1044,7 +1043,7 @@ namespace pkmn
         ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbon_level_t> gba_contest_ribbon_levels = boost::assign::map_list_of
+    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbon_level> gba_contest_ribbon_levels = boost::assign::map_list_of
         ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
         ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
         ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
@@ -1052,7 +1051,7 @@ namespace pkmn
         ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbons_mask_t> gba_contest_ribbon_masks = boost::assign::map_list_of
+    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbons_mask> gba_contest_ribbon_masks = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
@@ -1060,7 +1059,7 @@ namespace pkmn
         ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
     ;
 
-    static const std::map<std::string, pksav_gen3_contest_ribbons_offset_t> gba_contest_ribbon_offsets = boost::assign::map_list_of
+    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbons_offset> gba_contest_ribbon_offsets = boost::assign::map_list_of
         ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
         ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
         ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
@@ -1082,7 +1081,7 @@ namespace pkmn
 
         if(gba_ribbons.find(ribbon) != gba_ribbons.end())
         {
-            _set_ribbon<uint32_t, pksav_gen3_ribbon_mask_t>(
+            _set_ribbon<uint32_t, enum pksav_gen3_ribbon_mask>(
                 ribbon,
                 value,
                 &_misc->ribbons_obedience,
@@ -1334,8 +1333,8 @@ namespace pkmn
     void pokemon_gbaimpl::_populate_party_data() {
         pksav::gba_pc_pokemon_to_party_data(
             _database_entry,
-            reinterpret_cast<const pksav_gba_pc_pokemon_t*>(_native_pc),
-            reinterpret_cast<pksav_gba_pokemon_party_data_t*>(_native_party)
+            reinterpret_cast<const struct pksav_gba_pc_pokemon*>(_native_pc),
+            reinterpret_cast<struct pksav_gba_pokemon_party_data*>(_native_party)
         );
 
         _update_stat_map();

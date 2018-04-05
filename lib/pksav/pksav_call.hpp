@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,11 +12,13 @@
 
 #include <pkmn/exception.hpp>
 
+// TODO: remove :: when exception moved
 #define PKSAV_CALL(...) \
 { \
-    pksav_error_t status = __VA_ARGS__; \
-    if(status != PKSAV_ERROR_NONE) { \
-        throw pkmn::pksav_error(status); \
+    enum ::pksav_error error = __VA_ARGS__; \
+    if(error) \
+    { \
+        throw pkmn::pksav_error(error); \
     } \
 }
 

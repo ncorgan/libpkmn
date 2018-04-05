@@ -25,8 +25,8 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pkmn::gen1_pokemon_boxes_t);
         for(int i = 0; i < GEN1_NUM_BOXES; ++i) {
-            NATIVE_RCAST->boxes[i] = new pksav_gen1_pokemon_box_t;
-            std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(pksav_gen1_pokemon_box_t));
+            NATIVE_RCAST->boxes[i] = new struct pksav_gen1_pokemon_box;
+            std::memset(NATIVE_RCAST->boxes[i], 0, sizeof(struct pksav_gen1_pokemon_box));
             std::memset(NATIVE_RCAST->boxes[i]->nicknames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->nicknames));
             std::memset(NATIVE_RCAST->boxes[i]->otnames, 0x50, sizeof(NATIVE_RCAST->boxes[i]->otnames));
             NATIVE_RCAST->boxes[i]->species[20] = 0xFF;
@@ -38,14 +38,14 @@ namespace pkmn {
 
     pokemon_pc_gen1impl::pokemon_pc_gen1impl(
         int game_id,
-        pksav_gen1_pokemon_box_t* native,
+        struct pksav_gen1_pokemon_box* native,
         bool copy
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pkmn::gen1_pokemon_boxes_t);
         for(int i = 0; i < GEN1_NUM_BOXES; ++i) {
             if(copy) {
-                NATIVE_RCAST->boxes[i] = new pksav_gen1_pokemon_box_t;
+                NATIVE_RCAST->boxes[i] = new struct pksav_gen1_pokemon_box;
                 *NATIVE_RCAST->boxes[i] = native[i];
             } else {
                 NATIVE_RCAST->boxes[i] = &native[i];
@@ -58,14 +58,14 @@ namespace pkmn {
 
     pokemon_pc_gen1impl::pokemon_pc_gen1impl(
         int game_id,
-        pksav_gen1_pokemon_box_t** native,
+        struct pksav_gen1_pokemon_box** native,
         bool copy
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pkmn::gen1_pokemon_boxes_t);
         for(int i = 0; i < GEN1_NUM_BOXES; ++i) {
             if(copy) {
-                NATIVE_RCAST->boxes[i] = new pksav_gen1_pokemon_box_t;
+                NATIVE_RCAST->boxes[i] = new struct pksav_gen1_pokemon_box;
                 *NATIVE_RCAST->boxes[i] = *native[i];
             } else {
                 NATIVE_RCAST->boxes[i] = native[i];

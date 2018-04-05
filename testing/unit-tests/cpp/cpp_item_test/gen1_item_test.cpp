@@ -42,7 +42,7 @@ static void check_pksav_struct(
     const void* ptr,
     bool pc
 ) {
-    const pksav_gen1_item_pc_t* native = reinterpret_cast<const pksav_gen1_item_pc_t*>(ptr);
+    const struct pksav_gen1_item_pc* native = reinterpret_cast<const struct pksav_gen1_item_pc*>(ptr);
     EXPECT_EQ(expected_num_items, int(native->count));
     for(int i = 0; i < expected_num_items; ++i) {
         EXPECT_EQ(
@@ -61,7 +61,7 @@ static void check_pksav_struct(
     if(pc) {
         EXPECT_EQ(0xFF, native->terminator);
     } else {
-        EXPECT_EQ(0xFF, reinterpret_cast<const pksav_gen1_item_bag_t*>(native)->terminator);
+        EXPECT_EQ(0xFF, reinterpret_cast<const struct pksav_gen1_item_bag*>(native)->terminator);
     }
 }
 

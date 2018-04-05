@@ -60,6 +60,8 @@ namespace pkmn {
      *
      * PKSav error codes can be found
      * <a href="https://github.com/ncorgan/pksav/blob/master/include/pksav/error.h">here</a>.
+     *
+     * // TODO: move internal, change name
      */
     class PKMN_API pksav_error: public std::runtime_error
     {

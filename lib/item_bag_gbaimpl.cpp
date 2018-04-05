@@ -5,10 +5,10 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#define NATIVE_RCAST    (reinterpret_cast<pksav_gba_item_storage_t*>(_native))
-#define RS_STORAGE      (NATIVE_RCAST->rs)
-#define EMERALD_STORAGE (NATIVE_RCAST->emerald)
-#define FRLG_STORAGE    (NATIVE_RCAST->frlg)
+#define NATIVE_RCAST (reinterpret_cast<union pksav_gba_item_bag*>(_native))
+#define RS_BAG       (NATIVE_RCAST->rs)
+#define EMERALD_BAG  (NATIVE_RCAST->emerald)
+#define FRLG_BAG     (NATIVE_RCAST->frlg)
 
 #include "item_bag_gbaimpl.hpp"
 #include "item_list_modernimpl.hpp"
@@ -31,8 +31,8 @@ namespace pkmn {
             _native = ptr;
             _our_mem = false;
         } else {
-            _native = reinterpret_cast<void*>(new pksav_gba_item_storage_t);
-            std::memset(_native, 0, sizeof(pksav_gba_item_storage_t));
+            _native = reinterpret_cast<void*>(new union pksav_gba_item_bag);
+            std::memset(_native, 0, sizeof(union pksav_gba_item_bag));
             _our_mem = true;
         }
 
@@ -41,10 +41,10 @@ namespace pkmn {
 
     item_bag_gbaimpl::item_bag_gbaimpl(
         int game_id,
-        const pksav_gba_item_storage_t &item_storage
+        const union pksav_gba_item_bag &item_storage
     ): item_bag_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_item_storage_t);
+        _native = reinterpret_cast<void*>(new union pksav_gba_item_bag);
         *NATIVE_RCAST = item_storage;
         _our_mem = true;
 
@@ -90,84 +90,84 @@ namespace pkmn {
         {
             case VERSION_GROUP_RS:
                 _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
-                                             ITEM_POCKET_IDS[index], _game_id, RS_STORAGE.items,
-                                             sizeof(RS_STORAGE.items)/sizeof(pksav_item_t),
+                                             ITEM_POCKET_IDS[index], _game_id, RS_BAG.items,
+                                             sizeof(RS_BAG.items)/sizeof(struct pksav_item),
                                              false
                                          );
                 _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
-                                                  BALL_POCKET_IDS[index], _game_id, RS_STORAGE.balls,
-                                                  sizeof(RS_STORAGE.balls)/sizeof(pksav_item_t),
+                                                  BALL_POCKET_IDS[index], _game_id, RS_BAG.balls,
+                                                  sizeof(RS_BAG.balls)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
-                                                 TMHM_POCKET_IDS[index], _game_id, RS_STORAGE.tms_hms,
-                                                 sizeof(RS_STORAGE.tms_hms)/sizeof(pksav_item_t),
+                                                 TMHM_POCKET_IDS[index], _game_id, RS_BAG.tms_hms,
+                                                 sizeof(RS_BAG.tms_hms)/sizeof(struct pksav_item),
                                                  false
                                              );
                 _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
-                                                  BERRY_POCKET_IDS[index], _game_id, RS_STORAGE.berries,
-                                                  sizeof(RS_STORAGE.berries)/sizeof(pksav_item_t),
+                                                  BERRY_POCKET_IDS[index], _game_id, RS_BAG.berries,
+                                                  sizeof(RS_BAG.berries)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
-                                                 KEY_ITEM_POCKET_IDS[index], _game_id, RS_STORAGE.key_items,
-                                                 sizeof(RS_STORAGE.key_items)/sizeof(pksav_item_t),
+                                                 KEY_ITEM_POCKET_IDS[index], _game_id, RS_BAG.key_items,
+                                                 sizeof(RS_BAG.key_items)/sizeof(struct pksav_item),
                                                  false
                                              );
                 break;
 
             case VERSION_GROUP_EMERALD:
                 _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
-                                             ITEM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.items,
-                                             sizeof(EMERALD_STORAGE.items)/sizeof(pksav_item_t),
+                                             ITEM_POCKET_IDS[index], _game_id, EMERALD_BAG.items,
+                                             sizeof(EMERALD_BAG.items)/sizeof(struct pksav_item),
                                              false
                                          );
                 _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
-                                                  BALL_POCKET_IDS[index], _game_id, EMERALD_STORAGE.balls,
-                                                  sizeof(EMERALD_STORAGE.balls)/sizeof(pksav_item_t),
+                                                  BALL_POCKET_IDS[index], _game_id, EMERALD_BAG.balls,
+                                                  sizeof(EMERALD_BAG.balls)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
-                                                 TMHM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.tms_hms,
-                                                 sizeof(EMERALD_STORAGE.tms_hms)/sizeof(pksav_item_t),
+                                                 TMHM_POCKET_IDS[index], _game_id, EMERALD_BAG.tms_hms,
+                                                 sizeof(EMERALD_BAG.tms_hms)/sizeof(struct pksav_item),
                                                  false
                                              );
                 _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
-                                                  BERRY_POCKET_IDS[index], _game_id, EMERALD_STORAGE.berries,
-                                                  sizeof(EMERALD_STORAGE.berries)/sizeof(pksav_item_t),
+                                                  BERRY_POCKET_IDS[index], _game_id, EMERALD_BAG.berries,
+                                                  sizeof(EMERALD_BAG.berries)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
-                                                 KEY_ITEM_POCKET_IDS[index], _game_id, EMERALD_STORAGE.key_items,
-                                                 sizeof(EMERALD_STORAGE.key_items)/sizeof(pksav_item_t),
+                                                 KEY_ITEM_POCKET_IDS[index], _game_id, EMERALD_BAG.key_items,
+                                                 sizeof(EMERALD_BAG.key_items)/sizeof(struct pksav_item),
                                                  false
                                              );
                 break;
 
             case VERSION_GROUP_FRLG:
                 _item_pockets["Items"] = std::make_shared<item_list_modernimpl>(
-                                             ITEM_POCKET_IDS[index], _game_id, FRLG_STORAGE.items,
-                                             sizeof(FRLG_STORAGE.items)/sizeof(pksav_item_t),
+                                             ITEM_POCKET_IDS[index], _game_id, FRLG_BAG.items,
+                                             sizeof(FRLG_BAG.items)/sizeof(struct pksav_item),
                                              false
                                          );
                 _item_pockets["Poké Balls"] = std::make_shared<item_list_modernimpl>(
-                                                  BALL_POCKET_IDS[index], _game_id, FRLG_STORAGE.balls,
-                                                  sizeof(FRLG_STORAGE.balls)/sizeof(pksav_item_t),
+                                                  BALL_POCKET_IDS[index], _game_id, FRLG_BAG.balls,
+                                                  sizeof(FRLG_BAG.balls)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets[tmhm_pocket] = std::make_shared<item_list_modernimpl>(
-                                                 TMHM_POCKET_IDS[index], _game_id, FRLG_STORAGE.tms_hms,
-                                                 sizeof(FRLG_STORAGE.tms_hms)/sizeof(pksav_item_t),
+                                                 TMHM_POCKET_IDS[index], _game_id, FRLG_BAG.tms_hms,
+                                                 sizeof(FRLG_BAG.tms_hms)/sizeof(struct pksav_item),
                                                  false
                                              );
                 _item_pockets[berry_pocket] = std::make_shared<item_list_modernimpl>(
-                                                  BERRY_POCKET_IDS[index], _game_id, FRLG_STORAGE.berries,
-                                                  sizeof(FRLG_STORAGE.berries)/sizeof(pksav_item_t),
+                                                  BERRY_POCKET_IDS[index], _game_id, FRLG_BAG.berries,
+                                                  sizeof(FRLG_BAG.berries)/sizeof(struct pksav_item),
                                                   false
                                               );
                 _item_pockets["Key Items"] = std::make_shared<item_list_modernimpl>(
-                                                 KEY_ITEM_POCKET_IDS[index], _game_id, FRLG_STORAGE.key_items,
-                                                 sizeof(FRLG_STORAGE.key_items)/sizeof(pksav_item_t),
+                                                 KEY_ITEM_POCKET_IDS[index], _game_id, FRLG_BAG.key_items,
+                                                 sizeof(FRLG_BAG.key_items)/sizeof(struct pksav_item),
                                                  false
                                              );
                 break;

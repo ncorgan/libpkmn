@@ -84,7 +84,7 @@ namespace pkmn {
             );
 
         private:
-            pksav_gen1_save_t _pksav_save;
+            struct pksav_gen1_save _pksav_save;
 
             void _register_attributes();
     };

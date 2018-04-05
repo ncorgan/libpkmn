@@ -32,7 +32,7 @@ static PKMN_CONSTEXPR_OR_INLINE bool ITEM_ID_IS_HM(int num) {
     return (num >= HM01_ID and num <= HM07_ID);
 }
 
-#define NATIVE_RCAST (reinterpret_cast<pksav_gen2_tmhm_pocket_t*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_gen2_tmhm_pocket*>(_native))
 
 namespace pkmn {
 
@@ -65,8 +65,8 @@ namespace pkmn {
         }
         else
         {
-            _native = reinterpret_cast<void*>(new pksav_gen2_tmhm_pocket_t);
-            std::memset(_native, 0, sizeof(pksav_gen2_tmhm_pocket_t));
+            _native = reinterpret_cast<void*>(new struct pksav_gen2_tmhm_pocket);
+            std::memset(_native, 0, sizeof(struct pksav_gen2_tmhm_pocket));
             _our_mem = true;
         }
     }

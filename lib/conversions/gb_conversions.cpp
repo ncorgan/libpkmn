@@ -101,8 +101,8 @@ namespace pkmn { namespace conversions {
     }
 
     void gen1_pc_pokemon_to_gen2(
-        const pksav_gen1_pc_pokemon_t* from,
-        pksav_gen2_pc_pokemon_t* to
+        const struct pksav_gen1_pc_pokemon* from,
+        struct pksav_gen2_pc_pokemon* to
     )
     {
         std::memset(to, 0, sizeof(*to));
@@ -139,8 +139,8 @@ namespace pkmn { namespace conversions {
     }
 
     void gen1_party_pokemon_to_gen2(
-        const pksav_gen1_party_pokemon_t* from,
-        pksav_gen2_party_pokemon_t* to
+        const struct pksav_gen1_party_pokemon* from,
+        struct pksav_gen2_party_pokemon* to
     )
     {
         // PC data
@@ -172,8 +172,8 @@ namespace pkmn { namespace conversions {
     }
 
     void gen2_pc_pokemon_to_gen1(
-        const pksav_gen2_pc_pokemon_t* from,
-        pksav_gen1_pc_pokemon_t* to
+        const struct pksav_gen2_pc_pokemon* from,
+        struct pksav_gen1_pc_pokemon* to
     )
     {
         const int RED = 1;
@@ -262,8 +262,8 @@ namespace pkmn { namespace conversions {
     }
 
     void gen2_party_pokemon_to_gen1(
-        const pksav_gen2_party_pokemon_t* from,
-        pksav_gen1_party_pokemon_t* to
+        const struct pksav_gen2_party_pokemon* from,
+        struct pksav_gen1_party_pokemon* to
     )
     {
         // PC data

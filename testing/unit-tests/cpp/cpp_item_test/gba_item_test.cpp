@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -40,7 +40,7 @@ static void check_pksav_struct(
     const pkmn::item_slots_t& item_slots,
     const std::string& game,
     int expected_num_items,
-    const pksav_item_t* native_items
+    const struct pksav_item* native_items
 ) {
     for(int i = 0; i < expected_num_items; ++i) {
         EXPECT_EQ(
@@ -134,7 +134,7 @@ void gba_item_pocket_test(
         item_pocket->as_vector(),
         item_pocket->get_game(),
         item_pocket->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(item_pocket->get_native())
+        reinterpret_cast<const struct pksav_item*>(item_pocket->get_native())
     );
 }
 
@@ -229,7 +229,7 @@ void gba_key_item_pocket_test(
         key_item_pocket->as_vector(),
         key_item_pocket->get_game(),
         key_item_pocket->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(key_item_pocket->get_native())
+        reinterpret_cast<const struct pksav_item*>(key_item_pocket->get_native())
     );
 }
 
@@ -296,7 +296,7 @@ void gba_ball_pocket_test(
         ball_pocket->as_vector(),
         ball_pocket->get_game(),
         ball_pocket->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(ball_pocket->get_native())
+        reinterpret_cast<const struct pksav_item*>(ball_pocket->get_native())
     );
 }
 
@@ -364,7 +364,7 @@ void gba_tmhm_pocket_test(
         tmhm_pocket->as_vector(),
         tmhm_pocket->get_game(),
         tmhm_pocket->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(tmhm_pocket->get_native())
+        reinterpret_cast<const struct pksav_item*>(tmhm_pocket->get_native())
     );
 }
 
@@ -432,7 +432,7 @@ void gba_berry_pocket_test(
         berry_pocket->as_vector(),
         berry_pocket->get_game(),
         berry_pocket->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(berry_pocket->get_native())
+        reinterpret_cast<const struct pksav_item*>(berry_pocket->get_native())
     );
 }
 
@@ -468,7 +468,7 @@ void gba_item_pc_test(
         item_pc->as_vector(),
         item_pc->get_game(),
         item_pc->get_num_items(),
-        reinterpret_cast<const pksav_item_t*>(item_pc->get_native())
+        reinterpret_cast<const struct pksav_item*>(item_pc->get_native())
     );
 }
 
@@ -623,7 +623,7 @@ TEST_P(gba_item_bag_test, item_bag_test) {
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
      * PKSav struct.
      */
-    const pksav_gba_item_storage_t* native = reinterpret_cast<const pksav_gba_item_storage_t*>(bag->get_native());
+    const union pksav_gba_item_bag* native = reinterpret_cast<const union pksav_gba_item_bag*>(bag->get_native());
     if(game == "Ruby" or game == "Sapphire")
     {
         check_pksav_struct(

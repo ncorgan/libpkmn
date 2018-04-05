@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,23 +15,23 @@
 namespace pkmn { namespace conversions {
 
     void gba_pc_pokemon_to_gcn(
-        const pksav_gba_pc_pokemon_t* from,
+        const struct pksav_gba_pc_pokemon* from,
         LibPkmGC::GC::Pokemon* to
     );
 
     void gba_party_pokemon_to_gcn(
-        const pksav_gba_party_pokemon_t* from,
+        const struct pksav_gba_party_pokemon* from,
         LibPkmGC::GC::Pokemon* to
     );
 
     void gcn_pokemon_to_gba_pc(
         const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_pc_pokemon_t* to
+        struct pksav_gba_pc_pokemon* to
     );
 
     void gcn_pokemon_to_gba_party(
         const LibPkmGC::GC::Pokemon* from,
-        pksav_gba_party_pokemon_t* to
+        struct pksav_gba_party_pokemon* to
     );
 
 }}

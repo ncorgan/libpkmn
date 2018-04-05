@@ -29,13 +29,13 @@ namespace pkmn { namespace io {
         const std::vector<uint8_t>& buffer
     ) {
         // Validate size
-        if(buffer.size() != sizeof(pksav_gen1_pc_pokemon_t) and
-           buffer.size() != sizeof(pksav_gen1_party_pokemon_t))
+        if(buffer.size() != sizeof(struct pksav_gen1_pc_pokemon) and
+           buffer.size() != sizeof(struct pksav_gen1_party_pokemon))
         {
             return false;
         }
 
-        const pksav_gen1_pc_pokemon_t* native = reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(buffer.data());
+        const struct pksav_gen1_pc_pokemon* native = reinterpret_cast<const struct pksav_gen1_pc_pokemon*>(buffer.data());
 
         // Validate species
         try {
@@ -58,7 +58,7 @@ namespace pkmn { namespace io {
         }
 
         return std::make_shared<pokemon_gen1impl>(
-                   *reinterpret_cast<const pksav_gen1_pc_pokemon_t*>(buffer.data()),
+                   *reinterpret_cast<const struct pksav_gen1_pc_pokemon*>(buffer.data()),
                    RED
                );
     }

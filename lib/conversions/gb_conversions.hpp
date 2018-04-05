@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,23 +14,23 @@
 namespace pkmn { namespace conversions {
 
     void gen1_pc_pokemon_to_gen2(
-        const pksav_gen1_pc_pokemon_t* from,
-        pksav_gen2_pc_pokemon_t* to
+        const struct pksav_gen1_pc_pokemon* from,
+        struct pksav_gen2_pc_pokemon* to
     );
 
     void gen1_party_pokemon_to_gen2(
-        const pksav_gen1_party_pokemon_t* from,
-        pksav_gen2_party_pokemon_t* to
+        const struct pksav_gen1_party_pokemon* from,
+        struct pksav_gen2_party_pokemon* to
     );
 
     void gen2_pc_pokemon_to_gen1(
-        const pksav_gen2_pc_pokemon_t* from,
-        pksav_gen1_pc_pokemon_t* to
+        const struct pksav_gen2_pc_pokemon* from,
+        struct pksav_gen1_pc_pokemon* to
     );
 
     void gen2_party_pokemon_to_gen1(
-        const pksav_gen2_party_pokemon_t* from,
-        pksav_gen1_party_pokemon_t* to
+        const struct pksav_gen2_party_pokemon* from,
+        struct pksav_gen1_party_pokemon* to
     );
 
 }}

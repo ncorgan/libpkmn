@@ -18,7 +18,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_RCAST (reinterpret_cast<pksav_gba_pokemon_box_t*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_gba_pokemon_box*>(_native))
 
 namespace pkmn {
 
@@ -26,8 +26,8 @@ namespace pkmn {
         int game_id
     ): pokemon_box_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_pokemon_box_t);
-        std::memset(_native, 0, sizeof(pksav_gba_pokemon_box_t));
+        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
+        std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_box));
         _our_mem = true;
 
         _from_native();
@@ -35,7 +35,7 @@ namespace pkmn {
 
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id,
-        pksav_gba_pokemon_box_t* native
+        struct pksav_gba_pokemon_box* native
     ): pokemon_box_impl(game_id)
     {
         _native = reinterpret_cast<void*>(native);
@@ -46,10 +46,10 @@ namespace pkmn {
 
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id,
-        const pksav_gba_pokemon_box_t &native
+        const struct pksav_gba_pokemon_box &native
     ): pokemon_box_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_pokemon_box_t);
+        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
         *NATIVE_RCAST = native;
         _our_mem = true;
 
@@ -149,7 +149,7 @@ namespace pkmn {
 
         // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
         // that owns its own memory.
-        copy_box_pokemon<pksav_gba_pc_pokemon_t, pksav_gba_pokemon_party_data_t>(index);
+        copy_box_pokemon<struct pksav_gba_pc_pokemon, struct pksav_gba_pokemon_party_data>(index);
 
         // Copy the new Pokémon's internals into the party's internals and create a new sptr.
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
@@ -157,7 +157,7 @@ namespace pkmn {
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
         old_box_pokemon_impl_ptr->unlock();
 
-        NATIVE_RCAST->entries[index] = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
+        NATIVE_RCAST->entries[index] = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
 
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_RCAST->entries[index],

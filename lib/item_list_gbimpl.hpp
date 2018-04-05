@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -40,14 +40,13 @@ namespace pkmn {
     };
 
     // Generation I
-    typedef item_list_gbimpl<pksav_gen1_item_bag_t> item_list_gen1_bagimpl;
-    typedef item_list_gbimpl<pksav_gen1_item_pc_t>  item_list_gen1_pcimpl;
+    typedef item_list_gbimpl<struct pksav_gen1_item_bag> item_list_gen1_bagimpl;
+    typedef item_list_gbimpl<struct pksav_gen1_item_pc>  item_list_gen1_pcimpl;
 
     // Generation II
-    typedef item_list_gbimpl<pksav_gen2_item_pocket_t> item_list_gen2_item_pocketimpl;
-    typedef item_list_gbimpl<pksav_gen2_key_item_pocket_t> item_list_gen2_key_item_pocketimpl;
-    typedef item_list_gbimpl<pksav_gen2_ball_pocket_t> item_list_gen2_ball_pocketimpl;
-    typedef item_list_gbimpl<pksav_gen2_item_pc_t>  item_list_gen2_pcimpl;
+    typedef item_list_gbimpl<struct pksav_gen2_item_pocket> item_list_gen2_item_pocketimpl;
+    typedef item_list_gbimpl<struct pksav_gen2_ball_pocket> item_list_gen2_ball_pocketimpl;
+    typedef item_list_gbimpl<struct pksav_gen2_item_pc>  item_list_gen2_pcimpl;
 }
 
 #include "item_list_gbimpl.ipp"

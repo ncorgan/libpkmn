@@ -17,7 +17,7 @@
 
 #include <cstring>
 
-#define NATIVE_RCAST (reinterpret_cast<pksav_gba_pokemon_pc_t*>(_native))
+#define NATIVE_RCAST (reinterpret_cast<struct pksav_gba_pokemon_pc*>(_native))
 
 BOOST_STATIC_CONSTEXPR uint8_t GBA_TEXT_TERMINATOR = 0xFF;
 
@@ -27,8 +27,8 @@ namespace pkmn {
         int game_id
     ): pokemon_pc_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_pokemon_pc_t);
-        std::memset(_native, 0, sizeof(pksav_gba_pokemon_pc_t));
+        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_pc);
+        std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_pc));
         std::memset(NATIVE_RCAST->box_names, GBA_TEXT_TERMINATOR, sizeof(NATIVE_RCAST->box_names));
         _our_mem = true;
 
@@ -37,7 +37,7 @@ namespace pkmn {
 
     pokemon_pc_gbaimpl::pokemon_pc_gbaimpl(
         int game_id,
-        pksav_gba_pokemon_pc_t* native
+        struct pksav_gba_pokemon_pc* native
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(native);
@@ -48,10 +48,10 @@ namespace pkmn {
 
     pokemon_pc_gbaimpl::pokemon_pc_gbaimpl(
         int game_id,
-        const pksav_gba_pokemon_pc_t &native
+        const struct pksav_gba_pokemon_pc &native
     ): pokemon_pc_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_pokemon_pc_t);
+        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_pc);
         *NATIVE_RCAST = native;
         _our_mem = true;
 
@@ -85,7 +85,7 @@ namespace pkmn {
 
             char box_name[9] = {0};
             PKSAV_CALL(
-                pksav_text_from_gba(
+                pksav_gba_import_text(
                     NATIVE_RCAST->box_names[i],
                     box_name,
                     8
@@ -104,7 +104,7 @@ namespace pkmn {
             _box_names[i] = _box_list[i]->get_name();
 
             PKSAV_CALL(
-                pksav_text_to_gba(
+                pksav_gba_export_text(
                     _box_names[i].c_str(),
                     NATIVE_RCAST->box_names[i],
                     8

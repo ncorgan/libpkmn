@@ -70,7 +70,7 @@ namespace pkmn {
             ) override final;
 
         private:
-            pksav_gen2_save_t _pksav_save;
+            struct pksav_gen2_save _pksav_save;
     };
 
 }

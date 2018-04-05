@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -186,13 +186,13 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
      * On the C++ level, check the underlying representation and make
      * sure our abstractions match.
      */
-    const pksav_gba_pc_pokemon_t* native_pc_data = reinterpret_cast<const pksav_gba_pc_pokemon_t*>(
-                                                       pokemon->get_native_pc_data()
-                                                   );
-    const pksav_gba_pokemon_growth_t* growth = &native_pc_data->blocks.growth;
-    const pksav_gba_pokemon_attacks_t* attacks = &native_pc_data->blocks.attacks;
-    const pksav_gba_pokemon_effort_t* effort = &native_pc_data->blocks.effort;
-    const pksav_gba_pokemon_misc_t* misc = &native_pc_data->blocks.misc;
+    const struct pksav_gba_pc_pokemon* native_pc_data = reinterpret_cast<const struct pksav_gba_pc_pokemon*>(
+                                                            pokemon->get_native_pc_data()
+                                                        );
+    const struct pksav_gba_pokemon_growth_block* growth = &native_pc_data->blocks.growth;
+    const struct pksav_gba_pokemon_attacks_block* attacks = &native_pc_data->blocks.attacks;
+    const struct pksav_gba_pokemon_effort_block* effort = &native_pc_data->blocks.effort;
+    const struct pksav_gba_pokemon_misc_block* misc = &native_pc_data->blocks.misc;
 
     EXPECT_EQ(pokemon->get_personality(), pksav_littleendian32(native_pc_data->personality));
     EXPECT_EQ(pokemon->get_original_trainer_id(), pksav_littleendian32(native_pc_data->ot_id.id));
@@ -201,7 +201,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
 
     char nickname[11] = {0};
     PKSAV_CALL(
-        pksav_text_from_gba(
+        pksav_gba_import_text(
             native_pc_data->nickname,
             nickname,
             10
@@ -213,7 +213,7 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
 
     char otname[8] = {0};
     PKSAV_CALL(
-        pksav_text_from_gba(
+        pksav_gba_import_text(
             native_pc_data->otname,
             otname,
             7
@@ -343,9 +343,9 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     /*
      * Party data
      */
-    const pksav_gba_pokemon_party_data_t* native_party_data = reinterpret_cast<const pksav_gba_pokemon_party_data_t*>(
-                                                                      pokemon->get_native_party_data()
-                                                                  );
+    const struct pksav_gba_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gba_pokemon_party_data*>(
+                                                                       pokemon->get_native_party_data()
+                                                                   );
     // TODO: condition
 
     EXPECT_EQ(pokemon->get_level(), int(native_party_data->level));

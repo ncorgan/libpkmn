@@ -20,7 +20,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#define NATIVE_LIST_RCAST (reinterpret_cast<pksav_gba_pokemon_party_t*>(_native))
+#define NATIVE_LIST_RCAST (reinterpret_cast<struct pksav_gba_pokemon_party*>(_native))
 
 namespace pkmn {
 
@@ -28,8 +28,8 @@ namespace pkmn {
         int game_id
     ): pokemon_party_impl(game_id)
     {
-        _native = reinterpret_cast<void*>(new pksav_gba_pokemon_party_t);
-        std::memset(_native, 0, sizeof(pksav_gba_pokemon_party_t));
+        _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party);
+        std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_party));
         _our_mem = true;
 
         _from_native();
@@ -37,7 +37,7 @@ namespace pkmn {
 
     pokemon_party_gbaimpl::pokemon_party_gbaimpl(
         int game_id,
-        pksav_gba_pokemon_party_t* native
+        struct pksav_gba_pokemon_party* native
     ): pokemon_party_impl(game_id)
     {
         _native = reinterpret_cast<void*>(native);
@@ -108,7 +108,7 @@ namespace pkmn {
 
         // Make a copy of the current Pokémon in the given party slot so it can be preserved in an sptr
         // that owns its own memory.
-        copy_party_pokemon<pksav_gba_pc_pokemon_t, pksav_gba_pokemon_party_data_t>(index);
+        copy_party_pokemon<struct pksav_gba_pc_pokemon, struct pksav_gba_pokemon_party_data>(index);
 
         // Copy the new Pokémon's internals into the party's internals and create a new sptr.
         void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
@@ -117,8 +117,8 @@ namespace pkmn {
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
         old_party_pokemon_impl_ptr->unlock();
 
-        NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<pksav_gba_pc_pokemon_t*>(new_pokemon_native_pc_ptr);
-        NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<pksav_gba_pokemon_party_data_t*>(new_pokemon_native_party_ptr);
+        NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
+        NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<struct pksav_gba_pokemon_party_data*>(new_pokemon_native_party_ptr);
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_LIST_RCAST->party[index],
                                    _game_id
@@ -170,7 +170,7 @@ namespace pkmn {
              */
             if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc.blocks.growth.species) > 0)
             {
-                std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_gba_party_pokemon_t));
+                std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(struct pksav_gba_party_pokemon));
             }
 
             _pokemon_list[i] = std::make_shared<pokemon_gbaimpl>(

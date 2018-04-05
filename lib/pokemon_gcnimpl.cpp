@@ -327,7 +327,7 @@ namespace pkmn
                 }
                 else
                 {
-                    pksav_gba_party_pokemon_t pksav_pokemon;
+                    struct pksav_gba_party_pokemon pksav_pokemon;
                     pkmn::conversions::gcn_pokemon_to_gba_party(
                         GC_RCAST,
                         &pksav_pokemon

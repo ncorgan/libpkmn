@@ -87,11 +87,13 @@ namespace pkmn {
                                    item_list_id, game_id, nullptr
                                );
 
+                    /*
                     case 7:
                     case 12:
                         return std::make_shared<item_list_gen2_key_item_pocketimpl>(
                                    item_list_id, game_id, nullptr
                                );
+                               */
 
                     case 8:
                     case 13:

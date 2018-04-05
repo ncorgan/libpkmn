@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -225,7 +225,7 @@ void pokemon_box_test_common(
     // On the C++ level, check the underlying representation.
     switch(generation) {
         case 1: {
-            const pksav_gen1_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen1_pokemon_box_t*>(box->get_native());
+            const struct pksav_gen1_pokemon_box* native_box = reinterpret_cast<const struct pksav_gen1_pokemon_box*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
             for(size_t i = 0; i < 3; ++i) {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
@@ -234,7 +234,7 @@ void pokemon_box_test_common(
 
                 char nickname[11] = {0};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native_box->nicknames[i],
                         nickname,
                         10
@@ -244,7 +244,7 @@ void pokemon_box_test_common(
 
                 char otname[8] = {0};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native_box->otnames[i],
                         otname,
                         7
@@ -257,7 +257,7 @@ void pokemon_box_test_common(
         }
 
         case 2: {
-            const pksav_gen2_pokemon_box_t* native_box = reinterpret_cast<const pksav_gen2_pokemon_box_t*>(box->get_native());
+            const struct pksav_gen2_pokemon_box* native_box = reinterpret_cast<const struct pksav_gen2_pokemon_box*>(box->get_native());
             const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
             for(size_t i = 0; i < 3; ++i) {
                 EXPECT_EQ(pokemon_list.at(i)->get_database_entry().get_pokemon_index(), int(native_box->species[i]));
@@ -266,7 +266,7 @@ void pokemon_box_test_common(
 
                 char nickname[11] = {0};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native_box->nicknames[i],
                         nickname,
                         10
@@ -276,7 +276,7 @@ void pokemon_box_test_common(
 
                 char otname[8] = {0};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native_box->otnames[i],
                         otname,
                         7
@@ -298,7 +298,7 @@ void pokemon_box_test_common(
 
                 EXPECT_EQ(box->get_name(), std::string(native_box->name->toUTF8()));
             } else {
-                const pksav_gba_pokemon_box_t* native_box = reinterpret_cast<const pksav_gba_pokemon_box_t*>(box->get_native());
+                const struct pksav_gba_pokemon_box* native_box = reinterpret_cast<const struct pksav_gba_pokemon_box*>(box->get_native());
                 const pkmn::pokemon_list_t& pokemon_list = box->as_vector();
                 for(size_t i = 0; i < pokemon_list.size(); ++i) {
                     EXPECT_EQ(pokemon_list.at(i)->get_native_pc_data(), &native_box->entries[i]);
@@ -342,8 +342,8 @@ void pokemon_box_test_common(
 // See pokemon_pc_gen2impl.hpp
 BOOST_STATIC_CONSTEXPR int GEN2_NUM_BOXES = 14;
 typedef struct {
-    pksav_gen2_pokemon_box_t* boxes[GEN2_NUM_BOXES];
-    pksav_gen2_pokemon_box_names_t* box_names;
+    struct pksav_gen2_pokemon_box* boxes[GEN2_NUM_BOXES];
+    struct pksav_gen2_pokemon_box_names* box_names;
 } gen2_pokemon_full_pc_t;
 
 void pokemon_pc_test_common(
@@ -386,7 +386,7 @@ void pokemon_pc_test_common(
     // On the C++ level, just check the values we've set to confirm the pointers worked.
     switch(generation) {
         case 1: {
-            const pksav_gen1_pokemon_box_t** native_boxes = reinterpret_cast<const pksav_gen1_pokemon_box_t**>(pc->get_native());
+            const struct pksav_gen1_pokemon_box** native_boxes = reinterpret_cast<const struct pksav_gen1_pokemon_box**>(pc->get_native());
             const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
             for(size_t i = 0; i < pokemon_box_list.size(); ++i) {
                 const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(i)->as_vector();
@@ -417,7 +417,7 @@ void pokemon_pc_test_common(
 
                 char box_name[10] = {0};
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         native_pc->box_names->names[i],
                         box_name,
                         9
@@ -443,7 +443,7 @@ void pokemon_pc_test_common(
                     EXPECT_EQ(std::string(native_boxes[i]->name->toUTF8()), box_names.at(i));
                 }
             } else {
-                const pksav_gba_pokemon_pc_t* native_pc = reinterpret_cast<const pksav_gba_pokemon_pc_t*>(pc->get_native());
+                const struct pksav_gba_pokemon_pc* native_pc = reinterpret_cast<const struct pksav_gba_pokemon_pc*>(pc->get_native());
                 const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
                 const std::vector<std::string>& box_names = pc->get_box_names();
                 for(size_t i = 0; i < pokemon_box_list.size(); ++i) {
@@ -456,7 +456,7 @@ void pokemon_pc_test_common(
 
                     char box_name[10] = {0};
                     PKSAV_CALL(
-                        pksav_text_from_gba(
+                        pksav_gba_import_text(
                             native_pc->box_names[i],
                             box_name,
                             9

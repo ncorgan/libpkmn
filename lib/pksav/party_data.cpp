@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,16 +21,16 @@ namespace pksav {
 
     void gen1_pc_pokemon_to_party_data(
         const pkmn::database::pokemon_entry &entry,
-        const pksav_gen1_pc_pokemon_t* pc,
-        pksav_gen1_pokemon_party_data_t* party_data_out
+        const struct pksav_gen1_pc_pokemon* pc,
+        struct pksav_gen1_pokemon_party_data* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
-        uint32_t exp = 0;
+        size_t exp = 0;
         PKSAV_CALL(
-            pksav_from_base256(
+            pksav_import_base256(
                 pc->exp,
                 3,
                 &exp
@@ -131,8 +131,8 @@ namespace pksav {
 
     void gen2_pc_pokemon_to_party_data(
         const pkmn::database::pokemon_entry &entry,
-        const pksav_gen2_pc_pokemon_t* pc,
-        pksav_gen2_pokemon_party_data_t* party_data_out
+        const struct pksav_gen2_pc_pokemon* pc,
+        struct pksav_gen2_pokemon_party_data* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
@@ -245,16 +245,16 @@ namespace pksav {
     // TODO: nature modifiers
     void gba_pc_pokemon_to_party_data(
         const pkmn::database::pokemon_entry &entry,
-        const pksav_gba_pc_pokemon_t* pc,
-        pksav_gba_pokemon_party_data_t* party_data_out
+        const struct pksav_gba_pc_pokemon* pc,
+        struct pksav_gba_pokemon_party_data* party_data_out
     ) {
         std::memset(party_data_out, 0, sizeof(*party_data_out));
 
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
-        const pksav_gba_pokemon_growth_t* growth = &pc->blocks.growth;
-        const pksav_gba_pokemon_effort_t* effort = &pc->blocks.effort;
-        const pksav_gba_pokemon_misc_t* misc = &pc->blocks.misc;
+        const struct pksav_gba_pokemon_growth_block* growth = &pc->blocks.growth;
+        const struct pksav_gba_pokemon_effort_block* effort = &pc->blocks.effort;
+        const struct pksav_gba_pokemon_misc_block* misc = &pc->blocks.misc;
 
         party_data_out->level = uint8_t(entry.get_level_at_experience(int(growth->exp)));
 

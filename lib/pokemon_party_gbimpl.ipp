@@ -149,7 +149,7 @@ namespace pkmn {
 
         // In Generation II, whether or not a Pokémon is in an egg is
         // stored in the list that stores it, not the Pokémon struct itself.
-        if(std::is_same<list_type, pksav_gen2_pokemon_party_t>::value and actual_new_pokemon->is_egg())
+        if(std::is_same<list_type, struct pksav_gen2_pokemon_party>::value and actual_new_pokemon->is_egg())
         {
             NATIVE_LIST_RCAST->species[index] = GEN2_EGG_ID;
         }
@@ -172,14 +172,14 @@ namespace pkmn {
         if(_generation == 1)
         {
             PKSAV_CALL(
-                pksav_text_to_gen1(
+                pksav_gen1_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
-                pksav_text_to_gen1(
+                pksav_gen1_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
@@ -189,14 +189,14 @@ namespace pkmn {
         else
         {
             PKSAV_CALL(
-                pksav_text_to_gen2(
+                pksav_gen2_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
-                pksav_text_to_gen2(
+                pksav_gen2_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
@@ -252,7 +252,7 @@ namespace pkmn {
 
             // In Generation II, whether or not a Pokémon is in an egg is
             // stored in the list that stores it, not the Pokémon struct itself.
-            if(std::is_same<list_type, pksav_gen2_pokemon_party_t>::value)
+            if(std::is_same<list_type, struct pksav_gen2_pokemon_party>::value)
             {
                 _pokemon_list[i]->set_is_egg(
                     (NATIVE_LIST_RCAST->species[i] == GEN2_EGG_ID)
@@ -262,7 +262,7 @@ namespace pkmn {
             if(_generation == 1)
             {
                 PKSAV_CALL(
-                    pksav_text_from_gen1(
+                    pksav_gen1_import_text(
                         NATIVE_LIST_RCAST->nicknames[i],
                         nickname,
                         10
@@ -274,7 +274,7 @@ namespace pkmn {
                 }
 
                 PKSAV_CALL(
-                    pksav_text_from_gen1(
+                    pksav_gen1_import_text(
                         NATIVE_LIST_RCAST->otnames[i],
                         otname,
                         7
@@ -288,7 +288,7 @@ namespace pkmn {
             else
             {
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         NATIVE_LIST_RCAST->nicknames[i],
                         nickname,
                         10
@@ -300,7 +300,7 @@ namespace pkmn {
                 }
 
                 PKSAV_CALL(
-                    pksav_text_from_gen2(
+                    pksav_gen2_import_text(
                         NATIVE_LIST_RCAST->otnames[i],
                         otname,
                         7

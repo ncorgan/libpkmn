@@ -28,6 +28,10 @@
 
 namespace fs = boost::filesystem;
 
+// TODO: put enum back in PKSav
+#define PKSAV_GEN2_MALE 0
+#define PKSAV_GEN2_FEMALE 1
+
 namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int GOLD    = 4;
@@ -42,20 +46,20 @@ namespace pkmn {
     ): game_save_impl(filepath)
     {
         PKSAV_CALL(
-            pksav_gen2_save_load(
+            pksav_gen2_load_save_from_file(
                 _filepath.c_str(),
                 &_pksav_save
             );
         )
 
-        if(_pksav_save.gen2_game == PKSAV_GEN2_CRYSTAL)
+        if(_pksav_save.save_type == PKSAV_GEN2_SAVE_TYPE_CRYSTAL)
         {
             _game_id = CRYSTAL;
 
             _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             CRYSTAL_PC,
                             _game_id,
-                            _pksav_save.item_pc
+                            _pksav_save.item_storage.item_pc_ptr
                        );
         }
         else
@@ -86,29 +90,29 @@ namespace pkmn {
             _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             GS_PC,
                             _game_id,
-                            _pksav_save.item_pc
+                            _pksav_save.item_storage.item_pc_ptr
                        );
         }
 
         _pokedex = std::make_shared<pokedex_impl>(
                        _game_id,
-                       _pksav_save.pokedex_seen,
-                       _pksav_save.pokedex_owned
+                       _pksav_save.pokedex_lists.seen_ptr,
+                       _pksav_save.pokedex_lists.owned_ptr
                    );
 
         _pokemon_party = std::make_shared<pokemon_party_gen2impl>(
                              _game_id,
-                             _pksav_save.pokemon_party
+                             _pksav_save.pokemon_storage.party_ptr
                          );
         _pokemon_pc = std::make_shared<pokemon_pc_gen2impl>(
                           _game_id,
-                          _pksav_save.pokemon_boxes,
-                          _pksav_save.pokemon_box_names,
+                          _pksav_save.pokemon_storage.box_ptrs,
+                          _pksav_save.pokemon_storage.box_names_ptr,
                           false
                       );
         _item_bag = std::make_shared<item_bag_gen2impl>(
                         _game_id,
-                        _pksav_save.item_bag
+                        _pksav_save.item_storage.item_bag_ptr
                     );
 
         // When a Pokémon is added to the PC or party, it should be
@@ -128,7 +132,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        pksav_gen2_save_free(&_pksav_save);
+        pksav_gen2_free_save(&_pksav_save);
     }
 
     void game_save_gen2impl::save_as(
@@ -153,8 +157,8 @@ namespace pkmn {
 
         char trainer_name[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gen2(
-                _pksav_save.trainer_name,
+            pksav_gen2_import_text(
+                _pksav_save.trainer_info.name_ptr,
                 trainer_name,
                 7
             );
@@ -177,9 +181,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gen2(
+            pksav_gen2_export_text(
                 trainer_name.c_str(),
-                _pksav_save.trainer_name,
+                _pksav_save.trainer_info.name_ptr,
                 7
             );
         )
@@ -189,7 +193,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        return pksav_bigendian16(*_pksav_save.trainer_id);
+        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
     }
 
     void game_save_gen2impl::set_trainer_id(
@@ -200,14 +204,14 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        *_pksav_save.trainer_id = pksav_bigendian16(uint16_t(trainer_id));
+        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(uint16_t(trainer_id));
     }
 
     uint16_t game_save_gen2impl::get_trainer_public_id()
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        return pksav_bigendian16(*_pksav_save.trainer_id);
+        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
     }
 
     void game_save_gen2impl::set_trainer_public_id(
@@ -216,7 +220,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        *_pksav_save.trainer_id = pksav_bigendian16(trainer_public_id);
+        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(trainer_public_id);
     }
 
     uint16_t game_save_gen2impl::get_trainer_secret_id()
@@ -239,7 +243,7 @@ namespace pkmn {
 
         if(_game_id == CRYSTAL)
         {
-            ret = (*_pksav_save.trainer_gender == PKSAV_GEN2_MALE) ? "Male" : "Female";
+            ret = (*_pksav_save.trainer_info.gender_ptr == PKSAV_GEN2_MALE) ? "Male" : "Female";
         }
         else
         {
@@ -259,11 +263,11 @@ namespace pkmn {
         {
             if(trainer_gender == "Male")
             {
-                *_pksav_save.trainer_gender = uint8_t(PKSAV_GEN2_MALE);
+                *_pksav_save.trainer_info.gender_ptr = uint8_t(PKSAV_GEN2_MALE);
             }
             else if(trainer_gender == "Female")
             {
-                *_pksav_save.trainer_gender = uint8_t(PKSAV_GEN2_FEMALE);
+                *_pksav_save.trainer_info.gender_ptr = uint8_t(PKSAV_GEN2_FEMALE);
             }
             else
             {
@@ -282,8 +286,8 @@ namespace pkmn {
 
         char rival_name[8] = {0};
         PKSAV_CALL(
-            pksav_text_from_gen2(
-                _pksav_save.rival_name,
+            pksav_gen2_import_text(
+                _pksav_save.misc_fields.rival_name_ptr,
                 rival_name,
                 7
             );
@@ -306,9 +310,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
         PKSAV_CALL(
-            pksav_text_to_gen2(
+            pksav_gen2_export_text(
                 rival_name.c_str(),
-                _pksav_save.rival_name,
+                _pksav_save.misc_fields.rival_name_ptr,
                 7
             );
         )
@@ -318,16 +322,16 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        uint32_t ret = 0;
+        size_t money_from_pksav = 0;
         PKSAV_CALL(
-            pksav_from_base256(
-                _pksav_save.money,
+            pksav_import_base256(
+                _pksav_save.trainer_info.money_ptr,
                 3,
-                &ret
+                &money_from_pksav
             );
         )
 
-        return int(ret);
+        return int(money_from_pksav);
     }
 
     void game_save_gen2impl::set_money(
@@ -339,9 +343,9 @@ namespace pkmn {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
         PKSAV_CALL(
-            pksav_to_base256(
-                uint32_t(money),
-                _pksav_save.money,
+            pksav_export_base256(
+                size_t(money),
+                _pksav_save.trainer_info.money_ptr,
                 3
             );
         )

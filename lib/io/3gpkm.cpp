@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -28,15 +28,15 @@ namespace pkmn { namespace io {
         int* game_id_out
     ) {
         // Validate size
-        if(buffer.size() != sizeof(pksav_gba_pc_pokemon_t) and
-           buffer.size() != sizeof(pksav_gba_party_pokemon_t))
+        if(buffer.size() != sizeof(struct pksav_gba_pc_pokemon) and
+           buffer.size() != sizeof(struct pksav_gba_party_pokemon))
         {
             return false;
         }
 
-        const pksav_gba_pc_pokemon_t* native = reinterpret_cast<const pksav_gba_pc_pokemon_t*>(buffer.data());
-        const pksav_gba_pokemon_growth_t* growth = &native->blocks.growth;
-        const pksav_gba_pokemon_misc_t* misc = &native->blocks.misc;
+        const struct pksav_gba_pc_pokemon* native = reinterpret_cast<const struct pksav_gba_pc_pokemon*>(buffer.data());
+        const struct pksav_gba_pokemon_growth_block* growth = &native->blocks.growth;
+        const struct pksav_gba_pokemon_misc_block* misc = &native->blocks.misc;
 
         BOOST_STATIC_CONSTEXPR int RUBY = 8;
 
@@ -78,7 +78,7 @@ namespace pkmn { namespace io {
         }
 
         return std::make_shared<pokemon_gbaimpl>(
-                   *reinterpret_cast<const pksav_gba_pc_pokemon_t*>(buffer.data()),
+                   *reinterpret_cast<const struct pksav_gba_pc_pokemon*>(buffer.data()),
                    game_id
                );
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -36,7 +36,8 @@ namespace pkmn {
         int pksav_error_code
     ): std::runtime_error(
           str(boost::format("PKSav returned the following error: \"%s\"")
-              % pksav_strerror(pksav_error_t(pksav_error_code)))
+              % pksav_strerror(::pksav_error(pksav_error_code)))
+                               // TODO: remove :: after exception is removed
        ) {}
 
 }

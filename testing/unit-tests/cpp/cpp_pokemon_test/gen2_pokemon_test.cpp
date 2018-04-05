@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -77,9 +77,9 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
     std::string trainer_gender_before_change = pokemon->get_original_trainer_gender();
     int level_met_before_change = pokemon->get_level_met();
 
-    const pksav_gen2_pc_pokemon_t* native_pc = reinterpret_cast<const pksav_gen2_pc_pokemon_t*>(
-                                                   pokemon->get_native_pc_data()
-                                               );
+    const struct pksav_gen2_pc_pokemon* native_pc = reinterpret_cast<const struct pksav_gen2_pc_pokemon*>(
+                                                        pokemon->get_native_pc_data()
+                                                    );
     uint16_t time_caught_before_change = (native_pc->caught_data & PKSAV_GEN2_TIME_OF_DAY_MASK);
     time_caught_before_change >>= PKSAV_GEN2_TIME_OF_DAY_OFFSET;
 
@@ -124,9 +124,9 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
      * On the C++ level, check the underlying PKSav struct and make
      * sure our abstractions match.
      */
-    const pksav_gen2_pokemon_party_data_t* native_party_data = reinterpret_cast<const pksav_gen2_pokemon_party_data_t*>(
-                                                                   pokemon->get_native_party_data()
-                                                               );
+    const struct pksav_gen2_pokemon_party_data* native_party_data = reinterpret_cast<const struct pksav_gen2_pokemon_party_data*>(
+                                                                        pokemon->get_native_party_data()
+                                                                    );
 
     EXPECT_EQ(native_pc->species, uint8_t(pokemon->get_database_entry().get_pokemon_index()));
     EXPECT_EQ(

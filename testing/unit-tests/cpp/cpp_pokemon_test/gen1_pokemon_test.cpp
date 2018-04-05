@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -47,12 +47,12 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
      * On the C++ level, check the underlying PKSav struct and make
      * sure our abstractions match.
      */
-    const pksav_gen1_pc_pokemon_t* native_pc = reinterpret_cast<pksav_gen1_pc_pokemon_t*>(
-                                                   pokemon->get_native_pc_data()
-                                               );
-    const pksav_gen1_pokemon_party_data_t* native_party_data = reinterpret_cast<pksav_gen1_pokemon_party_data_t*>(
-                                                                   pokemon->get_native_party_data()
-                                                               );
+    const struct pksav_gen1_pc_pokemon* native_pc = reinterpret_cast<struct pksav_gen1_pc_pokemon*>(
+                                                        pokemon->get_native_pc_data()
+                                                    );
+    const struct pksav_gen1_pokemon_party_data* native_party_data = reinterpret_cast<struct pksav_gen1_pokemon_party_data*>(
+                                                                        pokemon->get_native_party_data()
+                                                                    );
 
     /*
      * PC data

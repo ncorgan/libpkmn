@@ -70,7 +70,7 @@ namespace pkmn {
     POKEMON_BOX_GBIMPL_TEMPLATE
     std::string POKEMON_BOX_GBIMPL_CLASS::get_name()
     {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)
+        if(std::is_same<list_type, struct pksav_gen1_pokemon_box>::value)
         {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
         }
@@ -87,7 +87,7 @@ namespace pkmn {
         const std::string &name
     )
     {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)
+        if(std::is_same<list_type, struct pksav_gen1_pokemon_box>::value)
         {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
         }
@@ -210,7 +210,7 @@ namespace pkmn {
 
         // In Generation II, whether or not a Pokémon is in an egg is
         // stored in the list that stores it, not the Pokémon struct itself.
-        if(std::is_same<list_type, pksav_gen2_pokemon_box_t>::value and actual_new_pokemon->is_egg())
+        if(std::is_same<list_type, struct pksav_gen2_pokemon_box>::value and actual_new_pokemon->is_egg())
         {
             NATIVE_LIST_RCAST->species[index] = GEN2_EGG_ID;
         }
@@ -222,14 +222,14 @@ namespace pkmn {
         if(_generation == 1)
         {
             PKSAV_CALL(
-                pksav_text_to_gen1(
+                pksav_gen1_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
-                pksav_text_to_gen1(
+                pksav_gen1_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
@@ -239,14 +239,14 @@ namespace pkmn {
         else
         {
             PKSAV_CALL(
-                pksav_text_to_gen2(
+                pksav_gen2_export_text(
                     actual_new_pokemon->get_nickname().c_str(),
                     NATIVE_LIST_RCAST->nicknames[index],
                     10
                 );
             )
             PKSAV_CALL(
-                pksav_text_to_gen2(
+                pksav_gen2_export_text(
                     actual_new_pokemon->get_original_trainer_name().c_str(),
                     NATIVE_LIST_RCAST->otnames[index],
                     7
@@ -320,7 +320,7 @@ namespace pkmn {
 
             // In Generation II, whether or not a Pokémon is in an egg is
             // stored in the list that stores it, not the Pokémon struct itself.
-            if(std::is_same<list_type, pksav_gen2_pokemon_box_t>::value)
+            if(std::is_same<list_type, struct pksav_gen2_pokemon_box>::value)
             {
                 _pokemon_list[i]->set_is_egg(
                     (NATIVE_LIST_RCAST->species[i] == GEN2_EGG_ID)
@@ -328,7 +328,7 @@ namespace pkmn {
             }
 
             PKSAV_CALL(
-                pksav_text_from_gen1(
+                pksav_gen1_import_text(
                     NATIVE_LIST_RCAST->nicknames[i],
                     nickname,
                     10
@@ -340,7 +340,7 @@ namespace pkmn {
             }
 
             PKSAV_CALL(
-                pksav_text_from_gen1(
+                pksav_gen1_import_text(
                     NATIVE_LIST_RCAST->otnames[i],
                     otname,
                     7

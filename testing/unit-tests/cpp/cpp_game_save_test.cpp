@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -60,7 +60,7 @@ namespace fs = boost::filesystem;
 namespace pkmntest {
 
     static const fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
-    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
+    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAVEST_SAVES"));
 
     typedef std::tuple<std::string, std::string, std::string> game_save_test_params_t;
 
@@ -580,23 +580,23 @@ namespace pkmntest {
     // TODO: specific case for Gamecube games
     BOOST_STATIC_CONSTEXPR size_t pksav_item_pc_sizes[] = {
         0,
-        sizeof(pksav_gen1_item_pc_t),
-        sizeof(pksav_gen2_item_pc_t),
-        (sizeof(pksav_item_t)*50)
+        sizeof(struct pksav_gen1_item_pc),
+        sizeof(struct pksav_gen2_item_pc),
+        (sizeof(struct pksav_item)*50)
     };
 
     // TODO: specific case for Gamecube games
     BOOST_STATIC_CONSTEXPR size_t pksav_pc_pokemon_sizes[] = {
         0,
-        sizeof(pksav_gen1_pc_pokemon_t),
-        sizeof(pksav_gen2_pc_pokemon_t),
-        sizeof(pksav_gba_pc_pokemon_t)
+        sizeof(struct pksav_gen1_pc_pokemon),
+        sizeof(struct pksav_gen2_pc_pokemon),
+        sizeof(struct pksav_gba_pc_pokemon)
     };
     BOOST_STATIC_CONSTEXPR size_t pksav_pokemon_party_data_sizes[] = {
         0,
-        sizeof(pksav_gen1_pokemon_party_data_t),
-        sizeof(pksav_gen2_pokemon_party_data_t),
-        sizeof(pksav_gba_pokemon_party_data_t)
+        sizeof(struct pksav_gen1_pokemon_party_data),
+        sizeof(struct pksav_gen2_pokemon_party_data),
+        sizeof(struct pksav_gba_pokemon_party_data)
     };
 
     static void compare_item_lists(
@@ -733,25 +733,25 @@ namespace pkmntest {
         size_t item_bag_size = 0;
         switch(generation) {
             case 1:
-                item_bag_size = sizeof(pksav_gen1_item_bag_t);
+                item_bag_size = sizeof(struct pksav_gen1_item_bag);
                 break;
 
             case 2:
-                item_bag_size = sizeof(pksav_gen2_item_bag_t);
+                item_bag_size = sizeof(struct pksav_gen2_item_bag);
                 break;
 
             case 3:
                 if(save1->get_game() == "Ruby" or game == "Sapphire")
                 {
-                    item_bag_size = sizeof(pksav_rs_item_storage_t);
+                    item_bag_size = sizeof(struct pksav_gba_rs_item_bag);
                 }
                 else if(save1->get_game() == "Emerald")
                 {
-                    item_bag_size = sizeof(pksav_emerald_item_storage_t);
+                    item_bag_size = sizeof(struct pksav_gba_emerald_item_bag);
                 }
                 else
                 {
-                    item_bag_size = sizeof(pksav_frlg_item_storage_t);
+                    item_bag_size = sizeof(struct pksav_gba_frlg_item_bag);
                 }
                 break;
 
