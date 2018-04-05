@@ -60,7 +60,7 @@ namespace fs = boost::filesystem;
 namespace pkmntest {
 
     static const fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
-    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAVEST_SAVES"));
+    static const fs::path PKSAV_TEST_SAVES(pkmn_getenv("PKSAV_TEST_SAVES"));
 
     typedef std::tuple<std::string, std::string, std::string> game_save_test_params_t;
 
@@ -904,8 +904,8 @@ namespace pkmntest {
     static const fs::path TMP_DIR(pkmn::get_tmp_dir());
 
     static const game_save_test_params_t params[] = {
-        game_save_test_params_t("Red/Blue/Yellow", "Red", "red_blue/pokemon_red.sav"),
-        game_save_test_params_t("Red/Blue/Yellow", "Yellow", "yellow/pokemon_yellow.sav"),
+        game_save_test_params_t("Red/Blue", "Red", "red_blue/pokemon_red.sav"),
+        game_save_test_params_t("Yellow", "Yellow", "yellow/pokemon_yellow.sav"),
         game_save_test_params_t("Gold/Silver", "Gold", "gold_silver/pokemon_gold.sav"),
         game_save_test_params_t("Crystal", "Crystal", "crystal/pokemon_crystal.sav"),
         game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"),

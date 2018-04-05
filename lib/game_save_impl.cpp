@@ -203,6 +203,9 @@ namespace pkmn {
         return SAVE_TYPE_NAMES[save_type];
     }
 
+    // TODO: read file in here, pass vector into _detect_type, then
+    // implement ctors that move vector into subclasses to avoid multiple
+    // file reads
     game_save::sptr game_save::from_file(
         const std::string &filepath
     )
