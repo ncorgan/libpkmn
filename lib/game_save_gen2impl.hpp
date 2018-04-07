@@ -17,8 +17,9 @@ namespace pkmn {
     {
         public:
             game_save_gen2impl() {};
-            explicit game_save_gen2impl(
-                const std::string &filepath
+            game_save_gen2impl(
+                const std::string& filepath,
+                std::vector<uint8_t>&& raw
             );
 
             ~game_save_gen2impl();

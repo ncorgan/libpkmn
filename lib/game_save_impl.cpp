@@ -203,32 +203,48 @@ namespace pkmn {
         return SAVE_TYPE_NAMES[save_type];
     }
 
-    // TODO: read file in here, pass vector into _detect_type, then
-    // implement ctors that move vector into subclasses to avoid multiple
-    // file reads
     game_save::sptr game_save::from_file(
         const std::string &filepath
     )
     {
-        pkmn_save_type_t save_type = _detect_save_type(filepath);
+        size_t filesize = size_t(fs::file_size(filepath));
+        std::vector<uint8_t> raw(filesize);
+
+        std::ifstream ifile(filepath.c_str(), std::ios::binary);
+        ifile.read(reinterpret_cast<char*>(raw.data()), filesize);
+        ifile.close();
+
+        pkmn_save_type_t save_type = _detect_save_type(raw);
 
         switch(save_type)
         {
             case PKMN_SAVE_TYPE_RED_BLUE:
             case PKMN_SAVE_TYPE_YELLOW:
-                return std::make_shared<game_save_gen1impl>(filepath);
+                return std::make_shared<game_save_gen1impl>(
+                           filepath,
+                           std::move(raw)
+                       );
 
             case PKMN_SAVE_TYPE_GOLD_SILVER:
             case PKMN_SAVE_TYPE_CRYSTAL:
-                return std::make_shared<game_save_gen2impl>(filepath);
+                return std::make_shared<game_save_gen2impl>(
+                           filepath,
+                           std::move(raw)
+                       );
 
             case PKMN_SAVE_TYPE_RUBY_SAPPHIRE:
             case PKMN_SAVE_TYPE_EMERALD:
             case PKMN_SAVE_TYPE_FIRERED_LEAFGREEN:
-                return std::make_shared<game_save_gbaimpl>(filepath);
+                return std::make_shared<game_save_gbaimpl>(
+                           filepath,
+                           std::move(raw)
+                       );
 
             case PKMN_SAVE_TYPE_COLOSSEUM_XD:
-                return std::make_shared<game_save_gcnimpl>(filepath);
+                return std::make_shared<game_save_gcnimpl>(
+                           filepath,
+                           std::move(raw)
+                       );
 
             case PKMN_SAVE_TYPE_NONE:
             default:
@@ -237,11 +253,14 @@ namespace pkmn {
     }
 
     game_save_impl::game_save_impl(
-        const std::string &filepath
+        const std::string& filepath,
+        std::vector<uint8_t>&& raw
     ): game_save(),
-       _game_id(0)
+       _game_id(0),
+       _raw(std::move(raw))
     {
-        if(not fs::exists(filepath)) {
+        if(not fs::exists(filepath))
+        {
             throw std::invalid_argument("The given filepath does not exist.");
         }
 

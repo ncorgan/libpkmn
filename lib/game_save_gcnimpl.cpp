@@ -36,32 +36,28 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_GCI_SIZE = 0x56040;
 
     game_save_gcnimpl::game_save_gcnimpl(
-        const std::string &filepath
-    ): game_save_impl(filepath)
+        const std::string& filepath,
+        std::vector<uint8_t>&& raw
+    ): game_save_impl(filepath, std::move(raw))
     {
-        size_t filesize = size_t(fs::file_size(filepath));
-        _data.resize(filesize);
-
-        std::ifstream ifile(filepath, std::ios::binary);
-        ifile.read(reinterpret_cast<char*>(_data.data()), filesize);
-        ifile.close();
+        size_t save_size = _raw.size();
 
         _has_gci_data = false;
-        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE)
+        if(save_size == GCN_COLOSSEUM_BIN_SIZE or save_size == GCN_COLOSSEUM_GCI_SIZE)
         {
             _colosseum = true;
             _game_id = COLOSSEUM_ID;
 
-            _has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), _has_gci_data));
+            _has_gci_data = (save_size == GCN_COLOSSEUM_GCI_SIZE);
+            _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_raw.data(), _has_gci_data));
         }
-        else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE)
+        else if(save_size == GCN_XD_BIN_SIZE or save_size == GCN_XD_GCI_SIZE)
         {
             _colosseum = false;
             _game_id = XD_ID;
 
-            _has_gci_data = (filesize == GCN_XD_GCI_SIZE);
-            _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), _has_gci_data));
+            _has_gci_data = (save_size == GCN_XD_GCI_SIZE);
+            _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_raw.data(), _has_gci_data));
         }
         else
         {
@@ -101,15 +97,15 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::save_as(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
-        _libpkmgc_save->saveEncrypted(_data.data(), _has_gci_data);
+        _libpkmgc_save->saveEncrypted(_raw.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);
-        ofile.write(reinterpret_cast<const char*>(_data.data()), _data.size());
+        ofile.write(reinterpret_cast<const char*>(_raw.data()), _raw.size());
         ofile.close();
 
         _filepath = fs::absolute(filepath).string();
@@ -123,7 +119,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -195,7 +191,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_trainer_gender(
-        PKMN_UNUSED(const std::string &trainer_gender)
+        PKMN_UNUSED(const std::string& trainer_gender)
     )
     {
         throw pkmn::feature_not_in_game_error("All trainers are male in Gamecube games.");
@@ -207,7 +203,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_rival_name(
-        PKMN_UNUSED(const std::string &rival_name)
+        PKMN_UNUSED(const std::string& rival_name)
     )
     {
         throw pkmn::feature_not_in_game_error("Rivals", get_game());

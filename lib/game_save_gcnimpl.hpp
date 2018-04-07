@@ -19,8 +19,9 @@ namespace pkmn {
     class game_save_gcnimpl: public game_save_impl {
         public:
             game_save_gcnimpl() {};
-            explicit game_save_gcnimpl(
-                const std::string &filepath
+            game_save_gcnimpl(
+                const std::string& filepath,
+                std::vector<uint8_t>&& raw
             );
 
             ~game_save_gcnimpl();
@@ -77,7 +78,6 @@ namespace pkmn {
             std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;
             LibPkmGC::GC::SaveEditing::SaveSlot* _current_slot;
 
-            std::vector<LibPkmGC::u8> _data;
             bool _colosseum, _has_gci_data;
     };
 

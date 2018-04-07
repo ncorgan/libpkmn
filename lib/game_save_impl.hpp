@@ -13,6 +13,8 @@
 #include <boost/thread/lockable_adapter.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
+#include <vector>
+
 BOOST_STATIC_CONSTEXPR int MONEY_MAX_VALUE = 999999;
 
 namespace pkmn {
@@ -23,8 +25,9 @@ namespace pkmn {
     {
         public:
             game_save_impl() {};
-            explicit game_save_impl(
-                const std::string& filepath
+            game_save_impl(
+                const std::string& filepath,
+                std::vector<uint8_t>&& raw
             );
 
             virtual ~game_save_impl() {};
@@ -55,6 +58,8 @@ namespace pkmn {
             pkmn::item_list::sptr _item_pc;
 
             int _game_id;
+
+            std::vector<uint8_t> _raw;
     };
 
 }
