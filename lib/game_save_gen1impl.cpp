@@ -95,11 +95,9 @@ namespace pkmn {
                              _pksav_save.pokemon_storage.party_ptr
                          );
 
-        BOOST_ASSERT(_pksav_save.pokemon_storage.box_ptrs != nullptr);
         _pokemon_pc = std::make_shared<pokemon_pc_gen1impl>(
                           _game_id,
-                          _pksav_save.pokemon_storage.box_ptrs,
-                          false
+                          &_pksav_save.pokemon_storage
                       );
 
         BOOST_ASSERT(_pksav_save.item_storage.item_bag_ptr != nullptr);

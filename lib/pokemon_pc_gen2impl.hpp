@@ -10,28 +10,17 @@
 #include "pokemon_pc_impl.hpp"
 
 #include <pksav/gen2/pokemon.h>
+#include <pksav/gen2/save.h>
 
 namespace pkmn {
 
-    BOOST_STATIC_CONSTEXPR int GEN2_NUM_BOXES = 14;
-
-    // TODO: use LibPKMN struct
-    typedef struct {
-        struct pksav_gen2_pokemon_box* boxes[GEN2_NUM_BOXES];
-        struct pksav_gen2_pokemon_box_names* box_names;
-    } gen2_pokemon_full_pc_t;
-
-    class pokemon_pc_gen2impl: public pokemon_pc_impl {
+    class pokemon_pc_gen2impl: public pokemon_pc_impl
+    {
         public:
             pokemon_pc_gen2impl() {}
-            explicit pokemon_pc_gen2impl(
-                int game_id
-            );
             pokemon_pc_gen2impl(
                 int game_id,
-                struct pksav_gen2_pokemon_box** native,
-                struct pksav_gen2_pokemon_box_names* native_box_names,
-                bool copy
+                struct pksav_gen2_pokemon_storage* native_ptr = nullptr
             );
 
             ~pokemon_pc_gen2impl();

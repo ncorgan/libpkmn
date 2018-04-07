@@ -97,7 +97,7 @@ namespace pkmn {
                 "Box name",
                 name,
                 0,
-                8
+                PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH
             );
 
             boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);

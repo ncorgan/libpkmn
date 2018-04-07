@@ -10,32 +10,17 @@
 #include "pokemon_pc_impl.hpp"
 
 #include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/save.h>
 
 namespace pkmn {
 
-    BOOST_STATIC_CONSTEXPR int GEN1_NUM_BOXES = 12;
-
-    // TODO: replace with pksav_gen1_pokemon_storage pointer
-    typedef struct
+    class pokemon_pc_gen1impl: public pokemon_pc_impl
     {
-        struct pksav_gen1_pokemon_box* boxes[GEN1_NUM_BOXES];
-    } gen1_pokemon_boxes_t;
-
-    class pokemon_pc_gen1impl: public pokemon_pc_impl {
         public:
             pokemon_pc_gen1impl() {}
-            explicit pokemon_pc_gen1impl(
-                int game_id
-            );
             pokemon_pc_gen1impl(
                 int game_id,
-                struct pksav_gen1_pokemon_box* native,
-                bool copy
-            );
-            pokemon_pc_gen1impl(
-                int game_id,
-                struct pksav_gen1_pokemon_box** native,
-                bool copy
+                struct pksav_gen1_pokemon_storage* native_ptr = nullptr
             );
 
             ~pokemon_pc_gen1impl();
