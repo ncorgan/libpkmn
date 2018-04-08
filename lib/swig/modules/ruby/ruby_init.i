@@ -6,6 +6,8 @@
  */
 
 %define PKMN_RUBY_INIT
+    %feature("autodoc", "2");
+
     %include <swig_exceptions.i>
     SWIG_CATCH_DEFAULT
 
