@@ -10,7 +10,7 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_move_slot_free(
+enum pkmn_error pkmn_move_slot_free(
     struct pkmn_move_slot* move_slot_ptr
 )
 {
@@ -22,13 +22,13 @@ pkmn_error_t pkmn_move_slot_free(
     return PKMN_ERROR_NONE;
 }
 
-pkmn_error_t pkmn_move_slots_free(
+enum pkmn_error pkmn_move_slots_free(
     struct pkmn_move_slots* move_slots_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(move_slots_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     if(move_slots_ptr->length > 0)
     {

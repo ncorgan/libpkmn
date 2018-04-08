@@ -10,13 +10,13 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_pokemon_box_list_free(
+enum pkmn_error pkmn_pokemon_box_list_free(
     struct pkmn_pokemon_box_list* pokemon_box_list_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_list_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     if(pokemon_box_list_ptr->length > 0)
     {

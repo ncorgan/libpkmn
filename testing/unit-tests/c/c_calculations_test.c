@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,13 +15,13 @@
 
 #define BUFFER_SIZE 512
 static char strbuffer[BUFFER_SIZE];
-static pkmn_error_t error;
+static enum pkmn_error error;
 static int int_result = 0;
 static float float_result = 0;
 static bool bool_result = false;
 static enum pkmn_gender gender_result = PKMN_GENDER_MALE;
 static struct pkmn_hidden_power hidden_power_result = { NULL, 0 };
-static pkmn_spinda_spots_t pkmn_spinda_spots_t_result;
+static struct pkmn_spinda_spots spinda_spots_result;
 
 static void brine_power_test()
 {
@@ -2193,7 +2193,7 @@ static void modern_shiny_test() {
 
 static void pokemon_size_test() {
     float size = 0.0f;
-    pkmn_database_pokemon_entry_t entry;
+    struct pkmn_database_pokemon_entry entry;
     srand((unsigned int)time(NULL));
 
     // Test input validation.
@@ -2293,7 +2293,7 @@ static void spinda_spot_test() {
      *
      * Source: https://github.com/magical/spinda
      */
-    static const pkmn_spinda_spots_t SPOTS1 = {
+    static const struct pkmn_spinda_spots SPOTS1 = {
                      .left_ear = {
                          7,
                          5
@@ -2314,17 +2314,17 @@ static void spinda_spot_test() {
 
     error = pkmn_calculations_spinda_spot_offset(
                 4064348759,
-                &pkmn_spinda_spots_t_result
+                &spinda_spots_result
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL(SPOTS1.left_ear.x, pkmn_spinda_spots_t_result.left_ear.x);
-    TEST_ASSERT_EQUAL(SPOTS1.left_ear.y, pkmn_spinda_spots_t_result.left_ear.y);
-    TEST_ASSERT_EQUAL(SPOTS1.right_ear.x, pkmn_spinda_spots_t_result.right_ear.x);
-    TEST_ASSERT_EQUAL(SPOTS1.right_ear.y, pkmn_spinda_spots_t_result.right_ear.y);
-    TEST_ASSERT_EQUAL(SPOTS1.left_face.x, pkmn_spinda_spots_t_result.left_face.x);
-    TEST_ASSERT_EQUAL(SPOTS1.left_face.y, pkmn_spinda_spots_t_result.left_face.y);
-    TEST_ASSERT_EQUAL(SPOTS1.right_face.x, pkmn_spinda_spots_t_result.right_face.x);
-    TEST_ASSERT_EQUAL(SPOTS1.right_face.y, pkmn_spinda_spots_t_result.right_face.y);
+    TEST_ASSERT_EQUAL(SPOTS1.left_ear.x, spinda_spots_result.left_ear.x);
+    TEST_ASSERT_EQUAL(SPOTS1.left_ear.y, spinda_spots_result.left_ear.y);
+    TEST_ASSERT_EQUAL(SPOTS1.right_ear.x, spinda_spots_result.right_ear.x);
+    TEST_ASSERT_EQUAL(SPOTS1.right_ear.y, spinda_spots_result.right_ear.y);
+    TEST_ASSERT_EQUAL(SPOTS1.left_face.x, spinda_spots_result.left_face.x);
+    TEST_ASSERT_EQUAL(SPOTS1.left_face.y, spinda_spots_result.left_face.y);
+    TEST_ASSERT_EQUAL(SPOTS1.right_face.x, spinda_spots_result.right_face.x);
+    TEST_ASSERT_EQUAL(SPOTS1.right_face.y, spinda_spots_result.right_face.y);
 }
 
 static void gb_stat_test() {

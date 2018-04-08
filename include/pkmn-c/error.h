@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,7 +10,8 @@
 #include <pkmn-c/config.h>
 
 //! A list of possible error codes.
-typedef enum {
+enum pkmn_error
+{
     //! No error.
     PKMN_ERROR_NONE = 0,
 
@@ -52,7 +53,7 @@ typedef enum {
 
     //! The core library threw something not derived from a std::exception.
     PKMN_ERROR_UNKNOWN_ERROR = 60
-} pkmn_error_t;
+};
 
 #ifdef __cplusplus
 extern "C" {

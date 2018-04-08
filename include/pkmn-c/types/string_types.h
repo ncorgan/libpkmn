@@ -28,11 +28,11 @@ struct pkmn_string_pair
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_string_list_free(
+PKMN_C_API enum pkmn_error pkmn_string_list_free(
     struct pkmn_string_list* string_list_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_string_pair_free(
+PKMN_C_API enum pkmn_error pkmn_string_pair_free(
     struct pkmn_string_pair* string_pair_ptr
 );
 

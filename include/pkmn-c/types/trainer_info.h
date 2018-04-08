@@ -24,7 +24,7 @@ struct pkmn_trainer_info
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_trainer_info_free(
+PKMN_C_API enum pkmn_error pkmn_trainer_info_free(
     struct pkmn_trainer_info* trainer_info_ptr
 );
 

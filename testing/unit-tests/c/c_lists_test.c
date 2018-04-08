@@ -16,7 +16,7 @@ static void ability_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_ability_list(
@@ -49,7 +49,7 @@ static void game_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_game_list(
@@ -87,7 +87,7 @@ static void gamecube_shadow_pokemon_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_gamecube_shadow_pokemon_list(
                 true,
@@ -118,7 +118,7 @@ static void item_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_item_list(
@@ -155,7 +155,7 @@ static void location_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_location_list(
@@ -192,7 +192,7 @@ static void move_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_move_list(
@@ -229,7 +229,7 @@ static void nature_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_nature_list(
                 &natures
@@ -258,7 +258,7 @@ static void pokemon_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_pokemon_list(
                 0,
@@ -296,7 +296,7 @@ static void region_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_region_list(
                 &regions
@@ -330,7 +330,7 @@ static void super_training_medal_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_super_training_medal_list(
                 &super_training_medals
@@ -359,7 +359,7 @@ static void type_list_test()
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_type_list(

@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/moves/power.hpp>
 
-pkmn_error_t pkmn_calculations_brine_power(
+enum pkmn_error pkmn_calculations_brine_power(
     int target_current_hp,
     int target_max_hp,
     int* brine_power_out
@@ -28,7 +28,7 @@ pkmn_error_t pkmn_calculations_brine_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_crush_grip_power(
+enum pkmn_error pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
     int generation,
@@ -46,7 +46,7 @@ pkmn_error_t pkmn_calculations_crush_grip_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_echoed_voice_powers(
+enum pkmn_error pkmn_calculations_echoed_voice_powers(
     int* powers_buffer,
     size_t buffer_len,
     size_t* num_powers_out
@@ -65,7 +65,7 @@ pkmn_error_t pkmn_calculations_echoed_voice_powers(
     )
 }
 
-pkmn_error_t pkmn_calculations_electro_ball_power(
+enum pkmn_error pkmn_calculations_electro_ball_power(
     int attacker_speed,
     int target_speed,
     int* electro_ball_power_out
@@ -81,7 +81,7 @@ pkmn_error_t pkmn_calculations_electro_ball_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_eruption_power(
+enum pkmn_error pkmn_calculations_eruption_power(
     int attacker_hp,
     int target_hp,
     int* eruption_power_out
@@ -97,7 +97,7 @@ pkmn_error_t pkmn_calculations_eruption_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_fury_cutter_powers(
+enum pkmn_error pkmn_calculations_fury_cutter_powers(
     int generation,
     int* powers_buffer,
     size_t buffer_len,
@@ -117,7 +117,7 @@ pkmn_error_t pkmn_calculations_fury_cutter_powers(
     )
 }
 
-pkmn_error_t pkmn_calculations_flail_power(
+enum pkmn_error pkmn_calculations_flail_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* flail_power_out
@@ -133,7 +133,7 @@ pkmn_error_t pkmn_calculations_flail_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_fling_power(
+enum pkmn_error pkmn_calculations_fling_power(
     const char* held_item,
     int* fling_power_out
 )
@@ -148,7 +148,7 @@ pkmn_error_t pkmn_calculations_fling_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_frustration_power(
+enum pkmn_error pkmn_calculations_frustration_power(
     int friendship,
     int* frustration_power_out
 )
@@ -162,7 +162,7 @@ pkmn_error_t pkmn_calculations_frustration_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_grass_knot_power(
+enum pkmn_error pkmn_calculations_grass_knot_power(
     float target_weight,
     int* grass_knot_power_out
 )
@@ -176,7 +176,7 @@ pkmn_error_t pkmn_calculations_grass_knot_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_gyro_ball_power(
+enum pkmn_error pkmn_calculations_gyro_ball_power(
     int attacker_speed,
     int target_speed,
     int* gyro_ball_power_out
@@ -192,7 +192,7 @@ pkmn_error_t pkmn_calculations_gyro_ball_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_ice_ball_powers(
+enum pkmn_error pkmn_calculations_ice_ball_powers(
     int* powers_buffer,
     size_t buffer_len,
     size_t* num_powers_out
@@ -211,7 +211,7 @@ pkmn_error_t pkmn_calculations_ice_ball_powers(
     )
 }
 
-pkmn_error_t pkmn_calculations_low_kick_power(
+enum pkmn_error pkmn_calculations_low_kick_power(
     float target_weight,
     int generation,
     int* low_kick_power_out
@@ -227,7 +227,7 @@ pkmn_error_t pkmn_calculations_low_kick_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_heat_crash_power(
+enum pkmn_error pkmn_calculations_heat_crash_power(
     float attacker_weight,
     float target_weight,
     int* heat_crash_power_out
@@ -243,7 +243,7 @@ pkmn_error_t pkmn_calculations_heat_crash_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_heavy_slam_power(
+enum pkmn_error pkmn_calculations_heavy_slam_power(
     float attacker_weight,
     float target_weight,
     int* heavy_slam_power_out
@@ -259,7 +259,7 @@ pkmn_error_t pkmn_calculations_heavy_slam_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_power_trip_power(
+enum pkmn_error pkmn_calculations_power_trip_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -285,7 +285,7 @@ pkmn_error_t pkmn_calculations_power_trip_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_punishment_power(
+enum pkmn_error pkmn_calculations_punishment_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -311,7 +311,7 @@ pkmn_error_t pkmn_calculations_punishment_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_return_power(
+enum pkmn_error pkmn_calculations_return_power(
     int friendship,
     int* return_power_out
 )
@@ -325,7 +325,7 @@ pkmn_error_t pkmn_calculations_return_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_reversal_power(
+enum pkmn_error pkmn_calculations_reversal_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* reversal_power_out
@@ -341,7 +341,7 @@ pkmn_error_t pkmn_calculations_reversal_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_rollout_powers(
+enum pkmn_error pkmn_calculations_rollout_powers(
     int* powers_buffer,
     size_t buffer_len,
     size_t* num_powers_out
@@ -360,7 +360,7 @@ pkmn_error_t pkmn_calculations_rollout_powers(
     )
 }
 
-pkmn_error_t pkmn_calculations_spit_up_power(
+enum pkmn_error pkmn_calculations_spit_up_power(
     int stockpile_amount,
     int* spit_up_power_out
 )
@@ -374,7 +374,7 @@ pkmn_error_t pkmn_calculations_spit_up_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_stored_power_power(
+enum pkmn_error pkmn_calculations_stored_power_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -400,7 +400,7 @@ pkmn_error_t pkmn_calculations_stored_power_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_triple_kick_powers(
+enum pkmn_error pkmn_calculations_triple_kick_powers(
     int* powers_buffer,
     size_t buffer_len,
     size_t* num_powers_out
@@ -419,7 +419,7 @@ pkmn_error_t pkmn_calculations_triple_kick_powers(
     )
 }
 
-pkmn_error_t pkmn_calculations_trump_card_power(
+enum pkmn_error pkmn_calculations_trump_card_power(
     int pp_remaining_after_use,
     int* trump_card_power_out
 )
@@ -433,7 +433,7 @@ pkmn_error_t pkmn_calculations_trump_card_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_water_spout_power(
+enum pkmn_error pkmn_calculations_water_spout_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* water_spout_power_out
@@ -449,7 +449,7 @@ pkmn_error_t pkmn_calculations_water_spout_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_wring_out_power(
+enum pkmn_error pkmn_calculations_wring_out_power(
     int target_current_hp,
     int target_max_hp,
     int generation,

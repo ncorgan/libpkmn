@@ -143,42 +143,42 @@ namespace pkmn { namespace c {
     // Calls to initialize internal representations.
     void init_item_bag(
         const pkmn::item_bag::sptr& cpp_item_bag,
-        pkmn_item_bag_t* item_bag_ptr
+        struct pkmn_item_bag* item_bag_ptr
     );
 
     void init_item_list(
         const pkmn::item_list::sptr& cpp_item_list,
-        pkmn_item_list_t* item_list_ptr
+        struct pkmn_item_list* item_list_ptr
     );
 
     void init_pokedex(
         const pkmn::pokedex::sptr& cpp_pokedex,
-        pkmn_pokedex_t* pokedex_ptr
+        struct pkmn_pokedex* pokedex_ptr
     );
 
     void init_pokemon(
         const pkmn::pokemon::sptr& cpp_pokemon,
-        pkmn_pokemon_t* pokemon_ptr
+        struct pkmn_pokemon* pokemon_ptr
     );
 
     void init_pokemon_box(
         const pkmn::pokemon_box::sptr& cpp_pokemon_box,
-        pkmn_pokemon_box_t* pokemon_box_ptr
+        struct pkmn_pokemon_box* pokemon_box_ptr
     );
 
     void init_pokemon_party(
         const pkmn::pokemon_party::sptr& cpp_pokemon_party,
-        pkmn_pokemon_party_t* pokemon_party_ptr
+        struct pkmn_pokemon_party* pokemon_party_ptr
     );
 
     void init_pokemon_pc(
         const pkmn::pokemon_pc::sptr& cpp_pokemon_pc,
-        pkmn_pokemon_pc_t* pokemon_pc_ptr
+        struct pkmn_pokemon_pc* pokemon_pc_ptr
     );
 
     void init_game_save(
         const pkmn::game_save::sptr& cpp_game_save,
-        pkmn_game_save_t* game_save_ptr
+        struct pkmn_game_save* game_save_ptr
     );
 
     template <typename pointer_type>
@@ -425,17 +425,17 @@ namespace pkmn { namespace c {
 
     void item_entry_cpp_to_c(
         const pkmn::database::item_entry& item_entry_cpp,
-        pkmn_database_item_entry_t* item_entry_c_ptr
+        struct pkmn_database_item_entry* item_entry_c_ptr
     );
 
     void move_entry_cpp_to_c(
         const pkmn::database::move_entry& move_entry_cpp,
-        pkmn_database_move_entry_t* move_entry_c_ptr
+        struct pkmn_database_move_entry* move_entry_c_ptr
     );
 
     void pokemon_entry_cpp_to_c(
         const pkmn::database::pokemon_entry& pokemon_entry_cpp,
-        pkmn_database_pokemon_entry_t* pokemon_entry_c_ptr
+        struct pkmn_database_pokemon_entry* pokemon_entry_c_ptr
     );
 
     void pokemon_list_cpp_to_c(

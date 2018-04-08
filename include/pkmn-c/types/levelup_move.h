@@ -28,11 +28,11 @@ struct pkmn_levelup_moves
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_levelup_move_free(
+PKMN_C_API enum pkmn_error pkmn_levelup_move_free(
     struct pkmn_levelup_move* levelup_move_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_levelup_moves_free(
+PKMN_C_API enum pkmn_error pkmn_levelup_moves_free(
     struct pkmn_levelup_moves* levelup_moves_ptr
 );
 

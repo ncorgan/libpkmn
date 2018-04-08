@@ -36,7 +36,7 @@ static const struct pkmn_trainer_info empty_trainer_info =
     .gender = PKMN_GENDER_MALE
 };
 
-static const pkmn_database_move_entry_t empty_move_entry =
+static const struct pkmn_database_move_entry empty_move_entry =
 {
     .name = NULL,
     .game = NULL,
@@ -52,7 +52,7 @@ static const pkmn_database_move_entry_t empty_move_entry =
     .super_contest_effect = NULL
 };
 
-static const pkmn_database_pokemon_entry_t empty_pokemon_entry =
+static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
 {
     .name = NULL,
     .game = NULL,
@@ -123,7 +123,7 @@ static const struct pkmn_move_slots empty_move_slots =
 };
 
 static void check_initial_values(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -134,9 +134,9 @@ static void check_initial_values(
     );
 
     char strbuffer[STRBUFFER_LEN] = {0};
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_database_pokemon_entry_t pokemon_entry = empty_pokemon_entry;
+    struct pkmn_database_pokemon_entry pokemon_entry = empty_pokemon_entry;
     error = pkmn_pokemon_get_database_entry(
                 pokemon_ptr,
                 &pokemon_entry
@@ -381,14 +381,14 @@ static void check_initial_values(
 }
 
 static void check_initial_maps(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
     int generation = game_to_generation(pokemon_ptr->game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int EVs[PKMN_NUM_STATS] = {0};
     int IVs[PKMN_NUM_STATS] = {0};
@@ -575,12 +575,12 @@ static void check_initial_maps(
 }
 
 static void test_image_filepaths(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(pokemon_ptr->game);
@@ -640,19 +640,19 @@ static void test_image_filepaths(
 }
 
 static void test_setting_ability(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(pokemon_ptr->game);
 
     if(generation >= 3)
     {
-        pkmn_database_pokemon_entry_t database_entry = empty_pokemon_entry;
+        struct pkmn_database_pokemon_entry database_entry = empty_pokemon_entry;
         error = pkmn_pokemon_get_database_entry(
                     pokemon_ptr,
                     &database_entry
@@ -755,7 +755,7 @@ static void test_setting_ability(
 }
 
 static void test_setting_ball(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     const char* valid_ball_name,
     const char** invalid_ball_names
 )
@@ -764,7 +764,7 @@ static void test_setting_ball(
     TEST_ASSERT_NOT_NULL(valid_ball_name);
     TEST_ASSERT_NOT_NULL(invalid_ball_names);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(pokemon_ptr->game);
@@ -818,12 +818,12 @@ static void test_setting_ball(
 }
 
 static void test_setting_condition(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -850,12 +850,12 @@ static void test_setting_condition(
 }
 
 static void test_setting_friendship(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -907,7 +907,7 @@ static void test_setting_friendship(
 }
 
 static void test_setting_held_item(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     const char* valid_item_name,
     const char** invalid_item_names
 )
@@ -916,7 +916,7 @@ static void test_setting_held_item(
     TEST_ASSERT_NOT_NULL(valid_item_name);
     TEST_ASSERT_NOT_NULL(invalid_item_names);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(pokemon_ptr->game);
@@ -970,12 +970,12 @@ static void test_setting_held_item(
 }
 
 static void test_setting_levels(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -990,7 +990,7 @@ static void test_setting_levels(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-    pkmn_database_pokemon_entry_t database_entry = empty_pokemon_entry;
+    struct pkmn_database_pokemon_entry database_entry = empty_pokemon_entry;
     error = pkmn_pokemon_get_database_entry(
                 pokemon_ptr,
                 &database_entry
@@ -1158,7 +1158,7 @@ static void test_setting_levels(
 }
 
 static void test_setting_location_met(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     const char* expected_original_location,
     const char** valid_locations,
     const char** invalid_locations
@@ -1170,7 +1170,7 @@ static void test_setting_location_met(
     TEST_ASSERT_NOT_NULL(invalid_locations);
 
     char strbuffer[STRBUFFER_LEN] = {0};
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -1316,12 +1316,12 @@ static void test_setting_location_met(
 }
 
 static void test_setting_markings(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     bool has_markings[PKMN_NUM_MARKINGS];
 
     int generation = game_to_generation(pokemon_ptr->game);
@@ -1384,7 +1384,7 @@ static void test_setting_markings(
 }
 
 static void test_setting_moves(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     const char** valid_move_names,
     const char** invalid_move_names
 )
@@ -1393,7 +1393,7 @@ static void test_setting_moves(
     TEST_ASSERT_NOT_NULL(valid_move_names);
     TEST_ASSERT_NOT_NULL(invalid_move_names);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_pokemon_set_move(
                 pokemon_ptr,
@@ -1412,7 +1412,7 @@ static void test_setting_moves(
         (move_index < 4) && valid_move_names[move_index];
         ++move_index)
     {
-        pkmn_database_move_entry_t move_entry = empty_move_entry;
+        struct pkmn_database_move_entry move_entry = empty_move_entry;
         error = pkmn_database_get_move_entry(
                     valid_move_names[move_index],
                     pokemon_ptr->game,
@@ -1481,7 +1481,7 @@ static void test_setting_moves(
 }
 
 static void test_setting_original_game(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     const char** valid_game_names,
     const char** invalid_game_names
 )
@@ -1491,7 +1491,7 @@ static void test_setting_original_game(
     TEST_ASSERT_NOT_NULL(invalid_game_names);
 
     char strbuffer[STRBUFFER_LEN] = {0};
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -1552,12 +1552,12 @@ static void test_setting_original_game(
 }
 
 static void test_setting_personality(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -1594,12 +1594,12 @@ static void test_setting_personality(
 }
 
 static void test_setting_pokerus(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -1651,12 +1651,12 @@ static void test_setting_pokerus(
 }
 
 static void test_setting_stats(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(pokemon_ptr->game);
 
@@ -1816,12 +1816,12 @@ static void test_setting_stats(
 }
 
 static void test_setting_trainer_info(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     int generation = game_to_generation(pokemon_ptr->game);
@@ -1975,7 +1975,7 @@ static void test_setting_trainer_info(
 }
 
 void pokemon_test_common(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     pkmn_test_values_t* test_values_ptr
 )
 {

@@ -12,7 +12,7 @@
 
 #include <pkmn/utils/paths.hpp>
 
-pkmn_error_t pkmn_get_appdata_dir(
+enum pkmn_error pkmn_get_appdata_dir(
     char* appdata_dir_out,
     size_t buffer_len,
     size_t* appdata_dir_length_out
@@ -30,7 +30,7 @@ pkmn_error_t pkmn_get_appdata_dir(
     )
 }
 
-pkmn_error_t pkmn_get_database_path(
+enum pkmn_error pkmn_get_database_path(
     char* database_path_out,
     size_t buffer_len,
     size_t* database_path_length_out
@@ -48,7 +48,7 @@ pkmn_error_t pkmn_get_database_path(
     )
 }
 
-pkmn_error_t pkmn_get_images_dir(
+enum pkmn_error pkmn_get_images_dir(
     char* images_dir_out,
     size_t buffer_len,
     size_t* images_dir_length_out
@@ -66,7 +66,7 @@ pkmn_error_t pkmn_get_images_dir(
     )
 }
 
-pkmn_error_t pkmn_get_tmp_dir(
+enum pkmn_error pkmn_get_tmp_dir(
     char* tmp_dir_out,
     size_t buffer_len,
     size_t* tmp_dir_length_out

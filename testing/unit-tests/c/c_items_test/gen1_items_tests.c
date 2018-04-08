@@ -26,12 +26,12 @@ static const char* WRONG_GENERATION_ITEM_NAMES[] =
 };
 
 static void gen1_item_list_test_common(
-    pkmn_item_list_t* item_list_ptr
+    struct pkmn_item_list* item_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as correctly empty.
     test_item_list_initial_values(item_list_ptr);
@@ -98,7 +98,7 @@ static void gen1_item_list_test_common(
 }
 
 static void gen1_item_pocket_test(
-    pkmn_item_list_t* item_pocket_ptr,
+    struct pkmn_item_list* item_pocket_ptr,
     const char* game
 )
 {
@@ -118,9 +118,9 @@ static void gen1_item_pc_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_item_list_t item_pc =
+    struct pkmn_item_list item_pc =
     {
         .name = NULL,
         .game = NULL,
@@ -153,9 +153,9 @@ static void gen1_item_bag_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_item_bag_t item_bag =
+    struct pkmn_item_bag item_bag =
     {
         .game = NULL,
         .pocket_names =
@@ -181,7 +181,7 @@ static void gen1_item_bag_test(
     TEST_ASSERT_EQUAL(1, item_bag.pocket_names.length);
     TEST_ASSERT_EQUAL_STRING("Items", item_bag.pocket_names.strings[0]);
 
-    pkmn_item_list_t item_pocket =
+    struct pkmn_item_list item_pocket =
     {
         .name = NULL,
         .game = NULL,
@@ -257,9 +257,9 @@ static void gen1_item_bag_test(
 #define GEN1_ITEM_TESTS(test_game) \
 void test_gen1_item_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t item_pocket = \
+    struct pkmn_item_list item_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \

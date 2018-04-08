@@ -36,7 +36,7 @@ static void enforce_enum_bounds(
     );
 }
 
-pkmn_error_t pkmn_calculations_gb_stat(
+enum pkmn_error pkmn_calculations_gb_stat(
     enum pkmn_stat stat,
     int level,
     int base_stat,
@@ -56,7 +56,7 @@ pkmn_error_t pkmn_calculations_gb_stat(
     )
 }
 
-pkmn_error_t pkmn_calculations_gb_stat_range(
+enum pkmn_error pkmn_calculations_gb_stat_range(
     enum pkmn_stat stat,
     int level,
     int base_stat,
@@ -76,7 +76,7 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
     )
 }
 
-pkmn_error_t pkmn_calculations_modern_stat(
+enum pkmn_error pkmn_calculations_modern_stat(
     enum pkmn_stat stat,
     int level,
     float nature_modifier,
@@ -98,7 +98,7 @@ pkmn_error_t pkmn_calculations_modern_stat(
     )
 }
 
-pkmn_error_t pkmn_calculations_modern_stat_range(
+enum pkmn_error pkmn_calculations_modern_stat_range(
     enum pkmn_stat stat,
     int level,
     int base_stat,

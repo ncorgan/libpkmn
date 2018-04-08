@@ -22,7 +22,7 @@ namespace pkmn { namespace c {
 
     void init_item_bag(
         const pkmn::item_bag::sptr& cpp_item_bag,
-        pkmn_item_bag_t* item_bag_ptr
+        struct pkmn_item_bag* item_bag_ptr
     )
     {
         BOOST_ASSERT(item_bag_ptr != nullptr);
@@ -32,7 +32,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_item_bag_t temp_item_bag =
+        struct pkmn_item_bag temp_item_bag =
         {
             nullptr, // game
             // pocket_names
@@ -64,7 +64,7 @@ namespace pkmn { namespace c {
 
     void init_item_list(
         const pkmn::item_list::sptr& cpp_item_list,
-        pkmn_item_list_t* item_list_ptr
+        struct pkmn_item_list* item_list_ptr
     )
     {
         BOOST_ASSERT(item_list_ptr != nullptr);
@@ -74,7 +74,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_item_list_t temp_item_list =
+        struct pkmn_item_list temp_item_list =
         {
             nullptr, // name
             nullptr, // game
@@ -104,7 +104,7 @@ namespace pkmn { namespace c {
 
     void init_pokedex(
         const pkmn::pokedex::sptr& cpp_pokedex,
-        pkmn_pokedex_t* pokedex_ptr
+        struct pkmn_pokedex* pokedex_ptr
     )
     {
         BOOST_ASSERT(pokedex_ptr != nullptr);
@@ -114,7 +114,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokedex_t temp_pokedex =
+        struct pkmn_pokedex temp_pokedex =
         {
             nullptr, // game
             nullptr // _internal
@@ -137,7 +137,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon(
         const pkmn::pokemon::sptr& cpp_pokemon,
-        pkmn_pokemon_t* pokemon_ptr
+        struct pkmn_pokemon* pokemon_ptr
     )
     {
         BOOST_ASSERT(pokemon_ptr != nullptr);
@@ -147,7 +147,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_t temp_pokemon =
+        struct pkmn_pokemon temp_pokemon =
         {
             nullptr, // species
             nullptr, // game
@@ -178,7 +178,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_box(
         const pkmn::pokemon_box::sptr& cpp_pokemon_box,
-        pkmn_pokemon_box_t* pokemon_box_ptr
+        struct pkmn_pokemon_box* pokemon_box_ptr
     )
     {
         BOOST_ASSERT(pokemon_box_ptr != nullptr);
@@ -188,7 +188,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_box_t temp_pokemon_box =
+        struct pkmn_pokemon_box temp_pokemon_box =
         {
             nullptr, // game
             0ULL,    // capacity
@@ -213,7 +213,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_party(
         const pkmn::pokemon_party::sptr& cpp_pokemon_party,
-        pkmn_pokemon_party_t* pokemon_party_ptr
+        struct pkmn_pokemon_party* pokemon_party_ptr
     )
     {
         BOOST_ASSERT(pokemon_party_ptr != nullptr);
@@ -223,7 +223,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_party_t temp_pokemon_party =
+        struct pkmn_pokemon_party temp_pokemon_party =
         {
             nullptr, // game
             0ULL,    // capacity
@@ -248,7 +248,7 @@ namespace pkmn { namespace c {
 
     void init_pokemon_pc(
         const pkmn::pokemon_pc::sptr& cpp_pokemon_pc,
-        pkmn_pokemon_pc_t* pokemon_pc_ptr
+        struct pkmn_pokemon_pc* pokemon_pc_ptr
     )
     {
         BOOST_ASSERT(pokemon_pc_ptr != nullptr);
@@ -258,7 +258,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_pc_t temp_pokemon_pc =
+        struct pkmn_pokemon_pc temp_pokemon_pc =
         {
             nullptr, // game
             0ULL,    // capacity
@@ -283,7 +283,7 @@ namespace pkmn { namespace c {
 
     void init_game_save(
         const pkmn::game_save::sptr& cpp_game_save,
-        pkmn_game_save_t* game_save_ptr
+        struct pkmn_game_save* game_save_ptr
     )
     {
         BOOST_ASSERT(game_save_ptr != nullptr);
@@ -293,7 +293,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_game_save_t temp_game_save =
+        struct pkmn_game_save temp_game_save =
         {
             nullptr, // game
             nullptr  // _internal
@@ -587,7 +587,7 @@ namespace pkmn { namespace c {
 
     void item_entry_cpp_to_c(
         const pkmn::database::item_entry& item_entry_cpp,
-        pkmn_database_item_entry_t* item_entry_c_ptr
+        struct pkmn_database_item_entry* item_entry_c_ptr
     )
     {
         BOOST_ASSERT(item_entry_c_ptr != nullptr);
@@ -596,7 +596,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_database_item_entry_t temp_item_entry =
+        struct pkmn_database_item_entry temp_item_entry =
         {
             nullptr, // name
             nullptr, // game
@@ -645,7 +645,7 @@ namespace pkmn { namespace c {
 
     void move_entry_cpp_to_c(
         const pkmn::database::move_entry& move_entry_cpp,
-        pkmn_database_move_entry_t* move_entry_c_ptr
+        struct pkmn_database_move_entry* move_entry_c_ptr
     )
     {
         BOOST_ASSERT(move_entry_c_ptr != nullptr);
@@ -654,7 +654,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_database_move_entry_t temp_move_entry =
+        struct pkmn_database_move_entry temp_move_entry =
         {
             nullptr, // name
             nullptr, // game
@@ -721,12 +721,12 @@ namespace pkmn { namespace c {
 
     void pokemon_entry_cpp_to_c(
         const pkmn::database::pokemon_entry& pokemon_entry_cpp,
-        pkmn_database_pokemon_entry_t* pokemon_entry_c_ptr
+        struct pkmn_database_pokemon_entry* pokemon_entry_c_ptr
     )
     {
         BOOST_ASSERT(pokemon_entry_c_ptr != nullptr);
 
-        pkmn_database_pokemon_entry_t temp_pokemon_entry =
+        struct pkmn_database_pokemon_entry temp_pokemon_entry =
         {
             nullptr, // name
             nullptr, // game
@@ -922,9 +922,9 @@ namespace pkmn { namespace c {
 
         if(temp_pokemon_list.length > 0)
         {
-            temp_pokemon_list.pokemon = (pkmn_pokemon_t*)std::calloc(
+            temp_pokemon_list.pokemon = (struct pkmn_pokemon*)std::calloc(
                                                              pokemon_list_cpp.size(),
-                                                             sizeof(pkmn_pokemon_t)
+                                                             sizeof(struct pkmn_pokemon)
                                                          );
             for(size_t pokemon_index = 0;
                 pokemon_index < temp_pokemon_list.length;
@@ -961,9 +961,9 @@ namespace pkmn { namespace c {
 
         if(temp_pokemon_box_list.length > 0)
         {
-            temp_pokemon_box_list.boxes = (pkmn_pokemon_box_t*)std::calloc(
+            temp_pokemon_box_list.boxes = (struct pkmn_pokemon_box*)std::calloc(
                                                                    pokemon_box_list_cpp.size(),
-                                                                   sizeof(pkmn_pokemon_box_t)
+                                                                   sizeof(struct pkmn_pokemon_box)
                                                                );
             for(size_t pokemon_box_index = 0;
                 pokemon_box_index < temp_pokemon_box_list.length;

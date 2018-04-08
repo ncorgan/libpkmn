@@ -51,18 +51,18 @@ class pkmn_test_exception: public std::exception {
  * Converting C++ exceptions to C error codes
  */
 
-pkmn_error_t throw_nothing() {
+enum pkmn_error throw_nothing() {
     PKMN_CPP_TO_C()
 }
 
-pkmn_error_t throw_unknown() {
+enum pkmn_error throw_unknown() {
     PKMN_CPP_TO_C(
         throw 5;
     )
 }
 
 template <typename exception_type>
-pkmn_error_t throw_exception(
+enum pkmn_error throw_exception(
     const std::string &msg
 ) {
     PKMN_CPP_TO_C(
@@ -70,7 +70,7 @@ pkmn_error_t throw_exception(
     )
 }
 
-pkmn_error_t throw_feature_not_in_game_error(
+enum pkmn_error throw_feature_not_in_game_error(
     const std::string &feature,
     const std::string &game
 ) {
@@ -82,7 +82,7 @@ pkmn_error_t throw_feature_not_in_game_error(
     )
 }
 
-pkmn_error_t throw_pksav_error(
+enum pkmn_error throw_pksav_error(
     pksav_error_t pksav_error_code
 ) {
     PKMN_CPP_TO_C(
@@ -90,14 +90,14 @@ pkmn_error_t throw_pksav_error(
     )
 }
 
-pkmn_error_t throw_pkmn_unimplemented_error() {
+enum pkmn_error throw_pkmn_unimplemented_error() {
     PKMN_CPP_TO_C(
         throw pkmn::unimplemented_error();
     )
 }
 
 TEST(cpp_to_c_test, exception_to_error_code_test) {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = throw_nothing();
     EXPECT_EQ(PKMN_ERROR_NONE, error);
@@ -177,13 +177,13 @@ typedef struct {
     std::string last_error;
 } pkmn_test_handle_t;
 
-pkmn_error_t throw_nothing_with_handle(
+enum pkmn_error throw_nothing_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,)
 }
 
-pkmn_error_t throw_unknown_with_handle(
+enum pkmn_error throw_unknown_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
@@ -192,7 +192,7 @@ pkmn_error_t throw_unknown_with_handle(
 }
 
 template <typename exception_type>
-pkmn_error_t throw_exception_with_handle(
+enum pkmn_error throw_exception_with_handle(
     const std::string &msg,
     pkmn_test_handle_t* handle
 ) {
@@ -201,7 +201,7 @@ pkmn_error_t throw_exception_with_handle(
     )
 }
 
-pkmn_error_t throw_feature_not_in_game_error_with_handle(
+enum pkmn_error throw_feature_not_in_game_error_with_handle(
     const std::string &feature,
     const std::string &game,
     pkmn_test_handle_t* handle
@@ -214,7 +214,7 @@ pkmn_error_t throw_feature_not_in_game_error_with_handle(
     )
 }
 
-pkmn_error_t throw_pksav_error_with_handle(
+enum pkmn_error throw_pksav_error_with_handle(
     pksav_error_t pksav_error_code,
     pkmn_test_handle_t* handle
 ) {
@@ -223,7 +223,7 @@ pkmn_error_t throw_pksav_error_with_handle(
     )
 }
 
-pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
+enum pkmn_error throw_pkmn_unimplemented_error_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
@@ -232,7 +232,7 @@ pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
 }
 
 TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     pkmn_test_handle_t test_handle;
 
     error = throw_nothing_with_handle(&test_handle);
@@ -718,7 +718,7 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
         )
     };
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_list pokemon_list_c = { NULL, 0 };
     pkmn::c::pokemon_list_cpp_to_c(
         pokemon_list_cpp,
@@ -770,7 +770,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     pokemon_box_list_cpp[1]->set_name("EFGH");
     pokemon_box_list_cpp[2]->set_name("IJKL");
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_box_list pokemon_box_list_c = { NULL, 0 };
     pkmn::c::pokemon_box_list_cpp_to_c(
         pokemon_box_list_cpp,

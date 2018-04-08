@@ -14,7 +14,7 @@
 #define BUFFER_LEN 1024
 
 static char strbuffer[BUFFER_LEN];
-static pkmn_error_t error_code = PKMN_ERROR_NONE;
+static enum pkmn_error error_code = PKMN_ERROR_NONE;
 
 /*
  * The example paths don't need to exist (except the database path). These

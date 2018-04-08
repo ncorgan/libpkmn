@@ -13,10 +13,10 @@
 
 #include <pkmn-c/item_list.h>
 
-pkmn_error_t pkmn_item_list_init(
+enum pkmn_error pkmn_item_list_init(
     const char* name,
     const char* game,
-    pkmn_item_list_t* item_list_out
+    struct pkmn_item_list* item_list_out
 )
 {
     PKMN_CHECK_NULL_PARAM(name);
@@ -33,8 +33,8 @@ pkmn_error_t pkmn_item_list_init(
     )
 }
 
-pkmn_error_t pkmn_item_list_free(
-    pkmn_item_list_t* item_list_ptr
+enum pkmn_error pkmn_item_list_free(
+    struct pkmn_item_list* item_list_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(item_list_ptr);
@@ -51,7 +51,7 @@ pkmn_error_t pkmn_item_list_free(
 }
 
 const char* pkmn_item_list_strerror(
-    pkmn_item_list_t* item_list_ptr
+    struct pkmn_item_list* item_list_ptr
 )
 {
     if(!item_list_ptr)
@@ -76,8 +76,8 @@ const char* pkmn_item_list_strerror(
     }
 }
 
-pkmn_error_t pkmn_item_list_get_num_items(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_get_num_items(
+    struct pkmn_item_list* item_list_ptr,
     size_t* num_items_out
 )
 {
@@ -92,8 +92,8 @@ pkmn_error_t pkmn_item_list_get_num_items(
     )
 }
 
-pkmn_error_t pkmn_item_list_at(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_at(
+    struct pkmn_item_list* item_list_ptr,
     size_t position,
     struct pkmn_item_slot* item_slot_out
 )
@@ -112,8 +112,8 @@ pkmn_error_t pkmn_item_list_at(
     )
 }
 
-pkmn_error_t pkmn_item_list_add(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_add(
+    struct pkmn_item_list* item_list_ptr,
     const char* item,
     size_t amount
 )
@@ -132,8 +132,8 @@ pkmn_error_t pkmn_item_list_add(
     )
 }
 
-pkmn_error_t pkmn_item_list_remove(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_remove(
+    struct pkmn_item_list* item_list_ptr,
     const char* item,
     size_t amount
 )
@@ -152,8 +152,8 @@ pkmn_error_t pkmn_item_list_remove(
     )
 }
 
-pkmn_error_t pkmn_item_list_move(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_move(
+    struct pkmn_item_list* item_list_ptr,
     size_t old_position,
     size_t new_position
 )
@@ -171,8 +171,8 @@ pkmn_error_t pkmn_item_list_move(
     )
 }
 
-pkmn_error_t pkmn_item_list_set_item(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_set_item(
+    struct pkmn_item_list* item_list_ptr,
     size_t position,
     const char* item,
     size_t amount
@@ -193,8 +193,8 @@ pkmn_error_t pkmn_item_list_set_item(
     )
 }
 
-pkmn_error_t pkmn_item_list_get_valid_items(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_get_valid_items(
+    struct pkmn_item_list* item_list_ptr,
     struct pkmn_string_list* valid_items_out
 )
 {
@@ -212,8 +212,8 @@ pkmn_error_t pkmn_item_list_get_valid_items(
     )
 }
 
-pkmn_error_t pkmn_item_list_as_list(
-    pkmn_item_list_t* item_list_ptr,
+enum pkmn_error pkmn_item_list_as_list(
+    struct pkmn_item_list* item_list_ptr,
     struct pkmn_item_slots* item_slots_out
 )
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,7 +18,8 @@
  * Do not attempt to use this struct before passing it into
  * ::pkmn_database_get_item_entry, or it will most likely crash.
  */
-typedef struct {
+struct pkmn_database_item_entry
+{
     /*!
      * @brief The item's name in the given game.
      *
@@ -99,7 +100,7 @@ typedef struct {
      * @brief The effect of the move Fling when this item is held.
      */
     char* fling_effect;
-} pkmn_database_item_entry_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -116,24 +117,24 @@ extern "C" {
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the item or game name is invalid
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the given item was not in the given game
  */
-PKMN_C_API pkmn_error_t pkmn_database_get_item_entry(
+PKMN_C_API enum pkmn_error pkmn_database_get_item_entry(
     const char* item_name,
     const char* item_game,
-    pkmn_database_item_entry_t* item_entry_out
+    struct pkmn_database_item_entry* item_entry_out
 );
 
 /*!
  * @brief Frees all memory allocated by ::pkmn_database_get_item_entry.
  *
- * Do not attempt to use this function on a pkmn_database_item_entry_t after
+ * Do not attempt to use this function on a struct pkmn_database_item_entry after
  * already freeing it, or it will most likely crash.
  *
  * \param item_entry A pointer to the item entry struct to free
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if item_entry is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_database_item_entry_free(
-    pkmn_database_item_entry_t* item_entry
+PKMN_C_API enum pkmn_error pkmn_database_item_entry_free(
+    struct pkmn_database_item_entry* item_entry
 );
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,7 +12,8 @@
 
 #include <stdbool.h>
 
-typedef struct {
+struct pkmn_database_move_entry
+{
     char* name;
     char* game;
     char* description;
@@ -25,20 +26,20 @@ typedef struct {
     char* contest_type;
     char* contest_effect;
     char* super_contest_effect;
-} pkmn_database_move_entry_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_database_get_move_entry(
+PKMN_C_API enum pkmn_error pkmn_database_get_move_entry(
     const char* move_name,
     const char* move_game,
-    pkmn_database_move_entry_t* move_entry_out
+    struct pkmn_database_move_entry* move_entry_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_move_entry_free(
-    pkmn_database_move_entry_t* move_entry
+PKMN_C_API enum pkmn_error pkmn_database_move_entry_free(
+    struct pkmn_database_move_entry* move_entry
 );
 
 #ifdef __cplusplus

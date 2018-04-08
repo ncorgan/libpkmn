@@ -30,7 +30,7 @@ static const char* WRONG_GENERATION_ALL_POCKET_ITEM_NAMES[] =
 };
 
 static void gen2_item_pocket_test(
-    pkmn_item_list_t* item_pocket_ptr,
+    struct pkmn_item_list* item_pocket_ptr,
     const char* game
 )
 {
@@ -42,7 +42,7 @@ static void gen2_item_pocket_test(
     TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->game);
     TEST_ASSERT_EQUAL(20, item_pocket_ptr->capacity);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as completely empty.
     test_item_list_initial_values(item_pocket_ptr);
@@ -103,7 +103,7 @@ static void gen2_item_pocket_test(
 }
 
 static void gen2_key_item_pocket_test(
-    pkmn_item_list_t* key_item_pocket_ptr,
+    struct pkmn_item_list* key_item_pocket_ptr,
     const char* game
 )
 {
@@ -111,7 +111,7 @@ static void gen2_key_item_pocket_test(
     TEST_ASSERT_NOT_NULL(key_item_pocket_ptr->_internal);
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     TEST_ASSERT_EQUAL_STRING("KeyItems", key_item_pocket_ptr->name);
     TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->game);
@@ -203,7 +203,7 @@ static void gen2_key_item_pocket_test(
 }
 
 static void gen2_ball_pocket_test(
-    pkmn_item_list_t* ball_pocket_ptr,
+    struct pkmn_item_list* ball_pocket_ptr,
     const char* game
 )
 {
@@ -257,7 +257,7 @@ static void gen2_ball_pocket_test(
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              ball_pocket_ptr,
                              &valid_items
                          );
@@ -271,7 +271,7 @@ static void gen2_ball_pocket_test(
 }
 
 static void gen2_tmhm_pocket_test(
-    pkmn_item_list_t* tmhm_pocket_ptr,
+    struct pkmn_item_list* tmhm_pocket_ptr,
     const char* game
 )
 {
@@ -283,7 +283,7 @@ static void gen2_tmhm_pocket_test(
     TEST_ASSERT_EQUAL_STRING(game, tmhm_pocket_ptr->game);
     TEST_ASSERT_EQUAL(57, tmhm_pocket_ptr->capacity);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as correctly empty.
     for(int tm_num = 1; tm_num <= 50; ++tm_num)
@@ -392,7 +392,7 @@ static void gen2_item_pc_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_item_list_t item_pc =
+    struct pkmn_item_list item_pc =
     {
         .name = NULL,
         .game = NULL,
@@ -400,7 +400,7 @@ static void gen2_item_pc_test(
         ._internal = NULL
     };
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_list_init(
                 "PC",
@@ -482,11 +482,11 @@ static void gen2_item_pc_test(
 }
 
 static void get_bag_pockets(
-    pkmn_item_bag_t* item_bag_ptr,
-    pkmn_item_list_t* item_pocket_ptr_out,
-    pkmn_item_list_t* key_item_pocket_ptr_out,
-    pkmn_item_list_t* ball_pocket_ptr_out,
-    pkmn_item_list_t* tmhm_pocket_ptr_out
+    struct pkmn_item_bag* item_bag_ptr,
+    struct pkmn_item_list* item_pocket_ptr_out,
+    struct pkmn_item_list* key_item_pocket_ptr_out,
+    struct pkmn_item_list* ball_pocket_ptr_out,
+    struct pkmn_item_list* tmhm_pocket_ptr_out
 )
 {
     TEST_ASSERT_NOT_NULL(item_bag_ptr);
@@ -495,7 +495,7 @@ static void get_bag_pockets(
     TEST_ASSERT_NOT_NULL(ball_pocket_ptr_out);
     TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr_out);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
@@ -532,9 +532,9 @@ static void gen2_item_bag_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_item_bag_t item_bag =
+    struct pkmn_item_bag item_bag =
     {
         .game = NULL,
         .pocket_names =
@@ -562,10 +562,10 @@ static void gen2_item_bag_test(
 
     test_item_bag_pocket_names(&item_bag);
 
-    pkmn_item_list_t item_pocket;
-    pkmn_item_list_t key_item_pocket;
-    pkmn_item_list_t ball_pocket;
-    pkmn_item_list_t tmhm_pocket;
+    struct pkmn_item_list item_pocket;
+    struct pkmn_item_list key_item_pocket;
+    struct pkmn_item_list ball_pocket;
+    struct pkmn_item_list tmhm_pocket;
 
     get_bag_pockets(
         &item_bag,
@@ -716,9 +716,9 @@ static void gen2_item_bag_test(
 #define GEN2_ITEM_TESTS(test_game) \
 void test_gen2_item_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t item_pocket = \
+    struct pkmn_item_list item_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -745,9 +745,9 @@ void test_gen2_item_pocket_ ## test_game () \
 } \
 void test_gen2_key_item_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t key_item_pocket = \
+    struct pkmn_item_list key_item_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -774,9 +774,9 @@ void test_gen2_key_item_pocket_ ## test_game () \
 } \
 void test_gen2_ball_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t ball_pocket = \
+    struct pkmn_item_list ball_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -803,9 +803,9 @@ void test_gen2_ball_pocket_ ## test_game () \
 } \
 void test_gen2_tmhm_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t tmhm_pocket = \
+    struct pkmn_item_list tmhm_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \

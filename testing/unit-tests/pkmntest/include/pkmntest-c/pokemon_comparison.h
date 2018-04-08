@@ -17,88 +17,88 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef pkmn_error_t (*pokemon_int_getter_fcn_t)(pkmn_pokemon_t*,int*);
-typedef pkmn_error_t (*pokemon_uint32_getter_fcn_t)(pkmn_pokemon_t*,uint32_t*);
-typedef pkmn_error_t (*pokemon_string_getter_fcn_t)(pkmn_pokemon_t*,char*,size_t,size_t*);
-typedef pkmn_error_t (*pokemon_bool_getter_fcn_t)(pkmn_pokemon_t*,bool*);
-typedef pkmn_error_t (*pokemon_int_buffer_getter_fcn_t)(pkmn_pokemon_t*,int*,size_t,size_t*);
-typedef pkmn_error_t (*pokemon_bool_buffer_getter_fcn_t)(pkmn_pokemon_t*,bool*,size_t,size_t*);
+typedef enum pkmn_error (*pokemon_int_getter_fcn_t)(struct pkmn_pokemon*,int*);
+typedef enum pkmn_error (*pokemon_uint32_getter_fcn_t)(struct pkmn_pokemon*,uint32_t*);
+typedef enum pkmn_error (*pokemon_string_getter_fcn_t)(struct pkmn_pokemon*,char*,size_t,size_t*);
+typedef enum pkmn_error (*pokemon_bool_getter_fcn_t)(struct pkmn_pokemon*,bool*);
+typedef enum pkmn_error (*pokemon_int_buffer_getter_fcn_t)(struct pkmn_pokemon*,int*,size_t,size_t*);
+typedef enum pkmn_error (*pokemon_bool_buffer_getter_fcn_t)(struct pkmn_pokemon*,bool*,size_t,size_t*);
 
 PKMNTEST_C_API void get_random_pokemon(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     struct pkmn_string_list* item_list_ptr, // Can be NULL
     const char* species, // Can be NULL
     const char* game
 );
 
 PKMNTEST_C_API void compare_pokemon(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr
 );
 
 PKMNTEST_C_API void compare_pokemon_ints(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     const char* field,
     pokemon_int_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_uint32s(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     const char* field,
     pokemon_uint32_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_strings(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     const char* field,
     pokemon_string_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_bools(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     const char* field,
     pokemon_bool_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_int_buffers(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     size_t buffer_size,
     const char* field,
     pokemon_int_buffer_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_bool_buffers(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     size_t buffer_size,
     const char* field,
     pokemon_bool_buffer_getter_fcn_t getter_fcn
 );
 
 PKMNTEST_C_API void compare_pokemon_original_trainer_info(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr
 );
 
 PKMNTEST_C_API void compare_pokemon_moves(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr
 );
 
 PKMNTEST_C_API void compare_pokemon_locations_met(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr,
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     bool as_egg
 );
 
 PKMNTEST_C_API void compare_pokemon_ribbons(
-    pkmn_pokemon_t* pokemon1_ptr,
-    pkmn_pokemon_t* pokemon2_ptr
+    struct pkmn_pokemon* pokemon1_ptr,
+    struct pkmn_pokemon* pokemon2_ptr
 );
 
 #endif /* PKMNTEST_C_POKEMON_COMPARISON_H */

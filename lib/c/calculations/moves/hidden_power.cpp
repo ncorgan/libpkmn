@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/moves/hidden_power.hpp>
 
-pkmn_error_t pkmn_calculations_gen2_hidden_power(
+enum pkmn_error pkmn_calculations_gen2_hidden_power(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -33,7 +33,7 @@ pkmn_error_t pkmn_calculations_gen2_hidden_power(
     )
 }
 
-pkmn_error_t pkmn_calculations_modern_hidden_power(
+enum pkmn_error pkmn_calculations_modern_hidden_power(
     int IV_HP,
     int IV_attack,
     int IV_defense,

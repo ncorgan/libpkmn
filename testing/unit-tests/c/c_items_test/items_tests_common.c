@@ -16,14 +16,14 @@
 // Helper functions
 
 void check_num_items(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     size_t expected_num_items
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
     TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     size_t num_items = 0;
 
     error = pkmn_item_list_get_num_items(
@@ -35,7 +35,7 @@ void check_num_items(
 }
 
 void check_item_at_index(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     size_t index,
     const char* expected_item_name,
     size_t expected_item_amount
@@ -45,7 +45,7 @@ void check_item_at_index(
     TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
     TEST_ASSERT_NOT_NULL(expected_item_name);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_item_slot item_slot =
     {
         .item = NULL,
@@ -69,7 +69,7 @@ void check_item_at_index(
 // Test functions
 
 void test_item_list_initial_values(
-    pkmn_item_list_t* item_list_ptr
+    struct pkmn_item_list* item_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
@@ -80,7 +80,7 @@ void test_item_list_initial_values(
         pkmn_item_list_strerror(item_list_ptr)
     );
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t num_items = 0;
     error = pkmn_item_list_get_num_items(
@@ -117,7 +117,7 @@ void test_item_list_initial_values(
 }
 
 void test_item_list_out_of_range_error(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char* item_name
 )
 {
@@ -125,7 +125,7 @@ void test_item_list_out_of_range_error(
     TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
     TEST_ASSERT_NOT_NULL(item_name);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t old_num_items = 0;
     error = pkmn_item_list_get_num_items(
@@ -180,7 +180,7 @@ void test_item_list_out_of_range_error(
 }
 
 void test_item_list_invalid_items(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 )
@@ -190,7 +190,7 @@ void test_item_list_invalid_items(
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_TRUE(num_items > 0);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t num_items_before = 0;
     error = pkmn_item_list_get_num_items(
@@ -214,7 +214,7 @@ void test_item_list_invalid_items(
 }
 
 void test_item_bag_invalid_items(
-    pkmn_item_bag_t* item_bag_ptr,
+    struct pkmn_item_bag* item_bag_ptr,
     const char** item_names,
     size_t num_items
 )
@@ -224,7 +224,7 @@ void test_item_bag_invalid_items(
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_TRUE(num_items > 0);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     for(size_t item_num = 0; item_num < num_items; ++item_num)
     {
@@ -238,7 +238,7 @@ void test_item_bag_invalid_items(
 }
 
 void test_item_list_set_item(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 )
@@ -248,7 +248,7 @@ void test_item_list_set_item(
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_EQUAL(3, num_items);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_list_set_item(
         item_list_ptr,
@@ -295,7 +295,7 @@ void test_item_list_set_item(
 }
 
 void test_item_list_add_remove(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 )
@@ -305,7 +305,7 @@ void test_item_list_add_remove(
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_EQUAL(8, num_items);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_list_add(
                 item_list_ptr,
@@ -531,16 +531,16 @@ void test_item_list_add_remove(
 }
 
 void test_item_bag_pocket_names(
-    pkmn_item_bag_t* item_bag_ptr
+    struct pkmn_item_bag* item_bag_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_bag_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     for(size_t pocket_index = 0; pocket_index < item_bag_ptr->pocket_names.length; ++pocket_index)
     {
-        pkmn_item_list_t pocket =
+        struct pkmn_item_list pocket =
         {
             .name = NULL,
             .game = NULL,

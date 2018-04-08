@@ -117,7 +117,7 @@ static inline void delete_file(
 
 static void spinda_test()
 {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     const char* qt_version = pkmn_buildinfo_qt_version();
 

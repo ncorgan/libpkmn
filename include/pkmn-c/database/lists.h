@@ -17,62 +17,62 @@
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_database_ability_list(
+PKMN_C_API enum pkmn_error pkmn_database_ability_list(
     int generation,
     struct pkmn_string_list* ability_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_game_list(
+PKMN_C_API enum pkmn_error pkmn_database_game_list(
     int generation,
     bool include_previous,
     struct pkmn_string_list* game_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_gamecube_shadow_pokemon_list(
+PKMN_C_API enum pkmn_error pkmn_database_gamecube_shadow_pokemon_list(
     bool colosseum,
     struct pkmn_string_list* gamecube_shadow_pokemon_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_item_list(
+PKMN_C_API enum pkmn_error pkmn_database_item_list(
     const char* game,
     struct pkmn_string_list* item_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_location_list(
+PKMN_C_API enum pkmn_error pkmn_database_location_list(
     const char* game,
     bool whole_generation,
     struct pkmn_string_list* location_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_move_list(
+PKMN_C_API enum pkmn_error pkmn_database_move_list(
     const char* game,
     struct pkmn_string_list* move_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_nature_list(
+PKMN_C_API enum pkmn_error pkmn_database_nature_list(
     struct pkmn_string_list* nature_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_list(
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_list(
     int generation,
     bool include_previous,
     struct pkmn_string_list* pokemon_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_region_list(
+PKMN_C_API enum pkmn_error pkmn_database_region_list(
     struct pkmn_string_list* region_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_ribbon_list(
+PKMN_C_API enum pkmn_error pkmn_database_ribbon_list(
     int generation,
     struct pkmn_string_list* ribbon_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_super_training_medal_list(
+PKMN_C_API enum pkmn_error pkmn_database_super_training_medal_list(
     struct pkmn_string_list* super_training_medal_list_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_type_list(
+PKMN_C_API enum pkmn_error pkmn_database_type_list(
     const char* game,
     struct pkmn_string_list* type_list_out
 );

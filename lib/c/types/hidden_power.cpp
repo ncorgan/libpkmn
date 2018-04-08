@@ -10,7 +10,7 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_hidden_power_free(
+enum pkmn_error pkmn_hidden_power_free(
     struct pkmn_hidden_power* hidden_power_ptr
 )
 {

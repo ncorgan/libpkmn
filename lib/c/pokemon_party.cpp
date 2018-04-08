@@ -13,9 +13,9 @@
 
 #include <pkmn-c/pokemon_party.h>
 
-pkmn_error_t pkmn_pokemon_party_init(
+enum pkmn_error pkmn_pokemon_party_init(
     const char* game,
-    pkmn_pokemon_party_t* pokemon_party_out
+    struct pkmn_pokemon_party* pokemon_party_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game);
@@ -31,8 +31,8 @@ pkmn_error_t pkmn_pokemon_party_init(
     )
 }
 
-pkmn_error_t pkmn_pokemon_party_free(
-    pkmn_pokemon_party_t* pokemon_party_ptr
+enum pkmn_error pkmn_pokemon_party_free(
+    struct pkmn_pokemon_party* pokemon_party_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_party_ptr);
@@ -48,7 +48,7 @@ pkmn_error_t pkmn_pokemon_party_free(
 }
 
 const char* pkmn_pokemon_party_strerror(
-    pkmn_pokemon_party_t* pokemon_party_ptr
+    struct pkmn_pokemon_party* pokemon_party_ptr
 )
 {
     if(!pokemon_party_ptr)
@@ -73,8 +73,8 @@ const char* pkmn_pokemon_party_strerror(
     }
 }
 
-pkmn_error_t pkmn_pokemon_party_get_num_pokemon(
-    pkmn_pokemon_party_t* pokemon_party_ptr,
+enum pkmn_error pkmn_pokemon_party_get_num_pokemon(
+    struct pkmn_pokemon_party* pokemon_party_ptr,
     size_t* num_pokemon_out
 )
 {
@@ -87,10 +87,10 @@ pkmn_error_t pkmn_pokemon_party_get_num_pokemon(
     )
 }
 
-pkmn_error_t pkmn_pokemon_party_get_pokemon(
-    pkmn_pokemon_party_t* pokemon_party_ptr,
+enum pkmn_error pkmn_pokemon_party_get_pokemon(
+    struct pkmn_pokemon_party* pokemon_party_ptr,
     size_t position,
-    pkmn_pokemon_t* pokemon_out
+    struct pkmn_pokemon* pokemon_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_party_ptr);
@@ -105,10 +105,10 @@ pkmn_error_t pkmn_pokemon_party_get_pokemon(
     )
 }
 
-pkmn_error_t pkmn_pokemon_party_set_pokemon(
-    pkmn_pokemon_party_t* pokemon_party_ptr,
+enum pkmn_error pkmn_pokemon_party_set_pokemon(
+    struct pkmn_pokemon_party* pokemon_party_ptr,
     size_t position,
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_party_ptr);
@@ -125,8 +125,8 @@ pkmn_error_t pkmn_pokemon_party_set_pokemon(
     )
 }
 
-pkmn_error_t pkmn_pokemon_party_as_list(
-    pkmn_pokemon_party_t* pokemon_party_ptr,
+enum pkmn_error pkmn_pokemon_party_as_list(
+    struct pkmn_pokemon_party* pokemon_party_ptr,
     struct pkmn_pokemon_list* pokemon_list_out
 )
 {

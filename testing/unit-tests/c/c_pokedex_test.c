@@ -19,8 +19,8 @@ static void pokedex_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokedex_t pokedex =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokedex pokedex =
     {
         .game = NULL,
         ._internal = NULL

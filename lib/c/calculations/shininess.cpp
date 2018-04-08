@@ -11,7 +11,7 @@
 
 #include <pkmn/calculations/shininess.hpp>
 
-pkmn_error_t pkmn_calculations_gen2_shiny(
+enum pkmn_error pkmn_calculations_gen2_shiny(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -28,7 +28,7 @@ pkmn_error_t pkmn_calculations_gen2_shiny(
     )
 }
 
-pkmn_error_t pkmn_calculations_modern_shiny(
+enum pkmn_error pkmn_calculations_modern_shiny(
     uint32_t personality,
     uint32_t trainer_id,
     bool* shiny_out

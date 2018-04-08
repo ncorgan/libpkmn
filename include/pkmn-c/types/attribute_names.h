@@ -23,7 +23,7 @@ struct pkmn_attribute_names
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_attribute_names_free(
+PKMN_C_API enum pkmn_error pkmn_attribute_names_free(
     struct pkmn_attribute_names* attribute_names_ptr
 );
 

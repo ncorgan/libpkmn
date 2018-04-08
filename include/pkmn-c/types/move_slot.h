@@ -28,11 +28,11 @@ struct pkmn_move_slots
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_move_slot_free(
+PKMN_C_API enum pkmn_error pkmn_move_slot_free(
     struct pkmn_move_slot* move_slot_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_move_slots_free(
+PKMN_C_API enum pkmn_error pkmn_move_slots_free(
     struct pkmn_move_slots* move_slots_ptr
 );
 

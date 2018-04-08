@@ -14,13 +14,13 @@
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
 
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_box_t empty_pokemon_box =
+static const struct pkmn_pokemon_box empty_pokemon_box =
 {
     .game = NULL,
     .capacity = 0,
@@ -43,12 +43,12 @@ static const struct pkmn_string_list empty_string_list =
 };
 
 static void test_empty_pokemon_box(
-    pkmn_pokemon_box_t* box_ptr
+    struct pkmn_pokemon_box* box_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(box_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(box_ptr->game);
 
@@ -104,12 +104,12 @@ static void test_empty_pokemon_box(
 }
 
 static void test_box_name(
-    pkmn_pokemon_box_t* box_ptr
+    struct pkmn_pokemon_box* box_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(box_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(box_ptr->game);
 
@@ -155,17 +155,17 @@ static void test_box_name(
 }
 
 static void test_setting_pokemon_in_box(
-    pkmn_pokemon_box_t* box_ptr
+    struct pkmn_pokemon_box* box_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(box_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t num_pokemon = 0;
 
-    pkmn_pokemon_t original_first = empty_pokemon;
-    pkmn_pokemon_t original_second = empty_pokemon;
+    struct pkmn_pokemon original_first = empty_pokemon;
+    struct pkmn_pokemon original_second = empty_pokemon;
 
     int generation = game_to_generation(box_ptr->game);
 
@@ -218,9 +218,9 @@ static void test_setting_pokemon_in_box(
      * have the same underlying Pokémon.
      */
 
-    pkmn_pokemon_t bulbasaur = empty_pokemon;
-    pkmn_pokemon_t charmander = empty_pokemon;
-    pkmn_pokemon_t squirtle = empty_pokemon;
+    struct pkmn_pokemon bulbasaur = empty_pokemon;
+    struct pkmn_pokemon charmander = empty_pokemon;
+    struct pkmn_pokemon squirtle = empty_pokemon;
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
@@ -295,7 +295,7 @@ static void test_setting_pokemon_in_box(
     // Copy a Pokémon whose memory is already part of the box. Make sure we
     // can't copy it to itself.
 
-    pkmn_pokemon_t second_in_box = empty_pokemon;
+    struct pkmn_pokemon second_in_box = empty_pokemon;
     error = pkmn_pokemon_box_get_pokemon(
                 box_ptr,
                 1,
@@ -356,7 +356,7 @@ static void test_setting_pokemon_in_box(
     TEST_ASSERT_NULL(second_in_box._internal);
 
     // Check that Pokémon can be placed non-contiguously in the correct games.
-    pkmn_pokemon_t fifth_in_box = empty_pokemon;
+    struct pkmn_pokemon fifth_in_box = empty_pokemon;
 
     if(generation <= 2)
     {
@@ -541,10 +541,10 @@ static void test_setting_pokemon_in_box(
 }
 
 static void test_empty_pokemon_pc(
-    pkmn_pokemon_pc_t* pc_ptr
+    struct pkmn_pokemon_pc* pc_ptr
 )
 {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
@@ -573,12 +573,12 @@ static void test_empty_pokemon_pc(
 }
 
 static void test_pc_box_names(
-    pkmn_pokemon_pc_t* pc_ptr
+    struct pkmn_pokemon_pc* pc_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pc_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_string_list box_names = empty_string_list;
 
     int generation = game_to_generation(pc_ptr->game);
@@ -595,7 +595,7 @@ static void test_pc_box_names(
     {
         for(size_t box_index = 0; box_index < pc_ptr->capacity; ++box_index)
         {
-            pkmn_pokemon_box_t pokemon_box = empty_pokemon_box;
+            struct pkmn_pokemon_box pokemon_box = empty_pokemon_box;
 
             error = pkmn_pokemon_pc_get_box(
                         pc_ptr,
@@ -638,10 +638,10 @@ static void test_pc_box_names(
 }
 
 static void test_setting_pokemon_in_boxes(
-    pkmn_pokemon_pc_t* pc_ptr
+    struct pkmn_pokemon_pc* pc_ptr
 )
 {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_box_list pokemon_boxes = empty_pokemon_box_list;
 
     error = pkmn_pokemon_pc_as_list(
@@ -659,9 +659,9 @@ static void test_setting_pokemon_in_boxes(
 
     for(size_t box_index = 0; box_index < pokemon_boxes.length; ++box_index)
     {
-        pkmn_pokemon_t first_pokemon = empty_pokemon;
-        pkmn_pokemon_t second_pokemon = empty_pokemon;
-        pkmn_pokemon_t third_pokemon = empty_pokemon;
+        struct pkmn_pokemon first_pokemon = empty_pokemon;
+        struct pkmn_pokemon second_pokemon = empty_pokemon;
+        struct pkmn_pokemon third_pokemon = empty_pokemon;
 
         error = pkmn_pokemon_box_get_pokemon(
                     &pokemon_boxes.boxes[box_index],
@@ -715,8 +715,8 @@ static void pokemon_box_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_t pokemon_box = empty_pokemon_box;
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon_box pokemon_box = empty_pokemon_box;
 
     error = pkmn_pokemon_box_init(
                 game,
@@ -745,8 +745,8 @@ static void pokemon_pc_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_pc_t pokemon_pc =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon_pc pokemon_pc =
     {
         .game = NULL,
         ._internal = NULL

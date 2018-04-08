@@ -10,7 +10,7 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_levelup_move_free(
+enum pkmn_error pkmn_levelup_move_free(
     struct pkmn_levelup_move* levelup_move_ptr
 )
 {
@@ -22,13 +22,13 @@ pkmn_error_t pkmn_levelup_move_free(
     return PKMN_ERROR_NONE;
 }
 
-pkmn_error_t pkmn_levelup_moves_free(
+enum pkmn_error pkmn_levelup_moves_free(
     struct pkmn_levelup_moves* levelup_moves_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(levelup_moves_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     if(levelup_moves_ptr->length > 0)
     {

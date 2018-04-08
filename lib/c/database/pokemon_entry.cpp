@@ -15,11 +15,11 @@
 #include <cstdlib>
 #include <cstring>
 
-pkmn_error_t pkmn_database_get_pokemon_entry(
+enum pkmn_error pkmn_database_get_pokemon_entry(
     const char* species,
     const char* game,
     const char* form,
-    pkmn_database_pokemon_entry_t* pokemon_entry_out
+    struct pkmn_database_pokemon_entry* pokemon_entry_out
 )
 {
     PKMN_CHECK_NULL_PARAM(species);
@@ -41,8 +41,8 @@ pkmn_error_t pkmn_database_get_pokemon_entry(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_set_form(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+enum pkmn_error pkmn_database_pokemon_entry_set_form(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     const char* form
 )
 {
@@ -65,8 +65,8 @@ pkmn_error_t pkmn_database_pokemon_entry_set_form(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     int level,
     int* experience_out
 )
@@ -83,8 +83,8 @@ pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     int experience,
     int* level_out
 )
@@ -101,8 +101,8 @@ pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     bool shiny,
     char* icon_filepath_out,
     size_t buffer_len,
@@ -126,8 +126,8 @@ pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     bool female,
     bool shiny,
     char* sprite_filepath_out,
@@ -152,8 +152,8 @@ pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     )
 }
 
-pkmn_error_t pkmn_database_pokemon_entry_free(
-    pkmn_database_pokemon_entry_t* pokemon_entry
+enum pkmn_error pkmn_database_pokemon_entry_free(
+    struct pkmn_database_pokemon_entry* pokemon_entry
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_entry);

@@ -28,11 +28,11 @@ struct pkmn_item_slots
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_item_slot_free(
+PKMN_C_API enum pkmn_error pkmn_item_slot_free(
     struct pkmn_item_slot* item_slot_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_item_slots_free(
+PKMN_C_API enum pkmn_error pkmn_item_slots_free(
     struct pkmn_item_slots* item_slots_ptr
 );
 

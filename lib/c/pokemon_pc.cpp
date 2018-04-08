@@ -13,9 +13,9 @@
 
 #include <pkmn-c/pokemon_pc.h>
 
-pkmn_error_t pkmn_pokemon_pc_init(
+enum pkmn_error pkmn_pokemon_pc_init(
     const char* game,
-    pkmn_pokemon_pc_t* pokemon_pc_out
+    struct pkmn_pokemon_pc* pokemon_pc_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game);
@@ -31,8 +31,8 @@ pkmn_error_t pkmn_pokemon_pc_init(
     )
 }
 
-pkmn_error_t pkmn_pokemon_pc_free(
-    pkmn_pokemon_pc_t* pokemon_pc_ptr
+enum pkmn_error pkmn_pokemon_pc_free(
+    struct pkmn_pokemon_pc* pokemon_pc_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
@@ -48,7 +48,7 @@ pkmn_error_t pkmn_pokemon_pc_free(
 }
 
 const char* pkmn_pokemon_pc_strerror(
-    pkmn_pokemon_pc_t* pokemon_pc_ptr
+    struct pkmn_pokemon_pc* pokemon_pc_ptr
 )
 {
     if(!pokemon_pc_ptr)
@@ -73,10 +73,10 @@ const char* pkmn_pokemon_pc_strerror(
     }
 }
 
-pkmn_error_t pkmn_pokemon_pc_get_box(
-    pkmn_pokemon_pc_t* pokemon_pc_ptr,
+enum pkmn_error pkmn_pokemon_pc_get_box(
+    struct pkmn_pokemon_pc* pokemon_pc_ptr,
     size_t index,
-    pkmn_pokemon_box_t* pokemon_box_out
+    struct pkmn_pokemon_box* pokemon_box_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
@@ -91,8 +91,8 @@ pkmn_error_t pkmn_pokemon_pc_get_box(
     )
 }
 
-pkmn_error_t pkmn_pokemon_pc_get_box_names(
-    pkmn_pokemon_pc_t* pokemon_pc_ptr,
+enum pkmn_error pkmn_pokemon_pc_get_box_names(
+    struct pkmn_pokemon_pc* pokemon_pc_ptr,
     struct pkmn_string_list* box_names_out
 )
 {
@@ -108,8 +108,8 @@ pkmn_error_t pkmn_pokemon_pc_get_box_names(
     )
 }
 
-pkmn_error_t pkmn_pokemon_pc_as_list(
-    pkmn_pokemon_pc_t* pokemon_pc_ptr,
+enum pkmn_error pkmn_pokemon_pc_as_list(
+    struct pkmn_pokemon_pc* pokemon_pc_ptr,
     struct pkmn_pokemon_box_list* pokemon_box_list_out
 )
 {

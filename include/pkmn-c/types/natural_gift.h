@@ -20,7 +20,7 @@ struct pkmn_natural_gift
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_natural_gift_free(
+PKMN_C_API enum pkmn_error pkmn_natural_gift_free(
     struct pkmn_natural_gift* natural_gift_ptr
 );
 

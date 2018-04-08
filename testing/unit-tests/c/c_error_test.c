@@ -24,7 +24,7 @@
 #    define FS_SEPARATOR "/"
 #endif
 
-static pkmn_error_t error = PKMN_ERROR_NONE;
+static enum pkmn_error error = PKMN_ERROR_NONE;
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN] = {0};
@@ -37,7 +37,7 @@ static float dummy_float = 0;
 static struct pkmn_string_list dummy_string_list = { NULL, 0 };
 static struct pkmn_trainer_info dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
 static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
-static pkmn_pokemon_t dummy_pokemon = {NULL, NULL, NULL};
+static struct pkmn_pokemon dummy_pokemon = {NULL, NULL, NULL};
 static struct pkmn_pokemon_list dummy_pokemon_list = { NULL, 0 };
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
@@ -133,15 +133,15 @@ static void game_save_error_test()
 {
     populate_pksav_saves();
 
-    pkmn_game_save_type_t dummy_game_save_type = PKMN_GAME_SAVE_TYPE_NONE;
+    enum pkmn_game_save_type dummy_game_save_type = PKMN_GAME_SAVE_TYPE_NONE;
 
-    pkmn_item_bag_t dummy_item_bag = { NULL, { NULL, 0 }, NULL };
-    pkmn_item_list_t dummy_item_list = { NULL, NULL, 0, NULL };
-    pkmn_pokedex_t dummy_pokedex = { NULL, NULL };
-    pkmn_pokemon_party_t dummy_pokemon_party = { NULL, 0, NULL };
-    pkmn_pokemon_pc_t dummy_pokemon_pc = { NULL, 0, NULL };
+    struct pkmn_item_bag dummy_item_bag = { NULL, { NULL, 0 }, NULL };
+    struct pkmn_item_list dummy_item_list = { NULL, NULL, 0, NULL };
+    struct pkmn_pokedex dummy_pokedex = { NULL, NULL };
+    struct pkmn_pokemon_party dummy_pokemon_party = { NULL, 0, NULL };
+    struct pkmn_pokemon_pc dummy_pokemon_pc = { NULL, 0, NULL };
 
-    pkmn_game_save_t game_save = { NULL, NULL };
+    struct pkmn_game_save game_save = { NULL, NULL };
 
     char filepath[STRBUFFER_LEN] = {0};
     snprintf(
@@ -490,8 +490,8 @@ static void game_save_error_test()
  */
 static void item_bag_error_test()
 {
-    pkmn_item_list_t item_list = { NULL, NULL, 0, NULL };
-    pkmn_item_bag_t item_bag = { NULL, { NULL, 0 }, NULL };
+    struct pkmn_item_list item_list = { NULL, NULL, 0, NULL };
+    struct pkmn_item_bag item_bag = { NULL, { NULL, 0 }, NULL };
 
     error = pkmn_item_bag_init(
                 "Red",
@@ -603,7 +603,7 @@ static void item_bag_error_test()
  */
 static void item_list_error_test()
 {
-    pkmn_item_list_t item_list = { NULL, NULL, 0, NULL };
+    struct pkmn_item_list item_list = { NULL, NULL, 0, NULL };
 
     error = pkmn_item_list_init(
                 "Items",
@@ -744,12 +744,12 @@ static void item_list_error_test()
  */
 static void pokedex_error_test()
 {
-    pkmn_pokedex_t pokedex =
+    struct pkmn_pokedex pokedex =
     {
         .game = NULL,
         ._internal = NULL
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_pokedex_init("Red", &pokedex);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -940,13 +940,13 @@ static void pokedex_error_test()
  */
 static void pokemon_error_test()
 {
-    pkmn_pokemon_t pokemon =
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,
         ._internal = NULL
     };
-    pkmn_database_pokemon_entry_t dummy_pokemon_entry;
+    struct pkmn_database_pokemon_entry dummy_pokemon_entry;
     enum pkmn_condition dummy_condition = PKMN_CONDITION_NONE;
     enum pkmn_gender dummy_gender = PKMN_GENDER_GENDERLESS;
     struct pkmn_move_slots dummy_move_slots = { NULL, 0 };
@@ -2098,7 +2098,7 @@ static void pokemon_error_test()
  */
 static void pokemon_box_error_test()
 {
-    pkmn_pokemon_box_t pokemon_box =
+    struct pkmn_pokemon_box pokemon_box =
     {
         .game = NULL,
         .capacity = 0,
@@ -2255,7 +2255,7 @@ static void pokemon_box_error_test()
  */
 static void pokemon_party_error_test()
 {
-    pkmn_pokemon_party_t pokemon_party =
+    struct pkmn_pokemon_party pokemon_party =
     {
         .game = NULL,
         .capacity = 0,
@@ -2376,13 +2376,13 @@ static void pokemon_party_error_test()
  */
 static void pokemon_pc_error_test()
 {
-    pkmn_pokemon_pc_t pokemon_pc =
+    struct pkmn_pokemon_pc pokemon_pc =
     {
         .game = NULL,
         .capacity = 0,
         ._internal = NULL
     };
-    pkmn_pokemon_box_t dummy_pokemon_box = {NULL, 0, NULL};
+    struct pkmn_pokemon_box dummy_pokemon_box = {NULL, 0, NULL};
     struct pkmn_pokemon_box_list dummy_pokemon_box_list = {NULL, 0};
 
     error = pkmn_pokemon_pc_init(
@@ -2699,8 +2699,8 @@ static void calculations_size_error_test() {
  * <pkmn-c/calculations/spinda_spots.h>
  */
 static void calculations_spinda_spots_error_test() {
-    pkmn_spinda_coords_t dummy_coords;
-    pkmn_spinda_spots_t dummy_spots;
+    struct pkmn_spinda_coords dummy_coords;
+    struct pkmn_spinda_spots dummy_spots;
 
     /*
      * pkmn_calculations_add_spinda_coords
@@ -3323,7 +3323,7 @@ static void calculations_moves_power_error_test()
  * <pkmn-c/database/item_entry.h>
  */
 static void database_item_entry_error_test() {
-    pkmn_database_item_entry_t dummy_pkmn_database_item_entry_t;
+    struct pkmn_database_item_entry dummy_pkmn_database_item_entry;
 
     /*
      * pkmn_database_get_item_entry
@@ -3332,14 +3332,14 @@ static void database_item_entry_error_test() {
     error = pkmn_database_get_item_entry(
                 NULL, // item_name
                 strbuffer,
-                &dummy_pkmn_database_item_entry_t
+                &dummy_pkmn_database_item_entry
             );
     TEST_NULL_POINTER_RETURN("item_name");
 
     error = pkmn_database_get_item_entry(
                 strbuffer,
                 NULL, // item_game
-                &dummy_pkmn_database_item_entry_t
+                &dummy_pkmn_database_item_entry
             );
     TEST_NULL_POINTER_RETURN("item_game");
 
@@ -3514,7 +3514,7 @@ static void database_lists_error_test() {
  * <pkmn-c/database/move_entry.h>
  */
 static void database_move_entry_error_test() {
-    pkmn_database_move_entry_t dummy_pkmn_database_move_entry_t;
+    struct pkmn_database_move_entry dummy_pkmn_database_move_entry;
 
     /*
      * pkmn_database_get_move_entry
@@ -3523,14 +3523,14 @@ static void database_move_entry_error_test() {
     error = pkmn_database_get_move_entry(
                 NULL, // move_name
                 strbuffer,
-                &dummy_pkmn_database_move_entry_t
+                &dummy_pkmn_database_move_entry
             );
     TEST_NULL_POINTER_RETURN("move_name");
 
     error = pkmn_database_get_move_entry(
                 strbuffer,
                 NULL, // move_game
-                &dummy_pkmn_database_move_entry_t
+                &dummy_pkmn_database_move_entry
             );
     TEST_NULL_POINTER_RETURN("move_game");
 
@@ -3555,7 +3555,7 @@ static void database_move_entry_error_test() {
  * <pkmn-c/database/pokemon_entry.h>
  */
 static void database_pokemon_entry_error_test() {
-    pkmn_database_pokemon_entry_t entry;
+    struct pkmn_database_pokemon_entry entry;
     error = pkmn_database_get_pokemon_entry(
                 "Charmander",
                 "Diamond",

@@ -15,9 +15,9 @@
 
 #include <cstdio>
 
-pkmn_error_t pkmn_pokedex_init(
+enum pkmn_error pkmn_pokedex_init(
     const char* game,
-    pkmn_pokedex_t* pokedex_out
+    struct pkmn_pokedex* pokedex_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game);
@@ -33,8 +33,8 @@ pkmn_error_t pkmn_pokedex_init(
     )
 }
 
-pkmn_error_t pkmn_pokedex_free(
-    pkmn_pokedex_t* pokedex_ptr
+enum pkmn_error pkmn_pokedex_free(
+    struct pkmn_pokedex* pokedex_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokedex_ptr);
@@ -49,7 +49,7 @@ pkmn_error_t pkmn_pokedex_free(
 }
 
 const char* pkmn_pokedex_strerror(
-    pkmn_pokedex_t* pokedex_ptr
+    struct pkmn_pokedex* pokedex_ptr
 )
 {
     if(!pokedex_ptr)
@@ -74,8 +74,8 @@ const char* pkmn_pokedex_strerror(
     }
 }
 
-pkmn_error_t pkmn_pokedex_has_seen(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_has_seen(
+    struct pkmn_pokedex* pokedex_ptr,
     const char* species,
     bool* has_seen_out
 )
@@ -90,8 +90,8 @@ pkmn_error_t pkmn_pokedex_has_seen(
     )
 }
 
-pkmn_error_t pkmn_pokedex_set_has_seen(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_set_has_seen(
+    struct pkmn_pokedex* pokedex_ptr,
     const char* species,
     bool has_seen
 )
@@ -105,8 +105,8 @@ pkmn_error_t pkmn_pokedex_set_has_seen(
     )
 }
 
-pkmn_error_t pkmn_pokedex_get_all_seen(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_get_all_seen(
+    struct pkmn_pokedex* pokedex_ptr,
     struct pkmn_string_list* all_seen_out
 )
 {
@@ -122,8 +122,8 @@ pkmn_error_t pkmn_pokedex_get_all_seen(
     )
 }
 
-pkmn_error_t pkmn_pokedex_get_num_seen(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_get_num_seen(
+    struct pkmn_pokedex* pokedex_ptr,
     size_t* num_seen_out
 )
 {
@@ -136,8 +136,8 @@ pkmn_error_t pkmn_pokedex_get_num_seen(
     )
 }
 
-pkmn_error_t pkmn_pokedex_has_caught(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_has_caught(
+    struct pkmn_pokedex* pokedex_ptr,
     const char* species,
     bool* has_caught_out
 )
@@ -152,8 +152,8 @@ pkmn_error_t pkmn_pokedex_has_caught(
     )
 }
 
-pkmn_error_t pkmn_pokedex_set_has_caught(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_set_has_caught(
+    struct pkmn_pokedex* pokedex_ptr,
     const char* species,
     bool has_caught
 )
@@ -167,8 +167,8 @@ pkmn_error_t pkmn_pokedex_set_has_caught(
     )
 }
 
-pkmn_error_t pkmn_pokedex_get_all_caught(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_get_all_caught(
+    struct pkmn_pokedex* pokedex_ptr,
     struct pkmn_string_list* all_caught_out
 )
 {
@@ -184,8 +184,8 @@ pkmn_error_t pkmn_pokedex_get_all_caught(
     )
 }
 
-pkmn_error_t pkmn_pokedex_get_num_caught(
-    pkmn_pokedex_t* pokedex_ptr,
+enum pkmn_error pkmn_pokedex_get_num_caught(
+    struct pkmn_pokedex* pokedex_ptr,
     size_t* num_caught_out
 )
 {
