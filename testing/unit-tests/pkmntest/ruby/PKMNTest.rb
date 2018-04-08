@@ -52,33 +52,24 @@ class PKMNTest < MiniTest::Test
             var1.numeric_attributes.names,
             var2.numeric_attributes.names
         )
-        var1.numeric_attributes.names.each do |attribute_name|
-            assert_equal(
-                var1.numeric_attributes[attribute_name],
-                var2.numeric_attributes[attribute_name]
-            )
+        var1.numeric_attributes.each do |attribute_name, value|
+            assert_equal(value, var2.numeric_attributes[attribute_name])
         end
 
         assert_equal(
             var1.string_attributes.names,
             var2.string_attributes.names
         )
-        var1.string_attributes.names.each do |attribute_name|
-            assert_equal(
-                var1.string_attributes[attribute_name],
-                var2.string_attributes[attribute_name]
-            )
+        var1.string_attributes.each do |attribute_name, value|
+            assert_equal(value, var2.string_attributes[attribute_name])
         end
 
         assert_equal(
             var1.boolean_attributes.names,
             var2.boolean_attributes.names
         )
-        var1.boolean_attributes.names.each do |attribute_name|
-            assert_equal(
-                var1.boolean_attributes[attribute_name],
-                var2.boolean_attributes[attribute_name]
-            )
+        var1.boolean_attributes.each do |attribute_name, value|
+            assert_equal(value, var2.boolean_attributes[attribute_name])
         end
     end
 

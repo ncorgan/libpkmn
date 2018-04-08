@@ -10,6 +10,7 @@
 %}
 
 %include <attribute.i>
+%include <std_string.i>
 
 // Subset of classes we actually want wrapped
 
@@ -61,6 +62,25 @@ class boolean_attribute_map
     {
         return self->get_attribute_names().size();
     }
+
+    pkmn::swig::numeric_attribute_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> attribute_names = self->get_attribute_names();
+        for(const std::string& attribute_name: attribute_names)
+        {
+            k = SWIG_From_std_string(attribute_name);
+            v = SWIG_From_int(self->get_attribute(attribute_name));
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
+    }
 }
 
 // String attributes
@@ -85,6 +105,25 @@ class boolean_attribute_map
     size_t __len__()
     {
         return self->get_attribute_names().size();
+    }
+
+    pkmn::swig::string_attribute_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> attribute_names = self->get_attribute_names();
+        for(const std::string& attribute_name: attribute_names)
+        {
+            k = SWIG_From_std_string(attribute_name);
+            v = SWIG_From_std_string(self->get_attribute(attribute_name));
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
     }
 }
 
@@ -111,18 +150,39 @@ class boolean_attribute_map
     {
         return self->get_attribute_names().size();
     }
+
+    pkmn::swig::boolean_attribute_map* each()
+    {
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
+
+        VALUE k, v;
+        std::vector<std::string> attribute_names = self->get_attribute_names();
+        for(const std::string& attribute_name: attribute_names)
+        {
+            k = SWIG_From_std_string(attribute_name);
+            v = self->get_attribute(attribute_name) ? Qtrue : Qfalse;
+            rb_yield_values(2, k, v);
+        }
+
+        return self;
+    }
 }
 
 // Definitions
 
 %define PKMN_RUBY_ATTRIBUTE_MAPS(sptr_type, ruby_name_numeric, ruby_name_string, ruby_name_boolean)
-    %ignore pkmn::swig::numeric_attribute_map<sptr_type>::numeric_attribute_map();
-    %attributeval(pkmn::swig::numeric_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
-    %template(ruby_name_numeric) pkmn::swig::numeric_attribute_map<sptr_type>;
-
+    // For some reason, this has to go first, or SWIG_From_std_string gets put
+    // after numeric_attribute_map tries to call it.
     %ignore pkmn::swig::string_attribute_map<sptr_type>::string_attribute_map();
     %attributeval(pkmn::swig::string_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
     %template(ruby_name_string)  pkmn::swig::string_attribute_map<sptr_type>;
+
+    %ignore pkmn::swig::numeric_attribute_map<sptr_type>::numeric_attribute_map();
+    %attributeval(pkmn::swig::numeric_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);
+    %template(ruby_name_numeric) pkmn::swig::numeric_attribute_map<sptr_type>;
 
     %ignore pkmn::swig::boolean_attribute_map<sptr_type>::boolean_attribute_map();
     %attributeval(pkmn::swig::boolean_attribute_map<sptr_type>, %arg(std::vector<std::string>), names, get_attribute_names);

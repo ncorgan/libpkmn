@@ -47,18 +47,18 @@ class Gen2PokemonTest < PokemonTest
 
         # Shininess affects IVs, so make sure the abstraction reflects that.
         pokemon.is_shiny = false
-        assert(!pokemon.is_shiny?)
+        assert(!pokemon.is_shiny)
         assert_equal(13, pokemon.IVs["Attack"])
 
         pokemon.is_shiny = true
-        assert(pokemon.is_shiny?)
+        assert(pokemon.is_shiny)
         assert_equal(15, pokemon.IVs["Attack"])
         assert_equal(10, pokemon.IVs["Defense"])
         assert_equal(10, pokemon.IVs["Speed"])
         assert_equal(10, pokemon.IVs["Special"])
 
         pokemon.IVs["Special"] = 12
-        assert(!pokemon.is_shiny?)
+        assert(!pokemon.is_shiny)
     end
 
     [["Gold", "Cyndaquil"],
