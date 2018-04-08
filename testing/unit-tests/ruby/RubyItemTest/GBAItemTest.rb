@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -64,13 +64,12 @@ class GBAItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            item_pocket,
-            ["Potion", "Orange Mail", "Lava Cookie", "Stardust",
-             "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"]
-        )
+        test_items = ["Potion", "Orange Mail", "Lava Cookie", "Stardust",
+                      "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"]
+        item_list_test_setting_items(item_pocket, test_items)
+        item_list_test_add_remove(item_pocket, test_items)
 
-        assert_operator(item_pocket.valid_items.length, :>, 0)
+        assert_operator(item_pocket.valid_items.size, :>, 0)
     end
 
     def _gba_key_item_pocket_test_common(key_item_pocket)
@@ -122,13 +121,12 @@ class GBAItemTest < ItemTest
         end
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            key_item_pocket,
-            ["Wailmer Pail", "Basement Key", "Meteorite", "Old Rod",
-             "Red Orb", "Root Fossil", "Contest Pass", "Eon Ticket"]
-        )
+        test_items = ["Wailmer Pail", "Basement Key", "Meteorite", "Old Rod",
+                      "Red Orb", "Root Fossil", "Contest Pass", "Eon Ticket"]
+        item_list_test_setting_items(key_item_pocket, test_items)
+        item_list_test_add_remove(key_item_pocket, test_items)
 
-        assert_operator(key_item_pocket.valid_items.length, :>, 0)
+        assert_operator(key_item_pocket.valid_items.size, :>, 0)
     end
 
     def _gba_ball_pocket_test_common(ball_pocket)
@@ -162,13 +160,12 @@ class GBAItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            ball_pocket,
-            ["Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
-             "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"]
-        )
+        test_items = ["Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
+                      "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"]
+        item_list_test_setting_items(ball_pocket, test_items)
+        item_list_test_add_remove(ball_pocket, test_items)
 
-        assert_operator(ball_pocket.valid_items.length, :>, 0)
+        assert_operator(ball_pocket.valid_items.size, :>, 0)
     end
 
     def _gba_tmhm_pocket_test_common(tmhm_pocket)
@@ -204,13 +201,12 @@ class GBAItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            tmhm_pocket,
-            ["TM01", "HM01", "TM02", "HM02",
-             "TM03", "HM03", "TM04", "HM04"]
-        )
+        test_items = ["TM01", "HM01", "TM02", "HM02",
+                      "TM03", "HM03", "TM04", "HM04"]
+        item_list_test_setting_items(tmhm_pocket, test_items)
+        item_list_test_add_remove(tmhm_pocket, test_items)
 
-        assert_operator(tmhm_pocket.valid_items.length, :>, 0)
+        assert_operator(tmhm_pocket.valid_items.size, :>, 0)
     end
 
     def _gba_berry_pocket_test_common(berry_pocket)
@@ -246,13 +242,12 @@ class GBAItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            berry_pocket,
-            ["Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-             "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"]
-        )
+        test_items = ["Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
+                      "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"]
+        item_list_test_setting_items(berry_pocket, test_items)
+        item_list_test_add_remove(berry_pocket, test_items)
 
-        assert_operator(berry_pocket.valid_items.length, :>, 0)
+        assert_operator(berry_pocket.valid_items.size, :>, 0)
     end
 
     def _gba_item_pc_test_common(pc)
@@ -272,10 +267,8 @@ class GBAItemTest < ItemTest
         )
 
         # Start adding and removing items, and make sure the numbers are accurate.
-        item_list_test_add_remove(
-            pc,
-            @@ALL_POCKET_ITEM_NAMES
-        )
+        item_list_test_setting_items(pc, @@ALL_POCKET_ITEM_NAMES)
+        item_list_test_add_remove(pc, @@ALL_POCKET_ITEM_NAMES)
     end
 
     def _gba_item_pocket_test(game)

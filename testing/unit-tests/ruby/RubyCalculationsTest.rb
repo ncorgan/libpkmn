@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -10,7 +10,7 @@ require "PKMN"
 
 require "test/unit"
 
-class RubyListsTest < Test::Unit::TestCase
+class RubyCalculationsTest < Test::Unit::TestCase
 
     def test_stab_modifier
         assert_equal(1.5, PKMN::Calculations.STAB_MODIFIER)
@@ -1284,7 +1284,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::DEFAULT_TRAINER_ID,
+                PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
                 "Torrent",
                 "Male",
@@ -1296,7 +1296,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::DEFAULT_TRAINER_ID,
+                PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 "Not a gender",
@@ -1308,7 +1308,7 @@ class RubyListsTest < Test::Unit::TestCase
         assert_raise ArgumentError do
             PKMN::Calculations::generate_personality(
                 "Charmander",
-                PKMN::Pokemon::DEFAULT_TRAINER_ID,
+                PKMN::Pokemon.DEFAULT_TRAINER_ID,
                 true,
                 "Blaze",
                 "Male",
@@ -1341,7 +1341,7 @@ class RubyListsTest < Test::Unit::TestCase
         # Test and validate a valid call.
         personality = PKMN::Calculations::generate_personality(
                           "Charmander",
-                          PKMN::Pokemon::DEFAULT_TRAINER_ID,
+                          PKMN::Pokemon.DEFAULT_TRAINER_ID,
                           true,
                           "Blaze",
                           "Male",
@@ -1349,7 +1349,7 @@ class RubyListsTest < Test::Unit::TestCase
                       )
         assert(
             PKMN::Calculations::modern_shiny(
-                personality, PKMN::Pokemon::DEFAULT_TRAINER_ID
+                personality, PKMN::Pokemon.DEFAULT_TRAINER_ID
             )
         )
         assert_equal(

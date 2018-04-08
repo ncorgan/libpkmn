@@ -13,6 +13,8 @@ import pkmn
 import sys
 import unittest
 
+# TODO: test setting item
+
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
 class items_tests(base_test.base_test):

@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -32,10 +32,12 @@ class Gen1ItemTest < ItemTest
         # Confirm items from later generations can't be added.
         item_class_test_invalid_items(list, @@INVALID_GENERATION_ITEMS)
 
+        # Start adding and removing items, and make sure the numbers are accurate.
+        item_list_test_setting_items(list, @@ITEM_NAMES)
         item_list_test_add_remove(list, @@ITEM_NAMES)
 
         full_item_list = PKMN::Database::get_item_list(list.game)
-        assert_equal(full_item_list.length, list.valid_items.length)
+        assert_equal(full_item_list.length, list.valid_items.size)
     end
 
     def _gen1_item_pocket_test(game)
@@ -66,7 +68,7 @@ class Gen1ItemTest < ItemTest
 
         (0..7).each do |i|
             assert_equal(@@ITEM_NAMES[i], bag["Items"][i].item)
-            assert_equal(i+1, bag["Items"][i].amount)      
+            assert_equal(i+1, bag["Items"][i].amount)
         end
         assert_equal("None", bag["Items"][8].item)
         assert_equal(0, bag["Items"][8].amount)
