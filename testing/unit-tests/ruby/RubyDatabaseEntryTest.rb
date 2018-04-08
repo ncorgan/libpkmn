@@ -41,7 +41,7 @@ class RubyDatabaseEntryTest < Test::Unit::TestCase
         entry.description
 
         assert_equal(300, entry.cost)
-        assert_true(entry.is_holdable?)
+        assert_true(entry.is_holdable)
         assert_equal(0, entry.fling_power)
         assert_equal("None", entry.fling_effect)
 
@@ -120,7 +120,7 @@ class RubyDatabaseEntryTest < Test::Unit::TestCase
         assert_float_equal(11.0, entry.weight)
         assert_float_equal(0.5, entry.chance_male)
         assert_float_equal(0.5, entry.chance_female)
-        assert(!entry.has_gender_differences?)
+        assert(!entry.has_gender_differences)
         assert_equal(70, entry.base_friendship)
 
         assert_equal("Ground", entry.types.first)
