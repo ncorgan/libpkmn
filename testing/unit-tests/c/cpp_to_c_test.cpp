@@ -62,7 +62,7 @@ enum pkmn_error throw_unknown() {
 }
 
 template <typename exception_type>
-enum pkmn_error throw_exception(
+pkmn_error throw_exception(
     const std::string &msg
 ) {
     PKMN_CPP_TO_C(
