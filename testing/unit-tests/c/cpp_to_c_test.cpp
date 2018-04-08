@@ -61,6 +61,7 @@ enum pkmn_error throw_unknown() {
     )
 }
 
+// The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
 pkmn_error throw_exception(
     const std::string &msg
@@ -191,8 +192,9 @@ enum pkmn_error throw_unknown_with_handle(
     )
 }
 
+// The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
-enum pkmn_error throw_exception_with_handle(
+pkmn_error throw_exception_with_handle(
     const std::string &msg,
     pkmn_test_handle_t* handle
 ) {
