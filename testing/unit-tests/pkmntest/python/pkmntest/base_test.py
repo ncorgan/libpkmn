@@ -105,7 +105,7 @@ class base_test(unittest.TestCase):
         generation = GAME_TO_GENERATION[game]
 
         # Level bound accounts for Gen II level met limitation
-        pokemon = pkmn.pokemon(species, game, "", random.randint(2, 63))
+        pokemon = pkmn.pokemon(species, game, form, random.randint(2, 63))
 
         for move_index in range(4):
             move = ""
