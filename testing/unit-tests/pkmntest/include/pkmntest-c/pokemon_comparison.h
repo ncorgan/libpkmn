@@ -26,7 +26,7 @@ typedef pkmn_error_t (*pokemon_bool_buffer_getter_fcn_t)(pkmn_pokemon_t*,bool*,s
 
 PKMNTEST_C_API void get_random_pokemon(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_string_list_t* item_list_ptr, // Can be NULL
+    struct pkmn_string_list* item_list_ptr, // Can be NULL
     const char* species, // Can be NULL
     const char* game
 );

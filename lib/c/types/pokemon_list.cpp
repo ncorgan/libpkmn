@@ -11,7 +11,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_pokemon_list_free(
-    pkmn_pokemon_list_t* pokemon_list_ptr
+    struct pkmn_pokemon_list* pokemon_list_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_list_ptr);

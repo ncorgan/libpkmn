@@ -10,7 +10,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_attribute_names_free(
-    pkmn_attribute_names_t* attribute_names_ptr
+    struct pkmn_attribute_names* attribute_names_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(attribute_names_ptr);

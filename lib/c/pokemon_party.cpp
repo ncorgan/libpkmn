@@ -127,7 +127,7 @@ pkmn_error_t pkmn_pokemon_party_set_pokemon(
 
 pkmn_error_t pkmn_pokemon_party_as_list(
     pkmn_pokemon_party_t* pokemon_party_ptr,
-    pkmn_pokemon_list_t* pokemon_list_out
+    struct pkmn_pokemon_list* pokemon_list_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_party_ptr);

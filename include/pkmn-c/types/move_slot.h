@@ -12,28 +12,28 @@
 
 #include <stdlib.h>
 
-typedef struct
+struct pkmn_move_slot
 {
     char* move;
     int pp;
-} pkmn_move_slot_t;
+};
 
-typedef struct
+struct pkmn_move_slots
 {
-    pkmn_move_slot_t* move_slots;
+    struct pkmn_move_slot* move_slots;
     size_t length;
-} pkmn_move_slots_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API pkmn_error_t pkmn_move_slot_free(
-    pkmn_move_slot_t* move_slot_ptr
+    struct pkmn_move_slot* move_slot_ptr
 );
 
 PKMN_C_API pkmn_error_t pkmn_move_slots_free(
-    pkmn_move_slots_t* move_slots_ptr
+    struct pkmn_move_slots* move_slots_ptr
 );
 
 #ifdef __cplusplus

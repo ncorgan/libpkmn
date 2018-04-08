@@ -15,8 +15,8 @@
 
 #include <map>
 
-static const std::map<std::string, pkmn_gender_t> genders = \
-    boost::assign::map_list_of<std::string, pkmn_gender_t>
+static const std::map<std::string, enum pkmn_gender> genders = \
+    boost::assign::map_list_of<std::string, enum pkmn_gender>
         ("Male", PKMN_GENDER_MALE)
         ("Female", PKMN_GENDER_FEMALE)
         ("Genderless", PKMN_GENDER_GENDERLESS)
@@ -25,7 +25,7 @@ static const std::map<std::string, pkmn_gender_t> genders = \
 pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
     const char* species,
     int IV_attack,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 ) {
     PKMN_CHECK_NULL_PARAM(species);
     PKMN_CHECK_NULL_PARAM(gender_out);
@@ -42,7 +42,7 @@ pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
 pkmn_error_t pkmn_calculations_modern_pokemon_gender(
     const char* species,
     uint32_t personality,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 ) {
     PKMN_CHECK_NULL_PARAM(species);
     PKMN_CHECK_NULL_PARAM(gender_out);

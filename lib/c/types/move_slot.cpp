@@ -11,7 +11,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_move_slot_free(
-    pkmn_move_slot_t* move_slot_ptr
+    struct pkmn_move_slot* move_slot_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(move_slot_ptr);
@@ -23,7 +23,7 @@ pkmn_error_t pkmn_move_slot_free(
 }
 
 pkmn_error_t pkmn_move_slots_free(
-    pkmn_move_slots_t* move_slots_ptr
+    struct pkmn_move_slots* move_slots_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(move_slots_ptr);

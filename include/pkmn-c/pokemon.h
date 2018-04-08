@@ -31,7 +31,7 @@ typedef struct
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_trainer_id_t pkmn_pokemon_default_trainer_id();
+PKMN_C_API union pkmn_trainer_id pkmn_pokemon_default_trainer_id();
 
 PKMN_C_API const char* pkmn_pokemon_default_trainer_name();
 
@@ -96,12 +96,12 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_get_database_entry(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_condition(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_condition_t* condition_out
+    enum pkmn_condition* condition_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_condition(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_condition_t condition
+    enum pkmn_condition condition
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_nickname(
@@ -118,12 +118,12 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_nickname(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t gender
+    enum pkmn_gender gender
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_is_shiny(
@@ -160,7 +160,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_pokerus_duration(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_original_trainer_info(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_trainer_info_t* original_trainer_info_out
+    struct pkmn_trainer_info* original_trainer_info_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_original_trainer_name(
@@ -185,7 +185,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_original_trainer_id(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_original_trainer_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t original_trainer_gender
+    enum pkmn_gender original_trainer_gender
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_current_trainer_friendship(
@@ -297,7 +297,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_get_markings(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_has_marking(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_marking_t marking,
+    enum pkmn_marking marking,
     bool has_marking
 );
 
@@ -315,7 +315,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_has_ribbon(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_ribbon_names(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_string_list_t* ribbon_names_out
+    struct pkmn_string_list* ribbon_names_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_contest_stats(
@@ -327,13 +327,13 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_get_contest_stats(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_contest_stat(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_contest_stat_t contest_stat,
+    enum pkmn_contest_stat contest_stat,
     int value
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_move_slots_t* move_slots_out
+    struct pkmn_move_slots* move_slots_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_move(
@@ -357,7 +357,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_get_EVs(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_EV(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int value
 );
 
@@ -370,7 +370,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_get_IVs(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_set_IV(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int value
 );
 
@@ -449,7 +449,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_set_boolean_attribute(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_get_attribute_names(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_attribute_names_t* attribute_names_out
+    struct pkmn_attribute_names* attribute_names_out
 );
 
 #ifdef __cplusplus

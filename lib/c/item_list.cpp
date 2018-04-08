@@ -95,7 +95,7 @@ pkmn_error_t pkmn_item_list_get_num_items(
 pkmn_error_t pkmn_item_list_at(
     pkmn_item_list_t* item_list_ptr,
     size_t position,
-    pkmn_item_slot_t* item_slot_out
+    struct pkmn_item_slot* item_slot_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -195,7 +195,7 @@ pkmn_error_t pkmn_item_list_set_item(
 
 pkmn_error_t pkmn_item_list_get_valid_items(
     pkmn_item_list_t* item_list_ptr,
-    pkmn_string_list_t* valid_items_out
+    struct pkmn_string_list* valid_items_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);
@@ -214,7 +214,7 @@ pkmn_error_t pkmn_item_list_get_valid_items(
 
 pkmn_error_t pkmn_item_list_as_list(
     pkmn_item_list_t* item_list_ptr,
-    pkmn_item_slots_t* item_slots_out
+    struct pkmn_item_slots* item_slots_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_list_ptr);

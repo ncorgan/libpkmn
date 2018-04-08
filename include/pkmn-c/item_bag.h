@@ -16,7 +16,7 @@
 typedef struct
 {
     char* game;
-    pkmn_string_list_t pocket_names;
+    struct pkmn_string_list pocket_names;
 
     void* _internal;
 } pkmn_item_bag_t;

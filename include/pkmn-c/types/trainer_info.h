@@ -13,19 +13,19 @@
 #include <pkmn-c/types/gender.h>
 #include <pkmn-c/types/trainer_id.h>
 
-typedef struct
+struct pkmn_trainer_info
 {
     char* name;
-    pkmn_trainer_id_t id;
-    pkmn_gender_t gender;
-} pkmn_trainer_info_t;
+    union pkmn_trainer_id id;
+    enum pkmn_gender gender;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API pkmn_error_t pkmn_trainer_info_free(
-    pkmn_trainer_info_t* trainer_info_ptr
+    struct pkmn_trainer_info* trainer_info_ptr
 );
 
 #ifdef __cplusplus

@@ -26,17 +26,17 @@ static const pkmn_pokemon_box_t empty_pokemon_box =
     .capacity = 0,
     ._internal = NULL
 };
-static const pkmn_pokemon_list_t empty_pokemon_list =
+static const struct pkmn_pokemon_list empty_pokemon_list =
 {
     .pokemon = NULL,
     .length = 0
 };
-static const pkmn_pokemon_box_list_t empty_pokemon_box_list =
+static const struct pkmn_pokemon_box_list empty_pokemon_box_list =
 {
     .boxes = NULL,
     .length = 0
 };
-static const pkmn_string_list_t empty_string_list =
+static const struct pkmn_string_list empty_string_list =
 {
     .strings = NULL,
     .length = 0
@@ -67,7 +67,7 @@ static void test_empty_pokemon_box(
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     size_t num_pokemon = 0;
     error = pkmn_pokemon_box_get_num_pokemon(
@@ -486,7 +486,7 @@ static void test_setting_pokemon_in_box(
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
     error = pkmn_pokemon_box_as_list(
                 box_ptr,
                 &pokemon_list
@@ -546,7 +546,7 @@ static void test_empty_pokemon_pc(
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_pokemon_box_list_t pokemon_box_list = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
                 pc_ptr,
                 &pokemon_box_list
@@ -579,7 +579,7 @@ static void test_pc_box_names(
     TEST_ASSERT_NOT_NULL(pc_ptr);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_string_list_t box_names = empty_string_list;
+    struct pkmn_string_list box_names = empty_string_list;
 
     int generation = game_to_generation(pc_ptr->game);
 
@@ -642,7 +642,7 @@ static void test_setting_pokemon_in_boxes(
 )
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_list_t pokemon_boxes = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_boxes = empty_pokemon_box_list;
 
     error = pkmn_pokemon_pc_as_list(
                 pc_ptr,

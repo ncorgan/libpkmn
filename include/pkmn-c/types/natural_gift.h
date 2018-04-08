@@ -10,18 +10,18 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-typedef struct
+struct pkmn_natural_gift
 {
     char* type;
     int base_power;
-} pkmn_natural_gift_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API pkmn_error_t pkmn_natural_gift_free(
-    pkmn_natural_gift_t* natural_gift_ptr
+    struct pkmn_natural_gift* natural_gift_ptr
 );
 
 #ifdef __cplusplus

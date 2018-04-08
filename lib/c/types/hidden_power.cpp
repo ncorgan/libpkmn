@@ -11,7 +11,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_hidden_power_free(
-    pkmn_hidden_power_t* hidden_power_ptr
+    struct pkmn_hidden_power* hidden_power_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(hidden_power_ptr);

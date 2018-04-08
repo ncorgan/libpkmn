@@ -69,7 +69,7 @@ PKMN_C_API pkmn_error_t pkmn_pokemon_box_set_pokemon(
 
 PKMN_C_API pkmn_error_t pkmn_pokemon_box_as_list(
     pkmn_pokemon_box_t* pokemon_box_ptr,
-    pkmn_pokemon_list_t* pokemon_list_out
+    struct pkmn_pokemon_list* pokemon_list_out
 );
 
 #ifdef __cplusplus

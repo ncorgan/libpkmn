@@ -27,19 +27,19 @@ typedef struct {
     float chance_female;
     bool has_gender_differences;
     int base_friendship;
-    pkmn_string_pair_t types;
-    pkmn_string_pair_t abilities;
+    struct pkmn_string_pair types;
+    struct pkmn_string_pair abilities;
     char* hidden_ability;
-    pkmn_string_pair_t egg_groups;
+    struct pkmn_string_pair egg_groups;
     int base_stats[7];
     int EV_yields[7];
     int experience_yield;
-    pkmn_levelup_moves_t levelup_moves;
-    pkmn_string_list_t tm_hm_moves;
-    pkmn_string_list_t egg_moves;
-    pkmn_string_list_t tutor_moves;
-    pkmn_string_list_t forms;
-    pkmn_string_list_t evolutions;
+    struct pkmn_levelup_moves levelup_moves;
+    struct pkmn_string_list tm_hm_moves;
+    struct pkmn_string_list egg_moves;
+    struct pkmn_string_list tutor_moves;
+    struct pkmn_string_list forms;
+    struct pkmn_string_list evolutions;
 } pkmn_database_pokemon_entry_t;
 
 #ifdef __cplusplus

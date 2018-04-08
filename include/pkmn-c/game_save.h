@@ -93,7 +93,7 @@ PKMN_C_API pkmn_error_t pkmn_game_save_save_as(
 
 PKMN_C_API pkmn_error_t pkmn_game_save_get_trainer_info(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_trainer_info_t* trainer_info_out
+    struct pkmn_trainer_info* trainer_info_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_name(
@@ -118,7 +118,7 @@ PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_secret_id(
 
 PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_gender(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_gender_t gender
+    enum pkmn_gender gender
 );
 
 // Other fields
@@ -214,7 +214,7 @@ PKMN_C_API pkmn_error_t pkmn_game_save_set_boolean_attribute(
 
 PKMN_C_API pkmn_error_t pkmn_game_save_get_attribute_names(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_attribute_names_t* attribute_names_out
+    struct pkmn_attribute_names* attribute_names_out
 );
 
 #ifdef __cplusplus

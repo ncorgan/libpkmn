@@ -40,7 +40,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_generate_personality(
     uint32_t trainer_id,
     bool shiny,
     const char* ability,
-    pkmn_gender_t gender,
+    enum pkmn_gender gender,
     const char* nature,
     uint32_t* personality_out
 );

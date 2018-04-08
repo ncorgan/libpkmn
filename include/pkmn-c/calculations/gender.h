@@ -38,7 +38,7 @@ extern "C" {
 PKMN_C_API pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
     const char* species,
     int IV_attack,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 );
 
 /*!
@@ -59,7 +59,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
 PKMN_C_API pkmn_error_t pkmn_calculations_modern_pokemon_gender(
     const char* species,
     uint32_t personality,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 );
 
 #ifdef __cplusplus

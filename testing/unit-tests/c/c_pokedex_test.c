@@ -60,7 +60,7 @@ static void pokedex_test(
     TEST_ASSERT_EQUAL(0, num_caught);
 
     // Set random Pokémon to be seen and caught.
-    pkmn_string_list_t all_pokemon =
+    struct pkmn_string_list all_pokemon =
     {
         .strings = NULL,
         .length = 0
@@ -128,7 +128,7 @@ static void pokedex_test(
 
     // Remove all seen.
 
-    pkmn_string_list_t all_seen =
+    struct pkmn_string_list all_seen =
     {
         .strings = NULL,
         .length = 0
@@ -173,7 +173,7 @@ static void pokedex_test(
 
     // Remove all caught.
 
-    pkmn_string_list_t all_caught =
+    struct pkmn_string_list all_caught =
     {
         .strings = NULL,
         .length = 0

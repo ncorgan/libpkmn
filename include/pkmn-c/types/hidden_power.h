@@ -10,18 +10,18 @@
 #include <pkmn-c/config.h>
 #include <pkmn-c/error.h>
 
-typedef struct
+struct pkmn_hidden_power
 {
     char* type;
     int base_power;
-} pkmn_hidden_power_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PKMN_C_API pkmn_error_t pkmn_hidden_power_free(
-    pkmn_hidden_power_t* hidden_power_ptr
+    struct pkmn_hidden_power* hidden_power_ptr
 );
 
 #ifdef __cplusplus

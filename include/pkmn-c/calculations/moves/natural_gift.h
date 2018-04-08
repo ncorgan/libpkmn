@@ -21,7 +21,7 @@ extern "C" {
 PKMN_C_API pkmn_error_t pkmn_calculations_natural_gift_stats(
     const char* item_name,
     int generation,
-    pkmn_natural_gift_t* natural_gift_stats_out
+    struct pkmn_natural_gift* natural_gift_stats_out
 );
 
 #ifdef __cplusplus

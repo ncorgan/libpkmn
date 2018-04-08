@@ -61,7 +61,7 @@ static void gen2_pokemon_test(
         &test_values
     );
 
-    pkmn_gender_t gender = PKMN_GENDER_GENDERLESS;
+    enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
     int IVs[PKMN_NUM_STATS] = {0};
     bool is_shiny = false;
 

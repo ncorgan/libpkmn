@@ -25,7 +25,7 @@ static BOOST_CONSTEXPR const char* stat_names[] = {
 };
 
 static void enforce_enum_bounds(
-    pkmn_stat_t stat
+    enum pkmn_stat stat
 )
 {
     pkmn::enforce_bounds(
@@ -37,7 +37,7 @@ static void enforce_enum_bounds(
 }
 
 pkmn_error_t pkmn_calculations_gb_stat(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
     int EV,
@@ -57,10 +57,10 @@ pkmn_error_t pkmn_calculations_gb_stat(
 }
 
 pkmn_error_t pkmn_calculations_gb_stat_range(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
-    pkmn_int_pair_t* stat_range_out
+    struct pkmn_int_pair* stat_range_out
 ) {
     PKMN_CHECK_NULL_PARAM(stat_range_out);
 
@@ -77,7 +77,7 @@ pkmn_error_t pkmn_calculations_gb_stat_range(
 }
 
 pkmn_error_t pkmn_calculations_modern_stat(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     float nature_modifier,
     int base_stat,
@@ -99,10 +99,10 @@ pkmn_error_t pkmn_calculations_modern_stat(
 }
 
 pkmn_error_t pkmn_calculations_modern_stat_range(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
-    pkmn_int_pair_t* stat_range_out
+    struct pkmn_int_pair* stat_range_out
 ) {
     PKMN_CHECK_NULL_PARAM(stat_range_out);
 

@@ -353,7 +353,7 @@ namespace pkmn { namespace c {
 
     void string_list_cpp_to_c(
         const std::vector<std::string>& string_list_cpp,
-        pkmn_string_list_t* string_list_c_ptr
+        struct pkmn_string_list* string_list_c_ptr
     )
     {
         BOOST_ASSERT(string_list_c_ptr != nullptr);
@@ -362,7 +362,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_string_list_t temp_string_list =
+        struct pkmn_string_list temp_string_list =
         {
             nullptr,               // strings
             string_list_cpp.size() // length
@@ -392,7 +392,7 @@ namespace pkmn { namespace c {
 
     void item_slots_cpp_to_c(
         const pkmn::item_slots_t& item_slots_cpp,
-        pkmn_item_slots_t* item_slots_c_ptr
+        struct pkmn_item_slots* item_slots_c_ptr
     )
     {
         BOOST_ASSERT(item_slots_c_ptr != nullptr);
@@ -401,7 +401,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_item_slots_t temp_item_slots =
+        struct pkmn_item_slots temp_item_slots =
         {
             nullptr,              // item_slots
             item_slots_cpp.size() // length
@@ -409,9 +409,9 @@ namespace pkmn { namespace c {
 
         if(temp_item_slots.length > 0)
         {
-            temp_item_slots.item_slots = (pkmn_item_slot_t*)std::calloc(
+            temp_item_slots.item_slots = (struct pkmn_item_slot*)std::calloc(
                                                                 item_slots_cpp.size(),
-                                                                sizeof(pkmn_item_slot_t)
+                                                                sizeof(struct pkmn_item_slot)
                                                             );
             for(size_t item_slot_index = 0;
                 item_slot_index < temp_item_slots.length;
@@ -431,7 +431,7 @@ namespace pkmn { namespace c {
 
     void levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t& levelup_moves_cpp,
-        pkmn_levelup_moves_t* levelup_moves_c_ptr
+        struct pkmn_levelup_moves* levelup_moves_c_ptr
     )
     {
         BOOST_ASSERT(levelup_moves_c_ptr != nullptr);
@@ -440,7 +440,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_levelup_moves_t temp_levelup_moves =
+        struct pkmn_levelup_moves temp_levelup_moves =
         {
             nullptr,                 // levelup_moves
             levelup_moves_cpp.size() // length
@@ -448,9 +448,9 @@ namespace pkmn { namespace c {
 
         if(temp_levelup_moves.length > 0)
         {
-            temp_levelup_moves.levelup_moves = (pkmn_levelup_move_t*)std::calloc(
+            temp_levelup_moves.levelup_moves = (struct pkmn_levelup_move*)std::calloc(
                                                                          levelup_moves_cpp.size(),
-                                                                         sizeof(pkmn_levelup_move_t)
+                                                                         sizeof(struct pkmn_levelup_move)
                                                                      );
             for(size_t levelup_move_index = 0;
                 levelup_move_index < temp_levelup_moves.length;
@@ -470,7 +470,7 @@ namespace pkmn { namespace c {
 
     void move_list_to_string_list(
         const pkmn::database::move_list_t& move_list,
-        pkmn_string_list_t* string_list_ptr
+        struct pkmn_string_list* string_list_ptr
     )
     {
         BOOST_ASSERT(string_list_ptr != nullptr);
@@ -479,7 +479,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_string_list_t temp_string_list =
+        struct pkmn_string_list temp_string_list =
         {
             nullptr,         // strings
             move_list.size() // length
@@ -509,7 +509,7 @@ namespace pkmn { namespace c {
 
     void move_slots_cpp_to_c(
         const pkmn::move_slots_t& move_slots_cpp,
-        pkmn_move_slots_t* move_slots_c_ptr
+        struct pkmn_move_slots* move_slots_c_ptr
     )
     {
         BOOST_ASSERT(move_slots_c_ptr != nullptr);
@@ -518,7 +518,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_move_slots_t temp_move_slots =
+        struct pkmn_move_slots temp_move_slots =
         {
             nullptr,              // move_slots
             move_slots_cpp.size() // length
@@ -526,9 +526,9 @@ namespace pkmn { namespace c {
 
         if(temp_move_slots.length > 0)
         {
-            temp_move_slots.move_slots = (pkmn_move_slot_t*)std::calloc(
+            temp_move_slots.move_slots = (struct pkmn_move_slot*)std::calloc(
                                                                  move_slots_cpp.size(),
-                                                                 sizeof(pkmn_move_slot_t)
+                                                                 sizeof(struct pkmn_move_slot)
                                                             );
             for(size_t move_slot_index = 0;
                 move_slot_index < temp_move_slots.length;
@@ -548,7 +548,7 @@ namespace pkmn { namespace c {
 
     void pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t& pokemon_entries,
-        pkmn_string_list_t* string_list_ptr
+        struct pkmn_string_list* string_list_ptr
     )
     {
         BOOST_ASSERT(string_list_ptr != nullptr);
@@ -557,7 +557,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_string_list_t temp_string_list =
+        struct pkmn_string_list temp_string_list =
         {
             nullptr,               // strings
             pokemon_entries.size() // length
@@ -905,7 +905,7 @@ namespace pkmn { namespace c {
 
     void pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t& pokemon_list_cpp,
-        pkmn_pokemon_list_t* pokemon_list_c_ptr
+        struct pkmn_pokemon_list* pokemon_list_c_ptr
     )
     {
         BOOST_ASSERT(pokemon_list_c_ptr != nullptr);
@@ -914,7 +914,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_list_t temp_pokemon_list =
+        struct pkmn_pokemon_list temp_pokemon_list =
         {
             nullptr,                // pokemon_list
             pokemon_list_cpp.size() // length
@@ -944,7 +944,7 @@ namespace pkmn { namespace c {
 
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
+        struct pkmn_pokemon_box_list* pokemon_box_list_c_ptr
     )
     {
         BOOST_ASSERT(pokemon_box_list_c_ptr != nullptr);
@@ -953,7 +953,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_pokemon_box_list_t temp_pokemon_box_list =
+        struct pkmn_pokemon_box_list temp_pokemon_box_list =
         {
             nullptr,                    // boxes
             pokemon_box_list_cpp.size() // length

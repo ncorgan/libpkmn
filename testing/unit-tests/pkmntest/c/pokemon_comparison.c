@@ -16,23 +16,23 @@
 #include <string.h>
 
 #define STRBUFFER_LEN 1024
-static const pkmn_string_list_t empty_string_list =
+static const struct pkmn_string_list empty_string_list =
 {
     .strings = NULL,
     .length = 0
 };
-static const pkmn_trainer_info_t empty_trainer_info =
+static const struct pkmn_trainer_info empty_trainer_info =
 {
     .name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
-static const pkmn_move_slots_t empty_move_slots =
+static const struct pkmn_move_slots empty_move_slots =
 {
     .move_slots = NULL,
     .length = 0
 };
-static const pkmn_attribute_names_t empty_attribute_names =
+static const struct pkmn_attribute_names empty_attribute_names =
 {
     .numeric_attribute_names =
     {
@@ -58,7 +58,7 @@ static inline bool random_bool()
 
 void get_random_pokemon(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_string_list_t* item_list_ptr,
+    struct pkmn_string_list* item_list_ptr,
     const char* species,
     const char* game
 )
@@ -69,8 +69,8 @@ void get_random_pokemon(
     pkmn_error_t error = PKMN_ERROR_NONE;
     int generation = game_to_generation(game);
 
-    pkmn_string_list_t internal_item_list = empty_string_list;
-    pkmn_string_list_t* internal_item_list_ptr = NULL;
+    struct pkmn_string_list internal_item_list = empty_string_list;
+    struct pkmn_string_list* internal_item_list_ptr = NULL;
 
     if(item_list_ptr)
     {
@@ -83,8 +83,8 @@ void get_random_pokemon(
         internal_item_list_ptr = &internal_item_list;
     }
 
-    pkmn_string_list_t move_list = empty_string_list;
-    pkmn_string_list_t pokemon_list = empty_string_list;
+    struct pkmn_string_list move_list = empty_string_list;
+    struct pkmn_string_list pokemon_list = empty_string_list;
 
     error = pkmn_database_move_list(game, &move_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -150,7 +150,7 @@ void get_random_pokemon(
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    for(pkmn_stat_t stat = PKMN_STAT_HP;
+    for(enum pkmn_stat stat = PKMN_STAT_HP;
         stat <= PKMN_STAT_SPDEF;
         ++stat)
     {
@@ -193,7 +193,7 @@ void get_random_pokemon(
     if(generation >= 3)
     {
         // Just do the markings compatible with all games.
-        for(pkmn_marking_t marking = PKMN_MARKING_CIRCLE;
+        for(enum pkmn_marking marking = PKMN_MARKING_CIRCLE;
             marking <= PKMN_MARKING_HEART;
             ++marking)
         {
@@ -206,7 +206,7 @@ void get_random_pokemon(
         }
 
         // Just do the contest stats compatible with all games.
-        for(pkmn_contest_stat_t contest_stat = PKMN_CONTEST_STAT_COOL;
+        for(enum pkmn_contest_stat contest_stat = PKMN_CONTEST_STAT_COOL;
             contest_stat <= PKMN_CONTEST_STAT_TOUGH;
             ++contest_stat)
         {
@@ -218,7 +218,7 @@ void get_random_pokemon(
             PKMN_TEST_ASSERT_SUCCESS(error);
         }
 
-        pkmn_string_list_t ribbon_names = empty_string_list;
+        struct pkmn_string_list ribbon_names = empty_string_list;
         for(size_t ribbon_index = 0; ribbon_index < ribbon_names.length; ++ribbon_index)
         {
             error = pkmn_pokemon_set_has_ribbon(
@@ -456,8 +456,8 @@ void compare_pokemon_original_trainer_info(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_trainer_info_t original_trainer_info1 = empty_trainer_info;
-    pkmn_trainer_info_t original_trainer_info2 = empty_trainer_info;
+    struct pkmn_trainer_info original_trainer_info1 = empty_trainer_info;
+    struct pkmn_trainer_info original_trainer_info2 = empty_trainer_info;
 
     error = pkmn_pokemon_get_original_trainer_info(
                 pokemon1_ptr,
@@ -498,8 +498,8 @@ void compare_pokemon_moves(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_move_slots_t move_slots1 = empty_move_slots;
-    pkmn_move_slots_t move_slots2 = empty_move_slots;
+    struct pkmn_move_slots move_slots1 = empty_move_slots;
+    struct pkmn_move_slots move_slots2 = empty_move_slots;
 
     error = pkmn_pokemon_get_moves(
                 pokemon1_ptr,
@@ -574,7 +574,7 @@ void compare_pokemon_ribbons(
 
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    pkmn_string_list_t ribbon_list = empty_string_list;
+    struct pkmn_string_list ribbon_list = empty_string_list;
     error = pkmn_pokemon_get_ribbon_names(
                 pokemon1_ptr,
                 &ribbon_list
@@ -773,14 +773,14 @@ void compare_pokemon(
 
     // Compare attributes.
 
-    pkmn_attribute_names_t attribute_names1 = empty_attribute_names;
+    struct pkmn_attribute_names attribute_names1 = empty_attribute_names;
     error = pkmn_pokemon_get_attribute_names(
                 pokemon1_ptr,
                 &attribute_names1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
-    pkmn_attribute_names_t attribute_names2 = empty_attribute_names;
+    struct pkmn_attribute_names attribute_names2 = empty_attribute_names;
     error = pkmn_pokemon_get_attribute_names(
                 pokemon2_ptr,
                 &attribute_names2

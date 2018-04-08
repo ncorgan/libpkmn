@@ -63,7 +63,7 @@ static void gen1_item_list_test_common(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -76,7 +76,7 @@ static void gen1_item_list_test_common(
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
-    pkmn_string_list_t full_item_list =
+    struct pkmn_string_list full_item_list =
     {
         .strings = NULL,
         .length = 0

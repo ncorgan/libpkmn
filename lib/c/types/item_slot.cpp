@@ -11,7 +11,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_item_slot_free(
-    pkmn_item_slot_t* item_slot_ptr
+    struct pkmn_item_slot* item_slot_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(item_slot_ptr);
@@ -23,7 +23,7 @@ pkmn_error_t pkmn_item_slot_free(
 }
 
 pkmn_error_t pkmn_item_slots_free(
-    pkmn_item_slots_t* item_slots_ptr
+    struct pkmn_item_slots* item_slots_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(item_slots_ptr);

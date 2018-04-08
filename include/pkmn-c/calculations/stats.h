@@ -33,7 +33,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
     int EV,
@@ -54,10 +54,10 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat(
  * \returns ::PKMN_ERROR_NULL_POINTER if stat_rangeout is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat_range(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
-    pkmn_int_pair_t* stat_range_out
+    struct pkmn_int_pair* stat_range_out
 );
 
 /*!
@@ -79,7 +79,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gb_stat_range(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If any numeric parameter is out of the given range
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_modern_stat(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     float nature_modifier,
     int base_stat,
@@ -101,10 +101,10 @@ PKMN_C_API pkmn_error_t pkmn_calculations_modern_stat(
  * \returns ::PKMN_ERROR_NULL_POINTER if stat_range_out is NULL
  */
 PKMN_C_API pkmn_error_t pkmn_calculations_modern_stat_range(
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int level,
     int base_stat,
-    pkmn_int_pair_t* stat_range_out
+    struct pkmn_int_pair* stat_range_out
 );
 
 #ifdef __cplusplus

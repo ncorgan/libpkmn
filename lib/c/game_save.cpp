@@ -155,7 +155,7 @@ pkmn_error_t pkmn_game_save_save_as(
 
 pkmn_error_t pkmn_game_save_get_trainer_info(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_trainer_info_t* trainer_info_out
+    struct pkmn_trainer_info* trainer_info_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -165,7 +165,7 @@ pkmn_error_t pkmn_game_save_get_trainer_info(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         // Put the values in a separate struct first so there are
         // no side effects if there's an error.
-        pkmn_trainer_info_t trainer_info;
+        struct pkmn_trainer_info trainer_info;
 
         pkmn::c::string_cpp_to_c_alloc(
             internal_ptr->cpp->get_trainer_name(),
@@ -243,7 +243,7 @@ PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_secret_id(
 
 pkmn_error_t pkmn_game_save_set_trainer_gender(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_gender_t gender
+    enum pkmn_gender gender
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -518,7 +518,7 @@ pkmn_error_t pkmn_game_save_set_boolean_attribute(
 
 pkmn_error_t pkmn_game_save_get_attribute_names(
     pkmn_game_save_t* game_save_ptr,
-    pkmn_attribute_names_t* attribute_names_out
+    struct pkmn_attribute_names* attribute_names_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);

@@ -17,7 +17,7 @@ pkmn_error_t pkmn_calculations_gen2_hidden_power(
     int IV_defense,
     int IV_speed,
     int IV_special,
-    pkmn_hidden_power_t* hidden_power_out
+    struct pkmn_hidden_power* hidden_power_out
 )
 {
     PKMN_CHECK_NULL_PARAM(hidden_power_out);
@@ -40,7 +40,7 @@ pkmn_error_t pkmn_calculations_modern_hidden_power(
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    pkmn_hidden_power_t* hidden_power_out
+    struct pkmn_hidden_power* hidden_power_out
 )
 {
     PKMN_CHECK_NULL_PARAM(hidden_power_out);

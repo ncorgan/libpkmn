@@ -42,7 +42,7 @@ static void check_initial_ribbons(
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_string_list_t ribbon_names;
+    struct pkmn_string_list ribbon_names;
     error = pkmn_pokemon_get_ribbon_names(
                 pokemon_ptr,
                 &ribbon_names

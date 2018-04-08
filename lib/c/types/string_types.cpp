@@ -11,7 +11,7 @@
 #include "error_internal.hpp"
 
 pkmn_error_t pkmn_string_list_free(
-    pkmn_string_list_t* string_list_ptr
+    struct pkmn_string_list* string_list_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(string_list_ptr);
@@ -34,7 +34,7 @@ pkmn_error_t pkmn_string_list_free(
 }
 
 pkmn_error_t pkmn_string_pair_free(
-    pkmn_string_pair_t* string_pair_ptr
+    struct pkmn_string_pair* string_pair_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(string_pair_ptr);

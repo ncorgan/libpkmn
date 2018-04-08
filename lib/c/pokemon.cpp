@@ -72,7 +72,7 @@ static void copy_map_to_buffer(
     }
 }
 
-pkmn_trainer_id_t pkmn_pokemon_default_trainer_id()
+union pkmn_trainer_id pkmn_pokemon_default_trainer_id()
 {
     return {pkmn::pokemon::DEFAULT_TRAINER_ID};
 }
@@ -286,7 +286,7 @@ pkmn_error_t pkmn_pokemon_get_database_entry(
 
 pkmn_error_t pkmn_pokemon_get_condition(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_condition_t* condition_out
+    enum pkmn_condition* condition_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -303,7 +303,7 @@ pkmn_error_t pkmn_pokemon_get_condition(
 
 pkmn_error_t pkmn_pokemon_set_condition(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_condition_t condition
+    enum pkmn_condition condition
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -359,7 +359,7 @@ pkmn_error_t pkmn_pokemon_set_nickname(
 
 pkmn_error_t pkmn_pokemon_get_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -376,7 +376,7 @@ pkmn_error_t pkmn_pokemon_get_gender(
 
 pkmn_error_t pkmn_pokemon_set_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t gender
+    enum pkmn_gender gender
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -486,7 +486,7 @@ pkmn_error_t pkmn_pokemon_set_pokerus_duration(
 
 pkmn_error_t pkmn_pokemon_get_original_trainer_info(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_trainer_info_t* original_trainer_info_out
+    struct pkmn_trainer_info* original_trainer_info_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -496,7 +496,7 @@ pkmn_error_t pkmn_pokemon_get_original_trainer_info(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         // Use a separate struct so as to not have any side effects if there
         // are errors.
-        pkmn_trainer_info_t trainer_info = {nullptr, {0}, PKMN_GENDER_MALE};
+        struct pkmn_trainer_info trainer_info = {nullptr, {0}, PKMN_GENDER_MALE};
 
         pkmn::c::string_cpp_to_c_alloc(
             internal_ptr->cpp->get_original_trainer_name(),
@@ -575,7 +575,7 @@ pkmn_error_t pkmn_pokemon_set_original_trainer_id(
 
 pkmn_error_t pkmn_pokemon_set_original_trainer_gender(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_gender_t original_trainer_gender
+    enum pkmn_gender original_trainer_gender
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -901,7 +901,7 @@ pkmn_error_t pkmn_pokemon_get_markings(
 
 pkmn_error_t pkmn_pokemon_set_has_marking(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_marking_t marking,
+    enum pkmn_marking marking,
     bool has_marking
 )
 {
@@ -974,7 +974,7 @@ pkmn_error_t pkmn_pokemon_set_has_ribbon(
 
 pkmn_error_t pkmn_pokemon_get_ribbon_names(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_string_list_t* ribbon_names_out
+    struct pkmn_string_list* ribbon_names_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -1014,7 +1014,7 @@ pkmn_error_t pkmn_pokemon_get_contest_stats(
 
 pkmn_error_t pkmn_pokemon_set_contest_stat(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_contest_stat_t contest_stat,
+    enum pkmn_contest_stat contest_stat,
     int value
 )
 {
@@ -1039,7 +1039,7 @@ pkmn_error_t pkmn_pokemon_set_contest_stat(
 
 pkmn_error_t pkmn_pokemon_get_moves(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_move_slots_t* move_slots_out
+    struct pkmn_move_slots* move_slots_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
@@ -1110,7 +1110,7 @@ pkmn_error_t pkmn_pokemon_get_EVs(
 
 pkmn_error_t pkmn_pokemon_set_EV(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int value
 )
 {
@@ -1156,7 +1156,7 @@ pkmn_error_t pkmn_pokemon_get_IVs(
 
 pkmn_error_t pkmn_pokemon_set_IV(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_stat_t stat,
+    enum pkmn_stat stat,
     int value
 )
 {
@@ -1374,7 +1374,7 @@ pkmn_error_t pkmn_pokemon_set_boolean_attribute(
 
 pkmn_error_t pkmn_pokemon_get_attribute_names(
     pkmn_pokemon_t* pokemon_ptr,
-    pkmn_attribute_names_t* attribute_names_out
+    struct pkmn_attribute_names* attribute_names_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);

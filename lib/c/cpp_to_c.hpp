@@ -226,7 +226,7 @@ namespace pkmn { namespace c {
 
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
-        pkmn_int_pair_t* int_pair_ptr
+        struct pkmn_int_pair* int_pair_ptr
     )
     {
         BOOST_ASSERT(int_pair_ptr != nullptr);
@@ -273,12 +273,12 @@ namespace pkmn { namespace c {
 
     void string_list_cpp_to_c(
         const std::vector<std::string>& string_list_cpp,
-        pkmn_string_list_t* string_list_c_ptr
+        struct pkmn_string_list* string_list_c_ptr
     );
 
     inline void string_pair_cpp_to_c(
         const std::pair<std::string, std::string>& string_pair_cpp,
-        pkmn_string_pair_t* c_pair_ptr
+        struct pkmn_string_pair* c_pair_ptr
     )
     {
         BOOST_ASSERT(c_pair_ptr != nullptr);
@@ -290,7 +290,7 @@ namespace pkmn { namespace c {
     template <typename value_type>
     void string_map_keys_to_string_list(
         const std::map<std::string, value_type>& map_cpp,
-        pkmn_string_list_t* string_list_c_ptr
+        struct pkmn_string_list* string_list_c_ptr
     )
     {
         BOOST_ASSERT(string_list_c_ptr != nullptr);
@@ -299,7 +299,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_string_list_t temp_string_list =
+        struct pkmn_string_list temp_string_list =
         {
             nullptr,       // strings
             map_cpp.size() // length
@@ -330,7 +330,7 @@ namespace pkmn { namespace c {
 
     inline void hidden_power_cpp_to_c(
         const pkmn::calculations::hidden_power& hidden_power_cpp,
-        pkmn_hidden_power_t* hidden_power_c_ptr
+        struct pkmn_hidden_power* hidden_power_c_ptr
     )
     {
         BOOST_ASSERT(hidden_power_c_ptr != nullptr);
@@ -344,7 +344,7 @@ namespace pkmn { namespace c {
 
     inline void natural_gift_cpp_to_c(
         const pkmn::calculations::natural_gift& natural_gift_cpp,
-        pkmn_natural_gift_t* natural_gift_c_ptr
+        struct pkmn_natural_gift* natural_gift_c_ptr
     )
     {
         BOOST_ASSERT(natural_gift_c_ptr != nullptr);
@@ -358,7 +358,7 @@ namespace pkmn { namespace c {
 
     inline void item_slot_cpp_to_c(
         const pkmn::item_slot& item_slot_cpp,
-        pkmn_item_slot_t* item_slot_c_ptr
+        struct pkmn_item_slot* item_slot_c_ptr
     )
     {
         BOOST_ASSERT(item_slot_c_ptr != nullptr);
@@ -372,12 +372,12 @@ namespace pkmn { namespace c {
 
     void item_slots_cpp_to_c(
         const pkmn::item_slots_t& item_slots_cpp,
-        pkmn_item_slots_t* item_slots_c_ptr
+        struct pkmn_item_slots* item_slots_c_ptr
     );
 
     inline void levelup_move_cpp_to_c(
         const pkmn::database::levelup_move& levelup_move_cpp,
-        pkmn_levelup_move_t* levelup_move_c_ptr
+        struct pkmn_levelup_move* levelup_move_c_ptr
     )
     {
         BOOST_ASSERT(levelup_move_c_ptr != nullptr);
@@ -391,17 +391,17 @@ namespace pkmn { namespace c {
 
     void levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t& levelup_moves_cpp,
-        pkmn_levelup_moves_t* levelup_moves_c_ptr
+        struct pkmn_levelup_moves* levelup_moves_c_ptr
     );
 
     void move_list_to_string_list(
         const pkmn::database::move_list_t& move_list,
-        pkmn_string_list_t* string_list_ptr
+        struct pkmn_string_list* string_list_ptr
     );
 
     inline void move_slot_cpp_to_c(
         const pkmn::move_slot& move_slot_cpp,
-        pkmn_move_slot_t* move_slot_c_ptr
+        struct pkmn_move_slot* move_slot_c_ptr
     )
     {
         BOOST_ASSERT(move_slot_c_ptr != nullptr);
@@ -415,12 +415,12 @@ namespace pkmn { namespace c {
 
     void move_slots_cpp_to_c(
         const pkmn::move_slots_t& move_slots_cpp,
-        pkmn_move_slots_t* move_slots_c_ptr
+        struct pkmn_move_slots* move_slots_c_ptr
     );
 
     void pokemon_entries_to_string_list(
         const pkmn::database::pokemon_entries_t& pokemon_entries,
-        pkmn_string_list_t* string_list_ptr
+        struct pkmn_string_list* string_list_ptr
     );
 
     void item_entry_cpp_to_c(
@@ -440,18 +440,18 @@ namespace pkmn { namespace c {
 
     void pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t& pokemon_list_cpp,
-        pkmn_pokemon_list_t* pokemon_list_c_ptr
+        struct pkmn_pokemon_list* pokemon_list_c_ptr
     );
 
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        pkmn_pokemon_box_list_t* pokemon_box_list_c_ptr
+        struct pkmn_pokemon_box_list* pokemon_box_list_c_ptr
     );
 
     template <typename sptr_type>
     void get_attribute_names_from_sptr(
         const std::shared_ptr<sptr_type>& libpkmn_sptr,
-        pkmn_attribute_names_t* attribute_names_out
+        struct pkmn_attribute_names* attribute_names_out
     )
     {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
@@ -461,7 +461,7 @@ namespace pkmn { namespace c {
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        pkmn_attribute_names_t temp_attribute_names =
+        struct pkmn_attribute_names temp_attribute_names =
         {
             // numeric_attribute_names
             {

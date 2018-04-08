@@ -52,7 +52,7 @@ PKMN_C_API pkmn_error_t pkmn_pokedex_set_has_seen(
 
 PKMN_C_API pkmn_error_t pkmn_pokedex_get_all_seen(
     pkmn_pokedex_t* pokedex_ptr,
-    pkmn_string_list_t* all_seen_out
+    struct pkmn_string_list* all_seen_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokedex_get_num_seen(
@@ -74,7 +74,7 @@ PKMN_C_API pkmn_error_t pkmn_pokedex_set_has_caught(
 
 PKMN_C_API pkmn_error_t pkmn_pokedex_get_all_caught(
     pkmn_pokedex_t* pokedex_ptr,
-    pkmn_string_list_t* all_caught_out
+    struct pkmn_string_list* all_caught_out
 );
 
 PKMN_C_API pkmn_error_t pkmn_pokedex_get_num_caught(

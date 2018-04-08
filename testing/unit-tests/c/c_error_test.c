@@ -34,11 +34,11 @@ static int dummy_int = 0;
 static size_t dummy_size_t = 0;
 static uint32_t dummy_uint32 = 0;
 static float dummy_float = 0;
-static pkmn_string_list_t dummy_string_list = { NULL, 0 };
-static pkmn_trainer_info_t dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
-static pkmn_attribute_names_t dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
+static struct pkmn_string_list dummy_string_list = { NULL, 0 };
+static struct pkmn_trainer_info dummy_trainer_info = { NULL, {0}, PKMN_GENDER_GENDERLESS};
+static struct pkmn_attribute_names dummy_attribute_names = {{NULL, 0}, {NULL, 0}, {NULL, 0}};
 static pkmn_pokemon_t dummy_pokemon = {NULL, NULL, NULL};
-static pkmn_pokemon_list_t dummy_pokemon_list = { NULL, 0 };
+static struct pkmn_pokemon_list dummy_pokemon_list = { NULL, 0 };
 
 static const char* null_pointer_error_format = "Null pointer passed into parameter \"%s\"";
 
@@ -947,9 +947,9 @@ static void pokemon_error_test()
         ._internal = NULL
     };
     pkmn_database_pokemon_entry_t dummy_pokemon_entry;
-    pkmn_condition_t dummy_condition = PKMN_CONDITION_NONE;
-    pkmn_gender_t dummy_gender = PKMN_GENDER_GENDERLESS;
-    pkmn_move_slots_t dummy_move_slots = { NULL, 0 };
+    enum pkmn_condition dummy_condition = PKMN_CONDITION_NONE;
+    enum pkmn_gender dummy_gender = PKMN_GENDER_GENDERLESS;
+    struct pkmn_move_slots dummy_move_slots = { NULL, 0 };
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
@@ -2383,7 +2383,7 @@ static void pokemon_pc_error_test()
         ._internal = NULL
     };
     pkmn_pokemon_box_t dummy_pokemon_box = {NULL, 0, NULL};
-    pkmn_pokemon_box_list_t dummy_pokemon_box_list = {NULL, 0};
+    struct pkmn_pokemon_box_list dummy_pokemon_box_list = {NULL, 0};
 
     error = pkmn_pokemon_pc_init(
                 "Red",
@@ -2523,7 +2523,7 @@ static void calculations_form_error_test() {
  * <pkmn-c/calculations/gender.h>
  */
 static void calculations_gender_error_test() {
-    pkmn_gender_t dummy_pkmn_gender_t = PKMN_GENDER_MALE;
+    enum pkmn_gender dummy_pkmn_gender = PKMN_GENDER_MALE;
 
     /*
      * pkmn_calculations_gen2_pokemon_gender
@@ -2532,7 +2532,7 @@ static void calculations_gender_error_test() {
     error = pkmn_calculations_gen2_pokemon_gender(
                 NULL, // species
                 0,
-                &dummy_pkmn_gender_t
+                &dummy_pkmn_gender
             );
     TEST_NULL_POINTER_RETURN("species");
 
@@ -2550,7 +2550,7 @@ static void calculations_gender_error_test() {
     error = pkmn_calculations_modern_pokemon_gender(
                 NULL, // species
                 0,
-                &dummy_pkmn_gender_t
+                &dummy_pkmn_gender
             );
     TEST_NULL_POINTER_RETURN("species");
 
@@ -2988,7 +2988,7 @@ static void calculations_moves_modifiers_error_test()
  */
 static void calculations_moves_natural_gift_error_test()
 {
-    pkmn_natural_gift_t dummy_pkmn_natural_gift_t = { NULL, 0 };
+    struct pkmn_natural_gift dummy_natural_gift = { NULL, 0 };
 
     /*
      * pkmn_calculations_natural_gift_stats
@@ -2997,7 +2997,7 @@ static void calculations_moves_natural_gift_error_test()
     error = pkmn_calculations_natural_gift_stats(
                 NULL, // item_name
                 5,
-                &dummy_pkmn_natural_gift_t
+                &dummy_natural_gift
             );
     TEST_NULL_POINTER_RETURN("item_name");
 

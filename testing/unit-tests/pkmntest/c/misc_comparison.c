@@ -13,8 +13,8 @@
 #include <string.h>
 
 void compare_attribute_names(
-    const pkmn_attribute_names_t* attribute_names1_ptr,
-    const pkmn_attribute_names_t* attribute_names2_ptr
+    const struct pkmn_attribute_names* attribute_names1_ptr,
+    const struct pkmn_attribute_names* attribute_names2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(attribute_names1_ptr);

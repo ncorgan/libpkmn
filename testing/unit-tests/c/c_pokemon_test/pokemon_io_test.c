@@ -28,18 +28,18 @@
 #    define FS_SEPARATOR "/"
 #endif
 
-static const pkmn_string_list_t empty_string_list =
+static const struct pkmn_string_list empty_string_list =
 {
     .strings = NULL,
     .length = 0
 };
-static const pkmn_trainer_info_t empty_trainer_info =
+static const struct pkmn_trainer_info empty_trainer_info =
 {
     .name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
-static const pkmn_move_slots_t empty_move_slots =
+static const struct pkmn_move_slots empty_move_slots =
 {
     .move_slots = NULL,
     .length = 0
@@ -455,7 +455,7 @@ void test_outside_3gpkm()
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
     pkmn_pokemon_t pokemon = empty_pokemon;
-    pkmn_trainer_info_t original_trainer_info = empty_trainer_info;
+    struct pkmn_trainer_info original_trainer_info = empty_trainer_info;
 
     const char* LIBPKMN_TEST_FILES = getenv("LIBPKMN_TEST_FILES");
     TEST_ASSERT_NOT_NULL(LIBPKMN_TEST_FILES);
@@ -572,14 +572,14 @@ void test_outside_3gpkm()
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    for(pkmn_marking_t marking = PKMN_MARKING_CIRCLE;
+    for(enum pkmn_marking marking = PKMN_MARKING_CIRCLE;
         marking <= PKMN_MARKING_DIAMOND;
         ++marking)
     {
         TEST_ASSERT_FALSE(markings[marking]);
     }
 
-    pkmn_string_list_t ribbon_names = empty_string_list;
+    struct pkmn_string_list ribbon_names = empty_string_list;
     error = pkmn_pokemon_get_ribbon_names(
                 &pokemon,
                 &ribbon_names
@@ -617,14 +617,14 @@ void test_outside_3gpkm()
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    for(pkmn_contest_stat_t contest_stat = PKMN_CONTEST_STAT_COOL;
+    for(enum pkmn_contest_stat contest_stat = PKMN_CONTEST_STAT_COOL;
         contest_stat <= PKMN_CONTEST_STAT_FEEL;
         ++contest_stat)
     {
         TEST_ASSERT_EQUAL(0, contest_stats[contest_stat]);
     }
 
-    pkmn_move_slots_t move_slots = empty_move_slots;
+    struct pkmn_move_slots move_slots = empty_move_slots;
     error = pkmn_pokemon_get_moves(
                 &pokemon,
                 &move_slots

@@ -15,7 +15,7 @@ static const pkmn_pokemon_t empty_pokemon =
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_list_t empty_pokemon_list =
+static const struct pkmn_pokemon_list empty_pokemon_list =
 {
     .pokemon = NULL,
     .length = 0
@@ -31,7 +31,7 @@ static void test_empty_pokemon_party(
 
     size_t num_pokemon = 6;
 
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
@@ -316,7 +316,7 @@ static void test_setting_pokemon_in_party(
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
     error = pkmn_pokemon_party_as_list(
                 party_ptr,
                 &pokemon_list

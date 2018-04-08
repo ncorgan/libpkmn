@@ -23,7 +23,7 @@ static void gender_test(
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_gender_t gender = PKMN_GENDER_GENDERLESS;
+    enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
 
     // Single-gender
     pkmn_pokemon_t nidorina = empty_pokemon;

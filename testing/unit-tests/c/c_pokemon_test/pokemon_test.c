@@ -29,7 +29,7 @@
 
 #define STAT_MAX       65535
 
-static const pkmn_trainer_info_t empty_trainer_info =
+static const struct pkmn_trainer_info empty_trainer_info =
 {
     .name = NULL,
     .id = {0U},
@@ -116,7 +116,7 @@ static const pkmn_database_pokemon_entry_t empty_pokemon_entry =
     }
 };
 
-static const pkmn_move_slots_t empty_move_slots =
+static const struct pkmn_move_slots empty_move_slots =
 {
     .move_slots = NULL,
     .length = 0
@@ -190,7 +190,7 @@ static void check_initial_values(
         );
     }
 
-    pkmn_trainer_info_t original_trainer_info = empty_trainer_info;
+    struct pkmn_trainer_info original_trainer_info = empty_trainer_info;
     error = pkmn_pokemon_get_original_trainer_info(
                 pokemon_ptr,
                 &original_trainer_info
@@ -317,7 +317,7 @@ static void check_initial_values(
     error = pkmn_database_pokemon_entry_free(&pokemon_entry);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_move_slots_t move_slots =
+    struct pkmn_move_slots move_slots =
     {
         .move_slots = NULL,
         .length = 0
@@ -478,7 +478,7 @@ static void check_initial_maps(
     bool markings[PKMN_NUM_MARKINGS] = {0};
 
     bool has_ribbon = true;
-    pkmn_string_list_t ribbon_names =
+    struct pkmn_string_list ribbon_names =
     {
         .strings = NULL,
         .length = 0
@@ -596,7 +596,7 @@ static void test_image_filepaths(
 
     if(generation >= 2)
     {
-        static const pkmn_gender_t genders[] = {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE};
+        static const enum pkmn_gender genders[] = {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE};
         static const bool is_shiny_bools[] = {true, false};
 
         for(size_t gender_index = 0; gender_index < 2; ++gender_index)
@@ -827,13 +827,13 @@ static void test_setting_condition(
 
     int generation = game_to_generation(pokemon_ptr->game);
 
-    pkmn_condition_t last_condition = (generation <= 2) ? PKMN_CONDITION_PARALYSIS
+    enum pkmn_condition last_condition = (generation <= 2) ? PKMN_CONDITION_PARALYSIS
                                                         : PKMN_CONDITION_BAD_POISON;
-    for(pkmn_condition_t condition = PKMN_CONDITION_NONE;
+    for(enum pkmn_condition condition = PKMN_CONDITION_NONE;
         (condition <= last_condition);
         ++condition)
     {
-        pkmn_condition_t condition_from_pokemon = PKMN_CONDITION_NONE;
+        enum pkmn_condition condition_from_pokemon = PKMN_CONDITION_NONE;
 
         error = pkmn_pokemon_set_condition(
                     pokemon_ptr,
@@ -1328,9 +1328,9 @@ static void test_setting_markings(
 
     if(generation >= 3)
     {
-        pkmn_marking_t last_marking = (generation == 3) ? PKMN_MARKING_HEART
+        enum pkmn_marking last_marking = (generation == 3) ? PKMN_MARKING_HEART
                                                         : PKMN_MARKING_DIAMOND;
-        for(pkmn_marking_t marking = PKMN_MARKING_CIRCLE;
+        for(enum pkmn_marking marking = PKMN_MARKING_CIRCLE;
             (marking <= last_marking);
             ++marking)
         {
@@ -1427,7 +1427,7 @@ static void test_setting_moves(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
-        pkmn_move_slots_t move_slots = empty_move_slots;
+        struct pkmn_move_slots move_slots = empty_move_slots;
         error = pkmn_pokemon_get_moves(
                     pokemon_ptr,
                     &move_slots
@@ -1670,7 +1670,7 @@ static void test_setting_stats(
     PKMN_TEST_ASSERT_SUCCESS(error);
     const int max_EV_value = (generation >= 3) ? MODERN_EV_MAX : GB_EV_MAX;
 
-    for(pkmn_stat_t stat = PKMN_STAT_HP; stat <= PKMN_STAT_SPDEF; ++stat)
+    for(enum pkmn_stat stat = PKMN_STAT_HP; stat <= PKMN_STAT_SPDEF; ++stat)
     {
         // Only set random stats.
         if(EVs[stat] != -1)
@@ -1713,7 +1713,7 @@ static void test_setting_stats(
     PKMN_TEST_ASSERT_SUCCESS(error);
     const int max_IV_value = (generation >= 3) ? MODERN_IV_MAX : GB_IV_MAX;
 
-    for(pkmn_stat_t stat = PKMN_STAT_HP; stat <= PKMN_STAT_SPDEF; ++stat)
+    for(enum pkmn_stat stat = PKMN_STAT_HP; stat <= PKMN_STAT_SPDEF; ++stat)
     {
         if(IVs[stat] != -1)
         {
@@ -1758,7 +1758,7 @@ static void test_setting_stats(
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
-        for(pkmn_contest_stat_t contest_stat = PKMN_CONTEST_STAT_COOL;
+        for(enum pkmn_contest_stat contest_stat = PKMN_CONTEST_STAT_COOL;
             contest_stat <= PKMN_CONTEST_STAT_SHEEN;
             ++contest_stat)
         {
@@ -1828,7 +1828,7 @@ static void test_setting_trainer_info(
 
     const char* nickname = "foobarbaz";
     const char* trainer_name = "foobar";
-    pkmn_trainer_id_t expected_trainer_id = {0U};
+    union pkmn_trainer_id expected_trainer_id = {0U};
 
     error = pkmn_pokemon_set_nickname(
                 pokemon_ptr,
@@ -1955,7 +1955,7 @@ static void test_setting_trainer_info(
         expected_trainer_id.id = (uint32_t)trainer_public_id;
     }
 
-    pkmn_trainer_info_t original_trainer_info = empty_trainer_info;
+    struct pkmn_trainer_info original_trainer_info = empty_trainer_info;
     error = pkmn_pokemon_get_original_trainer_info(
                 pokemon_ptr,
                 &original_trainer_info

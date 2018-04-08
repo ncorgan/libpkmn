@@ -46,7 +46,7 @@ void check_item_at_index(
     TEST_ASSERT_NOT_NULL(expected_item_name);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_item_slot_t item_slot =
+    struct pkmn_item_slot item_slot =
     {
         .item = NULL,
         .amount = 0
@@ -90,7 +90,7 @@ void test_item_list_initial_values(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_items);
 
-    pkmn_item_slots_t item_slots =
+    struct pkmn_item_slots item_slots =
     {
         .item_slots = NULL,
         .length = 0
@@ -476,7 +476,7 @@ void test_item_list_add_remove(
     // Since getting all the item slots as a whole is slow, so check
     // it once.
 
-    pkmn_item_slots_t item_slots =
+    struct pkmn_item_slots item_slots =
     {
         .item_slots = NULL,
         .length = 0

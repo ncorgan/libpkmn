@@ -106,7 +106,7 @@ static void gcn_item_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -197,7 +197,7 @@ static void gcn_key_item_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -278,7 +278,7 @@ static void gcn_ball_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -359,7 +359,7 @@ static void gcn_tm_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -440,7 +440,7 @@ static void gcn_berry_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -552,7 +552,7 @@ static void gcn_cologne_pocket_test(
 
     check_num_items(cologne_pocket_ptr, 0);
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -621,7 +621,7 @@ static void gcn_battle_cd_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -703,7 +703,7 @@ static void gcn_item_pc_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -716,7 +716,7 @@ static void gcn_item_pc_test(
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
-    pkmn_string_list_t full_item_list =
+    struct pkmn_string_list full_item_list =
     {
         .strings = NULL,
         .length = 0

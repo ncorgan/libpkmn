@@ -93,7 +93,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box(
 
 pkmn_error_t pkmn_pokemon_pc_get_box_names(
     pkmn_pokemon_pc_t* pokemon_pc_ptr,
-    pkmn_string_list_t* box_names_out
+    struct pkmn_string_list* box_names_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
@@ -110,7 +110,7 @@ pkmn_error_t pkmn_pokemon_pc_get_box_names(
 
 pkmn_error_t pkmn_pokemon_pc_as_list(
     pkmn_pokemon_pc_t* pokemon_pc_ptr,
-    pkmn_pokemon_box_list_t* pokemon_box_list_out
+    struct pkmn_pokemon_box_list* pokemon_box_list_out
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
