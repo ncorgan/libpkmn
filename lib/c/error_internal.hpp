@@ -46,6 +46,27 @@ void pkmn_set_error(
     } \
 }
 
+#define PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(param, handle) \
+{ \
+    if(param) \
+    { \
+        if(!param->_internal) \
+        { \
+            boost::mutex::scoped_lock lock(handle->error_mutex); \
+            pkmn_set_error("The parameter \"" #param "\" has not been initialized."); \
+            handle->last_error = "The parameter \"" #param "\" has not been initialized."; \
+            return PKMN_ERROR_NULL_POINTER; \
+        } \
+    } \
+    else \
+    { \
+        boost::mutex::scoped_lock lock(handle->error_mutex); \
+        pkmn_set_error("Null pointer passed into parameter \"" #param "\""); \
+        handle->last_error = "Null pointer passed into parameter \"" #param "\""; \
+        return PKMN_ERROR_NULL_POINTER; \
+    } \
+}
+
 #define PKMN_CHECK_NULL_PARAM_WITH_HANDLE(param, handle) \
 { \
     if(!param) { \

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -26,11 +26,13 @@ namespace pkmn {
 
     pokemon_party::sptr pokemon_party::make(
         const std::string &game
-    ) {
+    )
+    {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
-        switch(generation) {
+        switch(generation)
+        {
             case 1:
                 return std::make_shared<pokemon_party_gen1impl>(game_id);
 
@@ -38,9 +40,12 @@ namespace pkmn {
                 return std::make_shared<pokemon_party_gen2impl>(game_id);
 
             case 3:
-                if(game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id))
+                {
                     return std::make_shared<pokemon_party_gcnimpl>(game_id);
-                } else {
+                }
+                else
+                {
                     return std::make_shared<pokemon_party_gbaimpl>(game_id);
                 }
 
@@ -62,7 +67,8 @@ namespace pkmn {
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
-    std::string pokemon_party_impl::get_game() {
+    std::string pokemon_party_impl::get_game()
+    {
         return pkmn::database::game_id_to_name(
                    _game_id
                );
@@ -74,14 +80,22 @@ namespace pkmn {
     {
         pkmn::enforce_bounds("Party index", index, 0, (PARTY_SIZE-1));
 
+        boost::lock_guard<pokemon_party_impl> lock(*this);
+
         return _pokemon_list.at(index);
     }
 
-    const pkmn::pokemon_list_t& pokemon_party_impl::as_vector() {
+    const pkmn::pokemon_list_t& pokemon_party_impl::as_vector()
+    {
+        boost::lock_guard<pokemon_party_impl> lock(*this);
+
         return _pokemon_list;
     }
 
-    void* pokemon_party_impl::get_native() {
+    void* pokemon_party_impl::get_native()
+    {
+        boost::lock_guard<pokemon_party_impl> lock(*this);
+
         return _native;
     }
 }

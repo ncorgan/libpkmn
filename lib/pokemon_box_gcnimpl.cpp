@@ -25,9 +25,12 @@ namespace pkmn {
         int game_id
     ): pokemon_box_impl(game_id)
     {
-        if(_game_id == COLOSSEUM_ID) {
+        if(_game_id == COLOSSEUM_ID)
+        {
             _native = reinterpret_cast<void*>(new LibPkmGC::Colosseum::PokemonBox);
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new LibPkmGC::XD::PokemonBox);
         }
         _our_mem = true;
@@ -46,17 +49,27 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_box_gcnimpl::~pokemon_box_gcnimpl() {
-        if(_our_mem) {
-            if(_game_id == COLOSSEUM_ID) {
+    pokemon_box_gcnimpl::~pokemon_box_gcnimpl()
+    {
+        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+
+        if(_our_mem)
+        {
+            if(_game_id == COLOSSEUM_ID)
+            {
                 delete COLO_RCAST;
-            } else {
+            }
+            else
+            {
                 delete XD_RCAST;
             }
         }
     }
 
-    std::string pokemon_box_gcnimpl::get_name() {
+    std::string pokemon_box_gcnimpl::get_name()
+    {
+        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+
         return GC_RCAST->name->toUTF8();
     }
 
@@ -71,13 +84,20 @@ namespace pkmn {
             8
         );
 
+        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+
         GC_RCAST->name->fromUTF8(name.c_str());
     }
 
-    int pokemon_box_gcnimpl::get_num_pokemon() {
+    int pokemon_box_gcnimpl::get_num_pokemon()
+    {
+        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
+
         int num_pokemon = 0;
-        for(int i = 0; i < get_capacity(); ++i) {
-            if(GC_RCAST->pkm[i]->species > LibPkmGC::NoSpecies) {
+        for(int i = 0; i < get_capacity(); ++i)
+        {
+            if(GC_RCAST->pkm[i]->species > LibPkmGC::NoSpecies)
+            {
                 ++num_pokemon;
             }
         }
@@ -85,14 +105,16 @@ namespace pkmn {
         return num_pokemon;
     }
 
-    int pokemon_box_gcnimpl::get_capacity() {
+    int pokemon_box_gcnimpl::get_capacity()
+    {
         return 30;
     }
 
     void pokemon_box_gcnimpl::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int max_index = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, max_index);
 
@@ -101,7 +123,7 @@ namespace pkmn {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+        boost::lock_guard<pokemon_box_gcnimpl> lock(*this);
 
         // If the given Pokémon isn't from this box's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;

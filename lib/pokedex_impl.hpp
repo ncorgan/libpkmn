@@ -15,7 +15,7 @@
 namespace pkmn
 {
     class pokedex_impl: public pokedex,
-                        public boost::noncopyable,
+                        private boost::noncopyable,
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:

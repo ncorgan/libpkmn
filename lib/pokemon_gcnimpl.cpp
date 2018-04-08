@@ -321,6 +321,12 @@ namespace pkmn
                         ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
 
+                    // Some Gamecube-specific indices don't match up.
+                    if(_database_entry.get_game_id() != game_id)
+                    {
+                        ret->set_held_item(get_held_item());
+                    }
+
                     ret->set_level_met(get_level());
                 }
                 else
@@ -553,7 +559,8 @@ namespace pkmn
             get_game()
         );
 
-        if(not item.holdable()) {
+        if(not item.holdable() and (held_item != "None"))
+        {
             throw std::invalid_argument("This item is not holdable.");
         }
 

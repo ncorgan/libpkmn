@@ -24,7 +24,6 @@ namespace pkmn { namespace priv {
     );
 
     PKMN_API void initialize_database_connection();
-
 }}
 
 #endif /* INCLUDED_PKMN_PRIVATE_FUNCTIONS_HPP */

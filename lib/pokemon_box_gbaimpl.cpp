@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -56,13 +56,20 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_box_gbaimpl::~pokemon_box_gbaimpl() {
-        if(_our_mem) {
+    pokemon_box_gbaimpl::~pokemon_box_gbaimpl()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }
 
-    std::string pokemon_box_gbaimpl::get_name() {
+    std::string pokemon_box_gbaimpl::get_name()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
         return _box_name;
     }
 
@@ -77,13 +84,20 @@ namespace pkmn {
             8
         );
 
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
         _box_name = name;
     }
 
-    int pokemon_box_gbaimpl::get_num_pokemon() {
+    int pokemon_box_gbaimpl::get_num_pokemon()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
         int num_pokemon = 0;
-        for(int i = 0; i < get_capacity(); ++i) {
-            if(pksav_littleendian16(NATIVE_RCAST->entries[i].blocks.growth.species) > 0) {
+        for(int i = 0; i < get_capacity(); ++i)
+        {
+            if(pksav_littleendian16(NATIVE_RCAST->entries[i].blocks.growth.species) > 0)
+            {
                 ++num_pokemon;
             }
         }
@@ -91,7 +105,8 @@ namespace pkmn {
         return num_pokemon;
     }
 
-    int pokemon_box_gbaimpl::get_capacity() {
+    int pokemon_box_gbaimpl::get_capacity()
+    {
         return int(sizeof(NATIVE_RCAST->entries)/sizeof(NATIVE_RCAST->entries[0]));
     }
 
@@ -107,6 +122,8 @@ namespace pkmn {
         {
             throw std::invalid_argument("Cannot set a Pokémon to itself.");
         }
+
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         // If the given Pokémon isn't from this box's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;
@@ -161,7 +178,10 @@ namespace pkmn {
         }
     }
 
-    void pokemon_box_gbaimpl::_from_native() {
+    void pokemon_box_gbaimpl::_from_native()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
         int capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.

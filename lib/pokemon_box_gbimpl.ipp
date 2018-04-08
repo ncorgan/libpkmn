@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -57,17 +57,27 @@ namespace pkmn {
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    POKEMON_BOX_GBIMPL_CLASS::~pokemon_box_gbimpl() {
-        if(_our_mem) {
+    POKEMON_BOX_GBIMPL_CLASS::~pokemon_box_gbimpl()
+    {
+        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+
+        if(_our_mem)
+        {
             delete NATIVE_LIST_RCAST;
         }
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    std::string POKEMON_BOX_GBIMPL_CLASS::get_name() {
-        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value) {
+    std::string POKEMON_BOX_GBIMPL_CLASS::get_name()
+    {
+        if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)
+        {
             throw pkmn::feature_not_in_game_error("Box names", "Generation I");
-        } else {
+        }
+        else
+        {
+            boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+
             return _box_name;
         }
     }
@@ -90,17 +100,23 @@ namespace pkmn {
                 8
             );
 
+            boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+
             _box_name = name;
         }
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    int POKEMON_BOX_GBIMPL_CLASS::get_num_pokemon() {
+    int POKEMON_BOX_GBIMPL_CLASS::get_num_pokemon()
+    {
+        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+
         return int(NATIVE_LIST_RCAST->count);
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    int POKEMON_BOX_GBIMPL_CLASS::get_capacity() {
+    int POKEMON_BOX_GBIMPL_CLASS::get_capacity()
+    {
         return int(sizeof(NATIVE_LIST_RCAST->entries)/sizeof(NATIVE_LIST_RCAST->entries[0]));
     }
 
@@ -108,7 +124,8 @@ namespace pkmn {
     void POKEMON_BOX_GBIMPL_CLASS::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int num_pokemon = get_num_pokemon();
         int capacity = get_capacity();
         int max_index = std::min<int>(capacity-1, num_pokemon);
@@ -124,7 +141,7 @@ namespace pkmn {
             throw std::invalid_argument("Generation I-II boxes store Pokémon contiguously.");
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
 
         // If the given Pokémon isn't from this box's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;
@@ -182,9 +199,12 @@ namespace pkmn {
 
         // Update the number of Pokémon in the box if needed.
         std::string new_species = actual_new_pokemon->get_species();
-        if(index == num_pokemon and new_species != "None") {
+        if(index == num_pokemon and new_species != "None")
+        {
             ++(NATIVE_LIST_RCAST->count);
-        } else if(index == (num_pokemon-1) and new_species == "None") {
+        }
+        else if(index == (num_pokemon-1) and new_species == "None")
+        {
             --(NATIVE_LIST_RCAST->count);
         }
 
@@ -199,7 +219,8 @@ namespace pkmn {
             NATIVE_LIST_RCAST->species[index] = uint8_t(actual_new_pokemon->get_database_entry().get_pokemon_index());
         }
 
-        if(_generation == 1) {
+        if(_generation == 1)
+        {
             PKSAV_CALL(
                 pksav_text_to_gen1(
                     actual_new_pokemon->get_nickname().c_str(),
@@ -214,7 +235,9 @@ namespace pkmn {
                     7
                 );
             )
-        } else {
+        }
+        else
+        {
             PKSAV_CALL(
                 pksav_text_to_gen2(
                     actual_new_pokemon->get_nickname().c_str(),
@@ -246,7 +269,10 @@ namespace pkmn {
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
-    void POKEMON_BOX_GBIMPL_CLASS::_from_native() {
+    void POKEMON_BOX_GBIMPL_CLASS::_from_native()
+    {
+        boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);
+
         int capacity = get_capacity();
 
         // This shouldn't resize if the vector is populated.
@@ -261,21 +287,26 @@ namespace pkmn {
          * Unfortuately, the count field may not be reliable, so we need to check
          * ourselves and fix it if it's wrong.
          */
-        if(num_pokemon > 0 and NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0) {
-            for(int i = 0; i < num_pokemon; ++i) {
-                if(NATIVE_LIST_RCAST->entries[i].species == 0) {
+        if(num_pokemon > 0 and NATIVE_LIST_RCAST->entries[num_pokemon-1].species == 0)
+        {
+            for(int i = 0; i < num_pokemon; ++i)
+            {
+                if(NATIVE_LIST_RCAST->entries[i].species == 0)
+                {
                     NATIVE_LIST_RCAST->count = i;
                     break;
                 }
             }
         }
 
-        for(int i = 0; i < capacity; ++i) {
+        for(int i = 0; i < capacity; ++i)
+        {
             /*
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0) {
+            if(i >= num_pokemon and NATIVE_LIST_RCAST->entries[i].species > 0)
+            {
                 NATIVE_LIST_RCAST->species[i] = 0;
                 std::memset(&NATIVE_LIST_RCAST->entries[i], 0, sizeof(pksav_pc_pokemon_type));
                 std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
@@ -303,7 +334,8 @@ namespace pkmn {
                     10
                 );
             )
-            if(std::strlen(nickname) > 0) {
+            if(std::strlen(nickname) > 0)
+            {
                 _pokemon_list[i]->set_nickname(nickname);
             }
 
@@ -314,7 +346,8 @@ namespace pkmn {
                     7
                 );
             )
-            if(std::strlen(otname) > 0) {
+            if(std::strlen(otname) > 0)
+            {
                 _pokemon_list[i]->set_original_trainer_name(otname);
             }
         }

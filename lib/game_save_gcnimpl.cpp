@@ -19,6 +19,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <fstream>
 #include <stdexcept>
@@ -46,25 +47,31 @@ namespace pkmn {
         ifile.close();
 
         _has_gci_data = false;
-        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE) {
+        if(filesize == GCN_COLOSSEUM_BIN_SIZE or filesize == GCN_COLOSSEUM_GCI_SIZE)
+        {
             _colosseum = true;
             _game_id = COLOSSEUM_ID;
 
             _has_gci_data = (filesize == GCN_COLOSSEUM_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::Colosseum::SaveEditing::Save(_data.data(), _has_gci_data));
-        } else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE) {
+        }
+        else if(filesize == GCN_XD_BIN_SIZE or filesize == GCN_XD_GCI_SIZE)
+        {
             _colosseum = false;
             _game_id = XD_ID;
 
             _has_gci_data = (filesize == GCN_XD_GCI_SIZE);
             _libpkmgc_save.reset(new LibPkmGC::XD::SaveEditing::Save(_data.data(), _has_gci_data));
-        } else {
+        }
+        else
+        {
             throw std::invalid_argument("Not a valid Gamecube save.");
         }
 
         size_t index = 0;
         _current_slot = _libpkmgc_save->getMostRecentValidSlot(0, &index);
-        if(!_current_slot) {
+        if(!_current_slot)
+        {
             throw std::invalid_argument("Could not find a save slot.");
         }
 
@@ -88,11 +95,17 @@ namespace pkmn {
                    );
     }
 
-    game_save_gcnimpl::~game_save_gcnimpl() {}
+    game_save_gcnimpl::~game_save_gcnimpl()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+    }
 
     void game_save_gcnimpl::save_as(
         const std::string &filepath
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         _libpkmgc_save->saveEncrypted(_data.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);
@@ -102,7 +115,10 @@ namespace pkmn {
         _filepath = fs::absolute(filepath).string();
     }
 
-    std::string game_save_gcnimpl::get_trainer_name() {
+    std::string game_save_gcnimpl::get_trainer_name()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return std::string(_current_slot->player->trainer->trainerName->toUTF8());
     }
 
@@ -117,61 +133,90 @@ namespace pkmn {
             7
         );
 
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         _current_slot->player->trainer->trainerName->fromUTF8(trainer_name.c_str());
     }
 
-    uint32_t game_save_gcnimpl::get_trainer_id() {
+    uint32_t game_save_gcnimpl::get_trainer_id()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return _current_slot->player->trainer->TID | (uint32_t(_current_slot->player->trainer->SID) << 16);
     }
 
     void game_save_gcnimpl::set_trainer_id(
         uint32_t trainer_id
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         _current_slot->player->trainer->TID = LibPkmGC::u16(trainer_id & 0xFFFF);
         _current_slot->player->trainer->SID = LibPkmGC::u16(trainer_id >> 16);
     }
 
-    uint16_t game_save_gcnimpl::get_trainer_public_id() {
+    uint16_t game_save_gcnimpl::get_trainer_public_id()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return _current_slot->player->trainer->TID;
     }
 
     void game_save_gcnimpl::set_trainer_public_id(
         uint16_t trainer_public_id
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         _current_slot->player->trainer->TID = trainer_public_id;
     }
 
-    uint16_t game_save_gcnimpl::get_trainer_secret_id() {
+    uint16_t game_save_gcnimpl::get_trainer_secret_id()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return _current_slot->player->trainer->SID;
     }
 
     void game_save_gcnimpl::set_trainer_secret_id(
         uint16_t trainer_secret_id
-    ) {
+    )
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         _current_slot->player->trainer->SID = trainer_secret_id;
     }
 
-    std::string game_save_gcnimpl::get_trainer_gender() {
+    std::string game_save_gcnimpl::get_trainer_gender()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return (_current_slot->player->trainerGender == LibPkmGC::Male) ? "Male" : "Female";
     }
 
     void game_save_gcnimpl::set_trainer_gender(
         PKMN_UNUSED(const std::string &trainer_gender)
-    ) {
+    )
+    {
         throw pkmn::feature_not_in_game_error("All trainers are male in Gamecube games.");
     }
 
-    std::string game_save_gcnimpl::get_rival_name() {
+    std::string game_save_gcnimpl::get_rival_name()
+    {
         throw pkmn::feature_not_in_game_error("Rivals", get_game());
     }
 
     void game_save_gcnimpl::set_rival_name(
         PKMN_UNUSED(const std::string &rival_name)
-    ) {
+    )
+    {
         throw pkmn::feature_not_in_game_error("Rivals", get_game());
     }
 
-    int game_save_gcnimpl::get_money() {
+    int game_save_gcnimpl::get_money()
+    {
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
+
         return int(_current_slot->player->pokeDollars);
     }
 
@@ -180,6 +225,8 @@ namespace pkmn {
     )
     {
         pkmn::enforce_bounds("Money", money, 0, MONEY_MAX_VALUE);
+
+        boost::lock_guard<game_save_gcnimpl> lock(*this);
 
         _current_slot->player->pokeDollars = LibPkmGC::u32(money);
     }

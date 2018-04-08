@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,29 +9,36 @@
 
 #include "pokemon_test.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 static void gen1_pokemon_test(
     const char* species,
     const char* game
-) {
+)
+{
     TEST_ASSERT_NOT_NULL(species);
     TEST_ASSERT_NOT_NULL(game);
 
     pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_handle_t pokemon = NULL;
+    pkmn_pokemon_t pokemon =
+    {
+        .species = NULL,
+        .game = NULL,
+        ._internal = NULL
+    };
 
-    error = pkmn_pokemon_make(
-                &pokemon,
+    error = pkmn_pokemon_init(
                 species,
                 game,
                 "",
-                30
+                30,
+                &pokemon
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
-    TEST_ASSERT_NOT_NULL(pokemon);
+    PKMN_TEST_ASSERT_SUCCESS(error);
+    TEST_ASSERT_NOT_NULL(pokemon._internal);
 
-    pkmn_test_values_t test_values = {
+    pkmn_test_values_t test_values =
+    {
         .valid_ball = "Great Ball",
         .invalid_balls = (char*[]){"Great Ball", NULL},
 
@@ -50,22 +57,34 @@ static void gen1_pokemon_test(
     };
 
     pokemon_test_common(
-        pokemon,
+        &pokemon,
         &test_values
     );
 
+    // Make sure we can read the relevant attributes.
+    int catch_rate = 0;
+    error = pkmn_pokemon_get_numeric_attribute(
+                &pokemon,
+                "Catch rate",
+                &catch_rate
+            );
+    PKMN_TEST_ASSERT_SUCCESS(error);
+
     error = pkmn_pokemon_free(&pokemon);
-    TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+    PKMN_TEST_ASSERT_SUCCESS(error);
 }
 
-void red_pokemon_test() {
+void red_pokemon_test()
+{
     gen1_pokemon_test("Charmander", "Red");
 }
 
-void blue_pokemon_test() {
+void blue_pokemon_test()
+{
     gen1_pokemon_test("Squirtle", "Blue");
 }
 
-void yellow_pokemon_test() {
+void yellow_pokemon_test()
+{
     gen1_pokemon_test("Bulbasaur", "Yellow");
 }

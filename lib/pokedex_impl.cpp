@@ -78,6 +78,8 @@ namespace pkmn
 
     pokedex_impl::~pokedex_impl()
     {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
         if(_our_mem)
         {
             delete[] reinterpret_cast<uint8_t*>(_native_has_seen);

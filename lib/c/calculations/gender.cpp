@@ -17,9 +17,9 @@
 
 static const std::map<std::string, pkmn_gender_t> genders = \
     boost::assign::map_list_of<std::string, pkmn_gender_t>
-        ("Male", PKMN_MALE)
-        ("Female", PKMN_FEMALE)
-        ("Genderless", PKMN_GENDERLESS)
+        ("Male", PKMN_GENDER_MALE)
+        ("Female", PKMN_GENDER_FEMALE)
+        ("Genderless", PKMN_GENDER_GENDERLESS)
     ;
 
 pkmn_error_t pkmn_calculations_gen2_pokemon_gender(

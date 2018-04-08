@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,8 @@
 #include <pkmn/database/item_entry.hpp>
 
 #include <pksav/math/endian.h>
+
+#include <boost/thread/lock_guard.hpp>
 
 #include <algorithm>
 #include <cstring>
@@ -45,28 +47,35 @@ namespace pkmn {
         }
     }
 
-    item_list_modernimpl::~item_list_modernimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_list_modernimpl::~item_list_modernimpl()
+    {
+        boost::lock_guard<item_list_modernimpl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete[] NATIVE_RCAST;
         }
     }
 
     void item_list_modernimpl::_from_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_modernimpl> lock(*this);
 
-        if(index == -1) {
-            for(int i = 0; i < _capacity; ++i) {
+        if(index == -1)
+        {
+            for(int i = 0; i < _capacity; ++i)
+            {
                 _item_slots[i].item = pkmn::database::item_entry(
                                           pksav_littleendian16(NATIVE_RCAST[i].index),
                                           _game_id
                                       ).get_name();
                 _item_slots[i].amount = pksav_littleendian16(NATIVE_RCAST[i].count);
             }
-        } else {
+        }
+        else
+        {
             _item_slots[index].item = pkmn::database::item_entry(
                                           pksav_littleendian16(NATIVE_RCAST[index].index),
                                           _game_id
@@ -77,11 +86,14 @@ namespace pkmn {
 
     void item_list_modernimpl::_to_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_modernimpl> lock(*this);
 
-        if(index == -1) {
-            for(int i = 0; i < _capacity; ++i) {
+        if(index == -1)
+        {
+            for(int i = 0; i < _capacity; ++i)
+            {
                 NATIVE_RCAST[i].index = pksav_littleendian16(uint16_t(
                                             pkmn::database::item_entry(
                                                 _item_slots[i].item,
@@ -92,7 +104,9 @@ namespace pkmn {
                                             _item_slots[i].amount
                                         ));
             }
-        } else {
+        }
+        else
+        {
             NATIVE_RCAST[index].index = pksav_littleendian16(uint16_t(
                                             pkmn::database::item_entry(
                                                 _item_slots[index].item,

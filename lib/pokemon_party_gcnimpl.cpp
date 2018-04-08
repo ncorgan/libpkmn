@@ -31,10 +31,14 @@ namespace pkmn {
     {
         _native = reinterpret_cast<void*>(new pkmn::gcn_pokemon_party_t);
 
-        for(size_t i = 0; i < PARTY_SIZE; ++i) {
-            if(_game_id == COLOSSEUM_ID) {
+        for(size_t i = 0; i < PARTY_SIZE; ++i)
+        {
+            if(_game_id == COLOSSEUM_ID)
+            {
                 NATIVE_RCAST->pokemon[i] = new LibPkmGC::Colosseum::Pokemon;
-            } else {
+            }
+            else
+            {
                 NATIVE_RCAST->pokemon[i] = new LibPkmGC::XD::Pokemon;
             }
         }
@@ -51,9 +55,11 @@ namespace pkmn {
        _num_pokemon(0)
     {
         _native = reinterpret_cast<void*>(new pkmn::gcn_pokemon_party_t);
-        for(size_t i = 0; i < PARTY_SIZE; ++i) {
+        for(size_t i = 0; i < PARTY_SIZE; ++i)
+        {
             NATIVE_RCAST->pokemon[i] = native[i];
-            if(NATIVE_RCAST->pokemon[i]->species > LibPkmGC::NoSpecies) {
+            if(NATIVE_RCAST->pokemon[i]->species > LibPkmGC::NoSpecies)
+            {
                 ++_num_pokemon;
             }
         }
@@ -63,13 +69,21 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_party_gcnimpl::~pokemon_party_gcnimpl() {
+    pokemon_party_gcnimpl::~pokemon_party_gcnimpl()
+    {
+        boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
+
         // _our_mem applies to the struct members, not the struct itself
-        if(_our_mem) {
-            for(size_t i = 0; i < PARTY_SIZE; ++i) {
-                if(_game_id == COLOSSEUM_ID) {
+        if(_our_mem)
+        {
+            for(size_t i = 0; i < PARTY_SIZE; ++i)
+            {
+                if(_game_id == COLOSSEUM_ID)
+                {
                     delete COLO_POKEMON(i);
-                } else {
+                }
+                else
+                {
                     delete XD_POKEMON(i);
                 }
             }
@@ -78,7 +92,10 @@ namespace pkmn {
         delete NATIVE_RCAST;
     }
 
-    int pokemon_party_gcnimpl::get_num_pokemon() {
+    int pokemon_party_gcnimpl::get_num_pokemon()
+    {
+        boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
+
         return _num_pokemon;
     }
 
@@ -101,7 +118,7 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::mutex::scoped_lock(_mem_mutex);
+        boost::lock_guard<pokemon_party_gcnimpl> lock(*this);
 
         // If the given Pokémon isn't from this party's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;
@@ -170,18 +187,23 @@ namespace pkmn {
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = new_pokemon->get_species();
-        if(index == num_pokemon) {
-            if(NATIVE_RCAST->pokemon[index]->species > LibPkmGC::NoSpecies and new_species != "None") {
+        if(index == num_pokemon)
+        {
+            if(NATIVE_RCAST->pokemon[index]->species > LibPkmGC::NoSpecies and new_species != "None")
+            {
                 ++_num_pokemon;
             }
-        } else if(index == (num_pokemon-1)) {
+        }
+        else if(index == (num_pokemon-1))
+        {
             if(NATIVE_RCAST->pokemon[index]->species == LibPkmGC::NoSpecies and new_species == "None") {
                 --_num_pokemon;
             }
         }
     }
 
-    void pokemon_party_gcnimpl::_from_native() {
+    void pokemon_party_gcnimpl::_from_native()
+    {
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);
 

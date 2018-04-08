@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,8 @@
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/gen2/text.h>
+
+#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 
@@ -49,15 +51,20 @@ namespace pkmn {
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new pkmn::gen2_pokemon_full_pc_t);
-        if(copy) {
-            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+        if(copy)
+        {
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i)
+            {
                 NATIVE_RCAST->boxes[i] = new pksav_gen2_pokemon_box_t;
                 *NATIVE_RCAST->boxes[i] = *boxes[i];
             }
             NATIVE_RCAST->box_names = new pksav_gen2_pokemon_box_names_t;
             *NATIVE_RCAST->box_names = *box_names;
-        } else {
-            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+        }
+        else
+        {
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i)
+            {
                 NATIVE_RCAST->boxes[i] = boxes[i];
             }
             NATIVE_RCAST->box_names = box_names;
@@ -68,10 +75,15 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_pc_gen2impl::~pokemon_pc_gen2impl() {
+    pokemon_pc_gen2impl::~pokemon_pc_gen2impl()
+    {
+        boost::lock_guard<pokemon_pc_gen2impl> lock(*this);
+
         // _our_mem applies to the struct members, not the struct itself
-        if(_our_mem) {
-            for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+        if(_our_mem)
+        {
+            for(int i = 0; i < GEN2_NUM_BOXES; ++i)
+            {
                 delete NATIVE_RCAST->boxes[i];
             }
             delete NATIVE_RCAST->box_names;
@@ -80,14 +92,17 @@ namespace pkmn {
         delete NATIVE_RCAST;
     }
 
-    int pokemon_pc_gen2impl::get_num_boxes() {
+    int pokemon_pc_gen2impl::get_num_boxes()
+    {
         return GEN2_NUM_BOXES;
     }
 
-    void pokemon_pc_gen2impl::_from_native() {
+    void pokemon_pc_gen2impl::_from_native()
+    {
         _box_list.resize(GEN2_NUM_BOXES);
 
-        for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+        for(int i = 0; i < GEN2_NUM_BOXES; ++i)
+        {
             _box_list[i] = std::make_shared<pokemon_box_gen2impl>(
                                _game_id,
                                NATIVE_RCAST->boxes[i]
@@ -105,10 +120,12 @@ namespace pkmn {
         }
     }
 
-    void pokemon_pc_gen2impl::_update_box_names() {
+    void pokemon_pc_gen2impl::_update_box_names()
+    {
         _box_names.resize(GEN2_NUM_BOXES);
 
-        for(int i = 0; i < GEN2_NUM_BOXES; ++i) {
+        for(int i = 0; i < GEN2_NUM_BOXES; ++i)
+        {
             _box_names[i] = _box_list[i]->get_name();
 
             PKSAV_CALL(

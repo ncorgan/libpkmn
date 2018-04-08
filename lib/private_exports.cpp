@@ -22,5 +22,4 @@ namespace pkmn { namespace priv {
     {
         pkmn::database::initialize_connection();
     }
-
 }}

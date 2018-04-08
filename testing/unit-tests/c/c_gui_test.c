@@ -7,7 +7,7 @@
 
 #include "c_test_common.h"
 
-#include <pkmn.h>
+#include <pkmn-c.h>
 
 #ifdef PKMN_C_PLATFORM_WIN32
 #    include <windows.h>
@@ -119,9 +119,9 @@ static void spinda_test()
 {
     pkmn_error_t error = PKMN_ERROR_NONE;
 
-    const char* qt_version = pkmn_qt_version();
+    const char* qt_version = pkmn_buildinfo_qt_version();
 
-    if(strcmp(pkmn_qt_version(), "N/A"))
+    if(strcmp(qt_version, "N/A"))
     {
         const char* SPINDA_FORMAT = "spinda_%d_%d_%u.png";
 
@@ -136,7 +136,7 @@ static void spinda_test()
                     sizeof(PKMN_TMP_DIR),
                     NULL
                 );
-        TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+        PKMN_TEST_ASSERT_SUCCESS(error);
 
         for(int generation = 3; generation <= 5; ++generation)
         {
@@ -180,7 +180,7 @@ static void spinda_test()
                         false,
                         test_spinda_filepath
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
             TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
             delete_file(test_spinda_filepath);
@@ -222,7 +222,7 @@ static void spinda_test()
                         true,
                         test_spinda_filepath
                     );
-            TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
+            PKMN_TEST_ASSERT_SUCCESS(error);
             TEST_ASSERT_TRUE(file_exists(test_spinda_filepath));
             TEST_ASSERT_TRUE(do_files_match(test_files_spinda_filepath, test_spinda_filepath));
             delete_file(test_spinda_filepath);

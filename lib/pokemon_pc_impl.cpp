@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,6 +18,8 @@
 #include "database/id_to_string.hpp"
 
 #include <pkmn/exception.hpp>
+
+#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -61,7 +63,8 @@ namespace pkmn {
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
-    std::string pokemon_pc_impl::get_game() {
+    std::string pokemon_pc_impl::get_game()
+    {
         return pkmn::database::game_id_to_name(_game_id);
     }
 
@@ -72,20 +75,32 @@ namespace pkmn {
         int num_boxes = get_num_boxes();
         pkmn::enforce_bounds("Box index", index, 0, (num_boxes-1));
 
+        boost::lock_guard<pokemon_pc_impl> lock(*this);
+
         return _box_list.at(index);
     }
 
-    const pkmn::pokemon_box_list_t& pokemon_pc_impl::as_vector() {
+    const pkmn::pokemon_box_list_t& pokemon_pc_impl::as_vector()
+    {
+        boost::lock_guard<pokemon_pc_impl> lock(*this);
+
         return _box_list;
     }
 
-    const std::vector<std::string>& pokemon_pc_impl::get_box_names() {
+    const std::vector<std::string>& pokemon_pc_impl::get_box_names()
+    {
+        boost::lock_guard<pokemon_pc_impl> lock(*this);
+
         _update_box_names();
         return _box_names;
     }
 
-    void* pokemon_pc_impl::get_native() {
-        if(_generation > 1) {
+    void* pokemon_pc_impl::get_native()
+    {
+        boost::lock_guard<pokemon_pc_impl> lock(*this);
+
+        if(_generation > 1)
+        {
             _update_box_names();
         }
 

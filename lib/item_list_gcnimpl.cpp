@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -8,6 +8,8 @@
 #include "item_list_gcnimpl.hpp"
 
 #include <pkmn/database/item_entry.hpp>
+
+#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 
@@ -41,28 +43,35 @@ namespace pkmn {
         }
     }
 
-    item_list_gcnimpl::~item_list_gcnimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_list_gcnimpl::~item_list_gcnimpl()
+    {
+        boost::lock_guard<item_list_gcnimpl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete[] NATIVE_RCAST;
         }
     }
 
     void item_list_gcnimpl::_from_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gcnimpl> lock(*this);
 
-        if(index == -1) {
-            for(int i = 0; i < _capacity; ++i) {
+        if(index == -1)
+        {
+            for(int i = 0; i < _capacity; ++i)
+            {
                 _item_slots[i].item = pkmn::database::item_entry(
                                           int(NATIVE_RCAST[i].index),
                                           _game_id
                                       ).get_name();
                 _item_slots[i].amount = int(NATIVE_RCAST[i].quantity);
             }
-        } else {
+        }
+        else
+        {
             _item_slots[index].item = pkmn::database::item_entry(
                                           int(NATIVE_RCAST[index].index),
                                           _game_id
@@ -73,11 +82,14 @@ namespace pkmn {
 
     void item_list_gcnimpl::_to_native(
         int index
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gcnimpl> lock(*this);
 
-        if(index == -1) {
-            for(int i = 0; i < _capacity; ++i) {
+        if(index == -1)
+        {
+            for(int i = 0; i < _capacity; ++i)
+            {
                 NATIVE_RCAST[i].index = LibPkmGC::ItemIndex(
                                             pkmn::database::item_entry(
                                                 _item_slots[i].item,
@@ -88,7 +100,9 @@ namespace pkmn {
                                                _item_slots[i].amount
                                            );
             }
-        } else {
+        }
+        else
+        {
             NATIVE_RCAST[index].index = LibPkmGC::ItemIndex(
                                             pkmn::database::item_entry(
                                                 _item_slots[index].item,

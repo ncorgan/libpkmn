@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -21,6 +21,7 @@
 
 #include <boost/config.hpp>
 #include <boost/format.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #include <stdexcept>
 
@@ -204,7 +205,10 @@ namespace pkmn {
         return _capacity;
     }
 
-    int item_list_impl::get_num_items() {
+    int item_list_impl::get_num_items()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
+
         return _num_items;
     }
 
@@ -220,6 +224,8 @@ namespace pkmn {
             (_capacity-1)
         );
 
+        boost::lock_guard<item_list_impl> lock(*this);
+
         return _item_slots.at(position);
     }
 
@@ -230,6 +236,8 @@ namespace pkmn {
     {
         // Input validation
         pkmn::enforce_bounds("Amount", amount, 1, 99);
+
+        boost::lock_guard<item_list_impl> lock(*this);
 
         /*
          * Check if this item is already in the list. If so, add to
@@ -289,6 +297,8 @@ namespace pkmn {
         // Input validation
         pkmn::enforce_bounds("Amount", amount, 1, 99);
 
+        boost::lock_guard<item_list_impl> lock(*this);
+
         /*
          * Check if this item is in the list. If so, remove that amount,
          * and if there are no more, remove the item from the list and
@@ -331,7 +341,8 @@ namespace pkmn {
     void item_list_impl::move(
         int old_position,
         int new_position
-    ) {
+    )
+    {
         if(old_position < 0 or old_position >= _num_items or
            new_position < 0 or new_position >= _num_items)
         {
@@ -339,6 +350,8 @@ namespace pkmn {
         } else if(old_position == new_position) {
             throw std::invalid_argument("Positions cannot match.");
         }
+
+        boost::lock_guard<item_list_impl> lock(*this);
 
         pkmn::item_slot temp = _item_slots[old_position];
         _item_slots.erase(_item_slots.begin()+old_position);
@@ -355,6 +368,8 @@ namespace pkmn {
         // Input validation.
         int end_boundary = std::min<int>(_num_items, _capacity-1);
         pkmn::enforce_bounds("Position", position, 0, end_boundary);
+
+        boost::lock_guard<item_list_impl> lock(*this);
 
         if(item_name == "None")
         {
@@ -405,7 +420,10 @@ namespace pkmn {
         _to_native();
     }
 
-    const pkmn::item_slots_t& item_list_impl::as_vector() {
+    const pkmn::item_slots_t& item_list_impl::as_vector()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
+
         return _item_slots;
     }
 
@@ -437,7 +455,8 @@ namespace pkmn {
     /*
      * TODO: if PC, all items valid except Berry Pouch, TM Case
      */
-    const std::vector<std::string>& item_list_impl::get_valid_items() {
+    const std::vector<std::string>& item_list_impl::get_valid_items()
+    {
         if(_valid_items.size() == 0) {
             if(std::find(BERRY_LIST_IDS, BERRY_LIST_IDS+17, _item_list_id) != BERRY_LIST_IDS+17) {
                 static BOOST_CONSTEXPR const char* berry_list_query = \
@@ -461,8 +480,9 @@ namespace pkmn {
         return _valid_items;
     }
 
-    void* item_list_impl::get_native() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    void* item_list_impl::get_native()
+    {
+        boost::lock_guard<item_list_impl> lock(*this);
 
         return _native;
     }
