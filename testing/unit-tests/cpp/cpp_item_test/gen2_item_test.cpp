@@ -474,7 +474,8 @@ INSTANTIATE_TEST_CASE_P(
 
 class gen2_item_bag_test: public item_bag_test {};
 
-TEST_P(gen2_item_bag_test, item_bag_test) {
+TEST_P(gen2_item_bag_test, item_bag_test)
+{
     const pkmn::item_bag::sptr& bag = get_item_bag();
 
     const pkmn::item_pockets_t& pockets = bag->get_pockets();
@@ -506,10 +507,11 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     ASSERT_EQ(0, bag->get_pocket("KeyItems")->get_num_items());
     ASSERT_EQ(0, bag->get_pocket("Balls")->get_num_items());
     ASSERT_EQ(0, bag->get_pocket("TM/HM")->get_num_items());
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->add(
-            all_pocket_item_names[i],
-            5
+            all_pocket_item_names[item_index],
+            1
         );
     }
 
@@ -519,23 +521,23 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     const pkmn::item_slots_t& tm_hm_slots = bag->get_pocket("TM/HM")->as_vector();
 
     EXPECT_EQ("Potion", item_slots.at(0).item);
-    EXPECT_EQ(5, item_slots.at(0).amount);
+    EXPECT_EQ(1, item_slots.at(0).amount);
     EXPECT_EQ("Berry", item_slots.at(1).item);
-    EXPECT_EQ(5, item_slots.at(1).amount);
+    EXPECT_EQ(1, item_slots.at(1).amount);
     EXPECT_EQ("None", item_slots.at(2).item);
     EXPECT_EQ(0, item_slots.at(2).amount);
 
     EXPECT_EQ("Bicycle", key_item_slots.at(0).item);
-    EXPECT_EQ(5, key_item_slots.at(0).amount);
+    EXPECT_EQ(1, key_item_slots.at(0).amount);
     EXPECT_EQ("SquirtBottle", key_item_slots.at(1).item);
-    EXPECT_EQ(5, key_item_slots.at(1).amount);
+    EXPECT_EQ(1, key_item_slots.at(1).amount);
     EXPECT_EQ("None", key_item_slots.at(2).item);
     EXPECT_EQ(0, key_item_slots.at(2).amount);
 
     EXPECT_EQ("Great Ball", ball_slots.at(0).item);
-    EXPECT_EQ(5, ball_slots.at(0).amount);
+    EXPECT_EQ(1, ball_slots.at(0).amount);
     EXPECT_EQ("Friend Ball", ball_slots.at(1).item);
-    EXPECT_EQ(5, ball_slots.at(1).amount);
+    EXPECT_EQ(1, ball_slots.at(1).amount);
     EXPECT_EQ("None", ball_slots.at(2).item);
     EXPECT_EQ(0, ball_slots.at(2).amount);
 
@@ -544,9 +546,9 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ("TM02", tm_hm_slots.at(1).item);
     EXPECT_EQ(0, tm_hm_slots.at(1).amount);
     EXPECT_EQ("TM28", tm_hm_slots.at(27).item);
-    EXPECT_EQ(5, tm_hm_slots.at(27).amount);
+    EXPECT_EQ(1, tm_hm_slots.at(27).amount);
     EXPECT_EQ("HM01", tm_hm_slots.at(50).item);
-    EXPECT_EQ(5, tm_hm_slots.at(50).amount);
+    EXPECT_EQ(1, tm_hm_slots.at(50).amount);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
@@ -554,53 +556,60 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
      */
     const struct pksav_gen2_item_bag* native = reinterpret_cast<const struct pksav_gen2_item_bag*>(bag->get_native());
     EXPECT_EQ(2, native->item_pocket.count);
-    for(int i = 0; i < 3; ++i) {
+    for(int item_index = 0; item_index < 3; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 bag->get_game()
             ).get_item_index(),
-            int(native->item_pocket.items[i].index)
+            int(native->item_pocket.items[item_index].index)
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->item_pocket.items[i].count));
+        EXPECT_EQ(
+            item_slots.at(item_index).amount,
+            int(native->item_pocket.items[item_index].count)
+        );
     }
     EXPECT_EQ(0xFF, native->item_pocket.terminator);
-    /*
     EXPECT_EQ(2, native->key_item_pocket.count);
-    for(int i = 0; i < 3; ++i) {
+    for(int item_index = 0; item_index < 3; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                key_item_slots.at(i).item,
+                key_item_slots.at(item_index).item,
                 bag->get_game()
             ).get_item_index(),
-            int(native->key_item_pocket.items[i].index)
+            int(native->key_item_pocket.item_indices[item_index])
         );
-        EXPECT_EQ(key_item_slots.at(i).amount, int(native->key_item_pocket.items[i].count));
     }
     EXPECT_EQ(0xFF, native->key_item_pocket.terminator);
-    */
     EXPECT_EQ(2, native->ball_pocket.count);
-    for(int i = 0; i < 3; ++i) {
+    for(int item_index = 0; item_index < 3; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                ball_slots.at(i).item,
+                ball_slots.at(item_index).item,
                 bag->get_game()
             ).get_item_index(),
-            int(native->ball_pocket.items[i].index)
+            int(native->ball_pocket.items[item_index].index)
         );
-        EXPECT_EQ(ball_slots.at(i).amount, int(native->ball_pocket.items[i].count));
+        EXPECT_EQ(
+            ball_slots.at(item_index).amount,
+            int(native->ball_pocket.items[item_index].count)
+        );
     }
     EXPECT_EQ(0xFF, native->ball_pocket.terminator);
     EXPECT_EQ(0, native->tmhm_pocket.tm_count[0]);
     EXPECT_EQ(0, native->tmhm_pocket.tm_count[1]);
-    EXPECT_EQ(5, native->tmhm_pocket.tm_count[27]);
-    EXPECT_EQ(5, native->tmhm_pocket.hm_count[0]);
+    EXPECT_EQ(1, native->tmhm_pocket.tm_count[27]);
+    EXPECT_EQ(1, native->tmhm_pocket.hm_count[0]);
 
     // Make sure removing items through the bag removes from the proper pockets.
-    for(int i = 0; i < 8; ++i) {
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
         bag->remove(
-            all_pocket_item_names[i],
-            5
+            all_pocket_item_names[item_index],
+            1
         );
     }
 
@@ -635,23 +644,36 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     EXPECT_EQ(0, tm_hm_slots.at(50).amount);
 
     // Make sure we can't add/remove Crystal-specific items with a Gold/Silver bag.
-    if(get_game() == "Crystal") {
-        for(int i = 0; i < 4; ++i) {
-            bag->add(crystal_items[i], 1);
+    if(get_game() == "Crystal")
+    {
+        for(int item_index = 0; item_index < 4; ++item_index)
+        {
+            bag->add(crystal_items[item_index], 1);
         }
-        for(int i = 0; i < 4; ++i) {
-            EXPECT_EQ(crystal_items[i], key_item_slots.at(i).item);
-            EXPECT_EQ(1, key_item_slots.at(i).amount);
+        for(int item_index = 0; item_index < 4; ++item_index)
+        {
+            EXPECT_EQ(
+                crystal_items[item_index],
+                key_item_slots.at(item_index).item
+            );
+            EXPECT_EQ(
+                1,
+                key_item_slots.at(item_index).amount
+            );
         }
 
-        for(int i = 0; i < 4; ++i) {
-            bag->remove(crystal_items[i], 1);
+        for(int item_index = 0; item_index < 4; ++item_index)
+        {
+            bag->remove(crystal_items[item_index], 1);
         }
-        for(int i = 0; i < 4; ++i) {
-            EXPECT_EQ("None", key_item_slots.at(i).item);
-            EXPECT_EQ(0, key_item_slots.at(i).amount);
+        for(int item_index = 0; item_index < 4; ++item_index)
+        {
+            EXPECT_EQ("None", key_item_slots.at(item_index).item);
+            EXPECT_EQ(0, key_item_slots.at(item_index).amount);
         }
-    } else {
+    }
+    else
+    {
         test_item_bag_invalid_items(
             bag,
             crystal_items
@@ -665,7 +687,8 @@ TEST_P(gen2_item_bag_test, item_bag_test) {
     );
 }
 
-static const std::vector<std::string> item_bag_params = {
+static const std::vector<std::string> item_bag_params =
+{
     "Gold", "Silver", "Crystal"
 };
 

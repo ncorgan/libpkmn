@@ -114,19 +114,6 @@ namespace pkmn {
         boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
         /*
-         * Check if this item is already in the list. If so, it cannot
-         * be added. If not, see if there's room to add another
-         * item.
-         */
-        for(int item_index = 0; item_index < _num_items; ++item_index)
-        {
-            if(_item_slots[item_index].item == item_name)
-            {
-                throw std::invalid_argument("This item is already in this pocket.");
-            }
-        }
-
-        /*
          * Check if this item is in the list. If so, remove that amount,
          * and if there are no more, remove the item from the list and
          * shift everything over.
@@ -135,13 +122,12 @@ namespace pkmn {
         {
             if(_item_slots[item_index].item == item_name)
             {
-                _item_slots[item_index].amount = 0;
                 _item_slots.erase(_item_slots.begin()+item_index);
                 _item_slots.resize(_capacity);
                 --_num_items;
-                _to_native();
+                _to_native(item_index);
 
-                return;
+                break;
             }
         }
     }
@@ -217,7 +203,7 @@ namespace pkmn {
                                           NATIVE_RCAST->item_indices[index],
                                           _game_id
                                       ).get_name();
-            _item_slots[index].amount = 1;
+            _item_slots[index].amount = (NATIVE_RCAST->item_indices[index] > 0) ? 1 : 0;
         }
         else
         {
@@ -227,9 +213,11 @@ namespace pkmn {
                                                    NATIVE_RCAST->item_indices[item_index],
                                                    _game_id
                                                ).get_name();
-                _item_slots[item_index].amount = 1;
+                _item_slots[item_index].amount = (NATIVE_RCAST->item_indices[item_index] > 0) ? 1 : 0;
             }
         }
+
+        _num_items = NATIVE_RCAST->count;
     }
 
     void item_list_gen2_keyitemimpl::_to_native(
@@ -255,5 +243,7 @@ namespace pkmn {
                                                                  ).get_item_index());
             }
         }
+
+        NATIVE_RCAST->count = uint8_t(_num_items);
     }
 }

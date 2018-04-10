@@ -28,10 +28,6 @@
 
 namespace fs = boost::filesystem;
 
-// TODO: put enum back in PKSav
-#define PKSAV_GEN2_GENDER_MALE 0
-#define PKSAV_GEN2_GENDER_FEMALE 1
-
 namespace pkmn {
 
     BOOST_STATIC_CONSTEXPR int GOLD_GAME_ID    = 4;
