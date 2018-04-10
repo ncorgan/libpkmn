@@ -78,6 +78,7 @@ SET(pkmn_sources
     item_bag_gbaimpl.cpp
     item_bag_gcnimpl.cpp
     item_list_impl.cpp
+    item_list_gen2_keyitemimpl.cpp
     item_list_gen2_tmhmimpl.cpp
     item_list_gcnimpl.cpp
     item_list_modernimpl.cpp

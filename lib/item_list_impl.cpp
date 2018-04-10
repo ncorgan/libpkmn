@@ -8,6 +8,7 @@
 #include "exception_internal.hpp"
 #include "item_list_impl.hpp"
 #include "item_list_gbimpl.hpp"
+#include "item_list_gen2_keyitemimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
 #include "item_list_gcnimpl.hpp"
 #include "item_list_modernimpl.hpp"
@@ -87,13 +88,11 @@ namespace pkmn {
                                    item_list_id, game_id, nullptr
                                );
 
-                    /*
                     case 7:
                     case 12:
-                        return std::make_shared<item_list_gen2_key_item_pocketimpl>(
+                        return std::make_shared<item_list_gen2_keyitemimpl>(
                                    item_list_id, game_id, nullptr
                                );
-                               */
 
                     case 8:
                     case 13:
