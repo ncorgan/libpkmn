@@ -75,7 +75,7 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
         );
         EXPECT_EQ(
             3,
-            PKSAV_GEN1_POKEMON_MOVE_PP_UP(i)
+            PKSAV_GEN1_POKEMON_MOVE_PP_UP(native_pc->move_pps[i])
         );
     }
 
