@@ -124,8 +124,8 @@ namespace pkmn { namespace conversions {
          * Leave location caught at 0, Crystal's Poké Seer can't tell where
          * traded Pokémon were caught.
          */
-        to->caught_data = (to->caught_data & ~PKSAV_GEN2_LEVEL_CAUGHT_MASK)
-                        | (uint16_t(from->level) << PKSAV_GEN2_LEVEL_CAUGHT_OFFSET);
+        to->caught_data = (to->caught_data & ~PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK)
+                        | (uint16_t(from->level) << PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET);
 
         time_t now = std::time(0);
         PKSAV_CALL(
@@ -145,23 +145,23 @@ namespace pkmn { namespace conversions {
     {
         // PC data
         gen1_pc_pokemon_to_gen2(
-            &from->pc,
-            &to->pc
+            &from->pc_data,
+            &to->pc_data
         );
 
         // Party data
         std::memset(&to->party_data, 0, sizeof(to->party_data));
-        to->party_data.condition = from->pc.condition;
+        to->party_data.condition = from->pc_data.condition;
 
         // Leave unused field at 0
 
-        to->party_data.current_hp = from->pc.current_hp;
+        to->party_data.current_hp = from->pc_data.current_hp;
 
         // The next four fields are identical
         std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
 
         // In Generation II, the game index matches the species ID.
-        if(does_spcl_match_spatk(to->pc.species))
+        if(does_spcl_match_spatk(to->pc_data.species))
         {
             to->party_data.spatk = from->party_data.spcl;
         }
@@ -268,24 +268,24 @@ namespace pkmn { namespace conversions {
     {
         // PC data
         gen2_pc_pokemon_to_gen1(
-            &from->pc,
-            &to->pc
+            &from->pc_data,
+            &to->pc_data
         );
 
         // Party data
         std::memset(&to->party_data, 0, sizeof(to->party_data));
-        to->party_data.level = from->pc.level;
-        to->pc.condition = from->party_data.condition;
+        to->party_data.level = from->pc_data.level;
+        to->pc_data.condition = from->party_data.condition;
 
         // Leave unused field at 0
 
-        to->pc.current_hp = from->party_data.current_hp;
+        to->pc_data.current_hp = from->party_data.current_hp;
 
         // The next four fields are identical
         std::memcpy(&to->party_data.max_hp, &from->party_data.max_hp, 12);
 
         // In Generation II, the game index matches the species ID.
-        if(does_spcl_match_spatk(from->pc.species))
+        if(does_spcl_match_spatk(from->pc_data.species))
         {
             to->party_data.spcl = from->party_data.spatk;
         }

@@ -125,7 +125,7 @@ namespace pkmn {
         old_party_pokemon_impl_ptr->unlock();
 
         // Set the entry in the species list.
-        NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<pksav_pc_pokemon_type*>(new_pokemon_native_pc_ptr);
+        NATIVE_LIST_RCAST->party[index].pc_data = *reinterpret_cast<pksav_pc_pokemon_type*>(new_pokemon_native_pc_ptr);
         NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<pksav_pokemon_party_data_type*>(new_pokemon_native_party_ptr);
         _pokemon_list[index] = std::make_shared<libpkmn_pokemon_type>(
                                    &NATIVE_LIST_RCAST->party[index],
@@ -237,7 +237,7 @@ namespace pkmn {
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and NATIVE_LIST_RCAST->party[i].pc.species > 0)
+            if(i >= num_pokemon and NATIVE_LIST_RCAST->party[i].pc_data.species > 0)
             {
                 NATIVE_LIST_RCAST->species[i] = 0;
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_party_pokemon_type));

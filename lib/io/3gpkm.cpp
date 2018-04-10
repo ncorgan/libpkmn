@@ -51,17 +51,20 @@ namespace pkmn { namespace io {
         }
 
         // Validate game
-        try {
-            uint16_t origin_game = misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
-            origin_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
-
-            int game_id = pkmn::database::game_index_to_id(origin_game);
-            if(pkmn::database::game_id_to_generation(game_id) != 3) {
+        try
+        {
+            int game_id = pkmn::database::game_index_to_id(
+                              PKSAV_GBA_POKEMON_ORIGIN_GAME(misc->origin_info)
+                          );
+            if(pkmn::database::game_id_to_generation(game_id) != 3)
+            {
                 return false;
             }
 
             *game_id_out = game_id;
-        } catch(const std::invalid_argument&) {
+        }
+        catch(const std::invalid_argument&)
+        {
             return false;
         }
 

@@ -275,10 +275,10 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     // TODO: Pokérus
     // TODO: get location indices for what we set
 
-    EXPECT_EQ(pokemon->get_level_met(), int(misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK));
+    EXPECT_EQ(pokemon->get_level_met(), int(misc->origin_info & PKSAV_GBA_POKEMON_LEVEL_MET_MASK));
 
     // TODO: get ball ID for what we set
-    EXPECT_TRUE(misc->origin_info & PKSAV_GBA_OTGENDER_MASK);
+    EXPECT_TRUE(misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK);
 
     const std::map<std::string, int>& IVs = pokemon->get_IVs();
     uint8_t IV = 0;
@@ -337,8 +337,8 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     )
     EXPECT_EQ(IVs.at("Special Defense"), int(IV));
 
-    EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_EGG_MASK));
-    EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK));
+    EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK));
+    EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK));
 
     /*
      * Party data

@@ -143,10 +143,10 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         struct pksav_gen1_party_pokemon* party,
         int game_id
-    ): pokemon_impl(party->pc.species, game_id),
+    ): pokemon_impl(party->pc_data.species, game_id),
        _yellow_pikachu_friendship(0)
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc);
+        _native_pc = reinterpret_cast<void*>(&party->pc_data);
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(&party->party_data);
@@ -201,11 +201,11 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         const struct pksav_gen1_party_pokemon& party,
         int game_id
-    ): pokemon_impl(party.pc.species, game_id),
+    ): pokemon_impl(party.pc_data.species, game_id),
        _yellow_pikachu_friendship(0)
     {
         _native_pc = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
-        *GEN1_PC_RCAST = party.pc;
+        *GEN1_PC_RCAST = party.pc_data;
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new struct pksav_gen1_pokemon_party_data);
@@ -249,7 +249,7 @@ namespace pkmn
         pkmn::pokemon::sptr ret;
 
         struct pksav_gen1_party_pokemon pksav_pokemon;
-        pksav_pokemon.pc = *GEN1_PC_RCAST;
+        pksav_pokemon.pc_data = *GEN1_PC_RCAST;
         pksav_pokemon.party_data = *GEN1_PARTY_RCAST;
 
         int game_id = pkmn::database::game_name_to_id(game);
@@ -898,7 +898,7 @@ namespace pkmn
                     pkmn::database::move_id_to_name(
                         GEN1_PC_RCAST->moves[index], 1
                     ),
-                    (GEN1_PC_RCAST->move_pps[index] & PKSAV_GEN1_MOVE_PP_MASK)
+                    (GEN1_PC_RCAST->move_pps[index] & PKSAV_GEN1_POKEMON_MOVE_PP_MASK)
                 );
                 break;
 

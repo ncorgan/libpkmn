@@ -202,7 +202,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
             for(int i = 0; i < 3; ++i) {
                 EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->species[i]));
-                EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc.species));
+                EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc_data.species));
 
                 char nickname[11] = {};
                 PKSAV_CALL(
@@ -247,7 +247,7 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
             for(int i = 0; i < 3; ++i) {
                 EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
                 EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->species[i]));
-                EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc.species));
+                EXPECT_EQ(party->get_pokemon(i)->get_database_entry().get_pokemon_index(), int(native->party[i].pc_data.species));
 
                 char nickname[11] = {};
                 PKSAV_CALL(
@@ -295,12 +295,12 @@ TEST_P(pokemon_party_test, setting_pokemon_test) {
             } else {
                 struct pksav_gba_pokemon_party* native = reinterpret_cast<pksav_gba_pokemon_party*>(party->get_native());
                 EXPECT_EQ(3, native->count);
-                EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), native->party[0].pc.blocks.growth.species);
-                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->party[1].pc.blocks.growth.species);
-                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->party[2].pc.blocks.growth.species);
-                EXPECT_EQ(0, native->party[3].pc.blocks.growth.species);
-                EXPECT_EQ(0, native->party[4].pc.blocks.growth.species);
-                EXPECT_EQ(0, native->party[5].pc.blocks.growth.species);
+                EXPECT_EQ(squirtle->get_database_entry().get_pokemon_index(), native->party[0].pc_data.blocks.growth.species);
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->party[1].pc_data.blocks.growth.species);
+                EXPECT_EQ(charmander->get_database_entry().get_pokemon_index(), native->party[2].pc_data.blocks.growth.species);
+                EXPECT_EQ(0, native->party[3].pc_data.blocks.growth.species);
+                EXPECT_EQ(0, native->party[4].pc_data.blocks.growth.species);
+                EXPECT_EQ(0, native->party[5].pc_data.blocks.growth.species);
                 for(int i = 0; i < 6; ++i) {
                     EXPECT_EQ(party->get_pokemon(i)->get_native_pc_data(), &native->party[i]);
                 }

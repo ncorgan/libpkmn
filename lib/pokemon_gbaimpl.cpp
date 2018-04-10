@@ -32,9 +32,9 @@
 
 #include <pkmn/database/item_entry.hpp>
 
-#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
+#include <pksav/gba/ribbons.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
 
@@ -121,17 +121,17 @@ namespace pkmn
         set_ball("Premier Ball");
 
         _misc->iv_egg_ability = rng.rand();
-        _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
+        _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
         if(GBA_PC_RCAST->personality % 2)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
+            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_ABILITY_MASK;
+            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
 
-        _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
+        _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
 
         // Populate abstractions
         _update_ribbons_map();
@@ -192,11 +192,11 @@ namespace pkmn
         struct pksav_gba_party_pokemon* party,
         int game_id
     ): pokemon_impl(
-           pksav_littleendian16(party->pc.blocks.growth.species),
+           pksav_littleendian16(party->pc_data.blocks.growth.species),
            game_id
        )
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc);
+        _native_pc = reinterpret_cast<void*>(&party->pc_data);
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(&party->party_data);
@@ -268,12 +268,12 @@ namespace pkmn
         const struct pksav_gba_party_pokemon &party,
         int game_id
     ): pokemon_impl(
-           pksav_littleendian16(party.pc.blocks.growth.species),
+           pksav_littleendian16(party.pc_data.blocks.growth.species),
            game_id
        )
     {
         _native_pc = reinterpret_cast<void*>(new struct pksav_gba_pc_pokemon);
-        *GBA_PC_RCAST = party.pc;
+        *GBA_PC_RCAST = party.pc_data;
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new struct pksav_gba_pokemon_party_data);
@@ -324,7 +324,7 @@ namespace pkmn
         pkmn::pokemon::sptr ret;
 
         struct pksav_gba_party_pokemon pksav_pokemon;
-        pksav_pokemon.pc = *GBA_PC_RCAST;
+        pksav_pokemon.pc_data = *GBA_PC_RCAST;
         pksav_pokemon.party_data = *GBA_PARTY_RCAST;
 
         int game_id = pkmn::database::game_name_to_id(game);
@@ -410,7 +410,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return bool(_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK);
+        return bool(_misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK);
     }
 
     void pokemon_gbaimpl::set_is_egg(
@@ -421,11 +421,11 @@ namespace pkmn
 
         if(is_egg)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_EGG_MASK;
+            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_EGG_MASK;
         }
         else
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_EGG_MASK;
+            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_EGG_MASK;
         }
     }
 
@@ -706,7 +706,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return (_misc->origin_info & PKSAV_GBA_OTGENDER_MASK) ? "Female"
+        return (_misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK) ? "Female"
                                                               : "Male";
     }
 
@@ -717,9 +717,9 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         if(gender == "Male") {
-            _misc->origin_info &= ~PKSAV_GBA_OTGENDER_MASK;
+            _misc->origin_info &= ~PKSAV_GBA_POKEMON_OTGENDER_MASK;
         } else if(gender == "Female") {
-            _misc->origin_info |= PKSAV_GBA_OTGENDER_MASK;
+            _misc->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
         } else {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
@@ -753,7 +753,7 @@ namespace pkmn
         if(abilities.second == "None") {
             ret = abilities.first;
         } else {
-            ret = (_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK) ? abilities.second
+            ret = (_misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK) ? abilities.second
                                                                     : abilities.first;
         }
 
@@ -773,11 +773,11 @@ namespace pkmn
         }
         else if(ability == abilities.first)
         {
-            _misc->iv_egg_ability &= ~PKSAV_GBA_ABILITY_MASK;
+            _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else if(ability == abilities.second)
         {
-            _misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
+            _misc->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
         else
         {
@@ -802,10 +802,9 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        uint16_t ball = _misc->origin_info & PKSAV_GBA_BALL_MASK;
-        ball >>= PKSAV_GBA_BALL_OFFSET;
-
-        return pkmn::database::ball_id_to_name(ball);
+        return pkmn::database::ball_id_to_name(
+                   PKSAV_GBA_POKEMON_BALL(_misc->origin_info)
+               );
     }
 
     void pokemon_gbaimpl::set_ball(
@@ -817,11 +816,11 @@ namespace pkmn
         // Try and instantiate an item_entry to validate the ball.
         (void)pkmn::database::item_entry(ball, get_game());
 
-        _misc->origin_info &= ~PKSAV_GBA_BALL_MASK;
+        _misc->origin_info &= ~PKSAV_GBA_POKEMON_BALL_MASK;
         uint16_t ball_id = uint16_t(pkmn::database::ball_name_to_id(
                                         ball
                                     ));
-        _misc->origin_info |= (ball_id << PKSAV_GBA_BALL_OFFSET);
+        _misc->origin_info |= (ball_id << PKSAV_GBA_POKEMON_BALL_OFFSET);
     }
 
 
@@ -829,7 +828,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return (_misc->origin_info & PKSAV_GBA_LEVEL_MET_MASK);
+        return (_misc->origin_info & PKSAV_GBA_POKEMON_LEVEL_MET_MASK);
     }
 
     void pokemon_gbaimpl::set_level_met(
@@ -840,7 +839,7 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        _misc->origin_info &= ~PKSAV_GBA_LEVEL_MET_MASK;
+        _misc->origin_info &= ~PKSAV_GBA_POKEMON_LEVEL_MET_MASK;
         _misc->origin_info |= uint16_t(level);
     }
 
@@ -889,8 +888,7 @@ namespace pkmn
 
         std::string ret;
 
-        uint16_t original_game = _misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK;
-        original_game >>= PKSAV_GBA_ORIGIN_GAME_OFFSET;
+        uint16_t original_game = PKSAV_GBA_POKEMON_ORIGIN_GAME(_misc->origin_info);
 
         if(original_game == 15)
         {
@@ -925,12 +923,12 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        _misc->origin_info &= ~PKSAV_GBA_ORIGIN_GAME_MASK;
+        _misc->origin_info &= ~PKSAV_GBA_POKEMON_ORIGIN_GAME_MASK;
         uint16_t game_index = uint16_t(pkmn::database::game_name_to_index(
                                            game_to_test
                                        ));
 
-        _misc->origin_info |= (game_index << PKSAV_GBA_ORIGIN_GAME_OFFSET);
+        _misc->origin_info |= (game_index << PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET);
     }
 
     uint32_t pokemon_gbaimpl::get_personality()
@@ -1028,43 +1026,43 @@ namespace pkmn
         );
     }
 
-    static const std::unordered_map<std::string, enum pksav_gen3_ribbon_mask> gba_ribbons = boost::assign::map_list_of
-        ("Champion", PKSAV_GEN3_CHAMPION_RIBBON_MASK)
-        ("Winning",  PKSAV_GEN3_WINNING_RIBBON_MASK)
-        ("Victory",  PKSAV_GEN3_VICTORY_RIBBON_MASK)
-        ("Artist",   PKSAV_GEN3_ARTIST_RIBBON_MASK)
-        ("Effort",   PKSAV_GEN3_EFFORT_RIBBON_MASK)
-        ("Marine",   PKSAV_GEN3_MARINE_RIBBON_MASK)
-        ("Land",     PKSAV_GEN3_LAND_RIBBON_MASK)
-        ("Sky",      PKSAV_GEN3_SKY_RIBBON_MASK)
-        ("Country",  PKSAV_GEN3_COUNTRY_RIBBON_MASK)
-        ("National", PKSAV_GEN3_NATIONAL_RIBBON_MASK)
-        ("Earth",    PKSAV_GEN3_EARTH_RIBBON_MASK)
-        ("World",    PKSAV_GEN3_WORLD_RIBBON_MASK)
+    static const std::unordered_map<std::string, enum pksav_gba_ribbon_mask> gba_ribbons = boost::assign::map_list_of
+        ("Champion", PKSAV_GBA_CHAMPION_RIBBON_MASK)
+        ("Winning",  PKSAV_GBA_WINNING_RIBBON_MASK)
+        ("Victory",  PKSAV_GBA_VICTORY_RIBBON_MASK)
+        ("Artist",   PKSAV_GBA_ARTIST_RIBBON_MASK)
+        ("Effort",   PKSAV_GBA_EFFORT_RIBBON_MASK)
+        ("Marine",   PKSAV_GBA_MARINE_RIBBON_MASK)
+        ("Land",     PKSAV_GBA_LAND_RIBBON_MASK)
+        ("Sky",      PKSAV_GBA_SKY_RIBBON_MASK)
+        ("Country",  PKSAV_GBA_COUNTRY_RIBBON_MASK)
+        ("National", PKSAV_GBA_NATIONAL_RIBBON_MASK)
+        ("Earth",    PKSAV_GBA_EARTH_RIBBON_MASK)
+        ("World",    PKSAV_GBA_WORLD_RIBBON_MASK)
     ;
 
-    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbon_level> gba_contest_ribbon_levels = boost::assign::map_list_of
-        ("",       PKSAV_GEN3_CONTEST_RIBBON_NONE)
-        ("Normal", PKSAV_GEN3_CONTEST_RIBBON_NORMAL)
-        ("Super",  PKSAV_GEN3_CONTEST_RIBBON_SUPER)
-        ("Hyper",  PKSAV_GEN3_CONTEST_RIBBON_HYPER)
-        ("Master", PKSAV_GEN3_CONTEST_RIBBON_MASTER)
+    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbon_level> gba_contest_ribbon_levels = boost::assign::map_list_of
+        ("",       PKSAV_GBA_CONTEST_RIBBON_NONE)
+        ("Normal", PKSAV_GBA_CONTEST_RIBBON_NORMAL)
+        ("Super",  PKSAV_GBA_CONTEST_RIBBON_SUPER)
+        ("Hyper",  PKSAV_GBA_CONTEST_RIBBON_HYPER)
+        ("Master", PKSAV_GBA_CONTEST_RIBBON_MASTER)
     ;
 
-    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbons_mask> gba_contest_ribbon_masks = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_MASK)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_MASK)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_MASK)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_MASK)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_MASK)
+    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbons_mask> gba_contest_ribbon_masks = boost::assign::map_list_of
+        ("Cool",   PKSAV_GBA_COOL_RIBBONS_MASK)
+        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_MASK)
+        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_MASK)
+        ("Smart",  PKSAV_GBA_SMART_RIBBONS_MASK)
+        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_MASK)
     ;
 
-    static const std::unordered_map<std::string, enum pksav_gen3_contest_ribbons_offset> gba_contest_ribbon_offsets = boost::assign::map_list_of
-        ("Cool",   PKSAV_GEN3_COOL_RIBBONS_OFFSET)
-        ("Beauty", PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET)
-        ("Cute",   PKSAV_GEN3_CUTE_RIBBONS_OFFSET)
-        ("Smart",  PKSAV_GEN3_SMART_RIBBONS_OFFSET)
-        ("Tough",  PKSAV_GEN3_TOUGH_RIBBONS_OFFSET)
+    static const std::unordered_map<std::string, enum pksav_gba_contest_ribbons_offset> gba_contest_ribbon_offsets = boost::assign::map_list_of
+        ("Cool",   PKSAV_GBA_COOL_RIBBONS_OFFSET)
+        ("Beauty", PKSAV_GBA_BEAUTY_RIBBONS_OFFSET)
+        ("Cute",   PKSAV_GBA_CUTE_RIBBONS_OFFSET)
+        ("Smart",  PKSAV_GBA_SMART_RIBBONS_OFFSET)
+        ("Tough",  PKSAV_GBA_TOUGH_RIBBONS_OFFSET)
     ;
 
     void pokemon_gbaimpl::set_ribbon(
@@ -1081,7 +1079,7 @@ namespace pkmn
 
         if(gba_ribbons.find(ribbon) != gba_ribbons.end())
         {
-            _set_ribbon<uint32_t, enum pksav_gen3_ribbon_mask>(
+            _set_ribbon<uint32_t, enum pksav_gba_ribbon_mask>(
                 ribbon,
                 value,
                 &_misc->ribbons_obedience,
@@ -1270,7 +1268,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        return bool(_misc->ribbons_obedience & PKSAV_GBA_OBEDIENCE_MASK);
+        return bool(_misc->ribbons_obedience & PKSAV_GBA_POKEMON_OBEDIENCE_MASK);
     }
 
     void pokemon_gbaimpl::set_is_obedient(bool is_obedient)
@@ -1279,11 +1277,11 @@ namespace pkmn
 
         if(is_obedient)
         {
-            _misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
+            _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
         else
         {
-            _misc->ribbons_obedience &= ~PKSAV_GBA_OBEDIENCE_MASK;
+            _misc->ribbons_obedience &= ~PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
     }
 
@@ -1372,52 +1370,52 @@ namespace pkmn
     }
 
     void pokemon_gbaimpl::_update_ribbons_map() {
-        uint32_t cool_ribbons = _misc->ribbons_obedience & PKSAV_GEN3_COOL_RIBBONS_MASK;
-        _ribbons["Cool"]        = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Cool Super"]  = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Cool Hyper"]  = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Cool Master"] = bool(cool_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        uint32_t cool_ribbons = _misc->ribbons_obedience & PKSAV_GBA_COOL_RIBBONS_MASK;
+        _ribbons["Cool"]        = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
+        _ribbons["Cool Super"]  = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
+        _ribbons["Cool Hyper"]  = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
+        _ribbons["Cool Master"] = bool(cool_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t beauty_ribbons = _misc->ribbons_obedience & PKSAV_GEN3_BEAUTY_RIBBONS_MASK;
-        beauty_ribbons >>= PKSAV_GEN3_BEAUTY_RIBBONS_OFFSET;
-        _ribbons["Beauty"]        = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Beauty Super"]  = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Beauty Hyper"]  = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Beauty Master"] = bool(beauty_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        uint32_t beauty_ribbons = _misc->ribbons_obedience & PKSAV_GBA_BEAUTY_RIBBONS_MASK;
+        beauty_ribbons >>= PKSAV_GBA_BEAUTY_RIBBONS_OFFSET;
+        _ribbons["Beauty"]        = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
+        _ribbons["Beauty Super"]  = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
+        _ribbons["Beauty Hyper"]  = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
+        _ribbons["Beauty Master"] = bool(beauty_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t cute_ribbons = _misc->ribbons_obedience & PKSAV_GEN3_CUTE_RIBBONS_MASK;
-        cute_ribbons >>= PKSAV_GEN3_CUTE_RIBBONS_OFFSET;
-        _ribbons["Cute"]        = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Cute Super"]  = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Cute Hyper"]  = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Cute Master"] = bool(cute_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        uint32_t cute_ribbons = _misc->ribbons_obedience & PKSAV_GBA_CUTE_RIBBONS_MASK;
+        cute_ribbons >>= PKSAV_GBA_CUTE_RIBBONS_OFFSET;
+        _ribbons["Cute"]        = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
+        _ribbons["Cute Super"]  = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
+        _ribbons["Cute Hyper"]  = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
+        _ribbons["Cute Master"] = bool(cute_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t smart_ribbons = _misc->ribbons_obedience & PKSAV_GEN3_SMART_RIBBONS_MASK;
-        smart_ribbons >>= PKSAV_GEN3_SMART_RIBBONS_OFFSET;
-        _ribbons["Smart"]        = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Smart Super"]  = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Smart Hyper"]  = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Smart Master"] = bool(smart_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        uint32_t smart_ribbons = _misc->ribbons_obedience & PKSAV_GBA_SMART_RIBBONS_MASK;
+        smart_ribbons >>= PKSAV_GBA_SMART_RIBBONS_OFFSET;
+        _ribbons["Smart"]        = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
+        _ribbons["Smart Super"]  = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
+        _ribbons["Smart Hyper"]  = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
+        _ribbons["Smart Master"] = bool(smart_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        uint32_t tough_ribbons = _misc->ribbons_obedience & PKSAV_GEN3_TOUGH_RIBBONS_MASK;
-        tough_ribbons >>= PKSAV_GEN3_TOUGH_RIBBONS_OFFSET;
-        _ribbons["Tough"]        = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_NORMAL);
-        _ribbons["Tough Super"]  = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_SUPER);
-        _ribbons["Tough Hyper"]  = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_HYPER);
-        _ribbons["Tough Master"] = bool(tough_ribbons >= PKSAV_GEN3_CONTEST_RIBBON_MASTER);
+        uint32_t tough_ribbons = _misc->ribbons_obedience & PKSAV_GBA_TOUGH_RIBBONS_MASK;
+        tough_ribbons >>= PKSAV_GBA_TOUGH_RIBBONS_OFFSET;
+        _ribbons["Tough"]        = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_NORMAL);
+        _ribbons["Tough Super"]  = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_SUPER);
+        _ribbons["Tough Hyper"]  = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_HYPER);
+        _ribbons["Tough Master"] = bool(tough_ribbons >= PKSAV_GBA_CONTEST_RIBBON_MASTER);
 
-        _ribbons["Champion"] = bool(_misc->ribbons_obedience & PKSAV_GEN3_CHAMPION_RIBBON_MASK);
-        _ribbons["Winning"]  = bool(_misc->ribbons_obedience & PKSAV_GEN3_WINNING_RIBBON_MASK);
-        _ribbons["Victory"]  = bool(_misc->ribbons_obedience & PKSAV_GEN3_VICTORY_RIBBON_MASK);
-        _ribbons["Artist"]   = bool(_misc->ribbons_obedience & PKSAV_GEN3_ARTIST_RIBBON_MASK);
-        _ribbons["Effort"]   = bool(_misc->ribbons_obedience & PKSAV_GEN3_EFFORT_RIBBON_MASK);
-        _ribbons["Marine"]   = bool(_misc->ribbons_obedience & PKSAV_GEN3_MARINE_RIBBON_MASK);
-        _ribbons["Land"]     = bool(_misc->ribbons_obedience & PKSAV_GEN3_LAND_RIBBON_MASK);
-        _ribbons["Sky"]      = bool(_misc->ribbons_obedience & PKSAV_GEN3_SKY_RIBBON_MASK);
-        _ribbons["Country"]  = bool(_misc->ribbons_obedience & PKSAV_GEN3_COUNTRY_RIBBON_MASK);
-        _ribbons["National"] = bool(_misc->ribbons_obedience & PKSAV_GEN3_NATIONAL_RIBBON_MASK);
-        _ribbons["Earth"]    = bool(_misc->ribbons_obedience & PKSAV_GEN3_EARTH_RIBBON_MASK);
-        _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GEN3_WORLD_RIBBON_MASK);
+        _ribbons["Champion"] = bool(_misc->ribbons_obedience & PKSAV_GBA_CHAMPION_RIBBON_MASK);
+        _ribbons["Winning"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_WINNING_RIBBON_MASK);
+        _ribbons["Victory"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_VICTORY_RIBBON_MASK);
+        _ribbons["Artist"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_ARTIST_RIBBON_MASK);
+        _ribbons["Effort"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_EFFORT_RIBBON_MASK);
+        _ribbons["Marine"]   = bool(_misc->ribbons_obedience & PKSAV_GBA_MARINE_RIBBON_MASK);
+        _ribbons["Land"]     = bool(_misc->ribbons_obedience & PKSAV_GBA_LAND_RIBBON_MASK);
+        _ribbons["Sky"]      = bool(_misc->ribbons_obedience & PKSAV_GBA_SKY_RIBBON_MASK);
+        _ribbons["Country"]  = bool(_misc->ribbons_obedience & PKSAV_GBA_COUNTRY_RIBBON_MASK);
+        _ribbons["National"] = bool(_misc->ribbons_obedience & PKSAV_GBA_NATIONAL_RIBBON_MASK);
+        _ribbons["Earth"]    = bool(_misc->ribbons_obedience & PKSAV_GBA_EARTH_RIBBON_MASK);
+        _ribbons["World"]    = bool(_misc->ribbons_obedience & PKSAV_GBA_WORLD_RIBBON_MASK);
     }
 
     void pokemon_gbaimpl::_update_EV_map() {

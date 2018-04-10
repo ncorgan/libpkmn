@@ -118,14 +118,14 @@ namespace pkmn {
         pksav_nds_party_pokemon_t* party,
         int game_id
     ): pokemon_impl(
-           pksav_littleendian16(party->pc.blocks.blockA.species),
+           pksav_littleendian16(party->pc_data.blocks.blockA.species),
            game_id
        ),
        _gen4(game_id >= DIAMOND and game_id <= SOULSILVER),
        _plat(game_id == PLATINUM),
        _hgss(game_id == HEARTGOLD or game_id == SOULSILVER)
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc);
+        _native_pc = reinterpret_cast<void*>(&party->pc_data;
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(&party->party_data);

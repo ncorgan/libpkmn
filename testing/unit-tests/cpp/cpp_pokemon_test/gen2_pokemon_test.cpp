@@ -150,11 +150,11 @@ TEST_P(gen2_pokemon_test, gen2_pokemon_test) {
         EXPECT_EQ(entry.get_move_id(), int(native_pc->moves[i]));
         EXPECT_EQ(
             moves.at(i).pp,
-            int(native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_MASK)
+            int(native_pc->move_pps[i] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
         );
         EXPECT_EQ(
             3,
-            ((native_pc->move_pps[i] & PKSAV_GEN2_MOVE_PP_UP_MASK) >> 6)
+            PKSAV_GEN2_POKEMON_MOVE_PP_UP(native_pc->move_pps[i])
         );
     }
 

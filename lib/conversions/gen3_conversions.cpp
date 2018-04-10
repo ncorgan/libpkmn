@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,15 +12,17 @@
 #include <pkmn/calculations/stats.hpp>
 
 #include <pksav/common/condition.h>
-#include <pksav/common/gen3_ribbons.h>
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
+#include <pksav/gba/ribbons.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
 
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
 #include <boost/config.hpp>
+
+// TODO: use new enums and #defines where applicable
 
 namespace pkmn { namespace conversions {
 
@@ -58,27 +60,27 @@ namespace pkmn { namespace conversions {
     } ribbon_values_t;
     static const std::vector<ribbon_values_t> GEN3_RIBBON_VALUES =
     {
-        {PKSAV_GBA_COOL_MASK,   0,                       LIBPKMGC_CONTEST_STAT_COOL},
-        {PKSAV_GBA_BEAUTY_MASK, PKSAV_GBA_BEAUTY_OFFSET, LIBPKMGC_CONTEST_STAT_BEAUTY},
-        {PKSAV_GBA_CUTE_MASK,   PKSAV_GBA_CUTE_OFFSET,   LIBPKMGC_CONTEST_STAT_CUTE},
-        {PKSAV_GBA_SMART_MASK,  PKSAV_GBA_SMART_OFFSET,  LIBPKMGC_CONTEST_STAT_SMART},
-        {PKSAV_GBA_TOUGH_MASK,  PKSAV_GBA_TOUGH_OFFSET,  LIBPKMGC_CONTEST_STAT_TOUGH}
+        {PKSAV_GBA_COOL_RIBBONS_MASK,   PKSAV_GBA_COOL_RIBBONS_OFFSET,   LIBPKMGC_CONTEST_STAT_COOL},
+        {PKSAV_GBA_BEAUTY_RIBBONS_MASK, PKSAV_GBA_BEAUTY_RIBBONS_OFFSET, LIBPKMGC_CONTEST_STAT_BEAUTY},
+        {PKSAV_GBA_CUTE_RIBBONS_MASK,   PKSAV_GBA_CUTE_RIBBONS_OFFSET,   LIBPKMGC_CONTEST_STAT_CUTE},
+        {PKSAV_GBA_SMART_RIBBONS_MASK,  PKSAV_GBA_SMART_RIBBONS_OFFSET,  LIBPKMGC_CONTEST_STAT_SMART},
+        {PKSAV_GBA_TOUGH_RIBBONS_MASK,  PKSAV_GBA_TOUGH_RIBBONS_OFFSET,  LIBPKMGC_CONTEST_STAT_TOUGH}
     };
 
     typedef boost::bimap<uint32_t, libpkmgc_ribbon_t> gen3_ribbon_bimap_t;
     static const gen3_ribbon_bimap_t GEN3_RIBBON_BIMAP = boost::assign::list_of<gen3_ribbon_bimap_t::relation>
-        (PKSAV_GEN3_CHAMPION_RIBBON_MASK, LIBPKMGC_RIBBON_CHAMPION)
-        (PKSAV_GEN3_WINNING_RIBBON_MASK,  LIBPKMGC_RIBBON_WINNING)
-        (PKSAV_GEN3_VICTORY_RIBBON_MASK,  LIBPKMGC_RIBBON_VICTORY)
-        (PKSAV_GEN3_ARTIST_RIBBON_MASK,   LIBPKMGC_RIBBON_ARTIST)
-        (PKSAV_GEN3_EFFORT_RIBBON_MASK,   LIBPKMGC_RIBBON_EFFORT)
-        (PKSAV_GEN3_MARINE_RIBBON_MASK,   LIBPKMGC_RIBBON_MARINE)
-        (PKSAV_GEN3_LAND_RIBBON_MASK,     LIBPKMGC_RIBBON_LAND)
-        (PKSAV_GEN3_SKY_RIBBON_MASK,      LIBPKMGC_RIBBON_SKY)
-        (PKSAV_GEN3_COUNTRY_RIBBON_MASK,  LIBPKMGC_RIBBON_COUNTRY)
-        (PKSAV_GEN3_NATIONAL_RIBBON_MASK, LIBPKMGC_RIBBON_NATIONAL)
-        (PKSAV_GEN3_EARTH_RIBBON_MASK,    LIBPKMGC_RIBBON_EARTH)
-        (PKSAV_GEN3_WORLD_RIBBON_MASK,    LIBPKMGC_RIBBON_WORLD)
+        (PKSAV_GBA_CHAMPION_RIBBON_MASK, LIBPKMGC_RIBBON_CHAMPION)
+        (PKSAV_GBA_WINNING_RIBBON_MASK,  LIBPKMGC_RIBBON_WINNING)
+        (PKSAV_GBA_VICTORY_RIBBON_MASK,  LIBPKMGC_RIBBON_VICTORY)
+        (PKSAV_GBA_ARTIST_RIBBON_MASK,   LIBPKMGC_RIBBON_ARTIST)
+        (PKSAV_GBA_EFFORT_RIBBON_MASK,   LIBPKMGC_RIBBON_EFFORT)
+        (PKSAV_GBA_MARINE_RIBBON_MASK,   LIBPKMGC_RIBBON_MARINE)
+        (PKSAV_GBA_LAND_RIBBON_MASK,     LIBPKMGC_RIBBON_LAND)
+        (PKSAV_GBA_SKY_RIBBON_MASK,      LIBPKMGC_RIBBON_SKY)
+        (PKSAV_GBA_COUNTRY_RIBBON_MASK,  LIBPKMGC_RIBBON_COUNTRY)
+        (PKSAV_GBA_NATIONAL_RIBBON_MASK, LIBPKMGC_RIBBON_NATIONAL)
+        (PKSAV_GBA_EARTH_RIBBON_MASK,    LIBPKMGC_RIBBON_EARTH)
+        (PKSAV_GBA_WORLD_RIBBON_MASK,    LIBPKMGC_RIBBON_WORLD)
     ;
 
     typedef boost::bimap<enum pksav_battle_stat, libpkmgc_stat_t> gen3_stat_bimap_t;
@@ -116,12 +118,12 @@ namespace pkmn { namespace conversions {
         to->friendship = from_growth->friendship;
         to->locationCaught = 0; // Should be "Met in a distant land" in both games
 
-        uint16_t ball = (from_misc->origin_info & PKSAV_GBA_BALL_MASK);
-        ball >>= PKSAV_GBA_BALL_OFFSET;
-        to->ballCaughtWith = LibPkmGC::ItemIndex(ball);
+        to->ballCaughtWith = LibPkmGC::ItemIndex(
+                                 PKSAV_GBA_POKEMON_BALL(from_misc->origin_info)
+                             );
 
-        to->OTGender = (from_misc->origin_info & PKSAV_GBA_OTGENDER_MASK) ? LibPkmGC::Female
-                                                                          : LibPkmGC::Male;
+        to->OTGender = (from_misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK) ? LibPkmGC::Female
+                                                                                  : LibPkmGC::Male;
 
         char otname[8] = {0};
         PKSAV_CALL(
@@ -157,13 +159,13 @@ namespace pkmn { namespace conversions {
         to->PID = pksav_littleendian32(from->personality);
 
         to->version.game = LibPkmGC::GameIndex(
-                               (from_misc->origin_info & PKSAV_GBA_ORIGIN_GAME_MASK) >> PKSAV_GBA_ORIGIN_GAME_OFFSET
+                               PKSAV_GBA_POKEMON_ORIGIN_GAME(from_misc->origin_info)
                            );
         to->version.currentRegion = LibPkmGC::NTSC_U;
         to->version.originalRegion = LibPkmGC::NoRegion; // Not stored in GBA
         to->version.language = GEN3_LANGUAGE_BIMAP.left.at(pksav_littleendian16(from->language));
 
-        to->obedient = bool(from_misc->ribbons_obedience & PKSAV_GBA_OBEDIENCE_MASK);
+        to->obedient = bool(from_misc->ribbons_obedience & PKSAV_GBA_POKEMON_OBEDIENCE_MASK);
 
         for(const auto& gen3_ribbon_left_pair: GEN3_RIBBON_BIMAP.left)
         {
@@ -209,8 +211,8 @@ namespace pkmn { namespace conversions {
         }
 
         // Let LibPkmGC do the work.
-        to->setSecondAbilityFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_ABILITY_MASK));
-        to->setEggFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_EGG_MASK));
+        to->setSecondAbilityFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK));
+        to->setEggFlag(bool(from_misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK));
         to->updateLevelFromExp();
 
         // The database lists level 1 as having 0 experience, but 0 experience
@@ -232,7 +234,7 @@ namespace pkmn { namespace conversions {
     )
     {
         gba_pc_pokemon_to_gcn(
-            &from->pc,
+            &from->pc_data,
             to
         );
 
@@ -352,11 +354,11 @@ namespace pkmn { namespace conversions {
         to_misc->met_location = 254;
 
         to_misc->origin_info = from->partyData.level;
-        to_misc->origin_info |= (uint16_t(from->version.game) << PKSAV_GBA_ORIGIN_GAME_OFFSET);
-        to_misc->origin_info |= (uint16_t(from->ballCaughtWith) << PKSAV_GBA_BALL_OFFSET);
+        to_misc->origin_info |= (uint16_t(from->version.game) << PKSAV_GBA_POKEMON_ORIGIN_GAME_OFFSET);
+        to_misc->origin_info |= (uint16_t(from->ballCaughtWith) << PKSAV_GBA_POKEMON_BALL_OFFSET);
         if(from->OTGender == LibPkmGC::Female)
         {
-            to_misc->origin_info |= PKSAV_GBA_OTGENDER_MASK;
+            to_misc->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
         }
 
         for(auto iter = GEN3_STAT_BIMAP.left.begin(); iter != GEN3_STAT_BIMAP.left.end(); ++iter)
@@ -372,11 +374,11 @@ namespace pkmn { namespace conversions {
 
         if(from->isEgg())
         {
-            to_misc->iv_egg_ability |= PKSAV_GBA_EGG_MASK;
+            to_misc->iv_egg_ability |= PKSAV_GBA_POKEMON_EGG_MASK;
         }
         if(from->hasSecondAbility())
         {
-            to_misc->iv_egg_ability |= PKSAV_GBA_ABILITY_MASK;
+            to_misc->iv_egg_ability |= PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
 
         for(const ribbon_values_t& ribbon_values: GEN3_RIBBON_VALUES)
@@ -394,7 +396,7 @@ namespace pkmn { namespace conversions {
         }
         if(from->obedient)
         {
-            to_misc->ribbons_obedience |= PKSAV_GBA_OBEDIENCE_MASK;
+            to_misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
         }
     }
 
@@ -405,7 +407,7 @@ namespace pkmn { namespace conversions {
     {
         gcn_pokemon_to_gba_pc(
             from,
-            &to->pc
+            &to->pc_data
         );
 
         for(const auto& condition_pair: GEN3_CONDITION_CONVERSION_BIMAP.right)

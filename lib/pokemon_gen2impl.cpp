@@ -151,10 +151,10 @@ namespace pkmn
     pokemon_gen2impl::pokemon_gen2impl(
         struct pksav_gen2_party_pokemon* party,
         int game_id
-    ): pokemon_impl(party->pc.species, game_id),
+    ): pokemon_impl(party->pc_data.species, game_id),
        _is_egg(false)
     {
-        _native_pc = reinterpret_cast<void*>(&party->pc);
+        _native_pc = reinterpret_cast<void*>(&party->pc_data);
         _our_pc_mem = false;
 
         _native_party = reinterpret_cast<void*>(&party->party_data);
@@ -215,11 +215,11 @@ namespace pkmn
     pokemon_gen2impl::pokemon_gen2impl(
         const struct pksav_gen2_party_pokemon& party,
         int game_id
-    ): pokemon_impl(party.pc.species, game_id),
+    ): pokemon_impl(party.pc_data.species, game_id),
        _is_egg(false)
     {
         _native_pc = reinterpret_cast<void*>(new struct pksav_gen2_pc_pokemon);
-        *GEN2_PC_RCAST = party.pc;
+        *GEN2_PC_RCAST = party.pc_data;
         _our_pc_mem = true;
 
         _native_party = reinterpret_cast<void*>(new struct pksav_gen2_pokemon_party_data);
@@ -263,7 +263,7 @@ namespace pkmn
         pkmn::pokemon::sptr ret;
 
         struct pksav_gen2_party_pokemon pksav_pokemon;
-        pksav_pokemon.pc = *GEN2_PC_RCAST;
+        pksav_pokemon.pc_data = *GEN2_PC_RCAST;
         pksav_pokemon.party_data = *GEN2_PARTY_RCAST;
 
         int game_id = pkmn::database::game_name_to_id(game);
@@ -639,7 +639,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_OT_GENDER_MASK) ? "Female"
+        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_OT_GENDER_MASK) ? "Female"
                                                                         : "Male";
     }
 
@@ -651,11 +651,11 @@ namespace pkmn
 
         if(gender == "Male")
         {
-            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_OT_GENDER_MASK;
+            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
         else if(gender == "Female")
         {
-            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_OT_GENDER_MASK;
+            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
         else
         {
@@ -709,7 +709,7 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
+        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET;
     }
 
     void pokemon_gen2impl::set_level_met(
@@ -721,9 +721,9 @@ namespace pkmn
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         uint16_t caught_data = uint16_t(level);
-        caught_data <<= PKSAV_GEN2_LEVEL_CAUGHT_OFFSET;
+        caught_data <<= PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET;
 
-        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LEVEL_CAUGHT_MASK;
+        GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK;
         GEN2_PC_RCAST->caught_data |= caught_data;
     }
 
@@ -740,7 +740,7 @@ namespace pkmn
             boost::lock_guard<pokemon_gen2impl> lock(*this);
 
             return pkmn::database::location_index_to_name(
-                       (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_LOCATION_MASK),
+                       (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_LOCATION_MASK),
                        _database_entry.get_game_id()
                    );
         }
@@ -763,7 +763,7 @@ namespace pkmn
                                                    location,
                                                    _database_entry.get_game_id()
                                                ));
-            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_LOCATION_MASK;
+            GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_LOCATION_MASK;
             GEN2_PC_RCAST->caught_data |= location_index;
         }
     }
@@ -1045,7 +1045,7 @@ namespace pkmn
                     pkmn::database::move_id_to_name(
                         GEN2_PC_RCAST->moves[index], 2
                     ),
-                    (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_MOVE_PP_MASK)
+                    (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );
                 break;
 

@@ -117,7 +117,7 @@ namespace pkmn {
         // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
         old_party_pokemon_impl_ptr->unlock();
 
-        NATIVE_LIST_RCAST->party[index].pc = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
+        NATIVE_LIST_RCAST->party[index].pc_data = *reinterpret_cast<struct pksav_gba_pc_pokemon*>(new_pokemon_native_pc_ptr);
         NATIVE_LIST_RCAST->party[index].party_data = *reinterpret_cast<struct pksav_gba_pokemon_party_data*>(new_pokemon_native_party_ptr);
         _pokemon_list[index] = std::make_shared<pokemon_gbaimpl>(
                                    &NATIVE_LIST_RCAST->party[index],
@@ -128,14 +128,14 @@ namespace pkmn {
         std::string new_species = new_pokemon->get_species();
         if(index == num_pokemon)
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) > 0 and new_species != "None")
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc_data.blocks.growth.species) > 0 and new_species != "None")
             {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)+1);
             }
         }
         else if(index == (num_pokemon-1))
         {
-            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc.blocks.growth.species) == 0 and new_species == "None")
+            if(pksav_littleendian16(NATIVE_LIST_RCAST->party[index].pc_data.blocks.growth.species) == 0 and new_species == "None")
             {
                 NATIVE_LIST_RCAST->count = pksav_littleendian32(pksav_littleendian32(NATIVE_LIST_RCAST->count)-1);
             }
@@ -168,7 +168,7 @@ namespace pkmn {
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc.blocks.growth.species) > 0)
+            if(i >= num_pokemon and pksav_littleendian16(NATIVE_LIST_RCAST->party[i].pc_data.blocks.growth.species) > 0)
             {
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(struct pksav_gba_party_pokemon));
             }
