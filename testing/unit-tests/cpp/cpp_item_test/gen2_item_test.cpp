@@ -21,6 +21,8 @@
 
 #include <algorithm>
 
+// TODO: check vector sizes against PKSav #defines
+
 static const std::vector<std::string> all_pocket_item_names = boost::assign::list_of
     ("Potion")("Bicycle")("Great Ball")("TM28")
     ("Berry")("SquirtBottle")("Friend Ball")("HM01")
@@ -110,10 +112,10 @@ void gen2_key_item_pocket_test(
 )
 {
     (void)key_item_pocket;
-    /*
+
     ASSERT_EQ("KeyItems", key_item_pocket->get_name());
-    ASSERT_EQ(26, key_item_pocket->get_capacity());
-    ASSERT_EQ(26, key_item_pocket->as_vector().size());
+    ASSERT_EQ(PKSAV_GEN2_KEY_ITEM_POCKET_SIZE, key_item_pocket->get_capacity());
+    ASSERT_EQ(PKSAV_GEN2_KEY_ITEM_POCKET_SIZE, key_item_pocket->as_vector().size());
 
     // Make sure item slots start as correctly empty.
     test_item_list_empty_slots(key_item_pocket);
@@ -143,57 +145,86 @@ void gen2_key_item_pocket_test(
     );
 
     // Crystal-specific items.
-    if(key_item_pocket->get_game() == "Crystal") {
-        for(auto iter = crystal_items.begin(); iter != crystal_items.end(); ++iter) {
-            key_item_pocket->add(*iter, 1);
-            key_item_pocket->remove(*iter, 1);
+    if(key_item_pocket->get_game() == "Crystal")
+    {
+        for(const std::string& item: crystal_items)
+        {
+            key_item_pocket->add(item, 1);
+            key_item_pocket->remove(item, 1);
         }
 
         EXPECT_EQ(0, key_item_pocket->get_num_items());
-    } else {
+    }
+    else
+    {
         test_item_list_invalid_items(
             key_item_pocket,
             crystal_items
         );
     }
 
+    // Make sure we can't add or remove more than a single item.
+    EXPECT_THROW(
+        key_item_pocket->add("Bicycle", 5);
+    , std::out_of_range);
+    key_item_pocket->add("Bicycle", 1);
+    EXPECT_EQ(1, key_item_pocket->get_num_items());
+
+    EXPECT_THROW(
+        key_item_pocket->remove("Bicycle", 5);
+    , std::out_of_range);
+    key_item_pocket->remove("Bicycle", 1);
+    EXPECT_EQ(0, key_item_pocket->get_num_items());
+
     // Start adding and removing stuff, and make sure the numbers are accurate.
     static const std::vector<std::string> item_names = boost::assign::list_of
         ("Bicycle")("Basement Key")("SecretPotion")("Mystery Egg")
         ("Silver Wing")("Lost Item")("SquirtBottle")("Rainbow Wing")
     ;
-    test_item_list_add_remove(
-        key_item_pocket,
-        item_names
-    );
+    for(int item_index = 0; item_index < 8; ++item_index)
+    {
+        if(item_index < 4)
+        {
+            key_item_pocket->add(item_names[item_index], 1);
+        }
+        else
+        {
+            key_item_pocket->set_item(
+                item_index,
+                item_names[item_index],
+                1
+            );
+        }
+    }
+
+    key_item_pocket->remove(item_names[2], 1);
+    key_item_pocket->set_item(2, "None", 0);
+    EXPECT_EQ(6, key_item_pocket->get_num_items());
 
     const std::vector<std::string>& valid_items = key_item_pocket->get_valid_items();
-    EXPECT_GT(valid_items.size(), 0);
-    */
+    EXPECT_LE(valid_items.size(), PKSAV_GEN2_KEY_ITEM_POCKET_SIZE);
 
     /*
      * On the C++ level, make sure the LibPKMN abstraction matches the underlying
      * PKSav struct.
      */
-    /*const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
+    const pkmn::item_slots_t& item_slots = key_item_pocket->as_vector();
     int num_items = key_item_pocket->get_num_items();
 
     const struct pksav_gen2_key_item_pocket* native = reinterpret_cast<const pksav_gen2_key_item_pocket*>(key_item_pocket->get_native());
     EXPECT_EQ(num_items, int(native->count));
-    for(int i = 0; i < num_items; ++i) {
+    for(int item_index = 0; item_index < num_items; ++item_index)
+    {
         EXPECT_EQ(
             pkmn::database::item_entry(
-                item_slots.at(i).item,
+                item_slots.at(item_index).item,
                 key_item_pocket->get_game()
             ).get_item_index(),
-            int(native->items[i].index)
+            int(native->item_indices[item_index])
         );
-        EXPECT_EQ(item_slots.at(i).amount, int(native->items[i].count));
     }
-    EXPECT_EQ(0, native->items[num_items].index);
-    EXPECT_EQ(0, native->items[num_items].count);
+    EXPECT_EQ(0, native->item_indices[num_items]);
     EXPECT_EQ(0xFF, native->terminator);
-    */
 }
 
 void gen2_ball_pocket_test(

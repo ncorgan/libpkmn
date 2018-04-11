@@ -79,6 +79,8 @@ namespace pkmn { namespace database {
     /*
      * In Generation II, Apricorns were placed in the "Items" pocket instead
      * of separate storage.
+     *
+     * TODO: move to one spot
      */
     BOOST_STATIC_CONSTEXPR int APRICORN_LIST_IDS[] =
     {

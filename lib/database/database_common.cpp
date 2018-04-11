@@ -21,7 +21,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#define PKMN_COMPAT_NUM 16
+#define PKMN_COMPAT_NUM 17
 
 namespace pkmn { namespace database {
 
@@ -352,6 +352,11 @@ namespace pkmn { namespace database {
             81, // X/Y
             86  // Omega Ruby/Alpha Sapphire
         };
+        BOOST_STATIC_CONSTEXPR int KEY_ITEM_POCKET_IDS[] =
+        {
+            7,  // Gold/Silver
+            12, // Crystal
+        };
 
         if(not all_pockets)
         {
@@ -370,6 +375,26 @@ namespace pkmn { namespace database {
                     ),
                     ret.end()
                 );
+            }
+            if(generation == 2)
+            {
+                // In Generation II, Apricorns and RageCandyBars were placed in
+                // the "Items" pocket.
+                if(std::find(KEY_ITEM_POCKET_IDS, KEY_ITEM_POCKET_IDS+2, list_id) != KEY_ITEM_POCKET_IDS+2)
+                {
+                    ret.erase(
+                        std::remove_if(
+                            ret.begin(),
+                            ret.end(),
+                            [](const std::string& item)
+                            {
+                                return (item.find("Apricorn") != std::string::npos) ||
+                                       (item == "RAGECANDYBAR");
+                            }
+                        ),
+                        ret.end()
+                    );
+                }
             }
         }
 

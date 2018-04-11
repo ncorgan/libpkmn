@@ -40,6 +40,8 @@ namespace pkmn {
         {
             _native = reinterpret_cast<void*>(new struct pksav_gen2_key_item_pocket);
             std::memset(_native, 0, sizeof(struct pksav_gen2_key_item_pocket));
+            NATIVE_RCAST->terminator = 0xFF;
+
             _our_mem = true;
         }
     }
@@ -144,9 +146,16 @@ namespace pkmn {
 
         boost::lock_guard<item_list_gen2_keyitemimpl> lock(*this);
 
-        if((item_name == "None") && (amount != 0))
+        if(item_name == "None")
         {
-            throw std::invalid_argument("\"None\" entries must have an amount of 0.");
+            if(amount != 0)
+            {
+                throw std::invalid_argument("\"None\" entries must have an amount of 0.");
+            }
+            else
+            {
+                pkmn::enforce_bounds("Amount", amount, 0, 99);
+            }
         }
         else
         {
@@ -238,7 +247,7 @@ namespace pkmn {
             for(int item_index = 0; item_index < _capacity; ++item_index)
             {
                 NATIVE_RCAST->item_indices[item_index] = uint8_t(pkmn::database::item_entry(
-                                                                     _item_slots[index].item,
+                                                                     _item_slots[item_index].item,
                                                                      get_game()
                                                                  ).get_item_index());
             }
