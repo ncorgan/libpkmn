@@ -9,16 +9,19 @@
 
 #include "pokedex_impl.hpp"
 
+#include <pksav/gen1/save.h>
+#include <pksav/gen2/save.h>
+
 namespace pkmn
 {
+    template <typename pksav_type>
     class pokedex_gbimpl: public pokedex_impl
     {
         public:
             pokedex_gbimpl() {}
             pokedex_gbimpl(
                 int game_id,
-                uint8_t* native_has_seen = nullptr,
-                uint8_t* native_has_caught = nullptr
+                pksav_type* native_ptr = nullptr
             );
 
             ~pokedex_gbimpl();
@@ -45,10 +48,13 @@ namespace pkmn
             void _update_all_caught() override final;
 
         private:
-            uint8_t* _native_has_seen;
-            uint8_t* _native_has_caught;
+            pksav_type* _native_ptr;
     };
 
+    typedef pokedex_gbimpl<struct pksav_gen1_pokedex_lists> pokedex_gen1impl;
+    typedef pokedex_gbimpl<struct pksav_gen2_pokedex_lists> pokedex_gen2impl;
 }
+
+#include "pokedex_gbimpl.ipp"
 
 #endif /* PKMN_POKEDEX_GBIMPL_HPP */

@@ -16,48 +16,51 @@
 
 #include <pksav/common/pokedex.h>
 
-#include <boost/assert.hpp>
-#include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
-#include <cassert>
+#ifndef PKMN_POKEDEX_GBIMPL_IPP
+#define PKMN_POKEDEX_GBIMPL_IPP
+
+#define GBIMPL_RCAST(ptr) (reinterpret_cast<pksav_type*>(ptr))
 
 namespace pkmn
 {
-    pokedex_gbimpl::pokedex_gbimpl(
+    template <typename pksav_type>
+    pokedex_gbimpl<pksav_type>::pokedex_gbimpl(
         int game_id,
-        uint8_t* native_has_seen,
-        uint8_t* native_has_caught
+        pksav_type* native_ptr
     ): pokedex_impl(game_id)
     {
-        BOOST_ASSERT(!native_has_seen == !native_has_caught);
-
-        if(native_has_seen)
+        if(native_ptr)
         {
-            _native_has_seen = native_has_seen;
-            _native_has_caught = native_has_caught;
+            _native_ptr = native_ptr;
             _our_mem = false;
         }
         else
         {
             size_t num_bytes = static_cast<size_t>(std::ceil(float(_num_pokemon) / 8.0f));
-            _native_has_seen = new uint8_t[num_bytes]{0};
-            _native_has_caught = new uint8_t[num_bytes]{0};
+            _native_ptr = new pksav_type;
+
+            GBIMPL_RCAST(_native_ptr)->seen_ptr = new uint8_t[num_bytes]{0};
+            GBIMPL_RCAST(_native_ptr)->owned_ptr = new uint8_t[num_bytes]{0};
 
             _our_mem = true;
         }
     }
 
-    pokedex_gbimpl::~pokedex_gbimpl()
+    template <typename pksav_type>
+    pokedex_gbimpl<pksav_type>::~pokedex_gbimpl()
     {
         if(_our_mem)
         {
-            delete[] _native_has_seen;
-            delete[] _native_has_caught;
+            delete[] GBIMPL_RCAST(_native_ptr)->seen_ptr;
+            delete[] GBIMPL_RCAST(_native_ptr)->owned_ptr;
+            delete GBIMPL_RCAST(_native_ptr);
         }
     }
 
-    bool pokedex_gbimpl::has_seen(
+    template <typename pksav_type>
+    bool pokedex_gbimpl<pksav_type>::has_seen(
         const std::string& species
     )
     {
@@ -68,7 +71,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                _native_has_seen,
+                GBIMPL_RCAST(_native_ptr)->seen_ptr,
                 uint16_t(species_id),
                 &has_seen
             );
@@ -77,7 +80,8 @@ namespace pkmn
         return has_seen;
     }
 
-    bool pokedex_gbimpl::has_caught(
+    template <typename pksav_type>
+    bool pokedex_gbimpl<pksav_type>::has_caught(
         const std::string& species
     )
     {
@@ -88,7 +92,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                _native_has_caught,
+                GBIMPL_RCAST(_native_ptr)->owned_ptr,
                 uint16_t(species_id),
                 &has_caught
             );
@@ -97,47 +101,53 @@ namespace pkmn
         return has_caught;
     }
 
-    void pokedex_gbimpl::_set_has_seen(
+    template <typename pksav_type>
+    void pokedex_gbimpl<pksav_type>::_set_has_seen(
         int species_id,
         bool has_seen_value
     )
     {
         PKSAV_CALL(
             pksav_set_pokedex_bit(
-                _native_has_seen,
+                GBIMPL_RCAST(_native_ptr)->seen_ptr,
                 uint16_t(species_id),
                 has_seen_value
             );
         )
     }
 
-    void pokedex_gbimpl::_set_has_caught(
+    template <typename pksav_type>
+    void pokedex_gbimpl<pksav_type>::_set_has_caught(
         int species_id,
         bool has_caught_value
     )
     {
         PKSAV_CALL(
             pksav_set_pokedex_bit(
-                _native_has_caught,
+                GBIMPL_RCAST(_native_ptr)->owned_ptr,
                 uint16_t(species_id),
                 has_caught_value
             );
         )
     }
 
-    void pokedex_gbimpl::_update_all_seen()
+    template <typename pksav_type>
+    void pokedex_gbimpl<pksav_type>::_update_all_seen()
     {
         _update_member_vector_with_pksav(
-            _native_has_seen,
+            GBIMPL_RCAST(_native_ptr)->seen_ptr,
             _all_seen
         );
     }
 
-    void pokedex_gbimpl::_update_all_caught()
+    template <typename pksav_type>
+    void pokedex_gbimpl<pksav_type>::_update_all_caught()
     {
         _update_member_vector_with_pksav(
-            _native_has_caught,
+            GBIMPL_RCAST(_native_ptr)->owned_ptr,
             _all_caught
         );
     }
 }
+
+#endif /* PKMN_POKEDEX_GBIMPL_IPP */

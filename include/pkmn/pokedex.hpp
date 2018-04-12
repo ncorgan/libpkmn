@@ -55,6 +55,7 @@ namespace pkmn
             #ifndef __DOXYGEN__
             pokedex() {};
             virtual ~pokedex() {};
+            virtual void* get_native() = 0;
             #endif
     };
 }

@@ -21,8 +21,6 @@
 #include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
-#include <cassert>
-
 namespace pkmn
 {
     static const std::vector<size_t> GENERATION_POKEDEX_SIZES =
@@ -42,8 +40,11 @@ namespace pkmn
         switch(generation)
         {
             case 1:
+                ret = std::make_shared<pokedex_gen1impl>(game_id);
+                break;
+
             case 2:
-                ret = std::make_shared<pokedex_gbimpl>(game_id);
+                ret = std::make_shared<pokedex_gen2impl>(game_id);
                 break;
 
             case 3:
@@ -179,6 +180,13 @@ namespace pkmn
         }
 
         return int(_all_caught.size());
+    }
+
+    void* pokedex_impl::get_native()
+    {
+        boost::lock_guard<pokedex_impl> lock(*this);
+
+        return _native_ptr;
     }
 
     void pokedex_impl::_update_member_vector_with_pksav(

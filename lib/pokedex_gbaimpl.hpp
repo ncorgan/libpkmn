@@ -44,9 +44,6 @@ namespace pkmn
 
             void _update_all_seen() override final;
             void _update_all_caught() override final;
-
-        private:
-            struct pksav_gba_pokedex* _native_pokedex_ptr;
     };
 
 }

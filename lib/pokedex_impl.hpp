@@ -49,6 +49,8 @@ namespace pkmn
 
             int get_num_caught() override final;
 
+            void* get_native() override final;
+
         protected:
             int _game_id;
             int _generation;
@@ -60,6 +62,7 @@ namespace pkmn
             std::vector<std::string> _all_caught;
             bool _dirty_caught;
 
+            void* _native_ptr;
             bool _our_mem;
 
             void _update_member_vector_with_pksav(

@@ -96,10 +96,9 @@ namespace pkmn {
 
         BOOST_ASSERT(_pksav_save.pokedex_lists.seen_ptr != nullptr);
         BOOST_ASSERT(_pksav_save.pokedex_lists.owned_ptr != nullptr);
-        _pokedex = std::make_shared<pokedex_gbimpl>(
+        _pokedex = std::make_shared<pokedex_gen2impl>(
                        _game_id,
-                       _pksav_save.pokedex_lists.seen_ptr,
-                       _pksav_save.pokedex_lists.owned_ptr
+                       &_pksav_save.pokedex_lists
                    );
 
         BOOST_ASSERT(_pksav_save.pokemon_storage.party_ptr != nullptr);
