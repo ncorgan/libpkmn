@@ -6,6 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
+require_relative "RubyPokemonTest/ConversionTest"
 require_relative "RubyPokemonTest/FormTest"
 require_relative "RubyPokemonTest/GenderTest"
 require_relative "RubyPokemonTest/PokemonIOTest"
