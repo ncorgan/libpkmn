@@ -82,6 +82,7 @@ function game_save_test.test_common_fields(save)
     local is_gb_game = game_save_test.is_gb_game(game)
     local is_male_only = game_save_test.is_male_only(game)
     local is_rival_name_set = game_save_test.is_rival_name_set(game)
+    local is_gamecube_game = (game == "Colosseum") or (game == "XD")
 
     -- Hacky setter functions because LuaUnit can't check setting variables...
     function game_save_set_money(save, money)
@@ -226,61 +227,66 @@ function game_save_test.test_common_fields(save)
     save.money = 123456
     luaunit.assertEquals(save.money, 123456)
 
+    -- Not how these are typically used, but this test is slow...
+    local pokedex_has_seen = nil
+    local pokedex_has_caught = nil
+    if not is_gamecube_game
+    then
+        pokedex_has_seen = save.pokedex.has_seen
+        pokedex_has_caught = save.pokedex.has_caught
+    end
+
     -- Pokémon Party
     luaunit.assertEquals(#save.pokemon_party, 6)
     luaunit.assertTrue(save.pokemon_party.num_pokemon <= 6)
 
+    local party = save.pokemon_party
+    local num_pokemon = party.num_pokemon
+
     for party_index = 1, 6
     do
-        if party_index <= save.pokemon_party.num_pokemon
+        local pokemon = party[party_index]
+
+        if party_index <= num_pokemon
         then
-            luaunit.assertNotEquals(save.pokemon_party[party_index].species, "None")
+            luaunit.assertNotEquals(pokemon.species, "None")
+
+            if not is_gamecube_game and not pokemon.is_egg
+            then
+                luaunit.assertTrue(pokedex_has_seen[pokemon.species])
+                luaunit.assertTrue(pokedex_has_caught[pokemon.species])
+            end
         else
-            luaunit.assertEquals(save.pokemon_party[party_index].species, "None")
+            luaunit.assertEquals(pokemon.species, "None")
         end
     end
 
     -- Pokémon PC
-    for pc_index = 1, #save.pokemon_pc
+    local pokemon_pc = save.pokemon_pc
+
+    for pc_index = 1, #pokemon_pc
     do
-        luaunit.assertTrue(save.pokemon_pc[pc_index].num_pokemon <= #save.pokemon_pc[pc_index])
+        local box = pokemon_pc[pc_index]
+        luaunit.assertTrue(box.num_pokemon <= #box)
 
         -- Boxes are only contiguous in Game Boy games.
         if is_gb_game
         then
-            for box_index = 1, #save.pokemon_pc[pc_index]
+            for box_index = 1, #box
             do
-                if box_index <= save.pokemon_pc[pc_index].num_pokemon
+                local pokemon = box[box_index]
+
+                if box_index <= box.num_pokemon
                 then
-                    luaunit.assertNotEquals(save.pokemon_pc[pc_index][box_index].species, "None")
+                    luaunit.assertNotEquals(pokemon.species, "None")
+
+                    if not is_gamecube_game and not pokemon.is_egg
+                    then
+                        luaunit.assertTrue(pokedex_has_seen[pokemon.species])
+                        luaunit.assertTrue(pokedex_has_caught[pokemon.species])
+                    end
                 else
-                    luaunit.assertEquals(save.pokemon_pc[pc_index][box_index].species, "None")
-                end
-            end
-        end
-    end
-
-    -- Pokédex
-
-    if game ~= "Colosseum" and game ~= "XD"
-    then
-        for party_index = 1, #save.pokemon_party
-        do
-            if save.pokemon_party[party_index].species ~= "None" and not save.pokemon_party[party_index].is_egg
-            then
-                luaunit.assertTrue(save.pokedex.has_seen[save.pokemon_party[party_index].species])
-                luaunit.assertTrue(save.pokedex.has_caught[save.pokemon_party[party_index].species])
-            end
-        end
-
-        for pc_index = 1, #save.pokemon_pc
-        do
-            for box_index = 1, #save.pokemon_pc[pc_index]
-            do
-                if save.pokemon_pc[pc_index][box_index].species ~= "None" and not save.pokemon_pc[pc_index][box_index].is_egg
-                then
-                    luaunit.assertTrue(save.pokedex.has_seen[save.pokemon_pc[pc_index][box_index].species])
-                    luaunit.assertTrue(save.pokedex.has_caught[save.pokemon_pc[pc_index][box_index].species])
+                    luaunit.assertEquals(pokemon.species, "None")
                 end
             end
         end
@@ -332,16 +338,19 @@ function game_save_test.randomize_pokemon(save, item_list)
     local pokemon_list = pkmn.database.get_pokemon_list(generation, true)
     local move_list = pkmn.database.get_move_list(game)
 
-    for party_index = 1, #save.pokemon_party
+    local party = save.pokemon_party
+    for party_index = 1, #party
     do
-        save.pokemon_party[party_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
+        party[party_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
     end
 
-    for pc_index = 1, #save.pokemon_pc
+    pokemon_pc = save.pokemon_pc
+    for pc_index = 1, #pokemon_pc
     do
-        for box_index = 1, #save.pokemon_pc[pc_index]
+        local box = pokemon_pc[pc_index]
+        for box_index = 1, #box
         do
-            save.pokemon_pc[pc_index][box_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
+            box[box_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
         end
     end
 end
@@ -432,12 +441,15 @@ function game_save_test.compare_game_saves(save1, save2)
     end
     for pc_index = 1, #pc1
     do
-        luaunit.assertEquals(#pc1[pc_index], #pc2[pc_index])
+        local box1 = pc1[pc_index]
+        local box2 = pc2[pc_index]
+
+        luaunit.assertEquals(#box1, #box2)
         for box_index = 1, #pc1[1]
         do
             pkmntest_utils.compare_pokemon(
-                pc1[pc_index][box_index],
-                pc2[pc_index][box_index]
+                box1[box_index],
+                box2[box_index]
             )
         end
     end
