@@ -69,7 +69,7 @@ class GBAItemTest < ItemTest
         item_list_test_setting_items(item_pocket, test_items)
         item_list_test_add_remove(item_pocket, test_items)
 
-        assert_operator(item_pocket.valid_items.size, :>, 0)
+        assert_operator(item_pocket.valid_items.length, :>, 0)
     end
 
     def _gba_key_item_pocket_test_common(key_item_pocket)
@@ -126,7 +126,7 @@ class GBAItemTest < ItemTest
         item_list_test_setting_items(key_item_pocket, test_items)
         item_list_test_add_remove(key_item_pocket, test_items)
 
-        assert_operator(key_item_pocket.valid_items.size, :>, 0)
+        assert_operator(key_item_pocket.valid_items.length, :>, 0)
     end
 
     def _gba_ball_pocket_test_common(ball_pocket)
@@ -165,7 +165,7 @@ class GBAItemTest < ItemTest
         item_list_test_setting_items(ball_pocket, test_items)
         item_list_test_add_remove(ball_pocket, test_items)
 
-        assert_operator(ball_pocket.valid_items.size, :>, 0)
+        assert_operator(ball_pocket.valid_items.length, :>, 0)
     end
 
     def _gba_tmhm_pocket_test_common(tmhm_pocket)
@@ -206,7 +206,7 @@ class GBAItemTest < ItemTest
         item_list_test_setting_items(tmhm_pocket, test_items)
         item_list_test_add_remove(tmhm_pocket, test_items)
 
-        assert_operator(tmhm_pocket.valid_items.size, :>, 0)
+        assert_operator(tmhm_pocket.valid_items.length, :>, 0)
     end
 
     def _gba_berry_pocket_test_common(berry_pocket)
@@ -247,7 +247,7 @@ class GBAItemTest < ItemTest
         item_list_test_setting_items(berry_pocket, test_items)
         item_list_test_add_remove(berry_pocket, test_items)
 
-        assert_operator(berry_pocket.valid_items.size, :>, 0)
+        assert_operator(berry_pocket.valid_items.length, :>, 0)
     end
 
     def _gba_item_pc_test_common(pc)

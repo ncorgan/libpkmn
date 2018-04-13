@@ -37,7 +37,7 @@ class Gen1ItemTest < ItemTest
         item_list_test_add_remove(list, @@ITEM_NAMES)
 
         full_item_list = PKMN::Database::get_item_list(list.game)
-        assert_equal(full_item_list.length, list.valid_items.size)
+        assert_equal(full_item_list.length, list.valid_items.length)
     end
 
     def _gen1_item_pocket_test(game)

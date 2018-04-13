@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -151,12 +151,12 @@ class RubyDatabaseEntryTest < Test::Unit::TestCase
         assert_equal(165, entry.experience_yield)
         assert_equal(125000, entry.get_experience_at_level(50))
         assert_equal(58, entry.get_level_at_experience(200000))
-        assert(entry.levelup_moves.size > 0)
-        assert(entry.tm_hm_moves.size > 0)
-        assert(entry.egg_moves.size > 0)
-        assert(entry.tutor_moves.size > 0)
-        assert_equal(1, entry.forms.size)
-        assert_equal(0, entry.evolutions.size)
+        assert(entry.levelup_moves.length > 0)
+        assert(entry.tm_hm_moves.length > 0)
+        assert(entry.egg_moves.length > 0)
+        assert(entry.tutor_moves.length > 0)
+        assert_equal(1, entry.forms.length)
+        assert_equal(0, entry.evolutions.length)
 
         assert(Pathname.new(entry.get_icon_filepath(false)).exist?)
         assert(Pathname.new(entry.get_icon_filepath(true)).exist?)

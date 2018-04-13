@@ -52,7 +52,7 @@ class Gen2ItemTest < ItemTest
         item_list_test_setting_items(item_pocket, test_items)
         item_list_test_add_remove(item_pocket, test_items)
 
-        assert_operator(item_pocket.valid_items.size, :>, 0)
+        assert_operator(item_pocket.valid_items.length, :>, 0)
     end
 
     def _gen2_key_item_pocket_test_common(key_item_pocket)
@@ -97,7 +97,7 @@ class Gen2ItemTest < ItemTest
         item_list_test_setting_items(key_item_pocket, test_items)
         item_list_test_add_remove(key_item_pocket, test_items)
 
-        assert_operator(key_item_pocket.valid_items.size, :>, 0)
+        assert_operator(key_item_pocket.valid_items.length, :>, 0)
     end
 
     def _gen2_ball_pocket_test_common(ball_pocket)
@@ -128,7 +128,7 @@ class Gen2ItemTest < ItemTest
         item_list_test_setting_items(ball_pocket, test_items)
         item_list_test_add_remove(ball_pocket, test_items)
 
-        assert_operator(ball_pocket.valid_items.size, :>, 0)
+        assert_operator(ball_pocket.valid_items.length, :>, 0)
     end
 
     def _gen2_tmhm_pocket_test_common(tmhm_pocket)
@@ -183,7 +183,7 @@ class Gen2ItemTest < ItemTest
             assert_equal(0, tmhm_pocket[50+i-1].amount)
         end
 
-        assert_equal(57, tmhm_pocket.valid_items.size)
+        assert_equal(57, tmhm_pocket.valid_items.length)
     end
 
     def _gen2_item_pc_test_common(pc)
@@ -207,7 +207,7 @@ class Gen2ItemTest < ItemTest
         item_list_test_add_remove(pc, @@ALL_POCKET_ITEM_NAMES)
 
         full_item_list = PKMN::Database::get_item_list(pc.game)
-        assert_equal(pc.valid_items.size, full_item_list.length)
+        assert_equal(pc.valid_items.length, full_item_list.length)
     end
 
     def _gen2_item_pocket_test(game)

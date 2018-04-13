@@ -1,16 +1,17 @@
 #!/usr/bin/ruby
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
 #
 
 require "PKMN"
+require "PKMNTest"
 
 require "minitest/autorun"
 
-class GameSaveTest < MiniTest::Test
+class GameSaveTest < PKMNTest
     @@GB_GAMES = ["Red", "Blue", "Yellow",
                   "Gold", "Silver", "Crystal"]
 
@@ -32,37 +33,8 @@ class GameSaveTest < MiniTest::Test
 
     @@RNG = Random.new
 
-    @@DEFAULT_TRAINER_PID = PKMN::Pokemon::DEFAULT_TRAINER_ID & 0xFFFF
-    @@DEFAULT_TRAINER_SID = PKMN::Pokemon::DEFAULT_TRAINER_ID >> 16
-
-    @@GAME_GENERATIONS = {
-        "Red" => 1,
-        "Blue" => 1,
-        "Yellow" => 1,
-        "Gold" => 2,
-        "Silver" => 2,
-        "Crystal" => 2,
-        "Ruby" => 3,
-        "Sapphire" => 3,
-        "Emerald" => 3,
-        "FireRed" => 3,
-        "LeafGreen" => 3,
-        "Colosseum" => 3,
-        "XD" => 3,
-        "Diamond" => 4,
-        "Pearl" => 4,
-        "Platinum" => 4,
-        "HeartGold" => 4,
-        "SoulSilver" => 4,
-        "Black" => 5,
-        "White" => 5,
-        "Black 2" => 5,
-        "White 2" => 5,
-        "X" => 6,
-        "Y" => 6,
-        "Omega Ruby" => 6,
-        "Alpha Sapphire" => 6
-    }
+    @@DEFAULT_TRAINER_PID = PKMN::Pokemon.DEFAULT_TRAINER_ID & 0xFFFF
+    @@DEFAULT_TRAINER_SID = PKMN::Pokemon.DEFAULT_TRAINER_ID >> 16
 
     def _test_trainer_name(save)
         assert_raises ArgumentError do
@@ -72,8 +44,8 @@ class GameSaveTest < MiniTest::Test
             save.trainer_name = "LibPKMNLibPKMN" # Too long
         end
 
-        save.trainer_name = PKMN::Pokemon::DEFAULT_TRAINER_NAME
-        assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_NAME, save.trainer_name)
+        save.trainer_name = PKMN::Pokemon.DEFAULT_TRAINER_NAME
+        assert_equal(PKMN::Pokemon.DEFAULT_TRAINER_NAME, save.trainer_name)
     end
 
     def _test_trainer_id(save)
@@ -84,7 +56,7 @@ class GameSaveTest < MiniTest::Test
                 save.trainer_secret_id
             end
         else
-            assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_ID, save.trainer_id)
+            assert_equal(PKMN::Pokemon.DEFAULT_TRAINER_ID, save.trainer_id)
             assert_equal(@@DEFAULT_TRAINER_PID, save.trainer_public_id)
             assert_equal(@@DEFAULT_TRAINER_SID, save.trainer_secret_id)
         end
@@ -103,8 +75,8 @@ class GameSaveTest < MiniTest::Test
                 save.rival_name = "LibPKMNLibPKMN" # Too long
             end
 
-            save.rival_name = PKMN::Pokemon::DEFAULT_TRAINER_NAME
-            assert_equal(PKMN::Pokemon::DEFAULT_TRAINER_NAME, save.rival_name)
+            save.rival_name = PKMN::Pokemon.DEFAULT_TRAINER_NAME
+            assert_equal(PKMN::Pokemon.DEFAULT_TRAINER_NAME, save.rival_name)
         end
     end
 
@@ -116,7 +88,7 @@ class GameSaveTest < MiniTest::Test
         if @@GB_GAMES.include?(save.game)
             save.trainer_id = @@DEFAULT_TRAINER_PID
         else
-            save.trainer_id = PKMN::Pokemon::DEFAULT_TRAINER_ID
+            save.trainer_id = PKMN::Pokemon.DEFAULT_TRAINER_ID
         end
         _test_trainer_id(save)
 
@@ -190,50 +162,17 @@ class GameSaveTest < MiniTest::Test
         end
     end
 
-    def _get_random_pokemon(game, pokemon_list, move_list, item_list)
-        species = ""
-
-        # Don't deal with Deoxys issues here.
-        loop do
-            species = pokemon_list.sample
-            break if (@@GAME_GENERATIONS[game] != 3) or (species != "Deoxys")
-        end
-
-        ret = PKMN::Pokemon.new(species, game, "", @@RNG.rand(99) + 2)
-
-        entry = PKMN::Database::MoveEntry.new("None", game)
-        (0..3).each do |i|
-            entry = PKMN::Database::ItemEntry.new("None", game)
-            loop do
-                entry = PKMN::Database::MoveEntry.new(move_list.sample, game)
-                break if (entry.name.index("Shadow") != 0)
-            end
-            ret.moves[i].move = entry.name
-        end
-
-        if @@GAME_GENERATIONS[game] >= 2
-            entry = PKMN::Database::ItemEntry.new("None", game)
-            loop do
-                entry = PKMN::Database::ItemEntry.new(item_list.sample, game)
-                break if entry.is_holdable?
-            end
-            ret.held_item = entry.name
-        end
-
-        return ret
-    end
-
     def _randomize_pokemon(save, item_list)
         pokemon_list = PKMN::Database::get_pokemon_list(@@GAME_GENERATIONS[save.game], true)
         move_list = PKMN::Database::get_move_list(save.game)
 
         (0..5).each do |i|
-            save.pokemon_party[i] = _get_random_pokemon(save.game, pokemon_list, move_list, item_list)
+            save.pokemon_party[i] = get_random_pokemon(save.game, pokemon_list, move_list, item_list)
         end
 
         save.pokemon_pc.each do |box|
             (0..(box.length-1)).each do |i|
-                box[i] = _get_random_pokemon(save.game, pokemon_list, move_list, item_list)
+                box[i] = get_random_pokemon(save.game, pokemon_list, move_list, item_list)
             end
         end
     end
@@ -251,7 +190,7 @@ class GameSaveTest < MiniTest::Test
         assert_equal(pokemon1.species, pokemon2.species)
         assert_equal(pokemon1.level, pokemon2.level)
         assert_equal(pokemon1.nickname, pokemon2.nickname)
-        assert_equal(pokemon1.trainer_name, pokemon2.trainer_name)
+        assert_equal(pokemon1.original_trainer_name, pokemon2.original_trainer_name)
     end
 
     def _compare_game_saves(save1, save2)

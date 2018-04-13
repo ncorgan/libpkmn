@@ -72,7 +72,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(item_pocket, test_items)
         item_list_test_add_remove(item_pocket, test_items)
 
-        assert_operator(item_pocket.valid_items.size, :>, 0)
+        assert_operator(item_pocket.valid_items.length, :>, 0)
 
         # Make sure the pocket holds both GBA and GCN items.
         gcn_item = ""
@@ -142,7 +142,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(key_item_pocket, items)
         item_list_test_add_remove(key_item_pocket, items)
 
-        assert_operator(key_item_pocket.valid_items.size, :>, 0)
+        assert_operator(key_item_pocket.valid_items.length, :>, 0)
         assert(key_item_pocket.valid_items.include?(gcn_item))
     end
 
@@ -179,7 +179,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(ball_pocket, test_items)
         item_list_test_add_remove(ball_pocket, test_items)
 
-        assert_operator(ball_pocket.valid_items.size, :>, 0)
+        assert_operator(ball_pocket.valid_items.length, :>, 0)
     end
 
     def _gcn_tm_pocket_test_common(tm_pocket)
@@ -215,7 +215,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(tm_pocket, test_items)
         item_list_test_add_remove(tm_pocket, test_items)
 
-        assert_equal(50, tm_pocket.valid_items.size)
+        assert_equal(50, tm_pocket.valid_items.length)
 
         # Gamecube games have no HMs.
         assert(!tm_pocket.valid_items.include?("HM01"))
@@ -254,7 +254,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(berry_pocket, test_items)
         item_list_test_add_remove(berry_pocket, test_items)
 
-        assert_operator(berry_pocket.valid_items.size, :>, 0)
+        assert_operator(berry_pocket.valid_items.length, :>, 0)
     end
 
     def _gcn_cologne_pocket_test_common(cologne_pocket)
@@ -292,7 +292,7 @@ class GCNItemTest < ItemTest
         assert_equal("None", cologne_pocket[2].item)
         assert_equal(0, cologne_pocket[2].amount)
 
-        assert_equal(3, cologne_pocket.valid_items.size)
+        assert_equal(3, cologne_pocket.valid_items.length)
         assert(cologne_pocket.valid_items.include?("Joy Scent"))
     end
 
@@ -318,7 +318,7 @@ class GCNItemTest < ItemTest
         item_list_test_setting_items(battle_cd_pocket, test_items)
         item_list_test_add_remove(battle_cd_pocket, test_items)
 
-        assert_operator(battle_cd_pocket.valid_items.size, :>, 0)
+        assert_operator(battle_cd_pocket.valid_items.length, :>, 0)
     end
 
     def _gcn_item_pc_test_common(pc)
