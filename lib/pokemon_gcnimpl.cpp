@@ -42,7 +42,9 @@
 
 namespace pkmn
 {
-    BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
+    BOOST_STATIC_CONSTEXPR int MEW_ID    = 151;
+    BOOST_STATIC_CONSTEXPR int UNOWN_ID  = 201;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
     typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
@@ -124,7 +126,14 @@ namespace pkmn
         GC_RCAST->version.originalRegion = LibPkmGC::NTSC_U;
         GC_RCAST->version.language = LibPkmGC::English;
 
-        GC_RCAST->obedient = true;
+        // Only do this by default for Mew or Deoxys, who won't obey without
+        // this flag. For any others, this will cause them to falsely be
+        // flagged as a fateful encounter if traded up to Generation IV.
+        if((_database_entry.get_species_id() == MEW_ID) or
+           (_database_entry.get_species_id() == DEOXYS_ID))
+        {
+            GC_RCAST->obedient = true;
+        }
         for(size_t i = 0; i < 12; ++i)
         {
             GC_RCAST->specialRibbons[i] = false;

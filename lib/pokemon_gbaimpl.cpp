@@ -57,7 +57,9 @@ namespace fs = boost::filesystem;
 
 namespace pkmn
 {
-    BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
+    BOOST_STATIC_CONSTEXPR int MEW_ID    = 151;
+    BOOST_STATIC_CONSTEXPR int UNOWN_ID  = 201;
+    BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
     pokemon_gbaimpl::pokemon_gbaimpl(
         pkmn::database::pokemon_entry&& database_entry,
@@ -131,7 +133,14 @@ namespace pkmn
             _misc->iv_egg_ability &= ~PKSAV_GBA_POKEMON_ABILITY_MASK;
         }
 
-        _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
+        // Only do this by default for Mew or Deoxys, who won't obey without
+        // this flag. For any others, this will cause them to falsely be
+        // flagged as a fateful encounter if traded up to Generation IV.
+        if((_database_entry.get_species_id() == MEW_ID) or
+           (_database_entry.get_species_id() == DEOXYS_ID))
+        {
+            _misc->ribbons_obedience |= PKSAV_GBA_POKEMON_OBEDIENCE_MASK;
+        }
 
         // Populate abstractions
         _update_ribbons_map();
