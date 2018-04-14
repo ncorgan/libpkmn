@@ -69,65 +69,25 @@
 #include <pkmn-c/pokemon_pc.h>
 
 // Internal representations
-typedef struct
-{
-    pkmn::item_bag::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_item_bag_internal_t;
 
-typedef struct
+template <typename libpkmn_type>
+struct pkmn_c_internal_class_t
 {
-    pkmn::item_list::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_item_list_internal_t;
-
-typedef struct
-{
-    pkmn::pokedex::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokedex_internal_t;
-
-typedef struct
-{
-    pkmn::pokemon::sptr cpp;
+    std::shared_ptr<libpkmn_type> cpp;
     boost::mutex error_mutex;
     std::string last_error;
 
     int generation;
-} pkmn_pokemon_internal_t;
+};
 
-typedef struct
-{
-    pkmn::pokemon_box::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_box_internal_t;
-
-typedef struct
-{
-    pkmn::pokemon_party::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_party_internal_t;
-
-typedef struct
-{
-    pkmn::pokemon_pc::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-} pkmn_pokemon_pc_internal_t;
-
-typedef struct
-{
-    pkmn::game_save::sptr cpp;
-    boost::mutex error_mutex;
-    std::string last_error;
-
-    int generation;
-} pkmn_game_save_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::game_save> pkmn_game_save_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::item_bag> pkmn_item_bag_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::item_list> pkmn_item_list_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::pokedex> pkmn_pokedex_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::pokemon> pkmn_pokemon_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::pokemon_box> pkmn_pokemon_box_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::pokemon_party> pkmn_pokemon_party_internal_t;
+typedef pkmn_c_internal_class_t<pkmn::pokemon_pc> pkmn_pokemon_pc_internal_t;
 
 #define ITEM_BAG_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_bag_internal_t*>(ptr))
 #define ITEM_LIST_INTERNAL_RCAST(ptr) (reinterpret_cast<pkmn_item_list_internal_t*>(ptr))

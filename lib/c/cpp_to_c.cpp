@@ -20,6 +20,28 @@ namespace pkmn { namespace c {
 
     // LibPKMN wrapper class initialization.
 
+    template <typename libpkmn_cpp_type, typename libpkmn_c_type>
+    static void init_c_internal_class(
+        const std::shared_ptr<libpkmn_cpp_type>& libpkmn_sptr,
+        libpkmn_c_type* libpkmn_c_struct_out
+    )
+    {
+        BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
+        BOOST_ASSERT(libpkmn_c_struct_out != nullptr);
+
+        libpkmn_c_struct_out->_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
+        pkmn_c_internal_class_t<libpkmn_cpp_type>* internal_ptr =
+            reinterpret_cast<pkmn_c_internal_class_t<libpkmn_cpp_type>*>(
+                libpkmn_c_struct_out->_internal
+            );
+
+        internal_ptr->cpp = libpkmn_sptr;
+        internal_ptr->last_error = "None";
+        internal_ptr->generation = pkmn::priv::game_name_to_generation(
+                                       libpkmn_sptr->get_game()
+                                   );
+    }
+
     void init_item_bag(
         const pkmn::item_bag::sptr& cpp_item_bag,
         struct pkmn_item_bag* item_bag_ptr
@@ -43,6 +65,10 @@ namespace pkmn { namespace c {
             nullptr // _internal
         };
 
+        init_c_internal_class(
+            cpp_item_bag,
+            &temp_item_bag
+        );
         string_cpp_to_c_alloc(
             cpp_item_bag->get_game(),
             &temp_item_bag.game
@@ -51,11 +77,6 @@ namespace pkmn { namespace c {
             cpp_item_bag->get_pocket_names(),
             &temp_item_bag.pocket_names
         );
-
-        temp_item_bag._internal = new pkmn_item_bag_internal_t;
-        pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(temp_item_bag._internal);
-        internal_ptr->cpp = cpp_item_bag;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -82,6 +103,10 @@ namespace pkmn { namespace c {
             nullptr  // _internal
         };
 
+        init_c_internal_class(
+            cpp_item_list,
+            &temp_item_list
+        );
         string_cpp_to_c_alloc(
             cpp_item_list->get_name(),
             &temp_item_list.name
@@ -91,11 +116,6 @@ namespace pkmn { namespace c {
             &temp_item_list.game
         );
         temp_item_list.capacity = cpp_item_list->get_capacity();
-
-        temp_item_list._internal = new pkmn_item_list_internal_t;
-        pkmn_item_list_internal_t* internal_ptr = ITEM_LIST_INTERNAL_RCAST(temp_item_list._internal);
-        internal_ptr->cpp = cpp_item_list;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -120,15 +140,14 @@ namespace pkmn { namespace c {
             nullptr // _internal
         };
 
+        init_c_internal_class(
+            cpp_pokedex,
+            &temp_pokedex
+        );
         string_cpp_to_c_alloc(
             cpp_pokedex->get_game(),
             &temp_pokedex.game
         );
-
-        temp_pokedex._internal = new pkmn_pokedex_internal_t;
-        pkmn_pokedex_internal_t* internal_ptr = POKEDEX_INTERNAL_RCAST(temp_pokedex._internal);
-        internal_ptr->cpp = cpp_pokedex;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -154,6 +173,10 @@ namespace pkmn { namespace c {
             nullptr // _internal
         };
 
+        init_c_internal_class(
+            cpp_pokemon,
+            &temp_pokemon
+        );
         string_cpp_to_c_alloc(
             cpp_pokemon->get_species(),
             &temp_pokemon.species
@@ -162,14 +185,6 @@ namespace pkmn { namespace c {
             cpp_pokemon->get_game(),
             &temp_pokemon.game
         );
-
-        temp_pokemon._internal = new pkmn_pokemon_internal_t;
-        pkmn_pokemon_internal_t* internal_ptr = POKEMON_INTERNAL_RCAST(temp_pokemon._internal);
-        internal_ptr->cpp = cpp_pokemon;
-        internal_ptr->last_error = "None";
-        internal_ptr->generation = pkmn::priv::game_name_to_generation(
-                                       temp_pokemon.game
-                                   );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -195,16 +210,15 @@ namespace pkmn { namespace c {
             nullptr  // _internal
         };
 
+        init_c_internal_class(
+            cpp_pokemon_box,
+            &temp_pokemon_box
+        );
         string_cpp_to_c_alloc(
             cpp_pokemon_box->get_game(),
             &temp_pokemon_box.game
         );
         temp_pokemon_box.capacity = cpp_pokemon_box->get_capacity();
-
-        temp_pokemon_box._internal = new pkmn_pokemon_box_internal_t;
-        pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(temp_pokemon_box._internal);
-        internal_ptr->cpp = cpp_pokemon_box;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -230,16 +244,15 @@ namespace pkmn { namespace c {
             nullptr  // _internal
         };
 
+        init_c_internal_class(
+            cpp_pokemon_party,
+            &temp_pokemon_party
+        );
         string_cpp_to_c_alloc(
             cpp_pokemon_party->get_game(),
             &temp_pokemon_party.game
         );
         temp_pokemon_party.capacity = 6ULL;
-
-        temp_pokemon_party._internal = new pkmn_pokemon_party_internal_t;
-        pkmn_pokemon_party_internal_t* internal_ptr = POKEMON_PARTY_INTERNAL_RCAST(temp_pokemon_party._internal);
-        internal_ptr->cpp = cpp_pokemon_party;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -265,16 +278,15 @@ namespace pkmn { namespace c {
             nullptr  // _internal
         };
 
+        init_c_internal_class(
+            cpp_pokemon_pc,
+            &temp_pokemon_pc
+        );
         string_cpp_to_c_alloc(
             cpp_pokemon_pc->get_game(),
             &temp_pokemon_pc.game
         );
         temp_pokemon_pc.capacity = cpp_pokemon_pc->get_num_boxes();
-
-        temp_pokemon_pc._internal = new pkmn_pokemon_pc_internal_t;
-        pkmn_pokemon_pc_internal_t* internal_ptr = POKEMON_PC_INTERNAL_RCAST(temp_pokemon_pc._internal);
-        internal_ptr->cpp = cpp_pokemon_pc;
-        internal_ptr->last_error = "None";
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
@@ -299,18 +311,14 @@ namespace pkmn { namespace c {
             nullptr  // _internal
         };
 
+        init_c_internal_class(
+            cpp_game_save,
+            &temp_game_save
+        );
         string_cpp_to_c_alloc(
             cpp_game_save->get_game(),
             &temp_game_save.game
         );
-
-        temp_game_save._internal = new pkmn_game_save_internal_t;
-        pkmn_game_save_internal_t* internal_ptr = GAME_SAVE_INTERNAL_RCAST(temp_game_save._internal);
-        internal_ptr->cpp = cpp_game_save;
-        internal_ptr->last_error = "None";
-        internal_ptr->generation = pkmn::priv::game_name_to_generation(
-                                       temp_game_save.game
-                                   );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
