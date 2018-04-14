@@ -18,10 +18,26 @@
 
 #include <gtest/gtest.h>
 
+#include <cstdlib>
+
 namespace fs = boost::filesystem;
 
 static const fs::path LIBPKMN_TEST_FILES(pkmn_getenv("LIBPKMN_TEST_FILES"));
 static const fs::path TMP_DIR(pkmn::get_tmp_dir());
+
+static std::string export_pokemon_to_tmp_file(
+    pkmn::pokemon::sptr pokemon,
+    const std::string& extension
+)
+{
+    fs::path output_path = TMP_DIR / str(boost::format("%u.%s")
+                                         % pkmn::rng<uint32_t>().rand()
+                                         % extension);
+
+    pokemon->export_to_file(output_path.string());
+
+    return output_path.string();
+}
 
 static bool get_random_bool()
 {
@@ -212,16 +228,13 @@ TEST_P(pk1_test, test_saving_and_loading_pk1)
 {
     std::string game = GetParam();
 
-    fs::path pk1_path = TMP_DIR / str(boost::format("%s_%u.pk1") % game % pkmn::rng<uint32_t>().rand());
-
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
-    random_pokemon->export_to_file(pk1_path.string());
-
-    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(pk1_path.string());
+    std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk1");
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(tmp_path);
 
     compare_pokemon(random_pokemon, imported_pokemon);
 
-    std::remove(pk1_path.string().c_str());
+    std::remove(tmp_path.c_str());
 }
 
 static const std::vector<std::string> GEN1_GAMES = {"Red", "Blue", "Yellow"};
@@ -238,16 +251,13 @@ TEST_P(pk2_test, test_saving_and_loading_pk2)
 {
     std::string game = GetParam();
 
-    fs::path pk2_path = TMP_DIR / str(boost::format("%s_%u.pk2") % game % pkmn::rng<uint32_t>().rand());
-
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
-    random_pokemon->export_to_file(pk2_path.string());
-
-    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(pk2_path.string());
+    std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "pk2");
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(tmp_path);
 
     compare_pokemon(random_pokemon, imported_pokemon);
 
-    std::remove(pk2_path.string().c_str());
+    std::remove(tmp_path.c_str());
 }
 
 static const std::vector<std::string> GEN2_GAMES = {"Gold", "Silver", "Crystal"};
@@ -264,16 +274,13 @@ TEST_P(_3gpkm_test, test_saving_and_loading_3gpkm)
 {
     std::string game = GetParam();
 
-    fs::path _3gpkm_path = TMP_DIR / str(boost::format("%s_ %u.3gpkm") % game % pkmn::rng<uint32_t>().rand());
-
     pkmn::pokemon::sptr random_pokemon = get_random_pokemon(game);
-    random_pokemon->export_to_file(_3gpkm_path.string());
-
-    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(_3gpkm_path.string());
+    std::string tmp_path = export_pokemon_to_tmp_file(random_pokemon, "3gpkm");
+    pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(tmp_path);
 
     compare_pokemon(random_pokemon, imported_pokemon);
 
-    std::remove(_3gpkm_path.string().c_str());
+    std::remove(tmp_path.c_str());
 }
 
 static const std::vector<std::string> GBA_GAMES = {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"};
@@ -370,3 +377,114 @@ TEST(pokemon_io_test, test_outside_3gpkm) {
     EXPECT_EQ(79, mightyena_stats.at("Special Attack"));
     EXPECT_EQ(88, mightyena_stats.at("Special Defense"));
 }
+
+// These tests makes sure that when a Pokémon is exported and re-imported, that
+// its form is preserved.
+
+typedef struct
+{
+    std::string species;
+    std::string file_extension;
+    std::vector<std::string> games;
+} io_form_test_params_t;
+
+class io_form_test: public ::testing::TestWithParam<io_form_test_params_t> {};
+
+TEST_P(io_form_test, test_form_is_preserved_after_io)
+{
+    io_form_test_params_t test_params = GetParam();
+
+    for(const std::string& game: test_params.games)
+    {
+        std::vector<std::string> forms = pkmn::database::pokemon_entry(
+                                             test_params.species,
+                                             game,
+                                             ""
+                                         ).get_forms();
+
+        // Instantiate a Pokémon in the given form, export and reimport it,
+        // and make sure the form is preserved.
+        for(const std::string& form: forms)
+        {
+            pkmn::pokemon::sptr pokemon_of_form = pkmn::pokemon::make(
+                                                      test_params.species,
+                                                      game,
+                                                      form,
+                                                      5
+                                                  );
+            ASSERT_EQ(test_params.species, pokemon_of_form->get_species());
+            ASSERT_EQ(game, pokemon_of_form->get_game());
+            ASSERT_EQ(form, pokemon_of_form->get_form());
+
+            std::string tmp_path = export_pokemon_to_tmp_file(
+                                       pokemon_of_form,
+                                       test_params.file_extension
+                                   );
+
+            // Don't check game, as it's not guaranteed to match in all cases.
+            pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(
+                                                       tmp_path
+                                                   );
+            ASSERT_EQ(test_params.species, imported_pokemon->get_species());
+            ASSERT_EQ(form, imported_pokemon->get_form());
+
+            std::remove(tmp_path.c_str());
+        }
+
+        // Instantiate a Pokémon in the default form, set it to each form,
+        // export and reimport it, and make sure the form is preserved.
+        pkmn::pokemon::sptr test_pokemon = pkmn::pokemon::make(
+                                               test_params.species,
+                                               game,
+                                               "",
+                                               5
+                                           );
+        ASSERT_EQ(test_params.species, test_pokemon->get_species());
+        ASSERT_EQ(game, test_pokemon->get_game());
+
+        for(const std::string& form: forms)
+        {
+            test_pokemon->set_form(form);
+
+            std::string tmp_path = export_pokemon_to_tmp_file(
+                                       test_pokemon,
+                                       test_params.file_extension
+                                   );
+
+            // Don't check game, as it's not guaranteed to match in all cases.
+            pkmn::pokemon::sptr imported_pokemon = pkmn::pokemon::from_file(
+                                                       tmp_path
+                                                   );
+            ASSERT_EQ(test_params.species, imported_pokemon->get_species());
+            ASSERT_EQ(form, imported_pokemon->get_form());
+
+            std::remove(tmp_path.c_str());
+        }
+    }
+}
+
+// Generation II
+
+static const std::vector<io_form_test_params_t> GEN2_IO_FORM_TEST_PARAMS =
+{
+    {"Unown", "pk2", {"Gold", "Silver", "Crystal"}}
+};
+
+INSTANTIATE_TEST_CASE_P(
+    gen2_io_form_test,
+    io_form_test,
+    ::testing::ValuesIn(GEN2_IO_FORM_TEST_PARAMS)
+);
+
+// Generation III
+
+static const std::vector<io_form_test_params_t> GEN3_IO_FORM_TEST_PARAMS =
+{
+    {"Unown", "3gpkm", {"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen"}}
+};
+
+INSTANTIATE_TEST_CASE_P(
+    gen3_io_form_test,
+    io_form_test,
+    ::testing::ValuesIn(GEN3_IO_FORM_TEST_PARAMS)
+);
