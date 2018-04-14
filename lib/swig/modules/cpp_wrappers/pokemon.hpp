@@ -60,9 +60,9 @@ namespace pkmn { namespace swig {
  */
 #if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
             pokemon(
-                const wstd::string& species,
-                const wstd::string& game,
-                const wstd::string& form,
+                const std::wstring& species,
+                const std::wstring& game,
+                const std::wstring& form,
                 int level
             ): _pokemon(pkmn::pokemon::make(
                    boost::locale::conv::utf_to_utf<char>(species),
@@ -181,7 +181,7 @@ namespace pkmn { namespace swig {
                 );
             }
 
-            inline wstd::string get_location_met_as_egg()
+            inline std::wstring get_location_met_as_egg()
             {
                 if(_generation >= 4)
                 {
