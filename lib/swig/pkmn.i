@@ -44,7 +44,7 @@
 %ignore get_native;
 %ignore make;
 
-%ignore operator =;
+%ignore *::operator=;
 
 // SWIG needs to know about it, but we don't want it wrapped.
 %import <pkmn/types/class_with_attributes.hpp>
