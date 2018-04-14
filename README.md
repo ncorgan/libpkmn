@@ -12,6 +12,7 @@ RELEASE TODO
     * MSVC solutions
     * QMake for using Qt widgets
   * Applications with all APIs with usual importing means
+* PKSav: update to v2.0 when released
 * Misc
   * LGPL PKSav, LibPKMN APIs
 
@@ -118,4 +119,4 @@ A special thanks to Michael Bond ([@codemonkey85](https://github.com/codemonkey8
 
 This software is in no way affiliated with or endorsed by Nintendo, Creatures Inc. or Game Freak Inc, and is created for solely recreational and non-profit use. Pokémon © 2002- Pokémon. © 1995- Nintendo/Creatures Inc./GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo.
 
-README last updated: 2017/12/27
+README last updated: 2018/04/14
