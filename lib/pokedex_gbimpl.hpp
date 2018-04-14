@@ -46,9 +46,6 @@ namespace pkmn
 
             void _update_all_seen() override final;
             void _update_all_caught() override final;
-
-        private:
-            pksav_type* _native_ptr;
     };
 
     typedef pokedex_gbimpl<struct pksav_gen1_pokedex_lists> pokedex_gen1impl;

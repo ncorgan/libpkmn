@@ -18,6 +18,7 @@
 
 #include <pksav/common/pokedex.h>
 
+#include <boost/assert.hpp>
 #include <boost/format.hpp>
 #include <boost/thread/lock_guard.hpp>
 
@@ -194,6 +195,8 @@ namespace pkmn
         std::vector<std::string>& member_vector
     )
     {
+        BOOST_ASSERT(native_list != nullptr);
+
         member_vector.clear();
 
         std::string query_numbers;

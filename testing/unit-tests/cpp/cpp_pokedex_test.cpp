@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,12 +14,100 @@
 #include <pkmn/database/lists.hpp>
 
 #include <pksav/common/pokedex.h>
+#include <pksav/gen1/save.h>
+#include <pksav/gen2/save.h>
+#include <pksav/gba/pokedex.h>
 
 #include <gtest/gtest.h>
 
 #include <string>
 
 class pokedex_test: public ::testing::TestWithParam<std::string> {};
+
+static void check_pksav_buffer(
+    const uint8_t* pksav_buffer,
+    const std::vector<int>& numbers_to_check,
+    bool expected_value
+)
+{
+    ASSERT_NE(nullptr, pksav_buffer);
+
+    for(int pokemon_num: numbers_to_check)
+    {
+        bool result_from_pksav = false;
+        PKSAV_CALL(
+            pksav_get_pokedex_bit(
+                pksav_buffer,
+                uint16_t(pokemon_num),
+                &result_from_pksav
+            )
+        )
+        EXPECT_EQ(expected_value, result_from_pksav);
+    }
+}
+
+template <typename pksav_type>
+static void check_gb_pksav_pokedex(
+    const pksav_type* pksav_pokedex_ptr,
+    const std::vector<int>& seen_numbers,
+    const std::vector<int>& caught_numbers,
+    bool expected_value
+)
+{
+    ASSERT_NE(nullptr, pksav_pokedex_ptr);
+
+    check_pksav_buffer(
+        pksav_pokedex_ptr->seen_ptr,
+        seen_numbers,
+        expected_value
+    );
+    check_pksav_buffer(
+        pksav_pokedex_ptr->owned_ptr,
+        caught_numbers,
+        expected_value
+    );
+}
+
+static void check_gba_pksav_pokedex(
+    const struct pksav_gba_pokedex* gba_pokedex_ptr,
+    const std::vector<int>& seen_numbers,
+    const std::vector<int>& caught_numbers,
+    bool expected_value
+)
+{
+    ASSERT_NE(nullptr, gba_pokedex_ptr);
+
+    const size_t num_bytes = std::ceil(386.0f / 8.0f);
+
+    check_pksav_buffer(
+        gba_pokedex_ptr->seen_ptrA,
+        seen_numbers,
+        expected_value
+    );
+    check_pksav_buffer(
+        gba_pokedex_ptr->owned_ptr,
+        caught_numbers,
+        expected_value
+    );
+
+    // All three seen buffers should be equal.
+    EXPECT_EQ(
+        0,
+        std::memcmp(
+            gba_pokedex_ptr->seen_ptrA,
+            gba_pokedex_ptr->seen_ptrB,
+            num_bytes
+        )
+    );
+    EXPECT_EQ(
+        0,
+        std::memcmp(
+            gba_pokedex_ptr->seen_ptrA,
+            gba_pokedex_ptr->seen_ptrC,
+            num_bytes
+        )
+    );
+}
 
 TEST_P(pokedex_test, pokedex_test)
 {
@@ -30,8 +118,10 @@ TEST_P(pokedex_test, pokedex_test)
     pkmn::rng<size_t> size_rng;
 
     pkmn::pokedex::sptr pokedex = pkmn::pokedex::make(game);
-    //uint8_t* native_has_seen = reinterpret_cast<uint8_t*>(pokedex->get_native_has_seen());
-    //uint8_t* native_has_caught = reinterpret_cast<uint8_t*>(pokedex->get_native_has_caught());
+    ASSERT_EQ(game, pokedex->get_game());
+
+    void* native_ptr = pokedex->get_native();
+    ASSERT_NE(nullptr, native_ptr);
 
     // Check initial values.
     EXPECT_EQ(0, pokedex->get_num_seen());
@@ -73,35 +163,40 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(num_pokemon_caught, size_t(pokedex->get_num_caught()));
 
     // Check underlying native representations.
-/*
-    for(int pokemon_num: seen_pokemon_nums)
-    {
-        bool result_from_pksav = false;
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                native_has_seen,
-                uint16_t(pokemon_num),
-                &result_from_pksav
-            )
-        )
 
-        EXPECT_TRUE(result_from_pksav);
+    switch(generation)
+    {
+        case 1:
+            check_gb_pksav_pokedex<struct pksav_gen1_pokedex_lists>(
+                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                true
+            );
+            break;
+
+        case 2:
+            check_gb_pksav_pokedex<struct pksav_gen2_pokedex_lists>(
+                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                true
+            );
+            break;
+
+        case 3:
+            check_gba_pksav_pokedex(
+                reinterpret_cast<const struct pksav_gba_pokedex*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                true
+            );
+            break;
+
+        default:
+            break;
     }
 
-    for(int pokemon_num: caught_pokemon_nums)
-    {
-        bool result_from_pksav = false;
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                native_has_caught,
-                uint16_t(pokemon_num),
-                &result_from_pksav
-            )
-        )
-
-        EXPECT_TRUE(result_from_pksav);
-    }
-*/
     // Remove all entries.
 
     for(int pokemon_num: seen_pokemon_nums)
@@ -119,35 +214,39 @@ TEST_P(pokedex_test, pokedex_test)
     EXPECT_EQ(0, pokedex->get_num_caught());
 
     // Check underlying native representations again.
-/*
-    for(int pokemon_num: seen_pokemon_nums)
+
+    switch(generation)
     {
-        bool result_from_pksav = true;
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                native_has_seen,
-                uint16_t(pokemon_num),
-                &result_from_pksav
-            )
-        )
+        case 1:
+            check_gb_pksav_pokedex<struct pksav_gen1_pokedex_lists>(
+                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                false
+            );
+            break;
 
-        EXPECT_FALSE(result_from_pksav);
+        case 2:
+            check_gb_pksav_pokedex<struct pksav_gen2_pokedex_lists>(
+                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                false
+            );
+            break;
+
+        case 3:
+            check_gba_pksav_pokedex(
+                reinterpret_cast<const struct pksav_gba_pokedex*>(native_ptr),
+                seen_pokemon_nums,
+                caught_pokemon_nums,
+                false
+            );
+            break;
+
+        default:
+            break;
     }
-
-    for(int pokemon_num: caught_pokemon_nums)
-    {
-        bool result_from_pksav = true;
-        PKSAV_CALL(
-            pksav_get_pokedex_bit(
-                native_has_caught,
-                uint16_t(pokemon_num),
-                &result_from_pksav
-            )
-        )
-
-        EXPECT_FALSE(result_from_pksav);
-    }
-    */
 }
 
 static const std::vector<std::string> PARAMS =

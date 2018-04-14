@@ -26,9 +26,6 @@ namespace pkmn
 
             virtual ~pokedex_impl() {};
 
-            pokedex_impl(pokedex_impl&&) = default;
-            pokedex_impl& operator=(pokedex_impl&&) = default;
-
             std::string get_game() override final;
 
             void set_has_seen(
