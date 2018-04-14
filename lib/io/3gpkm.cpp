@@ -26,7 +26,8 @@ namespace pkmn { namespace io {
     bool vector_is_valid_3gpkm(
         const std::vector<uint8_t> &buffer,
         int* game_id_out
-    ) {
+    )
+    {
         // Validate size
         if(buffer.size() != sizeof(struct pksav_gba_pc_pokemon) and
            buffer.size() != sizeof(struct pksav_gba_party_pokemon))
@@ -38,15 +39,18 @@ namespace pkmn { namespace io {
         const struct pksav_gba_pokemon_growth_block* growth = &native->blocks.growth;
         const struct pksav_gba_pokemon_misc_block* misc = &native->blocks.misc;
 
-        BOOST_STATIC_CONSTEXPR int RUBY = 8;
+        BOOST_STATIC_CONSTEXPR int RUBY_ID = 8;
 
         // Validate species
-        try {
+        try
+        {
             (void)pkmn::database::pokemon_index_to_id(
                       pksav_littleendian16(growth->species),
-                      RUBY
+                      RUBY_ID
                   );
-        } catch(const std::invalid_argument&) {
+        }
+        catch(const std::invalid_argument&)
+        {
             return false;
         }
 
@@ -73,10 +77,12 @@ namespace pkmn { namespace io {
 
     pkmn::pokemon::sptr load_3gpkm(
         const std::vector<uint8_t> &buffer
-    ) {
+    )
+    {
         int game_id = 0;
 
-        if(not vector_is_valid_3gpkm(buffer, &game_id)) {
+        if(not vector_is_valid_3gpkm(buffer, &game_id))
+        {
             throw std::runtime_error("Invalid .3gpkm.");
         }
 
@@ -88,8 +94,10 @@ namespace pkmn { namespace io {
 
     pkmn::pokemon::sptr load_3gpkm(
         const std::string &filepath
-    ) {
-        if(not fs::exists(filepath)) {
+    )
+    {
+        if(not fs::exists(filepath))
+        {
             throw std::invalid_argument(
                       str(boost::format("The file \"%s\" does not exist.")
                           % filepath.c_str())

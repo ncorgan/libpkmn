@@ -163,9 +163,8 @@ namespace pkmn { namespace database {
             _invalid = false;
 
             static BOOST_CONSTEXPR const char* unown_query = \
-                "SELECT pokemon_id FROM pokemon_forms WHERE id="
-                "(SELECT form_id FROM gen3_unown_game_indices "
-                "WHERE game_index=?)";
+                "SELECT form_id FROM gen3_unown_game_indices "
+                "WHERE game_index=?";
 
             _form_id = pkmn::database::query_db_bind1<int, int>(
                            unown_query, _pokemon_index

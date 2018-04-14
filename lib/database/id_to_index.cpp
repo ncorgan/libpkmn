@@ -256,13 +256,36 @@ namespace pkmn { namespace database {
             return 0;
         }
 
-        static BOOST_CONSTEXPR const char* query =
-            "SELECT pokemon_id FROM pokemon_game_indices WHERE "
-            "game_index=? AND version_id=?";
+        int ret = 0;
 
-        return pkmn::database::query_db_bind2<int, int, int>(
-                   query, pokemon_index, game_id
-               );
+        int generation = pkmn::database::game_id_to_generation(game_id);
+
+        BOOST_STATIC_CONSTEXPR int GEN3_UNOWN_B_INDEX = 413;
+        BOOST_STATIC_CONSTEXPR int GEN3_UNOWN_QMARK_INDEX = 439;
+
+        if((generation == 3) and
+           (pokemon_index >= GEN3_UNOWN_B_INDEX and pokemon_index <= GEN3_UNOWN_QMARK_INDEX))
+        {
+            static BOOST_CONSTEXPR const char* query =
+                "SELECT pokemon_id FROM pokemon_forms WHERE id="
+                "(SELECT form_id FROM gen3_unown_game_indices WHERE game_index=?)";
+
+            ret = pkmn::database::query_db_bind1<int, int>(
+                      query, pokemon_index
+                  );
+        }
+        else
+        {
+            static BOOST_CONSTEXPR const char* query =
+                "SELECT pokemon_id FROM pokemon_game_indices WHERE "
+                "game_index=? AND version_id=?";
+
+            ret = pkmn::database::query_db_bind2<int, int, int>(
+                      query, pokemon_index, game_id
+                  );
+        }
+
+        return ret;
     }
 
 }}

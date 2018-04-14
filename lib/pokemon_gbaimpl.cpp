@@ -153,6 +153,10 @@ namespace pkmn
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
+            _growth->species = pksav_littleendian16(uint16_t(
+                                   _database_entry.get_pokemon_index()
+                               ));
+
             _set_unown_personality_from_form();
         }
 
@@ -408,6 +412,8 @@ namespace pkmn
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
         _database_entry.set_form(form);
+
+        _growth->species = pksav_littleendian16(uint16_t(_database_entry.get_pokemon_index()));
 
         if(_database_entry.get_species_id() == UNOWN_ID)
         {
