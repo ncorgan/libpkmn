@@ -53,7 +53,7 @@ namespace pkmn { namespace swig {
             ): _item_list(pkmn::item_list::make(
                    boost::locale::conv::utf_to_utf<char>(name),
                    boost::locale::conv::utf_to_utf<char>(game)
-               )
+                   ))
             {
             }
 #else
