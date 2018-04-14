@@ -384,15 +384,12 @@ namespace pkmntest {
                     9999
                 );
 
-                // TODO: uncomment after fixing:
-                //  * https://github.com/ncorgan/pksav/issues/3
-
-                /*int num_casino_coins = int_rng.rand(0, 99);
+                int num_casino_coins = int_rng.rand(0, 99);
                 save->set_numeric_attribute("Casino coins", num_casino_coins);
                 EXPECT_EQ(
                     num_casino_coins,
                     save->get_numeric_attribute("Casino coins")
-                );*/
+                );
 
                 if(game == "Yellow")
                 {

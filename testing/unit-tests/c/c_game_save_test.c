@@ -338,7 +338,7 @@ static void game_save_test_attributes(
 
             // TODO: uncomment after fixing:
             //  * https://github.com/ncorgan/pksav/issues/3
-            /*int new_num_casino_coins = (rand() % 10000);
+            int new_num_casino_coins = (rand() % 10000);
             error = pkmn_game_save_set_numeric_attribute(
                         game_save_ptr,
                         "Casino coins",
@@ -355,7 +355,7 @@ static void game_save_test_attributes(
             TEST_ASSERT_EQUAL(
                 new_num_casino_coins,
                 num_casino_coins
-            );*/
+            );
 
             int pikachu_friendship = -1;
             error = pkmn_game_save_get_numeric_attribute(
