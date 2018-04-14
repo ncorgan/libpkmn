@@ -139,6 +139,13 @@ class GameSaveTest < PKMNTest
         (0..5).each do |i|
             if i < save.pokemon_party.num_pokemon
                 assert(save.pokemon_party[i].species != "None")
+
+                if save.game != "Colosseum" and save.game != "XD"
+                    if not save.pokemon_party[i].is_egg
+                        assert(save.pokedex.has_seen[save.pokemon_party[i].species])
+                        assert(save.pokedex.has_caught[save.pokemon_party[i].species])
+                    end
+                end
             else
                 assert_equal("None", save.pokemon_party[i].species)
             end
@@ -154,10 +161,84 @@ class GameSaveTest < PKMNTest
                 if @@GB_GAMES.include?(save.game)
                     if i < box.num_pokemon
                         assert(box[i].species != "None")
+
+                        if save.game != "Colosseum" and save.game != "XD"
+                            if not box[i].is_egg
+                                assert(save.pokedex.has_seen[box[i].species])
+                                assert(save.pokedex.has_caught[box[i].species])
+                            end
+                        end
                     else
                         assert_equal("None", box[i].species)
                     end
                 end
+            end
+        end
+    end
+
+    def _test_attributes(save)
+        generation = @@GAME_GENERATIONS[save.game]
+
+        case generation
+        when 1
+            assert(save.numeric_attributes.names.include?("Casino coins"))
+            assert_operator(
+                save.numeric_attributes["Casino coins"],
+                :>=,
+                0
+            )
+            assert_operator(
+                save.numeric_attributes["Casino coins"],
+                :<=,
+                9999
+            )
+
+            # TODO: uncomment after fixing:
+            # * https://github.com/ncorgan/pksav/issues/3
+=begin
+            casino_coins = @@RNG.rand(10000)
+            save.numeric_attributes["Casino coins"] = casino_coins
+            assert_equal(casino_coins, save.numeric_attributes["Casino coins"])
+=end
+
+            if save.game == "Yellow"
+                assert(save.numeric_attributes.names.include?("Pikachu friendship"))
+                assert_operator(
+                    save.numeric_attributes["Pikachu friendship"],
+                    :>=,
+                    0
+                )
+                assert_operator(
+                    save.numeric_attributes["Pikachu friendship"],
+                    :<=,
+                    255
+                )
+
+                pikachu_friendship = @@RNG.rand(256)
+                save.numeric_attributes["Pikachu friendship"] = pikachu_friendship
+                assert_equal(pikachu_friendship, save.numeric_attributes["Pikachu friendship"])
+            else
+                assert(!save.numeric_attributes.names.include?("Pikachu friendship"))
+            end
+        when 3
+            if save.game != "Colosseum" and save.game != "XD"
+                assert(save.numeric_attributes.names.include?("Casino coins"))
+                assert_operator(
+                    save.numeric_attributes["Casino coins"],
+                    :>=,
+                    0
+                )
+                assert_operator(
+                    save.numeric_attributes["Casino coins"],
+                    :<=,
+                    9999
+                )
+
+                casino_coins = @@RNG.rand(10000)
+                save.numeric_attributes["Casino coins"] = casino_coins
+                assert_equal(casino_coins, save.numeric_attributes["Casino coins"])
+            else
+                assert(!save.numeric_attributes.names.include?("Casino coins"))
             end
         end
     end
@@ -229,6 +310,11 @@ class GameSaveTest < PKMNTest
                 _compare_pokemon(save1.pokemon_pc[i][j], save2.pokemon_pc[i][j])
             end
         end
+
+        if save1.game != "Colosseum" and save1.game != "XD"
+            assert_equal(save1.pokedex.all_seen, save2.pokedex.all_seen)
+            assert_equal(save1.pokedex.all_caught, save2.pokedex.all_caught)
+        end
     end
 
     def _game_save_test(test_params)
@@ -252,12 +338,15 @@ class GameSaveTest < PKMNTest
         item_list = PKMN::Database::get_item_list(game)
 
         _test_game_save_common_fields(save)
+        _test_attributes(save)
         _randomize_pokemon(save, item_list)
 
         temp_save_path = File.join(PKMN::Paths::get_tmp_dir(), "#{save.game}_#{@@RNG.rand(0xFFFF)}.sav")
         save.save_as(temp_save_path)
         save2 = PKMN::GameSave.new(temp_save_path)
         _compare_game_saves(save, save2)
+
+        compare_attributes(save, save2)
 
         File.delete(temp_save_path)
     end
