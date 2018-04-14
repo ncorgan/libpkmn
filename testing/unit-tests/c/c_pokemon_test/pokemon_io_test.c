@@ -643,7 +643,7 @@ void test_outside_3gpkm()
     error = pkmn_pokemon_get_EVs(
                 &pokemon,
                 EVs,
-                sizeof(EVs),
+                PKMN_NUM_STATS,
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -659,7 +659,7 @@ void test_outside_3gpkm()
     error = pkmn_pokemon_get_IVs(
                 &pokemon,
                 IVs,
-                sizeof(IVs),
+                PKMN_NUM_STATS,
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -675,7 +675,7 @@ void test_outside_3gpkm()
     error = pkmn_pokemon_get_stats(
                 &pokemon,
                 stats,
-                sizeof(stats),
+                PKMN_NUM_STATS,
                 NULL
             );
     PKMN_TEST_ASSERT_SUCCESS(error);

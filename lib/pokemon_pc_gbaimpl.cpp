@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,6 +12,8 @@
 
 #include <pksav/gba/pokemon.h>
 #include <pksav/gba/text.h>
+
+#include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
 
@@ -56,8 +58,12 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_pc_gbaimpl::~pokemon_pc_gbaimpl() {
-        if(_our_mem) {
+    pokemon_pc_gbaimpl::~pokemon_pc_gbaimpl()
+    {
+        boost::lock_guard<pokemon_pc_gbaimpl> lock(*this);
+
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }
@@ -66,10 +72,12 @@ namespace pkmn {
         return GBA_NUM_BOXES;
     }
 
-    void pokemon_pc_gbaimpl::_from_native() {
+    void pokemon_pc_gbaimpl::_from_native()
+    {
         _box_list.resize(GBA_NUM_BOXES);
 
-        for(int i = 0; i < GBA_NUM_BOXES; ++i) {
+        for(int i = 0; i < GBA_NUM_BOXES; ++i)
+        {
             _box_list[i] = std::make_shared<pokemon_box_gbaimpl>(
                                _game_id,
                                &NATIVE_RCAST->boxes[i]
@@ -87,10 +95,12 @@ namespace pkmn {
         }
     }
 
-    void pokemon_pc_gbaimpl::_update_box_names() {
+    void pokemon_pc_gbaimpl::_update_box_names()
+    {
         _box_names.resize(GBA_NUM_BOXES);
 
-        for(int i = 0; i < GBA_NUM_BOXES; ++i) {
+        for(int i = 0; i < GBA_NUM_BOXES; ++i)
+        {
             _box_names[i] = _box_list[i]->get_name();
 
             PKSAV_CALL(

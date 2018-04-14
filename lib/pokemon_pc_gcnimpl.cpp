@@ -10,6 +10,8 @@
 
 #include "utils/misc.hpp"
 
+#include <boost/thread/lock_guard.hpp>
+
 #define NATIVE_RCAST (reinterpret_cast<LibPkmGC::GC::PokemonBox**>(_native))
 #define GCN_NUM_BOXES (_game_id == COLOSSEUM_ID ? COLOSSEUM_NUM_BOXES : XD_NUM_BOXES)
 
@@ -20,10 +22,14 @@ namespace pkmn {
     ): pokemon_pc_impl(game_id)
     {
         _native = reinterpret_cast<void*>(new LibPkmGC::GC::PokemonBox*[GCN_NUM_BOXES]);
-        for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-            if(_game_id == COLOSSEUM_ID) {
+        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        {
+            if(_game_id == COLOSSEUM_ID)
+            {
                 NATIVE_RCAST[i] = new LibPkmGC::Colosseum::PokemonBox;
-            } else {
+            }
+            else
+            {
                 NATIVE_RCAST[i] = new LibPkmGC::XD::PokemonBox;
             }
         }
@@ -43,12 +49,20 @@ namespace pkmn {
         _from_native();
     }
 
-    pokemon_pc_gcnimpl::~pokemon_pc_gcnimpl() {
-        if(_our_mem) {
-            for(int i = 0; i < GCN_NUM_BOXES; ++i) {
-                if(_game_id == COLOSSEUM_ID) {
+    pokemon_pc_gcnimpl::~pokemon_pc_gcnimpl()
+    {
+        boost::lock_guard<pokemon_pc_gcnimpl> lock(*this);
+
+        if(_our_mem)
+        {
+            for(int i = 0; i < GCN_NUM_BOXES; ++i)
+            {
+                if(_game_id == COLOSSEUM_ID)
+                {
                     delete reinterpret_cast<LibPkmGC::Colosseum::PokemonBox*>(NATIVE_RCAST[i]);
-                } else {
+                }
+                else
+                {
                     delete reinterpret_cast<LibPkmGC::XD::PokemonBox*>(NATIVE_RCAST[i]);
                 }
             }
@@ -56,14 +70,17 @@ namespace pkmn {
         }
     }
 
-    int pokemon_pc_gcnimpl::get_num_boxes() {
+    int pokemon_pc_gcnimpl::get_num_boxes()
+    {
         return GCN_NUM_BOXES;
     }
 
-    void pokemon_pc_gcnimpl::_from_native() {
+    void pokemon_pc_gcnimpl::_from_native()
+    {
         _box_list.resize(GCN_NUM_BOXES);
 
-        for(int i = 0; i < GCN_NUM_BOXES; ++i) {
+        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        {
             _box_list[i] = std::make_shared<pokemon_box_gcnimpl>(
                                _game_id,
                                NATIVE_RCAST[i]
@@ -72,10 +89,12 @@ namespace pkmn {
         _update_box_names();
     }
 
-    void pokemon_pc_gcnimpl::_update_box_names() {
+    void pokemon_pc_gcnimpl::_update_box_names()
+    {
         _box_names.resize(GCN_NUM_BOXES);
 
-        for(int i = 0; i < GCN_NUM_BOXES; ++i) {
+        for(int i = 0; i < GCN_NUM_BOXES; ++i)
+        {
             _box_names[i] = _box_list[i]->get_name();
         }
     }

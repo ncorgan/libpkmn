@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -24,11 +24,13 @@ namespace pkmn {
 
     pokemon_box::sptr pokemon_box::make(
         const std::string &game
-    ) {
+    )
+    {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);
 
-        switch(generation) {
+        switch(generation)
+        {
             case 1:
                 return std::make_shared<pokemon_box_gen1impl>(game_id);
 
@@ -36,9 +38,12 @@ namespace pkmn {
                 return std::make_shared<pokemon_box_gen2impl>(game_id);
 
             case 3:
-                if(game_is_gamecube(game_id)) {
+                if(game_is_gamecube(game_id))
+                {
                     return std::make_shared<pokemon_box_gcnimpl>(game_id);
-                } else {
+                }
+                else
+                {
                     return std::make_shared<pokemon_box_gbaimpl>(game_id);
                 }
 
@@ -58,12 +63,12 @@ namespace pkmn {
         _box_name(""),
         _native(nullptr),
         _our_mem(false),
-        _mem_mutex(),
        _game_id(game_id),
        _generation(pkmn::database::game_id_to_generation(game_id))
     {}
 
-    std::string pokemon_box_impl::get_game() {
+    std::string pokemon_box_impl::get_game()
+    {
         return pkmn::database::game_id_to_name(
                    _game_id
                );
@@ -76,14 +81,22 @@ namespace pkmn {
         int capacity = get_capacity();
         pkmn::enforce_bounds("Box index", index, 0, (capacity-1));
 
+        boost::lock_guard<pokemon_box_impl> lock(*this);
+
         return _pokemon_list.at(index);
     }
 
-    const pkmn::pokemon_list_t& pokemon_box_impl::as_vector() {
+    const pkmn::pokemon_list_t& pokemon_box_impl::as_vector()
+    {
+        boost::lock_guard<pokemon_box_impl> lock(*this);
+
         return _pokemon_list;
     }
 
-    void* pokemon_box_impl::get_native() {
+    void* pokemon_box_impl::get_native()
+    {
+        boost::lock_guard<pokemon_box_impl> lock(*this);
+
         return _native;
     }
 }

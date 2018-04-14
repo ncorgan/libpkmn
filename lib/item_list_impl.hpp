@@ -7,16 +7,19 @@
 #ifndef PKMN_ITEM_LIST_IMPL_HPP
 #define PKMN_ITEM_LIST_IMPL_HPP
 
-#include "mem/scoped_lock.hpp"
-
 #include <pkmn/item_list.hpp>
 
 #include <boost/noncopyable.hpp>
-#include <boost/thread/mutex.hpp>
+
+#include <boost/thread/lockable_adapter.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 namespace pkmn {
 
-    class item_list_impl: public item_list, boost::noncopyable {
+    class item_list_impl: public item_list,
+                          private boost::noncopyable,
+                          public boost::basic_lockable_adapter<boost::recursive_mutex>
+    {
         public:
             item_list_impl() {};
             item_list_impl(
@@ -75,7 +78,6 @@ namespace pkmn {
 
             bool _our_mem;
             void* _native;
-            boost::mutex _mem_mutex;
 
             virtual void _from_native(
                 int index = -1

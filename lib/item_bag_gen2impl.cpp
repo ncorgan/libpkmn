@@ -11,6 +11,8 @@
 #include "item_list_gbimpl.hpp"
 #include "item_list_gen2_tmhmimpl.hpp"
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstring>
 
 namespace pkmn {
@@ -20,10 +22,13 @@ namespace pkmn {
         void* ptr
     ): item_bag_impl(game_id)
     {
-        if(ptr) {
+        if(ptr)
+        {
             _native = ptr;
             _our_mem = false;
-        } else {
+        }
+        else
+        {
             _native = reinterpret_cast<void*>(new pksav_gen2_item_bag_t);
             std::memset(_native, 0, sizeof(pksav_gen2_item_bag_t));
             NATIVE_RCAST->item_pocket.terminator = 0xFF;
@@ -47,15 +52,18 @@ namespace pkmn {
         _set_ptrs();
     }
 
-    item_bag_gen2impl::~item_bag_gen2impl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_bag_gen2impl::~item_bag_gen2impl()
+    {
+        boost::lock_guard<item_bag_gen2impl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }
 
-    void item_bag_gen2impl::_set_ptrs() {
+    void item_bag_gen2impl::_set_ptrs()
+    {
         bool crystal = (_game_id == 6);
 
         int item_pocket_id     = crystal ? 10 : 5;

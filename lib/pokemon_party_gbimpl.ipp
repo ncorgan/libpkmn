@@ -51,14 +51,21 @@ namespace pkmn {
     }
 
     POKEMON_PARTY_GBIMPL_TEMPLATE
-    POKEMON_PARTY_GBIMPL_CLASS::~pokemon_party_gbimpl() {
-        if(_our_mem) {
+    POKEMON_PARTY_GBIMPL_CLASS::~pokemon_party_gbimpl()
+    {
+        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+
+        if(_our_mem)
+        {
             delete NATIVE_LIST_RCAST;
         }
     }
 
     POKEMON_PARTY_GBIMPL_TEMPLATE
-    int POKEMON_PARTY_GBIMPL_CLASS::get_num_pokemon() {
+    int POKEMON_PARTY_GBIMPL_CLASS::get_num_pokemon()
+    {
+        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+
         return int(NATIVE_LIST_RCAST->count);
     }
 
@@ -66,7 +73,8 @@ namespace pkmn {
     void POKEMON_PARTY_GBIMPL_CLASS::set_pokemon(
         int index,
         pkmn::pokemon::sptr new_pokemon
-    ) {
+    )
+    {
         int num_pokemon = get_num_pokemon();
         int max_index = std::min<int>(PARTY_SIZE-1, num_pokemon);
 
@@ -81,7 +89,7 @@ namespace pkmn {
             throw std::invalid_argument("Parties store Pokémon contiguously.");
         }
 
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
 
         // If the given Pokémon isn't from this party's game, convert it if we can.
         pkmn::pokemon::sptr actual_new_pokemon;
@@ -152,13 +160,17 @@ namespace pkmn {
 
         // Update the number of Pokémon in the party if needed.
         std::string new_species = actual_new_pokemon->get_species();
-        if(index == num_pokemon and new_species != "None") {
+        if(index == num_pokemon and new_species != "None")
+        {
             ++(NATIVE_LIST_RCAST->count);
-        } else if(index == (num_pokemon-1) and new_species == "None") {
+        }
+        else if(index == (num_pokemon-1) and new_species == "None")
+        {
             --(NATIVE_LIST_RCAST->count);
         }
 
-        if(_generation == 1) {
+        if(_generation == 1)
+        {
             PKSAV_CALL(
                 pksav_text_to_gen1(
                     actual_new_pokemon->get_nickname().c_str(),
@@ -173,7 +185,9 @@ namespace pkmn {
                     7
                 );
             )
-        } else {
+        }
+        else
+        {
             PKSAV_CALL(
                 pksav_text_to_gen2(
                     actual_new_pokemon->get_nickname().c_str(),
@@ -205,7 +219,10 @@ namespace pkmn {
     }
 
     POKEMON_PARTY_GBIMPL_TEMPLATE
-    void POKEMON_PARTY_GBIMPL_CLASS::_from_native() {
+    void POKEMON_PARTY_GBIMPL_CLASS::_from_native()
+    {
+        boost::lock_guard<POKEMON_PARTY_GBIMPL_CLASS> lock(*this);
+
         // This shouldn't resize if the vector is populated.
         _pokemon_list.resize(PARTY_SIZE);
 
@@ -214,12 +231,14 @@ namespace pkmn {
 
         int num_pokemon = get_num_pokemon();
 
-        for(int i = 0; i < PARTY_SIZE; ++i) {
+        for(int i = 0; i < PARTY_SIZE; ++i)
+        {
             /*
              * Memory is not necessarily zeroed-out past the num_pokemon point,
              * so we'll do it ourselves.
              */
-            if(i >= num_pokemon and NATIVE_LIST_RCAST->party[i].pc.species > 0) {
+            if(i >= num_pokemon and NATIVE_LIST_RCAST->party[i].pc.species > 0)
+            {
                 NATIVE_LIST_RCAST->species[i] = 0;
                 std::memset(&NATIVE_LIST_RCAST->party[i], 0, sizeof(pksav_party_pokemon_type));
                 std::memset(NATIVE_LIST_RCAST->nicknames[i], 0x50, sizeof(NATIVE_LIST_RCAST->nicknames[i]));
@@ -240,7 +259,8 @@ namespace pkmn {
                 );
             }
 
-            if(_generation == 1) {
+            if(_generation == 1)
+            {
                 PKSAV_CALL(
                     pksav_text_from_gen1(
                         NATIVE_LIST_RCAST->nicknames[i],
@@ -248,7 +268,8 @@ namespace pkmn {
                         10
                     );
                 )
-                if(std::strlen(nickname) > 0) {
+                if(std::strlen(nickname) > 0)
+                {
                     _pokemon_list[i]->set_nickname(nickname);
                 }
 
@@ -259,10 +280,13 @@ namespace pkmn {
                         7
                     );
                 )
-                if(std::strlen(otname) > 0) {
+                if(std::strlen(otname) > 0)
+                {
                     _pokemon_list[i]->set_original_trainer_name(otname);
                 }
-            } else {
+            }
+            else
+            {
                 PKSAV_CALL(
                     pksav_text_from_gen2(
                         NATIVE_LIST_RCAST->nicknames[i],
@@ -270,7 +294,8 @@ namespace pkmn {
                         10
                     );
                 )
-                if(std::strlen(nickname) > 0) {
+                if(std::strlen(nickname) > 0)
+                {
                     _pokemon_list[i]->set_nickname(nickname);
                 }
 
@@ -281,7 +306,8 @@ namespace pkmn {
                         7
                     );
                 )
-                if(std::strlen(otname) > 0) {
+                if(std::strlen(otname) > 0)
+                {
                     _pokemon_list[i]->set_original_trainer_name(otname);
                 }
             }

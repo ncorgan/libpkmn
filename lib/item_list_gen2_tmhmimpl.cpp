@@ -13,6 +13,8 @@
 #include <pkmn/database/item_entry.hpp>
 #include <pkmn/exception.hpp>
 
+#include <boost/thread/lock_guard.hpp>
+
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
@@ -69,25 +71,32 @@ namespace pkmn {
         }
     }
 
-    item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    item_list_gen2_tmhmimpl::~item_list_gen2_tmhmimpl()
+    {
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        if(_our_mem) {
+        if(_our_mem)
+        {
             delete NATIVE_RCAST;
         }
     }
 
-    int item_list_gen2_tmhmimpl::get_num_items() {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    int item_list_gen2_tmhmimpl::get_num_items()
+    {
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         int ret = 0;
-        for(int i = 0; i < 50; i++) {
-            if(NATIVE_RCAST->tm_count[i] > 0) {
+        for(int i = 0; i < 50; i++)
+        {
+            if(NATIVE_RCAST->tm_count[i] > 0)
+            {
                 ++ret;
             }
         }
-        for(int i = 0; i < 7; i++) {
-            if(NATIVE_RCAST->hm_count[i] > 0) {
+        for(int i = 0; i < 7; i++)
+        {
+            if(NATIVE_RCAST->hm_count[i] > 0)
+            {
                 ++ret;
             }
         }
@@ -101,6 +110,8 @@ namespace pkmn {
     )
     {
         pkmn::enforce_bounds("Amount", amount, 1, 99);
+
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         pkmn::database::item_entry item(name, get_game());
         if(item.get_pocket() != get_name())
@@ -134,6 +145,8 @@ namespace pkmn {
     )
     {
         pkmn::enforce_bounds("Amount", amount, 1, 99);
+
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
         pkmn::database::item_entry item(name, get_game());
         if(item.get_pocket() != get_name())
@@ -178,6 +191,8 @@ namespace pkmn {
         int end_boundary = std::min<int>(_num_items, _capacity-1);
         pkmn::enforce_bounds("Position", position, 0, end_boundary);
 
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
+
         pkmn::database::item_entry entry(item_name, get_game());
         if(item_name != "None" and entry.get_pocket() != get_name())
         {
@@ -197,26 +212,32 @@ namespace pkmn {
 
     void item_list_gen2_tmhmimpl::_from_native(
         PKMN_UNUSED(int index)
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        for(size_t i = 0; i < 50; ++i) {
+        for(size_t i = 0; i < 50; ++i)
+        {
             _item_slots[i].amount = NATIVE_RCAST->tm_count[i];
         }
-        for(size_t i = 0; i < 7; ++i) {
+        for(size_t i = 0; i < 7; ++i)
+        {
             _item_slots[50+i].amount = NATIVE_RCAST->hm_count[i];
         }
     }
 
     void item_list_gen2_tmhmimpl::_to_native(
         PKMN_UNUSED(int index)
-    ) {
-        boost::mutex::scoped_lock scoped_lock(_mem_mutex);
+    )
+    {
+        boost::lock_guard<item_list_gen2_tmhmimpl> lock(*this);
 
-        for(size_t i = 0; i < 50; ++i) {
+        for(size_t i = 0; i < 50; ++i)
+        {
             NATIVE_RCAST->tm_count[i] = uint8_t(_item_slots[i].amount);
         }
-        for(size_t i = 0; i < 7; ++i) {
+        for(size_t i = 0; i < 7; ++i)
+        {
             NATIVE_RCAST->hm_count[i] = uint8_t(_item_slots[50+i].amount);
         }
     }
