@@ -39,7 +39,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int FRLG_PC    = 32;
 
     game_save_gbaimpl::game_save_gbaimpl(
-        const std::string &filepath
+        const std::string& filepath
     ): game_save_impl(filepath)
     {
         PKSAV_CALL(
@@ -167,7 +167,7 @@ namespace pkmn {
     }
 
     void game_save_gbaimpl::save_as(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
@@ -220,7 +220,7 @@ namespace pkmn {
     }
 
     void game_save_gbaimpl::set_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -297,7 +297,7 @@ namespace pkmn {
     }
 
     void game_save_gbaimpl::set_trainer_gender(
-        const std::string &trainer_gender
+        const std::string& trainer_gender
     )
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
@@ -344,7 +344,7 @@ namespace pkmn {
     }
 
     void game_save_gbaimpl::set_rival_name(
-        const std::string &rival_name
+        const std::string& rival_name
     )
     {
         if(_pksav_save.gba_game == PKSAV_GBA_FRLG)

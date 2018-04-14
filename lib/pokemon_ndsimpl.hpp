@@ -40,7 +40,7 @@ namespace pkmn {
             std::string get_nickname();
 
             void set_nickname(
-                const std::string &nickname
+                const std::string& nickname
             );
 
             bool is_shiny();
@@ -50,13 +50,13 @@ namespace pkmn {
             );
 
             void set_held_item(
-                const std::string &held_item
+                const std::string& held_item
             );
 
             std::string get_original_trainer_name();
 
             void set_original_trainer_name(
-                const std::string &trainer_name
+                const std::string& trainer_name
             );
 
             uint16_t get_original_trainer_public_id();
@@ -80,7 +80,7 @@ namespace pkmn {
             std::string get_original_trainer_gender();
 
             void set_original_trainer_gender(
-                const std::string &gender
+                const std::string& gender
             );
 
             int get_current_trainer_friendship();
@@ -92,13 +92,13 @@ namespace pkmn {
             std::string get_ability();
 
             void set_ability(
-                const std::string &ability
+                const std::string& ability
             );
 
             std::string get_ball();
 
             void set_ball(
-                const std::string &ball
+                const std::string& ball
             );
 
             int get_level_met();
@@ -112,14 +112,14 @@ namespace pkmn {
             );
 
             void set_location_met(
-                const std::string &location,
+                const std::string& location,
                 bool as_egg
             );
 
             std::string get_original_game();
 
             void set_original_game(
-                const std::string &game
+                const std::string& game
             );
 
             uint32_t get_personality();
@@ -141,32 +141,32 @@ namespace pkmn {
             );
 
             void set_IV(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             );
 
             void set_marking(
-                const std::string &marking,
+                const std::string& marking,
                 bool value
             );
 
             void set_ribbon(
-                const std::string &ribbon,
+                const std::string& ribbon,
                 bool value
             );
 
             void set_contest_stat(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             );
 
             void set_move(
-                const std::string &move,
+                const std::string& move,
                 int index
             );
 
             void set_EV(
-                const std::string &stat,
+                const std::string& stat,
                 int value
             );
 

@@ -52,7 +52,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_item_list(
-        const std::string &game
+        const std::string& game
     );
 
     /*!
@@ -66,7 +66,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_location_list(
-        const std::string &game,
+        const std::string& game,
         bool whole_generation
     );
 
@@ -76,7 +76,7 @@ namespace pkmn { namespace database {
      * \param game which game
      */
     PKMN_API std::vector<std::string> get_move_list(
-        const std::string &game
+        const std::string& game
     );
 
     /*!
@@ -124,7 +124,7 @@ namespace pkmn { namespace database {
      * \throws std::invalid_argument if the given game is invalid
      */
     PKMN_API std::vector<std::string> get_type_list(
-        const std::string &game
+        const std::string& game
     );
 }}
 

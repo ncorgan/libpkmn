@@ -18,19 +18,19 @@ namespace pkmn {
         public:
             game_save_gen1impl() {};
             explicit game_save_gen1impl(
-                const std::string &filepath
+                const std::string& filepath
             );
 
             ~game_save_gen1impl();
 
             void save_as(
-                const std::string &filepath
+                const std::string& filepath
             ) override final;
 
             std::string get_trainer_name() override final;
 
             void set_trainer_name(
-                const std::string &trainer_name
+                const std::string& trainer_name
             ) override final;
 
             uint32_t get_trainer_id() override final;
@@ -54,13 +54,13 @@ namespace pkmn {
             std::string get_trainer_gender() override final;
 
             void set_trainer_gender(
-                const std::string &trainer_gender
+                const std::string& trainer_gender
             ) override final;
 
             std::string get_rival_name() override final;
 
             void set_rival_name(
-                const std::string &rival_name
+                const std::string& rival_name
             ) override final;
 
             int get_money() override final;

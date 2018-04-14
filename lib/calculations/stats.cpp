@@ -35,7 +35,7 @@ namespace pkmn { namespace calculations {
     }
 
     int get_gb_stat(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         int base_stat,
         int EV,
@@ -75,7 +75,7 @@ namespace pkmn { namespace calculations {
     }
 
     int get_modern_stat(
-        const std::string &stat,
+        const std::string& stat,
         int level,
         float nature_modifier,
         int base_stat,

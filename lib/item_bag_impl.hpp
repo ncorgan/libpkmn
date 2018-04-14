@@ -30,7 +30,7 @@ namespace pkmn {
             std::string get_game() override final;
 
             pkmn::item_list::sptr get_pocket(
-                const std::string &name
+                const std::string& name
             ) override final;
 
             const pkmn::item_pockets_t& get_pockets() override final;
@@ -38,12 +38,12 @@ namespace pkmn {
             const std::vector<std::string>& get_pocket_names() override final;
 
             virtual void add(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) override final;
 
             virtual void remove(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) override final;
 

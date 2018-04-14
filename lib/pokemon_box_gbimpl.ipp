@@ -84,7 +84,7 @@ namespace pkmn {
 
     POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::set_name(
-        const std::string &name
+        const std::string& name
     )
     {
         if(std::is_same<list_type, pksav_gen1_pokemon_box_t>::value)

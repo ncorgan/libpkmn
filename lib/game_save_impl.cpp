@@ -60,7 +60,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_GCI_SIZE = 0x56040;
 
     static pkmn_save_type_t _detect_type(
-        const std::string &filepath
+        const std::string& filepath
     ) {
         if(not fs::exists(filepath)) {
             throw std::invalid_argument("The given filepath does not exist.");
@@ -173,13 +173,13 @@ namespace pkmn {
     }
 
     std::string game_save::detect_type(
-        const std::string &filepath
+        const std::string& filepath
     ) {
         return SAVE_TYPE_NAMES[_detect_type(filepath)];
     }
 
     game_save::sptr game_save::from_file(
-        const std::string &filepath
+        const std::string& filepath
     ) {
         pkmn_save_type_t save_type = _detect_type(filepath);
 
@@ -206,7 +206,7 @@ namespace pkmn {
     }
 
     game_save_impl::game_save_impl(
-        const std::string &filepath
+        const std::string& filepath
     ): game_save(),
        _game_id(0)
     {

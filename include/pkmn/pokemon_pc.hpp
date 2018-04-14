@@ -22,7 +22,7 @@ namespace pkmn {
             typedef std::shared_ptr<pokemon_pc> sptr;
 
             static sptr make(
-                const std::string &game
+                const std::string& game
             );
 
             virtual std::string get_game()  = 0;

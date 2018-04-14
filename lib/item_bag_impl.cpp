@@ -26,7 +26,7 @@
 namespace pkmn {
 
     item_bag::sptr item_bag::make(
-        const std::string &game
+        const std::string& game
     )
     {
         int game_id = pkmn::database::game_name_to_id(
@@ -94,7 +94,7 @@ namespace pkmn {
     }
 
     pkmn::item_list::sptr item_bag_impl::get_pocket(
-        const std::string &name
+        const std::string& name
     )
     {
         // TODO: use new enforce function
@@ -160,7 +160,7 @@ namespace pkmn {
     }
 
     void item_bag_impl::add(
-        const std::string &item_name,
+        const std::string& item_name,
         int amount
     )
     {
@@ -200,7 +200,7 @@ namespace pkmn {
     }
 
     void item_bag_impl::remove(
-        const std::string &item_name,
+        const std::string& item_name,
         int amount
     )
     {

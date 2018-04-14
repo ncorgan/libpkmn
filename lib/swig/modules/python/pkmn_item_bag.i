@@ -27,7 +27,7 @@
     %}
 
     pkmn::item_list::sptr __getitem__(
-        const std::string &key
+        const std::string& key
     ) {
         return self->get()->get_pocket(key);
     }

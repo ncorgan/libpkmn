@@ -42,12 +42,12 @@ namespace pkmn {
             ) override;
 
             virtual void add(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) override;
 
             virtual void remove(
-                const std::string &item_name,
+                const std::string& item_name,
                 int amount
             ) override;
 

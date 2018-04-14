@@ -22,12 +22,12 @@ namespace pkmn {
             int get_num_items() override;
 
             void add(
-                const std::string &name,
+                const std::string& name,
                 int amount
             ) override final;
 
             void remove(
-                const std::string &name,
+                const std::string& name,
                 int amount
             ) override final;
 

@@ -36,7 +36,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR size_t GCN_XD_GCI_SIZE = 0x56040;
 
     game_save_gcnimpl::game_save_gcnimpl(
-        const std::string &filepath
+        const std::string& filepath
     ): game_save_impl(filepath)
     {
         size_t filesize = size_t(fs::file_size(filepath));
@@ -101,7 +101,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::save_as(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
@@ -123,7 +123,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -195,7 +195,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_trainer_gender(
-        PKMN_UNUSED(const std::string &trainer_gender)
+        PKMN_UNUSED(const std::string& trainer_gender)
     )
     {
         throw pkmn::feature_not_in_game_error("All trainers are male in Gamecube games.");
@@ -207,7 +207,7 @@ namespace pkmn {
     }
 
     void game_save_gcnimpl::set_rival_name(
-        PKMN_UNUSED(const std::string &rival_name)
+        PKMN_UNUSED(const std::string& rival_name)
     )
     {
         throw pkmn::feature_not_in_game_error("Rivals", get_game());

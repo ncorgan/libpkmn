@@ -97,7 +97,7 @@ namespace pkmntest {
     };
 
     static inline bool is_gb_game(
-        const std::string &game
+        const std::string& game
     ) {
         size_t arr_size = sizeof(GB_GAMES)/sizeof(GB_GAMES[0]);
         return std::find(
@@ -108,7 +108,7 @@ namespace pkmntest {
     }
 
     static inline bool is_rival_name_set(
-        const std::string &game
+        const std::string& game
     ) {
         size_t arr_size = sizeof(RIVAL_NAME_SET_GAMES)/sizeof(RIVAL_NAME_SET_GAMES[0]);
         return std::find(
@@ -119,7 +119,7 @@ namespace pkmntest {
     }
 
     static inline bool is_male_only(
-        const std::string &game
+        const std::string& game
     ) {
         size_t arr_size = sizeof(MALE_ONLY_GAMES)/sizeof(MALE_ONLY_GAMES[0]);
         return std::find(
@@ -465,7 +465,7 @@ namespace pkmntest {
     }
 
     static pkmn::pokemon::sptr get_random_pokemon(
-        const std::string &game,
+        const std::string& game,
         const std::vector<std::string> &pokemon_list,
         const std::vector<std::string> &move_list,
         const std::vector<std::string> &item_list

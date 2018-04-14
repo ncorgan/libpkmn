@@ -16,7 +16,7 @@
 %extend std::shared_ptr<pkmn::item_bag> {
 
     pkmn::item_list::sptr __getitem__(
-        const std::string &key
+        const std::string& key
     ) {
         return self->get()->get_pocket(key);
     }

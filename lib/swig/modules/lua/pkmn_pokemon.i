@@ -22,7 +22,7 @@
 %extend std::shared_ptr<pkmn::pokemon> {
 
     void set_move(
-        const std::string &move_name,
+        const std::string& move_name,
         int index
     )
     {

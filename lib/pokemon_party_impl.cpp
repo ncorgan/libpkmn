@@ -25,7 +25,7 @@
 namespace pkmn {
 
     pokemon_party::sptr pokemon_party::make(
-        const std::string &game
+        const std::string& game
     )
     {
         int game_id = pkmn::database::game_name_to_id(game);

@@ -45,7 +45,7 @@ namespace pkmn {
             std::string get_name() override final;
 
             void set_name(
-                const std::string &name
+                const std::string& name
             ) override final;
 
             int get_num_pokemon() override final;

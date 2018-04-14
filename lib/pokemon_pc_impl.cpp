@@ -26,7 +26,7 @@
 namespace pkmn {
 
     pokemon_pc::sptr pokemon_pc::make(
-        const std::string &game
+        const std::string& game
     ) {
         int game_id = pkmn::database::game_name_to_id(game);
         int generation = pkmn::database::game_id_to_generation(game_id);

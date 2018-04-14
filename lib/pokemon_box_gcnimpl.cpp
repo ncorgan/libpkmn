@@ -74,7 +74,7 @@ namespace pkmn {
     }
 
     void pokemon_box_gcnimpl::set_name(
-        const std::string &name
+        const std::string& name
     )
     {
         pkmn::enforce_string_length(

@@ -25,7 +25,7 @@ namespace pkmn { namespace database {
     );
 
     int ability_name_to_id(
-        const std::string &ability_name
+        const std::string& ability_name
     );
 
     /*
@@ -37,7 +37,7 @@ namespace pkmn { namespace database {
     );
 
     int ball_name_to_id(
-        const std::string &ball_name
+        const std::string& ball_name
     );
 
     /*
@@ -49,7 +49,7 @@ namespace pkmn { namespace database {
     );
 
     int egg_group_name_to_id(
-        const std::string &egg_group_name
+        const std::string& egg_group_name
     );
 
     /*
@@ -61,7 +61,7 @@ namespace pkmn { namespace database {
     );
 
     int game_name_to_id(
-        const std::string &game_name
+        const std::string& game_name
     );
 
     /*
@@ -74,7 +74,7 @@ namespace pkmn { namespace database {
     );
 
     int item_name_to_id(
-        const std::string &item_name
+        const std::string& item_name
     );
 
     /*
@@ -86,7 +86,7 @@ namespace pkmn { namespace database {
     );
 
     int item_list_name_to_id(
-        const std::string &item_list_name
+        const std::string& item_list_name
     );
 
     /*
@@ -98,7 +98,7 @@ namespace pkmn { namespace database {
     );
 
     int location_name_to_id(
-        const std::string &location_name
+        const std::string& location_name
     );
 
     /*
@@ -114,7 +114,7 @@ namespace pkmn { namespace database {
     );
 
     int move_name_to_id(
-        const std::string &move_name
+        const std::string& move_name
     );
 
     /*
@@ -126,7 +126,7 @@ namespace pkmn { namespace database {
     );
 
     int nature_name_to_id(
-        const std::string &nature_name
+        const std::string& nature_name
     );
 
     /*
@@ -138,7 +138,7 @@ namespace pkmn { namespace database {
     );
 
     int species_name_to_id(
-        const std::string &species_name
+        const std::string& species_name
     );
 
     /*
@@ -150,7 +150,7 @@ namespace pkmn { namespace database {
     );
 
     int type_name_to_id(
-        const std::string &type_name
+        const std::string& type_name
     );
 
 }}

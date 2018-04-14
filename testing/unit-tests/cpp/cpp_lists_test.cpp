@@ -14,7 +14,7 @@
 
 static inline bool string_in_vector(
     const std::vector<std::string> &vec,
-    const std::string &str
+    const std::string& str
 ) {
     return (std::find(vec.begin(), vec.end(), str) != vec.end());
 }

@@ -320,11 +320,11 @@ namespace pkmn { namespace database {
     );
 
     int game_name_to_generation(
-        const std::string &game_name
+        const std::string& game_name
     );
 
     int game_name_to_version_group(
-        const std::string &game_name
+        const std::string& game_name
     );
 
     /*
@@ -332,11 +332,11 @@ namespace pkmn { namespace database {
      */
 
     std::string fix_veekun_whitespace(
-        const std::string &input
+        const std::string& input
     );
 
     std::string alternate_location_string(
-        const std::string &original_string,
+        const std::string& original_string,
         int location_id,
         int game_id,
         bool whole_generation,

@@ -30,7 +30,7 @@ struct error_struct
 static struct error_struct global_error;
 
 void pkmn_set_error(
-    const std::string &error
+    const std::string& error
 )
 {
     boost::mutex::scoped_lock lock(global_error.error_mutex);

@@ -39,7 +39,7 @@ namespace pkmn {
     BOOST_STATIC_CONSTEXPR int YELLOW_PC = 4;
 
     game_save_gen1impl::game_save_gen1impl(
-        const std::string &filepath
+        const std::string& filepath
     ): game_save_impl(filepath)
     {
         PKSAV_CALL(
@@ -134,7 +134,7 @@ namespace pkmn {
     }
 
     void game_save_gen1impl::save_as(
-        const std::string &filepath
+        const std::string& filepath
     )
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
@@ -166,7 +166,7 @@ namespace pkmn {
     }
 
     void game_save_gen1impl::set_trainer_name(
-        const std::string &trainer_name
+        const std::string& trainer_name
     )
     {
         pkmn::enforce_string_length(
@@ -237,7 +237,7 @@ namespace pkmn {
     }
 
     void game_save_gen1impl::set_trainer_gender(
-        PKMN_UNUSED(const std::string &trainer_gender)
+        PKMN_UNUSED(const std::string& trainer_gender)
     )
     {
         throw pkmn::feature_not_in_game_error("All trainers are male in Generation I.");
@@ -260,7 +260,7 @@ namespace pkmn {
     }
 
     void game_save_gen1impl::set_rival_name(
-        const std::string &rival_name
+        const std::string& rival_name
     )
     {
         pkmn::enforce_string_length(
