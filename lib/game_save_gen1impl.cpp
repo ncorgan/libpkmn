@@ -295,6 +295,8 @@ namespace pkmn {
         )
     }
 
+    // TODO: confirm, is money stored in base256 or BCD?
+
     int game_save_gen1impl::get_money()
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);
@@ -303,7 +305,7 @@ namespace pkmn {
 
         size_t money_from_pksav = 0;
         PKSAV_CALL(
-            pksav_import_base256(
+            pksav_import_bcd(
                 _pksav_save.trainer_info.money_ptr,
                 3,
                 &money_from_pksav
@@ -324,12 +326,18 @@ namespace pkmn {
         BOOST_ASSERT(_pksav_save.trainer_info.money_ptr != nullptr);
 
         PKSAV_CALL(
-            pksav_export_base256(
+            pksav_export_bcd(
                 size_t(money),
                 _pksav_save.trainer_info.money_ptr,
                 3
             )
         )
+
+        printf("%d -> %x %x %x\n", money,
+               _pksav_save.trainer_info.money_ptr[0],
+               _pksav_save.trainer_info.money_ptr[1],
+               _pksav_save.trainer_info.money_ptr[2]
+              );
     }
 
     // Functions for attributes
