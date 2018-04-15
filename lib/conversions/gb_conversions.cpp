@@ -195,16 +195,17 @@ namespace pkmn { namespace conversions {
                           hp_stat_query, from->species
                       );
 
-        uint8_t IV = 0;
-        pksav_get_gb_IV(
+        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
+        pksav_get_gb_IVs(
            &from->iv_data,
-           PKSAV_STAT_HP,
-           &IV
+           IVs,
+           sizeof(IVs)
         );
         to->current_hp = pksav_bigendian16(
                              pkmn::calculations::get_gb_stat(
                                  "HP", from->level, hp_stat,
-                                 pksav_bigendian16(from->ev_hp), IV
+                                 pksav_bigendian16(from->ev_hp),
+                                 IVs[PKSAV_GB_IV_HP]
                              )
                          );
 

@@ -21,16 +21,6 @@
 #include <stdexcept>
 #include <unordered_map>
 
-static const std::unordered_map<std::string, enum pksav_battle_stat> pkmn_stats_to_pksav = boost::assign::map_list_of
-    ("HP",              PKSAV_STAT_HP)
-    ("Attack",          PKSAV_STAT_ATTACK)
-    ("Defense",         PKSAV_STAT_DEFENSE)
-    ("Speed",           PKSAV_STAT_SPEED)
-    ("Special",         PKSAV_STAT_SPECIAL)
-    ("Special Attack",  PKSAV_STAT_SPATK)
-    ("Special Defense", PKSAV_STAT_SPDEF)
-;
-
 namespace pkmn {
 
     // Forward declarations

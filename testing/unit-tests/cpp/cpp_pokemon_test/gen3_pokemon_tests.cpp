@@ -281,61 +281,21 @@ TEST_P(gba_pokemon_test, gba_pokemon_test) {
     EXPECT_TRUE(misc->origin_info & PKSAV_GBA_POKEMON_OTGENDER_MASK);
 
     const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    uint8_t IV = 0;
-
+    uint8_t pksav_IVs[PKSAV_NUM_IVS] = {0};
     PKSAV_CALL(
-        pksav_get_IV(
+        pksav_get_IVs(
             &misc->iv_egg_ability,
-            PKSAV_STAT_HP,
-            &IV
+            pksav_IVs,
+            sizeof(pksav_IVs)
         );
     )
-    EXPECT_EQ(IVs.at("HP"), int(IV));
 
-    PKSAV_CALL(
-        pksav_get_IV(
-            &misc->iv_egg_ability,
-            PKSAV_STAT_ATTACK,
-            &IV
-        );
-    )
-    EXPECT_EQ(IVs.at("Attack"), int(IV));
-
-    PKSAV_CALL(
-        pksav_get_IV(
-            &misc->iv_egg_ability,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        );
-    )
-    EXPECT_EQ(IVs.at("Defense"), int(IV));
-
-    PKSAV_CALL(
-        pksav_get_IV(
-            &misc->iv_egg_ability,
-            PKSAV_STAT_SPEED,
-            &IV
-        );
-    )
-    EXPECT_EQ(IVs.at("Speed"), int(IV));
-
-    PKSAV_CALL(
-        pksav_get_IV(
-            &misc->iv_egg_ability,
-            PKSAV_STAT_SPATK,
-            &IV
-        );
-    )
-    EXPECT_EQ(IVs.at("Special Attack"), int(IV));
-
-    PKSAV_CALL(
-        pksav_get_IV(
-            &misc->iv_egg_ability,
-            PKSAV_STAT_SPDEF,
-            &IV
-        );
-    )
-    EXPECT_EQ(IVs.at("Special Defense"), int(IV));
+    EXPECT_EQ(IVs.at("HP"),              int(pksav_IVs[PKSAV_IV_HP]));
+    EXPECT_EQ(IVs.at("Attack"),          int(pksav_IVs[PKSAV_IV_ATTACK]));
+    EXPECT_EQ(IVs.at("Defense"),         int(pksav_IVs[PKSAV_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at("Speed"),           int(pksav_IVs[PKSAV_IV_SPEED]));
+    EXPECT_EQ(IVs.at("Special Attack"),  int(pksav_IVs[PKSAV_IV_SPATK]));
+    EXPECT_EQ(IVs.at("Special Defense"), int(pksav_IVs[PKSAV_IV_SPDEF]));
 
     EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_EGG_MASK));
     EXPECT_TRUE(!(misc->iv_egg_ability & PKSAV_GBA_POKEMON_ABILITY_MASK));

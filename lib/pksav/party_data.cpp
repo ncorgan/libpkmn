@@ -39,92 +39,57 @@ namespace pksav {
 
         party_data_out->level = uint8_t(entry.get_level_at_experience(int(exp)));
 
-        uint8_t IV_hp = 0;
+        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
         PKSAV_CALL(
-            pksav_get_gb_IV(
+            pksav_get_gb_IVs(
                 &pc->iv_data,
-                PKSAV_STAT_HP,
-                &IV_hp
+                IVs,
+                sizeof(IVs)
             );
         )
+
         party_data_out->max_hp = pksav_bigendian16(uint16_t(
                                      pkmn::calculations::get_gb_stat(
                                          "HP", party_data_out->level,
                                          base_stats.at("HP"),
                                          pksav_bigendian16(pc->ev_hp),
-                                         IV_hp
+                                         IVs[PKSAV_GB_IV_HP]
                                      )
                                  ));
-
-        uint8_t IV_attack = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_ATTACK,
-                &IV_attack
-            );
-        )
         party_data_out->atk = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Attack",
                                       party_data_out->level,
                                       base_stats.at("Attack"),
                                       pksav_bigendian16(pc->ev_atk),
-                                      IV_attack
+                                      IVs[PKSAV_GB_IV_ATTACK]
                                   )
                               ));
-
-        uint8_t IV_defense = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_DEFENSE,
-                &IV_defense
-            );
-        )
         party_data_out->def = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Defense",
                                       party_data_out->level,
                                       base_stats.at("Defense"),
                                       pksav_bigendian16(pc->ev_def),
-                                      IV_defense
+                                      IVs[PKSAV_GB_IV_DEFENSE]
                                   )
                               ));
-
-        uint8_t IV_speed = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_SPEED,
-                &IV_speed
-            );
-        )
         party_data_out->spd = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Speed",
                                       party_data_out->level,
                                       base_stats.at("Speed"),
                                       pksav_bigendian16(pc->ev_spd),
-                                      IV_speed
+                                      IVs[PKSAV_GB_IV_SPEED]
                                   )
                               ));
-
-        uint8_t IV_special = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_SPECIAL,
-                &IV_special
-            );
-        )
         party_data_out->spd = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Special",
                                       party_data_out->level,
                                       base_stats.at("Special"),
                                       pksav_bigendian16(pc->ev_spcl),
-                                      IV_special
+                                      IVs[PKSAV_GB_IV_SPEED]
                                   )
                               ));
     }
@@ -138,12 +103,12 @@ namespace pksav {
 
         std::map<std::string, int> base_stats = entry.get_base_stats();
 
-        uint8_t IV_hp = 0;
+        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
         PKSAV_CALL(
-            pksav_get_gb_IV(
+            pksav_get_gb_IVs(
                 &pc->iv_data,
-                PKSAV_STAT_HP,
-                &IV_hp
+                IVs,
+                sizeof(IVs)
             );
         )
         party_data_out->current_hp = pksav_bigendian16(uint16_t(
@@ -151,93 +116,49 @@ namespace pksav {
                                              "HP", pc->level,
                                              base_stats.at("HP"),
                                              pksav_bigendian16(pc->ev_hp),
-                                             IV_hp
+                                             IVs[PKSAV_GB_IV_HP]
                                          )
                                      ));
         party_data_out->max_hp = party_data_out->current_hp;
 
-        uint8_t IV_attack = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_ATTACK,
-                &IV_attack
-            );
-        )
         party_data_out->atk = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Attack", pc->level,
                                       base_stats.at("Attack"),
                                       pksav_bigendian16(pc->ev_atk),
-                                      IV_attack
+                                      IVs[PKSAV_GB_IV_ATTACK]
                                   )
                               ));
-
-        uint8_t IV_defense = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_DEFENSE,
-                &IV_defense
-            );
-        )
         party_data_out->def = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Defense", pc->level,
                                       base_stats.at("Defense"),
                                       pksav_bigendian16(pc->ev_def),
-                                      IV_defense
+                                      IVs[PKSAV_GB_IV_DEFENSE]
                                   )
                               ));
-
-        uint8_t IV_speed = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_SPEED,
-                &IV_speed
-            );
-        )
         party_data_out->spd = pksav_bigendian16(uint16_t(
                                   pkmn::calculations::get_gb_stat(
                                       "Speed", pc->level,
                                       base_stats.at("Speed"),
                                       pksav_bigendian16(pc->ev_spd),
-                                      IV_speed
+                                      IVs[PKSAV_GB_IV_SPEED]
                                   )
                               ));
-
-        uint8_t IV_spatk = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_SPATK,
-                &IV_spatk
-            );
-        )
         party_data_out->spatk = pksav_bigendian16(uint16_t(
                                     pkmn::calculations::get_gb_stat(
                                         "Special Attack", pc->level,
                                         base_stats.at("Special Attack"),
                                         pksav_bigendian16(pc->ev_spcl),
-                                        IV_spatk
+                                        IVs[PKSAV_GB_IV_SPECIAL]
                                     )
                                 ));
-
-        uint8_t IV_spdef = 0;
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                &pc->iv_data,
-                PKSAV_STAT_SPDEF,
-                &IV_spdef
-            );
-        )
         party_data_out->spdef = pksav_bigendian16(uint16_t(
                                     pkmn::calculations::get_gb_stat(
                                         "Special Defense", pc->level,
                                         base_stats.at("Special Defense"),
                                         pksav_bigendian16(pc->ev_spcl),
-                                        IV_spdef
+                                        IVs[PKSAV_GB_IV_SPECIAL]
                                     )
                                 ));
     }
@@ -258,12 +179,12 @@ namespace pksav {
 
         party_data_out->level = uint8_t(entry.get_level_at_experience(int(growth->exp)));
 
-        uint8_t IV_hp = 0;
+        uint8_t IVs[PKSAV_NUM_IVS] = {0};
         PKSAV_CALL(
-            pksav_get_IV(
+            pksav_get_IVs(
                 &misc->iv_egg_ability,
-                PKSAV_STAT_HP,
-                &IV_hp
+                IVs,
+                sizeof(IVs)
             );
         )
         party_data_out->max_hp = pksav_littleendian16(uint16_t(
@@ -273,19 +194,11 @@ namespace pksav {
                                          1.0f,
                                          base_stats.at("HP"),
                                          effort->ev_hp,
-                                         IV_hp
+                                         IVs[PKSAV_IV_HP]
                                      )
                                  ));
         party_data_out->current_hp = party_data_out->max_hp;
 
-        uint8_t IV_attack = 0;
-        PKSAV_CALL(
-            pksav_get_IV(
-                &misc->iv_egg_ability,
-                PKSAV_STAT_ATTACK,
-                &IV_attack
-            );
-        )
         party_data_out->atk = pksav_littleendian16(uint16_t(
                                   pkmn::calculations::get_modern_stat(
                                       "Attack",
@@ -293,18 +206,9 @@ namespace pksav {
                                       1.0f,
                                       base_stats.at("Attack"),
                                       effort->ev_atk,
-                                      IV_attack
+                                      IVs[PKSAV_IV_ATTACK]
                                   )
                               ));
-
-        uint8_t IV_defense = 0;
-        PKSAV_CALL(
-            pksav_get_IV(
-                &misc->iv_egg_ability,
-                PKSAV_STAT_DEFENSE,
-                &IV_defense
-            );
-        )
         party_data_out->def = pksav_littleendian16(uint16_t(
                                   pkmn::calculations::get_modern_stat(
                                       "Defense",
@@ -312,18 +216,9 @@ namespace pksav {
                                       1.0f,
                                       base_stats.at("Defense"),
                                       effort->ev_def,
-                                      IV_defense
+                                      IVs[PKSAV_IV_DEFENSE]
                                   )
                               ));
-
-        uint8_t IV_speed = 0;
-        PKSAV_CALL(
-            pksav_get_IV(
-                &misc->iv_egg_ability,
-                PKSAV_STAT_SPEED,
-                &IV_speed
-            );
-        )
         party_data_out->spd = pksav_littleendian16(uint16_t(
                                   pkmn::calculations::get_modern_stat(
                                       "Speed",
@@ -331,18 +226,9 @@ namespace pksav {
                                       1.0f,
                                       base_stats.at("Speed"),
                                       effort->ev_spd,
-                                      IV_speed
+                                      IVs[PKSAV_IV_SPEED]
                                   )
                               ));
-
-        uint8_t IV_spatk = 0;
-        PKSAV_CALL(
-            pksav_get_IV(
-                &misc->iv_egg_ability,
-                PKSAV_STAT_SPATK,
-                &IV_spatk
-            );
-        )
         party_data_out->spatk = pksav_littleendian16(uint16_t(
                                     pkmn::calculations::get_modern_stat(
                                         "Special Attack",
@@ -350,18 +236,9 @@ namespace pksav {
                                         1.0f,
                                         base_stats.at("Special Attack"),
                                         effort->ev_spatk,
-                                        IV_spatk
+                                        IVs[PKSAV_IV_SPATK]
                                     )
                                 ));
-
-        uint8_t IV_spdef = 0;
-        PKSAV_CALL(
-            pksav_get_IV(
-                &misc->iv_egg_ability,
-                PKSAV_STAT_SPDEF,
-                &IV_spdef
-            );
-        )
         party_data_out->spdef = pksav_littleendian16(uint16_t(
                                     pkmn::calculations::get_modern_stat(
                                         "Special Defense",
@@ -369,11 +246,12 @@ namespace pksav {
                                         1.0f,
                                         base_stats.at("Special Defense"),
                                         effort->ev_spdef,
-                                        IV_spdef
+                                        IVs[PKSAV_IV_SPDEF]
                                     )
                                 ));
     }
 
+/*
     // TODO: nature modifiers
     void nds_pc_pokemon_to_party_data(
         const pkmn::database::pokemon_entry &entry,
@@ -504,4 +382,5 @@ namespace pksav {
                                     )
                                 ));
     }
+*/
 }

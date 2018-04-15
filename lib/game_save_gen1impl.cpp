@@ -303,6 +303,12 @@ namespace pkmn {
 
         BOOST_ASSERT(_pksav_save.trainer_info.money_ptr != nullptr);
 
+        printf("%x %x %x\n",
+               _pksav_save.trainer_info.money_ptr[0],
+               _pksav_save.trainer_info.money_ptr[1],
+               _pksav_save.trainer_info.money_ptr[2]
+              );
+
         size_t money_from_pksav = 0;
         PKSAV_CALL(
             pksav_import_bcd(

@@ -36,6 +36,25 @@
 
 #include <stdexcept>
 
+static const std::unordered_map<std::string, enum pksav_gb_IV> PKMN_STATS_TO_PKSAV_GB_IVS =
+boost::assign::map_list_of
+    ("HP",      PKSAV_GB_IV_HP)
+    ("Attack",  PKSAV_GB_IV_ATTACK)
+    ("Defense", PKSAV_GB_IV_DEFENSE)
+    ("Speed",   PKSAV_GB_IV_SPEED)
+    ("Special", PKSAV_GB_IV_SPECIAL)
+;
+
+static const std::unordered_map<std::string, enum pksav_IV> PKMN_STATS_TO_PKSAV_IVS =
+boost::assign::map_list_of
+    ("HP",              PKSAV_IV_HP)
+    ("Attack",          PKSAV_IV_ATTACK)
+    ("Defense",         PKSAV_IV_DEFENSE)
+    ("Speed",           PKSAV_IV_SPEED)
+    ("Special Attack",  PKSAV_IV_SPATK)
+    ("Special Defense", PKSAV_IV_SPDEF)
+;
+
 namespace fs = boost::filesystem;
 
 namespace pkmn
@@ -303,113 +322,43 @@ namespace pkmn
         const uint16_t* iv_data_ptr
     )
     {
-        uint8_t IV = 0;
+        uint8_t IVs[PKSAV_NUM_GB_IVS] = {0};
 
         PKSAV_CALL(
-            pksav_get_gb_IV(
+            pksav_get_gb_IVs(
                 iv_data_ptr,
-                PKSAV_STAT_HP,
-                &IV
+                IVs,
+                sizeof(IVs)
             );
         )
-        _IVs["HP"] = int(IV);
 
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                iv_data_ptr,
-                PKSAV_STAT_ATTACK,
-                &IV
-            );
-        )
-        _IVs["Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                iv_data_ptr,
-                PKSAV_STAT_DEFENSE,
-                &IV
-            );
-        )
-        _IVs["Defense"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                iv_data_ptr,
-                PKSAV_STAT_SPEED,
-                &IV
-            );
-        );
-        _IVs["Speed"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_gb_IV(
-                iv_data_ptr,
-                PKSAV_STAT_SPECIAL,
-                &IV
-            );
-        )
-        _IVs["Special"] = int(IV);
+        _IVs["HP"]      = IVs[PKSAV_GB_IV_HP];
+        _IVs["Attack"]  = IVs[PKSAV_GB_IV_ATTACK];
+        _IVs["Defense"] = IVs[PKSAV_GB_IV_DEFENSE];
+        _IVs["Speed"]   = IVs[PKSAV_GB_IV_SPEED];
+        _IVs["Special"] = IVs[PKSAV_GB_IV_SPECIAL];
     }
 
     void pokemon_impl::_init_modern_IV_map(
         const uint32_t* iv_data_ptr
     )
     {
-        uint8_t IV = 0;
+        uint8_t IVs[PKSAV_NUM_IVS] = {0};
 
         PKSAV_CALL(
-            pksav_get_IV(
+            pksav_get_IVs(
                 iv_data_ptr,
-                PKSAV_STAT_HP,
-                &IV
+                IVs,
+                sizeof(IVs)
             );
         )
-        _IVs["HP"] = int(IV);
 
-        PKSAV_CALL(
-            pksav_get_IV(
-                iv_data_ptr,
-                PKSAV_STAT_ATTACK,
-                &IV
-            );
-        )
-        _IVs["Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                iv_data_ptr,
-                PKSAV_STAT_DEFENSE,
-                &IV
-            );
-        )
-        _IVs["Defense"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                iv_data_ptr,
-                PKSAV_STAT_SPEED,
-                &IV
-            );
-        )
-        _IVs["Speed"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                iv_data_ptr,
-                PKSAV_STAT_SPATK,
-                &IV
-            );
-        )
-        _IVs["Special Attack"] = int(IV);
-
-        PKSAV_CALL(
-            pksav_get_IV(
-                iv_data_ptr,
-                PKSAV_STAT_SPDEF,
-                &IV
-            );
-        )
-        _IVs["Special Defense"] = int(IV);
+        _IVs["HP"]              = IVs[PKSAV_IV_HP];
+        _IVs["Attack"]          = IVs[PKSAV_IV_ATTACK];
+        _IVs["Defense"]         = IVs[PKSAV_IV_DEFENSE];
+        _IVs["Speed"]           = IVs[PKSAV_IV_SPEED];
+        _IVs["Special Attack"]  = IVs[PKSAV_IV_SPATK];
+        _IVs["Special Defense"] = IVs[PKSAV_IV_SPDEF];
     }
 
     void pokemon_impl::_init_contest_stat_map(
@@ -582,9 +531,9 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_gb_IV(
-                iv_data_ptr,
-                pkmn_stats_to_pksav.at(stat),
-                uint8_t(value)
+                PKMN_STATS_TO_PKSAV_GB_IVS.at(stat),
+                uint8_t(value),
+                iv_data_ptr
             );
         )
 
@@ -605,9 +554,9 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_set_IV(
-                iv_data_ptr,
-                pkmn_stats_to_pksav.at(stat),
-                uint8_t(value)
+                PKMN_STATS_TO_PKSAV_IVS.at(stat),
+                uint8_t(value),
+                iv_data_ptr
             );
         )
 

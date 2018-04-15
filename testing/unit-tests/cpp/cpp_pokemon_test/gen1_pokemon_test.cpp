@@ -89,48 +89,20 @@ TEST_P(gen1_pokemon_test, gen1_pokemon_test) {
     EXPECT_EQ(EVs.at("Special"), int(pksav_bigendian16(native_pc->ev_spcl)));
 
     const std::map<std::string, int>& IVs = pokemon->get_IVs();
-    uint8_t IV = 0;
+    uint8_t pksav_IVs[PKSAV_NUM_GB_IVS] = {0};
+    PKSAV_CALL(
+        pksav_get_gb_IVs(
+            &native_pc->iv_data,
+            pksav_IVs,
+            sizeof(pksav_IVs)
+        );
+    )
 
-    PKSAV_CALL(
-        pksav_get_gb_IV(
-            &native_pc->iv_data,
-            PKSAV_STAT_HP,
-            &IV
-        )
-    )
-    EXPECT_EQ(IVs.at("HP"), int(IV));
-    PKSAV_CALL(
-        pksav_get_gb_IV(
-            &native_pc->iv_data,
-            PKSAV_STAT_ATTACK,
-            &IV
-        )
-    )
-    EXPECT_EQ(IVs.at("Attack"), int(IV));
-    PKSAV_CALL(
-        pksav_get_gb_IV(
-            &native_pc->iv_data,
-            PKSAV_STAT_DEFENSE,
-            &IV
-        )
-    )
-    EXPECT_EQ(IVs.at("Defense"), int(IV));
-    PKSAV_CALL(
-        pksav_get_gb_IV(
-            &native_pc->iv_data,
-            PKSAV_STAT_SPEED,
-            &IV
-        )
-    )
-    EXPECT_EQ(IVs.at("Speed"), int(IV));
-    PKSAV_CALL(
-        pksav_get_gb_IV(
-            &native_pc->iv_data,
-            PKSAV_STAT_SPECIAL,
-            &IV
-        )
-    )
-    EXPECT_EQ(IVs.at("Special"), int(IV));
+    EXPECT_EQ(IVs.at("HP"),      int(pksav_IVs[PKSAV_GB_IV_HP]));
+    EXPECT_EQ(IVs.at("Attack"),  int(pksav_IVs[PKSAV_GB_IV_ATTACK]));
+    EXPECT_EQ(IVs.at("Defense"), int(pksav_IVs[PKSAV_GB_IV_DEFENSE]));
+    EXPECT_EQ(IVs.at("Speed"),   int(pksav_IVs[PKSAV_GB_IV_SPEED]));
+    EXPECT_EQ(IVs.at("Special"), int(pksav_IVs[PKSAV_GB_IV_SPECIAL]));
 
     /*
      * Party data

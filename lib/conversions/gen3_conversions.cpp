@@ -83,14 +83,14 @@ namespace pkmn { namespace conversions {
         (PKSAV_GBA_WORLD_RIBBON_MASK,    LIBPKMGC_RIBBON_WORLD)
     ;
 
-    typedef boost::bimap<enum pksav_battle_stat, libpkmgc_stat_t> gen3_stat_bimap_t;
-    static const gen3_stat_bimap_t GEN3_STAT_BIMAP = boost::assign::list_of<gen3_stat_bimap_t::relation>
-        (PKSAV_STAT_HP,      LIBPKMGC_STAT_HP)
-        (PKSAV_STAT_ATTACK,  LIBPKMGC_STAT_ATTACK)
-        (PKSAV_STAT_DEFENSE, LIBPKMGC_STAT_DEFENSE)
-        (PKSAV_STAT_SPATK,   LIBPKMGC_STAT_SPATK)
-        (PKSAV_STAT_SPDEF,   LIBPKMGC_STAT_SPDEF)
-        (PKSAV_STAT_SPEED,   LIBPKMGC_STAT_SPEED)
+    typedef boost::bimap<enum pksav_IV, libpkmgc_stat_t> gen3_IV_bimap_t;
+    static const gen3_IV_bimap_t GEN3_IV_BIMAP = boost::assign::list_of<gen3_IV_bimap_t::relation>
+        (PKSAV_IV_HP,      LIBPKMGC_STAT_HP)
+        (PKSAV_IV_ATTACK,  LIBPKMGC_STAT_ATTACK)
+        (PKSAV_IV_DEFENSE, LIBPKMGC_STAT_DEFENSE)
+        (PKSAV_IV_SPATK,   LIBPKMGC_STAT_SPATK)
+        (PKSAV_IV_SPDEF,   LIBPKMGC_STAT_SPDEF)
+        (PKSAV_IV_SPEED,   LIBPKMGC_STAT_SPEED)
     ;
 
     void gba_pc_pokemon_to_gcn(
@@ -186,15 +186,19 @@ namespace pkmn { namespace conversions {
         to->EVs[LIBPKMGC_STAT_SPDEF]   = from_effort->ev_spdef;
         to->EVs[LIBPKMGC_STAT_SPEED]   = from_effort->ev_spd;
 
-        for(const auto& gen3_stat_left_pair: GEN3_STAT_BIMAP.left)
-        {
-            PKSAV_CALL(
-                pksav_get_IV(
-                    &from_misc->iv_egg_ability,
-                    gen3_stat_left_pair.first,
-                    &to->IVs[gen3_stat_left_pair.second]
-                );
+        uint8_t IVs[PKSAV_NUM_IVS] = {0};
+        PKSAV_CALL(
+            pksav_get_IVs(
+                &from_misc->iv_egg_ability,
+                IVs,
+                sizeof(IVs)
             );
+        )
+
+
+        for(const auto& gen3_IV_left_pair: GEN3_IV_BIMAP.left)
+        {
+            to->IVs[gen3_IV_left_pair.second] = IVs[gen3_IV_left_pair.first];
         }
 
         to->contestStats[LIBPKMGC_CONTEST_STAT_COOL]   = from_effort->contest_stats.cool;
@@ -361,13 +365,13 @@ namespace pkmn { namespace conversions {
             to_misc->origin_info |= PKSAV_GBA_POKEMON_OTGENDER_MASK;
         }
 
-        for(auto iter = GEN3_STAT_BIMAP.left.begin(); iter != GEN3_STAT_BIMAP.left.end(); ++iter)
+        for(auto iter = GEN3_IV_BIMAP.left.begin(); iter != GEN3_IV_BIMAP.left.end(); ++iter)
         {
             PKSAV_CALL(
                 pksav_set_IV(
-                    &to_misc->iv_egg_ability,
                     iter->first,
-                    from->IVs[iter->second]
+                    from->IVs[iter->second],
+                    &to_misc->iv_egg_ability
                 );
             );
         }
