@@ -427,6 +427,39 @@ namespace pkmntest {
                 break;
             }
 
+            case 2:
+            {
+                // Check for the default palette. Boys are red, girls are blue.
+                std::string gender = save->get_trainer_gender();
+                if(gender == "Male")
+                {
+                    ASSERT_EQ("Red", save->get_string_attribute("Player palette"));
+                }
+                else
+                {
+                    ASSERT_EQ("Blue", save->get_string_attribute("Player palette"));
+                }
+
+                // Now make sure setting to each works.
+                static const std::vector<std::string> GEN2_PALETTES =
+                {
+                    "Red", "Blue", "Green", "Brown",
+                    "Orange", "Gray", "Dark Green", "Dark Red"
+                };
+                for(const std::string& palette: GEN2_PALETTES)
+                {
+                    save->set_string_attribute("Player palette", palette);
+                    ASSERT_EQ(palette, save->get_string_attribute("Player palette"));
+                }
+
+                save->set_boolean_attribute("Daylight savings time?", false);
+                ASSERT_FALSE(save->get_boolean_attribute("Daylight savings time?"));
+                save->set_boolean_attribute("Daylight savings time?", true);
+                ASSERT_TRUE(save->get_boolean_attribute("Daylight savings time?"));
+
+                break;
+            }
+
             case 3:
             {
                 if((game != "Colosseum") and (game != "XD"))

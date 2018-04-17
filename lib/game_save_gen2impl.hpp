@@ -70,8 +70,20 @@ namespace pkmn {
                 int money
             ) override final;
 
+            // Functions for attributes
+
+            bool get_is_daylight_savings();
+
+            void set_is_daylight_savings(bool is_daylight_savings);
+
+            std::string get_palette();
+
+            void set_palette(const std::string& palette);
+
         private:
             struct pksav_gen2_save _pksav_save;
+
+            void _register_attributes();
     };
 
 }

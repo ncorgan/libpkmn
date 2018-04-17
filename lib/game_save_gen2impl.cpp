@@ -17,10 +17,13 @@
 
 #include <pkmn/exception.hpp>
 
+#include <pksav/gen2/palette.h>
 #include <pksav/math/endian.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assert.hpp>
+#include <boost/assign.hpp>
+#include <boost/bimap.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread/lock_guard.hpp>
 
@@ -131,6 +134,8 @@ namespace pkmn {
 
         party_impl_ptr->set_pokedex(_pokedex);
         pc_impl_ptr->set_pokedex(_pokedex);
+
+        _register_attributes();
     }
 
     game_save_gen2impl::~game_save_gen2impl()
@@ -374,5 +379,90 @@ namespace pkmn {
                 3
             );
         )
+    }
+
+    // Functions for attributes
+
+    bool game_save_gen2impl::get_is_daylight_savings()
+    {
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        return bool(*_pksav_save.save_time.daylight_savings_ptr &
+                    PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK);
+    }
+
+    void game_save_gen2impl::set_is_daylight_savings(bool is_daylight_savings)
+    {
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        if(is_daylight_savings)
+        {
+            *_pksav_save.save_time.daylight_savings_ptr |= PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
+        }
+        else
+        {
+            *_pksav_save.save_time.daylight_savings_ptr &= ~PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
+        }
+    }
+
+    typedef boost::bimap<std::string, enum pksav_gen2_palette> gen2_palette_bimap_t;
+    static const gen2_palette_bimap_t GEN2_PALETTE_BIMAP =
+    boost::assign::list_of<gen2_palette_bimap_t::relation>
+        ("Red",        PKSAV_GEN2_PALETTE_RED)
+        ("Blue",       PKSAV_GEN2_PALETTE_BLUE)
+        ("Green",      PKSAV_GEN2_PALETTE_GREEN)
+        ("Brown",      PKSAV_GEN2_PALETTE_BROWN)
+        ("Orange",     PKSAV_GEN2_PALETTE_ORANGE)
+        ("Gray",       PKSAV_GEN2_PALETTE_GRAY)
+        ("Dark Green", PKSAV_GEN2_PALETTE_DARK_GREEN)
+        ("Dark Red",   PKSAV_GEN2_PALETTE_DARK_RED)
+    ;
+
+    std::string game_save_gen2impl::get_palette()
+    {
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        // If the save file is screwed up enough, the palette may not be
+        // valid, so just return something.
+        std::string ret = "Red";
+
+        auto palette_iter = GEN2_PALETTE_BIMAP.right.find((enum pksav_gen2_palette)
+                                (*_pksav_save.trainer_info.palette_ptr)
+                            );
+        if(palette_iter != GEN2_PALETTE_BIMAP.right.end())
+        {
+            ret = palette_iter->second;
+        }
+
+        return ret;
+    }
+
+    void game_save_gen2impl::set_palette(const std::string& palette)
+    {
+        pkmn::enforce_value_in_map_keys(
+            "Player palette",
+            palette,
+            GEN2_PALETTE_BIMAP.left
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        *_pksav_save.trainer_info.palette_ptr = uint8_t(GEN2_PALETTE_BIMAP.left.at(palette));
+    }
+
+    void game_save_gen2impl::_register_attributes()
+    {
+        using std::placeholders::_1;
+
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Daylight savings time?",
+            std::bind(&game_save_gen2impl::get_is_daylight_savings, this),
+            std::bind(&game_save_gen2impl::set_is_daylight_savings, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Player palette",
+            std::bind(&game_save_gen2impl::get_palette, this),
+            std::bind(&game_save_gen2impl::set_palette, this, _1)
+        );
     }
 }
