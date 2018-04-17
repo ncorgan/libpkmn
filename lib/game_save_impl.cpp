@@ -127,45 +127,47 @@ namespace pkmn {
 
         if(ret == PKMN_SAVE_TYPE_NONE)
         {
-            enum pksav_gen1_save_type gen1_save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
+            enum pksav_gba_save_type gba_save_type = PKSAV_GBA_SAVE_TYPE_NONE;
             PKSAV_CALL(
-                pksav_gen1_get_buffer_save_type(
+                pksav_gba_get_buffer_save_type(
                     data.data(),
                     data_size,
-                    &gen1_save_type
+                    &gba_save_type
                 );
             );
 
-            BOOST_ASSERT(PKSAV_GEN1_ENUM_MAP.count(gen1_save_type) > 0);
-            ret = PKSAV_GEN1_ENUM_MAP.at(gen1_save_type);
+            BOOST_ASSERT(PKSAV_GBA_ENUM_MAP.count(gba_save_type) > 0);
+            ret = PKSAV_GBA_ENUM_MAP.at(gba_save_type);
 
+            // Checking Gen I before Gen II tends to remove Generation II saves
+            // registering as Generation I.
             if(ret == PKMN_SAVE_TYPE_NONE)
             {
-                enum pksav_gen2_save_type gen2_save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
+                enum pksav_gen1_save_type gen1_save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
                 PKSAV_CALL(
-                    pksav_gen2_get_buffer_save_type(
+                    pksav_gen1_get_buffer_save_type(
                         data.data(),
                         data_size,
-                        &gen2_save_type
+                        &gen1_save_type
                     );
                 );
 
-                BOOST_ASSERT(PKSAV_GEN2_ENUM_MAP.count(gen2_save_type) > 0);
-                ret = PKSAV_GEN2_ENUM_MAP.at(gen2_save_type);
+                BOOST_ASSERT(PKSAV_GEN1_ENUM_MAP.count(gen1_save_type) > 0);
+                ret = PKSAV_GEN1_ENUM_MAP.at(gen1_save_type);
 
                 if(ret == PKMN_SAVE_TYPE_NONE)
                 {
-                    enum pksav_gba_save_type gba_save_type = PKSAV_GBA_SAVE_TYPE_NONE;
+                    enum pksav_gen2_save_type gen2_save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
                     PKSAV_CALL(
-                        pksav_gba_get_buffer_save_type(
+                        pksav_gen2_get_buffer_save_type(
                             data.data(),
                             data_size,
-                            &gba_save_type
+                            &gen2_save_type
                         );
                     );
 
-                    BOOST_ASSERT(PKSAV_GBA_ENUM_MAP.count(gba_save_type) > 0);
-                    ret = PKSAV_GBA_ENUM_MAP.at(gba_save_type);
+                    BOOST_ASSERT(PKSAV_GEN2_ENUM_MAP.count(gen2_save_type) > 0);
+                    ret = PKSAV_GEN2_ENUM_MAP.at(gen2_save_type);
                 }
             }
         }
