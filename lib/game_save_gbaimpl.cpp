@@ -51,6 +51,8 @@ namespace pkmn {
             );
         )
 
+        int item_pc_id = 0;
+
         std::string filename = boost::algorithm::to_lower_copy(
                                    fs::path(filepath).stem().string()
                                );
@@ -78,12 +80,7 @@ namespace pkmn {
                     _game_id = RUBY_GAME_ID;
                 }
 
-                BOOST_ASSERT(_pksav_save.item_storage.pc_ptr != nullptr);
-                _item_pc = std::make_shared<item_list_modernimpl>(
-                                RS_PC_ID, _game_id,
-                                _pksav_save.item_storage.pc_ptr->items,
-                                50, false
-                           );
+                item_pc_id = RS_PC_ID;
                 break;
 
             case PKSAV_GBA_SAVE_TYPE_FRLG:
@@ -110,23 +107,12 @@ namespace pkmn {
                     _game_id = FIRERED_GAME_ID;
                 }
 
-                BOOST_ASSERT(_pksav_save.item_storage.pc_ptr != nullptr);
-                _item_pc = std::make_shared<item_list_modernimpl>(
-                                FRLG_PC_ID, _game_id,
-                                _pksav_save.item_storage.pc_ptr->items,
-                                50, false
-                           );
+                item_pc_id = FRLG_PC_ID;
                 break;
 
             default: // Emerald
                 _game_id = EMERALD_GAME_ID;
-
-                BOOST_ASSERT(_pksav_save.item_storage.pc_ptr != nullptr);
-                _item_pc = std::make_shared<item_list_modernimpl>(
-                                EMERALD_PC_ID, _game_id,
-                                _pksav_save.item_storage.pc_ptr->items,
-                                50, false
-                           );
+                item_pc_id = EMERALD_PC_ID;
                 break;
         }
 
@@ -166,6 +152,14 @@ namespace pkmn {
                         _game_id, _pksav_save.item_storage.bag_ptr
                     );
 
+        BOOST_ASSERT(_pksav_save.item_storage.pc_ptr != nullptr);
+        _item_pc = std::make_shared<item_list_modernimpl>(
+                        item_pc_id, _game_id,
+                        _pksav_save.item_storage.pc_ptr->items,
+                        PKSAV_GBA_ITEM_PC_NUM_ITEMS,
+                        false
+                   );
+
         // When a Pokémon is added to the PC or party, it should be
         // reflected in the Pokédex.
 
@@ -191,6 +185,13 @@ namespace pkmn {
     )
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        PKSAV_CALL(
+            pksav_gba_save_save(
+                filepath.c_str(),
+                &_pksav_save
+            );
+        )
 
         _filepath = fs::absolute(filepath).string();
     }
@@ -441,7 +442,43 @@ namespace pkmn {
         *_pksav_save.misc_fields.casino_coins_ptr = pksav_littleendian16(uint16_t(casino_coins));
     }
 
-    // TODO: Nat Pokedex unlocked?
+    bool game_save_gbaimpl::get_is_national_dex_unlocked()
+    {
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        BOOST_ASSERT(_pksav_save.pokedex.nat_pokedex_unlocked_ptrB != nullptr);
+
+        // Easiest since it's the same for all types
+        return bool(*_pksav_save.pokedex.nat_pokedex_unlocked_ptrB &
+                    PKSAV_GBA_NAT_POKEDEX_UNLOCKED_B_FLAG);
+    }
+
+    void game_save_gbaimpl::set_is_national_dex_unlocked(
+        bool is_national_dex_unlocked
+    )
+    {
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+        {
+            BOOST_ASSERT(_pksav_save.pokedex.frlg_nat_pokedex_unlocked_ptrA != nullptr);
+        }
+        else
+        {
+            BOOST_ASSERT(_pksav_save.pokedex.rse_nat_pokedex_unlocked_ptrA != nullptr);
+        }
+        BOOST_ASSERT(_pksav_save.pokedex.nat_pokedex_unlocked_ptrB != nullptr);
+        BOOST_ASSERT(_pksav_save.pokedex.nat_pokedex_unlocked_ptrC != nullptr);
+
+        PKSAV_CALL(
+            pksav_gba_pokedex_set_national_pokedex_unlocked(
+                &_pksav_save.pokedex,
+                _pksav_save.save_type,
+                is_national_dex_unlocked
+            );
+        )
+    }
+
     void game_save_gbaimpl::_register_attributes()
     {
         using std::placeholders::_1;
@@ -450,6 +487,14 @@ namespace pkmn {
             "Casino coins",
             std::bind(&game_save_gbaimpl::get_casino_coins, this),
             std::bind(&game_save_gbaimpl::set_casino_coins, this, _1)
+        );
+
+        // Don't use the whole word "Pokédex" to make life easier for
+        // Python users.
+        _boolean_attribute_engine.register_attribute_fcns(
+            "National Dex unlocked?",
+            std::bind(&game_save_gbaimpl::get_is_national_dex_unlocked, this),
+            std::bind(&game_save_gbaimpl::set_is_national_dex_unlocked, this, _1)
         );
     }
 }

@@ -78,6 +78,10 @@ namespace pkmn {
                 int casino_coins
             );
 
+            bool get_is_national_dex_unlocked();
+
+            void set_is_national_dex_unlocked(bool is_national_dex_unlocked);
+
         private:
             struct pksav_gba_save _pksav_save;
 
