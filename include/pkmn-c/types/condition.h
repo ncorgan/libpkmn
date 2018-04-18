@@ -16,7 +16,7 @@
  * All of these values are valid inputs for ::pkmn_pokemon_set_condition
  * and valid outputs for ::pkmn_pokemon_get_condition.
  */
-typedef enum
+enum pkmn_condition
 {
     //! No status effect.
     PKMN_CONDITION_NONE = 0,
@@ -32,6 +32,6 @@ typedef enum
     PKMN_CONDITION_PARALYSIS,
     //! Bad poison (such as from Toxic).
     PKMN_CONDITION_BAD_POISON
-} pkmn_condition_t;
+};
 
 #endif /* PKMN_C_TYPES_CONDITION_H */

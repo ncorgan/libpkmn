@@ -8,12 +8,12 @@
 #define PKMN_C_TYPES_INT_PAIR_H
 
 //! A pair of ints.
-typedef struct
+struct pkmn_int_pair
 {
     //! The first int in the pair.
     int first;
     //! The second int in the pair.
     int second;
-} pkmn_int_pair_t;
+};
 
 #endif /* PKMN_C_TYPES_INT_PAIR_H */

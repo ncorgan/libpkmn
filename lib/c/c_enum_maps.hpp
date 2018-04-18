@@ -20,7 +20,7 @@
 
 namespace pkmn { namespace c {
 
-    typedef boost::bimap<std::string, pkmn_gender_t> gender_bimap_t;
+    typedef boost::bimap<std::string, enum pkmn_gender> gender_bimap_t;
     static const gender_bimap_t GENDER_BIMAP =
     boost::assign::list_of<gender_bimap_t::relation>
         ("Male",       PKMN_GENDER_MALE)
@@ -28,7 +28,7 @@ namespace pkmn { namespace c {
         ("Genderless", PKMN_GENDER_GENDERLESS)
     ;
 
-    typedef boost::bimap<std::string, pkmn_stat_t> stat_bimap_t;
+    typedef boost::bimap<std::string, enum pkmn_stat> stat_bimap_t;
     static const stat_bimap_t STAT_BIMAP =
     boost::assign::list_of<stat_bimap_t::relation>
         ("HP",              PKMN_STAT_HP)
@@ -40,7 +40,7 @@ namespace pkmn { namespace c {
         ("Special Defense", PKMN_STAT_SPDEF)
     ;
 
-    typedef boost::bimap<std::string, pkmn_contest_stat_t> contest_stat_bimap_t;
+    typedef boost::bimap<std::string, enum pkmn_contest_stat> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP =
     boost::assign::list_of<contest_stat_bimap_t::relation>
         ("Cool",   PKMN_CONTEST_STAT_COOL)
@@ -52,7 +52,7 @@ namespace pkmn { namespace c {
         ("Sheen",  PKMN_CONTEST_STAT_SHEEN)
     ;
 
-    typedef boost::bimap<std::string, pkmn_condition_t> condition_bimap_t;
+    typedef boost::bimap<std::string, enum pkmn_condition> condition_bimap_t;
     static const condition_bimap_t CONDITION_BIMAP =
     boost::assign::list_of<condition_bimap_t::relation>
         ("None",       PKMN_CONDITION_NONE)
@@ -64,7 +64,7 @@ namespace pkmn { namespace c {
         ("Bad Poison", PKMN_CONDITION_BAD_POISON)
     ;
 
-    typedef boost::bimap<std::string, pkmn_marking_t> marking_bimap_t;
+    typedef boost::bimap<std::string, enum pkmn_marking> marking_bimap_t;
     static const marking_bimap_t GEN3_MARKING_BIMAP =
     boost::assign::list_of<marking_bimap_t::relation>
         ("Circle",   PKMN_MARKING_CIRCLE)

@@ -19,12 +19,12 @@ static const std::vector<std::string> gender_strings = {
     "Male", "Female", "Genderless"
 };
 
-pkmn_error_t pkmn_calculations_generate_personality(
+enum pkmn_error pkmn_calculations_generate_personality(
     const char* species,
     uint32_t trainer_id,
     bool shiny,
     const char* ability,
-    pkmn_gender_t gender,
+    enum pkmn_gender gender,
     const char* nature,
     uint32_t* personality_out
 ) {

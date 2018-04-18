@@ -17,11 +17,11 @@
  *
  * This struct must be freed with ::pkmn_move_slot_free.
  */
-typedef struct
+struct pkmn_move_slot
 {
     char* move;
     int pp;
-} pkmn_move_slot_t;
+};
 
 /*!
  * @brief A list of move slots.
@@ -29,13 +29,13 @@ typedef struct
  * This struct's memory is allocated by pkmn_pokemon_get_moves and must
  * be freed with ::pkmn_move_slots_free.
  */
-typedef struct
+struct pkmn_move_slots
 {
     //! The list of move slots, dynamically allocated.
-    pkmn_move_slot_t* move_slots;
+    struct pkmn_move_slot* move_slots;
     //! The number of moves in the list.
     size_t length;
-} pkmn_move_slots_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,8 +48,8 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if move_slot_ptr is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_move_slot_free(
-    pkmn_move_slot_t* move_slot_ptr
+PKMN_C_API enum pkmn_error pkmn_move_slot_free(
+    struct pkmn_move_slot* move_slot_ptr
 );
 
 /*!
@@ -59,8 +59,8 @@ PKMN_C_API pkmn_error_t pkmn_move_slot_free(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if move_slots_ptr is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_move_slots_free(
-    pkmn_move_slots_t* move_slots_ptr
+PKMN_C_API enum pkmn_error pkmn_move_slots_free(
+    struct pkmn_move_slots* move_slots_ptr
 );
 
 #ifdef __cplusplus

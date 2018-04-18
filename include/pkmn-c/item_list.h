@@ -28,7 +28,7 @@
  * Any dynamically allocated memory in this struct is initialized by
  * ::pkmn_item_list_init and freed by ::pkmn_item_list_free.
  */
-typedef struct
+struct pkmn_item_list
 {
     /*!
      * @brief This list's name, as the pocket or PC is referred to in-game.
@@ -46,7 +46,7 @@ typedef struct
     size_t capacity;
 
     void* _internal;
-} pkmn_item_list_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,10 +65,10 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the name or game is invalid
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_init(
+PKMN_C_API enum pkmn_error pkmn_item_list_init(
     const char* name,
     const char* game,
-    pkmn_item_list_t* item_list_out
+    struct pkmn_item_list* item_list_out
 );
 
 /*!
@@ -83,8 +83,8 @@ PKMN_C_API pkmn_error_t pkmn_item_list_init(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if item_list_ptr is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_free(
-    pkmn_item_list_t* item_list_ptr
+PKMN_C_API enum pkmn_error pkmn_item_list_free(
+    struct pkmn_item_list* item_list_ptr
 );
 
 /*!
@@ -96,7 +96,7 @@ PKMN_C_API pkmn_error_t pkmn_item_list_free(
  * \returns <b>NULL</b> if item_list_ptr is NULL
  */
 PKMN_C_API const char* pkmn_item_list_strerror(
-    pkmn_item_list_t* item_list_ptr
+    struct pkmn_item_list* item_list_ptr
 );
 
 /*!
@@ -107,8 +107,8 @@ PKMN_C_API const char* pkmn_item_list_strerror(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
 */
-PKMN_C_API pkmn_error_t pkmn_item_list_get_num_items(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_get_num_items(
+    struct pkmn_item_list* item_list_ptr,
     size_t* num_items_out
 );
 
@@ -124,10 +124,10 @@ PKMN_C_API pkmn_error_t pkmn_item_list_get_num_items(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_at(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_at(
+    struct pkmn_item_list* item_list_ptr,
     size_t position,
-    pkmn_item_slot_t* item_slot_out
+    struct pkmn_item_slot* item_slot_out
 );
 
 /*!
@@ -145,8 +145,8 @@ PKMN_C_API pkmn_error_t pkmn_item_list_at(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT If the item cannot be included in the given list
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If amount is outside the range [1,99]
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_add(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_add(
+    struct pkmn_item_list* item_list_ptr,
     const char* item,
     size_t amount
 );
@@ -166,8 +166,8 @@ PKMN_C_API pkmn_error_t pkmn_item_list_add(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item cannot be included in the given list
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is outside the range [1,99]
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_remove(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_remove(
+    struct pkmn_item_list* item_list_ptr,
     const char* item,
     size_t amount
 );
@@ -183,8 +183,8 @@ PKMN_C_API pkmn_error_t pkmn_item_list_remove(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is outside the range [0,num_items-1]
  * \returns ::PKMN_ERROR_RUNTIME_ERROR if items in the given list cannot be moved
 */
-PKMN_C_API pkmn_error_t pkmn_item_list_move(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_move(
+    struct pkmn_item_list* item_list_ptr,
     size_t old_position,
     size_t new_position
 );
@@ -203,8 +203,8 @@ PKMN_C_API pkmn_error_t pkmn_item_list_move(
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If the pocket's items are locked in one slot and the
  *                                     given item does not match that slot
 */
-PKMN_C_API pkmn_error_t pkmn_item_list_set_item(
-    pkmn_item_list_t* item_list_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_list_set_item(
+    struct pkmn_item_list* item_list_ptr,
     size_t position,
     const char* item,
     size_t amount
@@ -224,9 +224,9 @@ PKMN_C_API pkmn_error_t pkmn_item_list_set_item(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
 */
-PKMN_C_API pkmn_error_t pkmn_item_list_get_valid_items(
-    pkmn_item_list_t* item_list_ptr,
-    pkmn_string_list_t* valid_items_out
+PKMN_C_API enum pkmn_error pkmn_item_list_get_valid_items(
+    struct pkmn_item_list* item_list_ptr,
+    struct pkmn_string_list* valid_items_out
 );
 
 /*!
@@ -240,9 +240,9 @@ PKMN_C_API pkmn_error_t pkmn_item_list_get_valid_items(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_item_list_as_list(
-    pkmn_item_list_t* item_list_ptr,
-    pkmn_item_slots_t* item_slots_out
+PKMN_C_API enum pkmn_error pkmn_item_list_as_list(
+    struct pkmn_item_list* item_list_ptr,
+    struct pkmn_item_slots* item_slots_out
 );
 
 #ifdef __cplusplus

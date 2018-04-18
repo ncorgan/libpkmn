@@ -10,7 +10,7 @@
 #include <stdint.h>
 
 #pragma pack(push, 1)
-typedef union
+union pkmn_trainer_id
 {
     uint32_t id;
     struct
@@ -18,7 +18,7 @@ typedef union
         uint16_t public_id;
         uint16_t secret_id;
     };
-} pkmn_trainer_id_t;
+};
 #pragma pack(pop)
 
 #endif /* PKMN_C_TYPES_TRAINER_ID_H */

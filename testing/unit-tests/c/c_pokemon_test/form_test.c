@@ -19,8 +19,8 @@ static void test_gen1_pokemon_forms(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t pokemon =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -94,7 +94,7 @@ static void test_gen1_pokemon_forms(
     }
 
     // Cosplay Pikachu should only work for OR/AS.
-    pkmn_database_pokemon_entry_t oras_pikachu_entry;
+    struct pkmn_database_pokemon_entry oras_pikachu_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Pikachu",
                 "Omega Ruby",
@@ -195,8 +195,8 @@ static void test_gen2_pokemon_forms(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t pokemon =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -282,7 +282,7 @@ static void test_gen2_pokemon_forms(
     TEST_ASSERT_NULL(pokemon._internal);
 
     // Unown's "!" and "?" forms aren't in Generation II.
-    pkmn_database_pokemon_entry_t unown_entry;
+    struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Unown",
                 "Omega Ruby",
@@ -361,8 +361,8 @@ static void test_gen3_pokemon_forms(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t pokemon =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -436,7 +436,7 @@ static void test_gen3_pokemon_forms(
     }
 
     // Castform should always work.
-    pkmn_database_pokemon_entry_t castform_entry;
+    struct pkmn_database_pokemon_entry castform_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Castform",
                 "Omega Ruby",
@@ -595,7 +595,7 @@ static void test_gen3_pokemon_forms(
     }
     else
     {
-        pkmn_database_pokemon_entry_t deoxys_entry;
+        struct pkmn_database_pokemon_entry deoxys_entry;
         error = pkmn_database_get_pokemon_entry(
                     "Deoxys",
                     game,

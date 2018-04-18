@@ -34,10 +34,10 @@ extern "C" {
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the item is not a Berry
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if the generation is not in the range [4-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_natural_gift_stats(
+PKMN_C_API enum pkmn_error pkmn_calculations_natural_gift_stats(
     const char* item_name,
     int generation,
-    pkmn_natural_gift_t* natural_gift_stats_out
+    struct pkmn_natural_gift* natural_gift_stats_out
 );
 
 #ifdef __cplusplus

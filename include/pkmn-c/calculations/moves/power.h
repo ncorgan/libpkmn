@@ -30,7 +30,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_current_hp > target_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_brine_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_brine_power(
     int target_current_hp,
     int target_max_hp,
     int* brine_power_out
@@ -53,7 +53,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_brine_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_current_hp > target_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_crush_grip_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_crush_grip_power(
     int target_current_hp,
     int target_max_hp,
     int generation,
@@ -74,7 +74,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_crush_grip_power(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if powers_buffer is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_echoed_voice_powers(
+PKMN_C_API enum pkmn_error pkmn_calculations_echoed_voice_powers(
     int* powers_buffer,
     size_t buffer_length,
     size_t* num_powers_out
@@ -93,7 +93,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_echoed_voice_powers(
  * \returns ::PKMN_ERROR_NULL_POINTER if electro_ball_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_electro_ball_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_electro_ball_power(
     int attacker_speed,
     int target_speed,
     int* electro_ball_power_out
@@ -115,9 +115,9 @@ PKMN_C_API pkmn_error_t pkmn_calculations_electro_ball_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if attacker_current_hp > attacker_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_eruption_power(
-    int attacker_current_hp,
-    int attacker_max_hp,
+PKMN_C_API enum pkmn_error pkmn_calculations_eruption_power(
+    int attacker_hp,
+    int target_hp,
     int* eruption_out
 );
 
@@ -136,7 +136,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_eruption_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if attacker_current_hp > attacker_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_flail_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_flail_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* flail_power_out
@@ -152,7 +152,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_flail_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if iether parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given item doesn't exist
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_fling_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_fling_power(
     const char* held_item,
     int* fling_power_out
 );
@@ -169,7 +169,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_fling_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if frustration_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if friendship is outside the range [0-255]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_frustration_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_frustration_power(
     int friendship,
     int* frustration_power_out
 );
@@ -190,7 +190,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_frustration_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if powers_buffer is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if generation is out of the range [2-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_fury_cutter_powers(
+PKMN_C_API enum pkmn_error pkmn_calculations_fury_cutter_powers(
     int generation,
     int* powers_buffer,
     size_t buffer_length,
@@ -212,7 +212,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_fury_cutter_powers(
  * \returns ::PKMN_ERROR_NULL_POINTER if grass_knot_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_weight is zero or negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_grass_knot_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_grass_knot_power(
     float target_weight,
     int* grass_knot_power_out
 );
@@ -230,7 +230,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_grass_knot_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if gyro_ball_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_gyro_ball_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_gyro_ball_power(
     int attacker_speed,
     int target_speed,
     int* gyro_ball_power_out
@@ -252,7 +252,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gyro_ball_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if heat_crash_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_weight is zero or negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_heat_crash_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_heat_crash_power(
     float attacker_weight,
     float target_weight,
     int* heat_crash_power_out
@@ -274,7 +274,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_heat_crash_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if heavy_slam_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_weight is zero or negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_heavy_slam_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_heavy_slam_power(
     float attacker_weight,
     float target_weight,
     int* heavy_slam_power_out
@@ -296,7 +296,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_heavy_slam_power(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if powers_buffer is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_ice_ball_powers(
+PKMN_C_API enum pkmn_error pkmn_calculations_ice_ball_powers(
     int* powers_buffer,
     size_t buffer_length,
     size_t* num_powers_out
@@ -319,7 +319,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_ice_ball_powers(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_weight is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if generation is not in the range [1-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_low_kick_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_low_kick_power(
     float target_weight,
     int generation,
     int* low_kick_power_out
@@ -346,7 +346,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_low_kick_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if power_trip_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is not in the range [0-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_power_trip_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_power_trip_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -376,7 +376,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_power_trip_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if punishment_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is not in the range [0-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_punishment_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_punishment_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -399,7 +399,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_punishment_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if return_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if friendship is outside the range [0-255]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_return_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_return_power(
     int friendship,
     int* return_power_out
 );
@@ -419,7 +419,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_return_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if attacker_current_hp > attacker_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_reversal_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_reversal_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* reversal_power_out
@@ -441,7 +441,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_reversal_power(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if powers_buffer is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_rollout_powers(
+PKMN_C_API enum pkmn_error pkmn_calculations_rollout_powers(
     int* powers_buffer,
     size_t buffer_length,
     size_t* num_powers_out
@@ -460,7 +460,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_rollout_powers(
  * \returns ::PKMN_ERROR_NULL_POINTER if spit_up_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if stockpile_amount is not in the range [0-3]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_spit_up_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_spit_up_power(
     int stockpile_amount,
     int* spit_up_power_out
 );
@@ -486,7 +486,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_spit_up_power(
  * \returns ::PKMN_ERROR_NULL_POINTER if stored_power_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is not in the range [0-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_stored_power_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_stored_power_power(
     int attack_stat_stage,
     int defense_stat_stage,
     int special_attack_stat_stage,
@@ -508,7 +508,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_stored_power_power(
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if powers_buffer is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_triple_kick_powers(
+PKMN_C_API enum pkmn_error pkmn_calculations_triple_kick_powers(
     int* powers_buffer,
     size_t buffer_length,
     size_t* num_powers_out
@@ -526,7 +526,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_triple_kick_powers(
  * \returns ::PKMN_ERROR_NULL_POINTER if trump_card_power_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if pp_remaining_after_use is not in the range [0-8]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_trump_card_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_trump_card_power(
     int pp_remaining_after_use,
     int* trump_card_power_out
 );
@@ -547,7 +547,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_trump_card_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if either parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if attacker_current_hp > attacker_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_water_spout_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_water_spout_power(
     int attacker_current_hp,
     int attacker_max_hp,
     int* water_spout_power_out
@@ -570,7 +570,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_water_spout_power(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is zero or negative
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if target_current_hp > target_max_hp
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_wring_out_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_wring_out_power(
     int target_current_hp,
     int target_max_hp,
     int generation,

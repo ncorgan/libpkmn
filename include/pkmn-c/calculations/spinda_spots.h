@@ -11,26 +11,25 @@
 #include <pkmn-c/error.h>
 
 //! X/Y coordinates of an individual Spinda spot.
-typedef struct
+struct pkmn_spinda_coords
 {
-    //! X coordinate.
     int x;
     //! Y coordinate.
     int y;
-} pkmn_spinda_coords_t;
+};
 
 //! Coordinates of all four Spinda spots.
-typedef struct
+struct pkmn_spinda_spots
 {
     //! Coordinates of the left ear spot.
-    pkmn_spinda_coords_t left_ear;
+    struct pkmn_spinda_coords left_ear;
     //! Coordinates of the right ear spot.
-    pkmn_spinda_coords_t right_ear;
+    struct pkmn_spinda_coords right_ear;
     //! Coordinates of the left face spot.
-    pkmn_spinda_coords_t left_face;
+    struct pkmn_spinda_coords left_face;
     //! Coordinates of the right face spot.
-    pkmn_spinda_coords_t right_face;
-} pkmn_spinda_spots_t;
+    struct pkmn_spinda_coords right_face;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,10 +40,10 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords(
-    const pkmn_spinda_coords_t* coords1_ptr,
-    const pkmn_spinda_coords_t* coords2_ptr,
-    pkmn_spinda_coords_t* result_out
+PKMN_C_API enum pkmn_error pkmn_calculations_add_spinda_coords(
+    const struct pkmn_spinda_coords* coords1,
+    const struct pkmn_spinda_coords* coords2,
+    struct pkmn_spinda_coords* result_out
 );
 
 //! Add all of the spots of the two Spinda spot groups.
@@ -52,10 +51,10 @@ PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_spots(
-    const pkmn_spinda_spots_t* spots1_ptr,
-    const pkmn_spinda_spots_t* spots2_ptr,
-    pkmn_spinda_spots_t* result_out
+PKMN_C_API enum pkmn_error pkmn_calculations_add_spinda_spots(
+    const struct pkmn_spinda_spots* spots1,
+    const struct pkmn_spinda_spots* spots2,
+    struct pkmn_spinda_spots* result_out
 );
 
 //! Add the the given coordinates to all spots in the given group.
@@ -63,10 +62,10 @@ PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_spots(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
-    const pkmn_spinda_spots_t* spots_ptr,
-    const pkmn_spinda_coords_t* coords_ptr,
-    pkmn_spinda_spots_t* result_out
+PKMN_C_API enum pkmn_error pkmn_calculations_add_spinda_coords_to_spots(
+    const struct pkmn_spinda_spots* spots,
+    const struct pkmn_spinda_coords* coords,
+    struct pkmn_spinda_spots* result_out
 );
 
 //! Calculates offset of the spots on a Generation III-V Spinda.
@@ -74,9 +73,9 @@ PKMN_C_API pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any spot_Offset_out is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_spinda_spot_offset(
+PKMN_C_API enum pkmn_error pkmn_calculations_spinda_spot_offset(
     uint32_t personality,
-    pkmn_spinda_spots_t* spot_offset_out
+    struct pkmn_spinda_spots* spot_offset_out
 );
 
 #ifdef __cplusplus

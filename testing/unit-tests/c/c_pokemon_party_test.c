@@ -9,29 +9,29 @@
 
 #include <pkmn-c.h>
 
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_list_t empty_pokemon_list =
+static const struct pkmn_pokemon_list empty_pokemon_list =
 {
     .pokemon = NULL,
     .length = 0
 };
 
 static void test_empty_pokemon_party(
-    pkmn_pokemon_party_t* party_ptr
+    struct pkmn_pokemon_party* party_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(party_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t num_pokemon = 6;
 
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     error = pkmn_pokemon_party_get_num_pokemon(
                 party_ptr,
@@ -67,17 +67,17 @@ static void test_empty_pokemon_party(
 }
 
 static void test_setting_pokemon_in_party(
-    pkmn_pokemon_party_t* party_ptr
+    struct pkmn_pokemon_party* party_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(party_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     size_t num_pokemon = 0;
 
-    pkmn_pokemon_t original_first = empty_pokemon;
-    pkmn_pokemon_t original_second = empty_pokemon;
+    struct pkmn_pokemon original_first = empty_pokemon;
+    struct pkmn_pokemon original_second = empty_pokemon;
 
     error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
@@ -128,9 +128,9 @@ static void test_setting_pokemon_in_party(
      * have the same underlying Pokémon.
      */
 
-    pkmn_pokemon_t bulbasaur = empty_pokemon;
-    pkmn_pokemon_t charmander = empty_pokemon;
-    pkmn_pokemon_t squirtle = empty_pokemon;
+    struct pkmn_pokemon bulbasaur = empty_pokemon;
+    struct pkmn_pokemon charmander = empty_pokemon;
+    struct pkmn_pokemon squirtle = empty_pokemon;
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
@@ -205,7 +205,7 @@ static void test_setting_pokemon_in_party(
     // Copy a Pokémon whose memory is already part of the party. Make sure we
     // can't copy it to itself.
 
-    pkmn_pokemon_t second_in_party = empty_pokemon;
+    struct pkmn_pokemon second_in_party = empty_pokemon;
     error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 1,
@@ -299,7 +299,7 @@ static void test_setting_pokemon_in_party(
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
-    pkmn_pokemon_t fifth_in_party = empty_pokemon;
+    struct pkmn_pokemon fifth_in_party = empty_pokemon;
     error = pkmn_pokemon_party_get_pokemon(
                 party_ptr,
                 4,
@@ -316,7 +316,7 @@ static void test_setting_pokemon_in_party(
      * Now check everything we've created. Each variable should have the
      * same Pokémon underneath, even if the pointer has changed.
      */
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
     error = pkmn_pokemon_party_as_list(
                 party_ptr,
                 &pokemon_list
@@ -376,9 +376,9 @@ static void pokemon_party_test_common(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_pokemon_party_t party =
+    struct pkmn_pokemon_party party =
     {
         .game = NULL,
         .capacity = 0,

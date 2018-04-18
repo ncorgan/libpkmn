@@ -10,8 +10,8 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_trainer_info_free(
-    pkmn_trainer_info_t* trainer_info_ptr
+enum pkmn_error pkmn_trainer_info_free(
+    struct pkmn_trainer_info* trainer_info_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(trainer_info_ptr);

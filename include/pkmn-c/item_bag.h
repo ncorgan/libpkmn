@@ -24,7 +24,7 @@
  * Any dynamically allocated memory in this struct is initialized by
  * ::pkmn_item_bag_init and freed by ::pkmn_item_bag_free.
  */
-typedef struct
+struct pkmn_item_bag
 {
     /*!
      * @brief The game this bag is associated with.
@@ -37,10 +37,10 @@ typedef struct
      * All string entries are guaranteed to be valid inputs for
      * ::pkmn_item_bag_get_pocket.
      */
-    pkmn_string_list_t pocket_names;
+    struct pkmn_string_list pocket_names;
 
     void* _internal;
-} pkmn_item_bag_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,9 +57,9 @@ extern "C" {
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the game is invalid
  * \returns ::PKMN_ERROR_NULL_POINTER if either parameter is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_item_bag_init(
+PKMN_C_API enum pkmn_error pkmn_item_bag_init(
     const char* game,
-    pkmn_item_bag_t* item_bag_out
+    struct pkmn_item_bag* item_bag_out
 );
 
 /*!
@@ -75,8 +75,8 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_init(
  * \returns ::PKMN_ERROR_NULL_POINTER if item_bag_ptr is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if position is outside the range [0,capacity-1]
  */
-PKMN_C_API pkmn_error_t pkmn_item_bag_free(
-    pkmn_item_bag_t* item_bag_ptr
+PKMN_C_API enum pkmn_error pkmn_item_bag_free(
+    struct pkmn_item_bag* item_bag_ptr
 );
 
 /*!
@@ -88,7 +88,7 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_free(
  * \returns <b>NULL</b> if item_bag_ptr is NULL
  */
 PKMN_C_API const char* pkmn_item_bag_strerror(
-    pkmn_item_bag_t* item_bag_ptr
+    struct pkmn_item_bag* item_bag_ptr
 );
 
 /*!
@@ -107,10 +107,10 @@ PKMN_C_API const char* pkmn_item_bag_strerror(
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given name does not correspond to a
  *                                        valid pocket
  */
-PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
-    pkmn_item_bag_t* item_bag_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_bag_get_pocket(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* pocket_name,
-    pkmn_item_list_t* item_list_out
+    struct pkmn_item_list* item_list_out
 );
 
 /*!
@@ -129,8 +129,8 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_get_pocket(
  *                                        of this bag's pockets
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is not in the range [0,99]
  */
-PKMN_C_API pkmn_error_t pkmn_item_bag_add(
-    pkmn_item_bag_t* item_bag_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_bag_add(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* item,
     size_t amount
 );
@@ -151,8 +151,8 @@ PKMN_C_API pkmn_error_t pkmn_item_bag_add(
  *                                        of this bag's pockets
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if amount is not in the range [0,99]
  */
-PKMN_C_API pkmn_error_t pkmn_item_bag_remove(
-    pkmn_item_bag_t* item_bag_ptr,
+PKMN_C_API enum pkmn_error pkmn_item_bag_remove(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* item,
     size_t amount
 );

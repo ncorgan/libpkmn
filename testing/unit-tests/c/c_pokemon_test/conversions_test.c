@@ -14,7 +14,7 @@
 
 #include <string.h>
 
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
@@ -30,15 +30,15 @@ static void conversions_test(
     TEST_ASSERT_NOT_NULL(origin_game);
     TEST_ASSERT_NOT_NULL(dest_game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int origin_generation = game_to_generation(origin_game);
     int dest_generation = game_to_generation(dest_game);
     int min_generation = (origin_generation < dest_generation) ? origin_generation
                                                                : dest_generation;
 
-    pkmn_pokemon_t first_pokemon = empty_pokemon;
-    pkmn_pokemon_t second_pokemon = empty_pokemon;
+    struct pkmn_pokemon first_pokemon = empty_pokemon;
+    struct pkmn_pokemon second_pokemon = empty_pokemon;
 
     get_random_pokemon(
         &first_pokemon,

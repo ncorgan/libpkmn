@@ -12,18 +12,18 @@
 
 #include <stdlib.h>
 
-typedef struct
+struct pkmn_pokemon_list
 {
-    pkmn_pokemon_t* pokemon;
+    struct pkmn_pokemon* pokemon;
     size_t length;
-} pkmn_pokemon_list_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_pokemon_list_free(
-    pkmn_pokemon_list_t* pokemon_list
+PKMN_C_API enum pkmn_error pkmn_pokemon_list_free(
+    struct pkmn_pokemon_list* pokemon_list
 );
 
 #ifdef __cplusplus

@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/moves/damage.hpp>
 
-pkmn_error_t pkmn_calculations_damage(
+enum pkmn_error pkmn_calculations_damage(
     int attacker_level,
     int move_base_power,
     int attack_stat,

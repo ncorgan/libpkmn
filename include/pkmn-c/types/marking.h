@@ -22,7 +22,7 @@
  * and can be used as indices to access a full buffer returned from
  * ::pkmn_pokemon_get_markings.
  */
-typedef enum
+enum pkmn_marking
 {
     //! Circle.
     PKMN_MARKING_CIRCLE = 0,
@@ -36,6 +36,6 @@ typedef enum
     PKMN_MARKING_STAR,
     //! Diamond (Generation IV+).
     PKMN_MARKING_DIAMOND,
-} pkmn_marking_t;
+};
 
 #endif /* PKMN_C_TYPES_MARKING_H */

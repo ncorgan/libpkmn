@@ -34,7 +34,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_NULL_POINTER if critical_hit_chance_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if speed is outside the range [1-255]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
+PKMN_C_API enum pkmn_error pkmn_calculations_gen1_critical_hit_chance(
     int speed,
     bool rate_increased,
     bool high_rate_move,
@@ -59,7 +59,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if the generation is not in the range [2-6]
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if the critical hit stage is negative
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_critical_hit_chance(
+PKMN_C_API enum pkmn_error pkmn_calculations_critical_hit_chance(
     int generation,
     int critical_hit_stage,
     float* critical_hit_chance_out
@@ -78,7 +78,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_critical_hit_chance(
  * \returns ::PKMN_ERROR_NULL_POINTER if critical_hit_modifier_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if attacker_level is not in the range [1-255]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
+PKMN_C_API enum pkmn_error pkmn_calculations_gen1_critical_hit_modifier(
     int attacker_level,
     float* critical_hit_modifier_out
 );
@@ -95,7 +95,7 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
  * \returns ::PKMN_ERROR_NULL_POINTER if critical_hit_modifier_out is NULL
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if generation is not in the range [2-6]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_critical_hit_modifier(
+PKMN_C_API enum pkmn_error pkmn_calculations_critical_hit_modifier(
     int generation,
     float* critical_hit_modifier_out
 );

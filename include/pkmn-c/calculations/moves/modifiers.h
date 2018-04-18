@@ -38,7 +38,7 @@ extern "C" {
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if a given type is invalid or not present
  *                                        in the given generation
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_type_damage_modifier(
+PKMN_C_API enum pkmn_error pkmn_calculations_type_damage_modifier(
     int generation,
     const char* attacking_type,
     const char* defending_type,

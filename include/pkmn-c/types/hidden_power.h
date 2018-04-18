@@ -17,13 +17,13 @@
  * or ::pkmn_calculations_modern_hidden_power and must be freed with
  * ::pkmn_hidden_power_free.
  */
-typedef struct
+struct pkmn_hidden_power
 {
     //! The type of the move when used by a Pokémon with specific IVs.
     char* type;
     //! The base power of hte move when used by a Pokémon with specific IVs.
     int base_power;
-} pkmn_hidden_power_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,8 +36,8 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon success
  * \returns ::PKMN_ERROR_NULL_POINTER if hidden_power_ptr is NULL
  */
-PKMN_C_API pkmn_error_t pkmn_hidden_power_free(
-    pkmn_hidden_power_t* hidden_power_ptr
+PKMN_C_API enum pkmn_error pkmn_hidden_power_free(
+    struct pkmn_hidden_power* hidden_power_ptr
 );
 
 #ifdef __cplusplus
