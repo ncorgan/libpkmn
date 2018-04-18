@@ -84,7 +84,7 @@ enum pkmn_error throw_feature_not_in_game_error(
 }
 
 enum pkmn_error throw_pksav_error(
-    pksav_error_t pksav_error_code
+    enum pksav_error pksav_error_code
 ) {
     PKMN_CPP_TO_C(
         throw pkmn::pksav_error(int(pksav_error_code));
@@ -217,7 +217,7 @@ enum pkmn_error throw_feature_not_in_game_error_with_handle(
 }
 
 enum pkmn_error throw_pksav_error_with_handle(
-    pksav_error_t pksav_error_code,
+    enum pksav_error pksav_error_code,
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
