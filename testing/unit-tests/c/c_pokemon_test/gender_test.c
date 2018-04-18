@@ -9,7 +9,7 @@
 
 #include <pkmn-c.h>
 
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
@@ -22,11 +22,11 @@ static void gender_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_gender_t gender = PKMN_GENDER_GENDERLESS;
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    enum pkmn_gender gender = PKMN_GENDER_GENDERLESS;
 
     // Single-gender
-    pkmn_pokemon_t nidorina = empty_pokemon;
+    struct pkmn_pokemon nidorina = empty_pokemon;
     error = pkmn_pokemon_init(
                 "Nidorina",
                 game,
@@ -64,7 +64,7 @@ static void gender_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(nidorina._internal);
 
-    pkmn_pokemon_t nidorino = empty_pokemon;
+    struct pkmn_pokemon nidorino = empty_pokemon;
     error = pkmn_pokemon_init(
                 "Nidorino",
                 game,
@@ -102,7 +102,7 @@ static void gender_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NULL(nidorino._internal);
 
-    pkmn_pokemon_t magnemite = empty_pokemon;
+    struct pkmn_pokemon magnemite = empty_pokemon;
     error = pkmn_pokemon_init(
                 "Magnemite",
                 game,
@@ -153,7 +153,7 @@ static void gender_test(
         mixed_pokemon[pokemon_index];
         ++pokemon_index)
     {
-        pkmn_pokemon_t pokemon = empty_pokemon;
+        struct pkmn_pokemon pokemon = empty_pokemon;
         error = pkmn_pokemon_init(
                     mixed_pokemon[pokemon_index],
                     game,

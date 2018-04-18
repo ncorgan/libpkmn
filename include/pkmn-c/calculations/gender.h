@@ -35,10 +35,10 @@ extern "C" {
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If Pokémon species is invalid
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If IV_attack is out of range [0,15]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
+PKMN_C_API enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
     const char* species,
     int IV_attack,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 );
 
 /*!
@@ -56,10 +56,10 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gen2_pokemon_gender(
  * \returns ::PKMN_ERROR_NULL_POINTER if species or gender_out is null
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If Pokémon species is invalid
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_modern_pokemon_gender(
+PKMN_C_API enum pkmn_error pkmn_calculations_modern_pokemon_gender(
     const char* species,
     uint32_t personality,
-    pkmn_gender_t* gender_out
+    enum pkmn_gender* gender_out
 );
 
 #ifdef __cplusplus

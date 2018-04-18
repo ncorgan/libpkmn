@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_gui_generate_spinda_sprite_at_filepath(
+PKMN_C_API enum pkmn_error pkmn_gui_generate_spinda_sprite_at_filepath(
     int generation,
     uint32_t personality,
     bool shiny,

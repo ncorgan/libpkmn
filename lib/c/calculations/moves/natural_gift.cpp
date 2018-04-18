@@ -12,10 +12,10 @@
 
 #include <pkmn/calculations/moves/natural_gift.hpp>
 
-pkmn_error_t pkmn_calculations_natural_gift_stats(
+enum pkmn_error pkmn_calculations_natural_gift_stats(
     const char* item_name,
     int generation,
-    pkmn_natural_gift_t* natural_gift_stats_out
+    struct pkmn_natural_gift* natural_gift_stats_out
 )
 {
     PKMN_CHECK_NULL_PARAM(item_name);

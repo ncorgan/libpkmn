@@ -27,12 +27,12 @@ extern "C" {
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-15]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_gen2_hidden_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_gen2_hidden_power(
     int IV_attack,
     int IV_defense,
     int IV_speed,
     int IV_special,
-    pkmn_hidden_power_t* hidden_power_out
+    struct pkmn_hidden_power* hidden_power_out
 );
 
 /*!
@@ -48,14 +48,14 @@ PKMN_C_API pkmn_error_t pkmn_calculations_gen2_hidden_power(
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_OUT_OF_RANGE if any parameter is [0-31]
  */
-PKMN_C_API pkmn_error_t pkmn_calculations_modern_hidden_power(
+PKMN_C_API enum pkmn_error pkmn_calculations_modern_hidden_power(
     int IV_HP,
     int IV_attack,
     int IV_defense,
     int IV_speed,
     int IV_spatk,
     int IV_spdef,
-    pkmn_hidden_power_t* hidden_power_out
+    struct pkmn_hidden_power* hidden_power_out
 );
 
 #ifdef __cplusplus

@@ -9,13 +9,14 @@
 
 #define PKMN_NUM_MARKINGS 6
 
-typedef enum {
+enum pkmn_marking
+{
     PKMN_MARKING_CIRCLE = 0,
     PKMN_MARKING_TRIANGLE,
     PKMN_MARKING_SQUARE,
     PKMN_MARKING_HEART,
     PKMN_MARKING_STAR,
     PKMN_MARKING_DIAMOND,
-} pkmn_marking_t;
+};
 
 #endif /* PKMN_C_TYPES_MARKING_H */

@@ -9,7 +9,7 @@
 
 #define PKMN_NUM_STATS 7
 
-typedef enum
+enum pkmn_stat
 {
     PKMN_STAT_HP,
     PKMN_STAT_ATTACK,
@@ -18,11 +18,11 @@ typedef enum
     PKMN_STAT_SPECIAL,
     PKMN_STAT_SPATK,
     PKMN_STAT_SPDEF
-} pkmn_stat_t;
+};
 
 #define PKMN_NUM_CONTEST_STATS 7
 
-typedef enum
+enum pkmn_contest_stat
 {
     PKMN_CONTEST_STAT_COOL,
     PKMN_CONTEST_STAT_BEAUTY,
@@ -31,6 +31,6 @@ typedef enum
     PKMN_CONTEST_STAT_TOUGH,
     PKMN_CONTEST_STAT_FEEL,
     PKMN_CONTEST_STAT_SHEEN
-} pkmn_contest_stat_t;
+};
 
 #endif /* PKMN_C_TYPES_STATS_H */

@@ -12,19 +12,19 @@
 
 #include <pkmn-c/types/string_types.h>
 
-typedef struct
+struct pkmn_attribute_names
 {
-    pkmn_string_list_t numeric_attribute_names;
-    pkmn_string_list_t string_attribute_names;
-    pkmn_string_list_t boolean_attribute_names;
-} pkmn_attribute_names_t;
+    struct pkmn_string_list numeric_attribute_names;
+    struct pkmn_string_list string_attribute_names;
+    struct pkmn_string_list boolean_attribute_names;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_attribute_names_free(
-    pkmn_attribute_names_t* attribute_names_ptr
+PKMN_C_API enum pkmn_error pkmn_attribute_names_free(
+    struct pkmn_attribute_names* attribute_names_ptr
 );
 
 #ifdef __cplusplus

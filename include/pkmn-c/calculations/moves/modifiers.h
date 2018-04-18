@@ -18,7 +18,7 @@ extern "C" {
 
 #define PKMN_STAB_MODIFIER 1.5f
 
-PKMN_C_API pkmn_error_t pkmn_calculations_type_damage_modifier(
+PKMN_C_API enum pkmn_error pkmn_calculations_type_damage_modifier(
     int generation,
     const char* attacking_type,
     const char* defending_type,

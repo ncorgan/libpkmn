@@ -55,55 +55,55 @@ static const char* MALE_ONLY_GAMES[] =
     "Colosseum", "XD"
 };
 
-static const pkmn_game_save_t empty_game_save =
+static const struct pkmn_game_save empty_game_save =
 {
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_party_t empty_pokemon_party =
+static const struct pkmn_pokemon_party empty_pokemon_party =
 {
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_pc_t empty_pokemon_pc =
+static const struct pkmn_pokemon_pc empty_pokemon_pc =
 {
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_pokemon_list_t empty_pokemon_list =
+static const struct pkmn_pokemon_list empty_pokemon_list =
 {
     .pokemon = NULL,
     .length = 0
 };
-static const pkmn_pokemon_box_list_t empty_pokemon_box_list =
+static const struct pkmn_pokemon_box_list empty_pokemon_box_list =
 {
     .boxes = NULL,
     .length = 0
 };
-static const pkmn_trainer_info_t empty_trainer_info =
+static const struct pkmn_trainer_info empty_trainer_info =
 {
     .name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
-static const pkmn_string_list_t empty_string_list =
+static const struct pkmn_string_list empty_string_list =
 {
     .strings = NULL,
     .length = 0
 };
-static const pkmn_item_list_t empty_item_list =
+static const struct pkmn_item_list empty_item_list =
 {
     .name = NULL,
     .game = NULL,
     ._internal = NULL
 };
-static const pkmn_item_bag_t empty_item_bag =
+static const struct pkmn_item_bag empty_item_bag =
 {
     .game = NULL,
     .pocket_names =
@@ -113,12 +113,12 @@ static const pkmn_item_bag_t empty_item_bag =
     },
     ._internal = NULL
 };
-static const pkmn_item_slots_t empty_item_slots =
+static const struct pkmn_item_slots empty_item_slots =
 {
     .item_slots = NULL,
     .length = 0
 };
-static const pkmn_attribute_names_t empty_attribute_names =
+static const struct pkmn_attribute_names empty_attribute_names =
 {
     .numeric_attribute_names =
     {
@@ -189,8 +189,8 @@ static void populate_path_vars()
 }
 
 static void compare_string_lists(
-    pkmn_string_list_t* string_list1_ptr,
-    pkmn_string_list_t* string_list_ptr
+    struct pkmn_string_list* string_list1_ptr,
+    struct pkmn_string_list* string_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(string_list1_ptr);
@@ -212,12 +212,12 @@ static void compare_string_lists(
  */
 
 static void game_save_test_trainer_info(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(game_save_ptr->game);
 
@@ -247,7 +247,7 @@ static void game_save_test_trainer_info(
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
 
-    pkmn_trainer_info_t trainer_info = empty_trainer_info;
+    struct pkmn_trainer_info trainer_info = empty_trainer_info;
     error = pkmn_game_save_get_trainer_info(
                 game_save_ptr,
                 &trainer_info
@@ -277,10 +277,10 @@ static void game_save_test_trainer_info(
 }
 
 static void game_save_test_rival_name(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     if(is_rival_name_set(game_save_ptr->game))
@@ -314,12 +314,12 @@ static void game_save_test_rival_name(
 }
 
 static void game_save_test_attributes(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     int generation = game_to_generation(game_save_ptr->game);
     switch(generation)
@@ -438,19 +438,19 @@ static void game_save_test_attributes(
 }
 
 static void game_save_test_common_fields(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save_ptr);
 
     int generation = game_to_generation(game_save_ptr->game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     bool is_game_gamecube = !strcmp(game_save_ptr->game, "Colosseum") ||
                             !strcmp(game_save_ptr->game, "XD");
 
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     game_save_test_trainer_info(game_save_ptr);
     game_save_test_rival_name(game_save_ptr);
@@ -481,7 +481,7 @@ static void game_save_test_common_fields(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(money, money_from_game_save);
 
-    pkmn_pokedex_t pokedex =
+    struct pkmn_pokedex pokedex =
     {
         .game = NULL,
         ._internal = NULL
@@ -499,7 +499,7 @@ static void game_save_test_common_fields(
     }
 
     // Test the party.
-    pkmn_pokemon_party_t pokemon_party = empty_pokemon_party;
+    struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
     error = pkmn_game_save_get_pokemon_party(
                 game_save_ptr,
                 &pokemon_party
@@ -591,7 +591,7 @@ static void game_save_test_common_fields(
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     // Test PC.
-    pkmn_pokemon_pc_t pokemon_pc = empty_pokemon_pc;
+    struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
     error = pkmn_game_save_get_pokemon_pc(
                 game_save_ptr,
                 &pokemon_pc
@@ -601,7 +601,7 @@ static void game_save_test_common_fields(
     TEST_ASSERT_TRUE(pokemon_pc.capacity > 0);
     TEST_ASSERT_NOT_NULL(pokemon_pc._internal);
 
-    pkmn_pokemon_box_list_t pokemon_box_list = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
                 &pokemon_pc,
                 &pokemon_box_list
@@ -683,18 +683,18 @@ static void game_save_test_common_fields(
 }
 
 static void randomize_pokemon(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_string_list_t item_list = empty_string_list;
+    struct pkmn_string_list item_list = empty_string_list;
     error = pkmn_database_item_list(game_save_ptr->game, &item_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_pokemon_party_t pokemon_party = empty_pokemon_party;
+    struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
     error = pkmn_game_save_get_pokemon_party(
                 game_save_ptr,
                 &pokemon_party
@@ -703,7 +703,7 @@ static void randomize_pokemon(
 
     for(size_t pokemon_index = 0; pokemon_index < pokemon_party.capacity; ++pokemon_index)
     {
-        pkmn_pokemon_t pokemon = empty_pokemon;
+        struct pkmn_pokemon pokemon = empty_pokemon;
         get_random_pokemon(
             &pokemon,
             &item_list,
@@ -725,14 +725,14 @@ static void randomize_pokemon(
     error = pkmn_pokemon_party_free(&pokemon_party);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_pokemon_pc_t pokemon_pc = empty_pokemon_pc;
+    struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
     error = pkmn_game_save_get_pokemon_pc(
                 game_save_ptr,
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_pokemon_box_list_t pokemon_box_list = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
                 &pokemon_pc,
                 &pokemon_box_list
@@ -744,7 +744,7 @@ static void randomize_pokemon(
     {
         for(size_t pokemon_index = 0; pokemon_index < box_capacity; ++pokemon_index)
         {
-            pkmn_pokemon_t pokemon = empty_pokemon;
+            struct pkmn_pokemon pokemon = empty_pokemon;
             get_random_pokemon(
                 &pokemon,
                 &item_list,
@@ -775,14 +775,14 @@ static void randomize_pokemon(
 }
 
 static void compare_item_lists(
-    pkmn_item_list_t* item_list1_ptr,
-    pkmn_item_list_t* item_list_ptr
+    struct pkmn_item_list* item_list1_ptr,
+    struct pkmn_item_list* item_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_list1_ptr);
     TEST_ASSERT_NOT_NULL(item_list_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     TEST_ASSERT_EQUAL_STRING(item_list1_ptr->name, item_list_ptr->name);
     TEST_ASSERT_EQUAL_STRING(item_list1_ptr->game, item_list_ptr->game);
@@ -803,8 +803,8 @@ static void compare_item_lists(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(num_items1, num_items2);
 
-    pkmn_item_slots_t item_slots1 = empty_item_slots;
-    pkmn_item_slots_t item_slots2 = empty_item_slots;
+    struct pkmn_item_slots item_slots1 = empty_item_slots;
+    struct pkmn_item_slots item_slots2 = empty_item_slots;
 
     error = pkmn_item_list_as_list(
                 item_list1_ptr,
@@ -835,14 +835,14 @@ static void compare_item_lists(
 }
 
 static void compare_item_bags(
-    pkmn_item_bag_t* item_bag1_ptr,
-    pkmn_item_bag_t* item_bag2_ptr
+    struct pkmn_item_bag* item_bag1_ptr,
+    struct pkmn_item_bag* item_bag2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(item_bag1_ptr);
     TEST_ASSERT_NOT_NULL(item_bag2_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     compare_string_lists(
         &item_bag1_ptr->pocket_names,
@@ -851,8 +851,8 @@ static void compare_item_bags(
 
     for(size_t pocket_index = 0; pocket_index < item_bag1_ptr->pocket_names.length; ++pocket_index)
     {
-        pkmn_item_list_t pocket1 = empty_item_list;
-        pkmn_item_list_t pocket2 = empty_item_list;
+        struct pkmn_item_list pocket1 = empty_item_list;
+        struct pkmn_item_list pocket2 = empty_item_list;
 
         error = pkmn_item_bag_get_pocket(
                     item_bag1_ptr,
@@ -878,8 +878,8 @@ static void compare_item_bags(
 }
 
 static void compare_pokemon_lists(
-    pkmn_pokemon_list_t* pokemon_list1_ptr,
-    pkmn_pokemon_list_t* pokemon_list_ptr
+    struct pkmn_pokemon_list* pokemon_list1_ptr,
+    struct pkmn_pokemon_list* pokemon_list_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_list1_ptr);
@@ -896,17 +896,17 @@ static void compare_pokemon_lists(
 }
 
 static void compare_game_saves(
-    pkmn_game_save_t* game_save1_ptr,
-    pkmn_game_save_t* game_save2_ptr
+    struct pkmn_game_save* game_save1_ptr,
+    struct pkmn_game_save* game_save2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(game_save1_ptr);
     TEST_ASSERT_NOT_NULL(game_save2_ptr);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_pokemon_list_t pokemon_list1 = empty_pokemon_list;
-    pkmn_pokemon_list_t pokemon_list = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list1 = empty_pokemon_list;
+    struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     TEST_ASSERT_EQUAL_STRING(
         game_save1_ptr->game,
@@ -919,8 +919,8 @@ static void compare_game_saves(
 
     // Compare bags.
 
-    pkmn_item_bag_t item_bag1 = empty_item_bag;
-    pkmn_item_bag_t item_bag2 = empty_item_bag;
+    struct pkmn_item_bag item_bag1 = empty_item_bag;
+    struct pkmn_item_bag item_bag2 = empty_item_bag;
 
     error = pkmn_game_save_get_item_bag(
                 game_save1_ptr,
@@ -942,8 +942,8 @@ static void compare_game_saves(
     // Compare item PCs (if applicable).
     if((generation <= 3) || !is_game_gamecube)
     {
-        pkmn_item_list_t item_pc1 = empty_item_list;
-        pkmn_item_list_t item_pc = empty_item_list;
+        struct pkmn_item_list item_pc1 = empty_item_list;
+        struct pkmn_item_list item_pc = empty_item_list;
 
         error = pkmn_game_save_get_item_pc(
                     game_save1_ptr,
@@ -966,8 +966,8 @@ static void compare_game_saves(
 
     // Compare parties.
 
-    pkmn_pokemon_party_t pokemon_party1 = empty_pokemon_party;
-    pkmn_pokemon_party_t pokemon_party = empty_pokemon_party;
+    struct pkmn_pokemon_party pokemon_party1 = empty_pokemon_party;
+    struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
 
     error = pkmn_game_save_get_pokemon_party(
                 game_save1_ptr,
@@ -1004,8 +1004,8 @@ static void compare_game_saves(
 
     // Compare Pokémon PCs.
 
-    pkmn_pokemon_pc_t pokemon_pc1 = empty_pokemon_pc;
-    pkmn_pokemon_pc_t pokemon_pc = empty_pokemon_pc;
+    struct pkmn_pokemon_pc pokemon_pc1 = empty_pokemon_pc;
+    struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
 
     error = pkmn_game_save_get_pokemon_pc(
                 game_save1_ptr,
@@ -1018,8 +1018,8 @@ static void compare_game_saves(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_pokemon_box_list_t pokemon_box_list1 = empty_pokemon_box_list;
-    pkmn_pokemon_box_list_t pokemon_box_list = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_box_list1 = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
 
     error = pkmn_pokemon_pc_as_list(
                 &pokemon_pc1,
@@ -1065,14 +1065,14 @@ static void compare_game_saves(
 
     // Compare attributes.
 
-    pkmn_attribute_names_t attribute_names1 = empty_attribute_names;
+    struct pkmn_attribute_names attribute_names1 = empty_attribute_names;
     error = pkmn_game_save_get_attribute_names(
                 game_save1_ptr,
                 &attribute_names1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_attribute_names_t attribute_names2 = empty_attribute_names;
+    struct pkmn_attribute_names attribute_names2 = empty_attribute_names;
     error = pkmn_game_save_get_attribute_names(
                 game_save2_ptr,
                 &attribute_names2
@@ -1168,7 +1168,7 @@ static void compare_game_saves(
 }
 
 static void test_game_save(
-    pkmn_game_save_type_t save_type,
+    enum pkmn_game_save_type save_type,
     const char* game,
     const char* subdir,
     const char* filename
@@ -1178,12 +1178,12 @@ static void test_game_save(
     TEST_ASSERT_NOT_NULL(subdir);
     TEST_ASSERT_NOT_NULL(filename);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    pkmn_game_save_type_t save_type_from_file = PKMN_GAME_SAVE_TYPE_NONE;
+    enum pkmn_game_save_type save_type_from_file = PKMN_GAME_SAVE_TYPE_NONE;
 
-    pkmn_game_save_t game_save = empty_game_save;
+    struct pkmn_game_save game_save = empty_game_save;
     bool is_game_gamecube = !strcmp(game, "Colosseum") || !strcmp(game, "XD");
 
     char save_filepath[STRBUFFER_LEN] = {0};
@@ -1239,7 +1239,7 @@ static void test_game_save(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    pkmn_game_save_t game_save2 = empty_game_save;
+    struct pkmn_game_save game_save2 = empty_game_save;
     error = pkmn_game_save_init_from_file(
                 tmp_save_filepath,
                 &game_save2

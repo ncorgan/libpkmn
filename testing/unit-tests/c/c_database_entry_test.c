@@ -14,7 +14,7 @@
 #define STRBUFFER_LEN 1024
 
 static void assert_item_entry_uninitialized(
-    pkmn_database_item_entry_t* item_entry
+    struct pkmn_database_item_entry* item_entry
 ) {
     TEST_ASSERT_NULL(item_entry->name);
     TEST_ASSERT_NULL(item_entry->game);
@@ -28,7 +28,7 @@ static void assert_item_entry_uninitialized(
 }
 
 static void item_entry_test() {
-    pkmn_database_item_entry_t item_entry = {
+    struct pkmn_database_item_entry item_entry = {
         .name = NULL,
         .game = NULL,
         .category = NULL,
@@ -109,7 +109,7 @@ static void item_entry_test() {
 }
 
 static void assert_move_entry_uninitialized(
-    pkmn_database_move_entry_t* move_entry
+    struct pkmn_database_move_entry* move_entry
 ) {
     TEST_ASSERT_NULL(move_entry->name);
     TEST_ASSERT_NULL(move_entry->game);
@@ -128,7 +128,7 @@ static void assert_move_entry_uninitialized(
 }
 
 static void move_entry_test() {
-    pkmn_database_move_entry_t move_entry = {
+    struct pkmn_database_move_entry move_entry = {
         .name = NULL,
         .game = NULL,
         .description = NULL,
@@ -218,7 +218,7 @@ static void move_entry_test() {
 }
 
 static void assert_pokemon_entry_uninitialized(
-    pkmn_database_pokemon_entry_t* pokemon_entry
+    struct pkmn_database_pokemon_entry* pokemon_entry
 ) {
     TEST_ASSERT_NULL(pokemon_entry->name);
     TEST_ASSERT_NULL(pokemon_entry->game);
@@ -270,7 +270,7 @@ static bool file_exists(
 }
 
 static void pokemon_entry_test() {
-    pkmn_database_pokemon_entry_t pokemon_entry = {
+    struct pkmn_database_pokemon_entry pokemon_entry = {
         .name = NULL,
         .game = NULL,
         .species = NULL,

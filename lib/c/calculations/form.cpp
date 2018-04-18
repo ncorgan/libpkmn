@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/form.hpp>
 
-pkmn_error_t pkmn_calculations_gen2_unown_form(
+enum pkmn_error pkmn_calculations_gen2_unown_form(
     int IV_attack,
     int IV_defense,
     int IV_speed,
@@ -37,7 +37,7 @@ pkmn_error_t pkmn_calculations_gen2_unown_form(
     )
 }
 
-pkmn_error_t pkmn_calculations_gen3_unown_form(
+enum pkmn_error pkmn_calculations_gen3_unown_form(
     uint32_t personality,
     char* form_out,
     size_t buffer_len,
@@ -56,7 +56,7 @@ pkmn_error_t pkmn_calculations_gen3_unown_form(
     )
 }
 
-pkmn_error_t pkmn_calculations_wurmple_becomes_silcoon(
+enum pkmn_error pkmn_calculations_wurmple_becomes_silcoon(
     uint32_t personality,
     bool before_gen5,
     bool* evolves_out

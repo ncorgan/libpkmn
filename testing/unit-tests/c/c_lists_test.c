@@ -11,12 +11,12 @@
 
 static void ability_list_test()
 {
-    pkmn_string_list_t abilities =
+    struct pkmn_string_list abilities =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_ability_list(
@@ -44,12 +44,12 @@ static void ability_list_test()
 
 static void game_list_test()
 {
-    pkmn_string_list_t games =
+    struct pkmn_string_list games =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_game_list(
@@ -82,12 +82,12 @@ static void game_list_test()
 
 static void gamecube_shadow_pokemon_list_test()
 {
-    pkmn_string_list_t gamecube_shadow_pokemon =
+    struct pkmn_string_list gamecube_shadow_pokemon =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_gamecube_shadow_pokemon_list(
                 true,
@@ -113,12 +113,12 @@ static void gamecube_shadow_pokemon_list_test()
 
 static void item_list_test()
 {
-    pkmn_string_list_t items =
+    struct pkmn_string_list items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_item_list(
@@ -150,12 +150,12 @@ static void item_list_test()
 
 static void location_list_test()
 {
-    pkmn_string_list_t locations =
+    struct pkmn_string_list locations =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_location_list(
@@ -187,12 +187,12 @@ static void location_list_test()
 
 static void move_list_test()
 {
-    pkmn_string_list_t moves =
+    struct pkmn_string_list moves =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_move_list(
@@ -224,12 +224,12 @@ static void move_list_test()
 
 static void nature_list_test()
 {
-    pkmn_string_list_t natures =
+    struct pkmn_string_list natures =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_nature_list(
                 &natures
@@ -253,12 +253,12 @@ static void nature_list_test()
 
 static void pokemon_list_test()
 {
-    pkmn_string_list_t pokemon =
+    struct pkmn_string_list pokemon =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_pokemon_list(
                 0,
@@ -291,12 +291,12 @@ static void pokemon_list_test()
 
 static void region_list_test()
 {
-    pkmn_string_list_t regions =
+    struct pkmn_string_list regions =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_region_list(
                 &regions
@@ -325,12 +325,12 @@ static void ribbon_list_test()
 
 static void super_training_medal_list_test()
 {
-    pkmn_string_list_t super_training_medals =
+    struct pkmn_string_list super_training_medals =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_database_super_training_medal_list(
                 &super_training_medals
@@ -354,12 +354,12 @@ static void super_training_medal_list_test()
 
 static void type_list_test()
 {
-    pkmn_string_list_t types =
+    struct pkmn_string_list types =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure invalid calls return an error
     error = pkmn_database_type_list(

@@ -15,10 +15,10 @@
 #include <cstdlib>
 #include <cstring>
 
-pkmn_error_t pkmn_database_get_move_entry(
+enum pkmn_error pkmn_database_get_move_entry(
     const char* move_name,
     const char* move_game,
-    pkmn_database_move_entry_t* move_entry_out
+    struct pkmn_database_move_entry* move_entry_out
 )
 {
     PKMN_CHECK_NULL_PARAM(move_name);
@@ -38,8 +38,8 @@ pkmn_error_t pkmn_database_get_move_entry(
     )
 }
 
-pkmn_error_t pkmn_database_move_entry_free(
-    pkmn_database_move_entry_t* move_entry
+enum pkmn_error pkmn_database_move_entry_free(
+    struct pkmn_database_move_entry* move_entry
 )
 {
     PKMN_CHECK_NULL_PARAM(move_entry);

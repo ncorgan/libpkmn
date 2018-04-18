@@ -15,7 +15,7 @@
 
 #include <pkmn-c/game_save.h>
 
-static const std::unordered_map<std::string, pkmn_game_save_type_t> GAME_SAVE_TYPES =
+static const std::unordered_map<std::string, enum pkmn_game_save_type> GAME_SAVE_TYPES =
 {
     {"None", PKMN_GAME_SAVE_TYPE_NONE},
     {"Red/Blue/Yellow", PKMN_GAME_SAVE_TYPE_RED_BLUE_YELLOW},
@@ -27,9 +27,9 @@ static const std::unordered_map<std::string, pkmn_game_save_type_t> GAME_SAVE_TY
     {"Colosseum/XD", PKMN_GAME_SAVE_TYPE_COLOSSEUM_XD}
 };
 
-pkmn_error_t pkmn_game_save_detect_type(
+enum pkmn_error pkmn_game_save_detect_type(
     const char* filepath,
-    pkmn_game_save_type_t* game_save_type_out
+    enum pkmn_game_save_type* game_save_type_out
 )
 {
     PKMN_CHECK_NULL_PARAM(filepath);
@@ -43,9 +43,9 @@ pkmn_error_t pkmn_game_save_detect_type(
     )
 }
 
-pkmn_error_t pkmn_game_save_init_from_file(
+enum pkmn_error pkmn_game_save_init_from_file(
     const char* filepath,
-    pkmn_game_save_t* game_save_out
+    struct pkmn_game_save* game_save_out
 )
 {
     PKMN_CHECK_NULL_PARAM(filepath);
@@ -61,8 +61,8 @@ pkmn_error_t pkmn_game_save_init_from_file(
     )
 }
 
-pkmn_error_t pkmn_game_save_free(
-    pkmn_game_save_t* game_save_ptr
+enum pkmn_error pkmn_game_save_free(
+    struct pkmn_game_save* game_save_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -77,7 +77,7 @@ pkmn_error_t pkmn_game_save_free(
 }
 
 const char* pkmn_game_save_strerror(
-    pkmn_game_save_t* game_save_ptr
+    struct pkmn_game_save* game_save_ptr
 )
 {
     if(!game_save_ptr)
@@ -104,8 +104,8 @@ const char* pkmn_game_save_strerror(
 
 // Save file actions
 
-PKMN_C_API pkmn_error_t pkmn_game_save_get_filepath(
-    pkmn_game_save_t* game_save_ptr,
+PKMN_C_API enum pkmn_error pkmn_game_save_get_filepath(
+    struct pkmn_game_save* game_save_ptr,
     char* filepath_buffer,
     size_t filepath_buffer_length,
     size_t* actual_filepath_length_out
@@ -125,8 +125,8 @@ PKMN_C_API pkmn_error_t pkmn_game_save_get_filepath(
     )
 }
 
-pkmn_error_t pkmn_game_save_save(
-    pkmn_game_save_t* game_save_ptr
+enum pkmn_error pkmn_game_save_save(
+    struct pkmn_game_save* game_save_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -137,8 +137,8 @@ pkmn_error_t pkmn_game_save_save(
     )
 }
 
-pkmn_error_t pkmn_game_save_save_as(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_save_as(
+    struct pkmn_game_save* game_save_ptr,
     const char* filepath
 )
 {
@@ -153,9 +153,9 @@ pkmn_error_t pkmn_game_save_save_as(
 
 // Trainer info
 
-pkmn_error_t pkmn_game_save_get_trainer_info(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_trainer_info_t* trainer_info_out
+enum pkmn_error pkmn_game_save_get_trainer_info(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_trainer_info* trainer_info_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -165,7 +165,7 @@ pkmn_error_t pkmn_game_save_get_trainer_info(
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
         // Put the values in a separate struct first so there are
         // no side effects if there's an error.
-        pkmn_trainer_info_t trainer_info;
+        struct pkmn_trainer_info trainer_info;
 
         pkmn::c::string_cpp_to_c_alloc(
             internal_ptr->cpp->get_trainer_name(),
@@ -188,8 +188,8 @@ pkmn_error_t pkmn_game_save_get_trainer_info(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_trainer_name(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_trainer_name(
+    struct pkmn_game_save* game_save_ptr,
     const char* trainer_name
 )
 {
@@ -202,8 +202,8 @@ pkmn_error_t pkmn_game_save_set_trainer_name(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_trainer_id(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_trainer_id(
+    struct pkmn_game_save* game_save_ptr,
     uint32_t trainer_id
 )
 {
@@ -215,8 +215,8 @@ pkmn_error_t pkmn_game_save_set_trainer_id(
     )
 }
 
-PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_public_id(
-    pkmn_game_save_t* game_save_ptr,
+PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_public_id(
+    struct pkmn_game_save* game_save_ptr,
     uint16_t trainer_public_id
 )
 {
@@ -228,8 +228,8 @@ PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_public_id(
     )
 }
 
-PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_secret_id(
-    pkmn_game_save_t* game_save_ptr,
+PKMN_C_API enum pkmn_error pkmn_game_save_set_trainer_secret_id(
+    struct pkmn_game_save* game_save_ptr,
     uint16_t trainer_secret_id
 )
 {
@@ -241,9 +241,9 @@ PKMN_C_API pkmn_error_t pkmn_game_save_set_trainer_secret_id(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_trainer_gender(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_gender_t gender
+enum pkmn_error pkmn_game_save_set_trainer_gender(
+    struct pkmn_game_save* game_save_ptr,
+    enum pkmn_gender gender
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -264,8 +264,8 @@ pkmn_error_t pkmn_game_save_set_trainer_gender(
 
 // Other fields
 
-pkmn_error_t pkmn_game_save_get_rival_name(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_get_rival_name(
+    struct pkmn_game_save* game_save_ptr,
     char* rival_name_buffer,
     size_t rival_name_buffer_length,
     size_t* actual_rival_name_length_out
@@ -285,8 +285,8 @@ pkmn_error_t pkmn_game_save_get_rival_name(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_rival_name(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_rival_name(
+    struct pkmn_game_save* game_save_ptr,
     const char* rival_name
 )
 {
@@ -299,8 +299,8 @@ pkmn_error_t pkmn_game_save_set_rival_name(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_money(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_get_money(
+    struct pkmn_game_save* game_save_ptr,
     int* money_out
 )
 {
@@ -313,8 +313,8 @@ pkmn_error_t pkmn_game_save_get_money(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_money(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_money(
+    struct pkmn_game_save* game_save_ptr,
     int money
 )
 {
@@ -328,9 +328,9 @@ pkmn_error_t pkmn_game_save_set_money(
 
 // Pokémon and items
 
-pkmn_error_t pkmn_game_save_get_pokedex(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_pokedex_t* pokedex_out
+enum pkmn_error pkmn_game_save_get_pokedex(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_pokedex* pokedex_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -345,9 +345,9 @@ pkmn_error_t pkmn_game_save_get_pokedex(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_pokemon_party(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_pokemon_party_t* pokemon_party_out
+enum pkmn_error pkmn_game_save_get_pokemon_party(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_pokemon_party* pokemon_party_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -362,9 +362,9 @@ pkmn_error_t pkmn_game_save_get_pokemon_party(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_pokemon_pc(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_pokemon_pc_t* pokemon_pc_out
+enum pkmn_error pkmn_game_save_get_pokemon_pc(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_pokemon_pc* pokemon_pc_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -379,9 +379,9 @@ pkmn_error_t pkmn_game_save_get_pokemon_pc(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_item_bag(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_item_bag_t* item_bag_out
+enum pkmn_error pkmn_game_save_get_item_bag(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_item_bag* item_bag_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -396,9 +396,9 @@ pkmn_error_t pkmn_game_save_get_item_bag(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_item_pc(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_item_list_t* item_pc_out
+enum pkmn_error pkmn_game_save_get_item_pc(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_item_list* item_pc_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);
@@ -415,8 +415,8 @@ pkmn_error_t pkmn_game_save_get_item_pc(
 
 // Attributes
 
-pkmn_error_t pkmn_game_save_get_numeric_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_get_numeric_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     int* value_out
 )
@@ -431,8 +431,8 @@ pkmn_error_t pkmn_game_save_get_numeric_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_numeric_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_numeric_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     int value
 )
@@ -446,8 +446,8 @@ pkmn_error_t pkmn_game_save_set_numeric_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_string_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_get_string_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     char* value_out,
     size_t value_buffer_len,
@@ -469,8 +469,8 @@ pkmn_error_t pkmn_game_save_get_string_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_string_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_string_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     const char* value
 )
@@ -485,8 +485,8 @@ pkmn_error_t pkmn_game_save_set_string_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_boolean_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_get_boolean_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     bool* value_out
 )
@@ -501,8 +501,8 @@ pkmn_error_t pkmn_game_save_get_boolean_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_set_boolean_attribute(
-    pkmn_game_save_t* game_save_ptr,
+enum pkmn_error pkmn_game_save_set_boolean_attribute(
+    struct pkmn_game_save* game_save_ptr,
     const char* attribute_name,
     bool value
 )
@@ -516,9 +516,9 @@ pkmn_error_t pkmn_game_save_set_boolean_attribute(
     )
 }
 
-pkmn_error_t pkmn_game_save_get_attribute_names(
-    pkmn_game_save_t* game_save_ptr,
-    pkmn_attribute_names_t* attribute_names_out
+enum pkmn_error pkmn_game_save_get_attribute_names(
+    struct pkmn_game_save* game_save_ptr,
+    struct pkmn_attribute_names* attribute_names_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game_save_ptr);

@@ -10,8 +10,8 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_hidden_power_free(
-    pkmn_hidden_power_t* hidden_power_ptr
+enum pkmn_error pkmn_hidden_power_free(
+    struct pkmn_hidden_power* hidden_power_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(hidden_power_ptr);

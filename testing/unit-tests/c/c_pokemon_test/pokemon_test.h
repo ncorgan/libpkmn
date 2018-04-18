@@ -29,7 +29,7 @@ typedef struct {
 } pkmn_test_values_t;
 
 void pokemon_test_common(
-    pkmn_pokemon_t* pokemon_ptr,
+    struct pkmn_pokemon* pokemon_ptr,
     pkmn_test_values_t* test_values
 );
 

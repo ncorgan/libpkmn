@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/nature.hpp>
 
-pkmn_error_t pkmn_calculations_nature(
+enum pkmn_error pkmn_calculations_nature(
     uint32_t personality,
     char* nature_out,
     size_t buffer_len,

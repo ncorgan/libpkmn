@@ -33,7 +33,7 @@ static inline bool file_exists(
 }
 
 static inline bool string_list_contains(
-    pkmn_string_list_t* string_list,
+    struct pkmn_string_list* string_list,
     const char* string
 )
 {

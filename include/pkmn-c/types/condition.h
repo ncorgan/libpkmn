@@ -7,7 +7,8 @@
 #ifndef PKMN_C_TYPES_CONDITION_H
 #define PKMN_C_TYPES_CONDITION_H
 
-typedef enum {
+enum pkmn_condition
+{
     PKMN_CONDITION_NONE = 0,
     PKMN_CONDITION_ASLEEP,
     PKMN_CONDITION_POISON,
@@ -15,6 +16,6 @@ typedef enum {
     PKMN_CONDITION_FROZEN,
     PKMN_CONDITION_PARALYSIS,
     PKMN_CONDITION_BAD_POISON
-} pkmn_condition_t;
+};
 
 #endif /* PKMN_C_TYPES_CONDITION_H */

@@ -14,9 +14,9 @@
 
 #include <cstdio>
 
-pkmn_error_t pkmn_item_bag_init(
+enum pkmn_error pkmn_item_bag_init(
     const char* game,
-    pkmn_item_bag_t* item_bag_out
+    struct pkmn_item_bag* item_bag_out
 )
 {
     PKMN_CHECK_NULL_PARAM(game);
@@ -32,8 +32,8 @@ pkmn_error_t pkmn_item_bag_init(
     )
 }
 
-pkmn_error_t pkmn_item_bag_free(
-    pkmn_item_bag_t* item_bag_ptr
+enum pkmn_error pkmn_item_bag_free(
+    struct pkmn_item_bag* item_bag_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(item_bag_ptr);
@@ -49,7 +49,7 @@ pkmn_error_t pkmn_item_bag_free(
 }
 
 const char* pkmn_item_bag_strerror(
-    pkmn_item_bag_t* item_bag_ptr
+    struct pkmn_item_bag* item_bag_ptr
 )
 {
     if(!item_bag_ptr)
@@ -74,10 +74,10 @@ const char* pkmn_item_bag_strerror(
     }
 }
 
-pkmn_error_t pkmn_item_bag_get_pocket(
-    pkmn_item_bag_t* item_bag_ptr,
+enum pkmn_error pkmn_item_bag_get_pocket(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* pocket_name,
-    pkmn_item_list_t* item_list_out
+    struct pkmn_item_list* item_list_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
@@ -97,8 +97,8 @@ pkmn_error_t pkmn_item_bag_get_pocket(
     )
 }
 
-pkmn_error_t pkmn_item_bag_add(
-    pkmn_item_bag_t* item_bag_ptr,
+enum pkmn_error pkmn_item_bag_add(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* item,
     size_t amount
 )
@@ -117,8 +117,8 @@ pkmn_error_t pkmn_item_bag_add(
     )
 }
 
-pkmn_error_t pkmn_item_bag_remove(
-    pkmn_item_bag_t* item_bag_ptr,
+enum pkmn_error pkmn_item_bag_remove(
+    struct pkmn_item_bag* item_bag_ptr,
     const char* item,
     size_t amount
 )
