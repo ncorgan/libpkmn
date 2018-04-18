@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -12,8 +12,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 PROJECT(PKMN C CXX)
 
 SET(PKMN_VERSION_MAJOR 0)
-SET(PKMN_VERSION_MINOR 3)
-SET(PKMN_VERSION_PATCH 0)
+SET(PKMN_VERSION_MINOR 999)
+SET(PKMN_VERSION_PATCH 999)
 SET(PKMN_VERSION "${PKMN_VERSION_MAJOR}.${PKMN_VERSION_MINOR}.${PKMN_VERSION_PATCH}")
 
 SET(PKMN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
