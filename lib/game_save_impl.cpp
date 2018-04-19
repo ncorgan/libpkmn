@@ -106,7 +106,7 @@ namespace pkmn {
                     )
             );
         }
-        else if((data_size == GCN_COLOSSEUM_BIN_SIZE) or (data_size == GCN_COLOSSEUM_GCI_SIZE))
+        else if((data_size == GCN_XD_BIN_SIZE) or (data_size == GCN_XD_GCI_SIZE))
         {
             gcn_save_uptr.reset(
                 new LibPkmGC::XD::SaveEditing::Save(
