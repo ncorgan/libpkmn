@@ -464,6 +464,7 @@ namespace pkmntest {
             {
                 if((game != "Colosseum") and (game != "XD"))
                 {
+                    // Casino coins
                     ASSERT_TRUE(
                         pkmn::does_vector_contain_value<std::string>(
                             save->get_numeric_attribute_names(),
@@ -485,6 +486,20 @@ namespace pkmntest {
                         num_casino_coins,
                         save->get_numeric_attribute("Casino coins")
                     );
+
+                    // National Dex unlocked?
+                    ASSERT_TRUE(
+                        pkmn::does_vector_contain_value<std::string>(
+                            save->get_boolean_attribute_names(),
+                            "National Dex unlocked?"
+                        )
+                    );
+
+                    save->set_boolean_attribute("National Dex unlocked?", false);
+                    EXPECT_FALSE(save->get_boolean_attribute("National Dex unlocked?"));
+
+                    save->set_boolean_attribute("National Dex unlocked?", true);
+                    EXPECT_TRUE(save->get_boolean_attribute("National Dex unlocked?"));
                 }
                 break;
             }
@@ -938,11 +953,11 @@ namespace pkmntest {
         game_save_test_params_t("Yellow", "Yellow", "yellow/pokemon_yellow.sav"),
         game_save_test_params_t("Gold/Silver", "Gold", "gold_silver/pokemon_gold.sav"),
         game_save_test_params_t("Crystal", "Crystal", "crystal/pokemon_crystal.sav"),
-        game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav")/*,
+        game_save_test_params_t("Ruby/Sapphire", "Ruby", "ruby_sapphire/pokemon_ruby.sav"),
         game_save_test_params_t("Emerald", "Emerald", "emerald/pokemon_emerald.sav"),
         game_save_test_params_t("FireRed/LeafGreen", "FireRed", "firered_leafgreen/pokemon_firered.sav"),
         game_save_test_params_t("Colosseum/XD", "Colosseum", "gamecube_saves/pokemon_colosseum.gci"),
-        game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")*/
+        game_save_test_params_t("Colosseum/XD", "XD", "gamecube_saves/pokemon_xd.gci")
     };
 
     TEST_P(game_save_test, game_save_test) {
