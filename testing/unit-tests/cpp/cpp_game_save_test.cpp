@@ -554,22 +554,24 @@ namespace pkmntest {
             }
         }
 
-        // Set condition
-        std::vector<std::string> conditions;
+        // Set condition (TODO: add enum_maps to pkmntest library)
+        /*std::vector<std::string> conditions;
         if(generation <= 2)
         {
-            for(const auto& condition: pksav::GB_CONDITION_BIMAP.left)
+            for(const auto& condition: pksav::get_gb_condition_bimap().left)
             {
                 conditions.emplace_back(condition.first);
             }
         }
         else
         {
-            for(const auto& condition: pksav::CONDITION_MASK_BIMAP.left)
+            for(const auto& condition: pksav::get_condition_mask_bimap().left)
             {
                 conditions.emplace_back(condition.first);
             }
         }
+
+        ret->set_condition(conditions[rng.rand() % conditions.size()]);*/
 
         return ret;
     }

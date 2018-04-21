@@ -86,9 +86,11 @@ namespace pkmn
         GEN1_PC_RCAST->species = uint8_t(_database_entry.get_pokemon_index());
 
         std::pair<std::string, std::string> types = _database_entry.get_types();
-        GEN1_PC_RCAST->types[0] = uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.first));
+        const pksav::gen1_type_bimap_t& gen1_type_bimap = pksav::get_gen1_type_bimap();
+
+        GEN1_PC_RCAST->types[0] = uint8_t(gen1_type_bimap.left.at(types.first));
         GEN1_PC_RCAST->types[1] = (types.second == "None") ? GEN1_PC_RCAST->types[0]
-                                                           : uint8_t(pksav::GEN1_TYPE_BIMAP.left.at(types.second));
+                                                           : uint8_t(gen1_type_bimap.left.at(types.second));
 
         GEN1_PC_RCAST->catch_rate = gen1_catch_rates[_database_entry.get_species_id()];
 
@@ -331,9 +333,13 @@ namespace pkmn
         std::string ret = "None";
         enum pksav_gb_condition gb_condition = static_cast<enum pksav_gb_condition>(GEN1_PC_RCAST->condition);
 
-        if(pksav::GB_CONDITION_BIMAP.right.count(gb_condition))
+        const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
+
+        // Allow it not to find a valid one to account for glitch Pokémon.
+        auto gb_condition_iter = gb_condition_bimap.right.find(gb_condition);
+        if(gb_condition_iter != gb_condition_bimap.right.end())
         {
-            ret = pksav::GB_CONDITION_BIMAP.right.at(gb_condition);
+            ret = gb_condition_iter->second;
         }
 
         return ret;
@@ -345,16 +351,15 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-        auto condition_iter = pksav::GB_CONDITION_BIMAP.left.find(condition);
+        const pksav::gb_condition_bimap_t& gb_condition_bimap = pksav::get_gb_condition_bimap();
+        pkmn::enforce_value_in_map_keys(
+            "Condition",
+            condition,
+            gb_condition_bimap.left
+        );
 
-        if(condition_iter != pksav::GB_CONDITION_BIMAP.left.end())
-        {
-            GEN1_PC_RCAST->condition = static_cast<uint8_t>(condition_iter->second);
-        }
-        else
-        {
-            throw std::invalid_argument("Invalid condition.");
-        }
+        GEN1_PC_RCAST->condition =
+            static_cast<uint8_t>(gb_condition_bimap.left.at(condition));
     }
 
     std::string pokemon_gen1impl::get_nickname()

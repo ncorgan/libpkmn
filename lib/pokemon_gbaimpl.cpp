@@ -452,11 +452,13 @@ namespace pkmn
 
         // Check the mask. We won't distinguish between sleep states for different
         // numbers of turns.
-        for(const auto& mask_iter: pksav::CONDITION_MASK_BIMAP.right)
+
+        const pksav::condition_mask_bimap_t& condition_mask_bimap = pksav::get_condition_mask_bimap();
+        for(const auto& condition_mask_iter: condition_mask_bimap.right)
         {
-            if(GBA_PARTY_RCAST->condition & mask_iter.first)
+            if(GBA_PARTY_RCAST->condition & condition_mask_iter.first)
             {
-                ret = mask_iter.second;
+                ret = condition_mask_iter.second;
                 break;
             }
         }
@@ -468,27 +470,25 @@ namespace pkmn
         const std::string& condition
     )
     {
-        auto condition_iter = pksav::CONDITION_MASK_BIMAP.left.find(condition);
+        const pksav::condition_mask_bimap_t& condition_mask_bimap = pksav::get_condition_mask_bimap();
+        pkmn::enforce_value_in_map_keys(
+            "Condition",
+            condition,
+            condition_mask_bimap.left
+        );
 
-        if(condition_iter != pksav::CONDITION_MASK_BIMAP.left.end())
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        GBA_PARTY_RCAST->condition = 0;
+
+        if(condition == "Asleep")
         {
-            boost::lock_guard<pokemon_gbaimpl> lock(*this);
-
-            GBA_PARTY_RCAST->condition = 0;
-
-            if(condition == "Asleep")
-            {
-                // Sleep is stored as the number of turns asleep, so set a random value.
-                GBA_PARTY_RCAST->condition = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
-            }
-            else
-            {
-                GBA_PARTY_RCAST->condition = pksav_littleendian32(condition_iter->second);
-            }
+            // Sleep is stored as the number of turns asleep, so set a random value.
+            GBA_PARTY_RCAST->condition = pksav_littleendian32(pkmn::rng<uint32_t>().rand(1, 7));
         }
         else
         {
-            throw std::invalid_argument("Invalid condition.");
+            GBA_PARTY_RCAST->condition = pksav_littleendian32(condition_mask_bimap.left.at(condition));
         }
     }
 
@@ -1040,6 +1040,9 @@ namespace pkmn
             &GBA_PC_RCAST->markings
         );
     }
+
+    // TODO: will these be needed in other files? Conversion to NDS perhaps?
+    // If so, move to pksav/enum_maps
 
     static const std::unordered_map<std::string, enum pksav_gba_ribbon_mask> gba_ribbons = boost::assign::map_list_of
         ("Champion", PKSAV_GBA_CHAMPION_RIBBON_MASK)
