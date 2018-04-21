@@ -45,8 +45,16 @@ namespace pkmn {
                 pkmn::pokemon::sptr new_pokemon
             ) override final;
 
+            std::string get_wallpaper() override final;
+
+            void set_wallpaper(
+                const std::string& wallpaper
+            ) override final;
+
         private:
             void _from_native() override final;
+
+            std::string _wallpaper;
     };
 }
 

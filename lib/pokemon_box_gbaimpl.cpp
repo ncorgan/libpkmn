@@ -9,6 +9,8 @@
 #include "pokemon_box_gbaimpl.hpp"
 #include "pokemon_gbaimpl.hpp"
 
+#include "pksav/enum_maps.hpp"
+
 #include <pkmn/exception.hpp>
 
 #include <pksav/math/endian.h>
@@ -24,7 +26,8 @@ namespace pkmn {
 
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id
-    ): pokemon_box_impl(game_id)
+    ): pokemon_box_impl(game_id),
+       _wallpaper("Forest") // Some sensible default
     {
         _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
         std::memset(_native, 0, sizeof(struct pksav_gba_pokemon_box));
@@ -36,7 +39,8 @@ namespace pkmn {
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id,
         struct pksav_gba_pokemon_box* native
-    ): pokemon_box_impl(game_id)
+    ): pokemon_box_impl(game_id),
+       _wallpaper("Forest") // Some sensible default
     {
         _native = reinterpret_cast<void*>(native);
         _our_mem = false;
@@ -47,7 +51,8 @@ namespace pkmn {
     pokemon_box_gbaimpl::pokemon_box_gbaimpl(
         int game_id,
         const struct pksav_gba_pokemon_box &native
-    ): pokemon_box_impl(game_id)
+    ): pokemon_box_impl(game_id),
+       _wallpaper("Forest") // Some sensible default
     {
         _native = reinterpret_cast<void*>(new struct pksav_gba_pokemon_box);
         *NATIVE_RCAST = native;
@@ -176,6 +181,62 @@ namespace pkmn {
                 _pokedex->set_has_caught(species, true);
             }
         }
+    }
+
+    static std::vector<std::string> get_valid_wallpaper_names(
+        const std::string& game
+    )
+    {
+        std::vector<std::string> valid_wallpaper_names =
+            pkmn::map_keys_to_vector(pksav::GBA_BOX_WALLPAPER_BIMAP.left);
+
+        std::vector<std::string> game_specific_wallpaper_names;
+
+        if((game == "FireRed") or (game == "LeafGreen"))
+        {
+            game_specific_wallpaper_names =
+                pkmn::map_keys_to_vector(pksav::GBA_FRLG_BOX_WALLPAPER_BIMAP.left);
+        }
+        else
+        {
+            game_specific_wallpaper_names =
+                pkmn::map_keys_to_vector(pksav::GBA_RSE_BOX_WALLPAPER_BIMAP.left);
+        }
+
+        valid_wallpaper_names.insert(
+            valid_wallpaper_names.end(),
+            game_specific_wallpaper_names.begin(),
+            game_specific_wallpaper_names.end()
+        );
+
+        return valid_wallpaper_names;
+    }
+
+    std::string pokemon_box_gbaimpl::get_wallpaper()
+    {
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
+        BOOST_ASSERT(pkmn::does_vector_contain_value(
+            get_valid_wallpaper_names(get_game()),
+            _wallpaper
+        ));
+
+        return _wallpaper;
+    }
+
+    void pokemon_box_gbaimpl::set_wallpaper(
+        const std::string& wallpaper
+    )
+    {
+        pkmn::enforce_value_in_vector(
+            "Wallpaper",
+            wallpaper,
+            get_valid_wallpaper_names(get_game())
+        );
+
+        boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
+
+        _wallpaper = wallpaper;
     }
 
     void pokemon_box_gbaimpl::_from_native()

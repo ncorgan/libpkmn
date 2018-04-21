@@ -102,6 +102,10 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);
 
+        // Make sure any updating is performed.
+        (void)_pokemon_party->get_native();
+        (void)_pokemon_pc->get_native();
+
         _libpkmgc_save->saveEncrypted(_raw.data(), _has_gci_data);
 
         std::ofstream ofile(filepath, std::ios::binary);

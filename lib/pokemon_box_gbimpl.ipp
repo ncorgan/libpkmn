@@ -269,6 +269,20 @@ namespace pkmn {
     }
 
     POKEMON_BOX_GBIMPL_TEMPLATE
+    std::string POKEMON_BOX_GBIMPL_CLASS::get_wallpaper()
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
+    }
+
+    POKEMON_BOX_GBIMPL_TEMPLATE
+    void POKEMON_BOX_GBIMPL_CLASS::set_wallpaper(
+        PKMN_UNUSED(const std::string& wallpaper)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", "Generation I-II");
+    }
+
+    POKEMON_BOX_GBIMPL_TEMPLATE
     void POKEMON_BOX_GBIMPL_CLASS::_from_native()
     {
         boost::lock_guard<POKEMON_BOX_GBIMPL_CLASS> lock(*this);

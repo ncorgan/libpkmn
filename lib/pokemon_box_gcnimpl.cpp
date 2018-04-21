@@ -191,6 +191,18 @@ namespace pkmn {
                                );
     }
 
+    std::string pokemon_box_gcnimpl::get_wallpaper()
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
+    }
+
+    void pokemon_box_gcnimpl::set_wallpaper(
+        PKMN_UNUSED(const std::string& wallpaper)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Box wallpaper", get_game());
+    }
+
     void pokemon_box_gcnimpl::_from_native() {
         int capacity = get_capacity();
 

@@ -46,6 +46,12 @@ namespace pkmn {
                 pkmn::pokemon::sptr new_pokemon
             ) = 0;
 
+            virtual std::string get_wallpaper() = 0;
+
+            virtual void set_wallpaper(
+                const std::string& wallpaper
+            ) = 0;
+
             virtual const pkmn::pokemon_list_t& as_vector() = 0;
 
             #ifndef __DOXYGEN__

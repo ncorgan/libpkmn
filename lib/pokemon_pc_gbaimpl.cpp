@@ -112,4 +112,8 @@ namespace pkmn {
             )
         }
     }
+
+    void pokemon_pc_gbaimpl::_update_native_box_wallpapers()
+    {
+    }
 }

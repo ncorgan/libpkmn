@@ -91,6 +91,11 @@ namespace pkmn {
     {
         boost::lock_guard<pokemon_pc_impl> lock(*this);
 
+        if(_generation == 1)
+        {
+            throw pkmn::feature_not_in_game_error("Box names", "Generation I");
+        }
+
         _update_box_names();
         return _box_names;
     }
@@ -102,6 +107,10 @@ namespace pkmn {
         if(_generation > 1)
         {
             _update_box_names();
+        }
+        if((_generation > 3) and not game_is_gamecube(_game_id))
+        {
+            _update_native_box_wallpapers();
         }
 
         return _native;

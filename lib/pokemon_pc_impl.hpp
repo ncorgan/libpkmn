@@ -53,7 +53,7 @@ namespace pkmn {
             {
                 for(const auto& box: _box_list)
                 {
-                    BOOST_ASSERT(dynamic_cast<pokemon_box_impl*>(box.get()));
+                    BOOST_ASSERT(dynamic_cast<pokemon_box_impl*>(box.get()) != nullptr);
                     dynamic_cast<pokemon_box_impl*>(box.get())->set_pokedex(pokedex);
                 }
             }
@@ -69,8 +69,8 @@ namespace pkmn {
 
             virtual void _from_native() = 0;
             virtual void _update_box_names() = 0;
+            virtual void _update_native_box_wallpapers() = 0;
     };
-
 }
 
 #endif /* PKMN_POKEMON_PC_IMPL_HPP */

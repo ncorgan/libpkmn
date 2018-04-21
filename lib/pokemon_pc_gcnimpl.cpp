@@ -98,4 +98,9 @@ namespace pkmn {
             _box_names[i] = _box_list[i]->get_name();
         }
     }
+
+    void pokemon_pc_gcnimpl::_update_native_box_wallpapers()
+    {
+        BOOST_ASSERT_MSG(false, "No box wallpapers in Gamecube games, so this should never be called");
+    }
 }

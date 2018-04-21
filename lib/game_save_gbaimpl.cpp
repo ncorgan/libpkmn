@@ -186,6 +186,10 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gbaimpl> lock(*this);
 
+        // Make sure any updating is performed.
+        (void)_pokemon_party->get_native();
+        (void)_pokemon_pc->get_native();
+
         PKSAV_CALL(
             pksav_gba_save_save(
                 filepath.c_str(),

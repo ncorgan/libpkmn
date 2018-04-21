@@ -9,6 +9,7 @@
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
 #include <pksav/gen1/pokemon.h>
+#include <pksav/gba/box_wallpaper.h>
 #include <pksav/common/condition.h>
 
 #include <boost/assign.hpp>
@@ -41,6 +42,43 @@ boost::assign::list_of<condition_mask_bimap_t::relation>
     ("Frozen",     PKSAV_CONDITION_FROZEN)
     ("Paralysis",  PKSAV_CONDITION_PARALYZ)
     ("Bad Poison", PKSAV_CONDITION_BAD_POISON)
+;
+
+// Box wallpapers
+
+typedef boost::bimap<std::string, enum pksav_gba_box_wallpaper> gba_box_wallpaper_bimap_t;
+static const gba_box_wallpaper_bimap_t GBA_BOX_WALLPAPER_BIMAP =
+boost::assign::list_of<gba_box_wallpaper_bimap_t::relation>
+    ("Forest",  PKSAV_GBA_BOX_WALLPAPER_FOREST)
+    ("City",     PKSAV_GBA_BOX_WALLPAPER_CITY)
+    ("Desert",   PKSAV_GBA_BOX_WALLPAPER_DESERT)
+    ("Savanna",  PKSAV_GBA_BOX_WALLPAPER_SAVANNA)
+    ("Crag",     PKSAV_GBA_BOX_WALLPAPER_CRAG)
+    ("Volcano",  PKSAV_GBA_BOX_WALLPAPER_VOLCANO)
+    ("Snow",     PKSAV_GBA_BOX_WALLPAPER_SNOW)
+    ("Cave",     PKSAV_GBA_BOX_WALLPAPER_CAVE)
+    ("Beach",    PKSAV_GBA_BOX_WALLPAPER_BEACH)
+    ("Seafloor", PKSAV_GBA_BOX_WALLPAPER_SEAFLOOR)
+    ("River",    PKSAV_GBA_BOX_WALLPAPER_RIVER)
+    ("Sky",      PKSAV_GBA_BOX_WALLPAPER_SKY)
+;
+
+typedef boost::bimap<std::string, enum pksav_gba_rse_box_wallpaper> gba_rse_box_wallpaper_bimap_t;
+static const gba_rse_box_wallpaper_bimap_t GBA_RSE_BOX_WALLPAPER_BIMAP =
+boost::assign::list_of<gba_rse_box_wallpaper_bimap_t::relation>
+    ("Polka-Dot",  PKSAV_GBA_RSE_BOX_WALLPAPER_POLKADOT)
+    ("PokéCenter", PKSAV_GBA_RSE_BOX_WALLPAPER_POKECENTER)
+    ("Machine",    PKSAV_GBA_RSE_BOX_WALLPAPER_MACHINE)
+    ("Plain",      PKSAV_GBA_RSE_BOX_WALLPAPER_PLAIN)
+;
+
+typedef boost::bimap<std::string, enum pksav_gba_frlg_box_wallpaper> gba_frlg_box_wallpaper_bimap_t;
+static const gba_frlg_box_wallpaper_bimap_t GBA_FRLG_BOX_WALLPAPER_BIMAP =
+boost::assign::list_of<gba_frlg_box_wallpaper_bimap_t::relation>
+    ("Stars",      PKSAV_GBA_FRLG_BOX_WALLPAPER_STARS)
+    ("PokéCenter", PKSAV_GBA_FRLG_BOX_WALLPAPER_POKECENTER)
+    ("Tiles",      PKSAV_GBA_FRLG_BOX_WALLPAPER_TILES)
+    ("Simple",     PKSAV_GBA_FRLG_BOX_WALLPAPER_SIMPLE)
 ;
 
 // Misc

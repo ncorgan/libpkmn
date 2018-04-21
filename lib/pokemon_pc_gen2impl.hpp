@@ -30,6 +30,7 @@ namespace pkmn {
         private:
             void _from_native() override final;
             void _update_box_names() override final;
+            void _update_native_box_wallpapers() override final;
     };
 }
 

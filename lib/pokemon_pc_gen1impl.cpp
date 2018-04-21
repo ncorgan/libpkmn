@@ -139,6 +139,11 @@ namespace pkmn {
 
     void pokemon_pc_gen1impl::_update_box_names()
     {
-        throw pkmn::feature_not_in_game_error("Box names", "Generation I");
+        BOOST_ASSERT_MSG(false, "No box names in Generation I, so this should never be called");
+    }
+
+    void pokemon_pc_gen1impl::_update_native_box_wallpapers()
+    {
+        BOOST_ASSERT_MSG(false, "No box wallpapers in Generation I, so this should never be called");
     }
 }

@@ -174,4 +174,9 @@ namespace pkmn {
             )
         }
     }
+
+    void pokemon_pc_gen2impl::_update_native_box_wallpapers()
+    {
+        BOOST_ASSERT_MSG(false, "No box wallpapers in Generation I, so this should never be called");
+    }
 }
