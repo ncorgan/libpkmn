@@ -183,7 +183,7 @@ namespace pkmn {
         }
     }
 
-    static std::vector<std::string> get_valid_wallpaper_names(
+    std::vector<std::string> get_valid_gba_wallpaper_names(
         const std::string& game
     )
     {
@@ -217,7 +217,7 @@ namespace pkmn {
         boost::lock_guard<pokemon_box_gbaimpl> lock(*this);
 
         BOOST_ASSERT(pkmn::does_vector_contain_value(
-            get_valid_wallpaper_names(get_game()),
+            get_valid_gba_wallpaper_names(get_game()),
             _wallpaper
         ));
 
@@ -231,7 +231,7 @@ namespace pkmn {
         pkmn::enforce_value_in_vector(
             "Wallpaper",
             wallpaper,
-            get_valid_wallpaper_names(get_game())
+            get_valid_gba_wallpaper_names(get_game())
         );
 
         boost::lock_guard<pokemon_box_gbaimpl> lock(*this);

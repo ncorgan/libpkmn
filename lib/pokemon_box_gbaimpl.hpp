@@ -11,7 +11,13 @@
 
 #include <pksav/gba/pokemon.h>
 
+#include <vector>
+
 namespace pkmn {
+
+    std::vector<std::string> get_valid_gba_wallpaper_names(
+        const std::string& game
+    );
 
     class pokemon_box_gbaimpl: public pokemon_box_impl {
         public:
