@@ -49,8 +49,6 @@ namespace pkmn {
 
     item_list_modernimpl::~item_list_modernimpl()
     {
-        boost::lock_guard<item_list_modernimpl> lock(*this);
-
         if(_our_mem)
         {
             delete[] NATIVE_RCAST;

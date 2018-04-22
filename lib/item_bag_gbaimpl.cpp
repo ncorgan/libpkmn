@@ -15,6 +15,7 @@
 
 #include "database/database_common.hpp"
 
+#include <boost/assert.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 #include <cstring>
@@ -53,8 +54,6 @@ namespace pkmn {
 
     item_bag_gbaimpl::~item_bag_gbaimpl()
     {
-        boost::lock_guard<item_bag_gbaimpl> lock(*this);
-
         if(_our_mem)
         {
             delete NATIVE_RCAST;
@@ -74,10 +73,6 @@ namespace pkmn {
         BOOST_STATIC_CONSTEXPR int KEY_ITEM_POCKET_IDS[] = {19,25,31};
 
         int version_group = pkmn::database::game_id_to_version_group(_game_id);
-        if(version_group < VERSION_GROUP_RS or version_group > VERSION_GROUP_FRLG) {
-            throw std::runtime_error("Invalid version group.");
-        }
-
         int index = version_group - VERSION_GROUP_RS;
 
         // Set up differences between versions
@@ -173,7 +168,7 @@ namespace pkmn {
                 break;
 
             default:
-                throw std::runtime_error("Invalid version group.");
+                BOOST_ASSERT_MSG(false, "Invalid version group.");
         }
     }
 }
