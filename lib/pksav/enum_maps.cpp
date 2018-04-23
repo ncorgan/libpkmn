@@ -9,7 +9,35 @@
 
 #include <boost/bimap.hpp>
 
-namespace pksav {
+namespace pksav
+{
+
+// Options
+
+const gen1_rb_text_speed_bimap_t& get_gen1_rb_text_speed_bimap()
+{
+    static const gen1_rb_text_speed_bimap_t GEN1_RB_TEXT_SPEED_BIMAP =
+    boost::assign::list_of<gen1_rb_text_speed_bimap_t::relation>
+        ("Fast",   PKSAV_GEN1_RB_TEXT_SPEED_FAST)
+        ("Normal", PKSAV_GEN1_RB_TEXT_SPEED_NORMAL)
+        ("Slow",   PKSAV_GEN1_RB_TEXT_SPEED_SLOW)
+    ;
+
+    return GEN1_RB_TEXT_SPEED_BIMAP;
+}
+
+const gen1_yellow_sound_option_bimap_t& get_gen1_yellow_sound_option_bimap()
+{
+    static const gen1_yellow_sound_option_bimap_t GEN1_YELLOW_SOUND_OPTION_BIMAP =
+    boost::assign::list_of<gen1_yellow_sound_option_bimap_t::relation>
+        ("Mono",      PKSAV_GEN1_YELLOW_SOUND_MONO)
+        ("Earphone1", PKSAV_GEN1_YELLOW_SOUND_EARPHONE1)
+        ("Earphone2", PKSAV_GEN1_YELLOW_SOUND_EARPHONE2)
+        ("Earphone3", PKSAV_GEN1_YELLOW_SOUND_EARPHONE3)
+    ;
+
+    return GEN1_YELLOW_SOUND_OPTION_BIMAP;
+}
 
 // Status conditions
 

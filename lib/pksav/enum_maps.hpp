@@ -8,6 +8,7 @@
 #ifndef INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 #define INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP
 
+#include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gba/box_wallpaper.h>
 #include <pksav/common/condition.h>
@@ -17,9 +18,16 @@
 
 #include <string>
 
-namespace pksav {
+namespace pksav
+{
+    // Options
+    typedef boost::bimap<std::string, enum pksav_gen1_rb_text_speed> gen1_rb_text_speed_bimap_t;
+    typedef boost::bimap<std::string, enum pksav_gen1_yellow_sound_option> gen1_yellow_sound_option_bimap_t;
 
-    // Condition
+    const gen1_rb_text_speed_bimap_t& get_gen1_rb_text_speed_bimap();
+    const gen1_yellow_sound_option_bimap_t& get_gen1_yellow_sound_option_bimap();
+
+    // Status conditions
     typedef boost::bimap<std::string, enum pksav_gb_condition> gb_condition_bimap_t;
     typedef boost::bimap<std::string, enum pksav_condition_mask> condition_mask_bimap_t;
 

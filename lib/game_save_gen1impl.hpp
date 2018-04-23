@@ -84,6 +84,30 @@ namespace pkmn {
                 int pikachu_friendship
             );
 
+            std::string get_text_speed();
+
+            void set_text_speed(
+                const std::string& text_speed
+            );
+
+            std::string get_sound_output();
+
+            void set_sound_output(
+                const std::string& sound_output
+            );
+
+            std::string get_battle_style();
+
+            void set_battle_style(
+                const std::string& battle_style
+            );
+
+            bool get_are_battle_effects_enabled();
+
+            void set_are_battle_effects_enabled(
+                bool are_battle_effects_enabled
+            );
+
         private:
             struct pksav_gen1_save _pksav_save;
 

@@ -12,6 +12,7 @@
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen1impl.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/config.hpp>
@@ -409,6 +410,190 @@ namespace pkmn {
         *_pksav_save.misc_fields.pikachu_friendship_ptr = uint8_t(pikachu_friendship);
     }
 
+    // TODO: figure out where this is in Yellow
+    std::string game_save_gen1impl::get_text_speed()
+    {
+        BOOST_ASSERT(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE);
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
+        // Sensible default in the case of a corrupted save
+        std::string text_speed = "Normal";
+
+        uint8_t raw_text_speed = (*_pksav_save.options_ptr & PKSAV_GEN1_RB_OPTIONS_TEXT_SPEED_MASK);
+
+        const pksav::gen1_rb_text_speed_bimap_t& gen1_rb_text_speed_bimap =
+            pksav::get_gen1_rb_text_speed_bimap();
+        auto gen1_rb_text_speed_iter =
+            gen1_rb_text_speed_bimap.right.find(
+                static_cast<enum pksav_gen1_rb_text_speed>(raw_text_speed)
+            );
+
+        if(gen1_rb_text_speed_iter != gen1_rb_text_speed_bimap.right.end())
+        {
+            text_speed = gen1_rb_text_speed_iter->second;
+        }
+
+        return text_speed;
+    }
+
+    void game_save_gen1impl::set_text_speed(
+        const std::string& text_speed
+    )
+    {
+        BOOST_ASSERT(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE);
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        const pksav::gen1_rb_text_speed_bimap_t& gen1_rb_text_speed_bimap =
+            pksav::get_gen1_rb_text_speed_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Text speed",
+            text_speed,
+            gen1_rb_text_speed_bimap.left
+        );
+
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
+        *_pksav_save.options_ptr &= ~PKSAV_GEN1_RB_OPTIONS_TEXT_SPEED_MASK;
+        *_pksav_save.options_ptr |= static_cast<uint8_t>(
+                                        gen1_rb_text_speed_bimap.left.at(text_speed)
+                                    );
+    }
+
+    std::string game_save_gen1impl::get_sound_output()
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
+        // Sensible default in the case of a corrupted save
+        std::string sound_output = "Mono";
+
+        if(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
+        {
+            bool is_stereo = bool(*_pksav_save.options_ptr & PKSAV_GEN1_RB_OPTIONS_SOUND_STEREO_MASK);
+
+            sound_output = is_stereo ? "Stereo" : "Mono";
+        }
+        else
+        {
+            uint8_t raw_sound_output = PKSAV_GEN1_YELLOW_SOUND_OPTION(*_pksav_save.options_ptr);
+
+            const pksav::gen1_yellow_sound_option_bimap_t& gen1_yellow_sound_option_bimap =
+                pksav::get_gen1_yellow_sound_option_bimap();
+            auto gen1_yellow_sound_option_iter =
+                gen1_yellow_sound_option_bimap.right.find(
+                    static_cast<enum pksav_gen1_yellow_sound_option>(raw_sound_output)
+                );
+
+            if(gen1_yellow_sound_option_iter != gen1_yellow_sound_option_bimap.right.end())
+            {
+                sound_output = gen1_yellow_sound_option_iter->second;
+            }
+        }
+
+        return sound_output;
+    }
+
+    void game_save_gen1impl::set_sound_output(
+        const std::string& sound_output
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        if(_pksav_save.save_type == PKSAV_GEN1_SAVE_TYPE_RED_BLUE)
+        {
+            pkmn::enforce_value_in_vector(
+                "Sound output",
+                sound_output,
+                {"Stereo", "Mono"}
+            );
+
+            boost::lock_guard<game_save_gen1impl> lock(*this);
+        }
+        else
+        {
+            const pksav::gen1_yellow_sound_option_bimap_t& gen1_yellow_sound_option_bimap =
+                pksav::get_gen1_yellow_sound_option_bimap();
+
+            pkmn::enforce_value_in_map_keys(
+                "Sound output",
+                sound_output,
+                gen1_yellow_sound_option_bimap.left
+            );
+
+            boost::lock_guard<game_save_gen1impl> lock(*this);
+
+            *_pksav_save.options_ptr &= ~PKSAV_GEN1_YELLOW_OPTIONS_SOUND_MASK;
+            uint8_t raw_sound_output = static_cast<uint8_t>(
+                                           gen1_yellow_sound_option_bimap.left.at(sound_output)
+                                       );
+            raw_sound_output <<= PKSAV_GEN1_YELLOW_OPTIONS_SOUND_OFFSET;
+
+            *_pksav_save.options_ptr |= raw_sound_output;
+        }
+    }
+
+    std::string game_save_gen1impl::get_battle_style()
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        bool is_battle_style_set = (*_pksav_save.options_ptr & PKSAV_GEN1_OPTIONS_BATTLE_STYLE_SET_MASK);
+
+        return is_battle_style_set ? "Set" : "Shift";
+    }
+
+    void game_save_gen1impl::set_battle_style(
+        const std::string& battle_style
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        pkmn::enforce_value_in_vector(
+            "Battle style",
+            battle_style,
+            {"Set", "Shift"}
+        );
+
+        if(battle_style == "Set")
+        {
+            *_pksav_save.options_ptr |= PKSAV_GEN1_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+        else
+        {
+            *_pksav_save.options_ptr &= ~PKSAV_GEN1_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+    }
+
+    bool game_save_gen1impl::get_are_battle_effects_enabled()
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the result.
+        return !(*_pksav_save.options_ptr & PKSAV_GEN1_OPTIONS_BATTLE_EFFECTS_DISABLE_MASK);
+    }
+
+    void game_save_gen1impl::set_are_battle_effects_enabled(
+        bool are_battle_effects_enabled
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the input.
+        if(are_battle_effects_enabled)
+        {
+            *_pksav_save.options_ptr &= ~PKSAV_GEN1_OPTIONS_BATTLE_EFFECTS_DISABLE_MASK;
+        }
+        else
+        {
+            *_pksav_save.options_ptr |= PKSAV_GEN1_OPTIONS_BATTLE_EFFECTS_DISABLE_MASK;
+        }
+    }
+
     void game_save_gen1impl::_register_attributes()
     {
         using std::placeholders::_1;
@@ -418,6 +603,21 @@ namespace pkmn {
             std::bind(&game_save_gen1impl::get_casino_coins, this),
             std::bind(&game_save_gen1impl::set_casino_coins, this, _1)
         );
+        _string_attribute_engine.register_attribute_fcns(
+            "Sound output",
+            std::bind(&game_save_gen1impl::get_sound_output, this),
+            std::bind(&game_save_gen1impl::set_sound_output, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Battle style",
+            std::bind(&game_save_gen1impl::get_battle_style, this),
+            std::bind(&game_save_gen1impl::set_battle_style, this, _1)
+        );
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Enable battle effects?",
+            std::bind(&game_save_gen1impl::get_are_battle_effects_enabled, this),
+            std::bind(&game_save_gen1impl::set_are_battle_effects_enabled, this, _1)
+        );
 
         if(_game_id == YELLOW_GAME_ID)
         {
@@ -425,6 +625,14 @@ namespace pkmn {
                 "Pikachu friendship",
                 std::bind(&game_save_gen1impl::get_pikachu_friendship, this),
                 std::bind(&game_save_gen1impl::set_pikachu_friendship, this, _1)
+            );
+        }
+        else
+        {
+            _string_attribute_engine.register_attribute_fcns(
+                "Text speed",
+                std::bind(&game_save_gen1impl::get_text_speed, this),
+                std::bind(&game_save_gen1impl::set_text_speed, this, _1)
             );
         }
     }
