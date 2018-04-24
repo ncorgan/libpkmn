@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-201PKSAV_GBA_TRAINER_NAME_LENGTH + 1 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,6 +13,7 @@
 #include "pokemon_party_gbaimpl.hpp"
 #include "pokemon_pc_gbaimpl.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -483,6 +484,279 @@ namespace pkmn {
         )
     }
 
+    std::string game_save_gbaimpl::get_button_mode()
+    {
+        BOOST_ASSERT(_pksav_save.options.button_mode_ptr != nullptr);
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        std::string button_mode;
+
+        if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+        {
+            // Sensible default in case of save corruption
+            button_mode = "Help";
+
+            const pksav::gba_frlg_button_mode_bimap_t& gba_frlg_button_mode_bimap =
+                pksav::get_gba_frlg_button_mode_bimap();
+
+            auto gba_frlg_button_mode_iter = gba_frlg_button_mode_bimap.right.find(
+                                                 (enum pksav_gba_frlg_button_mode)(
+                                                     *_pksav_save.options.button_mode_ptr
+                                                 )
+                                             );
+            if(gba_frlg_button_mode_iter != gba_frlg_button_mode_bimap.right.end())
+            {
+                button_mode = gba_frlg_button_mode_iter->second;
+            }
+        }
+        else
+        {
+            // Sensible default in case of save corruption
+            button_mode = "Normal";
+
+            const pksav::gba_rse_button_mode_bimap_t& gba_rse_button_mode_bimap =
+                pksav::get_gba_rse_button_mode_bimap();
+
+            auto gba_rse_button_mode_iter = gba_rse_button_mode_bimap.right.find(
+                                                (enum pksav_gba_rse_button_mode)(
+                                                    *_pksav_save.options.button_mode_ptr
+                                                )
+                                            );
+            if(gba_rse_button_mode_iter != gba_rse_button_mode_bimap.right.end())
+            {
+                button_mode = gba_rse_button_mode_iter->second;
+            }
+        }
+
+        return button_mode;
+    }
+
+    void game_save_gbaimpl::set_button_mode(const std::string& button_mode)
+    {
+        BOOST_ASSERT(_pksav_save.options.button_mode_ptr != nullptr);
+
+        if(_pksav_save.save_type == PKSAV_GBA_SAVE_TYPE_FRLG)
+        {
+            const pksav::gba_frlg_button_mode_bimap_t& gba_frlg_button_mode_bimap =
+                pksav::get_gba_frlg_button_mode_bimap();
+
+            pkmn::enforce_value_in_map_keys(
+                "Button mode",
+                button_mode,
+                gba_frlg_button_mode_bimap.left
+            );
+
+            boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+            *_pksav_save.options.button_mode_ptr =
+                static_cast<uint8_t>(gba_frlg_button_mode_bimap.left.at(
+                    button_mode
+                ));
+        }
+        else
+        {
+            const pksav::gba_rse_button_mode_bimap_t& gba_rse_button_mode_bimap =
+                pksav::get_gba_rse_button_mode_bimap();
+
+            pkmn::enforce_value_in_map_keys(
+                "Button mode",
+                button_mode,
+                gba_rse_button_mode_bimap.left
+            );
+
+            boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+            *_pksav_save.options.button_mode_ptr =
+                static_cast<uint8_t>(gba_rse_button_mode_bimap.left.at(
+                    button_mode
+                ));
+        }
+    }
+
+    std::string game_save_gbaimpl::get_text_speed()
+    {
+        BOOST_ASSERT(_pksav_save.options.text_options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        // Sensible default in case of corrupted save
+        std::string text_speed = "Medium";
+
+        uint8_t raw_text_speed =
+            (*_pksav_save.options.text_options_ptr & PKSAV_GBA_OPTIONS_TEXT_SPEED_MASK);
+
+        const pksav::gba_text_speed_bimap_t& gba_text_speed_bimap =
+            pksav::get_gba_text_speed_bimap();
+
+        auto gba_text_speed_iter = gba_text_speed_bimap.right.find(
+                                       static_cast<enum pksav_gba_text_speed>(
+                                           raw_text_speed
+                                       )
+                                   );
+        if(gba_text_speed_iter != gba_text_speed_bimap.right.end())
+        {
+            text_speed = gba_text_speed_iter->second;
+        }
+
+        return text_speed;
+    }
+
+    void game_save_gbaimpl::set_text_speed(const std::string& text_speed)
+    {
+        BOOST_ASSERT(_pksav_save.options.text_options_ptr != nullptr);
+
+        const pksav::gba_text_speed_bimap_t& gba_text_speed_bimap =
+            pksav::get_gba_text_speed_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Text speed",
+            text_speed,
+            gba_text_speed_bimap.left
+        );
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        *_pksav_save.options.text_options_ptr &= ~PKSAV_GBA_OPTIONS_TEXT_SPEED_MASK;
+        *_pksav_save.options.text_options_ptr |= static_cast<uint8_t>(
+                                                     gba_text_speed_bimap.left.at(
+                                                         text_speed
+                                                     )
+                                                 );
+    }
+
+    int game_save_gbaimpl::get_textbox_frame_index()
+    {
+        BOOST_ASSERT(_pksav_save.options.text_options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        return static_cast<int>(
+                   PKSAV_GBA_OPTIONS_TEXTBOX_FRAME(*_pksav_save.options.text_options_ptr)
+               ) + 1;
+    }
+
+    void game_save_gbaimpl::set_textbox_frame_index(int textbox_frame_index)
+    {
+        BOOST_ASSERT(_pksav_save.options.text_options_ptr != nullptr);
+
+        pkmn::enforce_bounds(
+            "Textbox frame",
+            textbox_frame_index,
+            static_cast<int>(PKSAV_GBA_OPTIONS_TEXTBOX_MIN_FRAME + 1),
+            static_cast<int>(PKSAV_GBA_OPTIONS_TEXTBOX_MAX_FRAME + 1)
+        );
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        // The value is stored 0-based.
+        uint8_t raw_textbox_frame_index = static_cast<uint8_t>(textbox_frame_index) - 1;
+        raw_textbox_frame_index <<= PKSAV_GBA_OPTIONS_TEXTBOX_FRAME_OFFSET;
+
+        *_pksav_save.options.text_options_ptr &= ~PKSAV_GBA_OPTIONS_TEXTBOX_FRAME_MASK;
+        *_pksav_save.options.text_options_ptr |= raw_textbox_frame_index;
+    }
+
+    std::string game_save_gbaimpl::get_sound_output()
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        // Sensible default in the case of a corrupted save
+        std::string sound_output = "Mono";
+
+        bool is_stereo =
+            bool(*_pksav_save.options.sound_battle_options_ptr & PKSAV_GBA_OPTIONS_SOUND_STEREO_MASK);
+
+        sound_output = is_stereo ? "Stereo" : "Mono";
+
+        return sound_output;
+    }
+
+    void game_save_gbaimpl::set_sound_output(
+        const std::string& sound_output
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        pkmn::enforce_value_in_vector(
+            "Sound output",
+            sound_output,
+            {"Stereo", "Mono"}
+        );
+
+        boost::lock_guard<game_save_gbaimpl> lock(*this);
+
+        if(sound_output == "Stereo")
+        {
+            *_pksav_save.options.sound_battle_options_ptr |= PKSAV_GBA_OPTIONS_SOUND_STEREO_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.sound_battle_options_ptr &= ~PKSAV_GBA_OPTIONS_SOUND_STEREO_MASK;
+        }
+    }
+
+    std::string game_save_gbaimpl::get_battle_style()
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        bool is_battle_style_set =
+            (*_pksav_save.options.sound_battle_options_ptr & PKSAV_GBA_OPTIONS_BATTLE_STYLE_SET_MASK);
+
+        return is_battle_style_set ? "Set" : "Shift";
+    }
+
+    void game_save_gbaimpl::set_battle_style(
+        const std::string& battle_style
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        pkmn::enforce_value_in_vector(
+            "Battle style",
+            battle_style,
+            {"Set", "Shift"}
+        );
+
+        if(battle_style == "Set")
+        {
+            *_pksav_save.options.sound_battle_options_ptr |= PKSAV_GBA_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.sound_battle_options_ptr &= ~PKSAV_GBA_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+    }
+
+    bool game_save_gbaimpl::get_is_battle_scene_enabled()
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the result.
+        return !(*_pksav_save.options.sound_battle_options_ptr & PKSAV_GBA_OPTIONS_BATTLE_SCENE_DISABLE_MASK);
+    }
+
+    void game_save_gbaimpl::set_is_battle_scene_enabled(
+        bool is_battle_scene_enabled
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.sound_battle_options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the input.
+        if(is_battle_scene_enabled)
+        {
+            *_pksav_save.options.sound_battle_options_ptr &= ~PKSAV_GBA_OPTIONS_BATTLE_SCENE_DISABLE_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.sound_battle_options_ptr |= PKSAV_GBA_OPTIONS_BATTLE_SCENE_DISABLE_MASK;
+        }
+    }
+
     void game_save_gbaimpl::_register_attributes()
     {
         using std::placeholders::_1;
@@ -492,6 +766,32 @@ namespace pkmn {
             std::bind(&game_save_gbaimpl::get_casino_coins, this),
             std::bind(&game_save_gbaimpl::set_casino_coins, this, _1)
         );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Textbox frame",
+            std::bind(&game_save_gbaimpl::get_textbox_frame_index, this),
+            std::bind(&game_save_gbaimpl::set_textbox_frame_index, this, _1)
+        );
+
+        _string_attribute_engine.register_attribute_fcns(
+            "Button mode",
+            std::bind(&game_save_gbaimpl::get_button_mode, this),
+            std::bind(&game_save_gbaimpl::set_button_mode, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Text speed",
+            std::bind(&game_save_gbaimpl::get_text_speed, this),
+            std::bind(&game_save_gbaimpl::set_text_speed, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Sound output",
+            std::bind(&game_save_gbaimpl::get_sound_output, this),
+            std::bind(&game_save_gbaimpl::set_sound_output, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Battle style",
+            std::bind(&game_save_gbaimpl::get_battle_style, this),
+            std::bind(&game_save_gbaimpl::set_battle_style, this, _1)
+        );
 
         // Don't use the whole word "Pokédex" to make life easier for
         // Python users.
@@ -499,6 +799,11 @@ namespace pkmn {
             "National Dex unlocked?",
             std::bind(&game_save_gbaimpl::get_is_national_dex_unlocked, this),
             std::bind(&game_save_gbaimpl::set_is_national_dex_unlocked, this, _1)
+        );
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Enable battle scene?",
+            std::bind(&game_save_gbaimpl::get_is_battle_scene_enabled, this),
+            std::bind(&game_save_gbaimpl::set_is_battle_scene_enabled, this, _1)
         );
     }
 }

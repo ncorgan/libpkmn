@@ -65,6 +65,30 @@ const gen2_gbprinter_brightness_bimap_t& get_gen2_gbprinter_brightness_bimap()
     return GEN2_GBPRINTER_BRIGHTNESS_BIMAP;
 }
 
+const gba_rse_button_mode_bimap_t& get_gba_rse_button_mode_bimap()
+{
+    static const gba_rse_button_mode_bimap_t GBA_RSE_BUTTON_MODE_BIMAP =
+    boost::assign::list_of<gba_rse_button_mode_bimap_t::relation>
+        ("Normal", PKSAV_GBA_RSE_BUTTON_MODE_NORMAL)
+        ("LR",     PKSAV_GBA_RSE_BUTTON_MODE_LR)
+        ("L=A",    PKSAV_GBA_RSE_BUTTON_MODE_L_EQUALS_A)
+    ;
+
+    return GBA_RSE_BUTTON_MODE_BIMAP;
+}
+
+const gba_frlg_button_mode_bimap_t& get_gba_frlg_button_mode_bimap()
+{
+    static const gba_frlg_button_mode_bimap_t GBA_FRLG_BUTTON_MODE_BIMAP =
+    boost::assign::list_of<gba_frlg_button_mode_bimap_t::relation>
+        ("Help", PKSAV_GBA_FRLG_BUTTON_MODE_HELP)
+        ("LR",   PKSAV_GBA_FRLG_BUTTON_MODE_LR)
+        ("L=A",  PKSAV_GBA_FRLG_BUTTON_MODE_L_EQUALS_A)
+    ;
+
+    return GBA_FRLG_BUTTON_MODE_BIMAP;
+}
+
 // Status conditions
 
 const gb_condition_bimap_t& get_gb_condition_bimap()
@@ -96,6 +120,18 @@ const condition_mask_bimap_t& get_condition_mask_bimap()
     ;
 
     return CONDITION_MASK_BIMAP;
+}
+
+const gba_text_speed_bimap_t& get_gba_text_speed_bimap()
+{
+    static const gba_text_speed_bimap_t GBA_TEXT_SPEED_BIMAP =
+    boost::assign::list_of<gba_text_speed_bimap_t::relation>
+        ("Slow",   PKSAV_GBA_TEXT_SPEED_SLOW)
+        ("Medium", PKSAV_GBA_TEXT_SPEED_SLOW)
+        ("Fast",   PKSAV_GBA_TEXT_SPEED_SLOW)
+    ;
+
+    return GBA_TEXT_SPEED_BIMAP;
 }
 
 // Box wallpapers

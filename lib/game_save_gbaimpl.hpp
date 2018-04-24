@@ -82,6 +82,36 @@ namespace pkmn {
 
             void set_is_national_dex_unlocked(bool is_national_dex_unlocked);
 
+            std::string get_button_mode();
+
+            void set_button_mode(const std::string& button_mode);
+
+            std::string get_text_speed();
+
+            void set_text_speed(const std::string& text_speed);
+
+            int get_textbox_frame_index();
+
+            void set_textbox_frame_index(int textbox_frame_index);
+
+            std::string get_sound_output();
+
+            void set_sound_output(
+                const std::string& sound_output
+            );
+
+            std::string get_battle_style();
+
+            void set_battle_style(
+                const std::string& battle_style
+            );
+
+            bool get_is_battle_scene_enabled();
+
+            void set_is_battle_scene_enabled(
+                bool is_battle_scene_enabled
+            );
+
         private:
             struct pksav_gba_save _pksav_save;
 
