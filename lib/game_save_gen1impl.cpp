@@ -612,6 +612,7 @@ namespace pkmn {
             std::bind(&game_save_gen1impl::get_casino_coins, this),
             std::bind(&game_save_gen1impl::set_casino_coins, this, _1)
         );
+
         _string_attribute_engine.register_attribute_fcns(
             "Sound output",
             std::bind(&game_save_gen1impl::get_sound_output, this),
@@ -622,6 +623,7 @@ namespace pkmn {
             std::bind(&game_save_gen1impl::get_battle_style, this),
             std::bind(&game_save_gen1impl::set_battle_style, this, _1)
         );
+
         _boolean_attribute_engine.register_attribute_fcns(
             "Enable battle effects?",
             std::bind(&game_save_gen1impl::get_are_battle_effects_enabled, this),

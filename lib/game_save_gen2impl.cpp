@@ -722,11 +722,12 @@ namespace pkmn {
     {
         using std::placeholders::_1;
 
-        _boolean_attribute_engine.register_attribute_fcns(
-            "Daylight savings time?",
-            std::bind(&game_save_gen2impl::get_is_daylight_savings, this),
-            std::bind(&game_save_gen2impl::set_is_daylight_savings, this, _1)
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Textbox frame",
+            std::bind(&game_save_gen2impl::get_textbox_frame_index, this),
+            std::bind(&game_save_gen2impl::set_textbox_frame_index, this, _1)
         );
+
         _string_attribute_engine.register_attribute_fcns(
             "Player palette",
             std::bind(&game_save_gen2impl::get_palette, this),
@@ -747,20 +748,21 @@ namespace pkmn {
             std::bind(&game_save_gen2impl::get_battle_style, this),
             std::bind(&game_save_gen2impl::set_battle_style, this, _1)
         );
-        _boolean_attribute_engine.register_attribute_fcns(
-            "Enable battle scene?",
-            std::bind(&game_save_gen2impl::get_is_battle_scene_enabled, this),
-            std::bind(&game_save_gen2impl::set_is_battle_scene_enabled, this, _1)
-        );
-        _numeric_attribute_engine.register_attribute_fcns(
-            "Textbox frame",
-            std::bind(&game_save_gen2impl::get_textbox_frame_index, this),
-            std::bind(&game_save_gen2impl::set_textbox_frame_index, this, _1)
-        );
         _string_attribute_engine.register_attribute_fcns(
             "Game Boy Printer brightness",
             std::bind(&game_save_gen2impl::get_gameboy_printer_brightness, this),
             std::bind(&game_save_gen2impl::set_gameboy_printer_brightness, this, _1)
+        );
+
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Daylight savings time?",
+            std::bind(&game_save_gen2impl::get_is_daylight_savings, this),
+            std::bind(&game_save_gen2impl::set_is_daylight_savings, this, _1)
+        );
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Enable battle scene?",
+            std::bind(&game_save_gen2impl::get_is_battle_scene_enabled, this),
+            std::bind(&game_save_gen2impl::set_is_battle_scene_enabled, this, _1)
         );
         _boolean_attribute_engine.register_attribute_fcns(
             "Enable menu account?",
