@@ -13,6 +13,7 @@
 #include "pokemon_party_gbimpl.hpp"
 #include "pokemon_pc_gen2impl.hpp"
 
+#include "pksav/enum_maps.hpp"
 #include "pksav/pksav_call.hpp"
 
 #include <pkmn/exception.hpp>
@@ -454,6 +455,269 @@ namespace pkmn {
         *_pksav_save.trainer_info.palette_ptr = uint8_t(GEN2_PALETTE_BIMAP.left.at(palette));
     }
 
+    // TODO: is there enough in common with the Gen I implementation to consolidate
+    // these?
+
+    std::string game_save_gen2impl::get_text_speed()
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        // Sensible default in the case of a corrupted save
+        std::string text_speed = "Normal";
+
+        uint8_t raw_text_speed =
+            (*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK);
+
+        const pksav::gen2_text_speed_bimap_t& gen2_text_speed_bimap =
+            pksav::get_gen2_text_speed_bimap();
+        auto gen2_text_speed_iter =
+            gen2_text_speed_bimap.right.find(
+                static_cast<enum pksav_gen2_text_speed>(raw_text_speed)
+            );
+
+        if(gen2_text_speed_iter != gen2_text_speed_bimap.right.end())
+        {
+            text_speed = gen2_text_speed_iter->second;
+        }
+
+        return text_speed;
+    }
+
+    void game_save_gen2impl::set_text_speed(
+        const std::string& text_speed
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        const pksav::gen2_text_speed_bimap_t& gen2_text_speed_bimap =
+            pksav::get_gen2_text_speed_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Text speed",
+            text_speed,
+            gen2_text_speed_bimap.left
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK;
+        *_pksav_save.options.misc_options_ptr |= static_cast<uint8_t>(
+                                        gen2_text_speed_bimap.left.at(text_speed)
+                                    );
+    }
+
+    std::string game_save_gen2impl::get_sound_output()
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        // Sensible default in the case of a corrupted save
+        std::string sound_output = "Mono";
+
+        bool is_stereo =
+            bool(*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK);
+
+        sound_output = is_stereo ? "Stereo" : "Mono";
+
+        return sound_output;
+    }
+
+    void game_save_gen2impl::set_sound_output(
+        const std::string& sound_output
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        pkmn::enforce_value_in_vector(
+            "Sound output",
+            sound_output,
+            {"Stereo", "Mono"}
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        if(sound_output == "Stereo")
+        {
+            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
+        }
+    }
+
+    std::string game_save_gen2impl::get_battle_style()
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        bool is_battle_style_set =
+            (*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK);
+
+        return is_battle_style_set ? "Set" : "Shift";
+    }
+
+    void game_save_gen2impl::set_battle_style(
+        const std::string& battle_style
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        pkmn::enforce_value_in_vector(
+            "Battle style",
+            battle_style,
+            {"Set", "Shift"}
+        );
+
+        if(battle_style == "Set")
+        {
+            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
+        }
+    }
+
+    bool game_save_gen2impl::get_is_battle_scene_enabled()
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the result.
+        //
+        // TODO: verify, the disassembly is unclear
+        return !(*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK);
+    }
+
+    void game_save_gen2impl::set_is_battle_scene_enabled(
+        bool is_battle_scene_enabled
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+
+        // The save stored whether the effects are disabled, so reverse
+        // the input.
+        //
+        // TODO: verify, the disassembly is unclear
+        if(is_battle_scene_enabled)
+        {
+            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
+        }
+    }
+
+    int game_save_gen2impl::get_textbox_frame_index()
+    {
+        BOOST_ASSERT(_pksav_save.options.textbox_frame_index_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        return (*_pksav_save.options.textbox_frame_index_ptr & PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK);
+    }
+
+    void game_save_gen2impl::set_textbox_frame_index(int textbox_frame_index)
+    {
+        BOOST_ASSERT(_pksav_save.options.textbox_frame_index_ptr != nullptr);
+
+        pkmn::enforce_bounds(
+            "Textbox frame",
+            textbox_frame_index,
+            static_cast<int>(PKSAV_GEN2_OPTIONS_TEXTBOX_MIN_FRAME + 1),
+            static_cast<int>(PKSAV_GEN2_OPTIONS_TEXTBOX_MAX_FRAME + 1)
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        // The value is stored 0-based.
+        uint8_t raw_textbox_frame_index = static_cast<uint8_t>(textbox_frame_index) - 1;
+
+        *_pksav_save.options.textbox_frame_index_ptr &= ~PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK;
+        *_pksav_save.options.textbox_frame_index_ptr |= raw_textbox_frame_index;
+    }
+
+    std::string game_save_gen2impl::get_gameboy_printer_brightness()
+    {
+        BOOST_ASSERT(_pksav_save.options.gbprinter_brightness_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        // Sensible default in case of save corruption
+        std::string gameboy_printer_brightness = "Normal";
+
+        uint8_t raw_gameboy_printer_brightness =
+            (*_pksav_save.options.gbprinter_brightness_ptr & PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK);
+
+        const pksav::gen2_gbprinter_brightness_bimap_t& gen2_gbprinter_brightness_bimap =
+            pksav::get_gen2_gbprinter_brightness_bimap();
+
+        auto gen2_gbprinter_brightness_iter = gen2_gbprinter_brightness_bimap.right.find(
+                                                  static_cast<enum pksav_gen2_gbprinter_brightness>(
+                                                      raw_gameboy_printer_brightness
+                                                  )
+                                              );
+        if(gen2_gbprinter_brightness_iter != gen2_gbprinter_brightness_bimap.right.end())
+        {
+            gameboy_printer_brightness = gen2_gbprinter_brightness_iter->second;
+        }
+
+        return gameboy_printer_brightness;
+    }
+
+    void game_save_gen2impl::set_gameboy_printer_brightness(
+        const std::string& gameboy_printer_brightness
+    )
+    {
+        BOOST_ASSERT(_pksav_save.options.gbprinter_brightness_ptr != nullptr);
+
+        const pksav::gen2_gbprinter_brightness_bimap_t& gen2_gbprinter_brightness_bimap =
+            pksav::get_gen2_gbprinter_brightness_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Game Boy Printer brightness",
+            gameboy_printer_brightness,
+            gen2_gbprinter_brightness_bimap.left
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        *_pksav_save.options.gbprinter_brightness_ptr &= ~PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK;
+        *_pksav_save.options.gbprinter_brightness_ptr |=
+            static_cast<uint8_t>(
+                gen2_gbprinter_brightness_bimap.left.at(gameboy_printer_brightness)
+            );
+    }
+
+    bool game_save_gen2impl::get_is_menu_account_enabled()
+    {
+        BOOST_ASSERT(_pksav_save.options.menu_account_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        return bool(*_pksav_save.options.menu_account_ptr & PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK);
+    }
+
+    void game_save_gen2impl::set_is_menu_account_enabled(bool is_menu_account_enabled)
+    {
+        BOOST_ASSERT(_pksav_save.options.menu_account_ptr != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        if(is_menu_account_enabled)
+        {
+            *_pksav_save.options.menu_account_ptr |= PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
+        }
+        else
+        {
+            *_pksav_save.options.menu_account_ptr &= ~PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
+        }
+    }
+
     void game_save_gen2impl::_register_attributes()
     {
         using std::placeholders::_1;
@@ -467,6 +731,41 @@ namespace pkmn {
             "Player palette",
             std::bind(&game_save_gen2impl::get_palette, this),
             std::bind(&game_save_gen2impl::set_palette, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Text speed",
+            std::bind(&game_save_gen2impl::get_text_speed, this),
+            std::bind(&game_save_gen2impl::set_text_speed, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Sound output",
+            std::bind(&game_save_gen2impl::get_sound_output, this),
+            std::bind(&game_save_gen2impl::set_sound_output, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Battle style",
+            std::bind(&game_save_gen2impl::get_battle_style, this),
+            std::bind(&game_save_gen2impl::set_battle_style, this, _1)
+        );
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Enable battle scene?",
+            std::bind(&game_save_gen2impl::get_is_battle_scene_enabled, this),
+            std::bind(&game_save_gen2impl::set_is_battle_scene_enabled, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Textbox frame",
+            std::bind(&game_save_gen2impl::get_textbox_frame_index, this),
+            std::bind(&game_save_gen2impl::set_textbox_frame_index, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Game Boy Printer brightness",
+            std::bind(&game_save_gen2impl::get_gameboy_printer_brightness, this),
+            std::bind(&game_save_gen2impl::set_gameboy_printer_brightness, this, _1)
+        );
+        _boolean_attribute_engine.register_attribute_fcns(
+            "Enable menu account?",
+            std::bind(&game_save_gen2impl::get_is_menu_account_enabled, this),
+            std::bind(&game_save_gen2impl::set_is_menu_account_enabled, this, _1)
         );
     }
 }

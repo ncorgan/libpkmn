@@ -80,6 +80,44 @@ namespace pkmn {
 
             void set_palette(const std::string& palette);
 
+            std::string get_text_speed();
+
+            void set_text_speed(
+                const std::string& text_speed
+            );
+
+            std::string get_sound_output();
+
+            void set_sound_output(
+                const std::string& sound_output
+            );
+
+            std::string get_battle_style();
+
+            void set_battle_style(
+                const std::string& battle_style
+            );
+
+            bool get_is_battle_scene_enabled();
+
+            void set_is_battle_scene_enabled(
+                bool is_battle_scene_enabled
+            );
+
+            int get_textbox_frame_index();
+
+            void set_textbox_frame_index(int textbox_frame_index);
+
+            std::string get_gameboy_printer_brightness();
+
+            void set_gameboy_printer_brightness(
+                const std::string& gameboy_printer_brightness
+            );
+
+            bool get_is_menu_account_enabled();
+
+            void set_is_menu_account_enabled(bool is_menu_account_enabled);
+
         private:
             struct pksav_gen2_save _pksav_save;
 

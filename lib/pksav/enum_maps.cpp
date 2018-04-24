@@ -39,6 +39,32 @@ const gen1_yellow_sound_option_bimap_t& get_gen1_yellow_sound_option_bimap()
     return GEN1_YELLOW_SOUND_OPTION_BIMAP;
 }
 
+const gen2_text_speed_bimap_t& get_gen2_text_speed_bimap()
+{
+    static const gen2_text_speed_bimap_t GEN2_TEXT_SPEED_BIMAP =
+    boost::assign::list_of<gen2_text_speed_bimap_t::relation>
+        ("Fast",   PKSAV_GEN2_TEXT_SPEED_FAST)
+        ("Normal", PKSAV_GEN2_TEXT_SPEED_NORMAL)
+        ("Slow",   PKSAV_GEN2_TEXT_SPEED_SLOW)
+    ;
+
+    return GEN2_TEXT_SPEED_BIMAP;
+}
+
+const gen2_gbprinter_brightness_bimap_t& get_gen2_gbprinter_brightness_bimap()
+{
+    static const gen2_gbprinter_brightness_bimap_t GEN2_GBPRINTER_BRIGHTNESS_BIMAP =
+    boost::assign::list_of<gen2_gbprinter_brightness_bimap_t::relation>
+        ("Lightest", PKSAV_GEN2_GBPRINTER_BRIGHTNESS_LIGHTEST)
+        ("Lighter",  PKSAV_GEN2_GBPRINTER_BRIGHTNESS_LIGHTER)
+        ("Normal",   PKSAV_GEN2_GBPRINTER_BRIGHTNESS_NORMAL)
+        ("Darker",   PKSAV_GEN2_GBPRINTER_BRIGHTNESS_DARKER)
+        ("Darkest",  PKSAV_GEN2_GBPRINTER_BRIGHTNESS_DARKEST)
+    ;
+
+    return GEN2_GBPRINTER_BRIGHTNESS_BIMAP;
+}
+
 // Status conditions
 
 const gb_condition_bimap_t& get_gb_condition_bimap()

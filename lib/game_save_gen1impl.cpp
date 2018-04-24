@@ -512,6 +512,15 @@ namespace pkmn {
             );
 
             boost::lock_guard<game_save_gen1impl> lock(*this);
+
+            if(sound_output == "Stereo")
+            {
+                *_pksav_save.options_ptr |= PKSAV_GEN1_RB_OPTIONS_SOUND_STEREO_MASK;
+            }
+            else
+            {
+                *_pksav_save.options_ptr &= ~PKSAV_GEN1_RB_OPTIONS_SOUND_STEREO_MASK;
+            }
         }
         else
         {
