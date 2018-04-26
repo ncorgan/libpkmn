@@ -26,6 +26,7 @@ SET(cpp_tests
     cpp_calculations_test
     cpp_exception_test
     cpp_game_save_test
+    cpp_input_fuzzing_test
     cpp_lists_test
     cpp_paths_test
     cpp_pokedex_test
