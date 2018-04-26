@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -26,7 +26,6 @@ SET(cpp_tests
     cpp_calculations_test
     cpp_exception_test
     cpp_game_save_test
-    cpp_input_fuzzing_test
     cpp_lists_test
     cpp_paths_test
     cpp_pokedex_test
@@ -79,3 +78,5 @@ IF(PKMN_ENABLE_QT)
     PKMN_ADD_CPP_TEST(cpp_QtTest_GUI cpp_QtTest/cpp_QtTest.cpp)
     SET_TARGET_PROPERTIES(cpp_QtTest_GUI PROPERTIES AUTOMOC ON)
 ENDIF()
+
+ADD_SUBDIRECTORY(cpp_input_fuzzing_test)
