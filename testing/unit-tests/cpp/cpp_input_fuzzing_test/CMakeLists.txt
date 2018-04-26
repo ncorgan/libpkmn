@@ -20,7 +20,9 @@ SET(input_fuzzing_test_c_srcs
     ${PKMN_SOURCE_DIR}/pksav/lib/util/fs.c
 )
 SET(input_fuzzing_test_cpp_srcs
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpp_input_fuzzing_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game_save_fuzzing_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/pokemon_io_fuzzing_tests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils.cpp
 )
 
 SET_SOURCE_FILES_PROPERTIES(${input_fuzzing_test_c_srcs}
