@@ -9,6 +9,7 @@
 #define CPP_INPUT_FUZZING_TEST_UTILS_HPP
 
 #include <pkmn/config.hpp>
+#include <pkmn/pokemon.hpp>
 
 #include <cassert>
 #include <fstream>
@@ -16,7 +17,7 @@
 #include <type_traits>
 #include <vector>
 
-PKMN_CONSTEXPR_OR_CONST static size_t NUM_ITERATIONS = 500;
+PKMN_CONSTEXPR_OR_CONST static size_t NUM_ITERATIONS = 50;
 
 void randomize_vector(
     size_t filesize,
@@ -47,5 +48,7 @@ std::string write_random_tmp_file(
     size_t filesize,
     const std::string& extension
 );
+
+void read_all_pokemon_fields(const pkmn::pokemon::sptr& pokemon);
 
 #endif /* CPP_INPUT_FUZZING_TEST_UTILS_HPP */

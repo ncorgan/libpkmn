@@ -7,6 +7,8 @@
 
 #include "utils.hpp"
 
+#include "pkmntest/util.hpp"
+
 #include "types/rng.hpp"
 
 #include <pkmn/utils/paths.hpp>
@@ -89,4 +91,66 @@ std::string write_random_tmp_file(
     write_vector_to_file(output_vector, tmp_filepath);
 
     return tmp_filepath;
+}
+
+// Make sure parsing doesn't crash.
+void read_all_pokemon_fields(const pkmn::pokemon::sptr& pokemon)
+{
+    std::string game = pokemon->get_game();
+    int generation = game_generations.at(game);
+    (void)generation;
+
+    (void)pokemon->get_species();
+    (void)pokemon->get_form();
+    (void)pokemon->get_condition();
+    (void)pokemon->get_nickname();
+    (void)pokemon->get_original_trainer_name();
+    (void)pokemon->get_experience();
+    (void)pokemon->get_level();
+    (void)pokemon->get_moves();
+    (void)pokemon->get_EVs();
+    (void)pokemon->get_IVs();
+    (void)pokemon->get_current_hp();
+    (void)pokemon->get_stats();
+    (void)pokemon->get_icon_filepath();
+    (void)pokemon->get_sprite_filepath();
+
+    for(const std::string& attribute: pokemon->get_numeric_attribute_names())
+    {
+        (void)pokemon->get_numeric_attribute(attribute);
+    }
+    for(const std::string& attribute: pokemon->get_string_attribute_names())
+    {
+        (void)pokemon->get_string_attribute(attribute);
+    }
+    for(const std::string& attribute: pokemon->get_boolean_attribute_names())
+    {
+        (void)pokemon->get_boolean_attribute(attribute);
+    }
+
+    if(generation >= 2)
+    {
+        (void)pokemon->is_egg();
+        (void)pokemon->get_gender();
+        (void)pokemon->is_shiny();
+        (void)pokemon->get_held_item();
+        (void)pokemon->get_pokerus_duration();
+        (void)pokemon->get_original_trainer_gender();
+        (void)pokemon->get_current_trainer_friendship();
+        (void)pokemon->get_level_met();
+        (void)pokemon->get_location_met(false);
+    }
+    if(generation >= 3)
+    {
+        (void)pokemon->get_ability();
+        (void)pokemon->get_ball();
+        (void)pokemon->get_personality();
+        (void)pokemon->get_markings();
+        (void)pokemon->get_ribbons();
+        (void)pokemon->get_contest_stats();
+    }
+    if(generation >= 4)
+    {
+        (void)pokemon->get_location_met(true);
+    }
 }
