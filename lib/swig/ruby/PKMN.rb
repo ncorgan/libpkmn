@@ -16,6 +16,8 @@ require_relative "PKMN/Paths"
 require_relative "PKMN/STL"
 
 module PKMN
+    VERSION = "@PKMN_VERSION@"
+
     module BuildInfo
         SWIG_VERSION = "@SWIG_VERSION@"
     end
