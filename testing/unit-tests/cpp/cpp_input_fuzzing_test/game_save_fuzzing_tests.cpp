@@ -18,9 +18,12 @@
 #include <pksav/gen2/save.h>
 #include <pksav/gba/save.h>
 
-// Testing PKSav includes until files are separated out
+#include <pksav/math/endian.h>
+
+// PKSav includes
 #include "gen1/save_internal.h"
 #include "gen2/save_internal.h"
+#include "gba/checksum.h"
 #include "gba/save_internal.h"
 
 #include <boost/filesystem.hpp>
@@ -114,9 +117,30 @@ static void read_all_save_fields(
     }
 
     // Pokémon Party
+    save->get_pokemon_party()->get_num_pokemon();
     for(const auto& pokemon: save->get_pokemon_party()->as_vector())
     {
         read_all_pokemon_fields(pokemon);
+    }
+
+    // Pokémon PC
+    if(generation >= 2)
+    {
+        (void)save->get_pokemon_pc()->get_box_names();
+    }
+    for(const auto& box: save->get_pokemon_pc()->as_vector())
+    {
+        (void)box->get_num_pokemon();
+
+        for(const auto& pokemon: box->as_vector())
+        {
+            read_all_pokemon_fields(pokemon);
+        }
+
+        if(generation >= 2)
+        {
+            (void)box->get_name();
+        }
     }
 }
 
@@ -209,7 +233,7 @@ typedef std::tuple<enum pksav_gen2_save_type, std::string> gen2_save_fuzzing_tes
 class gen2_save_fuzzing_test: public ::testing::TestWithParam<gen2_save_fuzzing_test_params_t>
 {};
 
-// Create a random vector the size of a Generation I save, set its checksum
+// Create a random vector the size of a Generation II save, set its checksums
 // so PKSav believes it's authentic, and see how LibPKMN+PKsav deals with it.
 TEST_P(gen2_save_fuzzing_test, test_fuzzing_gen2_save)
 {
@@ -293,4 +317,123 @@ INSTANTIATE_TEST_CASE_P(
     gen2_save_fuzzing_test,
     gen2_save_fuzzing_test,
     ::testing::ValuesIn(GEN2_TEST_PARAMS)
+);
+
+// Generation II fuzzing
+
+typedef std::tuple<enum pksav_gba_save_type, std::string> gba_save_fuzzing_test_params_t;
+
+class gba_save_fuzzing_test: public ::testing::TestWithParam<gba_save_fuzzing_test_params_t>
+{};
+
+// Create a random vector the size of a GBA save, set its checksums, etc,
+// so PKSav believes it's authentic, and see how LibPKMN+PKsav deals with it.
+TEST_P(gba_save_fuzzing_test, test_fuzzing_gba_save)
+{
+    auto test_params = GetParam();
+
+    enum pksav_gba_save_type expected_pksav_save_type = std::get<0>(test_params);
+    std::string expected_detected_type = std::get<1>(test_params);
+
+    for(size_t iteration = 0; iteration < NUM_ITERATIONS; ++iteration)
+    {
+        std::vector<uint8_t> gba_save_vector;
+        randomize_vector(
+            PKSAV_GBA_SAVE_SLOT_SIZE * 2,
+            &gba_save_vector
+        );
+        union pksav_gba_save_slot* save_slots_ptr =
+            reinterpret_cast<union pksav_gba_save_slot*>(
+                gba_save_vector.data()
+            );
+
+        for(uint32_t slot_index = 0; slot_index < 2; ++slot_index)
+        {
+            union pksav_gba_save_slot* save_slot_ptr = &save_slots_ptr[slot_index];
+
+            for(uint8_t section_index = 0;
+                section_index < PKSAV_GBA_NUM_SAVE_SECTIONS;
+                ++section_index)
+            {
+                struct pksav_gba_section_footer* footer_ptr =
+                    &save_slot_ptr->sections_arr[section_index].footer;
+
+                footer_ptr->section_id = section_index;
+                footer_ptr->validation = pksav_littleendian32(
+                                             PKSAV_GBA_VALIDATION_MAGIC
+                                         );
+                footer_ptr->save_index = pksav_littleendian32(slot_index);
+            }
+
+            pksav_gba_set_section_checksums(&save_slots_ptr[slot_index]);
+
+            static PKMN_CONSTEXPR_OR_CONST uint32_t rs_game_code = 0;
+            static PKMN_CONSTEXPR_OR_CONST uint32_t frlg_game_code = 1;
+
+            const size_t security_key1_offset =
+                PKSAV_GBA_SAVE_SECTION0_OFFSETS[expected_pksav_save_type-1][PKSAV_GBA_SECURITY_KEY1];
+            const size_t security_key2_offset =
+                PKSAV_GBA_SAVE_SECTION0_OFFSETS[expected_pksav_save_type-1][PKSAV_GBA_SECURITY_KEY2];
+
+            static PKMN_CONSTEXPR_OR_CONST uint32_t dummy_security_key = 0x13510418;
+
+            save_slot_ptr->section0.data32[security_key1_offset/4] = dummy_security_key;
+            save_slot_ptr->section0.data32[security_key2_offset/4] = dummy_security_key;
+
+            if(expected_pksav_save_type != PKSAV_GBA_SAVE_TYPE_EMERALD)
+            {
+                const size_t game_code_offset =
+                    PKSAV_GBA_SAVE_SECTION0_OFFSETS[expected_pksav_save_type-1][PKSAV_GBA_GAME_CODE];
+
+                save_slot_ptr->section0.data32[game_code_offset/4] =
+                    pksav_littleendian32(
+                        (expected_pksav_save_type == PKSAV_GBA_SAVE_TYPE_RS)
+                            ? rs_game_code : frlg_game_code
+                    );
+            }
+        }
+
+        // Make sure PKSav thinks the buffer is valid.
+        enum pksav_gba_save_type gba_save_type = PKSAV_GBA_SAVE_TYPE_NONE;
+        PKSAV_CALL(
+            pksav_gba_get_buffer_save_type(
+                gba_save_vector.data(),
+                gba_save_vector.size(),
+                &gba_save_type
+            );
+        )
+        ASSERT_EQ(expected_pksav_save_type, gba_save_type);
+
+        std::string random_filepath1 = get_random_filepath(SAV_EXTENSION);
+        write_vector_to_file(gba_save_vector, random_filepath1);
+
+        ASSERT_EQ(expected_detected_type, pkmn::game_save::detect_type(random_filepath1));
+
+        // This should pass, as LibPKMN should label invalid inputs as invalid
+        // rather than erroring out.
+        pkmn::game_save::sptr save1 = pkmn::game_save::from_file(random_filepath1);
+        read_all_save_fields(save1);
+
+        std::string random_filepath2 = get_random_filepath(SAV_EXTENSION);
+        save1->save_as(random_filepath2);
+
+        pkmn::game_save::sptr save2 = pkmn::game_save::from_file(random_filepath1);
+        read_all_save_fields(save2);
+
+        fs::remove(random_filepath2);
+        fs::remove(random_filepath1);
+    }
+}
+
+static const std::vector<gba_save_fuzzing_test_params_t> GBA_TEST_PARAMS =
+{
+    std::make_tuple(PKSAV_GBA_SAVE_TYPE_RS,      "Ruby/Sapphire"),
+    std::make_tuple(PKSAV_GBA_SAVE_TYPE_EMERALD, "Emerald"),
+    std::make_tuple(PKSAV_GBA_SAVE_TYPE_FRLG,    "FireRed/LeafGreen")
+};
+
+INSTANTIATE_TEST_CASE_P(
+    gba_save_fuzzing_test,
+    gba_save_fuzzing_test,
+    ::testing::ValuesIn(GBA_TEST_PARAMS)
 );
