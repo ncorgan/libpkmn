@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_calculations_damage(
+PKMN_C_API enum pkmn_error pkmn_calculations_damage(
     int attacker_level,
     int move_base_power,
     int attack_stat,

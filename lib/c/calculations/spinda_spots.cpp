@@ -11,10 +11,10 @@
 
 #include <pkmn/calculations/spinda_spots.hpp>
 
-pkmn_error_t pkmn_calculations_add_spinda_coords(
-    const pkmn_spinda_coords_t* coords1,
-    const pkmn_spinda_coords_t* coords2,
-    pkmn_spinda_coords_t* result_out
+enum pkmn_error pkmn_calculations_add_spinda_coords(
+    const struct pkmn_spinda_coords* coords1,
+    const struct pkmn_spinda_coords* coords2,
+    struct pkmn_spinda_coords* result_out
 ) {
     PKMN_CHECK_NULL_PARAM(coords1);
     PKMN_CHECK_NULL_PARAM(coords2);
@@ -26,10 +26,10 @@ pkmn_error_t pkmn_calculations_add_spinda_coords(
     return PKMN_ERROR_NONE;
 }
 
-pkmn_error_t pkmn_calculations_add_spinda_spots(
-    const pkmn_spinda_spots_t* spots1,
-    const pkmn_spinda_spots_t* spots2,
-    pkmn_spinda_spots_t* result_out
+enum pkmn_error pkmn_calculations_add_spinda_spots(
+    const struct pkmn_spinda_spots* spots1,
+    const struct pkmn_spinda_spots* spots2,
+    struct pkmn_spinda_spots* result_out
 ) {
     PKMN_CHECK_NULL_PARAM(spots1);
     PKMN_CHECK_NULL_PARAM(spots2);
@@ -47,10 +47,10 @@ pkmn_error_t pkmn_calculations_add_spinda_spots(
     return PKMN_ERROR_NONE;
 }
 
-pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
-    const pkmn_spinda_spots_t* spots,
-    const pkmn_spinda_coords_t* coords,
-    pkmn_spinda_spots_t* result_out
+enum pkmn_error pkmn_calculations_add_spinda_coords_to_spots(
+    const struct pkmn_spinda_spots* spots,
+    const struct pkmn_spinda_coords* coords,
+    struct pkmn_spinda_spots* result_out
 ) {
     PKMN_CHECK_NULL_PARAM(spots);
     PKMN_CHECK_NULL_PARAM(coords);
@@ -68,9 +68,9 @@ pkmn_error_t pkmn_calculations_add_spinda_coords_to_spots(
     return PKMN_ERROR_NONE;
 }
 
-pkmn_error_t pkmn_calculations_spinda_spot_offset(
+enum pkmn_error pkmn_calculations_spinda_spot_offset(
     uint32_t personality,
-    pkmn_spinda_spots_t* spot_offset_out
+    struct pkmn_spinda_spots* spot_offset_out
 ) {
     PKMN_CHECK_NULL_PARAM(spot_offset_out);
 

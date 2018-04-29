@@ -12,7 +12,7 @@
 
 #include <pkmn/calculations/moves/critical_hit.hpp>
 
-pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
+enum pkmn_error pkmn_calculations_gen1_critical_hit_chance(
     int speed,
     bool rate_increased,
     bool high_rate_move,
@@ -30,7 +30,7 @@ pkmn_error_t pkmn_calculations_gen1_critical_hit_chance(
     )
 }
 
-pkmn_error_t pkmn_calculations_critical_hit_chance(
+enum pkmn_error pkmn_calculations_critical_hit_chance(
     int generation,
     int critical_hit_stage,
     float* critical_hit_chance_out
@@ -46,7 +46,7 @@ pkmn_error_t pkmn_calculations_critical_hit_chance(
     )
 }
 
-pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
+enum pkmn_error pkmn_calculations_gen1_critical_hit_modifier(
     int attacker_level,
     float* critical_hit_modifier_out
 )
@@ -60,7 +60,7 @@ pkmn_error_t pkmn_calculations_gen1_critical_hit_modifier(
     )
 }
 
-pkmn_error_t pkmn_calculations_critical_hit_modifier(
+enum pkmn_error pkmn_calculations_critical_hit_modifier(
     int generation,
     float* critical_hit_modifier_out
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,28 +12,28 @@
 
 #include <stdlib.h>
 
-typedef struct
+struct pkmn_string_list
 {
     char** strings;
     size_t length;
-} pkmn_string_list_t;
+};
 
-typedef struct
+struct pkmn_string_pair
 {
     char* first;
     char* second;
-} pkmn_string_pair_t;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_string_list_free(
-    pkmn_string_list_t* string_list_ptr
+PKMN_C_API enum pkmn_error pkmn_string_list_free(
+    struct pkmn_string_list* string_list_ptr
 );
 
-PKMN_C_API pkmn_error_t pkmn_string_pair_free(
-    pkmn_string_pair_t* string_pair_ptr
+PKMN_C_API enum pkmn_error pkmn_string_pair_free(
+    struct pkmn_string_pair* string_pair_ptr
 );
 
 #ifdef __cplusplus

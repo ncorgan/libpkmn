@@ -28,7 +28,7 @@ static const char* WRONG_GAME_ALL_POCKET_ITEM_NAMES[] =
 };
 
 static void gba_item_pocket_test(
-    pkmn_item_list_t* item_pocket_ptr,
+    struct pkmn_item_list* item_pocket_ptr,
     const char* game
 )
 {
@@ -95,12 +95,12 @@ static void gba_item_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              item_pocket_ptr,
                              &valid_items
                          );
@@ -114,7 +114,7 @@ static void gba_item_pocket_test(
 }
 
 static void gba_key_item_pocket_test(
-    pkmn_item_list_t* key_item_pocket_ptr,
+    struct pkmn_item_list* key_item_pocket_ptr,
     const char* game
 )
 {
@@ -188,12 +188,12 @@ static void gba_key_item_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              key_item_pocket_ptr,
                              &valid_items
                          );
@@ -207,7 +207,7 @@ static void gba_key_item_pocket_test(
 }
 
 static void gba_ball_pocket_test(
-    pkmn_item_list_t* ball_pocket_ptr,
+    struct pkmn_item_list* ball_pocket_ptr,
     const char* game
 )
 {
@@ -266,12 +266,12 @@ static void gba_ball_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              ball_pocket_ptr,
                              &valid_items
                          );
@@ -285,7 +285,7 @@ static void gba_ball_pocket_test(
 }
 
 static void gba_tmhm_pocket_test(
-    pkmn_item_list_t* tmhm_pocket_ptr,
+    struct pkmn_item_list* tmhm_pocket_ptr,
     const char* game
 )
 {
@@ -347,12 +347,12 @@ static void gba_tmhm_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              tmhm_pocket_ptr,
                              &valid_items
                          );
@@ -366,7 +366,7 @@ static void gba_tmhm_pocket_test(
 }
 
 static void gba_berry_pocket_test(
-    pkmn_item_list_t* berry_pocket_ptr,
+    struct pkmn_item_list* berry_pocket_ptr,
     const char* game
 )
 {
@@ -428,12 +428,12 @@ static void gba_berry_pocket_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
     };
-    pkmn_error_t error = pkmn_item_list_get_valid_items(
+    enum pkmn_error error = pkmn_item_list_get_valid_items(
                              berry_pocket_ptr,
                              &valid_items
                          );
@@ -452,7 +452,7 @@ static void gba_item_pc_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_item_list_t item_pc =
+    struct pkmn_item_list item_pc =
     {
         .name = NULL,
         .game = NULL,
@@ -460,7 +460,7 @@ static void gba_item_pc_test(
         ._internal = NULL
     };
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_list_init(
                 "PC",
@@ -504,7 +504,7 @@ static void gba_item_pc_test(
         8
     );
 
-    pkmn_string_list_t valid_items =
+    struct pkmn_string_list valid_items =
     {
         .strings = NULL,
         .length = 0
@@ -517,7 +517,7 @@ static void gba_item_pc_test(
     TEST_ASSERT_NOT_NULL(valid_items.strings);
     TEST_ASSERT_TRUE(valid_items.length > 0);
 
-    pkmn_string_list_t full_item_list =
+    struct pkmn_string_list full_item_list =
     {
         .strings = NULL,
         .length = 0
@@ -543,13 +543,13 @@ static void gba_item_pc_test(
 }
 
 static void get_bag_pockets(
-    pkmn_item_bag_t* item_bag_ptr,
-    pkmn_item_list_t* item_pocket_ptr_out,
-    pkmn_item_list_t* key_item_pocket_ptr_out,
-    pkmn_item_list_t* ball_pocket_ptr_out,
-    pkmn_item_list_t* tmhm_pocket_ptr_out,
+    struct pkmn_item_bag* item_bag_ptr,
+    struct pkmn_item_list* item_pocket_ptr_out,
+    struct pkmn_item_list* key_item_pocket_ptr_out,
+    struct pkmn_item_list* ball_pocket_ptr_out,
+    struct pkmn_item_list* tmhm_pocket_ptr_out,
     const char* tmhm_pocket_name,
-    pkmn_item_list_t* berry_pocket_ptr_out,
+    struct pkmn_item_list* berry_pocket_ptr_out,
     const char* berry_pocket_name
 )
 {
@@ -562,7 +562,7 @@ static void get_bag_pockets(
     TEST_ASSERT_NOT_NULL(berry_pocket_ptr_out);
     TEST_ASSERT_NOT_NULL(berry_pocket_name);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_bag_get_pocket(
                 item_bag_ptr,
@@ -606,9 +606,9 @@ static void gba_item_bag_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
-    pkmn_item_bag_t item_bag =
+    struct pkmn_item_bag item_bag =
     {
         .game = NULL,
         .pocket_names =
@@ -649,11 +649,11 @@ static void gba_item_bag_test(
         berry_pocket_name = "Berries";
     }
 
-    pkmn_item_list_t item_pocket;
-    pkmn_item_list_t key_item_pocket;
-    pkmn_item_list_t ball_pocket;
-    pkmn_item_list_t tmhm_pocket;
-    pkmn_item_list_t berry_pocket;
+    struct pkmn_item_list item_pocket;
+    struct pkmn_item_list key_item_pocket;
+    struct pkmn_item_list ball_pocket;
+    struct pkmn_item_list tmhm_pocket;
+    struct pkmn_item_list berry_pocket;
 
     get_bag_pockets(
         &item_bag,
@@ -776,9 +776,9 @@ static void gba_item_bag_test(
 #define GBA_ITEM_TESTS(test_game) \
 void test_gba_item_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t item_pocket = \
+    struct pkmn_item_list item_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -805,9 +805,9 @@ void test_gba_item_pocket_ ## test_game () \
 } \
 void test_gba_key_item_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t key_item_pocket = \
+    struct pkmn_item_list key_item_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -834,9 +834,9 @@ void test_gba_key_item_pocket_ ## test_game () \
 } \
 void test_gba_ball_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t ball_pocket = \
+    struct pkmn_item_list ball_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -863,9 +863,9 @@ void test_gba_ball_pocket_ ## test_game () \
 } \
 void test_gba_tmhm_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t tmhm_pocket = \
+    struct pkmn_item_list tmhm_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \
@@ -902,9 +902,9 @@ void test_gba_tmhm_pocket_ ## test_game () \
 } \
 void test_gba_berry_pocket_ ## test_game () \
 { \
-    pkmn_error_t error = PKMN_ERROR_NONE; \
+    enum pkmn_error error = PKMN_ERROR_NONE; \
  \
-    pkmn_item_list_t berry_pocket = \
+    struct pkmn_item_list berry_pocket = \
     { \
         .name = NULL, \
         .game = NULL, \

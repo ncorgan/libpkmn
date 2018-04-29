@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -15,7 +15,8 @@
 
 #include <stdbool.h>
 
-typedef struct {
+struct pkmn_database_pokemon_entry
+{
     char* name;
     char* game;
     char* species;
@@ -27,59 +28,59 @@ typedef struct {
     float chance_female;
     bool has_gender_differences;
     int base_friendship;
-    pkmn_string_pair_t types;
-    pkmn_string_pair_t abilities;
+    struct pkmn_string_pair types;
+    struct pkmn_string_pair abilities;
     char* hidden_ability;
-    pkmn_string_pair_t egg_groups;
+    struct pkmn_string_pair egg_groups;
     int base_stats[7];
     int EV_yields[7];
     int experience_yield;
-    pkmn_levelup_moves_t levelup_moves;
-    pkmn_string_list_t tm_hm_moves;
-    pkmn_string_list_t egg_moves;
-    pkmn_string_list_t tutor_moves;
-    pkmn_string_list_t forms;
-    pkmn_string_list_t evolutions;
-} pkmn_database_pokemon_entry_t;
+    struct pkmn_levelup_moves levelup_moves;
+    struct pkmn_string_list tm_hm_moves;
+    struct pkmn_string_list egg_moves;
+    struct pkmn_string_list tutor_moves;
+    struct pkmn_string_list forms;
+    struct pkmn_string_list evolutions;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-PKMN_C_API pkmn_error_t pkmn_database_get_pokemon_entry(
+PKMN_C_API enum pkmn_error pkmn_database_get_pokemon_entry(
     const char* species,
     const char* game,
     const char* form,
-    pkmn_database_pokemon_entry_t* pokemon_entry_out
+    struct pkmn_database_pokemon_entry* pokemon_entry_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_set_form(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_set_form(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     const char* form
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_experience_at_level(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_experience_at_level(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     int level,
     int* experience_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_level_at_experience(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_level_at_experience(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     int experience,
     int* level_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_icon_filepath(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_icon_filepath(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     bool shiny,
     char* icon_filepath_out,
     size_t buffer_len,
     size_t* icon_filepath_length_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
-    pkmn_database_pokemon_entry_t* pokemon_entry,
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_sprite_filepath(
+    struct pkmn_database_pokemon_entry* pokemon_entry,
     bool female,
     bool shiny,
     char* sprite_filepath_out,
@@ -87,8 +88,8 @@ PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_sprite_filepath(
     size_t* sprite_filepath_length_out
 );
 
-PKMN_C_API pkmn_error_t pkmn_database_pokemon_entry_free(
-    pkmn_database_pokemon_entry_t* pokemon_entry
+PKMN_C_API enum pkmn_error pkmn_database_pokemon_entry_free(
+    struct pkmn_database_pokemon_entry* pokemon_entry
 );
 
 #ifdef __cplusplus

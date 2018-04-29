@@ -10,8 +10,8 @@
 #include "cpp_to_c.hpp"
 #include "error_internal.hpp"
 
-pkmn_error_t pkmn_natural_gift_free(
-    pkmn_natural_gift_t* natural_gift_ptr
+enum pkmn_error pkmn_natural_gift_free(
+    struct pkmn_natural_gift* natural_gift_ptr
 )
 {
     PKMN_CHECK_NULL_PARAM(natural_gift_ptr);

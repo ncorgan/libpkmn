@@ -13,6 +13,7 @@
 #include "utils/floating_point_comparison.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -21,6 +22,17 @@
 
 namespace pkmn
 {
+    template <typename exception_type>
+    void throw_internal_error(
+        const std::string& message
+    )
+    {
+        std::string exception_message = "Internal error: ";
+        exception_message += message;
+
+        throw exception_type(exception_message);
+    }
+
     template <typename map_type, typename key_type>
     void enforce_value_in_map_keys(
         const std::string& field,

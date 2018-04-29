@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,12 +10,11 @@
 #include <pkmn-c/config.h>
 
 //! A list of possible error codes.
-typedef enum {
+enum pkmn_error
+{
     //! No error.
     PKMN_ERROR_NONE = 0,
 
-    //! PKSav returned a non-success error code.
-    PKMN_ERROR_PKSAV_ERROR = 1,
 
     //! An exposed function is not implemented for a given game.
     PKMN_ERROR_UNIMPLEMENTED_ERROR = 10,
@@ -23,6 +22,8 @@ typedef enum {
     PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR = 11,
     //! A user tried to use an optional feature not built into in this installation.
     PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR = 12,
+    //! The core library threw an internal error.
+    PKMN_ERROR_INTERNAL_ERROR = 13,
 
     //! A null parameter is passed into a function.
     PKMN_ERROR_NULL_POINTER = 20,
@@ -52,7 +53,7 @@ typedef enum {
 
     //! The core library threw something not derived from a std::exception.
     PKMN_ERROR_UNKNOWN_ERROR = 60
-} pkmn_error_t;
+};
 
 #ifdef __cplusplus
 extern "C" {

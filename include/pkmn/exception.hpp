@@ -50,26 +50,6 @@ namespace pkmn {
             );
     };
 
-    //! An exception thrown when a non-success error code is returned from PKSav.
-    /*!
-     * LibPKMN uses PKSav, a C library, under the hood for game save parsing, and this exception
-     * is used to convert its error codes into exceptions.
-     *
-     * This exception should never propagate up to the user and should be considered an internal
-     * logic error.
-     *
-     * PKSav error codes can be found
-     * <a href="https://github.com/ncorgan/pksav/blob/master/include/pksav/error.h">here</a>.
-     */
-    class PKMN_API pksav_error: public std::runtime_error
-    {
-        public:
-            //! Throw an exception for the given PKSav error code.
-            pksav_error(
-                int pksav_error_code
-            );
-    };
-
     //! An exception thrown when an exposed function is not implemented for a given game.
     class unimplemented_error: public std::runtime_error
     {

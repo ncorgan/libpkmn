@@ -5,6 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
+#include "pksav/pksav_call.hpp"
+
 #include "c/cpp_to_c.hpp"
 #include "c/error_internal.hpp"
 
@@ -51,18 +53,19 @@ class pkmn_test_exception: public std::exception {
  * Converting C++ exceptions to C error codes
  */
 
-pkmn_error_t throw_nothing() {
+enum pkmn_error throw_nothing() {
     PKMN_CPP_TO_C()
 }
 
-pkmn_error_t throw_unknown() {
+enum pkmn_error throw_unknown() {
     PKMN_CPP_TO_C(
         throw 5;
     )
 }
 
+// The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
-pkmn_error_t throw_exception(
+pkmn_error throw_exception(
     const std::string &msg
 ) {
     PKMN_CPP_TO_C(
@@ -70,7 +73,7 @@ pkmn_error_t throw_exception(
     )
 }
 
-pkmn_error_t throw_feature_not_in_game_error(
+enum pkmn_error throw_feature_not_in_game_error(
     const std::string &feature,
     const std::string &game
 ) {
@@ -82,22 +85,22 @@ pkmn_error_t throw_feature_not_in_game_error(
     )
 }
 
-pkmn_error_t throw_pksav_error(
+enum pkmn_error throw_pksav_error(
     pksav_error_t pksav_error_code
 ) {
     PKMN_CPP_TO_C(
-        throw pkmn::pksav_error(int(pksav_error_code));
+        PKSAV_CALL(pksav_error_code)
     )
 }
 
-pkmn_error_t throw_pkmn_unimplemented_error() {
+enum pkmn_error throw_pkmn_unimplemented_error() {
     PKMN_CPP_TO_C(
         throw pkmn::unimplemented_error();
     )
 }
 
 TEST(cpp_to_c_test, exception_to_error_code_test) {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = throw_nothing();
     EXPECT_EQ(PKMN_ERROR_NONE, error);
@@ -116,8 +119,8 @@ TEST(cpp_to_c_test, exception_to_error_code_test) {
     EXPECT_STREQ("feature_not_in_game_error", pkmn_strerror());
 
     error = throw_pksav_error(PKSAV_ERROR_INVALID_SAVE);
-    EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
-    EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
+    EXPECT_EQ(PKMN_ERROR_INTERNAL_ERROR, error);
+    EXPECT_STREQ("Internal error: PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error();
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -177,13 +180,13 @@ typedef struct {
     std::string last_error;
 } pkmn_test_handle_t;
 
-pkmn_error_t throw_nothing_with_handle(
+enum pkmn_error throw_nothing_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,)
 }
 
-pkmn_error_t throw_unknown_with_handle(
+enum pkmn_error throw_unknown_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
@@ -191,8 +194,9 @@ pkmn_error_t throw_unknown_with_handle(
     )
 }
 
+// The "enum" tag must be removed for MSVC to compile.
 template <typename exception_type>
-pkmn_error_t throw_exception_with_handle(
+pkmn_error throw_exception_with_handle(
     const std::string &msg,
     pkmn_test_handle_t* handle
 ) {
@@ -201,7 +205,7 @@ pkmn_error_t throw_exception_with_handle(
     )
 }
 
-pkmn_error_t throw_feature_not_in_game_error_with_handle(
+enum pkmn_error throw_feature_not_in_game_error_with_handle(
     const std::string &feature,
     const std::string &game,
     pkmn_test_handle_t* handle
@@ -214,16 +218,16 @@ pkmn_error_t throw_feature_not_in_game_error_with_handle(
     )
 }
 
-pkmn_error_t throw_pksav_error_with_handle(
+enum pkmn_error throw_pksav_error_with_handle(
     pksav_error_t pksav_error_code,
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
-        throw pkmn::pksav_error(int(pksav_error_code));
+        PKSAV_CALL(pksav_error_code)
     )
 }
 
-pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
+enum pkmn_error throw_pkmn_unimplemented_error_with_handle(
     pkmn_test_handle_t* handle
 ) {
     PKMN_CPP_TO_C_WITH_HANDLE(handle,
@@ -232,7 +236,7 @@ pkmn_error_t throw_pkmn_unimplemented_error_with_handle(
 }
 
 TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
-    pkmn_error_t error = PKMN_ERROR_NONE;
+    enum pkmn_error error = PKMN_ERROR_NONE;
     pkmn_test_handle_t test_handle;
 
     error = throw_nothing_with_handle(&test_handle);
@@ -263,9 +267,9 @@ TEST(cpp_to_c_test, exception_to_error_code_with_handle_test) {
     error = throw_pksav_error_with_handle(
         PKSAV_ERROR_INVALID_SAVE, &test_handle
     );
-    EXPECT_EQ(PKMN_ERROR_PKSAV_ERROR, error);
-    EXPECT_EQ("PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
-    EXPECT_STREQ("PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
+    EXPECT_EQ(PKMN_ERROR_INTERNAL_ERROR, error);
+    EXPECT_EQ("Internal error: PKSav returned the following error: \"Invalid save file\"", test_handle.last_error);
+    EXPECT_STREQ("Internal error: PKSav returned the following error: \"Invalid save file\"", pkmn_strerror());
 
     error = throw_pkmn_unimplemented_error_with_handle(&test_handle);
     EXPECT_EQ(PKMN_ERROR_UNIMPLEMENTED_ERROR, error);
@@ -445,7 +449,7 @@ TEST(cpp_to_c_test, hidden_power_cpp_to_c_test)
 {
     pkmn::calculations::hidden_power hidden_power_cpp("Normal", 90);
 
-    pkmn_hidden_power_t hidden_power_c;
+    struct pkmn_hidden_power hidden_power_c;
 
     pkmn::c::hidden_power_cpp_to_c(
         hidden_power_cpp,
@@ -464,7 +468,7 @@ TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
 {
     pkmn::calculations::natural_gift natural_gift_cpp("Normal", 90);
 
-    pkmn_natural_gift_t natural_gift_c;
+    struct pkmn_natural_gift natural_gift_c;
 
     pkmn::c::natural_gift_cpp_to_c(
         natural_gift_cpp,
@@ -482,7 +486,7 @@ TEST(cpp_to_c_test, natural_gift_cpp_to_c_test)
 TEST(cpp_to_c_test, item_slot_cpp_to_c_test)
 {
     pkmn::item_slot item_slot_cpp("Potion", 50);
-    pkmn_item_slot_t item_slot_c;
+    struct pkmn_item_slot item_slot_c;
 
     pkmn::c::item_slot_cpp_to_c(
         item_slot_cpp,
@@ -506,7 +510,7 @@ TEST(cpp_to_c_test, item_slots_cpp_to_c_test)
         pkmn::item_slot("Berry Pouch", 1)
     };
 
-    pkmn_item_slots_t item_slots_c = { NULL, 0 };
+    struct pkmn_item_slots item_slots_c = { NULL, 0 };
     pkmn::c::item_slots_cpp_to_c(
         item_slots_cpp,
         &item_slots_c
@@ -534,7 +538,7 @@ TEST(cpp_to_c_test, levelup_move_cpp_to_c_test)
         50
     );
 
-    pkmn_levelup_move_t levelup_move_c = { NULL, 0 };
+    struct pkmn_levelup_move levelup_move_c = { NULL, 0 };
 
     pkmn::c::levelup_move_cpp_to_c(
         levelup_move_cpp,
@@ -567,7 +571,7 @@ TEST(cpp_to_c_test, levelup_moves_cpp_to_c_test)
         )
     };
 
-    pkmn_levelup_moves_t levelup_moves_c = { NULL, 0 };
+    struct pkmn_levelup_moves levelup_moves_c = { NULL, 0 };
     pkmn::c::levelup_moves_cpp_to_c(
         levelup_moves_cpp,
         &levelup_moves_c
@@ -597,7 +601,7 @@ TEST(cpp_to_c_test, move_list_cpp_to_c_test)
         pkmn::database::move_entry("Frenzy Plant", "Emerald")
     };
 
-    pkmn_string_list_t string_list_c = { NULL, 0 };
+    struct pkmn_string_list string_list_c = { NULL, 0 };
     pkmn::c::move_list_to_string_list(
         move_list_cpp,
         &string_list_c
@@ -622,7 +626,7 @@ TEST(cpp_to_c_test, move_slot_cpp_to_c_test)
         50
     );
 
-    pkmn_move_slot_t move_slot_c;
+    struct pkmn_move_slot move_slot_c;
 
     pkmn::c::move_slot_cpp_to_c(
         move_slot_cpp,
@@ -655,7 +659,7 @@ TEST(cpp_to_c_test, move_slots_cpp_to_c_test)
         )
     };
 
-    pkmn_move_slots_t move_slots_c = { NULL, 0 };
+    struct pkmn_move_slots move_slots_c = { NULL, 0 };
     pkmn::c::move_slots_cpp_to_c(
         move_slots_cpp,
         &move_slots_c
@@ -685,7 +689,7 @@ TEST(cpp_to_c_test, pokemon_entries_cpp_to_c_test)
         pkmn::database::pokemon_entry("Treecko", "Ruby", "")
     };
 
-    pkmn_string_list_t string_list_c = { NULL, 0 };
+    struct pkmn_string_list string_list_c = { NULL, 0 };
     pkmn::c::pokemon_entries_to_string_list(
         pokemon_entries_cpp,
         &string_list_c
@@ -718,8 +722,8 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
         )
     };
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_list_t pokemon_list_c = { NULL, 0 };
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon_list pokemon_list_c = { NULL, 0 };
     pkmn::c::pokemon_list_cpp_to_c(
         pokemon_list_cpp,
         &pokemon_list_c
@@ -770,8 +774,8 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
     pokemon_box_list_cpp[1]->set_name("EFGH");
     pokemon_box_list_cpp[2]->set_name("IJKL");
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_box_list_t pokemon_box_list_c = { NULL, 0 };
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon_box_list pokemon_box_list_c = { NULL, 0 };
     pkmn::c::pokemon_box_list_cpp_to_c(
         pokemon_box_list_cpp,
         &pokemon_box_list_c
@@ -810,7 +814,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 TEST(cpp_to_c_test, int_pair_cpp_to_c_test)
 {
     std::pair<int, int> int_pair_cpp(6322, 10011);
-    pkmn_int_pair_t int_pair_c = {0, 0};
+    struct pkmn_int_pair int_pair_c = {0, 0};
 
     pkmn::c::int_pair_cpp_to_c(
         int_pair_cpp,
@@ -862,7 +866,7 @@ TEST(cpp_to_c_test, string_cpp_to_c_test)
 TEST(cpp_to_c_test, string_pair_cpp_to_c_test)
 {
     std::pair<std::string, std::string> string_pair_cpp("LibPKMN", "PKSav");
-    pkmn_string_pair_t string_pair_c = {NULL, NULL};
+    struct pkmn_string_pair string_pair_c = {NULL, NULL};
 
     pkmn::c::string_pair_cpp_to_c(
         string_pair_cpp,
@@ -895,7 +899,7 @@ TEST(cpp_to_c_test, std_map_keys_to_string_list_test)
         {"key9", 5},
     };
 
-    pkmn_string_list_t string_list_c = {NULL, 0};
+    struct pkmn_string_list string_list_c = {NULL, 0};
 
     pkmn::c::string_map_keys_to_string_list<bool>(
         string_bool_map,
@@ -941,7 +945,7 @@ TEST(cpp_to_c_test, string_list_cpp_to_c_test)
 {
     std::vector<std::string> string_vector_cpp{"LibPKMN", "PKSav", "TKO"};
 
-    pkmn_string_list_t string_list_c = { NULL, 0 };
+    struct pkmn_string_list string_list_c = { NULL, 0 };
     pkmn::c::string_list_cpp_to_c(
         string_vector_cpp,
         &string_list_c

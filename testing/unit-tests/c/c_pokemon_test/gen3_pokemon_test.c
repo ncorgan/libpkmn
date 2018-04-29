@@ -17,7 +17,7 @@
 
 #define STRBUFFER_LEN 1024
 static char strbuffer[STRBUFFER_LEN];
-static pkmn_error_t error = PKMN_ERROR_NONE;
+static enum pkmn_error error = PKMN_ERROR_NONE;
 
 static const char* contest_types[] =
 {
@@ -37,12 +37,12 @@ static const char* ribbons[] =
 };
 
 static void check_initial_ribbons(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
 
-    pkmn_string_list_t ribbon_names;
+    struct pkmn_string_list ribbon_names;
     error = pkmn_pokemon_get_ribbon_names(
                 pokemon_ptr,
                 &ribbon_names
@@ -80,7 +80,7 @@ static void check_initial_ribbons(
 }
 
 static void test_contest_ribbons(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -150,7 +150,7 @@ static void test_contest_ribbons(
 }
 
 static void test_ribbons(
-    pkmn_pokemon_t* pokemon_ptr
+    struct pkmn_pokemon* pokemon_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_ptr);
@@ -191,8 +191,8 @@ static void gba_pokemon_test(
     TEST_ASSERT_NOT_NULL(species);
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t pokemon =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,
@@ -254,8 +254,8 @@ static void gcn_pokemon_test(
     TEST_ASSERT_NOT_NULL(species);
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t pokemon =
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon pokemon =
     {
         .species = NULL,
         .game = NULL,

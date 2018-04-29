@@ -14,7 +14,7 @@
 #include <ctype.h>
 #include <string.h>
 
-static const pkmn_pokemon_t empty_pokemon =
+static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
@@ -28,10 +28,10 @@ static void gen2_unown_test(
     const char* game
 )
 {
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t unown = empty_pokemon;
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon unown = empty_pokemon;
 
-    pkmn_database_pokemon_entry_t unown_entry;
+    struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Unown",
                 game,
@@ -221,11 +221,11 @@ static void gen3_unown_test(
 {
     TEST_ASSERT_NOT_NULL(game);
 
-    pkmn_error_t error = PKMN_ERROR_NONE;
-    pkmn_pokemon_t unown = empty_pokemon;
+    enum pkmn_error error = PKMN_ERROR_NONE;
+    struct pkmn_pokemon unown = empty_pokemon;
     uint32_t personality = 0;
 
-    pkmn_database_pokemon_entry_t unown_entry;
+    struct pkmn_database_pokemon_entry unown_entry;
     error = pkmn_database_get_pokemon_entry(
                 "Unown",
                 game,

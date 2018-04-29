@@ -16,12 +16,12 @@
 // Helper functions
 
 void check_num_items(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     size_t expected_num_items
 );
 
 void check_item_at_index(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     size_t index,
     const char* expected_item_name,
     size_t expected_item_amount
@@ -30,40 +30,40 @@ void check_item_at_index(
 // Test functions
 
 void test_item_list_initial_values(
-    pkmn_item_list_t* list
+    struct pkmn_item_list* list
 );
 
 void test_item_list_out_of_range_error(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char* item_name
 );
 
 void test_item_list_invalid_items(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 );
 
 void test_item_bag_invalid_items(
-    pkmn_item_bag_t* item_bag_ptr,
+    struct pkmn_item_bag* item_bag_ptr,
     const char** item_names,
     size_t num_items
 );
 
 void test_item_list_set_item(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 );
 
 void test_item_list_add_remove(
-    pkmn_item_list_t* item_list_ptr,
+    struct pkmn_item_list* item_list_ptr,
     const char** item_names,
     size_t num_items
 );
 
 void test_item_bag_pocket_names(
-    pkmn_item_bag_t* item_bag_ptr
+    struct pkmn_item_bag* item_bag_ptr
 );
 
 #define GEN1_TEST_FCNS(game) \

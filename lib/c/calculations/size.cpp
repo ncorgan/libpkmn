@@ -11,7 +11,7 @@
 
 #include <pkmn/calculations/size.hpp>
 
-pkmn_error_t pkmn_calculations_pokemon_size(
+enum pkmn_error pkmn_calculations_pokemon_size(
     const char* species,
     uint32_t personality,
     int IV_HP,
