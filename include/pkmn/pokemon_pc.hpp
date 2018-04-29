@@ -14,27 +14,72 @@
 #include <string>
 #include <vector>
 
-namespace pkmn {
-
+namespace pkmn
+{
+    /*!
+     * @brief A list of Pokémon boxes in which a trainer stores Pokémon
+     *
+     * This class is an abstraction of the different in-game representations of
+     * a Pokémon PC throughout the different games, providing a common API
+     * for interacting with the PC.
+     */
     class PKMN_API pokemon_pc
     {
         public:
+            /*!
+             * @brief The actual interface for using the pokemon_box class.
+             *
+             * The pokemon_pc class itself is abstract and thus cannot be
+             * used directly.
+             */
             typedef std::shared_ptr<pokemon_pc> sptr;
 
+            /*!
+             * @brief The factory function for instantiating a Pokémon PC.
+             *
+             * This function uses the game to determine which underlying
+             * representation to use. This function will fail if given an
+             * invalid game.
+             *
+             * \param game Which game the PC corresponds to
+             * \throws std::invalid_argument If the given game is invalid
+             */
             static sptr make(
                 const std::string& game
             );
 
+            /*!
+             * @brief Returns the game this box comes from.
+             */
             virtual std::string get_game()  = 0;
 
+            /*!
+             * @brief Returns the number of boxes in this PC.
+             */
             virtual int get_num_boxes() = 0;
 
+            /*!
+             * @brief Returns the box at the given position.
+             *
+             * \param index The position of the box to return
+             */
             virtual pkmn::pokemon_box::sptr get_box(
                 int index
             ) = 0;
 
+            /*!
+             * @brief Returns a vector representation of the PC.
+             */
             virtual const pkmn::pokemon_box_list_t& as_vector() = 0;
 
+            /*!
+             * @brief Returns a list of box names.
+             *
+             * Generation I boxes have no name, so for a Generation I PC,
+             * this call will fail.
+             *
+             * \throws pkmn::feature_not_in_game_error If the PC is from Generation I
+             */
             virtual const std::vector<std::string>& get_box_names() = 0;
 
             #ifndef __DOXYGEN__

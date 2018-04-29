@@ -60,7 +60,7 @@ extern "C" {
  *
  * \param name The name of the pocket (or PC) whose item list to instantiate
  * \param game The game for which to instantiate the item list
- * \param item_list_out A pointer to the item bag struct to populate
+ * \param item_list_out A pointer to the item list struct to populate
  * \returns ::PKMN_ERROR_NONE upon successful completion
  * \returns ::PKMN_ERROR_NULL_POINTER if any pointer parameter is NULL
  * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the name or game is invalid
