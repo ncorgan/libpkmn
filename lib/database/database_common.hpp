@@ -7,6 +7,8 @@
 #ifndef PKMN_DATABASE_DATABASE_COMMON_HPP
 #define PKMN_DATABASE_DATABASE_COMMON_HPP
 
+#include "exception_internal.hpp"
+
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include <pkmn/config.hpp>
@@ -36,25 +38,28 @@ namespace pkmn { namespace database {
         const std::string& error_message
     )
     {
+        ret_type ret = ret_type();
+
         SQLite::Statement stmt(get_connection(), query);
         if(stmt.executeStep())
         {
-            return (ret_type)stmt.getColumn(0);
+            ret = (ret_type)stmt.getColumn(0);
         }
         else
         {
             if(error_message.empty())
             {
                 std::ostringstream stream;
-                stream << "Internal error:" << std::endl
-                       << "Invalid SQLite query: \"" << query << "\"";
-                throw std::invalid_argument(stream.str());
+                stream << "Invalid SQLite query: \"" << query << "\"";
+                throw_internal_error<std::invalid_argument>(stream.str());
             }
             else
             {
                 throw std::invalid_argument(error_message);
             }
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type>
@@ -64,27 +69,30 @@ namespace pkmn { namespace database {
         const std::string& error_message = ""
     )
     {
+        ret_type ret = ret_type();
+
         SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         if(stmt.executeStep())
         {
-            return (ret_type)stmt.getColumn(0);
+            ret = (ret_type)stmt.getColumn(0);
         }
         else
         {
             if(error_message.empty())
             {
                 std::ostringstream stream;
-                stream << "Internal error:" << std::endl
-                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
                        << " * Value 1 = " << bind1;
-                throw std::invalid_argument(stream.str());
+                throw_internal_error<std::invalid_argument>(stream.str());
             }
             else
             {
                 throw std::invalid_argument(error_message);
             }
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type>
@@ -95,29 +103,32 @@ namespace pkmn { namespace database {
         const std::string& error_message = ""
     )
     {
+        ret_type ret = ret_type();
+
         SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         if(stmt.executeStep())
         {
-            return (ret_type)stmt.getColumn(0);
+            ret = (ret_type)stmt.getColumn(0);
         }
         else
         {
             if(error_message.empty())
             {
                 std::ostringstream stream;
-                stream << "Internal error:" << std::endl
-                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
                        << " * Value 1 = " << bind1 << std::endl
                        << " * Value 2 = " << bind2;
-                throw std::invalid_argument(stream.str());
+                throw_internal_error<std::invalid_argument>(stream.str());
             }
             else
             {
                 throw std::invalid_argument(error_message);
             }
         }
+
+        return ret;
     }
 
     template <typename ret_type, typename bind1_type, typename bind2_type, typename bind3_type>
@@ -129,31 +140,34 @@ namespace pkmn { namespace database {
         const std::string& error_message = ""
     )
     {
+        ret_type ret = ret_type();
+
         SQLite::Statement stmt(get_connection(), query);
         stmt.bind(1, (bind1_type)bind1);
         stmt.bind(2, (bind2_type)bind2);
         stmt.bind(3, (bind3_type)bind3);
         if(stmt.executeStep())
         {
-            return (ret_type)stmt.getColumn(0);
+            ret = (ret_type)stmt.getColumn(0);
         }
         else
         {
             if(error_message.empty())
             {
                 std::ostringstream stream;
-                stream << "Internal error:" << std::endl
-                       << "Invalid SQLite query: \"" << query << "\"" << std::endl
+                stream << "Invalid SQLite query: \"" << query << "\"" << std::endl
                        << " * Value 1 = " << bind1 << std::endl
                        << " * Value 2 = " << bind2 << std::endl
                        << " * Value 3 = " << bind3 << std::endl;
-                throw std::invalid_argument(stream.str());
+                throw_internal_error<std::invalid_argument>(stream.str());
             }
             else
             {
                 throw std::invalid_argument(error_message);
             }
         }
+
+        return ret;
     }
 
     /*

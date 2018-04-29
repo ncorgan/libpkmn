@@ -15,8 +15,6 @@ enum pkmn_error
     //! No error.
     PKMN_ERROR_NONE = 0,
 
-    //! PKSav returned a non-success error code.
-    PKMN_ERROR_PKSAV_ERROR = 1,
 
     //! An exposed function is not implemented for a given game.
     PKMN_ERROR_UNIMPLEMENTED_ERROR = 10,
@@ -24,6 +22,8 @@ enum pkmn_error
     PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR = 11,
     //! A user tried to use an optional feature not built into in this installation.
     PKMN_ERROR_FEATURE_NOT_IN_BUILD_ERROR = 12,
+    //! The core library threw an internal error.
+    PKMN_ERROR_INTERNAL_ERROR = 13,
 
     //! A null parameter is passed into a function.
     PKMN_ERROR_NULL_POINTER = 20,
