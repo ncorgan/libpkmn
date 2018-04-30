@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import base_test
 
 import pkmn
 
@@ -17,7 +17,7 @@ import unittest
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
-class items_tests(base_test.base_test):
+class items_tests(base_test):
 
     def item_bag_test_get_pockets_with_both_text_types(self, bag):
         for pocket_name in bag.pocket_names:

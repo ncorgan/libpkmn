@@ -55,7 +55,7 @@ GAME_GENERATIONS = dict(
 def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[1])
 
-class game_save_test(pkmntest.base_test.base_test):
+class game_save_test(pkmntest.base_test):
 
     def __test_trainer_name(self):
         with self.assertRaises(ValueError):

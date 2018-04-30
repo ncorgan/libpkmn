@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 
 import pkmn
 
-import pokemon_test_base
+from . import pokemon_test_base
 
 import os
 import random

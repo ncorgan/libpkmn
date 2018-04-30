@@ -316,7 +316,7 @@ class gba_items_test(items_tests):
         if PYTHON_MAJOR_VERSION == 2:
             unicode_pocket_names = [pocket_name.decode("utf-8") for pocket_name in bag.pocket_names]
         else:
-            unicode_pocket_names = [unicode(pocket_name) for pocket_name in bag.pocket_names]
+            unicode_pocket_names = bag.pocket_names
 
         self.assertTrue("Items" in unicode_pocket_names)
         self.assertTrue("Key Items" in unicode_pocket_names)

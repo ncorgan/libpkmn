@@ -19,14 +19,14 @@ import sys
 def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
-class pokedex_test(pkmntest.base_test.base_test):
+class pokedex_test(pkmntest.base_test):
 
     @parameterized.expand(
-        pkmntest.base_test.ALL_MAIN_SERIES_GAMES,
+        pkmntest.ALL_MAIN_SERIES_GAMES,
         testcase_func_name=test_name_func
     )
     def test_pokedex(self, game):
-        generation = pkmntest.base_test.GAME_TO_GENERATION[game]
+        generation = pkmntest.GAME_TO_GENERATION[game]
 
         pokedex = pkmn.pokedex(game)
 

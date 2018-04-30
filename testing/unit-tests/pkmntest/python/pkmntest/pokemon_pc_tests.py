@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -20,7 +20,7 @@ def test_name_func(testcase_func, param_num, param):
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
 
-class pokemon_pc_tests(base_test.base_test):
+class pokemon_pc_tests(base_test):
 
     def __test_empty_pokemon_box(self, box):
         self.assertEqual(box.name, "")
@@ -40,7 +40,7 @@ class pokemon_pc_tests(base_test.base_test):
                 self.assertEqual(slot.pp, 0)
 
     def __test_box_name(self, box):
-        generation = base_test.GAME_TO_GENERATION[box.game]
+        generation = GAME_TO_GENERATION[box.game]
 
         if generation == 1:
             strs = self.get_both_string_types("ABCDEFGH")
@@ -64,7 +64,7 @@ class pokemon_pc_tests(base_test.base_test):
 
     def __test_setting_pokemon(self, box):
         game = box.game
-        generation = base_test.GAME_TO_GENERATION[game]
+        generation = GAME_TO_GENERATION[game]
 
         original_first = box[0]
         original_second = box[1]
@@ -145,7 +145,7 @@ class pokemon_pc_tests(base_test.base_test):
             self.__test_empty_pokemon_box(box)
 
     def __test_box_names(self, pc):
-        generation = base_test.GAME_TO_GENERATION[pc.game]
+        generation = GAME_TO_GENERATION[pc.game]
 
         if generation == 1:
             strs = self.get_both_string_types("ABCDEFGH")
@@ -166,7 +166,7 @@ class pokemon_pc_tests(base_test.base_test):
             self.assertEqual(box[0].species, "Squirtle")
             self.assertEqual(box[1].species, "Charmander")
 
-    @parameterized.expand(base_test.ALL_GAMES, testcase_func_name=test_name_func)
+    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
     def test_pokemon_box(self, game):
         box = pkmn.pokemon_box(game)
 
@@ -174,7 +174,7 @@ class pokemon_pc_tests(base_test.base_test):
         self.__test_box_name(box)
         self.__test_setting_pokemon(box)
 
-    @parameterized.expand(base_test.ALL_GAMES, testcase_func_name=test_name_func)
+    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
     def test_pokemon_pc(self, game):
         pc = pkmn.pokemon_pc(game)
 

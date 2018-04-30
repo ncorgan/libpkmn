@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -22,22 +22,6 @@ def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
-
-GAME_TO_GENERATION = {
-    "Red": 1,
-    "Blue": 1,
-    "Yellow": 1,
-    "Gold": 2,
-    "Silver": 2,
-    "Crystal": 2,
-    "Ruby": 3,
-    "Sapphire": 3,
-    "Emerald": 3,
-    "FireRed": 3,
-    "LeafGreen": 3,
-    "Colosseum": 3,
-    "XD": 3
-}
 
 GEN1_POKEMON_WITH_XY_MEGA_FORMS = [
     "Venusaur", "Blastoise", "Alakazam", "Gengar",
@@ -62,7 +46,7 @@ GEN3_POKEMON_WITH_ORAS_MEGA_FORMS = [
     "Altaria", "Glalie", "Salamence", "Metagross", "Rayquaza"
 ]
 
-class pokemon_common_tests(base_test.base_test):
+class pokemon_common_tests(base_test):
 
     def gen1_forms_test(self, game):
         generation = GAME_TO_GENERATION[game]
@@ -219,7 +203,7 @@ class pokemon_common_tests(base_test.base_test):
                 self.assertTrue(os.path.exists(deoxys.icon_filepath))
                 self.assertTrue(os.path.exists(deoxys.sprite_filepath))
 
-    @parameterized.expand(base_test.ALL_GAMES, testcase_func_name=test_name_func)
+    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
     def test_forms(self, game):
         generation = GAME_TO_GENERATION[game]
 
@@ -230,7 +214,7 @@ class pokemon_common_tests(base_test.base_test):
         if generation >= 3:
             self.gen3_forms_test(game)
 
-    @parameterized.expand(base_test.ALL_GAMES[3:], testcase_func_name=test_name_func)
+    @parameterized.expand(ALL_GAMES[3:], testcase_func_name=test_name_func)
     def test_gender(self, game):
         # Single-gender
         nidorina = pkmn.pokemon("Nidorina", game, "", 50)

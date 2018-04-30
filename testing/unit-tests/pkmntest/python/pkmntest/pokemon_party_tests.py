@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -17,7 +17,7 @@ from nose_parameterized import parameterized
 def test_name_func(testcase_func, param_num, param):
     return "{0}_{1}".format(testcase_func.__name__, param.args[0])
 
-class pokemon_party_tests(base_test.base_test):
+class pokemon_party_tests(base_test):
 
     def __test_empty_pokemon_party(self, party):
         self.assertEqual(len(party), 6)
@@ -106,7 +106,7 @@ class pokemon_party_tests(base_test.base_test):
         self.assertEqual(charmander.species, "Charmander")
         self.assertEqual(squirtle.species, "Squirtle")
 
-    @parameterized.expand(base_test.ALL_GAMES, testcase_func_name=test_name_func)
+    @parameterized.expand(ALL_GAMES, testcase_func_name=test_name_func)
     def test_pokemon_party(self, game):
         party = pkmn.pokemon_party(game)
 

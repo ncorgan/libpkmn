@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -19,22 +19,6 @@ import unittest
 from nose_parameterized import parameterized
 
 PYTHON_MAJOR_VERSION = sys.version_info[0]
-
-GAME_TO_GENERATION = {
-    "Red": 1,
-    "Blue": 1,
-    "Yellow": 1,
-    "Gold": 2,
-    "Silver": 2,
-    "Crystal": 2,
-    "Ruby": 3,
-    "Sapphire": 3,
-    "Emerald": 3,
-    "FireRed": 3,
-    "LeafGreen": 3,
-    "Colosseum": 3,
-    "XD": 3
-}
 
 class pokemon_test_params:
     def __init__(
@@ -57,7 +41,7 @@ class pokemon_test_params:
         self.valid_original_games = valid_original_games
         self.invalid_original_games = invalid_original_games
 
-class pokemon_test_base(base_test.base_test):
+class pokemon_test_base(base_test):
 
     def initial_values_test(self, pokemon):
         generation = GAME_TO_GENERATION[pokemon.game]

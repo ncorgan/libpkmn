@@ -6,7 +6,7 @@
 # or copy at http:#opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -16,22 +16,6 @@ import string
 import unittest
 
 from nose_parameterized import parameterized
-
-GAME_TO_GENERATION = {
-    "Red": 1,
-    "Blue": 1,
-    "Yellow": 1,
-    "Gold": 2,
-    "Silver": 2,
-    "Crystal": 2,
-    "Ruby": 3,
-    "Sapphire": 3,
-    "Emerald": 3,
-    "FireRed": 3,
-    "LeafGreen": 3,
-    "Colosseum": 3,
-    "XD": 3
-}
 
 def random_bool():
     return random.choice([True, False])
@@ -43,7 +27,7 @@ def random_string(length):
 def test_name_func(testcase_func, param_num, param):
     return "{0}_from_{1}_to_{2}".format(testcase_func.__name__, param.args[2], param.args[3])
 
-class pokemon_conversions_test(base_test.base_test):
+class pokemon_conversions_test(base_test):
 
     @parameterized.expand([
         # Generation I -> Generation I

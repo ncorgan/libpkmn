@@ -8,7 +8,7 @@
 
 import pkmn
 
-import pokemon_test_base
+from . import pokemon_test_base
 
 import os
 import unittest

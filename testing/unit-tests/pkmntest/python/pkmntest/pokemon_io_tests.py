@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import base_test
+from . import *
 
 import pkmn
 
@@ -22,7 +22,7 @@ def test_name_func(testcase_func, param_num, param):
 LIBPKMN_TEST_FILES = os.environ["LIBPKMN_TEST_FILES"]
 TMP_DIR = pkmn.paths.get_tmp_dir()
 
-class pokemon_io_test(base_test.base_test):
+class pokemon_io_test(base_test):
 
     @parameterized.expand([
         "Red","Blue","Yellow"
