@@ -69,15 +69,15 @@ namespace pkmn { namespace swig {
                    boost::locale::conv::utf_to_utf<char>(game),
                    boost::locale::conv::utf_to_utf<char>(form),
                    level
-               )),
-               _generation(pkmn::priv::game_name_to_generation(game))
+               ))
             {
+                _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
             }
 
             pokemon(
                 const std::wstring& filepath
             ): _pokemon(pkmn::pokemon::from_file(
-                   boost::locale::conv::utf_to_utf8<char>(filepath)
+                   boost::locale::conv::utf_to_utf<char>(filepath)
                ))
             {
                 _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
