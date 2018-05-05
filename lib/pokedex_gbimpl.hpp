@@ -21,7 +21,7 @@ namespace pkmn
             pokedex_gbimpl() {}
             pokedex_gbimpl(
                 int game_id,
-                pksav_type* native_ptr = nullptr
+                pksav_type* p_native = nullptr
             );
 
             ~pokedex_gbimpl();

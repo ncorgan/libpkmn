@@ -19,7 +19,7 @@ namespace pkmn
             pokedex_gbaimpl() {}
             pokedex_gbaimpl(
                 int game_id,
-                struct pksav_gba_pokedex* native_pokedex_ptr = nullptr
+                struct pksav_gba_pokedex* p_native = nullptr
             );
 
             ~pokedex_gbaimpl();

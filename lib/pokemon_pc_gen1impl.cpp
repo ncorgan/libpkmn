@@ -20,30 +20,30 @@
 namespace pkmn {
 
     static void _set_initial_pokemon_box_mem(
-        struct pksav_gen1_pokemon_box* box_ptr
+        struct pksav_gen1_pokemon_box* p_box
     )
     {
-        BOOST_ASSERT(box_ptr != nullptr);
+        BOOST_ASSERT(p_box != nullptr);
 
-        std::memset(box_ptr, 0, sizeof(*box_ptr));
+        std::memset(p_box, 0, sizeof(*p_box));
         std::memset(
-            box_ptr->nicknames,
+            p_box->nicknames,
             PKSAV_GEN1_TEXT_TERMINATOR,
-            sizeof(box_ptr->nicknames)
+            sizeof(p_box->nicknames)
         );
         std::memset(
-            box_ptr->otnames,
+            p_box->otnames,
             PKSAV_GEN1_TEXT_TERMINATOR,
-            sizeof(box_ptr->otnames)
+            sizeof(p_box->otnames)
         );
     }
 
     pokemon_pc_gen1impl::pokemon_pc_gen1impl(
         int game_id,
-        struct pksav_gen1_pokemon_storage* native_ptr
+        struct pksav_gen1_pokemon_storage* p_native
     ): pokemon_pc_impl(game_id)
     {
-        _our_mem = (native_ptr == nullptr);
+        _our_mem = (p_native == nullptr);
 
         if(_our_mem)
         {
@@ -53,29 +53,29 @@ namespace pkmn {
                 box_index < PKSAV_GEN1_NUM_POKEMON_BOXES;
                 ++box_index)
             {
-                NATIVE_RCAST->box_ptrs[box_index] = new struct pksav_gen1_pokemon_box;
-                _set_initial_pokemon_box_mem(NATIVE_RCAST->box_ptrs[box_index]);
+                NATIVE_RCAST->pp_boxes[box_index] = new struct pksav_gen1_pokemon_box;
+                _set_initial_pokemon_box_mem(NATIVE_RCAST->pp_boxes[box_index]);
             }
 
-            NATIVE_RCAST->current_box_ptr = new struct pksav_gen1_pokemon_box;
-            _set_initial_pokemon_box_mem(NATIVE_RCAST->current_box_ptr);
+            NATIVE_RCAST->p_current_box = new struct pksav_gen1_pokemon_box;
+            _set_initial_pokemon_box_mem(NATIVE_RCAST->p_current_box);
 
-            NATIVE_RCAST->current_box_num_ptr = new uint8_t(0);
+            NATIVE_RCAST->p_current_box_num = new uint8_t(0);
         }
         else
         {
-            _native = native_ptr;
+            _native = p_native;
 
 #ifndef NDEBUG
             for(size_t box_index = 0;
                 box_index < PKSAV_GEN1_NUM_POKEMON_BOXES;
                 ++box_index)
             {
-                BOOST_ASSERT(NATIVE_RCAST->box_ptrs[box_index] != nullptr);
+                BOOST_ASSERT(NATIVE_RCAST->pp_boxes[box_index] != nullptr);
             }
 
-            BOOST_ASSERT(NATIVE_RCAST->current_box_ptr != nullptr);
-            BOOST_ASSERT(NATIVE_RCAST->current_box_num_ptr != nullptr);
+            BOOST_ASSERT(NATIVE_RCAST->p_current_box != nullptr);
+            BOOST_ASSERT(NATIVE_RCAST->p_current_box_num != nullptr);
 #endif
         }
 
@@ -90,11 +90,11 @@ namespace pkmn {
                 box_index < PKSAV_GEN1_NUM_POKEMON_BOXES;
                 ++box_index)
             {
-                delete NATIVE_RCAST->box_ptrs[box_index];
+                delete NATIVE_RCAST->pp_boxes[box_index];
             }
 
-            delete NATIVE_RCAST->current_box_ptr;
-            delete NATIVE_RCAST->current_box_num_ptr;
+            delete NATIVE_RCAST->p_current_box;
+            delete NATIVE_RCAST->p_current_box_num;
 
             delete NATIVE_RCAST;
         }
@@ -109,7 +109,7 @@ namespace pkmn {
     {
         _box_list.resize(PKSAV_GEN1_NUM_POKEMON_BOXES);
 
-        uint8_t current_box_num = *NATIVE_RCAST->current_box_num_ptr;
+        uint8_t current_box_num = *NATIVE_RCAST->p_current_box_num;
         current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
         BOOST_ASSERT(current_box_num < PKSAV_GEN1_NUM_POKEMON_BOXES);
 
@@ -124,14 +124,14 @@ namespace pkmn {
             {
                 _box_list[box_index] = std::make_shared<pokemon_box_gen1impl>(
                                            _game_id,
-                                           NATIVE_RCAST->current_box_ptr
+                                           NATIVE_RCAST->p_current_box
                                        );
             }
             else
             {
                 _box_list[box_index] = std::make_shared<pokemon_box_gen1impl>(
                                            _game_id,
-                                           NATIVE_RCAST->box_ptrs[box_index]
+                                           NATIVE_RCAST->pp_boxes[box_index]
                                        );
             }
         }

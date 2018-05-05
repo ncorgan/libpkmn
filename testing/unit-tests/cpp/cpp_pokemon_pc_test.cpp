@@ -381,10 +381,10 @@ void pokemon_pc_test_common(
     {
         case 1:
         {
-            const struct pksav_gen1_pokemon_storage* native_storage_ptr =
+            const struct pksav_gen1_pokemon_storage* p_native_storage =
                 reinterpret_cast<const struct pksav_gen1_pokemon_storage*>(pc->get_native());
 
-            uint8_t current_box_num = *native_storage_ptr->current_box_num_ptr;
+            uint8_t current_box_num = *p_native_storage->p_current_box_num;
             current_box_num &= PKSAV_GEN1_CURRENT_POKEMON_BOX_NUM_MASK;
 
             const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
@@ -394,44 +394,44 @@ void pokemon_pc_test_common(
             {
                 const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(box_index)->as_vector();
 
-                const struct pksav_gen1_pokemon_box* box_ptr = nullptr;
+                const struct pksav_gen1_pokemon_box* p_box = nullptr;
                 if(box_index == current_box_num)
                 {
-                    box_ptr = native_storage_ptr->current_box_ptr;
+                    p_box = p_native_storage->p_current_box;
                 }
                 else
                 {
-                    box_ptr = native_storage_ptr->box_ptrs[box_index];
+                    p_box = p_native_storage->pp_boxes[box_index];
                 }
-                ASSERT_NE(nullptr, box_ptr);
+                ASSERT_NE(nullptr, p_box);
 
                 EXPECT_EQ(
                     pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[0])
+                    int(p_box->species[0])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[0].species)
+                    int(p_box->entries[0].species)
                 );
                 EXPECT_EQ(
                     pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[1])
+                    int(p_box->species[1])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[1].species)
+                    int(p_box->entries[1].species)
                 );
                 EXPECT_EQ(
                     pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[2])
+                    int(p_box->species[2])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[2].species)
+                    int(p_box->entries[2].species)
                 );
                 EXPECT_EQ(
                     pokemon_box_list.at(box_index)->get_native(),
-                    box_ptr
+                    p_box
                 );
             }
             break;
@@ -462,7 +462,7 @@ void pokemon_pc_test_common(
                 )
                 EXPECT_EQ(std::string(box_name), box_names.at(i));
             }*/
-            const struct pksav_gen2_pokemon_storage* native_storage_ptr =
+            const struct pksav_gen2_pokemon_storage* p_native_storage =
                 reinterpret_cast<const struct pksav_gen2_pokemon_storage*>(pc->get_native());
 
             const pkmn::pokemon_box_list_t& pokemon_box_list = pc->as_vector();
@@ -473,50 +473,50 @@ void pokemon_pc_test_common(
             {
                 const pkmn::pokemon_list_t& pokemon_list = pokemon_box_list.at(box_index)->as_vector();
 
-                const struct pksav_gen2_pokemon_box* box_ptr = nullptr;
-                if(box_index == *native_storage_ptr->current_box_num_ptr)
+                const struct pksav_gen2_pokemon_box* p_box = nullptr;
+                if(box_index == *p_native_storage->p_current_box_num)
                 {
-                    box_ptr = native_storage_ptr->current_box_ptr;
+                    p_box = p_native_storage->p_current_box;
                 }
                 else
                 {
-                    box_ptr = native_storage_ptr->box_ptrs[box_index];
+                    p_box = p_native_storage->pp_boxes[box_index];
                 }
-                ASSERT_NE(nullptr, box_ptr);
+                ASSERT_NE(nullptr, p_box);
 
                 EXPECT_EQ(
                     pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[0])
+                    int(p_box->species[0])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(0)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[0].species)
+                    int(p_box->entries[0].species)
                 );
                 EXPECT_EQ(
                     pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[1])
+                    int(p_box->species[1])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(1)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[1].species)
+                    int(p_box->entries[1].species)
                 );
                 EXPECT_EQ(
                     pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->species[2])
+                    int(p_box->species[2])
                 );
                 EXPECT_EQ(
                     pokemon_list.at(2)->get_database_entry().get_pokemon_index(),
-                    int(box_ptr->entries[2].species)
+                    int(p_box->entries[2].species)
                 );
                 EXPECT_EQ(
                     pokemon_box_list.at(box_index)->get_native(),
-                    box_ptr
+                    p_box
                 );
 
                 char box_name[PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH + 1] = {0};
                 PKSAV_CALL(
                     pksav_gen2_import_text(
-                        native_storage_ptr->box_names_ptr->names[box_index],
+                        p_native_storage->p_box_names->names[box_index],
                         box_name,
                         PKSAV_GEN2_POKEMON_BOX_NAME_LENGTH
                     );

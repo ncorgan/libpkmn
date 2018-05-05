@@ -48,44 +48,44 @@ static void check_pksav_buffer(
 
 template <typename pksav_type>
 static void check_gb_pksav_pokedex(
-    const pksav_type* pksav_pokedex_ptr,
+    const pksav_type* p_pksav_pokedex,
     const std::vector<int>& seen_numbers,
     const std::vector<int>& caught_numbers,
     bool expected_value
 )
 {
-    ASSERT_NE(nullptr, pksav_pokedex_ptr);
+    ASSERT_NE(nullptr, p_pksav_pokedex);
 
     check_pksav_buffer(
-        pksav_pokedex_ptr->seen_ptr,
+        p_pksav_pokedex->p_seen,
         seen_numbers,
         expected_value
     );
     check_pksav_buffer(
-        pksav_pokedex_ptr->owned_ptr,
+        p_pksav_pokedex->p_owned,
         caught_numbers,
         expected_value
     );
 }
 
 static void check_gba_pksav_pokedex(
-    const struct pksav_gba_pokedex* gba_pokedex_ptr,
+    const struct pksav_gba_pokedex* p_gba_pokedex,
     const std::vector<int>& seen_numbers,
     const std::vector<int>& caught_numbers,
     bool expected_value
 )
 {
-    ASSERT_NE(nullptr, gba_pokedex_ptr);
+    ASSERT_NE(nullptr, p_gba_pokedex);
 
     const size_t num_bytes = std::ceil(386.0f / 8.0f);
 
     check_pksav_buffer(
-        gba_pokedex_ptr->seen_ptrA,
+        p_gba_pokedex->p_seenA,
         seen_numbers,
         expected_value
     );
     check_pksav_buffer(
-        gba_pokedex_ptr->owned_ptr,
+        p_gba_pokedex->p_owned,
         caught_numbers,
         expected_value
     );
@@ -94,16 +94,16 @@ static void check_gba_pksav_pokedex(
     EXPECT_EQ(
         0,
         std::memcmp(
-            gba_pokedex_ptr->seen_ptrA,
-            gba_pokedex_ptr->seen_ptrB,
+            p_gba_pokedex->p_seenA,
+            p_gba_pokedex->p_seenB,
             num_bytes
         )
     );
     EXPECT_EQ(
         0,
         std::memcmp(
-            gba_pokedex_ptr->seen_ptrA,
-            gba_pokedex_ptr->seen_ptrC,
+            p_gba_pokedex->p_seenA,
+            p_gba_pokedex->p_seenC,
             num_bytes
         )
     );
@@ -120,8 +120,8 @@ TEST_P(pokedex_test, pokedex_test)
     pkmn::pokedex::sptr pokedex = pkmn::pokedex::make(game);
     ASSERT_EQ(game, pokedex->get_game());
 
-    void* native_ptr = pokedex->get_native();
-    ASSERT_NE(nullptr, native_ptr);
+    void* p_native = pokedex->get_native();
+    ASSERT_NE(nullptr, p_native);
 
     // Check initial values.
     EXPECT_EQ(0, pokedex->get_num_seen());
@@ -168,7 +168,7 @@ TEST_P(pokedex_test, pokedex_test)
     {
         case 1:
             check_gb_pksav_pokedex<struct pksav_gen1_pokedex_lists>(
-                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(native_ptr),
+                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 true
@@ -177,7 +177,7 @@ TEST_P(pokedex_test, pokedex_test)
 
         case 2:
             check_gb_pksav_pokedex<struct pksav_gen2_pokedex_lists>(
-                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(native_ptr),
+                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 true
@@ -186,7 +186,7 @@ TEST_P(pokedex_test, pokedex_test)
 
         case 3:
             check_gba_pksav_pokedex(
-                reinterpret_cast<const struct pksav_gba_pokedex*>(native_ptr),
+                reinterpret_cast<const struct pksav_gba_pokedex*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 true
@@ -219,7 +219,7 @@ TEST_P(pokedex_test, pokedex_test)
     {
         case 1:
             check_gb_pksav_pokedex<struct pksav_gen1_pokedex_lists>(
-                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(native_ptr),
+                reinterpret_cast<const struct pksav_gen1_pokedex_lists*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 false
@@ -228,7 +228,7 @@ TEST_P(pokedex_test, pokedex_test)
 
         case 2:
             check_gb_pksav_pokedex<struct pksav_gen2_pokedex_lists>(
-                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(native_ptr),
+                reinterpret_cast<const struct pksav_gen2_pokedex_lists*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 false
@@ -237,7 +237,7 @@ TEST_P(pokedex_test, pokedex_test)
 
         case 3:
             check_gba_pksav_pokedex(
-                reinterpret_cast<const struct pksav_gba_pokedex*>(native_ptr),
+                reinterpret_cast<const struct pksav_gba_pokedex*>(p_native),
                 seen_pokemon_nums,
                 caught_pokemon_nums,
                 false

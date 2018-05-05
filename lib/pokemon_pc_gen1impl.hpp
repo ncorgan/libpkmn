@@ -20,7 +20,7 @@ namespace pkmn {
             pokemon_pc_gen1impl() {}
             pokemon_pc_gen1impl(
                 int game_id,
-                struct pksav_gen1_pokemon_storage* native_ptr = nullptr
+                struct pksav_gen1_pokemon_storage* p_native = nullptr
             );
 
             ~pokemon_pc_gen1impl();

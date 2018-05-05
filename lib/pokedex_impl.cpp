@@ -187,7 +187,7 @@ namespace pkmn
     {
         boost::lock_guard<pokedex_impl> lock(*this);
 
-        return _native_ptr;
+        return _p_native;
     }
 
     void pokedex_impl::_update_member_vector_with_pksav(

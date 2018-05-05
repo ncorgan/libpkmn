@@ -58,11 +58,11 @@ namespace pkmn {
         {
             _game_id = CRYSTAL_GAME_ID;
 
-            BOOST_ASSERT(_pksav_save.item_storage.item_pc_ptr != nullptr);
+            BOOST_ASSERT(_pksav_save.item_storage.p_item_pc != nullptr);
             _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             CRYSTAL_PC_ID,
                             _game_id,
-                            _pksav_save.item_storage.item_pc_ptr
+                            _pksav_save.item_storage.p_item_pc
                        );
         }
         else
@@ -90,51 +90,51 @@ namespace pkmn {
                 _game_id = GOLD_GAME_ID;
             }
 
-            BOOST_ASSERT(_pksav_save.item_storage.item_pc_ptr != nullptr);
+            BOOST_ASSERT(_pksav_save.item_storage.p_item_pc != nullptr);
             _item_pc = std::make_shared<item_list_gen2_pcimpl>(
                             GS_PC_ID,
                             _game_id,
-                            _pksav_save.item_storage.item_pc_ptr
+                            _pksav_save.item_storage.p_item_pc
                        );
         }
 
-        BOOST_ASSERT(_pksav_save.pokedex_lists.seen_ptr != nullptr);
-        BOOST_ASSERT(_pksav_save.pokedex_lists.owned_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.pokedex_lists.p_seen != nullptr);
+        BOOST_ASSERT(_pksav_save.pokedex_lists.p_owned != nullptr);
         _pokedex = std::make_shared<pokedex_gen2impl>(
                        _game_id,
                        &_pksav_save.pokedex_lists
                    );
 
-        BOOST_ASSERT(_pksav_save.pokemon_storage.party_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.pokemon_storage.p_party != nullptr);
         _pokemon_party = std::make_shared<pokemon_party_gen2impl>(
                              _game_id,
-                             _pksav_save.pokemon_storage.party_ptr
+                             _pksav_save.pokemon_storage.p_party
                          );
 
-        BOOST_ASSERT(_pksav_save.pokemon_storage.box_ptrs != nullptr);
-        BOOST_ASSERT(_pksav_save.pokemon_storage.box_names_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.pokemon_storage.p_boxs != nullptr);
+        BOOST_ASSERT(_pksav_save.pokemon_storage.p_box_names != nullptr);
         _pokemon_pc = std::make_shared<pokemon_pc_gen2impl>(
                           _game_id,
                           &_pksav_save.pokemon_storage
                       );
 
-        BOOST_ASSERT(_pksav_save.item_storage.item_bag_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.item_storage.p_item_bag != nullptr);
         _item_bag = std::make_shared<item_bag_gen2impl>(
                         _game_id,
-                        _pksav_save.item_storage.item_bag_ptr
+                        _pksav_save.item_storage.p_item_bag
                     );
 
         // When a Pokémon is added to the PC or party, it should be
         // reflected in the Pokédex.
 
-        pokemon_party_impl* party_impl_ptr = dynamic_cast<pokemon_party_impl*>(_pokemon_party.get());
-        pokemon_pc_impl* pc_impl_ptr = dynamic_cast<pokemon_pc_impl*>(_pokemon_pc.get());
+        pokemon_party_impl* p_party_impl = dynamic_cast<pokemon_party_impl*>(_pokemon_party.get());
+        pokemon_pc_impl* p_pc_impl = dynamic_cast<pokemon_pc_impl*>(_pokemon_pc.get());
 
-        BOOST_ASSERT(party_impl_ptr != nullptr);
-        BOOST_ASSERT(pc_impl_ptr != nullptr);
+        BOOST_ASSERT(p_party_impl != nullptr);
+        BOOST_ASSERT(p_pc_impl != nullptr);
 
-        party_impl_ptr->set_pokedex(_pokedex);
-        pc_impl_ptr->set_pokedex(_pokedex);
+        p_party_impl->set_pokedex(_pokedex);
+        p_pc_impl->set_pokedex(_pokedex);
 
         _register_attributes();
     }
@@ -168,12 +168,12 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.name_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
         char trainer_name[PKSAV_GEN2_TRAINER_NAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gen2_import_text(
-                _pksav_save.trainer_info.name_ptr,
+                _pksav_save.trainer_info.p_name,
                 trainer_name,
                 PKSAV_GEN2_TRAINER_NAME_LENGTH
             );
@@ -195,12 +195,12 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.name_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_name != nullptr);
 
         PKSAV_CALL(
             pksav_gen2_export_text(
                 trainer_name.c_str(),
-                _pksav_save.trainer_info.name_ptr,
+                _pksav_save.trainer_info.p_name,
                 PKSAV_GEN2_TRAINER_NAME_LENGTH
             );
         )
@@ -210,9 +210,9 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.id_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
-        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
+        return pksav_bigendian16(*_pksav_save.trainer_info.p_id);
     }
 
     void game_save_gen2impl::set_trainer_id(
@@ -223,18 +223,18 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.id_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
-        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(uint16_t(trainer_id));
+        *_pksav_save.trainer_info.p_id = pksav_bigendian16(uint16_t(trainer_id));
     }
 
     uint16_t game_save_gen2impl::get_trainer_public_id()
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.id_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
-        return pksav_bigendian16(*_pksav_save.trainer_info.id_ptr);
+        return pksav_bigendian16(*_pksav_save.trainer_info.p_id);
     }
 
     void game_save_gen2impl::set_trainer_public_id(
@@ -243,9 +243,9 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.id_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_id != nullptr);
 
-        *_pksav_save.trainer_info.id_ptr = pksav_bigendian16(trainer_public_id);
+        *_pksav_save.trainer_info.p_id = pksav_bigendian16(trainer_public_id);
     }
 
     uint16_t game_save_gen2impl::get_trainer_secret_id()
@@ -268,7 +268,7 @@ namespace pkmn {
 
         if(_game_id == CRYSTAL_GAME_ID)
         {
-            ret = (*_pksav_save.trainer_info.gender_ptr == PKSAV_GEN2_GENDER_MALE) ? "Male" : "Female";
+            ret = (*_pksav_save.trainer_info.p_gender == PKSAV_GEN2_GENDER_MALE) ? "Male" : "Female";
         }
         else
         {
@@ -286,15 +286,15 @@ namespace pkmn {
 
         if(_game_id == CRYSTAL_GAME_ID)
         {
-            BOOST_ASSERT(_pksav_save.trainer_info.gender_ptr != nullptr);
+            BOOST_ASSERT(_pksav_save.trainer_info.p_gender != nullptr);
 
             if(trainer_gender == "Male")
             {
-                *_pksav_save.trainer_info.gender_ptr = uint8_t(PKSAV_GEN2_GENDER_MALE);
+                *_pksav_save.trainer_info.p_gender = uint8_t(PKSAV_GEN2_GENDER_MALE);
             }
             else if(trainer_gender == "Female")
             {
-                *_pksav_save.trainer_info.gender_ptr = uint8_t(PKSAV_GEN2_GENDER_FEMALE);
+                *_pksav_save.trainer_info.p_gender = uint8_t(PKSAV_GEN2_GENDER_FEMALE);
             }
             else
             {
@@ -311,12 +311,12 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.misc_fields.rival_name_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.misc_fields.p_rival_name != nullptr);
 
         char rival_name[PKSAV_GEN2_TRAINER_NAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gen2_import_text(
-                _pksav_save.misc_fields.rival_name_ptr,
+                _pksav_save.misc_fields.p_rival_name,
                 rival_name,
                 PKSAV_GEN2_TRAINER_NAME_LENGTH
             );
@@ -338,12 +338,12 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.misc_fields.rival_name_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.misc_fields.p_rival_name != nullptr);
 
         PKSAV_CALL(
             pksav_gen2_export_text(
                 rival_name.c_str(),
-                _pksav_save.misc_fields.rival_name_ptr,
+                _pksav_save.misc_fields.p_rival_name,
                 PKSAV_GEN2_TRAINER_NAME_LENGTH
             );
         )
@@ -353,12 +353,12 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.money_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
         size_t money_from_pksav = 0;
         PKSAV_CALL(
             pksav_import_base256(
-                _pksav_save.trainer_info.money_ptr,
+                _pksav_save.trainer_info.p_money,
                 3,
                 &money_from_pksav
             );
@@ -375,12 +375,12 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        BOOST_ASSERT(_pksav_save.trainer_info.money_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.trainer_info.p_money != nullptr);
 
         PKSAV_CALL(
             pksav_export_base256(
                 size_t(money),
-                _pksav_save.trainer_info.money_ptr,
+                _pksav_save.trainer_info.p_money,
                 3
             );
         )
@@ -392,7 +392,7 @@ namespace pkmn {
     {
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        return bool(*_pksav_save.save_time.daylight_savings_ptr &
+        return bool(*_pksav_save.save_time.p_daylight_savings &
                     PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK);
     }
 
@@ -402,11 +402,11 @@ namespace pkmn {
 
         if(is_daylight_savings)
         {
-            *_pksav_save.save_time.daylight_savings_ptr |= PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
+            *_pksav_save.save_time.p_daylight_savings |= PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
         }
         else
         {
-            *_pksav_save.save_time.daylight_savings_ptr &= ~PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
+            *_pksav_save.save_time.p_daylight_savings &= ~PKSAV_GEN2_DAYLIGHT_SAVINGS_TIME_MASK;
         }
     }
 
@@ -432,7 +432,7 @@ namespace pkmn {
         std::string ret = "Red";
 
         auto palette_iter = GEN2_PALETTE_BIMAP.right.find((enum pksav_gen2_palette)
-                                (*_pksav_save.trainer_info.palette_ptr)
+                                (*_pksav_save.trainer_info.p_palette)
                             );
         if(palette_iter != GEN2_PALETTE_BIMAP.right.end())
         {
@@ -452,7 +452,7 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        *_pksav_save.trainer_info.palette_ptr = uint8_t(GEN2_PALETTE_BIMAP.left.at(palette));
+        *_pksav_save.trainer_info.p_palette = uint8_t(GEN2_PALETTE_BIMAP.left.at(palette));
     }
 
     // TODO: is there enough in common with the Gen I implementation to consolidate
@@ -460,7 +460,7 @@ namespace pkmn {
 
     std::string game_save_gen2impl::get_text_speed()
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
@@ -468,7 +468,7 @@ namespace pkmn {
         std::string text_speed = "Normal";
 
         uint8_t raw_text_speed =
-            (*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK);
+            (*_pksav_save.options.p_misc_options & PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK);
 
         const pksav::gen2_text_speed_bimap_t& gen2_text_speed_bimap =
             pksav::get_gen2_text_speed_bimap();
@@ -489,7 +489,7 @@ namespace pkmn {
         const std::string& text_speed
     )
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         const pksav::gen2_text_speed_bimap_t& gen2_text_speed_bimap =
             pksav::get_gen2_text_speed_bimap();
@@ -502,15 +502,15 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK;
-        *_pksav_save.options.misc_options_ptr |= static_cast<uint8_t>(
+        *_pksav_save.options.p_misc_options &= ~PKSAV_GEN2_OPTIONS_TEXT_SPEED_MASK;
+        *_pksav_save.options.p_misc_options |= static_cast<uint8_t>(
                                         gen2_text_speed_bimap.left.at(text_speed)
                                     );
     }
 
     std::string game_save_gen2impl::get_sound_output()
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
@@ -518,7 +518,7 @@ namespace pkmn {
         std::string sound_output = "Mono";
 
         bool is_stereo =
-            bool(*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK);
+            bool(*_pksav_save.options.p_misc_options & PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK);
 
         sound_output = is_stereo ? "Stereo" : "Mono";
 
@@ -529,7 +529,7 @@ namespace pkmn {
         const std::string& sound_output
     )
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         pkmn::enforce_value_in_vector(
             "Sound output",
@@ -541,20 +541,20 @@ namespace pkmn {
 
         if(sound_output == "Stereo")
         {
-            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
+            *_pksav_save.options.p_misc_options |= PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
         }
         else
         {
-            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
+            *_pksav_save.options.p_misc_options &= ~PKSAV_GEN2_OPTIONS_SOUND_STEREO_MASK;
         }
     }
 
     std::string game_save_gen2impl::get_battle_style()
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         bool is_battle_style_set =
-            (*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK);
+            (*_pksav_save.options.p_misc_options & PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK);
 
         return is_battle_style_set ? "Set" : "Shift";
     }
@@ -563,7 +563,7 @@ namespace pkmn {
         const std::string& battle_style
     )
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         pkmn::enforce_value_in_vector(
             "Battle style",
@@ -573,30 +573,30 @@ namespace pkmn {
 
         if(battle_style == "Set")
         {
-            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
+            *_pksav_save.options.p_misc_options |= PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
         }
         else
         {
-            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
+            *_pksav_save.options.p_misc_options &= ~PKSAV_GEN2_OPTIONS_BATTLE_STYLE_SET_MASK;
         }
     }
 
     bool game_save_gen2impl::get_is_battle_scene_enabled()
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         // The save stored whether the effects are disabled, so reverse
         // the result.
         //
         // TODO: verify, the disassembly is unclear
-        return !(*_pksav_save.options.misc_options_ptr & PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK);
+        return !(*_pksav_save.options.p_misc_options & PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK);
     }
 
     void game_save_gen2impl::set_is_battle_scene_enabled(
         bool is_battle_scene_enabled
     )
     {
-        BOOST_ASSERT(_pksav_save.options.misc_options_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_misc_options != nullptr);
 
         // The save stored whether the effects are disabled, so reverse
         // the input.
@@ -604,26 +604,26 @@ namespace pkmn {
         // TODO: verify, the disassembly is unclear
         if(is_battle_scene_enabled)
         {
-            *_pksav_save.options.misc_options_ptr &= ~PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
+            *_pksav_save.options.p_misc_options &= ~PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
         }
         else
         {
-            *_pksav_save.options.misc_options_ptr |= PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
+            *_pksav_save.options.p_misc_options |= PKSAV_GEN2_OPTIONS_BATTLE_SCENE_MASK;
         }
     }
 
     int game_save_gen2impl::get_textbox_frame_index()
     {
-        BOOST_ASSERT(_pksav_save.options.textbox_frame_index_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_textbox_frame_index != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        return (*_pksav_save.options.textbox_frame_index_ptr & PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK);
+        return (*_pksav_save.options.p_textbox_frame_index & PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK);
     }
 
     void game_save_gen2impl::set_textbox_frame_index(int textbox_frame_index)
     {
-        BOOST_ASSERT(_pksav_save.options.textbox_frame_index_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_textbox_frame_index != nullptr);
 
         pkmn::enforce_bounds(
             "Textbox frame",
@@ -637,13 +637,13 @@ namespace pkmn {
         // The value is stored 0-based.
         uint8_t raw_textbox_frame_index = static_cast<uint8_t>(textbox_frame_index) - 1;
 
-        *_pksav_save.options.textbox_frame_index_ptr &= ~PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK;
-        *_pksav_save.options.textbox_frame_index_ptr |= raw_textbox_frame_index;
+        *_pksav_save.options.p_textbox_frame_index &= ~PKSAV_GEN2_OPTIONS_TEXTBOX_FRAME_MASK;
+        *_pksav_save.options.p_textbox_frame_index |= raw_textbox_frame_index;
     }
 
     std::string game_save_gen2impl::get_gameboy_printer_brightness()
     {
-        BOOST_ASSERT(_pksav_save.options.gbprinter_brightness_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_gbprinter_brightness != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
@@ -651,7 +651,7 @@ namespace pkmn {
         std::string gameboy_printer_brightness = "Normal";
 
         uint8_t raw_gameboy_printer_brightness =
-            (*_pksav_save.options.gbprinter_brightness_ptr & PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK);
+            (*_pksav_save.options.p_gbprinter_brightness & PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK);
 
         const pksav::gen2_gbprinter_brightness_bimap_t& gen2_gbprinter_brightness_bimap =
             pksav::get_gen2_gbprinter_brightness_bimap();
@@ -673,7 +673,7 @@ namespace pkmn {
         const std::string& gameboy_printer_brightness
     )
     {
-        BOOST_ASSERT(_pksav_save.options.gbprinter_brightness_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_gbprinter_brightness != nullptr);
 
         const pksav::gen2_gbprinter_brightness_bimap_t& gen2_gbprinter_brightness_bimap =
             pksav::get_gen2_gbprinter_brightness_bimap();
@@ -686,8 +686,8 @@ namespace pkmn {
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        *_pksav_save.options.gbprinter_brightness_ptr &= ~PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK;
-        *_pksav_save.options.gbprinter_brightness_ptr |=
+        *_pksav_save.options.p_gbprinter_brightness &= ~PKSAV_GEN2_GBPRINTER_BRIGHTNESS_MASK;
+        *_pksav_save.options.p_gbprinter_brightness |=
             static_cast<uint8_t>(
                 gen2_gbprinter_brightness_bimap.left.at(gameboy_printer_brightness)
             );
@@ -695,26 +695,26 @@ namespace pkmn {
 
     bool game_save_gen2impl::get_is_menu_account_enabled()
     {
-        BOOST_ASSERT(_pksav_save.options.menu_account_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_menu_account != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
-        return bool(*_pksav_save.options.menu_account_ptr & PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK);
+        return bool(*_pksav_save.options.p_menu_account & PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK);
     }
 
     void game_save_gen2impl::set_is_menu_account_enabled(bool is_menu_account_enabled)
     {
-        BOOST_ASSERT(_pksav_save.options.menu_account_ptr != nullptr);
+        BOOST_ASSERT(_pksav_save.options.p_menu_account != nullptr);
 
         boost::lock_guard<game_save_gen2impl> lock(*this);
 
         if(is_menu_account_enabled)
         {
-            *_pksav_save.options.menu_account_ptr |= PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
+            *_pksav_save.options.p_menu_account |= PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
         }
         else
         {
-            *_pksav_save.options.menu_account_ptr &= ~PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
+            *_pksav_save.options.p_menu_account &= ~PKSAV_GEN2_OPTIONS_MENU_ACCOUNT_MASK;
         }
     }
 

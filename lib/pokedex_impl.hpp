@@ -59,7 +59,7 @@ namespace pkmn
             std::vector<std::string> _all_caught;
             bool _dirty_caught;
 
-            void* _native_ptr;
+            void* _p_native;
             bool _our_mem;
 
             void _update_member_vector_with_pksav(
