@@ -688,6 +688,16 @@ namespace pkmn
         }
     }
 
+    std::string pokemon_gen2impl::get_language()
+    {
+        throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
+    }
+
+    void pokemon_gen2impl::set_language(const std::string&)
+    {
+        throw pkmn::feature_not_in_game_error("Generation II does not track origin language.");
+    }
+
     int pokemon_gen2impl::get_current_trainer_friendship()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);

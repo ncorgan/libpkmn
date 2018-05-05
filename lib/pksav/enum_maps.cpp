@@ -209,6 +209,22 @@ const gen1_type_bimap_t& get_gen1_type_bimap()
     return GEN1_TYPE_BIMAP;
 }
 
+const gba_language_bimap_t& get_gba_language_bimap()
+{
+    static const gba_language_bimap_t GBA_LANGUAGE_BIMAP =
+    boost::assign::list_of<gba_language_bimap_t::relation>
+        ("Japanese", PKSAV_GBA_LANGUAGE_JAPANESE)
+        ("English",  PKSAV_GBA_LANGUAGE_ENGLISH)
+        ("French",   PKSAV_GBA_LANGUAGE_FRENCH)
+        ("Italian",  PKSAV_GBA_LANGUAGE_ITALIAN)
+        ("German",   PKSAV_GBA_LANGUAGE_GERMAN)
+        ("Korean",   PKSAV_GBA_LANGUAGE_KOREAN) // Unused, but the value's there
+        ("Spanish",  PKSAV_GBA_LANGUAGE_SPANISH)
+    ;
+
+    return GBA_LANGUAGE_BIMAP;
+}
+
 const nature_bimap_t& get_nature_bimap()
 {
     static const nature_bimap_t NATURE_BIMAP =

@@ -534,6 +534,16 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
     }
 
+    std::string pokemon_gen1impl::get_language()
+    {
+        throw pkmn::feature_not_in_game_error("Generation I does not track origin language.");
+    }
+
+    void pokemon_gen1impl::set_language(const std::string&)
+    {
+        throw pkmn::feature_not_in_game_error("Generation I does not track origin language.");
+    }
+
     int pokemon_gen1impl::get_current_trainer_friendship()
     {
         throw pkmn::feature_not_in_game_error("Friendship", "Generation I");

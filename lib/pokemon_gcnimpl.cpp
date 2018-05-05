@@ -49,6 +49,8 @@ namespace pkmn
     BOOST_STATIC_CONSTEXPR int UNOWN_ID  = 201;
     BOOST_STATIC_CONSTEXPR int DEOXYS_ID = 386;
 
+    // TODO: consistency in template order
+
     typedef boost::bimap<libpkmgc_contest_stat_t, std::string> contest_stat_bimap_t;
     static const contest_stat_bimap_t CONTEST_STAT_BIMAP = boost::assign::list_of<contest_stat_bimap_t::relation>
         (LIBPKMGC_CONTEST_STAT_COOL,   "Cool")
@@ -87,6 +89,16 @@ namespace pkmn
         (LIBPKMGC_RIBBON_NATIONAL, "National")
         (LIBPKMGC_RIBBON_EARTH,    "Earth")
         (LIBPKMGC_RIBBON_WORLD,    "World")
+    ;
+
+    typedef boost::bimap<std::string, LibPkmGC::LanguageIndex> language_bimap_t;
+    static const language_bimap_t& LANGUAGE_BIMAP = boost::assign::list_of<language_bimap_t::relation>
+        ("Japanese", LibPkmGC::Japanese)
+        ("English",  LibPkmGC::English)
+        ("German",   LibPkmGC::German)
+        ("French",   LibPkmGC::French)
+        ("Italian",  LibPkmGC::Italian)
+        ("Spanish",  LibPkmGC::Spanish)
     ;
 
     pokemon_gcnimpl::pokemon_gcnimpl(
@@ -735,6 +747,44 @@ namespace pkmn
         {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
+    }
+
+    std::string pokemon_gcnimpl::get_language()
+    {
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        std::string ret;
+
+        // Allow for other values in case of a corrupted save.
+        auto language_bimap_iter = LANGUAGE_BIMAP.right.find(
+                                       GC_RCAST->version.language
+                                   );
+        if(language_bimap_iter != LANGUAGE_BIMAP.right.end())
+        {
+            ret = language_bimap_iter->second;
+        }
+        else
+        {
+            // Sensible default
+            ret = "English";
+        }
+
+        return ret;
+    }
+
+    void pokemon_gcnimpl::set_language(
+        const std::string& language
+    )
+    {
+        pkmn::enforce_value_in_map_keys(
+            "Language",
+            language,
+            LANGUAGE_BIMAP.left
+        );
+
+        boost::lock_guard<pokemon_gcnimpl> lock(*this);
+
+        GC_RCAST->version.language = LANGUAGE_BIMAP.left.at(language);
     }
 
     int pokemon_gcnimpl::get_current_trainer_friendship()
@@ -1430,6 +1480,7 @@ namespace pkmn
         _markings["Heart"]    = GC_RCAST->markings.heart;
     }
 
+    // TODO: region, until 3DS support brings in functions
     void pokemon_gcnimpl::_register_attributes()
     {
         using std::placeholders::_1;

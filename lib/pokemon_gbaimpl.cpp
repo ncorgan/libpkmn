@@ -35,6 +35,7 @@
 
 #include <pksav/common/markings.h>
 #include <pksav/common/stats.h>
+#include <pksav/gba/language.h>
 #include <pksav/gba/ribbons.h>
 #include <pksav/gba/text.h>
 #include <pksav/math/endian.h>
@@ -95,7 +96,7 @@ namespace pkmn
             );
         )
 
-        // TODO: language (should be enum in PKSav)
+        set_language("English");
 
         PKSAV_CALL(
             pksav_gba_export_text(
@@ -783,6 +784,53 @@ namespace pkmn
         } else {
             throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
         }
+    }
+
+    std::string pokemon_gbaimpl::get_language()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        std::string ret;
+
+        pksav_gba_language language_as_enum = static_cast<enum pksav_gba_language>(
+                                                  pksav_littleendian16(
+                                                      GBA_PC_RCAST->language
+                                                  )
+                                              );
+
+        const pksav::gba_language_bimap_t& gba_language_bimap = pksav::get_gba_language_bimap();
+
+        // Allow for other values in case of a corrupted save.
+        auto gba_language_bimap_iter = gba_language_bimap.right.find(language_as_enum);
+        if(gba_language_bimap_iter != gba_language_bimap.right.end())
+        {
+            ret = gba_language_bimap_iter->second;
+        }
+        else
+        {
+            // Sensible default
+            ret = "English";
+        }
+
+        return ret;
+    }
+
+    void pokemon_gbaimpl::set_language(
+        const std::string& language
+    )
+    {
+        const pksav::gba_language_bimap_t& gba_language_bimap = pksav::get_gba_language_bimap();
+        pkmn::enforce_value_in_map_keys(
+            "Language",
+            language,
+            gba_language_bimap.left
+        );
+
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        GBA_PC_RCAST->language = pksav_littleendian16(static_cast<uint16_t>(
+                                     gba_language_bimap.left.at(language)
+                                 ));
     }
 
     int pokemon_gbaimpl::get_current_trainer_friendship()

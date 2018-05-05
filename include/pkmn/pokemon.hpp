@@ -143,6 +143,12 @@ namespace pkmn {
                 const std::string& trainer_gender
             ) = 0;
 
+            virtual std::string get_language() = 0;
+
+            virtual void set_language(
+                const std::string& language
+            ) = 0;
+
             virtual int get_current_trainer_friendship() = 0;
 
             virtual void set_current_trainer_friendship(

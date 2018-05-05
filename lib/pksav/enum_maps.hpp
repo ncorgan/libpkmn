@@ -14,6 +14,7 @@
 #include <pksav/gen2/options.h>
 
 #include <pksav/gba/box_wallpaper.h>
+#include <pksav/gba/language.h>
 #include <pksav/gba/options.h>
 
 #include <pksav/common/condition.h>
@@ -63,9 +64,11 @@ namespace pksav
 
     // Misc
     typedef boost::bimap<std::string, enum pksav_gen1_type> gen1_type_bimap_t;
+    typedef boost::bimap<std::string, enum pksav_gba_language> gba_language_bimap_t;
     typedef boost::bimap<std::string, enum pksav_nature> nature_bimap_t;
 
     const gen1_type_bimap_t& get_gen1_type_bimap();
+    const gba_language_bimap_t& get_gba_language_bimap();
     const nature_bimap_t& get_nature_bimap();
 }
 
