@@ -7,10 +7,12 @@
 #ifndef PKMN_EXCEPTION_INTERNAL_HPP
 #define PKMN_EXCEPTION_INTERNAL_HPP
 
-#include <pkmn/exception.hpp>
-
 #include "utils/misc.hpp"
 #include "utils/floating_point_comparison.hpp"
+
+#include <pkmn/exception.hpp>
+
+#include <pksav/common/stats.h>
 
 #include <algorithm>
 #include <limits>
@@ -379,12 +381,14 @@ namespace pkmn
     )
     {
         std::string field = stat + " EV";
-        int max_value = is_game_modern ? 255 : 65535;
+
+        const int min_value = is_game_modern ? PKSAV_MIN_EV : PKSAV_MIN_GB_EV;
+        const int max_value = is_game_modern ? PKSAV_MAX_EV : PKSAV_MAX_GB_EV;
 
         pkmn::enforce_bounds(
             field,
             value,
-            0,
+            min_value,
             max_value
         );
     }
@@ -396,12 +400,14 @@ namespace pkmn
     )
     {
         std::string field = stat + " IV";
-        int max_value = is_game_modern ? 31 : 15;
+
+        const int min_value = is_game_modern ? PKSAV_MIN_IV : PKSAV_MIN_GB_IV;
+        const int max_value = is_game_modern ? PKSAV_MAX_IV : PKSAV_MAX_GB_IV;
 
         pkmn::enforce_bounds(
             field,
             value,
-            0,
+            min_value,
             max_value
         );
     }

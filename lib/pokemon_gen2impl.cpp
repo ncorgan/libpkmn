@@ -52,6 +52,14 @@ namespace pkmn
 {
     BOOST_STATIC_CONSTEXPR int UNOWN_ID = 201;
 
+    /*
+     * The field that stores the level at which a Pokémon is met is 6 bits, which
+     * stores a max value of 63. The highest-level Pokémon that can be caught is
+     * a level 52 Parasect in Mt. Silver, so this is fine. However, we must now
+     * account for this...
+     */
+    BOOST_STATIC_CONSTEXPR int MAX_LEVEL_MET = 63;
+
     pokemon_gen2impl::pokemon_gen2impl(
         pkmn::database::pokemon_entry&& database_entry,
         int level
@@ -96,8 +104,9 @@ namespace pkmn
 
         GEN2_PC_RCAST->friendship = uint8_t(_database_entry.get_base_friendship());
 
-        // The max for level met is 63, but that shouldn't restrict this.
-        set_level_met(std::min<int>(level, 63));
+        // Don't restrict the level at which we can instantiate a Pokémon, but
+        // we can't always set the level met to this value.
+        set_level_met(std::min<int>(level, MAX_LEVEL_MET));
         set_location_met("Special", false);
 
         time_t now = 0;
@@ -284,8 +293,7 @@ namespace pkmn
             case 2:
             {
                 ret = std::make_shared<pokemon_gen2impl>(pksav_pokemon, game_id);
-                // 63 is the max this value can be.
-                ret->set_level_met(std::min<int>(63, get_level()));
+                ret->set_level_met(std::min<int>(MAX_LEVEL_MET, get_level()));
                 break;
             }
 
@@ -397,7 +405,7 @@ namespace pkmn
             "Nickname",
             nickname,
             1,
-            10
+            PKSAV_GEN2_POKEMON_NICKNAME_LENGTH
         );
 
         _nickname = nickname;
@@ -439,7 +447,7 @@ namespace pkmn
                 }
                 else
                 {
-                    set_IV("Attack", 15);
+                    set_IV("Attack", PKSAV_MAX_GB_IV);
                 }
             }
             else if(gender == "Female")
@@ -596,7 +604,7 @@ namespace pkmn
             "Trainer name",
             trainer_name,
             1,
-            7
+            PKSAV_GEN2_POKEMON_OTNAME_LENGTH
         );
 
         _trainer_name = trainer_name;
@@ -662,19 +670,21 @@ namespace pkmn
         const std::string &gender
     )
     {
+        pkmn::enforce_value_in_vector(
+            "Original trainer gender",
+            gender,
+            {"Male", "Female"}
+        );
+
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
         if(gender == "Male")
         {
             GEN2_PC_RCAST->caught_data &= ~PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
-        else if(gender == "Female")
-        {
-            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
-        }
         else
         {
-            throw std::invalid_argument("gender: valid values \"Male\", \"Female\"");
+            GEN2_PC_RCAST->caught_data |= PKSAV_GEN2_POKEMON_OT_GENDER_MASK;
         }
     }
 
@@ -724,14 +734,14 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        return (GEN2_PC_RCAST->caught_data & PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_MASK) >> PKSAV_GEN2_POKEMON_LEVEL_CAUGHT_OFFSET;
+        return int(PKSAV_GEN2_POKEMON_LEVEL_CAUGHT(GEN2_PC_RCAST->caught_data));
     }
 
     void pokemon_gen2impl::set_level_met(
         int level
     )
     {
-        pkmn::enforce_bounds("Level met", level, 2, 63);
+        pkmn::enforce_bounds("Level met", level, 2, MAX_LEVEL_MET);
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
@@ -815,7 +825,7 @@ namespace pkmn
         PKSAV_CALL(
             pksav_import_base256(
                 GEN2_PC_RCAST->exp,
-                3,
+                PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE,
                 &ret
             );
         )
@@ -836,7 +846,7 @@ namespace pkmn
             pksav_export_base256(
                 experience,
                 GEN2_PC_RCAST->exp,
-                3
+                PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
 
@@ -867,7 +877,7 @@ namespace pkmn
             pksav_export_base256(
                 uint32_t(_database_entry.get_experience_at_level(level)),
                 GEN2_PC_RCAST->exp,
-                3
+                PKSAV_GEN2_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
 
@@ -948,25 +958,24 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen2impl> lock(*this);
 
-        // TODO: refactor to get vector of PPs
         std::vector<int> PPs;
         pkmn::database::move_entry entry(_moves[index].move, get_game());
-        for(int i = 0; i < 4; ++i)
+        for(int num_PP_ups = 0; num_PP_ups < 4; ++num_PP_ups)
         {
-            PPs.emplace_back(entry.get_pp(i));
+            PPs.emplace_back(entry.get_pp(num_PP_ups));
         }
 
-        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+        pkmn::enforce_bounds("PP", pp, 0, PPs.back());
 
         _moves[index].pp = pp;
         GEN2_PC_RCAST->move_pps[index] = uint8_t(pp);
 
         // Set the PP Up mask to the minimum value that will accommodate the given PP.
-        for(uint8_t i = 0; i < 4; ++i)
+        for(uint8_t num_PP_ups = 0; num_PP_ups < PPs.size(); ++num_PP_ups)
         {
-            if(pp <= PPs[i])
+            if(pp <= PPs[num_PP_ups])
             {
-                GEN2_PC_RCAST->move_pps[index] |= (i << 6);
+                GEN2_PC_RCAST->move_pps[index] |= (num_PP_ups << 6);
                 break;
             }
         }
@@ -1050,7 +1059,7 @@ namespace pkmn
         int index
     )
     {
-        _moves.resize(4);
+        _moves.resize(PKSAV_GEN2_POKEMON_NUM_MOVES);
         switch(index) {
             case 0:
             case 1:
@@ -1058,7 +1067,8 @@ namespace pkmn
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        GEN2_PC_RCAST->moves[index], 2
+                        GEN2_PC_RCAST->moves[index],
+                        _database_entry.get_game_id()
                     ),
                     (GEN2_PC_RCAST->move_pps[index] & PKSAV_GEN2_POKEMON_MOVE_PP_MASK)
                 );

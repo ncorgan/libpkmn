@@ -91,7 +91,7 @@ namespace pkmn
                     _database_entry.get_name()
                 ).c_str(),
                 GBA_PC_RCAST->nickname,
-                10
+                PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
         )
 
@@ -101,7 +101,7 @@ namespace pkmn
             pksav_gba_export_text(
                 DEFAULT_TRAINER_NAME.c_str(),
                 GBA_PC_RCAST->otname,
-                7
+                PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
         )
 
@@ -497,12 +497,13 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        char nickname[11] = {0};
+        // Add an extra character for the null terminator.
+        char nickname[PKSAV_GBA_POKEMON_NICKNAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gba_import_text(
                 GBA_PC_RCAST->nickname,
                 nickname,
-                10
+                PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
         )
 
@@ -517,7 +518,7 @@ namespace pkmn
             "Nickname",
             nickname,
             1,
-            10
+            PKSAV_GBA_POKEMON_NICKNAME_LENGTH
         );
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -526,7 +527,7 @@ namespace pkmn
             pksav_gba_export_text(
                 nickname.c_str(),
                 GBA_PC_RCAST->nickname,
-                10
+                PKSAV_GBA_POKEMON_NICKNAME_LENGTH
             );
         )
     }
@@ -680,12 +681,13 @@ namespace pkmn
     {
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        char otname[8] = {0};
+        // Add an extra character for the null terminator.
+        char otname[PKSAV_GBA_POKEMON_OTNAME_LENGTH + 1] = {0};
         PKSAV_CALL(
             pksav_gba_import_text(
                 GBA_PC_RCAST->otname,
                 otname,
-                7
+                PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
         )
 
@@ -700,7 +702,7 @@ namespace pkmn
             "Trainer name",
             trainer_name,
             1,
-            7
+            PKSAV_GBA_POKEMON_OTNAME_LENGTH
         );
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
@@ -709,7 +711,7 @@ namespace pkmn
             pksav_gba_export_text(
                 trainer_name.c_str(),
                 GBA_PC_RCAST->otname,
-                7
+                PKSAV_GBA_POKEMON_OTNAME_LENGTH
             );
         )
     }
@@ -1200,26 +1202,25 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gbaimpl> lock(*this);
 
-        // TODO: refactor to get vector of PPs
         std::vector<int> PPs;
         pkmn::database::move_entry entry(_moves[index].move, get_game());
-        for(int i = 0; i < 4; ++i)
+        for(int num_PP_ups = 0; num_PP_ups < 4; ++num_PP_ups)
         {
-            PPs.emplace_back(entry.get_pp(i));
+            PPs.emplace_back(entry.get_pp(num_PP_ups));
         }
 
-        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+        pkmn::enforce_bounds("PP", pp, 0, PPs.back());
 
         _moves[index].pp = pp;
         _attacks->move_pps[index] = uint8_t(pp);
 
         // Set the PP Up mask to the minimum value that will accommodate the given PP.
         _growth->pp_up &= ~uint8_t(3 << (index*2));
-        for(uint8_t i = 0; i < 4; ++i)
+        for(uint8_t num_PP_ups = 0; num_PP_ups < 4; ++num_PP_ups)
         {
-            if(pp <= PPs[i])
+            if(pp <= PPs[num_PP_ups])
             {
-                _growth->pp_up |= uint8_t(i << (index*2));
+                _growth->pp_up |= uint8_t(num_PP_ups << (index*2));
                 break;
             }
         }

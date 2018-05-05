@@ -44,7 +44,8 @@
  * Catch rates
  * http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_catch_rate
  */
-static const uint8_t gen1_catch_rates[] = {
+static const std::vector<uint8_t> GEN1_CATCH_RATES =
+{
     0,45,45,45,45,45,45,45,45,45,255,120,45,255,120,45,255,120,45,255,127,
     255,90,255,90,190,75,255,90,235,120,45,235,120,45,150,25,190,75,170,
     50,255,90,255,120,45,190,75,190,255,50,255,90,190,75,190,75,190,75,
@@ -87,11 +88,21 @@ namespace pkmn
         std::pair<std::string, std::string> types = _database_entry.get_types();
         const pksav::gen1_type_bimap_t& gen1_type_bimap = pksav::get_gen1_type_bimap();
 
+        BOOST_ASSERT(gen1_type_bimap.left.find(types.first) != gen1_type_bimap.left.end());
         GEN1_PC_RCAST->types[0] = uint8_t(gen1_type_bimap.left.at(types.first));
-        GEN1_PC_RCAST->types[1] = (types.second == "None") ? GEN1_PC_RCAST->types[0]
-                                                           : uint8_t(gen1_type_bimap.left.at(types.second));
 
-        GEN1_PC_RCAST->catch_rate = gen1_catch_rates[_database_entry.get_species_id()];
+        if(types.second == "None")
+        {
+            GEN1_PC_RCAST->types[1] = GEN1_PC_RCAST->types[0];
+        }
+        else
+        {
+            BOOST_ASSERT(gen1_type_bimap.left.find(types.second) != gen1_type_bimap.left.end());
+            GEN1_PC_RCAST->types[1] = uint8_t(gen1_type_bimap.left.at(types.second));
+        }
+
+        BOOST_ASSERT(size_t(_database_entry_get_species_id()) <= GEN1_CATCH_RATES.size());
+        GEN1_PC_RCAST->catch_rate = GEN1_CATCH_RATES[_database_entry.get_species_id()-1];
 
         GEN1_PC_RCAST->ot_id = pksav_bigendian16(uint16_t(DEFAULT_TRAINER_ID & 0xFFFF));
 
@@ -372,7 +383,7 @@ namespace pkmn
             "Nickname",
             nickname,
             1,
-            10
+            PKSAV_GEN1_POKEMON_NICKNAME_LENGTH
         );
 
         boost::lock_guard<pokemon_gen1impl> lock(*this);
@@ -455,7 +466,7 @@ namespace pkmn
             "Trainer name",
             trainer_name,
             1,
-            7
+            PKSAV_GEN1_POKEMON_OTNAME_LENGTH
         );
 
         boost::lock_guard<pokemon_gen1impl> lock(*this);
@@ -616,7 +627,7 @@ namespace pkmn
         PKSAV_CALL(
             pksav_import_base256(
                 GEN1_PC_RCAST->exp,
-                3,
+                PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE,
                 &ret
             );
         )
@@ -637,7 +648,7 @@ namespace pkmn
             pksav_export_base256(
                 experience,
                 GEN1_PC_RCAST->exp,
-                3
+                PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
 
@@ -669,7 +680,7 @@ namespace pkmn
             pksav_export_base256(
                 uint32_t(_database_entry.get_experience_at_level(level)),
                 GEN1_PC_RCAST->exp,
-                3
+                PKSAV_GEN1_POKEMON_EXPERIENCE_BUFFER_SIZE
             );
         )
 
@@ -745,25 +756,24 @@ namespace pkmn
 
         boost::lock_guard<pokemon_gen1impl> lock(*this);
 
-        // TODO: refactor to get vector of PPs
         std::vector<int> PPs;
         pkmn::database::move_entry entry(_moves[index].move, get_game());
-        for(int i = 0; i < 4; ++i)
+        for(int num_PP_ups = 0; num_PP_ups < 4; ++num_PP_ups)
         {
-            PPs.emplace_back(entry.get_pp(i));
+            PPs.emplace_back(entry.get_pp(num_PP_ups));
         }
 
-        pkmn::enforce_bounds("PP", pp, 0, PPs[3]);
+        pkmn::enforce_bounds("PP", pp, 0, PPs.back());
 
         _moves[index].pp = pp;
         GEN1_PC_RCAST->move_pps[index] = uint8_t(pp);
 
         // Set the PP Up mask to the minimum value that will accommodate the given PP.
-        for(uint8_t i = 0; i < 4; ++i)
+        for(uint8_t num_PP_ups = 0; num_PP_ups < PPs.size(); ++num_PP_ups)
         {
-            if(pp <= PPs[i])
+            if(pp <= PPs[num_PP_ups])
             {
-                GEN1_PC_RCAST->move_pps[index] |= (i << 6);
+                GEN1_PC_RCAST->move_pps[index] |= (num_PP_ups << 6);
                 break;
             }
         }
@@ -869,7 +879,7 @@ namespace pkmn
         int index
     )
     {
-        _moves.resize(4);
+        _moves.resize(PKSAV_GEN1_POKEMON_NUM_MOVES);
         switch(index) {
             case 0:
             case 1:
@@ -877,15 +887,17 @@ namespace pkmn
             case 3:
                 _moves[index] = pkmn::move_slot(
                     pkmn::database::move_id_to_name(
-                        GEN1_PC_RCAST->moves[index], 1
+                        GEN1_PC_RCAST->moves[index],
+                        _database_entry.get_game_id()
                     ),
                     (GEN1_PC_RCAST->move_pps[index] & PKSAV_GEN1_POKEMON_MOVE_PP_MASK)
                 );
                 break;
 
             default:
-                for(int i = 0; i < 4; ++i) {
-                    _update_moves(i);
+                for(int move_index = 0; move_index < 4; ++move_index)
+                {
+                    _update_moves(move_index);
                 }
         }
     }
@@ -910,8 +922,7 @@ namespace pkmn
 
     void pokemon_gen1impl::_register_attributes()
     {
-        using namespace std::placeholders;
-
+        // Read-only
         _numeric_attribute_engine.register_attribute_fcns(
             "Catch rate",
             std::bind(&pokemon_gen1impl::get_catch_rate, this),
