@@ -12,41 +12,6 @@ namespace PKMNTest {
 
 public class Gen1PokemonTests {
 
-    public static void FriendshipTest(
-        string game
-    ) {
-        PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", game, "", 5);
-
-        if(game.Equals("Yellow")) {
-            pikachu.CurrentTrainerFriendship = 123;
-            Assert.AreEqual(pikachu.CurrentTrainerFriendship, 123);
-
-            // Also check a non-Pikachu.
-            PKMN.Pokemon mewtwo = new PKMN.Pokemon("Mewtwo", game, "", 70);
-            Assert.Throws<ApplicationException>(
-                delegate {
-                    mewtwo.CurrentTrainerFriendship = 123;
-                }
-            );
-            Assert.Throws<ApplicationException>(
-                delegate {
-                    int friendship = mewtwo.CurrentTrainerFriendship;
-                }
-            );
-        } else {
-            Assert.Throws<ApplicationException>(
-                delegate {
-                    pikachu.CurrentTrainerFriendship = 123;
-                }
-            );
-            Assert.Throws<ApplicationException>(
-                delegate {
-                   int friendship = pikachu.CurrentTrainerFriendship;
-                }
-            );
-        }
-    }
-
     private static void CheckStatMap(
         PKMN.StringIntDict statMap
     ) {

@@ -248,8 +248,6 @@ namespace pkmn {
             void _register_attributes();
 
             std::string _nickname, _trainer_name;
-
-            uint8_t _yellow_pikachu_friendship;
     };
 
 }

@@ -73,12 +73,6 @@ void firered_3gpkm_test();
 void leafgreen_3gpkm_test();
 void test_outside_3gpkm();
 
-// Generation I friendship
-
-void red_friendship_test();
-void blue_friendship_test();
-void yellow_friendship_test();
-
 // Form
 
 void red_form_test();

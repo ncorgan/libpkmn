@@ -66,8 +66,7 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         pkmn::database::pokemon_entry&& database_entry,
         int level
-    ): pokemon_impl(std::move(database_entry)),
-       _yellow_pikachu_friendship(0)
+    ): pokemon_impl(std::move(database_entry))
     {
         _native_pc  = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
         std::memset(_native_pc, 0, sizeof(struct pksav_gen1_pc_pokemon));
@@ -116,8 +115,7 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         struct pksav_gen1_pc_pokemon* pc,
         int game_id
-    ): pokemon_impl(pc->species, game_id),
-       _yellow_pikachu_friendship(0)
+    ): pokemon_impl(pc->species, game_id)
     {
         _native_pc = reinterpret_cast<void*>(pc);
         _our_pc_mem = false;
@@ -145,8 +143,7 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         struct pksav_gen1_party_pokemon* party,
         int game_id
-    ): pokemon_impl(party->pc_data.species, game_id),
-       _yellow_pikachu_friendship(0)
+    ): pokemon_impl(party->pc_data.species, game_id)
     {
         _native_pc = reinterpret_cast<void*>(&party->pc_data);
         _our_pc_mem = false;
@@ -173,8 +170,7 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         const struct pksav_gen1_pc_pokemon& pc,
         int game_id
-    ): pokemon_impl(pc.species, game_id),
-       _yellow_pikachu_friendship(0)
+    ): pokemon_impl(pc.species, game_id)
     {
         _native_pc = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
         *GEN1_PC_RCAST = pc;
@@ -203,8 +199,7 @@ namespace pkmn
     pokemon_gen1impl::pokemon_gen1impl(
         const struct pksav_gen1_party_pokemon& party,
         int game_id
-    ): pokemon_impl(party.pc_data.species, game_id),
-       _yellow_pikachu_friendship(0)
+    ): pokemon_impl(party.pc_data.species, game_id)
     {
         _native_pc = reinterpret_cast<void*>(new struct pksav_gen1_pc_pokemon);
         *GEN1_PC_RCAST = party.pc_data;
@@ -528,45 +523,14 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("All Generation I trainers are male.");
     }
 
-    BOOST_STATIC_CONSTEXPR int YELLOW = 3;
-    BOOST_STATIC_CONSTEXPR int PIKACHU = 25;
-
     int pokemon_gen1impl::get_current_trainer_friendship()
     {
-        int ret = 0;
-
-        if(_database_entry.get_game_id() == YELLOW and
-           _database_entry.get_species_id() == PIKACHU)
-        {
-            boost::lock_guard<pokemon_gen1impl> lock(*this);
-
-            ret = _yellow_pikachu_friendship;
-        }
-        else
-        {
-            throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
-        }
-
-        return ret;
+        throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
     }
 
-    void pokemon_gen1impl::set_current_trainer_friendship(
-        int friendship
-    )
+    void pokemon_gen1impl::set_current_trainer_friendship(int)
     {
-        if(_database_entry.get_game_id() == YELLOW and
-           _database_entry.get_species_id() == PIKACHU)
-        {
-            pkmn::enforce_bounds("Friendship", friendship, 0, 255);
-
-            boost::lock_guard<pokemon_gen1impl> lock(*this);
-
-            _yellow_pikachu_friendship = uint8_t(friendship);
-        }
-        else
-        {
-            throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
-        }
+        throw pkmn::feature_not_in_game_error("Friendship", "Generation I");
     }
 
     std::string pokemon_gen1impl::get_ability()

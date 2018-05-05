@@ -15,25 +15,6 @@ import unittest
 
 class gen1_pokemon_test(pokemon_tests):
 
-    def gen1_friendship_test(self, game):
-        pikachu = pkmn.pokemon("Pikachu", game, "", 5)
-
-        if game == "Yellow":
-            pikachu.set_current_trainer_friendship(123)
-            self.assertEqual(pikachu.get_current_trainer_friendship(), 123)
-
-            # Also check a non-Pikachu.
-            mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
-            with self.assertRaises(RuntimeError):
-                mewtwo.set_current_trainer_friendship(123)
-            with self.assertRaises(RuntimeError):
-                mewtwo.get_current_trainer_friendship()
-        else:
-            with self.assertRaises(RuntimeError):
-                pikachu.set_current_trainer_friendship(123)
-            with self.assertRaises(RuntimeError):
-                pikachu.get_current_trainer_friendship()
-
     def gen1_check_stat_map(self, stat_map):
         self.assertTrue(stat_map.has_key("HP"))
         self.assertTrue(stat_map.has_key("Attack"))
@@ -242,9 +223,6 @@ class gen1_pokemon_test(pokemon_tests):
     def test_red_invalid_pokemon(self):
         self.invalid_pokemon_test("Red")
 
-    def test_red_friendship(self):
-        self.gen1_friendship_test("Red")
-
     def test_red_pokemon(self):
         self.pokemon_test_common(
             "Charmander",
@@ -259,9 +237,6 @@ class gen1_pokemon_test(pokemon_tests):
     def test_blue_invalid_pokemon(self):
         self.invalid_pokemon_test("Blue")
 
-    def test_blue_friendship(self):
-        self.gen1_friendship_test("Blue")
-
     def test_blue_pokemon(self):
         self.pokemon_test_common(
             "Charmander",
@@ -275,9 +250,6 @@ class gen1_pokemon_test(pokemon_tests):
 
     def test_yellow_invalid_pokemon(self):
         self.invalid_pokemon_test("Yellow")
-
-    def test_yellow_friendship(self):
-        self.gen1_friendship_test("Yellow")
 
     def test_yellow_pokemon(self):
         self.pokemon_test_common(

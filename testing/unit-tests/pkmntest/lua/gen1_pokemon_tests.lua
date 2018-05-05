@@ -12,24 +12,6 @@ local pokemon_tests = require("pokemon_tests")
 
 local gen1_pokemon_tests = {}
 
-function gen1_pokemon_tests.friendship_test(game)
-    local pikachu = pkmn.pokemon("Pikachu", game, "", 5)
-
-    if game == "Yellow"
-    then
-        pikachu:set_current_trainer_friendship(123)
-        luaunit.assertEquals(pikachu:get_current_trainer_friendship(), 123)
-
-        -- Also check a non-Pikachu.
-        local mewtwo = pkmn.pokemon("Mewtwo", game, "", 70)
-        luaunit.assertError(mewtwo.set_current_trainer_friendship, mewtwo, 123)
-        luaunit.assertError(mewtwo.get_current_trainer_friendship, mewtwo)
-    else
-        luaunit.assertError(pikachu.set_current_trainer_friendship, pikachu, 123)
-        luaunit.assertError(pikachu.get_current_trainer_friendship, pikachu)
-    end
-end
-
 function gen1_pokemon_tests.check_stat_map(stat_map)
     luaunit.assertTrue(stat_map:has_key("HP"))
     luaunit.assertTrue(stat_map:has_key("Attack"))
@@ -189,10 +171,6 @@ function test_gen1_red_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Red")
 end
 
-function test_gen1_red_friendship()
-    gen1_pokemon_tests.friendship_test("Red")
-end
-
 function test_gen1_red_pokemon()
     gen1_pokemon_tests.pokemon_test("Red")
 end
@@ -203,10 +181,6 @@ function test_gen1_blue_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Blue")
 end
 
-function test_gen1_blue_friendship()
-    gen1_pokemon_tests.friendship_test("Blue")
-end
-
 function test_gen1_blue_pokemon()
     gen1_pokemon_tests.pokemon_test("Blue")
 end
@@ -215,10 +189,6 @@ end
 
 function test_gen1_yellow_invalid_pokemon()
     pokemon_tests.invalid_pokemon_test("Yellow")
-end
-
-function test_gen1_yellow_friendship()
-    gen1_pokemon_tests.friendship_test("Yellow")
 end
 
 function test_gen1_yellow_pokemon()
