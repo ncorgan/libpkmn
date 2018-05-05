@@ -28,16 +28,22 @@
 %attribute(pkmn::swig::pokemon, bool, is_egg, is_egg, set_is_egg);
 %attributeval(pkmn::swig::pokemon, pkmn::database::pokemon_entry, database_entry, get_database_entry);
 %attributestring(pkmn::swig::pokemon, std::string, condition, get_condition, set_condition);
+%attributestring(pkmn::swig::pokemon, std::string, nickname, get_nickname, set_nickname);
 %attributestring(pkmn::swig::pokemon, std::string, gender, get_gender, set_gender);
 %attribute(pkmn::swig::pokemon, bool, is_shiny, is_shiny, set_shininess);
+%attributestring(pkmn::swig::pokemon, std::string, held_item, get_held_item, set_held_item);
 %attribute(pkmn::swig::pokemon, int, pokerus_duration, get_pokerus_duration, set_pokerus_duration);
+%attributestring(pkmn::swig::pokemon, std::string, original_trainer_name, get_original_trainer_name, set_original_trainer_name);
 %attribute(pkmn::swig::pokemon, uint16_t, original_trainer_public_id, get_original_trainer_public_id, set_original_trainer_public_id);
 %attribute(pkmn::swig::pokemon, uint16_t, original_trainer_secret_id, get_original_trainer_secret_id, set_original_trainer_secret_id);
 %attribute(pkmn::swig::pokemon, uint32_t, original_trainer_id, get_original_trainer_id, set_original_trainer_id);
 %attributestring(pkmn::swig::pokemon, std::string, original_trainer_gender, get_original_trainer_gender, set_original_trainer_gender);
 %attribute(pkmn::swig::pokemon, int, current_trainer_friendship, get_current_trainer_friendship, set_current_trainer_friendship);
 %attributestring(pkmn::swig::pokemon, std::string, ability, get_ability, set_ability);
+%attributestring(pkmn::swig::pokemon, std::string, ball, get_ball, set_ball);
 %attribute(pkmn::swig::pokemon, int, level_met, get_level_met, set_level_met);
+%attributestring(pkmn::swig::pokemon, std::string, location_met, get_location_met, set_location_met);
+%attributestring(pkmn::swig::pokemon, std::string, location_met_as_egg, get_location_met_as_egg, set_location_met_as_egg);
 %attributestring(pkmn::swig::pokemon, std::string, original_game, get_original_game, set_original_game);
 %attribute(pkmn::swig::pokemon, uint32_t, personality, get_personality, set_personality);
 %attribute(pkmn::swig::pokemon, int, experience, get_experience, set_experience);
@@ -55,27 +61,5 @@
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::numeric_attribute_map<pkmn::pokemon>), numeric_attributes, get_numeric_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::string_attribute_map<pkmn::pokemon>), string_attributes, get_string_attributes);
 %attributeval(pkmn::swig::pokemon, %arg(pkmn::swig::boolean_attribute_map<pkmn::pokemon>), boolean_attributes, get_boolean_attributes);
-
-/*
- * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
- * Python 2 "unicode" type to be converted to a char* or std::string. There's
- * no way for a SWIG project to bring this in, so we need this ugly workaround
- * when using earlier verisons of SWIG.
- */
-#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
-%attributestring(pkmn::swig::pokemon, std::wstring, ball, get_ball, set_ball);
-%attributestring(pkmn::swig::pokemon, std::wstring, held_item, get_held_item, set_held_item);
-%attributestring(pkmn::swig::pokemon, std::wstring, location_met, get_location_met, set_location_met);
-%attributestring(pkmn::swig::pokemon, std::wstring, location_met_as_egg, get_location_met_as_egg, set_location_met_as_egg);
-%attributestring(pkmn::swig::pokemon, std::wstring, nickname, get_nickname, set_nickname);
-%attributestring(pkmn::swig::pokemon, std::wstring, original_trainer_name, get_original_trainer_name, set_original_trainer_name);
-#else
-%attributestring(pkmn::swig::pokemon, std::string, ball, get_ball, set_ball);
-%attributestring(pkmn::swig::pokemon, std::string, held_item, get_held_item, set_held_item);
-%attributestring(pkmn::swig::pokemon, std::string, location_met, get_location_met, set_location_met);
-%attributestring(pkmn::swig::pokemon, std::string, location_met_as_egg, get_location_met_as_egg, set_location_met_as_egg);
-%attributestring(pkmn::swig::pokemon, std::string, nickname, get_nickname, set_nickname);
-%attributestring(pkmn::swig::pokemon, std::string, original_trainer_name, get_original_trainer_name, set_original_trainer_name);
-#endif
 
 %include "cpp_wrappers/pokemon.hpp"

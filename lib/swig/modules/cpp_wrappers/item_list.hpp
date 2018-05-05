@@ -12,10 +12,6 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/item_list.hpp>
 
-#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
-#    include <boost/locale/encoding_utf.hpp>
-#endif
-
 #include "item_slot.hpp"
 
 namespace pkmn { namespace swig {
@@ -40,30 +36,12 @@ namespace pkmn { namespace swig {
             {
             }
 
-/*
- * SWIG 3.0.8 introduced the SWIG_PYTHON_2_UNICODE macro, which allows the
- * Python 2 "unicode" type to be converted to a char* or std::string. There's
- * no way for a SWIG project to bring this in, so we need this ugly workaround
- * when using earlier verisons of SWIG.
- */
-#if defined(SWIGPYTHON) && SWIG_VERSION < 0x030008
-            item_list(
-                const std::wstring& name,
-                const std::wstring& game
-            ): _item_list(pkmn::item_list::make(
-                   boost::locale::conv::utf_to_utf<char>(name),
-                   boost::locale::conv::utf_to_utf<char>(game)
-                   ))
-            {
-            }
-#else
             item_list(
                 const std::string& name,
                 const std::string& game
             ): _item_list(pkmn::item_list::make(name, game))
             {
             }
-#endif
 
             inline std::string get_name()
             {
