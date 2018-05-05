@@ -421,6 +421,18 @@ namespace pkmn
         throw pkmn::feature_not_in_game_error("Held items", "Generation I");
     }
 
+    std::string pokemon_gen1impl::get_nature()
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation I");
+    }
+
+    void pokemon_gen1impl::set_nature(
+        PKMN_UNUSED(const std::string& nature)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation I");
+    }
+
     int pokemon_gen1impl::get_pokerus_duration()
     {
         throw pkmn::feature_not_in_game_error("Pokérus", "Generation I");

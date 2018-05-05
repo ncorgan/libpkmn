@@ -25,6 +25,7 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/calculations/form.hpp>
 #include <pkmn/calculations/gender.hpp>
+#include <pkmn/calculations/personality.hpp>
 #include <pkmn/calculations/shininess.hpp>
 #include <pkmn/utils/paths.hpp>
 
@@ -610,6 +611,48 @@ namespace pkmn
         }
 
         _growth->held_item = pksav_littleendian16(uint16_t(item.get_item_index()));
+    }
+
+    std::string pokemon_gbaimpl::get_nature()
+    {
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
+
+        enum pksav_nature nature = static_cast<enum pksav_nature>(get_personality() % 25);
+
+        // All values 0-24 should be represented in this bimap.
+        auto nature_iter = nature_bimap.right.find(nature);
+        BOOST_ASSERT(nature_iter != nature_bimap.right.end());
+
+        return nature_iter->second;
+    }
+
+    void pokemon_gbaimpl::set_nature(
+        const std::string& nature
+    )
+    {
+        const pksav::nature_bimap_t& nature_bimap = pksav::get_nature_bimap();
+        pkmn::enforce_value_in_map_keys(
+            "Nature",
+            nature,
+            nature_bimap.left
+        );
+
+        boost::lock_guard<pokemon_gbaimpl> lock(*this);
+
+        // Nature is derived from personality, so we need to find a new
+        // one that preserves all other values.
+        set_personality(
+            pkmn::calculations::generate_personality(
+                get_species(),
+                get_original_trainer_id(),
+                is_shiny(),
+                get_ability(),
+                get_gender(),
+                nature
+            )
+        );
     }
 
     int pokemon_gbaimpl::get_pokerus_duration()

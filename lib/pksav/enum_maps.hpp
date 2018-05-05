@@ -17,6 +17,7 @@
 #include <pksav/gba/options.h>
 
 #include <pksav/common/condition.h>
+#include <pksav/common/nature.h>
 
 #include <boost/assign.hpp>
 #include <boost/bimap.hpp>
@@ -62,8 +63,10 @@ namespace pksav
 
     // Misc
     typedef boost::bimap<std::string, enum pksav_gen1_type> gen1_type_bimap_t;
+    typedef boost::bimap<std::string, enum pksav_nature> nature_bimap_t;
 
     const gen1_type_bimap_t& get_gen1_type_bimap();
+    const nature_bimap_t& get_nature_bimap();
 }
 
 #endif /* INCLUDED_PKMN_PKSAV_ENUM_MAPS_HPP */

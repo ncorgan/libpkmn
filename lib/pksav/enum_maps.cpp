@@ -209,4 +209,38 @@ const gen1_type_bimap_t& get_gen1_type_bimap()
     return GEN1_TYPE_BIMAP;
 }
 
+const nature_bimap_t& get_nature_bimap()
+{
+    static const nature_bimap_t NATURE_BIMAP =
+    boost::assign::list_of<nature_bimap_t::relation>
+        ("Hardy",   PKSAV_NATURE_HARDY)
+        ("Lonely",  PKSAV_NATURE_LONELY)
+        ("Brave",   PKSAV_NATURE_BRAVE)
+        ("Adamant", PKSAV_NATURE_ADAMANT)
+        ("Naughty", PKSAV_NATURE_NAUGHTY)
+        ("Bold",    PKSAV_NATURE_BOLD)
+        ("Docile",  PKSAV_NATURE_DOCILE)
+        ("Relaxed", PKSAV_NATURE_RELAXED)
+        ("Impish",  PKSAV_NATURE_IMPISH)
+        ("Lax",     PKSAV_NATURE_LAX)
+        ("Timid",   PKSAV_NATURE_TIMID)
+        ("Hasty",   PKSAV_NATURE_HASTY)
+        ("Serious", PKSAV_NATURE_SERIOUS)
+        ("Jolly",   PKSAV_NATURE_JOLLY)
+        ("Naive",   PKSAV_NATURE_NAIVE)
+        ("Modest",  PKSAV_NATURE_MODEST)
+        ("Mild",    PKSAV_NATURE_MILD)
+        ("Quiet",   PKSAV_NATURE_QUIET)
+        ("Bashful", PKSAV_NATURE_BASHFUL)
+        ("Rash",    PKSAV_NATURE_RASH)
+        ("Calm",    PKSAV_NATURE_CALM)
+        ("Gentle",  PKSAV_NATURE_GENTLE)
+        ("Sassy",   PKSAV_NATURE_SASSY)
+        ("Careful", PKSAV_NATURE_CAREFUL)
+        ("Quirky",  PKSAV_NATURE_QUIRKY)
+    ;
+
+    return NATURE_BIMAP;
+}
+
 }

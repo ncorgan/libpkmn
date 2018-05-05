@@ -91,6 +91,12 @@ namespace pkmn {
                 const std::string &held_item
             ) override final;
 
+            std::string get_nature() override final;
+
+            void set_nature(
+                const std::string& nature
+            ) override final;
+
             int get_pokerus_duration() override final;
 
             void set_pokerus_duration(

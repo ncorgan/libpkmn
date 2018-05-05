@@ -546,6 +546,18 @@ namespace pkmn
         GEN2_PC_RCAST->held_item = uint8_t(item.get_item_index());
     }
 
+    std::string pokemon_gen2impl::get_nature()
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
+    }
+
+    void pokemon_gen2impl::set_nature(
+        PKMN_UNUSED(const std::string& nature)
+    )
+    {
+        throw pkmn::feature_not_in_game_error("Natures", "Generation II");
+    }
+
     int pokemon_gen2impl::get_pokerus_duration()
     {
         boost::lock_guard<pokemon_gen2impl> lock(*this);
