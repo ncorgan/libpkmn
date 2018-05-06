@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -22,6 +22,9 @@ class buildinfo_test(unittest.TestCase):
 
     def test_pksav_version(self):
         self.assertGreater(len(pkmn.buildinfo.PKSAV_VERSION), 0)
+
+    def test_qt_version(self):
+        self.assertGreater(len(pkmn.buildinfo.QT_VERSION), 0)
 
     def test_sqlite3_version(self):
         self.assertGreater(len(pkmn.buildinfo.SQLITE3_VERSION), 0)

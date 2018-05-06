@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -20,6 +20,10 @@ end
 
 function test_pksav_version()
     luaunit.assertTrue(#pkmn.buildinfo.PKSAV_VERSION > 0)
+end
+
+function test_qt_version()
+    luaunit.assertTrue(#pkmn.buildinfo.QT_VERSION > 0)
 end
 
 function test_sqlite3_version()
