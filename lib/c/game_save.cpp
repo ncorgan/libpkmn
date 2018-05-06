@@ -5,8 +5,8 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "c_enum_maps.hpp"
 #include "cpp_to_c.hpp"
+#include "enum_maps.hpp"
 #include "error_internal.hpp"
 #include "exception_internal.hpp"
 
@@ -176,8 +176,10 @@ enum pkmn_error pkmn_game_save_get_trainer_info(
         if(internal_ptr->generation >= 2)
         {
             std::string cpp_gender = internal_ptr->cpp->get_trainer_gender();
-            BOOST_ASSERT(pkmn::c::GENDER_BIMAP.left.count(cpp_gender) > 0);
-            trainer_info.gender = pkmn::c::GENDER_BIMAP.left.at(cpp_gender);
+
+            const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+            BOOST_ASSERT(gender_bimap.left.count(cpp_gender) > 0);
+            trainer_info.gender = gender_bimap.left.at(cpp_gender);
         }
         else
         {
@@ -256,8 +258,10 @@ enum pkmn_error pkmn_game_save_set_trainer_gender(
             {PKMN_GENDER_MALE, PKMN_GENDER_FEMALE}
         );
 
+        const pkmn::c::gender_bimap_t& gender_bimap = pkmn::c::get_gender_bimap();
+
         internal_ptr->cpp->set_trainer_gender(
-            pkmn::c::GENDER_BIMAP.right.at(gender)
+            gender_bimap.right.at(gender)
         );
     )
 }
