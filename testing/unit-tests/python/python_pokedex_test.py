@@ -48,8 +48,8 @@ class pokedex_test(pkmntest.base_test):
                 all_seen_nums += [index]
 
                 species = all_pokemon[index]
-                pokedex.has_seen[species] = True
-                self.assertTrue(pokedex.has_seen[species])
+                pokedex.seen_pokemon_map[species] = True
+                self.assertTrue(pokedex.seen_pokemon_map[species])
                 self.assertTrue(species in pokedex.all_seen)
         self.assertEqual(pokedex.num_seen, len(all_seen_nums))
         self.assertEqual(len(pokedex.all_seen), len(all_seen_nums))
@@ -61,8 +61,8 @@ class pokedex_test(pkmntest.base_test):
                 all_caught_nums += [index]
 
                 species = all_pokemon[index]
-                pokedex.has_caught[species] = True
-                self.assertTrue(pokedex.has_caught[species])
+                pokedex.caught_pokemon_map[species] = True
+                self.assertTrue(pokedex.caught_pokemon_map[species])
                 self.assertTrue(species in pokedex.all_caught)
         self.assertEqual(pokedex.num_caught, len(all_caught_nums))
         self.assertEqual(len(pokedex.all_caught), len(all_caught_nums))
@@ -70,14 +70,14 @@ class pokedex_test(pkmntest.base_test):
         # Remove all entries.
 
         for species in pokedex.all_seen:
-            pokedex.has_seen[species] = False
-            self.assertFalse(pokedex.has_seen[species])
+            pokedex.seen_pokemon_map[species] = False
+            self.assertFalse(pokedex.seen_pokemon_map[species])
         self.assertEqual(pokedex.num_seen, 0)
         self.assertEqual(len(pokedex.all_seen), 0)
 
         for species in pokedex.all_caught:
-            pokedex.has_caught[species] = False
-            self.assertFalse(pokedex.has_caught[species])
+            pokedex.caught_pokemon_map[species] = False
+            self.assertFalse(pokedex.caught_pokemon_map[species])
         self.assertEqual(pokedex.num_caught, 0)
         self.assertEqual(len(pokedex.all_caught), 0)
 

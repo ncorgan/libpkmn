@@ -42,16 +42,16 @@ function pokedex_test(pokedex)
 
     for num = 1, num_seen
     do
-        pokedex.has_seen[all_pokemon[num]] = true
-        luaunit.assertTrue(pokedex.has_seen[all_pokemon[num]])
+        pokedex.seen_pokemon_map[all_pokemon[num]] = true
+        luaunit.assertTrue(pokedex.seen_pokemon_map[all_pokemon[num]])
     end
     luaunit.assertEquals(pokedex.num_seen, num_seen)
     luaunit.assertEquals(#pokedex.all_seen, num_seen)
 
     for num = (#all_pokemon-num_caught+1), #all_pokemon
     do
-        pokedex.has_caught[all_pokemon[num]] = true
-        luaunit.assertTrue(pokedex.has_caught[all_pokemon[num]])
+        pokedex.caught_pokemon_map[all_pokemon[num]] = true
+        luaunit.assertTrue(pokedex.caught_pokemon_map[all_pokemon[num]])
     end
     luaunit.assertEquals(pokedex.num_caught, num_caught)
     luaunit.assertEquals(#pokedex.all_caught, num_caught)
@@ -61,8 +61,8 @@ function pokedex_test(pokedex)
     local all_seen = pokedex.all_seen
     for num = 1, #all_seen
     do
-        pokedex.has_seen[all_seen[num]] = false
-        luaunit.assertFalse(pokedex.has_seen[all_seen[num]])
+        pokedex.seen_pokemon_map[all_seen[num]] = false
+        luaunit.assertFalse(pokedex.seen_pokemon_map[all_seen[num]])
     end
     luaunit.assertEquals(pokedex.num_seen, 0)
     luaunit.assertEquals(#pokedex.all_seen, 0)
@@ -70,8 +70,8 @@ function pokedex_test(pokedex)
     local all_caught = pokedex.all_caught
     for num = 1, #all_caught
     do
-        pokedex.has_caught[all_caught[num]] = false
-        luaunit.assertFalse(pokedex.has_caught[all_caught[num]])
+        pokedex.caught_pokemon_map[all_caught[num]] = false
+        luaunit.assertFalse(pokedex.caught_pokemon_map[all_caught[num]])
     end
     luaunit.assertEquals(pokedex.num_caught, 0)
     luaunit.assertEquals(#pokedex.all_caught, 0)

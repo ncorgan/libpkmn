@@ -142,8 +142,8 @@ class GameSaveTest < PKMNTest
 
                 if save.game != "Colosseum" and save.game != "XD"
                     if not save.pokemon_party[i].is_egg
-                        assert(save.pokedex.has_seen[save.pokemon_party[i].species])
-                        assert(save.pokedex.has_caught[save.pokemon_party[i].species])
+                        assert(save.pokedex.seen_pokemon_hash[save.pokemon_party[i].species])
+                        assert(save.pokedex.caught_pokemon_hash[save.pokemon_party[i].species])
                     end
                 end
             else
@@ -164,8 +164,8 @@ class GameSaveTest < PKMNTest
 
                         if save.game != "Colosseum" and save.game != "XD"
                             if not box[i].is_egg
-                                assert(save.pokedex.has_seen[box[i].species])
-                                assert(save.pokedex.has_caught[box[i].species])
+                                assert(save.pokedex.seen_pokemon_hash[box[i].species])
+                                assert(save.pokedex.caught_pokemon_hash[box[i].species])
                             end
                         end
                     else

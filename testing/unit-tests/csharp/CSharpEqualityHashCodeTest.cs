@@ -230,9 +230,9 @@ public class CSharpEqualityHashCodeTest
         // The Pokemon class and its helpers all use the underlying pointer
         // in generating their hash codes. Make sure these aren't equal.
 
-        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.HasSeen.GetHashCode());
-        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.HasCaught.GetHashCode());
-        Assert.AreNotEqual(pokedex.HasSeen.GetHashCode(), pokedex.HasCaught.GetHashCode());
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.SeenPokemonMap.GetHashCode());
+        Assert.AreNotEqual(pokedex.GetHashCode(), pokedex.CaughtPokemonMap.GetHashCode());
+        Assert.AreNotEqual(pokedex.SeenPokemonMap.GetHashCode(), pokedex.CaughtPokemonMap.GetHashCode());
     }
 
     [Test]

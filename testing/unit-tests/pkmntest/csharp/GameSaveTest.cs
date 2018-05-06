@@ -251,8 +251,8 @@ public class GameSaveTest
                 string species = party[partyIndex].Species;
                 if(!species.Equals("None") && !party[partyIndex].IsEgg)
                 {
-                    Assert.IsTrue(pokedex.HasSeen[species]);
-                    Assert.IsTrue(pokedex.HasCaught[species]);
+                    Assert.IsTrue(pokedex.SeenPokemonMap[species]);
+                    Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
                 }
             }
 
@@ -264,8 +264,8 @@ public class GameSaveTest
                     string species = box[boxIndex].Species;
                     if(!species.Equals("None") && !box[boxIndex].IsEgg)
                     {
-                        Assert.IsTrue(pokedex.HasSeen[species]);
-                        Assert.IsTrue(pokedex.HasCaught[species]);
+                        Assert.IsTrue(pokedex.SeenPokemonMap[species]);
+                        Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
                     }
                 }
             }
@@ -277,13 +277,13 @@ public class GameSaveTest
             string testSpecies1 = "Bulbasaur";
             string testSpecies2 = "Charmander";
 
-            pokedex.HasSeen[testSpecies1] = false;
-            Assert.IsFalse(pokedex.HasSeen[testSpecies1]);
-            Assert.IsFalse(pokedex.HasCaught[testSpecies1]);
+            pokedex.SeenPokemonMap[testSpecies1] = false;
+            Assert.IsFalse(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsFalse(pokedex.CaughtPokemonMap[testSpecies1]);
 
-            pokedex.HasSeen[testSpecies2] = false;
-            Assert.IsFalse(pokedex.HasSeen[testSpecies1]);
-            Assert.IsFalse(pokedex.HasCaught[testSpecies1]);
+            pokedex.SeenPokemonMap[testSpecies2] = false;
+            Assert.IsFalse(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsFalse(pokedex.CaughtPokemonMap[testSpecies1]);
 
             PKMN.Pokemon testPokemon1 = new PKMN.Pokemon(
                                                 testSpecies1,
@@ -300,12 +300,12 @@ public class GameSaveTest
 
 
             party[0] = testPokemon1;
-            Assert.IsTrue(pokedex.HasSeen[testSpecies1]);
-            Assert.IsTrue(pokedex.HasCaught[testSpecies1]);
+            Assert.IsTrue(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsTrue(pokedex.CaughtPokemonMap[testSpecies1]);
 
             pokemonPC[0][0] = testPokemon2;
-            Assert.IsTrue(pokedex.HasSeen[testSpecies2]);
-            Assert.IsTrue(pokedex.HasCaught[testSpecies2]);
+            Assert.IsTrue(pokedex.SeenPokemonMap[testSpecies2]);
+            Assert.IsTrue(pokedex.CaughtPokemonMap[testSpecies2]);
         }
     }
 

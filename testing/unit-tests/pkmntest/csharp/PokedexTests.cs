@@ -43,8 +43,8 @@ public class PokedexTests
                 allSeenNums.Add(index);
 
                 string species = allPokemon[index];
-                pokedex.HasSeen[species] = true;
-                Assert.IsTrue(pokedex.HasSeen[species]);
+                pokedex.SeenPokemonMap[species] = true;
+                Assert.IsTrue(pokedex.SeenPokemonMap[species]);
             }
         }
         Assert.AreEqual(pokedex.NumSeen, allSeenNums.Count);
@@ -59,8 +59,8 @@ public class PokedexTests
                 allCaughtNums.Add(index);
 
                 string species = allPokemon[index];
-                pokedex.HasCaught[species] = true;
-                Assert.IsTrue(pokedex.HasCaught[species]);
+                pokedex.CaughtPokemonMap[species] = true;
+                Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
             }
         }
         Assert.AreEqual(pokedex.NumCaught, allCaughtNums.Count);
@@ -70,16 +70,16 @@ public class PokedexTests
 
         foreach(string species in pokedex.AllSeen)
         {
-            pokedex.HasSeen[species] = false;
-            Assert.IsFalse(pokedex.HasSeen[species]);
+            pokedex.SeenPokemonMap[species] = false;
+            Assert.IsFalse(pokedex.SeenPokemonMap[species]);
         }
         Assert.AreEqual(pokedex.NumSeen, 0);
         Assert.AreEqual(pokedex.AllSeen.Count, 0);
 
         foreach(string species in pokedex.AllCaught)
         {
-            pokedex.HasCaught[species] = false;
-            Assert.IsFalse(pokedex.HasCaught[species]);
+            pokedex.CaughtPokemonMap[species] = false;
+            Assert.IsFalse(pokedex.CaughtPokemonMap[species]);
         }
         Assert.AreEqual(pokedex.NumCaught, 0);
         Assert.AreEqual(pokedex.AllCaught.Count, 0);

@@ -228,12 +228,12 @@ function game_save_test.test_common_fields(save)
     luaunit.assertEquals(save.money, 123456)
 
     -- Not how these are typically used, but this test is slow...
-    local pokedex_has_seen = nil
-    local pokedex_has_caught = nil
+    local pokedex_seen_pokemon_map = nil
+    local pokedex_caught_pokemon_map = nil
     if not is_gamecube_game
     then
-        pokedex_has_seen = save.pokedex.has_seen
-        pokedex_has_caught = save.pokedex.has_caught
+        pokedex_seen_pokemon_map = save.pokedex.seen_pokemon_map
+        pokedex_caught_pokemon_map = save.pokedex.caught_pokemon_map
     end
 
     -- Pokémon Party
@@ -253,8 +253,8 @@ function game_save_test.test_common_fields(save)
 
             if not is_gamecube_game and not pokemon.is_egg
             then
-                luaunit.assertTrue(pokedex_has_seen[pokemon.species])
-                luaunit.assertTrue(pokedex_has_caught[pokemon.species])
+                luaunit.assertTrue(pokedex_seen_pokemon_map[pokemon.species])
+                luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
             end
         else
             luaunit.assertEquals(pokemon.species, "None")
@@ -282,8 +282,8 @@ function game_save_test.test_common_fields(save)
 
                     if not is_gamecube_game and not pokemon.is_egg
                     then
-                        luaunit.assertTrue(pokedex_has_seen[pokemon.species])
-                        luaunit.assertTrue(pokedex_has_caught[pokemon.species])
+                        luaunit.assertTrue(pokedex_seen_pokemon_map[pokemon.species])
+                        luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
                     end
                 else
                     luaunit.assertEquals(pokemon.species, "None")

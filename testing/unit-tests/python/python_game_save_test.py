@@ -215,15 +215,15 @@ class game_save_test(pkmntest.base_test):
             for pokemon in self.save.pokemon_party:
                 species = pokemon.species
                 if species != "None" and not pokemon.is_egg:
-                    self.assertTrue(pokedex.has_seen[species])
-                    self.assertTrue(pokedex.has_caught[species])
+                    self.assertTrue(pokedex.seen_pokemon_map[species])
+                    self.assertTrue(pokedex.caught_pokemon_map[species])
 
             for box in self.save.pokemon_pc:
                 for pokemon in box:
                     species = pokemon.species
                     if species != "None" and not pokemon.is_egg:
-                        self.assertTrue(pokedex.has_seen[species])
-                        self.assertTrue(pokedex.has_caught[species])
+                        self.assertTrue(pokedex.seen_pokemon_map[species])
+                        self.assertTrue(pokedex.caught_pokemon_map[species])
 
     def __test_attributes(self):
         game = self.save.game

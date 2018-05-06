@@ -28,10 +28,10 @@ using System.Runtime.InteropServices;"
 
 %attributestring(pkmn::swig::pokedex, std::string, Game, get_game);
 %attribute(pkmn::swig::pokedex, int, NumSeen, get_num_seen);
-%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_seen_helper, HasSeen, get_has_seen);
+%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_seen_helper, SeenPokemonMap, get_has_seen);
 %attributeval(pkmn::swig::pokedex, %arg(std::vector<std::string>), AllSeen, get_all_seen);
 %attribute(pkmn::swig::pokedex, int, NumCaught, get_num_caught);
-%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_caught_helper, HasCaught, get_has_caught);
+%attributeval(pkmn::swig::pokedex, pkmn::swig::pokedex_has_caught_helper, CaughtPokemonMap, get_has_caught);
 %attributeval(pkmn::swig::pokedex, %arg(std::vector<std::string>), AllCaught, get_all_caught);
 
 %typemap(cscode) pkmn::swig::pokedex
