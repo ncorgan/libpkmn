@@ -16,8 +16,8 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .species = NULL,
-    .game = NULL,
+    .p_species = NULL,
+    .p_game = NULL,
     .p_internal = NULL
 };
 

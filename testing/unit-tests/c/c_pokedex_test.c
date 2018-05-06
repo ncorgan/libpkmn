@@ -22,7 +22,7 @@ static void pokedex_test(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokedex pokedex =
     {
-        .game = NULL,
+        .p_game = NULL,
         .p_internal = NULL
     };
 
@@ -33,7 +33,7 @@ static void pokedex_test(
                 &pokedex
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(game, pokedex.game);
+    TEST_ASSERT_EQUAL_STRING(game, pokedex.p_game);
     TEST_ASSERT_NOT_NULL(pokedex.p_internal);
 
     // Check initial values.
@@ -222,7 +222,7 @@ static void pokedex_test(
 
     error = pkmn_pokedex_free(&pokedex);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokedex.game);
+    TEST_ASSERT_NULL(pokedex.p_game);
     TEST_ASSERT_NULL(pokedex.p_internal);
 }
 

@@ -22,8 +22,8 @@ static void gen1_pokemon_test(
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon pokemon =
     {
-        .species = NULL,
-        .game = NULL,
+        .p_species = NULL,
+        .p_game = NULL,
         .p_internal = NULL
     };
 

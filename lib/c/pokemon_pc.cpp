@@ -37,7 +37,7 @@ enum pkmn_error pkmn_pokemon_pc_free(
 {
     PKMN_CHECK_NULL_PARAM(pokemon_pc_ptr);
 
-    pkmn::c::free_pointer_and_set_to_null(&pokemon_pc_ptr->game);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_pc_ptr->p_game);
     pokemon_pc_ptr->capacity = 0;
 
     PKMN_CPP_TO_C(

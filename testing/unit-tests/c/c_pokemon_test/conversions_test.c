@@ -16,8 +16,8 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .species = NULL,
-    .game = NULL,
+    .p_species = NULL,
+    .p_game = NULL,
     .p_internal = NULL
 };
 
@@ -63,8 +63,8 @@ static void conversions_test(
 
     // Comparison
 
-    TEST_ASSERT_EQUAL_STRING(first_pokemon.species, second_pokemon.species);
-    TEST_ASSERT_EQUAL_STRING(dest_game, second_pokemon.game);
+    TEST_ASSERT_EQUAL_STRING(first_pokemon.p_species, second_pokemon.p_species);
+    TEST_ASSERT_EQUAL_STRING(dest_game, second_pokemon.p_game);
 
     // TODO: condition
 

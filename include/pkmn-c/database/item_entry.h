@@ -30,11 +30,11 @@ struct pkmn_database_item_entry
      * "Invalid (0xXX)", where XX corresponds to the hex value of the
      * item's in-game index.
      */
-    char* name;
+    char* p_name;
     /*!
      * @brief The game associated with this entry.
      */
-    char* game;
+    char* p_game;
     /*!
      * @brief This item's category.
      *
@@ -44,11 +44,11 @@ struct pkmn_database_item_entry
      * If this entry corresponds to an invalid item, this field will be
      * "Unknown".
      */
-    char* category;
+    char* p_category;
     /*!
      * @brief Which pocket would store this item in the given game.
      */
-    char* pocket;
+    char* p_pocket;
     /*!
      * @brief A description of this item.
      *
@@ -61,7 +61,7 @@ struct pkmn_database_item_entry
      * If this entry corresponds to an invalid item, this string will be
      * "Unknown".
      */
-    char* description;
+    char* p_description;
     /*!
      * @brief The price of this item if bought at a Poké Mart.
      *
@@ -99,7 +99,7 @@ struct pkmn_database_item_entry
     /*!
      * @brief The effect of the move Fling when this item is held.
      */
-    char* fling_effect;
+    char* p_fling_effect;
 };
 
 #ifdef __cplusplus
@@ -118,9 +118,9 @@ extern "C" {
  * \return ::PKMN_ERROR_INVALID_ARGUMENT if the given item was not in the given game
  */
 PKMN_C_API enum pkmn_error pkmn_database_get_item_entry(
-    const char* item_name,
-    const char* item_game,
-    struct pkmn_database_item_entry* item_entry_out
+    const char* p_item_name,
+    const char* p_item_game,
+    struct pkmn_database_item_entry* p_item_entry_out
 );
 
 /*!
@@ -134,7 +134,7 @@ PKMN_C_API enum pkmn_error pkmn_database_get_item_entry(
  * \returns ::PKMN_ERROR_NULL_POINTER if item_entry is NULL
  */
 PKMN_C_API enum pkmn_error pkmn_database_item_entry_free(
-    struct pkmn_database_item_entry* item_entry
+    struct pkmn_database_item_entry* p_item_entry
 );
 
 #ifdef __cplusplus

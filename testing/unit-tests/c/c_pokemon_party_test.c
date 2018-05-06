@@ -11,8 +11,8 @@
 
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .species = NULL,
-    .game = NULL,
+    .p_species = NULL,
+    .p_game = NULL,
     .p_internal = NULL
 };
 static const struct pkmn_pokemon_list empty_pokemon_list =
@@ -52,11 +52,11 @@ static void test_empty_pokemon_party(
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
-            pokemon_list.p_pokemon[pokemon_index].species
+            pokemon_list.p_pokemon[pokemon_index].p_species
         );
         TEST_ASSERT_EQUAL_STRING(
-            party_ptr->game,
-            pokemon_list.p_pokemon[pokemon_index].game
+            party_ptr->p_game,
+            pokemon_list.p_pokemon[pokemon_index].p_game
         );
     }
 
@@ -134,7 +134,7 @@ static void test_setting_pokemon_in_party(
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
-                party_ptr->game,
+                party_ptr->p_game,
                 "",
                 5,
                 &bulbasaur
@@ -144,7 +144,7 @@ static void test_setting_pokemon_in_party(
 
     error = pkmn_pokemon_init(
                 "Charmander",
-                party_ptr->game,
+                party_ptr->p_game,
                 "",
                 5,
                 &charmander
@@ -154,7 +154,7 @@ static void test_setting_pokemon_in_party(
 
     error = pkmn_pokemon_init(
                 "Squirtle",
-                party_ptr->game,
+                party_ptr->p_game,
                 "",
                 5,
                 &squirtle
@@ -286,7 +286,7 @@ static void test_setting_pokemon_in_party(
                 &second_in_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING("Charmander", second_in_party.species);
+    TEST_ASSERT_EQUAL_STRING("Charmander", second_in_party.p_species);
 
     error = pkmn_pokemon_free(&second_in_party);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -306,7 +306,7 @@ static void test_setting_pokemon_in_party(
                 &fifth_in_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING("None", fifth_in_party.species);
+    TEST_ASSERT_EQUAL_STRING("None", fifth_in_party.p_species);
 
     error = pkmn_pokemon_free(&fifth_in_party);
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -327,21 +327,21 @@ static void test_setting_pokemon_in_party(
 
     TEST_ASSERT_EQUAL_STRING(
         "Squirtle",
-        pokemon_list.p_pokemon[0].species
+        pokemon_list.p_pokemon[0].p_species
     );
     TEST_ASSERT_EQUAL_STRING(
         "Charmander",
-        pokemon_list.p_pokemon[1].species
+        pokemon_list.p_pokemon[1].p_species
     );
     TEST_ASSERT_EQUAL_STRING(
         "Charmander",
-        pokemon_list.p_pokemon[2].species
+        pokemon_list.p_pokemon[2].p_species
     );
-    TEST_ASSERT_EQUAL_STRING("None", original_first.species);
-    TEST_ASSERT_EQUAL_STRING("None", original_second.species);
-    TEST_ASSERT_EQUAL_STRING("Bulbasaur", bulbasaur.species);
-    TEST_ASSERT_EQUAL_STRING("Charmander", charmander.species);
-    TEST_ASSERT_EQUAL_STRING("Squirtle", squirtle.species);
+    TEST_ASSERT_EQUAL_STRING("None", original_first.p_species);
+    TEST_ASSERT_EQUAL_STRING("None", original_second.p_species);
+    TEST_ASSERT_EQUAL_STRING("Bulbasaur", bulbasaur.p_species);
+    TEST_ASSERT_EQUAL_STRING("Charmander", charmander.p_species);
+    TEST_ASSERT_EQUAL_STRING("Squirtle", squirtle.p_species);
 
     // Cleanup
 
@@ -380,7 +380,7 @@ static void pokemon_party_test_common(
 
     struct pkmn_pokemon_party party =
     {
-        .game = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -391,7 +391,7 @@ static void pokemon_party_test_common(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(party.p_internal);
-    TEST_ASSERT_EQUAL_STRING(game, party.game);
+    TEST_ASSERT_EQUAL_STRING(game, party.p_game);
     TEST_ASSERT_EQUAL(6, party.capacity);
 
     TEST_ASSERT_EQUAL_STRING(
@@ -404,7 +404,7 @@ static void pokemon_party_test_common(
 
     error = pkmn_pokemon_party_free(&party);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(party.game);
+    TEST_ASSERT_NULL(party.p_game);
     TEST_ASSERT_EQUAL(0, party.capacity);
     TEST_ASSERT_NULL(party.p_internal);
 }

@@ -134,8 +134,8 @@ enum pkmn_error pkmn_pokemon_free(
 {
     PKMN_CHECK_NULL_PARAM(pokemon_ptr);
 
-    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->species);
-    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->game);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->p_species);
+    pkmn::c::free_pointer_and_set_to_null(&pokemon_ptr->p_game);
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(

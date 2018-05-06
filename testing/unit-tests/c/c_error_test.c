@@ -746,7 +746,7 @@ static void pokedex_error_test()
 {
     struct pkmn_pokedex pokedex =
     {
-        .game = NULL,
+        .p_game = NULL,
         .p_internal = NULL
     };
     enum pkmn_error error = PKMN_ERROR_NONE;
@@ -942,8 +942,8 @@ static void pokemon_error_test()
 {
     struct pkmn_pokemon pokemon =
     {
-        .species = NULL,
-        .game = NULL,
+        .p_species = NULL,
+        .p_game = NULL,
         .p_internal = NULL
     };
     struct pkmn_database_pokemon_entry dummy_pokemon_entry;
@@ -2100,7 +2100,7 @@ static void pokemon_box_error_test()
 {
     struct pkmn_pokemon_box pokemon_box =
     {
-        .game = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -2257,7 +2257,7 @@ static void pokemon_party_error_test()
 {
     struct pkmn_pokemon_party pokemon_party =
     {
-        .game = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -2378,7 +2378,7 @@ static void pokemon_pc_error_test()
 {
     struct pkmn_pokemon_pc pokemon_pc =
     {
-        .game = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };

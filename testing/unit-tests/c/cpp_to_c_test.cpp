@@ -736,11 +736,11 @@ TEST(cpp_to_c_test, pokemon_list_cpp_to_c)
 
         EXPECT_STREQ(
             pokemon_list_cpp[i]->get_species().c_str(),
-            pokemon_list_c.p_pokemon[i].species
+            pokemon_list_c.p_pokemon[i].p_species
         );
         EXPECT_STREQ(
             pokemon_list_cpp[i]->get_game().c_str(),
-            pokemon_list_c.p_pokemon[i].game
+            pokemon_list_c.p_pokemon[i].p_game
         );
 
         error = pkmn_pokemon_get_level(
@@ -788,7 +788,7 @@ TEST(cpp_to_c_test, pokemon_box_list_cpp_to_c_test)
 
         EXPECT_STREQ(
             pokemon_box_list_cpp[index]->get_game().c_str(),
-            pokemon_box_list_c.p_boxes[index].game
+            pokemon_box_list_c.p_boxes[index].p_game
         );
 
         error = pkmn_pokemon_box_get_name(

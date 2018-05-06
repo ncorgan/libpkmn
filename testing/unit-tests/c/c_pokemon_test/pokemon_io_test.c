@@ -46,8 +46,8 @@ static const struct pkmn_move_slots empty_move_slots =
 };
 static const struct pkmn_pokemon empty_pokemon =
 {
-    .species = NULL,
-    .game = NULL,
+    .p_species = NULL,
+    .p_game = NULL,
     .p_internal = NULL
 };
 
@@ -476,8 +476,8 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.species);
-    TEST_ASSERT_EQUAL_STRING("Emerald", pokemon.game);
+    TEST_ASSERT_EQUAL_STRING("Mightyena", pokemon.p_species);
+    TEST_ASSERT_EQUAL_STRING("Emerald", pokemon.p_game);
 
     test_pokemon_string(
         &pokemon,

@@ -17,7 +17,7 @@
 
 struct pkmn_pokemon_pc
 {
-    char* game;
+    char* p_game;
     size_t capacity;
 
     void* p_internal;

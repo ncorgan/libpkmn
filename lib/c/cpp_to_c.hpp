@@ -391,17 +391,17 @@ namespace pkmn { namespace c {
 
     void item_entry_cpp_to_c(
         const pkmn::database::item_entry& item_entry_cpp,
-        struct pkmn_database_item_entry* item_entry_c_ptr
+        struct pkmn_database_item_entry* p_item_entry_c_out
     );
 
     void move_entry_cpp_to_c(
         const pkmn::database::move_entry& move_entry_cpp,
-        struct pkmn_database_move_entry* move_entry_c_ptr
+        struct pkmn_database_move_entry* p_move_entry_c_out
     );
 
     void pokemon_entry_cpp_to_c(
         const pkmn::database::pokemon_entry& pokemon_entry_cpp,
-        struct pkmn_database_pokemon_entry* pokemon_entry_c_ptr
+        struct pkmn_database_pokemon_entry* p_pokemon_entry_c_out
     );
 
     void pokemon_list_cpp_to_c(

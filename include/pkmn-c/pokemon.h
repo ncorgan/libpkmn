@@ -21,8 +21,8 @@
 
 struct pkmn_pokemon
 {
-    char* species;
-    char* game;
+    char* p_species;
+    char* p_game;
 
     void* p_internal;
 };

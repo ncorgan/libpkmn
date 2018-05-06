@@ -542,8 +542,8 @@ void test_item_bag_pocket_names(
     {
         struct pkmn_item_list pocket =
         {
-            .name = NULL,
-            .game = NULL,
+            .p_name = NULL,
+            .p_game = NULL,
             .capacity = 0,
             .p_internal = NULL
         };
@@ -557,9 +557,9 @@ void test_item_bag_pocket_names(
         TEST_ASSERT_NOT_NULL(pocket.p_internal);
         TEST_ASSERT_EQUAL_STRING(
             item_bag_ptr->pocket_names.pp_strings[pocket_index],
-            pocket.name
+            pocket.p_name
         );
-        TEST_ASSERT_EQUAL_STRING(item_bag_ptr->game, pocket.game);
+        TEST_ASSERT_EQUAL_STRING(item_bag_ptr->p_game, pocket.p_game);
 
         error = pkmn_item_list_free(&pocket);
         PKMN_TEST_ASSERT_SUCCESS(error);

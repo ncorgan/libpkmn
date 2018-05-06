@@ -50,8 +50,8 @@ static void gba_item_pocket_test(
         expected_capacity = 42;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(expected_capacity, item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -132,8 +132,8 @@ static void gba_key_item_pocket_test(
         expected_capacity = 30;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Key Items", key_item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Key Items", key_item_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(expected_capacity, key_item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -225,8 +225,8 @@ static void gba_ball_pocket_test(
         expected_capacity = 16;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Poké Balls", ball_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, ball_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Poké Balls", ball_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, ball_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(expected_capacity, ball_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -306,8 +306,8 @@ static void gba_tmhm_pocket_test(
         expected_capacity = 64;
     }
 
-    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, tmhm_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, tmhm_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, tmhm_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, tmhm_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(expected_capacity, tmhm_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -387,8 +387,8 @@ static void gba_berry_pocket_test(
         expected_capacity = 46;
     }
 
-    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, berry_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, berry_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, berry_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, berry_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(expected_capacity, berry_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -454,8 +454,8 @@ static void gba_item_pc_test(
 
     struct pkmn_item_list item_pc =
     {
-        .name = NULL,
-        .game = NULL,
+        .p_name = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -469,8 +469,8 @@ static void gba_item_pc_test(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pc.game);
+    TEST_ASSERT_EQUAL_STRING("PC", item_pc.p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pc.p_game);
     TEST_ASSERT_EQUAL(50, item_pc.capacity);
     TEST_ASSERT_NOT_NULL(item_pc.p_internal);
 
@@ -523,7 +523,7 @@ static void gba_item_pc_test(
         .length = 0
     };
     error = pkmn_database_item_list(
-                item_pc.game,
+                item_pc.p_game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -610,7 +610,7 @@ static void gba_item_bag_test(
 
     struct pkmn_item_bag item_bag =
     {
-        .game = NULL,
+        .p_game = NULL,
         .pocket_names =
         {
             .pp_strings = NULL,
@@ -780,8 +780,8 @@ void test_gba_item_pocket_ ## test_game () \
  \
     struct pkmn_item_list item_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -809,8 +809,8 @@ void test_gba_key_item_pocket_ ## test_game () \
  \
     struct pkmn_item_list key_item_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -838,8 +838,8 @@ void test_gba_ball_pocket_ ## test_game () \
  \
     struct pkmn_item_list ball_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -867,8 +867,8 @@ void test_gba_tmhm_pocket_ ## test_game () \
  \
     struct pkmn_item_list tmhm_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -906,8 +906,8 @@ void test_gba_berry_pocket_ ## test_game () \
  \
     struct pkmn_item_list berry_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \

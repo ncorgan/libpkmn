@@ -54,8 +54,8 @@ static void gcn_item_pocket_test(
 
     size_t capacity = is_colosseum ? 20 : 30;
 
-    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(capacity, item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -136,8 +136,8 @@ static void gcn_key_item_pocket_test(
     bool is_colosseum = !strcmp(game, "Colosseum");
     const char* gcn_item = is_colosseum ? "Ein File S" : "Miror Radar";
 
-    TEST_ASSERT_EQUAL_STRING("Key Items", key_item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Key Items", key_item_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(43, key_item_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -226,8 +226,8 @@ static void gcn_ball_pocket_test(
 
     bool is_colosseum = !strcmp(game, "Colosseum");
 
-    TEST_ASSERT_EQUAL_STRING("Poké Balls", ball_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, ball_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Poké Balls", ball_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, ball_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(16, ball_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -307,8 +307,8 @@ static void gcn_tm_pocket_test(
 
     bool is_colosseum = !strcmp(game, "Colosseum");
 
-    TEST_ASSERT_EQUAL_STRING("TMs", tm_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, tm_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("TMs", tm_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, tm_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(64, tm_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -388,8 +388,8 @@ static void gcn_berry_pocket_test(
 
     bool is_colosseum = !strcmp(game, "Colosseum");
 
-    TEST_ASSERT_EQUAL_STRING("Berries", berry_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, berry_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Berries", berry_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, berry_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(46, berry_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -469,8 +469,8 @@ static void gcn_cologne_pocket_test(
 
     bool is_colosseum = !strcmp(game, "Colosseum");
 
-    TEST_ASSERT_EQUAL_STRING("Colognes", cologne_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, cologne_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Colognes", cologne_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, cologne_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(3, cologne_pocket_ptr->capacity);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
@@ -577,8 +577,8 @@ static void gcn_battle_cd_pocket_test(
     TEST_ASSERT_NOT_NULL(battle_cd_pocket_ptr);
     TEST_ASSERT_NOT_NULL(battle_cd_pocket_ptr->p_internal);
 
-    TEST_ASSERT_EQUAL_STRING("Battle CDs", battle_cd_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING("XD", battle_cd_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Battle CDs", battle_cd_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING("XD", battle_cd_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(60, battle_cd_pocket_ptr->capacity);
 
     // Make sure item slots start as completely empty.
@@ -647,8 +647,8 @@ static void gcn_item_pc_test(
 
     struct pkmn_item_list item_pc =
     {
-        .name = NULL,
-        .game = NULL,
+        .p_name = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -666,8 +666,8 @@ static void gcn_item_pc_test(
 
     TEST_ASSERT_NOT_NULL(item_pc.p_internal);
 
-    TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pc.game);
+    TEST_ASSERT_EQUAL_STRING("PC", item_pc.p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pc.p_game);
     TEST_ASSERT_EQUAL(235, item_pc.capacity);
 
     // Make sure item slots start as completely empty.
@@ -722,7 +722,7 @@ static void gcn_item_pc_test(
         .length = 0
     };
     error = pkmn_database_item_list(
-                item_pc.game,
+                item_pc.p_game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -817,7 +817,7 @@ static void gcn_item_bag_test(
 
     struct pkmn_item_bag item_bag =
     {
-        .game = NULL,
+        .p_game = NULL,
         .pocket_names =
         {
             .pp_strings = NULL,
@@ -1034,8 +1034,8 @@ void test_gcn_item_pocket_ ## test_game () \
  \
     struct pkmn_item_list item_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1063,8 +1063,8 @@ void test_gcn_key_item_pocket_ ## test_game () \
  \
     struct pkmn_item_list key_item_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1092,8 +1092,8 @@ void test_gcn_ball_pocket_ ## test_game () \
  \
     struct pkmn_item_list ball_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1121,8 +1121,8 @@ void test_gcn_tm_pocket_ ## test_game () \
  \
     struct pkmn_item_list tm_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1150,8 +1150,8 @@ void test_gcn_berry_pocket_ ## test_game () \
  \
     struct pkmn_item_list berry_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1179,8 +1179,8 @@ void test_gcn_cologne_pocket_ ## test_game () \
  \
     struct pkmn_item_list cologne_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \
@@ -1220,8 +1220,8 @@ void test_gcn_battle_cd_pocket_XD()
 
     struct pkmn_item_list battle_cd_pocket =
     {
-        .name = NULL,
-        .game = NULL,
+        .p_name = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };

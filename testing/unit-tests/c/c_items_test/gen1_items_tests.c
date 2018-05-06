@@ -82,7 +82,7 @@ static void gen1_item_list_test_common(
         .length = 0
     };
     error = pkmn_database_item_list(
-                item_list_ptr->game,
+                item_list_ptr->p_game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -105,8 +105,8 @@ static void gen1_item_pocket_test(
     TEST_ASSERT_NOT_NULL(item_pocket_ptr);
     TEST_ASSERT_NOT_NULL(game);
 
-    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->game);
+    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->p_game);
     TEST_ASSERT_EQUAL(20, item_pocket_ptr->capacity);
 
     gen1_item_list_test_common(item_pocket_ptr);
@@ -122,8 +122,8 @@ static void gen1_item_pc_test(
 
     struct pkmn_item_list item_pc =
     {
-        .name = NULL,
-        .game = NULL,
+        .p_name = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -136,8 +136,8 @@ static void gen1_item_pc_test(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_NOT_NULL(item_pc.p_internal);
 
-    TEST_ASSERT_EQUAL_STRING("PC", item_pc.name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pc.game);
+    TEST_ASSERT_EQUAL_STRING("PC", item_pc.p_name);
+    TEST_ASSERT_EQUAL_STRING(game, item_pc.p_game);
     TEST_ASSERT_EQUAL(50, item_pc.capacity);
 
     gen1_item_list_test_common(&item_pc);
@@ -157,7 +157,7 @@ static void gen1_item_bag_test(
 
     struct pkmn_item_bag item_bag =
     {
-        .game = NULL,
+        .p_game = NULL,
         .pocket_names =
         {
             .pp_strings = NULL,
@@ -171,7 +171,7 @@ static void gen1_item_bag_test(
                 &item_bag
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(game, item_bag.game);
+    TEST_ASSERT_EQUAL_STRING(game, item_bag.p_game);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -183,8 +183,8 @@ static void gen1_item_bag_test(
 
     struct pkmn_item_list item_pocket =
     {
-        .name = NULL,
-        .game = NULL,
+        .p_name = NULL,
+        .p_game = NULL,
         .capacity = 0,
         .p_internal = NULL
     };
@@ -261,8 +261,8 @@ void test_gen1_item_pocket_ ## test_game () \
  \
     struct pkmn_item_list item_pocket = \
     { \
-        .name = NULL, \
-        .game = NULL, \
+        .p_name = NULL, \
+        .p_game = NULL, \
         .capacity = 0, \
         .p_internal = NULL \
     }; \

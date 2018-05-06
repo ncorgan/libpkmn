@@ -618,11 +618,11 @@ void compare_pokemon(
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(pokemon1_ptr->game);
+    int generation = game_to_generation(pokemon1_ptr->p_game);
 
     TEST_ASSERT_EQUAL_STRING(
-        pokemon1_ptr->species,
-        pokemon2_ptr->species
+        pokemon1_ptr->p_species,
+        pokemon2_ptr->p_species
     );
 
     // There is no way to determine what game an imported Generation I-II
@@ -630,8 +630,8 @@ void compare_pokemon(
     if(generation >= 3)
     {
         TEST_ASSERT_EQUAL_STRING(
-            pokemon1_ptr->game,
-            pokemon2_ptr->game
+            pokemon1_ptr->p_game,
+            pokemon2_ptr->p_game
         );
         compare_pokemon_strings(
             pokemon1_ptr,
