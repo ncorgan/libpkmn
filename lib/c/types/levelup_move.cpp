@@ -11,44 +11,44 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_levelup_move_free(
-    struct pkmn_levelup_move* levelup_move_ptr
+    struct pkmn_levelup_move* p_levelup_move
 )
 {
-    PKMN_CHECK_NULL_PARAM(levelup_move_ptr);
+    PKMN_CHECK_NULL_PARAM(p_levelup_move);
 
-    pkmn::c::free_pointer_and_set_to_null(&levelup_move_ptr->move);
-    levelup_move_ptr->level = 0;
+    pkmn::c::free_pointer_and_set_to_null(&p_levelup_move->p_move);
+    p_levelup_move->level = 0;
 
     return PKMN_ERROR_NONE;
 }
 
 enum pkmn_error pkmn_levelup_moves_free(
-    struct pkmn_levelup_moves* levelup_moves_ptr
+    struct pkmn_levelup_moves* p_levelup_moves
 )
 {
-    PKMN_CHECK_NULL_PARAM(levelup_moves_ptr);
+    PKMN_CHECK_NULL_PARAM(p_levelup_moves);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    if(levelup_moves_ptr->length > 0)
+    if(p_levelup_moves->length > 0)
     {
         for(size_t move_index = 0;
-            (move_index < levelup_moves_ptr->length) && !error;
+            (move_index < p_levelup_moves->length) && !error;
             ++move_index)
         {
-            error = pkmn_levelup_move_free(&levelup_moves_ptr->levelup_moves[move_index]);
+            error = pkmn_levelup_move_free(&p_levelup_moves->p_levelup_moves[move_index]);
         }
 
         if(!error)
         {
-            std::free(levelup_moves_ptr->levelup_moves);
+            std::free(p_levelup_moves->p_levelup_moves);
         }
     }
 
     if(!error)
     {
-        levelup_moves_ptr->levelup_moves = nullptr;
-        levelup_moves_ptr->length = 0;
+        p_levelup_moves->p_levelup_moves = nullptr;
+        p_levelup_moves->length = 0;
     }
 
     return error;

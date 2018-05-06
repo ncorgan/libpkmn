@@ -15,7 +15,7 @@
 
 struct pkmn_pokemon_box_list
 {
-    struct pkmn_pokemon_box* boxes;
+    struct pkmn_pokemon_box* p_boxes;
     size_t length;
 };
 
@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_box_list_free(
-    struct pkmn_pokemon_box_list* pokemon_box_list_ptr
+    struct pkmn_pokemon_box_list* p_pokemon_box_list
 );
 
 #ifdef __cplusplus

@@ -14,13 +14,13 @@
 
 struct pkmn_levelup_move
 {
-    char* move;
+    char* p_move;
     int level;
 };
 
 struct pkmn_levelup_moves
 {
-    struct pkmn_levelup_move* levelup_moves;
+    struct pkmn_levelup_move* p_levelup_moves;
     size_t length;
 };
 
@@ -29,11 +29,11 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_levelup_move_free(
-    struct pkmn_levelup_move* levelup_move_ptr
+    struct pkmn_levelup_move* p_levelup_move
 );
 
 PKMN_C_API enum pkmn_error pkmn_levelup_moves_free(
-    struct pkmn_levelup_moves* levelup_moves_ptr
+    struct pkmn_levelup_moves* p_levelup_moves
 );
 
 #ifdef __cplusplus

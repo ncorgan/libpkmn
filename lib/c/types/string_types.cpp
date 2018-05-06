@@ -11,36 +11,38 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_string_list_free(
-    struct pkmn_string_list* string_list_ptr
+    struct pkmn_string_list* p_string_list
 )
 {
-    PKMN_CHECK_NULL_PARAM(string_list_ptr);
+    PKMN_CHECK_NULL_PARAM(p_string_list);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    if(string_list_ptr->length > 0)
+    if(p_string_list->length > 0)
     {
-        for(size_t string_index = 0; string_index < string_list_ptr->length; ++string_index)
+        for(size_t string_index = 0;
+            string_index < p_string_list->length;
+            ++string_index)
         {
-            std::free(string_list_ptr->strings[string_index]);
+            std::free(p_string_list->pp_strings[string_index]);
         }
-        std::free(string_list_ptr->strings);
+        std::free(p_string_list->pp_strings);
     }
 
-    string_list_ptr->strings = nullptr;
-    string_list_ptr->length = 0;
+    p_string_list->pp_strings = nullptr;
+    p_string_list->length = 0;
 
     return error;
 }
 
 enum pkmn_error pkmn_string_pair_free(
-    struct pkmn_string_pair* string_pair_ptr
+    struct pkmn_string_pair* p_string_pair
 )
 {
-    PKMN_CHECK_NULL_PARAM(string_pair_ptr);
+    PKMN_CHECK_NULL_PARAM(p_string_pair);
 
-    pkmn::c::free_pointer_and_set_to_null(&string_pair_ptr->first);
-    pkmn::c::free_pointer_and_set_to_null(&string_pair_ptr->second);
+    pkmn::c::free_pointer_and_set_to_null(&p_string_pair->p_first);
+    pkmn::c::free_pointer_and_set_to_null(&p_string_pair->p_second);
 
     return PKMN_ERROR_NONE;
 }

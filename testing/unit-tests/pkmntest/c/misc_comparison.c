@@ -31,8 +31,8 @@ void compare_attribute_names(
         TEST_ASSERT_EQUAL(
             0,
             strcmp(
-                attribute_names1_ptr->numeric_attribute_names.strings[name_index],
-                attribute_names2_ptr->numeric_attribute_names.strings[name_index]
+                attribute_names1_ptr->numeric_attribute_names.pp_strings[name_index],
+                attribute_names2_ptr->numeric_attribute_names.pp_strings[name_index]
             )
         );
     }
@@ -48,8 +48,8 @@ void compare_attribute_names(
         TEST_ASSERT_EQUAL(
             0,
             strcmp(
-                attribute_names1_ptr->string_attribute_names.strings[name_index],
-                attribute_names2_ptr->string_attribute_names.strings[name_index]
+                attribute_names1_ptr->string_attribute_names.pp_strings[name_index],
+                attribute_names2_ptr->string_attribute_names.pp_strings[name_index]
             )
         );
     }
@@ -65,8 +65,8 @@ void compare_attribute_names(
         TEST_ASSERT_EQUAL(
             0,
             strcmp(
-                attribute_names1_ptr->boolean_attribute_names.strings[name_index],
-                attribute_names2_ptr->boolean_attribute_names.strings[name_index]
+                attribute_names1_ptr->boolean_attribute_names.pp_strings[name_index],
+                attribute_names2_ptr->boolean_attribute_names.pp_strings[name_index]
             )
         );
     }

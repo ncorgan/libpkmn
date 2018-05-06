@@ -31,7 +31,7 @@
 
 static const struct pkmn_trainer_info empty_trainer_info =
 {
-    .name = NULL,
+    .p_name = NULL,
     .id = {0U},
     .gender = PKMN_GENDER_MALE
 };
@@ -67,58 +67,58 @@ static const struct pkmn_database_pokemon_entry empty_pokemon_entry =
     .base_friendship = 0,
     .types =
     {
-        .first = NULL,
-        .second = NULL
+        .p_first = NULL,
+        .p_second = NULL
     },
     .abilities =
     {
-        .first = NULL,
-        .second = NULL
+        .p_first = NULL,
+        .p_second = NULL
     },
     .hidden_ability = NULL,
     .egg_groups =
     {
-        .first = NULL,
-        .second = NULL
+        .p_first = NULL,
+        .p_second = NULL
     },
     .base_stats = {0},
     .EV_yields = {0},
     .experience_yield = 0,
     .levelup_moves =
     {
-        .levelup_moves = NULL,
+        .p_levelup_moves = NULL,
         .length = 0
     },
     .tm_hm_moves =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .egg_moves =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .tutor_moves =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .forms =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .evolutions =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     }
 };
 
 static const struct pkmn_move_slots empty_move_slots =
 {
-    .move_slots = NULL,
+    .p_move_slots = NULL,
     .length = 0
 };
 
@@ -199,7 +199,7 @@ static void check_initial_values(
 
     TEST_ASSERT_EQUAL_STRING(
         pkmn_pokemon_default_trainer_name(),
-        original_trainer_info.name
+        original_trainer_info.p_name
     );
     TEST_ASSERT_EQUAL(
         pkmn_pokemon_default_trainer_id().public_id,
@@ -319,7 +319,7 @@ static void check_initial_values(
 
     struct pkmn_move_slots move_slots =
     {
-        .move_slots = NULL,
+        .p_move_slots = NULL,
         .length = 0
     };
     error = pkmn_pokemon_get_moves(
@@ -333,11 +333,11 @@ static void check_initial_values(
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
-            move_slots.move_slots[move_index].move
+            move_slots.p_move_slots[move_index].p_move
         );
         TEST_ASSERT_EQUAL(
             0,
-            move_slots.move_slots[move_index].pp
+            move_slots.p_move_slots[move_index].pp
         );
     }
 
@@ -480,7 +480,7 @@ static void check_initial_maps(
     bool has_ribbon = true;
     struct pkmn_string_list ribbon_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     };
 
@@ -524,14 +524,14 @@ static void check_initial_maps(
                     &ribbon_names
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(ribbon_names.strings);
+        TEST_ASSERT_NOT_NULL(ribbon_names.pp_strings);
         TEST_ASSERT_TRUE(ribbon_names.length > 0ULL);
 
         for(size_t ribbon_index = 0; ribbon_index < ribbon_names.length; ++ribbon_index)
         {
             error = pkmn_pokemon_has_ribbon(
                         pokemon_ptr,
-                        ribbon_names.strings[ribbon_index],
+                        ribbon_names.pp_strings[ribbon_index],
                         &has_ribbon
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
@@ -661,7 +661,7 @@ static void test_setting_ability(
 
         error = pkmn_pokemon_set_ability(
                     pokemon_ptr,
-                    database_entry.abilities.first
+                    database_entry.abilities.p_first
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
@@ -674,15 +674,15 @@ static void test_setting_ability(
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         TEST_ASSERT_EQUAL_STRING(
-            database_entry.abilities.first,
+            database_entry.abilities.p_first,
             strbuffer
         );
 
-        if(strcmp(database_entry.abilities.second, "None"))
+        if(strcmp(database_entry.abilities.p_second, "None"))
         {
             error = pkmn_pokemon_set_ability(
                         pokemon_ptr,
-                        database_entry.abilities.second
+                        database_entry.abilities.p_second
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
 
@@ -695,7 +695,7 @@ static void test_setting_ability(
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             TEST_ASSERT_EQUAL_STRING(
-                database_entry.abilities.second,
+                database_entry.abilities.p_second,
                 strbuffer
             );
         }
@@ -1435,11 +1435,11 @@ static void test_setting_moves(
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_STRING(
             valid_move_names[move_index],
-            move_slots.move_slots[move_index].move
+            move_slots.p_move_slots[move_index].p_move
         );
         TEST_ASSERT_EQUAL(
             move_entry.pp[0],
-            move_slots.move_slots[move_index].pp
+            move_slots.p_move_slots[move_index].pp
         );
 
         error = pkmn_move_slots_free(&move_slots);
@@ -1459,7 +1459,7 @@ static void test_setting_moves(
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(
             move_entry.pp[3],
-            move_slots.move_slots[move_index].pp
+            move_slots.p_move_slots[move_index].pp
         );
 
         error = pkmn_move_slots_free(&move_slots);
@@ -1961,7 +1961,7 @@ static void test_setting_trainer_info(
                 &original_trainer_info
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(trainer_name, original_trainer_info.name);
+    TEST_ASSERT_EQUAL_STRING(trainer_name, original_trainer_info.p_name);
 
     TEST_ASSERT_EQUAL(expected_trainer_id.id, original_trainer_info.id.id);
 

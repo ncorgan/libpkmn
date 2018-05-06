@@ -58,81 +58,81 @@ static const char* MALE_ONLY_GAMES[] =
 static const struct pkmn_game_save empty_game_save =
 {
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon_party empty_pokemon_party =
 {
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon_pc empty_pokemon_pc =
 {
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon_list empty_pokemon_list =
 {
-    .pokemon = NULL,
+    .p_pokemon = NULL,
     .length = 0
 };
 static const struct pkmn_pokemon_box_list empty_pokemon_box_list =
 {
-    .boxes = NULL,
+    .p_boxes = NULL,
     .length = 0
 };
 static const struct pkmn_trainer_info empty_trainer_info =
 {
-    .name = NULL,
+    .p_name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
 static const struct pkmn_string_list empty_string_list =
 {
-    .strings = NULL,
+    .pp_strings = NULL,
     .length = 0
 };
 static const struct pkmn_item_list empty_item_list =
 {
     .name = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_item_bag empty_item_bag =
 {
     .game = NULL,
     .pocket_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_item_slots empty_item_slots =
 {
-    .item_slots = NULL,
+    .p_item_slots = NULL,
     .length = 0
 };
 static const struct pkmn_attribute_names empty_attribute_names =
 {
     .numeric_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .string_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .boolean_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     }
 };
@@ -201,8 +201,8 @@ static void compare_string_lists(
     for(size_t string_index = 0; string_index < string_list1_ptr->length; ++string_index)
     {
         TEST_ASSERT_EQUAL_STRING(
-            string_list1_ptr->strings[string_index],
-            string_list_ptr->strings[string_index]
+            string_list1_ptr->pp_strings[string_index],
+            string_list_ptr->pp_strings[string_index]
         );
     }
 }
@@ -256,7 +256,7 @@ static void game_save_test_trainer_info(
 
     TEST_ASSERT_EQUAL_STRING(
         pkmn_pokemon_default_trainer_name(),
-        trainer_info.name
+        trainer_info.p_name
     );
     TEST_ASSERT_EQUAL(
         (generation >= 3) ? pkmn_pokemon_default_trainer_id().id
@@ -484,7 +484,7 @@ static void game_save_test_common_fields(
     struct pkmn_pokedex pokedex =
     {
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
     bool has_seen = false;
     bool has_caught = false;
@@ -507,7 +507,7 @@ static void game_save_test_common_fields(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(game_save_ptr->game, pokemon_party.game);
     TEST_ASSERT_EQUAL(6, pokemon_party.capacity);
-    TEST_ASSERT_NOT_NULL(pokemon_party._internal);
+    TEST_ASSERT_NOT_NULL(pokemon_party.p_internal);
 
     error = pkmn_pokemon_party_as_list(
                 &pokemon_party,
@@ -528,7 +528,7 @@ static void game_save_test_common_fields(
     {
         TEST_ASSERT_EQUAL_STRING(
             pokemon_party.game,
-            pokemon_list.pokemon[pokemon_index].game
+            pokemon_list.p_pokemon[pokemon_index].game
         );
 
         if(pokemon_index < num_pokemon)
@@ -536,20 +536,20 @@ static void game_save_test_common_fields(
             TEST_ASSERT_NOT_EQUAL(
                 strcmp(
                     "None",
-                    pokemon_list.pokemon[pokemon_index].species
+                    pokemon_list.p_pokemon[pokemon_index].species
                 ), 0
             );
 
             if(!is_game_gamecube)
             {
                 bool is_egg = false;
-                bool is_none = strcmp(pokemon_list.pokemon[pokemon_index].species, "None") == 0;
-                bool is_invalid = (bool)strstr(pokemon_list.pokemon[pokemon_index].species, "Invalid");
+                bool is_none = strcmp(pokemon_list.p_pokemon[pokemon_index].species, "None") == 0;
+                bool is_invalid = (bool)strstr(pokemon_list.p_pokemon[pokemon_index].species, "Invalid");
 
                 if(generation >= 2)
                 {
                     error = pkmn_pokemon_is_egg(
-                                &pokemon_list.pokemon[pokemon_index],
+                                &pokemon_list.p_pokemon[pokemon_index],
                                 &is_egg
                             );
                 }
@@ -559,7 +559,7 @@ static void game_save_test_common_fields(
                 {
                     error = pkmn_pokedex_has_seen(
                                 &pokedex,
-                                pokemon_list.pokemon[pokemon_index].species,
+                                pokemon_list.p_pokemon[pokemon_index].species,
                                 &has_seen
                             );
                     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -567,7 +567,7 @@ static void game_save_test_common_fields(
 
                     error = pkmn_pokedex_has_caught(
                                 &pokedex,
-                                pokemon_list.pokemon[pokemon_index].species,
+                                pokemon_list.p_pokemon[pokemon_index].species,
                                 &has_caught
                             );
                     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -579,7 +579,7 @@ static void game_save_test_common_fields(
         {
             TEST_ASSERT_EQUAL_STRING(
                 "None",
-                pokemon_list.pokemon[pokemon_index].species
+                pokemon_list.p_pokemon[pokemon_index].species
             );
         }
     }
@@ -599,7 +599,7 @@ static void game_save_test_common_fields(
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_STRING(game_save_ptr->game, pokemon_pc.game);
     TEST_ASSERT_TRUE(pokemon_pc.capacity > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_pc._internal);
+    TEST_ASSERT_NOT_NULL(pokemon_pc.p_internal);
 
     struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
@@ -607,36 +607,36 @@ static void game_save_test_common_fields(
                 &pokemon_box_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_box_list.boxes);
+    TEST_ASSERT_NOT_NULL(pokemon_box_list.p_boxes);
     TEST_ASSERT_TRUE(pokemon_box_list.length > 0);
 
     for(size_t box_index = 0; box_index < pokemon_box_list.length; ++box_index)
     {
         error = pkmn_pokemon_box_as_list(
-                    &pokemon_box_list.boxes[box_index],
+                    &pokemon_box_list.p_boxes[box_index],
                     &pokemon_list
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(pokemon_list.pokemon);
+        TEST_ASSERT_NOT_NULL(pokemon_list.p_pokemon);
         TEST_ASSERT_TRUE(pokemon_list.length > 0);
 
         for(size_t pokemon_index = 0; pokemon_index < pokemon_list.length; ++pokemon_index)
         {
             TEST_ASSERT_EQUAL_STRING(
                 game_save_ptr->game,
-                pokemon_list.pokemon[pokemon_index].game
+                pokemon_list.p_pokemon[pokemon_index].game
             );
 
             if(!is_game_gamecube)
             {
                 bool is_egg = false;
-                bool is_none = strcmp(pokemon_list.pokemon[pokemon_index].species, "None") == 0;
-                bool is_invalid = (bool)strstr(pokemon_list.pokemon[pokemon_index].species, "Invalid");
+                bool is_none = strcmp(pokemon_list.p_pokemon[pokemon_index].species, "None") == 0;
+                bool is_invalid = (bool)strstr(pokemon_list.p_pokemon[pokemon_index].species, "Invalid");
 
                 if(generation >= 2)
                 {
                     error = pkmn_pokemon_is_egg(
-                                &pokemon_list.pokemon[pokemon_index],
+                                &pokemon_list.p_pokemon[pokemon_index],
                                 &is_egg
                             );
                 }
@@ -646,7 +646,7 @@ static void game_save_test_common_fields(
                 {
                     error = pkmn_pokedex_has_seen(
                                 &pokedex,
-                                pokemon_list.pokemon[pokemon_index].species,
+                                pokemon_list.p_pokemon[pokemon_index].species,
                                 &has_seen
                             );
                     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -654,7 +654,7 @@ static void game_save_test_common_fields(
 
                     error = pkmn_pokedex_has_caught(
                                 &pokedex,
-                                pokemon_list.pokemon[pokemon_index].species,
+                                pokemon_list.p_pokemon[pokemon_index].species,
                                 &has_caught
                             );
                     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -738,7 +738,7 @@ static void randomize_pokemon(
                 &pokemon_box_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    size_t box_capacity = pokemon_box_list.boxes[0].capacity;
+    size_t box_capacity = pokemon_box_list.p_boxes[0].capacity;
 
     for(size_t box_index = 0; box_index < pokemon_pc.capacity; ++box_index)
     {
@@ -753,7 +753,7 @@ static void randomize_pokemon(
             );
 
             error = pkmn_pokemon_box_set_pokemon(
-                        &pokemon_box_list.boxes[box_index],
+                        &pokemon_box_list.p_boxes[box_index],
                         pokemon_index,
                         &pokemon
                     );
@@ -821,12 +821,12 @@ static void compare_item_lists(
     for(size_t item_index = 0; item_index < item_slots1.length; ++item_index)
     {
         TEST_ASSERT_EQUAL_STRING(
-            item_slots1.item_slots[item_index].item,
-            item_slots2.item_slots[item_index].item
+            item_slots1.p_item_slots[item_index].p_item,
+            item_slots2.p_item_slots[item_index].p_item
         );
         TEST_ASSERT_EQUAL(
-            item_slots1.item_slots[item_index].amount,
-            item_slots2.item_slots[item_index].amount
+            item_slots1.p_item_slots[item_index].amount,
+            item_slots2.p_item_slots[item_index].amount
         );
     }
 
@@ -856,13 +856,13 @@ static void compare_item_bags(
 
         error = pkmn_item_bag_get_pocket(
                     item_bag1_ptr,
-                    item_bag1_ptr->pocket_names.strings[pocket_index],
+                    item_bag1_ptr->pocket_names.pp_strings[pocket_index],
                     &pocket1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_item_bag_get_pocket(
                     item_bag2_ptr,
-                    item_bag1_ptr->pocket_names.strings[pocket_index],
+                    item_bag1_ptr->pocket_names.pp_strings[pocket_index],
                     &pocket2
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -879,18 +879,18 @@ static void compare_item_bags(
 
 static void compare_pokemon_lists(
     struct pkmn_pokemon_list* pokemon_list1_ptr,
-    struct pkmn_pokemon_list* pokemon_list_ptr
+    struct pkmn_pokemon_list* pokemon_list2_ptr
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon_list1_ptr);
-    TEST_ASSERT_NOT_NULL(pokemon_list_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon_list2_ptr);
 
-    TEST_ASSERT_EQUAL(pokemon_list1_ptr->length, pokemon_list_ptr->length);
+    TEST_ASSERT_EQUAL(pokemon_list1_ptr->length, pokemon_list2_ptr->length);
     for(size_t pokemon_index = 0; pokemon_index < pokemon_list1_ptr->length; ++pokemon_index)
     {
         compare_pokemon(
-            &pokemon_list1_ptr->pokemon[pokemon_index],
-            &pokemon_list_ptr->pokemon[pokemon_index]
+            &pokemon_list1_ptr->p_pokemon[pokemon_index],
+            &pokemon_list2_ptr->p_pokemon[pokemon_index]
         );
     }
 }
@@ -1035,12 +1035,12 @@ static void compare_game_saves(
     for(size_t box_index = 0; box_index < pokemon_box_list1.length; ++box_index)
     {
         error = pkmn_pokemon_box_as_list(
-                    &pokemon_box_list1.boxes[box_index],
+                    &pokemon_box_list1.p_boxes[box_index],
                     &pokemon_list1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_as_list(
-                    &pokemon_box_list.boxes[box_index],
+                    &pokemon_box_list.p_boxes[box_index],
                     &pokemon_list
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1093,14 +1093,14 @@ static void compare_game_saves(
 
         error = pkmn_game_save_get_numeric_attribute(
                     game_save1_ptr,
-                    attribute_names1.numeric_attribute_names.strings[attribute_index],
+                    attribute_names1.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_numeric_attribute(
                     game_save2_ptr,
-                    attribute_names2.numeric_attribute_names.strings[attribute_index],
+                    attribute_names2.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1117,7 +1117,7 @@ static void compare_game_saves(
 
         error = pkmn_game_save_get_string_attribute(
                     game_save1_ptr,
-                    attribute_names1.string_attribute_names.strings[attribute_index],
+                    attribute_names1.string_attribute_names.pp_strings[attribute_index],
                     attribute_value1,
                     sizeof(attribute_value1),
                     NULL
@@ -1126,7 +1126,7 @@ static void compare_game_saves(
 
         error = pkmn_game_save_get_string_attribute(
                     game_save2_ptr,
-                    attribute_names2.string_attribute_names.strings[attribute_index],
+                    attribute_names2.string_attribute_names.pp_strings[attribute_index],
                     attribute_value2,
                     sizeof(attribute_value2),
                     NULL
@@ -1145,14 +1145,14 @@ static void compare_game_saves(
 
         error = pkmn_game_save_get_boolean_attribute(
                     game_save1_ptr,
-                    attribute_names1.boolean_attribute_names.strings[attribute_index],
+                    attribute_names1.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_boolean_attribute(
                     game_save2_ptr,
-                    attribute_names2.boolean_attribute_names.strings[attribute_index],
+                    attribute_names2.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1207,7 +1207,7 @@ static void test_game_save(
                 &game_save
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(game_save._internal);
+    TEST_ASSERT_NOT_NULL(game_save.p_internal);
     TEST_ASSERT_EQUAL_STRING(game, game_save.game);
 
     error = pkmn_game_save_get_filepath(
@@ -1245,7 +1245,7 @@ static void test_game_save(
                 &game_save2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(game_save._internal);
+    TEST_ASSERT_NOT_NULL(game_save.p_internal);
 
     error = pkmn_game_save_get_filepath(
                 &game_save2,
@@ -1268,11 +1268,11 @@ static void test_game_save(
 
     error = pkmn_game_save_free(&game_save2);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(game_save2._internal);
+    TEST_ASSERT_NULL(game_save2.p_internal);
 
     error = pkmn_game_save_free(&game_save);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(game_save._internal);
+    TEST_ASSERT_NULL(game_save.p_internal);
 }
 
 #define PKMN_C_GAME_SAVE_TEST(save_type, game, subdir, filename) \

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -39,7 +39,7 @@ static inline bool string_list_contains(
 {
     for(size_t i = 0; i < string_list->length; ++i)
     {
-        if(!strcmp(string_list->strings[i], string))
+        if(!strcmp(string_list->pp_strings[i], string))
         {
             return true;
         }

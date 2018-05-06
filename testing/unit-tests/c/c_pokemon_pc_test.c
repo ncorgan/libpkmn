@@ -18,27 +18,27 @@ static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon_box empty_pokemon_box =
 {
     .game = NULL,
     .capacity = 0,
-    ._internal = NULL
+    .p_internal = NULL
 };
 static const struct pkmn_pokemon_list empty_pokemon_list =
 {
-    .pokemon = NULL,
+    .p_pokemon = NULL,
     .length = 0
 };
 static const struct pkmn_pokemon_box_list empty_pokemon_box_list =
 {
-    .boxes = NULL,
+    .p_boxes = NULL,
     .length = 0
 };
 static const struct pkmn_string_list empty_string_list =
 {
-    .strings = NULL,
+    .pp_strings = NULL,
     .length = 0
 };
 
@@ -82,24 +82,24 @@ static void test_empty_pokemon_box(
                 &pokemon_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_NOT_NULL(pokemon_list.p_pokemon);
     TEST_ASSERT_TRUE(pokemon_list.length > 0);
 
     for(size_t pokemon_index = 0; pokemon_index < pokemon_list.length; ++pokemon_index)
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
-            pokemon_list.pokemon[pokemon_index].species
+            pokemon_list.p_pokemon[pokemon_index].species
         );
         TEST_ASSERT_EQUAL_STRING(
             box_ptr->game,
-            pokemon_list.pokemon[pokemon_index].game
+            pokemon_list.p_pokemon[pokemon_index].game
         );
     }
 
     error = pkmn_pokemon_list_free(&pokemon_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_NULL(pokemon_list.p_pokemon);
     TEST_ASSERT_EQUAL(0, pokemon_list.length);
 }
 
@@ -175,7 +175,7 @@ static void test_setting_pokemon_in_box(
                 &original_first
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(original_first._internal);
+    TEST_ASSERT_NOT_NULL(original_first.p_internal);
 
     error = pkmn_pokemon_box_get_pokemon(
                 box_ptr,
@@ -183,7 +183,7 @@ static void test_setting_pokemon_in_box(
                 &original_second
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(original_second._internal);
+    TEST_ASSERT_NOT_NULL(original_second.p_internal);
 
     // Make sure we can't get Pokémon at invalid indices.
     error = pkmn_pokemon_box_get_pokemon(
@@ -230,7 +230,7 @@ static void test_setting_pokemon_in_box(
                 &bulbasaur
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(bulbasaur._internal);
+    TEST_ASSERT_NOT_NULL(bulbasaur.p_internal);
 
     error = pkmn_pokemon_init(
                 "Charmander",
@@ -240,7 +240,7 @@ static void test_setting_pokemon_in_box(
                 &charmander
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(charmander._internal);
+    TEST_ASSERT_NOT_NULL(charmander.p_internal);
 
     error = pkmn_pokemon_init(
                 "Squirtle",
@@ -250,7 +250,7 @@ static void test_setting_pokemon_in_box(
                 &squirtle
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(squirtle._internal);
+    TEST_ASSERT_NOT_NULL(squirtle.p_internal);
 
     error = pkmn_pokemon_box_set_pokemon(
                 box_ptr,
@@ -302,7 +302,7 @@ static void test_setting_pokemon_in_box(
                 &second_in_box
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(second_in_box._internal);
+    TEST_ASSERT_NOT_NULL(second_in_box.p_internal);
 
     error = pkmn_pokemon_box_set_pokemon(
                 box_ptr,
@@ -353,7 +353,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_free(&second_in_box);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(second_in_box._internal);
+    TEST_ASSERT_NULL(second_in_box.p_internal);
 
     // Check that Pokémon can be placed non-contiguously in the correct games.
     struct pkmn_pokemon fifth_in_box = empty_pokemon;
@@ -383,7 +383,7 @@ static void test_setting_pokemon_in_box(
 
         error = pkmn_pokemon_free(&second_in_box);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(second_in_box._internal);
+        TEST_ASSERT_NULL(second_in_box.p_internal);
 
         error = pkmn_pokemon_box_set_pokemon(
                     box_ptr,
@@ -402,7 +402,7 @@ static void test_setting_pokemon_in_box(
 
         error = pkmn_pokemon_free(&fifth_in_box);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(fifth_in_box._internal);
+        TEST_ASSERT_NULL(fifth_in_box.p_internal);
     }
     else
     {
@@ -429,7 +429,7 @@ static void test_setting_pokemon_in_box(
 
         error = pkmn_pokemon_free(&second_in_box);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(second_in_box._internal);
+        TEST_ASSERT_NULL(second_in_box.p_internal);
 
         error = pkmn_pokemon_box_set_pokemon(
                     box_ptr,
@@ -476,11 +476,11 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_free(&second_in_box);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(second_in_box._internal);
+    TEST_ASSERT_NULL(second_in_box.p_internal);
 
     error = pkmn_pokemon_free(&fifth_in_box);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(fifth_in_box._internal);
+    TEST_ASSERT_NULL(fifth_in_box.p_internal);
 
     /*
      * Now check everything we've created. Each variable should have the
@@ -492,20 +492,20 @@ static void test_setting_pokemon_in_box(
                 &pokemon_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_NOT_NULL(pokemon_list.p_pokemon);
     TEST_ASSERT_TRUE(pokemon_list.length > 0);
 
     TEST_ASSERT_EQUAL_STRING(
         "Squirtle",
-        pokemon_list.pokemon[0].species
+        pokemon_list.p_pokemon[0].species
     );
     TEST_ASSERT_EQUAL_STRING(
         "Charmander",
-        pokemon_list.pokemon[1].species
+        pokemon_list.p_pokemon[1].species
     );
     TEST_ASSERT_EQUAL_STRING(
         "Charmander",
-        pokemon_list.pokemon[2].species
+        pokemon_list.p_pokemon[2].species
     );
     TEST_ASSERT_EQUAL_STRING("None", original_first.species);
     TEST_ASSERT_EQUAL_STRING("None", original_second.species);
@@ -516,28 +516,28 @@ static void test_setting_pokemon_in_box(
     // Cleanup
 
     error = pkmn_pokemon_list_free(&pokemon_list);
-    TEST_ASSERT_NULL(pokemon_list.pokemon);
+    TEST_ASSERT_NULL(pokemon_list.p_pokemon);
     TEST_ASSERT_EQUAL(0, pokemon_list.length);
 
     error = pkmn_pokemon_free(&original_first);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(original_first._internal);
+    TEST_ASSERT_NULL(original_first.p_internal);
 
     error = pkmn_pokemon_free(&original_second);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(original_second._internal);
+    TEST_ASSERT_NULL(original_second.p_internal);
 
     error = pkmn_pokemon_free(&bulbasaur);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(bulbasaur._internal);
+    TEST_ASSERT_NULL(bulbasaur.p_internal);
 
     error = pkmn_pokemon_free(&charmander);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(charmander._internal);
+    TEST_ASSERT_NULL(charmander.p_internal);
 
     error = pkmn_pokemon_free(&squirtle);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(squirtle._internal);
+    TEST_ASSERT_NULL(squirtle.p_internal);
 }
 
 static void test_empty_pokemon_pc(
@@ -552,23 +552,23 @@ static void test_empty_pokemon_pc(
                 &pokemon_box_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_box_list.boxes);
+    TEST_ASSERT_NOT_NULL(pokemon_box_list.p_boxes);
     TEST_ASSERT_TRUE(pokemon_box_list.length > 0);
 
     for(size_t box_index = 0; box_index < pokemon_box_list.length; ++box_index)
     {
         TEST_ASSERT_EQUAL_STRING(
             pc_ptr->game,
-            pokemon_box_list.boxes[box_index].game
+            pokemon_box_list.p_boxes[box_index].game
         );
         test_empty_pokemon_box(
-            &pokemon_box_list.boxes[box_index]
+            &pokemon_box_list.p_boxes[box_index]
         );
     }
 
     error = pkmn_pokemon_box_list_free(&pokemon_box_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokemon_box_list.boxes);
+    TEST_ASSERT_NULL(pokemon_box_list.p_boxes);
     TEST_ASSERT_EQUAL(0, pokemon_box_list.length);
 }
 
@@ -615,7 +615,7 @@ static void test_pc_box_names(
 
             error = pkmn_pokemon_box_free(&pokemon_box);
             PKMN_TEST_ASSERT_SUCCESS(error);
-            TEST_ASSERT_NULL(pokemon_box._internal);
+            TEST_ASSERT_NULL(pokemon_box.p_internal);
         }
 
         error = pkmn_pokemon_pc_get_box_names(
@@ -627,12 +627,12 @@ static void test_pc_box_names(
         {
             char expected_box_name[10] = {0};
             snprintf(expected_box_name, sizeof(expected_box_name), "BOX%zu", (box_index+1));
-            TEST_ASSERT_EQUAL_STRING(expected_box_name, box_names.strings[box_index]);
+            TEST_ASSERT_EQUAL_STRING(expected_box_name, box_names.pp_strings[box_index]);
         }
 
         error = pkmn_string_list_free(&box_names);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(box_names.strings);
+        TEST_ASSERT_NULL(box_names.pp_strings);
         TEST_ASSERT_EQUAL(0, box_names.length);
     }
 }
@@ -642,71 +642,71 @@ static void test_setting_pokemon_in_boxes(
 )
 {
     enum pkmn_error error = PKMN_ERROR_NONE;
-    struct pkmn_pokemon_box_list pokemon_boxes = empty_pokemon_box_list;
+    struct pkmn_pokemon_box_list pokemon_p_boxes = empty_pokemon_box_list;
 
     error = pkmn_pokemon_pc_as_list(
                 pc_ptr,
-                &pokemon_boxes
+                &pokemon_p_boxes
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    for(size_t box_index = 0; box_index < pokemon_boxes.length; ++box_index)
+    for(size_t box_index = 0; box_index < pokemon_p_boxes.length; ++box_index)
     {
         test_setting_pokemon_in_box(
-            &pokemon_boxes.boxes[box_index]
+            &pokemon_p_boxes.p_boxes[box_index]
         );
     }
 
-    for(size_t box_index = 0; box_index < pokemon_boxes.length; ++box_index)
+    for(size_t box_index = 0; box_index < pokemon_p_boxes.length; ++box_index)
     {
         struct pkmn_pokemon first_pokemon = empty_pokemon;
         struct pkmn_pokemon second_pokemon = empty_pokemon;
         struct pkmn_pokemon third_pokemon = empty_pokemon;
 
         error = pkmn_pokemon_box_get_pokemon(
-                    &pokemon_boxes.boxes[box_index],
+                    &pokemon_p_boxes.p_boxes[box_index],
                     0,
                     &first_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(first_pokemon._internal);
+        TEST_ASSERT_NOT_NULL(first_pokemon.p_internal);
         TEST_ASSERT_EQUAL_STRING("Squirtle", first_pokemon.species);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    &pokemon_boxes.boxes[box_index],
+                    &pokemon_p_boxes.p_boxes[box_index],
                     1,
                     &second_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(second_pokemon._internal);
+        TEST_ASSERT_NOT_NULL(second_pokemon.p_internal);
         TEST_ASSERT_EQUAL_STRING("Charmander", second_pokemon.species);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    &pokemon_boxes.boxes[box_index],
+                    &pokemon_p_boxes.p_boxes[box_index],
                     2,
                     &third_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(third_pokemon._internal);
+        TEST_ASSERT_NOT_NULL(third_pokemon.p_internal);
         TEST_ASSERT_EQUAL_STRING("Charmander", third_pokemon.species);
 
         error = pkmn_pokemon_free(&third_pokemon);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(third_pokemon._internal);
+        TEST_ASSERT_NULL(third_pokemon.p_internal);
 
         error = pkmn_pokemon_free(&second_pokemon);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(second_pokemon._internal);
+        TEST_ASSERT_NULL(second_pokemon.p_internal);
 
         error = pkmn_pokemon_free(&first_pokemon);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(first_pokemon._internal);
+        TEST_ASSERT_NULL(first_pokemon.p_internal);
     }
 
-    error = pkmn_pokemon_box_list_free(&pokemon_boxes);
+    error = pkmn_pokemon_box_list_free(&pokemon_p_boxes);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokemon_boxes.boxes);
-    TEST_ASSERT_EQUAL(0, pokemon_boxes.length);
+    TEST_ASSERT_NULL(pokemon_p_boxes.p_boxes);
+    TEST_ASSERT_EQUAL(0, pokemon_p_boxes.length);
 }
 
 static void pokemon_box_test(
@@ -723,7 +723,7 @@ static void pokemon_box_test(
                 &pokemon_box
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_box._internal);
+    TEST_ASSERT_NOT_NULL(pokemon_box.p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -736,7 +736,7 @@ static void pokemon_box_test(
 
     error = pkmn_pokemon_box_free(&pokemon_box);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokemon_box._internal);
+    TEST_ASSERT_NULL(pokemon_box.p_internal);
 }
 
 static void pokemon_pc_test(
@@ -749,7 +749,7 @@ static void pokemon_pc_test(
     struct pkmn_pokemon_pc pokemon_pc =
     {
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_pc_init(
@@ -757,7 +757,7 @@ static void pokemon_pc_test(
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon_pc._internal);
+    TEST_ASSERT_NOT_NULL(pokemon_pc.p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -770,7 +770,7 @@ static void pokemon_pc_test(
 
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(pokemon_pc._internal);
+    TEST_ASSERT_NULL(pokemon_pc.p_internal);
 }
 
 #define BOX_AND_PC_TEST_FCNS(test_game, game_name) \

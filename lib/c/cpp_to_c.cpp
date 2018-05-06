@@ -2,7 +2,7 @@
  * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
- * or copy at http://opensource.org/licenses/MIT)
+ * or copy at http:// opensource.org/licenses/MIT)
  */
 
 #include "cpp_to_c.hpp"
@@ -29,10 +29,10 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
         BOOST_ASSERT(libpkmn_c_struct_out != nullptr);
 
-        libpkmn_c_struct_out->_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
+        libpkmn_c_struct_out->p_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
         pkmn_c_internal_class_t<libpkmn_cpp_type>* internal_ptr =
             reinterpret_cast<pkmn_c_internal_class_t<libpkmn_cpp_type>*>(
-                libpkmn_c_struct_out->_internal
+                libpkmn_c_struct_out->p_internal
             );
 
         internal_ptr->cpp = libpkmn_sptr;
@@ -59,10 +59,10 @@ namespace pkmn { namespace c {
             nullptr, // game
             // pocket_names
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0        // length
             },
-            nullptr // _internal
+            nullptr // p_internal
         };
 
         init_c_internal_class(
@@ -100,7 +100,7 @@ namespace pkmn { namespace c {
             nullptr, // name
             nullptr, // game
             0ULL,    // capacity
-            nullptr  // _internal
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
@@ -137,7 +137,7 @@ namespace pkmn { namespace c {
         struct pkmn_pokedex temp_pokedex =
         {
             nullptr, // game
-            nullptr // _internal
+            nullptr // p_internal
         };
 
         init_c_internal_class(
@@ -170,7 +170,7 @@ namespace pkmn { namespace c {
         {
             nullptr, // species
             nullptr, // game
-            nullptr // _internal
+            nullptr // p_internal
         };
 
         init_c_internal_class(
@@ -207,7 +207,7 @@ namespace pkmn { namespace c {
         {
             nullptr, // game
             0ULL,    // capacity
-            nullptr  // _internal
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
@@ -241,7 +241,7 @@ namespace pkmn { namespace c {
         {
             nullptr, // game
             0ULL,    // capacity
-            nullptr  // _internal
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
@@ -275,7 +275,7 @@ namespace pkmn { namespace c {
         {
             nullptr, // game
             0ULL,    // capacity
-            nullptr  // _internal
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
@@ -308,7 +308,7 @@ namespace pkmn { namespace c {
         struct pkmn_game_save temp_game_save =
         {
             nullptr, // game
-            nullptr  // _internal
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
@@ -361,119 +361,121 @@ namespace pkmn { namespace c {
 
     void string_list_cpp_to_c(
         const std::vector<std::string>& string_list_cpp,
-        struct pkmn_string_list* string_list_c_ptr
+        struct pkmn_string_list* p_string_list_c_out
     )
     {
-        BOOST_ASSERT(string_list_c_ptr != nullptr);
+        BOOST_ASSERT(p_string_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_string_list temp_string_list =
+        struct pkmn_string_list temp_string_list_c =
         {
-            nullptr,               // strings
+            nullptr,               // pp_strings
             string_list_cpp.size() // length
         };
 
-        if(temp_string_list.length > 0)
+        if(temp_string_list_c.length > 0)
         {
-            temp_string_list.strings = (char**)std::calloc(
-                                                   string_list_cpp.size(),
-                                                   sizeof(char*)
-                                               );
+            temp_string_list_c.pp_strings = (char**)std::calloc(
+                                                     string_list_cpp.size(),
+                                                     sizeof(char*)
+                                                 );
             for(size_t string_index = 0;
-                string_index < temp_string_list.length;
+                string_index < temp_string_list_c.length;
                 ++string_index)
             {
                 string_cpp_to_c_alloc(
                     string_list_cpp[string_index],
-                    &temp_string_list.strings[string_index]
+                    &temp_string_list_c.pp_strings[string_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *string_list_c_ptr = std::move(temp_string_list);
+        *p_string_list_c_out = std::move(temp_string_list_c);
     }
 
     void item_slots_cpp_to_c(
         const pkmn::item_slots_t& item_slots_cpp,
-        struct pkmn_item_slots* item_slots_c_ptr
+        struct pkmn_item_slots* p_item_slots_c_out
     )
     {
-        BOOST_ASSERT(item_slots_c_ptr != nullptr);
+        BOOST_ASSERT(p_item_slots_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_item_slots temp_item_slots =
+        struct pkmn_item_slots temp_item_slots_c =
         {
-            nullptr,              // item_slots
+            nullptr,              // p_item_slots
             item_slots_cpp.size() // length
         };
 
-        if(temp_item_slots.length > 0)
+        if(temp_item_slots_c.length > 0)
         {
-            temp_item_slots.item_slots = (struct pkmn_item_slot*)std::calloc(
-                                                                item_slots_cpp.size(),
-                                                                sizeof(struct pkmn_item_slot)
-                                                            );
+            temp_item_slots_c.p_item_slots = (struct pkmn_item_slot*)std::calloc(
+                                                                         item_slots_cpp.size(),
+                                                                         sizeof(struct pkmn_item_slot)
+                                                                     );
             for(size_t item_slot_index = 0;
-                item_slot_index < temp_item_slots.length;
+                item_slot_index < temp_item_slots_c.length;
                 ++item_slot_index)
             {
                 item_slot_cpp_to_c(
                     item_slots_cpp[item_slot_index],
-                    &temp_item_slots.item_slots[item_slot_index]
+                    &temp_item_slots_c.p_item_slots[item_slot_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *item_slots_c_ptr = std::move(temp_item_slots);
+        *p_item_slots_c_out = std::move(temp_item_slots_c);
     }
 
     void levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t& levelup_moves_cpp,
-        struct pkmn_levelup_moves* levelup_moves_c_ptr
+        struct pkmn_levelup_moves* p_levelup_moves_c_out
     )
     {
-        BOOST_ASSERT(levelup_moves_c_ptr != nullptr);
+        BOOST_ASSERT(p_levelup_moves_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_levelup_moves temp_levelup_moves =
+        struct pkmn_levelup_moves temp_levelup_moves_c =
         {
-            nullptr,                 // levelup_moves
+            nullptr,                 // p_levelup_moves
             levelup_moves_cpp.size() // length
         };
 
-        if(temp_levelup_moves.length > 0)
+        if(temp_levelup_moves_c.length > 0)
         {
-            temp_levelup_moves.levelup_moves = (struct pkmn_levelup_move*)std::calloc(
-                                                                         levelup_moves_cpp.size(),
-                                                                         sizeof(struct pkmn_levelup_move)
-                                                                     );
+            temp_levelup_moves_c.p_levelup_moves =
+                (struct pkmn_levelup_move*)std::calloc(
+                                               levelup_moves_cpp.size(),
+                                               sizeof(struct pkmn_levelup_move)
+                                           );
+
             for(size_t levelup_move_index = 0;
-                levelup_move_index < temp_levelup_moves.length;
+                levelup_move_index < temp_levelup_moves_c.length;
                 ++levelup_move_index)
             {
                 levelup_move_cpp_to_c(
                     levelup_moves_cpp[levelup_move_index],
-                    &temp_levelup_moves.levelup_moves[levelup_move_index]
+                    &temp_levelup_moves_c.p_levelup_moves[levelup_move_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *levelup_moves_c_ptr = std::move(temp_levelup_moves);
+        *p_levelup_moves_c_out = std::move(temp_levelup_moves_c);
     }
 
     void move_list_to_string_list(
@@ -489,23 +491,23 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_string_list temp_string_list =
         {
-            nullptr,         // strings
+            nullptr,         // pp_strings
             move_list.size() // length
         };
 
         if(temp_string_list.length > 0)
         {
-            temp_string_list.strings = (char**)std::calloc(
-                                                   move_list.size(),
-                                                   sizeof(char*)
-                                               );
+            temp_string_list.pp_strings = (char**)std::calloc(
+                                                      move_list.size(),
+                                                      sizeof(char*)
+                                                  );
             for(size_t move_index = 0;
                 move_index < temp_string_list.length;
                 ++move_index)
             {
                 string_cpp_to_c_alloc(
                     move_list[move_index].get_name(),
-                    &temp_string_list.strings[move_index]
+                    &temp_string_list.pp_strings[move_index]
                 );
             }
         }
@@ -517,41 +519,43 @@ namespace pkmn { namespace c {
 
     void move_slots_cpp_to_c(
         const pkmn::move_slots_t& move_slots_cpp,
-        struct pkmn_move_slots* move_slots_c_ptr
+        struct pkmn_move_slots* p_move_slots_c_out
     )
     {
-        BOOST_ASSERT(move_slots_c_ptr != nullptr);
+        BOOST_ASSERT(p_move_slots_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_move_slots temp_move_slots =
+        struct pkmn_move_slots temp_move_slots_c =
         {
-            nullptr,              // move_slots
+            nullptr,              // p_move_slots
             move_slots_cpp.size() // length
         };
 
-        if(temp_move_slots.length > 0)
+        if(temp_move_slots_c.length > 0)
         {
-            temp_move_slots.move_slots = (struct pkmn_move_slot*)std::calloc(
-                                                                 move_slots_cpp.size(),
-                                                                 sizeof(struct pkmn_move_slot)
-                                                            );
+            temp_move_slots_c.p_move_slots =
+                (struct pkmn_move_slot*)std::calloc(
+                                            move_slots_cpp.size(),
+                                            sizeof(struct pkmn_move_slot)
+                                        );
+
             for(size_t move_slot_index = 0;
-                move_slot_index < temp_move_slots.length;
+                move_slot_index < temp_move_slots_c.length;
                 ++move_slot_index)
             {
                 move_slot_cpp_to_c(
                     move_slots_cpp[move_slot_index],
-                    &temp_move_slots.move_slots[move_slot_index]
+                    &temp_move_slots_c.p_move_slots[move_slot_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *move_slots_c_ptr = std::move(temp_move_slots);
+        *p_move_slots_c_out = std::move(temp_move_slots_c);
     }
 
     void pokemon_entries_to_string_list(
@@ -567,23 +571,23 @@ namespace pkmn { namespace c {
         // a concern.
         struct pkmn_string_list temp_string_list =
         {
-            nullptr,               // strings
+            nullptr,               // pp_strings
             pokemon_entries.size() // length
         };
 
         if(temp_string_list.length > 0)
         {
-            temp_string_list.strings = (char**)std::calloc(
-                                                   pokemon_entries.size(),
-                                                   sizeof(char*)
-                                               );
+            temp_string_list.pp_strings = (char**)std::calloc(
+                                                      pokemon_entries.size(),
+                                                      sizeof(char*)
+                                                  );
             for(size_t entry_index = 0;
                 entry_index < temp_string_list.length;
                 ++entry_index)
             {
                 string_cpp_to_c_alloc(
                     pokemon_entries[entry_index].get_name(),
-                    &temp_string_list.strings[entry_index]
+                    &temp_string_list.pp_strings[entry_index]
                 );
             }
         }
@@ -747,53 +751,53 @@ namespace pkmn { namespace c {
             0.0f, // chance_female
             false, // has_gender_differences
             0, // base_friendship
-            //types
+            // types
             {
-                nullptr, // first
-                nullptr  // second
+                nullptr, // p_first
+                nullptr  // p_second
             },
-            //abilities
+            // abilities
             {
-                nullptr, // first
-                nullptr  // second
+                nullptr, // p_first
+                nullptr  // p_second
             },
             nullptr, // hidden_ability
-            //egg_groups
+            // egg_groups
             {
-                nullptr, // first
-                nullptr  // second
+                nullptr, // p_first
+                nullptr  // p_second
             },
             {0}, // base_stats
             {0}, // EV_yields
             0, // experience_yield
-            //levelup_moves
+            // levelup_moves
             {
                 nullptr, // levelup_moves
                 0ULL     // length
             },
-            //tm_hm_moves
+            // tm_hm_moves
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
-            //egg_moves
+            // egg_moves
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
-            //tutor_moves
+            // tutor_moves
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
-            //forms
+            // forms
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
-            //evolutions
+            // evolutions
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
         };
@@ -913,79 +917,83 @@ namespace pkmn { namespace c {
 
     void pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t& pokemon_list_cpp,
-        struct pkmn_pokemon_list* pokemon_list_c_ptr
+        struct pkmn_pokemon_list* p_pokemon_list_c_out
     )
     {
-        BOOST_ASSERT(pokemon_list_c_ptr != nullptr);
+        BOOST_ASSERT(p_pokemon_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon_list temp_pokemon_list =
+        struct pkmn_pokemon_list temp_pokemon_list_c =
         {
-            nullptr,                // pokemon_list
+            nullptr,                // p_pokemon_list
             pokemon_list_cpp.size() // length
         };
 
-        if(temp_pokemon_list.length > 0)
+        if(temp_pokemon_list_c.length > 0)
         {
-            temp_pokemon_list.pokemon = (struct pkmn_pokemon*)std::calloc(
-                                                             pokemon_list_cpp.size(),
-                                                             sizeof(struct pkmn_pokemon)
-                                                         );
+            temp_pokemon_list_c.p_pokemon =
+                (struct pkmn_pokemon*)std::calloc(
+                                          pokemon_list_cpp.size(),
+                                          sizeof(struct pkmn_pokemon)
+                                      );
+
             for(size_t pokemon_index = 0;
-                pokemon_index < temp_pokemon_list.length;
+                pokemon_index < temp_pokemon_list_c.length;
                 ++pokemon_index)
             {
                 init_pokemon(
                     pokemon_list_cpp[pokemon_index],
-                    &temp_pokemon_list.pokemon[pokemon_index]
+                    &temp_pokemon_list_c.p_pokemon[pokemon_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_list_c_ptr = std::move(temp_pokemon_list);
+        *p_pokemon_list_c_out = std::move(temp_pokemon_list_c);
     }
 
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        struct pkmn_pokemon_box_list* pokemon_box_list_c_ptr
+        struct pkmn_pokemon_box_list* p_pokemon_box_list_c_out
     )
     {
-        BOOST_ASSERT(pokemon_box_list_c_ptr != nullptr);
+        BOOST_ASSERT(p_pokemon_box_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon_box_list temp_pokemon_box_list =
+        struct pkmn_pokemon_box_list temp_pokemon_box_list_c =
         {
-            nullptr,                    // boxes
+            nullptr,                    // p_boxes
             pokemon_box_list_cpp.size() // length
         };
 
-        if(temp_pokemon_box_list.length > 0)
+        if(temp_pokemon_box_list_c.length > 0)
         {
-            temp_pokemon_box_list.boxes = (struct pkmn_pokemon_box*)std::calloc(
-                                                                   pokemon_box_list_cpp.size(),
-                                                                   sizeof(struct pkmn_pokemon_box)
-                                                               );
+            temp_pokemon_box_list_c.p_boxes =
+                (struct pkmn_pokemon_box*)std::calloc(
+                                              pokemon_box_list_cpp.size(),
+                                              sizeof(struct pkmn_pokemon_box)
+                                          );
+
             for(size_t pokemon_box_index = 0;
-                pokemon_box_index < temp_pokemon_box_list.length;
+                pokemon_box_index < temp_pokemon_box_list_c.length;
                 ++pokemon_box_index)
             {
                 init_pokemon_box(
                     pokemon_box_list_cpp[pokemon_box_index],
-                    &temp_pokemon_box_list.boxes[pokemon_box_index]
+                    &temp_pokemon_box_list_c.p_boxes[pokemon_box_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_box_list_c_ptr = std::move(temp_pokemon_box_list);
+        *p_pokemon_box_list_c_out = std::move(temp_pokemon_box_list_c);
     }
 }}

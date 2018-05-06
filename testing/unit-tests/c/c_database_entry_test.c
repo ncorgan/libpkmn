@@ -231,29 +231,29 @@ static void assert_pokemon_entry_uninitialized(
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry->chance_female, 0.0f);
     TEST_ASSERT_FALSE(pokemon_entry->has_gender_differences);
     TEST_ASSERT_EQUAL(pokemon_entry->base_friendship, 0);
-    TEST_ASSERT_NULL(pokemon_entry->types.first);
-    TEST_ASSERT_NULL(pokemon_entry->types.second);
-    TEST_ASSERT_NULL(pokemon_entry->abilities.first);
-    TEST_ASSERT_NULL(pokemon_entry->abilities.second);
+    TEST_ASSERT_NULL(pokemon_entry->types.p_first);
+    TEST_ASSERT_NULL(pokemon_entry->types.p_second);
+    TEST_ASSERT_NULL(pokemon_entry->abilities.p_first);
+    TEST_ASSERT_NULL(pokemon_entry->abilities.p_second);
     TEST_ASSERT_NULL(pokemon_entry->hidden_ability);
-    TEST_ASSERT_NULL(pokemon_entry->egg_groups.first);
-    TEST_ASSERT_NULL(pokemon_entry->egg_groups.second);
+    TEST_ASSERT_NULL(pokemon_entry->egg_groups.p_first);
+    TEST_ASSERT_NULL(pokemon_entry->egg_groups.p_second);
     for(int i = 0; i < 7; ++i) {
         TEST_ASSERT_EQUAL(pokemon_entry->base_stats[i], 0);
         TEST_ASSERT_EQUAL(pokemon_entry->EV_yields[i], 0);
     }
     TEST_ASSERT_EQUAL(pokemon_entry->experience_yield, 0);
-    TEST_ASSERT_NULL(pokemon_entry->levelup_moves.levelup_moves);
+    TEST_ASSERT_NULL(pokemon_entry->levelup_moves.p_levelup_moves);
     TEST_ASSERT_EQUAL(pokemon_entry->levelup_moves.length, 0);
-    TEST_ASSERT_NULL(pokemon_entry->tm_hm_moves.strings);
+    TEST_ASSERT_NULL(pokemon_entry->tm_hm_moves.pp_strings);
     TEST_ASSERT_EQUAL(pokemon_entry->tm_hm_moves.length, 0);
-    TEST_ASSERT_NULL(pokemon_entry->egg_moves.strings);
+    TEST_ASSERT_NULL(pokemon_entry->egg_moves.pp_strings);
     TEST_ASSERT_EQUAL(pokemon_entry->egg_moves.length, 0);
-    TEST_ASSERT_NULL(pokemon_entry->tutor_moves.strings);
+    TEST_ASSERT_NULL(pokemon_entry->tutor_moves.pp_strings);
     TEST_ASSERT_EQUAL(pokemon_entry->tutor_moves.length, 0);
-    TEST_ASSERT_NULL(pokemon_entry->forms.strings);
+    TEST_ASSERT_NULL(pokemon_entry->forms.pp_strings);
     TEST_ASSERT_EQUAL(pokemon_entry->forms.length, 0);
-    TEST_ASSERT_NULL(pokemon_entry->evolutions.strings);
+    TEST_ASSERT_NULL(pokemon_entry->evolutions.pp_strings);
     TEST_ASSERT_EQUAL(pokemon_entry->evolutions.length, 0);
 }
 
@@ -282,43 +282,43 @@ static void pokemon_entry_test() {
         .chance_female = 0.0f,
         .has_gender_differences = false,
         .types = {
-            .first = NULL,
-            .second = NULL
+            .p_first = NULL,
+            .p_second = NULL
         },
         .abilities = {
-            .first = NULL,
-            .second = NULL
+            .p_first = NULL,
+            .p_second = NULL
         },
         .hidden_ability = NULL,
         .egg_groups = {
-            .first = NULL,
-            .second = NULL
+            .p_first = NULL,
+            .p_second = NULL
         },
         .base_stats = {0,0,0,0,0,0,0},
         .EV_yields = {0,0,0,0,0,0,0},
         .experience_yield = 0,
         .levelup_moves = {
-            .levelup_moves = NULL,
+            .p_levelup_moves = NULL,
             .length = 0
         },
         .tm_hm_moves = {
-            .strings = NULL,
+            .pp_strings = NULL,
             .length = 0
         },
         .egg_moves = {
-            .strings = NULL,
+            .pp_strings = NULL,
             .length = 0
         },
         .tutor_moves = {
-            .strings = NULL,
+            .pp_strings = NULL,
             .length = 0
         },
         .forms = {
-            .strings = NULL,
+            .pp_strings = NULL,
             .length = 0
         },
         .evolutions = {
-            .strings = NULL,
+            .pp_strings = NULL,
             .length = 0
         }
     };
@@ -397,13 +397,13 @@ static void pokemon_entry_test() {
     TEST_ASSERT_EQUAL_FLOAT(pokemon_entry.chance_female, 0.5f);
     TEST_ASSERT_FALSE(pokemon_entry.has_gender_differences);
     TEST_ASSERT_EQUAL(pokemon_entry.base_friendship, 70);
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.first, "Ground");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.second, "Electric");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.first, "Static");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.second, "Limber");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.p_first, "Ground");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.types.p_second, "Electric");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.p_first, "Static");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.abilities.p_second, "Limber");
     TEST_ASSERT_EQUAL_STRING(pokemon_entry.hidden_ability, "Sand Veil");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.first, "Water 1");
-    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.second, "Amorphous");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.p_first, "Water 1");
+    TEST_ASSERT_EQUAL_STRING(pokemon_entry.egg_groups.p_second, "Amorphous");
     TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_HP], 109);
     TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_ATTACK], 66);
     TEST_ASSERT_EQUAL(pokemon_entry.base_stats[PKMN_STAT_DEFENSE], 84);
@@ -471,15 +471,15 @@ static void pokemon_entry_test() {
     TEST_ASSERT(strlen(sprite_filepath) > 0);
     TEST_ASSERT(file_exists(sprite_filepath));
 
-    TEST_ASSERT_NOT_NULL(pokemon_entry.levelup_moves.levelup_moves);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.levelup_moves.p_levelup_moves);
     TEST_ASSERT(pokemon_entry.levelup_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.tm_hm_moves.strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tm_hm_moves.pp_strings);
     TEST_ASSERT(pokemon_entry.tm_hm_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.egg_moves.strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.egg_moves.pp_strings);
     TEST_ASSERT(pokemon_entry.egg_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.tutor_moves.strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.tutor_moves.pp_strings);
     TEST_ASSERT(pokemon_entry.tutor_moves.length > 0);
-    TEST_ASSERT_NOT_NULL(pokemon_entry.forms.strings);
+    TEST_ASSERT_NOT_NULL(pokemon_entry.forms.pp_strings);
     TEST_ASSERT(pokemon_entry.forms.length > 0);
     // No evolutions, so no memory allocated
     TEST_ASSERT_EQUAL(pokemon_entry.evolutions.length, 0);

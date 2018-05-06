@@ -30,25 +30,25 @@
 
 static const struct pkmn_string_list empty_string_list =
 {
-    .strings = NULL,
+    .pp_strings = NULL,
     .length = 0
 };
 static const struct pkmn_trainer_info empty_trainer_info =
 {
-    .name = NULL,
+    .p_name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
 static const struct pkmn_move_slots empty_move_slots =
 {
-    .move_slots = NULL,
+    .p_move_slots = NULL,
     .length = 0
 };
 static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 
 static void test_pokemon_string(
@@ -503,7 +503,7 @@ void test_outside_3gpkm()
                 &original_trainer_info
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING("A", original_trainer_info.name);
+    TEST_ASSERT_EQUAL_STRING("A", original_trainer_info.p_name);
     TEST_ASSERT_EQUAL(223997927, original_trainer_info.id.id);
     TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, original_trainer_info.gender);
 
@@ -591,12 +591,12 @@ void test_outside_3gpkm()
         bool has_ribbon = false;
         error = pkmn_pokemon_has_ribbon(
                     &pokemon,
-                    ribbon_names.strings[ribbon_index],
+                    ribbon_names.pp_strings[ribbon_index],
                     &has_ribbon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
-        if(!strcmp(ribbon_names.strings[ribbon_index], "Champion"))
+        if(!strcmp(ribbon_names.pp_strings[ribbon_index], "Champion"))
         {
             TEST_ASSERT_TRUE(has_ribbon);
         }
@@ -631,10 +631,10 @@ void test_outside_3gpkm()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(4, move_slots.length);
-    TEST_ASSERT_EQUAL_STRING("Crunch", move_slots.move_slots[0].move);
-    TEST_ASSERT_EQUAL_STRING("Strength", move_slots.move_slots[1].move);
-    TEST_ASSERT_EQUAL_STRING("Shadow Ball", move_slots.move_slots[2].move);
-    TEST_ASSERT_EQUAL_STRING("Double-Edge", move_slots.move_slots[3].move);
+    TEST_ASSERT_EQUAL_STRING("Crunch", move_slots.p_move_slots[0].p_move);
+    TEST_ASSERT_EQUAL_STRING("Strength", move_slots.p_move_slots[1].p_move);
+    TEST_ASSERT_EQUAL_STRING("Shadow Ball", move_slots.p_move_slots[2].p_move);
+    TEST_ASSERT_EQUAL_STRING("Double-Edge", move_slots.p_move_slots[3].p_move);
 
     error = pkmn_move_slots_free(&move_slots);
     PKMN_TEST_ASSERT_SUCCESS(error);

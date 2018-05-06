@@ -13,7 +13,7 @@ static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 
 static void gender_test(
@@ -35,7 +35,7 @@ static void gender_test(
                 &nidorina
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(nidorina._internal);
+    TEST_ASSERT_NOT_NULL(nidorina.p_internal);
 
     error = pkmn_pokemon_get_gender(
                 &nidorina,
@@ -62,7 +62,7 @@ static void gender_test(
 
     error = pkmn_pokemon_free(&nidorina);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(nidorina._internal);
+    TEST_ASSERT_NULL(nidorina.p_internal);
 
     struct pkmn_pokemon nidorino = empty_pokemon;
     error = pkmn_pokemon_init(
@@ -73,7 +73,7 @@ static void gender_test(
                 &nidorino
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(nidorino._internal);
+    TEST_ASSERT_NOT_NULL(nidorino.p_internal);
 
     error = pkmn_pokemon_get_gender(
                 &nidorino,
@@ -100,7 +100,7 @@ static void gender_test(
 
     error = pkmn_pokemon_free(&nidorino);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(nidorino._internal);
+    TEST_ASSERT_NULL(nidorino.p_internal);
 
     struct pkmn_pokemon magnemite = empty_pokemon;
     error = pkmn_pokemon_init(
@@ -111,7 +111,7 @@ static void gender_test(
                 &magnemite
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(magnemite._internal);
+    TEST_ASSERT_NOT_NULL(magnemite.p_internal);
 
     error = pkmn_pokemon_get_gender(
                 &magnemite,
@@ -138,7 +138,7 @@ static void gender_test(
 
     error = pkmn_pokemon_free(&magnemite);
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NULL(magnemite._internal);
+    TEST_ASSERT_NULL(magnemite.p_internal);
 
     static const char* mixed_pokemon[] =
     {
@@ -202,7 +202,7 @@ static void gender_test(
 
         error = pkmn_pokemon_free(&pokemon);
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NULL(pokemon._internal);
+        TEST_ASSERT_NULL(pokemon.p_internal);
     }
 }
 

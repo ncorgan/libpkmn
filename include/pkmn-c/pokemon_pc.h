@@ -20,7 +20,7 @@ struct pkmn_pokemon_pc
     char* game;
     size_t capacity;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

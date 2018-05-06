@@ -19,7 +19,7 @@ struct pkmn_item_list
     char* game;
     size_t capacity;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

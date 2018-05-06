@@ -46,7 +46,7 @@ struct pkmn_game_save
 {
     char* game;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

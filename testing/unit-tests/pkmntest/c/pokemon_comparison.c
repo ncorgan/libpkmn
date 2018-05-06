@@ -18,35 +18,35 @@
 #define STRBUFFER_LEN 1024
 static const struct pkmn_string_list empty_string_list =
 {
-    .strings = NULL,
+    .pp_strings = NULL,
     .length = 0
 };
 static const struct pkmn_trainer_info empty_trainer_info =
 {
-    .name = NULL,
+    .p_name = NULL,
     .id = {0},
     .gender = PKMN_GENDER_GENDERLESS
 };
 static const struct pkmn_move_slots empty_move_slots =
 {
-    .move_slots = NULL,
+    .p_move_slots = NULL,
     .length = 0
 };
 static const struct pkmn_attribute_names empty_attribute_names =
 {
     .numeric_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .string_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     },
     .boolean_attribute_names =
     {
-        .strings = NULL,
+        .pp_strings = NULL,
         .length = 0
     }
 };
@@ -107,12 +107,12 @@ void get_random_pokemon(
         {
             do
             {
-                actual_species = pokemon_list.strings[rand() % pokemon_list.length];
+                actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
             } while(!strcmp(actual_species, "Deoxys"));
         }
         else
         {
-            actual_species = pokemon_list.strings[rand() % pokemon_list.length];
+            actual_species = pokemon_list.pp_strings[rand() % pokemon_list.length];
         }
     }
     TEST_ASSERT_NOT_NULL(actual_species);
@@ -136,7 +136,7 @@ void get_random_pokemon(
         const char* move = NULL;
         do
         {
-            move = move_list.strings[rand() % move_list.length];
+            move = move_list.pp_strings[rand() % move_list.length];
         } while(strstr(move, "Shadow"));
     }
 
@@ -179,7 +179,7 @@ void get_random_pokemon(
         {
             error = pkmn_pokemon_set_held_item(
                         pokemon_ptr,
-                        internal_item_list_ptr->strings[rand() % internal_item_list_ptr->length]
+                        internal_item_list_ptr->pp_strings[rand() % internal_item_list_ptr->length]
                     );
         } while(error == PKMN_ERROR_INVALID_ARGUMENT);
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -223,7 +223,7 @@ void get_random_pokemon(
         {
             error = pkmn_pokemon_set_has_ribbon(
                         pokemon_ptr,
-                        ribbon_names.strings[ribbon_index],
+                        ribbon_names.pp_strings[ribbon_index],
                         random_bool()
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
@@ -307,13 +307,13 @@ void compare_pokemon_uint32s(
 
 void compare_pokemon_strings(
     struct pkmn_pokemon* pokemon1_ptr,
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* pokemon2_ptr,
     const char* field,
     pokemon_string_getter_fcn_t getter_fcn
 )
 {
     TEST_ASSERT_NOT_NULL(pokemon1_ptr);
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(pokemon2_ptr);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -331,7 +331,7 @@ void compare_pokemon_strings(
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = getter_fcn(
-                pokemon_ptr,
+                pokemon2_ptr,
                 strbuffer2,
                 sizeof(strbuffer2),
                 NULL
@@ -470,8 +470,8 @@ void compare_pokemon_original_trainer_info(
             );
     TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
     TEST_ASSERT_EQUAL_STRING(
-        original_trainer_info1.name,
-        original_trainer_info2.name
+        original_trainer_info1.p_name,
+        original_trainer_info2.p_name
     );
     TEST_ASSERT_EQUAL(
         original_trainer_info1.id.id,
@@ -518,12 +518,12 @@ void compare_pokemon_moves(
     for(size_t move_index = 0; move_index < 4; ++move_index)
     {
         TEST_ASSERT_EQUAL_STRING(
-            move_slots1.move_slots[move_index].move,
-            move_slots2.move_slots[move_index].move
+            move_slots1.p_move_slots[move_index].p_move,
+            move_slots2.p_move_slots[move_index].p_move
         );
         TEST_ASSERT_EQUAL(
-            move_slots1.move_slots[move_index].pp,
-            move_slots2.move_slots[move_index].pp
+            move_slots1.p_move_slots[move_index].pp,
+            move_slots2.p_move_slots[move_index].pp
         );
     }
 
@@ -587,20 +587,20 @@ void compare_pokemon_ribbons(
     {
         error = pkmn_pokemon_has_ribbon(
                     pokemon1_ptr,
-                    ribbon_list.strings[ribbon_index],
+                    ribbon_list.pp_strings[ribbon_index],
                     &has_ribbon1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_has_ribbon(
                     pokemon_ptr,
-                    ribbon_list.strings[ribbon_index],
+                    ribbon_list.pp_strings[ribbon_index],
                     &has_ribbon2
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL_MESSAGE(
             has_ribbon1,
             has_ribbon2,
-            ribbon_list.strings[ribbon_index]
+            ribbon_list.pp_strings[ribbon_index]
         );
     }
 
@@ -801,14 +801,14 @@ void compare_pokemon(
 
         error = pkmn_pokemon_get_numeric_attribute(
                     pokemon1_ptr,
-                    attribute_names1.numeric_attribute_names.strings[attribute_index],
+                    attribute_names1.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
         error = pkmn_pokemon_get_numeric_attribute(
                     pokemon2_ptr,
-                    attribute_names2.numeric_attribute_names.strings[attribute_index],
+                    attribute_names2.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
@@ -825,7 +825,7 @@ void compare_pokemon(
 
         error = pkmn_pokemon_get_string_attribute(
                     pokemon1_ptr,
-                    attribute_names1.string_attribute_names.strings[attribute_index],
+                    attribute_names1.string_attribute_names.pp_strings[attribute_index],
                     attribute_value1,
                     sizeof(attribute_value1),
                     NULL
@@ -834,7 +834,7 @@ void compare_pokemon(
 
         error = pkmn_pokemon_get_string_attribute(
                     pokemon2_ptr,
-                    attribute_names2.string_attribute_names.strings[attribute_index],
+                    attribute_names2.string_attribute_names.pp_strings[attribute_index],
                     attribute_value2,
                     sizeof(attribute_value2),
                     NULL
@@ -853,14 +853,14 @@ void compare_pokemon(
 
         error = pkmn_pokemon_get_boolean_attribute(
                     pokemon1_ptr,
-                    attribute_names1.boolean_attribute_names.strings[attribute_index],
+                    attribute_names1.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);
 
         error = pkmn_pokemon_get_boolean_attribute(
                     pokemon2_ptr,
-                    attribute_names2.boolean_attribute_names.strings[attribute_index],
+                    attribute_names2.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_NONE, error);

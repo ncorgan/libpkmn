@@ -12,7 +12,7 @@
 
 struct pkmn_natural_gift
 {
-    char* type;
+    char* p_type;
     int base_power;
 };
 
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_natural_gift_free(
-    struct pkmn_natural_gift* natural_gift_ptr
+    struct pkmn_natural_gift* p_natural_gift
 );
 
 #ifdef __cplusplus

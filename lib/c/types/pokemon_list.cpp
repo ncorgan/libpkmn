@@ -11,32 +11,32 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_pokemon_list_free(
-    struct pkmn_pokemon_list* pokemon_list_ptr
+    struct pkmn_pokemon_list* p_pokemon_list
 )
 {
-    PKMN_CHECK_NULL_PARAM(pokemon_list_ptr);
+    PKMN_CHECK_NULL_PARAM(p_pokemon_list);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    if(pokemon_list_ptr->length > 0)
+    if(p_pokemon_list->length > 0)
     {
         for(size_t pokemon_index = 0;
-            (pokemon_index < pokemon_list_ptr->length) && !error;
+            (pokemon_index < p_pokemon_list->length) && !error;
             ++pokemon_index)
         {
-            error = pkmn_pokemon_free(&pokemon_list_ptr->pokemon[pokemon_index]);
+            error = pkmn_pokemon_free(&p_pokemon_list->p_pokemon[pokemon_index]);
         }
 
         if(!error)
         {
-            std::free(pokemon_list_ptr->pokemon);
+            std::free(p_pokemon_list->p_pokemon);
         }
     }
 
     if(!error)
     {
-        pokemon_list_ptr->pokemon = nullptr;
-        pokemon_list_ptr->length = 0;
+        p_pokemon_list->p_pokemon = nullptr;
+        p_pokemon_list->length = 0;
     }
 
     return error;

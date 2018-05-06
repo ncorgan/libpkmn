@@ -11,44 +11,44 @@
 #include "error_internal.hpp"
 
 enum pkmn_error pkmn_item_slot_free(
-    struct pkmn_item_slot* item_slot_ptr
+    struct pkmn_item_slot* p_item_slot
 )
 {
-    PKMN_CHECK_NULL_PARAM(item_slot_ptr);
+    PKMN_CHECK_NULL_PARAM(p_item_slot);
 
-    pkmn::c::free_pointer_and_set_to_null(&item_slot_ptr->item);
-    item_slot_ptr->amount = 0;
+    pkmn::c::free_pointer_and_set_to_null(&p_item_slot->p_item);
+    p_item_slot->amount = 0;
 
     return PKMN_ERROR_NONE;
 }
 
 enum pkmn_error pkmn_item_slots_free(
-    struct pkmn_item_slots* item_slots_ptr
+    struct pkmn_item_slots* p_item_slots
 )
 {
-    PKMN_CHECK_NULL_PARAM(item_slots_ptr);
+    PKMN_CHECK_NULL_PARAM(p_item_slots);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    if(item_slots_ptr->length > 0)
+    if(p_item_slots->length > 0)
     {
         for(size_t item_index = 0;
-            (item_index < item_slots_ptr->length) && !error;
+            (item_index < p_item_slots->length) && !error;
             ++item_index)
         {
-            error = pkmn_item_slot_free(&item_slots_ptr->item_slots[item_index]);
+            error = pkmn_item_slot_free(&p_item_slots->p_item_slots[item_index]);
         }
 
         if(!error)
         {
-            std::free(item_slots_ptr->item_slots);
+            std::free(p_item_slots->p_item_slots);
         }
     }
 
     if(!error)
     {
-        item_slots_ptr->item_slots = nullptr;
-        item_slots_ptr->length = 0;
+        p_item_slots->p_item_slots = nullptr;
+        p_item_slots->length = 0;
     }
 
     return error;

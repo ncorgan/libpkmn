@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_attribute_names_free(
-    struct pkmn_attribute_names* attribute_names_ptr
+    struct pkmn_attribute_names* p_attribute_names
 );
 
 #ifdef __cplusplus

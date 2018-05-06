@@ -15,7 +15,7 @@
 
 struct pkmn_trainer_info
 {
-    char* name;
+    char* p_name;
     union pkmn_trainer_id id;
     enum pkmn_gender gender;
 };
@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_trainer_info_free(
-    struct pkmn_trainer_info* trainer_info_ptr
+    struct pkmn_trainer_info* p_trainer_info
 );
 
 #ifdef __cplusplus

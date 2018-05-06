@@ -18,7 +18,7 @@ struct pkmn_pokedex
 {
     char* game;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

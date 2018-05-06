@@ -196,7 +196,7 @@ static void gba_pokemon_test(
     {
         .species = NULL,
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_init(
@@ -207,7 +207,7 @@ static void gba_pokemon_test(
                 &pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon._internal);
+    TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
     pkmn_test_values_t test_values =
     {
@@ -259,7 +259,7 @@ static void gcn_pokemon_test(
     {
         .species = NULL,
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_init(
@@ -270,7 +270,7 @@ static void gcn_pokemon_test(
                 &pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(pokemon._internal);
+    TEST_ASSERT_NOT_NULL(pokemon.p_internal);
 
     pkmn_test_values_t test_values =
     {

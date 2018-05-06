@@ -42,7 +42,7 @@ enum pkmn_error pkmn_pokemon_box_free(
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_pokemon_box_internal_t**>(&pokemon_box_ptr->_internal)
+            reinterpret_cast<pkmn_pokemon_box_internal_t**>(&pokemon_box_ptr->p_internal)
         );
     )
 }
@@ -58,7 +58,7 @@ const char* pkmn_pokemon_box_strerror(
 
     try
     {
-        pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+        pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -81,7 +81,7 @@ enum pkmn_error pkmn_pokemon_box_get_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name_buffer_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -100,7 +100,7 @@ enum pkmn_error pkmn_pokemon_box_set_name(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(name, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -114,7 +114,7 @@ enum pkmn_error pkmn_pokemon_box_get_num_pokemon(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_pokemon_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -129,7 +129,7 @@ enum pkmn_error pkmn_pokemon_box_get_pokemon(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -147,11 +147,11 @@ enum pkmn_error pkmn_pokemon_box_set_pokemon(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(pokemon_ptr, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
-        pkmn_pokemon_internal_t* new_pokemon_internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->_internal);
+        pkmn_pokemon_internal_t* new_pokemon_internal_ptr = POKEMON_INTERNAL_RCAST(pokemon_ptr->p_internal);
 
         internal_ptr->cpp->set_pokemon(
             int(position),
@@ -166,7 +166,7 @@ enum pkmn_error pkmn_pokemon_box_as_list(
 )
 {
     PKMN_CHECK_NULL_PARAM(pokemon_box_ptr);
-    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->_internal);
+    pkmn_pokemon_box_internal_t* internal_ptr = POKEMON_BOX_INTERNAL_RCAST(pokemon_box_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_list_out, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,

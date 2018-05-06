@@ -233,125 +233,131 @@ namespace pkmn { namespace c {
 
     void string_list_cpp_to_c(
         const std::vector<std::string>& string_list_cpp,
-        struct pkmn_string_list* string_list_c_ptr
+        struct pkmn_string_list* p_string_list_c_out
     );
 
     inline void string_pair_cpp_to_c(
         const std::pair<std::string, std::string>& string_pair_cpp,
-        struct pkmn_string_pair* c_pair_ptr
+        struct pkmn_string_pair* p_string_pair_c_out
     )
     {
-        BOOST_ASSERT(c_pair_ptr != nullptr);
+        BOOST_ASSERT(p_string_pair_c_out != nullptr);
 
-        string_cpp_to_c_alloc(string_pair_cpp.first, &c_pair_ptr->first);
-        string_cpp_to_c_alloc(string_pair_cpp.second, &c_pair_ptr->second);
+        string_cpp_to_c_alloc(
+            string_pair_cpp.first,
+            &p_string_pair_c_out->p_first
+        );
+        string_cpp_to_c_alloc(
+            string_pair_cpp.second,
+            &p_string_pair_c_out->p_second
+        );
     }
 
     template <typename value_type>
     void string_map_keys_to_string_list(
         const std::map<std::string, value_type>& map_cpp,
-        struct pkmn_string_list* string_list_c_ptr
+        struct pkmn_string_list* p_string_list_c_out
     )
     {
-        BOOST_ASSERT(string_list_c_ptr != nullptr);
+        BOOST_ASSERT(p_string_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_string_list temp_string_list =
+        struct pkmn_string_list temp_string_list_c =
         {
-            nullptr,       // strings
+            nullptr,       // pp_strings
             map_cpp.size() // length
         };
 
-        if(temp_string_list.length > 0)
+        if(temp_string_list_c.length > 0)
         {
-            temp_string_list.strings = (char**)std::calloc(
-                                                   temp_string_list.length,
-                                                   sizeof(char*)
-                                               );
+            temp_string_list_c.pp_strings = (char**)std::calloc(
+                                                        temp_string_list_c.length,
+                                                        sizeof(char*)
+                                                    );
             size_t index = 0;
             for(auto map_iter = map_cpp.begin();
-                (map_iter != map_cpp.end()) && (index < temp_string_list.length);
+                (map_iter != map_cpp.end()) && (index < temp_string_list_c.length);
                 ++map_iter, ++index)
             {
                 string_cpp_to_c_alloc(
                     map_iter->first,
-                    &temp_string_list.strings[index]
+                    &temp_string_list_c.pp_strings[index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *string_list_c_ptr = std::move(temp_string_list);
+        *p_string_list_c_out = std::move(temp_string_list_c);
     }
 
     inline void hidden_power_cpp_to_c(
         const pkmn::calculations::hidden_power& hidden_power_cpp,
-        struct pkmn_hidden_power* hidden_power_c_ptr
+        struct pkmn_hidden_power* p_hidden_power_c_out
     )
     {
-        BOOST_ASSERT(hidden_power_c_ptr != nullptr);
+        BOOST_ASSERT(p_hidden_power_c_out != nullptr);
 
         string_cpp_to_c_alloc(
             hidden_power_cpp.type,
-            &hidden_power_c_ptr->type
+            &p_hidden_power_c_out->p_type
         );
-        hidden_power_c_ptr->base_power = hidden_power_cpp.base_power;
+        p_hidden_power_c_out->base_power = hidden_power_cpp.base_power;
     }
 
     inline void natural_gift_cpp_to_c(
         const pkmn::calculations::natural_gift& natural_gift_cpp,
-        struct pkmn_natural_gift* natural_gift_c_ptr
+        struct pkmn_natural_gift* p_natural_gift_c_out
     )
     {
-        BOOST_ASSERT(natural_gift_c_ptr != nullptr);
+        BOOST_ASSERT(p_natural_gift_c_out != nullptr);
 
         string_cpp_to_c_alloc(
             natural_gift_cpp.type,
-            &natural_gift_c_ptr->type
+            &p_natural_gift_c_out->p_type
         );
-        natural_gift_c_ptr->base_power = natural_gift_cpp.base_power;
+        p_natural_gift_c_out->base_power = natural_gift_cpp.base_power;
     }
 
     inline void item_slot_cpp_to_c(
         const pkmn::item_slot& item_slot_cpp,
-        struct pkmn_item_slot* item_slot_c_ptr
+        struct pkmn_item_slot* p_item_slot_c_out
     )
     {
-        BOOST_ASSERT(item_slot_c_ptr != nullptr);
+        BOOST_ASSERT(p_item_slot_c_out != nullptr);
 
         string_cpp_to_c_alloc(
             item_slot_cpp.item,
-            &item_slot_c_ptr->item
+            &p_item_slot_c_out->p_item
         );
-        item_slot_c_ptr->amount = item_slot_cpp.amount;
+        p_item_slot_c_out->amount = item_slot_cpp.amount;
     }
 
     void item_slots_cpp_to_c(
         const pkmn::item_slots_t& item_slots_cpp,
-        struct pkmn_item_slots* item_slots_c_ptr
+        struct pkmn_item_slots* p_item_slots_c
     );
 
     inline void levelup_move_cpp_to_c(
         const pkmn::database::levelup_move& levelup_move_cpp,
-        struct pkmn_levelup_move* levelup_move_c_ptr
+        struct pkmn_levelup_move* p_levelup_move_c_out
     )
     {
-        BOOST_ASSERT(levelup_move_c_ptr != nullptr);
+        BOOST_ASSERT(p_levelup_move_c_out != nullptr);
 
         string_cpp_to_c_alloc(
             levelup_move_cpp.move.get_name(),
-            &levelup_move_c_ptr->move
+            &p_levelup_move_c_out->p_move
         );
-        levelup_move_c_ptr->level = levelup_move_cpp.level;
+        p_levelup_move_c_out->level = levelup_move_cpp.level;
     }
 
     void levelup_moves_cpp_to_c(
         const pkmn::database::levelup_moves_t& levelup_moves_cpp,
-        struct pkmn_levelup_moves* levelup_moves_c_ptr
+        struct pkmn_levelup_moves* p_levelup_moves_c_out
     );
 
     void move_list_to_string_list(
@@ -361,21 +367,21 @@ namespace pkmn { namespace c {
 
     inline void move_slot_cpp_to_c(
         const pkmn::move_slot& move_slot_cpp,
-        struct pkmn_move_slot* move_slot_c_ptr
+        struct pkmn_move_slot* p_move_slot_c_out
     )
     {
-        BOOST_ASSERT(move_slot_c_ptr != nullptr);
+        BOOST_ASSERT(p_move_slot_c_out != nullptr);
 
         string_cpp_to_c_alloc(
             move_slot_cpp.move,
-            &move_slot_c_ptr->move
+            &p_move_slot_c_out->p_move
         );
-        move_slot_c_ptr->pp = move_slot_cpp.pp;
+        p_move_slot_c_out->pp = move_slot_cpp.pp;
     }
 
     void move_slots_cpp_to_c(
         const pkmn::move_slots_t& move_slots_cpp,
-        struct pkmn_move_slots* move_slots_c_ptr
+        struct pkmn_move_slots* p_move_slots_c_out
     );
 
     void pokemon_entries_to_string_list(
@@ -400,12 +406,12 @@ namespace pkmn { namespace c {
 
     void pokemon_list_cpp_to_c(
         const pkmn::pokemon_list_t& pokemon_list_cpp,
-        struct pkmn_pokemon_list* pokemon_list_c_ptr
+        struct pkmn_pokemon_list* p_pokemon_list_c_out
     );
 
     void pokemon_box_list_cpp_to_c(
         const pkmn::pokemon_box_list_t& pokemon_box_list_cpp,
-        struct pkmn_pokemon_box_list* pokemon_box_list_c_ptr
+        struct pkmn_pokemon_box_list* p_pokemon_box_list_c_out
     );
 
     template <typename sptr_type>
@@ -425,17 +431,17 @@ namespace pkmn { namespace c {
         {
             // numeric_attribute_names
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
             // string_attribute_names
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             },
             // boolean_attribute_names
             {
-                nullptr, // strings
+                nullptr, // pp_strings
                 0ULL     // length
             }
         };

@@ -21,7 +21,7 @@ void check_num_items(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     size_t num_items = 0;
@@ -42,13 +42,13 @@ void check_item_at_index(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(expected_item_name);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_item_slot item_slot =
     {
-        .item = NULL,
+        .p_item = NULL,
         .amount = 0
     };
 
@@ -59,7 +59,7 @@ void check_item_at_index(
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    TEST_ASSERT_EQUAL_STRING(expected_item_name, item_slot.item);
+    TEST_ASSERT_EQUAL_STRING(expected_item_name, item_slot.p_item);
     TEST_ASSERT_EQUAL(expected_item_amount, item_slot.amount);
 
     error = pkmn_item_slot_free(&item_slot);
@@ -73,7 +73,7 @@ void test_item_list_initial_values(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",
@@ -92,7 +92,7 @@ void test_item_list_initial_values(
 
     struct pkmn_item_slots item_slots =
     {
-        .item_slots = NULL,
+        .p_item_slots = NULL,
         .length = 0
     };
     error = pkmn_item_list_as_list(
@@ -100,16 +100,16 @@ void test_item_list_initial_values(
                 &item_slots
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(item_slots.item_slots);
+    TEST_ASSERT_NOT_NULL(item_slots.p_item_slots);
     TEST_ASSERT_EQUAL(item_list_ptr->capacity, item_slots.length);
 
     for(size_t item_index = 0; item_index < item_slots.length; ++item_index)
     {
         TEST_ASSERT_EQUAL_STRING(
             "None",
-            item_slots.item_slots[item_index].item
+            item_slots.p_item_slots[item_index].p_item
         );
-        TEST_ASSERT_EQUAL(0, item_slots.item_slots[item_index].amount);
+        TEST_ASSERT_EQUAL(0, item_slots.p_item_slots[item_index].amount);
     }
 
     error = pkmn_item_slots_free(&item_slots);
@@ -122,7 +122,7 @@ void test_item_list_out_of_range_error(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(item_name);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
@@ -186,7 +186,7 @@ void test_item_list_invalid_items(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_TRUE(num_items > 0);
 
@@ -220,7 +220,7 @@ void test_item_bag_invalid_items(
 )
 {
     TEST_ASSERT_NOT_NULL(item_bag_ptr);
-    TEST_ASSERT_NOT_NULL(item_bag_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_bag_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_TRUE(num_items > 0);
 
@@ -244,7 +244,7 @@ void test_item_list_set_item(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_EQUAL(3, num_items);
 
@@ -301,7 +301,7 @@ void test_item_list_add_remove(
 )
 {
     TEST_ASSERT_NOT_NULL(item_list_ptr);
-    TEST_ASSERT_NOT_NULL(item_list_ptr->_internal);
+    TEST_ASSERT_NOT_NULL(item_list_ptr->p_internal);
     TEST_ASSERT_NOT_NULL(item_names);
     TEST_ASSERT_EQUAL(8, num_items);
 
@@ -478,7 +478,7 @@ void test_item_list_add_remove(
 
     struct pkmn_item_slots item_slots =
     {
-        .item_slots = NULL,
+        .p_item_slots = NULL,
         .length = 0
     };
     error = pkmn_item_list_as_list(
@@ -486,7 +486,7 @@ void test_item_list_add_remove(
                 &item_slots
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(item_slots.item_slots);
+    TEST_ASSERT_NOT_NULL(item_slots.p_item_slots);
     TEST_ASSERT_EQUAL(item_list_ptr->capacity, item_slots.length);
 
     const char* expected_item_names[] =
@@ -507,11 +507,11 @@ void test_item_list_add_remove(
     {
         TEST_ASSERT_EQUAL_STRING(
             expected_item_names[item_index],
-            item_slots.item_slots[item_index].item
+            item_slots.p_item_slots[item_index].p_item
         );
         TEST_ASSERT_EQUAL(
             expected_item_amounts[item_index],
-            item_slots.item_slots[item_index].amount
+            item_slots.p_item_slots[item_index].amount
         );
     }
 
@@ -519,8 +519,8 @@ void test_item_list_add_remove(
     {
         error = pkmn_item_list_remove(
                     item_list_ptr,
-                    item_slots.item_slots[item_index].item,
-                    item_slots.item_slots[item_index].amount
+                    item_slots.p_item_slots[item_index].p_item,
+                    item_slots.p_item_slots[item_index].amount
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
     }
@@ -545,18 +545,18 @@ void test_item_bag_pocket_names(
             .name = NULL,
             .game = NULL,
             .capacity = 0,
-            ._internal = NULL
+            .p_internal = NULL
         };
 
         error = pkmn_item_bag_get_pocket(
                     item_bag_ptr,
-                    item_bag_ptr->pocket_names.strings[pocket_index],
+                    item_bag_ptr->pocket_names.pp_strings[pocket_index],
                     &pocket
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        TEST_ASSERT_NOT_NULL(pocket._internal);
+        TEST_ASSERT_NOT_NULL(pocket.p_internal);
         TEST_ASSERT_EQUAL_STRING(
-            item_bag_ptr->pocket_names.strings[pocket_index],
+            item_bag_ptr->pocket_names.pp_strings[pocket_index],
             pocket.name
         );
         TEST_ASSERT_EQUAL_STRING(item_bag_ptr->game, pocket.game);

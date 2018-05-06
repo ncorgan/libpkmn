@@ -14,13 +14,13 @@
 
 struct pkmn_item_slot
 {
-    char* item;
+    char* p_item;
     size_t amount;
 };
 
 struct pkmn_item_slots
 {
-    struct pkmn_item_slot* item_slots;
+    struct pkmn_item_slot* p_item_slots;
     size_t length;
 };
 
@@ -29,11 +29,11 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_item_slot_free(
-    struct pkmn_item_slot* item_slot_ptr
+    struct pkmn_item_slot* p_item_slot
 );
 
 PKMN_C_API enum pkmn_error pkmn_item_slots_free(
-    struct pkmn_item_slots* item_slots_ptr
+    struct pkmn_item_slots* p_item_slots
 );
 
 #ifdef __cplusplus

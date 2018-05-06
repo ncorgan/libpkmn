@@ -18,7 +18,7 @@ static const struct pkmn_pokemon empty_pokemon =
 {
     .species = NULL,
     .game = NULL,
-    ._internal = NULL
+    .p_internal = NULL
 };
 
 static void conversions_test(
@@ -46,7 +46,7 @@ static void conversions_test(
         species,
         origin_game
     );
-    TEST_ASSERT_NOT_NULL(first_pokemon._internal);
+    TEST_ASSERT_NOT_NULL(first_pokemon.p_internal);
 
     error = pkmn_pokemon_to_game(
                 &first_pokemon,
@@ -54,7 +54,7 @@ static void conversions_test(
                 &second_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(second_pokemon._internal);
+    TEST_ASSERT_NOT_NULL(second_pokemon.p_internal);
 
     TEST_ASSERT_EQUAL_STRING(
         "None",

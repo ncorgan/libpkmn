@@ -747,7 +747,7 @@ static void pokedex_error_test()
     struct pkmn_pokedex pokedex =
     {
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -944,7 +944,7 @@ static void pokemon_error_test()
     {
         .species = NULL,
         .game = NULL,
-        ._internal = NULL
+        .p_internal = NULL
     };
     struct pkmn_database_pokemon_entry dummy_pokemon_entry;
     enum pkmn_condition dummy_condition = PKMN_CONDITION_NONE;
@@ -2102,7 +2102,7 @@ static void pokemon_box_error_test()
     {
         .game = NULL,
         .capacity = 0,
-        ._internal = NULL
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_box_init(
@@ -2259,7 +2259,7 @@ static void pokemon_party_error_test()
     {
         .game = NULL,
         .capacity = 0,
-        ._internal = NULL
+        .p_internal = NULL
     };
 
     error = pkmn_pokemon_party_init(
@@ -2380,7 +2380,7 @@ static void pokemon_pc_error_test()
     {
         .game = NULL,
         .capacity = 0,
-        ._internal = NULL
+        .p_internal = NULL
     };
     struct pkmn_pokemon_box dummy_pokemon_box = {NULL, 0, NULL};
     struct pkmn_pokemon_box_list dummy_pokemon_box_list = {NULL, 0};
@@ -3731,6 +3731,18 @@ static void gui_spinda_test()
 }
 
 /*
+ * <pkmn-c/types/attribute_names.h>
+ */
+static void types_attribute_names_test()
+{
+    /*
+     * pkmn_attribute_names_free
+     */
+    error = pkmn_attribute_names_free(NULL);
+    TEST_NULL_POINTER_RETURN("p_attribute_names");
+}
+
+/*
  * <pkmn-c/types/hidden_power.h>
  */
 static void types_hidden_power_test()
@@ -3739,7 +3751,7 @@ static void types_hidden_power_test()
      * pkmn_hidden_power_free
      */
     error = pkmn_hidden_power_free(NULL);
-    TEST_NULL_POINTER_RETURN("hidden_power_ptr");
+    TEST_NULL_POINTER_RETURN("p_hidden_power");
 }
 
 /*
@@ -3751,13 +3763,13 @@ static void types_item_slot_test()
      * pkmn_item_slot_free
      */
     error = pkmn_item_slot_free(NULL);
-    TEST_NULL_POINTER_RETURN("item_slot_ptr");
+    TEST_NULL_POINTER_RETURN("p_item_slot");
 
     /*
      * pkmn_item_slots_free
      */
     error = pkmn_item_slots_free(NULL);
-    TEST_NULL_POINTER_RETURN("item_slots_ptr");
+    TEST_NULL_POINTER_RETURN("p_item_slots");
 }
 
 /*
@@ -3769,13 +3781,13 @@ static void types_levelup_move_test()
      * pkmn_levelup_move_free
      */
     error = pkmn_levelup_move_free(NULL);
-    TEST_NULL_POINTER_RETURN("levelup_move_ptr");
+    TEST_NULL_POINTER_RETURN("p_levelup_move");
 
     /*
      * pkmn_levelup_moves_free
      */
     error = pkmn_levelup_moves_free(NULL);
-    TEST_NULL_POINTER_RETURN("levelup_moves_ptr");
+    TEST_NULL_POINTER_RETURN("p_levelup_moves");
 }
 
 /*
@@ -3787,13 +3799,13 @@ static void types_move_slot_test()
      * pkmn_move_slot_free
      */
     error = pkmn_move_slot_free(NULL);
-    TEST_NULL_POINTER_RETURN("move_slot_ptr");
+    TEST_NULL_POINTER_RETURN("p_move_slot");
 
     /*
      * pkmn_move_slots_free
      */
     error = pkmn_move_slots_free(NULL);
-    TEST_NULL_POINTER_RETURN("move_slots_ptr");
+    TEST_NULL_POINTER_RETURN("p_move_slots");
 }
 
 /*
@@ -3805,7 +3817,7 @@ static void types_natural_gift_test()
      * pkmn_natural_gift_free
      */
     error = pkmn_natural_gift_free(NULL);
-    TEST_NULL_POINTER_RETURN("natural_gift_ptr");
+    TEST_NULL_POINTER_RETURN("p_natural_gift");
 }
 
 /*
@@ -3817,7 +3829,7 @@ static void types_pokemon_box_list_test()
      * pkmn_pokemon_box_list_free
      */
     error = pkmn_pokemon_box_list_free(NULL);
-    TEST_NULL_POINTER_RETURN("pokemon_box_list_ptr");
+    TEST_NULL_POINTER_RETURN("p_pokemon_box_list");
 }
 
 /*
@@ -3829,7 +3841,7 @@ static void types_pokemon_list_test()
      * pkmn_pokemon_list_free
      */
     error = pkmn_pokemon_list_free(NULL);
-    TEST_NULL_POINTER_RETURN("pokemon_list_ptr");
+    TEST_NULL_POINTER_RETURN("p_pokemon_list");
 }
 
 /*
@@ -3841,13 +3853,13 @@ static void types_string_types_test()
      * pkmn_string_list_free
      */
     error = pkmn_string_list_free(NULL);
-    TEST_NULL_POINTER_RETURN("string_list_ptr");
+    TEST_NULL_POINTER_RETURN("p_string_list");
 
     /*
      * pkmn_string_pair_free
      */
     error = pkmn_string_pair_free(NULL);
-    TEST_NULL_POINTER_RETURN("string_pair_ptr");
+    TEST_NULL_POINTER_RETURN("p_string_pair");
 }
 
 /*
@@ -3859,7 +3871,7 @@ static void types_trainer_info_test()
      * pkmn_trainer_info_free
      */
     error = pkmn_trainer_info_free(NULL);
-    TEST_NULL_POINTER_RETURN("trainer_info_ptr");
+    TEST_NULL_POINTER_RETURN("p_trainer_info");
 }
 
 /*
@@ -3940,6 +3952,7 @@ PKMN_C_TEST_MAIN(
     PKMN_C_TEST(database_move_entry_error_test)
     PKMN_C_TEST(database_pokemon_entry_error_test)
     PKMN_C_TEST(gui_spinda_test)
+    PKMN_C_TEST(types_attribute_names_test)
     PKMN_C_TEST(types_hidden_power_test)
     PKMN_C_TEST(types_item_slot_test)
     PKMN_C_TEST(types_levelup_move_test)

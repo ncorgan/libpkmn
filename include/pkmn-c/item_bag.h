@@ -18,7 +18,7 @@ struct pkmn_item_bag
     char* game;
     struct pkmn_string_list pocket_names;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

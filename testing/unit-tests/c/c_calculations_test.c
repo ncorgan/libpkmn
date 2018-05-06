@@ -1659,7 +1659,8 @@ static void modern_gender_test() {
     TEST_ASSERT_EQUAL(PKMN_GENDER_GENDERLESS, gender_result);
 }
 
-static void gen2_hidden_power_test() {
+static void gen2_hidden_power_test()
+{
     /*
      * Make sure expected errors are returned and no new memory is allocated.
      */
@@ -1668,52 +1669,52 @@ static void gen2_hidden_power_test() {
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_gen2_hidden_power(
                 16, 0, 0, 0,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, -1, 0, 0,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 16, 0, 0,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, -1, 0,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 16, 0,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, -1,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_gen2_hidden_power(
                 0, 0, 0, 16,
                 &hidden_power_result
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -1724,14 +1725,15 @@ static void gen2_hidden_power_test() {
                 15, 15, 15, 14,
                 &hidden_power_result
             );
-    TEST_ASSERT_NOT_NULL(hidden_power_result.type);
-    TEST_ASSERT_EQUAL_STRING(hidden_power_result.type, "Dark");
+    TEST_ASSERT_NOT_NULL(hidden_power_result.p_type);
+    TEST_ASSERT_EQUAL_STRING(hidden_power_result.p_type, "Dark");
     TEST_ASSERT_EQUAL(69, hidden_power_result.base_power);
     pkmn_hidden_power_free(&hidden_power_result);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 }
 
-static void modern_hidden_power_test() {
+static void modern_hidden_power_test()
+{
     /*
      * Make sure expected exceptions are thrown and no new memory is allocated.
      */
@@ -1740,78 +1742,78 @@ static void modern_hidden_power_test() {
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         32, 0, 0, 0, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         0, 32, 0, 0, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, -1, 0, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 32, 0, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, -1, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 32, 0, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, -1, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 32, 0,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     error = pkmn_calculations_modern_hidden_power(
         0, 0, 0, 0, 0, -1,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
     error = pkmn_calculations_modern_hidden_power(
         0, -1, 0, 0, 0, 32,
         &hidden_power_result
     );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(hidden_power_result.type);
+    TEST_ASSERT_NULL(hidden_power_result.p_type);
 
     /*
      * Make sure known good inputs result in expected results.
@@ -1823,8 +1825,8 @@ static void modern_hidden_power_test() {
                 &hidden_power_result
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_NOT_NULL(hidden_power_result.type);
-    TEST_ASSERT_EQUAL_STRING(hidden_power_result.type, "Grass");
+    TEST_ASSERT_NOT_NULL(hidden_power_result.p_type);
+    TEST_ASSERT_EQUAL_STRING(hidden_power_result.p_type, "Grass");
     TEST_ASSERT_EQUAL(70, hidden_power_result.base_power);
 }
 
@@ -1840,7 +1842,7 @@ static void natural_gift_test()
                 &natural_gift
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(natural_gift.type);
+    TEST_ASSERT_NULL(natural_gift.p_type);
     TEST_ASSERT_EQUAL(0, natural_gift.base_power);
 
     error = pkmn_calculations_natural_gift_stats(
@@ -1849,7 +1851,7 @@ static void natural_gift_test()
                 &natural_gift
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
-    TEST_ASSERT_NULL(natural_gift.type);
+    TEST_ASSERT_NULL(natural_gift.p_type);
     TEST_ASSERT_EQUAL(0, natural_gift.base_power);
 
     // Test invalid types.
@@ -1860,15 +1862,15 @@ static void natural_gift_test()
                 &natural_gift
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
-    TEST_ASSERT_NULL(natural_gift.type);
+    TEST_ASSERT_NULL(natural_gift.p_type);
     TEST_ASSERT_EQUAL(0, natural_gift.base_power);
 
     // Make sure differences between generations are reflected.
     struct natural_gift_test_params
     {
-        const char* item;
+        const char* p_item;
 
-        const char* type;
+        const char* p_type;
         int gen4_power;
         int gen5_power;
         int gen6_power;
@@ -1886,14 +1888,14 @@ static void natural_gift_test()
         // Generation IV
 
         error = pkmn_calculations_natural_gift_stats(
-                    test_cases[test_case_index].item,
+                    test_cases[test_case_index].p_item,
                     4,
                     &natural_gift
                 );
         TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(
-            test_cases[test_case_index].type,
-            natural_gift.type
+            test_cases[test_case_index].p_type,
+            natural_gift.p_type
         );
         TEST_ASSERT_EQUAL(
             test_cases[test_case_index].gen4_power,
@@ -1901,20 +1903,20 @@ static void natural_gift_test()
         );
 
         error = pkmn_natural_gift_free(&natural_gift);
-        TEST_ASSERT_NULL(natural_gift.type);
+        TEST_ASSERT_NULL(natural_gift.p_type);
         TEST_ASSERT_EQUAL(0, natural_gift.base_power);
 
         // Generation V
 
         error = pkmn_calculations_natural_gift_stats(
-                    test_cases[test_case_index].item,
+                    test_cases[test_case_index].p_item,
                     5,
                     &natural_gift
                 );
         TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(
-            test_cases[test_case_index].type,
-            natural_gift.type
+            test_cases[test_case_index].p_type,
+            natural_gift.p_type
         );
         TEST_ASSERT_EQUAL(
             test_cases[test_case_index].gen5_power,
@@ -1922,20 +1924,20 @@ static void natural_gift_test()
         );
 
         error = pkmn_natural_gift_free(&natural_gift);
-        TEST_ASSERT_NULL(natural_gift.type);
+        TEST_ASSERT_NULL(natural_gift.p_type);
         TEST_ASSERT_EQUAL(0, natural_gift.base_power);
 
         // Generation VI
 
         error = pkmn_calculations_natural_gift_stats(
-                    test_cases[test_case_index].item,
+                    test_cases[test_case_index].p_item,
                     6,
                     &natural_gift
                 );
         TEST_ASSERT_EQUAL_STRING(PKMN_ERROR_NONE, error);
         TEST_ASSERT_EQUAL_STRING(
-            test_cases[test_case_index].type,
-            natural_gift.type
+            test_cases[test_case_index].p_type,
+            natural_gift.p_type
         );
         TEST_ASSERT_EQUAL(
             test_cases[test_case_index].gen6_power,
@@ -1943,7 +1945,7 @@ static void natural_gift_test()
         );
 
         error = pkmn_natural_gift_free(&natural_gift);
-        TEST_ASSERT_NULL(natural_gift.type);
+        TEST_ASSERT_NULL(natural_gift.p_type);
         TEST_ASSERT_EQUAL(0, natural_gift.base_power);
     }
 }

@@ -43,7 +43,7 @@ enum pkmn_error pkmn_item_bag_free(
 
     PKMN_CPP_TO_C(
         pkmn::c::delete_pointer_and_set_to_null(
-            reinterpret_cast<pkmn_item_bag_internal_t**>(&item_bag_ptr->_internal)
+            reinterpret_cast<pkmn_item_bag_internal_t**>(&item_bag_ptr->p_internal)
         );
     )
 }
@@ -59,7 +59,7 @@ const char* pkmn_item_bag_strerror(
 
     try
     {
-        pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
+        pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->p_internal);
         if(!internal_ptr)
         {
             return nullptr;
@@ -81,7 +81,7 @@ enum pkmn_error pkmn_item_bag_get_pocket(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pocket_name, internal_ptr);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item_list_out, internal_ptr);
 
@@ -104,7 +104,7 @@ enum pkmn_error pkmn_item_bag_add(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,
@@ -124,7 +124,7 @@ enum pkmn_error pkmn_item_bag_remove(
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(item_bag_ptr);
-    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->_internal);
+    pkmn_item_bag_internal_t* internal_ptr = ITEM_BAG_INTERNAL_RCAST(item_bag_ptr->p_internal);
     PKMN_CHECK_NULL_PARAM_WITH_HANDLE(item, internal_ptr);
 
     PKMN_CPP_TO_C_WITH_HANDLE(internal_ptr,

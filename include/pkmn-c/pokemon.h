@@ -24,7 +24,7 @@ struct pkmn_pokemon
     char* species;
     char* game;
 
-    void* _internal;
+    void* p_internal;
 };
 
 #ifdef __cplusplus

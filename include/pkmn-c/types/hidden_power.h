@@ -12,7 +12,7 @@
 
 struct pkmn_hidden_power
 {
-    char* type;
+    char* p_type;
     int base_power;
 };
 
@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 PKMN_C_API enum pkmn_error pkmn_hidden_power_free(
-    struct pkmn_hidden_power* hidden_power_ptr
+    struct pkmn_hidden_power* p_hidden_power
 );
 
 #ifdef __cplusplus
