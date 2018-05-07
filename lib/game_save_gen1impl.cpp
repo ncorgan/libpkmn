@@ -153,6 +153,55 @@ namespace pkmn {
         _filepath = fs::absolute(filepath).string();
     }
 
+    pkmn::time_duration game_save_gen1impl::get_time_played()
+    {
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
+        BOOST_ASSERT(_pksav_save.p_time_played != nullptr);
+
+        return pkmn::time_duration(
+                   pksav_littleendian16(_pksav_save.p_time_played->hours),
+                   _pksav_save.p_time_played->minutes,
+                   _pksav_save.p_time_played->seconds,
+                   0 // frames
+               );
+    }
+
+    void game_save_gen1impl::set_time_played(
+        const pkmn::time_duration& time_played
+    )
+    {
+        pkmn::enforce_bounds(
+            "Hours played",
+            time_played.hours,
+            0,
+            65535
+        );
+        pkmn::enforce_bounds(
+            "Minutes played",
+            time_played.minutes,
+            0,
+            59
+        );
+        pkmn::enforce_bounds(
+            "Seconds played",
+            time_played.seconds,
+            0,
+            59
+        );
+        // Silently ignore frames
+
+        boost::lock_guard<game_save_gen1impl> lock(*this);
+
+        BOOST_ASSERT(_pksav_save.p_time_played != nullptr);
+
+        _pksav_save.p_time_played->hours = pksav_littleendian16(
+                                               static_cast<uint16_t>(time_played.hours)
+                                           );
+        _pksav_save.p_time_played->minutes = static_cast<uint8_t>(time_played.minutes);
+        _pksav_save.p_time_played->seconds = static_cast<uint8_t>(time_played.seconds);
+    }
+
     std::string game_save_gen1impl::get_trainer_name()
     {
         boost::lock_guard<game_save_gen1impl> lock(*this);

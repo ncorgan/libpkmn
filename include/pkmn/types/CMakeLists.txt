@@ -10,7 +10,6 @@ IF(NOT PKMN_DONT_INSTALL_HEADERS)
     SET(pkmn_types_headers
         attribute_engine.hpp
         class_with_attributes.hpp
-        datetime.hpp
         time_duration.hpp
     )
 

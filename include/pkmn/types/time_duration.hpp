@@ -18,14 +18,14 @@ namespace pkmn
         int seconds;
         int frames;
 
-        time_duration():
+        PKMN_CONSTEXPR_OR_INLINE time_duration():
             hours(0),
             minutes(0),
             seconds(0),
             frames(0)
         {}
 
-        time_duration(
+        PKMN_CONSTEXPR_OR_INLINE time_duration(
             int hrs,
             int mins,
             int secs,
@@ -33,15 +33,17 @@ namespace pkmn
         ): hours(hrs), minutes(mins), seconds(secs), frames(frms)
         {}
 
-        time_duration(const time_duration&) = default;
+        PKMN_CONSTEXPR_OR_INLINE time_duration(const time_duration&) = default;
         time_duration& operator=(const time_duration&) = default;
 
 #ifndef SWIG
-        time_duration(time_duration&&) = default;
+        PKMN_CONSTEXPR_OR_INLINE time_duration(time_duration&&) = default;
         time_duration& operator=(time_duration&&) = default;
 #endif
 
-        inline bool operator==(const time_duration& rhs) const
+        PKMN_CONSTEXPR_OR_INLINE bool operator==(
+            const time_duration& rhs
+        ) const
         {
             return (this->hours == rhs.hours) &&
                    (this->minutes == rhs.minutes) &&
@@ -49,7 +51,9 @@ namespace pkmn
                    (this->frames == rhs.frames);
         };
 
-        inline bool operator!=(const time_duration& rhs) const
+        PKMN_CONSTEXPR_OR_INLINE bool operator!=(
+            const time_duration& rhs
+        ) const
         {
             return !operator==(rhs);
         }

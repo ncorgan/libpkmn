@@ -13,7 +13,9 @@
 #include <pkmn/pokedex.hpp>
 #include <pkmn/pokemon_party.hpp>
 #include <pkmn/pokemon_pc.hpp>
+
 #include <pkmn/types/class_with_attributes.hpp>
+#include <pkmn/types/time_duration.hpp>
 
 #include <cstdint>
 #include <string>
@@ -35,7 +37,8 @@ namespace pkmn {
              * @brief Returns what type of game save is at the given filepath.
              *
              * Possible return values:
-             *  * "Red/Blue/Yellow"
+             *  * "Red/Blue"
+             *  * "Yellow"
              *  * "Gold/Silver"
              *  * "Crystal"
              *  * "Ruby/Sapphire/Emerald"
@@ -98,6 +101,10 @@ namespace pkmn {
              * the specific game.
              */
             virtual std::string get_game() = 0;
+
+            virtual pkmn::time_duration get_time_played() = 0;
+
+            virtual void set_time_played(const pkmn::time_duration& time_played) = 0;
 
             /*!
              * @brief Returns the name of the player character.

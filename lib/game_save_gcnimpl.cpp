@@ -115,6 +115,16 @@ namespace pkmn {
         _filepath = fs::absolute(filepath).string();
     }
 
+    pkmn::time_duration game_save_gcnimpl::get_time_played()
+    {
+        throw pkmn::unimplemented_error();
+    }
+
+    void game_save_gcnimpl::set_time_played(const pkmn::time_duration&)
+    {
+        throw pkmn::unimplemented_error();
+    }
+
     std::string game_save_gcnimpl::get_trainer_name()
     {
         boost::lock_guard<game_save_gcnimpl> lock(*this);

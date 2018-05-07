@@ -30,6 +30,12 @@ namespace pkmn {
                 const std::string &filepath
             ) override final;
 
+            pkmn::time_duration get_time_played() override final;
+
+            void set_time_played(
+                const pkmn::time_duration& time_played
+            ) override final;
+
             std::string get_trainer_name() override final;
 
             void set_trainer_name(
