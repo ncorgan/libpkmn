@@ -43,17 +43,17 @@ static const struct pkmn_string_list empty_string_list =
 };
 
 static void test_empty_pokemon_box(
-    struct pkmn_pokemon_box* box_ptr
+    struct pkmn_pokemon_box* p_box
 )
 {
-    TEST_ASSERT_NOT_NULL(box_ptr);
+    TEST_ASSERT_NOT_NULL(p_box);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(box_ptr->p_game);
+    int generation = game_to_generation(p_box->p_game);
 
     error = pkmn_pokemon_box_get_name(
-                box_ptr,
+                p_box,
                 strbuffer,
                 sizeof(strbuffer),
                 NULL
@@ -71,14 +71,14 @@ static void test_empty_pokemon_box(
 
     size_t num_pokemon = 0;
     error = pkmn_pokemon_box_get_num_pokemon(
-                box_ptr,
+                p_box,
                 &num_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(0, num_pokemon);
 
     error = pkmn_pokemon_box_as_list(
-                box_ptr,
+                p_box,
                 &pokemon_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -92,7 +92,7 @@ static void test_empty_pokemon_box(
             pokemon_list.p_pokemon[pokemon_index].p_species
         );
         TEST_ASSERT_EQUAL_STRING(
-            box_ptr->p_game,
+            p_box->p_game,
             pokemon_list.p_pokemon[pokemon_index].p_game
         );
     }
@@ -104,25 +104,25 @@ static void test_empty_pokemon_box(
 }
 
 static void test_box_name(
-    struct pkmn_pokemon_box* box_ptr
+    struct pkmn_pokemon_box* p_box
 )
 {
-    TEST_ASSERT_NOT_NULL(box_ptr);
+    TEST_ASSERT_NOT_NULL(p_box);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(box_ptr->p_game);
+    int generation = game_to_generation(p_box->p_game);
 
     if(generation == 1)
     {
         error = pkmn_pokemon_box_set_name(
-                    box_ptr,
+                    p_box,
                     "ABCDEFGH"
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
 
         error = pkmn_pokemon_box_get_name(
-                    box_ptr,
+                    p_box,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -132,19 +132,19 @@ static void test_box_name(
     else
     {
         error = pkmn_pokemon_box_set_name(
-                    box_ptr,
+                    p_box,
                     "ABCDEFGHI"
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
 
         error = pkmn_pokemon_box_set_name(
-                    box_ptr,
+                    p_box,
                     "ABCDEFGH"
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_pokemon_box_get_name(
-                    box_ptr,
+                    p_box,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -155,10 +155,10 @@ static void test_box_name(
 }
 
 static void test_setting_pokemon_in_box(
-    struct pkmn_pokemon_box* box_ptr
+    struct pkmn_pokemon_box* p_box
 )
 {
-    TEST_ASSERT_NOT_NULL(box_ptr);
+    TEST_ASSERT_NOT_NULL(p_box);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -167,10 +167,10 @@ static void test_setting_pokemon_in_box(
     struct pkmn_pokemon original_first = empty_pokemon;
     struct pkmn_pokemon original_second = empty_pokemon;
 
-    int generation = game_to_generation(box_ptr->p_game);
+    int generation = game_to_generation(p_box->p_game);
 
     error = pkmn_pokemon_box_get_pokemon(
-                box_ptr,
+                p_box,
                 0,
                 &original_first
             );
@@ -178,7 +178,7 @@ static void test_setting_pokemon_in_box(
     TEST_ASSERT_NOT_NULL(original_first.p_internal);
 
     error = pkmn_pokemon_box_get_pokemon(
-                box_ptr,
+                p_box,
                 1,
                 &original_second
             );
@@ -187,28 +187,28 @@ static void test_setting_pokemon_in_box(
 
     // Make sure we can't get Pokémon at invalid indices.
     error = pkmn_pokemon_box_get_pokemon(
-                box_ptr,
+                p_box,
                 -1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_box_get_pokemon(
-                box_ptr,
-                box_ptr->capacity + 1,
+                p_box,
+                p_box->capacity + 1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
     // Make sure we can't set Pokémon at invalid indices.
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 -1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
-                box_ptr->capacity + 1,
+                p_box,
+                p_box->capacity + 1,
                 &original_first
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
@@ -224,7 +224,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Bulbasaur",
-                box_ptr->p_game,
+                p_box->p_game,
                 "",
                 5,
                 &bulbasaur
@@ -234,7 +234,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Charmander",
-                box_ptr->p_game,
+                p_box->p_game,
                 "",
                 5,
                 &charmander
@@ -244,7 +244,7 @@ static void test_setting_pokemon_in_box(
 
     error = pkmn_pokemon_init(
                 "Squirtle",
-                box_ptr->p_game,
+                p_box->p_game,
                 "",
                 5,
                 &squirtle
@@ -253,26 +253,26 @@ static void test_setting_pokemon_in_box(
     TEST_ASSERT_NOT_NULL(squirtle.p_internal);
 
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 0,
                 &bulbasaur
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-                box_ptr,
+                p_box,
                 &num_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL(1, num_pokemon);
 
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 1,
                 &charmander
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-                box_ptr,
+                p_box,
                 &num_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -280,13 +280,13 @@ static void test_setting_pokemon_in_box(
 
     // Replace one of the new ones.
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 0,
                 &squirtle
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-                box_ptr,
+                p_box,
                 &num_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -297,7 +297,7 @@ static void test_setting_pokemon_in_box(
 
     struct pkmn_pokemon second_in_box = empty_pokemon;
     error = pkmn_pokemon_box_get_pokemon(
-                box_ptr,
+                p_box,
                 1,
                 &second_in_box
             );
@@ -305,19 +305,19 @@ static void test_setting_pokemon_in_box(
     TEST_ASSERT_NOT_NULL(second_in_box.p_internal);
 
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 1,
                 &second_in_box
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 2,
                 &second_in_box
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-                box_ptr,
+                p_box,
                 &num_pokemon
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -325,13 +325,13 @@ static void test_setting_pokemon_in_box(
 
     // We should be able to clear the last contiguous Pokémon.
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 2,
                 &original_first
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box_ptr,
+        p_box,
         &num_pokemon
     );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -339,13 +339,13 @@ static void test_setting_pokemon_in_box(
 
     // Put it back.
     error = pkmn_pokemon_box_set_pokemon(
-                box_ptr,
+                p_box,
                 2,
                 &second_in_box
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_pokemon_box_get_num_pokemon(
-        box_ptr,
+        p_box,
         &num_pokemon
     );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -361,20 +361,20 @@ static void test_setting_pokemon_in_box(
     if(generation <= 2)
     {
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     1,
                     &original_first
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
         error = pkmn_pokemon_box_get_num_pokemon(
-                    box_ptr,
+                    p_box,
                     &num_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(3, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box_ptr,
+                    p_box,
                     1,
                     &second_in_box
                 );
@@ -386,14 +386,14 @@ static void test_setting_pokemon_in_box(
         TEST_ASSERT_NULL(second_in_box.p_internal);
 
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     4,
                     &bulbasaur
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box_ptr,
+                    p_box,
                     4,
                     &fifth_in_box
                 );
@@ -407,20 +407,20 @@ static void test_setting_pokemon_in_box(
     else
     {
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     1,
                     &original_first
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_get_num_pokemon(
-                    box_ptr,
+                    p_box,
                     &num_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(2, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box_ptr,
+                    p_box,
                     1,
                     &second_in_box
                 );
@@ -432,20 +432,20 @@ static void test_setting_pokemon_in_box(
         TEST_ASSERT_NULL(second_in_box.p_internal);
 
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     4,
                     &bulbasaur
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_get_num_pokemon(
-                    box_ptr,
+                    p_box,
                     &num_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         TEST_ASSERT_EQUAL(3, num_pokemon);
 
         error = pkmn_pokemon_box_get_pokemon(
-                    box_ptr,
+                    p_box,
                     4,
                     &fifth_in_box
                 );
@@ -455,19 +455,19 @@ static void test_setting_pokemon_in_box(
         // Restore it to how it was.
 
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     1,
                     &charmander
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_set_pokemon(
-                    box_ptr,
+                    p_box,
                     4,
                     &original_first
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_pokemon_box_get_num_pokemon(
-                    box_ptr,
+                    p_box,
                     &num_pokemon
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -488,7 +488,7 @@ static void test_setting_pokemon_in_box(
      */
     struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
     error = pkmn_pokemon_box_as_list(
-                box_ptr,
+                p_box,
                 &pokemon_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
