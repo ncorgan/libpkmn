@@ -52,7 +52,7 @@ PKMN_C_API enum pkmn_error pkmn_pokemon_pc_get_box_names(
 );
 
 PKMN_C_API enum pkmn_error pkmn_pokemon_pc_as_list(
-    struct pkmn_pokemon_pc* pokemon_box_ptr,
+    struct pkmn_pokemon_pc* p_pokemon_pc,
     struct pkmn_pokemon_box_list* p_pokemon_box_list_out
 );
 

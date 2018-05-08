@@ -102,116 +102,116 @@ namespace pkmn { namespace c {
 
     // Calls to initialize internal representations.
     void init_item_bag(
-        const pkmn::item_bag::sptr& cpp_item_bag,
-        struct pkmn_item_bag* item_bag_ptr
+        const pkmn::item_bag::sptr& item_bag_cpp,
+        struct pkmn_item_bag* p_item_bag_c_out
     );
 
     void init_item_list(
-        const pkmn::item_list::sptr& cpp_item_list,
-        struct pkmn_item_list* item_list_ptr
+        const pkmn::item_list::sptr& item_list_cpp,
+        struct pkmn_item_list* p_item_list_c_out
     );
 
     void init_pokedex(
-        const pkmn::pokedex::sptr& cpp_pokedex,
-        struct pkmn_pokedex* pokedex_ptr
+        const pkmn::pokedex::sptr& pokedex_cpp,
+        struct pkmn_pokedex* p_pokedex_c_out
     );
 
     void init_pokemon(
-        const pkmn::pokemon::sptr& cpp_pokemon,
-        struct pkmn_pokemon* pokemon_ptr
+        const pkmn::pokemon::sptr& pokemon_cpp,
+        struct pkmn_pokemon* p_pokemon_c_out
     );
 
     void init_pokemon_box(
-        const pkmn::pokemon_box::sptr& cpp_pokemon_box,
-        struct pkmn_pokemon_box* pokemon_box_ptr
+        const pkmn::pokemon_box::sptr& pokemon_box_cpp,
+        struct pkmn_pokemon_box* p_pokemon_box_c_out
     );
 
     void init_pokemon_party(
-        const pkmn::pokemon_party::sptr& cpp_pokemon_party,
-        struct pkmn_pokemon_party* pokemon_party_ptr
+        const pkmn::pokemon_party::sptr& pokemon_party_cpp,
+        struct pkmn_pokemon_party* p_pokemon_party_c_out
     );
 
     void init_pokemon_pc(
-        const pkmn::pokemon_pc::sptr& cpp_pokemon_pc,
-        struct pkmn_pokemon_pc* pokemon_pc_ptr
+        const pkmn::pokemon_pc::sptr& pokemon_pc_cpp,
+        struct pkmn_pokemon_pc* p_pokemon_pc_c_out
     );
 
     void init_game_save(
-        const pkmn::game_save::sptr& cpp_game_save,
-        struct pkmn_game_save* game_save_ptr
+        const pkmn::game_save::sptr& game_save_cpp,
+        struct pkmn_game_save* p_game_save_c_out
     );
 
     template <typename pointer_type>
-    inline void delete_pointer_and_set_to_null(pointer_type** pointer_ptr)
+    inline void delete_pointer_and_set_to_null(pointer_type** p_pointer)
     {
-        BOOST_ASSERT(pointer_ptr != nullptr);
+        BOOST_ASSERT(p_pointer != nullptr);
 
-        delete (*pointer_ptr);
-        *pointer_ptr = nullptr;
+        delete (*p_pointer);
+        *p_pointer = nullptr;
     }
 
     template <typename pointer_type>
-    inline void free_pointer_and_set_to_null(pointer_type** pointer_ptr)
+    inline void free_pointer_and_set_to_null(pointer_type** p_pointer)
     {
-        BOOST_ASSERT(pointer_ptr != nullptr);
+        BOOST_ASSERT(p_pointer != nullptr);
 
-        std::free(*pointer_ptr);
-        *pointer_ptr = nullptr;
+        std::free(*p_pointer);
+        *p_pointer = nullptr;
     }
 
     template <typename T>
     void list_cpp_to_c(
         const std::vector<T>& list_cpp,
-        T* list_ptr,
+        T* p_list_c_out,
         size_t buffer_len,
-        size_t* num_values_out
+        size_t* p_num_values_out
     )
     {
-        BOOST_ASSERT(list_ptr != nullptr);
+        BOOST_ASSERT(p_list_c_out != nullptr);
 
         if(!list_cpp.empty())
         {
             std::memcpy(
-                list_ptr,
+                p_list_c_out,
                 list_cpp.data(),
                 buffer_len * sizeof(T)
             );
         }
 
-        if(num_values_out)
+        if(p_num_values_out)
         {
-            *num_values_out = list_cpp.size();
+            *p_num_values_out = list_cpp.size();
         }
     }
 
     inline void int_pair_cpp_to_c(
         const std::pair<int, int>& int_pair_cpp,
-        struct pkmn_int_pair* int_pair_ptr
+        struct pkmn_int_pair* p_int_pair_c_out
     )
     {
-        BOOST_ASSERT(int_pair_ptr != nullptr);
+        BOOST_ASSERT(p_int_pair_c_out != nullptr);
 
-        int_pair_ptr->first = int_pair_cpp.first;
-        int_pair_ptr->second = int_pair_cpp.second;
+        p_int_pair_c_out->first = int_pair_cpp.first;
+        p_int_pair_c_out->second = int_pair_cpp.second;
     }
 
     void string_cpp_to_c(
         const std::string& string_cpp,
-        char* c_str_ptr,
+        char* p_c_str_out,
         size_t buffer_len,
-        size_t* string_length_out
+        size_t* p_string_length_out
     );
 
     inline void string_cpp_to_c_alloc(
         const std::string& string_cpp,
-        char** c_str_ptr
+        char** pp_c_str_out
     )
     {
-        BOOST_ASSERT(c_str_ptr != nullptr);
+        BOOST_ASSERT(pp_c_str_out != nullptr);
 
-        *c_str_ptr = (char*)std::calloc(string_cpp.size()+1, sizeof(char));
+        *pp_c_str_out = (char*)std::calloc(string_cpp.size()+1, sizeof(char));
         std::strncpy(
-            *c_str_ptr,
+            *pp_c_str_out,
             string_cpp.c_str(),
             string_cpp.size()
         );
@@ -219,15 +219,15 @@ namespace pkmn { namespace c {
 
     inline void string_cpp_to_c_realloc(
         const std::string& string_cpp,
-        char** c_str_ptr
+        char** pp_c_str_out
     )
     {
-        BOOST_ASSERT(c_str_ptr != nullptr);
+        BOOST_ASSERT(pp_c_str_out != nullptr);
 
-        std::free(*c_str_ptr);
+        std::free(*pp_c_str_out);
         string_cpp_to_c_alloc(
             string_cpp,
-            c_str_ptr
+            pp_c_str_out
         );
     }
 
@@ -361,8 +361,8 @@ namespace pkmn { namespace c {
     );
 
     void move_list_to_string_list(
-        const pkmn::database::move_list_t& move_list,
-        struct pkmn_string_list* string_list_ptr
+        const pkmn::database::move_list_t& move_list_cpp,
+        struct pkmn_string_list* p_string_list_c_out
     );
 
     inline void move_slot_cpp_to_c(
@@ -385,8 +385,8 @@ namespace pkmn { namespace c {
     );
 
     void pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t& pokemon_entries,
-        struct pkmn_string_list* string_list_ptr
+        const pkmn::database::pokemon_entries_t& pokemon_entries_cpp,
+        struct pkmn_string_list* p_string_list_c_out
     );
 
     void item_entry_cpp_to_c(
@@ -417,17 +417,17 @@ namespace pkmn { namespace c {
     template <typename sptr_type>
     void get_attribute_names_from_sptr(
         const std::shared_ptr<sptr_type>& libpkmn_sptr,
-        struct pkmn_attribute_names* attribute_names_out
+        struct pkmn_attribute_names* p_attribute_names_out
     )
     {
         BOOST_ASSERT(libpkmn_sptr.get() != nullptr);
-        BOOST_ASSERT(attribute_names_out != nullptr);
+        BOOST_ASSERT(p_attribute_names_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_attribute_names temp_attribute_names =
+        struct pkmn_attribute_names temp_attribute_names_c =
         {
             // numeric_attribute_names
             {
@@ -448,20 +448,20 @@ namespace pkmn { namespace c {
 
         string_list_cpp_to_c(
             libpkmn_sptr->get_numeric_attribute_names(),
-            &temp_attribute_names.numeric_attribute_names
+            &temp_attribute_names_c.numeric_attribute_names
         );
         string_list_cpp_to_c(
             libpkmn_sptr->get_string_attribute_names(),
-            &temp_attribute_names.string_attribute_names
+            &temp_attribute_names_c.string_attribute_names
         );
         string_list_cpp_to_c(
             libpkmn_sptr->get_boolean_attribute_names(),
-            &temp_attribute_names.boolean_attribute_names
+            &temp_attribute_names_c.boolean_attribute_names
         );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *attribute_names_out = std::move(temp_attribute_names);
+        *p_attribute_names_out = std::move(temp_attribute_names_c);
     }
 }
 }

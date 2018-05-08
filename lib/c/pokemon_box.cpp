@@ -143,19 +143,19 @@ enum pkmn_error pkmn_pokemon_box_get_pokemon(
 enum pkmn_error pkmn_pokemon_box_set_pokemon(
     struct pkmn_pokemon_box* p_pokemon_box,
     size_t position,
-    struct pkmn_pokemon* pokemon_ptr
+    struct pkmn_pokemon* p_pokemon
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon_box);
     pkmn_pokemon_box_internal_t* p_internal = POKEMON_BOX_INTERNAL_RCAST(p_pokemon_box->p_internal);
-    PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(pokemon_ptr, p_internal);
+    PKMN_CHECK_NULL_WRAPPER_PARAM_WITH_HANDLE(p_pokemon, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        pkmn_pokemon_internal_t* new_pokemon_p_internal = POKEMON_INTERNAL_RCAST(pokemon_ptr->p_internal);
+        pkmn_pokemon_internal_t* p_new_pokemon_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
 
         p_internal->cpp->set_pokemon(
             int(position),
-            new_pokemon_p_internal->cpp
+            p_new_pokemon_internal->cpp
         );
     )
 }

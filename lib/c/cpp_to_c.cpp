@@ -30,33 +30,33 @@ namespace pkmn { namespace c {
         BOOST_ASSERT(libpkmn_c_struct_out != nullptr);
 
         libpkmn_c_struct_out->p_internal = new pkmn_c_internal_class_t<libpkmn_cpp_type>;
-        pkmn_c_internal_class_t<libpkmn_cpp_type>* internal_ptr =
+        pkmn_c_internal_class_t<libpkmn_cpp_type>* p_internal =
             reinterpret_cast<pkmn_c_internal_class_t<libpkmn_cpp_type>*>(
                 libpkmn_c_struct_out->p_internal
             );
 
-        internal_ptr->cpp = libpkmn_sptr;
-        internal_ptr->last_error = "None";
-        internal_ptr->generation = pkmn::priv::game_name_to_generation(
+        p_internal->cpp = libpkmn_sptr;
+        p_internal->last_error = "None";
+        p_internal->generation = pkmn::priv::game_name_to_generation(
                                        libpkmn_sptr->get_game()
                                    );
     }
 
     void init_item_bag(
-        const pkmn::item_bag::sptr& cpp_item_bag,
-        struct pkmn_item_bag* item_bag_ptr
+        const pkmn::item_bag::sptr& item_bag_cpp,
+        struct pkmn_item_bag* p_item_bag_c_out
     )
     {
-        BOOST_ASSERT(item_bag_ptr != nullptr);
-        BOOST_ASSERT(cpp_item_bag.get() != nullptr);
+        BOOST_ASSERT(p_item_bag_c_out != nullptr);
+        BOOST_ASSERT(item_bag_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_item_bag temp_item_bag =
+        struct pkmn_item_bag temp_item_bag_c =
         {
-            nullptr, // game
+            nullptr, // p_game
             // pocket_names
             {
                 nullptr, // pp_strings
@@ -66,282 +66,282 @@ namespace pkmn { namespace c {
         };
 
         init_c_internal_class(
-            cpp_item_bag,
-            &temp_item_bag
+            item_bag_cpp,
+            &temp_item_bag_c
         );
         string_cpp_to_c_alloc(
-            cpp_item_bag->get_game(),
-            &temp_item_bag.p_game
+            item_bag_cpp->get_game(),
+            &temp_item_bag_c.p_game
         );
         string_list_cpp_to_c(
-            cpp_item_bag->get_pocket_names(),
-            &temp_item_bag.pocket_names
+            item_bag_cpp->get_pocket_names(),
+            &temp_item_bag_c.pocket_names
         );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *item_bag_ptr = std::move(temp_item_bag);
+        *p_item_bag_c_out = std::move(temp_item_bag_c);
     }
 
     void init_item_list(
-        const pkmn::item_list::sptr& cpp_item_list,
-        struct pkmn_item_list* item_list_ptr
+        const pkmn::item_list::sptr& item_list_cpp,
+        struct pkmn_item_list* p_item_list_c_out
     )
     {
-        BOOST_ASSERT(item_list_ptr != nullptr);
-        BOOST_ASSERT(cpp_item_list.get() != nullptr);
+        BOOST_ASSERT(p_item_list_c_out != nullptr);
+        BOOST_ASSERT(item_list_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_item_list temp_item_list =
+        struct pkmn_item_list temp_item_list_c =
         {
-            nullptr, // name
-            nullptr, // game
+            nullptr, // p_name
+            nullptr, // p_game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_item_list,
-            &temp_item_list
+            item_list_cpp,
+            &temp_item_list_c
         );
         string_cpp_to_c_alloc(
-            cpp_item_list->get_name(),
-            &temp_item_list.p_name
+            item_list_cpp->get_name(),
+            &temp_item_list_c.p_name
         );
         string_cpp_to_c_alloc(
-            cpp_item_list->get_game(),
-            &temp_item_list.p_game
+            item_list_cpp->get_game(),
+            &temp_item_list_c.p_game
         );
-        temp_item_list.capacity = cpp_item_list->get_capacity();
+        temp_item_list_c.capacity = item_list_cpp->get_capacity();
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *item_list_ptr = std::move(temp_item_list);
+        *p_item_list_c_out = std::move(temp_item_list_c);
     }
 
     void init_pokedex(
-        const pkmn::pokedex::sptr& cpp_pokedex,
-        struct pkmn_pokedex* pokedex_ptr
+        const pkmn::pokedex::sptr& pokedex_cpp,
+        struct pkmn_pokedex* p_pokedex_c_out
     )
     {
-        BOOST_ASSERT(pokedex_ptr != nullptr);
-        BOOST_ASSERT(cpp_pokedex.get() != nullptr);
+        BOOST_ASSERT(p_pokedex_c_out != nullptr);
+        BOOST_ASSERT(pokedex_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokedex temp_pokedex =
+        struct pkmn_pokedex temp_pokedex_c =
         {
-            nullptr, // game
-            nullptr // p_internal
+            nullptr, // p_game
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_pokedex,
-            &temp_pokedex
+            pokedex_cpp,
+            &temp_pokedex_c
         );
         string_cpp_to_c_alloc(
-            cpp_pokedex->get_game(),
-            &temp_pokedex.p_game
+            pokedex_cpp->get_game(),
+            &temp_pokedex_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokedex_ptr = std::move(temp_pokedex);
+        *p_pokedex_c_out = std::move(temp_pokedex_c);
     }
 
     void init_pokemon(
-        const pkmn::pokemon::sptr& cpp_pokemon,
-        struct pkmn_pokemon* pokemon_ptr
+        const pkmn::pokemon::sptr& pokemon_cpp,
+        struct pkmn_pokemon* p_pokemon_c_out
     )
     {
-        BOOST_ASSERT(pokemon_ptr != nullptr);
-        BOOST_ASSERT(cpp_pokemon.get() != nullptr);
+        BOOST_ASSERT(p_pokemon_c_out != nullptr);
+        BOOST_ASSERT(pokemon_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon temp_pokemon =
+        struct pkmn_pokemon temp_pokemon_c =
         {
-            nullptr, // species
-            nullptr, // game
-            nullptr // p_internal
+            nullptr, // p_species
+            nullptr, // p_game
+            nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_pokemon,
-            &temp_pokemon
+            pokemon_cpp,
+            &temp_pokemon_c
         );
         string_cpp_to_c_alloc(
-            cpp_pokemon->get_species(),
-            &temp_pokemon.p_species
+            pokemon_cpp->get_species(),
+            &temp_pokemon_c.p_species
         );
         string_cpp_to_c_alloc(
-            cpp_pokemon->get_game(),
-            &temp_pokemon.p_game
+            pokemon_cpp->get_game(),
+            &temp_pokemon_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_ptr = std::move(temp_pokemon);
+        *p_pokemon_c_out = std::move(temp_pokemon_c);
     }
 
     void init_pokemon_box(
-        const pkmn::pokemon_box::sptr& cpp_pokemon_box,
-        struct pkmn_pokemon_box* pokemon_box_ptr
+        const pkmn::pokemon_box::sptr& pokemon_box_cpp,
+        struct pkmn_pokemon_box* p_pokemon_box_c_out
     )
     {
-        BOOST_ASSERT(pokemon_box_ptr != nullptr);
-        BOOST_ASSERT(cpp_pokemon_box.get() != nullptr);
+        BOOST_ASSERT(p_pokemon_box_c_out != nullptr);
+        BOOST_ASSERT(pokemon_box_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon_box temp_pokemon_box =
+        struct pkmn_pokemon_box temp_pokemon_box_c =
         {
-            nullptr, // game
+            nullptr, // p_game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_pokemon_box,
-            &temp_pokemon_box
+            pokemon_box_cpp,
+            &temp_pokemon_box_c
         );
         string_cpp_to_c_alloc(
-            cpp_pokemon_box->get_game(),
-            &temp_pokemon_box.p_game
+            pokemon_box_cpp->get_game(),
+            &temp_pokemon_box_c.p_game
         );
-        temp_pokemon_box.capacity = cpp_pokemon_box->get_capacity();
+        temp_pokemon_box_c.capacity = pokemon_box_cpp->get_capacity();
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_box_ptr = std::move(temp_pokemon_box);
+        *p_pokemon_box_c_out = std::move(temp_pokemon_box_c);
     }
 
     void init_pokemon_party(
-        const pkmn::pokemon_party::sptr& cpp_pokemon_party,
-        struct pkmn_pokemon_party* pokemon_party_ptr
+        const pkmn::pokemon_party::sptr& pokemon_party_cpp,
+        struct pkmn_pokemon_party* p_pokemon_party_c_out
     )
     {
-        BOOST_ASSERT(pokemon_party_ptr != nullptr);
-        BOOST_ASSERT(cpp_pokemon_party.get() != nullptr);
+        BOOST_ASSERT(p_pokemon_party_c_out != nullptr);
+        BOOST_ASSERT(pokemon_party_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon_party temp_pokemon_party =
+        struct pkmn_pokemon_party temp_pokemon_party_c =
         {
-            nullptr, // game
+            nullptr, // p_game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_pokemon_party,
-            &temp_pokemon_party
+            pokemon_party_cpp,
+            &temp_pokemon_party_c
         );
         string_cpp_to_c_alloc(
-            cpp_pokemon_party->get_game(),
-            &temp_pokemon_party.p_game
+            pokemon_party_cpp->get_game(),
+            &temp_pokemon_party_c.p_game
         );
-        temp_pokemon_party.capacity = 6ULL;
+        temp_pokemon_party_c.capacity = 6ULL;
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_party_ptr = std::move(temp_pokemon_party);
+        *p_pokemon_party_c_out = std::move(temp_pokemon_party_c);
     }
 
     void init_pokemon_pc(
-        const pkmn::pokemon_pc::sptr& cpp_pokemon_pc,
-        struct pkmn_pokemon_pc* pokemon_pc_ptr
+        const pkmn::pokemon_pc::sptr& pokemon_pc_cpp,
+        struct pkmn_pokemon_pc* p_pokemon_pc_c_out
     )
     {
-        BOOST_ASSERT(pokemon_pc_ptr != nullptr);
-        BOOST_ASSERT(cpp_pokemon_pc.get() != nullptr);
+        BOOST_ASSERT(p_pokemon_pc_c_out != nullptr);
+        BOOST_ASSERT(pokemon_pc_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_pokemon_pc temp_pokemon_pc =
+        struct pkmn_pokemon_pc temp_pokemon_pc_c =
         {
-            nullptr, // game
+            nullptr, // p_game
             0ULL,    // capacity
             nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_pokemon_pc,
-            &temp_pokemon_pc
+            pokemon_pc_cpp,
+            &temp_pokemon_pc_c
         );
         string_cpp_to_c_alloc(
-            cpp_pokemon_pc->get_game(),
-            &temp_pokemon_pc.p_game
+            pokemon_pc_cpp->get_game(),
+            &temp_pokemon_pc_c.p_game
         );
-        temp_pokemon_pc.capacity = cpp_pokemon_pc->get_num_boxes();
+        temp_pokemon_pc_c.capacity = pokemon_pc_cpp->get_num_boxes();
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *pokemon_pc_ptr = std::move(temp_pokemon_pc);
+        *p_pokemon_pc_c_out = std::move(temp_pokemon_pc_c);
     }
 
     void init_game_save(
-        const pkmn::game_save::sptr& cpp_game_save,
-        struct pkmn_game_save* game_save_ptr
+        const pkmn::game_save::sptr& game_save_cpp,
+        struct pkmn_game_save* p_game_save_c_out
     )
     {
-        BOOST_ASSERT(game_save_ptr != nullptr);
-        BOOST_ASSERT(cpp_game_save.get() != nullptr);
+        BOOST_ASSERT(p_game_save_c_out != nullptr);
+        BOOST_ASSERT(game_save_cpp.get() != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_game_save temp_game_save =
+        struct pkmn_game_save temp_game_save_c =
         {
-            nullptr, // game
+            nullptr, // p_game
             nullptr  // p_internal
         };
 
         init_c_internal_class(
-            cpp_game_save,
-            &temp_game_save
+            game_save_cpp,
+            &temp_game_save_c
         );
         string_cpp_to_c_alloc(
-            cpp_game_save->get_game(),
-            &temp_game_save.p_game
+            game_save_cpp->get_game(),
+            &temp_game_save_c.p_game
         );
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *game_save_ptr = std::move(temp_game_save);
+        *p_game_save_c_out = std::move(temp_game_save_c);
     }
 
     // Helper classes
 
     void string_cpp_to_c(
         const std::string& string_cpp,
-        char* c_str_ptr,
+        char* p_c_str_out,
         size_t buffer_len,
-        size_t* string_length_out
+        size_t* p_string_length_out
     )
     {
-        BOOST_ASSERT(c_str_ptr);
+        BOOST_ASSERT(p_c_str_out);
 
         size_t string_length = string_cpp.size();
 
         if(!string_cpp.empty())
         {
             std::strncpy(
-                c_str_ptr,
+                p_c_str_out,
                 string_cpp.c_str(),
                 buffer_len
             );
@@ -349,13 +349,13 @@ namespace pkmn { namespace c {
             // Null-terminate if we can
             if(string_length < buffer_len)
             {
-                c_str_ptr[string_length] = '\0';
+                p_c_str_out[string_length] = '\0';
             }
         }
 
-        if(string_length_out)
+        if(p_string_length_out)
         {
-            *string_length_out = string_length;
+            *p_string_length_out = string_length;
         }
     }
 
@@ -479,42 +479,42 @@ namespace pkmn { namespace c {
     }
 
     void move_list_to_string_list(
-        const pkmn::database::move_list_t& move_list,
-        struct pkmn_string_list* string_list_ptr
+        const pkmn::database::move_list_t& move_list_cpp,
+        struct pkmn_string_list* p_string_list_c_out
     )
     {
-        BOOST_ASSERT(string_list_ptr != nullptr);
+        BOOST_ASSERT(p_string_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_string_list temp_string_list =
+        struct pkmn_string_list temp_string_list_c =
         {
-            nullptr,         // pp_strings
-            move_list.size() // length
+            nullptr,             // pp_strings
+            move_list_cpp.size() // length
         };
 
-        if(temp_string_list.length > 0)
+        if(temp_string_list_c.length > 0)
         {
-            temp_string_list.pp_strings = (char**)std::calloc(
-                                                      move_list.size(),
-                                                      sizeof(char*)
-                                                  );
+            temp_string_list_c.pp_strings = (char**)std::calloc(
+                                                        move_list_cpp.size(),
+                                                        sizeof(char*)
+                                                    );
             for(size_t move_index = 0;
-                move_index < temp_string_list.length;
+                move_index < temp_string_list_c.length;
                 ++move_index)
             {
                 string_cpp_to_c_alloc(
-                    move_list[move_index].get_name(),
-                    &temp_string_list.pp_strings[move_index]
+                    move_list_cpp[move_index].get_name(),
+                    &temp_string_list_c.pp_strings[move_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *string_list_ptr = std::move(temp_string_list);
+        *p_string_list_c_out = std::move(temp_string_list_c);
     }
 
     void move_slots_cpp_to_c(
@@ -559,42 +559,42 @@ namespace pkmn { namespace c {
     }
 
     void pokemon_entries_to_string_list(
-        const pkmn::database::pokemon_entries_t& pokemon_entries,
-        struct pkmn_string_list* string_list_ptr
+        const pkmn::database::pokemon_entries_t& pokemon_entries_cpp,
+        struct pkmn_string_list* p_string_list_c_out
     )
     {
-        BOOST_ASSERT(string_list_ptr != nullptr);
+        BOOST_ASSERT(p_string_list_c_out != nullptr);
 
         // Make all C++ calls and operate on a second struct until we
         // know everything succeeds before changing any user output.
         // If this fails, we'll leak, but it's small enough to not be
         // a concern.
-        struct pkmn_string_list temp_string_list =
+        struct pkmn_string_list temp_string_list_c =
         {
-            nullptr,               // pp_strings
-            pokemon_entries.size() // length
+            nullptr,                   // pp_strings
+            pokemon_entries_cpp.size() // length
         };
 
-        if(temp_string_list.length > 0)
+        if(temp_string_list_c.length > 0)
         {
-            temp_string_list.pp_strings = (char**)std::calloc(
-                                                      pokemon_entries.size(),
-                                                      sizeof(char*)
-                                                  );
+            temp_string_list_c.pp_strings = (char**)std::calloc(
+                                                        pokemon_entries_cpp.size(),
+                                                        sizeof(char*)
+                                                    );
             for(size_t entry_index = 0;
-                entry_index < temp_string_list.length;
+                entry_index < temp_string_list_c.length;
                 ++entry_index)
             {
                 string_cpp_to_c_alloc(
-                    pokemon_entries[entry_index].get_name(),
-                    &temp_string_list.pp_strings[entry_index]
+                    pokemon_entries_cpp[entry_index].get_name(),
+                    &temp_string_list_c.pp_strings[entry_index]
                 );
             }
         }
 
         // Everything succeeded, so move it into the pointer the caller
         // provided.
-        *string_list_ptr = std::move(temp_string_list);
+        *p_string_list_c_out = std::move(temp_string_list_c);
     }
 
     void item_entry_cpp_to_c(

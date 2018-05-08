@@ -269,17 +269,17 @@ enum pkmn_error pkmn_pokemon_set_is_egg(
 
 enum pkmn_error pkmn_pokemon_get_database_entry(
     struct pkmn_pokemon* p_pokemon,
-    struct pkmn_database_pokemon_entry* database_entry_ptr
+    struct pkmn_database_pokemon_entry* p_database_entry_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(database_entry_ptr, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_database_entry_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::c::pokemon_entry_cpp_to_c(
             p_internal->cpp->get_database_entry(),
-            database_entry_ptr
+            p_database_entry_out
         );
     )
 }
