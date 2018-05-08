@@ -10,6 +10,7 @@
 
 #include <pksav/gen1/options.h>
 #include <pksav/gen1/pokemon.h>
+#include <pksav/gen1/type.h>
 
 #include <pksav/gen2/options.h>
 
