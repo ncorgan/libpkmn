@@ -42,7 +42,7 @@ static void conversions_test(
 
     get_random_pokemon(
         &first_pokemon,
-        NULL, // item_list_ptr
+        NULL, // p_item_list
         species,
         origin_game
     );

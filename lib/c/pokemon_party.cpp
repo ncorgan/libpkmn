@@ -14,15 +14,15 @@
 #include <pkmn-c/pokemon_party.h>
 
 enum pkmn_error pkmn_pokemon_party_init(
-    const char* game,
+    const char* p_game,
     struct pkmn_pokemon_party* p_pokemon_party_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(game);
+    PKMN_CHECK_NULL_PARAM(p_game);
     PKMN_CHECK_NULL_PARAM(p_pokemon_party_out);
 
     PKMN_CPP_TO_C(
-        pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(game);
+        pkmn::pokemon_party::sptr cpp = pkmn::pokemon_party::make(p_game);
 
         pkmn::c::init_pokemon_party(
             cpp,
@@ -127,17 +127,17 @@ enum pkmn_error pkmn_pokemon_party_set_pokemon(
 
 enum pkmn_error pkmn_pokemon_party_as_list(
     struct pkmn_pokemon_party* p_pokemon_party,
-    struct pkmn_pokemon_list* pokemon_list_out
+    struct pkmn_pokemon_list* p_pokemon_list_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon_party);
     pkmn_pokemon_party_internal_t* p_internal = POKEMON_PARTY_INTERNAL_RCAST(p_pokemon_party->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_list_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_list_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::c::pokemon_list_cpp_to_c(
             p_internal->cpp->as_vector(),
-            pokemon_list_out
+            p_pokemon_list_out
         );
     )
 }

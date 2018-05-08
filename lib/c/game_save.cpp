@@ -334,51 +334,51 @@ enum pkmn_error pkmn_game_save_set_money(
 
 enum pkmn_error pkmn_game_save_get_pokedex(
     struct pkmn_game_save* p_game_save,
-    struct pkmn_pokedex* pokedex_out
+    struct pkmn_pokedex* p_pokedex_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
     pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokedex_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokedex_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::c::init_pokedex(
             p_internal->cpp->get_pokedex(),
-            pokedex_out
+            p_pokedex_out
         );
     )
 }
 
 enum pkmn_error pkmn_game_save_get_pokemon_party(
     struct pkmn_game_save* p_game_save,
-    struct pkmn_pokemon_party* pokemon_party_out
+    struct pkmn_pokemon_party* p_pokemon_party_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
     pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_party_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_party_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::c::init_pokemon_party(
             p_internal->cpp->get_pokemon_party(),
-            pokemon_party_out
+            p_pokemon_party_out
         );
     )
 }
 
 enum pkmn_error pkmn_game_save_get_pokemon_pc(
     struct pkmn_game_save* p_game_save,
-    struct pkmn_pokemon_pc* pokemon_pc_out
+    struct pkmn_pokemon_pc* p_pokemon_pc_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game_save);
     pkmn_game_save_internal_t* p_internal = GAME_SAVE_INTERNAL_RCAST(p_game_save->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(pokemon_pc_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_pokemon_pc_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
         pkmn::c::init_pokemon_pc(
             p_internal->cpp->get_pokemon_pc(),
-            pokemon_pc_out
+            p_pokemon_pc_out
         );
     )
 }

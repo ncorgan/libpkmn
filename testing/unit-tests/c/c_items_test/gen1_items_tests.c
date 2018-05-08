@@ -26,39 +26,39 @@ static const char* WRONG_GENERATION_ITEM_NAMES[] =
 };
 
 static void gen1_item_list_test_common(
-    struct pkmn_item_list* item_list_ptr
+    struct pkmn_item_list* p_item_list
 )
 {
-    TEST_ASSERT_NOT_NULL(item_list_ptr);
+    TEST_ASSERT_NOT_NULL(p_item_list);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     // Make sure item slots start as correctly empty.
-    test_item_list_initial_values(item_list_ptr);
+    test_item_list_initial_values(p_item_list);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        item_list_ptr,
+        p_item_list,
         "Potion"
     );
 
     // Confirm items from later generations can't be added.
     test_item_list_invalid_items(
-        item_list_ptr,
+        p_item_list,
         WRONG_GENERATION_ITEM_NAMES,
         sizeof(WRONG_GENERATION_ITEM_NAMES)/sizeof(WRONG_GENERATION_ITEM_NAMES[0])
     );
 
     // Test setting items by index.
     test_item_list_set_item(
-        item_list_ptr,
+        p_item_list,
         ITEM_NAMES,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        item_list_ptr,
+        p_item_list,
         ITEM_NAMES,
         8
     );
@@ -69,7 +69,7 @@ static void gen1_item_list_test_common(
         .length = 0
     };
     error = pkmn_item_list_get_valid_items(
-                item_list_ptr,
+                p_item_list,
                 &valid_items
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -82,7 +82,7 @@ static void gen1_item_list_test_common(
         .length = 0
     };
     error = pkmn_database_item_list(
-                item_list_ptr->p_game,
+                p_item_list->p_game,
                 &full_item_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -98,18 +98,18 @@ static void gen1_item_list_test_common(
 }
 
 static void gen1_item_pocket_test(
-    struct pkmn_item_list* item_pocket_ptr,
+    struct pkmn_item_list* p_item_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(item_pocket_ptr);
+    TEST_ASSERT_NOT_NULL(p_item_pocket);
     TEST_ASSERT_NOT_NULL(game);
 
-    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(20, item_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING("Items", p_item_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(20, p_item_pocket->capacity);
 
-    gen1_item_list_test_common(item_pocket_ptr);
+    gen1_item_list_test_common(p_item_pocket);
 }
 
 static void gen1_item_pc_test(

@@ -541,14 +541,14 @@ static void test_setting_pokemon_in_box(
 }
 
 static void test_empty_pokemon_pc(
-    struct pkmn_pokemon_pc* pc_ptr
+    struct pkmn_pokemon_pc* p_pc
 )
 {
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_pokemon_box_list pokemon_box_list = empty_pokemon_box_list;
     error = pkmn_pokemon_pc_as_list(
-                pc_ptr,
+                p_pc,
                 &pokemon_box_list
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -558,7 +558,7 @@ static void test_empty_pokemon_pc(
     for(size_t box_index = 0; box_index < pokemon_box_list.length; ++box_index)
     {
         TEST_ASSERT_EQUAL_STRING(
-            pc_ptr->p_game,
+            p_pc->p_game,
             pokemon_box_list.p_boxes[box_index].p_game
         );
         test_empty_pokemon_box(
@@ -573,32 +573,32 @@ static void test_empty_pokemon_pc(
 }
 
 static void test_pc_box_names(
-    struct pkmn_pokemon_pc* pc_ptr
+    struct pkmn_pokemon_pc* p_pc
 )
 {
-    TEST_ASSERT_NOT_NULL(pc_ptr);
+    TEST_ASSERT_NOT_NULL(p_pc);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_string_list box_names = empty_string_list;
 
-    int generation = game_to_generation(pc_ptr->p_game);
+    int generation = game_to_generation(p_pc->p_game);
 
     if(generation == 1)
     {
         error = pkmn_pokemon_pc_get_box_names(
-                    pc_ptr,
+                    p_pc,
                     &box_names
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
     else
     {
-        for(size_t box_index = 0; box_index < pc_ptr->capacity; ++box_index)
+        for(size_t box_index = 0; box_index < p_pc->capacity; ++box_index)
         {
             struct pkmn_pokemon_box pokemon_box = empty_pokemon_box;
 
             error = pkmn_pokemon_pc_get_box(
-                        pc_ptr,
+                        p_pc,
                         box_index,
                         &pokemon_box
                     );
@@ -619,11 +619,11 @@ static void test_pc_box_names(
         }
 
         error = pkmn_pokemon_pc_get_box_names(
-                    pc_ptr,
+                    p_pc,
                     &box_names
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
-        for(size_t box_index = 0; box_index < pc_ptr->capacity; ++box_index)
+        for(size_t box_index = 0; box_index < p_pc->capacity; ++box_index)
         {
             char expected_box_name[10] = {0};
             snprintf(expected_box_name, sizeof(expected_box_name), "BOX%zu", (box_index+1));
@@ -638,14 +638,14 @@ static void test_pc_box_names(
 }
 
 static void test_setting_pokemon_in_boxes(
-    struct pkmn_pokemon_pc* pc_ptr
+    struct pkmn_pokemon_pc* p_pc
 )
 {
     enum pkmn_error error = PKMN_ERROR_NONE;
     struct pkmn_pokemon_box_list pokemon_p_boxes = empty_pokemon_box_list;
 
     error = pkmn_pokemon_pc_as_list(
-                pc_ptr,
+                p_pc,
                 &pokemon_p_boxes
             );
     PKMN_TEST_ASSERT_SUCCESS(error);

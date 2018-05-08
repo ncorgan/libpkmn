@@ -52,13 +52,13 @@ static const struct pkmn_pokemon empty_pokemon =
 };
 
 static void test_pokemon_string(
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* p_pokemon,
     const char* field,
     const char* expected_value,
     pokemon_string_getter_fcn_t getter_fcn
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(expected_value);
     TEST_ASSERT_NOT_NULL(getter_fcn);
@@ -75,7 +75,7 @@ static void test_pokemon_string(
     );
 
     error = getter_fcn(
-                pokemon_ptr,
+                p_pokemon,
                 strbuffer,
                 sizeof(strbuffer),
                 NULL
@@ -89,13 +89,13 @@ static void test_pokemon_string(
 }
 
 static void test_pokemon_int(
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* p_pokemon,
     const char* field,
     int expected_value,
     pokemon_int_getter_fcn_t getter_fcn
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -110,7 +110,7 @@ static void test_pokemon_int(
         field
     );
 
-    error = getter_fcn(pokemon_ptr, &value_from_pokemon);
+    error = getter_fcn(p_pokemon, &value_from_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
@@ -120,13 +120,13 @@ static void test_pokemon_int(
 }
 
 static void test_pokemon_uint32(
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* p_pokemon,
     const char* field,
     uint32_t expected_value,
     pokemon_uint32_getter_fcn_t getter_fcn
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -141,7 +141,7 @@ static void test_pokemon_uint32(
         field
     );
 
-    error = getter_fcn(pokemon_ptr, &value_from_pokemon);
+    error = getter_fcn(p_pokemon, &value_from_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
@@ -151,13 +151,13 @@ static void test_pokemon_uint32(
 }
 
 static void test_pokemon_bool(
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* p_pokemon,
     const char* field,
     bool expected_value,
     pokemon_bool_getter_fcn_t getter_fcn
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
     TEST_ASSERT_NOT_NULL(field);
     TEST_ASSERT_NOT_NULL(getter_fcn);
 
@@ -172,7 +172,7 @@ static void test_pokemon_bool(
         field
     );
 
-    error = getter_fcn(pokemon_ptr, &value_from_pokemon);
+    error = getter_fcn(p_pokemon, &value_from_pokemon);
     PKMN_TEST_ASSERT_SUCCESS(error);
     TEST_ASSERT_EQUAL_MESSAGE(
         expected_value,
@@ -182,19 +182,19 @@ static void test_pokemon_bool(
 }
 
 static void test_location_met(
-    struct pkmn_pokemon* pokemon_ptr,
+    struct pkmn_pokemon* p_pokemon,
     bool as_egg,
     const char* expected_value
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon);
     TEST_ASSERT_NOT_NULL(expected_value);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
     error = pkmn_pokemon_get_location_met(
-                pokemon_ptr,
+                p_pokemon,
                 as_egg,
                 strbuffer,
                 sizeof(strbuffer),

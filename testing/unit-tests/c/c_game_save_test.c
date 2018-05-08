@@ -189,20 +189,20 @@ static void populate_path_vars()
 }
 
 static void compare_string_lists(
-    struct pkmn_string_list* string_list1_ptr,
-    struct pkmn_string_list* string_list_ptr
+    struct pkmn_string_list* p_string_list1,
+    struct pkmn_string_list* p_string_list
 )
 {
-    TEST_ASSERT_NOT_NULL(string_list1_ptr);
-    TEST_ASSERT_NOT_NULL(string_list_ptr);
+    TEST_ASSERT_NOT_NULL(p_string_list1);
+    TEST_ASSERT_NOT_NULL(p_string_list);
 
-    TEST_ASSERT_EQUAL(string_list1_ptr->length, string_list_ptr->length);
+    TEST_ASSERT_EQUAL(p_string_list1->length, p_string_list->length);
 
-    for(size_t string_index = 0; string_index < string_list1_ptr->length; ++string_index)
+    for(size_t string_index = 0; string_index < p_string_list1->length; ++string_index)
     {
         TEST_ASSERT_EQUAL_STRING(
-            string_list1_ptr->pp_strings[string_index],
-            string_list_ptr->pp_strings[string_index]
+            p_string_list1->pp_strings[string_index],
+            p_string_list->pp_strings[string_index]
         );
     }
 }
@@ -212,33 +212,33 @@ static void compare_string_lists(
  */
 
 static void game_save_test_trainer_info(
-    struct pkmn_game_save* game_save_ptr
+    struct pkmn_game_save* p_game_save
 )
 {
-    TEST_ASSERT_NOT_NULL(game_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_game_save);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(game_save_ptr->p_game);
+    int generation = game_to_generation(p_game_save->p_game);
 
     error = pkmn_game_save_set_trainer_id(
-                game_save_ptr,
+                p_game_save,
                 (generation >= 3) ? pkmn_pokemon_default_trainer_id().id
                                   : pkmn_pokemon_default_trainer_id().public_id
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_game_save_set_trainer_name(
-                game_save_ptr,
+                p_game_save,
                 pkmn_pokemon_default_trainer_name()
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_game_save_set_trainer_gender(
-                game_save_ptr,
+                p_game_save,
                 PKMN_GENDER_FEMALE
             );
-    if(is_male_only(game_save_ptr->p_game))
+    if(is_male_only(p_game_save->p_game))
     {
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
     }
@@ -249,7 +249,7 @@ static void game_save_test_trainer_info(
 
     struct pkmn_trainer_info trainer_info = empty_trainer_info;
     error = pkmn_game_save_get_trainer_info(
-                game_save_ptr,
+                p_game_save,
                 &trainer_info
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -263,7 +263,7 @@ static void game_save_test_trainer_info(
                           : pkmn_pokemon_default_trainer_id().public_id,
         trainer_info.id.id
     );
-    if(!is_male_only(game_save_ptr->p_game))
+    if(!is_male_only(p_game_save->p_game))
     {
         TEST_ASSERT_EQUAL(PKMN_GENDER_FEMALE, trainer_info.gender);
     }
@@ -277,16 +277,16 @@ static void game_save_test_trainer_info(
 }
 
 static void game_save_test_rival_name(
-    struct pkmn_game_save* game_save_ptr
+    struct pkmn_game_save* p_game_save
 )
 {
     enum pkmn_error error = PKMN_ERROR_NONE;
     char strbuffer[STRBUFFER_LEN] = {0};
 
-    if(is_rival_name_set(game_save_ptr->p_game))
+    if(is_rival_name_set(p_game_save->p_game))
     {
         error = pkmn_game_save_set_rival_name(
-                    game_save_ptr,
+                    p_game_save,
                     pkmn_pokemon_default_trainer_name()
                 );
         TEST_ASSERT_EQUAL(PKMN_ERROR_FEATURE_NOT_IN_GAME_ERROR, error);
@@ -294,13 +294,13 @@ static void game_save_test_rival_name(
     else
     {
         error = pkmn_game_save_set_rival_name(
-                    game_save_ptr,
+                    p_game_save,
                     pkmn_pokemon_default_trainer_name()
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_rival_name(
-                    game_save_ptr,
+                    p_game_save,
                     strbuffer,
                     sizeof(strbuffer),
                     NULL
@@ -314,21 +314,21 @@ static void game_save_test_rival_name(
 }
 
 static void game_save_test_attributes(
-    struct pkmn_game_save* game_save_ptr
+    struct pkmn_game_save* p_game_save
 )
 {
-    TEST_ASSERT_NOT_NULL(game_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_game_save);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    int generation = game_to_generation(game_save_ptr->p_game);
+    int generation = game_to_generation(p_game_save->p_game);
     switch(generation)
     {
         case 1:
         {
             int num_casino_coins = -1;
             error = pkmn_game_save_get_numeric_attribute(
-                        game_save_ptr,
+                        p_game_save,
                         "Casino coins",
                         &num_casino_coins
                     );
@@ -340,14 +340,14 @@ static void game_save_test_attributes(
             //  * https://github.com/ncorgan/pksav/issues/3
             /*int new_num_casino_coins = (rand() % 10000);
             error = pkmn_game_save_set_numeric_attribute(
-                        game_save_ptr,
+                        p_game_save,
                         "Casino coins",
                         new_num_casino_coins
                     );
             PKMN_TEST_ASSERT_SUCCESS(error);
 
             error = pkmn_game_save_get_numeric_attribute(
-                        game_save_ptr,
+                        p_game_save,
                         "Casino coins",
                         &num_casino_coins
                     );
@@ -359,24 +359,24 @@ static void game_save_test_attributes(
 
             int pikachu_friendship = -1;
             error = pkmn_game_save_get_numeric_attribute(
-                        game_save_ptr,
+                        p_game_save,
                         "Pikachu friendship",
                         &pikachu_friendship
                     );
-            if(!strcmp(game_save_ptr->p_game, "Yellow"))
+            if(!strcmp(p_game_save->p_game, "Yellow"))
             {
                 PKMN_TEST_ASSERT_SUCCESS(error);
 
                 int new_pikachu_friendship = (rand() % 256);
                 error = pkmn_game_save_set_numeric_attribute(
-                            game_save_ptr,
+                            p_game_save,
                             "Pikachu friendship",
                             new_pikachu_friendship
                         );
                 PKMN_TEST_ASSERT_SUCCESS(error);
 
                 error = pkmn_game_save_get_numeric_attribute(
-                            game_save_ptr,
+                            p_game_save,
                             "Pikachu friendship",
                             &pikachu_friendship
                         );
@@ -396,13 +396,13 @@ static void game_save_test_attributes(
 
         case 3:
         {
-            bool is_game_gamecube = !strcmp(game_save_ptr->p_game, "Colosseum") ||
-                                    !strcmp(game_save_ptr->p_game, "XD");
+            bool is_game_gamecube = !strcmp(p_game_save->p_game, "Colosseum") ||
+                                    !strcmp(p_game_save->p_game, "XD");
             if(!is_game_gamecube)
             {
                 int num_casino_coins = -1;
                 error = pkmn_game_save_get_numeric_attribute(
-                            game_save_ptr,
+                            p_game_save,
                             "Casino coins",
                             &num_casino_coins
                         );
@@ -412,14 +412,14 @@ static void game_save_test_attributes(
 
                 int new_num_casino_coins = (rand() % 10000);
                 error = pkmn_game_save_set_numeric_attribute(
-                            game_save_ptr,
+                            p_game_save,
                             "Casino coins",
                             new_num_casino_coins
                         );
                 PKMN_TEST_ASSERT_SUCCESS(error);
 
                 error = pkmn_game_save_get_numeric_attribute(
-                            game_save_ptr,
+                            p_game_save,
                             "Casino coins",
                             &num_casino_coins
                         );
@@ -438,30 +438,30 @@ static void game_save_test_attributes(
 }
 
 static void game_save_test_common_fields(
-    struct pkmn_game_save* game_save_ptr
+    struct pkmn_game_save* p_game_save
 )
 {
-    TEST_ASSERT_NOT_NULL(game_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_game_save);
 
-    int generation = game_to_generation(game_save_ptr->p_game);
+    int generation = game_to_generation(p_game_save->p_game);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    bool is_game_gamecube = !strcmp(game_save_ptr->p_game, "Colosseum") ||
-                            !strcmp(game_save_ptr->p_game, "XD");
+    bool is_game_gamecube = !strcmp(p_game_save->p_game, "Colosseum") ||
+                            !strcmp(p_game_save->p_game, "XD");
 
     struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
-    game_save_test_trainer_info(game_save_ptr);
-    game_save_test_rival_name(game_save_ptr);
+    game_save_test_trainer_info(p_game_save);
+    game_save_test_rival_name(p_game_save);
 
     error = pkmn_game_save_set_money(
-                game_save_ptr,
+                p_game_save,
                 -1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
     error = pkmn_game_save_set_money(
-                game_save_ptr,
+                p_game_save,
                 MONEY_MAX_VALUE+1
             );
     TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
@@ -470,12 +470,12 @@ static void game_save_test_common_fields(
     int money_from_game_save = 0;
 
     error = pkmn_game_save_set_money(
-                game_save_ptr,
+                p_game_save,
                 money
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_money(
-                game_save_ptr,
+                p_game_save,
                 &money_from_game_save
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -492,7 +492,7 @@ static void game_save_test_common_fields(
     if(!is_game_gamecube)
     {
         error = pkmn_game_save_get_pokedex(
-                    game_save_ptr,
+                    p_game_save,
                     &pokedex
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -501,11 +501,11 @@ static void game_save_test_common_fields(
     // Test the party.
     struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
     error = pkmn_game_save_get_pokemon_party(
-                game_save_ptr,
+                p_game_save,
                 &pokemon_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(game_save_ptr->p_game, pokemon_party.p_game);
+    TEST_ASSERT_EQUAL_STRING(p_game_save->p_game, pokemon_party.p_game);
     TEST_ASSERT_EQUAL(6, pokemon_party.capacity);
     TEST_ASSERT_NOT_NULL(pokemon_party.p_internal);
 
@@ -593,11 +593,11 @@ static void game_save_test_common_fields(
     // Test PC.
     struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
     error = pkmn_game_save_get_pokemon_pc(
-                game_save_ptr,
+                p_game_save,
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
-    TEST_ASSERT_EQUAL_STRING(game_save_ptr->p_game, pokemon_pc.p_game);
+    TEST_ASSERT_EQUAL_STRING(p_game_save->p_game, pokemon_pc.p_game);
     TEST_ASSERT_TRUE(pokemon_pc.capacity > 0);
     TEST_ASSERT_NOT_NULL(pokemon_pc.p_internal);
 
@@ -623,7 +623,7 @@ static void game_save_test_common_fields(
         for(size_t pokemon_index = 0; pokemon_index < pokemon_list.length; ++pokemon_index)
         {
             TEST_ASSERT_EQUAL_STRING(
-                game_save_ptr->p_game,
+                p_game_save->p_game,
                 pokemon_list.p_pokemon[pokemon_index].p_game
             );
 
@@ -679,24 +679,24 @@ static void game_save_test_common_fields(
     error = pkmn_pokemon_pc_free(&pokemon_pc);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
-    game_save_test_attributes(game_save_ptr);
+    game_save_test_attributes(p_game_save);
 }
 
 static void randomize_pokemon(
-    struct pkmn_game_save* game_save_ptr
+    struct pkmn_game_save* p_game_save
 )
 {
-    TEST_ASSERT_NOT_NULL(game_save_ptr);
+    TEST_ASSERT_NOT_NULL(p_game_save);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     struct pkmn_string_list item_list = empty_string_list;
-    error = pkmn_database_item_list(game_save_ptr->p_game, &item_list);
+    error = pkmn_database_item_list(p_game_save->p_game, &item_list);
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
     error = pkmn_game_save_get_pokemon_party(
-                game_save_ptr,
+                p_game_save,
                 &pokemon_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -708,7 +708,7 @@ static void randomize_pokemon(
             &pokemon,
             &item_list,
             NULL, // species
-            game_save_ptr->p_game
+            p_game_save->p_game
         );
 
         error = pkmn_pokemon_party_set_pokemon(
@@ -727,7 +727,7 @@ static void randomize_pokemon(
 
     struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
     error = pkmn_game_save_get_pokemon_pc(
-                game_save_ptr,
+                p_game_save,
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -749,7 +749,7 @@ static void randomize_pokemon(
                 &pokemon,
                 &item_list,
                 NULL, // species
-                game_save_ptr->p_game
+                p_game_save->p_game
             );
 
             error = pkmn_pokemon_box_set_pokemon(
@@ -775,29 +775,29 @@ static void randomize_pokemon(
 }
 
 static void compare_item_lists(
-    struct pkmn_item_list* item_list1_ptr,
-    struct pkmn_item_list* item_list2_ptr
+    struct pkmn_item_list* p_item_list1,
+    struct pkmn_item_list* p_item_list2
 )
 {
-    TEST_ASSERT_NOT_NULL(item_list1_ptr);
-    TEST_ASSERT_NOT_NULL(item_list2_ptr);
+    TEST_ASSERT_NOT_NULL(p_item_list1);
+    TEST_ASSERT_NOT_NULL(p_item_list2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
-    TEST_ASSERT_EQUAL_STRING(item_list1_ptr->p_name, item_list2_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(item_list1_ptr->p_game, item_list2_ptr->p_game);
-    TEST_ASSERT_EQUAL(item_list1_ptr->capacity, item_list2_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING(p_item_list1->p_name, p_item_list2->p_name);
+    TEST_ASSERT_EQUAL_STRING(p_item_list1->p_game, p_item_list2->p_game);
+    TEST_ASSERT_EQUAL(p_item_list1->capacity, p_item_list2->capacity);
 
     size_t num_items1 = 0;
     size_t num_items2 = 0;
 
     error = pkmn_item_list_get_num_items(
-                item_list1_ptr,
+                p_item_list1,
                 &num_items1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_get_num_items(
-                item_list2_ptr,
+                p_item_list2,
                 &num_items2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -807,12 +807,12 @@ static void compare_item_lists(
     struct pkmn_item_slots item_slots2 = empty_item_slots;
 
     error = pkmn_item_list_as_list(
-                item_list1_ptr,
+                p_item_list1,
                 &item_slots1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_item_list_as_list(
-                item_list2_ptr,
+                p_item_list2,
                 &item_slots2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -835,34 +835,34 @@ static void compare_item_lists(
 }
 
 static void compare_item_bags(
-    struct pkmn_item_bag* item_bag1_ptr,
-    struct pkmn_item_bag* item_bag2_ptr
+    struct pkmn_item_bag* p_item_bag1,
+    struct pkmn_item_bag* p_item_bag2
 )
 {
-    TEST_ASSERT_NOT_NULL(item_bag1_ptr);
-    TEST_ASSERT_NOT_NULL(item_bag2_ptr);
+    TEST_ASSERT_NOT_NULL(p_item_bag1);
+    TEST_ASSERT_NOT_NULL(p_item_bag2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     compare_string_lists(
-        &item_bag1_ptr->pocket_names,
-        &item_bag2_ptr->pocket_names
+        &p_item_bag1->pocket_names,
+        &p_item_bag2->pocket_names
     );
 
-    for(size_t pocket_index = 0; pocket_index < item_bag1_ptr->pocket_names.length; ++pocket_index)
+    for(size_t pocket_index = 0; pocket_index < p_item_bag1->pocket_names.length; ++pocket_index)
     {
         struct pkmn_item_list pocket1 = empty_item_list;
         struct pkmn_item_list pocket2 = empty_item_list;
 
         error = pkmn_item_bag_get_pocket(
-                    item_bag1_ptr,
-                    item_bag1_ptr->pocket_names.pp_strings[pocket_index],
+                    p_item_bag1,
+                    p_item_bag1->pocket_names.pp_strings[pocket_index],
                     &pocket1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_item_bag_get_pocket(
-                    item_bag2_ptr,
-                    item_bag1_ptr->pocket_names.pp_strings[pocket_index],
+                    p_item_bag2,
+                    p_item_bag1->pocket_names.pp_strings[pocket_index],
                     &pocket2
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -878,30 +878,30 @@ static void compare_item_bags(
 }
 
 static void compare_pokemon_lists(
-    struct pkmn_pokemon_list* pokemon_list1_ptr,
-    struct pkmn_pokemon_list* pokemon_list2_ptr
+    struct pkmn_pokemon_list* p_pokemon_list1,
+    struct pkmn_pokemon_list* p_pokemon_list2
 )
 {
-    TEST_ASSERT_NOT_NULL(pokemon_list1_ptr);
-    TEST_ASSERT_NOT_NULL(pokemon_list2_ptr);
+    TEST_ASSERT_NOT_NULL(p_pokemon_list1);
+    TEST_ASSERT_NOT_NULL(p_pokemon_list2);
 
-    TEST_ASSERT_EQUAL(pokemon_list1_ptr->length, pokemon_list2_ptr->length);
-    for(size_t pokemon_index = 0; pokemon_index < pokemon_list1_ptr->length; ++pokemon_index)
+    TEST_ASSERT_EQUAL(p_pokemon_list1->length, p_pokemon_list2->length);
+    for(size_t pokemon_index = 0; pokemon_index < p_pokemon_list1->length; ++pokemon_index)
     {
         compare_pokemon(
-            &pokemon_list1_ptr->p_pokemon[pokemon_index],
-            &pokemon_list2_ptr->p_pokemon[pokemon_index]
+            &p_pokemon_list1->p_pokemon[pokemon_index],
+            &p_pokemon_list2->p_pokemon[pokemon_index]
         );
     }
 }
 
 static void compare_game_saves(
-    struct pkmn_game_save* game_save1_ptr,
-    struct pkmn_game_save* game_save2_ptr
+    struct pkmn_game_save* p_game_save1,
+    struct pkmn_game_save* p_game_save2
 )
 {
-    TEST_ASSERT_NOT_NULL(game_save1_ptr);
-    TEST_ASSERT_NOT_NULL(game_save2_ptr);
+    TEST_ASSERT_NOT_NULL(p_game_save1);
+    TEST_ASSERT_NOT_NULL(p_game_save2);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
@@ -909,13 +909,13 @@ static void compare_game_saves(
     struct pkmn_pokemon_list pokemon_list = empty_pokemon_list;
 
     TEST_ASSERT_EQUAL_STRING(
-        game_save1_ptr->p_game,
-        game_save2_ptr->p_game
+        p_game_save1->p_game,
+        p_game_save2->p_game
     );
 
-    int generation = game_to_generation(game_save1_ptr->p_game);
-    bool is_game_gamecube = !strcmp(game_save1_ptr->p_game, "Colosseum") ||
-                            !strcmp(game_save1_ptr->p_game, "XD");
+    int generation = game_to_generation(p_game_save1->p_game);
+    bool is_game_gamecube = !strcmp(p_game_save1->p_game, "Colosseum") ||
+                            !strcmp(p_game_save1->p_game, "XD");
 
     // Compare bags.
 
@@ -923,12 +923,12 @@ static void compare_game_saves(
     struct pkmn_item_bag item_bag2 = empty_item_bag;
 
     error = pkmn_game_save_get_item_bag(
-                game_save1_ptr,
+                p_game_save1,
                 &item_bag1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_item_bag(
-                game_save2_ptr,
+                p_game_save2,
                 &item_bag2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -946,12 +946,12 @@ static void compare_game_saves(
         struct pkmn_item_list item_pc = empty_item_list;
 
         error = pkmn_game_save_get_item_pc(
-                    game_save1_ptr,
+                    p_game_save1,
                     &item_pc1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
         error = pkmn_game_save_get_item_pc(
-                    game_save2_ptr,
+                    p_game_save2,
                     &item_pc
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
@@ -970,12 +970,12 @@ static void compare_game_saves(
     struct pkmn_pokemon_party pokemon_party = empty_pokemon_party;
 
     error = pkmn_game_save_get_pokemon_party(
-                game_save1_ptr,
+                p_game_save1,
                 &pokemon_party1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_pokemon_party(
-                game_save2_ptr,
+                p_game_save2,
                 &pokemon_party
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1008,12 +1008,12 @@ static void compare_game_saves(
     struct pkmn_pokemon_pc pokemon_pc = empty_pokemon_pc;
 
     error = pkmn_game_save_get_pokemon_pc(
-                game_save1_ptr,
+                p_game_save1,
                 &pokemon_pc1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
     error = pkmn_game_save_get_pokemon_pc(
-                game_save1_ptr,
+                p_game_save1,
                 &pokemon_pc
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1067,14 +1067,14 @@ static void compare_game_saves(
 
     struct pkmn_attribute_names attribute_names1 = empty_attribute_names;
     error = pkmn_game_save_get_attribute_names(
-                game_save1_ptr,
+                p_game_save1,
                 &attribute_names1
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     struct pkmn_attribute_names attribute_names2 = empty_attribute_names;
     error = pkmn_game_save_get_attribute_names(
-                game_save2_ptr,
+                p_game_save2,
                 &attribute_names2
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -1092,14 +1092,14 @@ static void compare_game_saves(
         int attribute_value2 = 0;
 
         error = pkmn_game_save_get_numeric_attribute(
-                    game_save1_ptr,
+                    p_game_save1,
                     attribute_names1.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_numeric_attribute(
-                    game_save2_ptr,
+                    p_game_save2,
                     attribute_names2.numeric_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );
@@ -1116,7 +1116,7 @@ static void compare_game_saves(
         char attribute_value2[STRBUFFER_LEN] = {0};
 
         error = pkmn_game_save_get_string_attribute(
-                    game_save1_ptr,
+                    p_game_save1,
                     attribute_names1.string_attribute_names.pp_strings[attribute_index],
                     attribute_value1,
                     sizeof(attribute_value1),
@@ -1125,7 +1125,7 @@ static void compare_game_saves(
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_string_attribute(
-                    game_save2_ptr,
+                    p_game_save2,
                     attribute_names2.string_attribute_names.pp_strings[attribute_index],
                     attribute_value2,
                     sizeof(attribute_value2),
@@ -1144,14 +1144,14 @@ static void compare_game_saves(
         bool attribute_value2 = 0;
 
         error = pkmn_game_save_get_boolean_attribute(
-                    game_save1_ptr,
+                    p_game_save1,
                     attribute_names1.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value1
                 );
         PKMN_TEST_ASSERT_SUCCESS(error);
 
         error = pkmn_game_save_get_boolean_attribute(
-                    game_save2_ptr,
+                    p_game_save2,
                     attribute_names2.boolean_attribute_names.pp_strings[attribute_index],
                     &attribute_value2
                 );

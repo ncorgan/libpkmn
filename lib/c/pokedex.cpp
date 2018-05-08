@@ -124,15 +124,15 @@ enum pkmn_error pkmn_pokedex_get_all_seen(
 
 enum pkmn_error pkmn_pokedex_get_num_seen(
     struct pkmn_pokedex* p_pokedex,
-    size_t* num_seen_out
+    size_t* p_num_seen_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_pokedex);
     pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(p_pokedex->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_seen_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_num_seen_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *num_seen_out = p_internal->cpp->get_num_seen();
+        *p_num_seen_out = p_internal->cpp->get_num_seen();
     )
 }
 
@@ -186,14 +186,14 @@ enum pkmn_error pkmn_pokedex_get_all_caught(
 
 enum pkmn_error pkmn_pokedex_get_num_caught(
     struct pkmn_pokedex* p_pokedex,
-    size_t* num_caught_out
+    size_t* p_num_caught_out
 )
 {
     PKMN_CHECK_NULL_WRAPPER_PARAM(p_pokedex);
     pkmn_pokedex_internal_t* p_internal = POKEDEX_INTERNAL_RCAST(p_pokedex->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(num_caught_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_num_caught_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *num_caught_out = p_internal->cpp->get_num_caught();
+        *p_num_caught_out = p_internal->cpp->get_num_caught();
     )
 }

@@ -28,12 +28,12 @@ static const char* WRONG_GAME_ALL_POCKET_ITEM_NAMES[] =
 };
 
 static void gba_item_pocket_test(
-    struct pkmn_item_list* item_pocket_ptr,
+    struct pkmn_item_list* p_item_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(item_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(item_pocket_ptr->p_internal);
+    TEST_ASSERT_NOT_NULL(p_item_pocket);
+    TEST_ASSERT_NOT_NULL(p_item_pocket->p_internal);
     TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
@@ -50,30 +50,30 @@ static void gba_item_pocket_test(
         expected_capacity = 42;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Items", item_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, item_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(expected_capacity, item_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING("Items", p_item_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(expected_capacity, p_item_pocket->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(item_pocket_ptr);
+    test_item_list_initial_values(p_item_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        item_pocket_ptr,
+        p_item_pocket,
         "Potion"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Bicycle", "Master Ball", "HM01", "Razz Berry"};
-    test_item_list_invalid_items(item_pocket_ptr, wrong_pocket_item_names, 4);
+    test_item_list_invalid_items(p_item_pocket, wrong_pocket_item_names, 4);
 
     // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] = {"Pink Bow", "Black Sludge", "Binding Band", "Beedrillite"};
-    test_item_list_invalid_items(item_pocket_ptr, wrong_generation_item_names, 4);
+    test_item_list_invalid_items(p_item_pocket, wrong_generation_item_names, 4);
 
     // Make sure we can't add items from Gamecube games.
     const char* gamecube_item_names[] = {"Time Flute", "Poké Snack"};
-    test_item_list_invalid_items(item_pocket_ptr, gamecube_item_names, 2);
+    test_item_list_invalid_items(p_item_pocket, gamecube_item_names, 2);
 
     const char* item_names[] =
     {
@@ -83,14 +83,14 @@ static void gba_item_pocket_test(
 
     // Test setting items by index.
     test_item_list_set_item(
-        item_pocket_ptr,
+        p_item_pocket,
         item_names,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        item_pocket_ptr,
+        p_item_pocket,
         item_names,
         8
     );
@@ -101,7 +101,7 @@ static void gba_item_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             item_pocket_ptr,
+                             p_item_pocket,
                              &valid_items
                          );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -114,12 +114,12 @@ static void gba_item_pocket_test(
 }
 
 static void gba_key_item_pocket_test(
-    struct pkmn_item_list* key_item_pocket_ptr,
+    struct pkmn_item_list* p_key_item_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr->p_internal);
+    TEST_ASSERT_NOT_NULL(p_key_item_pocket);
+    TEST_ASSERT_NOT_NULL(p_key_item_pocket->p_internal);
     TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
@@ -132,40 +132,40 @@ static void gba_key_item_pocket_test(
         expected_capacity = 30;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Key Items", key_item_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, key_item_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(expected_capacity, key_item_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING("Key Items", p_key_item_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_key_item_pocket->p_game);
+    TEST_ASSERT_EQUAL(expected_capacity, p_key_item_pocket->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(key_item_pocket_ptr);
+    test_item_list_initial_values(p_key_item_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        key_item_pocket_ptr,
+        p_key_item_pocket,
         "Basement Key"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Potion", "Master Ball", "HM01", "Razz Berry"};
-    test_item_list_invalid_items(key_item_pocket_ptr, wrong_pocket_item_names, 4);
+    test_item_list_invalid_items(p_key_item_pocket, wrong_pocket_item_names, 4);
 
     // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] = {"GS Ball", "Poffin Items", "DNA Splicers", "Aqua Suit"};
-    test_item_list_invalid_items(key_item_pocket_ptr, wrong_generation_item_names, 4);
+    test_item_list_invalid_items(p_key_item_pocket, wrong_generation_item_names, 4);
 
     // Make sure we can't add items from incompatible Generation III games.
     const char* gcn_items[] = {"Ein File S", "Powerup Part", "Gonzap's Key", "Krane Memo 1"};
     const char* frlg_items[] = {"Helix Fossil", "Tea", "Ruby"};;
     const char* emerald_items[] = {"Magma Emblem", "Old Sea Map"};
 
-    test_item_list_invalid_items(key_item_pocket_ptr, gcn_items, 4);
+    test_item_list_invalid_items(p_key_item_pocket, gcn_items, 4);
     if(!strcmp(game, "Ruby") || !strcmp(game, "Sapphire"))
     {
-        test_item_list_invalid_items(key_item_pocket_ptr, frlg_items, 3);
+        test_item_list_invalid_items(p_key_item_pocket, frlg_items, 3);
     }
     if(strcmp(game, "Emerald"))
     {
-        test_item_list_invalid_items(key_item_pocket_ptr, emerald_items, 2);
+        test_item_list_invalid_items(p_key_item_pocket, emerald_items, 2);
     }
 
     const char* item_names[] =
@@ -176,14 +176,14 @@ static void gba_key_item_pocket_test(
 
     // Test setting items by index.
     test_item_list_set_item(
-        key_item_pocket_ptr,
+        p_key_item_pocket,
         item_names,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        key_item_pocket_ptr,
+        p_key_item_pocket,
         item_names,
         8
     );
@@ -194,7 +194,7 @@ static void gba_key_item_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             key_item_pocket_ptr,
+                             p_key_item_pocket,
                              &valid_items
                          );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -207,12 +207,12 @@ static void gba_key_item_pocket_test(
 }
 
 static void gba_ball_pocket_test(
-    struct pkmn_item_list* ball_pocket_ptr,
+    struct pkmn_item_list* p_ball_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(ball_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(ball_pocket_ptr->p_internal);
+    TEST_ASSERT_NOT_NULL(p_ball_pocket);
+    TEST_ASSERT_NOT_NULL(p_ball_pocket->p_internal);
     TEST_ASSERT_NOT_NULL(game);
 
     size_t expected_capacity = 0;
@@ -225,26 +225,26 @@ static void gba_ball_pocket_test(
         expected_capacity = 16;
     }
 
-    TEST_ASSERT_EQUAL_STRING("Poké Balls", ball_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, ball_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(expected_capacity, ball_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING("Poké Balls", p_ball_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_ball_pocket->p_game);
+    TEST_ASSERT_EQUAL(expected_capacity, p_ball_pocket->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(ball_pocket_ptr);
+    test_item_list_initial_values(p_ball_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        ball_pocket_ptr,
+        p_ball_pocket,
         "Master Ball"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Bicycle", "Potion", "HM01", "Razz Berry"};
-    test_item_list_invalid_items(ball_pocket_ptr, wrong_pocket_item_names, 4);
+    test_item_list_invalid_items(p_ball_pocket, wrong_pocket_item_names, 4);
 
     // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] = {"Moon Ball", "Heal Ball", "Dream Ball"};
-    test_item_list_invalid_items(ball_pocket_ptr, wrong_generation_item_names, 3);
+    test_item_list_invalid_items(p_ball_pocket, wrong_generation_item_names, 3);
 
     const char* item_names[] =
     {
@@ -254,14 +254,14 @@ static void gba_ball_pocket_test(
 
     // Test setting items by index.
     test_item_list_set_item(
-        ball_pocket_ptr,
+        p_ball_pocket,
         item_names,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        ball_pocket_ptr,
+        p_ball_pocket,
         item_names,
         8
     );
@@ -272,7 +272,7 @@ static void gba_ball_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             ball_pocket_ptr,
+                             p_ball_pocket,
                              &valid_items
                          );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -285,12 +285,12 @@ static void gba_ball_pocket_test(
 }
 
 static void gba_tmhm_pocket_test(
-    struct pkmn_item_list* tmhm_pocket_ptr,
+    struct pkmn_item_list* p_tmhm_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr->p_internal);
+    TEST_ASSERT_NOT_NULL(p_tmhm_pocket);
+    TEST_ASSERT_NOT_NULL(p_tmhm_pocket->p_internal);
     TEST_ASSERT_NOT_NULL(game);
 
     const char* expected_pocket_name = NULL;
@@ -306,26 +306,26 @@ static void gba_tmhm_pocket_test(
         expected_capacity = 64;
     }
 
-    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, tmhm_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, tmhm_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(expected_capacity, tmhm_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, p_tmhm_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_tmhm_pocket->p_game);
+    TEST_ASSERT_EQUAL(expected_capacity, p_tmhm_pocket->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(tmhm_pocket_ptr);
+    test_item_list_initial_values(p_tmhm_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        tmhm_pocket_ptr,
+        p_tmhm_pocket,
         "TM01"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Bicycle", "Potion", "Great Ball", "Razz Berry"};
-    test_item_list_invalid_items(tmhm_pocket_ptr, wrong_pocket_item_names, 4);
+    test_item_list_invalid_items(p_tmhm_pocket, wrong_pocket_item_names, 4);
 
     // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] = {"TM51"};
-    test_item_list_invalid_items(tmhm_pocket_ptr, wrong_generation_item_names, 1);
+    test_item_list_invalid_items(p_tmhm_pocket, wrong_generation_item_names, 1);
 
     const char* item_names[] =
     {
@@ -335,14 +335,14 @@ static void gba_tmhm_pocket_test(
 
     // Test setting items by index.
     test_item_list_set_item(
-        tmhm_pocket_ptr,
+        p_tmhm_pocket,
         item_names,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        tmhm_pocket_ptr,
+        p_tmhm_pocket,
         item_names,
         8
     );
@@ -353,7 +353,7 @@ static void gba_tmhm_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             tmhm_pocket_ptr,
+                             p_tmhm_pocket,
                              &valid_items
                          );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -366,12 +366,12 @@ static void gba_tmhm_pocket_test(
 }
 
 static void gba_berry_pocket_test(
-    struct pkmn_item_list* berry_pocket_ptr,
+    struct pkmn_item_list* p_berry_pocket,
     const char* game
 )
 {
-    TEST_ASSERT_NOT_NULL(berry_pocket_ptr);
-    TEST_ASSERT_NOT_NULL(berry_pocket_ptr->p_internal);
+    TEST_ASSERT_NOT_NULL(p_berry_pocket);
+    TEST_ASSERT_NOT_NULL(p_berry_pocket->p_internal);
     TEST_ASSERT_NOT_NULL(game);
 
     const char* expected_pocket_name = NULL;
@@ -387,26 +387,26 @@ static void gba_berry_pocket_test(
         expected_capacity = 46;
     }
 
-    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, berry_pocket_ptr->p_name);
-    TEST_ASSERT_EQUAL_STRING(game, berry_pocket_ptr->p_game);
-    TEST_ASSERT_EQUAL(expected_capacity, berry_pocket_ptr->capacity);
+    TEST_ASSERT_EQUAL_STRING(expected_pocket_name, p_berry_pocket->p_name);
+    TEST_ASSERT_EQUAL_STRING(game, p_berry_pocket->p_game);
+    TEST_ASSERT_EQUAL(expected_capacity, p_berry_pocket->capacity);
 
     // Make sure item slots start as completely empty.
-    test_item_list_initial_values(berry_pocket_ptr);
+    test_item_list_initial_values(p_berry_pocket);
 
     // Confirm errors are returned when expected.
     test_item_list_out_of_range_error(
-        berry_pocket_ptr,
+        p_berry_pocket,
         "Oran Berry"
     );
 
     // Make sure we can't add items from other pockets.
     const char* wrong_pocket_item_names[] = {"Bicycle", "Potion", "Great Ball", "TM01"};
-    test_item_list_invalid_items(berry_pocket_ptr, wrong_pocket_item_names, 4);
+    test_item_list_invalid_items(p_berry_pocket, wrong_pocket_item_names, 4);
 
     // Make sure we can't add items from later generations.
     const char* wrong_generation_item_names[] = {"Berry", "Occa Berry", "Roseli Berry"};
-    test_item_list_invalid_items(berry_pocket_ptr, wrong_generation_item_names, 3);
+    test_item_list_invalid_items(p_berry_pocket, wrong_generation_item_names, 3);
 
     const char* item_names[] =
     {
@@ -416,14 +416,14 @@ static void gba_berry_pocket_test(
 
     // Test setting items by index.
     test_item_list_set_item(
-        berry_pocket_ptr,
+        p_berry_pocket,
         item_names,
         3
     );
 
     // Start adding and removing items, and make sure the numbers are accurate.
     test_item_list_add_remove(
-        berry_pocket_ptr,
+        p_berry_pocket,
         item_names,
         8
     );
@@ -434,7 +434,7 @@ static void gba_berry_pocket_test(
         .length = 0
     };
     enum pkmn_error error = pkmn_item_list_get_valid_items(
-                             berry_pocket_ptr,
+                             p_berry_pocket,
                              &valid_items
                          );
     PKMN_TEST_ASSERT_SUCCESS(error);
@@ -543,59 +543,59 @@ static void gba_item_pc_test(
 }
 
 static void get_bag_pockets(
-    struct pkmn_item_bag* item_bag_ptr,
-    struct pkmn_item_list* item_pocket_ptr_out,
-    struct pkmn_item_list* key_item_pocket_ptr_out,
-    struct pkmn_item_list* ball_pocket_ptr_out,
-    struct pkmn_item_list* tmhm_pocket_ptr_out,
+    struct pkmn_item_bag* p_item_bag,
+    struct pkmn_item_list* p_item_pocket_out,
+    struct pkmn_item_list* p_key_item_pocket_out,
+    struct pkmn_item_list* p_ball_pocket_out,
+    struct pkmn_item_list* p_tmhm_pocket_out,
     const char* tmhm_pocket_name,
-    struct pkmn_item_list* berry_pocket_ptr_out,
+    struct pkmn_item_list* p_berry_pocket_out,
     const char* berry_pocket_name
 )
 {
-    TEST_ASSERT_NOT_NULL(item_bag_ptr);
-    TEST_ASSERT_NOT_NULL(item_pocket_ptr_out);
-    TEST_ASSERT_NOT_NULL(key_item_pocket_ptr_out);
-    TEST_ASSERT_NOT_NULL(ball_pocket_ptr_out);
-    TEST_ASSERT_NOT_NULL(tmhm_pocket_ptr_out);
+    TEST_ASSERT_NOT_NULL(p_item_bag);
+    TEST_ASSERT_NOT_NULL(p_item_pocket_out);
+    TEST_ASSERT_NOT_NULL(p_key_item_pocket_out);
+    TEST_ASSERT_NOT_NULL(p_ball_pocket_out);
+    TEST_ASSERT_NOT_NULL(p_tmhm_pocket_out);
     TEST_ASSERT_NOT_NULL(tmhm_pocket_name);
-    TEST_ASSERT_NOT_NULL(berry_pocket_ptr_out);
+    TEST_ASSERT_NOT_NULL(p_berry_pocket_out);
     TEST_ASSERT_NOT_NULL(berry_pocket_name);
 
     enum pkmn_error error = PKMN_ERROR_NONE;
 
     error = pkmn_item_bag_get_pocket(
-                item_bag_ptr,
+                p_item_bag,
                 "Items",
-                item_pocket_ptr_out
+                p_item_pocket_out
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
-                item_bag_ptr,
+                p_item_bag,
                 "Key Items",
-                key_item_pocket_ptr_out
+                p_key_item_pocket_out
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
-                item_bag_ptr,
+                p_item_bag,
                 "Poké Balls",
-                ball_pocket_ptr_out
+                p_ball_pocket_out
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
-                item_bag_ptr,
+                p_item_bag,
                 tmhm_pocket_name,
-                tmhm_pocket_ptr_out
+                p_tmhm_pocket_out
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 
     error = pkmn_item_bag_get_pocket(
-                item_bag_ptr,
+                p_item_bag,
                 berry_pocket_name,
-                berry_pocket_ptr_out
+                p_berry_pocket_out
             );
     PKMN_TEST_ASSERT_SUCCESS(error);
 }

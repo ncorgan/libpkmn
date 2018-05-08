@@ -15,18 +15,18 @@
 
 enum pkmn_error pkmn_pokemon_pc_init(
     const char* p_game,
-    struct pkmn_pokemon_pc* pokemon_pc_out
+    struct pkmn_pokemon_pc* p_pokemon_pc_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_game);
-    PKMN_CHECK_NULL_PARAM(pokemon_pc_out);
+    PKMN_CHECK_NULL_PARAM(p_pokemon_pc_out);
 
     PKMN_CPP_TO_C(
         pkmn::pokemon_pc::sptr cpp = pkmn::pokemon_pc::make(p_game);
 
         pkmn::c::init_pokemon_pc(
             cpp,
-            pokemon_pc_out
+            p_pokemon_pc_out
         );
     )
 }

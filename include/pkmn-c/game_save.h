@@ -149,7 +149,7 @@ PKMN_C_API enum pkmn_error pkmn_game_save_set_money(
 
 PKMN_C_API enum pkmn_error pkmn_game_save_get_pokedex(
     struct pkmn_game_save* p_game_save,
-    struct pkmn_pokedex* pokedex_out
+    struct pkmn_pokedex* p_pokedex_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_game_save_get_pokemon_party(
