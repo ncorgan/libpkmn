@@ -810,17 +810,17 @@ static void pokedex_error_test()
     TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "has_seen_out");
 
     /*
-     * pkmn_pokedex_set_has_seen
+     * pkmn_pokedex_set_has_seen_species
      */
 
-    error = pkmn_pokedex_set_has_seen(
+    error = pkmn_pokedex_set_has_seen_species(
                 NULL, // pokedex_ptr
                 "",
                 true
             );
     TEST_NULL_POINTER_RETURN("pokedex_ptr");
 
-    error = pkmn_pokedex_set_has_seen(
+    error = pkmn_pokedex_set_has_seen_species(
                 &pokedex,
                 NULL, // species
                 true
@@ -885,17 +885,17 @@ static void pokedex_error_test()
     TEST_POKEDEX_NULL_POINTER_RETURN(pokedex, "has_caught_out");
 
     /*
-     * pkmn_pokedex_set_has_caught
+     * pkmn_pokedex_set_has_caught_species
      */
 
-    error = pkmn_pokedex_set_has_caught(
+    error = pkmn_pokedex_set_has_caught_species(
                 NULL, // pokedex_ptr
                 "",
                 true
             );
     TEST_NULL_POINTER_RETURN("pokedex_ptr");
 
-    error = pkmn_pokedex_set_has_caught(
+    error = pkmn_pokedex_set_has_caught_species(
                 &pokedex,
                 NULL, // species
                 true

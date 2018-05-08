@@ -90,7 +90,7 @@ enum pkmn_error pkmn_pokedex_has_seen(
     )
 }
 
-enum pkmn_error pkmn_pokedex_set_has_seen(
+enum pkmn_error pkmn_pokedex_set_has_seen_species(
     struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool has_seen
@@ -152,7 +152,7 @@ enum pkmn_error pkmn_pokedex_has_caught(
     )
 }
 
-enum pkmn_error pkmn_pokedex_set_has_caught(
+enum pkmn_error pkmn_pokedex_set_has_caught_species(
     struct pkmn_pokedex* p_pokedex,
     const char* p_species,
     bool has_caught

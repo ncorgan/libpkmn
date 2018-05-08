@@ -74,7 +74,7 @@ static void pokedex_test(
 
     for(size_t pokemon_index = 0; pokemon_index < num_seen; ++pokemon_index)
     {
-        error = pkmn_pokedex_set_has_seen(
+        error = pkmn_pokedex_set_has_seen_species(
                     &pokedex,
                     all_pokemon.pp_strings[pokemon_index],
                     true
@@ -101,7 +101,7 @@ static void pokedex_test(
 
     for(size_t pokemon_index = (all_pokemon.length-num_caught); pokemon_index < all_pokemon.length; ++pokemon_index)
     {
-        error = pkmn_pokedex_set_has_caught(
+        error = pkmn_pokedex_set_has_caught_species(
                     &pokedex,
                     all_pokemon.pp_strings[pokemon_index],
                     true
@@ -142,7 +142,7 @@ static void pokedex_test(
 
     for(size_t pokemon_index = 0; pokemon_index < all_seen.length; ++pokemon_index)
     {
-        error = pkmn_pokedex_set_has_seen(
+        error = pkmn_pokedex_set_has_seen_species(
                     &pokedex,
                     all_seen.pp_strings[pokemon_index],
                     false
@@ -187,7 +187,7 @@ static void pokedex_test(
 
     for(size_t pokemon_index = 0; pokemon_index < all_caught.length; ++pokemon_index)
     {
-        error = pkmn_pokedex_set_has_caught(
+        error = pkmn_pokedex_set_has_caught_species(
                     &pokedex,
                     all_caught.pp_strings[pokemon_index],
                     false
