@@ -55,19 +55,6 @@ public class CSharpPokemonTest {
     }
 
     /*
-     * Generation I friendship test
-     */
-    [TestCase("Red")]
-    [TestCase("Blue")]
-    [TestCase("Yellow")]
-    public void Gen1FriendshipTest(
-        string version
-    )
-    {
-        PKMNTest.Gen1PokemonTests.FriendshipTest(version);
-    }
-
-    /*
      * Generation I Pokémon test
      */
     [TestCase("Red")]
