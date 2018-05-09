@@ -124,6 +124,20 @@ namespace pkmn {
 
             void set_is_menu_account_enabled(bool is_menu_account_enabled);
 
+            int get_money_with_mom();
+
+            void set_money_with_mom(int money_with_mom);
+
+            std::string get_mom_money_policy();
+
+            void set_mom_money_policy(
+                const std::string& mom_money_policy
+            );
+
+            int get_casino_coins();
+
+            void set_casino_coins(int casino_coins);
+
         private:
             struct pksav_gen2_save _pksav_save;
 

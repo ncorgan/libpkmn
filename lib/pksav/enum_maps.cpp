@@ -209,6 +209,19 @@ const gen1_type_bimap_t& get_gen1_type_bimap()
     return GEN1_TYPE_BIMAP;
 }
 
+const gen2_mom_money_policy_bimap_t& get_gen2_mom_money_policy_bimap()
+{
+    static const gen2_mom_money_policy_bimap_t GEN2_MOM_MONEY_POLICY_BIMAP =
+    boost::assign::list_of<gen2_mom_money_policy_bimap_t::relation>
+        ("Not saving money",  PKSAV_GEN2_MOM_MONEY_POLICY_NOT_SAVING)
+        ("Default",           PKSAV_GEN2_MOM_MONEY_POLICY_SAVING_SOME_MONEY)
+        ("Saving half money", PKSAV_GEN2_MOM_MONEY_POLICY_SAVING_HALF_MONEY)
+        ("Saving all money",  PKSAV_GEN2_MOM_MONEY_POLICY_SAVING_ALL_MONEY)
+    ;
+
+    return GEN2_MOM_MONEY_POLICY_BIMAP;
+}
+
 const gba_language_bimap_t& get_gba_language_bimap()
 {
     static const gba_language_bimap_t GBA_LANGUAGE_BIMAP =

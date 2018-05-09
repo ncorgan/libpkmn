@@ -12,6 +12,7 @@
 #include <pksav/gen1/pokemon.h>
 #include <pksav/gen1/type.h>
 
+#include <pksav/gen2/mom_money_policy.h>
 #include <pksav/gen2/options.h>
 
 #include <pksav/gba/box_wallpaper.h>
@@ -65,10 +66,12 @@ namespace pksav
 
     // Misc
     typedef boost::bimap<std::string, enum pksav_gen1_type> gen1_type_bimap_t;
+    typedef boost::bimap<std::string, enum pksav_gen2_mom_money_policy> gen2_mom_money_policy_bimap_t;
     typedef boost::bimap<std::string, enum pksav_gba_language> gba_language_bimap_t;
     typedef boost::bimap<std::string, enum pksav_nature> nature_bimap_t;
 
     const gen1_type_bimap_t& get_gen1_type_bimap();
+    const gen2_mom_money_policy_bimap_t& get_gen2_mom_money_policy_bimap();
     const gba_language_bimap_t& get_gba_language_bimap();
     const nature_bimap_t& get_nature_bimap();
 }

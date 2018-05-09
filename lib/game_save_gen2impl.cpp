@@ -412,7 +412,7 @@ namespace pkmn {
         PKSAV_CALL(
             pksav_import_base256(
                 _pksav_save.trainer_info.p_money,
-                3,
+                PKSAV_GEN2_SAVE_MONEY_BUFFER_SIZE_BYTES,
                 &money_from_pksav
             );
         )
@@ -434,7 +434,7 @@ namespace pkmn {
             pksav_export_base256(
                 size_t(money),
                 _pksav_save.trainer_info.p_money,
-                3
+                PKSAV_GEN2_SAVE_MONEY_BUFFER_SIZE_BYTES
             );
         )
     }
@@ -771,6 +771,154 @@ namespace pkmn {
         }
     }
 
+    int game_save_gen2impl::get_money_with_mom()
+    {
+        BOOST_ASSERT(_pksav_save.misc_fields.p_money_with_mom != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        size_t money_with_mom;
+        PKSAV_CALL(
+            pksav_import_bcd(
+                _pksav_save.misc_fields.p_money_with_mom,
+                PKSAV_GEN2_SAVE_MONEY_BUFFER_SIZE_BYTES,
+                &money_with_mom
+            );
+        )
+
+        return static_cast<int>(money_with_mom);
+    }
+
+    void game_save_gen2impl::set_money_with_mom(int money_with_mom)
+    {
+        pkmn::enforce_bounds(
+            "Money with Mom",
+            money_with_mom,
+            0,
+            PKSAV_GEN2_SAVE_MONEY_MAX_VALUE
+        );
+
+        BOOST_ASSERT(_pksav_save.misc_fields.p_money_with_mom != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        PKSAV_CALL(
+            pksav_export_bcd(
+                static_cast<size_t>(money_with_mom),
+                _pksav_save.misc_fields.p_money_with_mom,
+                PKSAV_GEN2_SAVE_MONEY_BUFFER_SIZE_BYTES
+            );
+        )
+    }
+
+    std::string game_save_gen2impl::get_mom_money_policy()
+    {
+        BOOST_ASSERT(_pksav_save.misc_options.p_mom_money_policy != nullptr);
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        std::string mom_money_policy = "Not saving money";
+
+        // If this flag isn't set, the player hasn't reached the point where this is
+        // introduced, so naturally, Mom's not saving money.
+        if(*_pksav_save.misc_fields.p_mom_money_policy & PKSAV_GEN2_MOM_MONEY_POLICY_ACTIVE_FLAG)
+        {
+            uint8_t raw_mom_money_policy =
+                (*_pksav_save.misc_fields.p_mom_money_policy & ~PKSAV_GEN2_MOM_MONEY_POLICY_ACTIVE_FLAG);
+
+            const pksav::gen2_mom_money_policy_bimap_t& gen2_mom_money_policy_bimap =
+                pksav::get_gen2_mom_money_policy_bimap();
+
+            // Go with the default above in the case of save corruption.
+            auto gen2_mom_money_policy_iter = gen2_mom_money_policy_bimap.right.find(
+                                                  static_cast<enum pksav_gen2_mom_money_policy>(
+                                                      raw_mom_money_policy
+                                                  )
+                                              );
+            if(gen2_mom_money_policy_iter != gen2_mom_money_policy_bimap.right.end())
+            {
+                mom_money_policy = gen2_mom_money_policy_iter->second;
+            }
+        }
+
+        return mom_money_policy;
+    }
+
+    void game_save_gen2impl::set_mom_money_policy(
+        const std::string& mom_money_policy
+    )
+    {
+        BOOST_ASSERT(_pksav_save.misc_fields.p_mom_money_policy != nullptr);
+
+        const pksav::gen2_mom_money_policy_bimap_t& gen2_mom_money_policy_bimap =
+            pksav::get_gen2_mom_money_policy_bimap();
+
+        pkmn::enforce_value_in_map_keys(
+            "Mom money policy",
+            mom_money_policy,
+            gen2_mom_money_policy_bimap.left
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        auto mom_money_policy_iter = gen2_mom_money_policy_bimap.left.find(
+                                         mom_money_policy
+                                     );
+        BOOST_ASSERT(mom_money_policy_iter != gen2_mom_money_policy_bimap.left.end());
+
+        uint8_t raw_mom_money_policy = static_cast<uint8_t>(
+                                           mom_money_policy_iter->second
+                                       );
+
+        // This separate flag indicates the event where this was introduced has
+        // occurred.
+        raw_mom_money_policy |= PKSAV_GEN2_MOM_MONEY_POLICY_ACTIVE_FLAG;
+
+        *_pksav_save.misc_fields.p_mom_money_policy = raw_mom_money_policy;
+    }
+
+    int game_save_gen2impl::get_casino_coins()
+    {
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
+
+        size_t casino_coins_from_pksav = 0;
+        PKSAV_CALL(
+            pksav_import_bcd(
+                _pksav_save.misc_fields.p_casino_coins,
+                PKSAV_GEN2_SAVE_CASINO_COINS_BUFFER_SIZE_BYTES,
+                &casino_coins_from_pksav
+            )
+        );
+
+        return int(casino_coins_from_pksav);
+    }
+
+    void game_save_gen2impl::set_casino_coins(
+        int casino_coins
+    )
+    {
+        pkmn::enforce_bounds(
+            "Casino coins",
+            casino_coins,
+            0,
+            PKSAV_GEN2_SAVE_CASINO_COINS_MAX_VALUE
+        );
+
+        boost::lock_guard<game_save_gen2impl> lock(*this);
+
+        BOOST_ASSERT(_pksav_save.misc_fields.p_casino_coins != nullptr);
+
+        PKSAV_CALL(
+            pksav_export_bcd(
+                size_t(casino_coins),
+                _pksav_save.misc_fields.p_casino_coins,
+                PKSAV_GEN2_SAVE_CASINO_COINS_BUFFER_SIZE_BYTES
+            )
+        );
+    }
+
     void game_save_gen2impl::_register_attributes()
     {
         using std::placeholders::_1;
@@ -779,6 +927,16 @@ namespace pkmn {
             "Textbox frame",
             std::bind(&game_save_gen2impl::get_textbox_frame_index, this),
             std::bind(&game_save_gen2impl::set_textbox_frame_index, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Money with Mom",
+            std::bind(&game_save_gen2impl::get_money_with_mom, this),
+            std::bind(&game_save_gen2impl::set_money_with_mom, this, _1)
+        );
+        _numeric_attribute_engine.register_attribute_fcns(
+            "Casino coins",
+            std::bind(&game_save_gen2impl::get_casino_coins, this),
+            std::bind(&game_save_gen2impl::set_casino_coins, this, _1)
         );
 
         _string_attribute_engine.register_attribute_fcns(
@@ -805,6 +963,11 @@ namespace pkmn {
             "Game Boy Printer brightness",
             std::bind(&game_save_gen2impl::get_gameboy_printer_brightness, this),
             std::bind(&game_save_gen2impl::set_gameboy_printer_brightness, this, _1)
+        );
+        _string_attribute_engine.register_attribute_fcns(
+            "Mom money policy",
+            std::bind(&game_save_gen2impl::get_mom_money_policy, this),
+            std::bind(&game_save_gen2impl::set_mom_money_policy, this, _1)
         );
 
         _boolean_attribute_engine.register_attribute_fcns(

@@ -359,7 +359,7 @@ namespace pkmn {
         PKSAV_CALL(
             pksav_import_bcd(
                 _pksav_save.trainer_info.p_money,
-                3,
+                PKSAV_GEN1_SAVE_MONEY_BUFFER_SIZE_BYTES,
                 &money_from_pksav
             );
         )
@@ -381,7 +381,7 @@ namespace pkmn {
             pksav_export_bcd(
                 size_t(money),
                 _pksav_save.trainer_info.p_money,
-                3
+                PKSAV_GEN1_SAVE_MONEY_BUFFER_SIZE_BYTES
             )
         )
     }
@@ -398,7 +398,7 @@ namespace pkmn {
         PKSAV_CALL(
             pksav_import_bcd(
                 _pksav_save.misc_fields.p_casino_coins,
-                2,
+                PKSAV_GEN1_SAVE_CASINO_COINS_BUFFER_SIZE_BYTES,
                 &casino_coins_from_pksav
             )
         );
@@ -414,7 +414,7 @@ namespace pkmn {
             "Casino coins",
             casino_coins,
             0,
-            9999
+            PKSAV_GEN1_SAVE_CASINO_COINS_MAX_VALUE
         );
 
         boost::lock_guard<game_save_gen1impl> lock(*this);
@@ -425,7 +425,7 @@ namespace pkmn {
             pksav_export_bcd(
                 size_t(casino_coins),
                 _pksav_save.misc_fields.p_casino_coins,
-                2
+                PKSAV_GEN1_SAVE_CASINO_COINS_BUFFER_SIZE_BYTES
             )
         );
     }
