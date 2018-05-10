@@ -41,10 +41,10 @@ PKMN_PYTHON_INIT
 %ignore make;
 %ignore get_native;
 
+%include <python/pkmn_time_duration.i>
+
 // Game Save
-%ignore detect_type;
-%include <pkmn/game_save.hpp>
-PKMN_PYTHON_SPTR(game_save)
+%include <python/pkmn_game_save.i>
 
 // Item List
 %include <python/pkmn_item_list.i>
