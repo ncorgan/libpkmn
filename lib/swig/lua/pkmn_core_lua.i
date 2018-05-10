@@ -53,6 +53,9 @@ PKMN_LUA_VECTOR(pkmn::move_slot, move_slot_list)
 // Pokémon PC
 %include <lua/pkmn_pokemon_pc.i>
 
+// Time Duration
+%include <pkmn/types/time_duration.hpp>
+
 // Game Save
 %include <pkmn/game_save.hpp>
 PKMN_LUA_SPTR(game_save)
