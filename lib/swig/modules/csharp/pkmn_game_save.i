@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -10,6 +10,13 @@
 %}
 
 %rename(game_save_base) pkmn::game_save;
+
+// TODO: replace with C# class
+%csmethodmodifiers pkmn::game_save::get_time_played() "internal";
+%csmethodmodifiers pkmn::game_save::set_time_played(const pkmn::time_duration&) "internal";
+
+%rename(GetTimePlayedInternal) get_time_played;
+%rename(SetTimePlayedInternal) set_time_played;
 
 %csmethodmodifiers pkmn::game_save::get_filepath() "private";
 %csmethodmodifiers pkmn::game_save::get_game() "private";
@@ -147,6 +154,19 @@
     public ItemList ItemPC {
         get {
             return this.GetItemPC();
+        }
+    }
+
+    public System.TimeSpan TimePlayed
+    {
+        get
+        {
+            return GetTimePlayedInternal();
+        }
+
+        set
+        {
+            SetTimePlayedInternal(value);
         }
     }
 

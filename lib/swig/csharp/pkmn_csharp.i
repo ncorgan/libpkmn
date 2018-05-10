@@ -56,6 +56,9 @@ std::string GetSWIGVersion();
 %csmethodmodifiers make_pokemon_pc "internal";
 %include <pkmn_statics.i>
 
+// Time Duration (internal)
+%include <csharp/pkmn_time_duration.i>
+
 // Game Save
 %include <csharp/pkmn_game_save.i>
 
