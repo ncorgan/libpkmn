@@ -23,10 +23,10 @@ public class PokedexTests
 
         // Test initial values.
 
-        Assert.AreEqual(pokedex.NumSeen, 0);
-        Assert.AreEqual(pokedex.AllSeen.Count, 0);
-        Assert.AreEqual(pokedex.NumCaught, 0);
-        Assert.AreEqual(pokedex.AllCaught.Count, 0);
+        Assert.AreEqual(0, pokedex.NumSeen);
+        Assert.AreEqual(0, pokedex.AllSeen.Count);
+        Assert.AreEqual(0, pokedex.NumCaught);
+        Assert.AreEqual(0, pokedex.AllCaught.Count);
 
         // Set random Pokémon to be seen and caught.
 
@@ -47,8 +47,8 @@ public class PokedexTests
                 Assert.IsTrue(pokedex.SeenPokemonMap[species]);
             }
         }
-        Assert.AreEqual(pokedex.NumSeen, allSeenNums.Count);
-        Assert.AreEqual(pokedex.AllSeen.Count, allSeenNums.Count);
+        Assert.AreEqual(allSeenNums.Count, pokedex.NumSeen);
+        Assert.AreEqual(allSeenNums.Count, pokedex.AllSeen.Count);
 
         PKMN.IntList allCaughtNums = new PKMN.IntList();
         while(allCaughtNums.Count < numCaught)
@@ -63,8 +63,8 @@ public class PokedexTests
                 Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
             }
         }
-        Assert.AreEqual(pokedex.NumCaught, allCaughtNums.Count);
-        Assert.AreEqual(pokedex.AllCaught.Count, allCaughtNums.Count);
+        Assert.AreEqual(allCaughtNums.Count, pokedex.NumCaught);
+        Assert.AreEqual(allCaughtNums.Count, pokedex.AllCaught.Count);
 
         // Remove all entries.
 
@@ -73,16 +73,16 @@ public class PokedexTests
             pokedex.SeenPokemonMap[species] = false;
             Assert.IsFalse(pokedex.SeenPokemonMap[species]);
         }
-        Assert.AreEqual(pokedex.NumSeen, 0);
-        Assert.AreEqual(pokedex.AllSeen.Count, 0);
+        Assert.AreEqual(0, pokedex.NumSeen);
+        Assert.AreEqual(0, pokedex.AllSeen.Count);
 
         foreach(string species in pokedex.AllCaught)
         {
             pokedex.CaughtPokemonMap[species] = false;
             Assert.IsFalse(pokedex.CaughtPokemonMap[species]);
         }
-        Assert.AreEqual(pokedex.NumCaught, 0);
-        Assert.AreEqual(pokedex.AllCaught.Count, 0);
+        Assert.AreEqual(0, pokedex.NumCaught);
+        Assert.AreEqual(0, pokedex.AllCaught.Count);
     }
 }
 

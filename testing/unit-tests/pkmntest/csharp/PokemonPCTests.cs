@@ -77,7 +77,9 @@ public class PokemonPCTests
     }
 
     private static void TestSettingPokemon(
-        PKMN.PokemonBox box
+        PKMN.PokemonBox box,
+        string[] validOtherGames,
+        string invalidOtherGame
     )
     {
         int generation = Util.GameToGeneration(box.Game);
@@ -184,15 +186,38 @@ public class PokemonPCTests
         Assert.AreEqual(bulbasaur.Species, "Bulbasaur");
         Assert.AreEqual(charmander.Species, "Charmander");
         Assert.AreEqual(squirtle.Species, "Squirtle");
+
+        // Make sure converting Pokémon before putting them in the box works (or doesn't)
+        // as expected.
+        foreach(string validGame in validOtherGames)
+        {
+            PKMN.Pokemon pikachu = new PKMN.Pokemon("Pikachu", validGame, "", 50);
+            Assert.AreEqual(validGame, pikachu.Game);
+
+            box[3] = pikachu;
+            Assert.AreEqual("Pikachu", box[3].Species);
+            Assert.AreEqual(box.Game, box[3].Game);
+            Assert.AreEqual(50, box[3].Level);
+        }
+
+        PKMN.Pokemon invalidPikachu = new PKMN.Pokemon("Pikachu", invalidOtherGame, "", 50);
+        Assert.Throws<ArgumentOutOfRangeException>(
+            delegate
+            {
+                box[3] = invalidPikachu;
+            }
+        );
     }
 
     public static void TestPokemonBox(
-        PKMN.PokemonBox box
+        PKMN.PokemonBox box,
+        string[] validOtherGames,
+        string invalidOtherGame
     )
     {
         TestEmptyPokemonBox(box);
         TestBoxName(box);
-        TestSettingPokemon(box);
+        TestSettingPokemon(box, validOtherGames, invalidOtherGame);
     }
 
     private static void TestEmptyPokemonPC(
@@ -240,24 +265,28 @@ public class PokemonPCTests
     }
 
     private static void TestSettingPokemonInBoxes(
-        PKMN.PokemonPC PC
+        PKMN.PokemonPC PC,
+        string[] validOtherGames,
+        string invalidOtherGame
     )
     {
         for(int i = 0; i < PC.Length; ++i)
         {
-            TestSettingPokemon(PC[i]);
+            TestSettingPokemon(PC[i], validOtherGames, invalidOtherGame);
             Assert.AreEqual(PC[i][0].Species, "Squirtle");
             Assert.AreEqual(PC[i][1].Species, "Charmander");
         }
     }
 
     public static void TestPokemonPC(
-        PKMN.PokemonPC PC
+        PKMN.PokemonPC PC,
+        string[] validOtherGames,
+        string invalidOtherGame
     )
     {
         TestEmptyPokemonPC(PC);
         TestBoxNames(PC);
-        TestSettingPokemonInBoxes(PC);
+        TestSettingPokemonInBoxes(PC, validOtherGames, invalidOtherGame);
     }
 }
 

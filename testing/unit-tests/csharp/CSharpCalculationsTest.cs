@@ -16,7 +16,7 @@ public class CSharpCalculationsTest {
     [Test]
     public void STABModifierTest()
     {
-        Assert.AreEqual(PKMN.Calculations.STABModifier, 1.5f);
+        Assert.AreEqual(1.5f, PKMN.Calculations.STABModifier);
     }
 
     [Test]
@@ -54,9 +54,9 @@ public class CSharpCalculationsTest {
 
         // Test expected behavior.
 
-        Assert.AreEqual(PKMN.Calculations.BrinePower(halfHP - 1, maxHP), 130);
-        Assert.AreEqual(PKMN.Calculations.BrinePower(halfHP, maxHP), 130);
-        Assert.AreEqual(PKMN.Calculations.BrinePower(halfHP + 1, maxHP), 65);
+        Assert.AreEqual(130, PKMN.Calculations.BrinePower(halfHP - 1, maxHP));
+        Assert.AreEqual(130, PKMN.Calculations.BrinePower(halfHP, maxHP));
+        Assert.AreEqual(65, PKMN.Calculations.BrinePower(halfHP + 1, maxHP));
     }
 
     [Test]
@@ -91,18 +91,18 @@ public class CSharpCalculationsTest {
 
         // Test expected results.
 
-        Assert.AreEqual(PKMN.Calculations.CrushGripPower(1, 200, 4), 1);
-        Assert.AreEqual(PKMN.Calculations.CrushGripPower(200, 200, 4), 121);
+        Assert.AreEqual(1, PKMN.Calculations.CrushGripPower(1, 200, 4));
+        Assert.AreEqual(121, PKMN.Calculations.CrushGripPower(200, 200, 4));
 
         for(int generation = 5; generation <= 6; ++generation)
         {
             Assert.AreEqual(
-                PKMN.Calculations.CrushGripPower(1, 200, generation),
-                1
+                1,
+                PKMN.Calculations.CrushGripPower(1, 200, generation)
             );
             Assert.AreEqual(
-                PKMN.Calculations.CrushGripPower(200, 200, generation),
-                120
+                120,
+                PKMN.Calculations.CrushGripPower(200, 200, generation)
             );
         }
     }
@@ -116,7 +116,7 @@ public class CSharpCalculationsTest {
         int[] resultsFromFunction = new int[echoedVoicePowers.Count];
         echoedVoicePowers.CopyTo(resultsFromFunction, 0);
 
-        Assert.AreEqual(resultsFromFunction, expectedResults);
+        Assert.AreEqual(expectedResults, resultsFromFunction);
     }
 
     [Test]
@@ -146,11 +146,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < attackerSpeeds.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedPowers[testCaseIndex],
                 PKMN.Calculations.ElectroBallPower(
                     attackerSpeeds[testCaseIndex],
                     targetSpeeds[testCaseIndex]
-                ),
-                expectedPowers[testCaseIndex]
+                )
             );
         }
     }
@@ -181,9 +181,9 @@ public class CSharpCalculationsTest {
 
         // Test expected results.
 
-        Assert.AreEqual(PKMN.Calculations.EruptionPower(1, 500), 1);
-        Assert.AreEqual(PKMN.Calculations.EruptionPower(250, 500), 75);
-        Assert.AreEqual(PKMN.Calculations.EruptionPower(500, 500), 150);
+        Assert.AreEqual(1, PKMN.Calculations.EruptionPower(1, 500));
+        Assert.AreEqual(75, PKMN.Calculations.EruptionPower(250, 500));
+        Assert.AreEqual(150, PKMN.Calculations.EruptionPower(500, 500));
     }
 
     [Test]
@@ -219,11 +219,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < attackerCurrentHPs.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedPowers[testCaseIndex],
                 PKMN.Calculations.FlailPower(
                     attackerCurrentHPs[testCaseIndex],
                     attackerMaxHPs[testCaseIndex]
-                ),
-                expectedPowers[testCaseIndex]
+                )
             );
         }
     }
@@ -252,8 +252,8 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < itemNames.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
-                PKMN.Calculations.FlingPower(itemNames[testCaseIndex]),
-                expectedPowers[testCaseIndex]
+                expectedPowers[testCaseIndex],
+                PKMN.Calculations.FlingPower(itemNames[testCaseIndex])
             );
         }
     }
@@ -278,8 +278,8 @@ public class CSharpCalculationsTest {
 
         // Test expected values.
 
-        Assert.AreEqual(PKMN.Calculations.FrustrationPower(0), 102);
-        Assert.AreEqual(PKMN.Calculations.FrustrationPower(255), 1);
+        Assert.AreEqual(102, PKMN.Calculations.FrustrationPower(0));
+        Assert.AreEqual(1, PKMN.Calculations.FrustrationPower(255));
     }
 
     [Test]
@@ -314,18 +314,18 @@ public class CSharpCalculationsTest {
             furyCutterPowers = PKMN.Calculations.FuryCutterPowers(generation);
             resultsFromFunction = new int[furyCutterPowers.Count];
             furyCutterPowers.CopyTo(resultsFromFunction, 0);
-            Assert.AreEqual(resultsFromFunction, expectedGen_2_4_Powers);
+            Assert.AreEqual(expectedGen_2_4_Powers, resultsFromFunction);
         }
 
         furyCutterPowers = PKMN.Calculations.FuryCutterPowers(5);
         resultsFromFunction = new int[furyCutterPowers.Count];
         furyCutterPowers.CopyTo(resultsFromFunction, 0);
-        Assert.AreEqual(resultsFromFunction, expectedGen5Powers);
+        Assert.AreEqual(expectedGen5Powers, resultsFromFunction);
 
         furyCutterPowers = PKMN.Calculations.FuryCutterPowers(6);
         resultsFromFunction = new int[furyCutterPowers.Count];
         furyCutterPowers.CopyTo(resultsFromFunction, 0);
-        Assert.AreEqual(resultsFromFunction, expectedGen6Powers);
+        Assert.AreEqual(expectedGen6Powers, resultsFromFunction);
     }
 
     [Test]
@@ -348,8 +348,8 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < targetWeights.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
-                PKMN.Calculations.GrassKnotPower(targetWeights[testCaseIndex]),
-                expectedPowers[testCaseIndex]
+                expectedPowers[testCaseIndex],
+                PKMN.Calculations.GrassKnotPower(targetWeights[testCaseIndex])
             );
         }
     }
@@ -374,9 +374,9 @@ public class CSharpCalculationsTest {
 
         // Test expected values.
 
-        Assert.AreEqual(PKMN.Calculations.GyroBallPower(1, 500), 150);
-        Assert.AreEqual(PKMN.Calculations.GyroBallPower(100, 200), 50);
-        Assert.AreEqual(PKMN.Calculations.GyroBallPower(500, 1), 1);
+        Assert.AreEqual(150, PKMN.Calculations.GyroBallPower(1, 500));
+        Assert.AreEqual(50, PKMN.Calculations.GyroBallPower(100, 200));
+        Assert.AreEqual(1, PKMN.Calculations.GyroBallPower(500, 1));
     }
 
     [Test]
@@ -421,11 +421,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < attackerWeights.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedPowers[testCaseIndex],
                 PKMN.Calculations.HeatCrashPower(
                     attackerWeights[testCaseIndex],
                     targetWeights[testCaseIndex]
-                ),
-                expectedPowers[testCaseIndex]
+                )
             );
         }
     }
@@ -472,11 +472,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < attackerWeights.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedPowers[testCaseIndex],
                 PKMN.Calculations.HeavySlamPower(
                     attackerWeights[testCaseIndex],
                     targetWeights[testCaseIndex]
-                ),
-                expectedPowers[testCaseIndex]
+                )
             );
         }
     }
@@ -490,7 +490,7 @@ public class CSharpCalculationsTest {
         int[] resultsFromFunction = new int[iceBallPowers.Count];
         iceBallPowers.CopyTo(resultsFromFunction, 0);
 
-        Assert.AreEqual(resultsFromFunction, expectedResults);
+        Assert.AreEqual(expectedResults, resultsFromFunction);
     }
 
     [Test]
@@ -539,21 +539,21 @@ public class CSharpCalculationsTest {
                     // Generation I-II only have one set power,
                     // regardless of target weight.
                     Assert.AreEqual(
+                        50,
                         PKMN.Calculations.LowKickPower(
                             targetWeights[testCaseIndex],
                             generation
-                        ),
-                        50
+                        )
                     );
                 }
                 else
                 {
                     Assert.AreEqual(
+                        expectedPowers[testCaseIndex],
                         PKMN.Calculations.LowKickPower(
                             targetWeights[testCaseIndex],
                             generation
-                        ),
-                        expectedPowers[testCaseIndex]
+                        )
                     );
                 }
             }
@@ -653,16 +653,16 @@ public class CSharpCalculationsTest {
         // Test expected values.
 
         Assert.AreEqual(
-            PKMN.Calculations.PowerTripPower(0, 0, 0, 0, 0, 0, 0),
-            20
+            20,
+            PKMN.Calculations.PowerTripPower(0, 0, 0, 0, 0, 0, 0)
         );
         Assert.AreEqual(
-            PKMN.Calculations.PowerTripPower(0, 1, 2, 3, 4, 5, 6),
-            440
+            440,
+            PKMN.Calculations.PowerTripPower(0, 1, 2, 3, 4, 5, 6)
         );
         Assert.AreEqual(
-            PKMN.Calculations.PowerTripPower(6, 6, 6, 6, 6, 6, 6),
-            860
+            860,
+            PKMN.Calculations.PowerTripPower(6, 6, 6, 6, 6, 6, 6)
         );
     }
 
@@ -759,16 +759,16 @@ public class CSharpCalculationsTest {
         // Test expected values.
 
         Assert.AreEqual(
-            PKMN.Calculations.PunishmentPower(0, 0, 0, 0, 0, 0, 0),
-            60
+            60,
+            PKMN.Calculations.PunishmentPower(0, 0, 0, 0, 0, 0, 0)
         );
         Assert.AreEqual(
-            PKMN.Calculations.PunishmentPower(0, 1, 2, 3, 4, 5, 6),
-            200
+            200,
+            PKMN.Calculations.PunishmentPower(0, 1, 2, 3, 4, 5, 6)
         );
         Assert.AreEqual(
-            PKMN.Calculations.PunishmentPower(6, 6, 6, 6, 6, 6, 6),
-            200
+            200,
+            PKMN.Calculations.PunishmentPower(6, 6, 6, 6, 6, 6, 6)
         );
     }
 
@@ -792,8 +792,8 @@ public class CSharpCalculationsTest {
 
         // Test expected values.
 
-        Assert.AreEqual(PKMN.Calculations.ReturnPower(0), 1);
-        Assert.AreEqual(PKMN.Calculations.ReturnPower(255), 102);
+        Assert.AreEqual(1, PKMN.Calculations.ReturnPower(0));
+        Assert.AreEqual(102, PKMN.Calculations.ReturnPower(255));
     }
 
     [Test]
@@ -841,11 +841,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < attackerCurrentHPs.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedPowers[testCaseIndex],
                 PKMN.Calculations.ReversalPower(
                     attackerCurrentHPs[testCaseIndex],
                     attackerMaxHPs[testCaseIndex]
-                ),
-                expectedPowers[testCaseIndex]
+                )
             );
         }
     }
@@ -859,7 +859,7 @@ public class CSharpCalculationsTest {
         int[] resultsFromFunction = new int[rolloutPowers.Count];
         rolloutPowers.CopyTo(resultsFromFunction, 0);
 
-        Assert.AreEqual(resultsFromFunction, expectedResults);
+        Assert.AreEqual(expectedResults, resultsFromFunction);
     }
 
     [Test]
@@ -880,10 +880,10 @@ public class CSharpCalculationsTest {
             }
         );
 
-        Assert.AreEqual(PKMN.Calculations.SpitUpPower(0), 0);
-        Assert.AreEqual(PKMN.Calculations.SpitUpPower(1), 100);
-        Assert.AreEqual(PKMN.Calculations.SpitUpPower(2), 200);
-        Assert.AreEqual(PKMN.Calculations.SpitUpPower(3), 300);
+        Assert.AreEqual(0, PKMN.Calculations.SpitUpPower(0));
+        Assert.AreEqual(100, PKMN.Calculations.SpitUpPower(1));
+        Assert.AreEqual(200, PKMN.Calculations.SpitUpPower(2));
+        Assert.AreEqual(300, PKMN.Calculations.SpitUpPower(3));
     }
 
     [Test]
@@ -979,16 +979,16 @@ public class CSharpCalculationsTest {
         // Test expected values.
 
         Assert.AreEqual(
-            PKMN.Calculations.StoredPowerPower(0, 0, 0, 0, 0, 0, 0),
-            20
+            20,
+            PKMN.Calculations.StoredPowerPower(0, 0, 0, 0, 0, 0, 0)
         );
         Assert.AreEqual(
-            PKMN.Calculations.StoredPowerPower(0, 1, 2, 3, 4, 5, 6),
-            440
+            440,
+            PKMN.Calculations.StoredPowerPower(0, 1, 2, 3, 4, 5, 6)
         );
         Assert.AreEqual(
-            PKMN.Calculations.StoredPowerPower(6, 6, 6, 6, 6, 6, 6),
-            860
+            860,
+            PKMN.Calculations.StoredPowerPower(6, 6, 6, 6, 6, 6, 6)
         );
     }
 
@@ -1001,7 +1001,7 @@ public class CSharpCalculationsTest {
         int[] resultsFromFunction = new int[tripleKickPowers.Count];
         tripleKickPowers.CopyTo(resultsFromFunction, 0);
 
-        Assert.AreEqual(resultsFromFunction, expectedResults);
+        Assert.AreEqual(expectedResults, resultsFromFunction);
     }
 
     [Test]
@@ -1027,8 +1027,8 @@ public class CSharpCalculationsTest {
         for(int remainingPP = 0; remainingPP < expectedResults.Length; ++remainingPP)
         {
             Assert.AreEqual(
-                PKMN.Calculations.TrumpCardPower(remainingPP),
-                expectedResults[remainingPP]
+                expectedResults[remainingPP],
+                PKMN.Calculations.TrumpCardPower(remainingPP)
             );
         }
     }
@@ -1059,9 +1059,9 @@ public class CSharpCalculationsTest {
 
         // Test expected results.
 
-        Assert.AreEqual(PKMN.Calculations.WaterSpoutPower(1, 500), 1);
-        Assert.AreEqual(PKMN.Calculations.WaterSpoutPower(250, 500), 75);
-        Assert.AreEqual(PKMN.Calculations.WaterSpoutPower(500, 500), 150);
+        Assert.AreEqual(1, PKMN.Calculations.WaterSpoutPower(1, 500));
+        Assert.AreEqual(75, PKMN.Calculations.WaterSpoutPower(250, 500));
+        Assert.AreEqual(150, PKMN.Calculations.WaterSpoutPower(500, 500));
     }
 
     [Test]
@@ -1096,18 +1096,18 @@ public class CSharpCalculationsTest {
 
         // Test expected values.
 
-        Assert.AreEqual(PKMN.Calculations.WringOutPower(1, 200, 4), 1);
-        Assert.AreEqual(PKMN.Calculations.WringOutPower(200, 200, 4), 121);
+        Assert.AreEqual(1, PKMN.Calculations.WringOutPower(1, 200, 4));
+        Assert.AreEqual(121, PKMN.Calculations.WringOutPower(200, 200, 4));
 
         for(int generation = 5; generation <= 6; ++generation)
         {
             Assert.AreEqual(
-                PKMN.Calculations.WringOutPower(1, 200, generation),
-                1
+                1,
+                PKMN.Calculations.WringOutPower(1, 200, generation)
             );
             Assert.AreEqual(
-                PKMN.Calculations.WringOutPower(200, 200, generation),
-                120
+                120,
+                PKMN.Calculations.WringOutPower(200, 200, generation)
             );
         }
     }
@@ -1192,11 +1192,11 @@ public class CSharpCalculationsTest {
         for(int testCaseIndex = 0; testCaseIndex < generations.Length; ++testCaseIndex)
         {
             Assert.AreEqual(
+                expectedResults[testCaseIndex],
                 PKMN.Calculations.CriticalHitChance(
                     generations[testCaseIndex],
                     stages[testCaseIndex]
-                ),
-                expectedResults[testCaseIndex]
+                )
             );
         }
     }
@@ -1221,9 +1221,9 @@ public class CSharpCalculationsTest {
 
         // Test expected values.
 
-        Assert.AreEqual(PKMN.Calculations.Gen1CriticalHitModifier(5), 1.5f);
-        Assert.AreEqual(PKMN.Calculations.Gen1CriticalHitModifier(20), 1.8f);
-        Assert.AreEqual(PKMN.Calculations.Gen1CriticalHitModifier(95), 1.95f);
+        Assert.AreEqual(1.5f, PKMN.Calculations.Gen1CriticalHitModifier(5));
+        Assert.AreEqual(1.8f, PKMN.Calculations.Gen1CriticalHitModifier(20));
+        Assert.AreEqual(1.95f, PKMN.Calculations.Gen1CriticalHitModifier(95));
     }
 
     [Test]
@@ -1248,11 +1248,46 @@ public class CSharpCalculationsTest {
 
         // Past Generation I, the modifier is constant, depending on the
         // generation.
-        Assert.AreEqual(PKMN.Calculations.CriticalHitModifier(2), 2.0f);
-        Assert.AreEqual(PKMN.Calculations.CriticalHitModifier(3), 2.0f);
-        Assert.AreEqual(PKMN.Calculations.CriticalHitModifier(4), 2.0f);
-        Assert.AreEqual(PKMN.Calculations.CriticalHitModifier(5), 2.0f);
-        Assert.AreEqual(PKMN.Calculations.CriticalHitModifier(6), 1.5f);
+        Assert.AreEqual(2.0f, PKMN.Calculations.CriticalHitModifier(2));
+        Assert.AreEqual(2.0f, PKMN.Calculations.CriticalHitModifier(3));
+        Assert.AreEqual(2.0f, PKMN.Calculations.CriticalHitModifier(4));
+        Assert.AreEqual(2.0f, PKMN.Calculations.CriticalHitModifier(5));
+        Assert.AreEqual(1.5f, PKMN.Calculations.CriticalHitModifier(6));
+    }
+
+    [Test]
+    public void DamageTest()
+    {
+        // Source: https://bulbapedia.bulbagarden.net/wiki/Damage#Example
+
+        // Only taking types into account
+        //
+        // "Imagine a level 75 Glaceon...with an effective Attack stat of 123
+        // uses Ice Fang (an Ice-type physical move with a power of 65) against
+        // a Garchomp with an effective Defense stat of 163 in Generation VI,
+        // and does not land a critical hit."
+        //
+        // The article itself results in the wrong value, but the value I'm
+        // testing for below was based on its equations.
+        const int level = 75;
+        const int iceFangBasePower = 65;
+        const float modifierAgainstDragonGround = 6.0f;
+        const int glaceonL75Attack = 123;
+        const int garchompL75Defense = 163;
+
+        int damage = PKMN.Calculations.Damage(
+                         level,
+                         iceFangBasePower,
+                         glaceonL75Attack,
+                         garchompL75Defense,
+                         modifierAgainstDragonGround
+                     );
+        Assert.AreEqual(200, damage);
+    }
+
+    [Test]
+    public void TypeDamageModifierTest()
+    {
     }
 
     [Test]
@@ -1304,8 +1339,8 @@ public class CSharpCalculationsTest {
          *
          * Source: http://bulbapedia.bulbagarden.net/wiki/Individual_values#Unown.27s_letter
          */
-        Assert.AreEqual(PKMN.Calculations.Gen2UnownForm(10, 9, 1, 14), "G");
-        Assert.AreEqual(PKMN.Calculations.Gen2UnownForm(5, 15, 10, 5), "S");
+        Assert.AreEqual("G", PKMN.Calculations.Gen2UnownForm(10, 9, 1, 14));
+        Assert.AreEqual("S", PKMN.Calculations.Gen2UnownForm(5, 15, 10, 5));
     }
 
     [Test]
@@ -1315,7 +1350,7 @@ public class CSharpCalculationsTest {
          *
          * Source: http://www.smogon.com/ingame/rng/pid_iv_creation#unown_shape
          */
-        Assert.AreEqual(PKMN.Calculations.Gen3UnownForm(0x4C07DE71), "B");
+        Assert.AreEqual("B", PKMN.Calculations.Gen3UnownForm(0x4C07DE71));
     }
 
     [Test]
@@ -1353,20 +1388,20 @@ public class CSharpCalculationsTest {
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Nidorino", 0), "Male");
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Nidorino", 15), "Male");
+        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Nidorino", 0));
+        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Nidorino", 15));
 
         // 25% male, 75% female
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Vulpix", 11), "Female");
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Vulpix", 12), "Male");
+        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Vulpix", 11));
+        Assert.AreEqual("Male", PKMN.Calculations.Gen2PokemonGender("Vulpix", 12));
 
         // All female
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Nidorina", 0), "Female");
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Nidorina", 15), "Female");
+        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Nidorina", 0));
+        Assert.AreEqual("Female", PKMN.Calculations.Gen2PokemonGender("Nidorina", 15));
 
         // Genderless
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Magnemite", 0), "Genderless");
-        Assert.AreEqual(PKMN.Calculations.Gen2PokemonGender("Magnemite", 15), "Genderless");
+        Assert.AreEqual("Genderless", PKMN.Calculations.Gen2PokemonGender("Magnemite", 0));
+        Assert.AreEqual("Genderless", PKMN.Calculations.Gen2PokemonGender("Magnemite", 15));
     }
 
     [Test]
@@ -1381,20 +1416,20 @@ public class CSharpCalculationsTest {
         // Make sure known good inputs result in expected results.
 
         // All male
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Nidorino", 0), "Male");
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Nidorino", 0xFFFFFFFF), "Male");
+        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Nidorino", 0));
+        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Nidorino", 0xFFFFFFFF));
 
         // 25% male, 75% female
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Vulpix", 190), "Female");
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Vulpix", 191), "Male");
+        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Vulpix", 190));
+        Assert.AreEqual("Male", PKMN.Calculations.ModernPokemonGender("Vulpix", 191));
 
         // All female
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Nidorina", 0), "Female");
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Nidorina", 0xFFFFFFFF), "Female");
+        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Nidorina", 0));
+        Assert.AreEqual("Female", PKMN.Calculations.ModernPokemonGender("Nidorina", 0xFFFFFFFF));
 
         // Genderless
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Magnemite", 0), "Genderless");
-        Assert.AreEqual(PKMN.Calculations.ModernPokemonGender("Magnemite", 0xFFFFFFFF), "Genderless");
+        Assert.AreEqual("Genderless", PKMN.Calculations.ModernPokemonGender("Magnemite", 0));
+        Assert.AreEqual("Genderless", PKMN.Calculations.ModernPokemonGender("Magnemite", 0xFFFFFFFF));
     }
 
     [Test]
@@ -1449,18 +1484,9 @@ public class CSharpCalculationsTest {
         PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
                                                        "Dark", 69
                                                    );
-        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower(
-                                                            "Normal", 69
-                                                        );
-        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower(
-                                                                 "Dark", 50
-                                                             );
-
         PKMN.HiddenPower hiddenPower = PKMN.Calculations.Gen2HiddenPower(15, 15, 15, 14);
 
-        Assert.AreEqual(hiddenPower, expectedHiddenPower);
-        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentType);
-        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentBasePower);
+        Assert.AreEqual(expectedHiddenPower, hiddenPower);
     }
 
     [Test]
@@ -1535,21 +1561,9 @@ public class CSharpCalculationsTest {
         PKMN.HiddenPower expectedHiddenPower = new PKMN.HiddenPower(
                                                        "Grass", 70
                                                    );
-        PKMN.HiddenPower hiddenPowerDifferentType = new PKMN.HiddenPower(
-                                                            "Steel", 70
-                                                        );
-        PKMN.HiddenPower hiddenPowerDifferentBasePower = new PKMN.HiddenPower(
-                                                                 "Grass", 10
-                                                             );
-
         PKMN.HiddenPower hiddenPower = PKMN.Calculations.ModernHiddenPower(30, 31, 31, 31, 30, 31);
 
         Assert.AreEqual(hiddenPower, expectedHiddenPower);
-        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentType);
-        Assert.AreNotEqual(hiddenPower, hiddenPowerDifferentBasePower);
-        Assert.AreEqual(hiddenPower.GetHashCode(), expectedHiddenPower.GetHashCode());
-        Assert.AreNotEqual(hiddenPower.GetHashCode(), hiddenPowerDifferentType.GetHashCode());
-        Assert.AreNotEqual(hiddenPower.GetHashCode(), hiddenPowerDifferentBasePower.GetHashCode());
     }
 
     [Test]
@@ -1596,22 +1610,22 @@ public class CSharpCalculationsTest {
                               items[testCaseIndex],
                               4
                           );
-            Assert.AreEqual(naturalGift.Type, types[testCaseIndex]);
-            Assert.AreEqual(naturalGift.BasePower, gen4Powers[testCaseIndex]);
+            Assert.AreEqual(types[testCaseIndex], naturalGift.Type);
+            Assert.AreEqual(gen4Powers[testCaseIndex], naturalGift.BasePower);
 
             naturalGift = PKMN.Calculations.NaturalGiftStats(
                               items[testCaseIndex],
                               5
                           );
-            Assert.AreEqual(naturalGift.Type, types[testCaseIndex]);
-            Assert.AreEqual(naturalGift.BasePower, gen5Powers[testCaseIndex]);
+            Assert.AreEqual(types[testCaseIndex], naturalGift.Type);
+            Assert.AreEqual(gen5Powers[testCaseIndex], naturalGift.BasePower);
 
             naturalGift = PKMN.Calculations.NaturalGiftStats(
                               items[testCaseIndex],
                               6
                           );
-            Assert.AreEqual(naturalGift.Type, types[testCaseIndex]);
-            Assert.AreEqual(naturalGift.BasePower, gen6Powers[testCaseIndex]);
+            Assert.AreEqual(types[testCaseIndex], naturalGift.Type);
+            Assert.AreEqual(gen6Powers[testCaseIndex], naturalGift.BasePower);
         }
     }
 
@@ -1627,8 +1641,8 @@ public class CSharpCalculationsTest {
 
         for(uint i = 0; i < natures.Length; ++i) {
             Assert.AreEqual(
-                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i)),
-                natures[i]
+                natures[i],
+                PKMN.Calculations.Nature((uint)((rng.Next(0,50001) * 1000) + i))
             );
         }
     }
@@ -1758,6 +1772,18 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
+    public void ModernShinyTest() {
+        /*
+         * Make sure known good inputs result in known results.
+         *
+         * Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
+         *         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
+         */
+        Assert.IsTrue(PKMN.Calculations.ModernShiny(2814471828, 2545049318));
+        Assert.IsTrue(PKMN.Calculations.ModernShiny(0xB58F0B2A, 398174488));
+    }
+
+    [Test]
     public void PokemonSizeTest() {
         // Make sure expected exceptions are thrown.
         Assert.Throws<IndexOutOfRangeException>(
@@ -1855,42 +1881,23 @@ public class CSharpCalculationsTest {
     }
 
     [Test]
-    public void ModernShinyTest() {
-        /*
-         * Make sure known good inputs result in known results.
-         *
-         * Source: http://bulbapedia.bulbagarden.net/wiki/Personality_value#Shininess
-         *         http://www.smogon.com/ingame/rng/pid_iv_creation#how_shiny
-         */
-        Assert.IsTrue(PKMN.Calculations.ModernShiny(2814471828, 2545049318));
-        Assert.IsTrue(PKMN.Calculations.ModernShiny(0xB58F0B2A, 398174488));
-    }
-
-    [Test]
     public void SpindaCoordsTest() {
-        // Check equality functions.
         PKMN.SpindaCoords spindaCoords1 = new PKMN.SpindaCoords(123, 456);
         PKMN.SpindaCoords spindaCoords2 = new PKMN.SpindaCoords(123, 456);
         PKMN.SpindaCoords spindaCoords3 = new PKMN.SpindaCoords(456, 123);
 
-        Assert.AreEqual(spindaCoords1, spindaCoords2);
-        Assert.AreNotEqual(spindaCoords1, spindaCoords3);
-        Assert.AreEqual(spindaCoords1.GetHashCode(), spindaCoords2.GetHashCode());
-        Assert.AreNotEqual(spindaCoords1.GetHashCode(), spindaCoords3.GetHashCode());
-
         // Check addition operators.
         PKMN.SpindaCoords addedCoords = spindaCoords1 + spindaCoords2;
-        Assert.AreEqual(addedCoords.X, 246);
-        Assert.AreEqual(addedCoords.Y, 912);
+        Assert.AreEqual(246, addedCoords.X);
+        Assert.AreEqual(912, addedCoords.Y);
 
         addedCoords += spindaCoords3;
-        Assert.AreEqual(addedCoords.X, 702);
-        Assert.AreEqual(addedCoords.Y, 1035);
+        Assert.AreEqual(702, addedCoords.X);
+        Assert.AreEqual(1035, addedCoords.Y);
     }
 
     [Test]
     public void SpindaSpotsTest() {
-        // Check equality functions.
         PKMN.SpindaSpots spindaSpots1 = new PKMN.SpindaSpots(
                                                 new PKMN.SpindaCoords(7, 5),
                                                 new PKMN.SpindaCoords(10, 0),
@@ -1910,11 +1917,6 @@ public class CSharpCalculationsTest {
                                                 new PKMN.SpindaCoords(1, 4)
                                             );
 
-        Assert.AreEqual(spindaSpots1, spindaSpots2);
-        Assert.AreNotEqual(spindaSpots1, spindaSpots3);
-        Assert.AreEqual(spindaSpots1.GetHashCode(), spindaSpots2.GetHashCode());
-        Assert.AreNotEqual(spindaSpots1.GetHashCode(), spindaSpots3.GetHashCode());
-
         /*
          * Make sure known good inputs result in known results.
          *
@@ -1925,28 +1927,28 @@ public class CSharpCalculationsTest {
 
         // Test addition operators.
         spindaSpots = spindaSpots + spindaSpots2;
-        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(14, 10));
-        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(20, 0));
-        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(2, 8));
-        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(4, 30));
+        Assert.AreEqual(new PKMN.SpindaCoords(14, 10), spindaSpots.LeftEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(20, 0), spindaSpots.RightEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(2, 8), spindaSpots.LeftFace);
+        Assert.AreEqual(new PKMN.SpindaCoords(4, 30), spindaSpots.RightFace);
 
         spindaSpots += spindaSpots3;
-        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(21, 15));
-        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(30, 0));
-        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(4, 23));
-        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(5, 34));
+        Assert.AreEqual(new PKMN.SpindaCoords(21, 15), spindaSpots.LeftEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(30, 0), spindaSpots.RightEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(4, 23), spindaSpots.LeftFace);
+        Assert.AreEqual(new PKMN.SpindaCoords(5, 34), spindaSpots.RightFace);
 
         spindaSpots = spindaSpots + new PKMN.SpindaCoords(2, 5);
-        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(23, 20));
-        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(32, 5));
-        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(6, 28));
-        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(7, 39));
+        Assert.AreEqual(new PKMN.SpindaCoords(23, 20), spindaSpots.LeftEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(32, 5), spindaSpots.RightEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(6, 28), spindaSpots.LeftFace);
+        Assert.AreEqual(new PKMN.SpindaCoords(7, 39), spindaSpots.RightFace);
 
         spindaSpots += new PKMN.SpindaCoords(5, 2);
-        Assert.AreEqual(spindaSpots.LeftEar, new PKMN.SpindaCoords(28, 22));
-        Assert.AreEqual(spindaSpots.RightEar, new PKMN.SpindaCoords(37, 7));
-        Assert.AreEqual(spindaSpots.LeftFace, new PKMN.SpindaCoords(11, 30));
-        Assert.AreEqual(spindaSpots.RightFace, new PKMN.SpindaCoords(12, 41));
+        Assert.AreEqual(new PKMN.SpindaCoords(28, 22), spindaSpots.LeftEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(37, 7), spindaSpots.RightEar);
+        Assert.AreEqual(new PKMN.SpindaCoords(11, 30), spindaSpots.LeftFace);
+        Assert.AreEqual(new PKMN.SpindaCoords(12, 41), spindaSpots.RightFace);
     }
 
     [Test]
