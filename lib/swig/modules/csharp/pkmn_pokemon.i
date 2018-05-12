@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -71,6 +71,54 @@ using Database;"
 
 %typemap(cscode) pkmn::swig::pokemon
 %{
+    public System.Drawing.Image Icon
+    {
+        get
+        {
+            try
+            {
+                return System.Drawing.Image.FromFile(this.IconFilepath);
+            }
+            catch (System.NotSupportedException)
+            {
+                /*
+                 * Until recent versions, Mono's System.Drawing.Image implementation uses
+                 * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+                 * the case, this function will write a temporary copy that Mono can import.
+                 */
+                string tmpFilepath = PKMN.ConvertImageForMono(this.IconFilepath);
+                System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+                System.IO.File.Delete(tmpFilepath);
+
+                return tmpImage;
+            }
+        }
+    }
+
+    public System.Drawing.Image Sprite
+    {
+        get
+        {
+            try
+            {
+                return System.Drawing.Image.FromFile(this.SpriteFilepath);
+            }
+            catch (System.NotSupportedException)
+            {
+                /*
+                 * Until recent versions, Mono's System.Drawing.Image implementation uses
+                 * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+                 * the case, this function will write a temporary copy that Mono can import.
+                 */
+                string tmpFilepath = PKMN.ConvertImageForMono(this.SpriteFilepath);
+                System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+                System.IO.File.Delete(tmpFilepath);
+
+                return tmpImage;
+            }
+        }
+    }
+
     public bool Equals(Pokemon other)
     {
         if(other == null)

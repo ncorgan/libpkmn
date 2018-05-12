@@ -24,6 +24,10 @@ namespace pkmn { namespace priv {
     );
 
     PKMN_API void initialize_database_connection();
+
+    PKMN_API std::string convert_image_for_mono(
+        const std::string& filepath
+    );
 }}
 
 #endif /* INCLUDED_PKMN_PRIVATE_FUNCTIONS_HPP */

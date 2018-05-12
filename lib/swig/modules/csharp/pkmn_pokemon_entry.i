@@ -44,6 +44,52 @@
 
 %typemap(cscode) pkmn::database::pokemon_entry
 %{
+    public System.Drawing.Image GetIcon(bool isFemale)
+    {
+        string iconFilepath = this.GetIconFilepath(isFemale);
+
+        try
+        {
+            return System.Drawing.Image.FromFile(iconFilepath);
+        }
+        catch (System.NotSupportedException)
+        {
+            /*
+             * Until recent versions, Mono's System.Drawing.Image implementation uses
+             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+             * the case, this function will write a temporary copy that Mono can import.
+             */
+            string tmpFilepath = PKMN.ConvertImageForMono(iconFilepath);
+            System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+            System.IO.File.Delete(tmpFilepath);
+
+            return tmpImage;
+        }
+    }
+
+    public System.Drawing.Image GetSprite(bool isFemale, bool isShiny)
+    {
+        string spriteFilepath = this.GetSpriteFilepath(isFemale, isShiny);
+
+        try
+        {
+            return System.Drawing.Image.FromFile(spriteFilepath);
+        }
+        catch (System.NotSupportedException)
+        {
+            /*
+             * Until recent versions, Mono's System.Drawing.Image implementation uses
+             * a version of libgdiplus that doesn't support 64bpp PNGs. If this is
+             * the case, this function will write a temporary copy that Mono can import.
+             */
+            string tmpFilepath = PKMN.ConvertImageForMono(spriteFilepath);
+            System.Drawing.Image tmpImage = System.Drawing.Image.FromFile(tmpFilepath);
+            System.IO.File.Delete(tmpFilepath);
+
+            return tmpImage;
+        }
+    }
+
     public bool Equals(PokemonEntry rhs)
     {
         if(rhs == null)

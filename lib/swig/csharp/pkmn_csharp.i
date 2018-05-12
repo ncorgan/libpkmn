@@ -27,6 +27,19 @@ PKMN_CSHARP_INIT
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_csharp_docs.i>
 
+// Private exports
+
+%rename(InitializeDatabaseConnection) initialize_database_connection;
+%rename(ConvertImageForMono) convert_image_for_mono;
+
+%csmethodmodifiers initialize_database_connection "internal";
+%csmethodmodifiers convert_image_for_mono "internal";
+
+namespace pkmn { namespace priv {
+    void initialize_database_connection();
+    std::string convert_image_for_mono(const std::string& filepath);
+}}
+
 // Build Info
 %csmethodmodifiers pkmn::build_info::get_boost_version "internal";
 %csmethodmodifiers pkmn::build_info::get_libpkmgc_version "internal";
@@ -37,14 +50,6 @@ PKMN_CSHARP_INIT
 %include <pkmn/build_info.hpp>
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
-
-// Will be called on import
-
-%rename(InitializeDatabaseConnection) initialize_database_connection;
-%csmethodmodifiers initialize_database_connection "internal";
-namespace pkmn { namespace priv {
-    void initialize_database_connection();
-}}
 
 // Attribute Maps
 %include <csharp/pkmn_attribute_maps.i>
