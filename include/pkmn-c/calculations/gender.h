@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2016,2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -29,16 +29,16 @@ extern "C" {
  *
  * \param species Pokémon species
  * \param IV_attack Attack IV (1-15)
- * \param gender_out Where to return the gender
+ * \param p_gender_out Where to return the gender
  * \returns ::PKMN_ERROR_NONE upon successful completion
- * \returns ::PKMN_ERROR_NULL_POINTER if species or gender_out is null
+ * \returns ::PKMN_ERROR_NULL_POINTER if species or p_gender_out is null
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If Pokémon species is invalid
  * \returns ::PKMN_ERROR_OUT_OF_RANGE If IV_attack is out of range [0,15]
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
-    const char* species,
+    const char* p_species,
     int IV_attack,
-    enum pkmn_gender* gender_out
+    enum pkmn_gender* p_gender_out
 );
 
 /*!
@@ -51,15 +51,15 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen2_pokemon_gender(
  *
  * \param species Pokémon species
  * \param personality Pokémon personality
- * \param gender_out Where to return the gender
+ * \param p_gender_out Where to return the gender
  * \returns ::PKMN_ERROR_NONE upon successful completion
- * \returns ::PKMN_ERROR_NULL_POINTER if species or gender_out is null
+ * \returns ::PKMN_ERROR_NULL_POINTER if species or p_gender_out is null
  * \returns ::PKMN_ERROR_RUNTIME_ERROR If Pokémon species is invalid
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_modern_pokemon_gender(
-    const char* species,
+    const char* p_species,
     uint32_t personality,
-    enum pkmn_gender* gender_out
+    enum pkmn_gender* p_gender_out
 );
 
 #ifdef __cplusplus

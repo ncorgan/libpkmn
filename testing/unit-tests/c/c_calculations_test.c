@@ -2375,7 +2375,7 @@ static void modern_stat_test() {
                 (enum pkmn_stat)(100), 1, 1.0f, 1, 1, 1,
                 &int_result
             );
-    TEST_ASSERT_EQUAL(PKMN_ERROR_OUT_OF_RANGE, error);
+    TEST_ASSERT_EQUAL(PKMN_ERROR_INVALID_ARGUMENT, error);
     error = pkmn_calculations_modern_stat(
                 PKMN_STAT_SPECIAL, 1, 1.0f, 1, 1, 1,
                 &int_result

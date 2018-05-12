@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,18 +18,18 @@ enum pkmn_error pkmn_calculations_damage(
     int attack_stat,
     int defense_stat,
     float modifier,
-    int* damage_out
+    int* p_damage_out
 )
 {
-    PKMN_CHECK_NULL_PARAM(damage_out);
+    PKMN_CHECK_NULL_PARAM(p_damage_out);
 
     PKMN_CPP_TO_C(
-        *damage_out = pkmn::calculations::damage(
-                          attacker_level,
-                          move_base_power,
-                          attack_stat,
-                          defense_stat,
-                          modifier
-                      );
+        *p_damage_out = pkmn::calculations::damage(
+                            attacker_level,
+                            move_base_power,
+                            attack_stat,
+                            defense_stat,
+                            modifier
+                        );
     )
 }

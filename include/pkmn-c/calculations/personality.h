@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -18,31 +18,31 @@
 extern "C" {
 #endif
 
-//! Generate a personality based on the given species and values.
+//! Generate a personality based on the given p_species and values.
 /*!
  * This function is RNG-based and takes an average of 30 milliseconds
  * to generate a valid value.
  *
- * \param species The Pokémon species
+ * \param p_species The Pokémon species
  * \param trainer_id The trainer ID to use in the shininess calculation
  * \param shiny Whether or not the Pokémon should be shiny
- * \param ability Which ability the Pokémon should have
+ * \param p_ability Which ability the Pokémon should have
  * \param gender What gender the Pokémon should be
- * \param nature What nature the Pokémon should have
- * \param personality_out Where to return the generated personality
+ * \param p_nature What nature the Pokémon should have
+ * \param p_personality_out Where to return the generated personality
  * \returns ::PKMN_ERROR_NONE upon success
- * \returns ::PKMN_ERROR_NULL_POINTER if ability, nature, or personality_out is NULL
- * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given ability or gender is invalid for the species
- * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given nature is invalid
+ * \returns ::PKMN_ERROR_NULL_POINTER if ability, p_nature, or p_personality_out is NULL
+ * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given p_ability or gender is invalid for the p_species
+ * \returns ::PKMN_ERROR_INVALID_ARGUMENT if the given p_nature is invalid
  */
 PKMN_C_API enum pkmn_error pkmn_calculations_generate_personality(
-    const char* species,
+    const char* p_species,
     uint32_t trainer_id,
     bool shiny,
-    const char* ability,
+    const char* p_ability,
     enum pkmn_gender gender,
-    const char* nature,
-    uint32_t* personality_out
+    const char* p_nature,
+    uint32_t* p_personality_out
 );
 
 #ifdef __cplusplus

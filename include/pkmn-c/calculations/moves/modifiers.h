@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,9 +20,9 @@ extern "C" {
 
 PKMN_C_API enum pkmn_error pkmn_calculations_type_damage_modifier(
     int generation,
-    const char* attacking_type,
-    const char* defending_type,
-    float* type_damage_modifier_out
+    const char* p_attacking_type,
+    const char* p_defending_type,
+    float* p_type_damage_modifier_out
 );
 
 #ifdef __cplusplus

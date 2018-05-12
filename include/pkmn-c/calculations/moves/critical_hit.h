@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -20,23 +20,23 @@ PKMN_C_API enum pkmn_error pkmn_calculations_gen1_critical_hit_chance(
     int speed,
     bool rate_increased,
     bool high_rate_move,
-    float* critical_hit_chance_out
+    float* p_critical_hit_chance_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_critical_hit_chance(
     int generation,
     int critical_hit_stage,
-    float* critical_hit_chance_out
+    float* p_critical_hit_chance_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_gen1_critical_hit_modifier(
     int attacker_level,
-    float* critical_hit_modifier_out
+    float* p_critical_hit_modifier_out
 );
 
 PKMN_C_API enum pkmn_error pkmn_calculations_critical_hit_modifier(
     int generation,
-    float* critical_hit_modifier_out
+    float* p_critical_hit_modifier_out
 );
 
 #ifdef __cplusplus
