@@ -242,15 +242,15 @@ enum pkmn_error pkmn_pokemon_set_form(
 
 enum pkmn_error pkmn_pokemon_is_egg(
     struct pkmn_pokemon* p_pokemon,
-    bool* is_egg_out
+    bool* p_is_egg_out
 )
 {
     PKMN_CHECK_NULL_PARAM(p_pokemon);
     pkmn_pokemon_internal_t* p_internal = POKEMON_INTERNAL_RCAST(p_pokemon->p_internal);
-    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(is_egg_out, p_internal);
+    PKMN_CHECK_NULL_PARAM_WITH_HANDLE(p_is_egg_out, p_internal);
 
     PKMN_CPP_TO_C_WITH_HANDLE(p_internal,
-        *is_egg_out = p_internal->cpp->is_egg();
+        *p_is_egg_out = p_internal->cpp->is_egg();
     )
 }
 
