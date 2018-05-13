@@ -6,6 +6,9 @@
  */
 
 #include "daycare_impl.hpp"
+#include "daycare_gen1impl.hpp"
+#include "daycare_gen2impl.hpp"
+
 #include "exception_internal.hpp"
 
 #include "database/database_common.hpp"
@@ -15,6 +18,37 @@
 #include <boost/thread/lock_guard.hpp>
 
 namespace pkmn {
+
+    daycare::sptr daycare::make(const std::string& game)
+    {
+        int game_id = pkmn::database::game_name_to_id(game);
+        int generation = pkmn::database::game_name_to_generation(game);
+
+        daycare::sptr ret;
+
+        switch(generation)
+        {
+            case 1:
+                ret = std::make_shared<daycare_gen1impl>(game_id);
+                break;
+
+            case 2:
+                ret = std::make_shared<daycare_gen2impl>(game_id);
+                break;
+
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                throw pkmn::unimplemented_error();
+
+            default:
+                throw std::out_of_range("Invalid game");
+        }
+
+        return ret;
+    }
 
     daycare_impl::daycare_impl(int game_id):
         daycare(),

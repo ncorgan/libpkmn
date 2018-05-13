@@ -69,6 +69,7 @@ SET(pkmn_sources
     private_exports.cpp
     daycare_impl.cpp
     daycare_gen1impl.cpp
+    daycare_gen2impl.cpp
     game_save_impl.cpp
     game_save_gen1impl.cpp
     game_save_gen2impl.cpp

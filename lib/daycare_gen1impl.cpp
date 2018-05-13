@@ -38,6 +38,8 @@ namespace pkmn {
             _is_our_mem = false;
         }
 
+        _can_breed = false;
+
         this->_from_native_levelup();
     }
 

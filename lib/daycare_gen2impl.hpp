@@ -4,8 +4,8 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
-#ifndef PKMN_DAYCARE_GEN1IMPL_HPP
-#define PKMN_DAYCARE_GEN1IMPL_HPP
+#ifndef PKMN_DAYCARE_GEN2IMPL_HPP
+#define PKMN_DAYCARE_GEN2IMPL_HPP
 
 #include "daycare_impl.hpp"
 
@@ -13,11 +13,11 @@
 
 namespace pkmn {
 
-    class daycare_gen1impl: public daycare_impl
+    class daycare_gen2impl: public daycare_impl
     {
         public:
-            daycare_gen1impl(int game_id, void* p_native = nullptr);
-            ~daycare_gen1impl();
+            daycare_gen2impl(int game_id, void* p_native = nullptr);
+            ~daycare_gen2impl();
 
             int get_levelup_pokemon_capacity() override final;
 
@@ -29,9 +29,9 @@ namespace pkmn {
             void _from_native_breeding() override final;
             void _to_native_breeding() override final;
 
-            BOOST_STATIC_CONSTEXPR int LEVELUP_CAPACITY = 1;
-            BOOST_STATIC_CONSTEXPR int BREEDING_CAPACITY = 0;
+            BOOST_STATIC_CONSTEXPR int LEVELUP_CAPACITY = 2;
+            BOOST_STATIC_CONSTEXPR int BREEDING_CAPACITY = 2;
     };
 }
 
-#endif /* PKMN_DAYCARE_GEN1IMPL_HPP */
+#endif /* PKMN_DAYCARE_GEN2IMPL_HPP */
