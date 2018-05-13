@@ -65,9 +65,10 @@ SET(pkmn_sources
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}
     build_info.cpp
-    daycare_impl.cpp
     exception.cpp
     private_exports.cpp
+    daycare_impl.cpp
+    daycare_gen1impl.cpp
     game_save_impl.cpp
     game_save_gen1impl.cpp
     game_save_gen2impl.cpp

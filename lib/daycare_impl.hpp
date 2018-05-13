@@ -42,6 +42,8 @@ namespace pkmn {
 
             const pkmn::pokemon::sptr& get_egg() override final;
 
+            void* get_native() override final;
+
         protected:
 
             int _game_id;
@@ -55,6 +57,7 @@ namespace pkmn {
             pkmn::pokemon::sptr _egg;
 
             void* _p_native;
+            bool _is_our_mem;
 
             pkmn::pokemon_list_t& _get_levelup_pokemon_ref();
 

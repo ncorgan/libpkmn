@@ -12,12 +12,9 @@
 #include "database/id_to_string.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/config.hpp>
 #include <boost/thread/lock_guard.hpp>
 
 namespace pkmn {
-
-    BOOST_STATIC_CONSTEXPR int BREEDING_POKEMON_CAPACITY = 2;
 
     daycare_impl::daycare_impl(int game_id):
         daycare(),
@@ -27,7 +24,8 @@ namespace pkmn {
         _levelup_pokemon(),
         _breeding_pokemon(),
         _egg(pkmn::pokemon::make("None", pkmn::database::game_id_to_name(game_id), "", 1)),
-        _p_native(nullptr)
+        _p_native(nullptr),
+        _is_our_mem(false)
     {}
 
     daycare_impl::~daycare_impl() {}
@@ -186,6 +184,16 @@ namespace pkmn {
         boost::lock_guard<daycare_impl> lock(*this);
 
         return _egg;
+    }
+
+    void* daycare_impl::get_native()
+    {
+        boost::lock_guard<daycare_impl> lock(*this);
+
+        _to_native_levelup();
+        _to_native_breeding();
+
+        return _p_native;
     }
 
     // Before Generation VII, daycares and nurseries were the same, so
