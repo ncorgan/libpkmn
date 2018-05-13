@@ -19,7 +19,8 @@ namespace pkmn {
                         public boost::basic_lockable_adapter<boost::recursive_mutex>
     {
         public:
-            daycare_impl(int game_id, void* p_native = nullptr);
+            explicit daycare_impl(int game_id);
+            ~daycare_impl();
 
             std::string get_game() override final;
 
@@ -39,14 +40,29 @@ namespace pkmn {
 
             void remove_breeding_pokemon(int position) override final;
 
-            pkmn::pokemon::sptr get_egg() override final;
+            const pkmn::pokemon::sptr& get_egg() override final;
 
-        private:
+        protected:
 
-            pkmn::pokemon_list_t _pokemon;
-            pkmn::pokemon_list_t _daycare_pokemon;
+            int _game_id;
+            int _generation;
+
+            bool _can_breed;
+
+            pkmn::pokemon_list_t _levelup_pokemon;
+            pkmn::pokemon_list_t _breeding_pokemon;
+
+            pkmn::pokemon::sptr _egg;
 
             void* _p_native;
+
+            pkmn::pokemon_list_t& _get_levelup_pokemon_ref();
+
+            virtual void _from_native_levelup() = 0;
+            virtual void _to_native_levelup() = 0;
+
+            virtual void _from_native_breeding() = 0;
+            virtual void _to_native_breeding() = 0;
     };
 }
 

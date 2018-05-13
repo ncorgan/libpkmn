@@ -33,6 +33,8 @@ namespace pkmn {
 
             virtual void remove_levelup_pokemon(int position) = 0;
 
+            virtual int get_levelup_pokemon_capacity() = 0;
+
             virtual const pkmn::pokemon_list_t& get_breeding_pokemon() = 0;
 
             virtual void add_breeding_pokemon(
@@ -41,7 +43,9 @@ namespace pkmn {
 
             virtual void remove_breeding_pokemon(int position) = 0;
 
-            virtual pkmn::pokemon::sptr get_egg() = 0;
+            virtual int get_breeding_pokemon_capacity() = 0;
+
+            virtual const pkmn::pokemon::sptr& get_egg() = 0;
 
             #ifndef __DOXYGEN__
             daycare() {};
