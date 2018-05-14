@@ -99,6 +99,11 @@ namespace pkmn {
              typename libpkmn_pokemon_type>
             friend class pokemon_party_gbimpl;
 
+            // Make the daycare implementations friend classes so they can access the internals.
+            friend class daycare_impl;
+            friend class daycare_gen1impl;
+            friend class daycare_gen2impl;
+
         protected:
             pkmn::move_slots_t _moves;
             std::map<std::string, int> _contest_stats, _stats, _EVs, _IVs;

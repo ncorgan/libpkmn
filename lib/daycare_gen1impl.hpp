@@ -19,7 +19,17 @@ namespace pkmn {
             daycare_gen1impl(int game_id, void* p_native = nullptr);
             ~daycare_gen1impl();
 
+            void set_levelup_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            );
+
             int get_levelup_pokemon_capacity() override final;
+
+            void set_breeding_pokemon(
+                int position,
+                const pkmn::pokemon::sptr& new_pokemon
+            );
 
             int get_breeding_pokemon_capacity() override final;
 

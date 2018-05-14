@@ -8,6 +8,8 @@
 #include "daycare_gen2impl.hpp"
 #include "pokemon_gen2impl.hpp"
 
+#include "exception_internal.hpp"
+
 #include "pksav/pksav_call.hpp"
 
 #include <pksav/gen2/daycare_data.h>
@@ -15,6 +17,7 @@
 #include <pksav/gen2/text.h>
 
 #include <boost/assert.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #define NATIVE_RCAST(ptr) (reinterpret_cast<struct pksav_gen2_daycare_data*>(ptr))
 
@@ -108,9 +111,101 @@ namespace pkmn {
         }
     }
 
+    void daycare_gen2impl::set_levelup_pokemon(
+        int position,
+        const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        pkmn::enforce_bounds(
+            "Position",
+            position,
+            0,
+            (LEVELUP_CAPACITY - 1)
+        );
+
+        boost::lock_guard<daycare_gen2impl> lock(*this);
+
+        pkmn::pokemon_list_t& r_levelup_pokemon = this->_get_levelup_pokemon_ref();
+
+        // If the given Pokémon isn't from this box's game, convert it if we can.
+        pkmn::pokemon::sptr actual_new_pokemon;
+        if(_game_id == new_pokemon->get_database_entry().get_game_id())
+        {
+            actual_new_pokemon = new_pokemon;
+        }
+        else
+        {
+            actual_new_pokemon = new_pokemon->to_game(get_game());
+        }
+
+        pokemon_impl* new_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(actual_new_pokemon.get());
+        pokemon_impl* old_box_pokemon_impl_ptr = dynamic_cast<pokemon_impl*>(r_levelup_pokemon[position].get());
+
+        // Make sure no one else is using the Pokémon variables.
+        boost::lock_guard<pokemon_impl> new_pokemon_lock(*new_pokemon_impl_ptr);
+        old_box_pokemon_impl_ptr->lock();
+
+        // Copy the underlying memory to the box. At the end of this process,
+        // all existing variables will correspond to the same Pokémon, even if
+        // their underlying memory has changed.
+
+        // Make a copy of the current Pokémon in the given box slot so it can be preserved in an sptr
+        // that owns its own memory.
+        copy_box_pokemon<struct pksav_gen2_pc_pokemon, struct pksav_gen2_pokemon_party_data>(
+            r_levelup_pokemon,
+            position
+        );
+
+        // Copy the new Pokémon's internals into the box's internals and create a new sptr.
+        void* new_pokemon_native_pc_ptr = new_pokemon_impl_ptr->_native_pc;
+
+        // Unlock the old Pokémon's mutex is unlocked before it's destructor is called.
+        old_box_pokemon_impl_ptr->unlock();
+
+        // Set the entry in the native struct.
+        struct pksav_gen2_pc_pokemon* p_native_pokemon =
+            (position == 0) ? &NATIVE_RCAST(_p_native)->stored_pokemon1_data.pokemon
+                            : &NATIVE_RCAST(_p_native)->stored_pokemon2_data.pokemon;
+
+        *p_native_pokemon = *reinterpret_cast<struct pksav_gen2_pc_pokemon*>(
+                                 new_pokemon_native_pc_ptr
+                             );
+        r_levelup_pokemon[position] = std::make_shared<pokemon_gen2impl>(
+                                          p_native_pokemon,
+                                          _game_id
+                                      );
+
+        // Don't set empty names.
+        std::string new_pokemon_nickname = actual_new_pokemon->get_nickname();
+        std::string new_pokemon_trainer_name = actual_new_pokemon->get_original_trainer_name();
+        if(new_pokemon_nickname.size() == 0)
+        {
+            new_pokemon_nickname = "None";
+        }
+        if(new_pokemon_trainer_name.size() == 0)
+        {
+            new_pokemon_trainer_name = "None";
+        }
+
+        r_levelup_pokemon[position]->set_nickname(new_pokemon_nickname);
+        r_levelup_pokemon[position]->set_original_trainer_name(new_pokemon_trainer_name);
+
+        // Set the names in the struct. TODO: do this smarter
+        this->_to_native_levelup();
+    }
+
     int daycare_gen2impl::get_levelup_pokemon_capacity()
     {
         return LEVELUP_CAPACITY;
+    }
+
+    void daycare_gen2impl::set_breeding_pokemon(
+        int position,
+        const pkmn::pokemon::sptr& new_pokemon
+    )
+    {
+        // Same thing as levelup for Generation II
+        this->set_levelup_pokemon(position, new_pokemon);
     }
 
     int daycare_gen2impl::get_breeding_pokemon_capacity()
