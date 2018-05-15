@@ -1288,6 +1288,82 @@ public class CSharpCalculationsTest {
     [Test]
     public void TypeDamageModifierTest()
     {
+        // Invalid generation
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Calculations.TypeDamageModifier(
+                    -1, "Normal", "Normal"
+                );
+            }
+        );
+        Assert.Throws<IndexOutOfRangeException>(
+            delegate
+            {
+                PKMN.Calculations.TypeDamageModifier(
+                    8, "Normal", "Normal"
+                );
+            }
+        );
+
+        // Invalid types for a given generation
+        int[] generations = {1, 1, 5, 3, 5, 2, 4};
+        string[] types = {"Dark", "Steel", "Fairy", "???", "???", "Shadow", "Shadow"};
+
+        for(int testCaseIndex = 0; testCaseIndex < generations.Length; ++testCaseIndex)
+        {
+            // Invalid attacking type
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate
+                {
+                    PKMN.Calculations.TypeDamageModifier(
+                        generations[testCaseIndex],
+                        types[testCaseIndex],
+                        "Normal"
+                    );
+                }
+            );
+
+            // Invalid defending type
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate
+                {
+                    PKMN.Calculations.TypeDamageModifier(
+                        generations[testCaseIndex],
+                        "Normal",
+                        types[testCaseIndex]
+                    );
+                }
+            );
+        }
+
+        // Check that changes between generations are properly implemented.
+        string[] attackingTypes = {"Bug", "Poison", "Ghost", "Ice", "Ghost", "Dark"};
+        string[] defendingTypes = {"Poison", "Bug", "Psychic", "Fire", "Steel", "Steel"};
+        int[] oldGenerations = {1, 1, 1, 1, 5, 5};
+        float[] oldModifiers = {2.0f, 2.0f, 0.0f, 1.0f, 0.5f, 0.5f};
+        int[] newGenerations = {2, 2, 2, 2, 6, 6};
+        float[] newModifiers = {0.5f, 1.0f, 2.0f, 0.5f, 1.0f, 1.0f};
+
+        for(int testCaseIndex = 0; testCaseIndex < attackingTypes.Length; ++testCaseIndex)
+        {
+            Assert.AreEqual(
+                oldModifiers[testCaseIndex],
+                PKMN.Calculations.TypeDamageModifier(
+                    oldGenerations[testCaseIndex],
+                    attackingTypes[testCaseIndex],
+                    defendingTypes[testCaseIndex]
+                )
+            );
+            Assert.AreEqual(
+                newModifiers[testCaseIndex],
+                PKMN.Calculations.TypeDamageModifier(
+                    newGenerations[testCaseIndex],
+                    attackingTypes[testCaseIndex],
+                    defendingTypes[testCaseIndex]
+                )
+            );
+        }
     }
 
     [Test]
