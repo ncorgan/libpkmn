@@ -321,12 +321,6 @@ namespace pkmn
                         ret = std::make_shared<pokemon_gcnimpl>(xd_pokemon);
                     }
 
-                    // Some Gamecube-specific indices don't match up.
-                    if(_database_entry.get_game_id() != game_id)
-                    {
-                        ret->set_held_item(get_held_item());
-                    }
-
                     ret->set_level_met(get_level());
                 }
                 else
@@ -340,6 +334,12 @@ namespace pkmn
                     ret = std::make_shared<pokemon_gbaimpl>(pksav_pokemon, game_id);
                 }
 
+                // Some Gamecube-specific indices don't match up. This will
+                // also catch attempts to send over invalid items.
+                if(_database_entry.get_game_id() != game_id)
+                {
+                    ret->set_held_item(get_held_item());
+                }
                 ret->set_original_game(get_original_game());
                 break;
 
