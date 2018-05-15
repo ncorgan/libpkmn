@@ -314,6 +314,10 @@ class game_save_test(pkmntest.base_test):
             self.assertEquals(item_list1[item_index].item, item_list2[item_index].item)
             self.assertEquals(item_list1[item_index].amount, item_list2[item_index].amount)
 
+    def __compare_pokedexes(self, pokedex1, pokedex2):
+        self.assertEquals(pokedex1.all_seen, pokedex2.all_seen)
+        self.assertEquals(pokedex1.all_caught, pokedex2.all_caught)
+
     def __compare_game_saves(self):
         game = self.save.game
         generation = GAME_GENERATIONS[game]
@@ -358,6 +362,11 @@ class game_save_test(pkmntest.base_test):
             self.assertEquals(len(box1), len(box2))
             for box_index in range(len(box1)):
                 self.compare_pokemon(box1[box_index], box2[box_index])
+
+        if game != "Colosseum" and game != "XD":
+            pokedex1 = self.save.pokedex
+            pokedex2 = self.save2.pokedex
+            self.__compare_pokedexes(pokedex1, pokedex2)
 
     @parameterized.expand([
         ("Red/Blue/Yellow", "Red", "red_blue", "pokemon_red.sav"),
