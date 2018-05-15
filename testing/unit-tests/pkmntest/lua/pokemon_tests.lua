@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+-- Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
 --
 -- Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 -- or copy at http://opensource.org/licenses/MIT)
@@ -1272,11 +1272,11 @@ function pokemon_tests.test_setting_stats(pokemon)
     pokemon.current_hp = 0
     luaunit.assertEquals(pokemon.current_hp, 0)
 
-    pokemon.current_hp = pokemon.stats["HP"]
-    luaunit.assertEquals(pokemon.current_hp, pokemon.stats["HP"])
-
     pokemon.current_hp = pokemon.stats["HP"] - 1
     luaunit.assertEquals(pokemon.current_hp, pokemon.stats["HP"] - 1)
+
+    pokemon.current_hp = pokemon.stats["HP"]
+    luaunit.assertEquals(pokemon.current_hp, pokemon.stats["HP"])
 
     -- Set the HP stat to lower than the current HP, and make sure
     -- it's updated.

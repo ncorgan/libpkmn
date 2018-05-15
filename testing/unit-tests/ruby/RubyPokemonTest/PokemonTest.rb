@@ -85,6 +85,8 @@ class PokemonTest < PKMNTest
 
         assert(Pathname.new(pokemon.icon_filepath).exist?)
         assert(Pathname.new(pokemon.sprite_filepath).exist?)
+
+        assert_equal(pokemon.stats["HP"], pokemon.current_hp)
     end
 
     def _check_initial_maps(pokemon)

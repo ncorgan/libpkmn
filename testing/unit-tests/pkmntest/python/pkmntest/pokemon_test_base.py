@@ -599,6 +599,9 @@ class pokemon_test_base(base_test):
         pokemon.current_hp = pokemon.stats["HP"] - 1
         self.assertEqual(pokemon.current_hp, pokemon.stats["HP"] - 1)
 
+        pokemon.current_hp = pokemon.stats["HP"]
+        self.assertEqual(pokemon.current_hp, pokemon.stats["HP"])
+
         # Set the HP stat to lower than the current HP, and make sure
         # it's updated.
 
