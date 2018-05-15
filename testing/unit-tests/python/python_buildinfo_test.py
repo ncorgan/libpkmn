@@ -14,6 +14,9 @@ import unittest
 
 class buildinfo_test(unittest.TestCase):
 
+    def test_pkmn_version(self):
+        self.assertGreater(len(pkmn.VERSION), 0)
+
     def test_boost_version(self):
         self.assertGreater(len(pkmn.buildinfo.BOOST_VERSION), 0)
 

@@ -10,6 +10,10 @@ local pkmn = require("pkmn")
 
 math.randomseed(os.time())
 
+function test_pkmn_version()
+    luaunit.assertTrue(#pkmn.VERSION > 0)
+end
+
 function test_boost_version()
     luaunit.assertTrue(#pkmn.buildinfo.BOOST_VERSION > 0)
 end
