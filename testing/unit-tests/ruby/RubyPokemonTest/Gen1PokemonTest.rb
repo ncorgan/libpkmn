@@ -33,6 +33,9 @@ class Gen1PokemonTest < PokemonTest
         test_params.invalid_original_games = ["Red"]
 
         pokemon_test_common(pokemon, test_params)
+
+        # Test attributes.
+        assert_equal(45, pokemon.numeric_attributes["Catch rate"])
     end
 
     [["Red", "Charmander"],

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -42,13 +42,6 @@ namespace pkmn { namespace swig {
             {
             }
 
-            bool operator==(
-                const item_bag& rhs
-            ) const
-            {
-                return (_item_bag == rhs._item_bag);
-            }
-
             std::string get_game()
             {
                 return _item_bag->get_game();
@@ -61,7 +54,9 @@ namespace pkmn { namespace swig {
                 return pkmn::swig::item_list(_item_bag->get_pocket(name));
             }
 
-            const std::vector<std::string>& get_pocket_names()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            std::vector<std::string> get_pocket_names()
             {
                 return _item_bag->get_pocket_names();
             }
@@ -81,6 +76,23 @@ namespace pkmn { namespace swig {
             {
                 _item_bag->remove(item, amount);
             }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_item_bag.get());
+            }
+#else
+            inline bool operator==(const item_bag& rhs) const
+            {
+                return (_item_bag == rhs._item_bag);
+            }
+
+            inline bool operator!=(const item_bag& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::item_bag::sptr _item_bag;

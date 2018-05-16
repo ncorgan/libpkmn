@@ -9,22 +9,72 @@
     #include <pkmn/database/move_entry.hpp>
 %}
 
-%csmethodmodifiers pkmn::database::move_entry::get_name() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_game() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_type() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_description() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_target() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_damage_class() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_base_power() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_accuracy() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_priority() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_effect() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_contest_type() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_contest_effect() const "private";
-%csmethodmodifiers pkmn::database::move_entry::get_super_contest_effect() const "private";
+%include <attribute.i>
+
+// Convert getter/setter functions into attributes for more idiomatic C#.
+
+%attributestring(pkmn::database::move_entry, std::string, Name, get_name);
+%attributestring(pkmn::database::move_entry, std::string, Game, get_game);
+%attributestring(pkmn::database::move_entry, std::string, MoveType, get_type);
+%attributestring(pkmn::database::move_entry, std::string, Description, get_description);
+%attributestring(pkmn::database::move_entry, std::string, Target, get_target);
+%attributestring(pkmn::database::move_entry, std::string, DamageClass, get_damage_class);
+%attribute(pkmn::database::move_entry, int, BasePower, get_base_power);
+%attribute(pkmn::database::move_entry, float, Accuracy, get_accuracy);
+%attribute(pkmn::database::move_entry, int, Priority, get_priority);
+%attributestring(pkmn::database::move_entry, std::string, Effect, get_effect);
+%attributestring(pkmn::database::move_entry, std::string, ContestType, get_contest_type);
+%attributestring(pkmn::database::move_entry, std::string, ContestEffect, get_contest_effect);
+%attributestring(pkmn::database::move_entry, std::string, SuperContestEffect, get_super_contest_effect);
 
 %ignore pkmn::database::move_entry::get_move_id;
 %ignore pkmn::database::move_entry::get_game_id;
+
+%typemap(cscode) pkmn::database::move_entry
+%{
+    public bool Equals(MoveEntry rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+        else if(this == rhs)
+        {
+            return true;
+        }
+        else
+        {
+            return this.Name.Equals(rhs.Name) &&
+                   this.Game.Equals(rhs.Game);
+        }
+    }
+
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
+            return false;
+        }
+
+        MoveEntry rhsEntry = rhs as MoveEntry;
+        if(rhsEntry == null)
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals(rhsEntry);
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<string>(this.Name)
+                                       .AddValue<string>(this.Game)
+                                       .ToHashCode();
+    }
+%}
+
 %include <pkmn/database/move_entry.hpp>
 
 %include <csharp/stl_macros.i>

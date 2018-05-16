@@ -17,7 +17,7 @@
  */
 
 TEST(cpp_paths_test, appdata_dir_test) {
-#ifdef PKMN_C_PLATFORM_WIN32
+#ifdef PKMN_PLATFORM_WIN32
     static const std::string appdata_dir("C:\\libpkmn\\appdata\\dir");
 #else
     static const std::string appdata_dir("/libpkmn/appdata/dir");
@@ -45,7 +45,7 @@ TEST(cpp_paths_test, database_path_test) {
     , std::runtime_error);
 
     // Now just make sure it fails with a non-existent file.
-#ifdef PKMN_C_PLATFORM_WIN32
+#ifdef PKMN_PLATFORM_WIN32
     static const std::string database_path("C:\\libpkmn\\database\\path");
 #else
     static const std::string database_path("/libpkmn/database/path");
@@ -57,7 +57,7 @@ TEST(cpp_paths_test, database_path_test) {
 }
 
 TEST(cpp_paths_test, images_dir_test) {
-#ifdef PKMN_C_PLATFORM_WIN32
+#ifdef PKMN_PLATFORM_WIN32
     static const std::string images_dir("C:\\libpkmn\\images\\dir");
 #else
     static const std::string images_dir("/libpkmn/images/dir");
@@ -68,7 +68,7 @@ TEST(cpp_paths_test, images_dir_test) {
 }
 
 TEST(cpp_paths_test, tmp_dir_test) {
-#ifdef PKMN_C_PLATFORM_WIN32
+#ifdef PKMN_PLATFORM_WIN32
     static const std::string tmp_dir("C:\\libpkmn\\tmp\\dir");
 #else
     static const std::string tmp_dir("/libpkmn/tmp/dir");

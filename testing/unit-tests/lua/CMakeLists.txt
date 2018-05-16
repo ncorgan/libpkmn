@@ -40,6 +40,7 @@ IF(LUAUNIT_FOUND)
         lua_items_test
         lua_lists_test
         lua_paths_test
+        lua_pokedex_test
         lua_pokemon_test
         lua_pokemon_party_test
         lua_pokemon_pc_test

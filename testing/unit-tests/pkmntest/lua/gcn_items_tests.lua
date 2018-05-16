@@ -47,10 +47,9 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#item_pocket, expected_capacity)
-    luaunit.assertEquals(item_pocket:get_name(), "Items")
-    luaunit.assertEquals(item_pocket:get_game(), game)
-    luaunit.assertEquals(item_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(item_pocket.name, "Items")
+    luaunit.assertEquals(item_pocket.game, game)
+    luaunit.assertEquals(item_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(item_pocket)
@@ -77,14 +76,22 @@ function gcn_items_tests.test_item_pocket(item_pocket, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Potion", "Orange Mail", "Lava Cookie", "Stardust",
+        "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"
+    }
+
+    items_tests.item_list_test_setting_items(
+        item_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         item_pocket,
-        {"Potion", "Orange Mail", "Lava Cookie", "Stardust",
-         "Shadow Mail", "Pink Scarf", "Antidote", "Green Shard"}
+        item_names
     )
 
-    local valid_items = item_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#item_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
@@ -99,10 +106,9 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#key_item_pocket, expected_capacity)
-    luaunit.assertEquals(key_item_pocket:get_name(), "Key Items")
-    luaunit.assertEquals(key_item_pocket:get_game(), game)
-    luaunit.assertEquals(key_item_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(key_item_pocket:get_num_items(), 0)
+    luaunit.assertEquals(key_item_pocket.name, "Key Items")
+    luaunit.assertEquals(key_item_pocket.game, game)
+    luaunit.assertEquals(key_item_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(key_item_pocket)
@@ -138,12 +144,16 @@ function gcn_items_tests.test_key_item_pocket(key_item_pocket, game)
         items = {"Krane Memo 1", "Krane Memo 2", "Krane Memo 3", "Krane Memo 4",
                  "Krane Memo 5", "Voice Case 1", "Voice Case 2", "Voice Case 3"}
     end
+    items_tests.item_list_test_setting_items(
+        key_item_pocket,
+        items
+    )
     items_tests.item_list_test_add_remove(
-        key_item_pocket, items
+        key_item_pocket,
+        items
     )
 
-    local valid_items = key_item_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#key_item_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_ball_pocket(ball_pocket, game)
@@ -151,10 +161,9 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#ball_pocket, expected_capacity)
-    luaunit.assertEquals(ball_pocket:get_name(), "Poké Balls")
-    luaunit.assertEquals(ball_pocket:get_game(), game)
-    luaunit.assertEquals(ball_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(ball_pocket:get_num_items(), 0)
+    luaunit.assertEquals(ball_pocket.name, "Poké Balls")
+    luaunit.assertEquals(ball_pocket.game, game)
+    luaunit.assertEquals(ball_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(ball_pocket)
@@ -181,14 +190,22 @@ function gcn_items_tests.test_ball_pocket(ball_pocket, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
+        "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"
+    }
+
+    items_tests.item_list_test_setting_items(
+        ball_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         ball_pocket,
-        {"Master Ball", "Ultra Ball", "Great Ball", "Poké Ball",
-         "Safari Ball", "Net Ball", "Dive Ball", "Nest Ball"}
+        item_names
     )
 
-    local valid_items = ball_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#ball_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_tm_pocket(tm_pocket, game)
@@ -196,10 +213,9 @@ function gcn_items_tests.test_tm_pocket(tm_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#tm_pocket, expected_capacity)
-    luaunit.assertEquals(tm_pocket:get_name(), "TMs")
-    luaunit.assertEquals(tm_pocket:get_game(), game)
-    luaunit.assertEquals(tm_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(tm_pocket:get_num_items(), 0)
+    luaunit.assertEquals(tm_pocket.name, "TMs")
+    luaunit.assertEquals(tm_pocket.game, game)
+    luaunit.assertEquals(tm_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(tm_pocket)
@@ -226,14 +242,22 @@ function gcn_items_tests.test_tm_pocket(tm_pocket, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "TM01", "TM02", "TM03", "TM04",
+        "TM05", "TM06", "TM07", "TM08"
+    }
+
+    items_tests.item_list_test_setting_items(
+        tm_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         tm_pocket,
-        {"TM01", "TM02", "TM03", "TM04",
-         "TM05", "TM06", "TM07", "TM08"}
+        item_names
     )
 
-    local valid_items = tm_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#tm_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_berry_pocket(berry_pocket, game)
@@ -241,10 +265,9 @@ function gcn_items_tests.test_berry_pocket(berry_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#berry_pocket, expected_capacity)
-    luaunit.assertEquals(berry_pocket:get_name(), "Berries")
-    luaunit.assertEquals(berry_pocket:get_game(), game)
-    luaunit.assertEquals(berry_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(berry_pocket:get_num_items(), 0)
+    luaunit.assertEquals(berry_pocket.name, "Berries")
+    luaunit.assertEquals(berry_pocket.game, game)
+    luaunit.assertEquals(berry_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(berry_pocket)
@@ -271,14 +294,22 @@ function gcn_items_tests.test_berry_pocket(berry_pocket, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
+        "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"
+    }
+
+    items_tests.item_list_test_setting_items(
+        berry_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         berry_pocket,
-        {"Cheri Berry", "Razz Berry", "Lum Berry", "Pinap Berry",
-         "Aspear Berry", "Iapapa Berry", "Wiki Berry", "Apicot Berry"}
+        item_names
     )
 
-    local valid_items = berry_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#berry_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
@@ -286,10 +317,9 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#cologne_pocket, expected_capacity)
-    luaunit.assertEquals(cologne_pocket:get_name(), "Colognes")
-    luaunit.assertEquals(cologne_pocket:get_game(), game)
-    luaunit.assertEquals(cologne_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(cologne_pocket:get_num_items(), 0)
+    luaunit.assertEquals(cologne_pocket.name, "Colognes")
+    luaunit.assertEquals(cologne_pocket.game, game)
+    luaunit.assertEquals(cologne_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(cologne_pocket)
@@ -332,8 +362,7 @@ function gcn_items_tests.test_cologne_pocket(cologne_pocket, game)
     luaunit.assertEquals(cologne_pocket[3].item, "None")
     luaunit.assertEquals(cologne_pocket[3].amount, 0)
 
-    local valid_items = cologne_pocket:get_valid_items()
-    luaunit.assertTrue(#valid_items > 0)
+    luaunit.assertTrue(#cologne_pocket.valid_items > 0)
 end
 
 function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
@@ -341,10 +370,9 @@ function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
 
     -- Check unchanging and initial values.
     luaunit.assertEquals(#battle_cd_pocket, expected_capacity)
-    luaunit.assertEquals(battle_cd_pocket:get_name(), "Battle CDs")
-    luaunit.assertEquals(battle_cd_pocket:get_game(), game)
-    luaunit.assertEquals(battle_cd_pocket:get_capacity(), expected_capacity)
-    luaunit.assertEquals(battle_cd_pocket:get_num_items(), 0)
+    luaunit.assertEquals(battle_cd_pocket.name, "Battle CDs")
+    luaunit.assertEquals(battle_cd_pocket.game, game)
+    luaunit.assertEquals(battle_cd_pocket.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(battle_cd_pocket)
@@ -359,23 +387,30 @@ function gcn_items_tests.test_battle_cd_pocket(battle_cd_pocket, game)
     )
 
     -- Start adding and removing stuff, and make sure the numbers are accurate.
+    local item_names =
+    {
+        "Battle CD 01", "Battle CD 02", "Battle CD 03", "Battle CD 04",
+        "Battle CD 05", "Battle CD 06", "Battle CD 07", "Battle CD 08"
+    }
+
+    items_tests.item_list_test_setting_items(
+        battle_cd_pocket,
+        item_names
+    )
     items_tests.item_list_test_add_remove(
         battle_cd_pocket,
-        {"Battle CD 01", "Battle CD 02", "Battle CD 03", "Battle CD 04",
-         "Battle CD 05", "Battle CD 06", "Battle CD 07", "Battle CD 08"}
+        item_names
     )
 
-    local valid_items = battle_cd_pocket:get_valid_items()
-    luaunit.assertEquals(#valid_items, 60)
+    luaunit.assertEquals(#battle_cd_pocket.valid_items, 60)
 end
 
 function gcn_items_tests.test_pc(pc, game)
     -- Check unchanging and initial values.
     luaunit.assertEquals(#pc, 235)
-    luaunit.assertEquals(pc:get_name(), "PC")
-    luaunit.assertEquals(pc:get_game(), game)
-    luaunit.assertEquals(pc:get_capacity(), 235)
-    luaunit.assertEquals(pc:get_num_items(), 0)
+    luaunit.assertEquals(pc.name, "PC")
+    luaunit.assertEquals(pc.game, game)
+    luaunit.assertEquals(pc.num_items, 0)
 
     -- Make sure item slots start as correctly empty.
     items_tests.item_list_test_empty_slot(pc)
@@ -409,7 +444,7 @@ function gcn_items_tests.test_pc(pc, game)
         all_pocket_items
     )
 
-    local valid_items = pc:get_valid_items()
+    local valid_items = pc.valid_items
     luaunit.assertTrue(#valid_items > 0)
 end
 
@@ -421,22 +456,10 @@ function gcn_items_tests.test_bag(bag, game)
     else
         num_pockets = 7
     end
-    
-    -- Check unchanging and initial values.
-    luaunit.assertEquals(bag:get_game(), game)
 
-    local pockets = bag:get_pockets()
-    luaunit.assertEquals(#pockets, num_pockets)
-    luaunit.assertTrue(pockets:has_key("Items"))
-    luaunit.assertTrue(pockets:has_key("Key Items"))
-    luaunit.assertTrue(pockets:has_key("Poké Balls"))
-    luaunit.assertTrue(pockets:has_key("TMs"))
-    luaunit.assertTrue(pockets:has_key("Berries"))
-    luaunit.assertTrue(pockets:has_key("Colognes"))
-    if game == "XD"
-    then
-        luaunit.assertTrue(pockets:has_key("Battle CDs"))
-    end
+    -- Check unchanging and initial values.
+    luaunit.assertEquals(bag.game, game)
+    luaunit.assertEquals(#bag, num_pockets)
 
     gcn_items_tests.test_item_pocket(bag["Items"], game)
     gcn_items_tests.test_key_item_pocket(bag["Key Items"], game)
@@ -450,15 +473,15 @@ function gcn_items_tests.test_bag(bag, game)
     end
 
     -- Make sure adding items through the bag adds to the proper pocket.
-    luaunit.assertEquals(bag["Items"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["Key Items"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["Poké Balls"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["TMs"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["Berries"]:get_num_items(), 0)
-    luaunit.assertEquals(bag["Colognes"]:get_num_items(), 0)
+    luaunit.assertEquals(bag["Items"].num_items, 0)
+    luaunit.assertEquals(bag["Key Items"].num_items, 0)
+    luaunit.assertEquals(bag["Poké Balls"].num_items, 0)
+    luaunit.assertEquals(bag["TMs"].num_items, 0)
+    luaunit.assertEquals(bag["Berries"].num_items, 0)
+    luaunit.assertEquals(bag["Colognes"].num_items, 0)
     if game == "XD"
     then
-        luaunit.assertEquals(bag["Battle CDs"]:get_num_items(), 0)
+        luaunit.assertEquals(bag["Battle CDs"].num_items, 0)
     end
 
     local all_pocket_items = {}

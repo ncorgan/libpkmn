@@ -1,197 +1,87 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/game_save.hpp>
+    #include "cpp_wrappers/game_save.hpp"
 %}
 
-%rename(game_save_base) pkmn::game_save;
+%include <attribute.i>
 
-%csmethodmodifiers pkmn::game_save::get_filepath() "private";
-%csmethodmodifiers pkmn::game_save::get_game() "private";
-%csmethodmodifiers pkmn::game_save::get_trainer_name() "private";
-%csmethodmodifiers pkmn::game_save::set_trainer_name(const std::string&) "private";
-%csmethodmodifiers pkmn::game_save::get_trainer_id() "private";
-%csmethodmodifiers pkmn::game_save::set_trainer_id(uint32_t) "private";
-%csmethodmodifiers pkmn::game_save::get_trainer_public_id() "private";
-%csmethodmodifiers pkmn::game_save::set_trainer_public_id(uint16_t) "private";
-%csmethodmodifiers pkmn::game_save::get_trainer_secret_id() "private";
-%csmethodmodifiers pkmn::game_save::set_trainer_secret_id(uint16_t) "private";
-%csmethodmodifiers pkmn::game_save::get_trainer_gender() "private";
-%csmethodmodifiers pkmn::game_save::set_trainer_gender(const std::string&) "private";
-%csmethodmodifiers pkmn::game_save::get_rival_name() "private";
-%csmethodmodifiers pkmn::game_save::set_rival_name(const std::string&) "private";
-%csmethodmodifiers pkmn::game_save::get_money() "private";
-%csmethodmodifiers pkmn::game_save::set_money(int) "private";
-%csmethodmodifiers pkmn::game_save::get_pokedex() "private";
-%csmethodmodifiers pkmn::game_save::get_pokemon_party() "private";
-%csmethodmodifiers pkmn::game_save::get_pokemon_pc() "private";
-%csmethodmodifiers pkmn::game_save::get_item_bag() "private";
-%csmethodmodifiers pkmn::game_save::get_item_pc() "private";
-%csmethodmodifiers std::shared_ptr<pkmn::game_save>::__cptr "private";
-%csmethodmodifiers std::shared_ptr<pkmn::game_save>::__sptr_eq "private";
+%typemap(csimports) pkmn::swig::game_save "
+using System;
+using System.Runtime.InteropServices;"
 
-%typemap(cscode) std::shared_ptr<pkmn::game_save> %{
-    public string Filepath {
-        get {
-            return this.GetFilepath();
-        }
-    }
+%ignore pkmn::swig::game_save::game_save();
+%ignore pkmn::swig::game_save::game_save(const pkmn::game_save::sptr&);
 
-    public string Game {
-        get {
-            return this.GetGame();
-        }
-    }
+// Needed for equality check.
+%csmethodmodifiers pkmn::swig::game_save::cptr() "private";
 
-    public string TrainerName {
-        get {
-            return this.GetTrainerName();
-        }
-        set {
-            this.SetTrainerName(value);
-        }
-    }
+// Convert getter/setter functions into attributes for more idiomatic C#.
 
-    public uint TrainerID {
-        get {
-            return this.GetTrainerID();
-        }
-        set {
-            this.SetTrainerID(value);
-        }
-    }
+%attributestring(pkmn::swig::game_save, std::string, Game, get_game);
+%attributestring(pkmn::swig::game_save, std::string, Filepath, get_filepath);
+%attributestring(pkmn::swig::game_save, std::string, TrainerName, get_trainer_name, set_trainer_name);
+%attribute(pkmn::swig::game_save, uint16_t, TrainerPublicID, get_trainer_public_id, set_trainer_public_id);
+%attribute(pkmn::swig::game_save, uint16_t, TrainerSecretID, get_trainer_secret_id, set_trainer_secret_id);
+%attribute(pkmn::swig::game_save, uint32_t, TrainerID, get_trainer_id, set_trainer_id);
+%attributestring(pkmn::swig::game_save, std::string, TrainerGender, get_trainer_gender, set_trainer_gender);
+%attributestring(pkmn::swig::game_save, std::string, RivalName, get_rival_name, set_rival_name);
+%attribute(pkmn::swig::game_save, int, Money, get_money, set_money);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokedex, Pokedex, get_pokedex);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_party, PokemonParty, get_pokemon_party);
+%attributeval(pkmn::swig::game_save, pkmn::swig::pokemon_pc, PokemonPC, get_pokemon_pc);
+%attributeval(pkmn::swig::game_save, pkmn::swig::item_bag, ItemBag, get_item_bag);
+%attributeval(pkmn::swig::game_save, pkmn::swig::item_list, ItemPC, get_item_pc);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::numeric_attribute_map<pkmn::game_save>), NumericAttributes, get_numeric_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::string_attribute_map<pkmn::game_save>), StringAttributes, get_string_attributes);
+%attributeval(pkmn::swig::game_save, %arg(pkmn::swig::boolean_attribute_map<pkmn::game_save>), BooleanAttributes, get_boolean_attributes);
 
-    public ushort TrainerPublicID {
-        get {
-            return this.GetTrainerPublicID();
-        }
-        set {
-            this.SetTrainerPublicID(value);
-        }
-    }
-
-    public ushort TrainerSecretID {
-        get {
-            return this.GetTrainerSecretID();
-        }
-        set {
-            this.SetTrainerSecretID(value);
-        }
-    }
-
-    /// <summary> Returns the type of save at the given filepath.
-    public static string DetectType(string filepath) {
-        string ret = PKMNPINVOKE.detect_game_save_type(filepath);
-        if(PKMNPINVOKE.SWIGPendingException.Pending) {
-            throw PKMNPINVOKE.SWIGPendingException.Retrieve();
-        }
-        return ret;
-    }
-
-    public string TrainerGender {
-        get {
-            return this.GetTrainerGender();
-        }
-        set {
-            this.SetTrainerGender(value);
-        }
-    }
-
-    public string RivalName {
-        get {
-            return this.GetRivalName();
-        }
-        set {
-            this.SetRivalName(value);
-        }
-    }
-
-    public int Money {
-        get {
-            return this.GetMoney();
-        }
-        set {
-            this.SetMoney(value);
-        }
-    }
-
-    public Pokedex Pokedex {
-        get {
-            return this.GetPokedex();
-        }
-    }
-
-    public PokemonParty PokemonParty {
-        get {
-            return this.GetPokemonParty();
-        }
-    }
-
-    public PokemonPC PokemonPC {
-        get {
-            return this.GetPokemonPC();
-        }
-    }
-
-    public ItemBag ItemBag {
-        get {
-            return this.GetItemBag();
-        }
-    }
-
-    public ItemList ItemPC {
-        get {
-            return this.GetItemPC();
-        }
-    }
-
-    /// <summary>Compares two GameSave instances to determine value equality.</summary>
-    /// <remarks>
-    /// Returns true if the internal shared_ptrs' pointers are equal.
-    /// </remarks>
-    /// <param name="rhs">GameSave with which to compare self</param>
-    /// <returns>Whether or not GameSave instances are equal</returns>
-    /// </remarks>
-    public bool Equals(GameSave rhs) {
-        if(rhs == null) {
+%typemap(cscode) pkmn::swig::game_save
+%{
+    public bool Equals(GameSave rhs)
+    {
+        if(rhs == null)
+        {
             return false;
-        } else if(this == rhs) {
+        }
+        else if(this == rhs)
+        {
             return true;
-        } else {
-            return this.__sptr_eq(rhs);
+        }
+        else
+        {
+            return (this.Cptr() == rhs.Cptr());
         }
     }
 
-    /// <summary>Compares an instance of GameSave to a C# object.</summary>
-    /// <param name="rhs">Object with which to compare self</param>
-    /// <returns>Whether or not GameSave and Object are equal</returns>
-    public override bool Equals(System.Object rhs) {
-        if(rhs == null) {
+    public override bool Equals(System.Object rhs)
+    {
+        if(rhs == null)
+        {
             return false;
         }
 
-        GameSave rhsSptr = rhs as GameSave;
-        if(rhsSptr == null) {
+        GameSave rhsAsGameSave = rhs as GameSave;
+        if(rhsAsGameSave == null)
+        {
             return false;
-        } else {
-            return this.Equals(rhsSptr);
+        }
+        else
+        {
+            return this.Equals(rhsAsGameSave);
         }
     }
 
-    /// <summary>Generates a unique hash code for the given GameSave.</summary>
-    /// <returns>Unique hash code</returns>
-    public override int GetHashCode() {
-        return HashCodeBuilder.Create().AddValue<ulong>(__cptr())
+    public override int GetHashCode()
+    {
+        return HashCodeBuilder.Create().AddValue<ulong>(Cptr())
                               .ToHashCode();
     }
 %}
 
-%ignore from_file;
-%ignore detect_type;
-%include <pkmn/game_save.hpp>
-%template(GameSave) std::shared_ptr<pkmn::game_save>;
+%include "cpp_wrappers/game_save.hpp"

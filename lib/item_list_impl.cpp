@@ -253,10 +253,10 @@ namespace pkmn {
                     throw std::runtime_error("Cannot add any more of this item.");
                 } else if((_item_slots[i].amount + amount) > 99)
                 {
-                    int new_amount = _item_slots[i].amount + amount;
                     throw std::runtime_error(
                               str(boost::format("Can only add %d more items.") %
-                                  (new_amount - amount))
+                                  (99 - _item_slots[i].amount)
+                              )
                           );
                 }
                 else
@@ -412,7 +412,7 @@ namespace pkmn {
             _item_slots.emplace_back(pkmn::item_slot("None", 0));
             --_num_items;
         }
-        else
+        else if(position == end_boundary)
         {
             ++_num_items;
         }

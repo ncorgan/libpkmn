@@ -892,7 +892,7 @@ namespace pkmntest {
             }
         }
 
-        if((generation != 2) and (game != "Colosseum") and (game != "XD"))
+        if((game != "Colosseum") and (game != "XD"))
         {
             compare_pokedexes(
                 save1->get_pokedex(),

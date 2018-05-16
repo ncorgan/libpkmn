@@ -11,7 +11,7 @@
 
 #include <pksav/gen2/pokemon.h>
 
-#include <boost/config/suffix.hpp>
+#include <boost/config.hpp>
 
 namespace pkmn {
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
  *
- * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+ * DIstributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
@@ -11,7 +11,8 @@ using NUnit.Framework;
 
 namespace PKMNTest {
 
-public class GameSaveTest {
+public class GameSaveTest
+{
 
     private static System.Random rng = new System.Random();
 
@@ -24,14 +25,16 @@ public class GameSaveTest {
 
     private static int MONEY_MAX = 999999;
 
-    private static string[] RIVAL_NAME_SET_GAMES = {
+    private static string[] RIVAL_NAME_SET_GAMES =
+    {
         "Ruby", "Sapphire", "Emerald",
         "Colosseum", "XD",
         "Black", "White",
         "X", "Y"
     };
 
-    private static string[] MALE_ONLY_GAMES = {
+    private static string[] MALE_ONLY_GAMES =
+    {
         "Red", "Blue", "Yellow",
         "Gold", "Silver",
         "Colosseum", "XD"
@@ -41,85 +44,68 @@ public class GameSaveTest {
      * Utility functions
      */
 
-    private static int GameToGeneration(
+    private static bool IsGBGame(
         string game
-    ) {
-        if(game.Equals("Red") || game.Equals("Blue") || game.Equals("Yellow")) {
-            return 1;
-        } else if(game.Equals("Gold") || game.Equals("Silver") || game.Equals("Crystal")) {
-            return 2;
-        } else if(game.Equals("Ruby") || game.Equals("Sapphire") || game.Equals("Emerald") ||
-                  game.Equals("FireRed") || game.Equals("LeafGreen") ||
-                  game.Equals("Colosseum") || game.Equals("XD")
-        ) {
-            return 3;
-        } else if(game.Equals("Diamond") || game.Equals("Pearl") || game.Equals("Platinum") ||
-                  game.Equals("HeartGold") || game.Equals("SoulSilver")
-        ) {
-            return 4;
-        } else if(game.Equals("Black") || game.Equals("White") ||
-                  game.Equals("Black 2") || game.Equals("White 2")
-        ) {
-            return 5;
-        } else if(game.Equals("X") || game.Equals("Y") ||
-                  game.Equals("Omega Ruby") || game.Equals("Alpha Sapphire")) {
-            return 6;
-        } else {
-            return 0;
-        }
+    )
+    {
+        return (Util.GameToGeneration(game) <= 2);
     }
 
-    private static bool isGBGame(
+    private static bool IsMaleOnly(
         string game
-    ) {
-        return (GameToGeneration(game) <= 2);
-    }
-
-    private static bool isMaleOnly(
-        string game
-    ) {
+    )
+    {
         return (Array.IndexOf(MALE_ONLY_GAMES, game) > -1);
     }
 
-    private static bool isRivalNameSet(
+    private static bool IsRivalNameSet(
         string game
-    ) {
+    )
+    {
         return (Array.IndexOf(RIVAL_NAME_SET_GAMES, game) > -1);
     }
 
     private static void TestTrainerID(
         PKMN.GameSave gameSave
-    ) {
-        bool gbGame = isGBGame(gameSave.Game);
+    )
+    {
+        bool gbGame = IsGBGame(gameSave.Game);
 
         Assert.AreEqual(
             gameSave.TrainerID,
-            gbGame ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID
+            gbGame ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DefaultTrainerID
         );
-        if(gbGame) {
+        if(gbGame)
+        {
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                     ushort SID = gameSave.TrainerSecretID;
                 }
             );
-        } else {
+        }
+        else
+        {
             Assert.AreEqual(gameSave.TrainerSecretID, DEFAULT_TRAINER_SID);
         }
     }
 
     private static void TestCommonFields(
         PKMN.GameSave gameSave
-    ) {
+    )
+    {
         String game = gameSave.Game;
 
         // Trainer name
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 gameSave.TrainerName = "";
             }
         );
         Assert.Throws<ArgumentOutOfRangeException>(
-            delegate {
+            delegate
+            {
                 gameSave.TrainerName = "LibPKMNLibPKMN";
             }
         );
@@ -127,53 +113,67 @@ public class GameSaveTest {
         Assert.AreEqual(gameSave.TrainerName, "LibPKMN");
 
         // Trainer ID
-        gameSave.TrainerID = isGBGame(game) ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DEFAULT_TRAINER_ID;
+        gameSave.TrainerID = IsGBGame(game) ? DEFAULT_TRAINER_PID : PKMN.Pokemon.DefaultTrainerID;
         TestTrainerID(gameSave);
         gameSave.TrainerPublicID = DEFAULT_TRAINER_PID;
         TestTrainerID(gameSave);
-        if(isGBGame(game)) {
+        if(IsGBGame(game))
+        {
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                     gameSave.TrainerSecretID = DEFAULT_TRAINER_SID;
                 }
             );
-        } else {
+        }
+        else
+        {
             gameSave.TrainerSecretID = DEFAULT_TRAINER_SID;
             TestTrainerID(gameSave);
         }
 
         // Rival Name
-        if(isRivalNameSet(game)) {
+        if(IsRivalNameSet(game))
+        {
             Assert.Throws<ApplicationException>(
-                delegate {
-                   gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
+                delegate
+                {
+                   gameSave.RivalName = PKMN.Pokemon.DefaultTrainerName;
                 }
             );
-        } else {
-           gameSave.RivalName = PKMN.Pokemon.DEFAULT_TRAINER_NAME;
-           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.DEFAULT_TRAINER_NAME);
+        }
+        else
+        {
+           gameSave.RivalName = PKMN.Pokemon.DefaultTrainerName;
+           Assert.AreEqual(gameSave.RivalName, PKMN.Pokemon.DefaultTrainerName);
         }
 
         // Trainer Gender
-        if(isMaleOnly(game)) {
+        if(IsMaleOnly(game))
+        {
             Assert.AreEqual(gameSave.TrainerGender, "Male");
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                    gameSave.TrainerGender = "Male";
                 }
             );
             Assert.Throws<ApplicationException>(
-                delegate {
+                delegate
+                {
                    gameSave.TrainerGender = "Female";
                 }
             );
-        } else {
+        }
+        else
+        {
             gameSave.TrainerGender = "Male";
             Assert.AreEqual(gameSave.TrainerGender, "Male");
             gameSave.TrainerGender = "Female";
             Assert.AreEqual(gameSave.TrainerGender, "Female");
             Assert.Throws<ArgumentOutOfRangeException>(
-                delegate {
+                delegate
+                {
                    gameSave.TrainerGender = "Genderless";
                 }
             );
@@ -181,12 +181,14 @@ public class GameSaveTest {
 
         // Money
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                gameSave.Money = -1;
             }
         );
         Assert.Throws<IndexOutOfRangeException>(
-            delegate {
+            delegate
+            {
                gameSave.Money = MONEY_MAX+1;
             }
         );
@@ -196,185 +198,262 @@ public class GameSaveTest {
         // Pokémon Party
         PKMN.PokemonParty party = gameSave.PokemonParty;
         int numPokemon = party.NumPokemon;
-        Assert.AreEqual(party.AsList().Count, 6);
+        Assert.AreEqual(party.Length, 6);
 
         Assert.Greater(numPokemon, 0);
         Assert.LessOrEqual(numPokemon, 6);
-        for(int i = 0; i < 6; ++i) {
-            if(i < numPokemon) {
+        for(int i = 0; i < 6; ++i)
+        {
+            if(i < numPokemon)
+            {
                 Assert.AreNotEqual(party[i].Species, "None");
-            } else {
+            }
+            else
+            {
                 Assert.AreEqual(party[i].Species, "None");
             }
         }
 
         // Pokémon PC
         PKMN.PokemonPC pokemonPC = gameSave.PokemonPC;
-        Assert.AreEqual(pokemonPC.Count, pokemonPC.AsList().Count);
-        for(int i = 0; i < pokemonPC.Count; ++i) {
+        for(int i = 0; i < pokemonPC.Length; ++i)
+        {
             PKMN.PokemonBox box = pokemonPC[i];
 
-            Assert.LessOrEqual(box.NumPokemon, box.Count);
-            Assert.AreEqual(box.Count, box.AsList().Count);
+            Assert.LessOrEqual(box.NumPokemon, box.Length);
 
             // Boxes are only contiguous in Game Boy games.
-            if(isGBGame(game)) {
+            if(IsGBGame(game))
+            {
                 numPokemon = box.NumPokemon;
-                for(int j = 0; j < box.Count; ++j) {
-                    if(j < numPokemon) {
+                for(int j = 0; j < box.Length; ++j)
+                {
+                    if(j < numPokemon)
+                    {
                         Assert.AreNotEqual(box[j].Species, "None");
-                    } else {
+                    }
+                    else
+                    {
                         Assert.AreEqual(box[j].Species, "None");
                     }
                 }
             }
         }
+
+        // Pokédex
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            PKMN.Pokedex pokedex = gameSave.Pokedex;
+            Assert.GreaterOrEqual(pokedex.NumSeen, pokedex.NumCaught);
+
+            for(int partyIndex = 0; partyIndex < party.Length; ++partyIndex)
+            {
+                string species = party[partyIndex].Species;
+                if(!species.Equals("None") && !party[partyIndex].IsEgg)
+                {
+                    Assert.IsTrue(pokedex.SeenPokemonMap[species]);
+                    Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
+                }
+            }
+
+            for(int PCIndex = 0; PCIndex < pokemonPC.Length; ++PCIndex)
+            {
+                PKMN.PokemonBox box = pokemonPC[PCIndex];
+                for(int boxIndex = 0; boxIndex < box.Length; ++boxIndex)
+                {
+                    string species = box[boxIndex].Species;
+                    if(!species.Equals("None") && !box[boxIndex].IsEgg)
+                    {
+                        Assert.IsTrue(pokedex.SeenPokemonMap[species]);
+                        Assert.IsTrue(pokedex.CaughtPokemonMap[species]);
+                    }
+                }
+            }
+
+            // Make sure that when a Pokémon is added to the party or PC, it's
+            // added to the Pokédex. Manually remove the test species from the
+            // Pokédex to confirm this behavior.
+
+            string testSpecies1 = "Bulbasaur";
+            string testSpecies2 = "Charmander";
+
+            pokedex.SeenPokemonMap[testSpecies1] = false;
+            Assert.IsFalse(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsFalse(pokedex.CaughtPokemonMap[testSpecies1]);
+
+            pokedex.SeenPokemonMap[testSpecies2] = false;
+            Assert.IsFalse(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsFalse(pokedex.CaughtPokemonMap[testSpecies1]);
+
+            PKMN.Pokemon testPokemon1 = new PKMN.Pokemon(
+                                                testSpecies1,
+                                                game,
+                                                "",
+                                                5
+                                            );
+            PKMN.Pokemon testPokemon2 = new PKMN.Pokemon(
+                                                testSpecies2,
+                                                game,
+                                                "",
+                                                5
+                                            );
+
+
+            party[0] = testPokemon1;
+            Assert.IsTrue(pokedex.SeenPokemonMap[testSpecies1]);
+            Assert.IsTrue(pokedex.CaughtPokemonMap[testSpecies1]);
+
+            pokemonPC[0][0] = testPokemon2;
+            Assert.IsTrue(pokedex.SeenPokemonMap[testSpecies2]);
+            Assert.IsTrue(pokedex.CaughtPokemonMap[testSpecies2]);
+        }
     }
 
-    private static PKMN.Pokemon GetRandomPokemon(
-        string game,
-        PKMN.StringList pokemonList,
-        PKMN.StringList moveList,
-        PKMN.StringList itemList
-    ) {
-        int generation = GameToGeneration(game);
+    private static void TestAttributes(
+        PKMN.GameSave gameSave
+    )
+    {
+        string game = gameSave.Game;
+        int generation = Util.GameToGeneration(game);
+        switch(generation)
+        {
+            case 1:
+                Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Casino coins"));
+                Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
+                Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
 
-        // Don't deal with Deoxys issues here.
-        string species = "";
-        do {
-            species = pokemonList[rng.Next(0, pokemonList.Count)];
-        } while(generation == 3 && species.Equals("Deoxys"));
+                // TODO: uncomment after fixing:
+                //  * https://github.com/ncorgan/pksav/issues/3
+                /*int casinoCoins = rng.Next(0, 9999);
+                gameSave.NumericAttributes["Casino coins"] = casinoCoins;
+                Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);*/
 
-        PKMN.Pokemon ret = new PKMN.Pokemon(
-                                   species,
-                                   game,
-                                   "",
-                                   rng.Next(2, 101)
-                               );
+                if(game.Equals("Yellow"))
+                {
+                    Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Pikachu friendship"));
+                    Assert.GreaterOrEqual(gameSave.NumericAttributes["Pikachu friendship"], 0);
+                    Assert.LessOrEqual(gameSave.NumericAttributes["Pikachu friendship"], 255);
 
-        for(int i = 0; i < 4; ++i) {
-            string move = "";
-            do
-            {
-                move = moveList[rng.Next(0, moveList.Count)];
-            } while(move.StartsWith("Shadow"));
-            ret.SetMove(move, i);
+                    int pikachuFriendship = rng.Next(0, 255);
+                    gameSave.NumericAttributes["Pikachu friendship"] = pikachuFriendship;
+                    Assert.AreEqual(gameSave.NumericAttributes["Pikachu friendship"], pikachuFriendship);
+                }
+                else
+                {
+                    Assert.IsFalse(gameSave.NumericAttributes.Names.Contains("Pikachu friendship"));
+                }
+                break;
+
+            case 3:
+                if(!game.Equals("Colosseum") && !game.Equals("XD"))
+                {
+                    Assert.IsTrue(gameSave.NumericAttributes.Names.Contains("Casino coins"));
+                    Assert.GreaterOrEqual(gameSave.NumericAttributes["Casino coins"], 0);
+                    Assert.LessOrEqual(gameSave.NumericAttributes["Casino coins"], 9999);
+
+                    int casinoCoins = rng.Next(0, 9999);
+                    gameSave.NumericAttributes["Casino coins"] = casinoCoins;
+                    Assert.AreEqual(gameSave.NumericAttributes["Casino coins"], casinoCoins);
+                }
+                break;
+
+            default:
+                break;
         }
-
-        if(generation >= 2) {
-            // Keep going until one is holdable
-            PKMN.Database.ItemEntry itemEntry;
-            do {
-                itemEntry = new PKMN.Database.ItemEntry(itemList[rng.Next(0, itemList.Count)], game);
-            } while(!itemEntry.IsHoldable);
-
-            ret.HeldItem = itemEntry.Name;
-        }
-
-        return ret;
     }
 
     private static void RandomizePokemon(
         PKMN.GameSave gameSave,
         PKMN.StringList itemList
-    ) {
+    )
+    {
         string game = gameSave.Game;
-        int generation = GameToGeneration(game);
-        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(generation, true);
+
         PKMN.StringList moveList = PKMN.Database.Lists.MoveList(game);
+        PKMN.StringList pokemonList = PKMN.Database.Lists.PokemonList(1, true);
 
         PKMN.PokemonParty party = gameSave.PokemonParty;
-        for(int i = 0; i < 6; ++i) {
-            party[i] = GetRandomPokemon(
-                           game,
-                           pokemonList,
-                           moveList,
-                           itemList
-                       );
+        for(int i = 0; i < 6; ++i)
+        {
+            party[i] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
         }
 
         PKMN.PokemonPC PC = gameSave.PokemonPC;
-        for(int i = 0; i < PC.Count; ++i) {
+        for(int i = 0; i < PC.Length; ++i)
+        {
             PKMN.PokemonBox box = PC[i];
-            for(int j = 0; j < box.Count; ++j) {
-                box[j] = GetRandomPokemon(
-                             game,
-                             pokemonList,
-                             moveList,
-                             itemList
-                         );
+            for(int j = 0; j < box.Length; ++j)
+            {
+                box[j] = Util.GetRandomPokemon(game, itemList, moveList, pokemonList);
             }
         }
     }
 
-    public static void CompareItemLists(
+    private static void CompareItemLists(
         PKMN.ItemList itemList1,
         PKMN.ItemList itemList2
-    ) {
+    )
+    {
         Assert.AreEqual(itemList1.Game, itemList2.Game);
         Assert.AreEqual(itemList1.Name, itemList2.Name);
-        Assert.AreEqual(itemList1.Capacity, itemList2.Capacity);
+        Assert.AreEqual(itemList1.Length, itemList2.Length);
         Assert.AreEqual(itemList1.NumItems, itemList2.NumItems);
 
-        for(int i = 0; i < itemList1.Capacity; ++i) {
+        for(int i = 0; i < itemList1.Length; ++i)
+        {
             Assert.AreEqual(itemList1[i].Item, itemList2[i].Item);
             Assert.AreEqual(itemList1[i].Amount, itemList2[i].Amount);
         }
     }
 
-    public static void ComparePokemon(
-        PKMN.Pokemon pokemon1,
-        PKMN.Pokemon pokemon2
-    ) {
-        Assert.AreEqual(pokemon1.Game, pokemon2.Game);
-        Assert.AreEqual(pokemon1.Species, pokemon2.Species);
-        Assert.AreEqual(pokemon1.Form, pokemon2.Form);
-        Assert.AreEqual(pokemon1.Nickname, pokemon2.Nickname);
-        Assert.AreEqual(pokemon1.OriginalTrainerName, pokemon2.OriginalTrainerName);
-
-        for(int i = 0; i < 4; ++i) {
-            Assert.AreEqual(pokemon1.Moves[i].Move, pokemon2.Moves[i].Move);
-            Assert.AreEqual(pokemon1.Moves[i].PP, pokemon2.Moves[i].PP);
-        }
-
-        if(GameToGeneration(pokemon1.Game) >= 2) {
-            Assert.AreEqual(pokemon1.HeldItem, pokemon2.HeldItem);
-        }
+    private static void ComparePokedexes(
+        PKMN.Pokedex pokedex1,
+        PKMN.Pokedex pokedex2
+    )
+    {
+        Assert.AreEqual(pokedex1.AllSeen, pokedex2.AllSeen);
+        Assert.AreEqual(pokedex1.AllCaught, pokedex2.AllCaught);
     }
 
     public static void CompareGameSaves(
         PKMN.GameSave save1,
         PKMN.GameSave save2
-    ) {
+    )
+    {
         string game = save1.Game;
-        int generation = GameToGeneration(game);
+        int generation = Util.GameToGeneration(game);
 
         Assert.AreEqual(save1.Game, save2.Game);
         Assert.AreEqual(save1.TrainerName, save2.TrainerName);
         Assert.AreEqual(save1.TrainerID, save2.TrainerID);
         Assert.AreEqual(save1.TrainerPublicID, save2.TrainerPublicID);
 
-        if(!isGBGame(game)) {
+        if(!IsGBGame(game))
+        {
             Assert.AreEqual(save1.TrainerSecretID, save2.TrainerSecretID);
         }
-        if(!isMaleOnly(game)) {
+        if(!IsMaleOnly(game))
+        {
             Assert.AreEqual(save1.TrainerGender, save2.TrainerGender);
         }
-        if(!isRivalNameSet(game)) {
+        if(!IsRivalNameSet(game))
+        {
             Assert.AreEqual(save1.RivalName, save2.RivalName);
         }
 
         Assert.AreEqual(save1.Money, save2.Money);
 
-        Assert.AreEqual(save1.ItemBag.Pockets.Count, save2.ItemBag.Pockets.Count);
-        foreach(string pocketName in save1.ItemBag.PocketNames) {
+        Assert.AreEqual(save1.ItemBag.Count, save2.ItemBag.Count);
+        foreach(string pocketName in save1.ItemBag.PocketNames)
+        {
             CompareItemLists(
                 save1.ItemBag[pocketName],
                 save2.ItemBag[pocketName]
             );
         }
 
-        if(generation <= 3) {
+        if(generation <= 3)
+        {
             CompareItemLists(
                 save1.ItemPC,
                 save2.ItemPC
@@ -382,8 +461,9 @@ public class GameSaveTest {
         }
 
         Assert.AreEqual(save1.PokemonParty.NumPokemon, save2.PokemonParty.NumPokemon);
-        for(int i = 0; i < 6; ++i) {
-            ComparePokemon(
+        for(int i = 0; i < 6; ++i)
+        {
+            Util.ComparePokemon(
                 save1.PokemonParty[i],
                 save2.PokemonParty[i]
             );
@@ -392,26 +472,63 @@ public class GameSaveTest {
         PKMN.PokemonPC pokemonPC1 = save1.PokemonPC;
         PKMN.PokemonPC pokemonPC2 = save2.PokemonPC;
 
-        if(generation >= 2) {
+        if(generation >= 2)
+        {
             Assert.AreEqual(pokemonPC1.BoxNames.Count, pokemonPC2.BoxNames.Count);
-            for(int i = 0; i < pokemonPC1.BoxNames.Count; ++i) {
+            for(int i = 0; i < pokemonPC1.BoxNames.Count; ++i)
+            {
                 Assert.AreEqual(pokemonPC1.BoxNames[i], pokemonPC2.BoxNames[i]);
             }
         }
-        for(int i = 0; i < pokemonPC1.Count; ++i) {
+        for(int i = 0; i < pokemonPC1.Length; ++i)
+        {
             PKMN.PokemonBox pokemonBox1 = pokemonPC1[i];
             PKMN.PokemonBox pokemonBox2 = pokemonPC2[i];
 
-            if(generation >= 2) {
+            if(generation >= 2)
+            {
                 Assert.AreEqual(pokemonBox1.Name, pokemonBox2.Name);
             }
             Assert.AreEqual(pokemonBox1.NumPokemon, pokemonBox2.NumPokemon);
-            for(int j = 0; j < pokemonBox1.NumPokemon; ++j) {
-                ComparePokemon(
+            for(int j = 0; j < pokemonBox1.NumPokemon; ++j)
+            {
+                Util.ComparePokemon(
                     pokemonBox1[j],
                     pokemonBox2[j]
                 );
             }
+        }
+        if(!game.Equals("Colosseum") && !game.Equals("XD"))
+        {
+            ComparePokedexes(
+                save1.Pokedex,
+                save2.Pokedex
+            );
+        }
+
+        Assert.AreEqual(save1.NumericAttributes.Names, save2.NumericAttributes.Names);
+        foreach(string attributeName in save1.NumericAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.NumericAttributes[attributeName],
+                save2.NumericAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(save1.StringAttributes.Names, save2.StringAttributes.Names);
+        foreach(string attributeName in save1.StringAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.StringAttributes[attributeName],
+                save2.StringAttributes[attributeName]
+            );
+        }
+        Assert.AreEqual(save1.BooleanAttributes.Names, save2.BooleanAttributes.Names);
+        foreach(string attributeName in save1.BooleanAttributes.Names)
+        {
+            Assert.AreEqual(
+                save1.BooleanAttributes[attributeName],
+                save2.BooleanAttributes[attributeName]
+            );
         }
     }
 
@@ -419,7 +536,8 @@ public class GameSaveTest {
         string type,
         string game,
         string subPath
-    ) {
+    )
+    {
         string saveFilepath = "";
         if(game.Equals("Colosseum") || game.Equals("XD"))
         {
@@ -438,6 +556,8 @@ public class GameSaveTest {
         PKMN.StringList itemList = PKMN.Database.Lists.ItemList(game);
 
         TestCommonFields(gameSave);
+        TestAttributes(gameSave);
+
         // TODO: RandomizeItems
         RandomizePokemon(
             gameSave,

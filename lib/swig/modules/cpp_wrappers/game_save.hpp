@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -11,10 +11,12 @@
 #include <pkmn/config.hpp>
 #include <pkmn/game_save.hpp>
 
-#include "swig/modules/cpp_wrappers/item_list.hpp"
-#include "swig/modules/cpp_wrappers/item_bag.hpp"
-#include "swig/modules/cpp_wrappers/pokemon_party.hpp"
-#include "swig/modules/cpp_wrappers/pokemon_pc.hpp"
+#include "attribute_maps.hpp"
+#include "item_list.hpp"
+#include "item_bag.hpp"
+#include "pokedex.hpp"
+#include "pokemon_party.hpp"
+#include "pokemon_pc.hpp"
 
 namespace pkmn { namespace swig {
 
@@ -32,14 +34,8 @@ namespace pkmn { namespace swig {
             }
 
             game_save(
-                const std::string& filepath 
+                const std::string& filepath
             ): _game_save(pkmn::game_save::from_file(filepath))
-            {
-            }
-
-            game_save(
-                const game_save& other
-            ): _game_save(other._game_save)
             {
             }
 
@@ -48,13 +44,6 @@ namespace pkmn { namespace swig {
             )
             {
                 return pkmn::game_save::detect_type(filepath);
-            }
-
-            bool operator==(
-                const game_save& rhs
-            ) const
-            {
-                return (_game_save == rhs._game_save);
             }
 
             inline std::string get_filepath()
@@ -163,6 +152,11 @@ namespace pkmn { namespace swig {
                 _game_save->set_money(money);
             }
 
+            inline pkmn::swig::pokedex get_pokedex()
+            {
+                return pkmn::swig::pokedex(_game_save->get_pokedex());
+            }
+
             inline pkmn::swig::pokemon_party get_pokemon_party()
             {
                 return pkmn::swig::pokemon_party(_game_save->get_pokemon_party());
@@ -182,6 +176,38 @@ namespace pkmn { namespace swig {
             {
                 return pkmn::swig::item_list(_game_save->get_item_pc());
             }
+
+            numeric_attribute_map<pkmn::game_save> get_numeric_attributes()
+            {
+                return numeric_attribute_map<pkmn::game_save>(_game_save);
+            }
+
+            string_attribute_map<pkmn::game_save> get_string_attributes()
+            {
+                return string_attribute_map<pkmn::game_save>(_game_save);
+            }
+
+            boolean_attribute_map<pkmn::game_save> get_boolean_attributes()
+            {
+                return boolean_attribute_map<pkmn::game_save>(_game_save);
+            }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_game_save.get());
+            }
+#else
+            inline bool operator==(const game_save& rhs) const
+            {
+                return (_game_save == rhs._game_save);
+            }
+
+            inline bool operator!=(const game_save& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::game_save::sptr _game_save;

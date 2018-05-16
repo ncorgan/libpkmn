@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,59 +13,46 @@
 
 %include <std_string.i>
 
-%rename("ItemSlotWrapper") item_slot_wrapper;
-%rename("item") get_item;
-%rename("item=") set_item;
-%rename("amount") get_amount;
-%rename("amount=") set_amount;
+%include <attribute.i>
 
-%rename("ItemList") item_list;
-%rename("name") get_name;
-%rename("game") get_game;
-%rename("length") get_capacity;
-%rename("num_items") get_num_items;
-%rename("valid_items") get_valid_items;
+%ignore pkmn::swig::item_list::item_list();
+%ignore pkmn::swig::item_list::item_list(const pkmn::item_list::sptr&);
+%ignore pkmn::swig::item_list::cptr();
+%ignore pkmn::swig::item_list::at(int);
+%ignore pkmn::swig::item_list::get_capacity();
+
+// Convert getter/setter functions into attributes for more idiomatic Ruby.
+
+%attributestring(pkmn::swig::item_list, std::string, name, get_name);
+%attributestring(pkmn::swig::item_list, std::string, game, get_game);
+%attribute(pkmn::swig::item_list, int, num_items, get_num_items);
+%attributeval(pkmn::swig::item_list, %arg(std::vector<std::string>), valid_items, get_valid_items);
 
 %include "cpp_wrappers/item_list.hpp"
 
-// Needed to avoid compile error
-%{
-    namespace swig
-    {
-        template <> struct traits<pkmn::swig::item_slot_wrapper>
-        {
-            typedef pointer_category category;
-            static const char* type_name()
-            {
-                return "pkmn::swig::item_slot_wrapper";
-            }
-        };
-    }
-%}
-
 %extend pkmn::swig::item_list
 {
-    int __len__() {
-        return self->get_capacity();
+    size_t __len__()
+    {
+        return size_t(self->get_capacity());
     }
 
-    pkmn::swig::item_slot_wrapper __getitem__(int index) {
-        return self->at(index);
-    }
-
-    bool __eq__(const pkmn::swig::item_list& rhs) {
-        return ((*self) == rhs);
+    pkmn::swig::item_slot __getitem__(size_t index)
+    {
+        return self->at(int(index));
     }
 
     pkmn::swig::item_list* each()
     {
-        if ( !rb_block_given_p() )
-            rb_raise( rb_eArgError, "no block given");
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
 
         VALUE r;
-        for(int i = 0; i < self->get_capacity(); ++i)
+        for(int item_index = 0; item_index < self->get_capacity(); ++item_index)
         {
-            r = swig::from<pkmn::swig::item_slot_wrapper>(self->at(i));
+            r = swig::from<pkmn::swig::item_slot>(self->at(item_index));
             rb_yield(r);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -13,10 +13,18 @@
 
 %include <std_string.i>
 
-%rename("ItemBag") item_bag;
+%include <attribute.i>
 
-%rename("game") get_game;
-%rename("pocket_names") get_pocket_names;
+%ignore pkmn::swig::item_bag::item_bag();
+%ignore pkmn::swig::item_bag::item_bag(const pkmn::item_bag::sptr&);
+%ignore pkmn::swig::item_bag::cptr();
+%ignore pkmn::swig::item_bag::at(int);
+%ignore pkmn::swig::item_bag::get_pocket(const std::string&);
+
+// Convert getter/setter functions into attributes for more idiomatic Ruby.
+
+%attributestring(pkmn::swig::item_bag, std::string, game, get_game);
+%attributeval(pkmn::swig::item_bag, %arg(std::vector<std::string>), pocket_names, get_pocket_names);
 
 %include "cpp_wrappers/item_bag.hpp"
 
@@ -37,29 +45,29 @@
 
 %extend pkmn::swig::item_bag
 {
-    int __len__() {
+    size_t __len__()
+    {
         return self->get_pocket_names().size();
     }
 
-    pkmn::swig::item_list __getitem__(const std::string& index) {
-        return self->get_pocket(index);
-    }
-
-    bool __eq__(const std::shared_ptr<pkmn::item_bag>& rhs) {
-        return ((*self) == rhs);
+    pkmn::swig::item_list __getitem__(const std::string& name)
+    {
+        return self->get_pocket(name);
     }
 
     pkmn::swig::item_bag* each()
     {
-        if ( !rb_block_given_p() )
-            rb_raise( rb_eArgError, "no block given");
+        if(!rb_block_given_p())
+        {
+            rb_raise(rb_eArgError, "no block given");
+        }
 
         const std::vector<std::string>& pocket_names = self->get_pocket_names();
 
         VALUE r;
-        for(auto iter = pocket_names.begin(); iter != pocket_names.end(); ++iter)
+        for(const std::string& pocket_name: pocket_names)
         {
-            r = swig::from<pkmn::swig::item_list>(self->get_pocket(*iter));
+            r = swig::from<pkmn::swig::item_list>(self->get_pocket(pocket_name));
             rb_yield(r);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -12,82 +12,9 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/item_list.hpp>
 
+#include "item_slot.hpp"
+
 namespace pkmn { namespace swig {
-
-    class item_slot_wrapper
-    {
-        public:
-            item_slot_wrapper():
-                _item_list(nullptr),
-                _index(0)
-            {}
-
-            item_slot_wrapper(
-                const pkmn::item_list::sptr& item_list,
-                int index
-            ): _item_list(item_list),
-               _index(index)
-            {
-            }
-
-            const std::string& get_item()
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _item_list->as_vector().at(_index).item;
-            }
-
-            void set_item(
-                const std::string& item
-            )
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _item_list->set_item(
-                    _index,
-                    item,
-                    (item == "None") ? 0
-                                     : (get_amount() == 0) ? 1
-                                                           : get_amount()
-                );
-            }
-
-            int get_amount()
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _item_list->as_vector().at(_index).amount;
-            }
-
-            void set_amount(
-                int amount
-            )
-            {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _item_list->set_item(
-                    _index,
-                    (amount == 0) ? "None" : get_item(),
-                    amount
-                );
-            }
-
-        private:
-            pkmn::item_list::sptr _item_list;
-            int _index;
-    };
 
     /*
      * This class is a thin wrapper around pkmn::item_list::sptr and
@@ -116,41 +43,45 @@ namespace pkmn { namespace swig {
             {
             }
 
-            bool operator==(
-                const item_list& rhs
-            ) const
-            {
-                return (_item_list == rhs._item_list);
-            }
-
-            std::string get_name()
+            inline std::string get_name()
             {
                 return _item_list->get_name();
             }
 
-            std::string get_game()
+            inline std::string get_game()
             {
                 return _item_list->get_game();
             }
 
-            int get_capacity()
+            inline int get_capacity()
             {
                 return _item_list->get_capacity();
             }
 
-            int get_num_items()
+            inline int get_num_items()
             {
                 return _item_list->get_num_items();
             }
 
-            item_slot_wrapper at(
-                int index
+            inline item_slot at(
+                int position
             )
             {
-                return item_slot_wrapper(_item_list, index);
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Position",
+                    position,
+                    1,
+                    get_capacity()
+                );
+
+                return item_slot(_item_list, position-1);
+#else
+                return item_slot(_item_list, position);
+#endif
             }
 
-            void add(
+            inline void add(
                 const std::string& item,
                 int amount
             )
@@ -158,7 +89,7 @@ namespace pkmn { namespace swig {
                 _item_list->add(item, amount);
             }
 
-            void remove(
+            inline void remove(
                 const std::string& item,
                 int amount
             )
@@ -166,18 +97,54 @@ namespace pkmn { namespace swig {
                 _item_list->remove(item, amount);
             }
 
-            void move(
+            inline void move(
                 int old_position,
                 int new_position
             )
             {
+#ifdef SWIGLUA
+                pkmn::enforce_bounds(
+                    "Old position",
+                    old_position,
+                    1,
+                    get_num_items()
+                );
+                pkmn::enforce_bounds(
+                    "New position",
+                    new_position,
+                    1,
+                    get_num_items()
+                );
+
+                _item_list->move(old_position-1, new_position-1);
+#else
                 _item_list->move(old_position, new_position);
+#endif
             }
 
-            const std::vector<std::string>& get_valid_items()
+            // Copy the vector, since the const in the reference
+            // is casted away.
+            inline std::vector<std::string> get_valid_items()
             {
                 return _item_list->get_valid_items();
             }
+
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
+            {
+                return uintmax_t(_item_list.get());
+            }
+#else
+            inline bool operator==(const item_list& rhs) const
+            {
+                return (_item_list == rhs._item_list);
+            }
+
+            inline bool operator!=(const item_list& rhs) const
+            {
+                return !operator==(rhs);
+            }
+#endif
 
         private:
             pkmn::item_list::sptr _item_list;

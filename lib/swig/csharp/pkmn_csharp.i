@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2015-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -14,20 +14,31 @@ PKMN_CSHARP_INIT
 %import <stl_csharp.i>
 
 %{
-    #include <pkmn/item_list.hpp>
-    #include <pkmn/item_bag.hpp>
-
-    #include <pkmn/utils/paths.hpp>
-
     #include <pkmn/build_info.hpp>
 
-    inline std::string GetSWIGVersion() {
+    #include "private_exports.hpp"
+
+    inline std::string GetSWIGVersion()
+    {
         return std::string("@SWIG_VERSION@");
     }
 %}
 
 // Convert Doxygen docs to Python docstrings
 %include <pkmn_csharp_docs.i>
+
+// Private exports
+
+%rename(InitializeDatabaseConnection) initialize_database_connection;
+%rename(ConvertImageForMono) convert_image_for_mono;
+
+%csmethodmodifiers initialize_database_connection "internal";
+%csmethodmodifiers convert_image_for_mono "internal";
+
+namespace pkmn { namespace priv {
+    void initialize_database_connection();
+    std::string convert_image_for_mono(const std::string& filepath);
+}}
 
 // Build Info
 %csmethodmodifiers pkmn::build_info::get_boost_version "internal";
@@ -40,21 +51,8 @@ PKMN_CSHARP_INIT
 %csmethodmodifiers GetSWIGVersion "internal";
 std::string GetSWIGVersion();
 
-// For all sptrs, for some reason didn't get ignored from pkmn.i
-%ignore make;
-%ignore get_native;
-
-// Bring in our wrapped make functions, don't expose them
-%csmethodmodifiers detect_game_save_type "internal";
-%csmethodmodifiers make_game_save "internal";
-%csmethodmodifiers make_item_bag "internal";
-%csmethodmodifiers make_item_list "internal";
-%csmethodmodifiers make_pokedex "internal";
-%csmethodmodifiers make_pokemon "internal";
-%csmethodmodifiers make_pokemon_box "internal";
-%csmethodmodifiers make_pokemon_party "internal";
-%csmethodmodifiers make_pokemon_pc "internal";
-%include <pkmn_statics.i>
+// Attribute Maps
+%include <csharp/pkmn_attribute_maps.i>
 
 // Game Save
 %include <csharp/pkmn_game_save.i>
@@ -64,18 +62,16 @@ std::string GetSWIGVersion();
 
 // Item List
 %include <csharp/pkmn_item_list.i>
-PKMN_CSHARP_MAP(std::string, pkmn::item_list::sptr, String, ItemList, ItemPockets);
 
 // Item Bag
 %include <csharp/pkmn_item_bag.i>
 
-// Move Slot
-%include <csharp/pkmn_move_slot.i>
-
 // Pokédex
+%include <csharp/pkmn_pokedex_helpers.i>
 %include <csharp/pkmn_pokedex.i>
 
-// Pokémon 
+// Pokémon
+%include <csharp/pkmn_pokemon_helpers.i>
 %include <csharp/pkmn_pokemon.i>
 
 // Pokémon Box

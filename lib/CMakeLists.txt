@@ -64,6 +64,7 @@ SET(pkmn_sources
     ${pkmn_pksav_sources}
     ${pkmn_qt_sources}
     ${pkmn_utils_sources}
+    private_exports.cpp
     build_info.cpp
     exception.cpp
     private_exports.cpp

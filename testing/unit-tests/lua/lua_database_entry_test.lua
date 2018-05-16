@@ -16,18 +16,18 @@ function test_item_entry()
 
     local entry = pkmn.database.item_entry("Fast Ball", "SoulSilver")
 
-    luaunit.assertEquals(entry:get_name(), "Fast Ball")
-    luaunit.assertEquals(entry:get_game(), "SoulSilver")
-    luaunit.assertEquals(entry:get_category(), "Apricorn balls")
-    luaunit.assertEquals(entry:get_pocket(), "Poké Balls")
+    luaunit.assertEquals(entry.name, "Fast Ball")
+    luaunit.assertEquals(entry.game, "SoulSilver")
+    luaunit.assertEquals(entry.category, "Apricorn balls")
+    luaunit.assertEquals(entry.pocket, "Poké Balls")
 
     -- Just make sure it works.
-    entry:get_description()
+    local description = entry.description
 
-    luaunit.assertEquals(entry:get_cost(), 300)
-    luaunit.assertTrue(entry:holdable())
-    luaunit.assertEquals(entry:get_fling_power(), 0)
-    luaunit.assertEquals(entry:get_fling_effect(), "None")
+    luaunit.assertEquals(entry.cost, 300)
+    luaunit.assertTrue(entry.is_holdable)
+    luaunit.assertEquals(entry.fling_power, 0)
+    luaunit.assertEquals(entry.fling_effect, "None")
 
     -- Test equality.
     local entry_same = pkmn.database.item_entry("Fast Ball", "SoulSilver")
@@ -47,31 +47,31 @@ function test_move_entry()
 
     local entry = pkmn.database.move_entry("Octazooka", "Silver")
 
-    luaunit.assertEquals(entry:get_name(), "Octazooka");
-    luaunit.assertEquals(entry:get_game(), "Silver")
-    luaunit.assertEquals(entry:get_type(), "Water")
+    luaunit.assertEquals(entry.name, "Octazooka");
+    luaunit.assertEquals(entry.game, "Silver")
+    luaunit.assertEquals(entry.type, "Water")
 
     -- Just make sure it works.
-    entry:get_description()
+    local description = entry.description
 
-    luaunit.assertEquals(entry:get_target(), "Selected Pokémon")
-    luaunit.assertEquals(entry:get_damage_class(), "Special")
-    luaunit.assertEquals(entry:get_base_power(), 65)
+    luaunit.assertEquals(entry.target, "Selected Pokémon")
+    luaunit.assertEquals(entry.damage_class, "Special")
+    luaunit.assertEquals(entry.base_power, 65)
 
     local pps = {10, 12, 14, 16}
     for i = 1, #pps do
         luaunit.assertEquals(entry:get_pp(i-1), pps[i])
     end
 
-    luaunit.assertAlmostEquals(entry:get_accuracy(), 0.85, 0.0001)
-    luaunit.assertEquals(entry:get_priority(), 0)
+    luaunit.assertAlmostEquals(entry.accuracy, 0.85, 0.0001)
+    luaunit.assertEquals(entry.priority, 0)
 
     -- Just make sure it works.
-    entry:get_effect()
+    local effect = entry.effect
 
-    luaunit.assertEquals(entry:get_contest_type(), "None")
-    luaunit.assertEquals(entry:get_contest_effect(), "None")
-    luaunit.assertEquals(entry:get_super_contest_effect(), "None")
+    luaunit.assertEquals(entry.contest_type, "None")
+    luaunit.assertEquals(entry.contest_effect, "None")
+    luaunit.assertEquals(entry.super_contest_effect, "None")
 
     -- Test equality.
     local entry_same = pkmn.database.move_entry("Octazooka", "Silver")
@@ -97,56 +97,51 @@ function test_pokemon_entry()
 
     local entry = pkmn.database.pokemon_entry("Stunfisk", "Black 2", "")
 
-    luaunit.assertEquals(entry:get_name(), "Stunfisk")
-    luaunit.assertEquals(entry:get_game(), "Black 2")
-    luaunit.assertEquals(entry:get_species(), "Trap")
-    luaunit.assertEquals(entry:get_form(), "Standard")
-    luaunit.assertTrue(#entry:get_pokedex_entry() > 0)
-    luaunit.assertAlmostEquals(entry:get_height(), 0.7, 0.0001)
-    luaunit.assertAlmostEquals(entry:get_weight(), 11.0, 0.0001)
-    luaunit.assertAlmostEquals(entry:get_chance_male(), 0.5, 0.0001)
-    luaunit.assertAlmostEquals(entry:get_chance_female(), 0.5, 0.0001)
-    luaunit.assertFalse(entry:has_gender_differences())
-    luaunit.assertEquals(entry:get_base_friendship(), 70)
+    luaunit.assertEquals(entry.name, "Stunfisk")
+    luaunit.assertEquals(entry.game, "Black 2")
+    luaunit.assertEquals(entry.species, "Trap")
+    luaunit.assertEquals(entry.form, "Standard")
+    luaunit.assertTrue(#entry.pokedex_entry > 0)
+    luaunit.assertAlmostEquals(entry.height, 0.7, 0.0001)
+    luaunit.assertAlmostEquals(entry.weight, 11.0, 0.0001)
+    luaunit.assertAlmostEquals(entry.chance_male, 0.5, 0.0001)
+    luaunit.assertAlmostEquals(entry.chance_female, 0.5, 0.0001)
+    luaunit.assertFalse(entry.has_gender_differences)
+    luaunit.assertEquals(entry.base_friendship, 70)
 
-    local types = entry:get_types()
-    luaunit.assertEquals(types.first, "Ground")
-    luaunit.assertEquals(types.second, "Electric")
+    luaunit.assertEquals(entry.types.first, "Ground")
+    luaunit.assertEquals(entry.types.second, "Electric")
 
-    local abilities = entry:get_abilities()
-    luaunit.assertEquals(abilities.first, "Static")
-    luaunit.assertEquals(abilities.second, "Limber")
+    luaunit.assertEquals(entry.abilities.first, "Static")
+    luaunit.assertEquals(entry.abilities.second, "Limber")
 
-    luaunit.assertEquals(entry:get_hidden_ability(), "Sand Veil")
+    luaunit.assertEquals(entry.hidden_ability, "Sand Veil")
 
-    local egg_groups = entry:get_egg_groups()
-    luaunit.assertEquals(egg_groups.first, "Water 1")
-    luaunit.assertEquals(egg_groups.second, "Amorphous")
+    luaunit.assertEquals(entry.egg_groups.first, "Water 1")
+    luaunit.assertEquals(entry.egg_groups.second, "Amorphous")
 
-    local base_stats = entry:get_base_stats()
-    luaunit.assertEquals(base_stats["HP"], 109)
-    luaunit.assertEquals(base_stats["Attack"], 66)
-    luaunit.assertEquals(base_stats["Defense"], 84)
-    luaunit.assertEquals(base_stats["Speed"], 32)
-    luaunit.assertEquals(base_stats["Special Attack"], 81)
-    luaunit.assertEquals(base_stats["Special Defense"], 99)
+    luaunit.assertEquals(entry.base_stats["HP"], 109)
+    luaunit.assertEquals(entry.base_stats["Attack"], 66)
+    luaunit.assertEquals(entry.base_stats["Defense"], 84)
+    luaunit.assertEquals(entry.base_stats["Speed"], 32)
+    luaunit.assertEquals(entry.base_stats["Special Attack"], 81)
+    luaunit.assertEquals(entry.base_stats["Special Defense"], 99)
 
-    local EV_yields = entry:get_EV_yields()
-    luaunit.assertEquals(EV_yields["HP"], 2);
-    luaunit.assertEquals(EV_yields["Attack"], 0);
-    luaunit.assertEquals(EV_yields["Defense"], 0);
-    luaunit.assertEquals(EV_yields["Speed"], 0);
-    luaunit.assertEquals(EV_yields["Special Attack"], 0);
-    luaunit.assertEquals(EV_yields["Special Defense"], 0);
+    luaunit.assertEquals(entry.EV_yields["HP"], 2);
+    luaunit.assertEquals(entry.EV_yields["Attack"], 0);
+    luaunit.assertEquals(entry.EV_yields["Defense"], 0);
+    luaunit.assertEquals(entry.EV_yields["Speed"], 0);
+    luaunit.assertEquals(entry.EV_yields["Special Attack"], 0);
+    luaunit.assertEquals(entry.EV_yields["Special Defense"], 0);
 
-    luaunit.assertEquals(entry:get_experience_yield(), 165)
+    luaunit.assertEquals(entry.experience_yield, 165)
     luaunit.assertEquals(entry:get_experience_at_level(50), 125000)
     luaunit.assertEquals(entry:get_level_at_experience(200000), 58)
-    luaunit.assertTrue(#entry:get_levelup_moves() > 0)
-    luaunit.assertTrue(#entry:get_tm_hm_moves() > 0)
-    luaunit.assertTrue(#entry:get_egg_moves() > 0)
-    luaunit.assertTrue(#entry:get_tutor_moves() > 0)
-    luaunit.assertEquals(#entry:get_evolutions(), 0)
+    luaunit.assertTrue(#entry.levelup_moves > 0)
+    luaunit.assertTrue(#entry.tm_hm_moves > 0)
+    luaunit.assertTrue(#entry.egg_moves > 0)
+    luaunit.assertTrue(#entry.tutor_moves > 0)
+    luaunit.assertEquals(#entry.evolutions, 0)
 
     luaunit.assertTrue(file_exists(entry:get_icon_filepath(false)))
     luaunit.assertTrue(file_exists(entry:get_icon_filepath(true)))

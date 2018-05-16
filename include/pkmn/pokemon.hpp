@@ -104,7 +104,7 @@ namespace pkmn {
             virtual int get_pokerus_duration() = 0;
 
             virtual void set_pokerus_duration(
-                int diruation
+                int duration
             ) = 0;
 
             virtual std::string get_original_trainer_name() = 0;

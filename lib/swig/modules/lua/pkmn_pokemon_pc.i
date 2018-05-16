@@ -1,37 +1,40 @@
 /*
- * Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
 
 %{
-    #include <pkmn/pokemon_pc.hpp>
+    #include "cpp_wrappers/pokemon_pc.hpp"
 %}
 
-%rename(as_list) as_vector;
-%include <pkmn/pokemon_pc.hpp>
+%include <attribute.i>
 
-%extend std::shared_ptr<pkmn::pokemon_pc> {
+%ignore pkmn::swig::pokemon_pc::pokemon_pc();
+%ignore pkmn::swig::pokemon_pc::pokemon_pc(const pkmn::pokemon_pc::sptr&);
+%ignore pkmn::swig::pokemon_pc::cptr();
+%ignore pkmn::swig::pokemon_pc::at(int);
+%ignore pkmn::swig::pokemon_pc::get_num_boxes();
 
-    pkmn::pokemon_box::sptr __getitem__(
-        int index
-    ) throw (std::out_of_range)
+// Convert getter/setter functions into attributes for more idiomatic Lua.
+
+%attributestring(pkmn::swig::pokemon_pc, std::string, game, get_game);
+%attributeval(pkmn::swig::pokemon_pc, %arg(std::vector<std::string>), box_names, get_box_names);
+
+%extend pkmn::swig::pokemon_pc
+{
+    pkmn::swig::pokemon_box __getitem__(
+        int position
+    )
     {
-        if (index == 0)
-            throw std::out_of_range("Lua lists are 1-based");
-        return self->get()->as_vector().at(index-1);
+        return self->get_box(position);
     }
 
-    bool __eq__(
-        const pkmn::pokemon_pc::sptr &rhs
-    ) {
-        return (self->get() == rhs.get());
+    int __len(void*)
+    {
+        return self->get_num_boxes();
     }
-
-    int __len(void*) {
-        return int(self->get()->get_num_boxes());
-    }
-
 }
-%template(pokemon_pc_sptr) std::shared_ptr<pkmn::pokemon_pc>;
+
+%include "cpp_wrappers/pokemon_pc.hpp"

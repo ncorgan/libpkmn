@@ -75,6 +75,57 @@ class ItemTest < MiniTest::Test
         end
     end
 
+    def item_list_test_setting_items(items, item_names)
+        assert_equal(items.num_items, 0)
+        assert_equal(item_names.length, 8)
+
+        # Make sure invalid indices are caught.
+        assert_raises IndexError do
+            items[-1].item = item_names[0]
+        end
+        assert_raises IndexError do
+            items[items.length].item = item_names[0]
+        end
+
+        items[0].item = item_names[0]
+        items[0].amount = 50
+        items[1].item = item_names[1]
+        items[1].amount = 40
+        items[2].item = item_names[2]
+        items[2].amount = 30
+
+        assert_equal(items.num_items, 3)
+        assert_equal(items[0].item, item_names[0])
+        assert_equal(items[0].amount, 50)
+        assert_equal(items[1].item, item_names[1])
+        assert_equal(items[1].amount, 40)
+        assert_equal(items[2].item, item_names[2])
+        assert_equal(items[2].amount, 30)
+
+        # Make sure the item list being contiguous is enforced.
+        assert_raises IndexError do
+            items[4].item = item_names[3]
+        end
+
+        items[2].item = "None"
+
+        assert_equal(items.num_items, 2)
+        assert_equal(items[0].item, item_names[0])
+        assert_equal(items[0].amount, 50)
+        assert_equal(items[1].item, item_names[1])
+        assert_equal(items[1].amount, 40)
+        assert_equal(items[2].item, "None")
+        assert_equal(items[2].amount, 0)
+
+        items[0].item = "None"
+        items[0].item = "None"
+
+        (0..2).each do |index|
+            assert_equal(items[index].item, "None")
+            assert_equal(items[index].amount, 0)
+        end
+    end
+
     def item_list_test_add_remove(items, item_names)
         assert_equal(items.num_items, 0)
         assert_equal(item_names.length, 8)

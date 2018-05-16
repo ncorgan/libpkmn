@@ -20,13 +20,12 @@ header_text = """/*
  * This file was generated: %s
  */""" % datetime.datetime.now()
 
-ignored_classes = ["game_save",
-                   "item_bag",
-                   "item_list",
-                   "pokemon",
-                   "pokemon_box",
-                   "pokemon_pc",
+ignored_classes = ["numeric_attribute_map",
+                   "string_attribute_map",
+                   "boolean_attribute_map",
                    "PKMN_API"]
+
+ignored_functions = ["size"]
 
 ignored_files = ["config.hpp",
                  "exception.hpp",
@@ -41,6 +40,7 @@ replacements = dict(Ev = "EV",
                     Iv = "IV",
                     Pp = "PP",
                     Pc = "PC",
+                    Hp = "HP",
                     TmHm = "TMHM",
                     Pksav = "PKSav",
                     Libpkmgc = "LibPkmGC",
@@ -80,7 +80,7 @@ def convert_header(header,language):
 
     if language != "ruby":
         for fcn in header.functions:
-            if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower():
+            if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and fcn["name"] not in ignored_functions:
                 output += generate_rename_line(str(fcn["name"]), (False if java else True)) + "\n"
 
     for cls in header.classes:
@@ -89,7 +89,7 @@ def convert_header(header,language):
 
         if language != "ruby":
             for fcn in header.classes[cls]["methods"]["public"]:
-                if "operator" not in fcn["name"].lower() and not fcn["constructor"] and not fcn["destructor"]:
+                if "operator" not in fcn["name"].lower() and not fcn["constructor"] and not fcn["destructor"] and fcn["name"] not in ignored_functions:
                     output += generate_rename_line(fcn["name"], (False if java else True)) + "\n"
 
             for var in header.classes[cls]["properties"]["public"]:
@@ -116,6 +116,6 @@ if __name__ == "__main__":
             if file.endswith(".hpp") and file not in ignored_files:
                 output += convert_header(CppHeaderParser.CppHeader(os.path.join(root, file)), options.language)
 
-    f = open(options.output_file, 'w')
+    f = open(options.output_file, 'a')
     f.write(output)
     f.close()

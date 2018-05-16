@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,147 +9,31 @@ using System;
 using NUnit.Framework;
 
 [TestFixture]
-public class CSharpPokemonPartyTest {
-    /*
-     * Red
-     */
-    [Test]
-    public void RedPokemonPartyTest() {
+public class CSharpPokemonPartyTest
+{
+    [TestCase("Red", new string[]{"Blue", "Yellow", "Gold", "Silver", "Crystal"}, "Ruby")]
+    [TestCase("Blue", new string[]{"Red", "Yellow", "Gold", "Silver", "Crystal"}, "Sapphire")]
+    [TestCase("Yellow", new string[]{"Red", "Blue", "Gold", "Silver", "Crystal"}, "Emerald")]
+    [TestCase("Gold", new string[]{"Red", "Blue", "Yellow", "Silver", "Crystal"}, "FireRed")]
+    [TestCase("Silver", new string[]{"Red", "Blue", "Yellow", "Gold", "Crystal"}, "LeafGreen")]
+    [TestCase("Crystal", new string[]{"Red", "Blue", "Yellow", "Gold", "Silver"}, "Colosseum")]
+    [TestCase("Ruby", new string[]{"Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Red")]
+    [TestCase("Sapphire", new string[]{"Ruby", "Emerald", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Blue")]
+    [TestCase("Emerald", new string[]{"Ruby", "Sapphire", "FireRed", "LeafGreen", "Colosseum", "XD"}, "Yellow")]
+    [TestCase("FireRed", new string[]{"Ruby", "Sapphire", "Emerald", "LeafGreen", "Colosseum", "XD"}, "Gold")]
+    [TestCase("LeafGreen", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "Colosseum", "XD"}, "Silver")]
+    [TestCase("Colosseum", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "XD"}, "Crystal")]
+    [TestCase("XD", new string[]{"Ruby", "Sapphire", "Emerald", "FireRed", "LeafGreen", "Colosseum"}, "Red")]
+    public void PokemonPartyTest(
+        string game,
+        string[] validOtherGames,
+        string invalidOtherGame
+    )
+    {
         PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Red"),
-            "Red"
-        );
-    }
-
-    /*
-     * Blue
-     */
-    [Test]
-    public void BluePokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Blue"),
-            "Blue"
-        );
-    }
-
-    /*
-     * Yellow
-     */
-    [Test]
-    public void YellowPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Yellow"),
-            "Yellow"
-        );
-    }
-
-    /*
-     * Gold
-     */
-    [Test]
-    public void GoldPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Gold"),
-            "Gold"
-        );
-    }
-
-    /*
-     * Silver
-     */
-    [Test]
-    public void SilverPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Silver"),
-            "Silver"
-        );
-    }
-
-    /*
-     * Crystal
-     */
-    [Test]
-    public void CrystalPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Crystal"),
-            "Crystal"
-        );
-    }
-
-    /*
-     * Ruby
-     */
-    [Test]
-    public void RubyPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Ruby"),
-            "Ruby"
-        );
-    }
-
-    /*
-     * Sapphire
-     */
-    [Test]
-    public void SapphirePokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Sapphire"),
-            "Sapphire"
-        );
-    }
-
-    /*
-     * Emerald
-     */
-    [Test]
-    public void EmeraldPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Emerald"),
-            "Emerald"
-        );
-    }
-
-    /*
-     * FireRed
-     */
-    [Test]
-    public void FireRedPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("FireRed"),
-            "FireRed"
-        );
-    }
-
-    /*
-     * LeafGreen
-     */
-    [Test]
-    public void LeafGreenPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("LeafGreen"),
-            "LeafGreen"
-        );
-    }
-
-    /*
-     * Colosseum
-     */
-    [Test]
-    public void ColosseumPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("Colosseum"),
-            "Colosseum"
-        );
-    }
-
-    /*
-     * XD
-     */
-    [Test]
-    public void XDPokemonPartyTest() {
-        PKMNTest.PokemonPartyTests.TestPokemonParty(
-            new PKMN.PokemonParty("XD"),
-            "XD"
+            new PKMN.PokemonParty(game),
+            validOtherGames,
+            invalidOtherGame
         );
     }
 }

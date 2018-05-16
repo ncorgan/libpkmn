@@ -16,7 +16,11 @@ require_relative "PKMN/Paths"
 require_relative "PKMN/STL"
 
 module PKMN
+    VERSION = "@PKMN_VERSION@"
+
     module BuildInfo
         SWIG_VERSION = "@SWIG_VERSION@"
     end
 end
+
+PKMN::initialize_database_connection()

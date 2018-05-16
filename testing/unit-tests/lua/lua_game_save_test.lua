@@ -6,54 +6,12 @@
 --
 
 local pkmn = require("pkmn")
+local pkmntest_utils = require("pkmntest_utils")
 local luaunit = require("luaunit")
-
-local utils = {}
 
 math.randomseed(os.time())
 
--- http://stackoverflow.com/a/30960054
-function utils.is_windows()
-    local shared_lib_ext = package.cpath:match("%p[\\|/]?%p(%a+)")
-    return (shared_lib_ext == "dll")
-end
-
-function utils.concat_paths(path1, path2, path3)
-    if utils.is_windows()
-    then
-        if path3 == nil
-        then
-            return string.format("%s\\%s", path1, path2)
-        else
-            return string.format("%s\\%s\\%s", path1, path2, path3)
-        end
-    else
-        if path3 == nil
-        then
-            return string.format("%s/%s", path1, path2)
-        else
-            return string.format("%s/%s/%s", path1, path2, path3)
-        end
-    end
-end
-
 local game_save_test = {}
-
-game_save_test.GAME_TO_GENERATION = {
-    ["Red"] = 1,
-    ["Blue"] = 1,
-    ["Yellow"] = 1,
-    ["Gold"] = 2,
-    ["Silver"] = 2,
-    ["Crystal"] = 2,
-    ["Ruby"] = 3,
-    ["Sapphire"] = 3,
-    ["Emerald"] = 3,
-    ["FireRed"] = 3,
-    ["LeafGreen"] = 3,
-    ["Colosseum"] = 3,
-    ["XD"] = 3
-}
 
 game_save_test.PKSAV_TEST_SAVES = pkmn.paths.getenv("PKSAV_TEST_SAVES")
 game_save_test.LIBPKMN_TEST_FILES = pkmn.paths.getenv("LIBPKMN_TEST_FILES")
@@ -79,13 +37,13 @@ game_save_test.RIVAL_NAME_SET_GAMES = {
 }
 
 function game_save_test.is_gb_game(game)
-    return (game_save_test.GAME_TO_GENERATION[game] <= 2)
+    return (pkmntest_utils.GAME_TO_GENERATION[game] <= 2)
 end
 
 function game_save_test.is_male_only(game)
-    for i = 1, #game_save_test.MALE_ONLY_GAMES
+    for game_index = 1, #game_save_test.MALE_ONLY_GAMES
     do
-        if game_save_test.MALE_ONLY_GAMES[i] == game
+        if game_save_test.MALE_ONLY_GAMES[game_index] == game
         then
             return true
         end
@@ -95,9 +53,9 @@ function game_save_test.is_male_only(game)
 end
 
 function game_save_test.is_rival_name_set(game)
-    for i = 1, #game_save_test.RIVAL_NAME_SET_GAMES
+    for game_index = 1, #game_save_test.RIVAL_NAME_SET_GAMES
     do
-        if game_save_test.RIVAL_NAME_SET_GAMES[i] == game
+        if game_save_test.RIVAL_NAME_SET_GAMES[game_index] == game
         then
             return true
         end
@@ -109,327 +67,432 @@ end
 function game_save_test.test_trainer_id(save, is_gb_game)
     if is_gb_game
     then
-        luaunit.assertEquals(save:get_trainer_id(), game_save_test.DEFAULT_TRAINER_PID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save.trainer_id, game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save.trainer_public_id, game_save_test.DEFAULT_TRAINER_PID)
         luaunit.assertError(save.get_trainer_secret_id, save)
     else
-        luaunit.assertEquals(save:get_trainer_id(), pkmn.DEFAULT_TRAINER_ID)
-        luaunit.assertEquals(save:get_trainer_public_id(), game_save_test.DEFAULT_TRAINER_PID)
-        luaunit.assertEquals(save:get_trainer_secret_id(), game_save_test.DEFAULT_TRAINER_SID)
+        luaunit.assertEquals(save.trainer_id, pkmn.pokemon.DEFAULT_TRAINER_ID)
+        luaunit.assertEquals(save.trainer_public_id, game_save_test.DEFAULT_TRAINER_PID)
+        luaunit.assertEquals(save.trainer_secret_id, game_save_test.DEFAULT_TRAINER_SID)
     end
 end
 
 function game_save_test.test_common_fields(save)
-    local game = save:get_game()
+    local game = save.game
     local is_gb_game = game_save_test.is_gb_game(game)
     local is_male_only = game_save_test.is_male_only(game)
     local is_rival_name_set = game_save_test.is_rival_name_set(game)
+    local is_gamecube_game = (game == "Colosseum") or (game == "XD")
+
+    -- Hacky setter functions because LuaUnit can't check setting variables...
+    function game_save_set_money(save, money)
+        save.money = money
+    end
+    function game_save_set_trainer_name(save, name)
+        save.trainer_name = name
+    end
+    function game_save_set_trainer_gender(save, gender)
+        save.trainer_gender = gender
+    end
+    function game_save_set_trainer_id(save, id)
+        save.trainer_id = id
+    end
+    function game_save_set_trainer_public_id(save, public_id)
+        save.trainer_public_id = public_id
+    end
+    function game_save_set_trainer_secret_id(save, secret_id)
+        save.trainer_secret_id = secret_id
+    end
+    function game_save_set_rival_name(save, name)
+        save.rival_name = name
+    end
 
     -- Trainer name
-    luaunit.assertError(save.set_trainer_name, save, "")
-    luaunit.assertError(save.set_trainer_name, save, "LibPKMNLibPKMN")
-    save:set_trainer_name("LibPKMN")
-    luaunit.assertEquals(save:get_trainer_name(), "LibPKMN")
+    luaunit.assertError(
+        game_save_set_trainer_name,
+        save,
+        ""
+    )
+    luaunit.assertError(
+        game_save_set_trainer_name,
+        save,
+        "LibPKMNLibPKMN"
+    )
+
+    save.trainer_name = "LibPKMN"
+    luaunit.assertEquals(save.trainer_name, "LibPKMN")
 
     -- Trainer ID
     if is_gb_game
     then
-        save:set_trainer_id(game_save_test.DEFAULT_TRAINER_PID)
+        save.trainer_id = game_save_test.DEFAULT_TRAINER_PID
     else
-        save:set_trainer_id(pkmn.DEFAULT_TRAINER_ID)
+        save.trainer_id = pkmn.pokemon.DEFAULT_TRAINER_ID
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 
-    save:set_trainer_public_id(game_save_test.DEFAULT_TRAINER_PID)
+    save.trainer_public_id = game_save_test.DEFAULT_TRAINER_PID
     game_save_test.test_trainer_id(save, is_gb_game)
 
     if is_gb_game
     then
-        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.DEFAULT_TRAINER_SID)
+        luaunit.assertError(
+            game_save_set_trainer_secret_id,
+            save,
+            game_save_test.DEFAULT_TRAINER_SID
+        )
     else
-        save:set_trainer_secret_id(game_save_test.DEFAULT_TRAINER_SID)
+        save.trainer_secret_id = game_save_test.DEFAULT_TRAINER_SID
     end
     game_save_test.test_trainer_id(save, is_gb_game)
 
     -- Make sure Lua+SWIG properly catches out-of-range values.
-    luaunit.assertError(save.set_trainer_id, save, -1)
-    luaunit.assertError(save.set_trainer_public_id, save, -1)
-    luaunit.assertError(save.set_trainer_public_id, save, game_save_test.MAX_UINT16+1)
+    pkmntest_utils.enforce_uint16_param(
+        game_save_set_trainer_public_id,
+        save
+    )
     if is_gb_game
     then
-        luaunit.assertError(save.set_trainer_id, save, game_save_test.MAX_UINT16+1)
+        pkmntest_utils.enforce_uint16_param(
+            game_save_set_trainer_id,
+            save
+        )
     else
-        luaunit.assertError(save.set_trainer_id, save, game_save_test.MAX_UINT32+1)
-        luaunit.assertError(save.set_trainer_secret_id, save, -1)
-        luaunit.assertError(save.set_trainer_secret_id, save, game_save_test.MAX_UINT16+1)
+        pkmntest_utils.enforce_uint16_param(
+            game_save_set_trainer_secret_id,
+            save
+        )
+        pkmntest_utils.enforce_uint32_param(
+            game_save_set_trainer_id,
+            save
+        )
     end
 
     -- Rival name
     if is_rival_name_set
     then
-        luaunit.assertError(save.set_rival_name, save, "LibPKMN")
+        luaunit.assertError(
+            game_save_set_rival_name,
+            save,
+            "LibPKMN"
+        )
     else
-        luaunit.assertError(save.set_rival_name, save, "")
-        luaunit.assertError(save.set_rival_name, save, "LibPKMNLibPKMN")
-        save:set_rival_name("LibPKMN")
-        luaunit.assertEquals(save:get_rival_name(), "LibPKMN")
+        luaunit.assertError(
+            game_save_set_rival_name,
+            save,
+            ""
+        )
+        luaunit.assertError(
+            game_save_set_rival_name,
+            save,
+            "LibPKMNLibPKMN"
+        )
+        save.rival_name = "LibPKMN"
+        luaunit.assertEquals(save.rival_name, "LibPKMN")
     end
 
     -- Trainer gender
     if is_male_only
     then
-        luaunit.assertEquals(save:get_trainer_gender(), "Male")
+        luaunit.assertEquals(save.trainer_gender, "Male")
+        luaunit.assertError(
+            game_save_set_trainer_gender,
+            save,
+            "Male"
+        )
+        luaunit.assertError(
+            game_save_set_trainer_gender,
+            save,
+            "Female"
+        )
+
         luaunit.assertError(save.set_trainer_gender, save, "Male")
         luaunit.assertError(save.set_trainer_gender, save, "Female")
     else
-        save:set_trainer_gender("Male")
-        luaunit.assertEquals(save:get_trainer_gender(), "Male")
-        save:set_trainer_gender("Female")
-        luaunit.assertEquals(save:get_trainer_gender(), "Female")
-        luaunit.assertError(save.set_trainer_gender, save, "Genderless")
+        save.trainer_gender = "Male"
+        luaunit.assertEquals(save.trainer_gender, "Male")
+        save.trainer_gender = "Female"
+        luaunit.assertEquals(save.trainer_gender, "Female")
+
+        luaunit.assertError(
+            game_save_set_trainer_gender,
+            save,
+            "Genderless"
+        )
     end
 
     -- Money
-    luaunit.assertError(save.set_money, save, -1)
-    luaunit.assertError(save.set_money, save, game_save_test.MONEY_MAX+1)
-    save:set_money(123456)
-    luaunit.assertEquals(save:get_money(), 123456)
+    luaunit.assertError(game_save_set_money, save, -1)
+    luaunit.assertError(game_save_set_money, save, game_save_test.MONEY_MAX+1)
+    save.money = 123456
+    luaunit.assertEquals(save.money, 123456)
+
+    -- Not how these are typically used, but this test is slow...
+    local pokedex_seen_pokemon_map = nil
+    local pokedex_caught_pokemon_map = nil
+    if not is_gamecube_game
+    then
+        pokedex_seen_pokemon_map = save.pokedex.seen_pokemon_map
+        pokedex_caught_pokemon_map = save.pokedex.caught_pokemon_map
+    end
 
     -- Pokémon Party
-    local party = save:get_pokemon_party()
-    local num_pokemon = party:get_num_pokemon()
-    luaunit.assertEquals(#party, 6)
-    luaunit.assertTrue(num_pokemon <= 6)
+    luaunit.assertEquals(#save.pokemon_party, 6)
+    luaunit.assertTrue(save.pokemon_party.num_pokemon <= 6)
 
-    for i = 1, 6
+    local party = save.pokemon_party
+    local num_pokemon = party.num_pokemon
+
+    for party_index = 1, 6
     do
-        if i <= num_pokemon
+        local pokemon = party[party_index]
+
+        if party_index <= num_pokemon
         then
-            luaunit.assertNotEquals(party[i]:get_species(), "None")
+            luaunit.assertNotEquals(pokemon.species, "None")
+
+            if not is_gamecube_game and not pokemon.is_egg
+            then
+                luaunit.assertTrue(pokedex_seen_pokemon_map[pokemon.species])
+                luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
+            end
         else
-            luaunit.assertEquals(party[i]:get_species(), "None")
+            luaunit.assertEquals(pokemon.species, "None")
         end
     end
 
     -- Pokémon PC
-    local pc = save:get_pokemon_pc()
-    luaunit.assertEquals(#pc, #pc:as_list())
+    local pokemon_pc = save.pokemon_pc
 
-    for i = 1, #pc
+    for pc_index = 1, #pokemon_pc
     do
-        local box = pc[i]
-        luaunit.assertEquals(#box, box:get_capacity())
-        luaunit.assertTrue(box:get_num_pokemon() <= #box)
+        local box = pokemon_pc[pc_index]
+        luaunit.assertTrue(box.num_pokemon <= #box)
 
         -- Boxes are only contiguous in Game Boy games.
         if is_gb_game
         then
-            for i = 1, #box
+            for box_index = 1, #box
             do
-                local num_pokemon = box:get_num_pokemon()
-                if i <= num_pokemon
+                local pokemon = box[box_index]
+
+                if box_index <= box.num_pokemon
                 then
-                    luaunit.assertNotEquals(box[i]:get_species(), "None")
+                    luaunit.assertNotEquals(pokemon.species, "None")
+
+                    if not is_gamecube_game and not pokemon.is_egg
+                    then
+                        luaunit.assertTrue(pokedex_seen_pokemon_map[pokemon.species])
+                        luaunit.assertTrue(pokedex_caught_pokemon_map[pokemon.species])
+                    end
                 else
-                    luaunit.assertEquals(box[i]:get_species(), "None")
+                    luaunit.assertEquals(pokemon.species, "None")
                 end
             end
         end
     end
 end
 
-function game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_list)
-    local generation = game_save_test.GAME_TO_GENERATION[game]
+function game_save_test.test_attributes(save)
+    local game = save.game
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
 
-    local species = ""
-    repeat
-        species = pokemon_list[math.random(1, #pokemon_list)]
-    until (generation ~= 3 or species ~= "Deoxys")
-
-    ret = pkmn.pokemon(species, game, "", math.random(2, 100))
-
-    for i = 1, 4
-    do
-        local move = ""
-        repeat
-            move = move_list[math.random(1, #move_list)]
-        until string.find(move, "Shadow") == nil
-        ret:set_move(move, i)
-    end
-
-    if generation >= 2
+    if generation == 1
     then
-        -- Keep going until one is holdable
-        repeat
-            pcall(ret.set_held_item, ret, item_list[math.random(1, #item_list)])
-        until ret:get_held_item() ~= "None"
-    end
+        luaunit.assertTrue(save.numeric_attributes["Casino coins"] >= 0)
+        luaunit.assertTrue(save.numeric_attributes["Casino coins"] <= 9999)
+        -- TODO: uncomment after fixing:
+        --  * https://github.com/ncorgan/pksav/issues/3
+        --[[
+        local casino_coins = math.random(0, 9999)
+        save.numeric_attributes["Casino coins"] = casino_coins
+        luaunit.assertEquals(save.numeric_attributes["Casino coins"], casino_coins)
+        --]]
 
-    return ret
+        if game == "Yellow"
+        then
+            luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] >= 0)
+            luaunit.assertTrue(save.numeric_attributes["Pikachu friendship"] <= 255)
+
+            local pikachu_friendship = math.random(0, 255)
+            save.numeric_attributes["Pikachu friendship"] = pikachu_friendship
+            luaunit.assertEquals(save.numeric_attributes["Pikachu friendship"], pikachu_friendship)
+        end
+    elseif generation == 3
+    then
+        if game ~= "Colosseum" and game ~= "XD"
+        then
+            luaunit.assertTrue(save.numeric_attributes["Casino coins"] >= 0)
+            luaunit.assertTrue(save.numeric_attributes["Casino coins"] <= 9999)
+
+            local casino_coins = math.random(0, 9999)
+            save.numeric_attributes["Casino coins"] = casino_coins
+            luaunit.assertEquals(save.numeric_attributes["Casino coins"], casino_coins)
+        end
+    end
 end
 
 function game_save_test.randomize_pokemon(save, item_list)
-    local game = save:get_game()
-    local generation = game_save_test.GAME_TO_GENERATION[game]
+    local game = save.game
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
     local pokemon_list = pkmn.database.get_pokemon_list(generation, true)
     local move_list = pkmn.database.get_move_list(game)
 
-    local party = save:get_pokemon_party()
-    for i = 1, #party
+    local party = save.pokemon_party
+    for party_index = 1, #party
     do
-        party[i] = game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_list)
+        party[party_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
     end
 
-    local pc = save:get_pokemon_pc()
-    for i = 1, #pc
+    pokemon_pc = save.pokemon_pc
+    for pc_index = 1, #pokemon_pc
     do
-        local box = pc[i]
-        for j = 1, #box
+        local box = pokemon_pc[pc_index]
+        for box_index = 1, #box
         do
-            box[j] = game_save_test.get_random_pokemon(game, pokemon_list, move_list, item_list)
+            box[box_index] = pkmntest_utils.get_random_pokemon(game, pokemon_list, move_list, item_list)
         end
     end
 end
 
 function game_save_test.compare_item_lists(item_list1, item_list2)
-    luaunit.assertEquals(item_list1:get_game(), item_list2:get_game())
-    luaunit.assertEquals(item_list1:get_name(), item_list2:get_name())
+    luaunit.assertEquals(item_list1.game, item_list2.game)
+    luaunit.assertEquals(item_list1.name, item_list2.name)
     luaunit.assertEquals(#item_list1, #item_list2)
-    luaunit.assertEquals(item_list1:get_num_items(), item_list2:get_num_items())
+    luaunit.assertEquals(item_list1.num_items, item_list2.num_items)
 
-    for i = 1, #item_list1
+    for item_index = 1, #item_list1
     do
-        luaunit.assertEquals(item_list1[i].item, item_list2[i].item)
-        luaunit.assertEquals(item_list1[i].amount, item_list2[i].amount)
-    end
-end
-
-function game_save_test.compare_pokemon(pokemon1, pokemon2)
-    luaunit.assertEquals(pokemon1:get_game(), pokemon2:get_game())
-    luaunit.assertEquals(pokemon1:get_species(), pokemon2:get_species())
-    luaunit.assertEquals(pokemon1:get_form(), pokemon2:get_form())
-    luaunit.assertEquals(pokemon1:get_nickname(), pokemon2:get_nickname())
-    luaunit.assertEquals(pokemon1:get_original_trainer_name(), pokemon2:get_original_trainer_name())
-
-    local moves1 = pokemon1:get_moves()
-    local moves2 = pokemon2:get_moves()
-    for i = 1, 4
-    do
-        luaunit.assertEquals(moves1[i].move, moves2[i].move)
-        luaunit.assertEquals(moves1[i].pp, moves2[i].pp)
-    end
-
-    if game_save_test.GAME_TO_GENERATION[pokemon1:get_game()] >= 2
-    then
-        luaunit.assertEquals(pokemon1:get_held_item(), pokemon2:get_held_item())
+        luaunit.assertEquals(item_list1[item_index].item, item_list2[item_index].item)
+        luaunit.assertEquals(item_list1[item_index].amount, item_list2[item_index].amount)
     end
 end
 
 function game_save_test.compare_game_saves(save1, save2)
-    local game = save1:get_game()
-    local generation = game_save_test.GAME_TO_GENERATION[game]
+    local game = save1.game
+    local generation = pkmntest_utils.GAME_TO_GENERATION[game]
     local is_gb_game = game_save_test.is_gb_game(game)
     local is_male_only = game_save_test.is_male_only(game)
     local is_rival_name_set = game_save_test.is_rival_name_set(game)
 
-    luaunit.assertEquals(save1:get_game(), save2:get_game())
-    luaunit.assertEquals(save1:get_trainer_id(), save2:get_trainer_id())
-    luaunit.assertEquals(save1:get_trainer_public_id(), save2:get_trainer_public_id())
+    luaunit.assertEquals(save1.game, save2.game)
+    luaunit.assertEquals(save1.trainer_id, save2.trainer_id)
+    luaunit.assertEquals(save1.trainer_public_id, save2.trainer_public_id)
 
     if not is_gb_game
     then
-        luaunit.assertEquals(save1:get_trainer_secret_id(), save2:get_trainer_secret_id())
+        luaunit.assertEquals(save1.trainer_secret_id, save2.trainer_secret_id)
     end
     if not is_male_only
     then
-        luaunit.assertEquals(save1:get_trainer_gender(), save2:get_trainer_gender())
+        luaunit.assertEquals(save1.trainer_gender, save2.trainer_gender)
     end
     if not is_rival_name_set
     then
-        luaunit.assertEquals(save1:get_rival_name(), save2:get_rival_name())
+        luaunit.assertEquals(save1.rival_name, save2.rival_name)
     end
 
-    luaunit.assertEquals(save1:get_money(), save2:get_money())
+    luaunit.assertEquals(save1.money, save2.money)
 
-    local bag1 = save1:get_item_bag()
-    local bag2 = save2:get_item_bag()
+    local bag1 = save1.item_bag
+    local bag2 = save2.item_bag
+
     luaunit.assertEquals(#bag1, #bag2)
-    luaunit.assertEquals(#bag1:get_pocket_names(), #bag2:get_pocket_names())
+    luaunit.assertEquals(bag1.pocket_names, bag2.pocket_names)
 
-    local pocket_names = bag1:get_pocket_names()
-    for i = 1, #pocket_names
+    local pocket_names = bag1.pocket_names
+    for pocket_index = 1, #pocket_names
     do
-        game_save_test.compare_item_lists(bag1[pocket_names[i]], bag2[pocket_names[i]])
+        game_save_test.compare_item_lists(
+            bag1[pocket_names[pocket_index]],
+            bag2[pocket_names[pocket_index]]
+        )
     end
 
     if generation <= 3
     then
-        game_save_test.compare_item_lists(save1:get_item_pc(), save2:get_item_pc())
+        game_save_test.compare_item_lists(save1.item_pc, save2.item_pc)
     end
 
-    local party1 = save1:get_pokemon_party()
-    local party2 = save2:get_pokemon_party()
-    luaunit.assertEquals(party1:get_num_pokemon(), party2:get_num_pokemon())
-    for i = 1, 6
+    local party1 = save1.pokemon_party
+    local party2 = save2.pokemon_party
+
+    luaunit.assertEquals(party1.num_pokemon, party2.num_pokemon)
+    for party_index = 1, 6
     do
-        game_save_test.compare_pokemon(party1[i], party2[i])
+        pkmntest_utils.compare_pokemon(
+            party1[party_index],
+            party2[party_index]
+        )
     end
 
-    local pc1 = save1:get_pokemon_pc()
-    local pc2 = save2:get_pokemon_pc()
+    local pc1 = save1.pokemon_pc
+    local pc2 = save2.pokemon_pc
+
+    luaunit.assertEquals(#pc1, #pc2)
     if generation >= 2
     then
-        local box_names1 = pc1:get_box_names()
-        local box_names2 = pc2:get_box_names()
-        luaunit.assertEquals(#box_names1, #box_names2)
-        for i = 1, #box_names1
+        luaunit.assertEquals(pc1.box_names, pc2.box_names)
+
+        for pc_index = 1, #pc1
         do
-            luaunit.assertEquals(box_names1[i], box_names2[i])
+            luaunit.assertEquals(pc1[pc_index].name, pc2[pc_index].name)
         end
     end
-    for i = 1, #pc1
+    for pc_index = 1, #pc1
     do
-        if generation >= 2
-        then
-            luaunit.assertEquals(pc1[i]:get_name(), pc2[i]:get_name())
-            luaunit.assertEquals(#pc1[i], #pc2[i])
-            for j = 1, #pc1[i]
-            do
-                game_save_test.compare_pokemon(pc1[i][j], pc2[i][j])
-            end
+        local box1 = pc1[pc_index]
+        local box2 = pc2[pc_index]
+
+        luaunit.assertEquals(#box1, #box2)
+        for box_index = 1, #pc1[1]
+        do
+            pkmntest_utils.compare_pokemon(
+                box1[box_index],
+                box2[box_index]
+            )
         end
     end
+
+    if game ~= "Colosseum" and game ~= "XD"
+    then
+        luaunit.assertEquals(save1.pokedex.all_seen, save2.pokedex.all_seen)
+        luaunit.assertEquals(save1.pokedex.all_caught, save2.pokedex.all_caught)
+    end
+
+    pkmntest_utils.compare_attributes(save1, save2)
 end
 
 function game_save_test.test_game_save(expected_type, expected_game, subdir, filename)
     local save_filepath = ""
     if expected_game == "Colosseum" or expected_game == "XD"
     then
-        save_filepath = utils.concat_paths(game_save_test.LIBPKMN_TEST_FILES, subdir, filename)
+        save_filepath = pkmntest_utils.concat_paths(game_save_test.LIBPKMN_TEST_FILES, subdir, filename)
     else
-        save_filepath = utils.concat_paths(game_save_test.PKSAV_TEST_SAVES, subdir, filename)
+        save_filepath = pkmntest_utils.concat_paths(game_save_test.PKSAV_TEST_SAVES, subdir, filename)
     end
     luaunit.assertEquals(pkmn.detect_game_save_type(save_filepath), expected_type)
 
     local save = pkmn.game_save(save_filepath)
-    luaunit.assertEquals(save:get_filepath(), save_filepath)
-    luaunit.assertEquals(save:get_game(), expected_game)
+    luaunit.assertEquals(save.filepath, save_filepath)
+    luaunit.assertEquals(save.game, expected_game)
 
     local item_list = pkmn.database.get_item_list(expected_game)
 
     game_save_test.test_common_fields(save)
+    game_save_test.test_attributes(save)
     -- TODO: randomize_items
     game_save_test.randomize_pokemon(save, item_list)
 
-    temp_save_filepath = utils.concat_paths(
+    temp_save_filepath = pkmntest_utils.concat_path(
                              game_save_test.PKMN_TMP_DIR,
                              string.format("%s_%d.sav", expected_game, math.random(0, 0xFFFF))
                          )
     save:save_as(temp_save_filepath)
 
     local save2 = pkmn.game_save(temp_save_filepath)
-    luaunit.assertEquals(save2:get_filepath(), temp_save_filepath)
-    luaunit.assertEquals(save2:get_game(), expected_game)
+    luaunit.assertEquals(save2.filepath, temp_save_filepath)
+    luaunit.assertEquals(save2.game, expected_game)
     game_save_test.compare_game_saves(save, save2)
 
     os.remove(temp_save_filepath)

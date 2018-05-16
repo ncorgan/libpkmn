@@ -5,12 +5,12 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#include "utils/misc.hpp"
 #include "pokedex_impl.hpp"
 
 #include "database/database_common.hpp"
 #include "database/id_to_string.hpp"
 #include "pksav/pksav_call.hpp"
+#include "utils/misc.hpp"
 
 #include <pkmn/exception.hpp>
 
@@ -103,7 +103,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_seen),
+                reinterpret_cast<const uint8_t*>(_native_has_seen),
                 uint16_t(species_id),
                 &ret
             );
@@ -182,7 +182,7 @@ namespace pkmn
 
         PKSAV_CALL(
             pksav_get_pokedex_bit(
-                reinterpret_cast<uint8_t*>(_native_has_caught),
+                reinterpret_cast<const uint8_t*>(_native_has_caught),
                 uint16_t(species_id),
                 &ret
             );
@@ -209,7 +209,7 @@ namespace pkmn
         )
 
         // If a Pokémon has been caught, then it must have been seen.
-        if(has_caught_value and (not has_caught(species)))
+        if(has_caught_value and (not has_seen(species)))
         {
             set_has_seen(species, true);
         }

@@ -253,12 +253,14 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
 
     // Spiky-eared Pichu should only work in HG/SS
     if(game == "HeartGold" or game == "SoulSilver") {
-        (void)pkmn::pokemon::make(
-                  "Pichu",
-                  game,
-                  "Spiky-eared",
-                  100
-              );
+        pkmn::pokemon::sptr pichu = pkmn::pokemon::make(
+                                        "Pichu",
+                                        game,
+                                        "Spiky-eared",
+                                       100
+                                    );
+        EXPECT_TRUE(pichu->is_shiny());
+        EXPECT_EQ("Female", pichu->get_gender());
     } else {
         EXPECT_THROW(
             (void)pkmn::pokemon::make(
@@ -280,10 +282,8 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         unown_forms.at(i),
                                         10
                                     );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
     if(generation == 2) {
         EXPECT_THROW(
@@ -309,10 +309,8 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                                         "!",
                                         10
                                     );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
 
         unown = pkmn::pokemon::make(
                     "Unown",
@@ -320,10 +318,8 @@ TEST_P(gen2_form_test, test_gen2_pokemon_forms) {
                     "?",
                     10
                 );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
-        }
+        EXPECT_TRUE(fs::exists(unown->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(unown->get_sprite_filepath()));
     }
 }
 
@@ -390,10 +386,8 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                            *iter,
                                            30
                                        );
-        if(game != "Colosseum" and game != "XD") {
-            EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
-            EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
-        }
+        EXPECT_TRUE(fs::exists(castform->get_icon_filepath()));
+        EXPECT_TRUE(fs::exists(castform->get_sprite_filepath()));
     }
 
     // Primal Reversion forms should only work in OR/AS.
@@ -403,10 +397,8 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                       "",
                                       70
                                   );
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(groudon->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(groudon->get_sprite_filepath()));
 
     pkmn::pokemon::sptr kyogre = pkmn::pokemon::make(
                                      "Kyogre",
@@ -414,10 +406,8 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                                      "",
                                      70
                                  );
-    if(game != "Colosseum" and game != "XD") {
-        EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
-        EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
-    }
+    EXPECT_TRUE(fs::exists(kyogre->get_icon_filepath()));
+    EXPECT_TRUE(fs::exists(kyogre->get_sprite_filepath()));
 
     if(game == "Omega Ruby" or game == "Alpha Sapphire") {
         (void)pkmn::pokemon::make(
@@ -461,10 +451,8 @@ TEST_P(gen3_form_test, test_gba_pokemon_forms) {
                          "Normal",
                          70
                      );
-            if(game != "Colosseum" and game != "XD") {
-                EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
-                EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
-            }
+            EXPECT_TRUE(fs::exists(deoxys->get_icon_filepath()));
+            EXPECT_TRUE(fs::exists(deoxys->get_sprite_filepath()));
         } else {
             EXPECT_THROW(
                 (void)pkmn::pokemon::make(

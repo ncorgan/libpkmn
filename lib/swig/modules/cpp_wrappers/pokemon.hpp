@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -9,6 +9,10 @@
 #define CPP_WRAPPERS_POKEMON_HPP
 
 #include "exception_internal.hpp"
+#include "private_exports.hpp"
+
+#include "attribute_maps.hpp"
+#include "pokemon_helpers.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
@@ -16,427 +20,29 @@
 
 namespace pkmn { namespace swig {
 
-    class pokemon_EV_map
-    {
-        public:
-            pokemon_EV_map():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_EV_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            inline int get_EV(
-                const std::string& stat
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                const std::map<std::string, int>& EVs = _pokemon->get_EVs();
-                if(EVs.count(stat) == 0)
-                {
-                    throw std::invalid_argument("Invalid stat.");
-                }
-
-                return EVs.at(stat);
-            }
-
-            inline void set_EV(
-                const std::string& stat,
-                int value
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_EV(stat, value);
-            }
-
-            inline bool has_key(
-                const std::string& key
-            )
-            {
-                return (_pokemon->get_EVs().count(key) > 0);
-            }
-
-            inline pkmn::pokemon::sptr get_internal()
-            {
-                return _pokemon;
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
-    class pokemon_IV_map
-    {
-        public:
-            pokemon_IV_map():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_IV_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            inline int get_IV(
-                const std::string& stat
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                const std::map<std::string, int>& IVs = _pokemon->get_IVs();
-                if(IVs.count(stat) == 0)
-                {
-                    throw std::invalid_argument("Invalid stat.");
-                }
-
-                return IVs.at(stat);
-            }
-
-            inline void set_IV(
-                const std::string& stat,
-                int value
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_IV(stat, value);
-            }
-
-            inline bool has_key(
-                const std::string& key
-            )
-            {
-                return (_pokemon->get_IVs().count(key) > 0);
-            }
-
-            inline pkmn::pokemon::sptr get_internal()
-            {
-                return _pokemon;
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
-    class pokemon_marking_map
-    {
-        public:
-            pokemon_marking_map():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_marking_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            inline bool get_marking(
-                const std::string& marking
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                const std::map<std::string, bool>& markings = _pokemon->get_markings();
-                if(markings.count(marking) == 0)
-                {
-                    throw std::invalid_argument("Invalid marking.");
-                }
-
-                return markings.at(marking);
-            }
-
-            inline void set_marking(
-                const std::string& stat,
-                bool value
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_marking(stat, value);
-            }
-
-            inline bool has_key(
-                const std::string& key
-            )
-            {
-                return (_pokemon->get_markings().count(key) > 0);
-            }
-
-            inline pkmn::pokemon::sptr get_internal()
-            {
-                return _pokemon;
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
-    class pokemon_ribbon_map
-    {
-        public:
-            pokemon_ribbon_map():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_ribbon_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            inline bool get_ribbon(
-                const std::string& ribbon
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                const std::map<std::string, bool>& ribbons = _pokemon->get_ribbons();
-                if(ribbons.count(ribbon) == 0)
-                {
-                    throw std::invalid_argument("Invalid ribbon.");
-                }
-
-                return ribbons.at(ribbon);
-            }
-
-            inline void set_ribbon(
-                const std::string& stat,
-                bool value
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_ribbon(stat, value);
-            }
-
-            inline bool has_key(
-                const std::string& key
-            )
-            {
-                return (_pokemon->get_ribbons().count(key) > 0);
-            }
-
-            inline pkmn::pokemon::sptr get_internal()
-            {
-                return _pokemon;
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
-    class pokemon_contest_stat_map
-    {
-        public:
-            pokemon_contest_stat_map():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_contest_stat_map(
-                pkmn::pokemon::sptr pokemon
-            ): _pokemon(pokemon)
-            {}
-
-            inline int get_contest_stat(
-                const std::string& stat
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                const std::map<std::string, int>& contest_stats = _pokemon->get_contest_stats();
-                if(contest_stats.count(stat) == 0)
-                {
-                    throw std::invalid_argument("Invalid contest stat.");
-                }
-
-                return contest_stats.at(stat);
-            }
-
-            inline void set_contest_stat(
-                const std::string& stat,
-                int value
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_contest_stat(stat, value);
-            }
-
-            inline bool has_key(
-                const std::string& key
-            )
-            {
-                return (_pokemon->get_contest_stats().count(key) > 0);
-            }
-
-            inline pkmn::pokemon::sptr get_internal()
-            {
-                return _pokemon;
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-    };
-
-    class pokemon_move_slot_wrapper
-    {
-        public:
-            pokemon_move_slot_wrapper():
-                _pokemon(nullptr),
-                _index(0)
-            {}
-
-            pokemon_move_slot_wrapper(
-                const pkmn::pokemon::sptr& cpp_pokemon,
-                int index
-            ): _pokemon(cpp_pokemon),
-               _index(index)
-            {}
-
-            const std::string& get_move()
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _pokemon->get_moves().at(_index).move;
-            }
-
-            void set_move(
-                const std::string& move
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                _pokemon->set_move(move, _index);
-            }
-
-            int get_pp()
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                return _pokemon->get_moves().at(_index).pp;
-            }
-
-            // TODO: set_pp when underlying function implemented
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-            int _index;
-    };
-
-    class pokemon_move_slots_wrapper
-    {
-        public:
-            pokemon_move_slots_wrapper():
-                _pokemon(nullptr)
-            {}
-
-            pokemon_move_slots_wrapper(
-                const pkmn::pokemon::sptr& cpp_pokemon
-            ): _pokemon(cpp_pokemon)
-            {
-                _init();
-            }
-
-            pokemon_move_slot_wrapper get_move_slot(
-                int index
-            )
-            {
-                if(!_pokemon)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
-
-                // TODO: Lua check
-                pkmn::enforce_bounds("Move index", index, 0, 3);
-
-                return _moves.at(index);
-            }
-
-            size_t size()
-            {
-                return _moves.size();
-            }
-
-        private:
-            pkmn::pokemon::sptr _pokemon;
-
-            std::vector<pokemon_move_slot_wrapper> _moves;
-
-            void _init()
-            {
-                for(int i = 0; i < 4; ++i)
-                {
-                    _moves.emplace_back(
-                        pokemon_move_slot_wrapper(
-                            _pokemon,
-                            i
-                        )
-                    );
-                }
-            }
-    };
-
     /*
      * This class is a thin wrapper around pkmn::pokemon::sptr and
      * will be what some SWIG wrappers will use instead of the class
      * itself. It will allow syntax like the following to be used:
      *
      * bulbasaur.EVs["Attack"] = 100
+     *
+     * Per conventions, when used as attributes, these getters won't
+     * throw exceptions and will instead return a default value.
      */
     class pokemon
     {
         public:
             pokemon():
-                _pokemon(nullptr)
+                _pokemon(nullptr),
+                _generation(0)
             {}
 
             pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
-            ): _pokemon(cpp_pokemon)
+            ): _pokemon(cpp_pokemon),
+               _generation(pkmn::priv::game_name_to_generation(cpp_pokemon->get_game()))
             {
-                _init();
             }
 
             pokemon(
@@ -444,35 +50,33 @@ namespace pkmn { namespace swig {
                 const std::string& game,
                 const std::string& form,
                 int level
-            ): _pokemon(pkmn::pokemon::make(species, game, form, level))
+            ): _pokemon(pkmn::pokemon::make(species, game, form, level)),
+               _generation(pkmn::priv::game_name_to_generation(game))
             {
-                _init();
             }
 
             pokemon(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
-                _init();
+                _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
             }
 
-            pokemon(
-                const pokemon& other
-            ): _pokemon(other._pokemon)
+            static const uint32_t DEFAULT_TRAINER_ID;
+            static const std::string DEFAULT_TRAINER_NAME;
+
+            inline pokemon to_game(
+                const std::string& game
+            )
             {
-                _init();
+                return pokemon(_pokemon->to_game(game));
             }
 
-            bool operator==(
-                const pokemon& rhs
-            ) const
+            inline void export_to_file(
+                const std::string& filepath
+            )
             {
-                return (_pokemon == rhs._pokemon);
-            }
-
-            inline pkmn::pokemon::sptr get_internal() const
-            {
-                return _pokemon;
+                _pokemon->export_to_file(filepath);
             }
 
             inline std::string get_species()
@@ -497,9 +101,32 @@ namespace pkmn { namespace swig {
                 _pokemon->set_form(form);
             }
 
-            inline const pkmn::database::pokemon_entry& get_database_entry()
+            inline bool is_egg()
+            {
+                return _pokemon->is_egg();
+            }
+
+            inline void set_is_egg(bool is_egg)
+            {
+                _pokemon->set_is_egg(is_egg);
+            }
+
+            // Copy the entry, since the const in the reference is casted away.
+            inline pkmn::database::pokemon_entry get_database_entry()
             {
                 return _pokemon->get_database_entry();
+            }
+
+            inline std::string get_condition()
+            {
+                return _pokemon->get_condition();
+            }
+
+            inline void set_condition(
+                const std::string& condition
+            )
+            {
+                _pokemon->set_condition(condition);
             }
 
             inline std::string get_nickname()
@@ -516,7 +143,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_gender()
             {
-                return _pokemon->get_gender();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_gender();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_gender(
@@ -528,7 +162,14 @@ namespace pkmn { namespace swig {
 
             inline bool is_shiny()
             {
-                return _pokemon->is_shiny();
+                if(_generation >= 2)
+                {
+                    return _pokemon->is_shiny();
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             inline void set_shininess(
@@ -540,7 +181,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_held_item()
             {
-                return _pokemon->get_held_item();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_held_item();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_held_item(
@@ -548,6 +196,23 @@ namespace pkmn { namespace swig {
             )
             {
                 _pokemon->set_held_item(held_item);
+            }
+
+            inline int get_pokerus_duration()
+            {
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_pokerus_duration();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            inline void set_pokerus_duration(int duration)
+            {
+                _pokemon->set_pokerus_duration(duration);
             }
 
             inline std::string get_original_trainer_name()
@@ -569,7 +234,14 @@ namespace pkmn { namespace swig {
 
             inline uint16_t get_original_trainer_secret_id()
             {
-                return _pokemon->get_original_trainer_secret_id();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_original_trainer_secret_id();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline uint32_t get_original_trainer_id()
@@ -600,7 +272,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_original_trainer_gender()
             {
-                return _pokemon->get_original_trainer_gender();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_original_trainer_gender();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_original_trainer_gender(
@@ -612,7 +291,14 @@ namespace pkmn { namespace swig {
 
             inline int get_current_trainer_friendship()
             {
-                return _pokemon->get_current_trainer_friendship();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_current_trainer_friendship();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline void set_current_trainer_friendship(
@@ -624,7 +310,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_ability()
             {
-                return _pokemon->get_ability();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_ability();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_ability(
@@ -636,7 +329,14 @@ namespace pkmn { namespace swig {
 
             inline std::string get_ball()
             {
-                return _pokemon->get_ball();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_ball();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_ball(
@@ -648,7 +348,14 @@ namespace pkmn { namespace swig {
 
             inline int get_level_met()
             {
-                return _pokemon->get_level_met();
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_level_met();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             inline void set_level_met(
@@ -658,24 +365,54 @@ namespace pkmn { namespace swig {
                 _pokemon->set_level_met(level_met);
             }
 
-            inline std::string get_location_met(
-                bool as_egg
-            )
+            inline std::string get_location_met()
             {
-                return _pokemon->get_location_met(as_egg);
+                if(_generation >= 2)
+                {
+                    return _pokemon->get_location_met(false);
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_location_met(
-                const std::string& location,
-                bool as_egg
+                const std::string& location
             )
             {
-                _pokemon->set_location_met(location, as_egg);
+                _pokemon->set_location_met(location, false);
+            }
+
+            inline std::string get_location_met_as_egg()
+            {
+                if(_generation >= 4)
+                {
+                    return _pokemon->get_location_met(true);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            inline void set_location_met_as_egg(
+                const std::string& location
+            )
+            {
+                _pokemon->set_location_met(location, true);
             }
 
             inline std::string get_original_game()
             {
-                return _pokemon->get_original_game();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_original_game();
+                }
+                else
+                {
+                    return "";
+                }
             }
 
             inline void set_original_game(
@@ -687,7 +424,14 @@ namespace pkmn { namespace swig {
 
             inline uint32_t get_personality()
             {
-                return _pokemon->get_personality();
+                if(_generation >= 3)
+                {
+                    return _pokemon->get_personality();
+                }
+                else
+                {
+                    return 0U;
+                }
             }
 
             inline void set_personality(
@@ -721,47 +465,48 @@ namespace pkmn { namespace swig {
                 _pokemon->set_level(level);
             }
 
-            inline pokemon_EV_map& get_EVs()
+            inline int get_current_hp()
             {
-                return _EV_map;
+                return _pokemon->get_current_hp();
             }
 
-            inline pokemon_IV_map& get_IVs()
+            inline void set_current_hp(int hp)
             {
-                return _IV_map;
+                _pokemon->set_current_hp(hp);
             }
 
-            inline pokemon_marking_map& get_markings()
+            inline EV_map get_EVs()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_markings();
-
-                return _marking_map;
+                return EV_map(_pokemon);
             }
 
-            inline pokemon_ribbon_map& get_ribbons()
+            inline IV_map get_IVs()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_ribbons();
-
-                return _ribbon_map;
+                return IV_map(_pokemon);
             }
 
-            inline pokemon_contest_stat_map& get_contest_stats()
+            inline marking_map get_markings()
             {
-                // To throw pkmn::unimplemented_error if appropriate.
-                (void)_pokemon->get_contest_stats();
-
-                return _contest_stat_map;
+                return marking_map(_pokemon);
             }
 
-            inline pokemon_move_slots_wrapper& get_moves()
+            inline ribbon_map get_ribbons()
             {
-                return _move_slots_wrapper;
+                return ribbon_map(_pokemon);
+            }
+
+            inline contest_stat_map get_contest_stats()
+            {
+                return contest_stat_map(_pokemon);
+            }
+
+            inline move_slots get_moves()
+            {
+                return move_slots(_pokemon);
             }
 
             // Stats are read-only, so no need to wrap.
-            inline const std::map<std::string, int>& get_stats()
+            inline std::map<std::string, int> get_stats()
             {
                 return _pokemon->get_stats();
             }
@@ -776,65 +521,50 @@ namespace pkmn { namespace swig {
                 return _pokemon->get_sprite_filepath();
             }
 
-            inline int get_numeric_attribute(
-                const std::string& attribute_name
-            )
+            numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
             {
-                return _pokemon->get_numeric_attribute(attribute_name);
+                return numeric_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
-            inline void set_numeric_attribute(
-                const std::string& attribute_name,
-                int value
-            )
+            string_attribute_map<pkmn::pokemon> get_string_attributes()
             {
-                _pokemon->set_numeric_attribute(attribute_name, value);
+                return string_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
-            inline std::vector<std::string> get_numeric_attribute_names()
+            boolean_attribute_map<pkmn::pokemon> get_boolean_attributes()
             {
-                return _pokemon->get_numeric_attribute_names();
+                return boolean_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
-            inline std::string get_string_attribute(
-                const std::string& attribute_name
-            )
+            inline pkmn::pokemon::sptr get_internal() const
             {
-                return _pokemon->get_string_attribute(attribute_name);
+                return _pokemon;
             }
 
-            inline void set_string_attribute(
-                const std::string& attribute_name,
-                const std::string& value
-            )
+#ifdef SWIGCSHARP
+            inline uintmax_t cptr()
             {
-                _pokemon->set_string_attribute(attribute_name, value);
+                return uintmax_t(_pokemon.get());
+            }
+#else
+            inline bool operator==(const pokemon& rhs) const
+            {
+                return (_pokemon == rhs._pokemon);
             }
 
-            inline std::vector<std::string> get_string_attribute_names()
+            inline bool operator!=(const pokemon& rhs) const
             {
-                return _pokemon->get_string_attribute_names();
+                return !operator==(rhs);
             }
+#endif
 
         private:
             pkmn::pokemon::sptr _pokemon;
-            pokemon_EV_map _EV_map;
-            pokemon_IV_map _IV_map;
-            pokemon_marking_map _marking_map;
-            pokemon_ribbon_map _ribbon_map;
-            pokemon_contest_stat_map _contest_stat_map;
-            pokemon_move_slots_wrapper _move_slots_wrapper;
-
-            void _init()
-            {
-                _EV_map = pokemon_EV_map(_pokemon);
-                _IV_map = pokemon_IV_map(_pokemon);
-                _marking_map = pokemon_marking_map(_pokemon);
-                _ribbon_map = pokemon_ribbon_map(_pokemon);
-                _contest_stat_map = pokemon_contest_stat_map(_pokemon);
-                _move_slots_wrapper = pokemon_move_slots_wrapper(_pokemon);
-            }
+            int _generation;
     };
+
+    const uint32_t pokemon::DEFAULT_TRAINER_ID = pkmn::pokemon::DEFAULT_TRAINER_ID;
+    const std::string pokemon::DEFAULT_TRAINER_NAME = pkmn::pokemon::DEFAULT_TRAINER_NAME;
 
 }}
 

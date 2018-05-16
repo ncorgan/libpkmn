@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016-2017 Nicholas Corgan (n.corgan@gmail.com)
+# Copyright (c) 2016-2018 Nicholas Corgan (n.corgan@gmail.com)
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT)
@@ -23,8 +23,6 @@ class gen1_items_test(items_tests):
     #
 
     def __test_item_list_common(self, items, game):
-        self.assertEqual(len(items.as_list()), items.get_capacity())
-
         # Make sure item slots start as correctly empty.
         self.item_list_test_empty_slot(items)
 
@@ -44,38 +42,38 @@ class gen1_items_test(items_tests):
              "TM34", "Moon Stone", "Bicycle", "Full Heal"]
         )
 
-        valid_items = items.get_valid_items()
-        full_item_list = pkmn.database.get_item_list(game)
-        self.assertEqual(len(valid_items), len(full_item_list))
+        full_item_list = pkmn.database.lists.get_item_list(game)
+        self.assertEqual(len(items.valid_items), len(full_item_list))
         self.item_list_test_both_text_types(items)
 
     def __test_item_list(self, items, game):
         # Check unchanging and initial values.
-        self.assertEqual(items.get_name(), "Items")
-        self.assertEqual(items.get_game(), game)
-        self.assertEqual(items.get_capacity(), 20)
-        self.assertEqual(items.get_num_items(), 0)
+        self.assertEqual(items.name, "Items")
+        self.assertEqual(items.game, game)
+        self.assertEqual(len(items), 20)
+        self.assertEqual(items.num_items, 0)
 
         self.__test_item_list_common(items, game)
 
     def __test_item_pc(self, pc, game):
         # Check unchanging and initial values.
-        self.assertEqual(pc.get_name(), "PC")
-        self.assertEqual(pc.get_game(), game)
-        self.assertEqual(pc.get_capacity(), 50)
-        self.assertEqual(pc.get_num_items(), 0)
+        self.assertEqual(pc.name, "PC")
+        self.assertEqual(pc.game, game)
+        self.assertEqual(len(pc), 50)
+        self.assertEqual(pc.num_items, 0)
 
         self.__test_item_list_common(pc, game)
 
     def __test_item_bag(self, bag, game):
         # Check unchanging and initial values.
-        self.assertEqual(bag.get_game(), game)
+        self.assertEqual(bag.game, game)
 
-        pockets = bag.get_pockets()
-        self.assertEqual(pockets.size(), 1)
-        self.assertTrue(pockets.has_key("Items"))
+        self.assertEqual(len(bag), 1)
+        self.assertEqual(len(bag.pocket_names), 1)
 
-        self.__test_item_list(pockets["Items"], game)
+        self.assertTrue("Items" in bag.pocket_names)
+
+        self.__test_item_list(bag["Items"], game)
         self.item_bag_test_get_pockets_with_both_text_types(bag)
 
         # Confirm items from later generations can't be added.
@@ -88,23 +86,23 @@ class gen1_items_test(items_tests):
                  "TM34", "Moon Stone", "Bicycle", "Full Heal"]
 
         # Make sure adding items through the bag adds to the pocket.
-        self.assertEqual(pockets["Items"].get_num_items(), 0)
+        self.assertEqual(bag["Items"].num_items, 0)
         for i in range(len(items)):
             bag.add(items[i], i+1)
 
         for i in range(len(items)):
-            self.assertEqual(pockets["Items"][i].item, items[i])
-            self.assertEqual(pockets["Items"][i].amount, i+1)
+            self.assertEqual(bag["Items"][i].item, items[i])
+            self.assertEqual(bag["Items"][i].amount, i+1)
 
-        self.assertEqual(pockets["Items"][8].item, "None")
-        self.assertEqual(pockets["Items"][8].amount, 0)
+        self.assertEqual(bag["Items"][8].item, "None")
+        self.assertEqual(bag["Items"][8].amount, 0)
 
         for i in range(len(items)):
             bag.remove(items[i], i+1)
 
         for i in range(len(items)+1):
-            self.assertEqual(pockets["Items"][i].item, "None")
-            self.assertEqual(pockets["Items"][i].amount, 0)
+            self.assertEqual(bag["Items"][i].item, "None")
+            self.assertEqual(bag["Items"][i].amount, 0)
 
     #
     # Red

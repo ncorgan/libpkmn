@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -226,6 +226,7 @@ namespace pkmn { namespace conversions {
         to->levelMet = to->partyData.level;
     }
 
+    // Ignore items here, deal with where it's easier to detect invalid items
     void gba_party_pokemon_to_gcn(
         const pksav_gba_party_pokemon_t* from,
         LibPkmGC::GC::Pokemon* to
@@ -305,16 +306,6 @@ namespace pkmn { namespace conversions {
         pksav_gba_pokemon_misc_t* to_misc = &to->blocks.misc;
 
         to_growth->species = pksav_littleendian16(uint16_t(from->species));
-
-        // Don't bring over GCN-exclusive items.
-        if(from->heldItem <= MAX_GBA_ITEM_INDEX)
-        {
-            to_growth->held_item = pksav_littleendian16(uint16_t(from->heldItem));
-        }
-        else
-        {
-            to_growth->held_item = 0;
-        }
 
         to_growth->exp = pksav_littleendian32(from->experience);
         to_growth->friendship = from->friendship;

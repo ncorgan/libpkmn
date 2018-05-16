@@ -17,9 +17,7 @@ PKMN_CSHARP_INIT
 %include <std_string.i>
 
 // std::map
-PKMN_CSHARP_MAP(std::string, bool,        string, bool,   StringBoolDict)
-PKMN_CSHARP_MAP(std::string, std::string, string, string, StringStringDict)
-PKMN_CSHARP_MAP(std::string, int,         string, int,    StringIntDict)
+PKMN_CSHARP_MAP(std::string, int, string, int, StringIntDict)
 
 // std::pair
 PKMN_CSHARP_PAIR(int, int, int, int, IntPair)
