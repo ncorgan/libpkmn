@@ -98,7 +98,7 @@ class PKMNTest < MiniTest::Test
 
         if generation >= 2
             # Keep going until one is holdable.
-            while pokemon.held_item == "None"
+            while pokemon.held_item == "None" or pokemon.held_item.include?("Scent")
                 begin
                     pokemon.held_item = item_list[@@RNG.rand(item_list.size)]
                 rescue

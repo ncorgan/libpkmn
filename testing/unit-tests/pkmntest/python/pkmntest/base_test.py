@@ -101,7 +101,7 @@ class base_test(unittest.TestCase):
 
         if generation >= 2:
             # Keep going until one is holdable.
-            while pokemon.held_item == "None":
+            while pokemon.held_item == "None" or "Scent" in pokemon.held_item:
                 try:
                     pokemon.held_item = random.choice(item_list)
                 except:
