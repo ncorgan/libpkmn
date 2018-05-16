@@ -35,15 +35,15 @@ namespace pkmn {
 
             std::string get_game() override final;
 
-            virtual pkmn::pokedex::sptr get_pokedex() override;
+            virtual const pkmn::pokedex::sptr& get_pokedex() override;
 
-            pkmn::pokemon_party::sptr get_pokemon_party() override final;
+            const pkmn::pokemon_party::sptr& get_pokemon_party() override final;
 
-            pkmn::pokemon_pc::sptr get_pokemon_pc() override final;
+            const pkmn::pokemon_pc::sptr& get_pokemon_pc() override final;
 
-            pkmn::item_bag::sptr get_item_bag() override final;
+            const pkmn::item_bag::sptr& get_item_bag() override final;
 
-            pkmn::item_list::sptr get_item_pc() override final;
+            const pkmn::item_list::sptr& get_item_pc() override final;
 
         protected:
             std::string _filepath;

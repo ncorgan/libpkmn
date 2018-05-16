@@ -74,7 +74,7 @@ namespace pkmn {
                );
     }
 
-    pkmn::pokemon::sptr pokemon_box_impl::get_pokemon(
+    const pkmn::pokemon::sptr& pokemon_box_impl::get_pokemon(
         int index
     )
     {

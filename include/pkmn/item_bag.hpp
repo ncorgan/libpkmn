@@ -67,7 +67,7 @@ namespace pkmn {
              * \throws std::invalid_argument If the given name does not correspond to a
              *                               valid pocket
              */
-            virtual pkmn::item_list::sptr get_pocket(
+            virtual const pkmn::item_list::sptr& get_pocket(
                 const std::string& name
             ) = 0;
 

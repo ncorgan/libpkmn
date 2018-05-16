@@ -36,7 +36,7 @@ namespace pkmn {
 
             std::string get_game() override final;
 
-            pkmn::pokemon::sptr get_pokemon(
+            const pkmn::pokemon::sptr& get_pokemon(
                 int index
             ) override final;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -48,7 +48,7 @@ namespace pkmn {
 
             void set_pokemon(
                 int index,
-                pkmn::pokemon::sptr new_pokemon
+                const pkmn::pokemon::sptr& new_pokemon
             ) override final;
 
         private:

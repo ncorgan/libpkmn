@@ -71,7 +71,7 @@ namespace pkmn {
                 int money
             ) override final;
 
-            pkmn::pokedex::sptr get_pokedex() override final;
+            const pkmn::pokedex::sptr& get_pokedex() override final;
 
         private:
             std::unique_ptr<LibPkmGC::GC::SaveEditing::Save> _libpkmgc_save;

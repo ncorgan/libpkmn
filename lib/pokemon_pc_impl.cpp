@@ -68,7 +68,7 @@ namespace pkmn {
         return pkmn::database::game_id_to_name(_game_id);
     }
 
-    pkmn::pokemon_box::sptr pokemon_pc_impl::get_box(
+    const pkmn::pokemon_box::sptr& pokemon_pc_impl::get_box(
         int index
     )
     {

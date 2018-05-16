@@ -35,7 +35,7 @@ namespace pkmn {
 
             std::string get_game() override final;
 
-            pkmn::pokemon_box::sptr get_box(
+            const pkmn::pokemon_box::sptr& get_box(
                 int index
             ) override final;
 
@@ -48,7 +48,7 @@ namespace pkmn {
             // For internal use
 
             inline void set_pokedex(
-                pkmn::pokedex::sptr pokedex
+                const pkmn::pokedex::sptr& pokedex
             )
             {
                 for(const auto& box: _box_list)

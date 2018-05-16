@@ -112,7 +112,7 @@ namespace pkmn {
 
     void pokemon_box_gcnimpl::set_pokemon(
         int index,
-        pkmn::pokemon::sptr new_pokemon
+        const pkmn::pokemon::sptr& new_pokemon
     )
     {
         int max_index = get_capacity();
