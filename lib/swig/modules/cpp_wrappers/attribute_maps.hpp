@@ -15,27 +15,24 @@
 #include <pkmn/game_save.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace swig {
 
     template <typename sptr_type>
     class numeric_attribute_map
     {
         public:
-            numeric_attribute_map():
-                _internal(nullptr)
-            {}
-
-            numeric_attribute_map(
+            explicit numeric_attribute_map(
                 const std::shared_ptr<sptr_type>& internal
             ): _internal(internal)
-            {}
+            {
+                BOOST_ASSERT(_internal.get() != nullptr);
+            }
 
             inline int get_attribute(const std::string& attribute)
             {
-                if(!_internal)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_internal.get() != nullptr);
 
                 return _internal->get_numeric_attribute(attribute);
             }
@@ -45,20 +42,14 @@ namespace pkmn { namespace swig {
                 int value
             )
             {
-                if(!_internal)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_internal.get() != nullptr);
 
                 _internal->set_numeric_attribute(attribute, value);
             }
 
             inline std::vector<std::string> get_attribute_names()
             {
-                if(!_internal)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_internal.get() != nullptr);
 
                 return _internal->get_numeric_attribute_names();
             }
@@ -66,39 +57,45 @@ namespace pkmn { namespace swig {
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return uintmax_t(_internal.get());
             }
 #else
             inline bool operator==(const numeric_attribute_map& rhs) const
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return (_internal == rhs._internal);
             }
 
             inline bool operator!=(const numeric_attribute_map& rhs) const
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif
 
         private:
-            std::shared_ptr<sptr_type> _internal;
+            const std::shared_ptr<sptr_type>& _internal;
     };
 
     template <typename sptr_type>
     class string_attribute_map
     {
         public:
-            string_attribute_map():
-                _internal(nullptr)
-            {}
-
-            string_attribute_map(
+            explicit string_attribute_map(
                 const std::shared_ptr<sptr_type>& internal
             ): _internal(internal)
-            {}
+            {
+                BOOST_ASSERT(_internal.get() != nullptr);
+            }
 
             inline std::string get_attribute(const std::string& attribute)
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return _internal->get_string_attribute(attribute);
             }
 
@@ -107,6 +104,8 @@ namespace pkmn { namespace swig {
                 const std::string& value
             )
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 _internal->set_string_attribute(attribute, value);
             }
 
@@ -118,6 +117,8 @@ namespace pkmn { namespace swig {
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return uintmax_t(_internal.get());
             }
 #else
@@ -133,24 +134,24 @@ namespace pkmn { namespace swig {
 #endif
 
         private:
-            std::shared_ptr<sptr_type> _internal;
+            const std::shared_ptr<sptr_type>& _internal;
     };
 
     template <typename sptr_type>
     class boolean_attribute_map
     {
         public:
-            boolean_attribute_map():
-                _internal(nullptr)
-            {}
-
-            boolean_attribute_map(
+            explicit boolean_attribute_map(
                 const std::shared_ptr<sptr_type>& internal
             ): _internal(internal)
-            {}
+            {
+                BOOST_ASSERT(_internal.get() != nullptr);
+            }
 
             inline bool get_attribute(const std::string& attribute)
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return _internal->get_boolean_attribute(attribute);
             }
 
@@ -159,33 +160,43 @@ namespace pkmn { namespace swig {
                 bool value
             )
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 _internal->set_boolean_attribute(attribute, value);
             }
 
             inline std::vector<std::string> get_attribute_names()
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return _internal->get_boolean_attribute_names();
             }
 
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return uintmax_t(_internal.get());
             }
 #else
             inline bool operator==(const boolean_attribute_map& rhs) const
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return (_internal == rhs._internal);
             }
 
             inline bool operator!=(const boolean_attribute_map& rhs) const
             {
+                BOOST_ASSERT(_internal.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif
 
         private:
-            std::shared_ptr<sptr_type> _internal;
+            const std::shared_ptr<sptr_type>& _internal;
     };
 
 }}

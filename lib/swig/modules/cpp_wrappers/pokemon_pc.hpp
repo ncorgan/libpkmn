@@ -8,45 +8,48 @@
 #ifndef CPP_WRAPPERS_POKEMON_PC_HPP
 #define CPP_WRAPPERS_POKEMON_PC_HPP
 
+#include "swig/modules/cpp_wrappers/pokemon_box.hpp"
+
 #include "exception_internal.hpp"
 
 #include <pkmn/config.hpp>
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon_pc.hpp>
 
-#include "swig/modules/cpp_wrappers/pokemon_box.hpp"
+#include <boost/assert.hpp>
 
 namespace pkmn { namespace swig {
 
     class pokemon_pc
     {
         public:
-            pokemon_pc():
-                _pokemon_pc(nullptr),
-                _generation(0)
-            {}
-
-            pokemon_pc(
+            explicit pokemon_pc(
                 const pkmn::pokemon_pc::sptr& cpp_pokemon_pc
             ): _pokemon_pc(cpp_pokemon_pc),
                _generation(pkmn::priv::game_name_to_generation(cpp_pokemon_pc->get_game()))
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
             }
 
-            pokemon_pc(
+            explicit pokemon_pc(
                 const std::string& game
             ): _pokemon_pc(pkmn::pokemon_pc::make(game)),
                _generation(pkmn::priv::game_name_to_generation(game))
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
             }
 
             inline std::string get_game()
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 return _pokemon_pc->get_game();
             }
 
             inline int get_num_boxes()
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 return _pokemon_pc->get_num_boxes();
             }
 
@@ -54,6 +57,8 @@ namespace pkmn { namespace swig {
                 int index
             )
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
 #ifdef SWIGLUA
                 pkmn::enforce_bounds(
                     "Box index",
@@ -72,6 +77,8 @@ namespace pkmn { namespace swig {
             // is casted away.
             inline std::vector<std::string> get_box_names()
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon_pc->get_box_names();
@@ -85,16 +92,22 @@ namespace pkmn { namespace swig {
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 return uintmax_t(_pokemon_pc.get());
             }
 #else
             inline bool operator==(const pokemon_pc& rhs) const
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 return (_pokemon_pc == rhs._pokemon_pc);
             }
 
             inline bool operator!=(const pokemon_pc& rhs) const
             {
+                BOOST_ASSERT(_pokemon_pc.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif

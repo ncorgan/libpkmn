@@ -14,6 +14,8 @@
 
 #include "item_slot.hpp"
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace swig {
 
     /*
@@ -26,40 +28,46 @@ namespace pkmn { namespace swig {
     class item_list
     {
         public:
-            item_list():
-                _item_list(nullptr)
-            {}
-
-            item_list(
+            explicit item_list(
                 const pkmn::item_list::sptr& cpp_item_list
             ): _item_list(cpp_item_list)
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
             }
 
-            item_list(
+            explicit item_list(
                 const std::string& name,
                 const std::string& game
             ): _item_list(pkmn::item_list::make(name, game))
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
             }
 
             inline std::string get_name()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _item_list->get_name();
             }
 
             inline std::string get_game()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _item_list->get_game();
             }
 
             inline int get_capacity()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _item_list->get_capacity();
             }
 
             inline int get_num_items()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _item_list->get_num_items();
             }
 
@@ -67,6 +75,8 @@ namespace pkmn { namespace swig {
                 int position
             )
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
 #ifdef SWIGLUA
                 pkmn::enforce_bounds(
                     "Position",
@@ -86,6 +96,8 @@ namespace pkmn { namespace swig {
                 int amount
             )
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 _item_list->add(item, amount);
             }
 
@@ -94,6 +106,8 @@ namespace pkmn { namespace swig {
                 int amount
             )
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 _item_list->remove(item, amount);
             }
 
@@ -102,6 +116,8 @@ namespace pkmn { namespace swig {
                 int new_position
             )
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
 #ifdef SWIGLUA
                 pkmn::enforce_bounds(
                     "Old position",
@@ -126,22 +142,30 @@ namespace pkmn { namespace swig {
             // is casted away.
             inline std::vector<std::string> get_valid_items()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _item_list->get_valid_items();
             }
 
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return uintmax_t(_item_list.get());
             }
 #else
             inline bool operator==(const item_list& rhs) const
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return (_item_list == rhs._item_list);
             }
 
             inline bool operator!=(const item_list& rhs) const
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif

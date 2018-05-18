@@ -18,6 +18,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/pokemon.hpp>
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace swig {
 
     /*
@@ -33,16 +35,12 @@ namespace pkmn { namespace swig {
     class pokemon
     {
         public:
-            pokemon():
-                _pokemon(nullptr),
-                _generation(0)
-            {}
-
-            pokemon(
+            explicit pokemon(
                 const pkmn::pokemon::sptr& cpp_pokemon
             ): _pokemon(cpp_pokemon),
                _generation(pkmn::priv::game_name_to_generation(cpp_pokemon->get_game()))
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
             pokemon(
@@ -53,12 +51,15 @@ namespace pkmn { namespace swig {
             ): _pokemon(pkmn::pokemon::make(species, game, form, level)),
                _generation(pkmn::priv::game_name_to_generation(game))
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
             }
 
-            pokemon(
+            explicit pokemon(
                 const std::string& filepath
             ): _pokemon(pkmn::pokemon::from_file(filepath))
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _generation = pkmn::priv::game_name_to_generation(_pokemon->get_game());
             }
 
@@ -69,6 +70,8 @@ namespace pkmn { namespace swig {
                 const std::string& game
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return pokemon(_pokemon->to_game(game));
             }
 
@@ -76,21 +79,29 @@ namespace pkmn { namespace swig {
                 const std::string& filepath
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->export_to_file(filepath);
             }
 
             inline std::string get_species()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_species();
             }
 
             inline std::string get_game()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_game();
             }
 
             inline std::string get_form()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_form();
             }
 
@@ -98,27 +109,37 @@ namespace pkmn { namespace swig {
                 const std::string& form
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_form(form);
             }
 
             inline bool is_egg()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->is_egg();
             }
 
             inline void set_is_egg(bool is_egg)
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_is_egg(is_egg);
             }
 
             // Copy the entry, since the const in the reference is casted away.
             inline pkmn::database::pokemon_entry get_database_entry()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_database_entry();
             }
 
             inline std::string get_condition()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_condition();
             }
 
@@ -126,11 +147,15 @@ namespace pkmn { namespace swig {
                 const std::string& condition
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_condition(condition);
             }
 
             inline std::string get_nickname()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_nickname();
             }
 
@@ -138,11 +163,15 @@ namespace pkmn { namespace swig {
                 const std::string& nickname
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_nickname(nickname);
             }
 
             inline std::string get_gender()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_gender();
@@ -157,11 +186,15 @@ namespace pkmn { namespace swig {
                 const std::string& gender
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_gender(gender);
             }
 
             inline bool is_shiny()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->is_shiny();
@@ -176,11 +209,15 @@ namespace pkmn { namespace swig {
                 bool value
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_shininess(value);
             }
 
             inline std::string get_held_item()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_held_item();
@@ -195,11 +232,15 @@ namespace pkmn { namespace swig {
                 const std::string& held_item
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_held_item(held_item);
             }
 
             inline int get_pokerus_duration()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_pokerus_duration();
@@ -212,11 +253,15 @@ namespace pkmn { namespace swig {
 
             inline void set_pokerus_duration(int duration)
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_pokerus_duration(duration);
             }
 
             inline std::string get_original_trainer_name()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_original_trainer_name();
             }
 
@@ -224,16 +269,22 @@ namespace pkmn { namespace swig {
                 const std::string& trainer_name
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_trainer_name(trainer_name);
             }
 
             inline uint16_t get_original_trainer_public_id()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_original_trainer_public_id();
             }
 
             inline uint16_t get_original_trainer_secret_id()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 3)
                 {
                     return _pokemon->get_original_trainer_secret_id();
@@ -246,6 +297,8 @@ namespace pkmn { namespace swig {
 
             inline uint32_t get_original_trainer_id()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_original_trainer_id();
             }
 
@@ -253,6 +306,8 @@ namespace pkmn { namespace swig {
                 uint16_t public_id
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_trainer_public_id(public_id);
             }
 
@@ -260,6 +315,8 @@ namespace pkmn { namespace swig {
                 uint16_t secret_id
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_trainer_secret_id(secret_id);
             }
 
@@ -267,11 +324,15 @@ namespace pkmn { namespace swig {
                 uint32_t public_id
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_trainer_id(public_id);
             }
 
             inline std::string get_original_trainer_gender()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_original_trainer_gender();
@@ -286,11 +347,15 @@ namespace pkmn { namespace swig {
                 const std::string& trainer_gender
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_trainer_gender(trainer_gender);
             }
 
             inline int get_current_trainer_friendship()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_current_trainer_friendship();
@@ -305,11 +370,15 @@ namespace pkmn { namespace swig {
                 int friendship
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_current_trainer_friendship(friendship);
             }
 
             inline std::string get_ability()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 3)
                 {
                     return _pokemon->get_ability();
@@ -324,11 +393,15 @@ namespace pkmn { namespace swig {
                 const std::string& ability
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_ability(ability);
             }
 
             inline std::string get_ball()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 3)
                 {
                     return _pokemon->get_ball();
@@ -343,11 +416,15 @@ namespace pkmn { namespace swig {
                 const std::string& ball
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_ball(ball);
             }
 
             inline int get_level_met()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_level_met();
@@ -362,11 +439,15 @@ namespace pkmn { namespace swig {
                 int level_met
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_level_met(level_met);
             }
 
             inline std::string get_location_met()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 2)
                 {
                     return _pokemon->get_location_met(false);
@@ -381,11 +462,15 @@ namespace pkmn { namespace swig {
                 const std::string& location
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_location_met(location, false);
             }
 
             inline std::string get_location_met_as_egg()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 4)
                 {
                     return _pokemon->get_location_met(true);
@@ -400,11 +485,15 @@ namespace pkmn { namespace swig {
                 const std::string& location
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_location_met(location, true);
             }
 
             inline std::string get_original_game()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 3)
                 {
                     return _pokemon->get_original_game();
@@ -419,11 +508,15 @@ namespace pkmn { namespace swig {
                 const std::string& original_game
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_original_game(original_game);
             }
 
             inline uint32_t get_personality()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 if(_generation >= 3)
                 {
                     return _pokemon->get_personality();
@@ -438,11 +531,15 @@ namespace pkmn { namespace swig {
                 uint32_t personality
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_personality(personality);
             }
 
             inline int get_experience()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_experience();
             }
 
@@ -450,11 +547,15 @@ namespace pkmn { namespace swig {
                 int experience
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_experience(experience);
             }
 
             inline int get_level()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_level();
             }
 
@@ -462,98 +563,136 @@ namespace pkmn { namespace swig {
                 int level
             )
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_level(level);
             }
 
             inline int get_current_hp()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_current_hp();
             }
 
             inline void set_current_hp(int hp)
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 _pokemon->set_current_hp(hp);
             }
 
             inline EV_map get_EVs()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return EV_map(_pokemon);
             }
 
             inline IV_map get_IVs()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return IV_map(_pokemon);
             }
 
             inline marking_map get_markings()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return marking_map(_pokemon);
             }
 
             inline ribbon_map get_ribbons()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return ribbon_map(_pokemon);
             }
 
             inline contest_stat_map get_contest_stats()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return contest_stat_map(_pokemon);
             }
 
             inline move_slots get_moves()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return move_slots(_pokemon);
             }
 
             // Stats are read-only, so no need to wrap.
             inline std::map<std::string, int> get_stats()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_stats();
             }
 
             inline std::string get_icon_filepath()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_icon_filepath();
             }
 
             inline std::string get_sprite_filepath()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon->get_sprite_filepath();
             }
 
             numeric_attribute_map<pkmn::pokemon> get_numeric_attributes()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return numeric_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
             string_attribute_map<pkmn::pokemon> get_string_attributes()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return string_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
             boolean_attribute_map<pkmn::pokemon> get_boolean_attributes()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return boolean_attribute_map<pkmn::pokemon>(_pokemon);
             }
 
-            inline pkmn::pokemon::sptr get_internal() const
+            inline const pkmn::pokemon::sptr& get_internal() const
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return _pokemon;
             }
 
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return uintmax_t(_pokemon.get());
             }
 #else
             inline bool operator==(const pokemon& rhs) const
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return (_pokemon == rhs._pokemon);
             }
 
             inline bool operator!=(const pokemon& rhs) const
             {
+                BOOST_ASSERT(_pokemon.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif

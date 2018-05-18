@@ -14,6 +14,8 @@
 #include <pkmn/exception.hpp>
 #include <pkmn/pokedex.hpp>
 
+#include <boost/assert.hpp>
+
 namespace pkmn { namespace swig {
 
     class pokedex
@@ -33,6 +35,8 @@ namespace pkmn { namespace swig {
                 {
                     _pokedex = pkmn::pokedex::make(game);
                 }
+
+                BOOST_ASSERT(_pokedex.get() != nullptr);
             }
 
             pokedex(
@@ -40,7 +44,9 @@ namespace pkmn { namespace swig {
             ): _pokedex(cpp_pokedex),
                _game(cpp_pokedex->get_game()),
                _is_gamecube_game(false) // There is no valid Gamecube instance
-            {}
+            {
+                BOOST_ASSERT(_pokedex.get() != nullptr);
+            }
 
             inline std::string get_game()
             {
@@ -55,13 +61,28 @@ namespace pkmn { namespace swig {
             // Copy, since SWIG will cast away the const in the reference.
             inline std::vector<std::string> get_all_seen()
             {
-                return _is_gamecube_game ? std::vector<std::string>()
-                                         : _pokedex->get_all_seen();
+                std::vector<std::string> ret;
+
+                if(not _is_gamecube_game)
+                {
+                    BOOST_ASSERT(_pokedex.get() != nullptr);
+                    ret = _pokedex->get_all_seen();
+                }
+
+                return ret;
             }
 
             inline int get_num_seen()
             {
-                return _is_gamecube_game ? 0 : _pokedex->get_num_seen();
+                int ret = 0;
+
+                if(not _is_gamecube_game)
+                {
+                    BOOST_ASSERT(_pokedex.get() != nullptr);
+                    ret = _pokedex->get_num_seen();
+                }
+
+                return ret;
             }
 
             inline pokedex_has_caught_helper get_has_caught()
@@ -72,8 +93,15 @@ namespace pkmn { namespace swig {
             // Copy, since SWIG will cast away the const in the reference.
             std::vector<std::string> get_all_caught()
             {
-                return _is_gamecube_game ? std::vector<std::string>()
-                                         : _pokedex->get_all_caught();
+                std::vector<std::string> ret;
+
+                if(not _is_gamecube_game)
+                {
+                    BOOST_ASSERT(_pokedex.get() != nullptr);
+                    ret = _pokedex->get_all_caught();
+                }
+
+                return ret;
             }
 
             inline int get_num_caught()
@@ -95,6 +123,9 @@ namespace pkmn { namespace swig {
                 }
                 else
                 {
+                    BOOST_ASSERT(_pokedex.get() != nullptr);
+                    BOOST_ASSERT(rhs._pokedex.get() != nullptr);
+
                     return (_pokedex == rhs._pokedex);
                 }
             }

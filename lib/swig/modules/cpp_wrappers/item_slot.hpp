@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nicholas Corgan (n.corgan@gmail.com)
+ * Copyright (c) 2017-2018 Nicholas Corgan (n.corgan@gmail.com)
  *
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
@@ -17,25 +17,18 @@ namespace pkmn { namespace swig {
     class item_slot
     {
         public:
-            item_slot():
-                _item_list(nullptr),
-                _index(0)
-            {}
-
-            item_slot(
+            explicit item_slot(
                 const pkmn::item_list::sptr& item_list,
                 int index
             ): _item_list(item_list),
                _index(index)
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
             }
 
             inline const std::string& get_item()
             {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_item_list.get() != nullptr);
 
                 return _item_list->as_vector().at(_index).item;
             }
@@ -44,10 +37,7 @@ namespace pkmn { namespace swig {
                 const std::string& item
             )
             {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_item_list.get() != nullptr);
 
                 _item_list->set_item(
                     _index,
@@ -60,10 +50,7 @@ namespace pkmn { namespace swig {
 
             inline int get_amount()
             {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_item_list.get() != nullptr);
 
                 return _item_list->as_vector().at(_index).amount;
             }
@@ -72,10 +59,7 @@ namespace pkmn { namespace swig {
                 int amount
             )
             {
-                if(!_item_list)
-                {
-                    throw std::runtime_error("This class should only be used as a member of another class, rather than standalone.");
-                }
+                BOOST_ASSERT(_item_list.get() != nullptr);
 
                 _item_list->set_item(
                     _index,
@@ -86,23 +70,31 @@ namespace pkmn { namespace swig {
 
             int index()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return _index;
             }
 
 #ifdef SWIGCSHARP
             inline uintmax_t cptr()
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return uintmax_t(_item_list.get());
             }
 #else
             inline bool operator==(const item_slot& rhs) const
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return (_item_list == rhs._item_list) and
                        (_index == rhs._index);
             }
 
             inline bool operator!=(const item_slot& rhs) const
             {
+                BOOST_ASSERT(_item_list.get() != nullptr);
+
                 return !operator==(rhs);
             }
 #endif

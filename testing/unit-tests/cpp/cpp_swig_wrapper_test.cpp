@@ -157,26 +157,6 @@ TEST(cpp_swig_helper_test, test_item_bag)
     }
 }
 
-TEST(cpp_swig_helper_test, test_invalid_pokedex_helpers)
-{
-    pkmn::swig::pokedex_has_seen_helper has_seen_helper;
-    pkmn::swig::pokedex_has_caught_helper has_caught_helper;
-
-    EXPECT_THROW(
-        has_seen_helper.get_has_seen("Bulbasaur");
-    , std::runtime_error);
-    EXPECT_THROW(
-        has_seen_helper.set_has_seen("Bulbasaur", true);
-    , std::runtime_error);
-
-    EXPECT_THROW(
-        has_caught_helper.get_has_caught("Bulbasaur");
-    , std::runtime_error);
-    EXPECT_THROW(
-        has_caught_helper.set_has_caught("Bulbasaur", true);
-    , std::runtime_error);
-}
-
 TEST(cpp_swig_helper_test, test_pokedex)
 {
     pkmn::pokedex::sptr cpp_pokedex = pkmn::pokedex::make("Red");
@@ -203,50 +183,6 @@ TEST(cpp_swig_helper_test, test_pokedex)
     EXPECT_EQ(0, cpp_pokedex->get_num_caught());
     EXPECT_EQ(1ULL, cpp_pokedex->get_all_seen().size());
     EXPECT_EQ(0ULL, cpp_pokedex->get_all_caught().size());
-}
-
-TEST(cpp_swig_helper_test, test_invalid_pokemon_helpers)
-{
-    pkmn::swig::EV_map EV_map;
-    pkmn::swig::IV_map IV_map;
-    pkmn::swig::marking_map marking_map;
-    pkmn::swig::ribbon_map ribbon_map;
-    pkmn::swig::contest_stat_map contest_stat_map;
-
-    EXPECT_THROW(
-        EV_map.get_EV("HP");
-    , std::runtime_error);
-    EXPECT_THROW(
-        EV_map.set_EV("HP", 0);
-    , std::runtime_error);
-
-    EXPECT_THROW(
-        IV_map.get_IV("HP");
-    , std::runtime_error);
-    EXPECT_THROW(
-        IV_map.set_IV("HP", 0);
-    , std::runtime_error);
-
-    EXPECT_THROW(
-        marking_map.get_marking("Circle");
-    , std::runtime_error);
-    EXPECT_THROW(
-        marking_map.set_marking("Circle", true);
-    , std::runtime_error);
-
-    EXPECT_THROW(
-        ribbon_map.get_ribbon("Cool");
-    , std::runtime_error);
-    EXPECT_THROW(
-        ribbon_map.set_ribbon("Cool", true);
-    , std::runtime_error);
-
-    EXPECT_THROW(
-        contest_stat_map.get_contest_stat("Beauty");
-    , std::runtime_error);
-    EXPECT_THROW(
-        contest_stat_map.set_contest_stat("Beauty", 0);
-    , std::runtime_error);
 }
 
 static void test_EV_IV_keys(
